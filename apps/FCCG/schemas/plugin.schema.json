@@ -54,8 +54,8 @@
         "modules": {
           "type": "object", "minProperties": 1,
           "additionalProperties": {
-            "type": "object", "required": ["model", "tx_power_limit_dbm"],
-            "properties": {"model": {"type": "string"}, "tx_power_limit_dbm": {"type": "integer"}},
+            "type": "object", "required": ["model", "tx_power_limit_dbm", "supported_tx_powers_dbm"],
+            "properties": {"model": {"type": "string"}, "tx_power_limit_dbm": {"type": "integer"}, "supported_tx_powers_dbm": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer"}}},
             "additionalProperties": false
           }
         }

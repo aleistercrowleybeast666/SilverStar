@@ -78,42 +78,53 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
     """Validate one shared AIR snapshot against both physical radio endpoints."""
     link = model.air_link
     issues = _AirLinkProfileIssues_Get(link)
-    if not model.ground_target.enabled:
-        return tuple(issues)
     flight_instance = model.DeviceInstance_Get(link.flight_radio_instance)
     flight, flight_error = _Radio_Get(
         catalog, flight_instance.plugin if flight_instance else "", "Flight"
     )
-    ground, ground_error = _Radio_Get(
-        catalog, model.ground_target.radio_plugin, "Ground"
-    )
+    ground = None
+    ground_error = None
+    if model.ground_target.enabled:
+        ground, ground_error = _Radio_Get(
+            catalog, model.ground_target.radio_plugin, "Ground"
+        )
     issues.extend(issue for issue in (flight_error, ground_error) if issue is not None)
-    if issues:
-        return tuple(issues)
-    assert flight is not None and ground is not None
-    flight_radio = flight.radio
-    ground_radio = ground.radio
-    assert flight_radio is not None and ground_radio is not None
-
-    if (
-        flight_radio.technology != ground_radio.technology
-        or flight_radio.family != ground_radio.family
-        or link.radio_technology != flight_radio.technology
-        or link.radio_family != flight_radio.family
+    radios = tuple(
+        (endpoint, manifest.radio)
+        for endpoint, manifest in (("Flight", flight), ("Ground", ground))
+        if manifest is not None and manifest.radio is not None
+    )
+    if any(
+        radio.technology != link.radio_technology or radio.family != link.radio_family
+        for _endpoint, radio in radios
     ):
         issues.append(AirLinkIssue(
-            "AIR_LINK_FAMILY_MISMATCH", "Flight, Ground and AIR Link radio families differ"
+            "AIR_LINK_FAMILY_MISMATCH", "Selected radio family differs from AIR Link"
         ))
-    selected_frequency = link.frequency_hz
-    minimum_frequency = max(flight_radio.frequency_min_hz, ground_radio.frequency_min_hz)
-    maximum_frequency = min(flight_radio.frequency_max_hz, ground_radio.frequency_max_hz)
-    if not minimum_frequency <= selected_frequency <= maximum_frequency:
-        issues.append(AirLinkIssue(
-            "AIR_LINK_FREQUENCY_OUT_OF_RANGE",
-            "Selected frequency is outside the radio range overlap",
-        ))
-    issues.extend(_PhyIssues_Get(link, flight_radio, "Flight"))
-    issues.extend(_PhyIssues_Get(link, ground_radio, "Ground"))
+    if radios:
+        minimum_frequency = max(radio.frequency_min_hz for _endpoint, radio in radios)
+        maximum_frequency = min(radio.frequency_max_hz for _endpoint, radio in radios)
+        if not minimum_frequency <= link.frequency_hz <= maximum_frequency:
+            issues.append(AirLinkIssue(
+                "AIR_LINK_FREQUENCY_OUT_OF_RANGE",
+                "Selected frequency is outside the radio range overlap",
+            ))
+    for endpoint, radio in radios:
+        issues.extend(_PhyIssues_Get(link, radio, endpoint))
+    if flight is not None and flight.radio is not None:
+        flight_modules = tuple(flight.radio.modules.values())
+        if len(flight_modules) != 1 or model.flight_tx_power_dbm not in flight_modules[0]["supported_tx_powers_dbm"]:
+            issues.append(AirLinkIssue(
+                "AIR_LINK_TX_POWER_UNSUPPORTED",
+                "Flight TX power is not supported by the selected radio module",
+            ))
+    if ground is not None and ground.radio is not None:
+        module = ground.radio.modules.get(model.ground_target.module_variant)
+        if module is not None and model.ground_target.tx_power_dbm not in module["supported_tx_powers_dbm"]:
+            issues.append(AirLinkIssue(
+                "AIR_LINK_TX_POWER_UNSUPPORTED",
+                "Ground TX power is not supported by the selected radio module",
+            ))
 
     protocol = model.protocols.get("telemetry")
     minimum_air_mtu = 0
@@ -130,8 +141,12 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
             "AIR_LINK_PHY_INCOMPATIBLE", "AIR Link protocol does not match Flight telemetry"
         ))
     # GSP AIR_RX has three wrapper bytes; the GS reference has a 64-byte payload.
-    usable_mtu = min(flight_radio.maximum_payload, ground_radio.maximum_payload, 61)
-    if not minimum_air_mtu <= link.packet_mtu <= usable_mtu:
+    usable_mtu = min(
+        (radio.maximum_payload for _endpoint, radio in radios), default=0
+    )
+    if model.ground_target.enabled:
+        usable_mtu = min(usable_mtu, 61)
+    if radios and not minimum_air_mtu <= link.packet_mtu <= usable_mtu:
         issues.append(AirLinkIssue(
             "AIR_LINK_MTU_TOO_SMALL",
             f"AIR requires {minimum_air_mtu} bytes and this bridge permits {usable_mtu}",

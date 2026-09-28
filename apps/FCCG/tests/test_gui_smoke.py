@@ -44,7 +44,9 @@ def test_build_log_and_internal_build_actions_are_advanced_only(
         assert not advanced.Expanded_Is()
         assert advanced.body.isAncestorOf(window.build_page.build_log)
         assert advanced.body.isHidden()
-        assert "build" in window.build_page.action_buttons
+        assert "flight_build" in window.build_page.action_buttons
+        assert "ground_build" in window.build_page.action_buttons
+        assert "generate_flight" not in window.build_page.action_buttons
         assert "build_release" not in window.build_page.action_buttons
         assert "flash" not in window.build_page.action_buttons
     finally:
@@ -243,19 +245,14 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
         assert [
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
-        ] == ["设备", "飞控配置", "算法参数", "硬件连接", "AIR Link", "地面站", "代码生成与构建"]
+        ] == ["飞控设备", "飞行配置", "导航配置", "遥测配置", "飞控硬件", "地面站硬件", "构建与检测"]
         assert not hasattr(window.build_page, "configuration_combo")
         assert set(window.build_page.action_buttons) == {
-            "generate_apply",
-            "generate_flight",
-            "generate_ground",
-            "generate_all",
-            "open_vscode",
-            "open_folder",
+            "flight_build", "flight_clean", "flight_open_vscode",
+            "flight_open_folder", "flight_artifact_check",
+            "ground_build", "ground_clean", "ground_open_vscode",
+            "ground_open_folder", "ground_artifact_check",
             "open_firmware_output",
-            "build",
-            "clean",
-            "clean_all",
             "host_tests",
             "architecture_check",
             "power10_check",
@@ -263,8 +260,8 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
             "artifact_check",
             "tool_install_guide",
         }
-        assert not window.build_page.action_buttons["open_vscode"].isEnabled()
-        assert not window.build_page.action_buttons["open_folder"].isEnabled()
+        assert not window.build_page.action_buttons["flight_open_vscode"].isEnabled()
+        assert not window.build_page.action_buttons["ground_open_folder"].isEnabled()
         assert not window.build_page.action_buttons[
             "open_firmware_output"
         ].isEnabled()
@@ -282,15 +279,15 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
         ] == [
-                "Devices",
+                "Flight Devices",
                 "Flight Configuration",
-                "Algorithm Parameters",
-                "Hardware Connection",
-                "AIR Link",
-                "Ground Station",
-                "Code Generation & Build",
+                "Navigation Configuration",
+                "Telemetry Configuration",
+                "Flight Hardware",
+                "Ground Station Hardware",
+                "Build & Validation",
             ]
-        assert window.build_page.action_buttons["build"].text() == "Build Firmware in FCCG"
+        assert window.build_page.action_buttons["flight_build"].text() == "Build Firmware"
         assert all(
             "Build Release" not in button.text()
             for button in window.build_page.action_buttons.values()
@@ -334,7 +331,10 @@ def test_ground_page_selects_verified_board_radio_and_uart(tmp_path: Path, qapp)
         )
         assert page.status.text() == "地面站：READY"
         assert window._model.ground_target.pc_resource == "PLATFORM_UART_1"
-        window.air_link_page.fields["frequency_hz"].setValue(2400.0)
+        frequency = window.air_link_page.fields["frequency_hz"]
+        frequency.CommittedValue_Set(2473.0)
+        frequency.lineEdit().setText("2400.000")
+        QTest.keyClick(frequency, Qt.Key.Key_Return)
         assert "AIR_LINK_FREQUENCY_OUT_OF_RANGE" in window.air_link_page.status.text()
     finally:
         window.close()
@@ -777,7 +777,7 @@ def test_background_worker_updates_shared_progress(tmp_path: Path, qapp) -> None
         window.close()
 
 
-def test_save_prepare_build_and_advanced_actions_use_shared_worker(
+def test_target_build_controls_and_quality_actions_use_shared_worker(
     tmp_path: Path, workspace_root: Path, qapp, monkeypatch
 ) -> None:
     service = FccgService(workspace_root)
@@ -804,7 +804,6 @@ def test_save_prepare_build_and_advanced_actions_use_shared_worker(
     try:
         window._Project_Open(project_root)
         monkeypatch.setattr(window, "Task_Run", task_run)
-        window._Build_Request("generate_apply")
         plan_calls: list[tuple[object, Path]] = []
         original_plan_create = service.GenerationPlan_Create
 
@@ -815,32 +814,17 @@ def test_save_prepare_build_and_advanced_actions_use_shared_worker(
         monkeypatch.setattr(service, "GenerationPlan_Create", plan_create)
         window._HardwarePrepare_Request()
         assert plan_calls == []
-        assert window.build_page.action_buttons["open_vscode"].isEnabled()
-        assert window.build_page.action_buttons["open_folder"].isEnabled()
+        assert not window.build_page.action_buttons["flight_open_vscode"].isEnabled()
+        assert not window.build_page.action_buttons["ground_open_folder"].isEnabled()
+        assert window.build_page.root_layout.indexOf(window.build_page.tool_status_group) == 1
         descriptor_before_validation = window._model.Dictionary_Get()
-        window._Build_Request("build")
-        assert window._model.Dictionary_Get() == descriptor_before_validation
         window._Build_Request("architecture_check")
-        window._Build_Request("clean")
-        window._Build_Request("clean_all")
-        assert (
-            window.build_page.action_buttons["clean"].text()
-            == "清理 FCCG 构建产物"
-        )
-        assert "build/FCCG、.eide/build" in (
-            window.build_page.action_buttons["clean_all"].toolTip()
-        )
+        assert window._model.Dictionary_Get() == descriptor_before_validation
+        assert window.build_page.action_buttons["flight_clean"].text() == "清理"
     finally:
         window.close()
 
-    assert invocations == [
-        ("save", False),
-        ("prepare_plan", False),
-        ("build", False),
-        ("build", False),
-        ("build", False),
-        ("build", False),
-    ]
+    assert invocations == [("prepare_plan", False), ("build", False)]
 
 
 def test_hardware_prepare_plans_off_ui_thread_and_completes_safely(

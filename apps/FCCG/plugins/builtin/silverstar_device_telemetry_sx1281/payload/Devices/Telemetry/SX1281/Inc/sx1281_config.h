@@ -80,6 +80,7 @@
 #ifdef SILVERSTAR_AIR_LINK_ENABLED
 #include "air_link_config.h"
 #undef LORA_RF_FREQUENCY_HZ
+#undef LORA_TX_OUTPUT_POWER_DBM
 #undef LORA_CFG_SF
 #undef LORA_CFG_BW
 #undef LORA_CFG_CR
@@ -89,6 +90,7 @@
 #undef LORA_CFG_CRC_MODE
 #undef LORA_CFG_IQ_MODE
 #define LORA_RF_FREQUENCY_HZ            AIR_LINK_FREQUENCY_HZ
+#define LORA_TX_OUTPUT_POWER_DBM        AIR_LINK_TX_POWER_DBM
 #define LORA_CFG_SF                     AIR_LINK_SX128X_SF
 #define LORA_CFG_BW                     AIR_LINK_SX128X_BW
 #define LORA_CFG_CR                     AIR_LINK_SX128X_CR

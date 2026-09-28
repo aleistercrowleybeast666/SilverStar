@@ -57,7 +57,7 @@ def test_language_fallback_and_formatting() -> None:
         "capability.actuator.mission_action.launch_ignition"
     ) == "起飞点火功率输出"
     translator.Language_Set("en_US")
-    assert translator.Text_Get("page.board_hardware") == "Hardware Connection"
+    assert translator.Text_Get("page.board_hardware") == "Flight Hardware"
     assert translator.Text_Get("strategy.none") == "No Fusion"
     assert translator.Text_Get("unknown.stable.code") == "unknown.stable.code"
 

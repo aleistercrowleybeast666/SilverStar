@@ -44,12 +44,13 @@ from PySide6.QtWidgets import (
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.app.version import PRODUCT_NAME, __version__
-from silverstar_fccg.build.runner import BuildAction, BuildProgress, BuildResult
+from silverstar_fccg.build.runner import BuildAction, BuildProgress, BuildResult, BuildRunner
 from silverstar_fccg.build.toolchain import ArmGnuSubtoolPaths_Derive
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.path_preferences import PathPreferences
 from silverstar_fccg.core.settings import SettingsStore
+from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.core.task import (
     TaskProgressEvent_Parse,
     TaskProgressState,
@@ -153,9 +154,9 @@ class MainWindow(QMainWindow):
     PAGE_CODES = (
         "page.devices",
         "page.flight_configuration",
-        "page.algorithm_parameters",
+        "page.navigation_configuration",
+        "page.telemetry_configuration",
         "page.board_hardware",
-        "page.air_link",
         "page.ground",
         "page.build",
     )
@@ -205,6 +206,7 @@ class MainWindow(QMainWindow):
         self._logging_refresh_scheduled = False
         self._validation_focus_widget: QWidget | None = None
         self._toolchain_dialog: QDialog | None = None
+        self._toolchain_checked = False
         self._install_guide_dialog: QDialog | None = None
         self._action_enabled_snapshot: dict[object, bool] = {}
         self.setWindowTitle(PRODUCT_NAME)
@@ -298,12 +300,36 @@ class MainWindow(QMainWindow):
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
         self.build_page = BuildPage(self._translator)
+        # Keep the existing editors and signal ownership while placing each
+        # configuration group on the page that owns it in the user workflow.
+        for group in (
+            self.flight_configuration_page.strategy_group,
+            self.flight_configuration_page.mode_group,
+            self.flight_configuration_page.capability_group,
+        ):
+            self.flight_configuration_page.root_layout.removeWidget(group)
+        for index, group in enumerate((
+            self.flight_configuration_page.capability_group,
+            self.flight_configuration_page.mode_group,
+            self.flight_configuration_page.strategy_group,
+        ), start=1):
+            self.algorithm_parameters_page.root_layout.insertWidget(index, group)
+        self.devices_page.root_layout.removeWidget(self.devices_page.telemetry_group)
+        self.ground_target_page.root_layout.removeWidget(
+            self.ground_target_page.radio_selection_group
+        )
+        for index, group in enumerate((
+            self.flight_configuration_page.telemetry_protocol_group,
+            self.devices_page.telemetry_group,
+            self.ground_target_page.radio_selection_group,
+        ), start=1):
+            self.air_link_page.root_layout.insertWidget(index, group)
         self._page_widgets = (
             self.devices_page,
             self.flight_configuration_page,
             self.algorithm_parameters_page,
-            self.board_hardware_page,
             self.air_link_page,
+            self.board_hardware_page,
             self.ground_target_page,
             self.build_page,
         )
@@ -368,6 +394,7 @@ class MainWindow(QMainWindow):
 
     def _Signals_Connect(self) -> None:
         self.navigation_list.currentRowChanged.connect(self.pages.setCurrentIndex)
+        self.navigation_list.currentRowChanged.connect(self._NavigationPage_Change)
         self.language_combo.currentIndexChanged.connect(self._Language_Selected)
         self.theme_combo.currentIndexChanged.connect(self._Theme_Selected)
         self.new_action.triggered.connect(self._NewProject_Show)
@@ -413,13 +440,20 @@ class MainWindow(QMainWindow):
         self.board_hardware_page.prepareRequested.connect(
             self._HardwarePrepare_Request
         )
+        self.board_hardware_page.generateRequested.connect(
+            lambda: self._Targets_Generate("generate_flight")
+        )
         self.air_link_page.configurationChanged.connect(self._AirLink_Change)
+        self.air_link_page.endpointPowerChanged.connect(self._EndpointPower_Change)
         self.ground_target_page.enabledChanged.connect(
             lambda enabled: self._GroundTarget_Change("enabled", enabled)
         )
         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
         self.ground_target_page.importRequested.connect(self._GroundCubeMxImport_Request)
+        self.ground_target_page.generateRequested.connect(
+            lambda: self._Targets_Generate("generate_ground")
+        )
         self.flight_configuration_page.strategyChanged.connect(
             self._Strategy_Change
         )
@@ -447,6 +481,11 @@ class MainWindow(QMainWindow):
         self.plugin_manager_dialog.panel.removeRequested.connect(
             self._PluginRemove_Request
         )
+
+    def _NavigationPage_Change(self, index: int) -> None:
+        if index == self.PAGE_CODES.index("page.build") and not self._toolchain_checked:
+            self._toolchain_checked = True
+            QTimer.singleShot(0, self._Toolchains_Detect)
 
     def _Catalog_Load(self) -> None:
         self._component_views = self._service.ComponentViews_Get(
@@ -695,6 +734,16 @@ class MainWindow(QMainWindow):
             )
             self.build_page.GeneratedProject_Set(
                 display.generated_project
+            )
+            project_root = self._project_root
+            self.build_page.Targets_Set(
+                flight_generated=bool(
+                    project_root and (project_root / "Flight_Controller" / "Makefile").is_file()
+                ),
+                ground_enabled=display.model.ground_target.enabled,
+                ground_generated=bool(
+                    project_root and (project_root / "Ground_Station" / "Makefile").is_file()
+                ),
             )
             self.build_page.FirmwareArtifact_Set(
                 str(display.firmware_output_directory or ""),
@@ -1412,7 +1461,7 @@ class MainWindow(QMainWindow):
         manifest = self._service.catalog.Component_Get(selected) if selected else None
         requirements = {
             "modules": tuple(
-                (str(item.get("display_name", identity)), identity)
+                (str(item.get("display_name", item.get("model", identity))), identity)
                 for identity, item in (manifest.radio.modules.items()
                                        if manifest is not None and manifest.radio is not None else ())
             ),
@@ -1425,6 +1474,10 @@ class MainWindow(QMainWindow):
         self.air_link_page.Configuration_Set(
             model.air_link, AirLinkIssues_Get(model, self._service.catalog)
         )
+        self.air_link_page.EndpointPowers_Set(
+            model.flight_tx_power_dbm, model.ground_target.tx_power_dbm,
+            model.ground_target.enabled,
+        )
         self.ground_target_page.Configuration_Set(
             model.ground_target, boards, radios, requirements,
             GroundTargetIssues_Get(model, self._service.catalog),
@@ -1436,6 +1489,19 @@ class MainWindow(QMainWindow):
                 candidate, "air_link", replace(candidate.air_link, **{field: value})
             )
         )
+
+    def _EndpointPower_Change(self, endpoint: str, value: int) -> None:
+        if endpoint == "flight":
+            self._ProjectConfiguration_Change(
+                lambda candidate: setattr(candidate, "flight_tx_power_dbm", value)
+            )
+        elif endpoint == "ground":
+            self._ProjectConfiguration_Change(
+                lambda candidate: setattr(
+                    candidate, "ground_target",
+                    replace(candidate.ground_target, tx_power_dbm=value),
+                )
+            )
 
     def _GroundTarget_Change(self, field: str, value: object) -> None:
         if field == "board":
@@ -2567,6 +2633,9 @@ class MainWindow(QMainWindow):
 
     def _Build_Request(self, action_text: str) -> None:
         self._ProjectModel_Sync()
+        if action_text.startswith(("flight_", "ground_")):
+            self._TargetAction_Request(action_text)
+            return
         if action_text in {"generate_flight", "generate_ground", "generate_all"}:
             self._Targets_Generate(action_text)
             return
@@ -2691,6 +2760,91 @@ class MainWindow(QMainWindow):
             indeterminate=False,
             line_callback=self._BuildLine_Append,
         )
+
+    def _TargetAction_Request(self, action_text: str) -> None:
+        target, separator, operation = action_text.partition("_")
+        if not separator or target not in {"flight", "ground"}:
+            return
+        if self._project_root is None:
+            self._Error_Show(self._translator.Text_Get("error.generate_before_open"))
+            return
+        directory_name = "Flight_Controller" if target == "flight" else "Ground_Station"
+        output_policy = WorkspacePolicy(self._project_root)
+        target_root = output_policy.Path_Resolve(self._project_root / directory_name, allow_root=False)
+        if not (target_root / "Makefile").is_file():
+            self._Error_Show(self._translator.Text_Get("error.generate_before_open"))
+            return
+        if operation in {"open_vscode", "open_folder"}:
+            destination = (
+                target_root / f"{directory_name}.code-workspace"
+                if operation == "open_vscode" else target_root
+            )
+            if not destination.exists():
+                self._Error_Show(self._translator.Text_Get("error.generate_before_open"))
+                return
+            opened = (
+                self._VsCodeWorkspace_Launch(destination).succeeded
+                if operation == "open_vscode" else
+                QDesktopServices.openUrl(QUrl.fromLocalFile(str(destination)))
+            )
+            if not opened:
+                self._Error_Show(self._translator.Text_Get(
+                    "error.open_generated_project", path=str(destination)
+                ))
+            return
+        if operation == "artifact_check":
+            artifact = target_root / "build" / (
+                "ground.elf" if target == "ground" else ""
+            )
+            found = artifact.is_file() if target == "ground" else any(
+                (target_root / "build").rglob("*.elf")
+            )
+            self.build_page.BuildLog_Append(
+                f"{directory_name}: {'artifact found' if found else 'no ELF artifact'}"
+            )
+            return
+        if operation not in {"build", "clean"}:
+            return
+        action = BuildAction.BUILD if operation == "build" else BuildAction.CLEAN
+        selected_model = deepcopy(self._model)
+        if target == "ground":
+            selected_model.build = selected_model.ground_target.build
+        self.build_page.BuildLog_Set("")
+
+        def run(context) -> BuildResult:
+            if action == BuildAction.CLEAN:
+                build_root = output_policy.Path_Resolve(target_root / "build", allow_root=False)
+                if build_root.exists():
+                    if not build_root.is_dir() or build_root.is_symlink():
+                        raise ValueError("Target build path is not a normal directory")
+                    shutil.rmtree(build_root)
+                return BuildResult(action, ("clean", str(build_root)), 0, "Build directory cleaned")
+            runner = BuildRunner(output_policy)
+            command = runner.Command_Get(selected_model, BuildAction.BUILD)
+            return_code, lines = runner._Process_Run(
+                command, target_root, runner._Environment_Get(selected_model, action),
+                context.token if hasattr(context, "token") else context,
+                context.Line_Report,
+            )
+            return BuildResult(action, command, return_code, "".join(lines),
+                               live_streamed=True)
+
+        self.Task_Run(
+            run, self._TargetBuild_Complete, self._Build_Error,
+            indeterminate=True, line_callback=self._BuildLine_Append,
+        )
+
+    def _TargetBuild_Complete(self, result: BuildResult) -> None:
+        self.status_label.setText(
+            self._translator.Text_Get(
+                "status.build_succeeded" if result.succeeded else "status.build_failed",
+                action=result.action.value,
+            )
+        )
+        if not result.succeeded:
+            self._Error_Show(
+                self._translator.Text_Get("error.build_failed_summary"), result.output
+            )
 
     def _FirmwareOutput_Open(self) -> None:
         directory, artifact_name = self._FirmwareArtifact_Get(self._model)

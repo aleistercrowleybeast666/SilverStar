@@ -233,7 +233,8 @@
     "modules": {
       "e28_2g4m12sx": {
         "model": "E28-2G4M12SX",
-        "tx_power_limit_dbm": 12
+        "tx_power_limit_dbm": 12,
+        "supported_tx_powers_dbm": [12]
       }
     }
   },

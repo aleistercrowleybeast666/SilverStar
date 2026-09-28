@@ -328,7 +328,7 @@ def GeneratedFiles_Render(
     }
 
 
-def AirLinkHeader_Render(model: ProjectModel) -> str:
+def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
     link = model.air_link
     bandwidths = {200000: "LORA_BW_0200", 400000: "LORA_BW_0400", 800000: "LORA_BW_0800", 1600000: "LORA_BW_1600"}
     coding_rates = {"4/5": "LORA_CR_4_5", "4/6": "LORA_CR_4_6", "4/7": "LORA_CR_4_7", "4/8": "LORA_CR_4_8"}
@@ -341,6 +341,7 @@ def AirLinkHeader_Render(model: ProjectModel) -> str:
 
 /* Shared SilverStar AIR Link snapshot; AIR M0 remains a separate wire protocol. */
 #define AIR_LINK_FREQUENCY_HZ {link.frequency_hz}UL
+#define AIR_LINK_TX_POWER_DBM {model.flight_tx_power_dbm if target == "flight" else model.ground_target.tx_power_dbm}
 #define AIR_LINK_SX128X_SF LORA_SF{link.spreading_factor}
 #define AIR_LINK_SX128X_BW {bandwidths[link.bandwidth_hz]}
 #define AIR_LINK_SX128X_CR {coding_rates[link.coding_rate]}

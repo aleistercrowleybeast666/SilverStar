@@ -26,10 +26,13 @@ class BuildPage(ScrollableLocalizedPage):
     detectionRequested = Signal()
     actionRequested = Signal(str)
 
-    _PRIMARY_ACTIONS = (
-        ("generate_apply", "action.generate_apply_project"),
+    _PRIMARY_ACTIONS: tuple[tuple[str, str], ...] = ()
+    _TARGET_ACTIONS = (
+        ("build", "action.target_build"),
+        ("clean", "action.target_clean"),
         ("open_vscode", "action.open_vscode_workspace"),
         ("open_folder", "action.open_project_folder"),
+        ("artifact_check", "action.target_artifact_check"),
     )
     _QUALITY_ACTIONS = (
         ("host_tests", "action.host_tests"),
@@ -55,52 +58,24 @@ class BuildPage(ScrollableLocalizedPage):
             self.Group_Create("group.build_configuration", summary_layout)
         )
 
-        primary_actions = QHBoxLayout()
         self.action_buttons: dict[str, QPushButton] = {}
-        for action_id, key in self._PRIMARY_ACTIONS:
-            button = self._ActionButton_Create(action_id, key)
-            if action_id == "generate_apply":
-                button.setObjectName("primaryButton")
-            primary_actions.addWidget(button)
-        primary_actions.addStretch(1)
-        self.root_layout.addLayout(primary_actions)
-        target_actions = QHBoxLayout()
-        for action_id, key in (
-            ("generate_flight", "action.generate_flight"),
-            ("generate_ground", "action.generate_ground"),
-            ("generate_all", "action.generate_all"),
+        self.target_status_labels: dict[str, QLabel] = {}
+        for target, group_key in (
+            ("flight", "group.flight_build"),
+            ("ground", "group.ground_build_target"),
         ):
-            target_actions.addWidget(self._ActionButton_Create(action_id, key))
-        target_actions.addStretch(1)
-        self.root_layout.addLayout(target_actions)
+            target_layout = QVBoxLayout()
+            status_label = QLabel()
+            self.target_status_labels[target] = status_label
+            target_layout.addWidget(status_label)
+            actions = QHBoxLayout()
+            for action_id, key in self._TARGET_ACTIONS:
+                actions.addWidget(self._ActionButton_Create(f"{target}_{action_id}", key))
+            actions.addStretch(1)
+            target_layout.addLayout(actions)
+            self.root_layout.addWidget(self.Group_Create(group_key, target_layout))
 
         advanced_layout = QVBoxLayout()
-        verification_label = QLabel()
-        verification_label.setObjectName("sectionLabel")
-        self.Text_Register(verification_label, "build.section.verification")
-        advanced_layout.addWidget(verification_label)
-        verification_help = QLabel()
-        verification_help.setWordWrap(True)
-        verification_help.setProperty("muted", True)
-        self.Text_Register(verification_help, "build.help.verification")
-        advanced_layout.addWidget(verification_help)
-        verification_row = QHBoxLayout()
-        verification_button = self._ActionButton_Create(
-            "build", "action.validation_build"
-        )
-        verification_button.setMinimumWidth(180)
-        verification_row.addWidget(verification_button)
-        clean_button = self._ActionButton_Create("clean", "action.clean")
-        clean_button.setMinimumWidth(120)
-        verification_row.addWidget(clean_button)
-        clean_all_button = self._ActionButton_Create(
-            "clean_all", "action.clean_all"
-        )
-        clean_all_button.setMinimumWidth(120)
-        verification_row.addWidget(clean_all_button)
-        verification_row.addStretch(1)
-        advanced_layout.addLayout(verification_row)
-
         quality_label = QLabel()
         quality_label.setObjectName("sectionLabel")
         self.Text_Register(quality_label, "build.section.quality")
@@ -184,7 +159,7 @@ class BuildPage(ScrollableLocalizedPage):
         self.tool_status_group = self.Group_Create(
             "build.section.toolchain", tool_status_layout
         )
-        advanced_layout.addWidget(self.tool_status_group)
+        self.root_layout.insertWidget(1, self.tool_status_group)
         detect_row = QHBoxLayout()
         self.detect_button = QPushButton()
         self.detect_button.setMinimumWidth(120)
@@ -199,7 +174,7 @@ class BuildPage(ScrollableLocalizedPage):
         self.install_guide_button.setMinimumWidth(120)
         detect_row.addWidget(self.install_guide_button)
         detect_row.addStretch(1)
-        advanced_layout.addLayout(detect_row)
+        self.root_layout.insertLayout(2, detect_row)
         self.advanced_section = CollapsibleSection(expanded=False)
         self.advanced_section.BodyLayout_Set(advanced_layout)
         self.advanced_group = self.advanced_section
@@ -227,16 +202,18 @@ class BuildPage(ScrollableLocalizedPage):
         advanced_layout.addWidget(self.build_detail_section)
         self.root_layout.addStretch(1)
         self._tools: tuple[ToolchainToolView, ...] = ()
+        self._target_generated = {"flight": False, "ground": False}
+        self._ground_enabled = False
         self._action_keys = {
             action_id: key
             for action_id, key in (
                 *self._PRIMARY_ACTIONS,
                 *self._QUALITY_ACTIONS,
-                ("build", "action.validation_build"),
-                ("clean", "action.clean"),
-                ("clean_all", "action.clean_all"),
                 ("open_firmware_output", "action.open_firmware_output"),
                 ("tool_install_guide", "action.install_guide"),
+                *((f"{target}_{action}", key)
+                  for target in ("flight", "ground")
+                  for action, key in self._TARGET_ACTIONS),
             )
         }
         self.Language_Apply(translator)
@@ -291,9 +268,6 @@ class BuildPage(ScrollableLocalizedPage):
         make_found = status.get("make") == "found"
         host_found = status.get("host_gcc") == "found"
         enabled_by_action = {
-            "build": compiler_found and make_found,
-            "clean": make_found,
-            "clean_all": make_found,
             "host_tests": host_found and make_found,
             "architecture_check": make_found,
             "power10_check": make_found,
@@ -302,7 +276,35 @@ class BuildPage(ScrollableLocalizedPage):
         }
         for action_id, enabled in enabled_by_action.items():
             self.action_buttons[action_id].setEnabled(enabled)
+        self._TargetActions_Update()
         self._ActionTooltips_Apply()
+
+    def Targets_Set(self, *, flight_generated: bool, ground_enabled: bool,
+                    ground_generated: bool) -> None:
+        self._target_generated = {
+            "flight": flight_generated, "ground": ground_generated,
+        }
+        self._ground_enabled = ground_enabled
+        self._TargetActions_Update()
+
+    def _TargetActions_Update(self) -> None:
+        statuses = {tool.tool_id: tool.status for tool in self._tools}
+        for target in ("flight", "ground"):
+            generated = self._target_generated[target]
+            configured = target == "flight" or self._ground_enabled
+            status_key = (
+                "target.status.not_configured" if not configured
+                else "target.status.not_generated" if not generated
+                else "target.status.generated"
+            )
+            self.target_status_labels[target].setText(self._translator.Text_Get(status_key))
+            for action, _key in self._TARGET_ACTIONS:
+                enabled = generated and configured
+                if action == "build":
+                    enabled = enabled and statuses.get("compiler") == "found" and statuses.get("make") == "found"
+                elif action == "clean":
+                    enabled = enabled and statuses.get("make") == "found"
+                self.action_buttons[f"{target}_{action}"].setEnabled(enabled)
 
     def QualityResults_Set(self, records: Iterable[object]) -> None:
         self._quality_records = tuple(records)
@@ -360,9 +362,6 @@ class BuildPage(ScrollableLocalizedPage):
             return
         status = {tool.tool_id: tool.status for tool in self._tools}
         requirements = {
-            "build": ("compiler", "make"),
-            "clean": ("make",),
-            "clean_all": ("make",),
             "host_tests": ("host_gcc", "make"),
             "architecture_check": ("make",),
             "power10_check": ("make",),
@@ -392,10 +391,8 @@ class BuildPage(ScrollableLocalizedPage):
         self.environment_value.setText(environment or "—")
 
     def GeneratedProject_Set(self, available: bool) -> None:
-        for action_id in ("open_vscode", "open_folder"):
-            button = self.action_buttons.get(action_id)
-            if button is not None:
-                button.setEnabled(available)
+        self._target_generated["flight"] = available
+        self._TargetActions_Update()
 
     def FirmwareArtifact_Set(self, directory: str, artifact_name: str) -> None:
         self.firmware_output_value.setText(directory or "—")
@@ -430,6 +427,7 @@ class BuildPage(ScrollableLocalizedPage):
         if hasattr(self, "quality_result_labels"):
             self.QualityResults_Set(getattr(self, "_quality_records", ()))
         self._ActionTooltips_Apply()
+        self._TargetActions_Update()
 
 
 def DefaultTools_Get() -> tuple[ToolchainToolView, ...]:

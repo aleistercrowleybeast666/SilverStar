@@ -618,6 +618,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
     autoAssignRequested = Signal()
     assignmentChanged = Signal(str, str)
     prepareRequested = Signal()
+    generateRequested = Signal()
     manualValidationRequested = Signal()
     i2cExternalPullupChanged = Signal(str, bool)
 
@@ -667,6 +668,13 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         self.root_layout.addWidget(
             self.Group_Create("group.board_selection", selection_form)
         )
+        self.generate_button = QPushButton()
+        self.generate_button.setObjectName("primaryButton")
+        self.Text_Register(self.generate_button, "action.generate_flight_project")
+        self.generate_button.clicked.connect(
+            lambda _checked=False: self.generateRequested.emit()
+        )
+        self.root_layout.addWidget(self.generate_button)
 
         self.platform_form = QFormLayout()
         self.platform_values: dict[str, QLabel] = {}
@@ -895,9 +903,10 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         self.custom_widget.setVisible(custom_selected)
         self.export_button.setEnabled(custom_ready)
         board_selected = hardware_mode == "board_plugin"
-        self.preparation_label.setVisible(board_selected)
-        self.preparation_widget.setVisible(board_selected)
+        self.preparation_label.setVisible(False)
+        self.preparation_widget.setVisible(False)
         self.prepare_button.setEnabled(board_selected)
+        self.generate_button.setEnabled(hardware_mode != "unselected")
         custom_actions_enabled = hardware_mode == "custom"
         self.auto_button.setEnabled(custom_actions_enabled)
         self.manual_validation_button.setEnabled(custom_actions_enabled)
@@ -1249,11 +1258,25 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             "group.communication_protocols", self.protocol_form
         )
         self.root_layout.addWidget(self.protocol_group)
+        self.telemetry_protocol_form = QFormLayout()
+        self.telemetry_protocol_group = self.Group_Create(
+            "group.telemetry_protocol", self.telemetry_protocol_form
+        )
+        self.mission_strategy_form = QFormLayout()
+        self.mission_strategy_group = self.Group_Create(
+            "group.mission_strategy", self.mission_strategy_form
+        )
+        self.root_layout.addWidget(self.mission_strategy_group)
         self.strategy_form = QFormLayout()
         self.strategy_group = self.Group_Create(
             "group.strategy_selection", self.strategy_form
         )
         self.root_layout.addWidget(self.strategy_group)
+        self.mission_mode_layout = QVBoxLayout()
+        self.mission_mode_group = self.Group_Create(
+            "group.mission_modes", self.mission_mode_layout
+        )
+        self.root_layout.addWidget(self.mission_mode_group)
         self.mode_layout = QVBoxLayout()
         self.mode_group = self.Group_Create("group.mode_selection", self.mode_layout)
         self.root_layout.addWidget(self.mode_group)
@@ -1409,10 +1432,13 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         self._mode_availability = dict(mode_availability or {})
         while self.strategy_form.rowCount():
             self.strategy_form.removeRow(0)
-        while self.mode_layout.count():
-            item = self.mode_layout.takeAt(0)
-            if item.widget() is not None:
-                item.widget().deleteLater()
+        while self.mission_strategy_form.rowCount():
+            self.mission_strategy_form.removeRow(0)
+        for target_layout in (self.mode_layout, self.mission_mode_layout):
+            while target_layout.count():
+                item = target_layout.takeAt(0)
+                if item.widget() is not None:
+                    item.widget().deleteLater()
         self.strategy_combos.clear()
         self.mode_checks.clear()
         self.mode_parameter_spins.clear()
@@ -1461,7 +1487,11 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                     selected_slot, editor.currentData()
                 )
             )
-            self.strategy_form.addRow(
+            target_form = (
+                self.strategy_form if slot in {"alignment", "ins", "estimator"}
+                else self.mission_strategy_form
+            )
+            target_form.addRow(
                 QLabel(self._translator.Text_Get(f"strategy.slot.{slot}")), combo
             )
             self.strategy_combos[slot] = combo
@@ -1570,7 +1600,10 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                 section_layout.addWidget(option_widget)
                 checks.append(check)
             section_layout.addStretch(1)
-            self.mode_layout.addWidget(section)
+            target_layout = (
+                self.mode_layout if slot == "calibration" else self.mission_mode_layout
+            )
+            target_layout.addWidget(section)
             self.mode_checks[slot] = checks
 
     def Protocols_Set(
@@ -1584,6 +1617,11 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         self._selected_protocol_profiles = dict(selected)
         while self.protocol_form.count():
             item = self.protocol_form.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+        while self.telemetry_protocol_form.count():
+            item = self.telemetry_protocol_form.takeAt(0)
             widget = item.widget()
             if widget is not None:
                 widget.deleteLater()
@@ -1655,7 +1693,11 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             )
             editor = combo
             self.protocol_combos[category] = combo
-            self.protocol_form.addRow(
+            target_form = (
+                self.telemetry_protocol_form if category == "telemetry"
+                else self.protocol_form
+            )
+            target_form.addRow(
                 QLabel(
                     self._translator.Text_Get(
                         f"protocol.category.{category}"

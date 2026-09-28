@@ -199,6 +199,7 @@ class GroundTargetConfiguration:
     pc_interface: str = ""
     pc_resource: str = ""
     baudrate: int = 230400
+    tx_power_dbm: int = 12
     build: BuildOptions = field(default_factory=BuildOptions)
 
 
@@ -232,6 +233,7 @@ class ProjectModel:
     )
     build: BuildOptions = field(default_factory=BuildOptions)
     air_link: AirLinkConfiguration = field(default_factory=AirLinkConfiguration)
+    flight_tx_power_dbm: int = 12
     ground_target: GroundTargetConfiguration = field(default_factory=GroundTargetConfiguration)
     generated_glue: list[str] = field(
         default_factory=lambda: [
@@ -386,6 +388,7 @@ class ProjectModel:
                 "assignment_fingerprint": self.hardware.assignment_fingerprint,
             },
             "air_link": asdict(self.air_link),
+            "flight_tx_power_dbm": self.flight_tx_power_dbm,
             "ground_target": {
                 "enabled": self.ground_target.enabled,
                 "mcu": self.ground_target.mcu,
@@ -397,6 +400,7 @@ class ProjectModel:
                 "pc_interface": self.ground_target.pc_interface,
                 "pc_resource": self.ground_target.pc_resource,
                 "baudrate": self.ground_target.baudrate,
+                "tx_power_dbm": self.ground_target.tx_power_dbm,
                 "build": _Build_Dictionary(self.ground_target.build),
             },
             "resources": dict(sorted(self.resource_assignments.items())),
@@ -1507,10 +1511,11 @@ def _AirLink_Parse(value: Any) -> AirLinkConfiguration:
 
 def _GroundTarget_Parse(value: Any) -> GroundTargetConfiguration:
     data = _Object_Require(value, "ground_target")
-    if set(data) != {
+    expected = {
         "enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant",
         "resources", "pc_interface", "pc_resource", "baudrate", "build",
-    }:
+    }
+    if set(data) not in (expected, expected | {"tx_power_dbm"}):
         raise ProjectModelError("ground_target has missing or unknown fields")
     if type(data["enabled"]) is not bool:
         raise ProjectModelError("ground_target.enabled must be boolean")
@@ -1525,6 +1530,9 @@ def _GroundTarget_Parse(value: Any) -> GroundTargetConfiguration:
         raise ProjectModelError("ground_target.pc_interface is invalid")
     if type(data["baudrate"]) is not int or data["baudrate"] <= 0:
         raise ProjectModelError("ground_target.baudrate must be positive")
+    tx_power = data.get("tx_power_dbm", 12)
+    if type(tx_power) is not int:
+        raise ProjectModelError("ground_target.tx_power_dbm must be integer")
     resources = _Object_Require(data["resources"], "ground_target.resources")
     if any(
         not isinstance(key, str) or not RESOURCE_KEY_PATTERN.fullmatch(key)
@@ -1538,6 +1546,7 @@ def _GroundTarget_Parse(value: Any) -> GroundTargetConfiguration:
         radio_plugin=data["radio_plugin"], module_variant=data["module_variant"],
         resource_assignments=dict(resources), pc_interface=data["pc_interface"],
         pc_resource=data["pc_resource"], baudrate=data["baudrate"],
+        tx_power_dbm=tx_power,
         build=_Build_Parse(data["build"]),
     )
 
@@ -1627,6 +1636,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         "protocols",
         "hardware",
         "air_link",
+        "flight_tx_power_dbm",
         "ground_target",
         "resources",
         "capability_sources",
@@ -1637,6 +1647,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         "component_provenance",
         "reference_provenance",
     }
+    if "flight_tx_power_dbm" not in root:
+        root["flight_tx_power_dbm"] = 12
     if set(root) != required_root:
         missing = required_root - set(root)
         unknown = set(root) - required_root
@@ -1679,6 +1691,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     protocols = _Protocols_Parse(root.get("protocols"))
     hardware = _Hardware_Parse(root.get("hardware"), board=board)
     air_link = _AirLink_Parse(root.get("air_link"))
+    if type(root["flight_tx_power_dbm"]) is not int:
+        raise ProjectModelError("flight_tx_power_dbm must be integer")
     ground_target = _GroundTarget_Parse(root.get("ground_target"))
     resources = _Object_Require(root.get("resources"), "resources")
     if not all(
@@ -1728,6 +1742,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         development_environment=environment,
         hardware=hardware,
         air_link=air_link,
+        flight_tx_power_dbm=root["flight_tx_power_dbm"],
         ground_target=ground_target,
         resource_assignments=dict(resources),
         capability_source_overrides=dict(capability_sources),

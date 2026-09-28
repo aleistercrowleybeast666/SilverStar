@@ -2926,8 +2926,12 @@ def PluginManifest_Parse(
         modules = radio_data["modules"]
         if not isinstance(modules, dict) or not modules or any(
             not isinstance(module_id, str) or not PLUGIN_ID_PATTERN.fullmatch(module_id)
-            or not isinstance(module, dict) or set(module) != {"model", "tx_power_limit_dbm"}
+            or not isinstance(module, dict) or set(module) != {"model", "tx_power_limit_dbm", "supported_tx_powers_dbm"}
             or not isinstance(module["model"], str) or type(module["tx_power_limit_dbm"]) is not int
+            or not isinstance(module["supported_tx_powers_dbm"], list)
+            or not module["supported_tx_powers_dbm"]
+            or any(type(power) is not int or power > module["tx_power_limit_dbm"]
+                   for power in module["supported_tx_powers_dbm"])
             for module_id, module in modules.items()
         ):
             raise PluginManifestError("radio.modules is invalid")

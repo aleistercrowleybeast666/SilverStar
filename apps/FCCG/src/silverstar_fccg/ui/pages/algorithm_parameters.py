@@ -27,7 +27,7 @@ class AlgorithmParametersPage(ScrollableLocalizedPage):
     sharedDefaultsRequested = Signal(str)
 
     def __init__(self, translator: Translator) -> None:
-        super().__init__(translator, "page.algorithm_parameters", "algorithm_parameters.description")
+        super().__init__(translator, "page.navigation_configuration", "page.navigation_configuration.description")
         self._content = QWidget()
         self.root_layout.addWidget(self._content)
         self.root_layout.addStretch(1)
