@@ -327,4 +327,58 @@ IMUState IMU_ReadReturnContent(uint8_t instance, uint16_t *value);
 IMUState IMU_ReadCurrentConfig(uint8_t instance, IMUConfig *config);
 IMUState IMU_ReadCurrentConfigPartial(uint8_t instance, IMUConfig *config, uint32_t *elapsed_ms);
 
+typedef enum
+{
+    Jy901bRegisterReadStartResult_Ok = 0,
+    Jy901bRegisterReadStartResult_Busy,
+    Jy901bRegisterReadStartResult_InvalidArgument,
+    Jy901bRegisterReadStartResult_IoError
+} Jy901bRegisterReadStartResult;
+
+typedef enum
+{
+    Jy901bRegisterReadPollResult_Pending = 0,
+    Jy901bRegisterReadPollResult_Complete,
+    Jy901bRegisterReadPollResult_Timeout,
+    Jy901bRegisterReadPollResult_IoError,
+    Jy901bRegisterReadPollResult_NotReady
+} Jy901bRegisterReadPollResult;
+
+Jy901bRegisterReadStartResult IMU_RegisterReadAsyncStart(
+    uint8_t instance, uint8_t reg);
+Jy901bRegisterReadPollResult IMU_RegisterReadAsyncPoll(
+    uint8_t instance, uint16_t *value);
+
+typedef enum
+{
+    Jy901bRegisterWriteStartResult_Ok = 0,
+    Jy901bRegisterWriteStartResult_Busy,
+    Jy901bRegisterWriteStartResult_InvalidArgument,
+    Jy901bRegisterWriteStartResult_IoError
+} Jy901bRegisterWriteStartResult;
+
+typedef enum
+{
+    Jy901bRegisterWritePollResult_Pending = 0,
+    Jy901bRegisterWritePollResult_Complete,
+    Jy901bRegisterWritePollResult_IoError,
+    Jy901bRegisterWritePollResult_NotReady
+} Jy901bRegisterWritePollResult;
+
+Jy901bRegisterWriteStartResult IMU_RegisterWriteAsyncStart(
+    uint8_t instance, uint8_t reg, uint16_t value);
+Jy901bRegisterWritePollResult IMU_RegisterWriteAsyncPoll(uint8_t instance);
+
+#define JY901B_STARTUP_REGISTER_COUNT 10U
+
+typedef enum
+{
+    Jy901bStartupRegisterResult_Ok = 0,
+    Jy901bStartupRegisterResult_InvalidArgument
+} Jy901bStartupRegisterResult;
+
+Jy901bStartupRegisterResult IMU_StartupRegisterGet(
+    uint8_t index, IMUOutputRate output_rate, IMUAlgorithm algorithm,
+    uint8_t *reg, uint16_t *expected_value);
+
 #endif /* __JY901B_DEVICE_H */

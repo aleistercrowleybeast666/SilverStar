@@ -154,6 +154,7 @@ GnssNeoM9nIdentifyResult GnssNeoM9n_Identify(uint8_t instance);
 typedef enum
 {
     GnssNeoM9nProbeStartResult_Ok = 0,
+    GnssNeoM9nProbeStartResult_Busy,
     GnssNeoM9nProbeStartResult_NotReady,
     GnssNeoM9nProbeStartResult_IoError
 } GnssNeoM9nProbeStartResult;

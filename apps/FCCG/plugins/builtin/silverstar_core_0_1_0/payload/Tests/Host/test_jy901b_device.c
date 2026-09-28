@@ -221,6 +221,64 @@ static void Test_WriteFailureDoesNotSave(void)
     TEST_CHECK(Test_RegisterWriteCount(tx, tx_length, IMU_REG_SAVE) == 0U);
 }
 
+static void Test_RegisterReadAsync(void)
+{
+    uint8_t response[IMU_FRAME_LEN];
+    uint16_t value = 0U;
+
+    HostPlatformMock_Reset();
+    TEST_CHECK(IMU_LocalGravitySet(SYSTEM_LOCAL_GRAVITY_MPS2) == IMU_OK);
+    TEST_CHECK(IMU_Init() == IMU_OK);
+    TEST_CHECK(IMU_RegisterReadAsyncStart(0U, IMU_REG_RRATE) ==
+               Jy901bRegisterReadStartResult_Ok);
+    TEST_CHECK(IMU_RegisterReadAsyncStart(0U, IMU_REG_RRATE) ==
+               Jy901bRegisterReadStartResult_Busy);
+    TEST_CHECK(IMU_RegisterReadAsyncPoll(0U, &value) ==
+               Jy901bRegisterReadPollResult_Pending);
+    Test_FrameBuild(IMU_REG_READ_RESPONSE, 0x1234, 0, 0, 0, response);
+    TEST_CHECK(HostPlatformMock_UartRxInject(PROJECT_RESOURCE_IMU_UART,
+                   response, sizeof(response)) == sizeof(response));
+    IMU_Poll();
+    TEST_CHECK(IMU_RegisterReadAsyncPoll(0U, &value) ==
+               Jy901bRegisterReadPollResult_Complete);
+    TEST_CHECK(value == 0x1234U);
+    TEST_CHECK(IMU_RegisterReadAsyncStart(0U, IMU_REG_RRATE) ==
+               Jy901bRegisterReadStartResult_Ok);
+    HostPlatformMock_TimeAdvanceUs(
+        ((uint64_t)IMU_CONFIG_READ_TIMEOUT_MS + 1ULL) * 1000ULL);
+    TEST_CHECK(IMU_RegisterReadAsyncPoll(0U, &value) ==
+               Jy901bRegisterReadPollResult_Timeout);
+}
+
+static void Test_RegisterWriteAsync(void)
+{
+    uint8_t tx[TEST_TX_BUFFER_CAPACITY];
+    uint16_t tx_length;
+
+    HostPlatformMock_Reset();
+    TEST_CHECK(IMU_LocalGravitySet(SYSTEM_LOCAL_GRAVITY_MPS2) == IMU_OK);
+    TEST_CHECK(IMU_Init() == IMU_OK);
+    TEST_CHECK(IMU_RegisterWriteAsyncStart(0U, IMU_REG_RRATE,
+                   OutputRate_200Hz) == Jy901bRegisterWriteStartResult_Ok);
+    TEST_CHECK(IMU_RegisterReadAsyncStart(0U, IMU_REG_RRATE) ==
+               Jy901bRegisterReadStartResult_Busy);
+    TEST_CHECK(IMU_RegisterWriteAsyncPoll(0U) ==
+               Jy901bRegisterWritePollResult_Pending);
+    HostPlatformMock_TimeAdvanceUs(
+        ((uint64_t)IMU_CFG_UNLOCK_DELAY_MS) * 1000ULL);
+    TEST_CHECK(IMU_RegisterWriteAsyncPoll(0U) ==
+               Jy901bRegisterWritePollResult_Pending);
+    HostPlatformMock_TimeAdvanceUs(
+        ((uint64_t)IMU_CFG_WRITE_DELAY_MS) * 1000ULL);
+    TEST_CHECK(IMU_RegisterWriteAsyncPoll(0U) ==
+               Jy901bRegisterWritePollResult_Complete);
+    tx_length = HostPlatformMock_UartTxTake(PROJECT_RESOURCE_IMU_UART,
+        tx, sizeof(tx));
+    TEST_CHECK(Test_RegisterWriteCount(tx, tx_length, IMU_REG_KEY) == 1U);
+    TEST_CHECK(Test_RegisterWriteCount(tx, tx_length, IMU_REG_RRATE) == 1U);
+    TEST_CHECK(Test_RegisterWriteCount(tx, tx_length, IMU_REG_SAVE) == 0U);
+}
+
 int main(void)
 {
     Test_ReturnContentComposition();
@@ -229,5 +287,7 @@ int main(void)
     Test_ApplyUsesOneSave();
     Test_WriteFailureDoesNotSave();
     Test_ReadbackMismatchDoesNotSave();
+    Test_RegisterReadAsync();
+    Test_RegisterWriteAsync();
     return Test_Finish("jy901b_device");
 }

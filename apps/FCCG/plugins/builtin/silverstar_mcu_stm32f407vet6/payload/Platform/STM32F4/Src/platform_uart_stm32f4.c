@@ -340,6 +340,31 @@ PlatformResult PlatformUart_WriteAsync(PlatformUartId id,
     return (written == length) ? PLATFORM_OK : PLATFORM_BUSY;
 }
 
+PlatformResult PlatformUart_WriteFrameAsync(PlatformUartId id,
+                                            const uint8_t *data,
+                                            uint16_t length,
+                                            PlatformUartTxPriority priority)
+{
+    PlatformUartContext *context = PlatformUart_ContextGet(id);
+    PlatformCriticalState state;
+    ringbuf_t *ring;
+
+    if ((context == NULL) || (data == NULL) || (length == 0U))
+    { return PLATFORM_INVALID_ARGUMENT; }
+    ring = PlatformUart_TxRingGet(context, priority);
+    if (ring == NULL) { return PLATFORM_UNSUPPORTED; }
+    state = PlatformCritical_Enter();
+    if (RingBuf_GetFree(ring) < length)
+    {
+        PlatformCritical_Exit(state);
+        return PLATFORM_BUSY;
+    }
+    (void)RingBuf_Push(ring, data, length);
+    PlatformCritical_Exit(state);
+    PlatformUart_TxTryStart(context);
+    return PLATFORM_OK;
+}
+
 PlatformResult PlatformUart_Read(PlatformUartId id,
                                  uint8_t *data,
                                  uint16_t capacity,

@@ -51,6 +51,11 @@ PlatformResult PlatformUart_WriteAsync(PlatformUartId id,
                                        uint16_t length,
                                        PlatformUartTxPriority priority,
                                        uint16_t *accepted_length);
+/* Enqueue one command frame completely or return BUSY without enqueueing bytes. */
+PlatformResult PlatformUart_WriteFrameAsync(PlatformUartId id,
+                                            const uint8_t *data,
+                                            uint16_t length,
+                                            PlatformUartTxPriority priority);
 PlatformResult PlatformUart_Read(PlatformUartId id,
                                  uint8_t *data,
                                  uint16_t capacity,

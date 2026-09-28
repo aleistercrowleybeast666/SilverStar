@@ -113,6 +113,14 @@ PlatformResult PlatformUart_Write(
     return PLATFORM_OK;
 }
 
+PlatformResult PlatformUart_WriteFrameAsync(
+    PlatformUartId id, const uint8_t *data, uint16_t length,
+    PlatformUartTxPriority priority)
+{
+    (void)priority;
+    return PlatformUart_Write(id, data, length, 0U);
+}
+
 PlatformResult PlatformUart_Read(
     PlatformUartId id, uint8_t *data, uint16_t capacity,
     uint16_t *read_length)

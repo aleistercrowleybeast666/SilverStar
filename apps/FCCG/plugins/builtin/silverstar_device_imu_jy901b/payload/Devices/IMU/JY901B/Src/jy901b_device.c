@@ -39,6 +39,14 @@ typedef struct
     uint32_t parser_resync_count;
     uint32_t process_limit_count;
     uint32_t port_discontinuity_sequence;
+    uint8_t register_read_active;
+    uint8_t register_read_index;
+    uint8_t register_read_frame[IMU_FRAME_LEN];
+    uint32_t register_read_started_ms;
+    uint8_t register_write_phase;
+    uint8_t register_write_reg;
+    uint16_t register_write_value;
+    uint32_t register_write_started_ms;
 } Jy901bContext;
 
 static Jy901bContext s_contexts[PROJECT_JY901B_INSTANCE_COUNT];
@@ -425,6 +433,19 @@ static IMUState IMU_SendConfigFrame(uint8_t instance, uint8_t reg, uint16_t valu
     return IMU_OK;
 }
 
+static PlatformResult IMU_ConfigFrameEnqueue(uint8_t instance,
+    uint8_t reg, uint16_t value)
+{
+    uint8_t frame[IMU_CFG_FRAME_LEN] =
+    {
+        0xFFU, 0xAAU, reg, (uint8_t)(value & 0xFFU),
+        (uint8_t)((value >> 8U) & 0xFFU)
+    };
+
+    return PlatformUart_WriteFrameAsync(Jy901bResource_UartGet(instance),
+        frame, sizeof(frame), PLATFORM_UART_TX_PRIORITY);
+}
+
 static IMUState IMU_WriteRegister(uint8_t instance, uint8_t reg, uint16_t value, uint8_t save)
 {
     IMUState state;
@@ -542,6 +563,160 @@ static uint8_t IMU_ParseReadResponseByte(uint8_t byte, uint8_t *frame, uint8_t *
     }
 
     return 0U;
+}
+
+Jy901bRegisterReadStartResult IMU_RegisterReadAsyncStart(
+    uint8_t instance, uint8_t reg)
+{
+    uint8_t cmd[IMU_CFG_FRAME_LEN] =
+        {0xFFU, 0xAAU, IMU_REG_READADDR, reg, 0x00U};
+    Jy901bContext *context;
+
+    if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
+    { return Jy901bRegisterReadStartResult_InvalidArgument; }
+    context = &s_contexts[instance];
+    if ((context->register_read_active != 0U) ||
+        (context->register_write_phase != 0U))
+    { return Jy901bRegisterReadStartResult_Busy; }
+    if (PlatformUart_RxFlush(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
+    { return Jy901bRegisterReadStartResult_IoError; }
+    {
+        PlatformResult send_result = PlatformUart_WriteFrameAsync(
+            Jy901bResource_UartGet(instance), cmd, sizeof(cmd),
+            PLATFORM_UART_TX_PRIORITY);
+        if (send_result == PLATFORM_BUSY)
+        { return Jy901bRegisterReadStartResult_Busy; }
+        if (send_result != PLATFORM_OK)
+        { return Jy901bRegisterReadStartResult_IoError; }
+    }
+    context->register_read_index = 0U;
+    context->register_read_started_ms = PlatformTime_Ms();
+    context->register_read_active = 1U;
+    return Jy901bRegisterReadStartResult_Ok;
+}
+
+Jy901bRegisterReadPollResult IMU_RegisterReadAsyncPoll(
+    uint8_t instance, uint16_t *value)
+{
+    Jy901bContext *context;
+    uint8_t buffer[IMU_TEMP_BUF_LEN];
+    uint16_t read_length = 0U;
+    uint16_t index;
+
+    if ((instance >= PROJECT_JY901B_INSTANCE_COUNT) || (value == NULL))
+    { return Jy901bRegisterReadPollResult_NotReady; }
+    context = &s_contexts[instance];
+    if (context->register_read_active == 0U)
+    { return Jy901bRegisterReadPollResult_NotReady; }
+    if (PlatformUart_Read(Jy901bResource_UartGet(instance), buffer,
+            sizeof(buffer), &read_length) != PLATFORM_OK)
+    {
+        context->register_read_active = 0U;
+        return Jy901bRegisterReadPollResult_IoError;
+    }
+    for (index = 0U; index < read_length; index++)
+    {
+        if (IMU_ParseReadResponseByte(buffer[index],
+                context->register_read_frame,
+                &context->register_read_index) != 0U)
+        {
+            *value = (uint16_t)(((uint16_t)context->register_read_frame[3] << 8) |
+                                context->register_read_frame[2]);
+            context->register_read_active = 0U;
+            return Jy901bRegisterReadPollResult_Complete;
+        }
+    }
+    if ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >=
+        IMU_CONFIG_READ_TIMEOUT_MS)
+    {
+        context->register_read_active = 0U;
+        return Jy901bRegisterReadPollResult_Timeout;
+    }
+    return Jy901bRegisterReadPollResult_Pending;
+}
+
+Jy901bRegisterWriteStartResult IMU_RegisterWriteAsyncStart(
+    uint8_t instance, uint8_t reg, uint16_t value)
+{
+    Jy901bContext *context;
+    PlatformUartId uart;
+
+    if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
+    { return Jy901bRegisterWriteStartResult_InvalidArgument; }
+    context = &s_contexts[instance];
+    if ((context->register_read_active != 0U) ||
+        (context->register_write_phase != 0U))
+    { return Jy901bRegisterWriteStartResult_Busy; }
+    uart = Jy901bResource_UartGet(instance);
+    if (PlatformUart_RxStop(uart) != PLATFORM_OK)
+    { return Jy901bRegisterWriteStartResult_IoError; }
+    {
+        PlatformResult send_result = IMU_ConfigFrameEnqueue(
+            instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
+        if (send_result == PLATFORM_BUSY)
+        {
+            (void)PlatformUart_RxRestart(uart);
+            return Jy901bRegisterWriteStartResult_Busy;
+        }
+        if (send_result != PLATFORM_OK)
+        {
+            (void)PlatformUart_RxRestart(uart);
+            return Jy901bRegisterWriteStartResult_IoError;
+        }
+    }
+    context->register_write_reg = reg;
+    context->register_write_value = value;
+    context->register_write_started_ms = PlatformTime_Ms();
+    context->register_write_phase = 1U;
+    return Jy901bRegisterWriteStartResult_Ok;
+}
+
+Jy901bRegisterWritePollResult IMU_RegisterWriteAsyncPoll(uint8_t instance)
+{
+    Jy901bContext *context;
+    PlatformUartId uart;
+    uint32_t now_ms;
+
+    if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
+    { return Jy901bRegisterWritePollResult_NotReady; }
+    context = &s_contexts[instance];
+    if (context->register_write_phase == 0U)
+    { return Jy901bRegisterWritePollResult_NotReady; }
+    uart = Jy901bResource_UartGet(instance);
+    now_ms = PlatformTime_Ms();
+    if ((uint32_t)(now_ms - context->register_write_started_ms) >=
+        IMU_CFG_WRITE_ASYNC_TIMEOUT_MS)
+    {
+        context->register_write_phase = 0U;
+        (void)PlatformUart_RxRestart(uart);
+        return Jy901bRegisterWritePollResult_IoError;
+    }
+    if (context->register_write_phase == 1U)
+    {
+        if ((uint32_t)(now_ms - context->register_write_started_ms) <
+            IMU_CFG_UNLOCK_DELAY_MS)
+        { return Jy901bRegisterWritePollResult_Pending; }
+        PlatformResult send_result = IMU_ConfigFrameEnqueue(instance,
+            context->register_write_reg, context->register_write_value);
+        if (send_result == PLATFORM_BUSY)
+        { return Jy901bRegisterWritePollResult_Pending; }
+        if (send_result != PLATFORM_OK)
+        {
+            context->register_write_phase = 0U;
+            (void)PlatformUart_RxRestart(uart);
+            return Jy901bRegisterWritePollResult_IoError;
+        }
+        context->register_write_started_ms = PlatformTime_Ms();
+        context->register_write_phase = 2U;
+        return Jy901bRegisterWritePollResult_Pending;
+    }
+    if ((uint32_t)(now_ms - context->register_write_started_ms) <
+        IMU_CFG_WRITE_DELAY_MS)
+    { return Jy901bRegisterWritePollResult_Pending; }
+    context->register_write_phase = 0U;
+    return (PlatformUart_RxRestart(uart) == PLATFORM_OK) ?
+        Jy901bRegisterWritePollResult_Complete :
+        Jy901bRegisterWritePollResult_IoError;
 }
 
 static IMUState IMU_ReadRegister(uint8_t instance, uint8_t reg, uint16_t *value)
@@ -937,6 +1112,8 @@ void IMU_Reset(uint8_t instance)
 {
     IMU_StreamReset(instance);
     memset(&s_config_cache, 0, sizeof(s_config_cache));
+    s_contexts[instance].register_read_active = 0U;
+    s_contexts[instance].register_write_phase = 0U;
 }
 
 void IMU_StreamReset(uint8_t instance)
@@ -972,21 +1149,50 @@ static void IMU_DefaultValuesGet(const IMUConfig *config, uint16_t values[10])
     values[9] = config->ReturnContentValue;
 }
 
+Jy901bStartupRegisterResult IMU_StartupRegisterGet(
+    uint8_t index, IMUOutputRate output_rate, IMUAlgorithm algorithm,
+    uint8_t *reg, uint16_t *expected_value)
+{
+    static const uint8_t registers[JY901B_STARTUP_REGISTER_COUNT] =
+    {
+        IMU_REG_BAUD, IMU_REG_ORIENT, IMU_REG_AXIS6,
+        IMU_REG_BANDWIDTH, IMU_REG_RRATE, IMU_REG_GYRORANGE,
+        IMU_REG_ACCRANGE, IMU_REG_FILTK, IMU_REG_ACCFILT,
+        IMU_REG_RSW
+    };
+    const uint16_t values[JY901B_STARTUP_REGISTER_COUNT] =
+    {
+        IMU_DEFAULT_BAUD_VALUE, IMU_DEFAULT_ORIENT_VALUE,
+        (uint16_t)algorithm, IMU_DEFAULT_BANDWIDTH_VALUE,
+        (uint16_t)output_rate, IMU_DEFAULT_GYRO_RANGE_VALUE,
+        IMU_DEFAULT_ACCEL_RANGE_VALUE, IMU_DEFAULT_FUSION_FILTER_VALUE,
+        IMU_DEFAULT_ACCEL_FILTER_VALUE, FC_IMU_RETURN_CONTENT_DEFAULT
+    };
+
+    if ((index >= JY901B_STARTUP_REGISTER_COUNT) ||
+        (reg == NULL) || (expected_value == NULL))
+    { return Jy901bStartupRegisterResult_InvalidArgument; }
+    *reg = registers[index];
+    *expected_value = values[index];
+    return Jy901bStartupRegisterResult_Ok;
+}
+
 static IMUState IMU_DefaultDifferencesApply(uint8_t instance,
     const uint16_t actual[10], const uint16_t expected[10], uint8_t *changed)
 {
-    static const uint8_t registers[10] = {IMU_REG_BAUD, IMU_REG_ORIENT,
-        IMU_REG_AXIS6, IMU_REG_BANDWIDTH, IMU_REG_RRATE, IMU_REG_GYRORANGE,
-        IMU_REG_ACCRANGE, IMU_REG_FILTK, IMU_REG_ACCFILT, IMU_REG_RSW};
     uint8_t index;
     SILVERSTAR_ASSERT_OBJECT(changed, uint8_t, SILVERSTAR_ASSERT_MODULE_DEVICE);
     *changed = 0U;
     for (index = 0U; index < 10U; index++)
     {
         IMUState result;
+        uint8_t reg;
+        uint16_t ignored_expected;
         if (actual[index] == expected[index]) { continue; }
+        (void)IMU_StartupRegisterGet(index, OutputRate_200Hz,
+            Algorithm_6Axis, &reg, &ignored_expected);
         result = (index == 0U) ? IMU_SetBaudrate(instance, Baudrate_230400) :
-            IMU_WriteRegister(instance, registers[index], expected[index], 0U);
+            IMU_WriteRegister(instance, reg, expected[index], 0U);
         if (result != IMU_OK) { return result; }
         *changed = 1U;
     }
@@ -998,15 +1204,17 @@ IMUState IMU_ApplyDefaultConfig(uint8_t instance, IMUOutputRate output_rate,
 {
     IMUConfig actual = {0};
     uint16_t values[10];
-    uint16_t expected[10] = {IMU_DEFAULT_BAUD_VALUE, IMU_DEFAULT_ORIENT_VALUE,
-        (uint16_t)algorithm, IMU_DEFAULT_BANDWIDTH_VALUE, (uint16_t)output_rate,
-        IMU_DEFAULT_GYRO_RANGE_VALUE, IMU_DEFAULT_ACCEL_RANGE_VALUE,
-        IMU_DEFAULT_FUSION_FILTER_VALUE, IMU_DEFAULT_ACCEL_FILTER_VALUE,
-        FC_IMU_RETURN_CONTENT_DEFAULT};
+    uint16_t expected[JY901B_STARTUP_REGISTER_COUNT];
     IMUState result;
     uint8_t changed;
     uint8_t index;
+    uint8_t reg;
     SILVERSTAR_ASSERT_OBJECT(&actual, IMUConfig, SILVERSTAR_ASSERT_MODULE_DEVICE);
+    for (index = 0U; index < JY901B_STARTUP_REGISTER_COUNT; index++)
+    {
+        (void)IMU_StartupRegisterGet(index, output_rate, algorithm,
+            &reg, &expected[index]);
+    }
     result = IMU_ReadCurrentConfig(instance, &actual);
     if (result != IMU_OK) { return result; }
     IMU_DefaultValuesGet(&actual, values);
@@ -1062,6 +1270,9 @@ void IMU_Poll(uint8_t instance)
 
     SILVERSTAR_ASSERT_OBJECT(&s_imu, IMUData,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
+    if ((s_contexts[instance].register_read_active != 0U) ||
+        (s_contexts[instance].register_write_phase != 0U))
+    { return; }
     if (PlatformUart_DiagnosticsGet(Jy901bResource_UartGet(instance), &port_diagnostics) !=
         PLATFORM_OK)
     {

@@ -267,6 +267,15 @@ PlatformResult PlatformUart_WriteAsync(PlatformUartId id,
     return result;
 }
 
+PlatformResult PlatformUart_WriteFrameAsync(PlatformUartId id,
+                                            const uint8_t *data,
+                                            uint16_t length,
+                                            PlatformUartTxPriority priority)
+{
+    (void)priority;
+    return PlatformUart_Write(id, data, length, 0U);
+}
+
 PlatformResult PlatformUart_Read(PlatformUartId id,
                                  uint8_t *data,
                                  uint16_t capacity,

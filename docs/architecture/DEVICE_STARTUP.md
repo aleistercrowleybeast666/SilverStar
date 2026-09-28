@@ -37,3 +37,10 @@ The current JY901B baud rescue and register configuration still contain
 response waits; the M9N identify and configuration paths also contain
 synchronous waits. They must be split into request/poll transactions before
 the contract can be declared implemented or firmware startup verified.
+
+Factory UART defaults used for bounded fallback come from the
+[WitMotion standard protocol](https://wit-motion.gitbook.io/witmotion-sdk/wit-standard-protocol/wit-standard-communication-protocol)
+(BAUD register `0x0002`, 9600 baud) and the
+[u-blox NEO-M9N integration manual](https://content.u-blox.com/sites/default/files/NEO-M9N_Integrationmanual_UBX-19014286.pdf)
+(38400 baud, UBX input enabled). The other fallback baud rates are the
+explicit sets already declared by the SilverStar JY901B and M9N drivers.
