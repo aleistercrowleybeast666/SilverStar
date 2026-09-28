@@ -1,0 +1,153 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.storage.sd_sdio_fatfs",
+  "name": "SD/TF Card · STM32 SDIO + FatFs",
+  "type": "device",
+  "class": "storage",
+  "version": "0.1.0",
+  "description": "Single-instance SD/TF physical storage and sequential SSLOG sink using CubeMX SDIO and FatFs glue.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu.stm32f407vet6",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "storage",
+        "kind": "sdio",
+        "constraints": {
+          "storage": {
+            "fatfs": true,
+            "dma_rx": true,
+            "dma_tx": true,
+            "irq": true,
+            "sdio_only": true
+          }
+        },
+        "display_names": {
+          "zh_CN": "SD/TF 卡 · SDIO + FatFs",
+          "en_US": "SD/TF Card · SDIO + FatFs"
+        }
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared",
+        "display_names": {
+          "zh_CN": "单调时间基准",
+          "en_US": "Monotonic Timebase"
+        }
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "service.storage",
+    "service.log_sink",
+    "transport.sequential_file_sink"
+  ],
+  "build": {
+    "sources": [
+      "Devices/Storage/SdSdioFatFs/Src/storage_service.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": [],
+    "protocol_sources": {
+      "logging": [
+        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"
+      ]
+    }
+  },
+  "payload": {
+    "roots": [
+      "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+      "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "SD/TF 卡（STM32 SDIO + FatFs）",
+      "en_US": "SD/TF Card (STM32 SDIO + FatFs)"
+    },
+    "descriptions": {
+      "zh_CN": "使用 CubeMX SDIO、FatFs App/Target 胶水及受控 FatFs core 的单实例物理存储与日志接收端。",
+      "en_US": "Single-instance physical storage and log sink using CubeMX SDIO/FatFs App/Target glue and a controlled FatFs core."
+    },
+    "device_category": "storage.sd_card",
+    "device_group": "storage",
+    "device_group_order": 10,
+    "device_selection_style": "toggle",
+    "default_instance_id": "storage0",
+    "hardware_contract_required": true,
+    "build_feature_symbols": [
+      "SYSTEM_USER_STORAGE_ENABLE",
+      "SYSTEM_USER_LOG_SINK_ENABLE"
+    ],
+    "device_descriptors": [
+      {
+        "order": 8,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_STORAGE",
+        "class": "SYSTEM_DEVICE_CLASS_STORAGE",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+        "capability": "SYSTEM_CAPABILITY_STORAGE",
+        "rate": "0U",
+        "driver_hash": "0xF02E45D5UL",
+        "name_hash": "0x3A7B5375UL"
+      },
+      {
+        "order": 9,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_STORAGE",
+        "class": "SYSTEM_DEVICE_CLASS_LOG_SINK",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+        "capability": "SYSTEM_CAPABILITY_STORAGE",
+        "rate": "0U",
+        "driver_hash": "0x6DB00410UL",
+        "name_hash": "0xCD7C84A3UL"
+      }
+    ],
+    "source_origins": {
+      "Devices/Storage/SdSdioFatFs/Src/storage_service.c": "fccg_storage_integrity",
+      "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c": "fccg_storage_integrity"
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 1,
+    "class_max": 1,
+    "same_plugin_multiple": false,
+    "multi_instance_ready": false
+  },
+  "physical_device": {
+    "vendor": "Generic",
+    "model": "SD/TF Card",
+    "chipset": "STM32 SDIO",
+    "driver": "CubeMX FatFs"
+  },
+  "transports": [
+    {
+      "capability": "transport.sequential_file_sink",
+      "kind": "sequential_file_sink",
+      "mtu": 65535,
+      "ordered": true,
+      "bidirectional": false,
+      "reliable": true,
+      "mode": "file"
+    }
+  ]
+}

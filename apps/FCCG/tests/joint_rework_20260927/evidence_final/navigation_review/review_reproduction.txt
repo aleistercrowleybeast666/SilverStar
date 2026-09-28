@@ -1,0 +1,42 @@
+Production sources unchanged. PlatformCritical Host stubs are single-threaded only.
+COMMAND=["D:/msys64/ucrt64/bin/gcc.exe", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-include", "D:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Generated\\Inc\\project_flight_config.h", "-ID:\\python_software\\SilverStar_FCCG\\plugins\\builtin\\silverstar_core_0_0_12\\payload\\System\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\plugins\\builtin\\silverstar_core_0_0_12\\payload\\Common\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Tests\\Host\\Fixtures\\MultiInstance\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Tests\\Host", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\APP\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Common\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Calibration\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Alignment\\Common\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Alignment\\GravityKnownYaw\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Alignment\\GravityMagTriad\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\INS\\Coning2Sculling2\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Estimator\\KF6\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Common\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Modules\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Protocol\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Protocol\\SSLOG\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Interfaces\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\System\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\System\\Alignment\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\System\\Calibration\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\System\\Indicator\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\System\\Inertial\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\System\\User", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Targets\\SilverStar_F407\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Board\\SilverStar_0_5\\Services\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Generated\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\FlightLogic\\Deployment\\MultiTrigger\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\FlightLogic\\Landing\\BarometerImuWindow\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Platform\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Platform\\STM32F4\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Devices\\IMU\\JY901B\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Devices\\IMU\\JY901B\\Adapter\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Devices\\GNSS\\NEO_M9N\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Devices\\Telemetry\\SX1281\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Devices\\Telemetry\\SX1281\\Adapter\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Middlewares\\Third_Party\\SX1280lib", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Alignment\\GravityKnownYaw\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Alignment\\GravityMagTriad\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Alignment\\HardwareQuat6AxisKnownYaw\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Alignment\\HardwareQuat9Axis\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\matrix_delivery\\kf6\\Algorithm\\Estimator\\ESKF15\\Inc", "D:\\python_software\\SilverStar_FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Src\\navigation_kf.c", "D:\\python_software\\SilverStar_FCCG\\plugins\\builtin\\silverstar_core_0_0_12\\payload\\System\\Src\\system_navigation_health.c", "D:\\python_software\\SilverStar_FCCG\\plugins\\builtin\\silverstar_core_0_0_12\\payload\\Common\\Src\\silverstar_assert.c", "-x", "c", "-", "-lm", "-o", "D:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\sensors\\navigation_review\\review.exe"]
+SOURCE:
+
+#include <stdio.h>
+#include <float.h>
+#include <string.h>
+#include "navigation_kf.h"
+#include "system_navigation_health.h"
+#include "platform_critical.h"
+PlatformCriticalState PlatformCritical_Enter(void) { return 0U; }
+void PlatformCritical_Exit(PlatformCriticalState state) { (void)state; }
+int main(void) {
+ NavigationKfContext kf; float covariance[6][6]={{0}};
+ const float observation[3]={1,1,1}, variance[3]={FLT_MAX,FLT_MAX,FLT_MAX};
+ SystemNavigationFusionEvidence evidence={0}; SystemNavigationGroupHealth group;
+ unsigned int i; int result;
+ NavigationKf_Init(&kf);
+ for(i=0;i<6;i++) covariance[i][i]=1.0e-8f;
+ printf("reset_with_min_covariance=%u\n",NavigationKf_ResetWithCovariance(&kf,&covariance[0][0]));
+ result=NavigationKf_UpdateGnssPosition(&kf,observation,variance);
+ printf("kf_result=%d accepted=%d P00=%.9g x0=%.9g mathematical_float_gain=%.9g accept_count=%u\n",result,NAV_KF_UPDATE_ACCEPTED,kf.covariance[0][0],kf.state[0],covariance[0][0]/FLT_MAX,kf.position_accept_count);
+ SystemNavigationHealth_Reset(1000000ULL);
+ evidence.receive_us=1100000; evidence.measurement_us=1050000; evidence.evaluation_us=1200000;
+ evidence.sequence=1; evidence.variance_scale=3.0f; evidence.nis=0.5f;
+ evidence.physically_valid=1; evidence.attempted=1; evidence.effective_update=1; evidence.soft_weighted=1;
+ for(i=0;i<5;i++) printf("health_observe_%u=%u\n",i,SystemNavigationHealth_Observe((uint8_t)i,&evidence));
+ SystemNavigationHealth_GroupGet(0,1200000,&group);
+ printf("group_state=%u soft_weighted=%u quality=%u overall=%u healthy=%u degraded=%u\n",group.state,SYSTEM_NAVIGATION_SOFT_WEIGHTED,group.quality,SystemNavigationHealth_OverallGet(1200000,31,0),SYSTEM_NAVIGATION_HEALTH_HEALTHY,SYSTEM_NAVIGATION_HEALTH_DEGRADED);
+ return 0;
+}
+
+BUILD_RETURN=0
+RUN_RETURN=0
+reset_with_min_covariance=1
+kf_result=0 accepted=0 P00=9.99999994e-09 x0=0 mathematical_float_gain=0 accept_count=1
+health_observe_0=0
+health_observe_1=0
+health_observe_2=0
+health_observe_3=0
+health_observe_4=0
+group_state=2 soft_weighted=2 quality=2 overall=1 healthy=1 degraded=2

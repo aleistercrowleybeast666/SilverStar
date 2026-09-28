@@ -1,0 +1,400 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.board.silverstar_0_5",
+  "name": "SS0.5",
+  "type": "board",
+  "class": "flight_controller_board",
+  "version": "0.1.0",
+  "description": "Verified SS0.5 PCB, CubeMX hardware source, fixed services and resource mapping.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu.stm32f407vet6",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [
+      {
+        "id": "PLATFORM_UART_1",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "PLATFORM_UART_1",
+          "header": "platform_uart.h"
+        }
+      },
+      {
+        "id": "PLATFORM_UART_2",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "PLATFORM_UART_2",
+          "header": "platform_uart.h"
+        }
+      },
+      {
+        "id": "PLATFORM_UART_3",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "PLATFORM_UART_3",
+          "header": "platform_uart.h"
+        }
+      },
+      {
+        "id": "PLATFORM_SPI_1",
+        "kind": "spi",
+        "metadata": {
+          "c_id": "PLATFORM_SPI_1",
+          "header": "platform_spi.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_0",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_0",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_1",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_1",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_2",
+        "kind": "gpio_input",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_2",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_3",
+        "kind": "gpio_interrupt",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_3",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_4",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_4",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_5",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_5",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_6",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_6",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_7",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_7",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_8",
+        "kind": "gpio_interrupt",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_8",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_ADC_1",
+        "kind": "adc",
+        "metadata": {
+          "c_id": "PLATFORM_ADC_1",
+          "header": "platform_adc.h"
+        }
+      },
+      {
+        "id": "PLATFORM_SDIO_1",
+        "kind": "sdio",
+        "metadata": {}
+      },
+      {
+        "id": "PLATFORM_TIME_1",
+        "kind": "time",
+        "metadata": {}
+      }
+    ],
+    "roles": [
+      {
+        "key": "imu:data",
+        "kind": "uart",
+        "default": "PLATFORM_UART_1",
+        "candidates": [
+          "PLATFORM_UART_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "imu:time",
+        "kind": "time",
+        "default": "PLATFORM_TIME_1",
+        "candidates": [
+          "PLATFORM_TIME_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:data",
+        "kind": "uart",
+        "default": "PLATFORM_UART_2",
+        "candidates": [
+          "PLATFORM_UART_2"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:reset",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_7",
+        "candidates": [
+          "PLATFORM_GPIO_7"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:timepulse",
+        "kind": "gpio_interrupt",
+        "default": "PLATFORM_GPIO_8",
+        "candidates": [
+          "PLATFORM_GPIO_8"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:time",
+        "kind": "time",
+        "default": "PLATFORM_TIME_1",
+        "candidates": [
+          "PLATFORM_TIME_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_bus",
+        "kind": "spi",
+        "default": "PLATFORM_SPI_1",
+        "candidates": [
+          "PLATFORM_SPI_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_nss",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_0",
+        "candidates": [
+          "PLATFORM_GPIO_0"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_reset",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_1",
+        "candidates": [
+          "PLATFORM_GPIO_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_busy",
+        "kind": "gpio_input",
+        "default": "PLATFORM_GPIO_2",
+        "candidates": [
+          "PLATFORM_GPIO_2"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_dio1",
+        "kind": "gpio_interrupt",
+        "default": "PLATFORM_GPIO_3",
+        "candidates": [
+          "PLATFORM_GPIO_3"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:time",
+        "kind": "time",
+        "default": "PLATFORM_TIME_1",
+        "candidates": [
+          "PLATFORM_TIME_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "console:console",
+        "kind": "uart",
+        "default": "PLATFORM_UART_3",
+        "candidates": [
+          "PLATFORM_UART_3"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.actuator.launch_ignition:output",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_4",
+        "candidates": [
+          "PLATFORM_GPIO_4"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.actuator.parachute_pyro:output",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_5",
+        "candidates": [
+          "PLATFORM_GPIO_5"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.indicator.system_status:output",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_6",
+        "candidates": [
+          "PLATFORM_GPIO_6"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.sensor.input_voltage:input_voltage",
+        "kind": "adc",
+        "default": "PLATFORM_ADC_1",
+        "candidates": [
+          "PLATFORM_ADC_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.storage.sd_sdio_fatfs:storage",
+        "kind": "sdio",
+        "default": "PLATFORM_SDIO_1",
+        "candidates": [
+          "PLATFORM_SDIO_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.storage.sd_sdio_fatfs:time",
+        "kind": "time",
+        "default": "PLATFORM_TIME_1",
+        "candidates": [
+          "PLATFORM_TIME_1"
+        ],
+        "fixed": true
+      }
+    ],
+    "conflicts": []
+  },
+  "provides": [
+    "board.silverstar_0_5",
+    "hardware.stm32.generated"
+  ],
+  "build": {
+    "sources": [
+      "Core/Src/main.c",
+      "Core/Src/gpio.c",
+      "Core/Src/dma.c",
+      "Core/Src/usart.c",
+      "Core/Src/stm32f4xx_it.c",
+      "Core/Src/stm32f4xx_hal_msp.c",
+      "Core/Src/stm32f4xx_hal_timebase_tim.c",
+      "Core/Src/system_stm32f4xx.c",
+      "Core/Src/syscalls.c",
+      "Core/Src/spi.c",
+      "Core/Src/adc.c",
+      "Core/Src/sdio.c",
+      "FATFS/Target/bsp_driver_sd.c",
+      "FATFS/Target/sd_diskio.c",
+      "FATFS/Target/fatfs_platform.c",
+      "FATFS/App/fatfs.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Core/Inc",
+      "FATFS/Target",
+      "FATFS/App"
+    ],
+    "defines": [],
+    "exclude_sources": [
+      "Core/Src/sysmem.c"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Board/SilverStar_0_5",
+      "Core",
+      "FATFS",
+      "BuildSystem/fatfs.mk",
+      "Flight_Controller0.5.ioc",
+      ".mxproject"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "build_symbol": "SILVERSTAR_0_5",
+    "display_names": {
+      "zh_CN": "SS0.5（已验证）",
+      "en_US": "SS0.5 (Validated)"
+    },
+    "descriptions": {
+      "zh_CN": "已验证的SS0.5板卡、CubeMX硬件源、固定服务与资源映射。",
+      "en_US": "Verified SS0.5 PCB, CubeMX hardware source, fixed services, and resource mapping."
+    },
+    "device_descriptors": [],
+    "source_origins": {
+      "FATFS/Target/sd_diskio.c": "fccg_storage_integrity",
+      "FATFS/Target/bsp_driver_sd.c": "fccg_storage_integrity"
+    }
+  },
+  "board": {
+    "source_kind": "verified_builtin",
+    "compatible_mcus": [
+      "silverstar.mcu.stm32f407vet6"
+    ],
+    "vendor": "STM32",
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "verified": true,
+    "hardware_root": "Core",
+    "ioc_file": "payload/Flight_Controller0.5.ioc",
+    "connections_file": "connections.json"
+  }
+}

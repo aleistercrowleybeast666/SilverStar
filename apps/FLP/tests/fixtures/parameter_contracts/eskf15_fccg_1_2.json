@@ -1,0 +1,460 @@
+{
+  "schema_id": "silverstar.algorithm-parameters/1.0",
+  "parameters": [
+    {
+      "id": "gravity_mps2",
+      "type": "float",
+      "default": 9.78,
+      "unit": "m/s^2",
+      "representation": "value",
+      "min": 1.0,
+      "max": 20.0,
+      "description": {
+        "en_US": "gravity_mps2"
+      },
+      "order": 0
+    },
+    {
+      "id": "gyro_noise_density",
+      "type": "float",
+      "default": 0.003,
+      "unit": "rad/s/sqrt(Hz)",
+      "representation": "value",
+      "min": 1e-08,
+      "max": 10.0,
+      "description": {
+        "en_US": "gyro_noise_density"
+      },
+      "order": 1
+    },
+    {
+      "id": "accel_noise_density",
+      "type": "float",
+      "default": 0.08,
+      "unit": "m/s^2/sqrt(Hz)",
+      "representation": "value",
+      "min": 1e-08,
+      "max": 10.0,
+      "description": {
+        "en_US": "accel_noise_density"
+      },
+      "order": 2
+    },
+    {
+      "id": "gyro_bias_rw",
+      "type": "float",
+      "default": 0.0001,
+      "unit": "rad/s^2/sqrt(Hz)",
+      "representation": "value",
+      "min": 1e-08,
+      "max": 10.0,
+      "description": {
+        "en_US": "gyro_bias_rw"
+      },
+      "order": 3
+    },
+    {
+      "id": "accel_bias_rw",
+      "type": "float",
+      "default": 0.001,
+      "unit": "m/s^3/sqrt(Hz)",
+      "representation": "value",
+      "min": 1e-08,
+      "max": 10.0,
+      "description": {
+        "en_US": "accel_bias_rw"
+      },
+      "order": 4
+    },
+    {
+      "id": "p0_position_e",
+      "type": "float",
+      "default": 4,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_position_e"
+      },
+      "order": 5
+    },
+    {
+      "id": "p0_position_n",
+      "type": "float",
+      "default": 4,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_position_n"
+      },
+      "order": 6
+    },
+    {
+      "id": "p0_position_u",
+      "type": "float",
+      "default": 9,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_position_u"
+      },
+      "order": 7
+    },
+    {
+      "id": "p0_velocity_e",
+      "type": "float",
+      "default": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_velocity_e"
+      },
+      "order": 8
+    },
+    {
+      "id": "p0_velocity_n",
+      "type": "float",
+      "default": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_velocity_n"
+      },
+      "order": 9
+    },
+    {
+      "id": "p0_velocity_u",
+      "type": "float",
+      "default": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_velocity_u"
+      },
+      "order": 10
+    },
+    {
+      "id": "p0_theta_x",
+      "type": "float",
+      "default": 0.030461742,
+      "unit": "rad^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_theta_x"
+      },
+      "order": 11
+    },
+    {
+      "id": "p0_theta_y",
+      "type": "float",
+      "default": 0.030461742,
+      "unit": "rad^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_theta_y"
+      },
+      "order": 12
+    },
+    {
+      "id": "p0_theta_z",
+      "type": "float",
+      "default": 0.030461742,
+      "unit": "rad^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_theta_z"
+      },
+      "order": 13
+    },
+    {
+      "id": "p0_gyro_bias_x",
+      "type": "float",
+      "default": 0.0001,
+      "unit": "rad^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_gyro_bias_x"
+      },
+      "order": 14
+    },
+    {
+      "id": "p0_gyro_bias_y",
+      "type": "float",
+      "default": 0.0001,
+      "unit": "rad^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_gyro_bias_y"
+      },
+      "order": 15
+    },
+    {
+      "id": "p0_gyro_bias_z",
+      "type": "float",
+      "default": 0.0001,
+      "unit": "rad^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_gyro_bias_z"
+      },
+      "order": 16
+    },
+    {
+      "id": "p0_accel_bias_x",
+      "type": "float",
+      "default": 0.01,
+      "unit": "m^2/s^4",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_accel_bias_x"
+      },
+      "order": 17
+    },
+    {
+      "id": "p0_accel_bias_y",
+      "type": "float",
+      "default": 0.01,
+      "unit": "m^2/s^4",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_accel_bias_y"
+      },
+      "order": 18
+    },
+    {
+      "id": "p0_accel_bias_z",
+      "type": "float",
+      "default": 0.01,
+      "unit": "m^2/s^4",
+      "representation": "covariance_diagonal",
+      "min": 1e-08,
+      "max": 1000000.0,
+      "description": {
+        "en_US": "p0_accel_bias_z"
+      },
+      "order": 19
+    },
+    {
+      "id": "gnss_position_std_horizontal",
+      "type": "float",
+      "default": 1.5,
+      "unit": "m",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 1000,
+      "description": {
+        "en_US": "gnss_position_std_horizontal"
+      },
+      "order": 20
+    },
+    {
+      "id": "gnss_position_std_vertical",
+      "type": "float",
+      "default": 2.5,
+      "unit": "m",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 1000,
+      "description": {
+        "en_US": "gnss_position_std_vertical"
+      },
+      "order": 21
+    },
+    {
+      "id": "gnss_velocity_std",
+      "type": "float",
+      "default": 0.15,
+      "unit": "m/s",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 1000,
+      "description": {
+        "en_US": "gnss_velocity_std"
+      },
+      "order": 22
+    },
+    {
+      "id": "baro_std_m",
+      "type": "float",
+      "default": 2.5,
+      "unit": "m",
+      "representation": "sigma",
+      "min": 0.01,
+      "max": 1000,
+      "description": {
+        "en_US": "baro_std_m"
+      },
+      "order": 23
+    },
+    {
+      "id": "nis_1d_soft",
+      "type": "float",
+      "default": 6.635,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000,
+      "description": {
+        "en_US": "nis_1d_soft"
+      },
+      "order": 24
+    },
+    {
+      "id": "nis_1d_hard",
+      "type": "float",
+      "default": 10.828,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000,
+      "description": {
+        "en_US": "nis_1d_hard"
+      },
+      "order": 25
+    },
+    {
+      "id": "nis_2d_soft",
+      "type": "float",
+      "default": 9.21,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000,
+      "description": {
+        "en_US": "nis_2d_soft"
+      },
+      "order": 26
+    },
+    {
+      "id": "nis_2d_hard",
+      "type": "float",
+      "default": 13.816,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000,
+      "description": {
+        "en_US": "nis_2d_hard"
+      },
+      "order": 27
+    },
+    {
+      "id": "nis_max_r_scale",
+      "type": "float",
+      "default": 4,
+      "unit": "1",
+      "representation": "value",
+      "min": 1,
+      "max": 4,
+      "description": {
+        "en_US": "nis_max_r_scale"
+      },
+      "order": 28
+    },
+    {
+      "id": "lever_arm_body_x_m",
+      "type": "float",
+      "default": 0.0,
+      "unit": "m",
+      "representation": "value",
+      "min": -10.0,
+      "max": 10.0,
+      "description": {
+        "en_US": "lever_arm_body_x_m"
+      },
+      "order": 29
+    },
+    {
+      "id": "lever_arm_body_y_m",
+      "type": "float",
+      "default": 0.0,
+      "unit": "m",
+      "representation": "value",
+      "min": -10.0,
+      "max": 10.0,
+      "description": {
+        "en_US": "lever_arm_body_y_m"
+      },
+      "order": 30
+    },
+    {
+      "id": "lever_arm_body_z_m",
+      "type": "float",
+      "default": 0.0,
+      "unit": "m",
+      "representation": "value",
+      "min": -10.0,
+      "max": 10.0,
+      "description": {
+        "en_US": "lever_arm_body_z_m"
+      },
+      "order": 31
+    },
+    {
+      "id": "gnss_position_measurement_delay_ms",
+      "type": "integer",
+      "default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "description": {
+        "en_US": "gnss_position_measurement_delay_ms"
+      },
+      "order": 32
+    },
+    {
+      "id": "gnss_velocity_measurement_delay_ms",
+      "type": "integer",
+      "default": 270,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "description": {
+        "en_US": "gnss_velocity_measurement_delay_ms"
+      },
+      "order": 33
+    },
+    {
+      "id": "baro_measurement_delay_ms",
+      "type": "integer",
+      "default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "description": {
+        "en_US": "baro_measurement_delay_ms"
+      },
+      "order": 34
+    }
+  ]
+}

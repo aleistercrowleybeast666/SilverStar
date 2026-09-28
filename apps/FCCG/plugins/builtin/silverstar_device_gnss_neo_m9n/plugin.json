@@ -1,0 +1,260 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.gnss.neo_m9n",
+  "name": "NEO-M9N",
+  "type": "device",
+  "class": "gnss",
+  "version": "0.1.0",
+  "description": "Reference NEO-M9N Device driver and canonical adapter.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "data",
+        "kind": "uart",
+        "binding_macro": "PROJECT_RESOURCE_GNSS_UART",
+        "constraints": {
+          "uart": {
+            "baud": {
+              "exact": 921600,
+              "configurable": false
+            },
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0,
+            "rx_dma": true,
+            "tx_dma": false,
+            "irq": true
+          }
+        }
+      },
+      {
+        "name": "reset",
+        "kind": "gpio_output",
+        "binding_macro": "PROJECT_RESOURCE_GNSS_RESET",
+        "electrical_constraints": {
+          "mode": "gpio_output",
+          "output_type": "push_pull",
+          "pull": "none",
+          "speed": "low",
+          "safe_initial_level": "inactive",
+          "active_polarity": "low",
+          "startup_glitch_free": true
+        }
+      },
+      {
+        "name": "timepulse",
+        "kind": "gpio_interrupt",
+        "binding_macro": "PROJECT_RESOURCE_GNSS_TIMEPULSE",
+        "electrical_constraints": {
+          "mode": "gpio_interrupt",
+          "pull": "none",
+          "exti_trigger": "rising",
+          "irq": true,
+          "maximum_irq_priority": 5
+        }
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared"
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.gnss",
+    "gnss.position",
+    "gnss.velocity"
+  ],
+  "build": {
+    "sources": [
+      "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/GNSS/NEO_M9N/Inc",
+      "Devices/GNSS/NEO_M9N/Adapter/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/GNSS/NEO_M9N"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "NEO-M9N",
+      "en_US": "NEO-M9N"
+    },
+    "device_descriptors": [
+      {
+        "order": 2,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_NEO_M9N",
+        "class": "SYSTEM_DEVICE_CLASS_GNSS",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "capability": "SYSTEM_CAPABILITY_GNSS",
+        "rate": "SYSTEM_GNSS_NAVIGATION_RATE_HZ",
+        "driver_hash": "0xC751E890UL",
+        "name_hash": "0xA8E98337UL"
+      }
+    ],
+    "device_group": "primary_devices",
+    "device_group_order": 20,
+    "device_selection_style": "instance",
+    "device_category": "sensor.gnss",
+    "build_feature_symbols": [
+      "SYSTEM_USER_GNSS_ENABLE"
+    ],
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_GNSS": {
+        "function_prefix": "NeoM9nGnssInstance",
+        "headers": [
+          "neo_m9n_instance.h"
+        ],
+        "pass_instance": true
+      }
+    },
+    "instance_resource_binding": {
+      "struct_type": "ProjectNeoM9nResources",
+      "accessor": "ProjectNeoM9nResources_Get",
+      "count_symbol": "PROJECT_NEO_M9N_INSTANCE_COUNT",
+      "runtime_context_upper_bound": 4,
+      "fields": [
+        {
+          "requirement": "data",
+          "member": "uart"
+        },
+        {
+          "requirement": "reset",
+          "member": "reset"
+        },
+        {
+          "requirement": "timepulse",
+          "member": "timepulse"
+        },
+        {
+          "requirement": "time",
+          "member": "time"
+        }
+      ]
+    },
+    "recordable_outputs": {
+      "gnss.position": {
+        "enabled": true
+      },
+      "gnss.velocity": {
+        "enabled": true
+      }
+    },
+    "source_origins": {
+      "default": "reference_base",
+      "Devices/GNSS/NEO_M9N/Inc/neo_m9n_device.h": "fccg_multi_instance_context",
+      "Devices/GNSS/NEO_M9N/Adapter/Inc/neo_m9n_instance.h": "fccg_multi_instance_context",
+      "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c": "fccg_multi_instance_context",
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c": "fccg_multi_instance_context"
+    },
+    "sensor_recommendations": [
+      {
+        "parameter_id": "gnss_position_std_horizontal",
+        "value": 1.5,
+        "unit": "m",
+        "representation": "sigma",
+        "source": "NEO-M9N",
+        "description": {
+          "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+          "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+        }
+      },
+      {
+        "parameter_id": "gnss_position_std_vertical",
+        "value": 2.5,
+        "unit": "m",
+        "representation": "sigma",
+        "source": "NEO-M9N",
+        "description": {
+          "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+          "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+        }
+      },
+      {
+        "parameter_id": "gnss_velocity_std",
+        "value": 0.15,
+        "unit": "m/s",
+        "representation": "sigma",
+        "source": "NEO-M9N",
+        "description": {
+          "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+          "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+        }
+      }
+    ],
+    "runtime_defaults": {
+      "SYSTEM_DEVICE_CLASS_GNSS": {
+        "SYSTEM_GNSS_NAVIGATION_RATE_HZ": 25,
+        "SYSTEM_GNSS_DYNAMIC_MODEL": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G"
+      }
+    },
+    "initialization": {
+      "configure_on_boot": true,
+      "navigation_rate_hz": 25,
+      "target_baud": 921600,
+      "dynamic_model": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G",
+      "persistent_layer_default": "RAM",
+      "readback": {
+        "zh_CN": "MON-VER 核对型号/协议；配置实际读回一致且收到新 PVT 才就绪",
+        "en_US": "MON-VER model/protocol check; configuration readback plus a new PVT required for readiness"
+      },
+      "filter": {
+        "zh_CN": "按动态模型解算；没有宣称逐轴滤波参数可配置",
+        "en_US": "Receiver dynamic model; no configurable per-axis filter claim"
+      },
+      "fifo": {
+        "zh_CN": "有界 UART/UBX 字节解析；iTOW 重复/乱序拒绝",
+        "en_US": "Bounded UART/UBX byte parser; duplicate/out-of-order iTOW rejected"
+      },
+      "constellations": {
+        "zh_CN": "GPS/GLONASS/Galileo/BeiDou 按配置逐键读回核验",
+        "en_US": "GPS/GLONASS/Galileo/BeiDou configuration verified key by key"
+      },
+      "conditional_persistence": {
+        "zh_CN": "默认仅 RAM；显式保存逐层先读、差异写、再次读回，不重试失去 ACK 的 NVM 写",
+        "en_US": "RAM by default; explicit save reads each layer, writes differences, reads back; no retry of NVM write after lost ACK"
+      },
+      "hardware_status": {
+        "zh_CN": "当前试验硬件型号；本轮仅软件测试，配置变更待台架验证",
+        "en_US": "Current test hardware model; this turn tests software only, changed configuration requires bench validation"
+      }
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 4,
+    "class_max": 4,
+    "same_plugin_multiple": true,
+    "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "u-blox",
+    "model": "NEO-M9N",
+    "chipset": "UBX-M9",
+    "driver": "NEO-M9N Driver"
+  },
+  "transports": []
+}

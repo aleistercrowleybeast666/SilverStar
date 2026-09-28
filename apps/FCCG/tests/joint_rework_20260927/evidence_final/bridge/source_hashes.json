@@ -1,0 +1,106 @@
+[
+  {
+    "path": "plugins\\builtin\\silverstar_core_0_0_12\\payload\\Tests\\Host\\test_eskf_backend.c",
+    "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+  },
+  {
+    "path": "plugins\\builtin\\silverstar_core_0_0_12\\payload\\APP\\Src\\flight_task.c",
+    "sha256": "c7b70f1284cc4d8661af48dd4c512518c1370bb7c66f60ca4767e4d170e70074"
+  },
+  {
+    "path": "plugins\\builtin\\silverstar_core_0_0_12\\payload\\APP\\Src\\logger_task.c",
+    "sha256": "6ef02bdc42fb3949ac1b15e238346613d976da34f6b1c1b2738682e7d114de0c"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Tests\\Host\\host_platform_mock.c",
+    "sha256": "89d6e355b1e60e4c048a2e6380778980e8f19503678c16a26a9a5156a37e1cc7"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c",
+    "sha256": "76d1772227859ecc06c03b21e9127c0cbbf402bbd824beeb569099eb0fcf25ea"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_replay.c",
+    "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_backend.c",
+    "sha256": "dd80c2b6f811a73ba13c1bf6e9d718fcd7fba2b01076f5cd15b8b57bbaf0c1a9"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Algorithm\\Common\\Src\\navigation_quality.c",
+    "sha256": "bac7eebd70a66ae39afc7c53550b29f78055a80a9b01f08c952c9bdfd5ed78d0"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Algorithm\\Common\\Src\\geodesy_local.c",
+    "sha256": "8ee67ec55504899cb70defa90fd0f4dbb83ed9ef6b711c2ccb8e0ec62b77f312"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\APP\\Src\\estimator_bus.c",
+    "sha256": "0367da2761c8c375ed618ec32df667751e52c2dc19061e2fe074a41cbf02c0a6"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\APP\\Src\\logger_bus.c",
+    "sha256": "2a7f263339becb7aaa3ac2510f34343365efdec53706cb34bf4674de3cf02380"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Src\\system_navigation_health.c",
+    "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Src\\system_time.c",
+    "sha256": "f46bf020352b9e0278a3d4b664ac08b10705292fe15d4e31214e1ba595c95135"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Src\\system_log_policy.c",
+    "sha256": "d37555f1cef7abb677f3cd39164db352cb0b5b489fc12e03fe618b1e3359afd1"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Src\\system_gnss_quality.c",
+    "sha256": "558993a708ee0c385144acfdaf04634929706cdd8abf29c514735dcfa6c4a772"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Src\\system_navigation_profile.c",
+    "sha256": "047826d2d2e0f532065c29a8a9050b25a097efed3a3bbebddee4c75114baab50"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Src\\system_estimator_profile.c",
+    "sha256": "d0b7ee65e2de24f139d890a3cd6ed0734272a0f5993464fba6466f4404497edc"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Src\\system_profile.c",
+    "sha256": "ce9599e83df26606683dd38b84aad999c571582c4ed4929d4e87af3340d5e57b"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\System\\Calibration\\Src\\system_calibration.c",
+    "sha256": "ff09ddc050c25e71e4a1933def6193709e408ba31578fb7927bfead36d9b357d"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Common\\Src\\common_spsc_queue.c",
+    "sha256": "a7f9b105521d6cc3b71d07865b43c323335e0cf536b164479edf57ea94ca1f2d"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Common\\Src\\silverstar_assert.c",
+    "sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Generated\\Src\\project_metadata.c",
+    "sha256": "c66c03461987919658ed5823c1fa94afb295aada2be9a801d76c4af18e2e2929"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Generated\\Src\\project_log_decoder_profile.c",
+    "sha256": "53b5b75db915fa1180fbf62d0091bbf25554fa353bc9dd366fd990a54cd2cfe6"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Generated\\Src\\project_log_config.c",
+    "sha256": "5f493fdb8f6ec32650c8723898237d12f2f2e5da9bb96bb7b5076ebf56184d00"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Protocol\\SSLOG\\Src\\sslog_protocol.c",
+    "sha256": "b065b6733fe87dea5e220e8eaed4ef61569fff831e3dd3d14f1c218fc6aaa3bc"
+  },
+  {
+    "path": "tests\\joint_rework_20260927\\backend_bridge_test\\Protocol\\SSLOG\\Src\\sslog_records.c",
+    "sha256": "0c3d2419306d32ed7495030f6069317aaff4d7dd6cd8a1c92655f235a4830194"
+  }
+]

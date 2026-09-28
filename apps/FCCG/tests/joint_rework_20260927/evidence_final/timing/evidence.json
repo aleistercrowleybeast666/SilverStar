@@ -1,0 +1,155 @@
+{
+  "pytest": "12 passed",
+  "host_per_optimization": "2089 checks, 0 failures",
+  "arm_modes": [
+    "O2",
+    "Og"
+  ],
+  "default_sourcegraph_bench_absent": true,
+  "target_execution": "NOT RUN; no CPU timing claim",
+  "object_sizes_not_linked_firmware_budgets": [
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench.o",
+      "text": 652,
+      "data": 0,
+      "bss": 0
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench_example.o",
+      "text": 92,
+      "data": 0,
+      "bss": 0
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench_f407.o",
+      "text": 668,
+      "data": 0,
+      "bss": 272
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench.o",
+      "text": 740,
+      "data": 0,
+      "bss": 0
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench_example.o",
+      "text": 88,
+      "data": 0,
+      "bss": 0
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench_f407.o",
+      "text": 688,
+      "data": 0,
+      "bss": 272
+    }
+  ],
+  "files": [
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final.log",
+      "bytes": 102,
+      "sha256": "d3bba5ab937244c611b3f629296fee578998f2ebb2ec46cb9818944c1cca2877"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_timing_core_wrap_own0\\host.log",
+      "bytes": 39,
+      "sha256": "b042b22e4297a63d5d3e613ff83e5335b888116abdbaeca8926efcef1d3ed60d"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_timing_core_wrap_own1\\host.log",
+      "bytes": 39,
+      "sha256": "b042b22e4297a63d5d3e613ff83e5335b888116abdbaeca8926efcef1d3ed60d"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_timing_core_wrap_own0\\compile.log",
+      "bytes": 658,
+      "sha256": "05b0542cc629ccbc3912857d92bd5cbf7d3dbdc805a2ec0472602c95ad72efc8"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_timing_core_wrap_own1\\compile.log",
+      "bytes": 658,
+      "sha256": "19f3331049ab7eedb960f3d6dd38071f5f5c946eeb8ea590dca088b85463b51b"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench.log",
+      "bytes": 7342,
+      "sha256": "e4a570214b7bfe1c9f8a9c3493c9aa5ccbad0bb5b6312211269f0bb887dc1ae8"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench_example.log",
+      "bytes": 7358,
+      "sha256": "276d437e2509c259ea091696f5031a79019699afa8c1133faef80ab2d7739b1d"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench_f407.log",
+      "bytes": 7352,
+      "sha256": "29785309db636ed72dfa8e70765c6bb4f48a7311ac99935b2682a7df04fbe535"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench.log",
+      "bytes": 7342,
+      "sha256": "e00c75a1352291689039a193ff691d485af27c809bf20d6efc7021b3caf3e0cf"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench_example.log",
+      "bytes": 7358,
+      "sha256": "243b1b6ce77905c78ba84965e4b6aa173c8bfc3efc17f874d1313ca0b521d1e4"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench_f407.log",
+      "bytes": 7352,
+      "sha256": "97748042cde0b4776882874f9c458ed06efaa2ee429d69f2e50bc95e6aa344bc"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench.su",
+      "bytes": 653,
+      "sha256": "80f48cc72acb3328aef22a07f229608b038ce7f0e41bd16aaf1e9fdc09348f5b"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench_example.su",
+      "bytes": 533,
+      "sha256": "ed721051506d124da2fa05347a5ba2e42e0db9523f60c8692d7ce876f86d3e5a"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench_f407.su",
+      "bytes": 856,
+      "sha256": "335d7e9bfa1d31c836b8ee03b224387625753ffffb49e6587eefd6aad01cc0d7"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench.su",
+      "bytes": 978,
+      "sha256": "ae87981ee7838c0e5cad6ce85794e2780b9b5813775c7c64669d9885e3159856"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench_example.su",
+      "bytes": 533,
+      "sha256": "ed721051506d124da2fa05347a5ba2e42e0db9523f60c8692d7ce876f86d3e5a"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench_f407.su",
+      "bytes": 1197,
+      "sha256": "762af0675e6f77d068b18c65f231b61e958e681e9b6a96fb79fbe61524c35243"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a0\\timing_bench_f407.disassembly.txt",
+      "bytes": 11294,
+      "sha256": "8d42392dcf050913500d658a20679cf64be09c687744c0e1ed4df79ab9f1ff4a"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\test_real_f407_cmsis_adapter_a1\\timing_bench_f407.disassembly.txt",
+      "bytes": 12093,
+      "sha256": "911e8323dbc58a5dc65129522a62b11b45fba5fb80ee39b0f70a1e9965bad4a8"
+    },
+    {
+      "path": "tests\\joint_rework_20260927\\timing_bench_final\\target_timing0\\Generated\\project_sources.mk",
+      "bytes": 8766,
+      "sha256": "295c8bd76e82e15b87f69291589daf85059acd1ab31f4638f37f008f67ab25bb"
+    }
+  ]
+}

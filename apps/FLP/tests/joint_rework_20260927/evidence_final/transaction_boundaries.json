@@ -1,0 +1,1 @@
+{"rejected_before_trim": ["CLIPPED", "NaN", "live_non_PSD", "prefix_non_PSD"], "authoritative_state_and_history_unchanged": true, "successful_multiple_prefix_count": 2, "capacity": 192, "capacity_failure_preserves_state": true, "additional_global_or_full_state_storage": 0}

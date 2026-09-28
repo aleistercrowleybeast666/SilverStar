@@ -1,0 +1,38 @@
+[
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_3\\LOG\\SS0000.BIN",
+    "sha256": "f774a990536b3b39c38f09639a7f1d9a5100ea15f3d219ee1667d351d3fac381",
+    "bytes": 1575879,
+    "unchanged": true
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_3\\LOG\\SS0001.BIN",
+    "sha256": "65e19a1aeec9d24836a9831549156fbf9579a49b6cd822d1de06ca8f61b71e95",
+    "bytes": 1834315,
+    "unchanged": true
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_3\\LOG\\SS0002.BIN",
+    "sha256": "b9e8e6a56a18497acb5e6405881fe5128464e478edb1a793822951a55b6989cc",
+    "bytes": 18486023,
+    "unchanged": true
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_3\\LOG\\SS0003.BIN",
+    "sha256": "1cc5c363610245b1eefcab0f2beab6a5cf128ee4049fa6dc9e2deb1a703a588a",
+    "bytes": 13536311,
+    "unchanged": true
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_3\\LOG\\SS0004.BIN",
+    "sha256": "f19bc4350816b2b3fabd298a788f78e7abf30556a563800ef6da178772b1938c",
+    "bytes": 17979491,
+    "unchanged": true
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_3\\HARDWARE\\SS_0_5_TEST_3.ssdecoder",
+    "sha256": "8af5886f04914019db565d008eba575f8f56bf61c4225b019f899e26fa589857",
+    "bytes": 112963,
+    "unchanged": true
+  }
+]

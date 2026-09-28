@@ -1,0 +1,589 @@
+{
+  "fccg": {
+    "profile_version": 1,
+    "records": {
+      "FLIGHT_LOG_RECORD_EVENT": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "飞行事件",
+          "en_US": "Flight Event"
+        },
+        "cadence": {
+          "kind": "event"
+        }
+      },
+      "FLIGHT_LOG_RECORD_STATS": {
+        "level": "recommended",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "日志统计",
+          "en_US": "Log Statistics"
+        },
+        "cadence": {
+          "kind": "periodic"
+        },
+        "producer_components": [
+          "silverstar.core.device_task"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_ESTIMATOR": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "状态估计",
+          "en_US": "Estimator State"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "periodic"
+        }
+      },
+      "FLIGHT_LOG_RECORD_SYSTEM_CONFIG": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "系统配置",
+          "en_US": "System Configuration"
+        },
+        "cadence": {
+          "kind": "one_shot"
+        }
+      },
+      "FLIGHT_LOG_RECORD_PURE_INS": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "纯惯导",
+          "en_US": "Pure INS"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.mechanization"
+          ]
+        },
+        "cadence": {
+          "kind": "periodic"
+        }
+      },
+      "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC": {
+        "level": "optional",
+        "purpose": "test",
+        "default_enabled": false,
+        "display_names": {
+          "zh_CN": "KF6 诊断",
+          "en_US": "KF6 Diagnostic"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "periodic"
+        }
+      },
+      "FLIGHT_LOG_RECORD_KF6_FULL_P": {
+        "level": "optional",
+        "purpose": "test",
+        "default_enabled": false,
+        "display_names": {
+          "zh_CN": "KF6 完整协方差",
+          "en_US": "KF6 Full Covariance"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "periodic"
+        }
+      },
+      "FLIGHT_LOG_RECORD_POWER": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "电源状态（输入电压）",
+          "en_US": "Power State (Input Voltage)"
+        },
+        "requires": {
+          "recordable_capabilities": [
+            "power.voltage"
+          ]
+        },
+        "cadence": {
+          "kind": "periodic"
+        }
+      },
+      "FLIGHT_LOG_RECORD_HEALTH": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "健康状态",
+          "en_US": "Health State"
+        },
+        "cadence": {
+          "kind": "periodic"
+        }
+      },
+      "FLIGHT_LOG_RECORD_TELEMETRY_DIAG": {
+        "level": "recommended",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "遥测诊断",
+          "en_US": "Telemetry Diagnostic"
+        },
+        "requires": {
+          "capabilities": [
+            "device.telemetry"
+          ]
+        },
+        "cadence": {
+          "kind": "periodic"
+        },
+        "producer_components": [
+          "silverstar.core.telemetry_task"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_INITIAL_STATE": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "初始状态",
+          "en_US": "Initial State"
+        },
+        "cadence": {
+          "kind": "one_shot"
+        }
+      },
+      "FLIGHT_LOG_RECORD_GNSS_NATIVE": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "GNSS 原始数据",
+          "en_US": "Native GNSS Data"
+        },
+        "requires": {
+          "recordable_capabilities": [
+            "gnss.position",
+            "gnss.velocity"
+          ]
+        },
+        "cadence": {
+          "kind": "source",
+          "source": "gnss",
+          "display_names": {
+            "zh_CN": "取决于GNSS数据更新",
+            "en_US": "Follows GNSS updates"
+          }
+        }
+      },
+      "FLIGHT_LOG_RECORD_BARO_NATIVE": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "气压计原始数据",
+          "en_US": "Native Barometer Data"
+        },
+        "requires": {
+          "recordable_capabilities": [
+            "barometer.altitude"
+          ]
+        },
+        "cadence": {
+          "kind": "source",
+          "source": "barometer",
+          "display_names": {
+            "zh_CN": "取决于气压计数据更新",
+            "en_US": "Follows barometer updates"
+          }
+        }
+      },
+      "FLIGHT_LOG_RECORD_MAG_NATIVE": {
+        "level": "recommended",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "磁力计原始数据",
+          "en_US": "Native Magnetometer Data"
+        },
+        "requires": {
+          "recordable_capabilities": [
+            "magnetometer.field"
+          ]
+        },
+        "cadence": {
+          "kind": "source",
+          "source": "magnetometer",
+          "display_names": {
+            "zh_CN": "取决于磁力计数据更新",
+            "en_US": "Follows magnetometer updates"
+          }
+        }
+      },
+      "FLIGHT_LOG_RECORD_INERTIAL_INCREMENT": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "惯性增量",
+          "en_US": "Inertial Increment"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.mechanization"
+          ]
+        },
+        "cadence": {
+          "kind": "algorithm_output",
+          "source": "inertial_mechanization",
+          "display_names": {
+            "zh_CN": "取决于惯导机械化输出",
+            "en_US": "Follows inertial mechanization output"
+          }
+        }
+      },
+      "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "GNSS 量测",
+          "en_US": "GNSS Measurement"
+        },
+        "requires": {
+          "capabilities": [
+            "device.gnss",
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "measurement"
+        }
+      },
+      "FLIGHT_LOG_RECORD_BARO_MEASUREMENT": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "气压计量测",
+          "en_US": "Barometer Measurement"
+        },
+        "requires": {
+          "capabilities": [
+            "barometer.altitude",
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "measurement"
+        }
+      },
+      "FLIGHT_LOG_RECORD_IMU_CORRECTED": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "IMU 校正数据",
+          "en_US": "Corrected IMU Data"
+        },
+        "requires": {
+          "capabilities": [
+            "device.imu"
+          ]
+        },
+        "cadence": {
+          "kind": "source",
+          "source": "imu",
+          "display_names": {
+            "zh_CN": "取决于IMU数据更新",
+            "en_US": "Follows IMU updates"
+          }
+        }
+      },
+      "FLIGHT_LOG_RECORD_CALIBRATION_RESULT": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "生效校准结果",
+          "en_US": "Active Calibration Result"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.calibration"
+          ]
+        },
+        "cadence": {
+          "kind": "event"
+        },
+        "producer_components": [
+          "silverstar.core.flight_task"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_ALIGNMENT_RESULT": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "对准结果",
+          "en_US": "Alignment Result"
+        },
+        "requires": {
+          "strategy_slots": [
+            "alignment"
+          ]
+        },
+        "cadence": {
+          "kind": "event"
+        }
+      },
+      "FLIGHT_LOG_RECORD_MISSION_CONFIG": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "任务配置",
+          "en_US": "Mission Configuration"
+        },
+        "cadence": {
+          "kind": "one_shot"
+        }
+      },
+      "FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "设备描述",
+          "en_US": "Device Descriptor"
+        },
+        "cadence": {
+          "kind": "one_shot"
+        }
+      },
+      "FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "算法描述",
+          "en_US": "Algorithm Descriptor"
+        },
+        "cadence": {
+          "kind": "one_shot"
+        }
+      },
+      "FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "日志流描述",
+          "en_US": "Log Stream Descriptor"
+        },
+        "cadence": {
+          "kind": "one_shot"
+        }
+      },
+      "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "日志解析配置描述",
+          "en_US": "Decoder Profile Descriptor"
+        },
+        "cadence": {
+          "kind": "one_shot"
+        }
+      },
+      "FLIGHT_LOG_RECORD_ESTIMATOR_STEP": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "估计器执行时序",
+          "en_US": "Estimator Step"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "measurement"
+        }
+      },
+      "FLIGHT_LOG_RECORD_GNSS_RECOVERY": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "GNSS 分组恢复",
+          "en_US": "Gnss Recovery"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "measurement"
+        }
+      },
+      "FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC": {
+        "level": "recommended",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "着陆候选诊断",
+          "en_US": "Landing Diagnostic"
+        },
+        "requires": {},
+        "cadence": {
+          "kind": "event"
+        }
+      },
+      "FLIGHT_LOG_RECORD_ESKF15_STATE": {
+        "level": "recommended",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "ESKF15 STATE",
+          "en_US": "ESKF15 STATE"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "algorithm_output"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART": {
+        "level": "optional",
+        "purpose": "test",
+        "default_enabled": false,
+        "display_names": {
+          "zh_CN": "ESKF15 FULL P PART",
+          "en_US": "ESKF15 FULL P PART"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "algorithm_output"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE": {
+        "level": "required",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "ESKF15 INITIAL STATE",
+          "en_US": "ESKF15 INITIAL STATE"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "one_shot"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART": {
+        "level": "required",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "ESKF15 INITIAL P PART",
+          "en_US": "ESKF15 INITIAL P PART"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "one_shot"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT": {
+        "level": "required",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "ESKF15 MEASUREMENT",
+          "en_US": "ESKF15 MEASUREMENT"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "measurement"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT": {
+        "level": "required",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "ESKF15 机体系输入",
+          "en_US": "ESKF15 Body Input"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "source"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_NAV_QUALITY": {
+        "level": "recommended",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "导航质量与窗口证据",
+          "en_US": "Navigation quality evidence"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "measurement"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf15",
+          "silverstar.algorithm.estimator.kf6"
+        ]
+      }
+    }
+  },
+  "default_stream_enabled": {
+    "STATS": true,
+    "TELEMETRY_DIAG": true,
+    "MAG_NATIVE": true
+  }
+}

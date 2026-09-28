@@ -1,0 +1,12 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "253DD88E57BB7F672AD2ED174979F19F632CEE58E71A36EB6D7452455BC20E07",
+    "Path": "D:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\backend_bridge_test\\build\\FCCG\\Host\\BackendBridge\\actual_backend_logger.BIN"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "2C58FA36A1E40A27801E775B02640F6A460DF00D12B58A0640BC3331B4102C46",
+    "Path": "D:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\backend_bridge_test\\ActualBackendLoggerBridgeTest.ssdecoder"
+  }
+]

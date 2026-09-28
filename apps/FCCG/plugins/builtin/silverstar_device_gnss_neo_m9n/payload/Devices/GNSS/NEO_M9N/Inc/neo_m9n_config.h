@@ -1,0 +1,61 @@
+#ifndef __NEO_M9N_CONFIG_H
+#define __NEO_M9N_CONFIG_H
+
+#include "project_resources.h"
+
+#define GNSS_TIMEOUT_MS              1500U
+
+#define GNSS_UART_BAUD_4800              4800U
+#define GNSS_UART_BAUD_9600              9600U
+#define GNSS_UART_BAUD_19200             19200U
+#define GNSS_UART_BAUD_38400             38400U
+#define GNSS_UART_BAUD_57600             57600U
+#define GNSS_UART_BAUD_115200            115200U
+#define GNSS_UART_BAUD_230400            230400U
+#define GNSS_UART_BAUD_460800            460800U
+#define GNSS_UART_BAUD_576000            576000U
+#define GNSS_UART_BAUD_921600            921600U
+
+#define GNSS_DEFAULT_BAUDRATE        GNSS_UART_BAUD_921600
+#define GNSS_MAX_BAUDRATE            GNSS_UART_BAUD_921600
+#define GNSS_DEFAULT_RATE_HZ         1U
+#define GNSS_TARGET_RATE_HZ          25U
+#define GNSS_MAX_RATE_HZ             25U
+
+#define GNSS_CFG_TIMEOUT_MS          100U
+#define GNSS_ACK_TIMEOUT_MS          1500U
+#define GNSS_CONFIG_READ_TIMEOUT_MS  3000U
+#define GNSS_CONFIG_READ_GROUP_TIMEOUT_MS 300U
+#define GNSS_CONFIG_READ_KEY_TIMEOUT_MS   150U
+#define GNSS_SAVE_ACK_TIMEOUT_MS     3000U
+#define GNSS_UART_CONFIG_SETTLE_MS   100U
+#define GNSS_SIGNAL_RESET_WAIT_MS    600U
+#define GNSS_SIGNAL_STREAM_RECOVERY_TIMEOUT_MS 1500U
+
+#define GNSS_CFG_LAYER_RAM           0x01U
+#define GNSS_CFG_LAYER_BBR           0x02U
+#define GNSS_CFG_LAYER_FLASH         0x04U
+#define GNSS_CFG_LAYER_RAM_FLASH     (GNSS_CFG_LAYER_RAM | GNSS_CFG_LAYER_FLASH)
+#define GNSS_CFG_LAYER_ALL           (GNSS_CFG_LAYER_RAM | GNSS_CFG_LAYER_BBR | GNSS_CFG_LAYER_FLASH)
+#define GNSS_CFG_LAYER_PERSISTENT_DEFAULT \
+                                      GNSS_CFG_LAYER_RAM
+
+#define GNSS_DYNMODEL_PORTABLE       0U
+#define GNSS_DYNMODEL_STATIONARY     2U
+#define GNSS_DYNMODEL_PEDESTRIAN     3U
+#define GNSS_DYNMODEL_AUTOMOTIVE     4U
+#define GNSS_DYNMODEL_SEA            5U
+#define GNSS_DYNMODEL_AIRBORNE_1G    6U
+#define GNSS_DYNMODEL_AIRBORNE_2G    7U
+#define GNSS_DYNMODEL_AIRBORNE_4G    8U
+#define GNSS_TARGET_DYNMODEL         GNSS_DYNMODEL_AIRBORNE_4G
+
+#define GNSS_NAV_MIN_SV              6U
+#define GNSS_NAV_MAX_HACC_MM         5000U
+#define GNSS_NAV_MAX_VACC_MM         10000U
+#define GNSS_NAV_MAX_SACC_MMPS       2000U
+#define GNSS_COURSE_MIN_GSPEED_MMPS   2000U      /* Minimum ground speed for motion-course use. */
+#define GNSS_COURSE_MAX_HEADACC_E5    1500000U   /* Motion-course maximum 1-sigma accuracy. */
+#define GNSS_NAV_MAX_AGE_MS          500U
+
+#endif /* __NEO_M9N_CONFIG_H */

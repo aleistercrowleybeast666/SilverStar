@@ -1,0 +1,125 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.sensor.input_voltage",
+  "name": "Input Voltage Monitor",
+  "type": "device",
+  "class": "other_sensor",
+  "version": "0.1.0",
+  "description": "ADC input-voltage Device owning the SilverStar power adapter; the selected hardware supplies ADC and monotonic-time bindings.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "input_voltage",
+        "kind": "adc",
+        "binding_macro": "PROJECT_RESOURCE_INPUT_VOLTAGE_ADC",
+        "display_names": {
+          "zh_CN": "输入电压监测",
+          "en_US": "Input Voltage Monitor"
+        }
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared",
+        "display_names": {
+          "zh_CN": "单调时间基准",
+          "en_US": "Monotonic Timebase"
+        }
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "power.voltage",
+    "power.monitor"
+  ],
+  "build": {
+    "sources": [
+      "Devices/Power/InputVoltage/Src/power_service.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/Power/InputVoltage/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/Power/InputVoltage/Src/power_service.c",
+      "Devices/Power/InputVoltage/Inc/adc_power_config.h"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "logical_device": true,
+    "display_names": {
+      "zh_CN": "输入电压监测",
+      "en_US": "Input Voltage Monitor"
+    },
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_POWER": {
+        "function_prefix": "SystemPower"
+      }
+    },
+    "device_category": "sensor.voltage",
+    "device_group": "other_sensors",
+    "device_group_order": 40,
+    "device_selection_style": "toggle",
+    "default_instance_id": "voltage_monitor0",
+    "recordable_outputs": {
+      "power.voltage": {
+        "enabled": true
+      }
+    },
+    "build_feature_symbols": [
+      "SYSTEM_USER_POWER_ENABLE"
+    ],
+    "optional_resource_bindings": [
+      {
+        "binding_macro": "PROJECT_RESOURCE_INPUT_VOLTAGE_ADC",
+        "enabled_macro": "PROJECT_FEATURE_INPUT_VOLTAGE_MONITOR",
+        "fallback": "PLATFORM_ADC_COUNT",
+        "header": "platform_adc.h"
+      }
+    ],
+    "device_descriptors": [
+      {
+        "order": 7,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_POWER_ADC",
+        "class": "SYSTEM_DEVICE_CLASS_POWER",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED",
+        "capability": "SYSTEM_CAPABILITY_POWER",
+        "rate": "(uint32_t)(1000000ULL / SYSTEM_POWER_SAMPLE_PERIOD_US)",
+        "driver_hash": "0x7C755741UL",
+        "name_hash": "0xEF288B50UL"
+      }
+    ]
+  },
+  "instance_policy": {
+    "plugin_max": 1,
+    "class_max": 4,
+    "same_plugin_multiple": false,
+    "multi_instance_ready": false
+  },
+  "physical_device": {
+    "vendor": "SilverStar",
+    "model": "SS0.5 Input Voltage Monitor",
+    "chipset": "SS0.5 ADC Input",
+    "driver": "power_service"
+  }
+}

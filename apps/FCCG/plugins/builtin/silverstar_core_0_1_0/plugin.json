@@ -1,0 +1,209 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.core.0_1_0",
+  "name": "SilverStar Core 0.1.0",
+  "type": "core",
+  "class": "flight_controller_core",
+  "version": "0.1.0",
+  "description": "MCU-independent SilverStar application, system, interfaces and host validation sources.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "core.silverstar",
+    "interface.canonical",
+    "system.lifecycle"
+  ],
+  "build": {
+    "sources": [
+      "APP/Src/device_task.c",
+      "APP/Src/app_tasks.c",
+      "APP/Src/estimator_barometer_pending.c",
+      "APP/Src/estimator_bus.c",
+      "APP/Src/estimator_task.c",
+      "APP/Src/flight_task.c",
+      "APP/Src/imu_sample_bus.c",
+      "APP/Src/ins_task.c",
+      "Common/Src/common_format.c",
+      "Common/Src/common_ringbuf.c",
+      "Common/Src/common_spsc_queue.c",
+      "Common/Src/silverstar_assert.c",
+      "Common/Src/debug_log.c",
+      "System/Src/system_barometer.c",
+      "System/Src/system_capabilities.c",
+      "System/Src/system_estimator_diagnostics.c",
+      "System/Src/system_estimator_profile.c",
+      "System/Src/system_gnss_quality.c",
+      "System/Src/system_health.c",
+      "System/Src/system_navigation_profile.c",
+      "System/Src/system_profile.c",
+      "System/Src/system_sensor_status.c",
+      "System/Src/system_startup.c",
+      "System/Src/system_time.c",
+      "System/Alignment/Src/system_alignment.c",
+      "System/Alignment/Src/system_alignment_source.c",
+      "System/Calibration/Src/system_calibration.c",
+      "System/Calibration/Src/system_calibration_correction.c",
+      "System/Indicator/Src/system_indicator.c",
+      "System/Inertial/Src/system_inertial.c",
+      "System/User/system_user_inertial_config.c",
+      "System/Src/system_source_selector.c",
+      "System/Src/system_navigation_health.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "APP/Inc",
+      "Common/Inc",
+      "Modules/Inc",
+      "Interfaces/Inc",
+      "System/Inc",
+      "System/Alignment/Inc",
+      "System/Calibration/Inc",
+      "System/Indicator/Inc",
+      "System/Inertial/Inc",
+      "System/User"
+    ],
+    "defines": [],
+    "protocol_sources": {
+      "telemetry": [
+        "APP/Src/telemetry_task.c",
+        "Modules/Src/telemetry_service.c"
+      ],
+      "maintenance": [
+        "APP/Src/serial_task.c"
+      ],
+      "logging": [
+        "APP/Src/device_native_log.c",
+        "APP/Src/diagnostic_log.c",
+        "APP/Src/logger_bus.c",
+        "APP/Src/logger_task.c",
+        "System/Src/system_log_policy.c"
+      ]
+    }
+  },
+  "payload": {
+    "roots": [
+      "APP",
+      "Common",
+      "Interfaces",
+      "Modules",
+      "System",
+      "Tests",
+      "Tools",
+      "BuildSystem/first_party.mk",
+      ".clang-format"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "SilverStar 核心 0.1.0",
+      "en_US": "SilverStar Core 0.1.0"
+    },
+    "protocol_log_producers": {
+      "logging": [
+        "silverstar.core.device_task",
+        "silverstar.core.flight_task"
+      ],
+      "telemetry": [
+        "silverstar.core.telemetry_task"
+      ]
+    },
+    "source_origins": {
+      "default": "reference_base",
+      "APP/Inc/app_task_config.h": "fccg_runtime_safety",
+      "Common/Inc/silverstar_assert.h": "fccg_runtime_safety",
+      "Common/Src/silverstar_assert.c": "fccg_runtime_safety",
+      "System/Inc/system_task_stack.h": "fccg_runtime_safety",
+      "System/Calibration/Inc/system_calibration.h": "fccg_runtime_safety",
+      "System/Calibration/Src/system_calibration_correction.c": "fccg_runtime_safety",
+      "Tests/Host/FreeRTOS.h": "fccg_runtime_safety",
+      "Tests/Host/task.h": "fccg_runtime_safety",
+      "Tests/Host/test_telemetry.c": "fccg_runtime_safety",
+      "Tests/Host/test_system_alignment.c": "fccg_runtime_safety",
+      "Tests/Host/test_fault_hook.c": "fccg_runtime_safety",
+      "Tests/Host/test_runtime_commands.c": "fccg_runtime_safety",
+      "Tests/Host/test_runtime_startup.c": "fccg_runtime_safety",
+      "Tests/Host/test_calibration_build_gate.c": "fccg_runtime_safety",
+      "APP/Src/app_tasks.c": "fccg_runtime_safety",
+      "APP/Inc/app_tasks.h": "fccg_optional_protocol_gating",
+      "APP/Src/device_task.c": "fccg_optional_protocol_gating",
+      "APP/Src/estimator_task.c": "fccg_runtime_safety",
+      "APP/Src/flight_task.c": "fccg_optional_protocol_gating",
+      "APP/Src/imu_sample_bus.c": "fccg_optional_protocol_gating",
+      "APP/Src/ins_task.c": "fccg_optional_protocol_gating",
+      "APP/Src/logger_task.c": "fccg_storage_integrity",
+      "APP/Src/telemetry_task.c": "fccg_optional_protocol_gating",
+      "Common/Src/debug_log.c": "fccg_optional_protocol_gating",
+      "Interfaces/Inc/system_telemetry_transport_if.h": "fccg_multi_instance_failover",
+      "System/Alignment/Src/system_alignment.c": "fccg_runtime_safety",
+      "System/Calibration/Src/system_calibration.c": "fccg_runtime_safety",
+      "System/Inc/system_source_selector.h": "fccg_multi_instance_failover",
+      "System/Src/system_capabilities.c": "fccg_optional_protocol_gating",
+      "System/Src/system_source_selector.c": "fccg_multi_instance_failover",
+      "System/Src/system_startup.c": "fccg_optional_protocol_gating",
+      "Tests/Host/Fixtures/MultiInstance/Inc/project_resources.h": "fccg_multi_instance_failover",
+      "Tests/Host/Fixtures/MultiInstance/multi_instance_resources.c": "fccg_multi_instance_failover",
+      "Tests/Host/Fixtures/source_selector_lock_stub.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_logger.c": "fccg_optional_protocol_gating",
+      "Tests/Host/test_console.c": "fccg_optional_protocol_gating",
+      "Tests/Host/test_imu_sample_bus.c": "fccg_optional_protocol_gating",
+      "Tests/Host/test_jy901b_adapter.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_jy901b_device.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_jy901b_multi_instance.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_lifecycle_logging.c": "fccg_optional_protocol_gating",
+      "Tests/Host/test_neo_m9n_adapter.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_neo_m9n_device.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_neo_m9n_multi_instance.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_source_selector.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_sx1280_hal_multi_instance.c": "fccg_optional_protocol_gating",
+      "Tests/Host/test_sx1281_device.c": "fccg_multi_instance_failover",
+      "Tests/Host/test_sx1281_multi_instance.c": "fccg_multi_instance_failover",
+      "Tests/Host/run_tests.ps1": "fccg_runtime_safety",
+      "Tools/check_architecture.ps1": "fccg_runtime_safety",
+      "Tools/check_power_of_ten.ps1": "fccg_optional_protocol_gating",
+      "Tools/validate_sslog_record_catalog.py": "fccg_optional_protocol_gating",
+      "Tools/check_task_stacks.py": "fccg_runtime_safety",
+      "APP/Inc/logger_bus.h": "fccg_storage_integrity",
+      "APP/Inc/logger_task.h": "fccg_storage_integrity",
+      "APP/Src/logger_bus.c": "fccg_storage_integrity",
+      "Interfaces/Inc/system_storage_if.h": "fccg_storage_integrity",
+      "System/Src/system_navigation_health.c": "fccg_joint_navigation",
+      "System/Inc/system_navigation_health.h": "fccg_joint_navigation"
+    },
+    "device_descriptors": [
+      {
+        "order": 12,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_NONE",
+        "class": "SYSTEM_DEVICE_CLASS_TIME",
+        "instance": 0,
+        "driver_id": 1,
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "capability": "0U",
+        "rate": "1000000UL",
+        "driver_hash": "0x162F2C94UL",
+        "name_hash": "0xADE08D82UL"
+      }
+    ],
+    "capability_source_groups": [
+      [
+        "imu.acceleration",
+        "imu.angular_rate",
+        "imu.software_alignment_qualified",
+        "imu.software_propagation_qualified",
+        "imu.landing_stillness_qualified"
+      ]
+    ]
+  }
+}

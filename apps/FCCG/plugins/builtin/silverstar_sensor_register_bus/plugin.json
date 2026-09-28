@@ -1,0 +1,67 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.sensor.register_bus",
+  "name": "Sensor register bus",
+  "type": "device",
+  "class": "sensor_library",
+  "version": "0.1.0",
+  "description": "Sensor register bus raw sensor driver; HARDWARE_UNVERIFIED.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [],
+  "build": {
+    "sources": [
+      "Devices/SensorBus/Src/sensor_register_bus.c",
+      "Devices/SensorBus/Src/sensor_imu.c",
+      "Devices/SensorBus/Src/sensor_imu_adapter.c",
+      "Devices/SensorBus/Src/sensor_imu_spi_adapter.c",
+      "Devices/SensorBus/Src/sensor_high_g.c",
+      "Devices/SensorBus/Src/sensor_bmi088_fifo.c",
+      "Devices/SensorBus/Src/sensor_bmi088_sync.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/SensorBus/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/SensorBus"
+    ]
+  },
+  "metadata": {
+    "internal": true,
+    "source_origins": {
+      "default": "fccg_joint_sensor_library"
+    },
+    "device_category": "sensor.bus",
+    "device_selection_style": "instance"
+  },
+  "instance_policy": {
+    "plugin_max": 4,
+    "class_max": 4,
+    "same_plugin_multiple": true,
+    "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "SilverStar",
+    "model": "Sensor register bus",
+    "chipset": "Sensor register bus",
+    "driver": "Sensor register bus register driver"
+  },
+  "transports": []
+}

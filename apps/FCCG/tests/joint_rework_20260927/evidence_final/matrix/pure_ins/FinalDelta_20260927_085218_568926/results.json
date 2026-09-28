@@ -1,0 +1,64 @@
+[
+  {
+    "gate": "Release-build",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "all",
+      "stack-report",
+      "memory-report",
+      "artifact-check"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Release-build.log",
+    "sha256": "a5e71ae604573d8e2c045212a4a59d39a16e28fa0df626725e6fe6666a55b73e"
+  },
+  {
+    "gate": "Release-quality",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "architecture-check",
+      "power10-check",
+      "static-analysis"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Release-quality.log",
+    "sha256": "3fb427b09abcf4486f086025794dac565844d658701ed86577e2858a68e8daef"
+  },
+  {
+    "gate": "Debug-build",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Debug",
+      "all",
+      "stack-report",
+      "memory-report",
+      "artifact-check"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Debug-build.log",
+    "sha256": "4de746ee75dc7a42e47c2a0bafafb2733060d60f51afb8a8205936e0a3a14dd6"
+  },
+  {
+    "gate": "Debug-quality",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Debug",
+      "architecture-check",
+      "power10-check",
+      "static-analysis"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Debug-quality.log",
+    "sha256": "373888eaa9d1aa2b7125c26175f70ca870cadc4c8aa57874dbbd7ab6de42df49"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "case": "legacy_same_size_type_change",
+    "exit": 2,
+    "identity_rejected": true
+  },
+  {
+    "case": "unknown_extra_record",
+    "exit": 2,
+    "identity_rejected": true
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.flight_logic.landing.baro_imu_window",
+  "name": "Landing Detection Common",
+  "type": "flight_logic",
+  "class": "landing_common",
+  "version": "0.1.0",
+  "description": "Shared landing metrics, windows, and regression primitives used by build-selected landing strategies.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "flight_logic.landing.common"
+  ],
+  "build": {
+    "sources": [
+      "FlightLogic/Landing/BarometerImuWindow/Src/flight_landing.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "FlightLogic/Landing/BarometerImuWindow/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "FlightLogic/Landing/BarometerImuWindow"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "着陆判定公共实现",
+      "en_US": "Landing Detection Common"
+    },
+    "descriptions": {
+      "zh_CN": "三种着陆策略共享的采样新鲜度、静止指标、冲击指标与气压回归实现。",
+      "en_US": "Shared sample-freshness, stillness, impact, and barometer-regression primitives for all landing strategies."
+    }
+  }
+}

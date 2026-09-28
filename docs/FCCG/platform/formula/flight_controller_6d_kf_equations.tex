@@ -1,0 +1,1256 @@
+
+\documentclass[12pt,a4paper]{ctexart}
+
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,bm,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.35em}
+\renewcommand{\arraystretch}{1.25}
+
+\newcommand{\I}{\mathbf I}
+\newcommand{\zero}{\mathbf 0}
+\newcommand{\xhat}{\hat{\mathbf x}}
+\newcommand{\transpose}{^{\mathsf T}}
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\diag}{\operatorname{diag}}
+
+\title{探空火箭六维位置--速度卡尔曼滤波模型\\
+预测、GNSS量测与气压高度量测完整公式}
+\author{Flight Controller 0.5}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{文档目的}
+
+本文给出第一版组合导航所采用的六维位置--速度线性卡尔曼滤波器（KF）的完整数学模型，包括：
+
+\begin{itemize}[leftmargin=2em]
+  \item IMU速度增量驱动的状态预测模型；
+  \item 预测噪声及其分配矩阵；
+  \item GNSS三维位置与三维速度量测模型；
+  \item 气压计相对高度量测模型；
+  \item GNSS更新和气压高度更新各自的五步递推公式；
+  \item 每个状态矩阵、输入矩阵、噪声分配矩阵和量测矩阵的具体形式；
+  \item GNSS位置与速度可用性分离时的部分量测更新；
+  \item 与常见飞控估计器执行结构的对应关系。
+\end{itemize}
+
+本文只描述六维位置--速度KF，不包含姿态失准角、加速度计零偏和陀螺零偏状态。纯惯导支路保持独立，不接受任何量测修正。
+
+\section{常见飞控如何使用IMU}
+
+常见飞控不会把每一帧原始陀螺仪和加速度计数据当作普通的低频观测量，而是将IMU作为惯性导航系统的高频传播输入：
+
+\begin{enumerate}[leftmargin=2em]
+  \item 陀螺仪角增量用于传播姿态；
+  \item 加速度计速度增量经过姿态旋转和重力补偿后，用于传播速度；
+  \item 速度用于传播位置；
+  \item 同时传播估计误差协方差；
+  \item GNSS、气压计、磁力计、空速计、视觉等传感器在各自新量测到达时执行异步量测更新。
+\end{enumerate}
+
+因此，典型执行频率关系为：
+
+\[
+\boxed{
+\text{IMU高频预测}
+\quad+\quad
+\text{外部传感器低频异步修正}
+}
+\]
+
+PX4 EKF2的官方说明明确指出，IMU数据只用于状态预测，不作为EKF推导中的普通观测量。ArduPilot的EKF同样使用陀螺仪、加速度计传播姿态、速度和位置，并融合GNSS、气压计、磁力计等外部量测。
+
+生产级飞控通常还会处理传感器延迟：把GNSS或气压量测放到与其时间戳对应的历史状态上融合，再通过缓存的IMU数据或输出预测器传播到当前时刻。
+
+\section{坐标系和状态定义}
+
+采用ENU局部导航坐标系：
+
+\begin{itemize}[leftmargin=2em]
+  \item $E$：东向；
+  \item $N$：北向；
+  \item $U$：向上。
+\end{itemize}
+
+六维状态向量定义为：
+
+\[
+\boxed{
+\mathbf x_k =
+\begin{bmatrix}
+p_{E,k} &
+p_{N,k} &
+p_{U,k} &
+v_{E,k} &
+v_{N,k} &
+v_{U,k}
+\end{bmatrix}\transpose
+}
+\]
+
+也可写成分块形式：
+
+\[
+\mathbf x_k =
+\begin{bmatrix}
+\mathbf p_k\\
+\mathbf v_k
+\end{bmatrix},
+\qquad
+\mathbf p_k =
+\begin{bmatrix}
+p_{E,k}\\p_{N,k}\\p_{U,k}
+\end{bmatrix},
+\qquad
+\mathbf v_k =
+\begin{bmatrix}
+v_{E,k}\\v_{N,k}\\v_{U,k}
+\end{bmatrix}.
+\]
+
+滤波器使用的IMU输入不是原始加速度，而是惯导机械化已经计算完成的导航系速度增量：
+
+\[
+\boxed{
+\mathbf u_k =
+\Delta \mathbf v_{n,k} =
+\begin{bmatrix}
+\Delta v_{E,k}\\
+\Delta v_{N,k}\\
+\Delta v_{U,k}
+\end{bmatrix}
+}
+\]
+
+该速度增量应已经完成：
+
+\begin{itemize}[leftmargin=2em]
+  \item 加速度计零偏补偿；
+  \item 划桨补偿；
+  \item 使用当前姿态从机体系旋转到ENU；
+  \item 重力补偿；
+  \item 对当前预测区间的积分。
+\end{itemize}
+
+\section{完整随机状态方程}
+
+完整离散随机状态模型写为：
+
+\[
+\boxed{
+\mathbf x_k =
+F_k\mathbf x_{k-1}
++
+B_k\mathbf u_k
++
+G_k\mathbf w_k
+}
+\]
+
+其中：
+
+\begin{itemize}[leftmargin=2em]
+  \item $F_k$：状态转移矩阵；
+  \item $B_k$：确定性IMU输入分配矩阵；
+  \item $\mathbf u_k=\Delta\mathbf v_{n,k}$：已知速度增量输入；
+  \item $G_k$：预测噪声分配矩阵；
+  \item $\mathbf w_k$：等效速度增量误差。
+\end{itemize}
+
+假设：
+
+\[
+\E[\mathbf w_k] = \zero,
+\qquad
+\E[\mathbf w_k\mathbf w_k\transpose] = Q_{\Delta v,k}.
+\]
+
+\subsection{状态转移矩阵}
+
+设本次预测时间间隔为 $\Delta t_k$，则：
+
+\[
+\boxed{
+F_k =
+\begin{bmatrix}
+\I_3 & \Delta t_k\I_3\\
+\zero_{3\times3} & \I_3
+\end{bmatrix}
+}
+\]
+
+其具体形式为：
+
+\[
+F_k =
+\begin{bmatrix}
+1&0&0&\Delta t_k&0&0\\
+0&1&0&0&\Delta t_k&0\\
+0&0&1&0&0&\Delta t_k\\
+0&0&0&1&0&0\\
+0&0&0&0&1&0\\
+0&0&0&0&0&1
+\end{bmatrix}.
+\]
+
+\subsection{IMU输入分配矩阵}
+
+速度增量直接更新速度，并以常加速度近似对位置贡献
+$\frac{1}{2}\Delta\mathbf v\,\Delta t$，因此：
+
+\[
+\boxed{
+B_k =
+\begin{bmatrix}
+\frac{1}{2}\Delta t_k\I_3\\
+\I_3
+\end{bmatrix}
+}
+\]
+
+具体形式为：
+
+\[
+B_k =
+\begin{bmatrix}
+\frac{1}{2}\Delta t_k&0&0\\
+0&\frac{1}{2}\Delta t_k&0\\
+0&0&\frac{1}{2}\Delta t_k\\
+1&0&0\\
+0&1&0\\
+0&0&1
+\end{bmatrix}.
+\]
+
+于是确定性状态传播对应：
+
+\[
+\boxed{
+\mathbf v_k^- =
+\mathbf v_{k-1}^+
++
+\Delta\mathbf v_{n,k}
+}
+\]
+
+\[
+\boxed{
+\mathbf p_k^- =
+\mathbf p_{k-1}^+
++
+\mathbf v_{k-1}^+\Delta t_k
++
+\frac{1}{2}\Delta\mathbf v_{n,k}\Delta t_k
+}
+\]
+
+也等价于：
+
+\[
+\mathbf p_k^- =
+\mathbf p_{k-1}^+
++
+\frac{\mathbf v_{k-1}^+ + \mathbf v_k^-}{2}\Delta t_k.
+\]
+
+\subsection{预测噪声分配矩阵}
+
+第一版把未建模的IMU传播误差等效为导航系速度增量误差
+$\mathbf w_k$。它对位置和速度的作用方式与真实速度增量相同，因此：
+
+\[
+\boxed{
+G_k =
+\begin{bmatrix}
+\frac{1}{2}\Delta t_k\I_3\\
+\I_3
+\end{bmatrix}
+}
+\]
+
+数值上：
+
+\[
+\boxed{G_k=B_k}
+\]
+
+但物理意义不同：
+
+\begin{itemize}[leftmargin=2em]
+  \item $B_k$描述确定性IMU输入如何进入状态；
+  \item $G_k$描述未知传播误差如何进入状态。
+\end{itemize}
+
+设：
+
+\[
+Q_{\Delta v,k}
+=
+\diag\left(
+\sigma_{\Delta v,E}^2,
+\sigma_{\Delta v,N}^2,
+\sigma_{\Delta v,U}^2
+\right).
+\]
+
+映射到六维状态空间后的过程噪声为：
+
+\[
+Q_{x,k}
+=
+G_kQ_{\Delta v,k}G_k\transpose.
+\]
+
+展开得到：
+
+\[
+\boxed{
+Q_{x,k}
+=
+\begin{bmatrix}
+\frac{\Delta t_k^2}{4}Q_{\Delta v,k}
+&
+\frac{\Delta t_k}{2}Q_{\Delta v,k}\\[4pt]
+\frac{\Delta t_k}{2}Q_{\Delta v,k}
+&
+Q_{\Delta v,k}
+\end{bmatrix}
+}
+\]
+
+注意，$Q_{\Delta v,k}$不应只照抄加速度计数据手册白噪声，还应等效包含六维模型未显式估计的误差，例如：
+
+\begin{itemize}[leftmargin=2em]
+  \item 姿态误差导致的比力投影误差；
+  \item 残余加速度计零偏；
+  \item 残余陀螺零偏对姿态传播的影响；
+  \item 高动态和振动造成的未建模误差；
+  \item 划桨补偿残差。
+\end{itemize}
+
+\section{状态预测的两步公式}
+
+\subsection{第一步：状态均值预测}
+
+由于过程噪声均值为零：
+
+\[
+\E[\mathbf w_k]=\zero,
+\]
+
+所以状态均值预测不直接加入随机噪声样本：
+
+\[
+\boxed{
+\xhat_k^- =
+F_k\xhat_{k-1}^+
++
+B_k\Delta\mathbf v_{n,k}
+}
+\]
+
+\subsection{第二步：协方差预测}
+
+\[
+\boxed{
+P_k^- =
+F_kP_{k-1}^+F_k\transpose
++
+G_kQ_{\Delta v,k}G_k\transpose
+}
+\]
+
+其中：
+
+\[
+P_k =
+\E\left[
+(\mathbf x_k-\xhat_k)
+(\mathbf x_k-\xhat_k)\transpose
+\right].
+\]
+
+\section{GNSS量测模型}
+
+GNSS的UBX-NAV-PVT输出速度为NED坐标：
+
+\[
+\begin{bmatrix}
+v_N\\v_E\\v_D
+\end{bmatrix}.
+\]
+
+转换成ENU：
+
+\[
+\boxed{
+\mathbf v_{\mathrm{GNSS}}^{ENU}
+=
+\begin{bmatrix}
+v_E\\
+v_N\\
+-v_D
+\end{bmatrix}
+}
+\]
+
+GNSS位置应先由经纬高转换为相对发射点ENU位置：
+
+\[
+\mathbf p_{\mathrm{GNSS}}^{ENU}
+=
+\begin{bmatrix}
+p_E^{G}\\
+p_N^{G}\\
+p_U^{G}
+\end{bmatrix}.
+\]
+
+\subsection{GNSS位置与速度联合量测}
+
+当位置和速度均可用时，定义：
+
+\[
+\boxed{
+\mathbf z_{G,k} =
+\begin{bmatrix}
+\mathbf p_{\mathrm{GNSS},k}\\
+\mathbf v_{\mathrm{GNSS},k}
+\end{bmatrix}
+}
+\in\mathbb R^6.
+\]
+
+完整随机量测方程为：
+
+\[
+\boxed{
+\mathbf z_{G,k}
+=
+H_G\mathbf x_k
++
+M_G\mathbf n_{G,k}
+}
+\]
+
+其中：
+
+\[
+\boxed{
+H_G=\I_6
+}
+\]
+
+\[
+\boxed{
+M_G=\I_6
+}
+\]
+
+\[
+\E[\mathbf n_{G,k}] = \zero,
+\qquad
+\E[\mathbf n_{G,k}\mathbf n_{G,k}\transpose] = R_G.
+\]
+
+第一版在缺少GNSS完整协方差矩阵时，可采用对角近似：
+
+\[
+\boxed{
+R_G =
+\diag\left(
+\sigma_{pE}^2,
+\sigma_{pN}^2,
+\sigma_{pU}^2,
+\sigma_{vE}^2,
+\sigma_{vN}^2,
+\sigma_{vU}^2
+\right)
+}
+\]
+
+可根据u-blox输出构造：
+
+\[
+\sigma_{pE}=\sigma_{pN}
+=
+\max\left(hAcc,\sigma_{h,\min}\right),
+\]
+
+\[
+\sigma_{pU}
+=
+\max\left(vAcc,\sigma_{U,\min}\right),
+\]
+
+\[
+\sigma_{vE}=\sigma_{vN}=\sigma_{vU}
+=
+\max\left(sAcc,\sigma_{s,\min}\right).
+\]
+
+所有毫米量必须先转换为米，毫米每秒必须先转换为米每秒。
+
+\subsection{仅GNSS位置可用}
+
+当：
+
+\[
+position\_usable=1,
+\qquad
+velocity\_usable=0,
+\]
+
+只使用位置量测：
+
+\[
+\mathbf z_{Gp,k}
+=
+\begin{bmatrix}
+p_E^G\\p_N^G\\p_U^G
+\end{bmatrix}.
+\]
+
+量测矩阵：
+
+\[
+\boxed{
+H_{Gp}
+=
+\begin{bmatrix}
+1&0&0&0&0&0\\
+0&1&0&0&0&0\\
+0&0&1&0&0&0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\I_3&\zero
+\end{bmatrix}
+}
+\]
+
+噪声分配矩阵：
+
+\[
+\boxed{M_{Gp}=\I_3}
+\]
+
+量测噪声：
+
+\[
+\boxed{
+R_{Gp}
+=
+\diag\left(
+\sigma_{pE}^2,
+\sigma_{pN}^2,
+\sigma_{pU}^2
+\right)
+}
+\]
+
+\subsection{仅GNSS速度可用}
+
+当：
+
+\[
+position\_usable=0,
+\qquad
+velocity\_usable=1,
+\]
+
+只使用速度量测：
+
+\[
+\mathbf z_{Gv,k}
+=
+\begin{bmatrix}
+v_E^G\\v_N^G\\v_U^G
+\end{bmatrix}.
+\]
+
+量测矩阵：
+
+\[
+\boxed{
+H_{Gv}
+=
+\begin{bmatrix}
+0&0&0&1&0&0\\
+0&0&0&0&1&0\\
+0&0&0&0&0&1
+\end{bmatrix}
+=
+\begin{bmatrix}
+\zero&\I_3
+\end{bmatrix}
+}
+\]
+
+噪声分配矩阵：
+
+\[
+\boxed{M_{Gv}=\I_3}
+\]
+
+量测噪声：
+
+\[
+\boxed{
+R_{Gv}
+=
+\diag\left(
+\sigma_{vE}^2,
+\sigma_{vN}^2,
+\sigma_{vU}^2
+\right)
+}
+\]
+
+GNSS运动航向$headMot$不进入第一版六维KF。它由GNSS水平速度解算得到，与$v_E,v_N$并非独立量测，重复融合会造成协方差过于乐观。
+
+\section{气压高度量测模型}
+
+气压计采用相对发射点高度：
+
+\[
+\boxed{
+z_{B,k}
+=
+h_{\mathrm{baro},k}
+-
+h_{\mathrm{baro},0}
+}
+\]
+
+其完整随机量测方程：
+
+\[
+\boxed{
+z_{B,k}
+=
+H_B\mathbf x_k
++
+M_B n_{B,k}
+}
+\]
+
+其中：
+
+\[
+\boxed{
+H_B=
+\begin{bmatrix}
+0&0&1&0&0&0
+\end{bmatrix}
+}
+\]
+
+\[
+\boxed{M_B=1}
+\]
+
+\[
+\E[n_{B,k}]=0,
+\qquad
+\E[n_{B,k}^2]=R_B=\sigma_B^2.
+\]
+
+所以：
+
+\[
+\boxed{
+z_{B,k}
+=
+p_{U,k}
++
+n_{B,k}
+}
+\]
+
+气压量测直接观测$p_U$，但由于$P$中位置与速度存在交叉协方差，更新后也可能间接修正$v_U$。
+
+\section{GNSS量测更新的五步公式}
+
+以下以GNSS联合位置--速度量测为例。若只使用位置或速度，只需分别替换为
+\[
+(\mathbf z_{Gp},H_{Gp},M_{Gp},R_{Gp})
+\quad\text{或}\quad
+(\mathbf z_{Gv},H_{Gv},M_{Gv},R_{Gv}).
+\]
+
+\subsection*{第1步：状态预测}
+
+\[
+\boxed{
+\xhat_k^- =
+F_k\xhat_{k-1}^+
++
+B_k\Delta\mathbf v_{n,k}
+}
+\]
+
+\subsection*{第2步：协方差预测}
+
+\[
+\boxed{
+P_k^- =
+F_kP_{k-1}^+F_k\transpose
++
+G_kQ_{\Delta v,k}G_k\transpose
+}
+\]
+
+\subsection*{第3步：GNSS创新、创新协方差与卡尔曼增益}
+
+创新：
+
+\[
+\boxed{
+\mathbf y_{G,k}
+=
+\mathbf z_{G,k}
+-
+H_G\xhat_k^-
+}
+\]
+
+创新协方差：
+
+\[
+\boxed{
+S_{G,k}
+=
+H_GP_k^-H_G\transpose
++
+M_GR_GM_G\transpose
+}
+\]
+
+由于$H_G=M_G=\I_6$：
+
+\[
+\boxed{
+S_{G,k}=P_k^-+R_G
+}
+\]
+
+卡尔曼增益：
+
+\[
+\boxed{
+K_{G,k}
+=
+P_k^-H_G\transpose S_{G,k}^{-1}
+}
+\]
+
+联合量测时可简化为：
+
+\[
+\boxed{
+K_{G,k}
+=
+P_k^-(P_k^-+R_G)^{-1}
+}
+\]
+
+\subsection*{第4步：GNSS状态更新}
+
+\[
+\boxed{
+\xhat_k^+
+=
+\xhat_k^-
++
+K_{G,k}\mathbf y_{G,k}
+}
+\]
+
+\subsection*{第5步：GNSS协方差更新}
+
+推荐使用Joseph稳定形式：
+
+\[
+\boxed{
+P_k^+
+=
+(\I_6-K_{G,k}H_G)
+P_k^-
+(\I_6-K_{G,k}H_G)\transpose
++
+K_{G,k}M_GR_GM_G\transpose K_{G,k}\transpose
+}
+\]
+
+由于$M_G=\I_6$：
+
+\[
+\boxed{
+P_k^+
+=
+(\I_6-K_{G,k}H_G)
+P_k^-
+(\I_6-K_{G,k}H_G)\transpose
++
+K_{G,k}R_GK_{G,k}\transpose
+}
+\]
+
+\section{GNSS部分量测更新的具体形式}
+
+\subsection{仅位置更新}
+
+\[
+\mathbf y_{Gp,k}
+=
+\mathbf z_{Gp,k}
+-
+H_{Gp}\xhat_k^-,
+\]
+
+\[
+S_{Gp,k}
+=
+H_{Gp}P_k^-H_{Gp}\transpose
++
+R_{Gp},
+\]
+
+\[
+K_{Gp,k}
+=
+P_k^-H_{Gp}\transpose S_{Gp,k}^{-1},
+\]
+
+\[
+\xhat_k^+
+=
+\xhat_k^-
++
+K_{Gp,k}\mathbf y_{Gp,k},
+\]
+
+\[
+P_k^+
+=
+(\I_6-K_{Gp,k}H_{Gp})
+P_k^-
+(\I_6-K_{Gp,k}H_{Gp})\transpose
++
+K_{Gp,k}R_{Gp}K_{Gp,k}\transpose.
+\]
+
+\subsection{仅速度更新}
+
+\[
+\mathbf y_{Gv,k}
+=
+\mathbf z_{Gv,k}
+-
+H_{Gv}\xhat_k^-,
+\]
+
+\[
+S_{Gv,k}
+=
+H_{Gv}P_k^-H_{Gv}\transpose
++
+R_{Gv},
+\]
+
+\[
+K_{Gv,k}
+=
+P_k^-H_{Gv}\transpose S_{Gv,k}^{-1},
+\]
+
+\[
+\xhat_k^+
+=
+\xhat_k^-
++
+K_{Gv,k}\mathbf y_{Gv,k},
+\]
+
+\[
+P_k^+
+=
+(\I_6-K_{Gv,k}H_{Gv})
+P_k^-
+(\I_6-K_{Gv,k}H_{Gv})\transpose
++
+K_{Gv,k}R_{Gv}K_{Gv,k}\transpose.
+\]
+
+\section{气压高度量测更新的五步公式}
+
+\subsection*{第1步：状态预测}
+
+\[
+\boxed{
+\xhat_k^- =
+F_k\xhat_{k-1}^+
++
+B_k\Delta\mathbf v_{n,k}
+}
+\]
+
+\subsection*{第2步：协方差预测}
+
+\[
+\boxed{
+P_k^- =
+F_kP_{k-1}^+F_k\transpose
++
+G_kQ_{\Delta v,k}G_k\transpose
+}
+\]
+
+\subsection*{第3步：气压创新、创新方差与卡尔曼增益}
+
+气压创新为标量：
+
+\[
+\boxed{
+y_{B,k}
+=
+z_{B,k}
+-
+H_B\xhat_k^-
+}
+\]
+
+创新方差：
+
+\[
+\boxed{
+S_{B,k}
+=
+H_BP_k^-H_B\transpose
++
+M_BR_BM_B\transpose
+}
+\]
+
+由于$M_B=1$：
+
+\[
+\boxed{
+S_{B,k}
+=
+H_BP_k^-H_B\transpose+\sigma_B^2
+}
+\]
+
+因为$H_B$只选择第三个状态$p_U$：
+
+\[
+\boxed{
+S_{B,k}
+=
+P_{k,33}^-+\sigma_B^2
+}
+\]
+
+卡尔曼增益为$6\times1$列向量：
+
+\[
+\boxed{
+K_{B,k}
+=
+P_k^-H_B\transpose S_{B,k}^{-1}
+}
+\]
+
+具体为：
+
+\[
+\boxed{
+K_{B,k}
+=
+\frac{1}{P_{k,33}^-+\sigma_B^2}
+\begin{bmatrix}
+P_{k,13}^-\\
+P_{k,23}^-\\
+P_{k,33}^-\\
+P_{k,43}^-\\
+P_{k,53}^-\\
+P_{k,63}^-
+\end{bmatrix}
+}
+\]
+
+\subsection*{第4步：气压状态更新}
+
+\[
+\boxed{
+\xhat_k^+
+=
+\xhat_k^-
++
+K_{B,k}y_{B,k}
+}
+\]
+
+展开为：
+
+\[
+\begin{bmatrix}
+\hat p_E^+\\
+\hat p_N^+\\
+\hat p_U^+\\
+\hat v_E^+\\
+\hat v_N^+\\
+\hat v_U^+
+\end{bmatrix}
+=
+\begin{bmatrix}
+\hat p_E^-\\
+\hat p_N^-\\
+\hat p_U^-\\
+\hat v_E^-\\
+\hat v_N^-\\
+\hat v_U^-
+\end{bmatrix}
++
+K_{B,k}
+\left(
+z_{B,k}-\hat p_U^-
+\right).
+\]
+
+\subsection*{第5步：气压协方差更新}
+
+Joseph形式：
+
+\[
+\boxed{
+P_k^+
+=
+(\I_6-K_{B,k}H_B)
+P_k^-
+(\I_6-K_{B,k}H_B)\transpose
++
+K_{B,k}R_BK_{B,k}\transpose
+}
+\]
+
+其中：
+
+\[
+R_B=\sigma_B^2.
+\]
+
+\section{量测门控与异步执行}
+
+预测步骤在每次新的IMU机械化速度增量到达时执行：
+
+\[
+\text{IMU update}
+\Longrightarrow
+\text{state prediction}
++
+\text{covariance prediction}.
+\]
+
+GNSS或气压计只有在出现一帧新的、时间戳有效且质量合格的量测时才执行更新：
+
+\[
+\text{new GNSS}
+\Longrightarrow
+\text{GNSS measurement update},
+\]
+
+\[
+\text{new barometer}
+\Longrightarrow
+\text{barometer measurement update}.
+\]
+
+若同一时刻有多个量测，可按时间戳顺序依次更新。第一版建议执行顺序：
+
+\begin{enumerate}[leftmargin=2em]
+  \item 传播到量测时间戳；
+  \item GNSS位置更新（若可用）；
+  \item GNSS速度更新（若可用）；
+  \item 气压高度更新（若可用）；
+  \item 继续用后续IMU增量传播。
+\end{enumerate}
+
+如果GNSS位置和速度来自同一个NAV-PVT解，它们实际上可能存在相关性。由于模块没有提供完整位置--速度协方差矩阵，第一版只能使用保守的对角$R$和噪声下限，避免滤波器过度自信。
+
+\section{创新一致性检验}
+
+任一量测更新前可计算归一化创新平方（NIS）：
+
+\[
+\boxed{
+\mathrm{NIS}
+=
+\mathbf y\transpose S^{-1}\mathbf y
+}
+\]
+
+GNSS位置、GNSS速度和气压高度应分别维护独立门限：
+
+\begin{itemize}[leftmargin=2em]
+  \item GNSS位置创新过大，只拒绝位置更新；
+  \item GNSS速度创新过大，只拒绝速度更新；
+  \item 气压创新过大，只拒绝气压更新。
+\end{itemize}
+
+气压量测为一维时：
+
+\[
+\boxed{
+\mathrm{NIS}_B
+=
+\frac{y_B^2}{S_B}
+}
+\]
+
+\section{全部矩阵尺寸汇总}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3cm}
+                  >{\centering\arraybackslash}p{2.5cm}
+                  >{\raggedright\arraybackslash}p{8cm}}
+\toprule
+符号 & 尺寸 & 含义\\
+\midrule
+\endfirsthead
+\toprule
+符号 & 尺寸 & 含义\\
+\midrule
+\endhead
+$\mathbf x$ & $6\times1$ & 位置和速度状态\\
+$F$ & $6\times6$ & 状态转移矩阵\\
+$B$ & $6\times3$ & 确定性速度增量输入分配矩阵\\
+$\Delta\mathbf v_n$ & $3\times1$ & IMU机械化导航系速度增量\\
+$G$ & $6\times3$ & 预测噪声分配矩阵\\
+$\mathbf w$ & $3\times1$ & 等效速度增量误差\\
+$Q_{\Delta v}$ & $3\times3$ & 速度增量误差协方差\\
+$P$ & $6\times6$ & 状态估计误差协方差\\
+$\mathbf z_G$ & $6\times1$ & GNSS位置和速度联合量测\\
+$H_G$ & $6\times6$ & GNSS联合量测矩阵\\
+$M_G$ & $6\times6$ & GNSS联合量测噪声分配矩阵\\
+$R_G$ & $6\times6$ & GNSS联合量测噪声协方差\\
+$\mathbf z_{Gp}$ & $3\times1$ & GNSS位置量测\\
+$H_{Gp}$ & $3\times6$ & GNSS位置量测矩阵\\
+$R_{Gp}$ & $3\times3$ & GNSS位置噪声协方差\\
+$\mathbf z_{Gv}$ & $3\times1$ & GNSS速度量测\\
+$H_{Gv}$ & $3\times6$ & GNSS速度量测矩阵\\
+$R_{Gv}$ & $3\times3$ & GNSS速度噪声协方差\\
+$z_B$ & 标量 & 气压相对高度\\
+$H_B$ & $1\times6$ & 气压高度量测矩阵\\
+$M_B$ & 标量 & 气压量测噪声分配\\
+$R_B$ & 标量 & 气压高度噪声方差\\
+$K_G$ & $6\times6$ & GNSS联合更新卡尔曼增益\\
+$K_{Gp}$ & $6\times3$ & GNSS位置更新增益\\
+$K_{Gv}$ & $6\times3$ & GNSS速度更新增益\\
+$K_B$ & $6\times1$ & 气压高度更新增益\\
+\bottomrule
+\end{longtable}
+
+\section{程序执行框架建议}
+
+第一版程序执行逻辑可概括为：
+
+\begin{verbatim}
+on_new_imu_delta(delta_v_n, dt):
+    build F(dt), B(dt), G(dt), Q_delta_v(dt, flight_phase)
+    x_minus = F * x_plus + B * delta_v_n
+    P_minus = F * P_plus * F^T + G * Q_delta_v * G^T
+    publish_prediction()
+
+on_new_gnss(snapshot):
+    propagate_to(snapshot.timestamp)
+
+    if snapshot.position_usable:
+        update_with_gnss_position()
+
+    if snapshot.velocity_usable:
+        update_with_gnss_velocity()
+
+on_new_barometer(snapshot):
+    propagate_to(snapshot.timestamp)
+
+    if snapshot.baro_usable:
+        update_with_barometer_height()
+\end{verbatim}
+
+纯惯导支路必须保存独立状态：
+
+\[
+\mathbf p_{\mathrm{pure}},
+\quad
+\mathbf v_{\mathrm{pure}},
+\quad
+\mathbf q_{\mathrm{pure}},
+\]
+
+KF量测修正不得写回纯惯导上下文。
+
+\section{结论}
+
+本六维KF使用IMU机械化速度增量作为高频预测输入，并使用GNSS和气压计作为异步量测：
+
+\[
+\boxed{
+\text{IMU} \rightarrow \text{预测}
+}
+\]
+
+\[
+\boxed{
+\text{GNSS位置、GNSS速度、气压高度}
+\rightarrow
+\text{量测更新}
+}
+\]
+
+完整状态模型为：
+
+\[
+\boxed{
+\mathbf x_k =
+F_k\mathbf x_{k-1}
++
+B_k\Delta\mathbf v_{n,k}
++
+G_k\mathbf w_k
+}
+\]
+
+完整量测模型为：
+
+\[
+\boxed{
+\mathbf z_k =
+H_k\mathbf x_k
++
+M_k\mathbf n_k
+}
+\]
+
+该结构符合惯性组合导航的常见做法，并为后续扩展到包含姿态失准角、加速度计零偏和陀螺零偏的15维ESKF保留了清晰接口。
+
+\end{document}

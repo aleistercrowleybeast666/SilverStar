@@ -1,0 +1,89 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.calibration",
+  "name": "IMU Calibration",
+  "type": "algorithm",
+  "class": "calibration",
+  "version": "0.1.0",
+  "description": "One-face and six-face calibration modes in one component.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": [
+      {
+        "capability": "imu.acceleration",
+        "purpose": "calibration"
+      },
+      {
+        "capability": "imu.angular_rate",
+        "purpose": "calibration"
+      }
+    ]
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.calibration"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Calibration/Src/imu_six_face_calibration.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Calibration/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Calibration"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "IMU 校准",
+      "en_US": "IMU Calibration"
+    },
+    "selection_notes": {
+      "zh_CN": "未选择校准流程时使用恒等校正；日志仍记录当前生效的校准结果。",
+      "en_US": "With no calibration procedure selected, identity correction is used; logging still records the active calibration result."
+    }
+  },
+  "selection": {
+    "kind": "mode",
+    "slot": "calibration",
+    "required": false,
+    "allow_none": true,
+    "allow_multiple": true,
+    "ui_order": 10,
+    "options": [
+      "OneFace",
+      "SixFace"
+    ],
+    "default": [],
+    "labels": {
+      "zh_CN": {
+        "OneFace": "单面校准",
+        "SixFace": "六面校准"
+      },
+      "en_US": {
+        "OneFace": "One-face",
+        "SixFace": "Six-face"
+      }
+    },
+    "option_symbols": {
+      "OneFace": "SYSTEM_CALIBRATION_CAPABILITY_ONE_FACE",
+      "SixFace": "SYSTEM_CALIBRATION_CAPABILITY_SIX_FACE"
+    },
+    "aggregate_symbol": "SYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK"
+  }
+}

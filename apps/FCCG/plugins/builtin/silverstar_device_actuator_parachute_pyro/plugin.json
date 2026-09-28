@@ -1,0 +1,125 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.actuator.parachute_pyro",
+  "name": "Parachute Pyro Power Output",
+  "type": "device",
+  "class": "mission_action_actuator",
+  "version": "0.1.0",
+  "description": "Declarative physical-resource Device backed by an internal SilverStar service component rather than by a Board plugin.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.flight_logic.mission_action.gpio_output_service",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "output",
+        "kind": "gpio_output",
+        "binding_macro": "PROJECT_RESOURCE_PARACHUTE_PYRO_OUTPUT",
+        "electrical_constraints": {
+          "mode": "gpio_output",
+          "output_type": "push_pull",
+          "pull": "none",
+          "speed": "low",
+          "safe_initial_level": "inactive",
+          "active_polarity": "high",
+          "startup_glitch_free": true
+        },
+        "display_names": {
+          "zh_CN": "火工开伞功率输出",
+          "en_US": "Parachute Pyro Power Output"
+        }
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared",
+        "display_names": {
+          "zh_CN": "单调时间基准",
+          "en_US": "Monotonic Timebase"
+        }
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "actuator.mission_action.parachute_deploy"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": []
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "declarative": true,
+    "logical_device": true,
+    "display_names": {
+      "zh_CN": "火工开伞功率输出",
+      "en_US": "Parachute Pyro Power Output"
+    },
+    "device_category": "actuator.mission",
+    "device_group": "actuators",
+    "device_group_order": 50,
+    "device_selection_style": "toggle",
+    "independent_class_member": true,
+    "default_instance_id": "parachute_pyro0",
+    "auto_select_when_required": false,
+    "build_feature_symbols": [
+      "SYSTEM_USER_OUTPUT_ENABLE",
+      "SYSTEM_USER_MISSION_ACTION_ENABLE",
+      "MISSION_ACTION_OUTPUT_BUILD_PARACHUTE_DEPLOY_AVAILABLE"
+    ],
+    "optional_resource_bindings": [
+      {
+        "binding_macro": "PROJECT_RESOURCE_PARACHUTE_PYRO_OUTPUT",
+        "enabled_macro": "PROJECT_FEATURE_PARACHUTE_PYRO_OUTPUT",
+        "fallback": "PLATFORM_GPIO_COUNT",
+        "header": "platform_gpio.h"
+      }
+    ],
+    "device_descriptors": [
+      {
+        "order": 11,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_OUTPUT",
+        "class": "SYSTEM_DEVICE_CLASS_MISSION_ACTION",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+        "capability": "SYSTEM_CAPABILITY_OUTPUT",
+        "rate": "0U",
+        "driver_hash": "0x8BC9C34EUL",
+        "name_hash": "0x3870C351UL"
+      }
+    ]
+  },
+  "instance_policy": {
+    "plugin_max": 1,
+    "class_max": 4,
+    "same_plugin_multiple": false,
+    "multi_instance_ready": false
+  },
+  "physical_device": {
+    "vendor": "SilverStar",
+    "model": "SS0.5 P_CONTROL2",
+    "chipset": "SS0.5 GPIO Output",
+    "driver": "output_service"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "baseline_commit": "8671cab2ccbeeaffeeaef7aea8d9ffd31c7db8b3",
+  "format": "per-operation FNV64 over initialized KF/context/storage/outcome bytes plus return result; SHA256 over trace stream",
+  "traces": {
+    "Test_NumericFailureAndInvalidPointers": {
+      "operations": 11,
+      "sha256": "9db49b459835c8bb1268de4f37b958ffc32c0d52b3689b6313ca052d06bc1b4e"
+    },
+    "Test_NominalFullRate0U": {
+      "operations": 4688,
+      "sha256": "e1e96610aa9f98ac466dc7fcd75a75a8fd36d1606622dd9205c8fad751046c11"
+    },
+    "Test_NominalFullRate20U": {
+      "operations": 4728,
+      "sha256": "8141c79b59985370dc7a23419650e462b2355eb22e160ff71b3a7f9497802d04"
+    },
+    "Test_NominalFullRate110U": {
+      "operations": 4908,
+      "sha256": "7a707a069b707f3d20f02d7333475dc5ea97e243b05e7f412b89ea98819aebef"
+    },
+    "Test_HardInputAndRateCapacity": {
+      "operations": 146,
+      "sha256": "ac7da22d632291a6f87d5767f5860c7672a49f8f8ebe998f1cb32aa0f6971c3a"
+    },
+    "Test_ZeroDelayLegacy": {
+      "operations": 928,
+      "sha256": "c2c1e74c4b40798215e36885c4ad1684b0f8561428f4f6a1e866b65435820c9c"
+    },
+    "Test_BarometerBetweenImuSamples": {
+      "operations": 101,
+      "sha256": "7f596074793e492dfdefa941d32ef7c3cd8646799966d57d143584d2e09c9fb1"
+    },
+    "Test_OverflowEpochAndDiscontinuity": {
+      "operations": 164,
+      "sha256": "57a85e2dad8d925840f45d6c0a293066740933a2732b110b4b649e001e0f40f6"
+    },
+    "Test_MixedAndWrap": {
+      "operations": 5628,
+      "sha256": "24413a4b9172276bca115bffde72dc3058c23798715b39b24bf0183652caee47"
+    },
+    "Test_BarometerAndTies": {
+      "operations": 166,
+      "sha256": "4f6b77a0c1f0c5800f05ac70cef6901b3a0e9154c11bfcf9cebaaeb3ac65fa4d"
+    },
+    "Test_ReceiveClockAndTimeSync": {
+      "operations": 80,
+      "sha256": "da3aff24041097bddbfd170b21c1c274d40b948f9f854acae1ffd9c30a95b986"
+    }
+  },
+  "app_traces": {
+    "0/270": "f36bc3aa1e3e58f7c1b3c7dcbc3805341a14d73e936e9e59f8f6d8b9e49f1be2",
+    "270/0": "c12f63f8672b642517724c4a562f59173e1e873741299cd5abc7bddeedd1ce29",
+    "0/0": "c29708e32f0ef03208b8f85b1992fd07433692f9a4b9cc258ee0aeac10bdd134",
+    "100/100": "2207d2ad266a6219f84a49e4970010a421b3ec64940e490ab71a28f349be10c8"
+  }
+}

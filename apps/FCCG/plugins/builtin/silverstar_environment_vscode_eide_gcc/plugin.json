@@ -1,0 +1,67 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.environment.vscode_eide_gcc",
+  "name": "VS Code + EIDE + Arm GNU Toolchain",
+  "type": "development_environment",
+  "class": "vscode_eide_gcc",
+  "version": "0.1.0",
+  "description": "Native Make, VS Code and EIDE project environment resolved from one source graph.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "environment.vscode",
+    "environment.eide",
+    "toolchain.arm_gnu"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": []
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "VS Code + EIDE + Arm GNU 工具链",
+      "en_US": "VS Code + EIDE + Arm GNU Toolchain"
+    }
+  },
+  "environment": {
+    "renderer": "vscode_eide_gcc",
+    "toolchain": "arm-none-eabi-gcc",
+    "outputs": [
+      "Makefile",
+      ".vscode/tasks.json",
+      ".vscode/settings.json",
+      ".vscode/extensions.json",
+      ".eide/eide.yml",
+      ".eide/files.options.yml",
+      "SilverStar.code-workspace"
+    ],
+    "tasks": [
+      "build",
+      "clean",
+      "host_tests",
+      "architecture_check",
+      "power10_check",
+      "static_analysis",
+      "artifact_check"
+    ],
+    "eide_native": true
+  }
+}

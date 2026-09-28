@@ -1,0 +1,104 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.indicator.system_status",
+  "name": "System Status Indicator",
+  "type": "device",
+  "class": "indicator",
+  "version": "0.1.0",
+  "description": "Declarative software-controlled status indicator.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.flight_logic.indicator.gpio_status_service",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "output",
+        "kind": "gpio_output",
+        "binding_macro": "PROJECT_RESOURCE_SYSTEM_INDICATOR",
+        "electrical_constraints": {
+          "mode": "gpio_output",
+          "output_type": "push_pull",
+          "pull": "none",
+          "speed": "low",
+          "safe_initial_level": "inactive",
+          "active_polarity": "low",
+          "startup_glitch_free": true
+        },
+        "display_names": {
+          "zh_CN": "系统状态指示灯 · GPIO输出",
+          "en_US": "System Status Indicator · GPIO Output"
+        }
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.indicator.system_status"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": []
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "declarative": true,
+    "logical_device": true,
+    "optional_device": false,
+    "device_category": "indicator.status",
+    "device_group": "indicators",
+    "device_group_order": 45,
+    "device_selection_style": "toggle",
+    "default_instance_id": "system_indicator0",
+    "indicator_role": "system",
+    "indicator_enable_symbol": "SYSTEM_INDICATOR_SYSTEM_ENABLE",
+    "optional_resource_bindings": [
+      {
+        "binding_macro": "PROJECT_RESOURCE_SYSTEM_INDICATOR",
+        "enabled_macro": "PROJECT_FEATURE_SYSTEM_STATUS_INDICATOR",
+        "fallback": "PLATFORM_GPIO_COUNT",
+        "header": "platform_gpio.h"
+      }
+    ],
+    "display_names": {
+      "zh_CN": "系统状态指示灯",
+      "en_US": "System Status Indicator"
+    },
+    "descriptions": {
+      "zh_CN": "显示校准、系统就绪及任务阶段状态；SS0.5使用PA1上的IMU_CAL_LED，低电平点亮。",
+      "en_US": "Shows calibration, readiness, and mission state; SS0.5 uses the active-low IMU_CAL_LED on PA1."
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 1,
+    "class_max": 8,
+    "same_plugin_multiple": false,
+    "multi_instance_ready": false
+  },
+  "physical_device": {
+    "vendor": "SilverStar",
+    "model": "SS0.5 IMU_CAL_LED",
+    "chipset": "Active-low GPIO Indicator",
+    "driver": "indicator_service"
+  }
+}

@@ -1,0 +1,67 @@
+[
+  {
+    "source": "SS0000",
+    "source_sha256": "f774a990536b3b39c38f09639a7f1d9a5100ea15f3d219ee1667d351d3fac381",
+    "raw_hash_unchanged": true,
+    "native_physical_mask_changes": 0,
+    "model_mismatch_count": 0,
+    "maximum_baro_receive_age_ms": 10.984,
+    "maximum_history_steps": 62,
+    "prior_capacity": 144,
+    "final_capacity": 192,
+    "numerical_output_sha256": "793b44d6abcbd829c557506777b3fe0ac07afc0551db203bb10cbaf18c97f838",
+    "equivalent_inputs_and_control_flow": true
+  },
+  {
+    "source": "SS0001",
+    "source_sha256": "65e19a1aeec9d24836a9831549156fbf9579a49b6cd822d1de06ca8f61b71e95",
+    "raw_hash_unchanged": true,
+    "native_physical_mask_changes": 0,
+    "model_mismatch_count": 0,
+    "maximum_baro_receive_age_ms": 10.99,
+    "maximum_history_steps": 62,
+    "prior_capacity": 144,
+    "final_capacity": 192,
+    "numerical_output_sha256": "f3a1457bf29aa32c0c54e037664c7a113d9d1b478d06e035183247b752f3eb3f",
+    "equivalent_inputs_and_control_flow": true
+  },
+  {
+    "source": "SS0002",
+    "source_sha256": "b9e8e6a56a18497acb5e6405881fe5128464e478edb1a793822951a55b6989cc",
+    "raw_hash_unchanged": true,
+    "native_physical_mask_changes": 0,
+    "model_mismatch_count": 0,
+    "maximum_baro_receive_age_ms": 10.984,
+    "maximum_history_steps": 62,
+    "prior_capacity": 144,
+    "final_capacity": 192,
+    "numerical_output_sha256": "4d0ec6bf60cdc874a3bb1418bdfbbd4112639ea584dd59184e8e7457836167ba",
+    "equivalent_inputs_and_control_flow": true
+  },
+  {
+    "source": "SS0003",
+    "source_sha256": "1cc5c363610245b1eefcab0f2beab6a5cf128ee4049fa6dc9e2deb1a703a588a",
+    "raw_hash_unchanged": true,
+    "native_physical_mask_changes": 0,
+    "model_mismatch_count": 0,
+    "maximum_baro_receive_age_ms": 10.99,
+    "maximum_history_steps": 62,
+    "prior_capacity": 144,
+    "final_capacity": 192,
+    "numerical_output_sha256": "d0cc3fff921554520cb19085e386b8940e73cf6c45b11d8b9a3176fdccf0da7c",
+    "equivalent_inputs_and_control_flow": true
+  },
+  {
+    "source": "SS0004",
+    "source_sha256": "f19bc4350816b2b3fabd298a788f78e7abf30556a563800ef6da178772b1938c",
+    "raw_hash_unchanged": true,
+    "native_physical_mask_changes": 0,
+    "model_mismatch_count": 0,
+    "maximum_baro_receive_age_ms": 10.99,
+    "maximum_history_steps": 62,
+    "prior_capacity": 144,
+    "final_capacity": 192,
+    "numerical_output_sha256": "dc06005ec5123bf7de7493f7778a719348ed3bdcbe2bde107719b1697097ed1c",
+    "equivalent_inputs_and_control_flow": true
+  }
+]

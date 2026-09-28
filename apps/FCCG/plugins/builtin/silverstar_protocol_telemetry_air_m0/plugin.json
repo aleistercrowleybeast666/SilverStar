@@ -1,0 +1,116 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.protocol.telemetry.air_m0",
+  "name": "AIR Telemetry Protocol M0",
+  "type": "protocol",
+  "class": "telemetry",
+  "version": "0.1.0",
+  "description": "AIR M0 telemetry protocol with unchanged wire codec.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "protocol.air"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Protocol/Inc/air_protocol.h",
+      "Protocol/Src/air_protocol.c",
+      "Protocol/metadata/air_m0.json"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "AIR遥测协议 M0",
+      "en_US": "AIR Telemetry Protocol M0"
+    },
+    "log_compatibility_tag": "AIR-NCRC",
+    "source_origins": {
+      "reference_base": {
+        "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+        "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+      },
+      "fccg_extension": {
+        "source_root": "tools/reference_overlays",
+        "purpose": "independent protocol ownership and metadata"
+      }
+    }
+  },
+  "protocol": {
+    "category": "telemetry",
+    "logging_metadata": "Protocol/metadata/air_m0.json",
+    "maintenance_protocol_version": "0.0",
+    "firmware_version": "0.1.0",
+    "documentation_version": "0.1.0",
+    "profiles": {
+      "telemetry": [
+        {
+          "id": "air.m0",
+          "version": "0.0",
+          "display_names": {
+            "zh_CN": "AIR遥测协议 M0",
+            "en_US": "AIR Telemetry Protocol M0"
+          },
+          "service": "telemetry_service",
+          "slot": "telemetry_protocol",
+          "codec_sources": [
+            "Protocol/Src/air_protocol.c"
+          ],
+          "parser_sources": [
+            "Protocol/Src/air_protocol.c"
+          ],
+          "include_dirs": [
+            "Protocol/Inc"
+          ],
+          "defines": [],
+          "binding": "telemetry_transport",
+          "transport_selection": "ordered_failover",
+          "transport": {
+            "capability": "transport.packet",
+            "kind": "packet",
+            "minimum_mtu": 50,
+            "ordered": true,
+            "bidirectional": true,
+            "reliable": false,
+            "mode": "datagram"
+          },
+          "decoder_metadata": "Protocol/metadata/air_m0.json",
+          "documentation": [
+            "docs/AIR_PROTOCOL.md"
+          ],
+          "host_tests": [
+            "Tests/Host/test_air_kf.c",
+            "Tests/Host/test_telemetry.c"
+          ],
+          "golden_tests": [
+            "Tests/Host/test_air_kf.c",
+            "Tests/Host/test_telemetry.c"
+          ]
+        }
+      ]
+    }
+  }
+}

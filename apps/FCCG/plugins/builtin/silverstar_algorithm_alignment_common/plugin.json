@@ -1,0 +1,54 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.alignment.common",
+  "name": "Alignment Common",
+  "type": "algorithm",
+  "class": "alignment_common",
+  "version": "0.1.0",
+  "description": "Shared alignment window, preflight and strategy contracts.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.algorithm.common",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.alignment_common"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Alignment/Common/Src/attitude_alignment.c",
+      "Algorithm/Alignment/Common/Src/attitude_preflight.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Alignment/Common/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Alignment/Common"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "初始对准公共层",
+      "en_US": "Alignment Common"
+    }
+  }
+}

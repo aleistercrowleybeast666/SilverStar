@@ -1,0 +1,8 @@
+{
+  "evidence_entries": 183,
+  "lossless_log_containers": 5,
+  "all_evidence_byte_exact": true,
+  "immutable_original_inputs": 6,
+  "shared_contract_sha256": "68d4e3edc6be4c110c4c973990c12a1464290d28e1c9254a51c96a1f41832b5e",
+  "passed": true
+}

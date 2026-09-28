@@ -1,0 +1,85 @@
+{
+  "format_version": 1,
+  "resources": {
+    "PLATFORM_UART_1": {
+      "physical": "USART1",
+      "fixed": true,
+      "purpose": "imu.data"
+    },
+    "PLATFORM_UART_2": {
+      "physical": "USART2",
+      "fixed": true,
+      "purpose": "gnss.data"
+    },
+    "PLATFORM_UART_3": {
+      "physical": "USART3",
+      "fixed": true,
+      "purpose": "console.data"
+    },
+    "PLATFORM_SPI_1": {
+      "physical": "SPI1",
+      "fixed": true,
+      "purpose": "telemetry.bus"
+    },
+    "PLATFORM_GPIO_0": {
+      "physical": "RADIO_NSS",
+      "fixed": true,
+      "purpose": "telemetry.nss"
+    },
+    "PLATFORM_GPIO_1": {
+      "physical": "RADIO_RST",
+      "fixed": true,
+      "purpose": "telemetry.reset"
+    },
+    "PLATFORM_GPIO_2": {
+      "physical": "RADIO_BUSY",
+      "fixed": true,
+      "purpose": "telemetry.busy"
+    },
+    "PLATFORM_GPIO_3": {
+      "physical": "RADIO_DIO1",
+      "fixed": true,
+      "purpose": "telemetry.dio1"
+    },
+    "PLATFORM_GPIO_4": {
+      "physical": "P_CONTROL1",
+      "fixed": true,
+      "purpose": "actuator.launch_ignition"
+    },
+    "PLATFORM_GPIO_5": {
+      "physical": "P_CONTROL2",
+      "fixed": true,
+      "purpose": "actuator.parachute_pyro"
+    },
+    "PLATFORM_GPIO_6": {
+      "physical": "IMU_CAL_LED",
+      "fixed": true,
+      "purpose": "system.indicator"
+    },
+    "PLATFORM_GPIO_7": {
+      "physical": "GNSS_RST",
+      "fixed": true,
+      "purpose": "gnss.reset"
+    },
+    "PLATFORM_GPIO_8": {
+      "physical": "GNSS_TIMEPULSE",
+      "fixed": true,
+      "purpose": "gnss.timepulse"
+    },
+    "PLATFORM_ADC_1": {
+      "physical": "ADC1",
+      "fixed": true,
+      "purpose": "power.input_voltage"
+    },
+    "PLATFORM_SDIO_1": {
+      "physical": "SDIO",
+      "fixed": true,
+      "purpose": "storage"
+    },
+    "PLATFORM_TIME_1": {
+      "physical": "SYSTEM_TIME",
+      "fixed": true,
+      "purpose": "system.time"
+    }
+  }
+}

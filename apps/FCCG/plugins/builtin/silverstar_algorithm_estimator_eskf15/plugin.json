@@ -1,0 +1,874 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.estimator.eskf15",
+  "name": "ESKF15 Navigation Estimator",
+  "type": "algorithm",
+  "class": "estimator",
+  "version": "0.1.0",
+  "description": "Right-local 15-state error Kalman navigation with calibrated body replay.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.algorithm.common",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": [
+      {
+        "capability": "gnss.position",
+        "purpose": "measurement_update"
+      },
+      {
+        "capability": "gnss.velocity",
+        "purpose": "measurement_update"
+      },
+      {
+        "capability": "barometer.altitude",
+        "purpose": "measurement_update"
+      }
+    ]
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.estimator"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Estimator/ESKF15/Src/navigation_eskf.c",
+      "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+      "Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Estimator/ESKF15/Inc"
+    ],
+    "defines": [
+      "SYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF15",
+      "SYSTEM_BUILD_ESTIMATOR_ENABLED=0U",
+      "SYSTEM_BUILD_ESKF15_ENABLED=1U"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Estimator/ESKF15"
+    ]
+  },
+  "metadata": {
+    "display_names": {
+      "zh_CN": "ESKF15 误差状态融合估计",
+      "en_US": "ESKF15 Navigation Estimator"
+    },
+    "algorithm_revision": 1,
+    "gnss_integrity_revision": 3,
+    "navigation_contract": "silverstar.navigation/1",
+    "algorithm_descriptors": [
+      {
+        "order": 4,
+        "class": "SYSTEM_ALGORITHM_CLASS_FUSION",
+        "algorithm": "SYSTEM_FUSION_ALGORITHM",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "name_hash": "0x45534B46UL"
+      }
+    ],
+    "source_origins": {
+      "default": "fccg_joint_navigation"
+    }
+  },
+  "selection": {
+    "kind": "strategy",
+    "slot": "estimator",
+    "required": false,
+    "allow_none": true,
+    "ui_order": 30,
+    "none_defines": [
+      "SYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_NONE",
+      "SYSTEM_BUILD_ESTIMATOR_ENABLED=0U"
+    ]
+  },
+  "algorithm_parameters": {
+    "schema_id": "silverstar.algorithm-parameters/1.0",
+    "parameters": [
+      {
+        "id": "gravity_mps2",
+        "type": "float",
+        "default": 9.78,
+        "unit": "m/s^2",
+        "representation": "value",
+        "min": 1.0,
+        "max": 20.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 0,
+        "generated_symbol": "SYSTEM_ESKF_GRAVITY_MPS2",
+        "display_names": {
+          "en_US": "Gravity",
+          "zh_CN": "重力加速度"
+        },
+        "description": {
+          "en_US": "ESKF15 actual gravity_mps2; m/s^2; value.",
+          "zh_CN": "ESKF15 实际参数 gravity_mps2；m/s^2。"
+        },
+        "shared_key": "navigation.gravity_mps2"
+      },
+      {
+        "id": "gyro_noise_density",
+        "type": "float",
+        "default": 0.003,
+        "unit": "rad/s/sqrt(Hz)",
+        "representation": "value",
+        "min": 1e-08,
+        "max": 10.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "basic",
+        "order": 1,
+        "generated_symbol": "SYSTEM_ESKF_GYRO_NOISE_DENSITY",
+        "display_names": {
+          "en_US": "Gyro noise density",
+          "zh_CN": "陀螺噪声密度"
+        },
+        "description": {
+          "en_US": "ESKF15 actual gyro_noise_density; rad/s/sqrt(Hz); value.",
+          "zh_CN": "ESKF15 实际参数 gyro_noise_density；rad/s/sqrt(Hz)。"
+        }
+      },
+      {
+        "id": "accel_noise_density",
+        "type": "float",
+        "default": 0.08,
+        "unit": "m/s^2/sqrt(Hz)",
+        "representation": "value",
+        "min": 1e-08,
+        "max": 10.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "basic",
+        "order": 2,
+        "generated_symbol": "SYSTEM_ESKF_ACCEL_NOISE_DENSITY",
+        "display_names": {
+          "en_US": "Accelerometer noise density",
+          "zh_CN": "加速度计噪声密度"
+        },
+        "description": {
+          "en_US": "ESKF15 actual accel_noise_density; m/s^2/sqrt(Hz); value.",
+          "zh_CN": "ESKF15 实际参数 accel_noise_density；m/s^2/sqrt(Hz)。"
+        }
+      },
+      {
+        "id": "gyro_bias_rw",
+        "type": "float",
+        "default": 0.0001,
+        "unit": "rad/s^2/sqrt(Hz)",
+        "representation": "value",
+        "min": 1e-08,
+        "max": 10.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "basic",
+        "order": 3,
+        "generated_symbol": "SYSTEM_ESKF_GYRO_BIAS_RW",
+        "display_names": {
+          "en_US": "Gyro bias random walk",
+          "zh_CN": "陀螺零偏随机游走"
+        },
+        "description": {
+          "en_US": "ESKF15 actual gyro_bias_rw; rad/s^2/sqrt(Hz); value.",
+          "zh_CN": "ESKF15 实际参数 gyro_bias_rw；rad/s^2/sqrt(Hz)。"
+        }
+      },
+      {
+        "id": "accel_bias_rw",
+        "type": "float",
+        "default": 0.001,
+        "unit": "m/s^3/sqrt(Hz)",
+        "representation": "value",
+        "min": 1e-08,
+        "max": 10.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "basic",
+        "order": 4,
+        "generated_symbol": "SYSTEM_ESKF_ACCEL_BIAS_RW",
+        "display_names": {
+          "en_US": "Accelerometer bias random walk",
+          "zh_CN": "加速度计零偏随机游走"
+        },
+        "description": {
+          "en_US": "ESKF15 actual accel_bias_rw; m/s^3/sqrt(Hz); value.",
+          "zh_CN": "ESKF15 实际参数 accel_bias_rw；m/s^3/sqrt(Hz)。"
+        }
+      },
+      {
+        "id": "p0_position_e",
+        "type": "float",
+        "default": 4,
+        "unit": "m^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 5,
+        "generated_symbol": "SYSTEM_ESKF_P0_POSITION_E",
+        "display_names": {
+          "en_US": "Initial position variance E",
+          "zh_CN": "位置 E 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_position_e; m^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_position_e；m^2。"
+        }
+      },
+      {
+        "id": "p0_position_n",
+        "type": "float",
+        "default": 4,
+        "unit": "m^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 6,
+        "generated_symbol": "SYSTEM_ESKF_P0_POSITION_N",
+        "display_names": {
+          "en_US": "Initial position variance N",
+          "zh_CN": "位置 N 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_position_n; m^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_position_n；m^2。"
+        }
+      },
+      {
+        "id": "p0_position_u",
+        "type": "float",
+        "default": 9,
+        "unit": "m^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 7,
+        "generated_symbol": "SYSTEM_ESKF_P0_POSITION_U",
+        "display_names": {
+          "en_US": "Initial position variance U",
+          "zh_CN": "位置 U 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_position_u; m^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_position_u；m^2。"
+        }
+      },
+      {
+        "id": "p0_velocity_e",
+        "type": "float",
+        "default": 0.25,
+        "unit": "m^2/s^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 8,
+        "generated_symbol": "SYSTEM_ESKF_P0_VELOCITY_E",
+        "display_names": {
+          "en_US": "Initial velocity variance E",
+          "zh_CN": "速度 E 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_velocity_e; m^2/s^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_velocity_e；m^2/s^2。"
+        }
+      },
+      {
+        "id": "p0_velocity_n",
+        "type": "float",
+        "default": 0.25,
+        "unit": "m^2/s^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 9,
+        "generated_symbol": "SYSTEM_ESKF_P0_VELOCITY_N",
+        "display_names": {
+          "en_US": "Initial velocity variance N",
+          "zh_CN": "速度 N 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_velocity_n; m^2/s^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_velocity_n；m^2/s^2。"
+        }
+      },
+      {
+        "id": "p0_velocity_u",
+        "type": "float",
+        "default": 0.25,
+        "unit": "m^2/s^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 10,
+        "generated_symbol": "SYSTEM_ESKF_P0_VELOCITY_U",
+        "display_names": {
+          "en_US": "Initial velocity variance U",
+          "zh_CN": "速度 U 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_velocity_u; m^2/s^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_velocity_u；m^2/s^2。"
+        }
+      },
+      {
+        "id": "p0_theta_x",
+        "type": "float",
+        "default": 0.030461742,
+        "unit": "rad^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 11,
+        "generated_symbol": "SYSTEM_ESKF_P0_THETA_X",
+        "display_names": {
+          "en_US": "Initial attitude error variance X",
+          "zh_CN": "姿态误差 X 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_theta_x; rad^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_theta_x；rad^2。"
+        }
+      },
+      {
+        "id": "p0_theta_y",
+        "type": "float",
+        "default": 0.030461742,
+        "unit": "rad^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 12,
+        "generated_symbol": "SYSTEM_ESKF_P0_THETA_Y",
+        "display_names": {
+          "en_US": "Initial attitude error variance Y",
+          "zh_CN": "姿态误差 Y 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_theta_y; rad^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_theta_y；rad^2。"
+        }
+      },
+      {
+        "id": "p0_theta_z",
+        "type": "float",
+        "default": 0.030461742,
+        "unit": "rad^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 13,
+        "generated_symbol": "SYSTEM_ESKF_P0_THETA_Z",
+        "display_names": {
+          "en_US": "Initial attitude error variance Z",
+          "zh_CN": "姿态误差 Z 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_theta_z; rad^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_theta_z；rad^2。"
+        }
+      },
+      {
+        "id": "p0_gyro_bias_x",
+        "type": "float",
+        "default": 0.0001,
+        "unit": "rad^2/s^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 14,
+        "generated_symbol": "SYSTEM_ESKF_P0_GYRO_BIAS_X",
+        "display_names": {
+          "en_US": "Initial gyro bias variance X",
+          "zh_CN": "陀螺零偏 X 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_gyro_bias_x; rad^2/s^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_gyro_bias_x；rad^2/s^2。"
+        }
+      },
+      {
+        "id": "p0_gyro_bias_y",
+        "type": "float",
+        "default": 0.0001,
+        "unit": "rad^2/s^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 15,
+        "generated_symbol": "SYSTEM_ESKF_P0_GYRO_BIAS_Y",
+        "display_names": {
+          "en_US": "Initial gyro bias variance Y",
+          "zh_CN": "陀螺零偏 Y 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_gyro_bias_y; rad^2/s^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_gyro_bias_y；rad^2/s^2。"
+        }
+      },
+      {
+        "id": "p0_gyro_bias_z",
+        "type": "float",
+        "default": 0.0001,
+        "unit": "rad^2/s^2",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 16,
+        "generated_symbol": "SYSTEM_ESKF_P0_GYRO_BIAS_Z",
+        "display_names": {
+          "en_US": "Initial gyro bias variance Z",
+          "zh_CN": "陀螺零偏 Z 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_gyro_bias_z; rad^2/s^2; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_gyro_bias_z；rad^2/s^2。"
+        }
+      },
+      {
+        "id": "p0_accel_bias_x",
+        "type": "float",
+        "default": 0.01,
+        "unit": "m^2/s^4",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 17,
+        "generated_symbol": "SYSTEM_ESKF_P0_ACCEL_BIAS_X",
+        "display_names": {
+          "en_US": "Initial accelerometer bias variance X",
+          "zh_CN": "加速度计零偏 X 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_accel_bias_x; m^2/s^4; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_accel_bias_x；m^2/s^4。"
+        }
+      },
+      {
+        "id": "p0_accel_bias_y",
+        "type": "float",
+        "default": 0.01,
+        "unit": "m^2/s^4",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 18,
+        "generated_symbol": "SYSTEM_ESKF_P0_ACCEL_BIAS_Y",
+        "display_names": {
+          "en_US": "Initial accelerometer bias variance Y",
+          "zh_CN": "加速度计零偏 Y 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_accel_bias_y; m^2/s^4; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_accel_bias_y；m^2/s^4。"
+        }
+      },
+      {
+        "id": "p0_accel_bias_z",
+        "type": "float",
+        "default": 0.01,
+        "unit": "m^2/s^4",
+        "representation": "covariance_diagonal",
+        "min": 1e-08,
+        "max": 1000000.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 19,
+        "generated_symbol": "SYSTEM_ESKF_P0_ACCEL_BIAS_Z",
+        "display_names": {
+          "en_US": "Initial accelerometer bias variance Z",
+          "zh_CN": "加速度计零偏 Z 初始方差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual p0_accel_bias_z; m^2/s^4; covariance_diagonal.",
+          "zh_CN": "ESKF15 实际参数 p0_accel_bias_z；m^2/s^4。"
+        }
+      },
+      {
+        "id": "gnss_position_std_horizontal",
+        "type": "float",
+        "default": 1.5,
+        "unit": "m",
+        "representation": "sigma",
+        "min": 0.001,
+        "max": 1000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 20,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_POSITION_STD_HORIZONTAL",
+        "display_names": {
+          "en_US": "GNSS horizontal position sigma floor",
+          "zh_CN": "GNSS 水平位置标准差下限"
+        },
+        "description": {
+          "en_US": "ESKF15 actual gnss_position_std_horizontal; m; sigma.",
+          "zh_CN": "ESKF15 实际参数 gnss_position_std_horizontal；m。"
+        }
+      },
+      {
+        "id": "gnss_position_std_vertical",
+        "type": "float",
+        "default": 2.5,
+        "unit": "m",
+        "representation": "sigma",
+        "min": 0.001,
+        "max": 1000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 21,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_POSITION_STD_VERTICAL",
+        "display_names": {
+          "en_US": "GNSS vertical position sigma floor",
+          "zh_CN": "GNSS 垂直位置标准差下限"
+        },
+        "description": {
+          "en_US": "ESKF15 actual gnss_position_std_vertical; m; sigma.",
+          "zh_CN": "ESKF15 实际参数 gnss_position_std_vertical；m。"
+        }
+      },
+      {
+        "id": "gnss_velocity_std",
+        "type": "float",
+        "default": 0.15,
+        "unit": "m/s",
+        "representation": "sigma",
+        "min": 0.001,
+        "max": 1000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 22,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_VELOCITY_STD",
+        "display_names": {
+          "en_US": "GNSS velocity sigma floor",
+          "zh_CN": "GNSS 速度标准差下限"
+        },
+        "description": {
+          "en_US": "ESKF15 actual gnss_velocity_std; m/s; sigma.",
+          "zh_CN": "ESKF15 实际参数 gnss_velocity_std；m/s。"
+        }
+      },
+      {
+        "id": "baro_std_m",
+        "type": "float",
+        "default": 2.5,
+        "unit": "m",
+        "representation": "sigma",
+        "min": 0.01,
+        "max": 1000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 23,
+        "generated_symbol": "SYSTEM_ESKF_BARO_STD_M",
+        "display_names": {
+          "en_US": "Barometer height sigma",
+          "zh_CN": "气压高度标准差"
+        },
+        "description": {
+          "en_US": "ESKF15 actual baro_std_m; m; sigma.",
+          "zh_CN": "ESKF15 实际参数 baro_std_m；m。"
+        }
+      },
+      {
+        "id": "nis_1d_soft",
+        "type": "float",
+        "default": 6.635,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.001,
+        "max": 10000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 24,
+        "generated_symbol": "SYSTEM_ESKF_NIS_1D_SOFT",
+        "display_names": {
+          "en_US": "1D NIS soft threshold",
+          "zh_CN": "1 维 NIS 软降权阈值"
+        },
+        "description": {
+          "en_US": "ESKF15 actual nis_1d_soft; 1; value.",
+          "zh_CN": "ESKF15 实际参数 nis_1d_soft；1。"
+        }
+      },
+      {
+        "id": "nis_1d_hard",
+        "type": "float",
+        "default": 10.828,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.001,
+        "max": 10000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 25,
+        "generated_symbol": "SYSTEM_ESKF_NIS_1D_HARD",
+        "display_names": {
+          "en_US": "1D NIS hard threshold",
+          "zh_CN": "1 维 NIS 硬拒绝阈值"
+        },
+        "description": {
+          "en_US": "ESKF15 actual nis_1d_hard; 1; value.",
+          "zh_CN": "ESKF15 实际参数 nis_1d_hard；1。"
+        },
+        "greater_than": "nis_1d_soft"
+      },
+      {
+        "id": "nis_2d_soft",
+        "type": "float",
+        "default": 9.21,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.001,
+        "max": 10000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 26,
+        "generated_symbol": "SYSTEM_ESKF_NIS_2D_SOFT",
+        "display_names": {
+          "en_US": "2D NIS soft threshold",
+          "zh_CN": "2 维 NIS 软降权阈值"
+        },
+        "description": {
+          "en_US": "ESKF15 actual nis_2d_soft; 1; value.",
+          "zh_CN": "ESKF15 实际参数 nis_2d_soft；1。"
+        }
+      },
+      {
+        "id": "nis_2d_hard",
+        "type": "float",
+        "default": 13.816,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.001,
+        "max": 10000,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 27,
+        "generated_symbol": "SYSTEM_ESKF_NIS_2D_HARD",
+        "display_names": {
+          "en_US": "2D NIS hard threshold",
+          "zh_CN": "2 维 NIS 硬拒绝阈值"
+        },
+        "description": {
+          "en_US": "ESKF15 actual nis_2d_hard; 1; value.",
+          "zh_CN": "ESKF15 实际参数 nis_2d_hard；1。"
+        },
+        "greater_than": "nis_2d_soft"
+      },
+      {
+        "id": "nis_max_r_scale",
+        "type": "float",
+        "default": 4,
+        "unit": "1",
+        "representation": "value",
+        "min": 1,
+        "max": 4,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 28,
+        "generated_symbol": "SYSTEM_ESKF_NIS_MAX_R_SCALE",
+        "display_names": {
+          "en_US": "Maximum robust variance factor",
+          "zh_CN": "稳健方差倍率上限"
+        },
+        "description": {
+          "en_US": "ESKF15 actual nis_max_r_scale; 1; value.",
+          "zh_CN": "ESKF15 实际参数 nis_max_r_scale；1。"
+        }
+      },
+      {
+        "id": "lever_arm_body_x_m",
+        "type": "float",
+        "default": 0.0,
+        "unit": "m",
+        "representation": "value",
+        "min": -10.0,
+        "max": 10.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 29,
+        "generated_symbol": "SYSTEM_ESKF_LEVER_ARM_BODY_X_M",
+        "display_names": {
+          "en_US": "GNSS body lever arm X",
+          "zh_CN": "GNSS 机体系杆臂 X"
+        },
+        "description": {
+          "en_US": "ESKF15 actual lever_arm_body_x_m; m; value.",
+          "zh_CN": "ESKF15 实际参数 lever_arm_body_x_m；m。"
+        }
+      },
+      {
+        "id": "lever_arm_body_y_m",
+        "type": "float",
+        "default": 0.0,
+        "unit": "m",
+        "representation": "value",
+        "min": -10.0,
+        "max": 10.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 30,
+        "generated_symbol": "SYSTEM_ESKF_LEVER_ARM_BODY_Y_M",
+        "display_names": {
+          "en_US": "GNSS body lever arm Y",
+          "zh_CN": "GNSS 机体系杆臂 Y"
+        },
+        "description": {
+          "en_US": "ESKF15 actual lever_arm_body_y_m; m; value.",
+          "zh_CN": "ESKF15 实际参数 lever_arm_body_y_m；m。"
+        }
+      },
+      {
+        "id": "lever_arm_body_z_m",
+        "type": "float",
+        "default": 0.0,
+        "unit": "m",
+        "representation": "value",
+        "min": -10.0,
+        "max": 10.0,
+        "precision": 8,
+        "step": 0.001,
+        "group": "advanced",
+        "order": 31,
+        "generated_symbol": "SYSTEM_ESKF_LEVER_ARM_BODY_Z_M",
+        "display_names": {
+          "en_US": "GNSS body lever arm Z",
+          "zh_CN": "GNSS 机体系杆臂 Z"
+        },
+        "description": {
+          "en_US": "ESKF15 actual lever_arm_body_z_m; m; value.",
+          "zh_CN": "ESKF15 实际参数 lever_arm_body_z_m；m。"
+        }
+      },
+      {
+        "id": "gnss_position_measurement_delay_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 550,
+        "precision": 0,
+        "step": 5,
+        "group": "advanced",
+        "order": 32,
+        "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
+        "display_names": {
+          "en_US": "GNSS position measurement delay",
+          "zh_CN": "GNSS 位置量测延迟"
+        },
+        "description": {
+          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+        }
+      },
+      {
+        "id": "gnss_velocity_measurement_delay_ms",
+        "type": "integer",
+        "default": 270,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 550,
+        "precision": 0,
+        "step": 5,
+        "group": "advanced",
+        "order": 33,
+        "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
+        "display_names": {
+          "en_US": "GNSS velocity measurement delay",
+          "zh_CN": "GNSS 速度量测延迟"
+        },
+        "description": {
+          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+        }
+      },
+      {
+        "id": "baro_measurement_delay_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 550,
+        "precision": 0,
+        "step": 5,
+        "group": "advanced",
+        "order": 34,
+        "generated_symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
+        "display_names": {
+          "en_US": "Barometer measurement delay",
+          "zh_CN": "气压高度量测延迟"
+        },
+        "description": {
+          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+        }
+      }
+    ]
+  }
+}

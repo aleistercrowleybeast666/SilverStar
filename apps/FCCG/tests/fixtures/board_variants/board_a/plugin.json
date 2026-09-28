@@ -1,0 +1,276 @@
+{
+  "schema_version": 0,
+  "id": "fixture.board.f407_a",
+  "name": "F407 Board A",
+  "type": "board",
+  "class": "flight_controller_board",
+  "version": "1.0.0",
+  "description": "Test fixture mapping IMU to USART1 and GNSS to USART2.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu.stm32f407vet6",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [
+      {
+        "id": "USART1",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "PLATFORM_UART_1",
+          "header": "platform_uart.h"
+        }
+      },
+      {
+        "id": "USART2",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "PLATFORM_UART_2",
+          "header": "platform_uart.h"
+        }
+      },
+      {
+        "id": "GNSS_RESET_A",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_0",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "GNSS_TIMEPULSE_A",
+        "kind": "gpio_interrupt",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_1",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "INPUT_VOLTAGE_A",
+        "kind": "adc",
+        "metadata": {
+          "c_id": "PLATFORM_ADC_1",
+          "header": "platform_adc.h"
+        }
+      },
+      {
+        "id": "LAUNCH_IGNITION_A",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_2",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PARACHUTE_PYRO_A",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_3",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "SYSTEM_TIME",
+        "kind": "time",
+        "metadata": {}
+      }
+    ],
+    "roles": [
+      {
+        "key": "imu:data",
+        "kind": "uart",
+        "default": "USART1",
+        "candidates": [
+          "USART1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "imu:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:data",
+        "kind": "uart",
+        "default": "USART2",
+        "candidates": [
+          "USART2"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:reset",
+        "kind": "gpio_output",
+        "default": "GNSS_RESET_A",
+        "candidates": [
+          "GNSS_RESET_A"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:timepulse",
+        "kind": "gpio_interrupt",
+        "default": "GNSS_TIMEPULSE_A",
+        "candidates": [
+          "GNSS_TIMEPULSE_A"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "gnss:time",
+        "kind": "time",
+        "default": "SYSTEM_TIME",
+        "candidates": [
+          "SYSTEM_TIME"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.sensor.input_voltage:input_voltage",
+        "kind": "adc",
+        "default": "INPUT_VOLTAGE_A",
+        "candidates": [
+          "INPUT_VOLTAGE_A"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.actuator.launch_ignition:output",
+        "kind": "gpio_output",
+        "default": "LAUNCH_IGNITION_A",
+        "candidates": [
+          "LAUNCH_IGNITION_A"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "silverstar.device.actuator.parachute_pyro:output",
+        "kind": "gpio_output",
+        "default": "PARACHUTE_PYRO_A",
+        "candidates": [
+          "PARACHUTE_PYRO_A"
+        ],
+        "fixed": true
+      }
+    ],
+    "conflicts": []
+  },
+  "provides": [
+    "board.fixture.f407_a",
+    "transport.packet",
+    "transport.byte_stream",
+    "transport.sequential_file_sink"
+  ],
+  "transports": [
+    {
+      "capability": "transport.packet",
+      "kind": "packet",
+      "mtu": 255,
+      "ordered": true,
+      "bidirectional": true,
+      "reliable": false,
+      "mode": "datagram"
+    },
+    {
+      "capability": "transport.byte_stream",
+      "kind": "byte_stream",
+      "mtu": 1,
+      "ordered": true,
+      "bidirectional": true,
+      "reliable": true,
+      "mode": "stream"
+    },
+    {
+      "capability": "transport.sequential_file_sink",
+      "kind": "sequential_file_sink",
+      "mtu": 65535,
+      "ordered": true,
+      "bidirectional": false,
+      "reliable": true,
+      "mode": "file"
+    }
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "BoardVariants/A"
+    ]
+  },
+  "metadata": {
+    "display_names": {
+      "zh_CN": "F407 板卡 A",
+      "en_US": "F407 Board A"
+    },
+    "platform_resources": {
+      "uarts": [
+        {
+          "id": "USART1",
+          "handle": "huart1"
+        },
+        {
+          "id": "USART2",
+          "handle": "huart2"
+        }
+      ],
+      "spis": [],
+      "adcs": [
+        {
+          "id": "INPUT_VOLTAGE_A",
+          "handle": "hadc1"
+        }
+      ],
+      "gpios": [
+        {
+          "id": "GNSS_RESET_A",
+          "port": "GNSS_RESET_A_GPIO_Port",
+          "pin": "GNSS_RESET_A_Pin"
+        },
+        {
+          "id": "GNSS_TIMEPULSE_A",
+          "port": "GNSS_TIMEPULSE_A_GPIO_Port",
+          "pin": "GNSS_TIMEPULSE_A_Pin",
+          "active_high": 1
+        },
+        {
+          "id": "LAUNCH_IGNITION_A",
+          "port": "LAUNCH_IGNITION_A_GPIO_Port",
+          "pin": "LAUNCH_IGNITION_A_Pin"
+        },
+        {
+          "id": "PARACHUTE_PYRO_A",
+          "port": "PARACHUTE_PYRO_A_GPIO_Port",
+          "pin": "PARACHUTE_PYRO_A_Pin"
+        }
+      ]
+    }
+  },
+  "board": {
+    "source_kind": "third_party",
+    "compatible_mcus": [
+      "silverstar.mcu.stm32f407vet6"
+    ],
+    "vendor": "STM32",
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "verified": false,
+    "hardware_root": "BoardVariants/A"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "maximum_absolute_error": {
+    "p": 1.0311939405482917e-05,
+    "v": 9.415769714138378e-06,
+    "q": 7.532805394953185e-06,
+    "bg": 5.67984240962098e-07,
+    "ba": 5.174664484636302e-07,
+    "covariance": 3.1265881617996427e-06,
+    "nis": 1.6923102232946352e-05
+  },
+  "scenarios": 4,
+  "prediction_epochs": 2000,
+  "measurement_groups": 1000,
+  "tolerance": {
+    "absolute": 0.0002,
+    "relative": 0.0003
+  }
+}

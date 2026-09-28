@@ -1,0 +1,54 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.common",
+  "name": "Navigation Algorithm Common",
+  "type": "algorithm",
+  "class": "common",
+  "version": "0.1.0",
+  "description": "Shared MCU-independent attitude-frame and local-geodesy algorithms.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.common"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Common/Src/attitude_frame.c",
+      "Algorithm/Common/Src/geodesy_local.c",
+      "Algorithm/Common/Src/navigation_quality.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Common/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Common"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "导航算法公共层",
+      "en_US": "Navigation Algorithm Common"
+    },
+    "source_origins": {
+      "Algorithm/Common/Src/navigation_quality.c": "fccg_joint_navigation",
+      "Algorithm/Common/Inc/navigation_quality.h": "fccg_joint_navigation"
+    }
+  }
+}

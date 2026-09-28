@@ -1,0 +1,17 @@
+{
+  "format_version": 1,
+  "profile_id": "air.m0",
+  "service": "telemetry_service",
+  "slot": "telemetry_protocol",
+  "wire_value": 0,
+  "framing": "packet",
+  "minimum_mtu": 50,
+  "sensor_status": {
+    "message_type": "AIR_TYPE_SENSOR_STATUS",
+    "device_identity_fields": [
+      "sensor_id",
+      "instance_id"
+    ],
+    "wire_layout_unchanged": true
+  }
+}

@@ -1,0 +1,1 @@
+{"epochs": 200, "interval_us": 10000, "mid_interval_events": 18, "maximum_absolute_error": 3.1615246314231626e-06, "maximum_c_replay_steps": 72}

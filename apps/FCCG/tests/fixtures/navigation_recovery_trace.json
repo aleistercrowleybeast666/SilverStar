@@ -1,0 +1,76 @@
+{
+  "purpose": "Revision-2 reduced replay context and explicit invalid defaults for unattempted GNSS groups. Operation counts match the pre-revision-2 golden; the C fixture also enforces numerical references, SPD and failure controls.",
+  "source_sha256": "1afee50b4e603ad21f020fe348b11dc2c51e3d86096d20f07f178bbd86fb2a3e",
+  "traces": {
+    "Test_ReanchorInvalidCovariance": {
+      "operations": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Test_ReanchorGroupCovariance": {
+      "operations": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Test_IndependentReplayGroups": {
+      "operations": 8,
+      "sha256": "0ee788fdb38db5bbcb756a847a44caa176fc4fa43622ca8d21657cdc5f9fa6f0"
+    },
+    "Test_ReanchorDelayed1U": {
+      "operations": 2343,
+      "sha256": "db41222dbd86cbe8ad4f263b54a146d7a1154bea21bd302548cd20ada30cbb7a"
+    },
+    "Test_ReanchorDelayed0U": {
+      "operations": 2415,
+      "sha256": "f24bf9ff63a0239d049326c1bb943dc51c3731ad4e2ef192201be38bb5991c5b"
+    },
+    "Test_NumericFailureAndInvalidPointers": {
+      "operations": 11,
+      "sha256": "eab43cac2d081fad0b2fc446c8ffb36ef6b0a95ad102eeeec6b802905bf215ff"
+    },
+    "Test_NominalFullRate0U": {
+      "operations": 4688,
+      "sha256": "f9c8ecdce4c3477dc9dcb48a85a1d02455b4071838861f0e57066ea74296854d"
+    },
+    "Test_NominalFullRate20U": {
+      "operations": 4728,
+      "sha256": "ac4aebe8c74bf201c65541f15ded9a6789378598cdef388568da38d0cc50bb38"
+    },
+    "Test_NominalFullRate110U": {
+      "operations": 4908,
+      "sha256": "850d247c669043ed58ac4e23788b1db22cca4323676fa00cfdcba45ae3dc839f"
+    },
+    "Test_HardInputAndRateCapacity": {
+      "operations": 146,
+      "sha256": "1cd80c6e64a67c48e2a210341fca16c1e0525fae93d3ffe25e10c59442391da5"
+    },
+    "Test_ZeroDelayDirectReference": {
+      "operations": 928,
+      "sha256": "9aa0639201dfe2648b61daf7517eea6638c08a2679bee6b7a91b97c16ecbbccf"
+    },
+    "Test_BarometerBetweenImuSamples": {
+      "operations": 101,
+      "sha256": "d82910aca81a7d8fc7afa0b0600251b4d49b148b9f188024312592ec9b00a97d"
+    },
+    "Test_OverflowEpochAndDiscontinuity": {
+      "operations": 164,
+      "sha256": "08f0791e5b76cac1859e1a7715f25cd4444515dfed2242fb5882e30eb5668be6"
+    },
+    "Test_MixedAndWrap": {
+      "operations": 5628,
+      "sha256": "12317d128ce3c764d8d246e83af94258af840e35ece7c219dd70d8dbf3da27b0"
+    },
+    "Test_BarometerAndTies": {
+      "operations": 166,
+      "sha256": "c355a754df6009132054eff1753ec983e4cd1445b6ccd17a2fed5b01e2faca8c"
+    },
+    "Test_ReceiveClockAndTimeSync": {
+      "operations": 80,
+      "sha256": "136bde446efbfada72a2296f1eab62ffa90c8f59ad3be2dd719b57637f8ab35a"
+    }
+  },
+  "app_traces": {
+    "0/270": "c0462fc48d264c9f93e49818e75245dbddbf42352e214981a99a23d5444e2e02",
+    "270/0": "5a585562b2a4c00a724d72af3f5ea77ab6d9aa45ff34b2ce83cf620178379825",
+    "0/0": "c4e6188345d5fd44c1cdcefb4a2ac3ce6c6e647864b51713d4b21f359208b4cc",
+    "100/100": "1c52a9622268f852531bce28d01188f48561662dc3e6f59384de8ad780ee664b"
+  }
+}

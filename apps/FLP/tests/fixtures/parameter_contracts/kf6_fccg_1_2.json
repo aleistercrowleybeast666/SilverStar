@@ -1,0 +1,814 @@
+{
+  "schema_id": "silverstar.algorithm-parameters/1.0",
+  "parameters": [
+    {
+      "id": "gravity_mps2",
+      "type": "float",
+      "default": 9.78,
+      "unit": "m/s^2",
+      "representation": "value",
+      "min": 1.0,
+      "max": 20.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 0,
+      "generated_symbol": "SYSTEM_KF_GRAVITY_MPS2",
+      "display_names": {
+        "en_US": "Gravity",
+        "zh_CN": "重力加速度"
+      },
+      "description": {
+        "en_US": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+        "zh_CN": "仅用于导航重力扣除；校准、对准和传感器换算保留独立的平台重力配置。"
+      },
+      "shared_key": "navigation.gravity_mps2"
+    },
+    {
+      "id": "p0_position_e",
+      "type": "float",
+      "default": 4.0,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "min": 0.001,
+      "max": 1000000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 1,
+      "generated_symbol": "SYSTEM_ESTIMATOR_P0_POSITION_E_VARIANCE_M2",
+      "display_names": {
+        "en_US": "P0 position E",
+        "zh_CN": "P0 位置 E"
+      },
+      "description": {
+        "en_US": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+        "zh_CN": "初始协方差对角下限；GNSS 不确定性可能增大 P0。此值不再平方。"
+      }
+    },
+    {
+      "id": "p0_position_n",
+      "type": "float",
+      "default": 4.0,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "min": 0.001,
+      "max": 1000000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 2,
+      "generated_symbol": "SYSTEM_ESTIMATOR_P0_POSITION_N_VARIANCE_M2",
+      "display_names": {
+        "en_US": "P0 position N",
+        "zh_CN": "P0 位置 N"
+      },
+      "description": {
+        "en_US": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+        "zh_CN": "初始协方差对角下限；GNSS 不确定性可能增大 P0。此值不再平方。"
+      }
+    },
+    {
+      "id": "p0_position_u",
+      "type": "float",
+      "default": 9.0,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "min": 0.001,
+      "max": 1000000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 3,
+      "generated_symbol": "SYSTEM_ESTIMATOR_P0_POSITION_U_VARIANCE_M2",
+      "display_names": {
+        "en_US": "P0 position U",
+        "zh_CN": "P0 位置 U"
+      },
+      "description": {
+        "en_US": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+        "zh_CN": "初始协方差对角下限；GNSS 不确定性可能增大 P0。此值不再平方。"
+      }
+    },
+    {
+      "id": "p0_velocity_e",
+      "type": "float",
+      "default": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 0.001,
+      "max": 1000000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 4,
+      "generated_symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_E_VARIANCE_M2PS2",
+      "display_names": {
+        "en_US": "P0 velocity E",
+        "zh_CN": "P0 速度 E"
+      },
+      "description": {
+        "en_US": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+        "zh_CN": "初始协方差对角下限；GNSS 不确定性可能增大 P0。此值不再平方。"
+      }
+    },
+    {
+      "id": "p0_velocity_n",
+      "type": "float",
+      "default": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 0.001,
+      "max": 1000000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 5,
+      "generated_symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_N_VARIANCE_M2PS2",
+      "display_names": {
+        "en_US": "P0 velocity N",
+        "zh_CN": "P0 速度 N"
+      },
+      "description": {
+        "en_US": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+        "zh_CN": "初始协方差对角下限；GNSS 不确定性可能增大 P0。此值不再平方。"
+      }
+    },
+    {
+      "id": "p0_velocity_u",
+      "type": "float",
+      "default": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "min": 0.001,
+      "max": 1000000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 6,
+      "generated_symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_U_VARIANCE_M2PS2",
+      "display_names": {
+        "en_US": "P0 velocity U",
+        "zh_CN": "P0 速度 U"
+      },
+      "description": {
+        "en_US": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+        "zh_CN": "初始协方差对角下限；GNSS 不确定性可能增大 P0。此值不再平方。"
+      }
+    },
+    {
+      "id": "process_accel_std_e",
+      "type": "float",
+      "default": 1.5,
+      "unit": "m/s^2",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 100.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 7,
+      "generated_symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_E_STD_MPS2_OVERRIDE",
+      "display_names": {
+        "en_US": "Process acceleration sigma E",
+        "zh_CN": "过程加速度标准差 E"
+      },
+      "description": {
+        "en_US": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+        "zh_CN": "逐轴加速度标准差；预测过程按原公式平方并乘以原有时间系数生成 Q。"
+      }
+    },
+    {
+      "id": "process_accel_std_n",
+      "type": "float",
+      "default": 1.5,
+      "unit": "m/s^2",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 100.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 8,
+      "generated_symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_N_STD_MPS2_OVERRIDE",
+      "display_names": {
+        "en_US": "Process acceleration sigma N",
+        "zh_CN": "过程加速度标准差 N"
+      },
+      "description": {
+        "en_US": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+        "zh_CN": "逐轴加速度标准差；预测过程按原公式平方并乘以原有时间系数生成 Q。"
+      }
+    },
+    {
+      "id": "process_accel_std_u",
+      "type": "float",
+      "default": 2.0,
+      "unit": "m/s^2",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 100.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 9,
+      "generated_symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_U_STD_MPS2_OVERRIDE",
+      "display_names": {
+        "en_US": "Process acceleration sigma U",
+        "zh_CN": "过程加速度标准差 U"
+      },
+      "description": {
+        "en_US": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+        "zh_CN": "逐轴加速度标准差；预测过程按原公式平方并乘以原有时间系数生成 Q。"
+      }
+    },
+    {
+      "id": "gnss_position_std_horizontal",
+      "type": "float",
+      "default": 1.5,
+      "unit": "m",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 1000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 10,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_HORIZONTAL_STD_FLOOR_M_OVERRIDE",
+      "display_names": {
+        "en_US": "GNSS horizontal position sigma floor",
+        "zh_CN": "GNSS 水平位置标准差下限"
+      },
+      "description": {
+        "en_US": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+        "zh_CN": "实际标准差下限，非固定 R。原规则：sigma=max(接收机 sigma×1.25, 下限)，R=sigma²。水平 E/N 共用下限；速度 E/N/U 共用下限。"
+      }
+    },
+    {
+      "id": "gnss_position_std_vertical",
+      "type": "float",
+      "default": 2.5,
+      "unit": "m",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 1000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 11,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VERTICAL_STD_FLOOR_M_OVERRIDE",
+      "display_names": {
+        "en_US": "GNSS vertical position sigma floor",
+        "zh_CN": "GNSS 垂直位置标准差下限"
+      },
+      "description": {
+        "en_US": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+        "zh_CN": "实际标准差下限，非固定 R。原规则：sigma=max(接收机 sigma×1.25, 下限)，R=sigma²。水平 E/N 共用下限；速度 E/N/U 共用下限。"
+      }
+    },
+    {
+      "id": "gnss_velocity_std",
+      "type": "float",
+      "default": 0.15,
+      "unit": "m/s",
+      "representation": "sigma",
+      "min": 0.001,
+      "max": 1000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 12,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_STD_FLOOR_MPS_OVERRIDE",
+      "display_names": {
+        "en_US": "GNSS velocity sigma floor (E/N/U)",
+        "zh_CN": "GNSS 速度标准差下限（E/N/U）"
+      },
+      "description": {
+        "en_US": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+        "zh_CN": "实际标准差下限，非固定 R。原规则：sigma=max(接收机 sigma×1.25, 下限)，R=sigma²。水平 E/N 共用下限；速度 E/N/U 共用下限。"
+      }
+    },
+    {
+      "id": "baro_std_m",
+      "type": "float",
+      "default": 5.0,
+      "unit": "m",
+      "representation": "sigma",
+      "min": 1.5,
+      "max": 1000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 13,
+      "generated_symbol": "SYSTEM_ESTIMATOR_BAROMETER_ALTITUDE_STD_M_OVERRIDE",
+      "display_names": {
+        "en_US": "Barometer altitude sigma",
+        "zh_CN": "气压高度标准差"
+      },
+      "description": {
+        "en_US": "Altitude sigma, squared once by the existing measurement update; existing minimum is 1.5 m.",
+        "zh_CN": "高度标准差，由原测量更新平方一次；原有最小值为 1.5 m。"
+      }
+    },
+    {
+      "id": "nis_1d_soft",
+      "type": "float",
+      "default": 6.635,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 14,
+      "generated_symbol": "SYSTEM_ESTIMATOR_NIS_1D_SOFT_THRESHOLD",
+      "display_names": {
+        "en_US": "NIS 1D soft",
+        "zh_CN": "NIS 1 维 软门限"
+      },
+      "description": {
+        "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+        "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
+      }
+    },
+    {
+      "id": "nis_1d_hard",
+      "type": "float",
+      "default": 10.828,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 15,
+      "generated_symbol": "SYSTEM_ESTIMATOR_NIS_1D_HARD_THRESHOLD",
+      "display_names": {
+        "en_US": "NIS 1D hard",
+        "zh_CN": "NIS 1 维 硬门限"
+      },
+      "description": {
+        "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+        "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
+      },
+      "greater_than": "nis_1d_soft"
+    },
+    {
+      "id": "nis_2d_soft",
+      "type": "float",
+      "default": 9.21,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 16,
+      "generated_symbol": "SYSTEM_ESTIMATOR_NIS_2D_SOFT_THRESHOLD",
+      "display_names": {
+        "en_US": "NIS 2D soft",
+        "zh_CN": "NIS 2 维 软门限"
+      },
+      "description": {
+        "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+        "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
+      }
+    },
+    {
+      "id": "nis_2d_hard",
+      "type": "float",
+      "default": 13.816,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 17,
+      "generated_symbol": "SYSTEM_ESTIMATOR_NIS_2D_HARD_THRESHOLD",
+      "display_names": {
+        "en_US": "NIS 2D hard",
+        "zh_CN": "NIS 2 维 硬门限"
+      },
+      "description": {
+        "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+        "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
+      },
+      "greater_than": "nis_2d_soft"
+    },
+    {
+      "id": "nis_3d_soft",
+      "type": "float",
+      "default": 11.345,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 18,
+      "generated_symbol": "SYSTEM_ESTIMATOR_NIS_3D_SOFT_THRESHOLD",
+      "display_names": {
+        "en_US": "NIS 3D soft",
+        "zh_CN": "NIS 3 维 软门限"
+      },
+      "description": {
+        "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+        "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
+      }
+    },
+    {
+      "id": "nis_3d_hard",
+      "type": "float",
+      "default": 16.266,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.001,
+      "max": 10000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 19,
+      "generated_symbol": "SYSTEM_ESTIMATOR_NIS_3D_HARD_THRESHOLD",
+      "display_names": {
+        "en_US": "NIS 3D hard",
+        "zh_CN": "NIS 3 维 硬门限"
+      },
+      "description": {
+        "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+        "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
+      },
+      "greater_than": "nis_3d_soft"
+    },
+    {
+      "id": "nis_max_r_scale",
+      "type": "float",
+      "default": 10.0,
+      "unit": "1",
+      "representation": "value",
+      "min": 1.0,
+      "max": 1000.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "advanced",
+      "order": 20,
+      "generated_symbol": "SYSTEM_ESTIMATOR_NIS_MAX_R_SCALE",
+      "display_names": {
+        "en_US": "NIS maximum R inflation",
+        "zh_CN": "NIS 最大 R 膨胀因子"
+      },
+      "description": {
+        "en_US": "Actual dimensionless cap already used by soft gating; not a multiplier of a hidden default.",
+        "zh_CN": "软门限已有的实际无量纲上限，不是隐藏默认值的倍率。"
+      }
+    },
+    {
+      "id": "gnss_velocity_vertical_scale",
+      "type": "float",
+      "default": 1.0,
+      "unit": "1",
+      "representation": "value",
+      "min": 1.0,
+      "max": 10.0,
+      "precision": 3,
+      "step": 0.05,
+      "group": "advanced",
+      "order": 22,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_VERTICAL_SCALE",
+      "display_names": {
+        "zh_CN": "GNSS 垂直速度标准差倍率",
+        "en_US": "GNSS vertical velocity standard deviation scale"
+      },
+      "description": {
+        "zh_CN": "GNSS 垂直速度标准差倍率；失联恢复不由连续 NIS 拒绝单独触发。",
+        "en_US": "GNSS vertical velocity standard deviation scale; continuous NIS rejection alone never authorizes recovery."
+      }
+    },
+    {
+      "id": "gnss_reacquire_outage_ms",
+      "type": "integer",
+      "default": 300,
+      "unit": "ms",
+      "representation": "value",
+      "min": 100,
+      "max": 10000,
+      "precision": 0,
+      "step": 10,
+      "group": "advanced",
+      "order": 23,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_REACQUIRE_OUTAGE_MS",
+      "display_names": {
+        "zh_CN": "GNSS 恢复失联门槛",
+        "en_US": "GNSS reacquisition outage threshold"
+      },
+      "description": {
+        "zh_CN": "GNSS 恢复失联门槛；失联恢复不由连续 NIS 拒绝单独触发。",
+        "en_US": "GNSS reacquisition outage threshold; continuous NIS rejection alone never authorizes recovery."
+      }
+    },
+    {
+      "id": "gnss_position_measurement_delay_ms",
+      "type": "integer",
+      "default": 0,
+      "legacy_default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "precision": 0,
+      "step": 5,
+      "group": "advanced",
+      "order": 24,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
+      "display_names": {
+        "en_US": "GNSS position measurement delay",
+        "zh_CN": "GNSS 位置量测延迟"
+      },
+      "description": {
+        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+      }
+    },
+    {
+      "id": "gnss_velocity_measurement_delay_ms",
+      "type": "integer",
+      "default": 270,
+      "legacy_default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "precision": 0,
+      "step": 5,
+      "group": "advanced",
+      "order": 25,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
+      "display_names": {
+        "en_US": "GNSS velocity measurement delay",
+        "zh_CN": "GNSS 速度量测延迟"
+      },
+      "description": {
+        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+      }
+    },
+    {
+      "id": "baro_measurement_delay_ms",
+      "type": "integer",
+      "default": 0,
+      "legacy_default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "precision": 0,
+      "step": 5,
+      "group": "advanced",
+      "order": 26,
+      "generated_symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
+      "display_names": {
+        "en_US": "Barometer measurement delay",
+        "zh_CN": "气压高度量测延迟"
+      },
+      "description": {
+        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+      }
+    },
+    {
+      "id": "gnss_integrity_enable",
+      "type": "integer",
+      "default": 1,
+      "legacy_default": 0,
+      "unit": "1",
+      "representation": "value",
+      "min": 0,
+      "max": 1,
+      "precision": 0,
+      "step": 1,
+      "group": "gnss_integrity",
+      "order": 27,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ENABLE",
+      "display_names": {
+        "en_US": "Enable GNSS position self-check",
+        "zh_CN": "启用 GNSS 位置自检"
+      },
+      "description": {
+        "en_US": "Enable GNSS position self-check. Actual onboard value.",
+        "zh_CN": "启用 GNSS 位置自检；机载实际使用值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_max_gap_ms",
+      "type": "integer",
+      "default": 120,
+      "legacy_default": 120,
+      "unit": "ms",
+      "representation": "value",
+      "min": 40,
+      "max": 1200,
+      "precision": 0,
+      "step": 1,
+      "group": "gnss_integrity",
+      "order": 28,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_MAX_GAP_MS",
+      "display_names": {
+        "en_US": "Maximum evidence sample gap",
+        "zh_CN": "证据最大采样间隔"
+      },
+      "description": {
+        "en_US": "Maximum evidence sample gap. Actual onboard value.",
+        "zh_CN": "证据最大采样间隔；机载实际使用值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_error_threshold_m",
+      "type": "float",
+      "default": 10.0,
+      "legacy_default": 10.0,
+      "unit": "m",
+      "representation": "value",
+      "min": 0.1,
+      "max": 200.0,
+      "precision": 3,
+      "step": 0.01,
+      "group": "gnss_integrity",
+      "order": 29,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ERROR_THRESHOLD_M",
+      "display_names": {
+        "en_US": "Error threshold",
+        "zh_CN": "错误阈值"
+      },
+      "description": {
+        "en_US": "Error threshold for GNSS-native horizontal position/velocity closure.",
+        "zh_CN": "GNSS 原生水平位置/速度闭合检测的错误阈值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_recovery_threshold_m",
+      "type": "float",
+      "default": 4.0,
+      "legacy_default": 4.0,
+      "unit": "m",
+      "representation": "value",
+      "min": 0.1,
+      "max": 100.0,
+      "precision": 3,
+      "step": 0.01,
+      "group": "gnss_integrity",
+      "order": 30,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_THRESHOLD_M",
+      "display_names": {
+        "en_US": "Recovery threshold",
+        "zh_CN": "恢复阈值"
+      },
+      "description": {
+        "en_US": "Recovery threshold for GNSS-native horizontal position/velocity closure.",
+        "zh_CN": "GNSS 原生水平位置/速度闭合检测的恢复阈值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_suspect_duration_ms",
+      "type": "integer",
+      "default": 2000,
+      "legacy_default": 2000,
+      "unit": "ms",
+      "representation": "value",
+      "min": 100,
+      "max": 30000,
+      "precision": 0,
+      "step": 1,
+      "group": "gnss_integrity",
+      "order": 31,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SUSPECT_DURATION_MS",
+      "display_names": {
+        "en_US": "Continuous abnormal time before suspect",
+        "zh_CN": "进入可疑所需异常时间"
+      },
+      "description": {
+        "en_US": "Continuous abnormal time before suspect. Actual onboard value.",
+        "zh_CN": "进入可疑所需异常时间；机载实际使用值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_reject_duration_ms",
+      "type": "integer",
+      "default": 5000,
+      "legacy_default": 5000,
+      "unit": "ms",
+      "representation": "value",
+      "min": 100,
+      "max": 30000,
+      "precision": 0,
+      "step": 1,
+      "group": "gnss_integrity",
+      "order": 32,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_REJECT_DURATION_MS",
+      "display_names": {
+        "en_US": "Additional rejection duration",
+        "zh_CN": "额外拒绝持续时间"
+      },
+      "description": {
+        "en_US": "Additional rejection duration for GNSS-native horizontal position/velocity closure.",
+        "zh_CN": "GNSS 原生水平位置/速度闭合检测的额外拒绝持续时间。"
+      }
+    },
+    {
+      "id": "gnss_integrity_recovery_duration_ms",
+      "type": "integer",
+      "default": 8000,
+      "legacy_default": 8000,
+      "unit": "ms",
+      "representation": "value",
+      "min": 100,
+      "max": 30000,
+      "precision": 0,
+      "step": 1,
+      "group": "gnss_integrity",
+      "order": 33,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_DURATION_MS",
+      "display_names": {
+        "en_US": "Continuous healthy recovery evidence time",
+        "zh_CN": "连续恢复证据时间"
+      },
+      "description": {
+        "en_US": "Continuous healthy recovery evidence time. Actual onboard value.",
+        "zh_CN": "连续恢复证据时间；机载实际使用值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_position_r_scale",
+      "type": "float",
+      "default": 4.0,
+      "legacy_default": 4.0,
+      "unit": "1",
+      "representation": "value",
+      "min": 1.0,
+      "max": 100.0,
+      "precision": 3,
+      "step": 0.01,
+      "group": "gnss_integrity",
+      "order": 34,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_POSITION_R_SCALE",
+      "display_names": {
+        "en_US": "Suspect/recovering Pos EN R multiplier",
+        "zh_CN": "可疑和恢复观察时水平位置 R 倍率"
+      },
+      "description": {
+        "en_US": "Suspect/recovering Pos EN R multiplier. Actual onboard value.",
+        "zh_CN": "可疑和恢复观察时水平位置 R 倍率；机载实际使用值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_hacc_max_m",
+      "type": "float",
+      "default": 6.0,
+      "legacy_default": 6.0,
+      "unit": "m",
+      "representation": "value",
+      "min": 0.1,
+      "max": 100.0,
+      "precision": 3,
+      "step": 0.01,
+      "group": "gnss_integrity",
+      "order": 35,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_HACC_MAX_M",
+      "display_names": {
+        "en_US": "Maximum receiver hAcc for evidence",
+        "zh_CN": "证据允许的接收机 hAcc 上限"
+      },
+      "description": {
+        "en_US": "Maximum receiver hAcc for evidence. Actual onboard value.",
+        "zh_CN": "证据允许的接收机 hAcc 上限；机载实际使用值。"
+      }
+    },
+    {
+      "id": "gnss_integrity_sacc_max_mps",
+      "type": "float",
+      "default": 1.2,
+      "legacy_default": 1.2,
+      "unit": "m/s",
+      "representation": "value",
+      "min": 0.01,
+      "max": 20.0,
+      "precision": 3,
+      "step": 0.01,
+      "group": "gnss_integrity",
+      "order": 36,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SACC_MAX_MPS",
+      "display_names": {
+        "en_US": "Maximum receiver sAcc for evidence",
+        "zh_CN": "证据允许的接收机 sAcc 上限"
+      },
+      "description": {
+        "en_US": "Maximum receiver sAcc for evidence. Actual onboard value.",
+        "zh_CN": "证据允许的接收机 sAcc 上限；机载实际使用值。"
+      }
+    }
+  ]
+}

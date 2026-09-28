@@ -1,0 +1,1010 @@
+[
+  {
+    "variant": "kf6_flight",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": false,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": false,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": false,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": false,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": false,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "changed": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "changed": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "changed": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "changed": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "changed": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_081706_010978",
+    "exit": 0,
+    "gates": [
+      {
+        "gate": "Release-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Release-build.log",
+        "sha256": "bed852b102bdc2877f718cc10420c811e6039eba1cb495e63d980e1ca91368f3"
+      },
+      {
+        "gate": "Release-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Release-quality.log",
+        "sha256": "88f746ca775c81d42fdf5c183f85baa36e6fe395683a7d00d30df6f5b1a118d2"
+      },
+      {
+        "gate": "Debug-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-build.log",
+        "sha256": "37772195e2cc2755f6311f89d4e10a462f33d2263d8397fdf92fb42a9e75375c"
+      },
+      {
+        "gate": "Debug-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-quality.log",
+        "sha256": "7cbfbad5a3e3024165243b0c0003e5482ab723134c98d6c27b9c886f674538d6"
+      },
+      {
+        "gate": "Host",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "host-tests"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Host.log",
+        "sha256": "8d5bf19428bacaa4beddb4a563d0315baed19767c0df6ce32c3bb4d283c7295e"
+      }
+    ],
+    "summaries": {
+      "Release-build": [
+        "  FLASH     used=285968 remaining=238320 capacity=524288",
+        "  main SRAM used=101840 remaining=29232 capacity=131072",
+        "  CCMRAM    used=56216 remaining=9320 capacity=65536"
+      ],
+      "Release-quality": [
+        "Power of Ten check passed: 6457 checks, 99 first-party C files, 2426 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Debug-build": [
+        "  FLASH     used=302896 remaining=221392 capacity=524288",
+        "  main SRAM used=101864 remaining=29208 capacity=131072",
+        "  CCMRAM    used=56216 remaining=9320 capacity=65536"
+      ],
+      "Debug-quality": [
+        "Power of Ten check passed: 6457 checks, 99 first-party C files, 2426 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Host": [
+        "SilverStar host summary: executables=72 checks=4392885 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ]
+    }
+  },
+  {
+    "variant": "kf6_test",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": false,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": false,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": false,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": false,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": false,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "changed": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "changed": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "changed": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "changed": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "changed": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_081706_010978",
+    "exit": 0,
+    "gates": [
+      {
+        "gate": "Release-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalMatrix_20260927_081706_010978/Release-build.log",
+        "sha256": "0d80657a50377819e4085cecaaf555e21440df1033a4a3f2ab7c32e4e518f824"
+      },
+      {
+        "gate": "Release-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalMatrix_20260927_081706_010978/Release-quality.log",
+        "sha256": "c2b7193a86e10489521f5ff3e28772551d083492535c851e9e860011809e25c2"
+      },
+      {
+        "gate": "Debug-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-build.log",
+        "sha256": "30f3930fd4d645327c09fd06f186428fdec748c4f1663d2923bc1ab18d144f2d"
+      },
+      {
+        "gate": "Debug-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-quality.log",
+        "sha256": "feb7676a0b7340831fa71431f5dd44952d468c3f370069514f3199f5864b4382"
+      },
+      {
+        "gate": "Host",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "host-tests"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalMatrix_20260927_081706_010978/Host.log",
+        "sha256": "5149e52462f9ca33097c0d7e9ebd8867e83c7e5828e663bd9dc302252fd3de67"
+      }
+    ],
+    "summaries": {
+      "Release-build": [
+        "  FLASH     used=285968 remaining=238320 capacity=524288",
+        "  main SRAM used=101840 remaining=29232 capacity=131072",
+        "  CCMRAM    used=56216 remaining=9320 capacity=65536"
+      ],
+      "Release-quality": [
+        "Power of Ten check passed: 6457 checks, 99 first-party C files, 2426 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Debug-build": [
+        "  FLASH     used=302896 remaining=221392 capacity=524288",
+        "  main SRAM used=101864 remaining=29208 capacity=131072",
+        "  CCMRAM    used=56216 remaining=9320 capacity=65536"
+      ],
+      "Debug-quality": [
+        "Power of Ten check passed: 6457 checks, 99 first-party C files, 2426 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Host": [
+        "SilverStar host summary: executables=72 checks=4392885 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ]
+    }
+  },
+  {
+    "variant": "eskf15_flight",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": false,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": false,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": false,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": false,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": false,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "changed": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "changed": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "changed": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "changed": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "changed": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "changed": false,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "changed": false,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_081706_010978",
+    "exit": 0,
+    "gates": [
+      {
+        "gate": "Release-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Release-build.log",
+        "sha256": "731a3692eccc8d5c6c1aa7fe48eee57b558f72654a477eec3c394c338fe2efa6"
+      },
+      {
+        "gate": "Release-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Release-quality.log",
+        "sha256": "5ec2de9a1c3ad3ae702271a9dabfae147f7156d7eba5ca752ea1a76d42db6c97"
+      },
+      {
+        "gate": "Debug-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-build.log",
+        "sha256": "4660391f57250f35f756a80e9a0bd5d98b30786114c45b55d5b08ab8fb9382cc"
+      },
+      {
+        "gate": "Debug-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-quality.log",
+        "sha256": "cafa5b9dc5f7d794c3b46d077ba04912c3e88b9c69202df4e6facd8555cf7046"
+      },
+      {
+        "gate": "Host",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "host-tests"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalMatrix_20260927_081706_010978/Host.log",
+        "sha256": "b699c0477e8af0cb129cd70d7a8207b55989553bae8eb8ab494129508a5caa6d"
+      }
+    ],
+    "summaries": {
+      "Release-build": [
+        "  FLASH     used=272272 remaining=252016 capacity=524288",
+        "  main SRAM used=100440 remaining=30632 capacity=131072",
+        "  CCMRAM    used=65080 remaining=456 capacity=65536"
+      ],
+      "Release-quality": [
+        "Power of Ten check passed: 6268 checks, 99 first-party C files, 2353 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Debug-build": [
+        "  FLASH     used=287856 remaining=236432 capacity=524288",
+        "  main SRAM used=100464 remaining=30608 capacity=131072",
+        "  CCMRAM    used=65080 remaining=456 capacity=65536"
+      ],
+      "Debug-quality": [
+        "Power of Ten check passed: 6268 checks, 99 first-party C files, 2353 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Host": [
+        "SilverStar host summary: executables=71 checks=4360252 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ]
+    }
+  },
+  {
+    "variant": "eskf15_test",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": false,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": false,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": false,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": false,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": false,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "changed": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "changed": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "changed": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "changed": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "changed": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "changed": false,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "changed": false,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_081706_010978",
+    "exit": 0,
+    "gates": [
+      {
+        "gate": "Release-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalMatrix_20260927_081706_010978/Release-build.log",
+        "sha256": "be4de889a84ddcea85544d31cbf62598a3c487c2c7138b23824119181f55beaa"
+      },
+      {
+        "gate": "Release-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalMatrix_20260927_081706_010978/Release-quality.log",
+        "sha256": "66c6df929f56494cf3e0b905d5bceb5cb549497e5ef8ba7e724e4dd55f2b1f32"
+      },
+      {
+        "gate": "Debug-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-build.log",
+        "sha256": "aade103479dcd253e0f04e9a39a3f683cd7f782e3fcfd28a5512accdb3ef9c5c"
+      },
+      {
+        "gate": "Debug-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-quality.log",
+        "sha256": "ce694f08d16a38bcda0b738615a15710c8de47ffeb0517dc7e4a5f377bc169f7"
+      },
+      {
+        "gate": "Host",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "host-tests"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalMatrix_20260927_081706_010978/Host.log",
+        "sha256": "2327782bc7738991eb0ac57634e4216fcc602439283af310a67e904d44735250"
+      }
+    ],
+    "summaries": {
+      "Release-build": [
+        "  FLASH     used=272272 remaining=252016 capacity=524288",
+        "  main SRAM used=100440 remaining=30632 capacity=131072",
+        "  CCMRAM    used=65080 remaining=456 capacity=65536"
+      ],
+      "Release-quality": [
+        "Power of Ten check passed: 6268 checks, 99 first-party C files, 2353 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Debug-build": [
+        "  FLASH     used=287856 remaining=236432 capacity=524288",
+        "  main SRAM used=100464 remaining=30608 capacity=131072",
+        "  CCMRAM    used=65080 remaining=456 capacity=65536"
+      ],
+      "Debug-quality": [
+        "Power of Ten check passed: 6268 checks, 99 first-party C files, 2353 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Host": [
+        "SilverStar host summary: executables=71 checks=4360252 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ]
+    }
+  },
+  {
+    "variant": "eskf15_no_logging",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": false,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": false,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": false,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": false,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": false,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": false,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "changed": false,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "changed": false,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "changed": false,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "changed": false,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "changed": false,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "changed": false,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "changed": false,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_081706_010978",
+    "exit": 0,
+    "gates": [
+      {
+        "gate": "Release-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Release-build.log",
+        "sha256": "91cfabbca98c58875f23cd4a7fe2ba2508daa69f9664f27e1ac6cbbffe7e2fe1"
+      },
+      {
+        "gate": "Release-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Release-quality.log",
+        "sha256": "33dc5dcee4c60cc1a4c832d1178da8b72ec649d1d65b0425de7035a46a474fd0"
+      },
+      {
+        "gate": "Debug-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-build.log",
+        "sha256": "f747b8fb276f0f2a1e78d1a914bc004f400150b8eeda6853d1a0300c18e384c8"
+      },
+      {
+        "gate": "Debug-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-quality.log",
+        "sha256": "6781ba30c451fed7a0c5d74b2aea9c474e0523d9861197a6a659c21fec89542f"
+      },
+      {
+        "gate": "Host",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "host-tests"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Host.log",
+        "sha256": "7883c35ab152007ed5f84646f2d33705c569988db9f77e1e2a4c3b14678e6134"
+      }
+    ],
+    "summaries": {
+      "Release-build": [
+        "  FLASH     used=233396 remaining=290892 capacity=524288",
+        "  main SRAM used=68060 remaining=63012 capacity=131072",
+        "  CCMRAM    used=62008 remaining=3528 capacity=65536"
+      ],
+      "Release-quality": [
+        "Power of Ten check passed: 5936 checks, 95 first-party C files, 2237 functions.",
+        "SilverStar architecture check passed: checks=184 failures=0"
+      ],
+      "Debug-build": [
+        "  FLASH     used=249252 remaining=275036 capacity=524288",
+        "  main SRAM used=68100 remaining=62972 capacity=131072",
+        "  CCMRAM    used=62008 remaining=3528 capacity=65536"
+      ],
+      "Debug-quality": [
+        "Power of Ten check passed: 5936 checks, 95 first-party C files, 2237 functions.",
+        "SilverStar architecture check passed: checks=184 failures=0"
+      ],
+      "Host": [
+        "SilverStar host summary: executables=61 checks=152301 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ]
+    }
+  },
+  {
+    "variant": "pure_ins",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": false,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": false,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": true,
+        "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": true,
+        "sha256": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": false,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "changed": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "changed": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "changed": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "changed": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "changed": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_081706_010978",
+    "exit": 0,
+    "gates": [
+      {
+        "gate": "Release-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalMatrix_20260927_081706_010978/Release-build.log",
+        "sha256": "2bbff07d87de2207c8661055c494bf3850ea2df00ddb3894ad1f248b44f794d8"
+      },
+      {
+        "gate": "Release-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalMatrix_20260927_081706_010978/Release-quality.log",
+        "sha256": "3115c20a16e5f7fd875102f50c41066bf5d27d00e8e2a70e11ce5a723895dd73"
+      },
+      {
+        "gate": "Debug-build",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "all",
+          "stack-report",
+          "memory-report",
+          "artifact-check"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-build.log",
+        "sha256": "ed97fde36dd2c9b4c22b5c610aa1ce50f1e84a587edf37e1e0fa91a0fa266a6a"
+      },
+      {
+        "gate": "Debug-quality",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Debug",
+          "architecture-check",
+          "power10-check",
+          "static-analysis"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-quality.log",
+        "sha256": "341b2c30d270a563a597aa91012465973eac94509a7345dd20b9a1421e574a4c"
+      },
+      {
+        "gate": "Host",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-j4",
+          "SHELL=cmd.exe",
+          "CONFIG=Release",
+          "host-tests"
+        ],
+        "exit": 0,
+        "log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalMatrix_20260927_081706_010978/Host.log",
+        "sha256": "8febd38a7cd5cbd37c9ac5592d6bb7713cc8341890138f3f41ac7e0bfd835d49"
+      }
+    ],
+    "summaries": {
+      "Release-build": [
+        "  FLASH     used=253592 remaining=270696 capacity=524288",
+        "  main SRAM used=82512 remaining=48560 capacity=131072",
+        "  CCMRAM    used=44800 remaining=20736 capacity=65536"
+      ],
+      "Release-quality": [
+        "Power of Ten check passed: 6116 checks, 96 first-party C files, 2302 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Debug-build": [
+        "  FLASH     used=268976 remaining=255312 capacity=524288",
+        "  main SRAM used=82536 remaining=48536 capacity=131072",
+        "  CCMRAM    used=44800 remaining=20736 capacity=65536"
+      ],
+      "Debug-quality": [
+        "Power of Ten check passed: 6116 checks, 96 first-party C files, 2302 functions.",
+        "SilverStar architecture check passed: checks=318 failures=0"
+      ],
+      "Host": [
+        "SilverStar host summary: executables=70 checks=4358689 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ]
+    }
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "baseline_commit": "b2e05fb",
+  "compiler": "GCC 16.1.0 x86_64-w64-mingw32 -O2",
+  "trajectory_sha256": "ad64bc875b4ec87f0bafdd65e868bb99822b79dfe79fc0debf13ec9484486aa1",
+  "trajectory_bytes": 1109911,
+  "trajectory_lines": 5005
+}

@@ -1,0 +1,121 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.console.uart",
+  "name": "Serial Maintenance Protocol 0.0",
+  "type": "device",
+  "class": "console",
+  "version": "0.1.0",
+  "description": "Reference UART Console Device driver and canonical adapter.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "console",
+        "kind": "uart",
+        "binding_macro": "PROJECT_RESOURCE_CONSOLE_UART",
+        "constraints": {
+          "uart": {
+            "baud": {
+              "exact": 230400,
+              "configurable": false
+            },
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0,
+            "rx_dma": false,
+            "tx_dma": false,
+            "irq": true
+          }
+        }
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.console",
+    "maintenance.console",
+    "transport.byte_stream"
+  ],
+  "build": {
+    "sources": [
+      "Devices/Console/UART/Src/console_uart_device.c",
+      "Devices/Console/UART/Adapter/Src/uart_console_adapter.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/Console/UART/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/Console/UART"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "串口维护协议 0.0",
+      "en_US": "Serial Maintenance Protocol 0.0"
+    },
+    "device_descriptors": [
+      {
+        "order": 6,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_CONSOLE",
+        "class": "SYSTEM_DEVICE_CLASS_CONSOLE",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED",
+        "capability": "SYSTEM_CAPABILITY_CONSOLE",
+        "rate": "0U",
+        "driver_hash": "0x92850855UL",
+        "name_hash": "0xC8A9F404UL"
+      }
+    ],
+    "device_group": "maintenance_endpoints",
+    "device_group_order": 70,
+    "device_selection_style": "instance",
+    "device_category": "link.maintenance",
+    "internal": true,
+    "auto_managed_protocol_category": "maintenance",
+    "default_instance_id": "maintenance0",
+    "build_feature_symbols": [
+      "SYSTEM_USER_CONSOLE_ENABLE"
+    ]
+  },
+  "instance_policy": {
+    "plugin_max": 1,
+    "class_max": 1,
+    "same_plugin_multiple": false,
+    "multi_instance_ready": false
+  },
+  "physical_device": {
+    "vendor": "SilverStar",
+    "model": "UART Maintenance Endpoint",
+    "chipset": "STM32 UART",
+    "driver": "UART Console Adapter"
+  },
+  "transports": [
+    {
+      "capability": "transport.byte_stream",
+      "kind": "byte_stream",
+      "mtu": 1,
+      "ordered": true,
+      "bidirectional": true,
+      "reliable": true,
+      "mode": "stream"
+    }
+  ]
+}

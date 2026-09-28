@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "silverstar.sslog.record-catalog/1.0",
+  "title": "SilverStar SSLOG Record Catalog",
+  "type": "object",
+  "required": [
+    "catalog_schema_id",
+    "canonical_json",
+    "field_contract",
+    "record_modes",
+    "instance_routing_fields",
+    "format",
+    "endianness",
+    "record_header_size",
+    "record_crc",
+    "max_payload_size",
+    "records"
+  ],
+  "properties": {
+    "catalog_schema_id": {
+      "const": "silverstar.sslog.record-catalog/1.0"
+    },
+    "format": {
+      "const": "SSLOG0"
+    },
+    "endianness": {
+      "const": "little"
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "enum",
+          "name",
+          "version",
+          "payload_size",
+          "size_macro",
+          "c_type",
+          "member",
+          "default_stream",
+          "fields"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^0x[0-9A-F]{2}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "payload_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 256
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "u8",
+                    "i8",
+                    "u16",
+                    "i16",
+                    "u32",
+                    "i32",
+                    "u64",
+                    "i64",
+                    "f32",
+                    "pad"
+                  ]
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "string"
+                },
+                "scale": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "enum": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "bitfield": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "timestamp": {
+                  "type": "boolean"
+                },
+                "validity": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

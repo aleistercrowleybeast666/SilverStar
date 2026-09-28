@@ -1,0 +1,15 @@
+{
+  "origin": "synthetic Host actual C producer; never flight data",
+  "input_sha256": "dc8c75866b3849f1aaacb6b01812f51e62980756a4c9975c9966eb1782027c9e",
+  "decoder_sha256": "cff101c71022b6ecd05dba1d37c84f717f446215e79b952cabedd274a74aad36",
+  "maximum_absolute_error": {
+    "navigation.position_enu": 1.6817705534829044e-08,
+    "navigation.velocity_enu": 1.226543263586899e-07,
+    "attitude.q_nb": 8.910570015174812e-08,
+    "eskf15.gyro_bias": 4.547382977983239e-12,
+    "eskf15.accel_bias": 1.649797582646247e-09,
+    "eskf15.covariance.diagonal": 1.6326671383737335e-06,
+    "eskf15.covariance.upper_triangle": 1.6326671383737335e-06
+  },
+  "records": 659
+}

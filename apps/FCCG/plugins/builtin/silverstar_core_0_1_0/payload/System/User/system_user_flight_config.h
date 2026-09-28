@@ -1,0 +1,159 @@
+#ifndef __SYSTEM_USER_FLIGHT_CONFIG_H
+#define __SYSTEM_USER_FLIGHT_CONFIG_H
+
+#include "system_configuration_types.h"
+#include "target_system_config.h"
+
+/* OR-combined automatic deploy triggers. Zero disables automatic deploy. */
+#ifndef SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK
+#define SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ
+#endif
+
+/* The installed primary IMU remap exposes the rocket longitudinal axis as +Z. */
+#ifndef SYSTEM_FLIGHT_ROCKET_LONGITUDINAL_AXIS
+#define SYSTEM_FLIGHT_ROCKET_LONGITUDINAL_AXIS SYSTEM_BODY_AXIS_Z_POSITIVE
+#endif
+
+/* TILT compares to the START-frozen rocket axis by default, not NAV +Up. */
+#ifndef SYSTEM_FLIGHT_TILT_REFERENCE
+#define SYSTEM_FLIGHT_TILT_REFERENCE SYSTEM_TILT_REFERENCE_INITIAL_AXIS
+#endif
+
+/* Degrees from SYSTEM_FLIGHT_TILT_REFERENCE; valid range is (0, 180]. */
+#ifndef SYSTEM_FLIGHT_TILT_THRESHOLD_DEG
+#define SYSTEM_FLIGHT_TILT_THRESHOLD_DEG 45.0f
+#endif
+
+/* ENU +Z is upward. This deployment threshold MUST remain negative, in m/s. */
+#ifndef SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS
+#define SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS (-2.0f)
+#endif
+
+/* Delay is relative to accepted START/mission time, not physical launch. */
+#ifndef SYSTEM_FLIGHT_DEPLOY_DELAY_MS
+#define SYSTEM_FLIGHT_DEPLOY_DELAY_MS 60000U
+#endif
+
+/* New-sample confirmation span.  Zero deploys on the first qualifying sample. */
+#ifndef SYSTEM_FLIGHT_DEPLOY_CONFIRM_MS
+#define SYSTEM_FLIGHT_DEPLOY_CONFIRM_MS 0U
+#endif
+
+/* Optional first-generation landing detection is enabled by default. */
+#ifndef SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE
+#define SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE 1U
+#endif
+
+/* The build graph selects the one compiled Landing Strategy. */
+#ifndef SYSTEM_BUILD_LANDING_MODE
+#define SYSTEM_BUILD_LANDING_MODE SYSTEM_LANDING_MODE_BARO_IMU_WINDOW
+#endif
+#define SYSTEM_FLIGHT_LANDING_MODE SYSTEM_BUILD_LANDING_MODE
+
+/* Short direct-barometer trend window used to open a landing candidate. */
+#ifndef SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_WINDOW_MS
+#define SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_WINDOW_MS 1000U
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_MIN_SAMPLES
+#define SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_MIN_SAMPLES 10U
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_RATE_MPS
+#define SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_RATE_MPS 1.0f
+#endif
+
+/* Synchronized barometer/IMU confirmation interval [t0,t1]. */
+#ifndef SYSTEM_FLIGHT_LANDING_CANDIDATE_DURATION_MS
+#define SYSTEM_FLIGHT_LANDING_CANDIDATE_DURATION_MS 3000U
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_BARO_CONFIRM_RATE_MPS
+#define SYSTEM_FLIGHT_LANDING_BARO_CONFIRM_RATE_MPS 0.30f
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_BARO_MAX_SPAN_M
+#define SYSTEM_FLIGHT_LANDING_BARO_MAX_SPAN_M 1.0f
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_BARO_MIN_SAMPLES
+#define SYSTEM_FLIGHT_LANDING_BARO_MIN_SAMPLES 20U
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_IMU_MIN_SAMPLES
+#define SYSTEM_FLIGHT_LANDING_IMU_MIN_SAMPLES 50U
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_MIN_COVERAGE_PERCENT
+#define SYSTEM_FLIGHT_LANDING_MIN_COVERAGE_PERCENT 80U
+#endif
+
+/* Test baseline only; tune from real flight opening-shock and descent logs. */
+#ifndef SYSTEM_FLIGHT_LANDING_IMPACT_INHIBIT_MS
+#define SYSTEM_FLIGHT_LANDING_IMPACT_INHIBIT_MS 3000U
+#endif
+
+/* Corrected body acceleration norm threshold; needs real-flight tuning. */
+#ifndef SYSTEM_FLIGHT_LANDING_IMPACT_THRESHOLD_MPS2
+#define SYSTEM_FLIGHT_LANDING_IMPACT_THRESHOLD_MPS2 15.0f
+#endif
+
+/* Maximum accepted age of INS/inertial landing samples, in milliseconds. */
+#ifndef SYSTEM_FLIGHT_LANDING_SAMPLE_MAX_AGE_MS
+#define SYSTEM_FLIGHT_LANDING_SAMPLE_MAX_AGE_MS 100U
+#endif
+
+/* Corrected body gyro norm threshold, in rad/s. */
+#ifndef SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS
+#ifdef SYSTEM_FLIGHT_LANDING_GYRO_THRESHOLD_RADPS
+#define SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS \
+    SYSTEM_FLIGHT_LANDING_GYRO_THRESHOLD_RADPS
+#else
+#define SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS 0.10f
+#endif
+#endif
+
+/* Post-impact tolerance around local gravity, in m/s^2. */
+#ifndef SYSTEM_FLIGHT_LANDING_STILL_ACCEL_TOLERANCE_MPS2
+#ifdef SYSTEM_FLIGHT_LANDING_ACCEL_THRESHOLD_MPS2
+#define SYSTEM_FLIGHT_LANDING_STILL_ACCEL_TOLERANCE_MPS2 \
+    SYSTEM_FLIGHT_LANDING_ACCEL_THRESHOLD_MPS2
+#else
+#define SYSTEM_FLIGHT_LANDING_STILL_ACCEL_TOLERANCE_MPS2 0.50f
+#endif
+#endif
+
+/* Deprecated source aliases retained for existing user build overrides. */
+#ifndef SYSTEM_FLIGHT_LANDING_GYRO_THRESHOLD_RADPS
+#define SYSTEM_FLIGHT_LANDING_GYRO_THRESHOLD_RADPS \
+    SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS
+#endif
+#ifndef SYSTEM_FLIGHT_LANDING_ACCEL_THRESHOLD_MPS2
+#define SYSTEM_FLIGHT_LANDING_ACCEL_THRESHOLD_MPS2 \
+    SYSTEM_FLIGHT_LANDING_STILL_ACCEL_TOLERANCE_MPS2
+#endif
+
+/* Continuous low-dynamic landing confirmation time, in milliseconds. */
+#ifndef SYSTEM_FLIGHT_LANDING_CONFIRM_MS
+#define SYSTEM_FLIGHT_LANDING_CONFIRM_MS 5000U
+#endif
+
+#if (SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE != 0U) && \
+    (SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE != 1U)
+#error "SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE must be 0 or 1"
+#endif
+
+#if (SYSTEM_FLIGHT_LANDING_CONFIRM_MS == 0U) || \
+    (SYSTEM_FLIGHT_LANDING_SAMPLE_MAX_AGE_MS == 0U) || \
+    (SYSTEM_FLIGHT_LANDING_CANDIDATE_DURATION_MS == 0U) || \
+    (SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_WINDOW_MS == 0U) || \
+    (SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_MIN_SAMPLES < 2U) || \
+    (SYSTEM_FLIGHT_LANDING_BARO_MIN_SAMPLES < 2U) || \
+    (SYSTEM_FLIGHT_LANDING_IMU_MIN_SAMPLES == 0U)
+#error "Landing windows, sample ages and minimum sample counts are invalid"
+#endif
+
+#if ((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK & \
+      ~SYSTEM_DEPLOY_TRIGGER_MASK_ALL) != 0U)
+#error "SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK contains an undefined trigger"
+#endif
+
+#if (SYSTEM_FLIGHT_LANDING_MIN_COVERAGE_PERCENT == 0U) || \
+    (SYSTEM_FLIGHT_LANDING_MIN_COVERAGE_PERCENT > 100U)
+#error "Landing coverage percent must be in [1,100]"
+#endif
+
+#endif /* __SYSTEM_USER_FLIGHT_CONFIG_H */

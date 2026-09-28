@@ -1,0 +1,608 @@
+{
+  "passed": true,
+  "full_matrix": "tests\\joint_rework_20260927\\FinalMatrix_20260927_081706_010978",
+  "final_delta": "tests\\joint_rework_20260927\\FinalDelta_20260927_085218_568926",
+  "variants": [
+    {
+      "variant": "kf6_flight",
+      "baseline_full_host": [
+        "SilverStar host summary: executables=72 checks=4392885 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ],
+      "baseline_exit": 0,
+      "final_gates_exit": 0,
+      "final_affected_host": [
+        {
+          "name": "navigation_quality_supervisor",
+          "exit": 0,
+          "counts": [
+            [
+              "1853",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_flight\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_quality_supervisor.log"
+        },
+        {
+          "name": "air_kf",
+          "exit": 0,
+          "counts": [
+            [
+              "706",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_flight\\build\\FCCG\\FinalDelta_20260927_085218_568926\\air_kf.log"
+        },
+        {
+          "name": "navigation_kf_replay",
+          "exit": 0,
+          "counts": [
+            [
+              "33531",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_flight\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_kf_replay.log"
+        },
+        {
+          "name": "estimator_preparation_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "288",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_flight\\build\\FCCG\\FinalDelta_20260927_085218_568926\\estimator_preparation_actual.log"
+        }
+      ],
+      "configurations": {
+        "Release": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalDelta_20260927_085218_568926/Release-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 286184,
+              "remaining": 238104,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 101840,
+              "remaining": 29232,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 56216,
+              "remaining": 9320,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalDelta_20260927_085218_568926/Release-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        },
+        "Debug": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalDelta_20260927_085218_568926/Debug-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 303192,
+              "remaining": 221096,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 101864,
+              "remaining": 29208,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 56216,
+              "remaining": 9320,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/kf6_flight/build/FCCG/FinalDelta_20260927_085218_568926/Debug-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        }
+      }
+    },
+    {
+      "variant": "kf6_test",
+      "baseline_full_host": [
+        "SilverStar host summary: executables=72 checks=4392885 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ],
+      "baseline_exit": 0,
+      "final_gates_exit": 0,
+      "final_affected_host": [
+        {
+          "name": "navigation_quality_supervisor",
+          "exit": 0,
+          "counts": [
+            [
+              "1853",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_test\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_quality_supervisor.log"
+        },
+        {
+          "name": "air_kf",
+          "exit": 0,
+          "counts": [
+            [
+              "706",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_test\\build\\FCCG\\FinalDelta_20260927_085218_568926\\air_kf.log"
+        },
+        {
+          "name": "navigation_kf_replay",
+          "exit": 0,
+          "counts": [
+            [
+              "33531",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_test\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_kf_replay.log"
+        },
+        {
+          "name": "estimator_preparation_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "288",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\kf6_test\\build\\FCCG\\FinalDelta_20260927_085218_568926\\estimator_preparation_actual.log"
+        }
+      ],
+      "configurations": {
+        "Release": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalDelta_20260927_085218_568926/Release-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 286184,
+              "remaining": 238104,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 101840,
+              "remaining": 29232,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 56216,
+              "remaining": 9320,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalDelta_20260927_085218_568926/Release-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        },
+        "Debug": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalDelta_20260927_085218_568926/Debug-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 303192,
+              "remaining": 221096,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 101864,
+              "remaining": 29208,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 56216,
+              "remaining": 9320,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/kf6_test/build/FCCG/FinalDelta_20260927_085218_568926/Debug-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        }
+      }
+    },
+    {
+      "variant": "eskf15_flight",
+      "baseline_full_host": [
+        "SilverStar host summary: executables=71 checks=4360252 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ],
+      "baseline_exit": 0,
+      "final_gates_exit": 0,
+      "final_affected_host": [
+        {
+          "name": "navigation_quality_supervisor",
+          "exit": 0,
+          "counts": [
+            [
+              "1853",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_flight\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_quality_supervisor.log"
+        },
+        {
+          "name": "eskf_backend_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "1575",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_flight\\build\\FCCG\\FinalDelta_20260927_085218_568926\\eskf_backend_actual.log"
+        },
+        {
+          "name": "estimator_preparation_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "241",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_flight\\build\\FCCG\\FinalDelta_20260927_085218_568926\\estimator_preparation_actual.log"
+        }
+      ],
+      "configurations": {
+        "Release": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalDelta_20260927_085218_568926/Release-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 272320,
+              "remaining": 251968,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 100440,
+              "remaining": 30632,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 65080,
+              "remaining": 456,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalDelta_20260927_085218_568926/Release-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        },
+        "Debug": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalDelta_20260927_085218_568926/Debug-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 287888,
+              "remaining": 236400,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 100464,
+              "remaining": 30608,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 65080,
+              "remaining": 456,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/eskf15_flight/build/FCCG/FinalDelta_20260927_085218_568926/Debug-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        }
+      }
+    },
+    {
+      "variant": "eskf15_test",
+      "baseline_full_host": [
+        "SilverStar host summary: executables=71 checks=4360252 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ],
+      "baseline_exit": 0,
+      "final_gates_exit": 0,
+      "final_affected_host": [
+        {
+          "name": "navigation_quality_supervisor",
+          "exit": 0,
+          "counts": [
+            [
+              "1853",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_test\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_quality_supervisor.log"
+        },
+        {
+          "name": "eskf_backend_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "1575",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_test\\build\\FCCG\\FinalDelta_20260927_085218_568926\\eskf_backend_actual.log"
+        },
+        {
+          "name": "estimator_preparation_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "241",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_test\\build\\FCCG\\FinalDelta_20260927_085218_568926\\estimator_preparation_actual.log"
+        }
+      ],
+      "configurations": {
+        "Release": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalDelta_20260927_085218_568926/Release-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 272320,
+              "remaining": 251968,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 100440,
+              "remaining": 30632,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 65080,
+              "remaining": 456,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalDelta_20260927_085218_568926/Release-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        },
+        "Debug": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalDelta_20260927_085218_568926/Debug-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 287888,
+              "remaining": 236400,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 100464,
+              "remaining": 30608,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 65080,
+              "remaining": 456,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/eskf15_test/build/FCCG/FinalDelta_20260927_085218_568926/Debug-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        }
+      }
+    },
+    {
+      "variant": "eskf15_no_logging",
+      "baseline_full_host": [
+        "SilverStar host summary: executables=61 checks=152301 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ],
+      "baseline_exit": 0,
+      "final_gates_exit": 0,
+      "final_affected_host": [
+        {
+          "name": "navigation_quality_supervisor",
+          "exit": 0,
+          "counts": [
+            [
+              "1853",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_no_logging\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_quality_supervisor.log"
+        },
+        {
+          "name": "estimator_preparation_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "241",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\eskf15_no_logging\\build\\FCCG\\FinalDelta_20260927_085218_568926\\estimator_preparation_actual.log"
+        }
+      ],
+      "configurations": {
+        "Release": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalDelta_20260927_085218_568926/Release-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 233444,
+              "remaining": 290844,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 68060,
+              "remaining": 63012,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 62008,
+              "remaining": 3528,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalDelta_20260927_085218_568926/Release-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 5938 checks, 95 first-party C files, 2238 functions.",
+            "SilverStar architecture check passed: checks=184 failures=0"
+          ]
+        },
+        "Debug": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalDelta_20260927_085218_568926/Debug-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 249284,
+              "remaining": 275004,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 68100,
+              "remaining": 62972,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 62008,
+              "remaining": 3528,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalDelta_20260927_085218_568926/Debug-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 5938 checks, 95 first-party C files, 2238 functions.",
+            "SilverStar architecture check passed: checks=184 failures=0"
+          ]
+        }
+      }
+    },
+    {
+      "variant": "pure_ins",
+      "baseline_full_host": [
+        "SilverStar host summary: executables=70 checks=4358689 failures=0 compile_pass_cases=8 expected_compile_failures=16",
+        "All SilverStar host tests passed."
+      ],
+      "baseline_exit": 0,
+      "final_gates_exit": 0,
+      "final_affected_host": [
+        {
+          "name": "navigation_quality_supervisor",
+          "exit": 0,
+          "counts": [
+            [
+              "1853",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\pure_ins\\build\\FCCG\\FinalDelta_20260927_085218_568926\\navigation_quality_supervisor.log"
+        },
+        {
+          "name": "estimator_preparation_actual",
+          "exit": 0,
+          "counts": [
+            [
+              "231",
+              "0"
+            ]
+          ],
+          "log": "tests\\joint_rework_20260927\\verified_matrix\\pure_ins\\build\\FCCG\\FinalDelta_20260927_085218_568926\\estimator_preparation_actual.log"
+        }
+      ],
+      "configurations": {
+        "Release": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Release-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 253592,
+              "remaining": 270696,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 82512,
+              "remaining": 48560,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 44800,
+              "remaining": 20736,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Release-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6118 checks, 96 first-party C files, 2303 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        },
+        "Debug": {
+          "build_exit": 0,
+          "build_log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Debug-build.log",
+          "resources_bytes": {
+            "FLASH": {
+              "used": 268976,
+              "remaining": 255312,
+              "capacity": 524288
+            },
+            "main SRAM": {
+              "used": 82536,
+              "remaining": 48536,
+              "capacity": 131072
+            },
+            "CCMRAM": {
+              "used": 44800,
+              "remaining": 20736,
+              "capacity": 65536
+            }
+          },
+          "quality_exit": 0,
+          "quality_log": "tests/joint_rework_20260927/verified_matrix/pure_ins/build/FCCG/FinalDelta_20260927_085218_568926/Debug-quality.log",
+          "quality_summaries": [
+            "Power of Ten check passed: 6118 checks, 96 first-party C files, 2303 functions.",
+            "SilverStar architecture check passed: checks=318 failures=0"
+          ]
+        }
+      }
+    }
+  ],
+  "boundary": "Final deltas reran every Release/Debug ARM gate and affected real Host fixtures; full Host and real FatFs storage acceptance remain in the preserved baseline run. No hardware, flash, physical output or radio gateway acceptance is claimed."
+}

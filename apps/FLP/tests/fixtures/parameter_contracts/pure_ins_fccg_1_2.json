@@ -1,0 +1,27 @@
+{
+  "schema_id": "silverstar.algorithm-parameters/1.0",
+  "parameters": [
+    {
+      "id": "gravity_mps2",
+      "type": "float",
+      "default": 9.78,
+      "unit": "m/s^2",
+      "representation": "value",
+      "min": 1.0,
+      "max": 20.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 0,
+      "generated_symbol": "SYSTEM_INS_GRAVITY_MPS2",
+      "display_names": {
+        "en_US": "Gravity",
+        "zh_CN": "重力加速度"
+      },
+      "description": {
+        "en_US": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+        "zh_CN": "仅用于导航重力扣除；校准、对准和传感器换算保留独立的平台重力配置。"
+      }
+    }
+  ]
+}

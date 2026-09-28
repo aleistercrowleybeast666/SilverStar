@@ -1,0 +1,175 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.imu.icm45686",
+  "name": "ICM45686",
+  "type": "device",
+  "class": "imu",
+  "version": "0.1.0",
+  "description": "ICM45686 raw sensor driver; HARDWARE_UNVERIFIED.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.sensor.register_bus",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "data",
+        "kind": "i2c",
+        "constraints": {
+          "i2c": {
+            "address_7bit": 104,
+            "maximum_bus_frequency_hz": 400000
+          }
+        },
+        "platform_capabilities": [
+          "i2c.master_blocking",
+          "i2c.memory_read_write"
+        ],
+        "mode": "shared"
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared"
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.imu",
+    "imu.acceleration",
+    "imu.angular_rate",
+    "imu.software_alignment_qualified",
+    "imu.software_propagation_qualified",
+    "imu.landing_stillness_qualified"
+  ],
+  "build": {
+    "sources": [
+      "Devices/IMU/ICM45686/Src/icm45686_device.c",
+      "Devices/IMU/ICM45686/Src/icm45686_instance.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/IMU/ICM45686/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/IMU/ICM45686"
+    ]
+  },
+  "metadata": {
+    "display_names": {
+      "en_US": "ICM45686",
+      "zh_CN": "ICM45686"
+    },
+    "device_group": "primary_devices",
+    "device_group_order": 21,
+    "device_selection_style": "instance",
+    "device_category": "sensor.imu",
+    "source_origins": {
+      "default": "fccg_joint_sensor_library"
+    },
+    "initialization": {
+      "configure_on_boot": true,
+      "profile": "raw_200_hz",
+      "persistent_storage": "none",
+      "persist_if_changed": false,
+      "hardware_status": "HARDWARE_UNVERIFIED",
+      "register_evidence": "https://github.com/tdk-invn-oss/motion.mcu.icm45686.driver/tree/0a5bed6975b5cdeecb98f95db420f3058dd88547",
+      "sample_timestamp": "bounded read/IRQ consumption proxy; TIME_UNCERTAIN (no edge capture mapping)",
+      "driver_status": "IMPLEMENTED_HARDWARE_UNVERIFIED",
+      "fifo": {
+        "zh_CN": "独立新寄存器图，16 字节小端、原生时间、双读计数勘误处理",
+        "en_US": "Distinct new register map, 16-byte little-endian native time, double count read for erratum"
+      },
+      "output_rate_hz": 200,
+      "accelerometer_range_g": 16,
+      "gyroscope_range_dps": 2000,
+      "readback": {
+        "zh_CN": "先读取、仅改差异位、掩码读回；最多 3 次。有效采样前不 READY",
+        "en_US": "Read first, update differing bits, masked readback with at most 3 attempts; no READY before a valid sample"
+      },
+      "filter": {
+        "zh_CN": "200 Hz，低噪声模式；保留芯片默认滤波链",
+        "en_US": "200 Hz, low-noise mode; chip default filter chain retained"
+      }
+    },
+    "high_g_channel": {
+      "present": false,
+      "enabled": false,
+      "independent": true
+    },
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_IMU": {
+        "function_prefix": "Icm45686ImuInstance",
+        "headers": [
+          "icm45686_instance.h"
+        ],
+        "pass_instance": true
+      }
+    },
+    "instance_resource_binding": {
+      "struct_type": "ProjectIcm45686Resources",
+      "accessor": "ProjectIcm45686Resources_Get",
+      "count_symbol": "PROJECT_ICM45686_INSTANCE_COUNT",
+      "runtime_context_upper_bound": 4,
+      "fields": [
+        {
+          "requirement": "data",
+          "member": "i2c"
+        },
+        {
+          "requirement": "time",
+          "member": "time"
+        }
+      ]
+    },
+    "device_descriptors": [
+      {
+        "order": 1,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_ICM45686",
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "capability": "SYSTEM_CAPABILITY_IMU",
+        "rate": "200U",
+        "driver_hash": "0x01000001UL",
+        "name_hash": "0x01000002UL"
+      }
+    ],
+    "build_feature_symbols": [
+      "SYSTEM_USER_IMU_ENABLE"
+    ],
+    "runtime_defaults": {
+      "SYSTEM_DEVICE_CLASS_IMU": {
+        "SYSTEM_IMU_OUTPUT_RATE_HZ": 200
+      }
+    },
+    "qualification_evidence": {
+      "contract": "static software alignment/propagation/stillness: paired SI accel+gyro, sequence, source/config/calibration generation, explicit clipping/time uncertainty; hardware status remains independent",
+      "host_test": "tests/test_joint_sensor_library.py",
+      "hardware_status": "HARDWARE_UNVERIFIED"
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 4,
+    "class_max": 4,
+    "same_plugin_multiple": true,
+    "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "TDK InvenSense",
+    "model": "ICM45686",
+    "chipset": "ICM45686",
+    "driver": "ICM45686 register driver"
+  },
+  "transports": []
+}

@@ -1,0 +1,28 @@
+{
+  "folders": [
+    { "name": "SilverStar", "path": "." }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": ["tests/integration"],
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/.ruff_cache": true,
+      "**/build": true,
+      "**/dist": true,
+      ".work": true,
+      ".venv": true
+    }
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      { "name": "FCCG", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/FCCG.py", "cwd": "${workspaceFolder}" },
+      { "name": "GSHC", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/GSHC.py", "cwd": "${workspaceFolder}" },
+      { "name": "FLP", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/FLP.py", "cwd": "${workspaceFolder}" }
+    ]
+  }
+}

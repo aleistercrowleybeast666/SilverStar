@@ -1,0 +1,78 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.flight_logic.landing.impact_then_stillness",
+  "name": "Impact Then Stillness Landing",
+  "type": "flight_logic",
+  "class": "landing",
+  "version": "0.1.0",
+  "description": "Detects a qualified landing impact and then confirms landing with a stillness window.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.flight_logic.landing.baro_imu_window",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": [
+      {
+        "capability": "imu.acceleration",
+        "purpose": "landing_detection"
+      },
+      {
+        "capability": "imu.angular_rate",
+        "purpose": "landing_detection"
+      },
+      {
+        "capability": "imu.landing_stillness_qualified",
+        "purpose": "landing_detection"
+      },
+      {
+        "capability": "imu.landing_impact_qualified",
+        "purpose": "landing_detection"
+      }
+    ]
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "flight_logic.landing"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": [
+      "SYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_IMPACT_THEN_STILLNESS"
+    ]
+  },
+  "payload": {
+    "roots": []
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "冲击后静止着陆判断",
+      "en_US": "Impact Then Stillness Landing"
+    },
+    "descriptions": {
+      "zh_CN": "先检测具备资格的着陆冲击，再以静止窗口确认着陆。",
+      "en_US": "Detects a qualified landing impact and then confirms landing with a stillness window."
+    },
+    "implementation": "Compile-time selector for the shared reference recovery state machine; no duplicated strategy payload."
+  },
+  "selection": {
+    "kind": "strategy",
+    "slot": "landing",
+    "required": true,
+    "allow_none": false,
+    "ui_order": 40
+  }
+}

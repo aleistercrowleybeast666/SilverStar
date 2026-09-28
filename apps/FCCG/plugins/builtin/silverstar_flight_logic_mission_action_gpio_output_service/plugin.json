@@ -1,0 +1,58 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.flight_logic.mission_action.gpio_output_service",
+  "name": "GPIO Mission-Action Output Service",
+  "type": "flight_logic",
+  "class": "mission_action_output_service",
+  "version": "0.1.0",
+  "description": "Board-independent SilverStar mission-action and timed GPIO output service selected as an internal dependency of an ignition or parachute output Device.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "service.output",
+    "service.mission_action"
+  ],
+  "build": {
+    "sources": [
+      "FlightLogic/MissionAction/GpioOutput/Src/mission_action_service.c",
+      "FlightLogic/MissionAction/GpioOutput/Src/output_service.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "FlightLogic/MissionAction/GpioOutput/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "FlightLogic/MissionAction/GpioOutput/Src/mission_action_service.c",
+      "FlightLogic/MissionAction/GpioOutput/Src/output_service.c",
+      "FlightLogic/MissionAction/GpioOutput/Inc/mission_action_output_config.h"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "internal_dependency": true,
+    "display_names": {
+      "zh_CN": "GPIO 任务动作输出服务",
+      "en_US": "GPIO Mission-Action Output Service"
+    }
+  }
+}

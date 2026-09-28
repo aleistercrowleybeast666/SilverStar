@@ -1,0 +1,12 @@
+#ifndef __NEO_M9N_BUILD_CAPABILITIES_H
+#define __NEO_M9N_BUILD_CAPABILITIES_H
+
+#define NEO_M9N_BUILD_POSITION_AVAILABLE                          1U
+
+/* Floors only; live hAcc/vAcc/sAcc remain the primary uncertainty source. */
+#define NEO_M9N_BUILD_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE    1U
+#define NEO_M9N_RECOMMENDED_HORIZONTAL_POSITION_STD_FLOOR_M      1.5f
+#define NEO_M9N_RECOMMENDED_VERTICAL_POSITION_STD_FLOOR_M        2.5f
+#define NEO_M9N_RECOMMENDED_VELOCITY_STD_FLOOR_MPS               0.15f
+
+#endif /* __NEO_M9N_BUILD_CAPABILITIES_H */

@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "profile_id": "maintenance.serial.0_0",
+  "service": "maintenance_service",
+  "slot": "maintenance_protocol",
+  "framing": "utf8_line",
+  "transport": "byte_stream",
+  "device_addressing": {
+    "classes": [
+      "IMU",
+      "BARO",
+      "GNSS"
+    ],
+    "instance_range": [
+      0,
+      255
+    ],
+    "identity_fields": [
+      "descriptor_id",
+      "instance_id",
+      "physical_device_id"
+    ]
+  }
+}

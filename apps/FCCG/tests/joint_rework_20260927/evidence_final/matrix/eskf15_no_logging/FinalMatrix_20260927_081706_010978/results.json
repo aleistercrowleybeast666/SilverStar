@@ -1,0 +1,77 @@
+[
+  {
+    "gate": "Release-build",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "all",
+      "stack-report",
+      "memory-report",
+      "artifact-check"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Release-build.log",
+    "sha256": "91cfabbca98c58875f23cd4a7fe2ba2508daa69f9664f27e1ac6cbbffe7e2fe1"
+  },
+  {
+    "gate": "Release-quality",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "architecture-check",
+      "power10-check",
+      "static-analysis"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Release-quality.log",
+    "sha256": "33dc5dcee4c60cc1a4c832d1178da8b72ec649d1d65b0425de7035a46a474fd0"
+  },
+  {
+    "gate": "Debug-build",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Debug",
+      "all",
+      "stack-report",
+      "memory-report",
+      "artifact-check"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-build.log",
+    "sha256": "f747b8fb276f0f2a1e78d1a914bc004f400150b8eeda6853d1a0300c18e384c8"
+  },
+  {
+    "gate": "Debug-quality",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Debug",
+      "architecture-check",
+      "power10-check",
+      "static-analysis"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Debug-quality.log",
+    "sha256": "6781ba30c451fed7a0c5d74b2aea9c474e0523d9861197a6a659c21fec89542f"
+  },
+  {
+    "gate": "Host",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-j4",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "host-tests"
+    ],
+    "exit": 0,
+    "log": "tests/joint_rework_20260927/verified_matrix/eskf15_no_logging/build/FCCG/FinalMatrix_20260927_081706_010978/Host.log",
+    "sha256": "7883c35ab152007ed5f84646f2d33705c569988db9f77e1e2a4c3b14678e6134"
+  }
+]

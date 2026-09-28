@@ -1,0 +1,73 @@
+{
+  "path": "C:\\Users\\chdxm\\Desktop\\stm32-1\\Flight_Controller0.5",
+  "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+  "commit_time_utc": "2026-08-28T02:07:29+08:00",
+  "branch": "main",
+  "working_tree": "clean",
+  "status": [],
+  "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942",
+  "protocol_source_sha256": {
+    "Protocol/Src/air_protocol.c": "4537b3588b65baa051c13605eed5715a42f530abe5a0bdfad11a4925a2a0b418",
+    "System/Src/system_console.c": "c1efc4849c33c9fca361015ec6068d027eeac95bd275f56d139146ea3c781d99",
+    "Protocol/SSLOG/Src/sslog_protocol.c": "b065b6733fe87dea5e220e8eaed4ef61569fff831e3dd3d14f1c218fc6aaa3bc",
+    "Protocol/SSLOG/Src/sslog_records.c": "871b73bd1cecf9a39a2b95006f34bb32d303a5cba23d55aa02aedb934fe03d30"
+  },
+  "recorded_at_utc": "2026-08-27T18:07:29+00:00",
+  "audit": {
+    "required_files": [
+      "Generated/Inc/project_device_instances.h",
+      "Generated/Inc/project_log_decoder_profile.h",
+      "Generated/Src/project_device_instances.c",
+      "Generated/Src/project_log_decoder_profile.c",
+      "Generated/Src/project_log_config.c",
+      "Generated/Src/project_metadata.c",
+      "Generated/project_semantics.json",
+      "Interfaces/Inc/system_descriptor_if.h",
+      "System/Src/system_console.c",
+      "System/Src/system_sensor_status.c",
+      "Protocol/SSLOG/Inc/sslog_records.h",
+      "Protocol/SSLOG/Src/sslog_records.c",
+      "Protocol/SSLOG/schema/sslog_schema.json",
+      "Protocol/SSLOG/schema/sslog_parser_metadata.json",
+      "Protocol/SSLOG/schema/sslog_record_catalog.schema.json",
+      "APP/Inc/diagnostic_log.h",
+      "APP/Src/diagnostic_log.c",
+      "APP/Src/device_task.c",
+      "APP/Src/device_native_log.c",
+      "APP/Src/logger_task.c",
+      "APP/Src/telemetry_task.c",
+      "Tests/Host/Fixtures/multi_instance_project_fixture.c",
+      "Tests/Host/run_tests.ps1",
+      "Tests/Host/test_console.c",
+      "Tests/Host/test_device_native_log.c",
+      "Tests/Host/test_logger.c",
+      "Tools/check_architecture.ps1",
+      "Tools/validate_sslog_record_catalog.py",
+      "docs/details/MAINTENANCE_PROTOCOL.md",
+      "docs/details/STORAGE_AND_FLIGHT_LOG.md",
+      "docs/details/AIR_PROTOCOL.md",
+      "docs/details/ARCHITECTURE.md",
+      "docs/details/FCCG_COMPONENT_BOUNDARIES.md",
+      "docs/details/VALIDATION_REQUIREMENTS.md"
+    ],
+    "missing_required_files": [],
+    "maintenance_document_findings": [],
+    "maintenance_document_accepted": true,
+    "import_groups": [
+      "Generated device-instance facade contract",
+      "Generated decoder-profile descriptor and project-semantics contract",
+      "descriptor and physical-device identity interfaces",
+      "native capability logging production code and Host Tests",
+      "periodic STATS and TELEMETRY_DIAG producers and Host validation",
+      "SSLOG codec, schema and parser metadata",
+      "SSLOG Record Catalog schema and validator",
+      "maintenance instance-command implementation and Host Tests",
+      "AIR M0 Sensor Status metadata and golden tests",
+      "official architecture, protocol and component-boundary documents"
+    ]
+  },
+  "fccg_protocol_source_sha256": {
+    "Protocol/SSLOG/Src/sslog_records.c": "0c3d2419306d32ed7495030f6069317aaff4d7dd6cd8a1c92655f235a4830194",
+    "Protocol/Src/air_protocol.c": "f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4"
+  }
+}

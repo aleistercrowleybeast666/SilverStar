@@ -1,0 +1,59 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.flight_logic.cycle.reference",
+  "name": "SilverStar Flight Cycle",
+  "type": "flight_logic",
+  "class": "cycle",
+  "version": "0.1.0",
+  "description": "Validated SilverStar lifecycle and recovery decision component.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": [
+      "flight_logic.deployment",
+      "flight_logic.landing"
+    ]
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "flight_logic.cycle"
+  ],
+  "build": {
+    "sources": [
+      "FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c",
+      "FlightLogic/FlightCycle/Src/silverstar_flight_recovery.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "FlightLogic/FlightCycle"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "SilverStar 飞行周期",
+      "en_US": "SilverStar Flight Cycle"
+    },
+    "source_origins": {
+      "default": "reference_base",
+      "FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c": "fccg_optional_protocol_gating"
+    }
+  }
+}

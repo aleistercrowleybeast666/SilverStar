@@ -1,0 +1,176 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.gnss.neo_m8n",
+  "name": "NEO-M8N",
+  "type": "device",
+  "class": "gnss",
+  "version": "0.1.0",
+  "description": "Reference NEO-M8N Device driver and canonical adapter.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.sensor.ubx",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "data",
+        "kind": "uart",
+        "constraints": {
+          "uart": {
+            "baud": {
+              "exact": 115200,
+              "configurable": true
+            },
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0,
+            "rx_dma": true,
+            "tx_dma": false,
+            "irq": true
+          }
+        }
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared"
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.gnss",
+    "gnss.position",
+    "gnss.velocity"
+  ],
+  "build": {
+    "sources": [
+      "Devices/GNSS/NEO_M8N/Src/neo_m8n_instance.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/GNSS/NEO_M8N/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/GNSS/NEO_M8N"
+    ]
+  },
+  "metadata": {
+    "display_names": {
+      "zh_CN": "NEO-M8N",
+      "en_US": "NEO-M8N"
+    },
+    "device_descriptors": [
+      {
+        "order": 2,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_NEO_M8N",
+        "class": "SYSTEM_DEVICE_CLASS_GNSS",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "capability": "SYSTEM_CAPABILITY_GNSS",
+        "rate": "5U",
+        "driver_hash": "0xC751E890UL",
+        "name_hash": "0xA8E98337UL"
+      }
+    ],
+    "device_group": "primary_devices",
+    "device_group_order": 20,
+    "device_selection_style": "instance",
+    "device_category": "sensor.gnss",
+    "build_feature_symbols": [
+      "SYSTEM_USER_GNSS_ENABLE"
+    ],
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_GNSS": {
+        "function_prefix": "NeoM8nGnssInstance",
+        "headers": [
+          "neo_m8n_instance.h"
+        ],
+        "pass_instance": true
+      }
+    },
+    "instance_resource_binding": {
+      "struct_type": "ProjectNeoM8nResources",
+      "accessor": "ProjectNeoM8nResources_Get",
+      "count_symbol": "PROJECT_NEO_M8N_INSTANCE_COUNT",
+      "runtime_context_upper_bound": 4,
+      "fields": [
+        {
+          "requirement": "data",
+          "member": "uart"
+        },
+        {
+          "requirement": "time",
+          "member": "time"
+        }
+      ]
+    },
+    "recordable_outputs": {
+      "gnss.position": {
+        "enabled": true
+      },
+      "gnss.velocity": {
+        "enabled": true
+      }
+    },
+    "source_origins": {
+      "default": "fccg_joint_sensor_library"
+    },
+    "initialization": {
+      "configure_on_boot": true,
+      "navigation_rate_hz": 5,
+      "target_baud": 115200,
+      "dynamic_model": "portable_ground_test",
+      "persistent_layer_default": "RAM",
+      "conditional_persistence": {
+        "zh_CN": "默认仅 RAM；本驱动不支持独立读回 M8 非易失层，显式持久化返回 UNSUPPORTED，不发送 CFG-CFG",
+        "en_US": "RAM only; independent M8 nonvolatile-layer readback is unsupported, explicit persistence returns UNSUPPORTED without CFG-CFG"
+      },
+      "hardware_status": "HARDWARE_UNVERIFIED",
+      "constellations": {
+        "zh_CN": "GPS + Galileo + BeiDou；逐项读回核验；GLONASS 关闭（F10 无该键），子信号保持原设置",
+        "en_US": "GPS + Galileo + BeiDou, individually read back; GLONASS off (key absent on F10), signal-band settings preserved"
+      },
+      "readback": {
+        "zh_CN": "启动 MON-VER 型号/协议核验；实际配置响应一致并收到新 PVT 才就绪；硬件查询执行新的只读事务",
+        "en_US": "Startup MON-VER identity/protocol, actual matching configuration responses and a new PVT; hardware query starts a fresh read-only transaction"
+      },
+      "filter": {
+        "zh_CN": "按动态模型解算；没有宣称逐轴滤波参数可配置",
+        "en_US": "Receiver dynamic model; no configurable per-axis filter claim"
+      },
+      "fifo": {
+        "zh_CN": "有界 UART/UBX 字节解析；iTOW 重复/乱序拒绝",
+        "en_US": "Bounded UART/UBX byte parser; duplicate/out-of-order iTOW rejected"
+      }
+    },
+    "runtime_defaults": {
+      "SYSTEM_DEVICE_CLASS_GNSS": {
+        "SYSTEM_GNSS_NAVIGATION_RATE_HZ": 5,
+        "SYSTEM_GNSS_DYNAMIC_MODEL": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE"
+      }
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 4,
+    "class_max": 4,
+    "same_plugin_multiple": true,
+    "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "u-blox",
+    "model": "NEO-M8N",
+    "chipset": "UBX-M8",
+    "driver": "NEO-M8N Driver"
+  },
+  "transports": []
+}

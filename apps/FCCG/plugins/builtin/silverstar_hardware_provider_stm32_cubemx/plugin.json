@@ -1,0 +1,50 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.hardware_provider.stm32_cubemx",
+  "name": "STM32CubeMX Hardware Provider",
+  "type": "hardware_configuration_provider",
+  "class": "stm32_cubemx",
+  "version": "0.1.0",
+  "description": "Trusted FCCG provider for validating and importing generated STM32CubeMX projects as data.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "hardware_provider.stm32_cubemx"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": []
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "STM32CubeMX 硬件配置导入",
+      "en_US": "STM32CubeMX Hardware Provider"
+    }
+  },
+  "hardware_provider": {
+    "vendor": "STM32",
+    "handler": "stm32_cubemx",
+    "accepted_inputs": [
+      "ioc",
+      "directory"
+    ]
+  }
+}

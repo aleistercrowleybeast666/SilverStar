@@ -1,0 +1,230 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,bm,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.35em}
+\renewcommand{\arraystretch}{1.25}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\cross}{\times}
+\title{SilverStar探空火箭惯导机械化公式\\二阶圆锥误差补偿与二阶划桨误差补偿\\速度与位置更新}
+\author{SilverStar 0.0.7}
+\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{范围}
+本文描述SilverStar 0.0.7当前惯导机械化所使用的两子样本二阶圆锥误差补偿、旋转补偿、二阶划桨误差补偿、机体系到ENU的速度增量变换、重力补偿、速度积分和梯形位置积分。共享惯性增量总线只传递补偿后的机体系增量；Pure INS、KF导航支路以及未来其他姿态支路分别使用自己的姿态完成机体系到ENU的变换。
+
+\section{坐标和输入}
+机体系记为$b$，局部导航系采用ENU，记为$n$。第一个和第二个子区间的角增量与速度增量分别为：
+\[
+\Delta\vect{\theta}_1,\quad \Delta\vect{v}_1,
+\qquad
+\Delta\vect{\theta}_2,\quad \Delta\vect{v}_2.
+\]
+两个子区间时间为$\Delta t_1$和$\Delta t_2$，总时间：
+\[
+\Delta t=\Delta t_1+\Delta t_2.
+\]
+
+若原始输入为相邻采样点角速度和比力，当前实现使用梯形积分形成子区间增量：
+\[
+\Delta\vect{\theta}_i=\frac{1}{2}
+(\vect{\omega}_{i-1}+\vect{\omega}_{i})\Delta t_i,
+\]
+\[
+\Delta\vect{v}_i=\frac{1}{2}
+(\vect{f}_{i-1}+\vect{f}_{i})\Delta t_i.
+\]
+
+\section{基本两子样本增量}
+\[
+\Delta\vect{\theta}=\Delta\vect{\theta}_1+\Delta\vect{\theta}_2,
+\]
+\[
+\Delta\vect{v}=\Delta\vect{v}_1+\Delta\vect{v}_2.
+\]
+
+\section{二阶圆锥误差补偿}
+当前两子样本二阶圆锥补偿为：
+\[
+\boxed{
+\Delta\vect{\theta}_{c}
+=
+\Delta\vect{\theta}_1
++
+\Delta\vect{\theta}_2
++
+\frac{2}{3}
+\left(
+\Delta\vect{\theta}_1\cross\Delta\vect{\theta}_2
+\right)
+}
+\]
+其中$\Delta\vect{\theta}_{c}$用于软件四元数传播。
+
+\section{速度增量旋转补偿}
+只考虑整个两子样本区间的旋转补偿时：
+\[
+\boxed{
+\Delta\vect{v}_{r}
+=
+\Delta\vect{v}
++
+\frac{1}{2}
+\left(
+\Delta\vect{\theta}\cross\Delta\vect{v}
+\right)
+}
+\]
+该量主要用于日志和与完整划桨补偿结果比较。
+
+\section{二阶划桨误差补偿}
+当前实现的两子样本二阶划桨补偿为：
+\[
+\boxed{
+\begin{aligned}
+\Delta\vect{v}_{s}
+={}&
+\Delta\vect{v}_1+\Delta\vect{v}_2\\
+&+\frac{1}{2}
+\left[
+(\Delta\vect{\theta}_1+\Delta\vect{\theta}_2)
+\cross
+(\Delta\vect{v}_1+\Delta\vect{v}_2)
+\right]\\
+&+\frac{2}{3}
+\left(
+\Delta\vect{\theta}_1\cross\Delta\vect{v}_2
++
+\Delta\vect{v}_1\cross\Delta\vect{\theta}_2
+\right).
+\end{aligned}
+}
+\]
+注意最后一项第二个叉乘在代码中写为
+$\Delta\vect{v}_1\cross\Delta\vect{\theta}_2$，必须保持叉乘顺序。
+
+\section{共享机体系惯性增量}
+每个完整机械化区间向共享总线发布：
+\begin{verbatim}
+typedef struct
+{
+    uint64_t timestamp_us;
+    uint32_t sequence;
+    float dt_s;
+
+    float delta_theta_b_corrected[3];
+    float delta_velocity_b_sculling_corrected[3];
+} SystemInertialIncrement;
+\end{verbatim}
+
+对应数学量为：
+\[
+\texttt{delta\_theta\_b\_corrected}
+=\Delta\vect{\theta}_{c},
+\qquad
+\texttt{delta\_velocity\_b\_sculling\_corrected}
+=\Delta\vect{v}_{s}.
+\]
+
+两者均位于系统机体系。$\Delta\vect{v}_{s}$尚未由任何姿态旋转到ENU，也尚未加入重力增量。共享总线不得发布由Pure INS姿态预先生成的ENU速度增量。
+
+\section{姿态传播}
+软件姿态支路使用补偿后的角增量传播四元数。设区间起点四元数为$q_{nb,k}$，增量四元数为：
+\[
+\delta q(\Delta\vect{\theta}_{c})
+=
+\begin{bmatrix}
+\cos(\|\Delta\vect{\theta}_{c}\|/2)\\
+\vect{u}\sin(\|\Delta\vect{\theta}_{c}\|/2)
+\end{bmatrix},
+\qquad
+\vect{u}=\frac{\Delta\vect{\theta}_{c}}{\|\Delta\vect{\theta}_{c}\|}.
+\]
+传播形式按SilverStar统一Hamilton约定和现有实现确定：
+\[
+q_{nb,k+1}=q_{nb,k}\otimes\delta q.
+\]
+结果必须归一化。零角增量时使用单位增量四元数。
+
+\section{各姿态支路分别转到ENU并补偿重力}
+设姿态支路$r$在区间起点维护自己的$q_{nb,k}^{(r)}$，其对应的body-to-navigation旋转矩阵为$C_b^n(q_{nb,k}^{(r)})$。该支路将共享的机体系划桨补偿速度增量转到导航系：
+\[
+\Delta\vect{v}_{n,\mathrm{specific}}^{(r)}
+=C_b^n(q_{nb,k}^{(r)})\Delta\vect{v}_{s}.
+\]
+ENU中重力方向为$-U$，$g$由唯一用户配置\texttt{SYSTEM\_LOCAL\_GRAVITY\_MPS2}传入机械化上下文：
+\[
+\boxed{
+\Delta\vect{v}_{n}^{(r)}
+=
+C_b^n(q_{nb,k}^{(r)})\Delta\vect{v}_{s}
+-
+\begin{bmatrix}0\\0\\g\Delta t\end{bmatrix}
+}
+\]
+其中当前配置为$g=9.78\ \mathrm{m/s^2}$。Device、APP与Algorithm不得另设第二套默认重力常量。
+
+Pure INS和KF导航支路在0.0.7中使用相同的软件传播策略，但各自保存姿态上下文并分别执行上述变换。任何KF状态、协方差或量测更新不得写回Pure INS上下文。
+
+\section{速度和位置积分}
+对任一姿态支路$r$，速度更新：
+\[
+\boxed{
+\vect{v}_{n,k+1}^{(r)}=\vect{v}_{n,k}^{(r)}+\Delta\vect{v}_{n}^{(r)}
+}
+\]
+
+位置使用新旧速度的梯形积分：
+\[
+\boxed{
+\vect{p}_{n,k+1}^{(r)}
+=
+\vect{p}_{n,k}^{(r)}
++
+\frac{1}{2}
+\left(
+\vect{v}_{n,k}^{(r)}+\vect{v}_{n,k+1}^{(r)}
+\right)\Delta t
+}
+\]
+最终状态顺序为ENU：
+\[
+\vect{p}_n=[p_E,p_N,p_U]^\mathsf{T},\qquad
+\vect{v}_n=[v_E,v_N,v_U]^\mathsf{T}.
+\]
+
+\section{状态输出和日志建议}
+为验证补偿效果，应记录：
+\begin{itemize}[leftmargin=2em]
+\item 两个子样本角增量和速度增量；
+\item 基本角增量$\Delta\vect{\theta}$；
+\item 圆锥补偿角增量$\Delta\vect{\theta}_c$；
+\item 基本速度增量$\Delta\vect{v}$；
+\item 旋转补偿速度增量$\Delta\vect{v}_r$；
+\item 划桨补偿速度增量$\Delta\vect{v}_s$；
+\item 每个姿态支路各自生成的重力补偿后$\Delta\vect{v}_n^{(r)}$；
+\item 每个姿态支路自己的姿态四元数、速度和位置。
+\end{itemize}
+
+\section{异常处理}
+以下情况不得继续产生有效机械化输出：
+\begin{itemize}[leftmargin=2em]
+\item 加速度或角速度样本无效；
+\item 时间间隔非正、过小或超过允许上限；
+\item 四元数无效或无法归一化；
+\item 任一中间结果出现NaN或Inf；
+\item 样本发生大间隔时，应重建子样本历史而不是跨间隙积分。
+\end{itemize}
+
+\section{与KF6的边界}
+Pure INS和KF导航支路共享同一\texttt{SystemInertialIncrement}，其中只包含补偿后的机体系角增量和机体系划桨补偿速度增量。Pure INS使用自己的软件姿态生成$\Delta\vect{v}_n^{(\mathrm{pure})}$；KF导航支路使用自己的当前姿态上下文生成$\Delta\vect{v}_n^{(\mathrm{kf})}$，再把后者交给六维KF数学核心进行预测。KF不得直接消费由Pure INS姿态转换后的ENU增量，Pure INS也不得接受KF状态回注。
+
+\end{document}

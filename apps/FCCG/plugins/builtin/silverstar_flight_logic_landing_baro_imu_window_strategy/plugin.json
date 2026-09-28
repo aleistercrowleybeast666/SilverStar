@@ -1,0 +1,82 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+  "name": "Barometer + IMU Window Landing",
+  "type": "flight_logic",
+  "class": "landing",
+  "version": "0.1.0",
+  "description": "Uses qualified barometric-window and IMU-stillness data for landing detection.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.flight_logic.landing.baro_imu_window",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": [
+      {
+        "capability": "imu.acceleration",
+        "purpose": "landing_detection"
+      },
+      {
+        "capability": "imu.angular_rate",
+        "purpose": "landing_detection"
+      },
+      {
+        "capability": "imu.landing_stillness_qualified",
+        "purpose": "landing_detection"
+      },
+      {
+        "capability": "barometer.altitude",
+        "purpose": "landing_detection"
+      },
+      {
+        "capability": "barometer.landing_window_qualified",
+        "purpose": "landing_detection"
+      }
+    ]
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "flight_logic.landing"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": [
+      "SYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW"
+    ]
+  },
+  "payload": {
+    "roots": []
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "气压计 + IMU窗口着陆判断",
+      "en_US": "Barometer + IMU Window Landing"
+    },
+    "descriptions": {
+      "zh_CN": "使用具备窗口判定资格的气压高度与IMU静止指标判断着陆。",
+      "en_US": "Uses qualified barometric-window and IMU-stillness data for landing detection."
+    },
+    "implementation": "Compile-time selector for the shared reference recovery state machine; no duplicated strategy payload."
+  },
+  "selection": {
+    "kind": "strategy",
+    "slot": "landing",
+    "required": true,
+    "allow_none": false,
+    "ui_order": 40
+  }
+}

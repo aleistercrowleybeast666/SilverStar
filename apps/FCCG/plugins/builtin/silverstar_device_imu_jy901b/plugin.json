@@ -1,0 +1,347 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.imu.jy901b",
+  "name": "JY901B",
+  "type": "device",
+  "class": "imu",
+  "version": "0.1.0",
+  "description": "Reference JY901B Device driver and canonical adapter.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "data",
+        "kind": "uart",
+        "binding_macro": "PROJECT_RESOURCE_IMU_UART",
+        "constraints": {
+          "uart": {
+            "baud": {
+              "exact": 230400,
+              "configurable": false
+            },
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0,
+            "rx_dma": true,
+            "tx_dma": false,
+            "irq": true
+          }
+        }
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared"
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.imu",
+    "imu.acceleration",
+    "imu.angular_rate",
+    "attitude.external",
+    "magnetometer.field",
+    "barometer.altitude",
+    "attitude.external.preflight_alignment_6axis_qualified",
+    "attitude.external.preflight_alignment_9axis_qualified",
+    "attitude.external.preflight_fallback_qualified",
+    "imu.software_alignment_qualified",
+    "imu.software_propagation_qualified",
+    "imu.landing_stillness_qualified",
+    "barometer.landing_window_qualified",
+    "barometer.alignment_origin_qualified",
+    "magnetometer.physical_unit"
+  ],
+  "build": {
+    "sources": [
+      "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/IMU/JY901B/Inc",
+      "Devices/IMU/JY901B/Adapter/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/IMU/JY901B"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "JY901B",
+      "en_US": "JY901B"
+    },
+    "device_descriptors": [
+      {
+        "order": 1,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+        "capability": "SYSTEM_CAPABILITY_IMU",
+        "rate": "SYSTEM_IMU_OUTPUT_RATE_HZ",
+        "driver_hash": "0xADF02482UL",
+        "name_hash": "0x53692179UL"
+      },
+      {
+        "order": 3,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+        "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+        "capability": "SYSTEM_CAPABILITY_BAROMETER",
+        "rate": "SYSTEM_BAROMETER_OUTPUT_RATE_HZ",
+        "driver_hash": "0xADF02482UL",
+        "name_hash": "0x53692179UL"
+      },
+      {
+        "order": 4,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+        "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+        "capability": "SYSTEM_CAPABILITY_HARDWARE_QUATERNION",
+        "rate": "SYSTEM_HARDWARE_QUATERNION_OUTPUT_RATE_HZ",
+        "driver_hash": "0xADF02482UL",
+        "name_hash": "0x53692179UL"
+      },
+      {
+        "order": 13,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+        "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL | ((SYSTEM_USER_MAGNETOMETER_ENABLE != 0U) ? SYSTEM_DESCRIPTOR_FLAG_ENABLED : 0U)",
+        "capability": "SYSTEM_CAPABILITY_MAGNETOMETER",
+        "rate": "SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ",
+        "driver_hash": "0xADF02482UL",
+        "name_hash": "0x53692179UL"
+      }
+    ],
+    "device_group": "primary_devices",
+    "device_group_order": 20,
+    "device_selection_style": "instance",
+    "device_category": "sensor.imu",
+    "build_feature_symbols": [
+      "SYSTEM_USER_IMU_ENABLE",
+      "SYSTEM_USER_BAROMETER_ENABLE",
+      "SYSTEM_USER_HARDWARE_QUATERNION_ENABLE"
+    ],
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_IMU": {
+        "function_prefix": "Jy901bImuInstance",
+        "headers": [
+          "jy901b_instance.h"
+        ],
+        "pass_instance": true
+      },
+      "SYSTEM_DEVICE_CLASS_BAROMETER": {
+        "function_prefix": "Jy901bBarometerInstance",
+        "headers": [
+          "jy901b_instance.h"
+        ],
+        "pass_instance": true
+      },
+      "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {
+        "function_prefix": "Jy901bMagnetometerInstance",
+        "headers": [
+          "jy901b_instance.h"
+        ],
+        "pass_instance": true
+      },
+      "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION": {
+        "function_prefix": "Jy901bQuaternionInstance",
+        "headers": [
+          "jy901b_instance.h"
+        ],
+        "pass_instance": true
+      }
+    },
+    "instance_resource_binding": {
+      "struct_type": "ProjectJy901bResources",
+      "accessor": "ProjectJy901bResources_Get",
+      "count_symbol": "PROJECT_JY901B_INSTANCE_COUNT",
+      "runtime_context_upper_bound": 4,
+      "fields": [
+        {
+          "requirement": "data",
+          "member": "uart"
+        },
+        {
+          "requirement": "time",
+          "member": "time"
+        }
+      ]
+    },
+    "capability_qualifications": {
+      "attitude.external.preflight_alignment_6axis_qualified": {
+        "evidence": "JY901B_QUATERNION_BUILD_PREFLIGHT_ALIGNMENT_6AXIS_QUALIFIED=1U"
+      },
+      "attitude.external.preflight_alignment_9axis_qualified": {
+        "evidence": "JY901B_QUATERNION_BUILD_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED=1U"
+      },
+      "attitude.external.preflight_fallback_qualified": {
+        "evidence": "JY901B_QUATERNION_BUILD_PREFLIGHT_FALLBACK_QUALIFIED=1U"
+      },
+      "imu.software_alignment_qualified": {
+        "evidence": "JY901B_IMU_BUILD_SOFTWARE_ALIGNMENT_QUALIFIED=1U"
+      },
+      "imu.software_propagation_qualified": {
+        "evidence": "JY901B_IMU_BUILD_SOFTWARE_PROPAGATION_QUALIFIED=1U"
+      },
+      "imu.landing_stillness_qualified": {
+        "evidence": "Derived from the reference Stillness gate requiring selected acceleration and angular-rate data"
+      },
+      "barometer.landing_window_qualified": {
+        "evidence": "JY901B_BAROMETER_BUILD_LANDING_WINDOW_QUALIFIED=1U"
+      }
+    },
+    "unqualified_capabilities": {
+      "magnetometer.absolute_vector_qualified": "JY901B_MAGNETOMETER_BUILD_ABSOLUTE_VECTOR_QUALIFIED=0U",
+      "attitude.external.authoritative_6axis_qualified": "JY901B_QUATERNION_BUILD_AUTHORITATIVE_6AXIS_QUALIFIED=0U",
+      "attitude.external.authoritative_9axis_qualified": "JY901B_QUATERNION_BUILD_AUTHORITATIVE_9AXIS_QUALIFIED=0U",
+      "imu.landing_impact_qualified": "JY901B_IMU_BUILD_LANDING_IMPACT_QUALIFIED=0U"
+    },
+    "recordable_outputs": {
+      "imu.acceleration": {
+        "enabled": true
+      },
+      "imu.angular_rate": {
+        "enabled": true
+      },
+      "attitude.external": {
+        "enabled": true
+      },
+      "barometer.altitude": {
+        "enabled": true
+      },
+      "magnetometer.field": {
+        "enabled": false,
+        "reason_code": "logging.unavailable.magnetometer_output_disabled"
+      }
+    },
+    "source_origins": {
+      "default": "reference_base",
+      "Devices/IMU/JY901B/Inc/jy901b_imu_build_capabilities.h": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Inc/jy901b_device.h": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Inc/jy901b_sensor_adapter.h": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Inc/jy901b_instance.h": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Src/jy901b_device.c": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Inc/jy901b_sample_quality.h": "fccg_multi_instance_context",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c": "fccg_multi_instance_context"
+    },
+    "sensor_recommendations": [
+      {
+        "parameter_id": "baro_std_m",
+        "value": 1.5,
+        "unit": "m",
+        "representation": "sigma",
+        "source": "JY901B",
+        "description": {
+          "en_US": "Advisory ground-test starting point, not native per-sample variance or a hardware guarantee.",
+          "zh_CN": "地面实验初始建议，不是逐样本原生方差或硬件保证。"
+        }
+      },
+      {
+        "parameter_id": "process_accel_std_e",
+        "value": 1.5,
+        "unit": "m/s^2",
+        "representation": "sigma",
+        "source": "JY901B",
+        "description": {
+          "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+          "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+        }
+      },
+      {
+        "parameter_id": "process_accel_std_n",
+        "value": 1.5,
+        "unit": "m/s^2",
+        "representation": "sigma",
+        "source": "JY901B",
+        "description": {
+          "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+          "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+        }
+      },
+      {
+        "parameter_id": "process_accel_std_u",
+        "value": 2.0,
+        "unit": "m/s^2",
+        "representation": "sigma",
+        "source": "JY901B",
+        "description": {
+          "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+          "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+        }
+      }
+    ],
+    "runtime_defaults": {
+      "SYSTEM_DEVICE_CLASS_IMU": {
+        "SYSTEM_IMU_OUTPUT_RATE_HZ": 200
+      }
+    },
+    "initialization": {
+      "configure_on_boot": true,
+      "output_rate_hz": 200,
+      "target_baud": 230400,
+      "accelerometer_range_g": 16,
+      "gyroscope_range_dps": 2000,
+      "filter": {
+        "zh_CN": "固定 256 Hz 带宽；读回后生效",
+        "en_US": "Fixed 256 Hz bandwidth; effective only after readback"
+      },
+      "fifo": {
+        "zh_CN": "UART 帧队列；接收时间代理，TIME_UNCERTAIN",
+        "en_US": "UART frame queue; receive-time proxy, TIME_UNCERTAIN"
+      },
+      "readback": {
+        "zh_CN": "逐项读取 10 个配置寄存器；实际值不符则拒绝就绪",
+        "en_US": "Read all 10 configuration registers; mismatch rejects readiness"
+      },
+      "conditional_persistence": {
+        "zh_CN": "默认仅 RAM，不发 SAVE；没有独立 NVM 读回，显式维护保存仍不假称已验证",
+        "en_US": "RAM only by default, no SAVE; no independent NVM readback, explicit maintenance save never claims verified persistence"
+      },
+      "hardware_status": {
+        "zh_CN": "当前试验硬件型号；本轮仅软件测试，配置变更待台架验证",
+        "en_US": "Current test hardware model; this turn tests software only, changed configuration requires bench validation"
+      }
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 4,
+    "class_max": 4,
+    "same_plugin_multiple": true,
+    "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "WitMotion",
+    "model": "JY901B",
+    "chipset": "JY901B",
+    "driver": "JY901B Driver"
+  },
+  "transports": []
+}

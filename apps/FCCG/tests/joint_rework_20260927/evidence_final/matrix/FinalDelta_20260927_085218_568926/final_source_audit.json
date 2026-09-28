@@ -1,0 +1,472 @@
+[
+  {
+    "variant": "kf6_flight",
+    "sources": [
+      {
+        "path": "System/User/system_user_config.h",
+        "matches": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "matches": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "matches": true,
+        "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "matches": true,
+        "sha256": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "matches": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "matches": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "matches": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "matches": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "matches": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "matches": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "matches": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "APP/Src/estimator_task.c",
+        "matches": true,
+        "sha256": "ee97eb5d61c15d435afd8ec2d48b1d88e9c2d74af017619b55cb1fc1b3608448"
+      },
+      {
+        "path": "Tests/Host/test_estimator_preparation.c",
+        "matches": true,
+        "sha256": "18ba28ce0a79f3d892164a56edf0eddb2d0dad3eb6ff89fe8b3ead3147d81720"
+      },
+      {
+        "path": "Algorithm/Estimator/KF6/Src/navigation_kf.c",
+        "matches": true,
+        "sha256": "27279b3b5ed248a3a740c09318b3464778cd6e8e224e60ef1fb60ea2e025e5bb"
+      },
+      {
+        "path": "Tests/Host/test_air_kf.c",
+        "matches": true,
+        "sha256": "e129ba7d241eef27dc9c984a31e73cf2b6478abc1fae29f44b62801d67409801"
+      }
+    ]
+  },
+  {
+    "variant": "kf6_test",
+    "sources": [
+      {
+        "path": "System/User/system_user_config.h",
+        "matches": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "matches": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "matches": true,
+        "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "matches": true,
+        "sha256": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "matches": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "matches": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "matches": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "matches": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "matches": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "matches": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "matches": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "APP/Src/estimator_task.c",
+        "matches": true,
+        "sha256": "ee97eb5d61c15d435afd8ec2d48b1d88e9c2d74af017619b55cb1fc1b3608448"
+      },
+      {
+        "path": "Tests/Host/test_estimator_preparation.c",
+        "matches": true,
+        "sha256": "18ba28ce0a79f3d892164a56edf0eddb2d0dad3eb6ff89fe8b3ead3147d81720"
+      },
+      {
+        "path": "Algorithm/Estimator/KF6/Src/navigation_kf.c",
+        "matches": true,
+        "sha256": "27279b3b5ed248a3a740c09318b3464778cd6e8e224e60ef1fb60ea2e025e5bb"
+      },
+      {
+        "path": "Tests/Host/test_air_kf.c",
+        "matches": true,
+        "sha256": "e129ba7d241eef27dc9c984a31e73cf2b6478abc1fae29f44b62801d67409801"
+      }
+    ]
+  },
+  {
+    "variant": "eskf15_flight",
+    "sources": [
+      {
+        "path": "System/User/system_user_config.h",
+        "matches": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "matches": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "matches": true,
+        "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "matches": true,
+        "sha256": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "matches": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "matches": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "matches": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "matches": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "matches": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "matches": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "matches": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "APP/Src/estimator_task.c",
+        "matches": true,
+        "sha256": "ee97eb5d61c15d435afd8ec2d48b1d88e9c2d74af017619b55cb1fc1b3608448"
+      },
+      {
+        "path": "Tests/Host/test_estimator_preparation.c",
+        "matches": true,
+        "sha256": "18ba28ce0a79f3d892164a56edf0eddb2d0dad3eb6ff89fe8b3ead3147d81720"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "matches": true,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "matches": true,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ]
+  },
+  {
+    "variant": "eskf15_test",
+    "sources": [
+      {
+        "path": "System/User/system_user_config.h",
+        "matches": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "matches": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "matches": true,
+        "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "matches": true,
+        "sha256": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "matches": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "matches": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "matches": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "matches": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "matches": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "matches": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "matches": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "APP/Src/estimator_task.c",
+        "matches": true,
+        "sha256": "ee97eb5d61c15d435afd8ec2d48b1d88e9c2d74af017619b55cb1fc1b3608448"
+      },
+      {
+        "path": "Tests/Host/test_estimator_preparation.c",
+        "matches": true,
+        "sha256": "18ba28ce0a79f3d892164a56edf0eddb2d0dad3eb6ff89fe8b3ead3147d81720"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "matches": true,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "matches": true,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ]
+  },
+  {
+    "variant": "eskf15_no_logging",
+    "sources": [
+      {
+        "path": "System/User/system_user_config.h",
+        "matches": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "matches": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "matches": true,
+        "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "matches": true,
+        "sha256": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "matches": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "matches": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "matches": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "matches": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "matches": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "matches": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "matches": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "APP/Src/estimator_task.c",
+        "matches": true,
+        "sha256": "ee97eb5d61c15d435afd8ec2d48b1d88e9c2d74af017619b55cb1fc1b3608448"
+      },
+      {
+        "path": "Tests/Host/test_estimator_preparation.c",
+        "matches": true,
+        "sha256": "18ba28ce0a79f3d892164a56edf0eddb2d0dad3eb6ff89fe8b3ead3147d81720"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "matches": true,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "matches": true,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ]
+  },
+  {
+    "variant": "pure_ins",
+    "sources": [
+      {
+        "path": "System/User/system_user_config.h",
+        "matches": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "matches": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "matches": true,
+        "sha256": "ca706060f00b70eecc2f3c28d23315c74fff3788ccc54c04523fe384646743e5"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "matches": true,
+        "sha256": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "matches": true,
+        "sha256": "d4bd69064f74156f7a2bfda6625c3be63b62c1df8107bf15e171cc3539df1c01"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "matches": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Tests/Host/test_telemetry.c",
+        "matches": true,
+        "sha256": "11ba5a404b76d9050a75acd09cc45224feb649a1dad2165c5d6a984049964bf6"
+      },
+      {
+        "path": "Tests/Host/test_runtime_startup.c",
+        "matches": true,
+        "sha256": "f0ce41bd23f84062c5e4a6fb074d22ba4e4e375083cf0e3421cbd117521b5850"
+      },
+      {
+        "path": "Tests/Host/test_source_selector.c",
+        "matches": true,
+        "sha256": "211d91afe5d9403ce1eb70f2af56ccf99ddc7792c144eb029766e3ba0cc891fe"
+      },
+      {
+        "path": "Tests/Host/test_lifecycle.c",
+        "matches": true,
+        "sha256": "592bce99c92c8882914ab1629c9ed5a4ccce9fe1b9729ea48b54efe81652926c"
+      },
+      {
+        "path": "Tests/Host/test_system_startup.c",
+        "matches": true,
+        "sha256": "5ce9db0deb3bcda33c8f125ec4902a217fda9fb333d9dbb9755a572f229c6d98"
+      },
+      {
+        "path": "APP/Src/estimator_task.c",
+        "matches": true,
+        "sha256": "ee97eb5d61c15d435afd8ec2d48b1d88e9c2d74af017619b55cb1fc1b3608448"
+      },
+      {
+        "path": "Tests/Host/test_estimator_preparation.c",
+        "matches": true,
+        "sha256": "18ba28ce0a79f3d892164a56edf0eddb2d0dad3eb6ff89fe8b3ead3147d81720"
+      }
+    ]
+  }
+]

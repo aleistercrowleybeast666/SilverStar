@@ -1,0 +1,18 @@
+{
+  "version": "0.0.12",
+  "plugins": 65,
+  "startup_alive_seconds": 8,
+  "startup_traceback": false,
+  "offline": true,
+  "logical_size": [
+    1000,
+    700
+  ],
+  "device_pixel_ratio": 2,
+  "screenshots": [
+    "algorithm_1000x700_200dpi_light_en_US.png",
+    "algorithm_1000x700_200dpi_light_zh_CN.png",
+    "algorithm_1000x700_200dpi_dark_en_US.png",
+    "algorithm_1000x700_200dpi_dark_zh_CN.png"
+  ]
+}

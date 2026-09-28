@@ -1,0 +1,8 @@
+[
+  {"name": "duplicate_sector_byte", "operation": "duplicate_previous_byte", "offset": 512, "expected_error": "bad_crc", "signature": "extra_byte"},
+  {"name": "missing_sector_byte", "operation": "remove_byte", "offset": 512, "expected_error": "bad_crc", "signature": "missing_byte"},
+  {"name": "payload_crc_flip", "operation": "flip_byte", "offset": 88, "expected_error": "bad_crc"},
+  {"name": "oversized_length", "operation": "oversize_first_record", "expected_error": "oversized_length"},
+  {"name": "unexplained_sequence_gap", "operation": "skip_sequence", "missing_records": 7},
+  {"name": "extra_tail", "operation": "append_byte", "expected_error": "trailing_bytes"}
+]

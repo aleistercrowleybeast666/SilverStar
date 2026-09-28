@@ -1,0 +1,12 @@
+{
+  "copied": [
+    ".eide/eide.yml",
+    ".eide/files.options.yml",
+    "Flight_Controller0.5.code-workspace",
+    ".vscode/tasks.json"
+  ],
+  "missing_in_reference": [
+    ".vscode/extensions.json",
+    ".vscode/settings.json"
+  ]
+}

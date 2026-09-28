@@ -1,0 +1,26 @@
+[
+  {
+    "project": "eskf_final",
+    "producer": "actual LoggerBus/LoggerTask/SSLOG/FatFs throughput fixture",
+    "source_path": "D:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\eskf_final\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\logger-startup-burst.sslog",
+    "source_bytes": 15988195,
+    "source_sha256": "6a5cfcef649ddb217c35ac4c52a4cb57077540e0a222a391a1fb4a3c0450f7ad",
+    "decoder_sha256": "7b9d5613c4066c80ca0fa425111eb26b34c448bb21d5259e3630f6238d2f906d",
+    "fixture_scope": "synthetic marker payloads, not ESKF numerical output; no FAITHFUL claim permitted",
+    "import_status": "rejected",
+    "import_error": "DecoderProfileError:calibration_result_not_ready",
+    "source_and_decoder_unchanged": true
+  },
+  {
+    "project": "eskf_test_final",
+    "producer": "actual LoggerBus/LoggerTask/SSLOG/FatFs throughput fixture",
+    "source_path": "D:\\python_software\\SilverStar_FCCG\\tests\\joint_rework_20260927\\eskf_test_final\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\logger-startup-burst.sslog",
+    "source_bytes": 19324951,
+    "source_sha256": "47b28d3b9a72a50a0bd23a9ef656424a9ae697cea9508577e4ad99a3a939f6c1",
+    "decoder_sha256": "880212fb3feb2f13639f254f87316abd18b2969ec5eebd8e00c980f73cdb7ebc",
+    "fixture_scope": "synthetic marker payloads, not ESKF numerical output; no FAITHFUL claim permitted",
+    "import_status": "rejected",
+    "import_error": "DecoderProfileError:calibration_result_not_ready",
+    "source_and_decoder_unchanged": true
+  }
+]

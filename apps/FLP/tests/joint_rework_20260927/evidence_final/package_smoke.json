@@ -1,0 +1,13 @@
+{
+  "wheel": "silverstar_flp-0.0.5-py3-none-any.whl",
+  "bytes": 348590,
+  "sha256": "2c376ae831b155c3358b96881157cfb03fdaeba6593773ae1ad04d5242d4dabb",
+  "build_exit": 0,
+  "smoke_exit": 0,
+  "runtime": {
+    "version": "0.0.5",
+    "plugin": "silverstar.algorithm.estimator.eskf15",
+    "package_path": "D:\\python_software\\SilverStar_FLP\\tests\\joint_rework_20260927\\package_final\\unpacked\\silverstar_flp\\__init__.py"
+  },
+  "scope": "offline wheel extraction + offscreen GUI; no install or publish"
+}

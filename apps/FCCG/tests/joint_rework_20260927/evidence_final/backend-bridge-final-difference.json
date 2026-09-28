@@ -1,0 +1,127 @@
+{
+  "old_bin_sha256": "a7c93727e53b9b6220479137a6e04f0ff51729da4f690861bf4beb127469549c",
+  "new_bin_sha256": "253dd88e57bb7f672ad2ed174979f19f632cee58e71a36eb6d7452455bc20e07",
+  "same_size": true,
+  "same_header": true,
+  "same_catalog": true,
+  "changed_records": [
+    {
+      "record": "DECODER_PROFILE_DESCRIPTOR",
+      "offset": 64,
+      "fields": [
+        "project_semantics_hash_128",
+        "generation_profile_hash_128"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 316,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 370,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 424,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 478,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 532,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 586,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 640,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 694,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 748,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 802,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "DEVICE_DESCRIPTOR",
+      "offset": 856,
+      "fields": [
+        "physical_device_id"
+      ]
+    },
+    {
+      "record": "NAV_QUALITY",
+      "offset": 52539,
+      "fields": [
+        "health"
+      ]
+    },
+    {
+      "record": "ESKF15_STATE",
+      "offset": 52795,
+      "fields": [
+        "health"
+      ]
+    },
+    {
+      "record": "NAV_QUALITY",
+      "offset": 55287,
+      "fields": [
+        "health"
+      ]
+    },
+    {
+      "record": "ESKF15_STATE",
+      "offset": 55543,
+      "fields": [
+        "health"
+      ]
+    }
+  ],
+  "changed_package_members": [
+    "checksums.sha256",
+    "manifest.json",
+    "project_semantics.json"
+  ]
+}

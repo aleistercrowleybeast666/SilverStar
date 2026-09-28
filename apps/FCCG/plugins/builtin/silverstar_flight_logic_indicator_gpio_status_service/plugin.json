@@ -1,0 +1,52 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.flight_logic.indicator.gpio_status_service",
+  "name": "GPIO Status Indicator Service",
+  "type": "flight_logic",
+  "class": "status_indicator_service",
+  "version": "0.1.0",
+  "description": "Board-independent status-indicator adapter selected as an internal dependency of a software-controlled Indicator Device.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "service.status_indicator"
+  ],
+  "build": {
+    "sources": [
+      "FlightLogic/Indicator/GpioStatus/Src/indicator_service.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "FlightLogic/Indicator/GpioStatus/Src/indicator_service.c"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "internal_dependency": true,
+    "display_names": {
+      "zh_CN": "GPIO 状态指示服务",
+      "en_US": "GPIO Status Indicator Service"
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.protocol.logging.sslog_0_0",
+  "name": "Flight Log Format 0.0",
+  "type": "protocol",
+  "class": "logging",
+  "version": "0.1.0",
+  "description": "SSLOG 0.0 container, Record Catalog and declarative decoder metadata.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "protocol.sslog"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Protocol/SSLOG"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "飞行日志格式 0.0",
+      "en_US": "Flight Log Format 0.0"
+    },
+    "source_origins": {
+      "reference_base": {
+        "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+        "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+      },
+      "fccg_extension": {
+        "source_root": "tools/reference_overlays",
+        "purpose": "independent protocol ownership and metadata"
+      },
+      "Protocol/SSLOG/Inc/sslog_protocol.h": "fccg_multi_instance_failover",
+      "Protocol/SSLOG/schema/sslog_parser_metadata.json": "fccg_multi_instance_failover",
+      "Protocol/SSLOG/schema/sslog_schema.json": "fccg_multi_instance_failover"
+    },
+    "container_decoder": {
+      "id": "silverstar.sslog.container/0.0",
+      "version": "0.0"
+    }
+  },
+  "protocol": {
+    "category": "logging",
+    "logging_metadata": "Protocol/SSLOG/schema/sslog_parser_metadata.json",
+    "maintenance_protocol_version": "0.0",
+    "firmware_version": "0.1.0",
+    "documentation_version": "0.1.0",
+    "profiles": {
+      "logging": [
+        {
+          "id": "flight_log.0_0",
+          "version": "0.0",
+          "display_names": {
+            "zh_CN": "飞行日志格式 0.0",
+            "en_US": "Flight Log Format 0.0"
+          },
+          "service": "flight_log_service",
+          "slot": "log_format",
+          "codec_sources": [
+            "Protocol/SSLOG/Src/sslog_protocol.c",
+            "Protocol/SSLOG/Src/sslog_records.c"
+          ],
+          "parser_sources": [
+            "Protocol/SSLOG/Src/sslog_protocol.c"
+          ],
+          "include_dirs": [
+            "Protocol/SSLOG/Inc"
+          ],
+          "defines": [],
+          "binding": "flight_log_sink",
+          "transport_selection": "single",
+          "transport": {
+            "capability": "transport.sequential_file_sink",
+            "kind": "sequential_file_sink",
+            "minimum_mtu": 280,
+            "ordered": true,
+            "bidirectional": false,
+            "reliable": true,
+            "mode": "file"
+          },
+          "decoder_metadata": "Protocol/SSLOG/schema/sslog_parser_metadata.json",
+          "documentation": [
+            "docs/STORAGE_AND_FLIGHT_LOG.md"
+          ],
+          "host_tests": [
+            "Tests/Host/test_logger.c",
+            "Tests/Host/test_device_native_log.c"
+          ],
+          "golden_tests": [
+            "Tests/Host/test_logger.c"
+          ]
+        }
+      ]
+    }
+  }
+}

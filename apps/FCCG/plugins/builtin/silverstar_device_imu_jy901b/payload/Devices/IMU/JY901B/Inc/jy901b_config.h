@@ -1,0 +1,112 @@
+#ifndef __JY901B_CONFIG_H
+#define __JY901B_CONFIG_H
+
+#include <stdint.h>
+
+#include "project_resources.h"
+#include "jy901b_device.h"
+#include "jy901b_magnetometer_build_capabilities.h"
+#include "platform_critical.h"
+
+/* JY901B: IMU + magnetometer + barometer, TTL UART. */
+
+#define PI                              3.14159265358979323846f
+
+#define JY901B_IMU_SAMPLE_FIFO_DEPTH      16U
+#define IMU_ONLINE_TIMEOUT_MS           100U
+
+#define IMU_UART_BAUD_4800              4800U
+#define IMU_UART_BAUD_9600              9600U
+#define IMU_UART_BAUD_19200             19200U
+#define IMU_UART_BAUD_38400             38400U
+#define IMU_UART_BAUD_57600             57600U
+#define IMU_UART_BAUD_115200            115200U
+#define IMU_UART_BAUD_230400            230400U
+
+#define IMU_DEFAULT_BAUDRATE            IMU_UART_BAUD_230400
+#define IMU_MAX_BAUDRATE                IMU_UART_BAUD_230400
+
+#define JY901B_UART_BOOT_BAUD            IMU_UART_BAUD_230400
+#ifndef JY901B_BAUD_RESCUE_ENABLE
+#ifndef JY901B_BAUD_RESCUE_ENABLE
+#define JY901B_BAUD_RESCUE_ENABLE        1U
+#endif
+#endif
+#define JY901B_BAUD_NORMALIZE_ENABLE     0U
+#define JY901B_BAUD_SCAN_DWELL_MS        300U
+#define JY901B_BAUD_VERIFY_FRAME_COUNT   3U
+#define JY901B_BAUD_SCAN_PASS_COUNT      2U
+
+#if (JY901B_BAUD_RESCUE_ENABLE != 0U) && \
+    (JY901B_BAUD_RESCUE_ENABLE != 1U)
+#error "JY901B_BAUD_RESCUE_ENABLE must be 0 or 1"
+#endif
+#if (JY901B_BAUD_NORMALIZE_ENABLE != 0U) && \
+    (JY901B_BAUD_NORMALIZE_ENABLE != 1U)
+#error "JY901B_BAUD_NORMALIZE_ENABLE must be 0 or 1"
+#endif
+
+#define IMU_DEFAULT_BAUD_VALUE          IMU_BAUD_230400_VALUE
+#define IMU_DEFAULT_BANDWIDTH_VALUE     IMU_BANDWIDTH_256HZ_VALUE
+
+#define IMU_ORIENT_HORIZONTAL_VALUE     0x0000U
+#define IMU_ORIENT_VERTICAL_VALUE       0x0001U
+#define IMU_DEFAULT_ORIENT_VALUE        IMU_ORIENT_VERTICAL_VALUE
+#if (IMU_DEFAULT_ORIENT_VALUE != IMU_ORIENT_HORIZONTAL_VALUE) && \
+    (IMU_DEFAULT_ORIENT_VALUE != IMU_ORIENT_VERTICAL_VALUE)
+#error "Invalid IMU_DEFAULT_ORIENT_VALUE"
+#endif
+#define IMU_DEFAULT_GYRO_RANGE_VALUE    IMU_GYRO_RANGE_2000DPS_VALUE
+#define IMU_DEFAULT_ACCEL_RANGE_VALUE   IMU_ACCEL_RANGE_16G_VALUE
+#define IMU_DEFAULT_FUSION_FILTER_VALUE 30U
+#define IMU_DEFAULT_ACCEL_FILTER_VALUE  800U
+
+#define IMU_FILTER_VALUE_MIN            1U
+#define IMU_FILTER_VALUE_MAX            10000U
+
+#define IMU_CFG_TX_TIMEOUT_MS           100U
+#define IMU_CFG_RX_TIMEOUT_MS           100U
+#define IMU_CFG_UNLOCK_DELAY_MS         200U
+#define IMU_CFG_WRITE_DELAY_MS          20U
+#define IMU_CFG_SAVE_DELAY_MS           200U
+#define IMU_CFG_BAUD_SWITCH_DELAY_MS    100U
+#define IMU_HARDWARE_ZERO_Z_TIMEOUT_MS  500U
+#define IMU_CONFIG_REG_READ_TIMEOUT_MS  600U
+#define IMU_CONFIG_READ_TIMEOUT_MS      IMU_CONFIG_REG_READ_TIMEOUT_MS
+#define IMU_CONFIG_REG_RESPONSE_DELAY_MS 30U
+#define IMU_CONFIG_REG_GAP_MS           20U
+#define IMU_ORIENT_CONFIG_TIMEOUT_MS     500U
+#define IMU_ORIENT_READ_TIMEOUT_MS       800U
+#define IMU_BOOT_CONFIG_SETTLE_MS        1000U
+
+/* JY901B RSW bits used by this driver. Each returned frame is explicit so the
+ * default stream does not depend on an opaque composite value. */
+#define JY901B_RSW_ACCEL_MASK           0x0002U
+#define JY901B_RSW_GYRO_MASK            0x0004U
+#define JY901B_RSW_MAG_MASK             0x0010U
+#define JY901B_RSW_PRESSURE_MASK        0x0040U
+#define JY901B_RSW_QUATERNION_MASK      0x0200U
+
+#if JY901B_MAGNETOMETER_ADAPTER_ENABLE
+#define JY901B_RSW_OPTIONAL_MAG_MASK    JY901B_RSW_MAG_MASK
+#else
+#define JY901B_RSW_OPTIONAL_MAG_MASK    0x0000U
+#endif
+
+#define FC_IMU_RETURN_CONTENT_DEFAULT \
+    (JY901B_RSW_ACCEL_MASK | JY901B_RSW_GYRO_MASK | \
+     JY901B_RSW_PRESSURE_MASK | JY901B_RSW_QUATERNION_MASK | \
+     JY901B_RSW_OPTIONAL_MAG_MASK)
+#define FC_IMU_RETURN_CONTENT_QUAT_MASK JY901B_RSW_QUATERNION_MASK
+
+static inline uint32_t IMU_IrqLock(void)
+{
+    return PlatformCritical_Enter();
+}
+
+static inline void IMU_IrqUnlock(uint32_t primask)
+{
+    PlatformCritical_Exit(primask);
+}
+
+#endif /* __JY901B_CONFIG_H */

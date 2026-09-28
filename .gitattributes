@@ -1,0 +1,4 @@
+# Preserve imported source and historical Markdown byte content during the first baseline.
+# New root code and integration tests retain Git's normal whitespace checks.
+apps/** whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
+docs/** whitespace=-blank-at-eol,-blank-at-eof

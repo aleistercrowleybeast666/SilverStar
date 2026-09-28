@@ -1,0 +1,85 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.os.freertos_11_3_0",
+  "name": "FreeRTOS Kernel 11.3.0",
+  "type": "os",
+  "class": "rtos",
+  "version": "11.3.0",
+  "description": "Official FreeRTOS 11.3.0 static kernel subset and SilverStar hooks.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu.stm32f407vet6",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "os.freertos",
+    "os.static_allocation"
+  ],
+  "build": {
+    "sources": [
+      "OS/FreeRTOS/freertos_hooks.c",
+      "Targets/SilverStar_F407/Src/freertos_target_irq.c",
+      "ThirdParty/FreeRTOS-Kernel/list.c",
+      "ThirdParty/FreeRTOS-Kernel/queue.c",
+      "ThirdParty/FreeRTOS-Kernel/tasks.c",
+      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "OS/FreeRTOS",
+      "ThirdParty/FreeRTOS-Kernel/include",
+      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F"
+    ],
+    "defines": [],
+    "virtual_sources": [
+      "ThirdParty/FreeRTOS-Kernel/list.c",
+      "ThirdParty/FreeRTOS-Kernel/queue.c",
+      "ThirdParty/FreeRTOS-Kernel/tasks.c"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "OS/FreeRTOS",
+      "ThirdParty/FreeRTOS-Kernel/list.c",
+      "ThirdParty/FreeRTOS-Kernel/queue.c",
+      "ThirdParty/FreeRTOS-Kernel/tasks.c",
+      "ThirdParty/FreeRTOS-Kernel/include",
+      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F",
+      "ThirdParty/FreeRTOS-Kernel/LICENSE.md",
+      "ThirdParty/FreeRTOS-Kernel/README.md",
+      "ThirdParty/FreeRTOS-Kernel/FreeRTOS-Kernel-V11.3.0-repository-SPDX2.3.spdx",
+      "BuildSystem/freertos.mk",
+      "Targets/SilverStar_F407/Inc/freertos_target_config.h",
+      "Targets/SilverStar_F407/Src/freertos_target_irq.c"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "source_kind": "reference_snapshot",
+      "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+      "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
+    },
+    "display_names": {
+      "zh_CN": "FreeRTOS Kernel 11.3.0",
+      "en_US": "FreeRTOS Kernel 11.3.0"
+    },
+    "source_origins": {
+      "default": "reference_base",
+      "OS/FreeRTOS/freertos_hooks.c": "fccg_runtime_safety"
+    }
+  }
+}

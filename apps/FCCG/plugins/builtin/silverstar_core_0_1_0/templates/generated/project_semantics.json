@@ -1,0 +1,3418 @@
+{
+  "algorithms": [
+    "silverstar.algorithm.common",
+    "silverstar.algorithm.alignment.common",
+    "silverstar.algorithm.calibration",
+    "silverstar.algorithm.alignment.gravity_known_yaw",
+    "silverstar.algorithm.estimator.kf6",
+    "silverstar.algorithm.ins.coning2_sculling2"
+  ],
+  "available_records": [
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_EVENT"
+    },
+    {
+      "active_producers": [
+        "silverstar.core.device_task"
+      ],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [
+        "silverstar.core.device_task"
+      ],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_STATS"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_ESTIMATOR"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_SYSTEM_CONFIG"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_PURE_INS"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "optional",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_KF6_FULL_P"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_POWER"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_HEALTH"
+    },
+    {
+      "active_producers": [
+        "silverstar.core.telemetry_task"
+      ],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [
+        "silverstar.core.telemetry_task"
+      ],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_TELEMETRY_DIAG"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_INITIAL_STATE"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_GNSS_NATIVE"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_BARO_NATIVE"
+    },
+    {
+      "active_producers": [],
+      "available": false,
+      "level": "recommended",
+      "missing": [
+        "magnetometer.field"
+      ],
+      "producer_components": [],
+      "reason_code": "logging.unavailable.magnetometer_output_disabled",
+      "record": "FLIGHT_LOG_RECORD_MAG_NATIVE"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_INERTIAL_INCREMENT"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_BARO_MEASUREMENT"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "recommended",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_IMU_CORRECTED"
+    },
+    {
+      "active_producers": [
+        "silverstar.core.flight_task"
+      ],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [
+        "silverstar.core.flight_task"
+      ],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_CALIBRATION_RESULT"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_ALIGNMENT_RESULT"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_MISSION_CONFIG"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR"
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "level": "required",
+      "missing": [],
+      "producer_components": [],
+      "reason_code": "",
+      "record": "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR"
+    }
+  ],
+  "canonical_channels": [
+    {
+      "automatic": true,
+      "capability": "actuator.mission_action.parachute_deploy",
+      "channel_id": "canonical:actuator.mission_action.parachute_deploy",
+      "endpoint_descriptor_ids": [
+        11
+      ],
+      "physical_device_instance": "parachute_pyro0",
+      "provider_plugin": "silverstar.device.actuator.parachute_pyro"
+    },
+    {
+      "automatic": true,
+      "capability": "barometer.altitude",
+      "channel_id": "canonical:barometer.altitude",
+      "endpoint_descriptor_ids": [
+        3
+      ],
+      "physical_device_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "automatic": true,
+      "capability": "barometer.landing_window_qualified",
+      "channel_id": "canonical:barometer.landing_window_qualified",
+      "endpoint_descriptor_ids": [
+        3
+      ],
+      "physical_device_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "automatic": true,
+      "capability": "gnss.position",
+      "channel_id": "canonical:gnss.position",
+      "endpoint_descriptor_ids": [
+        2
+      ],
+      "physical_device_instance": "gnss0",
+      "provider_plugin": "silverstar.device.gnss.neo_m9n"
+    },
+    {
+      "automatic": true,
+      "capability": "gnss.velocity",
+      "channel_id": "canonical:gnss.velocity",
+      "endpoint_descriptor_ids": [
+        2
+      ],
+      "physical_device_instance": "gnss0",
+      "provider_plugin": "silverstar.device.gnss.neo_m9n"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.acceleration",
+      "channel_id": "canonical:imu.acceleration",
+      "endpoint_descriptor_ids": [
+        1
+      ],
+      "physical_device_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.angular_rate",
+      "channel_id": "canonical:imu.angular_rate",
+      "endpoint_descriptor_ids": [
+        1
+      ],
+      "physical_device_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.landing_stillness_qualified",
+      "channel_id": "canonical:imu.landing_stillness_qualified",
+      "endpoint_descriptor_ids": [
+        1
+      ],
+      "physical_device_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.software_alignment_qualified",
+      "channel_id": "canonical:imu.software_alignment_qualified",
+      "endpoint_descriptor_ids": [
+        1
+      ],
+      "physical_device_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.software_propagation_qualified",
+      "channel_id": "canonical:imu.software_propagation_qualified",
+      "endpoint_descriptor_ids": [
+        1
+      ],
+      "physical_device_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b"
+    }
+  ],
+  "capability_endpoints": [
+    {
+      "capabilities": [
+        "device.imu",
+        "imu.acceleration",
+        "imu.angular_rate",
+        "attitude.external",
+        "magnetometer.field",
+        "barometer.altitude",
+        "attitude.external.preflight_alignment_6axis_qualified",
+        "attitude.external.preflight_alignment_9axis_qualified",
+        "attitude.external.preflight_fallback_qualified",
+        "imu.software_alignment_qualified",
+        "imu.software_propagation_qualified",
+        "imu.landing_stillness_qualified",
+        "barometer.landing_window_qualified"
+      ],
+      "descriptor_id": 1,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_IMU_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_IMU",
+      "instance_id": 0,
+      "model": "JY901B",
+      "physical_device_id": 1,
+      "physical_device_instance": "imu0",
+      "plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "capabilities": [
+        "device.gnss",
+        "gnss.position",
+        "gnss.velocity"
+      ],
+      "descriptor_id": 2,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_GNSS_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_GNSS",
+      "instance_id": 0,
+      "model": "NEO-M9N",
+      "physical_device_id": 2,
+      "physical_device_instance": "gnss0",
+      "plugin": "silverstar.device.gnss.neo_m9n"
+    },
+    {
+      "capabilities": [
+        "device.imu",
+        "imu.acceleration",
+        "imu.angular_rate",
+        "attitude.external",
+        "magnetometer.field",
+        "barometer.altitude",
+        "attitude.external.preflight_alignment_6axis_qualified",
+        "attitude.external.preflight_alignment_9axis_qualified",
+        "attitude.external.preflight_fallback_qualified",
+        "imu.software_alignment_qualified",
+        "imu.software_propagation_qualified",
+        "imu.landing_stillness_qualified",
+        "barometer.landing_window_qualified"
+      ],
+      "descriptor_id": 3,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_BARO_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+      "instance_id": 0,
+      "model": "JY901B",
+      "physical_device_id": 1,
+      "physical_device_instance": "imu0",
+      "plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "capabilities": [
+        "device.imu",
+        "imu.acceleration",
+        "imu.angular_rate",
+        "attitude.external",
+        "magnetometer.field",
+        "barometer.altitude",
+        "attitude.external.preflight_alignment_6axis_qualified",
+        "attitude.external.preflight_alignment_9axis_qualified",
+        "attitude.external.preflight_fallback_qualified",
+        "imu.software_alignment_qualified",
+        "imu.software_propagation_qualified",
+        "imu.landing_stillness_qualified",
+        "barometer.landing_window_qualified"
+      ],
+      "descriptor_id": 4,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_ATTITUDE_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+      "instance_id": 0,
+      "model": "JY901B",
+      "physical_device_id": 1,
+      "physical_device_instance": "imu0",
+      "plugin": "silverstar.device.imu.jy901b"
+    },
+    {
+      "capabilities": [
+        "device.telemetry",
+        "transport.packet",
+        "transport.lora",
+        "transport.integrity.hardware_crc"
+      ],
+      "descriptor_id": 5,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_TELEMETRY_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_TELEMETRY",
+      "instance_id": 0,
+      "model": "E28-2G4M12SX",
+      "physical_device_id": 3,
+      "physical_device_instance": "telemetry0",
+      "plugin": "silverstar.device.telemetry.sx1281"
+    },
+    {
+      "capabilities": [
+        "device.console",
+        "maintenance.console",
+        "transport.byte_stream"
+      ],
+      "descriptor_id": 6,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_CONSOLE_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_CONSOLE",
+      "instance_id": 0,
+      "model": "UART Maintenance Endpoint",
+      "physical_device_id": 4,
+      "physical_device_instance": "maintenance0",
+      "plugin": "silverstar.device.console.uart"
+    },
+    {
+      "capabilities": [
+        "power.voltage",
+        "power.monitor"
+      ],
+      "descriptor_id": 7,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_POWER_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_POWER",
+      "instance_id": 0,
+      "model": "SS0.5 Input Voltage Monitor",
+      "physical_device_id": 5,
+      "physical_device_instance": "voltage_monitor0",
+      "plugin": "silverstar.device.sensor.input_voltage"
+    },
+    {
+      "capabilities": [
+        "service.storage",
+        "service.log_sink",
+        "transport.sequential_file_sink"
+      ],
+      "descriptor_id": 8,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_STORAGE_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_STORAGE",
+      "instance_id": 0,
+      "model": "SD/TF Card",
+      "physical_device_id": 6,
+      "physical_device_instance": "storage0",
+      "plugin": "silverstar.device.storage.sd_sdio_fatfs"
+    },
+    {
+      "capabilities": [
+        "service.storage",
+        "service.log_sink",
+        "transport.sequential_file_sink"
+      ],
+      "descriptor_id": 9,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_LOG_SINK_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_LOG_SINK",
+      "instance_id": 0,
+      "model": "SD/TF Card",
+      "physical_device_id": 6,
+      "physical_device_instance": "storage0",
+      "plugin": "silverstar.device.storage.sd_sdio_fatfs"
+    },
+    {
+      "capabilities": [
+        "actuator.mission_action.launch_ignition"
+      ],
+      "descriptor_id": 10,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_OUTPUT_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_OUTPUT",
+      "instance_id": 0,
+      "model": "SS0.5 P_CONTROL1",
+      "physical_device_id": 7,
+      "physical_device_instance": "launch_ignition0",
+      "plugin": "silverstar.device.actuator.launch_ignition"
+    },
+    {
+      "capabilities": [
+        "actuator.mission_action.parachute_deploy"
+      ],
+      "descriptor_id": 11,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_ACTION_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_MISSION_ACTION",
+      "instance_id": 0,
+      "model": "SS0.5 P_CONTROL2",
+      "physical_device_id": 7,
+      "physical_device_instance": "parachute_pyro0",
+      "plugin": "silverstar.device.actuator.parachute_pyro"
+    },
+    {
+      "capabilities": [
+        "core.silverstar",
+        "interface.canonical",
+        "system.lifecycle"
+      ],
+      "descriptor_id": 12,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_TIME_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_TIME",
+      "instance_id": 0,
+      "model": "SilverStar Core 0.1.0",
+      "physical_device_id": 0,
+      "physical_device_instance": "",
+      "plugin": "silverstar.core.0_1_0"
+    },
+    {
+      "capabilities": [
+        "device.imu",
+        "imu.acceleration",
+        "imu.angular_rate",
+        "attitude.external",
+        "magnetometer.field",
+        "barometer.altitude",
+        "attitude.external.preflight_alignment_6axis_qualified",
+        "attitude.external.preflight_alignment_9axis_qualified",
+        "attitude.external.preflight_fallback_qualified",
+        "imu.software_alignment_qualified",
+        "imu.software_propagation_qualified",
+        "imu.landing_stillness_qualified",
+        "barometer.landing_window_qualified"
+      ],
+      "descriptor_id": 13,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_MAG_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+      "instance_id": 0,
+      "model": "JY901B",
+      "physical_device_id": 1,
+      "physical_device_instance": "imu0",
+      "plugin": "silverstar.device.imu.jy901b"
+    }
+  ],
+  "capability_routes": [
+    {
+      "automatic": true,
+      "capability": "imu.acceleration",
+      "consumer": "silverstar.algorithm.calibration",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "calibration"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.acceleration",
+      "consumer": "silverstar.algorithm.alignment.gravity_known_yaw",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "initialization"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.acceleration",
+      "consumer": "silverstar.algorithm.ins.coning2_sculling2",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "runtime"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.acceleration",
+      "consumer": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "landing_detection"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.angular_rate",
+      "consumer": "silverstar.algorithm.calibration",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "calibration"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.angular_rate",
+      "consumer": "silverstar.flight_logic.deployment.multi_trigger",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "runtime"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.angular_rate",
+      "consumer": "silverstar.algorithm.alignment.gravity_known_yaw",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "initialization"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.angular_rate",
+      "consumer": "silverstar.algorithm.ins.coning2_sculling2",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "runtime"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.angular_rate",
+      "consumer": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "landing_detection"
+    },
+    {
+      "automatic": true,
+      "capability": "actuator.mission_action.parachute_deploy",
+      "consumer": "silverstar.flight_logic.deployment.multi_trigger",
+      "provider_instance": "parachute_pyro0",
+      "provider_plugin": "silverstar.device.actuator.parachute_pyro",
+      "purpose": "runtime"
+    },
+    {
+      "automatic": true,
+      "capability": "actuator.mission_action.parachute_deploy",
+      "consumer": "silverstar.flight_logic.deployment.multi_trigger",
+      "provider_instance": "parachute_pyro0",
+      "provider_plugin": "silverstar.device.actuator.parachute_pyro",
+      "purpose": "runtime"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.software_propagation_qualified",
+      "consumer": "silverstar.flight_logic.deployment.multi_trigger",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "runtime"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.software_alignment_qualified",
+      "consumer": "silverstar.algorithm.alignment.gravity_known_yaw",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "initialization"
+    },
+    {
+      "automatic": true,
+      "capability": "gnss.position",
+      "consumer": "silverstar.algorithm.estimator.kf6",
+      "provider_instance": "gnss0",
+      "provider_plugin": "silverstar.device.gnss.neo_m9n",
+      "purpose": "measurement_update"
+    },
+    {
+      "automatic": true,
+      "capability": "gnss.velocity",
+      "consumer": "silverstar.algorithm.estimator.kf6",
+      "provider_instance": "gnss0",
+      "provider_plugin": "silverstar.device.gnss.neo_m9n",
+      "purpose": "measurement_update"
+    },
+    {
+      "automatic": true,
+      "capability": "barometer.altitude",
+      "consumer": "silverstar.algorithm.estimator.kf6",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "measurement_update"
+    },
+    {
+      "automatic": true,
+      "capability": "barometer.altitude",
+      "consumer": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "landing_detection"
+    },
+    {
+      "automatic": true,
+      "capability": "imu.landing_stillness_qualified",
+      "consumer": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "landing_detection"
+    },
+    {
+      "automatic": true,
+      "capability": "barometer.landing_window_qualified",
+      "consumer": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "provider_instance": "imu0",
+      "provider_plugin": "silverstar.device.imu.jy901b",
+      "purpose": "landing_detection"
+    }
+  ],
+  "component_locks": [
+    {
+      "component": "silverstar.core.0_1_0",
+      "manifest_sha256": "57a574297c1b36cbcdee3d65bd7542fb3201e2632340f1167a4b0edd1d2d4a65",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.mcu.stm32f407vet6",
+      "manifest_sha256": "94f2e9241f1317bbc1e0a42865f2de358b9ad78ca5dda01831a6ca238d2595e1",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.board.silverstar_0_5",
+      "manifest_sha256": "165f102aca502d91b5cf230a7a423e22f0b8d266d2c0613ca746fa386f2fc2ba",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.os.freertos_11_3_0",
+      "manifest_sha256": "79123de513a1bbbce0f3f7b0fc107c7e5d79103c74042de6459d2a8b30c78126",
+      "version": "11.3.0"
+    },
+    {
+      "component": "silverstar.device.imu.jy901b",
+      "manifest_sha256": "c7985e157cf077efe0dd1e9a8941eea390a966a2605f01387f446b65916e200f",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.gnss.neo_m9n",
+      "manifest_sha256": "3632525905352247caccb7bb7ce972b36c808bf7adb83244f02f53f74ecaad3c",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.telemetry.sx1281",
+      "manifest_sha256": "d9b79eb0788619dc75c6c2d6418f3234f27b1b40cd275c597e33e2aedf1def23",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.console.uart",
+      "manifest_sha256": "e1a41aae60c694a7aff1ba89f9bb70d8ad8d96fdda11c335931660fdd5e918dc",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.storage.sd_sdio_fatfs",
+      "manifest_sha256": "3f6ab7310c3887da557023047380e511150a2ad5b834532aa16aa58d28b82824",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.sensor.input_voltage",
+      "manifest_sha256": "95a6a7b9b77ca7570dd4ef1bcf66cb81b9d55096554e81e0e4dcdf04cf159475",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.actuator.launch_ignition",
+      "manifest_sha256": "dba9e4a0964c45de0a865c99db8c62a124bd49aa701410477e6b6e86ceb782d7",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.actuator.parachute_pyro",
+      "manifest_sha256": "d9c9d08b032073d234150518e6834e8111c45f3f4486e6b3bcc3eb49f6fd3b27",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.device.indicator.system_status",
+      "manifest_sha256": "15a22dd2f55f367a1ea231a214ec201d2b8cf120ed35e127f9c6a30b31085789",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.algorithm.common",
+      "manifest_sha256": "222bd71c77c50ac0999d87b1fbf701e16a997512989b302f1512599dd8dcfe62",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.algorithm.alignment.common",
+      "manifest_sha256": "c0287bccad106c2b2ff6f3a1fe4820f57bd8c99396a299d7e758369c230d24df",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.algorithm.calibration",
+      "manifest_sha256": "2f146b94850e6ddaa8d97d155434df3875f0738c41b7a7b16813a95de473fb6e",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.flight_logic.cycle.reference",
+      "manifest_sha256": "07496200026c11e741b10ec48ff7f05d210b6297dea62c78b2f8632a42e90a67",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.flight_logic.deployment.multi_trigger",
+      "manifest_sha256": "e306ce60fb059a6f98e5e882825c74d6c8b526b10d32f65cc84ca4fdb6185dd5",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.flight_logic.landing.baro_imu_window",
+      "manifest_sha256": "319e8fcfd6cba5e3ec91f66ae38a1a339ca7652818f8acf1d4a528776b9bdcab",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.flight_logic.mission_action.gpio_output_service",
+      "manifest_sha256": "c2fed799f0723761f32bf38d29388e321985d37eae60fce7dae5e04ee5eaf985",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.flight_logic.indicator.gpio_status_service",
+      "manifest_sha256": "b0107812512d199bc8278bb3a6ba279a8749d4ae269b4379e936b5f8b4e25e63",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.algorithm.alignment.gravity_known_yaw",
+      "manifest_sha256": "19d0db7a642de7b99960a0e9cb3ad3e3bf2e0187680e48c911ea5300c21a8d8b",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "manifest_sha256": "4fd087fc072e83b3b2359ee46035c41c6186ee42aaf9574235c18e444c9a75bc",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.algorithm.ins.coning2_sculling2",
+      "manifest_sha256": "984a5fe250db8230421fcd5770a802520420061feff36b6ea4d172dc43a4040c",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "manifest_sha256": "bbf71f7ac432f6f3e89c686497661b206e879ffb4b5adfd36c998afeeef48258",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.protocol.logging.sslog_0_0",
+      "manifest_sha256": "6435fb2218d5231d4899c461f62f6b9b66f3e9f8913cf463ff2d058ddbda7c4d",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.protocol.maintenance.serial_0_0",
+      "manifest_sha256": "f24d014cfd70eb447c88453ae3ee723dd213d22c8198df56a3531bb1980a595f",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.protocol.telemetry.air_m0",
+      "manifest_sha256": "1eea7996adc6206e12df094c6b0219e90d796fede2456f1d6c4f37e9677313c7",
+      "version": "0.1.0"
+    },
+    {
+      "component": "silverstar.environment.vscode_eide_gcc",
+      "manifest_sha256": "7147e5035271df349cede9f27899f69e265a90f7d2881c7ed03a06e5a94fcf59",
+      "version": "0.1.0"
+    }
+  ],
+  "components": [
+    "silverstar.core.0_1_0",
+    "silverstar.mcu.stm32f407vet6",
+    "silverstar.board.silverstar_0_5",
+    "silverstar.os.freertos_11_3_0",
+    "silverstar.device.imu.jy901b",
+    "silverstar.device.gnss.neo_m9n",
+    "silverstar.device.telemetry.sx1281",
+    "silverstar.device.console.uart",
+    "silverstar.device.storage.sd_sdio_fatfs",
+    "silverstar.device.sensor.input_voltage",
+    "silverstar.device.actuator.launch_ignition",
+    "silverstar.device.actuator.parachute_pyro",
+    "silverstar.device.indicator.system_status",
+    "silverstar.algorithm.common",
+    "silverstar.algorithm.alignment.common",
+    "silverstar.algorithm.calibration",
+    "silverstar.flight_logic.cycle.reference",
+    "silverstar.flight_logic.deployment.multi_trigger",
+    "silverstar.flight_logic.landing.baro_imu_window",
+    "silverstar.flight_logic.mission_action.gpio_output_service",
+    "silverstar.flight_logic.indicator.gpio_status_service",
+    "silverstar.algorithm.alignment.gravity_known_yaw",
+    "silverstar.algorithm.estimator.kf6",
+    "silverstar.algorithm.ins.coning2_sculling2",
+    "silverstar.flight_logic.landing.baro_imu_window_strategy",
+    "silverstar.protocol.logging.sslog_0_0",
+    "silverstar.protocol.maintenance.serial_0_0",
+    "silverstar.protocol.telemetry.air_m0",
+    "silverstar.environment.vscode_eide_gcc"
+  ],
+  "device_descriptors": [
+    {
+      "descriptor_id": 1,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_IMU_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_IMU",
+      "instance_id": 0,
+      "physical_device_id": 1,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+      "source_component": "silverstar.device.imu.jy901b",
+      "source_instance_id": "imu0"
+    },
+    {
+      "descriptor_id": 2,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_GNSS_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_GNSS",
+      "instance_id": 0,
+      "physical_device_id": 2,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_NEO_M9N",
+      "source_component": "silverstar.device.gnss.neo_m9n",
+      "source_instance_id": "gnss0"
+    },
+    {
+      "descriptor_id": 3,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_BARO_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+      "instance_id": 0,
+      "physical_device_id": 1,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+      "source_component": "silverstar.device.imu.jy901b",
+      "source_instance_id": "imu0"
+    },
+    {
+      "descriptor_id": 4,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_ATTITUDE_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+      "instance_id": 0,
+      "physical_device_id": 1,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+      "source_component": "silverstar.device.imu.jy901b",
+      "source_instance_id": "imu0"
+    },
+    {
+      "descriptor_id": 5,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_TELEMETRY_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_TELEMETRY",
+      "instance_id": 0,
+      "physical_device_id": 3,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_E28_SX1281",
+      "source_component": "silverstar.device.telemetry.sx1281",
+      "source_instance_id": "telemetry0"
+    },
+    {
+      "descriptor_id": 6,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_CONSOLE_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_CONSOLE",
+      "instance_id": 0,
+      "physical_device_id": 4,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_CONSOLE",
+      "source_component": "silverstar.device.console.uart",
+      "source_instance_id": "maintenance0"
+    },
+    {
+      "descriptor_id": 7,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_POWER_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_POWER",
+      "instance_id": 0,
+      "physical_device_id": 5,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_POWER_ADC",
+      "source_component": "silverstar.device.sensor.input_voltage",
+      "source_instance_id": "voltage_monitor0"
+    },
+    {
+      "descriptor_id": 8,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_STORAGE_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_STORAGE",
+      "instance_id": 0,
+      "physical_device_id": 6,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_STORAGE",
+      "source_component": "silverstar.device.storage.sd_sdio_fatfs",
+      "source_instance_id": "storage0"
+    },
+    {
+      "descriptor_id": 9,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_LOG_SINK_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_LOG_SINK",
+      "instance_id": 0,
+      "physical_device_id": 6,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_STORAGE",
+      "source_component": "silverstar.device.storage.sd_sdio_fatfs",
+      "source_instance_id": "storage0"
+    },
+    {
+      "descriptor_id": 10,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_OUTPUT_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_OUTPUT",
+      "instance_id": 0,
+      "physical_device_id": 7,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_OUTPUT",
+      "source_component": "silverstar.device.actuator.launch_ignition",
+      "source_instance_id": "launch_ignition0"
+    },
+    {
+      "descriptor_id": 11,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_ACTION_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_MISSION_ACTION",
+      "instance_id": 0,
+      "physical_device_id": 7,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_OUTPUT",
+      "source_component": "silverstar.device.actuator.parachute_pyro",
+      "source_instance_id": "parachute_pyro0"
+    },
+    {
+      "descriptor_id": 12,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_TIME_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_TIME",
+      "instance_id": 0,
+      "physical_device_id": 0,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_NONE",
+      "source_component": "silverstar.core.0_1_0",
+      "source_instance_id": ""
+    },
+    {
+      "descriptor_id": 13,
+      "descriptor_symbol": "PROJECT_DESCRIPTOR_ID_MAG_0",
+      "device_class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+      "instance_id": 0,
+      "physical_device_id": 1,
+      "physical_device_symbol": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+      "source_component": "silverstar.device.imu.jy901b",
+      "source_instance_id": "imu0"
+    }
+  ],
+  "devices": [
+    {
+      "capabilities": [
+        "device.imu",
+        "imu.acceleration",
+        "imu.angular_rate",
+        "attitude.external",
+        "magnetometer.field",
+        "barometer.altitude",
+        "attitude.external.preflight_alignment_6axis_qualified",
+        "attitude.external.preflight_alignment_9axis_qualified",
+        "attitude.external.preflight_fallback_qualified",
+        "imu.software_alignment_qualified",
+        "imu.software_propagation_qualified",
+        "imu.landing_stillness_qualified",
+        "barometer.landing_window_qualified"
+      ],
+      "chipset": "JY901B",
+      "component_class": "imu",
+      "descriptor_ids": [
+        1,
+        3,
+        4,
+        13
+      ],
+      "driver": "JY901B Driver",
+      "instance_id": "imu0",
+      "model": "JY901B",
+      "physical_device_id": 1,
+      "physical_device_ids": [
+        1
+      ],
+      "plugin": "silverstar.device.imu.jy901b",
+      "recordable_outputs": {
+        "attitude.external": {
+          "enabled": true
+        },
+        "barometer.altitude": {
+          "enabled": true
+        },
+        "imu.acceleration": {
+          "enabled": true
+        },
+        "imu.angular_rate": {
+          "enabled": true
+        },
+        "magnetometer.field": {
+          "enabled": false,
+          "reason_code": "logging.unavailable.magnetometer_output_disabled"
+        }
+      },
+      "vendor": "WitMotion"
+    },
+    {
+      "capabilities": [
+        "device.gnss",
+        "gnss.position",
+        "gnss.velocity"
+      ],
+      "chipset": "UBX-M9",
+      "component_class": "gnss",
+      "descriptor_ids": [
+        2
+      ],
+      "driver": "NEO-M9N Driver",
+      "instance_id": "gnss0",
+      "model": "NEO-M9N",
+      "physical_device_id": 2,
+      "physical_device_ids": [
+        2
+      ],
+      "plugin": "silverstar.device.gnss.neo_m9n",
+      "recordable_outputs": {
+        "gnss.position": {
+          "enabled": true
+        },
+        "gnss.velocity": {
+          "enabled": true
+        }
+      },
+      "vendor": "u-blox"
+    },
+    {
+      "capabilities": [
+        "device.telemetry",
+        "transport.packet",
+        "transport.lora",
+        "transport.integrity.hardware_crc"
+      ],
+      "chipset": "SX1281",
+      "component_class": "telemetry",
+      "descriptor_ids": [
+        5
+      ],
+      "driver": "SX1281 Driver",
+      "instance_id": "telemetry0",
+      "model": "E28-2G4M12SX",
+      "physical_device_id": 3,
+      "physical_device_ids": [
+        3
+      ],
+      "plugin": "silverstar.device.telemetry.sx1281",
+      "recordable_outputs": {},
+      "vendor": "Ebyte"
+    },
+    {
+      "capabilities": [
+        "device.console",
+        "maintenance.console",
+        "transport.byte_stream"
+      ],
+      "chipset": "STM32 UART",
+      "component_class": "console",
+      "descriptor_ids": [
+        6
+      ],
+      "driver": "UART Console Adapter",
+      "instance_id": "maintenance0",
+      "model": "UART Maintenance Endpoint",
+      "physical_device_id": 4,
+      "physical_device_ids": [
+        4
+      ],
+      "plugin": "silverstar.device.console.uart",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "service.storage",
+        "service.log_sink",
+        "transport.sequential_file_sink"
+      ],
+      "chipset": "STM32 SDIO",
+      "component_class": "storage",
+      "descriptor_ids": [
+        8,
+        9
+      ],
+      "driver": "CubeMX FatFs",
+      "instance_id": "storage0",
+      "model": "SD/TF Card",
+      "physical_device_id": 6,
+      "physical_device_ids": [
+        6
+      ],
+      "plugin": "silverstar.device.storage.sd_sdio_fatfs",
+      "recordable_outputs": {},
+      "vendor": "Generic"
+    },
+    {
+      "capabilities": [
+        "power.voltage",
+        "power.monitor"
+      ],
+      "chipset": "SS0.5 ADC Input",
+      "component_class": "other_sensor",
+      "descriptor_ids": [
+        7
+      ],
+      "driver": "power_service",
+      "instance_id": "voltage_monitor0",
+      "model": "SS0.5 Input Voltage Monitor",
+      "physical_device_id": 5,
+      "physical_device_ids": [
+        5
+      ],
+      "plugin": "silverstar.device.sensor.input_voltage",
+      "recordable_outputs": {
+        "power.voltage": {
+          "enabled": true
+        }
+      },
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "actuator.mission_action.launch_ignition"
+      ],
+      "chipset": "SS0.5 GPIO Output",
+      "component_class": "mission_action_actuator",
+      "descriptor_ids": [
+        10
+      ],
+      "driver": "output_service",
+      "instance_id": "launch_ignition0",
+      "model": "SS0.5 P_CONTROL1",
+      "physical_device_id": 7,
+      "physical_device_ids": [
+        7
+      ],
+      "plugin": "silverstar.device.actuator.launch_ignition",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "actuator.mission_action.parachute_deploy"
+      ],
+      "chipset": "SS0.5 GPIO Output",
+      "component_class": "mission_action_actuator",
+      "descriptor_ids": [
+        11
+      ],
+      "driver": "output_service",
+      "instance_id": "parachute_pyro0",
+      "model": "SS0.5 P_CONTROL2",
+      "physical_device_id": 7,
+      "physical_device_ids": [
+        7
+      ],
+      "plugin": "silverstar.device.actuator.parachute_pyro",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "device.indicator.system_status"
+      ],
+      "chipset": "Active-low GPIO Indicator",
+      "component_class": "indicator",
+      "descriptor_ids": [],
+      "driver": "indicator_service",
+      "instance_id": "system_indicator0",
+      "model": "SS0.5 IMU_CAL_LED",
+      "physical_device_id": null,
+      "physical_device_ids": [],
+      "plugin": "silverstar.device.indicator.system_status",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    }
+  ],
+  "enabled_capabilities": {
+    "gnss0": [
+      "device.gnss",
+      "gnss.position",
+      "gnss.velocity"
+    ],
+    "imu0": [
+      "device.imu",
+      "imu.acceleration",
+      "imu.angular_rate",
+      "barometer.altitude",
+      "imu.software_alignment_qualified",
+      "imu.software_propagation_qualified",
+      "imu.landing_stillness_qualified",
+      "barometer.landing_window_qualified"
+    ],
+    "launch_ignition0": [],
+    "maintenance0": [
+      "device.console",
+      "maintenance.console",
+      "transport.byte_stream"
+    ],
+    "parachute_pyro0": [
+      "actuator.mission_action.parachute_deploy"
+    ],
+    "storage0": [
+      "service.storage",
+      "service.log_sink",
+      "transport.sequential_file_sink"
+    ],
+    "system_indicator0": [
+      "device.indicator.system_status"
+    ],
+    "telemetry0": [
+      "device.telemetry",
+      "transport.packet",
+      "transport.lora",
+      "transport.integrity.hardware_crc"
+    ],
+    "voltage_monitor0": []
+  },
+  "enum_catalog": {},
+  "event_catalog": {
+    "sensor_source_change_event": {
+      "arg0": "bits7:0 device_class, 15:8 old_instance, 23:16 new_instance, 31:24 reason",
+      "arg1": "bits15:0 old_descriptor_id, 31:16 new_descriptor_id",
+      "event_id": "FLIGHT_LOG_EVENT_SENSOR_SOURCE_CHANGE",
+      "reasons": {
+        "1": "initial_selection",
+        "2": "failover",
+        "3": "recovery",
+        "4": "configuration",
+        "5": "prestart_primary_unavailable",
+        "6": "gnss_liveness_timeout",
+        "7": "telemetry_consecutive_tx_timeout",
+        "8": "telemetry_init_failure"
+      }
+    }
+  },
+  "firmware_algorithm_parameters": [
+    {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "manifest_sha256": "4fd087fc072e83b3b2359ee46035c41c6186ee42aaf9574235c18e444c9a75bc",
+      "parameters": [
+        {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.779999732971191
+        },
+        {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 9.0
+        },
+        {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        {
+          "description": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+          "id": "process_accel_std_e",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        {
+          "description": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+          "id": "process_accel_std_n",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        {
+          "description": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+          "id": "process_accel_std_u",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 2.0
+        },
+        {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_horizontal",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 1.5
+        },
+        {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_vertical",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 2.5
+        },
+        {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_velocity_std",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s",
+          "value": 0.15000000596046448
+        },
+        {
+          "description": "Altitude sigma, squared once by the existing measurement update; existing minimum is 1.5 m.",
+          "id": "baro_std_m",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 5.0
+        },
+        {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 6.635000228881836
+        },
+        {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.82800006866455
+        },
+        {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 9.210000038146973
+        },
+        {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 13.815999984741211
+        },
+        {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 11.345000267028809
+        },
+        {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 16.266000747680664
+        },
+        {
+          "description": "Actual dimensionless cap already used by soft gating; not a multiplier of a hidden default.",
+          "id": "nis_max_r_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.0
+        }
+      ],
+      "schema_id": "silverstar.algorithm-parameters/1.0"
+    },
+    {
+      "component": "silverstar.algorithm.ins.coning2_sculling2",
+      "manifest_sha256": "984a5fe250db8230421fcd5770a802520420061feff36b6ea4d172dc43a4040c",
+      "parameters": [
+        {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.779999732971191
+        }
+      ],
+      "schema_id": "silverstar.algorithm-parameters/1.0"
+    }
+  ],
+  "firmware_version": "0.1.0",
+  "hardware": {
+    "assignment_fingerprint": "",
+    "board": "silverstar.board.silverstar_0_5",
+    "core": "STM32F407VETx",
+    "cubemx_version": "6.15.0",
+    "detected_mcu": "STM32F407VET6",
+    "firmware_package": "STM32Cube FW_F4 V1.28.3",
+    "hal_cmsis_source_policy": "plugin_payload_authoritative",
+    "matched_mcu_platform": "silverstar.mcu.stm32f407vet6",
+    "mcu_family": "STM32F4",
+    "mode": "board_plugin",
+    "package": "LQFP100",
+    "platform_lock": {
+      "component": "silverstar.mcu.stm32f407vet6",
+      "manifest_sha256": "94f2e9241f1317bbc1e0a42865f2de358b9ad78ca5dda01831a6ca238d2595e1",
+      "version": "0.1.0"
+    },
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "snapshot_id": "",
+    "source_digest": "",
+    "source_kind": "verified_builtin"
+  },
+  "logging_streams": [
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "EVENT",
+      "record": "FLIGHT_LOG_RECORD_EVENT"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 1000000,
+      "policy": "PERIODIC",
+      "record": "FLIGHT_LOG_RECORD_STATS"
+    },
+    {
+      "decimation_factor": 4,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_ESTIMATOR"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "ONE_SHOT",
+      "record": "FLIGHT_LOG_RECORD_SYSTEM_CONFIG"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_PURE_INS"
+    },
+    {
+      "decimation_factor": 4,
+      "enabled": false,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC"
+    },
+    {
+      "decimation_factor": 4,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_KF6_FULL_P"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 20000,
+      "policy": "PERIODIC",
+      "record": "FLIGHT_LOG_RECORD_POWER"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 1000000,
+      "policy": "PERIODIC",
+      "record": "FLIGHT_LOG_RECORD_HEALTH"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 200000,
+      "policy": "PERIODIC",
+      "record": "FLIGHT_LOG_RECORD_TELEMETRY_DIAG"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "ONE_SHOT",
+      "record": "FLIGHT_LOG_RECORD_INITIAL_STATE"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_GNSS_NATIVE"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_BARO_NATIVE"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": false,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_MAG_NATIVE"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_INERTIAL_INCREMENT"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "EVERY",
+      "record": "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "EVERY",
+      "record": "FLIGHT_LOG_RECORD_BARO_MEASUREMENT"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "DECIMATION",
+      "record": "FLIGHT_LOG_RECORD_IMU_CORRECTED"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "EVENT",
+      "record": "FLIGHT_LOG_RECORD_CALIBRATION_RESULT"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "EVENT",
+      "record": "FLIGHT_LOG_RECORD_ALIGNMENT_RESULT"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "ONE_SHOT",
+      "record": "FLIGHT_LOG_RECORD_MISSION_CONFIG"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "ONE_SHOT",
+      "record": "FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "ONE_SHOT",
+      "record": "FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "ONE_SHOT",
+      "record": "FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR"
+    },
+    {
+      "decimation_factor": 1,
+      "enabled": true,
+      "period_us": 0,
+      "policy": "ONE_SHOT",
+      "record": "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR"
+    }
+  ],
+  "metadata_declarations": {},
+  "mode_parameters": {
+    "deployment": {
+      "ApogeeVerticalVelocity": {
+        "vertical_velocity_threshold": -2.0
+      },
+      "Delay": {
+        "delay": 60.0
+      },
+      "Tilt": {
+        "tilt_threshold": 45.0
+      }
+    }
+  },
+  "modes": {
+    "calibration": [],
+    "deployment": [
+      "ApogeeVerticalVelocity",
+      "Tilt"
+    ]
+  },
+  "physical_device_ids": {
+    "PROJECT_PHYSICAL_DEVICE_ID_CONSOLE": 4,
+    "PROJECT_PHYSICAL_DEVICE_ID_E28_SX1281": 3,
+    "PROJECT_PHYSICAL_DEVICE_ID_JY901B": 1,
+    "PROJECT_PHYSICAL_DEVICE_ID_NEO_M9N": 2,
+    "PROJECT_PHYSICAL_DEVICE_ID_NONE": 0,
+    "PROJECT_PHYSICAL_DEVICE_ID_OUTPUT": 7,
+    "PROJECT_PHYSICAL_DEVICE_ID_POWER_ADC": 5,
+    "PROJECT_PHYSICAL_DEVICE_ID_STORAGE": 6
+  },
+  "physical_devices": [
+    {
+      "capabilities": [
+        "device.imu",
+        "imu.acceleration",
+        "imu.angular_rate",
+        "attitude.external",
+        "magnetometer.field",
+        "barometer.altitude",
+        "attitude.external.preflight_alignment_6axis_qualified",
+        "attitude.external.preflight_alignment_9axis_qualified",
+        "attitude.external.preflight_fallback_qualified",
+        "imu.software_alignment_qualified",
+        "imu.software_propagation_qualified",
+        "imu.landing_stillness_qualified",
+        "barometer.landing_window_qualified"
+      ],
+      "chipset": "JY901B",
+      "component_class": "imu",
+      "descriptor_ids": [
+        1,
+        3,
+        4,
+        13
+      ],
+      "driver": "JY901B Driver",
+      "instance_id": "imu0",
+      "model": "JY901B",
+      "physical_device_id": 1,
+      "physical_device_ids": [
+        1
+      ],
+      "plugin": "silverstar.device.imu.jy901b",
+      "recordable_outputs": {
+        "attitude.external": {
+          "enabled": true
+        },
+        "barometer.altitude": {
+          "enabled": true
+        },
+        "imu.acceleration": {
+          "enabled": true
+        },
+        "imu.angular_rate": {
+          "enabled": true
+        },
+        "magnetometer.field": {
+          "enabled": false,
+          "reason_code": "logging.unavailable.magnetometer_output_disabled"
+        }
+      },
+      "vendor": "WitMotion"
+    },
+    {
+      "capabilities": [
+        "device.gnss",
+        "gnss.position",
+        "gnss.velocity"
+      ],
+      "chipset": "UBX-M9",
+      "component_class": "gnss",
+      "descriptor_ids": [
+        2
+      ],
+      "driver": "NEO-M9N Driver",
+      "instance_id": "gnss0",
+      "model": "NEO-M9N",
+      "physical_device_id": 2,
+      "physical_device_ids": [
+        2
+      ],
+      "plugin": "silverstar.device.gnss.neo_m9n",
+      "recordable_outputs": {
+        "gnss.position": {
+          "enabled": true
+        },
+        "gnss.velocity": {
+          "enabled": true
+        }
+      },
+      "vendor": "u-blox"
+    },
+    {
+      "capabilities": [
+        "device.telemetry",
+        "transport.packet",
+        "transport.lora",
+        "transport.integrity.hardware_crc"
+      ],
+      "chipset": "SX1281",
+      "component_class": "telemetry",
+      "descriptor_ids": [
+        5
+      ],
+      "driver": "SX1281 Driver",
+      "instance_id": "telemetry0",
+      "model": "E28-2G4M12SX",
+      "physical_device_id": 3,
+      "physical_device_ids": [
+        3
+      ],
+      "plugin": "silverstar.device.telemetry.sx1281",
+      "recordable_outputs": {},
+      "vendor": "Ebyte"
+    },
+    {
+      "capabilities": [
+        "device.console",
+        "maintenance.console",
+        "transport.byte_stream"
+      ],
+      "chipset": "STM32 UART",
+      "component_class": "console",
+      "descriptor_ids": [
+        6
+      ],
+      "driver": "UART Console Adapter",
+      "instance_id": "maintenance0",
+      "model": "UART Maintenance Endpoint",
+      "physical_device_id": 4,
+      "physical_device_ids": [
+        4
+      ],
+      "plugin": "silverstar.device.console.uart",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "service.storage",
+        "service.log_sink",
+        "transport.sequential_file_sink"
+      ],
+      "chipset": "STM32 SDIO",
+      "component_class": "storage",
+      "descriptor_ids": [
+        8,
+        9
+      ],
+      "driver": "CubeMX FatFs",
+      "instance_id": "storage0",
+      "model": "SD/TF Card",
+      "physical_device_id": 6,
+      "physical_device_ids": [
+        6
+      ],
+      "plugin": "silverstar.device.storage.sd_sdio_fatfs",
+      "recordable_outputs": {},
+      "vendor": "Generic"
+    },
+    {
+      "capabilities": [
+        "power.voltage",
+        "power.monitor"
+      ],
+      "chipset": "SS0.5 ADC Input",
+      "component_class": "other_sensor",
+      "descriptor_ids": [
+        7
+      ],
+      "driver": "power_service",
+      "instance_id": "voltage_monitor0",
+      "model": "SS0.5 Input Voltage Monitor",
+      "physical_device_id": 5,
+      "physical_device_ids": [
+        5
+      ],
+      "plugin": "silverstar.device.sensor.input_voltage",
+      "recordable_outputs": {
+        "power.voltage": {
+          "enabled": true
+        }
+      },
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "actuator.mission_action.launch_ignition"
+      ],
+      "chipset": "SS0.5 GPIO Output",
+      "component_class": "mission_action_actuator",
+      "descriptor_ids": [
+        10
+      ],
+      "driver": "output_service",
+      "instance_id": "launch_ignition0",
+      "model": "SS0.5 P_CONTROL1",
+      "physical_device_id": 7,
+      "physical_device_ids": [
+        7
+      ],
+      "plugin": "silverstar.device.actuator.launch_ignition",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "actuator.mission_action.parachute_deploy"
+      ],
+      "chipset": "SS0.5 GPIO Output",
+      "component_class": "mission_action_actuator",
+      "descriptor_ids": [
+        11
+      ],
+      "driver": "output_service",
+      "instance_id": "parachute_pyro0",
+      "model": "SS0.5 P_CONTROL2",
+      "physical_device_id": 7,
+      "physical_device_ids": [
+        7
+      ],
+      "plugin": "silverstar.device.actuator.parachute_pyro",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    },
+    {
+      "capabilities": [
+        "device.indicator.system_status"
+      ],
+      "chipset": "Active-low GPIO Indicator",
+      "component_class": "indicator",
+      "descriptor_ids": [],
+      "driver": "indicator_service",
+      "instance_id": "system_indicator0",
+      "model": "SS0.5 IMU_CAL_LED",
+      "physical_device_id": null,
+      "physical_device_ids": [],
+      "plugin": "silverstar.device.indicator.system_status",
+      "recordable_outputs": {},
+      "vendor": "SilverStar"
+    }
+  ],
+  "project": "SilverStar",
+  "project_digest": "6e157732",
+  "protocol_bindings": [
+    {
+      "binding": "flight_log_sink",
+      "candidate_instances": [
+        "storage0"
+      ],
+      "physical_device_instance": "storage0",
+      "physical_device_plugin": "silverstar.device.storage.sd_sdio_fatfs",
+      "profile_id": "flight_log.0_0",
+      "service": "flight_log_service",
+      "slot": "log_format",
+      "transport_capability": "transport.sequential_file_sink",
+      "transport_selection": "single"
+    },
+    {
+      "binding": "maintenance_console",
+      "candidate_instances": [
+        "maintenance0"
+      ],
+      "physical_device_instance": "maintenance0",
+      "physical_device_plugin": "silverstar.device.console.uart",
+      "profile_id": "maintenance.serial.0_0",
+      "service": "maintenance_service",
+      "slot": "maintenance_protocol",
+      "transport_capability": "transport.byte_stream",
+      "transport_selection": "single"
+    },
+    {
+      "binding": "telemetry_transport",
+      "candidate_instances": [
+        "telemetry0"
+      ],
+      "physical_device_instance": "telemetry0",
+      "physical_device_plugin": "silverstar.device.telemetry.sx1281",
+      "profile_id": "air.m0",
+      "service": "telemetry_service",
+      "slot": "telemetry_protocol",
+      "transport_capability": "transport.packet",
+      "transport_selection": "ordered_failover"
+    }
+  ],
+  "protocols": {
+    "logging": {
+      "component": "silverstar.protocol.logging.sslog_0_0",
+      "manifest_sha256": "6435fb2218d5231d4899c461f62f6b9b66f3e9f8913cf463ff2d058ddbda7c4d",
+      "profile": "flight_log.0_0",
+      "version": "0.1.0"
+    },
+    "maintenance": {
+      "component": "silverstar.protocol.maintenance.serial_0_0",
+      "manifest_sha256": "f24d014cfd70eb447c88453ae3ee723dd213d22c8198df56a3531bb1980a595f",
+      "profile": "maintenance.serial.0_0",
+      "version": "0.1.0"
+    },
+    "telemetry": {
+      "component": "silverstar.protocol.telemetry.air_m0",
+      "manifest_sha256": "1eea7996adc6206e12df094c6b0219e90d796fede2456f1d6c4f37e9677313c7",
+      "profile": "air.m0",
+      "version": "0.1.0"
+    }
+  },
+  "raw_channel_id_templates": {
+    "default": "{record}:{source_descriptor_id}:{instance_id}",
+    "partition_by": [
+      "source_descriptor_id",
+      "instance_id",
+      "physical_device_id"
+    ]
+  },
+  "record_views": [
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "event",
+        "source": ""
+      },
+      "columns": [
+        "event_id",
+        "arg0",
+        "arg1"
+      ],
+      "display_names": {
+        "en_US": "Flight Event",
+        "zh_CN": "飞行事件"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "EVENT"
+      },
+      "partition_by": [],
+      "payload_size": 12,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_EVENT",
+      "record_type": "0x02",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [
+        "silverstar.core.device_task"
+      ],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "periodic",
+        "source": ""
+      },
+      "columns": [
+        "imu_queue_overflow_count",
+        "logger_queue_overflow_count",
+        "ins_update_count",
+        "health_flags"
+      ],
+      "display_names": {
+        "en_US": "Log Statistics",
+        "zh_CN": "日志统计"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 1000000,
+        "policy": "PERIODIC"
+      },
+      "partition_by": [],
+      "payload_size": 16,
+      "producer_components": [
+        "silverstar.core.device_task"
+      ],
+      "record": "FLIGHT_LOG_RECORD_STATS",
+      "record_type": "0x03",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows estimator output",
+          "zh_CN": "取决于状态估计输出"
+        },
+        "kind": "algorithm_output",
+        "source": "estimator"
+      },
+      "columns": [
+        "position_enu_m",
+        "velocity_enu_mps",
+        "covariance_diagonal",
+        "gnss_position_enu_m",
+        "gnss_velocity_enu_mps",
+        "baro_relative_altitude_m",
+        "last_position_nis",
+        "last_velocity_nis",
+        "last_baro_nis",
+        "measurement_result_flags",
+        "health_flags",
+        "prediction_queue_overflow_count",
+        "gnss_sequence",
+        "baro_sequence",
+        "gnss_timestamp_us",
+        "baro_timestamp_us",
+        "gnss_measurement_age_us",
+        "baro_measurement_age_us",
+        "gnss_origin_valid",
+        "baro_origin_valid",
+        "initialized",
+        "mission_running"
+      ],
+      "display_names": {
+        "en_US": "Estimator State",
+        "zh_CN": "状态估计"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 4,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [],
+      "payload_size": 136,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_ESTIMATOR",
+      "record_type": "0x04",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "one_shot",
+        "source": ""
+      },
+      "columns": [
+        "version",
+        "profile_id",
+        "device_config_digest",
+        "configured_imu_rate_hz",
+        "configured_gnss_rate_hz",
+        "configured_magnetometer_rate_hz",
+        "configured_barometer_rate_hz",
+        "configured_hardware_quaternion_rate_hz",
+        "mechanization_subsample_count",
+        "expected_ins_rate_hz",
+        "mechanization_min_sample_rate_hz",
+        "mechanization_max_sample_rate_hz",
+        "log_profile_id",
+        "sync_period_us",
+        "aggregation_buffer_size",
+        "normal_queue_depth",
+        "estimator_queue_depth",
+        "device_descriptor_count",
+        "algorithm_descriptor_count",
+        "log_stream_descriptor_count",
+        "reserved",
+        "p0_diagonal",
+        "process_accel_std_mps2",
+        "measurement_profile",
+        "nis_profile"
+      ],
+      "display_names": {
+        "en_US": "System Configuration",
+        "zh_CN": "系统配置"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "ONE_SHOT"
+      },
+      "partition_by": [],
+      "payload_size": 132,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_SYSTEM_CONFIG",
+      "record_type": "0x05",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows inertial mechanization output",
+          "zh_CN": "取决于惯导机械化输出"
+        },
+        "kind": "algorithm_output",
+        "source": "inertial_mechanization"
+      },
+      "columns": [
+        "update_sequence",
+        "q_nb",
+        "velocity_enu_mps",
+        "position_enu_m",
+        "accel_enu_mps2",
+        "dt_s",
+        "health_flags",
+        "alignment_valid",
+        "ins_valid"
+      ],
+      "display_names": {
+        "en_US": "Pure INS",
+        "zh_CN": "纯惯导"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [],
+      "payload_size": 68,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_PURE_INS",
+      "record_type": "0x07",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows estimator output",
+          "zh_CN": "取决于状态估计输出"
+        },
+        "kind": "algorithm_output",
+        "source": "estimator"
+      },
+      "columns": [
+        "position_innovation",
+        "velocity_innovation",
+        "baro_innovation",
+        "position_variance_r",
+        "velocity_variance_r",
+        "baro_variance_r",
+        "position_nis",
+        "velocity_nis",
+        "baro_nis",
+        "position_r_scale",
+        "velocity_r_scale",
+        "baro_r_scale",
+        "process_accel_std_mps2",
+        "gnss_velocity_valid_mask",
+        "velocity_update_dimension",
+        "position_update_result",
+        "velocity_update_result",
+        "baro_update_result"
+      ],
+      "display_names": {
+        "en_US": "KF6 Diagnostic",
+        "zh_CN": "KF6 诊断"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 4,
+        "enabled": false,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [],
+      "payload_size": 104,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC",
+      "record_type": "0x08",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows estimator output",
+          "zh_CN": "取决于状态估计输出"
+        },
+        "kind": "algorithm_output",
+        "source": "estimator"
+      },
+      "columns": [
+        "covariance_upper_triangle"
+      ],
+      "display_names": {
+        "en_US": "KF6 Full Covariance",
+        "zh_CN": "KF6 完整协方差"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 4,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [],
+      "payload_size": 84,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_KF6_FULL_P",
+      "record_type": "0x09",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "periodic",
+        "source": ""
+      },
+      "columns": [
+        "source_descriptor_id",
+        "instance_id",
+        "reserved",
+        "sample_timestamp_us",
+        "receive_timestamp_us",
+        "sequence",
+        "voltage_v",
+        "current_a",
+        "power_w",
+        "state_of_charge_percent",
+        "temperature_c",
+        "valid_mask"
+      ],
+      "display_names": {
+        "en_US": "Power State (Input Voltage)",
+        "zh_CN": "电源状态（输入电压）"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 20000,
+        "policy": "PERIODIC"
+      },
+      "partition_by": [
+        "source_descriptor_id",
+        "instance_id"
+      ],
+      "payload_size": 48,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_POWER",
+      "record_type": "0x0A",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "periodic",
+        "source": ""
+      },
+      "columns": [
+        "timestamp_us",
+        "compiled_mask",
+        "enabled_mask",
+        "present_mask",
+        "healthy_mask",
+        "start_blocking_mask",
+        "warning_mask",
+        "sequence",
+        "ready"
+      ],
+      "display_names": {
+        "en_US": "Health State",
+        "zh_CN": "健康状态"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 1000000,
+        "policy": "PERIODIC"
+      },
+      "partition_by": [],
+      "payload_size": 40,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_HEALTH",
+      "record_type": "0x0B",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [
+        "silverstar.core.telemetry_task"
+      ],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "periodic",
+        "source": ""
+      },
+      "columns": [
+        "last_transmit_timestamp_us",
+        "last_receive_timestamp_us",
+        "transmit_packet_count",
+        "receive_packet_count",
+        "transmit_error_count",
+        "receive_error_count",
+        "integrity_error_count",
+        "last_rssi_dbm",
+        "last_snr_q4",
+        "online"
+      ],
+      "display_names": {
+        "en_US": "Telemetry Diagnostic",
+        "zh_CN": "遥测诊断"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 200000,
+        "policy": "PERIODIC"
+      },
+      "partition_by": [],
+      "payload_size": 48,
+      "producer_components": [
+        "silverstar.core.telemetry_task"
+      ],
+      "record": "FLIGHT_LOG_RECORD_TELEMETRY_DIAG",
+      "record_type": "0x0C",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "one_shot",
+        "source": ""
+      },
+      "columns": [
+        "alignment_algorithm",
+        "hardware_mode",
+        "mode_verified",
+        "origin_valid_flags",
+        "alignment_sample_count",
+        "gnss_sample_count",
+        "barometer_sample_count",
+        "reserved",
+        "q_nb",
+        "acceleration_mean_b_mps2",
+        "gyro_mean_b_radps",
+        "magnetic_field_mean_b_uT",
+        "gnss_origin_latitude_e7",
+        "gnss_origin_longitude_e7",
+        "gnss_origin_height_mm",
+        "gnss_origin_position_std_m",
+        "initial_velocity_enu_mps",
+        "initial_velocity_std_mps",
+        "barometer_origin_altitude_m",
+        "barometer_origin_std_m",
+        "p0_diagonal"
+      ],
+      "display_names": {
+        "en_US": "Initial State",
+        "zh_CN": "初始状态"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "ONE_SHOT"
+      },
+      "partition_by": [],
+      "payload_size": 144,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_INITIAL_STATE",
+      "record_type": "0x0D",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows GNSS updates",
+          "zh_CN": "取决于GNSS数据更新"
+        },
+        "kind": "source",
+        "source": "gnss"
+      },
+      "columns": [
+        "source_descriptor_id",
+        "instance_id",
+        "reserved",
+        "sample_timestamp_us",
+        "receive_timestamp_us",
+        "sequence",
+        "latitude_e7",
+        "longitude_e7",
+        "ellipsoid_height_mm",
+        "msl_height_mm",
+        "velocity_enu_mps",
+        "velocity_variance_m2ps2",
+        "horizontal_accuracy_m",
+        "vertical_accuracy_m",
+        "speed_accuracy_mps",
+        "velocity_valid_mask",
+        "fix_type",
+        "position_usable",
+        "course_usable",
+        "online"
+      ],
+      "display_names": {
+        "en_US": "Native GNSS Data",
+        "zh_CN": "GNSS 原始数据"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [
+        "source_descriptor_id",
+        "instance_id"
+      ],
+      "payload_size": 84,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_GNSS_NATIVE",
+      "record_type": "0x0F",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows barometer updates",
+          "zh_CN": "取决于气压计数据更新"
+        },
+        "kind": "source",
+        "source": "barometer"
+      },
+      "columns": [
+        "source_descriptor_id",
+        "instance_id",
+        "reserved",
+        "sample_timestamp_us",
+        "receive_timestamp_us",
+        "sequence",
+        "pressure_raw_pa",
+        "altitude_raw_cm",
+        "pressure_pa",
+        "altitude_m",
+        "altitude_variance_m2",
+        "valid_mask"
+      ],
+      "display_names": {
+        "en_US": "Native Barometer Data",
+        "zh_CN": "气压计原始数据"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [
+        "source_descriptor_id",
+        "instance_id"
+      ],
+      "payload_size": 48,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_BARO_NATIVE",
+      "record_type": "0x10",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": false,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows magnetometer updates",
+          "zh_CN": "取决于磁力计数据更新"
+        },
+        "kind": "source",
+        "source": "magnetometer"
+      },
+      "columns": [
+        "source_descriptor_id",
+        "instance_id",
+        "reserved",
+        "sample_timestamp_us",
+        "receive_timestamp_us",
+        "sequence",
+        "raw",
+        "magnetic_field_b_uT",
+        "temperature_c",
+        "valid_mask",
+        "calibration_valid"
+      ],
+      "display_names": {
+        "en_US": "Native Magnetometer Data",
+        "zh_CN": "磁力计原始数据"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": false,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [
+        "source_descriptor_id",
+        "instance_id"
+      ],
+      "payload_size": 60,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_MAG_NATIVE",
+      "record_type": "0x11",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows inertial mechanization output",
+          "zh_CN": "取决于惯导机械化输出"
+        },
+        "kind": "algorithm_output",
+        "source": "inertial_mechanization"
+      },
+      "columns": [
+        "interval_start_timestamp_us",
+        "interval_end_timestamp_us",
+        "sequence",
+        "dt_s",
+        "delta_theta_b_corrected",
+        "delta_velocity_b_sculling_corrected",
+        "health_flags"
+      ],
+      "display_names": {
+        "en_US": "Inertial Increment",
+        "zh_CN": "惯性增量"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [],
+      "payload_size": 52,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_INERTIAL_INCREMENT",
+      "record_type": "0x13",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "measurement",
+        "source": ""
+      },
+      "columns": [
+        "sample_timestamp_us",
+        "receive_timestamp_us",
+        "sequence",
+        "position_enu_m",
+        "velocity_enu_mps",
+        "position_variance_m2",
+        "velocity_variance_m2ps2",
+        "velocity_valid_mask",
+        "position_usable",
+        "fusion_allowed",
+        "reserved"
+      ],
+      "display_names": {
+        "en_US": "GNSS Measurement",
+        "zh_CN": "GNSS 量测"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "EVERY"
+      },
+      "partition_by": [],
+      "payload_size": 72,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT",
+      "record_type": "0x14",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "measurement",
+        "source": ""
+      },
+      "columns": [
+        "sample_timestamp_us",
+        "receive_timestamp_us",
+        "sequence",
+        "relative_altitude_m",
+        "variance_m2",
+        "valid_mask"
+      ],
+      "display_names": {
+        "en_US": "Barometer Measurement",
+        "zh_CN": "气压计量测"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "EVERY"
+      },
+      "partition_by": [],
+      "payload_size": 32,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_BARO_MEASUREMENT",
+      "record_type": "0x15",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {
+          "en_US": "Follows IMU updates",
+          "zh_CN": "取决于IMU数据更新"
+        },
+        "kind": "source",
+        "source": "imu"
+      },
+      "columns": [
+        "sample_timestamp_us",
+        "receive_timestamp_us",
+        "sequence",
+        "source_id",
+        "virtual_imu_id",
+        "valid_mask",
+        "accel_b_mps2",
+        "gyro_b_radps",
+        "temperature_c",
+        "calibration_mode",
+        "correction_valid",
+        "reserved"
+      ],
+      "display_names": {
+        "en_US": "Corrected IMU Data",
+        "zh_CN": "IMU 校正数据"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "DECIMATION"
+      },
+      "partition_by": [],
+      "payload_size": 60,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_IMU_CORRECTED",
+      "record_type": "0x16",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [
+        "silverstar.core.flight_task"
+      ],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "event",
+        "source": ""
+      },
+      "columns": [
+        "source_id",
+        "virtual_imu_id",
+        "mode",
+        "state",
+        "ready",
+        "completed_face_mask",
+        "samples",
+        "reject_count",
+        "retry_count",
+        "start_sequence",
+        "accel_bias_mps2",
+        "accel_scale",
+        "gyro_bias_radps",
+        "gyro_scale"
+      ],
+      "display_names": {
+        "en_US": "Active Calibration Result",
+        "zh_CN": "生效校准结果"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "EVENT"
+      },
+      "partition_by": [],
+      "payload_size": 72,
+      "producer_components": [
+        "silverstar.core.flight_task"
+      ],
+      "record": "FLIGHT_LOG_RECORD_CALIBRATION_RESULT",
+      "record_type": "0x17",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "event",
+        "source": ""
+      },
+      "columns": [
+        "capability_mask",
+        "selected_mask",
+        "required_mask",
+        "ready_mask",
+        "unavailable_mask",
+        "missing_adapter_mask",
+        "start_sequence",
+        "state",
+        "config_result",
+        "ready",
+        "source_count",
+        "attitude_timestamp_us",
+        "q_nb",
+        "gnss_origin_lat_e7",
+        "gnss_origin_lon_e7",
+        "gnss_origin_height_mm",
+        "gnss_sample_count",
+        "gnss_horizontal_accuracy_m",
+        "gnss_vertical_accuracy_m",
+        "barometer_sample_count",
+        "barometer_origin_pressure_pa",
+        "barometer_origin_altitude_m",
+        "attitude_state",
+        "gnss_state",
+        "barometer_state",
+        "attitude_source"
+      ],
+      "display_names": {
+        "en_US": "Alignment Result",
+        "zh_CN": "对准结果"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "EVENT"
+      },
+      "partition_by": [],
+      "payload_size": 96,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_ALIGNMENT_RESULT",
+      "record_type": "0x18",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "one_shot",
+        "source": ""
+      },
+      "columns": [
+        "alignment_algorithm",
+        "rocket_longitudinal_axis",
+        "deploy_trigger_mask",
+        "tilt_reference",
+        "landing_enable",
+        "landing_mode",
+        "impact_capable",
+        "known_yaw_deg",
+        "magnetic_declination_deg",
+        "tilt_threshold_deg",
+        "apogee_vz_threshold_mps",
+        "deploy_confirm_ms",
+        "deploy_delay_ms",
+        "baro_trigger_window_ms",
+        "baro_trigger_min_samples",
+        "baro_trigger_rate_mps",
+        "candidate_duration_ms",
+        "baro_confirm_rate_mps",
+        "baro_max_span_m",
+        "candidate_baro_min_samples",
+        "candidate_imu_min_samples",
+        "candidate_min_coverage_percent",
+        "impact_inhibit_ms",
+        "impact_threshold_mps2",
+        "still_gyro_threshold_radps",
+        "still_accel_tolerance_mps2",
+        "landing_confirm_ms",
+        "landing_sample_max_age_ms"
+      ],
+      "display_names": {
+        "en_US": "Mission Configuration",
+        "zh_CN": "任务配置"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "ONE_SHOT"
+      },
+      "partition_by": [],
+      "payload_size": 91,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_MISSION_CONFIG",
+      "record_type": "0x19",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "one_shot",
+        "source": ""
+      },
+      "columns": [
+        "descriptor_id",
+        "physical_device_id",
+        "device_class",
+        "instance_id",
+        "driver_id",
+        "flags",
+        "capability_mask",
+        "configured_rate_hz",
+        "driver_name_hash",
+        "model_name_hash"
+      ],
+      "display_names": {
+        "en_US": "Device Descriptor",
+        "zh_CN": "设备描述"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "ONE_SHOT"
+      },
+      "partition_by": [
+        "instance_id",
+        "physical_device_id"
+      ],
+      "payload_size": 26,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR",
+      "record_type": "0x1A",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "one_shot",
+        "source": ""
+      },
+      "columns": [
+        "descriptor_id",
+        "algorithm_class",
+        "instance_id",
+        "algorithm_id",
+        "flags",
+        "config_digest",
+        "name_hash"
+      ],
+      "display_names": {
+        "en_US": "Algorithm Descriptor",
+        "zh_CN": "算法描述"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "ONE_SHOT"
+      },
+      "partition_by": [
+        "instance_id"
+      ],
+      "payload_size": 16,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR",
+      "record_type": "0x1B",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "one_shot",
+        "source": ""
+      },
+      "columns": [
+        "record_type",
+        "record_version",
+        "enabled",
+        "policy",
+        "decimation",
+        "reserved",
+        "period_us"
+      ],
+      "display_names": {
+        "en_US": "Log Stream Descriptor",
+        "zh_CN": "日志流描述"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "ONE_SHOT"
+      },
+      "partition_by": [],
+      "payload_size": 12,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR",
+      "record_type": "0x1C",
+      "record_version": 0,
+      "validity": {}
+    },
+    {
+      "active_producers": [],
+      "available": true,
+      "cadence": {
+        "display_names": {},
+        "kind": "one_shot",
+        "source": ""
+      },
+      "columns": [
+        "package_schema_major",
+        "package_schema_minor",
+        "container_format_major",
+        "container_format_minor",
+        "record_catalog_hash_128",
+        "project_semantics_hash_128",
+        "generation_profile_hash_128",
+        "reserved"
+      ],
+      "display_names": {
+        "en_US": "Decoder Profile Descriptor",
+        "zh_CN": "日志解析配置描述"
+      },
+      "enums": {},
+      "events": {},
+      "logging": {
+        "decimation_factor": 1,
+        "enabled": true,
+        "period_us": 0,
+        "policy": "ONE_SHOT"
+      },
+      "partition_by": [],
+      "payload_size": 64,
+      "producer_components": [],
+      "record": "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR",
+      "record_type": "0x1D",
+      "record_version": 0,
+      "validity": {}
+    }
+  ],
+  "resource_assignments": [
+    {
+      "kind": "uart",
+      "logical_resource": "PLATFORM_UART_2",
+      "owner": "gnss0",
+      "peripheral": "USART2",
+      "physical_resource": "USART2",
+      "pins": {
+        "rx": "PD6",
+        "tx": "PD5"
+      },
+      "requirement": "gnss0:data"
+    },
+    {
+      "kind": "gpio_output",
+      "logical_resource": "PLATFORM_GPIO_7",
+      "owner": "gnss0",
+      "peripheral": "",
+      "physical_resource": "GNSS_RST",
+      "pins": {},
+      "requirement": "gnss0:reset"
+    },
+    {
+      "kind": "time",
+      "logical_resource": "PLATFORM_TIME_1",
+      "owner": "gnss0",
+      "peripheral": "",
+      "physical_resource": "SYSTEM_TIME",
+      "pins": {},
+      "requirement": "gnss0:time"
+    },
+    {
+      "kind": "gpio_interrupt",
+      "logical_resource": "PLATFORM_GPIO_8",
+      "owner": "gnss0",
+      "peripheral": "",
+      "physical_resource": "GNSS_TIMEPULSE",
+      "pins": {},
+      "requirement": "gnss0:timepulse"
+    },
+    {
+      "kind": "uart",
+      "logical_resource": "PLATFORM_UART_1",
+      "owner": "imu0",
+      "peripheral": "USART1",
+      "physical_resource": "USART1",
+      "pins": {
+        "rx": "PA10",
+        "tx": "PA9"
+      },
+      "requirement": "imu0:data"
+    },
+    {
+      "kind": "time",
+      "logical_resource": "PLATFORM_TIME_1",
+      "owner": "imu0",
+      "peripheral": "",
+      "physical_resource": "SYSTEM_TIME",
+      "pins": {},
+      "requirement": "imu0:time"
+    },
+    {
+      "kind": "gpio_output",
+      "logical_resource": "PLATFORM_GPIO_4",
+      "owner": "launch_ignition0",
+      "peripheral": "",
+      "physical_resource": "P_CONTROL1",
+      "pins": {},
+      "requirement": "launch_ignition0:output"
+    },
+    {
+      "kind": "time",
+      "logical_resource": "PLATFORM_TIME_1",
+      "owner": "launch_ignition0",
+      "peripheral": "",
+      "physical_resource": "SYSTEM_TIME",
+      "pins": {},
+      "requirement": "launch_ignition0:time"
+    },
+    {
+      "kind": "uart",
+      "logical_resource": "PLATFORM_UART_3",
+      "owner": "maintenance0",
+      "peripheral": "USART3",
+      "physical_resource": "USART3",
+      "pins": {
+        "rx": "PB11",
+        "tx": "PB10"
+      },
+      "requirement": "maintenance0:console"
+    },
+    {
+      "kind": "gpio_output",
+      "logical_resource": "PLATFORM_GPIO_5",
+      "owner": "parachute_pyro0",
+      "peripheral": "",
+      "physical_resource": "P_CONTROL2",
+      "pins": {},
+      "requirement": "parachute_pyro0:output"
+    },
+    {
+      "kind": "time",
+      "logical_resource": "PLATFORM_TIME_1",
+      "owner": "parachute_pyro0",
+      "peripheral": "",
+      "physical_resource": "SYSTEM_TIME",
+      "pins": {},
+      "requirement": "parachute_pyro0:time"
+    },
+    {
+      "kind": "sdio",
+      "logical_resource": "PLATFORM_SDIO_1",
+      "owner": "storage0",
+      "peripheral": "SDIO",
+      "physical_resource": "SDIO",
+      "pins": {
+        "ck": "PC12",
+        "cmd": "PD2",
+        "d0": "PC8",
+        "d1": "PC9",
+        "d2": "PC10",
+        "d3": "PC11"
+      },
+      "requirement": "storage0:storage"
+    },
+    {
+      "kind": "time",
+      "logical_resource": "PLATFORM_TIME_1",
+      "owner": "storage0",
+      "peripheral": "",
+      "physical_resource": "SYSTEM_TIME",
+      "pins": {},
+      "requirement": "storage0:time"
+    },
+    {
+      "kind": "gpio_output",
+      "logical_resource": "PLATFORM_GPIO_6",
+      "owner": "system_indicator0",
+      "peripheral": "",
+      "physical_resource": "IMU_CAL_LED",
+      "pins": {},
+      "requirement": "system_indicator0:output"
+    },
+    {
+      "kind": "spi",
+      "logical_resource": "PLATFORM_SPI_1",
+      "owner": "telemetry0",
+      "peripheral": "SPI1",
+      "physical_resource": "SPI1",
+      "pins": {
+        "miso": "PA6",
+        "mosi": "PA7",
+        "sck": "PA5"
+      },
+      "requirement": "telemetry0:radio_bus"
+    },
+    {
+      "kind": "gpio_input",
+      "logical_resource": "PLATFORM_GPIO_2",
+      "owner": "telemetry0",
+      "peripheral": "",
+      "physical_resource": "RADIO_BUSY",
+      "pins": {},
+      "requirement": "telemetry0:radio_busy"
+    },
+    {
+      "kind": "gpio_interrupt",
+      "logical_resource": "PLATFORM_GPIO_3",
+      "owner": "telemetry0",
+      "peripheral": "",
+      "physical_resource": "RADIO_DIO1",
+      "pins": {},
+      "requirement": "telemetry0:radio_dio1"
+    },
+    {
+      "kind": "gpio_output",
+      "logical_resource": "PLATFORM_GPIO_0",
+      "owner": "telemetry0",
+      "peripheral": "",
+      "physical_resource": "RADIO_NSS",
+      "pins": {},
+      "requirement": "telemetry0:radio_nss"
+    },
+    {
+      "kind": "gpio_output",
+      "logical_resource": "PLATFORM_GPIO_1",
+      "owner": "telemetry0",
+      "peripheral": "",
+      "physical_resource": "RADIO_RST",
+      "pins": {},
+      "requirement": "telemetry0:radio_reset"
+    },
+    {
+      "kind": "time",
+      "logical_resource": "PLATFORM_TIME_1",
+      "owner": "telemetry0",
+      "peripheral": "",
+      "physical_resource": "SYSTEM_TIME",
+      "pins": {},
+      "requirement": "telemetry0:time"
+    },
+    {
+      "kind": "adc",
+      "logical_resource": "PLATFORM_ADC_1",
+      "owner": "voltage_monitor0",
+      "peripheral": "ADC1",
+      "physical_resource": "ADC1",
+      "pins": {
+        "adcx_in10": "PC0"
+      },
+      "requirement": "voltage_monitor0:input_voltage"
+    },
+    {
+      "kind": "time",
+      "logical_resource": "PLATFORM_TIME_1",
+      "owner": "voltage_monitor0",
+      "peripheral": "",
+      "physical_resource": "SYSTEM_TIME",
+      "pins": {},
+      "requirement": "voltage_monitor0:time"
+    }
+  ],
+  "schema_id": "silverstar.project-semantics/1.2",
+  "strategies": {
+    "alignment": "silverstar.algorithm.alignment.gravity_known_yaw",
+    "estimator": "silverstar.algorithm.estimator.kf6",
+    "ins": "silverstar.algorithm.ins.coning2_sculling2",
+    "landing": "silverstar.flight_logic.landing.baro_imu_window_strategy"
+  },
+  "target": "SilverStar_F407"
+}

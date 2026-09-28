@@ -1,0 +1,15 @@
+{
+  "duration_s": 300,
+  "prediction_epochs": 15000,
+  "position_accepted": 140,
+  "position_nis_rejected": 2860,
+  "weighted_position_attempts": 2900,
+  "completed_windows": 58,
+  "maximum_variance_scale": 1.4400000000000068,
+  "final_health": 4,
+  "endpoint_output_m": [
+    7.824512864676683,
+    0.0,
+    -7.657694318539958e-08
+  ]
+}

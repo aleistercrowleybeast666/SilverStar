@@ -1,0 +1,18 @@
+#ifndef __PLATFORM_TYPES_H
+#define __PLATFORM_TYPES_H
+
+#include <stdint.h>
+
+typedef enum
+{
+    PLATFORM_OK = 0,
+    PLATFORM_ALREADY_INITIALIZED,
+    PLATFORM_NOT_READY,
+    PLATFORM_BUSY,
+    PLATFORM_TIMEOUT,
+    PLATFORM_INVALID_ARGUMENT,
+    PLATFORM_UNSUPPORTED,
+    PLATFORM_IO_ERROR
+} PlatformResult;
+
+#endif /* __PLATFORM_TYPES_H */

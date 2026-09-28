@@ -1,0 +1,57 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "SilverStar: F407 Debug build",
+            "type": "shell",
+            "command": "mingw32-make",
+            "args": [
+                "TARGET_PROFILE=SilverStar_F407",
+                "CONFIG=Debug",
+                "all"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "SilverStar: F407 Debug clean",
+            "type": "shell",
+            "command": "mingw32-make",
+            "args": [
+                "TARGET_PROFILE=SilverStar_F407",
+                "CONFIG=Debug",
+                "clean"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "SilverStar: Host tests",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "Tests/Host/run_tests.ps1"
+            ],
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "SilverStar: Architecture check",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "Tools/check_architecture.ps1"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

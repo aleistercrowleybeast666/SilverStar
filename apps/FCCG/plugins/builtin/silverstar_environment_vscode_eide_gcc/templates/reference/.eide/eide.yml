@@ -1,0 +1,191 @@
+version: "4.1"
+name: SilverStar_0_0_9
+type: ARM
+deviceName: null
+packDir: null
+srcDirs:
+  - Platform/STM32F4/Src
+  - Devices/IMU/JY901B/Src
+  - Devices/IMU/JY901B/Adapter/Src
+  - Devices/GNSS/NEO_M9N/Src
+  - Devices/GNSS/NEO_M9N/Adapter/Src
+  - Devices/Telemetry/SX1281/Src
+  - Devices/Telemetry/SX1281/Adapter/Src
+  - Middlewares/Third_Party/SX1280lib
+  - Devices/Console/UART/Src
+  - Devices/Console/UART/Adapter/Src
+  - Board/SilverStar_0_5/Services/Src
+  - Algorithm/Common/Src
+  - Algorithm/Calibration/Src
+  - Algorithm/Alignment/Common/Src
+  - Algorithm/Alignment/GravityKnownYaw/Src
+  - Algorithm/INS/Coning2Sculling2/Src
+  - Algorithm/Estimator/KF6/Src
+  - FlightLogic/FlightCycle/Src
+  - FlightLogic/Deployment/MultiTrigger/Src
+  - FlightLogic/Landing/BarometerImuWindow/Src
+  - Generated/Src
+  - Drivers/STM32F4xx_HAL_Driver/Src
+  - FATFS/Target
+  - FATFS/App
+  - Middlewares/Third_Party/FatFs/src
+  - ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F
+  - Core/Src
+  - APP/Src
+  - Common/Src
+  - Modules/Src
+  - Protocol/Src
+  - Protocol/SSLOG/Src
+  - System/Src
+  - System/Alignment/Src
+  - System/Calibration/Src
+  - System/Indicator/Src
+  - System/Inertial/Src
+  - System/User
+  - OS/FreeRTOS
+  - Targets/SilverStar_F407/Src
+virtualFolder:
+  name: <virtual_root>
+  files:
+    - path: ThirdParty/FreeRTOS-Kernel/list.c
+    - path: ThirdParty/FreeRTOS-Kernel/queue.c
+    - path: ThirdParty/FreeRTOS-Kernel/tasks.c
+    - path: startup_stm32f407xx.s
+  folders: []
+dependenceList: []
+outDir: build\EIDE\SilverStar_F407
+miscInfo:
+  uid: 862a91db7b443d89b424df68cde97ab9
+targets:
+  Debug:
+    cppPreprocessAttrs:
+      defineList:
+        - SYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW
+        - SYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_GRAVITY_KNOWN_YAW
+        - SYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U
+        - SYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=0U
+        - SYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U
+        - SYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U
+        - SYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2
+        - SYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW
+        - SYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_KF6
+        - SYSTEM_BUILD_ESTIMATOR_ENABLED=1U
+        - USE_HAL_DRIVER
+        - STM32F407xx
+      incList:
+        - Platform/Inc
+        - Platform/STM32F4/Inc
+        - Devices/IMU/JY901B/Inc
+        - Devices/IMU/JY901B/Adapter/Inc
+        - Devices/GNSS/NEO_M9N/Inc
+        - Devices/Telemetry/SX1281/Inc
+        - Middlewares/Third_Party/SX1280lib
+        - Devices/Console/UART/Inc
+        - Board/SilverStar_0_5/Services/Inc
+        - Algorithm/Common/Inc
+        - Algorithm/Calibration/Inc
+        - Algorithm/Alignment/Common/Inc
+        - Algorithm/Alignment/GravityKnownYaw/Inc
+        - Algorithm/INS/Coning2Sculling2/Inc
+        - Algorithm/Estimator/KF6/Inc
+        - FlightLogic/Deployment/MultiTrigger/Inc
+        - FlightLogic/Landing/BarometerImuWindow/Inc
+        - Generated/Inc
+        - Drivers/STM32F4xx_HAL_Driver/Inc
+        - Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
+        - Drivers/CMSIS/Device/ST/STM32F4xx/Include
+        - Drivers/CMSIS/Include
+        - FATFS/Target
+        - FATFS/App
+        - Middlewares/Third_Party/FatFs/src
+        - ThirdParty/FreeRTOS-Kernel/include
+        - ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F
+        - Core/Inc
+        - OS/FreeRTOS
+        - Targets/SilverStar_F407/Inc
+        - APP/Inc
+        - Common/Inc
+        - Modules/Inc
+        - Protocol/Inc
+        - Protocol/SSLOG/Inc
+        - Interfaces/Inc
+        - System/Inc
+        - System/Alignment/Inc
+        - System/Calibration/Inc
+        - System/Indicator/Inc
+        - System/Inertial/Inc
+        - System/User
+        - Devices
+      libList: []
+    excludeList:
+      - Core/Src/sysmem.c
+    settings:
+      debugger: cortex-debug
+    toolchain: GCC
+    toolchainConfigMap:
+      GCC:
+        archExtensions: ""
+        cpuType: Cortex-M4
+        floatingPointHardware: single
+        options:
+          version: 5
+          afterBuildTasks: []
+          asm-compiler:
+            ASM_FLAGS: ""
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: ""
+            C_FLAGS: -include Targets/SilverStar_F407/Inc/platform_memory_target.h
+            language-c: c11
+            language-cpp: c++11
+            one-elf-section-per-data: true
+            one-elf-section-per-function: true
+            optimization: level-debug
+            warnings: all-warnings
+          global:
+            $float-abi-type: hard
+            arm-thumb-mode: thumb
+            misc-control: ""
+            not-use-syscalls: true
+            output-debug-info: enable
+            use-newlib-nano: true
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            $toolName: auto
+            LD_FLAGS: ""
+            LIB_FLAGS: -lc -lm -lnosys
+            output-format: elf
+            remove-unused-input-sections: true
+            use-float-printf: false
+        scatterFilePath: STM32F407XX_FLASH.ld
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
+    uploadConfigMap:
+      JLink:
+        baseAddr: ""
+        bin: ""
+        cpuInfo:
+          cpuName: "null"
+          vendor: "null"
+        otherCmds: ""
+        proType: 1
+        speed: 8000
+      OpenOCD:
+        baseAddr: "0x08000000"
+        bin: ""
+        interface: cmsis-dap
+        target: stm32f4x
+      STLink:
+        address: "0x08000000"
+        bin: ""
+        elFile: None
+        optionBytes: .eide/debug.st.option.bytes.ini
+        otherCmds: ""
+        proType: SWD
+        resetMode: default
+        runAfterProgram: true
+        speed: 4000
+    uploader: OpenOCD

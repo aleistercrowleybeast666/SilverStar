@@ -1,0 +1,248 @@
+[
+  {
+    "variant": "kf6_flight",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": true,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": true,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "126c28fc1b82170c7d8b0d5931e543b7b7b9bffb16ab18235439cfb130ac03fa"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_080030"
+  },
+  {
+    "variant": "kf6_test",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": true,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": true,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "126c28fc1b82170c7d8b0d5931e543b7b7b9bffb16ab18235439cfb130ac03fa"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_080030"
+  },
+  {
+    "variant": "eskf15_flight",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": false,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": false,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": false,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "126c28fc1b82170c7d8b0d5931e543b7b7b9bffb16ab18235439cfb130ac03fa"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "changed": true,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "changed": false,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_080030"
+  },
+  {
+    "variant": "eskf15_test",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": true,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": true,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "126c28fc1b82170c7d8b0d5931e543b7b7b9bffb16ab18235439cfb130ac03fa"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "changed": true,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "changed": true,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_080030"
+  },
+  {
+    "variant": "eskf15_no_logging",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": true,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": true,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "126c28fc1b82170c7d8b0d5931e543b7b7b9bffb16ab18235439cfb130ac03fa"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": false,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      },
+      {
+        "path": "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "changed": true,
+        "sha256": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+      },
+      {
+        "path": "Tests/Host/test_eskf_backend.c",
+        "changed": false,
+        "sha256": "6581de428b13cbbcfc9d7c82ac2a2a07d204d3b48f996d33befc82c8773e0235"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_080030"
+  },
+  {
+    "variant": "pure_ins",
+    "synchronized": [
+      {
+        "path": "System/User/system_user_config.h",
+        "changed": true,
+        "sha256": "31a3baa315ea0fa6451e557ad15a9eb6ff578e04dbff7ce69868800c51aca01d"
+      },
+      {
+        "path": "System/Inc/system_navigation_health.h",
+        "changed": true,
+        "sha256": "9db68b7812d96b2206a281dc535c18176c094e450d641e24a9a61be83acc674d"
+      },
+      {
+        "path": "System/Src/system_navigation_health.c",
+        "changed": true,
+        "sha256": "78062858044fc9092395468ccced6ab37a4bc40f8917cdac1e2f16a916849126"
+      },
+      {
+        "path": "Tests/Host/test_navigation_quality_supervisor.c",
+        "changed": true,
+        "sha256": "258000f054dcb320f4250126656da888e7758134e8b5c2a5d69c013dcdf63a46"
+      },
+      {
+        "path": "Tests/Host/run_tests.ps1",
+        "changed": true,
+        "sha256": "126c28fc1b82170c7d8b0d5931e543b7b7b9bffb16ab18235439cfb130ac03fa"
+      },
+      {
+        "path": "Tools/check_architecture.ps1",
+        "changed": true,
+        "sha256": "8840f47a12351cf903ff8de7a9732d71f7e5be5d91a152582a681156a609480b"
+      }
+    ],
+    "report_name": "FinalMatrix_20260927_080030"
+  }
+]

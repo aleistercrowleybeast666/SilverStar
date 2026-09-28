@@ -1,0 +1,210 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.imu.lsm6dsv32x_spi",
+  "name": "LSM6DSV32X · SPI",
+  "type": "device",
+  "class": "imu",
+  "version": "0.1.0",
+  "description": "LSM6DSV32X raw SPI driver with CS/DRDY binding; HARDWARE_UNVERIFIED.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.sensor.register_bus",
+        "optional": false
+      }
+    ],
+    "resources": [
+      {
+        "name": "data",
+        "kind": "spi",
+        "constraints": {
+          "spi": {
+            "mode": "master",
+            "cpol": "low",
+            "cpha": "1edge",
+            "data_bits": 8,
+            "bit_order": "msb",
+            "minimum_clock_hz": 100000,
+            "maximum_clock_hz": 1000000,
+            "dma": false,
+            "irq": false
+          }
+        },
+        "mode": "shared"
+      },
+      {
+        "name": "cs",
+        "kind": "gpio_output",
+        "electrical_constraints": {
+          "mode": "gpio_output",
+          "output_type": "push_pull",
+          "pull": "none",
+          "speed": "low",
+          "safe_initial_level": "inactive",
+          "active_polarity": "low",
+          "startup_glitch_free": true
+        }
+      },
+      {
+        "name": "drdy",
+        "kind": "gpio_interrupt",
+        "electrical_constraints": {
+          "mode": "gpio_interrupt",
+          "pull": "none",
+          "exti_trigger": "rising",
+          "irq": true,
+          "maximum_irq_priority": 5
+        }
+      },
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared"
+      }
+    ],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.imu",
+    "imu.acceleration",
+    "imu.angular_rate",
+    "imu.software_alignment_qualified",
+    "imu.software_propagation_qualified",
+    "imu.landing_stillness_qualified"
+  ],
+  "build": {
+    "sources": [
+      "Devices/IMU/LSM6DSV32X_SPI/Src/lsm6dsv32x_spi_device.c",
+      "Devices/IMU/LSM6DSV32X_SPI/Src/lsm6dsv32x_spi_instance.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Devices/IMU/LSM6DSV32X_SPI/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Devices/IMU/LSM6DSV32X_SPI"
+    ]
+  },
+  "metadata": {
+    "display_names": {
+      "en_US": "LSM6DSV32X · SPI",
+      "zh_CN": "LSM6DSV32X · SPI"
+    },
+    "device_group": "primary_devices",
+    "device_group_order": 21,
+    "device_selection_style": "instance",
+    "device_category": "sensor.imu",
+    "source_origins": {
+      "default": "fccg_joint_sensor_library"
+    },
+    "initialization": {
+      "configure_on_boot": true,
+      "profile": "raw_240_hz",
+      "persistent_storage": "none",
+      "persist_if_changed": false,
+      "hardware_status": "HARDWARE_UNVERIFIED",
+      "register_evidence": "https://github.com/STMicroelectronics/lsm6dsv32x_spi-pid",
+      "sample_timestamp": "bounded read/IRQ consumption proxy; TIME_UNCERTAIN (no edge capture mapping)",
+      "driver_status": "IMPLEMENTED_HARDWARE_UNVERIFIED",
+      "output_rate_hz": 240,
+      "accelerometer_range_g": 16,
+      "gyroscope_range_dps": 2000,
+      "readback": {
+        "zh_CN": "先读取、仅改差异位、掩码读回；最多 3 次。有效采样前不 READY",
+        "en_US": "Read first, update differing bits, masked readback with at most 3 attempts; no READY before a valid sample"
+      },
+      "filter": {
+        "zh_CN": "高性能模式；默认滤波链，未宣称可调滤波带宽",
+        "en_US": "High-performance mode; default filter chain, no configurable bandwidth claim"
+      },
+      "fifo": {
+        "zh_CN": "7 字节标签低 g/gyro 配对，240 Hz；高 g 独立读取；无边沿捕获则时间不确定",
+        "en_US": "7-byte tagged low-g/gyro pairs at 240 Hz; high-g read separately; no captured edge clock, time uncertain"
+      }
+    },
+    "high_g_channel": {
+      "present": false,
+      "enabled": false,
+      "independent": true
+    },
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_IMU": {
+        "function_prefix": "Lsm6Dsv32XSpiImuInstance",
+        "headers": [
+          "lsm6dsv32x_spi_instance.h"
+        ],
+        "pass_instance": true
+      }
+    },
+    "instance_resource_binding": {
+      "struct_type": "ProjectLsm6Dsv32XSpiResources",
+      "accessor": "ProjectLsm6Dsv32XSpiResources_Get",
+      "count_symbol": "PROJECT_LSM6DSV32X_SPI_INSTANCE_COUNT",
+      "runtime_context_upper_bound": 4,
+      "fields": [
+        {
+          "requirement": "data",
+          "member": "spi"
+        },
+        {
+          "requirement": "cs",
+          "member": "cs"
+        },
+        {
+          "requirement": "drdy",
+          "member": "drdy"
+        },
+        {
+          "requirement": "time",
+          "member": "time"
+        }
+      ]
+    },
+    "device_descriptors": [
+      {
+        "order": 1,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_LSM6DSV32X_SPI",
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "capability": "SYSTEM_CAPABILITY_IMU",
+        "rate": "240U",
+        "driver_hash": "0x01000001UL",
+        "name_hash": "0x01000002UL"
+      }
+    ],
+    "build_feature_symbols": [
+      "SYSTEM_USER_IMU_ENABLE"
+    ],
+    "runtime_defaults": {
+      "SYSTEM_DEVICE_CLASS_IMU": {
+        "SYSTEM_IMU_OUTPUT_RATE_HZ": 240
+      }
+    },
+    "qualification_evidence": {
+      "contract": "static software alignment/propagation/stillness: paired SI accel+gyro, sequence, source/config/calibration generation, explicit clipping/time uncertainty; hardware status remains independent",
+      "host_test": "tests/test_joint_sensor_library.py",
+      "hardware_status": "HARDWARE_UNVERIFIED"
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 4,
+    "class_max": 4,
+    "same_plugin_multiple": true,
+    "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "STMicroelectronics",
+    "model": "LSM6DSV32X",
+    "chipset": "LSM6DSV32X",
+    "driver": "LSM6DSV32X_SPI register driver"
+  },
+  "transports": []
+}
