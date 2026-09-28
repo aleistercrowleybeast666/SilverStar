@@ -125,7 +125,8 @@ def test_dependency_and_resource_conflicts_are_reported(builtin_catalog) -> None
 
 def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
     graph = SourceGraph_Resolve(ReferenceProject_Create(), builtin_catalog)
-    assert len(graph.sources) == 143
+    assert len(graph.sources) == 144
+    assert "System/Src/system_device_startup.c" in graph.sources
     assert "Algorithm/Common/Src/navigation_quality.c" in graph.sources
     assert "System/Src/system_navigation_health.c" in graph.sources
     assert "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c" in graph.sources

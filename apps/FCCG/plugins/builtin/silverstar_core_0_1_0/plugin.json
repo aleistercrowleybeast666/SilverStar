@@ -45,6 +45,7 @@
       "System/Src/system_navigation_profile.c",
       "System/Src/system_profile.c",
       "System/Src/system_sensor_status.c",
+      "System/Src/system_device_startup.c",
       "System/Src/system_startup.c",
       "System/Src/system_time.c",
       "System/Alignment/Src/system_alignment.c",
