@@ -171,6 +171,40 @@ GnssNeoM9nProbeStartResult GnssNeoM9n_ProbeStart(
     uint8_t instance, uint32_t baudrate);
 GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance);
 
+typedef struct
+{
+    uint32_t key;
+    uint64_t value;
+    uint8_t value_len;
+} GnssNeoM9nConfigItem;
+
+typedef enum
+{
+    GnssNeoM9nItemStartResult_Ok = 0,
+    GnssNeoM9nItemStartResult_Busy,
+    GnssNeoM9nItemStartResult_InvalidArgument,
+    GnssNeoM9nItemStartResult_NotReady,
+    GnssNeoM9nItemStartResult_IoError
+} GnssNeoM9nItemStartResult;
+
+typedef enum
+{
+    GnssNeoM9nItemPollResult_Pending = 0,
+    GnssNeoM9nItemPollResult_Complete,
+    GnssNeoM9nItemPollResult_Nak,
+    GnssNeoM9nItemPollResult_Timeout,
+    GnssNeoM9nItemPollResult_IoError,
+    GnssNeoM9nItemPollResult_NotReady
+} GnssNeoM9nItemPollResult;
+
+GnssNeoM9nItemStartResult GnssNeoM9n_ItemReadStart(
+    uint8_t instance, uint32_t key);
+GnssNeoM9nItemPollResult GnssNeoM9n_ItemReadPoll(
+    uint8_t instance, GnssNeoM9nConfigItem *item);
+GnssNeoM9nItemStartResult GnssNeoM9n_ItemWriteStart(
+    uint8_t instance, const GnssNeoM9nConfigItem *item);
+GnssNeoM9nItemPollResult GnssNeoM9n_ItemWritePoll(uint8_t instance);
+
 typedef enum
 {
     GnssNeoM9n_UpdateOk = 0,

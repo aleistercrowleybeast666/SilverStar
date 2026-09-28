@@ -2,6 +2,7 @@
 
 #include "project_resources.h"
 #include "neo_m9n_config.h"
+#include "neo_m9n_config_keys.h"
 #include "platform_critical.h"
 #include "platform_time.h"
 #include "platform_uart.h"
@@ -54,29 +55,6 @@
 #define GNSS_CFG_ITEM_TYPE_U8       8U
 #define GNSS_CFG_ITEM_TYPE_E1       1U
 #define GNSS_UART_BAUDRATE_MIN      4800U
-#define GNSS_CFG_UART1INPROT_UBX    0x10730001UL
-#define GNSS_CFG_UART1INPROT_NMEA   0x10730002UL
-#define GNSS_CFG_UART1INPROT_RTCM3X 0x10730004UL
-#define GNSS_CFG_UART1OUTPROT_UBX   0x10740001UL
-#define GNSS_CFG_UART1OUTPROT_NMEA  0x10740002UL
-#define GNSS_CFG_UART1_BAUDRATE     0x40520001UL
-#define GNSS_CFG_RATE_MEAS          0x30210001UL
-#define GNSS_CFG_RATE_NAV           0x30210002UL
-#define GNSS_CFG_RATE_TIMEREF       0x20210003UL
-#define GNSS_CFG_MSGOUT_NAV_PVT_UART1 0x20910007UL
-#define GNSS_CFG_NAVSPG_DYNMODEL    0x20110021UL
-#define GNSS_CFG_SIGNAL_GPS_ENA     0x1031001FUL
-#define GNSS_CFG_SIGNAL_GPS_L1CA_ENA 0x10310001UL
-#define GNSS_CFG_SIGNAL_SBAS_ENA    0x10310020UL
-#define GNSS_CFG_SIGNAL_SBAS_L1CA_ENA 0x10310005UL
-#define GNSS_CFG_SIGNAL_GAL_ENA     0x10310021UL
-#define GNSS_CFG_SIGNAL_GAL_E1_ENA  0x10310007UL
-#define GNSS_CFG_SIGNAL_BDS_ENA     0x10310022UL
-#define GNSS_CFG_SIGNAL_BDS_B1_ENA  0x1031000DUL
-#define GNSS_CFG_SIGNAL_QZSS_ENA    0x10310024UL
-#define GNSS_CFG_SIGNAL_QZSS_L1CA_ENA 0x10310012UL
-#define GNSS_CFG_SIGNAL_GLO_ENA     0x10310025UL
-#define GNSS_CFG_SIGNAL_GLO_L1_ENA  0x10310018UL
 #define GNSS_MAX_WAIT_POLL_ITERATIONS 8192U
 #define GNSS_MAX_BYTES_PER_PROCESS    512U
 #define GNSS_MAX_VALGET_ITEMS_PER_FRAME GNSS_VALGET_CACHE_MAX_ITEMS
@@ -121,12 +99,7 @@ typedef struct
     char type[GNSS_NMEA_TYPE_LEN + 1U];
 } GnssNmeaParser_t;
 
-typedef struct
-{
-    uint32_t key;
-    uint64_t value;
-    uint8_t value_len;
-} GnssCfgItem_t;
+typedef GnssNeoM9nConfigItem GnssCfgItem_t;
 
 typedef struct
 {
@@ -150,6 +123,11 @@ typedef struct
     uint8_t identity_verified;
     uint8_t probe_prepared;
     uint32_t probe_baudrate;
+    uint32_t item_read_started_ms;
+    uint32_t item_write_started_ms;
+    uint32_t item_read_key;
+    uint8_t item_read_active;
+    uint8_t item_write_active;
     GnssNeoM9nConfigReadDiagnostics valget_diagnostics;
     GnssNeoM9nSatelliteDiagnostics satellite_diagnostics;
     GnssNeoM9nRfDiagnostics rf_diagnostics;
@@ -2037,6 +2015,8 @@ GnssNeoM9nProbeStartResult GnssNeoM9n_ProbeStart(
         return GnssNeoM9nProbeStartResult_IoError;
     }
     s_contexts[instance].probe_prepared = 0U;
+    s_contexts[instance].item_read_active = 0U;
+    s_contexts[instance].item_write_active = 0U;
     return GnssNeoM9nProbeStartResult_Ok;
 }
 
@@ -2956,6 +2936,137 @@ void GnssNeoM9n_ConfigReadAsyncCancel(uint8_t instance,
     s_config_async.result = result;
     s_config_async.first_failure = diagnostics;
     s_config_async.state = GnssConfigAsyncIdle;
+}
+
+GnssNeoM9nItemStartResult GnssNeoM9n_ItemReadStart(
+    uint8_t instance, uint32_t key)
+{
+    GnssNeoM9nAsyncStartResult result;
+
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
+        (Gnss_ConfigKeyValueLen(key) == 0U))
+    { return GnssNeoM9nItemStartResult_InvalidArgument; }
+    if (s_initialized == 0U)
+    { return GnssNeoM9nItemStartResult_NotReady; }
+    if ((s_contexts[instance].item_read_active != 0U) ||
+        (s_contexts[instance].item_write_active != 0U) ||
+        (s_config_async.state != GnssConfigAsyncIdle))
+    { return GnssNeoM9nItemStartResult_Busy; }
+    result = Gnss_ValgetAsyncStart(instance, &key, 1U,
+        GNSS_VALGET_LAYER_RAM);
+    if (result == GnssNeoM9nAsyncStartBusy)
+    { return GnssNeoM9nItemStartResult_Busy; }
+    if (result != GnssNeoM9nAsyncStartOk)
+    { return GnssNeoM9nItemStartResult_IoError; }
+    s_contexts[instance].item_read_key = key;
+    s_contexts[instance].item_read_started_ms = PlatformTime_Ms();
+    s_contexts[instance].item_read_active = 1U;
+    return GnssNeoM9nItemStartResult_Ok;
+}
+
+GnssNeoM9nItemPollResult GnssNeoM9n_ItemReadPoll(
+    uint8_t instance, GnssNeoM9nConfigItem *item)
+{
+    GnssNeoM9nConfigReadResult result;
+    GnssNeoM9nAsyncPollResult poll_result;
+
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) || (item == NULL) ||
+        (s_contexts[instance].item_read_active == 0U))
+    { return GnssNeoM9nItemPollResult_NotReady; }
+    (void)GnssNeoM9n_Process(instance, PlatformTime_Ms());
+    if ((s_valget_received == 0U) &&
+        ((uint32_t)(PlatformTime_Ms() -
+            s_contexts[instance].item_read_started_ms) >=
+            GNSS_CONFIG_READ_GROUP_TIMEOUT_MS))
+    {
+        Gnss_ValgetAsyncCancel(instance, GnssNeoM9nConfigReadTimeout,
+            GnssNeoM9nTransactionDetailTimeout);
+    }
+    poll_result = Gnss_ValgetAsyncPoll(instance, NULL, NULL, &result);
+    if (poll_result == GnssNeoM9nAsyncPollPending)
+    { return GnssNeoM9nItemPollResult_Pending; }
+    s_contexts[instance].item_read_active = 0U;
+    if (result == GnssNeoM9nConfigReadTimeout)
+    { return GnssNeoM9nItemPollResult_Timeout; }
+    if (result == GnssNeoM9nConfigReadNak)
+    { return GnssNeoM9nItemPollResult_Nak; }
+    if ((result != GnssNeoM9nConfigReadResponseOk) ||
+        (s_valget_cache_count != 1U) ||
+        (s_valget_cache[0].key != s_contexts[instance].item_read_key))
+    { return GnssNeoM9nItemPollResult_IoError; }
+    *item = s_valget_cache[0];
+    return GnssNeoM9nItemPollResult_Complete;
+}
+
+GnssNeoM9nItemStartResult GnssNeoM9n_ItemWriteStart(
+    uint8_t instance, const GnssNeoM9nConfigItem *item)
+{
+    uint8_t payload[12] = {0U, GNSS_CFG_LAYER_RAM, 0U, 0U};
+    PlatformResult result;
+    uint8_t index;
+
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) || (item == NULL) ||
+        (item->value_len == 0U) || (item->value_len > 4U) ||
+        (item->value_len != Gnss_ConfigKeyValueLen(item->key)))
+    { return GnssNeoM9nItemStartResult_InvalidArgument; }
+    if (s_initialized == 0U)
+    { return GnssNeoM9nItemStartResult_NotReady; }
+    if ((s_contexts[instance].item_read_active != 0U) ||
+        (s_contexts[instance].item_write_active != 0U) ||
+        (s_valget_wait_active != 0U) ||
+        (s_config_async.state != GnssConfigAsyncIdle) ||
+        (s_satellite_wait_active != 0U) || (s_rf_wait_active != 0U))
+    { return GnssNeoM9nItemStartResult_Busy; }
+    Gnss_WriteU32Le(&payload[4], item->key);
+    for (index = 0U; index < item->value_len; index++)
+    { payload[8U + index] = (uint8_t)(item->value >> (8U * index)); }
+    Gnss_ClearAckWait(instance, GNSS_UBX_CFG_CLASS,
+        GNSS_UBX_CFG_VALSET_ID);
+    result = Gnss_UbxFrameEnqueue(instance, GNSS_UBX_CFG_CLASS,
+        GNSS_UBX_CFG_VALSET_ID, payload,
+        (uint16_t)(8U + item->value_len));
+    if (result == PLATFORM_BUSY)
+    { return GnssNeoM9nItemStartResult_Busy; }
+    if (result != PLATFORM_OK)
+    { return GnssNeoM9nItemStartResult_IoError; }
+    s_contexts[instance].item_write_started_ms = PlatformTime_Ms();
+    s_contexts[instance].item_write_active = 1U;
+    return GnssNeoM9nItemStartResult_Ok;
+}
+
+GnssNeoM9nItemPollResult GnssNeoM9n_ItemWritePoll(uint8_t instance)
+{
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
+        (s_contexts[instance].item_write_active == 0U))
+    { return GnssNeoM9nItemPollResult_NotReady; }
+    (void)GnssNeoM9n_Process(instance, PlatformTime_Ms());
+    if (s_transaction_discontinuity != 0U)
+    {
+        s_contexts[instance].item_write_active = 0U;
+        return GnssNeoM9nItemPollResult_IoError;
+    }
+    if ((s_last_ack_class == GNSS_UBX_CFG_CLASS) &&
+        (s_last_ack_id == GNSS_UBX_CFG_VALSET_ID))
+    {
+        if (s_last_ack == GnssNeoM9nAckAck)
+        {
+            s_contexts[instance].item_write_active = 0U;
+            return GnssNeoM9nItemPollResult_Complete;
+        }
+        if (s_last_ack == GnssNeoM9nAckNak)
+        {
+            s_contexts[instance].item_write_active = 0U;
+            return GnssNeoM9nItemPollResult_Nak;
+        }
+    }
+    if ((uint32_t)(PlatformTime_Ms() -
+            s_contexts[instance].item_write_started_ms) >=
+        GNSS_ACK_TIMEOUT_MS)
+    {
+        s_contexts[instance].item_write_active = 0U;
+        return GnssNeoM9nItemPollResult_Timeout;
+    }
+    return GnssNeoM9nItemPollResult_Pending;
 }
 
 GnssNeoM9nConfigReadResult GnssNeoM9n_ValgetRead(uint8_t instance,

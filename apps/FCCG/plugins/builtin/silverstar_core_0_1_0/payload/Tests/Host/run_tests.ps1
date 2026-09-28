@@ -777,7 +777,9 @@ Invoke-HostTest -Name 'jy901b_adapter' -ExtraCompilerArgs @(
 Invoke-HostTest -Name 'neo_m9n_device' -Sources @(
     "$repoRoot\Tests\Host\test_neo_m9n_device.c",
     "$repoRoot\Generated\Src\project_resources.c",
-    "$repoRoot\Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c"
+    "$repoRoot\Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c",
+    "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c",
+    "$repoRoot\System\Src\system_device_startup.c"
 )
 Invoke-HostTest -Name 'neo_m9n_adapter' -Sources @(
     "$repoRoot\Tests\Host\test_neo_m9n_adapter.c",

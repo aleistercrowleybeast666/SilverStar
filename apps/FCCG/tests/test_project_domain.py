@@ -125,12 +125,13 @@ def test_dependency_and_resource_conflicts_are_reported(builtin_catalog) -> None
 
 def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
     graph = SourceGraph_Resolve(ReferenceProject_Create(), builtin_catalog)
-    assert len(graph.sources) == 145
+    assert len(graph.sources) == 146
     assert "System/Src/system_device_startup.c" in graph.sources
     assert "Algorithm/Common/Src/navigation_quality.c" in graph.sources
     assert "System/Src/system_navigation_health.c" in graph.sources
     assert "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c" in graph.sources
     assert "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c" in graph.sources
+    assert "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c" in graph.sources
     assert "Algorithm/Estimator/KF6/Src/navigation_integrity.c" in graph.sources
     assert "Algorithm/Estimator/KF6/Src/navigation_kf_replay.c" in graph.sources
     assert len(graph.sources) == len(set(graph.sources))

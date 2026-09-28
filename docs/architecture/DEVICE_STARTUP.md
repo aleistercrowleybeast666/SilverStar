@@ -1,7 +1,7 @@
 # Device startup contract
 
-SilverStar calls `SystemStartup_Run` before the FreeRTOS scheduler. That stage
-must only initialize deterministic MCU state, place mission outputs in SAFE,
+The required Round 3 design limits pre-scheduler startup to deterministic MCU
+state, placing mission outputs in SAFE,
 initialize internal objects and create static tasks. Device discovery, UART
 baud or protocol search, response waits, configuration readback, SD mount and
 sample readiness belong to `DeviceTask` after the scheduler starts.
@@ -31,12 +31,14 @@ callback asynchronous.
 
 ## Integration status
 
-The controller and host tests are present. Integration into
-`SystemStartup_Run`, `DeviceTask`, JY901B and NEO-M9N remains in progress.
-The current JY901B baud rescue and register configuration still contain
-response waits; the M9N identify and configuration paths also contain
-synchronous waits. They must be split into request/poll transactions before
-the contract can be declared implemented or firmware startup verified.
+The controller and host tests are present. JY901B and NEO-M9N have bounded
+request/poll startup controllers and Host tests for probe fallback, per-field
+read/diff/write, readback, and sample gates. Their older adapter startup paths
+still call synchronous operations. `SystemStartup_Run` still executes device
+startup and waits before scheduler start; `DeviceTask` does not yet own these
+controllers. The contract is therefore **not yet integrated**. Firmware
+startup must not be described as asynchronous until the adapter routing and
+scheduler-first path are verified together.
 
 Factory UART defaults used for bounded fallback come from the
 [WitMotion standard protocol](https://wit-motion.gitbook.io/witmotion-sdk/wit-standard-protocol/wit-standard-communication-protocol)

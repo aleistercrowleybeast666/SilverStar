@@ -4,6 +4,7 @@
 #include "project_resources.h"
 #include "neo_m9n_config.h"
 #include "neo_m9n_device.h"
+#include "neo_m9n_startup.h"
 #include "platform_critical.h"
 #include "platform_time.h"
 #include "platform_uart.h"
@@ -87,6 +88,12 @@ static uint8_t s_ignore_config_write;
 static uint8_t s_drop_config_ack;
 static uint8_t s_wrong_model;
 static uint8_t s_async_busy_once;
+static uint8_t s_startup_item_mode;
+static uint32_t s_startup_physical_baud;
+static uint32_t s_startup_last_write_key;
+static uint8_t s_startup_write_count;
+static GnssNeoM9nConfigItem s_startup_items[32];
+static uint8_t s_startup_item_count;
 
 static uint16_t Test_ReadU16Le(const uint8_t *data)
 {
@@ -180,6 +187,18 @@ static uint8_t Test_KeyValueLength(uint32_t key)
 
 static uint64_t Test_KeyValue(uint32_t key)
 {
+    uint8_t index;
+
+    if (s_startup_item_mode != 0U)
+    {
+        if (key == 0x40520001UL)
+        { return s_startup_physical_baud; }
+        for (index = 0U; index < s_startup_item_count; index++)
+        {
+            if (s_startup_items[index].key == key)
+            { return s_startup_items[index].value; }
+        }
+    }
     if (key == 0x40520001UL) { return GNSS_DEFAULT_BAUDRATE; }
     if (key == 0x30210001UL) { return 40U; }
     if (key == 0x20110021UL) { return GNSS_DYNMODEL_AIRBORNE_4G; }
@@ -299,7 +318,8 @@ static void Test_ValgetRespond(const uint8_t *request_payload,
             key ^= 0x00000001UL;
         }
         value = Test_KeyValue(key);
-        if ((key == 0x30210001UL) && (request_payload[1] < 3U))
+        if ((s_startup_item_mode == 0U) &&
+            (key == 0x30210001UL) && (request_payload[1] < 3U))
         { value = s_layer_measurement_ms[request_payload[1]]; }
         value_length = Test_KeyValueLength(key);
         Test_WriteU32Le(&payload[response_length], key);
@@ -397,6 +417,9 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
     }
     TEST_CHECK(data != NULL && length >= 8U);
     payload_length = Test_ReadU16Le(&data[4]);
+    if ((s_startup_item_mode != 0U) &&
+        (s_uart_baudrate != s_startup_physical_baud))
+    { return PLATFORM_OK; }
     if (s_mode == TEST_RESPONSE_DISCONTINUITY)
     {
         s_uart_diagnostics.rx_discontinuity_count++;
@@ -434,6 +457,41 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
     }
     else if ((data[2] == TEST_CFG_CLASS) && (data[3] == 0x8AU))
     {
+        if (s_startup_item_mode != 0U)
+        {
+            uint32_t key = Test_ReadU32Le(&data[10]);
+            uint8_t value_len = Test_KeyValueLength(key);
+            uint64_t value = 0U;
+            uint8_t index;
+            TEST_CHECK(payload_length == (uint16_t)(8U + value_len));
+            for (index = 0U; index < value_len; index++)
+            { value |= (uint64_t)data[14U + index] << (8U * index); }
+            s_startup_last_write_key = key;
+            s_startup_write_count++;
+            if (key == 0x40520001UL)
+            {
+                s_startup_physical_baud = (uint32_t)value;
+                return PLATFORM_OK;
+            }
+            for (index = 0U; index < s_startup_item_count; index++)
+            {
+                if (s_startup_items[index].key == key) { break; }
+            }
+            TEST_CHECK(index < 32U);
+            if (index == s_startup_item_count)
+            { s_startup_item_count++; }
+            s_startup_items[index].key = key;
+            s_startup_items[index].value = value;
+            s_startup_items[index].value_len = value_len;
+            {
+                uint8_t ack[2] = {TEST_CFG_CLASS, 0x8AU};
+                uint8_t frame[16];
+                uint16_t frame_length = Test_FrameBuild(
+                    TEST_ACK_CLASS, 1U, ack, 2U, frame);
+                Test_FrameInject(frame, frame_length, 0U);
+            }
+            return PLATFORM_OK;
+        }
         uint8_t layer;
         uint8_t ack[2] = {TEST_CFG_CLASS, 0x8AU};
         uint8_t frame[16];
@@ -923,6 +981,121 @@ static void Test_AsyncConfigReadBackpressure(void)
     TEST_CHECK(s_uart_diagnostics.tx_bytes > tx_before);
 }
 
+static void Test_AsyncItemReadWrite(void)
+{
+    GnssNeoM9nConfigItem item = {0U};
+    const GnssNeoM9nConfigItem target =
+        {0x30210001UL, 40U, 2U};
+    uint32_t writes_before;
+    uint32_t bbr_writes_before;
+    uint32_t flash_writes_before;
+
+    s_mode = TEST_RESPONSE_OK;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    s_layer_measurement_ms[0] = 1000U;
+    writes_before = s_layer_writes[0];
+    bbr_writes_before = s_layer_writes[1];
+    flash_writes_before = s_layer_writes[2];
+    s_async_busy_once = 1U;
+    TEST_CHECK(GnssNeoM9n_ItemReadStart(0U, target.key) ==
+        GnssNeoM9nItemStartResult_Busy);
+    TEST_CHECK(GnssNeoM9n_ItemReadStart(0U, target.key) ==
+        GnssNeoM9nItemStartResult_Ok);
+    TEST_CHECK(GnssNeoM9n_ItemReadPoll(0U, &item) ==
+        GnssNeoM9nItemPollResult_Complete);
+    TEST_CHECK(item.key == target.key);
+    TEST_CHECK(item.value == 1000U);
+    TEST_CHECK(item.value_len == target.value_len);
+    TEST_CHECK(s_layer_writes[0] == writes_before);
+
+    s_async_busy_once = 1U;
+    TEST_CHECK(GnssNeoM9n_ItemWriteStart(0U, &target) ==
+        GnssNeoM9nItemStartResult_Busy);
+    TEST_CHECK(GnssNeoM9n_ItemWriteStart(0U, &target) ==
+        GnssNeoM9nItemStartResult_Ok);
+    TEST_CHECK(GnssNeoM9n_ItemWritePoll(0U) ==
+        GnssNeoM9nItemPollResult_Complete);
+    TEST_CHECK(s_layer_writes[0] == writes_before + 1U);
+    TEST_CHECK(s_layer_writes[1] == bbr_writes_before);
+    TEST_CHECK(s_layer_writes[2] == flash_writes_before);
+    TEST_CHECK(GnssNeoM9n_ItemReadStart(0U, target.key) ==
+        GnssNeoM9nItemStartResult_Ok);
+    TEST_CHECK(GnssNeoM9n_ItemReadPoll(0U, &item) ==
+        GnssNeoM9nItemPollResult_Complete);
+    TEST_CHECK(item.value == target.value);
+}
+
+static void Test_AsyncStartup(void)
+{
+    SystemGnssConfig target = {0U};
+    uint8_t pvt_payload[92] = {0U};
+    uint8_t pvt_frame[100];
+    uint16_t pvt_length;
+    uint32_t cycle;
+
+    s_mode = TEST_RESPONSE_OK;
+    s_rx_count = 0U;
+    s_rx_head = 0U;
+    s_rx_tail = 0U;
+    s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
+    s_startup_physical_baud = GNSS_FACTORY_BAUDRATE;
+    s_startup_item_mode = 1U;
+    s_startup_item_count = 1U;
+    s_startup_items[0].key = 0x30210001UL;
+    s_startup_items[0].value = 1000U;
+    s_startup_items[0].value_len = 2U;
+    s_startup_write_count = 0U;
+    s_startup_last_write_key = 0U;
+    target.navigation_rate_hz = 25U;
+    target.constellation_mask = SYSTEM_GNSS_CONSTELLATION_GPS |
+        SYSTEM_GNSS_CONSTELLATION_BDS |
+        SYSTEM_GNSS_CONSTELLATION_GALILEO;
+    target.dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G;
+    target.output_protocol = SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX;
+    target.enabled_message_mask = SYSTEM_GNSS_MESSAGE_NAV_PVT;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(NeoM9nStartup_Init(0U, &target) == NeoM9nStartupResult_Ok);
+    pvt_length = Test_FrameBuild(TEST_NAV_CLASS, 0x07U,
+        pvt_payload, sizeof(pvt_payload), pvt_frame);
+    for (cycle = 0U; cycle < 2000U; cycle++)
+    {
+        SystemDeviceStartupState state = NeoM9nStartup_StateGet(0U);
+        if (state == SystemDeviceStartupState_WaitingSample)
+        { Test_FrameInject(pvt_frame, pvt_length, 0U); }
+        NeoM9nStartup_Tick(0U, s_tick_ms);
+        state = NeoM9nStartup_StateGet(0U);
+        if ((state == SystemDeviceStartupState_Ready) ||
+            (state == SystemDeviceStartupState_Failed))
+        { break; }
+        s_tick_ms += 10U;
+    }
+    TEST_CHECK(NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Ready);
+    TEST_CHECK(s_startup_physical_baud == GNSS_DEFAULT_BAUDRATE);
+    TEST_CHECK(s_startup_write_count > 0U);
+    TEST_CHECK(s_startup_write_count < 23U);
+    TEST_CHECK(s_startup_last_write_key == 0x40520001UL);
+    TEST_CHECK(Test_KeyValue(0x30210001UL) == 40U);
+
+    s_rx_count = 0U;
+    s_rx_head = 0U;
+    s_rx_tail = 0U;
+    s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
+    s_startup_physical_baud = 0U;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(NeoM9nStartup_Init(0U, &target) == NeoM9nStartupResult_Ok);
+    for (cycle = 0U; cycle < 1000U; cycle++)
+    {
+        NeoM9nStartup_Tick(0U, s_tick_ms);
+        if (NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Failed)
+        { break; }
+        s_tick_ms += 10U;
+    }
+    TEST_CHECK(NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Failed);
+    TEST_CHECK(NeoM9nStartup_FailureGet(0U) ==
+        SystemDeviceStartupFailure_NotPresent);
+    s_startup_item_mode = 0U;
+}
+
 int main(void)
 {
     (void)memset(&s_uart_diagnostics, 0, sizeof(s_uart_diagnostics));
@@ -936,5 +1109,7 @@ int main(void)
     Test_ConfigDiffReadbackPersistence();
     Test_NonblockingProbe();
     Test_AsyncConfigReadBackpressure();
+    Test_AsyncItemReadWrite();
+    Test_AsyncStartup();
     return Test_Finish("neo_m9n_device");
 }

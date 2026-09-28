@@ -80,7 +80,8 @@
   "build": {
     "sources": [
       "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
-      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c"
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c"
     ],
     "asm_sources": [],
     "include_dirs": [
