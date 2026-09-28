@@ -395,7 +395,7 @@ def MetadataFiles_Render(
         ".vscode/extensions.json": _VsCodeExtensions_Render(environment),
         ".eide/eide.yml": _Eide_Render(render_model, graph, environment),
         ".eide/files.options.yml": _EideFileOptions_Render(environment),
-        f"{render_model.identity.name}.code-workspace": _VsCodeWorkspace_Render(
+        "Flight_Controller.code-workspace": _VsCodeWorkspace_Render(
             render_model, environment
         ),
         "README.md": _GeneratedReadme_Render(render_model),

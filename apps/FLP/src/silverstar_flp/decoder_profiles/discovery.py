@@ -80,6 +80,8 @@ class TaskDirectoryScanner:
         scan_root = selected.parent if selected.is_file() else selected
         if not scan_root.is_dir():
             raise DecoderProfileError("decoder_discovery_directory_invalid", str(scan_root))
+        if (scan_root / "SilverStar.ssproject").is_file():
+            return self._SilverStarProject_Scan(selected, scan_root)
         log_paths: set[Path] = set()
         package_paths: set[Path] = set()
         scanned_count = 0
@@ -140,6 +142,55 @@ class TaskDirectoryScanner:
             decoder_package_paths=tuple(
                 sorted(package_paths, key=lambda item: str(item).casefold())
             ),
+            scanned_file_count=scanned_count,
+            scanned_total_bytes=scanned_bytes,
+            limit_reached=limit_reached,
+        )
+
+    def _SilverStarProject_Scan(
+        self, selected: Path, root: Path
+    ) -> TaskDirectoryDiscovery:
+        """Use the project contract without traversing generated firmware trees."""
+        log_root = root / "Log"
+        logs: list[Path] = []
+        packages: list[Path] = []
+        scanned_count = 0
+        scanned_bytes = 0
+        limit_reached = False
+        directories = [root]
+        if log_root.is_dir() and not log_root.is_symlink():
+            directories.append(log_root)
+            directories.extend(
+                path for path in sorted(log_root.iterdir())
+                if path.is_dir() and not path.is_symlink()
+            )
+        for directory in directories:
+            for entry in sorted(directory.iterdir()):
+                if entry.is_symlink() or not entry.is_file():
+                    continue
+                suffix = entry.suffix.casefold()
+                if directory == root and suffix != ".ssdecoder":
+                    continue
+                if directory != root and suffix not in _LOG_SUFFIXES:
+                    continue
+                scanned_count += 1
+                scanned_bytes += entry.stat().st_size
+                if (
+                    scanned_count > self.limits.maximum_file_count
+                    or scanned_bytes > self.limits.maximum_total_file_bytes
+                ):
+                    limit_reached = True
+                    break
+                if suffix == ".ssdecoder":
+                    packages.append(entry.resolve())
+                else:
+                    logs.append(entry.resolve())
+            if limit_reached:
+                break
+        return TaskDirectoryDiscovery(
+            selected_path=selected,
+            log_paths=tuple(sorted(logs, key=lambda path: str(path).casefold())),
+            decoder_package_paths=tuple(sorted(packages, key=lambda path: str(path).casefold())),
             scanned_file_count=scanned_count,
             scanned_total_bytes=scanned_bytes,
             limit_reached=limit_reached,

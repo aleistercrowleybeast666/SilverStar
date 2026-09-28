@@ -110,6 +110,7 @@ class MainWindow(QMainWindow):
             / "path_preferences.json"
         )
         self._last_import_directory: Path | None = None
+        self._silverstar_project_root: Path | None = None
         self._plugin_manager = plugin_manager or TrustedContainerPluginManager(
             Path(
                 QStandardPaths.writableLocation(
@@ -302,6 +303,10 @@ class MainWindow(QMainWindow):
         self.open_project_action = QAction(self)
         self.open_project_action.setShortcut("Ctrl+O")
         self.open_project_action.triggered.connect(self._ProjectDialog_Open)
+        self.open_silverstar_project_action = QAction(self)
+        self.open_silverstar_project_action.triggered.connect(
+            self._SilverStarProjectDialog_Open
+        )
         self.save_project_action = QAction(self)
         self.save_project_action.setShortcut("Ctrl+S")
         self.save_project_action.triggered.connect(self._Project_Save)
@@ -328,6 +333,7 @@ class MainWindow(QMainWindow):
         self.about_action.triggered.connect(self._About_Show)
         self.file_menu.addAction(self.new_project_action)
         self.file_menu.addAction(self.open_project_action)
+        self.file_menu.addAction(self.open_silverstar_project_action)
         self.file_menu.addAction(self.save_project_action)
         self.file_menu.addAction(self.save_project_as_action)
         self.file_menu.addSeparator()
@@ -458,6 +464,14 @@ class MainWindow(QMainWindow):
 
     def _ExportDirectory_Default(self) -> Path:
         log_path = self._dataset.source_path if self._dataset is not None else Path.cwd() / "Log"
+        if self._silverstar_project_root is not None and self._dataset is not None:
+            log_root = self._silverstar_project_root / "Log"
+            try:
+                log_path.resolve().relative_to(log_root.resolve())
+            except ValueError:
+                pass
+            else:
+                return log_path.parent / f"{log_path.stem}_Export"
         return ExportDirectory_Default(log_path, self._project.project_path)
 
     def _Language_Selected(self) -> None:
@@ -478,6 +492,9 @@ class MainWindow(QMainWindow):
         auto_find: bool = False,
     ) -> None:
         source_path = Path(path)
+        if source_path.is_dir() and (source_path / "SilverStar.ssproject").is_file():
+            self.SilverStarProjectRoot_Open(source_path)
+            return
         suffix = source_path.suffix.casefold()
         if suffix == ".ssflp":
             self._Project_Open(source_path)
@@ -502,6 +519,13 @@ class MainWindow(QMainWindow):
             self.import_dialog.open()
 
     def LogPair_Open(self, log_path: Path, decoder_path: Path) -> None:
+        if self._silverstar_project_root is not None:
+            root = self._silverstar_project_root
+            if not (
+                decoder_path.resolve().parent == root
+                and log_path.resolve().is_relative_to((root / "Log").resolve())
+            ):
+                self._silverstar_project_root = None
         self.Log_Open(
             log_path,
             decoder_path=decoder_path,
@@ -620,6 +644,24 @@ class MainWindow(QMainWindow):
             self._FolderSearch_Set,
             lambda message: self._Error_Show(message),
         )
+
+    def _SilverStarProjectDialog_Open(self) -> None:
+        selected = QFileDialog.getExistingDirectory(
+            self,
+            self._translator.Text_Get("action.open_silverstar_project"),
+            str(self._path_preferences.DefaultProjectRoot_EffectiveGet()),
+        )
+        if selected:
+            self.SilverStarProjectRoot_Open(Path(selected))
+
+    def SilverStarProjectRoot_Open(self, path: Path) -> None:
+        root = Path(path).resolve()
+        if not (root / "SilverStar.ssproject").is_file() or not (root / "Log").is_dir():
+            self._Error_Show("silverstar_project_root_invalid")
+            return
+        self._silverstar_project_root = root
+        self.import_dialog.Folder_Set(root)
+        self._FolderSearch_Start(root)
 
     def _FolderSearch_Set(self, discovery: object) -> None:
         self.import_dialog.PairDiscovery_Set(discovery)
@@ -1165,6 +1207,9 @@ class MainWindow(QMainWindow):
         self.import_action.setText(self._translator.Text_Get("action.import"))
         self.export_action.setText(self._translator.Text_Get("action.export"))
         self.open_project_action.setText(self._translator.Text_Get("action.open_project"))
+        self.open_silverstar_project_action.setText(
+            self._translator.Text_Get("action.open_silverstar_project")
+        )
         self.save_project_action.setText(self._translator.Text_Get("action.save_project"))
         self.save_project_as_action.setText(self._translator.Text_Get("action.save_project_as"))
         self.exit_action.setText(self._translator.Text_Get("action.exit"))

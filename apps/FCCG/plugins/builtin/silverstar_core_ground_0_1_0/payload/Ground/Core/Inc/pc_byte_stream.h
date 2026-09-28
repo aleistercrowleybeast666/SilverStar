@@ -7,5 +7,6 @@
 uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity);
 uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length);
 void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length);
+uint32_t PcByteStream_OverflowCount_Get(void);
 
 #endif /* __PC_BYTE_STREAM_H */

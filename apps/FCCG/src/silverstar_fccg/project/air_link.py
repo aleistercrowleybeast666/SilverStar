@@ -190,11 +190,18 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                 "GROUND_UART_UNBOUND", "Ground UART must match selected baudrate and 8N1 RX/TX"
             ))
     elif ground.pc_interface == "usb_cdc":
+        usb_sources = {source.rsplit("/", 1)[-1].casefold()
+                       for source in ground.hardware.build_sources}
+        required_usb_sources = {
+            "usb_device.c", "usbd_cdc_if.c", "usbd_desc.c", "usbd_conf.c",
+            "usbd_core.c", "usbd_ctlreq.c", "usbd_ioreq.c", "usbd_cdc.c",
+        }
         if not ground.hardware.inventory.get("usb_cdc") or not any(
             resource.kind == "usb_cdc" for resource in available.values()
-        ):
+        ) or not required_usb_sources.issubset(usb_sources):
             issues.append(AirLinkIssue(
-                "GROUND_USB_CDC_UNAVAILABLE", "Ground CubeMX hardware has no USB Device CDC"
+                "GROUND_USB_CDC_UNAVAILABLE",
+                "Ground CubeMX hardware lacks USB Device CDC sources or capability",
             ))
     else:
         issues.append(AirLinkIssue(

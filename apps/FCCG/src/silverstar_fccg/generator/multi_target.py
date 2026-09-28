@@ -19,10 +19,14 @@ from silverstar_fccg.generator.render import (
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.project.air_link import GroundTargetIssues_Get
-from silverstar_fccg.project.model import DeviceInstance, ProjectModel
+from silverstar_fccg.project.model import DeviceInstance, ProjectModel, ProjectModel_Load
+from silverstar_fccg.project.folder_contract import (
+    FLIGHT_DIRECTORY, GROUND_DIRECTORY, PROJECT_FILENAME, ProjectRoot_Save,
+)
 
 
 GROUND_CORE_ID = "silverstar.core.ground.0_1_0"
+GROUND_OWNERSHIP_FILE = ".silverstar-ground-ownership.json"
 
 
 class TargetScope(StrEnum):
@@ -170,6 +174,11 @@ uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length)
     return (HAL_UART_Transmit(&{handle}, (uint8_t *)(uintptr_t)data, length, 100U)
             == HAL_OK) ? length : 0U;
 }}
+
+uint32_t PcByteStream_OverflowCount_Get(void)
+{{
+    return 0U;
+}}
 """
     return """#include "pc_byte_stream.h"
 #include "usbd_cdc_if.h"
@@ -179,6 +188,7 @@ uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length)
 static uint8_t s_rx_buffer[PC_USB_RX_CAPACITY];
 static volatile uint16_t s_rx_head;
 static volatile uint16_t s_rx_tail;
+static volatile uint32_t s_rx_overflow_count;
 
 void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
 {
@@ -187,7 +197,11 @@ void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
     for (index = 0U; index < length; index++)
     {
         uint16_t next = (uint16_t)((s_rx_head + 1U) % PC_USB_RX_CAPACITY);
-        if (next == s_rx_tail) { break; }
+        if (next == s_rx_tail)
+        {
+            s_rx_overflow_count += (uint32_t)(length - index);
+            break;
+        }
         s_rx_buffer[s_rx_head] = data[index];
         s_rx_head = next;
     }
@@ -207,8 +221,17 @@ uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
 
 uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length)
 {
+    uint8_t result;
     if ((data == NULL) || (length == 0U)) { return 0U; }
-    return (CDC_Transmit_FS((uint8_t *)(uintptr_t)data, length) == USBD_OK) ? length : 0U;
+    result = CDC_Transmit_FS((uint8_t *)(uintptr_t)data, length);
+    /* USBD_BUSY is transient: the bounded Ground PC queue retries this frame. */
+    if (result == USBD_BUSY) { return 0U; }
+    return (result == USBD_OK) ? length : 0U;
+}
+
+uint32_t PcByteStream_OverflowCount_Get(void)
+{
+    return s_rx_overflow_count;
 }
 """
 
@@ -233,6 +256,12 @@ OBJECTS := $(patsubst %.c,build/%.o,$(C_SOURCES)) $(patsubst %.s,build/%.o,$(ASM
 CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections {flags} {include_flags} {define_flags}
 LDFLAGS := {flags} -Wl,--gc-sections -T{linker} -specs=nano.specs -lc -lm -lnosys
 
+ifeq ($(OS),Windows_NT)
+MKDIR_P = if not exist "$(dir $@)" mkdir "$(dir $@)"
+else
+MKDIR_P = mkdir -p "$(dir $@)"
+endif
+
 all: build/ground.elf build/ground.bin
 
 build/ground.elf: $(OBJECTS)
@@ -242,11 +271,11 @@ build/ground.bin: build/ground.elf
 \t$(OBJCOPY) -O binary $< $@
 
 build/%.o: %.c
-\t@mkdir -p $(dir $@)
+\t@$(MKDIR_P)
 \t$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 build/%.o: %.s
-\t@mkdir -p $(dir $@)
+\t@$(MKDIR_P)
 \t$(CC) $(CFLAGS) -x assembler-with-cpp -c $< -o $@
 
 -include $(OBJECTS:.o=.d)
@@ -269,6 +298,8 @@ def GroundFiles_Render(
     _PayloadFiles_Add(files, radio, skip_adapter=True)
     for source in mcu.PayloadFiles_Get():
         relative = source.relative_to(mcu.payload_root).as_posix()
+        if relative.startswith(("Middlewares/Third_Party/FatFs/", "FATFS/")):
+            continue
         if relative.startswith(("Platform/", "Drivers/", "BuildSystem/", "Middlewares/")) or relative in {
             mcu.build.linker_script, *mcu.build.asm_sources,
         }:
@@ -317,7 +348,7 @@ def GroundFiles_Render(
     base_graph = SourceGraph_Resolve(ground_model, catalog)
     sources = tuple(dict.fromkeys([
         *(source for source in base_graph.sources
-          if not source.startswith(("Generated/", "FATFS/"))
+          if not source.startswith(("Generated/", "FATFS/", "Middlewares/Third_Party/FatFs/"))
           and "/Adapter/" not in source),
         "Common/Src/silverstar_assert.c", "Generated/Src/project_resources.c",
         "Generated/Src/platform_resources.c", "Generated/Src/pc_byte_stream.c",
@@ -346,7 +377,7 @@ def GroundFiles_Render(
         sources, base_graph.asm_sources, includes, defines, base_graph,
         ground.build.toolchain_prefix or base_graph.toolchain_prefix,
     ).encode("utf-8")
-    files["GroundStation.code-workspace"] = (
+    files[f"{GROUND_DIRECTORY}.code-workspace"] = (
         json.dumps({
             "folders": [{"path": "."}],
             "settings": {},
@@ -398,26 +429,45 @@ def TargetGeneration_Apply(
 ) -> TargetGenerationResult:
     output_policy = WorkspacePolicy(project_root)
     root = output_policy.root
-    project_file = root / "SilverStar.ssproject"
-    project_content = (
-        json.dumps(model.Dictionary_Get(), ensure_ascii=False, indent=2) + "\n"
-    ).encode("utf-8")
-    if project_file.exists() and project_file.read_bytes() != project_content:
-        raise ValueError("Top-level project configuration was changed outside FCCG")
+    project_file = root / PROJECT_FILENAME
+    if project_file.exists() and ProjectModel_Load(project_file).identity.name != model.identity.name:
+        raise ValueError("Top-level project belongs to another SilverStar project")
     targets: list[str] = []
+    ground_previous_hashes: dict[str, str] = {}
+    ground_stale: list[str] = []
     if scope in (TargetScope.GROUND, TargetScope.ALL):
         if not model.ground_target.enabled:
             raise ValueError("Ground target is disabled")
         ground_files = GroundFiles_Render(model, catalog, internal_policy)
-        ground_root = output_policy.Path_Resolve(root / "GroundStation", allow_root=False)
+        ground_root = output_policy.Path_Resolve(root / GROUND_DIRECTORY, allow_root=False)
+        ownership_file = ground_root / GROUND_OWNERSHIP_FILE
+        if ownership_file.is_file():
+            ownership = json.loads(ownership_file.read_text(encoding="utf-8"))
+            if ownership.get("format_version") != 1 or not isinstance(ownership.get("files"), dict):
+                raise ValueError("Ground output ownership metadata is invalid")
+            ground_previous_hashes = ownership["files"]
         for relative, content in ground_files.items():
             destination = output_policy.Path_Resolve(
                 ground_root.joinpath(*relative.split("/")), allow_root=False
             )
-            if destination.exists() and (not destination.is_file() or destination.read_bytes() != content):
-                raise ValueError(f"Ground output differs from generated source: {destination}")
+            if destination.exists():
+                if not destination.is_file():
+                    raise ValueError(f"Ground output is not a file: {destination}")
+                current_hash = hashlib.sha256(destination.read_bytes()).hexdigest()
+                if current_hash != hashlib.sha256(content).hexdigest() and current_hash != ground_previous_hashes.get(relative):
+                    raise ValueError(f"Ground output has local changes: {destination}")
+        for relative, expected_hash in ground_previous_hashes.items():
+            if relative in ground_files:
+                continue
+            destination = output_policy.Path_Resolve(
+                ground_root.joinpath(*relative.split("/")), allow_root=False
+            )
+            if destination.is_file():
+                if hashlib.sha256(destination.read_bytes()).hexdigest() != expected_hash:
+                    raise ValueError(f"Stale Ground output has local changes: {destination}")
+                ground_stale.append(relative)
     if scope in (TargetScope.FLIGHT, TargetScope.ALL):
-        flight_root = output_policy.Path_Resolve(root / "FlightController", allow_root=False)
+        flight_root = output_policy.Path_Resolve(root / FLIGHT_DIRECTORY, allow_root=False)
         assembler = ProjectAssembler(internal_policy, catalog, output_policy)
         flight_model = (
             replace(model, ground_target=replace(model.ground_target, enabled=False))
@@ -428,18 +478,38 @@ def TargetGeneration_Apply(
         if not plan.valid or plan.dangerous:
             raise ValueError("Flight generation plan is invalid or needs user review")
         assembler.Apply(flight_model, plan)
-        targets.append("FlightController")
+        flight_descriptor = ProjectModel_Load(flight_root / PROJECT_FILENAME)
+        model.log_decoder_profile = flight_descriptor.log_decoder_profile
+        decoder = flight_root / f"{model.identity.name}.ssdecoder"
+        root_decoder = root / decoder.name
+        if decoder.is_file():
+            output_policy.Bytes_AtomicWrite(root_decoder, decoder.read_bytes())
+        elif root_decoder.is_file():
+            root_decoder.unlink()
+        targets.append(FLIGHT_DIRECTORY)
     if scope in (TargetScope.GROUND, TargetScope.ALL):
+        for relative in ground_stale:
+            output_policy.Path_Resolve(
+                ground_root.joinpath(*relative.split("/")), allow_root=False
+            ).unlink()
         for relative, content in sorted(ground_files.items()):
             destination = ground_root.joinpath(*relative.split("/"))
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            if not destination.exists():
-                destination.write_bytes(content)
-        targets.append("GroundStation")
-    root.mkdir(parents=True, exist_ok=True)
-    project_file.write_bytes(project_content)
+            if not destination.is_file() or destination.read_bytes() != content:
+                output_policy.Bytes_AtomicWrite(destination, content)
+        output_policy.Text_AtomicWrite(
+            ground_root / GROUND_OWNERSHIP_FILE,
+            json.dumps({
+                "format_version": 1,
+                "files": {
+                    relative: hashlib.sha256(content).hexdigest()
+                    for relative, content in sorted(ground_files.items())
+                },
+            }, indent=2) + "\n",
+        )
+        targets.append(GROUND_DIRECTORY)
+    ProjectRoot_Save(model, root)
     hashes = {
         relative: hashlib.sha256(content).hexdigest()
-        for relative, content in (ground_files.items() if "GroundStation" in targets else ())
+        for relative, content in (ground_files.items() if GROUND_DIRECTORY in targets else ())
     }
     return TargetGenerationResult(root, tuple(targets), hashes)

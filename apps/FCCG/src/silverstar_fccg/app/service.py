@@ -80,6 +80,7 @@ from silverstar_fccg.project.model import (
     ProjectModel,
     ProjectModel_Load,
 )
+from silverstar_fccg.project.folder_contract import ProjectRoot_Save
 from silverstar_fccg.project.quality_results import (
     QualityResult_Save,
     QualityResultRecord,
@@ -146,6 +147,10 @@ class FccgService:
     def Project_Open(self, path: Path) -> ProjectModel:
         project_file = path / "SilverStar.ssproject" if path.is_dir() else path
         return ProjectModel_Load(project_file.resolve())
+
+    def ProjectRoot_Save(self, model: ProjectModel, project_root: Path) -> Path:
+        """Save project configuration and its Log directory independently of targets."""
+        return ProjectRoot_Save(model, project_root)
 
     def Project_Save(
         self,

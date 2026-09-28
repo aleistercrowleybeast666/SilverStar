@@ -94,6 +94,9 @@ from silverstar_fccg.project.model import (
     ProjectModel,
     ProtocolSelection,
 )
+from silverstar_fccg.project.folder_contract import (
+    FLIGHT_DIRECTORY,
+)
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
 from silverstar_fccg.project.quality_results import QualityResultRecord
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
@@ -549,7 +552,7 @@ class MainWindow(QMainWindow):
                 )
         definitions = ProtocolLogDefinitions_Get(model, self._service.catalog)
         workspace_file = (
-            self._project_root / f"{model.identity.name}.code-workspace"
+            self._project_root / FLIGHT_DIRECTORY / f"{FLIGHT_DIRECTORY}.code-workspace"
             if self._project_root is not None
             else None
         )
@@ -628,9 +631,10 @@ class MainWindow(QMainWindow):
             ),
             firmware_output_directory=firmware_output_directory,
             firmware_artifact_name=firmware_artifact_name,
-            quality_results=(
-                self._service.QualityResults_Get(self._project_root)
+        quality_results=(
+                self._service.QualityResults_Get(self._project_root / FLIGHT_DIRECTORY)
                 if self._project_root is not None
+                and (self._project_root / FLIGHT_DIRECTORY).is_dir()
                 else ()
             ),
         )
@@ -643,7 +647,7 @@ class MainWindow(QMainWindow):
         candidates: list[tuple[float, int, Path, Path]] = []
         for priority, configuration in enumerate(("Debug", "Release")):
             directory = (
-                self._project_root
+                self._project_root / FLIGHT_DIRECTORY
                 / "build"
                 / "FCCG"
                 / model.build.target_profile
@@ -865,7 +869,7 @@ class MainWindow(QMainWindow):
             )
             return
         readiness = self._service.ProjectReadiness_Get(
-            self._model, self._project_root
+            self._model, self._project_root / FLIGHT_DIRECTORY
         )
         if not readiness.ready:
             detail = "\n".join(
@@ -1455,7 +1459,9 @@ class MainWindow(QMainWindow):
         boards = tuple(
             (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
             for manifest in self._service.catalog.Type_Get("board")
-            if manifest.board is not None and manifest.board.verified
+            if manifest.board is not None
+            and manifest.board.verified
+            and manifest.metadata.get("target_role") == "ground_station"
         )
         selected = model.ground_target.radio_plugin
         manifest = self._service.catalog.Component_Get(selected) if selected else None
@@ -2152,6 +2158,11 @@ class MainWindow(QMainWindow):
         values = wizard.WizardData_Get()
         self._model = self._service.ProjectDraft_Create(values["name"])
         self._project_root = Path(values["output_directory"]).resolve(strict=False)
+        try:
+            self._service.ProjectRoot_Save(self._model, self._project_root)
+        except Exception as error:
+            self._Error_Show(error)
+            return
         self._generation_plan = None
         self._project_state = ProjectLifecycleState.DRAFT
         self._Project_Refresh()
@@ -2186,7 +2197,7 @@ class MainWindow(QMainWindow):
             return
         self._generation_plan = None
         readiness = self._service.ProjectReadiness_Get(
-            self._model, self._project_root
+            self._model, self._project_root / FLIGHT_DIRECTORY
         )
         self._project_state = (
             ProjectLifecycleState.DIRTY
@@ -2206,39 +2217,13 @@ class MainWindow(QMainWindow):
             self._Project_SaveAs()
             return
         try:
-            plan = self._service.GenerationPlan_Create(
-                self._model, self._project_root
-            )
+            self._service.ProjectRoot_Save(self._model, self._project_root)
         except Exception as error:
             self._Error_Show(error)
             return
-        if not self._GenerationPlan_ApplyAllowed(plan):
-            return
-        self._project_state = ProjectLifecycleState.MATERIALIZING
-
-        def save(context) -> ApplyResult:
-            context.ProgressEvent_Report(
-                "SAVE_PROJECT",
-                TaskProgressState.PLAN,
-                total=7,
-                code="status.project_validating",
-            )
-            return self._service.Project_Save(
-                self._model,
-                self._project_root,
-                confirm_dangerous=plan.dangerous,
-                progress_callback=self._TaskProgressCallback_Get(
-                    context,
-                    "SAVE_PROJECT",
-                    "status.project_materializing",
-                ),
-            )
-
-        self.Task_Run(
-            save,
-            self._Project_Save_Complete,
-            self._Project_Materialization_Error,
-        )
+        self._project_state = ProjectLifecycleState.DIRTY
+        self._Project_Refresh()
+        self.status_label.setText(self._translator.Text_Get("status.project_saved_ready"))
 
     def _Project_Save_Complete(self, result: ApplyResult) -> None:
         self._project_root = result.project_root
@@ -2271,50 +2256,19 @@ class MainWindow(QMainWindow):
         if not selected_paths:
             return
         selected = selected_paths[0]
-        dangerous = False
-        if self._project_root is not None and (
-            self._project_root / "SilverStar.ssproject"
-        ).is_file():
-            try:
-                source_plan = self._service.GenerationPlan_Create(
-                    self._model, self._project_root
-                )
-            except Exception as error:
-                self._Error_Show(error)
-                return
-            if not self._GenerationPlan_ApplyAllowed(source_plan):
-                return
-            dangerous = source_plan.dangerous
-        self._project_state = ProjectLifecycleState.MATERIALIZING
-
-        def save_as(context) -> Path:
-            context.ProgressEvent_Report(
-                "SAVE_PROJECT_AS",
-                TaskProgressState.PLAN,
-                total=3,
-                code="status.project_copying",
-            )
-            return self._service.Project_SaveAs(
-                self._model,
-                self._project_root,
-                Path(selected),
-                confirm_dangerous=dangerous,
-                progress_callback=self._TaskProgressCallback_Get(
-                    context,
-                    "SAVE_PROJECT_AS",
-                    "status.project_copying",
-                ),
-            )
-
-        self.Task_Run(
-            save_as,
-            self._Project_SaveAs_Complete,
-            self._Project_Materialization_Error,
-        )
+        try:
+            destination = Path(selected).resolve(strict=False)
+            if destination != self._project_root and destination.exists() and any(destination.iterdir()):
+                raise ValueError("Save As destination must be empty")
+            self._service.ProjectRoot_Save(self._model, destination)
+        except Exception as error:
+            self._Error_Show(error)
+            return
+        self._Project_SaveAs_Complete(destination)
 
     def _Project_SaveAs_Complete(self, destination: Path) -> None:
         self._project_root = destination
-        self._project_state = ProjectLifecycleState.READY
+        self._project_state = ProjectLifecycleState.DRAFT
         self._generation_plan = None
         self._Project_Refresh()
         self.status_label.setText(
@@ -2606,6 +2560,7 @@ class MainWindow(QMainWindow):
         return False
 
     def _Targets_Generate(self, action_text: str) -> None:
+        self._ProjectModel_Sync()
         if self._project_root is None:
             selected = QFileDialog.getExistingDirectory(
                 self, self._translator.Text_Get("dialog.select_project_root")
@@ -2620,15 +2575,26 @@ class MainWindow(QMainWindow):
         }[action_text]
         model = deepcopy(self._model)
         destination = self._project_root
+        try:
+            self._service.ProjectRoot_Save(model, destination)
+        except Exception as error:
+            self._Error_Show(error)
+            return
+
+        def generated(result) -> None:
+            self._model.log_decoder_profile = model.log_decoder_profile
+            self._Project_Refresh()
+            self.status_label.setText(
+                self._translator.Text_Get("status.targets_generated")
+                + ": " + ", ".join(result.targets)
+            )
+
         self.Task_Run(
             lambda _context: TargetGeneration_Apply(
                 model, self._service.catalog, self._service.policy,
                 destination, scope,
             ),
-            lambda result: self.status_label.setText(
-                self._translator.Text_Get("status.targets_generated")
-                + ": " + ", ".join(result.targets)
-            ),
+            generated,
         )
 
     def _Build_Request(self, action_text: str) -> None:
@@ -2671,20 +2637,16 @@ class MainWindow(QMainWindow):
         action = actions.get(action_text)
         if action is None:
             return
-        project_root = self._project_root
-        readiness = self._service.ProjectReadiness_Get(self._model, project_root)
-        materialization_required = not readiness.ready
-        plan: GenerationPlan | None = None
-        if materialization_required:
-            try:
-                plan = self._service.GenerationPlan_Create(
-                    self._model, project_root
-                )
-            except Exception as error:
-                self._Error_Show(error)
-                return
-            if not self._GenerationPlan_ApplyAllowed(plan):
-                return
+        project_root = self._project_root / FLIGHT_DIRECTORY
+        project_file = project_root / "SilverStar.ssproject"
+        if not project_file.is_file():
+            self._Error_Show(self._translator.Text_Get("error.generate_before_open"))
+            return
+        try:
+            generated_model = self._service.Project_Open(project_file)
+        except Exception as error:
+            self._Error_Show(error)
+            return
         self._project_state = ProjectLifecycleState.BUILDING
         self._active_build_action = action
         self._build_started_at = time.perf_counter()
@@ -2692,16 +2654,8 @@ class MainWindow(QMainWindow):
         self.build_page.BuildDetailLog_Set("")
 
         def build(context) -> BuildResult:
-            if materialization_required:
-                assert plan is not None
-                context.Progress_Report(0.04, "status.project_materializing")
-                self._service.Project_EnsureBuildable(
-                    self._model,
-                    project_root,
-                    confirm_dangerous=plan.dangerous,
-                )
             context.Progress_Report(
-                0.10 if materialization_required else 0.0,
+                0.0,
                 (
                     "status.build_planning"
                     if action == BuildAction.BUILD
@@ -2726,11 +2680,7 @@ class MainWindow(QMainWindow):
                 else:
                     fraction = 0.0
                 context.Progress_Report(
-                    (
-                        0.10 + (0.89 * max(0.0, min(1.0, fraction)))
-                        if materialization_required
-                        else max(0.0, min(0.99, fraction))
-                    ),
+                    max(0.0, min(0.99, fraction)),
                     "status.build_running",
                 )
                 context.Line_Report(
@@ -2740,11 +2690,10 @@ class MainWindow(QMainWindow):
                 )
 
             result = self._service.Build_Run(
-                self._model,
+                generated_model,
                 project_root,
                 action,
                 context.token if hasattr(context, "token") else context,
-                confirm_dangerous=bool(plan and plan.dangerous),
                 line_callback=context.Line_Report,
                 progress_callback=progress_report,
                 ensure_buildable=False,
@@ -2871,7 +2820,7 @@ class MainWindow(QMainWindow):
             self._Error_Show(self._translator.Text_Get("error.generate_before_open"))
             return
         target = (
-            self._project_root / f"{self._model.identity.name}.code-workspace"
+            self._project_root / FLIGHT_DIRECTORY / f"{FLIGHT_DIRECTORY}.code-workspace"
             if action_text == "open_vscode"
             else self._project_root
         )
@@ -3307,7 +3256,7 @@ class MainWindow(QMainWindow):
         )
         try:
             record = self._service.QualityResult_Record(
-                self._project_root,
+                self._project_root / FLIGHT_DIRECTORY,
                 task=action.value,
                 succeeded=succeeded,
                 duration=duration,
@@ -3318,7 +3267,9 @@ class MainWindow(QMainWindow):
             return
         records = {
             saved.task: saved
-            for saved in self._service.QualityResults_Get(self._project_root)
+            for saved in self._service.QualityResults_Get(
+                self._project_root / FLIGHT_DIRECTORY
+            )
         }
         records[record.task] = record
         self.build_page.QualityResults_Set(records.values())

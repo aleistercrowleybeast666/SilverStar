@@ -1,5 +1,9 @@
 # SilverStar Flight Controller Code Generator
 
+## Current SilverStar project folder workflow
+
+FCCG now saves `SilverStar.ssproject` and creates `Log/` before either firmware target is generated. Generate Flight from **Flight Hardware** and Ground from **Ground Station Hardware**; each action prepares hardware and generates into its own `Flight_Controller/` or `Ground_Station/` directory. The Build & Validation page builds and inspects generated targets. Flight logging generation places the canonical decoder at the project root. See the [project folder contract](../architecture/PROJECT_FOLDER_CONTRACT.md).
+
 ## Algorithm actual parameters / 算法实际参数
 
 新增独立算法参数页面（硬件连接之前），插件声明实际值、单位和 representation。

@@ -21,6 +21,7 @@ from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.app.version import PRODUCT_NAME, __version__
 from silverstar_fccg.core.settings import SettingsStore
 from silverstar_fccg.generator.assembler import ApplyResult, GenerationPlan
+from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
 from silverstar_fccg.project.validation import ProjectValidationResult
 from silverstar_fccg.ui.dialogs import NewProjectWizard
@@ -170,7 +171,9 @@ def test_vscode_workspace_open_failure_shows_exact_reason(
     tmp_path: Path, qapp, monkeypatch
 ) -> None:
     window = _Window_Create(tmp_path, qapp)
-    workspace = tmp_path / f"{window._model.identity.name}.code-workspace"
+    target_root = tmp_path / "Flight_Controller"
+    target_root.mkdir()
+    workspace = target_root / "Flight_Controller.code-workspace"
     workspace.write_text('{"folders": [{"path": "."}]}\n', encoding="utf-8")
     (tmp_path / ".eide").mkdir()
     (tmp_path / ".eide" / "eide.yml").write_text(
@@ -301,36 +304,19 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
         window.close()
 
 
-def test_ground_page_selects_verified_board_radio_and_uart(tmp_path: Path, qapp) -> None:
+def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path, qapp) -> None:
     window = _Window_Create(tmp_path, qapp)
     try:
         page = window.ground_target_page
         page.enabled.setChecked(True)
-        page.board.setCurrentIndex(
-            page.board.findData("silverstar.board.silverstar_0_5")
-        )
-        assert window._model.ground_target.mcu == "silverstar.mcu.stm32f407vet6"
-        assert window._model.ground_target.hardware.mode == "board_plugin"
+        assert page.board.findData("silverstar.board.silverstar_0_5") == -1
+        assert page.board.currentData() == ""
         page.radio.setCurrentIndex(
             page.radio.findData("silverstar.device.telemetry.sx1281")
         )
         page.module.setCurrentIndex(page.module.findData("e28_2g4m12sx"))
-        for requirement, resource in (
-            ("radio_bus", "PLATFORM_SPI_1"),
-            ("radio_nss", "PLATFORM_GPIO_0"),
-            ("radio_reset", "PLATFORM_GPIO_1"),
-            ("radio_busy", "PLATFORM_GPIO_2"),
-            ("radio_dio1", "PLATFORM_GPIO_3"),
-            ("time", "PLATFORM_TIME_1"),
-        ):
-            combo = page.assignments[requirement]
-            combo.setCurrentIndex(combo.findData(resource))
         page.pc_interface.setCurrentIndex(page.pc_interface.findData("uart"))
-        page.pc_resource.setCurrentIndex(
-            page.pc_resource.findData("PLATFORM_UART_1")
-        )
-        assert page.status.text() == "地面站：READY"
-        assert window._model.ground_target.pc_resource == "PLATFORM_UART_1"
+        assert "GROUND_UART_UNBOUND" in page.status.text()
         frequency = window.air_link_page.fields["frequency_hz"]
         frequency.CommittedValue_Set(2473.0)
         frequency.lineEdit().setText("2400.000")
@@ -783,7 +769,9 @@ def test_target_build_controls_and_quality_actions_use_shared_worker(
     service = FccgService(workspace_root)
     project_root = tmp_path / "ProgressActions"
     model = service.ReferenceProject_Create("ProgressActions")
-    service.Project_Save(model, project_root)
+    TargetGeneration_Apply(
+        model, service.catalog, service.policy, project_root, TargetScope.FLIGHT
+    )
     window = MainWindow(
         SettingsStore(tmp_path / "progress-actions.ini"),
         service=service,
@@ -814,7 +802,7 @@ def test_target_build_controls_and_quality_actions_use_shared_worker(
         monkeypatch.setattr(service, "GenerationPlan_Create", plan_create)
         window._HardwarePrepare_Request()
         assert plan_calls == []
-        assert not window.build_page.action_buttons["flight_open_vscode"].isEnabled()
+        assert window.build_page.action_buttons["flight_open_vscode"].isEnabled()
         assert not window.build_page.action_buttons["ground_open_folder"].isEnabled()
         assert window.build_page.root_layout.indexOf(window.build_page.tool_status_group) == 1
         descriptor_before_validation = window._model.Dictionary_Get()

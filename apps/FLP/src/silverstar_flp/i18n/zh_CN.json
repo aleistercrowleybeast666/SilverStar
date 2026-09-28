@@ -8,6 +8,7 @@
   "action.import": "导入日志 / 解码包",
   "action.open_log": "打开飞行日志",
   "action.open_project": "打开工程",
+  "action.open_silverstar_project": "打开 SilverStar 工程文件夹",
   "action.save_project": "保存工程",
   "action.save_project_as": "工程另存为…",
   "action.exit": "退出",

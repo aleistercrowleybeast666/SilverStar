@@ -152,6 +152,9 @@ def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
         "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c",
         "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c",
         "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c",
     )
     assert graph.linker_script == "STM32F407XX_FLASH.ld"
     fragment = graph.MakeFragment_Render()

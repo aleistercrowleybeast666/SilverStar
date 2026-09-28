@@ -177,6 +177,7 @@ class GroundTargetPage(ScrollableLocalizedPage):
         radio_form.addRow(label, self.module)
         self.assignment_form = QFormLayout()
         self.assignments: dict[str, QComboBox] = {}
+        self._assignment_signature: tuple[object, ...] = ()
         self.radio_selection_group = self.Group_Create(
             "group.ground_radio", radio_form
         )
@@ -266,29 +267,42 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.baudrate.CommittedValue_Set(ground.baudrate)
         self.build_summary.setText(
             f"{ground.build.make_command} · "
-            f"{ground.build.toolchain_prefix}gcc · GroundStation.code-workspace"
+            f"{ground.build.toolchain_prefix}gcc · Ground_Station.code-workspace"
         )
         for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
                        self.pc_resource, self.baudrate):
             widget.blockSignals(False)
-        while self.assignment_form.rowCount():
-            self.assignment_form.removeRow(0)
-        self.assignments.clear()
-        for name, kind in requirements.get("resources", ()):
-            combo = QComboBox()
-            combo.addItem("—", "")
-            for resource in ground.hardware.resources:
-                if resource.kind == kind:
-                    combo.addItem(resource.resource_id, resource.resource_id)
+        required = tuple(requirements.get("resources", ()))
+        signature = (
+            required,
+            tuple((resource.resource_id, resource.kind)
+                  for resource in ground.hardware.resources),
+        )
+        if signature != self._assignment_signature:
+            for combo in self.assignments.values():
+                combo.blockSignals(True)
+            while self.assignment_form.rowCount():
+                self.assignment_form.removeRow(0)
+            self.assignments.clear()
+            for name, kind in required:
+                combo = QComboBox()
+                combo.addItem("—", "")
+                for resource in ground.hardware.resources:
+                    if resource.kind == kind:
+                        combo.addItem(resource.resource_id, resource.resource_id)
+                combo.currentIndexChanged.connect(
+                    lambda _index, requirement=name, selected=combo:
+                    self.assignmentChanged.emit(requirement, selected.currentData() or "")
+                )
+                self.assignment_form.addRow(f"{name} ({kind})", combo)
+                self.assignments[name] = combo
+            self._assignment_signature = signature
+        for name, combo in self.assignments.items():
+            combo.blockSignals(True)
             combo.setCurrentIndex(max(
                 0, combo.findData(ground.resource_assignments.get(f"radio0:{name}", ""))
             ))
-            combo.currentIndexChanged.connect(
-                lambda _index, requirement=name, selected=combo:
-                self.assignmentChanged.emit(requirement, selected.currentData() or "")
-            )
-            self.assignment_form.addRow(f"{name} ({kind})", combo)
-            self.assignments[name] = combo
+            combo.blockSignals(False)
         self.status.setText(
             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
             if issues else self._translator.Text_Get("status.ground_ready")

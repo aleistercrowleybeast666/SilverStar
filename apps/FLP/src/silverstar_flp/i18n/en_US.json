@@ -8,6 +8,7 @@
   "action.import": "Import Log / Decoder",
   "action.open_log": "Open Flight Log",
   "action.open_project": "Open Project",
+  "action.open_silverstar_project": "Open SilverStar Project Folder",
   "action.save_project": "Save Project",
   "action.save_project_as": "Save Project As…",
   "action.exit": "Exit",

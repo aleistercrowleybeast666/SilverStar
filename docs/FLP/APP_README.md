@@ -1,5 +1,9 @@
 # SilverStar Flight Log Processor
 
+## Current SilverStar project folder workflow
+
+Use **Open SilverStar Project Folder** for a project created by FCCG. FLP reads the root `<ProjectName>.ssdecoder`, offers logs under `Log/` for one-at-a-time selection, and checks the exact decoder identity before opening. The default export directory is `Log/<LogStem>_Export/`. Direct `.BIN`/`.sslog` and manually selected `.ssdecoder` remain available. Details: [project folder contract](../architecture/PROJECT_FOLDER_CONTRACT.md).
+
 Current formal logging, fixed-lag replay, single Analysis Source, shared range and paged/GIF
 exports are defined in [Field Log Replay](Field_Log_Replay.md). Exact validation is in
 [VALIDATION.md](VALIDATION.md). Historical test snapshots below do not supersede that contract.

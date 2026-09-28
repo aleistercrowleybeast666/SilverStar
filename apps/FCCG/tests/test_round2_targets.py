@@ -21,6 +21,7 @@ from silverstar_fccg.project.model import (
     ProjectModel_Parse,
 )
 from silverstar_fccg.project.reference import ReferenceProject_Create
+from silverstar_fccg.project.folder_contract import ProjectRoot_Save
 from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get, BoardResourceProvisions_Get,
 )
@@ -56,6 +57,16 @@ def _GroundBoardProject_Get(catalog: PluginCatalog):
         pc_interface="uart", pc_resource="PLATFORM_UART_1",
     )
     return model
+
+
+def test_project_root_can_exist_without_generated_targets(builtin_catalog, tmp_path: Path) -> None:
+    model = ReferenceProject_Create("FolderOnly", catalog=builtin_catalog)
+    root = ProjectRoot_Save(model, tmp_path / "folder_only")
+    assert (root / "SilverStar.ssproject").is_file()
+    assert (root / "Log").is_dir()
+    assert not (root / "Flight_Controller").exists()
+    assert not (root / "Ground_Station").exists()
+    assert not list(root.glob("*.ssdecoder"))
 
 
 def test_two_targets_have_independent_hardware_and_serialization(builtin_catalog) -> None:
@@ -174,6 +185,13 @@ def test_ground_pc_interface_requires_uart_or_usb_cdc_capability(builtin_catalog
         inventory={**model.ground_target.hardware.inventory, "usb_cdc": True},
         resources=(*model.ground_target.hardware.resources,
                    HardwareResource("USB_CDC", "usb_cdc")),
+        build_sources=tuple(
+            "HardwareGenerated/STM32CubeMX/USB_DEVICE/" + name
+            for name in (
+                "usb_device.c", "usbd_cdc_if.c", "usbd_desc.c", "usbd_conf.c",
+                "usbd_core.c", "usbd_ctlreq.c", "usbd_ioreq.c", "usbd_cdc.c",
+            )
+        ),
     )
     model.ground_target = replace(model.ground_target, hardware=hardware)
     assert "GROUND_USB_CDC_UNAVAILABLE" not in {
@@ -190,6 +208,9 @@ def test_usb_cdc_adapter_uses_the_same_gsp_byte_stream(
     assert "PcByteStream_Read" in adapter
     assert "PcByteStream_Write" in adapter
     assert "CDC_Transmit_FS" in adapter
+    assert "USBD_BUSY" in adapter
+    assert "s_rx_overflow_count" in adapter
+    assert "PcByteStream_OverflowCount_Get" in adapter
     callback = (
         '#include "usbd_cdc_if.h"\n'
         "static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len)\n"
@@ -266,10 +287,10 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
         model, builtin_catalog, WorkspacePolicy(workspace_root),
         tmp_path / "flight_only", TargetScope.FLIGHT,
     )
-    assert flight.targets == ("FlightController",)
-    assert not (flight.project_root / "GroundStation").exists()
+    assert flight.targets == ("Flight_Controller",)
+    assert not (flight.project_root / "Ground_Station").exists()
     flight_sources = (
-        flight.project_root / "FlightController/Generated/project_sources.mk"
+        flight.project_root / "Flight_Controller/Generated/project_sources.mk"
     ).read_text()
     assert "SILVERSTAR_AIR_LINK_ENABLED=1" in flight_sources
     flight_only_model = deepcopy(model)
@@ -278,21 +299,31 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
         flight_only_model, builtin_catalog, WorkspacePolicy(workspace_root),
         tmp_path / "ground_disabled", TargetScope.FLIGHT,
     )
-    assert disabled.targets == ("FlightController",)
-    assert not (disabled.project_root / "GroundStation").exists()
+    assert disabled.targets == ("Flight_Controller",)
+    assert not (disabled.project_root / "Ground_Station").exists()
     both = TargetGeneration_Apply(
         model, builtin_catalog, WorkspacePolicy(workspace_root),
         tmp_path / "both", TargetScope.ALL,
     )
-    assert both.targets == ("FlightController", "GroundStation")
+    assert both.targets == ("Flight_Controller", "Ground_Station")
+    assert (both.project_root / "SilverStar.ssproject").is_file()
+    assert (both.project_root / "Log").is_dir()
+    assert (both.project_root / "Flight_Controller/Flight_Controller.code-workspace").is_file()
+    assert not (both.project_root / "FlightController").exists()
+    assert not (both.project_root / "GroundStation").exists()
+    decoder = both.project_root / f"{model.identity.name}.ssdecoder"
+    assert decoder.is_file()
+    assert json.loads((both.project_root / "SilverStar.ssproject").read_text())[
+        "log_decoder_profile"
+    ]["relative_path"] == decoder.name
     metadata = json.loads(
-        (both.project_root / "GroundStation/Generated/ground_target_metadata.json").read_text()
+        (both.project_root / "Ground_Station/Generated/ground_target_metadata.json").read_text()
     )
     assert metadata["silverstar_version"] == "0.1.0"
     assert metadata["target_role"] == "ground_station"
     assert len(metadata["hardware_fingerprint"]) == 64
     workspace = json.loads(
-        (both.project_root / "GroundStation/GroundStation.code-workspace").read_text()
+        (both.project_root / "Ground_Station/Ground_Station.code-workspace").read_text()
     )
     assert workspace["tasks"]["tasks"][0]["command"] == model.ground_target.build.make_command
     repeated = TargetGeneration_Apply(
@@ -300,3 +331,15 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
         both.project_root, TargetScope.ALL,
     )
     assert repeated.file_hashes == both.file_hashes
+    changed = deepcopy(model)
+    changed.ground_target = replace(
+        changed.ground_target,
+        build=replace(changed.ground_target.build, make_command="make -j2"),
+    )
+    TargetGeneration_Apply(
+        changed, builtin_catalog, WorkspacePolicy(workspace_root),
+        both.project_root, TargetScope.GROUND,
+    )
+    assert b"make -j2" in (
+        both.project_root / "Ground_Station/Ground_Station.code-workspace"
+    ).read_bytes()

@@ -108,7 +108,7 @@ def ProjectReadiness_Inspect(
         ".fccg/hardware-preparation.json",
         ".eide/eide.yml",
         ".vscode/tasks.json",
-        f"{model.identity.name}.code-workspace",
+        "Flight_Controller.code-workspace",
         *(
             (
                 "Generated/Inc/project_log_decoder_profile.h",
