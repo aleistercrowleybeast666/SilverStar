@@ -6,7 +6,7 @@ from .common import GspType, crc16_ccitt_false
 
 GSP_SOF1 = 0xA5
 GSP_SOF2 = 0x5A
-GSP_MAX_PAYLOAD = 255
+GSP_MAX_PAYLOAD = 64
 
 
 @dataclass(frozen=True)
@@ -188,7 +188,7 @@ def build_gsp_frame(msg_type: int, payload: bytes) -> bytes:
 
 
 def build_pc_to_gs_air_frame(air_frame: bytes) -> bytes:
-    if len(air_frame) > 255:
+    if len(air_frame) > GSP_MAX_PAYLOAD - 1:
         raise ValueError("AIR frame too long")
     payload = bytes([len(air_frame)]) + air_frame
     return build_gsp_frame(int(GspType.AIR_TX), payload)

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from silverstar_fccg.plugins.manifest import PluginManifest_Load
+from silverstar_fccg.plugins.manifest import PluginManifest_Load, PluginManifest_VariantResolve
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILTIN = ROOT / "plugins" / "builtin"
@@ -20,6 +20,26 @@ SPECIAL_IMU_MODELS = ("BMI088", "BMI323", "ICM45686")
 SPI_IMU_MODELS = tuple(name + "_SPI" for name in IMU_MODELS + SPECIAL_IMU_MODELS if name != "MPU6050")
 GNSS_MODELS = ("neo_m8n", "max_m10s", "neo_f10n")
 SYNC_IMU_MODELS = ("BMI088_SYNC400", "BMI088_SYNC400_SPI")
+
+
+def _ImuVariant_Get(name: str):
+    normalized = name.lower()
+    interface = "spi" if normalized.endswith("_spi") else "i2c"
+    chip = normalized.removesuffix("_spi").removesuffix("_sync400")
+    folder = "silverstar_device_imu_" + chip
+    manifest = PluginManifest_Load(BUILTIN / folder / "plugin.json")
+    if not manifest.device_variants:
+        return folder, manifest, "", ""
+    selected = next(
+        variant_id for variant_id, variant in manifest.device_variants.items()
+        if variant["interface"] == interface
+        and ("sync400" in normalized) == ("sync400" in variant_id)
+    )
+    variant = manifest.device_variants[selected]
+    return (
+        folder, PluginManifest_VariantResolve(manifest, selected),
+        variant["interface"], variant["profile"],
+    )
 
 
 def test_joint_bmi088_sync_actual_c_mock(tmp_path: Path) -> None:
@@ -184,9 +204,13 @@ def test_joint_ubx_adapter_actual_transactions(tmp_path: Path) -> None:
     assert output.count("adapter fresh read/response evidence/zero-write mismatch/timeout/explicit persistence PASS") == 4
 
 
-@pytest.mark.parametrize("folder", ["silverstar_sensor_register_bus", "silverstar_ubx_protocol"] + ["silverstar_device_imu_" + name.lower() for name in IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS] + ["silverstar_device_gnss_" + name for name in GNSS_MODELS])
-def test_joint_sensor_manifest_has_real_sources(folder: str) -> None:
-    manifest = PluginManifest_Load(BUILTIN / folder / "plugin.json")
+@pytest.mark.parametrize("name", ["silverstar_sensor_register_bus", "silverstar_ubx_protocol"] + list(IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS) + ["silverstar_device_gnss_" + name for name in GNSS_MODELS])
+def test_joint_sensor_manifest_has_real_sources(name: str) -> None:
+    manifest = (
+        PluginManifest_Load(BUILTIN / name / "plugin.json")
+        if name.startswith(("silverstar_sensor_", "silverstar_ubx_", "silverstar_device_gnss_"))
+        else _ImuVariant_Get(name)[1]
+    )
     assert manifest.build.sources
     for relative in manifest.build.sources:
         assert (manifest.payload_root / relative).is_file()
@@ -198,20 +222,33 @@ def test_joint_sensor_manifest_has_real_sources(folder: str) -> None:
 
 def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> None:
     folders = ["silverstar_sensor_register_bus", "silverstar_ubx_protocol"]
-    folders += ["silverstar_device_imu_" + name.lower() for name in IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS]
+    imu_names = IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS
+    folders += [_ImuVariant_Get(name)[0] for name in imu_names]
     folders += ["silverstar_device_gnss_" + name for name in GNSS_MODELS]
     includes = [tmp_path, BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/Inc"]
     includes += [BUILTIN / "silverstar_core_0_1_0/payload" / name / "Inc" for name in ("Interfaces", "System", "Common")]
     sources: list[Path] = []
     resource_lines = ['#ifndef __PROJECT_RESOURCES_H', '#define __PROJECT_RESOURCES_H', '#include "system_device_types.h"', '#include "platform_i2c.h"', '#include "platform_uart.h"', '#include "platform_time.h"', '#include "platform_spi.h"', '#include "platform_gpio.h"']
-    for folder in folders:
-        manifest = PluginManifest_Load(BUILTIN / folder / "plugin.json")
+    for index, folder in enumerate(folders):
+        manifest = (
+            _ImuVariant_Get(imu_names[index - 2])[1]
+            if 2 <= index < 2 + len(imu_names)
+            else PluginManifest_Load(BUILTIN / folder / "plugin.json")
+        )
         includes.extend(manifest.payload_root / name for name in manifest.build.include_dirs)
         sources.extend(manifest.payload_root / name for name in manifest.build.sources)
         binding = manifest.instance_resource_binding
         if binding is None:
             continue
         manifest_data = json.loads((BUILTIN / folder / "plugin.json").read_text(encoding="utf-8"))
+        if 2 <= index < 2 + len(imu_names) and "device_variants" in manifest_data:
+            _, _, interface, profile = _ImuVariant_Get(imu_names[index - 2])
+            variant_id = next(
+                key for key, value in manifest_data["device_variants"].items()
+                if value["interface"] == interface and value["profile"] == profile
+            )
+            from silverstar_fccg.plugins.manifest import _VariantOverlay_Apply
+            _VariantOverlay_Apply(manifest_data, manifest_data["device_variants"][variant_id]["overrides"])
         kinds = {item["name"]: item["kind"] for item in manifest_data["requires"]["resources"]}
         types = {"uart": "PlatformUartId", "i2c": "PlatformI2cId", "spi": "PlatformSpiId", "time": "PlatformTimeId", "gpio_output": "PlatformGpioId", "gpio_interrupt": "PlatformGpioId"}
         fields = " ".join(types[kinds[item["requirement"]]] + " " + item["member"] + ";" for item in manifest_data["metadata"]["instance_resource_binding"]["fields"])
@@ -230,7 +267,7 @@ def test_joint_special_imu_actual_c_mock(tmp_path: Path) -> None:
     command = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror", "-pedantic"]
     command += ["-I" + str(common / "Inc"), str(common / "Src/sensor_register_bus.c"), str(common / "Src/sensor_imu.c"), str(common / "Src/sensor_bmi088_fifo.c")]
     for model in SPECIAL_IMU_MODELS:
-        root = BUILTIN / ("silverstar_device_imu_" + model.lower()) / "payload/Devices/IMU" / model
+        root = BUILTIN / ("silverstar_device_imu_" + model.lower().removesuffix("_spi")) / "payload/Devices/IMU" / model
         command += ["-I" + str(root / "Inc"), str(root / "Src" / (model.lower() + "_device.c"))]
     binary = tmp_path / "special.exe"
     command += [str(FIXTURES / "test_sensor_special.c"), "-o", str(binary)]
@@ -257,7 +294,7 @@ def test_joint_spi_actual_transport_and_drdy(tmp_path: Path) -> None:
     includes = [common / "Inc", core / "Interfaces/Inc", BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/Inc"]
     sources = [common / "Src" / name for name in ("sensor_register_bus.c", "sensor_imu.c", "sensor_imu_adapter.c", "sensor_imu_spi_adapter.c")]
     for model in ("MPU6000_SPI", "BMI088_SPI", "BMI323_SPI"):
-        root = BUILTIN / ("silverstar_device_imu_" + model.lower()) / "payload/Devices/IMU" / model
+        root = BUILTIN / ("silverstar_device_imu_" + model.lower().removesuffix("_spi")) / "payload/Devices/IMU" / model
         includes.append(root / "Inc")
         sources.append(root / "Src" / (model.lower() + "_device.c"))
     binary = tmp_path / "spi.exe"

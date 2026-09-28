@@ -26,10 +26,10 @@ version = {attr = "silverstar_fccg.app.version.__version__"}
 silverstar_fccg = ["i18n/*.json", "ui/assets/*.svg"]
 
 [tool.pytest.ini_options]
-addopts = "-ra --basetemp=tests/.pytest-work"
+addopts = "-ra --basetemp=.work/pytest"
 testpaths = ["tests"]
 pythonpath = ["src"]
-cache_dir = "tests/.pytest-cache"
+cache_dir = ".work/pytest-cache"
 norecursedirs = [
     ".pytest-cache",
     ".pytest-cache-*",

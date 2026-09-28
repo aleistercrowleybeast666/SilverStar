@@ -14,6 +14,7 @@ from test_joint_sensor_library import (
     SPECIAL_IMU_MODELS,
     SPI_IMU_MODELS,
     SYNC_IMU_MODELS,
+    _ImuVariant_Get,
     _Command_Run,
 )
 
@@ -114,7 +115,9 @@ def test_bmi088_sync_binding_requires_declared_nets_and_invalidates_fingerprint(
     )
     from silverstar_fccg.project.resources import ResourceAssignments_Resolve
 
-    model = _CustomModel_Create(builtin_catalog, [DeviceInstance("sync0", "silverstar.device.imu.bmi088_sync400")])
+    model = _CustomModel_Create(builtin_catalog, [DeviceInstance(
+        "sync0", "silverstar.device.imu.bmi088", "i2c", "bosch_sync_400_hz"
+    )])
     model.resource_assignments = {"sync0:data": "I2C1", "sync0:gyro": "I2C1", "sync0:time": "SYSTEM_TIME",
                                   "sync0:drdy": "PC2", "sync0:auxiliary_drdy": "PC3"}
     inventory = _SensorInventory_Create()
@@ -145,7 +148,9 @@ def test_bmi088_sync_qualification_cannot_be_borrowed_for_raw_source(builtin_cat
     from silverstar_fccg.project.reference import ReferenceProject_Create
 
     model = ReferenceProject_Create("SyncQualified", catalog=builtin_catalog)
-    model.device_instances.insert(0, DeviceInstance("sync0", "silverstar.device.imu.bmi088_sync400"))
+    model.device_instances.insert(0, DeviceInstance(
+        "sync0", "silverstar.device.imu.bmi088", "i2c", "bosch_sync_400_hz"
+    ))
     assert not CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
     model.device_instances.insert(0, DeviceInstance("raw0", "silverstar.device.imu.bmi088"))
     conflicts = CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
@@ -168,13 +173,11 @@ def test_bmi088_sync_image_is_exact_pinned_bosch_blob_and_license() -> None:
     assert actual_bytes == expected_bytes and len(actual_bytes) == 6144
     assert hashlib.sha256(actual_bytes).hexdigest() == "996efc7079e75bc0b93f302f520e8a3bfa74c147b0a28fd6a2306d74a690fe88"
     assert "BSD-3-Clause" in (actual / "BMI088_SYNC_LICENSE.txt").read_text(encoding="utf-8")
-    from tools.import_reference_components import _WorkspaceOwnedPackages_Get
-
-    retained = {item["manifest"]["id"]: item for item in _WorkspaceOwnedPackages_Get(set())}
-    for component in ("silverstar.sensor.register_bus", "silverstar.device.imu.bmi088_sync400",
-                      "silverstar.device.imu.bmi088_sync400_spi"):
-        assert retained[component]["workspace_owned_package"] is True
-        assert retained[component]["manifest"]["metadata"]["source_origins"]["default"] == "fccg_joint_sensor_library"
+    _, sync_i2c, _, _ = _ImuVariant_Get("BMI088_SYNC400")
+    _, sync_spi, _, _ = _ImuVariant_Get("BMI088_SYNC400_SPI")
+    assert sync_i2c.component_id == sync_spi.component_id == "silverstar.device.imu.bmi088"
+    assert sync_i2c.metadata["source_origins"]["default"] == "fccg_joint_sensor_library"
+    assert sync_spi.metadata["source_origins"]["default"] == "fccg_joint_sensor_library"
 
 
 @pytest.mark.parametrize(("kind", "name"), DEVICES)
@@ -189,9 +192,16 @@ def test_each_sensor_real_generated_graph_compiles(builtin_catalog, tmp_path: Pa
         BoardHardwareInventory_Get,
         ResourceAssignments_Resolve,
     )
-    component_id = "silverstar.device." + kind + "." + name
+    if kind == "imu":
+        folder, manifest, interface, profile = _ImuVariant_Get(name)
+        component_id = manifest.component_id
+        selected_instance = DeviceInstance("sensor0", component_id, interface, profile)
+    else:
+        component_id = "silverstar.device." + kind + "." + name
+        manifest = builtin_catalog.Component_Get(component_id)
+        selected_instance = DeviceInstance("sensor0", component_id)
     model = _CustomStorageModel_Get(builtin_catalog)
-    model.device_instances.insert(0, DeviceInstance("sensor0", component_id))
+    model.device_instances.insert(0, selected_instance)
     model.device_instances.append(DeviceInstance("launch_fixture", "silverstar.device.actuator.launch_ignition"))
     model.resource_assignments.update({"launch_fixture:output": "PC4", "launch_fixture:time": "SYSTEM_TIME"})
     if kind == "gnss":
@@ -217,7 +227,6 @@ def test_each_sensor_real_generated_graph_compiles(builtin_catalog, tmp_path: Pa
     model.modes = {slot: [] for slot in model.modes}
     model.protocols = {slot: None for slot in model.protocols}
     model.capability_source_overrides = {}
-    manifest = builtin_catalog.Component_Get(component_id)
     aliases = {"time": "SYSTEM_TIME", "gyro": "I2C1", "cs": "PC0", "auxiliary_cs": "PC1", "drdy": "PC2", "auxiliary_drdy": "PC3"}
     aliases["data"] = "USART1" if kind == "gnss" else ("SPI2" if name.endswith("_spi") else "I2C1")
     model.resource_assignments.update({"sensor0:" + requirement.name: aliases[requirement.name] for requirement in manifest.resource_requirements})

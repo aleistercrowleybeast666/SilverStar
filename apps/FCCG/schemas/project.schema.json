@@ -5,7 +5,7 @@
   "type": "object",
   "required": [
     "format_version", "algorithm_parameters", "project", "components", "modes", "mode_parameters",
-    "protocols", "hardware",
+    "protocols", "hardware", "air_link", "ground_target",
     "resources", "capability_sources", "logging", "log_decoder_profile", "build", "generated_glue",
     "component_provenance", "reference_provenance"
   ],
@@ -25,7 +25,46 @@
       },
       "additionalProperties": false
     },
-    "format_version": {"const": 12},
+    "format_version": {"const": 13},
+    "air_link": {
+      "type": "object",
+      "required": ["protocol_profile", "radio_technology", "radio_family", "phy_mode", "frequency_hz", "spreading_factor", "bandwidth_hz", "coding_rate", "preamble_symbols", "header_mode", "crc_enabled", "iq_mode", "packet_mtu", "flight_radio_instance"],
+      "properties": {
+        "protocol_profile": {"type": "string"},
+        "radio_technology": {"type": "string"},
+        "radio_family": {"type": "string"},
+        "phy_mode": {"type": "string"},
+        "frequency_hz": {"type": "integer", "minimum": 1},
+        "spreading_factor": {"type": "integer", "minimum": 1},
+        "bandwidth_hz": {"type": "integer", "minimum": 1},
+        "coding_rate": {"type": "string"},
+        "preamble_symbols": {"type": "integer", "minimum": 1},
+        "header_mode": {"type": "string"},
+        "crc_enabled": {"type": "boolean"},
+        "iq_mode": {"type": "string"},
+        "packet_mtu": {"type": "integer", "minimum": 1},
+        "flight_radio_instance": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "ground_target": {
+      "type": "object",
+      "required": ["enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant", "resources", "pc_interface", "pc_resource", "baudrate", "build"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "mcu": {"type": "string"},
+        "board": {"type": "string"},
+        "hardware": {"$ref": "#/properties/hardware"},
+        "radio_plugin": {"type": "string"},
+        "module_variant": {"type": "string"},
+        "resources": {"type": "object", "additionalProperties": {"type": "string"}},
+        "pc_interface": {"enum": ["", "uart", "usb_cdc"]},
+        "pc_resource": {"type": "string"},
+        "baudrate": {"type": "integer", "minimum": 1},
+        "build": {"$ref": "#/properties/build"}
+      },
+      "additionalProperties": false
+    },
     "project": {
       "type": "object",
       "required": ["name", "firmware_version", "build_target"],
@@ -254,10 +293,12 @@
     "instanceId": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
     "deviceInstance": {
       "type": "object",
-      "required": ["instance_id", "plugin"],
+      "required": ["instance_id", "plugin", "interface", "profile"],
       "properties": {
         "instance_id": {"$ref": "#/$defs/instanceId"},
-        "plugin": {"$ref": "#/$defs/componentId"}
+        "plugin": {"$ref": "#/$defs/componentId"},
+        "interface": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
+        "profile": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"}
       },
       "additionalProperties": false
     },

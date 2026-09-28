@@ -219,11 +219,29 @@
     "chipset": "SX1281",
     "driver": "SX1281 Driver"
   },
+  "radio": {
+    "technology": "lora",
+    "family": "sx128x",
+    "phy_modes": ["lora"],
+    "frequency_min_hz": 2473000000,
+    "frequency_max_hz": 2473000000,
+    "bandwidths_hz": [800000],
+    "spreading_factors": [10],
+    "coding_rates": ["4/5"],
+    "maximum_payload": 64,
+    "maximum_tx_power_dbm": 12,
+    "modules": {
+      "e28_2g4m12sx": {
+        "model": "E28-2G4M12SX",
+        "tx_power_limit_dbm": 12
+      }
+    }
+  },
   "transports": [
     {
       "capability": "transport.packet",
       "kind": "packet",
-      "mtu": 255,
+      "mtu": 64,
       "ordered": true,
       "bidirectional": true,
       "reliable": false,

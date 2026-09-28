@@ -4,7 +4,7 @@ import json
 import math
 import re
 from copy import deepcopy
-from dataclasses import dataclass, field, replace
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -39,7 +39,7 @@ TOOLCHAIN_PREFIX_PATTERN = re.compile(r"^[A-Za-z0-9_.+-]+$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 RELATIVE_FILE_PATTERN = re.compile(r"^[A-Za-z0-9_./+@ -]+$")
 
-PROJECT_FORMAT_VERSION = 12
+PROJECT_FORMAT_VERSION = 13
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
     "telemetry": "air.m0",
@@ -90,6 +90,8 @@ class ProjectIdentity:
 class DeviceInstance:
     instance_id: str
     plugin: str
+    interface: str = ""
+    profile: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -167,6 +169,39 @@ class HardwareConfiguration:
     assignment_fingerprint: str = ""
 
 
+@dataclass(frozen=True, slots=True)
+class AirLinkConfiguration:
+    protocol_profile: str = "air.m0"
+    radio_technology: str = "lora"
+    radio_family: str = "sx128x"
+    phy_mode: str = "lora"
+    frequency_hz: int = 2473000000
+    spreading_factor: int = 10
+    bandwidth_hz: int = 800000
+    coding_rate: str = "4/5"
+    preamble_symbols: int = 16
+    header_mode: str = "explicit"
+    crc_enabled: bool = True
+    iq_mode: str = "normal"
+    packet_mtu: int = 61
+    flight_radio_instance: str = "telemetry0"
+
+
+@dataclass(frozen=True, slots=True)
+class GroundTargetConfiguration:
+    enabled: bool = False
+    mcu: str = ""
+    board: str = ""
+    hardware: HardwareConfiguration = field(default_factory=HardwareConfiguration)
+    radio_plugin: str = ""
+    module_variant: str = ""
+    resource_assignments: dict[str, str] = field(default_factory=dict)
+    pc_interface: str = ""
+    pc_resource: str = ""
+    baudrate: int = 230400
+    build: BuildOptions = field(default_factory=BuildOptions)
+
+
 @dataclass(slots=True)
 class ProjectModel:
     identity: ProjectIdentity
@@ -196,6 +231,8 @@ class ProjectModel:
         default_factory=LogDecoderProfileReference
     )
     build: BuildOptions = field(default_factory=BuildOptions)
+    air_link: AirLinkConfiguration = field(default_factory=AirLinkConfiguration)
+    ground_target: GroundTargetConfiguration = field(default_factory=GroundTargetConfiguration)
     generated_glue: list[str] = field(
         default_factory=lambda: [
             "project_bindings",
@@ -275,6 +312,8 @@ class ProjectModel:
                     {
                         "instance_id": instance.instance_id,
                         "plugin": instance.plugin,
+                        "interface": instance.interface,
+                        "profile": instance.profile,
                     }
                     for instance in self.device_instances
                 ],
@@ -346,6 +385,20 @@ class ProjectModel:
                 "risk_acknowledged": self.hardware.risk_acknowledged,
                 "assignment_fingerprint": self.hardware.assignment_fingerprint,
             },
+            "air_link": asdict(self.air_link),
+            "ground_target": {
+                "enabled": self.ground_target.enabled,
+                "mcu": self.ground_target.mcu,
+                "board": self.ground_target.board,
+                "hardware": _Hardware_Dictionary(self.ground_target.hardware),
+                "radio_plugin": self.ground_target.radio_plugin,
+                "module_variant": self.ground_target.module_variant,
+                "resources": dict(sorted(self.ground_target.resource_assignments.items())),
+                "pc_interface": self.ground_target.pc_interface,
+                "pc_resource": self.ground_target.pc_resource,
+                "baudrate": self.ground_target.baudrate,
+                "build": _Build_Dictionary(self.ground_target.build),
+            },
             "resources": dict(sorted(self.resource_assignments.items())),
             "capability_sources": dict(
                 sorted(self.capability_source_overrides.items())
@@ -392,6 +445,21 @@ def _Object_Require(data: Any, name: str) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ProjectModelError(f"{name} must be an object")
     return data
+
+
+def _Hardware_Dictionary(hardware: HardwareConfiguration) -> dict[str, Any]:
+    data = asdict(hardware)
+    data["resources"] = [
+        {"id": resource.resource_id, "kind": resource.kind, "metadata": resource.metadata}
+        for resource in hardware.resources
+    ]
+    for key in ("capabilities", "build_sources", "asm_sources", "include_dirs", "defines"):
+        data[key] = list(data[key])
+    return data
+
+
+def _Build_Dictionary(build: BuildOptions) -> dict[str, Any]:
+    return asdict(build)
 
 
 def _String_Require(
@@ -870,19 +938,23 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
     instance_ids: set[str] = set()
     for entry_value in value:
         entry = _Object_Require(entry_value, "device instance")
-        if set(entry) != {"instance_id", "plugin"}:
+        if set(entry) != {"instance_id", "plugin", "interface", "profile"}:
             raise ProjectModelError(
-                "device instance must contain instance_id and plugin"
+                "device instance must contain instance_id, plugin, interface and profile"
             )
         instance_id = _String_Require(entry, "instance_id")
         plugin = _String_Require(entry, "plugin")
+        interface = _String_Require(entry, "interface", allow_empty=True)
+        profile = _String_Require(entry, "profile", allow_empty=True)
         if not DEVICE_INSTANCE_ID_PATTERN.fullmatch(instance_id):
             raise ProjectModelError(f"Invalid device instance id: {instance_id!r}")
         _ComponentId_Validate(plugin, "device plugin")
+        if any(value and not SELECTION_OPTION_PATTERN.fullmatch(value) for value in (interface, profile)):
+            raise ProjectModelError("Invalid device interface or profile")
         if instance_id in instance_ids:
             raise ProjectModelError(f"Duplicate device instance id: {instance_id}")
         instance_ids.add(instance_id)
-        instances.append(DeviceInstance(instance_id, plugin))
+        instances.append(DeviceInstance(instance_id, plugin, interface, profile))
     return instances
 
 
@@ -1412,6 +1484,64 @@ def _Build_Parse(value: Any) -> BuildOptions:
     )
 
 
+def _AirLink_Parse(value: Any) -> AirLinkConfiguration:
+    data = _Object_Require(value, "air_link")
+    expected = set(AirLinkConfiguration.__dataclass_fields__)
+    if set(data) != expected:
+        raise ProjectModelError("air_link has missing or unknown fields")
+    for key in (
+        "protocol_profile", "radio_technology", "radio_family", "phy_mode",
+        "coding_rate", "header_mode", "iq_mode", "flight_radio_instance",
+    ):
+        if not isinstance(data[key], str):
+            raise ProjectModelError(f"air_link.{key} must be a string")
+    for key in ("frequency_hz", "spreading_factor", "bandwidth_hz", "preamble_symbols", "packet_mtu"):
+        if type(data[key]) is not int or data[key] <= 0:
+            raise ProjectModelError(f"air_link.{key} must be a positive integer")
+    if type(data["crc_enabled"]) is not bool:
+        raise ProjectModelError("air_link.crc_enabled must be boolean")
+    if data["flight_radio_instance"] and not DEVICE_INSTANCE_ID_PATTERN.fullmatch(data["flight_radio_instance"]):
+        raise ProjectModelError("air_link.flight_radio_instance is invalid")
+    return AirLinkConfiguration(**data)
+
+
+def _GroundTarget_Parse(value: Any) -> GroundTargetConfiguration:
+    data = _Object_Require(value, "ground_target")
+    if set(data) != {
+        "enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant",
+        "resources", "pc_interface", "pc_resource", "baudrate", "build",
+    }:
+        raise ProjectModelError("ground_target has missing or unknown fields")
+    if type(data["enabled"]) is not bool:
+        raise ProjectModelError("ground_target.enabled must be boolean")
+    for key in ("mcu", "board", "radio_plugin", "module_variant", "pc_interface", "pc_resource"):
+        if not isinstance(data[key], str):
+            raise ProjectModelError(f"ground_target.{key} must be a string")
+    for key in ("mcu", "board", "radio_plugin"):
+        _ComponentId_Validate(data[key], f"ground_target.{key}", allow_empty=True)
+    if data["module_variant"] and not SELECTION_OPTION_PATTERN.fullmatch(data["module_variant"]):
+        raise ProjectModelError("ground_target.module_variant is invalid")
+    if data["pc_interface"] not in ("", "uart", "usb_cdc"):
+        raise ProjectModelError("ground_target.pc_interface is invalid")
+    if type(data["baudrate"]) is not int or data["baudrate"] <= 0:
+        raise ProjectModelError("ground_target.baudrate must be positive")
+    resources = _Object_Require(data["resources"], "ground_target.resources")
+    if any(
+        not isinstance(key, str) or not RESOURCE_KEY_PATTERN.fullmatch(key)
+        or not isinstance(value, str) or not RESOURCE_ID_PATTERN.fullmatch(value)
+        for key, value in resources.items()
+    ):
+        raise ProjectModelError("ground_target.resources is invalid")
+    return GroundTargetConfiguration(
+        enabled=data["enabled"], mcu=data["mcu"], board=data["board"],
+        hardware=_Hardware_Parse(data["hardware"], board=data["board"]),
+        radio_plugin=data["radio_plugin"], module_variant=data["module_variant"],
+        resource_assignments=dict(resources), pc_interface=data["pc_interface"],
+        pc_resource=data["pc_resource"], baudrate=data["baudrate"],
+        build=_Build_Parse(data["build"]),
+    )
+
+
 def _Provenance_Parse(value: Any) -> dict[str, dict[str, Any]]:
     provenance = _Object_Require(value, "component_provenance")
     for component_id, entry_value in provenance.items():
@@ -1496,6 +1626,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         "algorithm_parameters",
         "protocols",
         "hardware",
+        "air_link",
+        "ground_target",
         "resources",
         "capability_sources",
         "logging",
@@ -1546,6 +1678,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     mode_parameters = _ModeParameters_Parse(root.get("mode_parameters"))
     protocols = _Protocols_Parse(root.get("protocols"))
     hardware = _Hardware_Parse(root.get("hardware"), board=board)
+    air_link = _AirLink_Parse(root.get("air_link"))
+    ground_target = _GroundTarget_Parse(root.get("ground_target"))
     resources = _Object_Require(root.get("resources"), "resources")
     if not all(
         isinstance(key, str)
@@ -1593,6 +1727,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         protocols=protocols,
         development_environment=environment,
         hardware=hardware,
+        air_link=air_link,
+        ground_target=ground_target,
         resource_assignments=dict(resources),
         capability_source_overrides=dict(capability_sources),
         logging_streams=_Logging_Parse(root.get("logging")),

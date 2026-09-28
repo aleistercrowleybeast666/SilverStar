@@ -1,5 +1,7 @@
 # Plugin Format
 
+当前 Device manifest 可声明 device_variants：一个真实芯片插件对应接口和运行 profile 的有限 overlay，物理芯片身份由公共 manifest 唯一声明。Radio Device 另声明物理频段、PHY 和模块 variant，详见[Device variants](../architecture/DEVICE_VARIANTS.md)与[AIR Link](../architecture/AIR_LINK.md)。以下 format 12 描述为历史上下文。
+
 ## Algorithm actual parameters / 算法实际参数
 
 新增独立算法参数页面（硬件连接之前），插件声明实际值、单位和 representation。

@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import re
+from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
@@ -152,6 +153,21 @@ class PhysicalDeviceContribution:
     model: str
     chipset: str
     driver: str
+
+
+@dataclass(frozen=True, slots=True)
+class RadioContribution:
+    technology: str
+    family: str
+    phy_modes: tuple[str, ...]
+    frequency_min_hz: int
+    frequency_max_hz: int
+    bandwidths_hz: tuple[int, ...]
+    spreading_factors: tuple[int, ...]
+    coding_rates: tuple[str, ...]
+    maximum_payload: int
+    maximum_tx_power_dbm: int
+    modules: dict[str, dict[str, Any]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -431,6 +447,7 @@ class PluginManifest:
     instance_policy: DeviceInstancePolicy = DeviceInstancePolicy()
     instance_resource_binding: InstanceResourceBinding | None = None
     physical_device: PhysicalDeviceContribution | None = None
+    radio: RadioContribution | None = None
     selection: SelectionContribution | None = None
     board: BoardContribution | None = None
     protocol: ProtocolContribution | None = None
@@ -439,6 +456,7 @@ class PluginManifest:
     environment: EnvironmentContribution | None = None
     algorithm_parameters: tuple[AlgorithmParameterDefinition, ...] = ()
     source: str = "builtin"
+    device_variants: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     @property
     def capabilities_required(self) -> tuple[str, ...]:
@@ -2744,9 +2762,11 @@ def PluginManifest_Parse(
         "cardinality",
         "instance_policy",
         "physical_device",
+        "radio",
         "platform",
         "protocol",
         "transports",
+        "device_variants",
     }
     unknown = set(data) - allowed_top_level
     if unknown:
@@ -2761,6 +2781,24 @@ def PluginManifest_Parse(
     component_type = data["type"]
     if component_type not in ALLOWED_PLUGIN_TYPES:
         raise PluginManifestError(f"Unsupported plugin type: {component_type!r}")
+    device_variants = data.get("device_variants", {})
+    if not isinstance(device_variants, dict) or (device_variants and component_type != "device"):
+        raise PluginManifestError("device_variants is only valid on Device plugins")
+    for variant_id, variant in device_variants.items():
+        if not isinstance(variant_id, str) or not SELECTION_OPTION_PATTERN.fullmatch(variant_id):
+            raise PluginManifestError("device variant id is invalid")
+        if not isinstance(variant, dict) or set(variant) != {"interface", "profile", "overrides"}:
+            raise PluginManifestError("device variant needs interface, profile and overrides")
+        if any(not isinstance(variant[key], str) or not SELECTION_OPTION_PATTERN.fullmatch(variant[key]) for key in ("interface", "profile")):
+            raise PluginManifestError("device variant interface or profile is invalid")
+        overrides = variant["overrides"]
+        if not isinstance(overrides, dict) or set(overrides) - {
+            "name", "description", "requires", "build", "payload", "metadata",
+            "provides",
+        }:
+            raise PluginManifestError("device variant overrides unsupported common fields")
+        if "provides" in overrides and not set(data.get("provides", [])).issubset(overrides["provides"]):
+            raise PluginManifestError("device variant cannot remove common capabilities")
     version = data["version"]
     if not isinstance(version, str) or not VERSION_PATTERN.fullmatch(version):
         raise PluginManifestError(f"Invalid plugin version: {version!r}")
@@ -2861,6 +2899,50 @@ def PluginManifest_Parse(
     physical_device = _PhysicalDevice_Parse(
         data.get("physical_device"), component_type=component_type
     )
+    radio_data = data.get("radio")
+    radio = None
+    if radio_data is not None:
+        expected_radio = {
+            "technology", "family", "phy_modes", "frequency_min_hz",
+            "frequency_max_hz", "bandwidths_hz", "spreading_factors",
+            "coding_rates", "maximum_payload", "maximum_tx_power_dbm", "modules",
+        }
+        if component_type != "device" or not isinstance(radio_data, dict) or set(radio_data) != expected_radio:
+            raise PluginManifestError("radio metadata requires a Device and complete fields")
+        for field_name in ("technology", "family"):
+            if not isinstance(radio_data[field_name], str) or not PLUGIN_ID_PATTERN.fullmatch(radio_data[field_name]):
+                raise PluginManifestError(f"radio.{field_name} is invalid")
+        for field_name in ("phy_modes", "coding_rates"):
+            if not isinstance(radio_data[field_name], list) or not radio_data[field_name] or any(not isinstance(item, str) or not item for item in radio_data[field_name]):
+                raise PluginManifestError(f"radio.{field_name} is invalid")
+        for field_name in ("frequency_min_hz", "frequency_max_hz", "maximum_payload", "maximum_tx_power_dbm"):
+            if type(radio_data[field_name]) is not int:
+                raise PluginManifestError(f"radio.{field_name} must be integer")
+        for field_name in ("bandwidths_hz", "spreading_factors"):
+            if not isinstance(radio_data[field_name], list) or not radio_data[field_name] or any(type(item) is not int or item <= 0 for item in radio_data[field_name]):
+                raise PluginManifestError(f"radio.{field_name} is invalid")
+        if (radio_data["frequency_min_hz"] <= 0 or radio_data["frequency_max_hz"] < radio_data["frequency_min_hz"] or radio_data["maximum_payload"] <= 0):
+            raise PluginManifestError("radio frequency range or payload is invalid")
+        modules = radio_data["modules"]
+        if not isinstance(modules, dict) or not modules or any(
+            not isinstance(module_id, str) or not PLUGIN_ID_PATTERN.fullmatch(module_id)
+            or not isinstance(module, dict) or set(module) != {"model", "tx_power_limit_dbm"}
+            or not isinstance(module["model"], str) or type(module["tx_power_limit_dbm"]) is not int
+            for module_id, module in modules.items()
+        ):
+            raise PluginManifestError("radio.modules is invalid")
+        radio = RadioContribution(
+            technology=radio_data["technology"], family=radio_data["family"],
+            phy_modes=tuple(radio_data["phy_modes"]),
+            frequency_min_hz=radio_data["frequency_min_hz"],
+            frequency_max_hz=radio_data["frequency_max_hz"],
+            bandwidths_hz=tuple(radio_data["bandwidths_hz"]),
+            spreading_factors=tuple(radio_data["spreading_factors"]),
+            coding_rates=tuple(radio_data["coding_rates"]),
+            maximum_payload=radio_data["maximum_payload"],
+            maximum_tx_power_dbm=radio_data["maximum_tx_power_dbm"],
+            modules=dict(modules),
+        )
 
     if (component_type == "board") != (board is not None):
         raise PluginManifestError("board plugins must declare exactly one board block")
@@ -2950,6 +3032,7 @@ def PluginManifest_Parse(
         instance_policy=instance_policy,
         instance_resource_binding=instance_resource_binding,
         physical_device=physical_device,
+        radio=radio,
         selection=selection,
         algorithm_parameters=algorithm_parameters,
         board=board,
@@ -2958,6 +3041,7 @@ def PluginManifest_Parse(
         hardware_provider=hardware_provider,
         environment=environment,
         source=source,
+        device_variants=dict(device_variants),
     )
     payload_files = {
         path.relative_to(manifest.payload_root).as_posix()
@@ -3028,4 +3112,25 @@ def PluginManifest_Load(path: Path, *, source: str = "builtin") -> PluginManifes
         raise PluginManifestError(
             f"Cannot read plugin manifest {path}: {error}"
         ) from error
-    return PluginManifest_Parse(data, path, source=source)
+    manifest = PluginManifest_Parse(data, path, source=source)
+    for variant_id in manifest.device_variants:
+        PluginManifest_VariantResolve(manifest, variant_id)
+    return manifest
+
+
+def _VariantOverlay_Apply(base: dict[str, Any], overlay: dict[str, Any]) -> None:
+    for key, value in overlay.items():
+        if isinstance(value, dict) and isinstance(base.get(key), dict):
+            _VariantOverlay_Apply(base[key], value)
+        else:
+            base[key] = deepcopy(value)
+
+
+def PluginManifest_VariantResolve(manifest: PluginManifest, variant_id: str) -> PluginManifest:
+    variant = manifest.device_variants.get(variant_id)
+    if variant is None:
+        raise PluginManifestError(f"Unknown variant {variant_id} for {manifest.component_id}")
+    data = json.loads(manifest.manifest_path.read_text(encoding="utf-8"))
+    data.pop("device_variants", None)
+    _VariantOverlay_Apply(data, variant["overrides"])
+    return PluginManifest_Parse(data, manifest.manifest_path, source=manifest.source)

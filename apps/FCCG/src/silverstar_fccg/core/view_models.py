@@ -97,6 +97,8 @@ class DeviceInstanceView:
     multi_instance_ready: bool = False
     initialization: dict[str, Any] = field(default_factory=dict)
     runtime_defaults: dict[str, Any] = field(default_factory=dict)
+    interface: str = ""
+    profile: str = ""
 
 
 @dataclass(frozen=True, slots=True)

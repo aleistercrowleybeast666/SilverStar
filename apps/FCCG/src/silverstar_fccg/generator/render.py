@@ -42,7 +42,7 @@ from silverstar_fccg.project.logging import (
     ProjectProtocolLogMetadataPath_Get,
     ProtocolLogDefinitions_Get,
 )
-from silverstar_fccg.project.model import LogDecoderProfileReference, ProjectModel
+from silverstar_fccg.project.model import DeviceInstance, LogDecoderProfileReference, ProjectModel
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
 from silverstar_fccg.project.record_catalog import (
     RecordCatalog_Merge,
@@ -268,6 +268,7 @@ def _ProjectSemanticsWithoutLogging_Render(
 def GeneratedFiles_Render(
     model: ProjectModel, catalog: PluginCatalog, graph: SourceGraph
 ) -> dict[str, bytes]:
+    catalog = catalog.ProjectView_Get(model)
     logging_enabled = model.protocols.get("logging") is not None
     decoder_profile = (
         LogDecoderProfile_Render(model, catalog) if logging_enabled else None
@@ -286,6 +287,7 @@ def GeneratedFiles_Render(
         "Generated/Inc/project_flight_config.h": _FlightConfigHeader_Render(
             model, catalog
         ),
+        "Generated/Inc/air_link_config.h": AirLinkHeader_Render(model),
         "Generated/Inc/project_device_instances.h": _DeviceInstancesHeader_Render(
             model, catalog
         ),
@@ -324,6 +326,33 @@ def GeneratedFiles_Render(
         name: content if isinstance(content, bytes) else content.encode("utf-8")
         for name, content in files.items()
     }
+
+
+def AirLinkHeader_Render(model: ProjectModel) -> str:
+    link = model.air_link
+    bandwidths = {200000: "LORA_BW_0200", 400000: "LORA_BW_0400", 800000: "LORA_BW_0800", 1600000: "LORA_BW_1600"}
+    coding_rates = {"4/5": "LORA_CR_4_5", "4/6": "LORA_CR_4_6", "4/7": "LORA_CR_4_7", "4/8": "LORA_CR_4_8"}
+    if link.spreading_factor not in range(5, 13) or link.bandwidth_hz not in bandwidths or link.coding_rate not in coding_rates:
+        raise ValueError("AIR Link SX128x PHY parameters are unsupported")
+    if link.preamble_symbols != 16 or link.header_mode != "explicit" or not link.crc_enabled or link.iq_mode != "normal":
+        raise ValueError("The current SX128x driver supports the qualified explicit/CRC/normal-IQ profile")
+    return f"""#ifndef __AIR_LINK_CONFIG_H
+#define __AIR_LINK_CONFIG_H
+
+/* Shared SilverStar AIR Link snapshot; AIR M0 remains a separate wire protocol. */
+#define AIR_LINK_FREQUENCY_HZ {link.frequency_hz}UL
+#define AIR_LINK_SX128X_SF LORA_SF{link.spreading_factor}
+#define AIR_LINK_SX128X_BW {bandwidths[link.bandwidth_hz]}
+#define AIR_LINK_SX128X_CR {coding_rates[link.coding_rate]}
+#define AIR_LINK_PREAMBLE_SYMBOLS {link.preamble_symbols}U
+#define AIR_LINK_SX128X_PREAMBLE_ENCODED 0x18U
+#define AIR_LINK_SX128X_HEADER LORA_PACKET_VARIABLE_LENGTH
+#define AIR_LINK_SX128X_CRC LORA_CRC_ON
+#define AIR_LINK_SX128X_IQ LORA_IQ_NORMAL
+#define AIR_LINK_PACKET_MTU {link.packet_mtu}U
+
+#endif /* __AIR_LINK_CONFIG_H */
+"""
 
 
 def MetadataFiles_Render(
@@ -536,11 +565,16 @@ def _DeviceRuntimeDefaults_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> list[tuple[str, str]]:
     """Resolve fixed device defaults through the same primary descriptor route."""
+    catalog = catalog.ProjectView_Get(model)
     result: dict[str, str] = {}
     for entry in _DeviceDescriptorEntries_Get(model, catalog):
         if "SYSTEM_DESCRIPTOR_FLAG_PRIMARY" not in str(entry.get("flags", "")):
             continue
-        manifest = catalog.Component_Get(str(entry["_component_id"]))
+        source_id = str(entry["_source_instance_id"])
+        manifest = (
+            catalog.InstanceIdComponent_Get(source_id)
+            if source_id else catalog.Component_Get(str(entry["_component_id"]))
+        )
         declarations = manifest.metadata.get("runtime_defaults", {})
         if not isinstance(declarations, dict):
             raise ValueError(f"Invalid runtime defaults: {manifest.component_id}")
@@ -569,15 +603,20 @@ def _DeviceRuntimeDefaults_Get(
 
 def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
     """Render target facts from the physical provider selected for each class."""
+    catalog = catalog.ProjectView_Get(model)
     entries = _DeviceDescriptorEntries_Get(model, catalog)
     providers: dict[str, PluginManifest] = {}
     for entry in entries:
         device_class = str(entry.get("class", ""))
         if device_class not in providers or "SYSTEM_DESCRIPTOR_FLAG_PRIMARY" in str(entry.get("flags", "")):
-            providers[device_class] = catalog.Component_Get(str(entry["_component_id"]))
+            source_id = str(entry["_source_instance_id"])
+            providers[device_class] = (
+                catalog.InstanceIdComponent_Get(source_id)
+                if source_id else catalog.Component_Get(str(entry["_component_id"]))
+            )
     selected_capabilities = {
         capability for instance in model.device_instances
-        for capability in catalog.Component_Get(instance.plugin).provides
+        for capability in catalog.InstanceComponent_Get(instance).provides
     }
     bindings = catalog.Component_Get(model.mcu).metadata.get("device_build_capabilities", [])
     if not isinstance(bindings, list):
@@ -778,6 +817,7 @@ def _FlightConfigHeader_Render(
 
 
 def _ResourceHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
+    catalog = catalog.ProjectView_Get(model)
     result = ResourceAssignments_Resolve(model, catalog)
     if not result.valid:
         raise ValueError("Cannot generate resource header: " + "; ".join(result.errors))
@@ -785,7 +825,7 @@ def _ResourceHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
     values: dict[str, str] = {}
     assigned_macros: set[str] = set()
     instance_plugins = {
-        instance.instance_id: catalog.Component_Get(instance.plugin)
+        instance.instance_id: catalog.InstanceComponent_Get(instance)
         for instance in model.device_instances
     }
     for assignment in result.assignments:
@@ -878,19 +918,26 @@ def _ResourceHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
 """
 
 
+def _InstanceBindingGroups_Get(model: ProjectModel, catalog: PluginCatalog):
+    groups: dict[str, tuple[PluginManifest, list[DeviceInstance]]] = {}
+    for instance in model.device_instances:
+        manifest = catalog.InstanceComponent_Get(instance)
+        binding = manifest.instance_resource_binding
+        if binding is None:
+            continue
+        if binding.accessor not in groups:
+            groups[binding.accessor] = (manifest, [])
+        groups[binding.accessor][1].append(instance)
+    return tuple(groups[key] for key in sorted(groups))
+
+
 def _InstanceResourceDeclarations_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
     sections: list[str] = []
-    for manifest in catalog.Type_Get("device"):
+    for manifest, instances in _InstanceBindingGroups_Get(model, catalog):
         binding = manifest.instance_resource_binding
-        instances = tuple(
-            instance
-            for instance in model.device_instances
-            if instance.plugin == manifest.component_id
-        )
-        if binding is None or not instances:
-            continue
+        assert binding is not None
         requirement_by_name = {
             requirement.name: requirement
             for requirement in manifest.resource_requirements
@@ -924,6 +971,7 @@ def _InstanceResourceDeclarations_Render(
 def _InstanceResourcesSource_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
+    catalog = catalog.ProjectView_Get(model)
     resolution = ResourceAssignments_Resolve(model, catalog)
     if not resolution.valid:
         raise ValueError(
@@ -939,15 +987,9 @@ def _InstanceResourcesSource_Render(
         r"(?:[A-Za-z_][A-Za-z0-9_]*|"
         r"\(\([A-Za-z_][A-Za-z0-9_]*\)[0-9]+U\))"
     )
-    for manifest in catalog.Type_Get("device"):
+    for manifest, instances in _InstanceBindingGroups_Get(model, catalog):
         binding = manifest.instance_resource_binding
-        instances = tuple(
-            instance
-            for instance in model.device_instances
-            if instance.plugin == manifest.component_id
-        )
-        if binding is None or not instances:
-            continue
+        assert binding is not None
         rows: list[str] = []
         for instance in instances:
             values: list[str] = []
@@ -1004,7 +1046,7 @@ def _StorageBindingHeader_Render(
     storage_instances = tuple(
         instance
         for instance in model.device_instances
-        if "service.storage" in catalog.Component_Get(instance.plugin).provides
+        if "service.storage" in catalog.InstanceComponent_Get(instance).provides
     )
     if len(storage_instances) != 1:
         raise ValueError(
@@ -1781,7 +1823,7 @@ def _LogPhysicalDevices_Get(
 ) -> list[dict[str, Any]]:
     devices: list[dict[str, Any]] = []
     for instance in model.device_instances:
-        manifest = catalog.Component_Get(instance.plugin)
+        manifest = catalog.InstanceComponent_Get(instance)
         physical = manifest.physical_device
         if physical is None:
             raise ValueError(
@@ -2128,6 +2170,7 @@ def _DescriptorSymbol_Get(device_class: str, instance_id: int) -> str:
 def _DeviceDescriptorEntries_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> list[dict[str, Any]]:
+    catalog = catalog.ProjectView_Get(model)
     selected_instances: dict[str, list[str]] = {}
     for instance in model.device_instances:
         selected_instances.setdefault(instance.plugin, []).append(instance.instance_id)
@@ -2143,11 +2186,25 @@ def _DeviceDescriptorEntries_Get(
         if manifest.component_type == "device":
             instance_ids = tuple(selected_instances.get(component_id, ()))
         for source_instance_id in instance_ids:
-            source_instance_index = (
-                instance_ids.index(source_instance_id)
-                if source_instance_id
-                else 0
+            instance_manifest = (
+                catalog.InstanceIdComponent_Get(source_instance_id)
+                if source_instance_id else manifest
             )
+            raw_entries = instance_manifest.metadata.get("device_descriptors", [])
+            if source_instance_id and instance_manifest.instance_resource_binding is not None:
+                accessor = instance_manifest.instance_resource_binding.accessor
+                source_instance_index = sum(
+                    1 for previous in instance_ids[:instance_ids.index(source_instance_id)]
+                    if catalog.InstanceIdComponent_Get(previous).instance_resource_binding
+                    is not None
+                    and catalog.InstanceIdComponent_Get(
+                        previous
+                    ).instance_resource_binding.accessor == accessor
+                )
+            else:
+                source_instance_index = (
+                    instance_ids.index(source_instance_id) if source_instance_id else 0
+                )
             for raw_entry in raw_entries:
                 if not isinstance(raw_entry, dict):
                     raise ValueError(
@@ -2158,9 +2215,9 @@ def _DeviceDescriptorEntries_Get(
                 entry["_source_instance_id"] = source_instance_id
                 entry["_source_instance_index"] = source_instance_index
                 physical_symbol = str(entry.get("physical_device_id", ""))
-                if len(instance_ids) > 1 and source_instance_index > 0:
+                if len(instance_ids) > 1 and instance_ids.index(source_instance_id) > 0:
                     physical_symbol = (
-                        f"{physical_symbol}_{source_instance_index}"
+                        f"{physical_symbol}_{instance_ids.index(source_instance_id)}"
                     )
                 entry["physical_device_id"] = physical_symbol
                 entries.append(entry)
@@ -2392,7 +2449,11 @@ def _DeviceInstanceSwitches_Render(
         device_class = str(entry.get("class", ""))
         if device_class not in endpoints:
             continue
-        manifest = catalog.Component_Get(str(entry["_component_id"]))
+        source_id = str(entry["_source_instance_id"])
+        manifest = (
+            catalog.InstanceIdComponent_Get(source_id)
+            if source_id else catalog.Component_Get(str(entry["_component_id"]))
+        )
         bindings = manifest.metadata.get("device_instance_bindings")
         binding = bindings.get(device_class) if isinstance(bindings, dict) else None
         if not isinstance(binding, dict):

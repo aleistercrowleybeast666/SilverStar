@@ -2,7 +2,7 @@
 
 ```text
 SilverStar
-├─ FCCG — declarative flight-controller configuration, plugin resolution and code generation
+├─ FCCG — declarative Flight and Ground target configuration and code generation
 ├─ GSHC — AIR M0 ground telemetry, commands, readiness and operator UI
 └─ FLP  — immutable SSLOG log opening, exact decoder validation, replay and export
 ```
@@ -13,4 +13,4 @@ SilverStar
 
 FCCG's builtin plugin manifests and generated firmware release metadata use the unified product identity. Generated firmware is an output in a user-selected project or ignored work area, never a long-term source directory here. User logs and decoder packages are immutable inputs. Application-local implementation details remain owned by each application; explicit cross-component work can update all three.
 
-Future Ground Station firmware, shared AIR configuration and Simulator work can extend this suite after the migration baseline. This document defines only the current boundary.
+FCCG now places Flight Controller and optional Ground Station firmware in one project. Both share [AIR Link](AIR_LINK.md); Ground remains an opaque AIR packet bridge to GSHC's GSP serial stream. [Target model](TARGET_MODEL.md), [Ground Station](GROUND_STATION.md), and [Device variants](DEVICE_VARIANTS.md) define the second-round boundary. Simulator and device automatic initialization remain future work.

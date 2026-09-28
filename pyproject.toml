@@ -25,4 +25,5 @@ version = {attr = "silverstar_version.__version__"}
 
 [tool.pytest.ini_options]
 testpaths = ["tests/integration"]
-addopts = "-ra"
+addopts = "-ra --basetemp=.work/pytest"
+cache_dir = ".work/pytest-cache"

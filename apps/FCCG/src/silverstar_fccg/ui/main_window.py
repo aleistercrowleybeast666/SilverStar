@@ -63,10 +63,14 @@ from silverstar_fccg.core.view_models import (
     ToolchainToolView,
 )
 from silverstar_fccg.generator.assembler import ApplyResult, GenerationPlan
+from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.generator.hardware_preparation import (
     HardwareAssignmentFingerprint_Get,
 )
 from silverstar_fccg.project.algorithm_parameters import AlgorithmParameterOwners_Get
+from silverstar_fccg.project.air_link import (
+    AirLinkIssues_Get, GroundTargetIssues_Get, RadioLinkCompatible_Get,
+)
 from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
 from silverstar_fccg.project.configuration import (
     ModeOptionAvailabilities_Get,
@@ -84,6 +88,7 @@ from silverstar_fccg.project.logging import (
 from silverstar_fccg.project.model import (
     DeviceInstance,
     HardwareConfiguration,
+    HardwareResource,
     LogStreamConfig,
     ProjectModel,
     ProtocolSelection,
@@ -102,6 +107,7 @@ from silverstar_fccg.ui.pages import (
     PluginManagerDialog,
 )
 from silverstar_fccg.ui.pages.algorithm_parameters import AlgorithmParametersPage
+from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage
 from silverstar_fccg.ui.pages.build import DefaultTools_Get
 from silverstar_fccg.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
@@ -149,6 +155,8 @@ class MainWindow(QMainWindow):
         "page.flight_configuration",
         "page.algorithm_parameters",
         "page.board_hardware",
+        "page.air_link",
+        "page.ground",
         "page.build",
     )
 
@@ -287,12 +295,16 @@ class MainWindow(QMainWindow):
         self.algorithm_parameters_page.sharedParameterChanged.connect(self._SharedAlgorithmParameter_Change)
         self.algorithm_parameters_page.sharedDefaultsRequested.connect(self._SharedAlgorithmDefaults_Reset)
         self.board_hardware_page = BoardHardwarePage(self._translator)
+        self.air_link_page = AirLinkPage(self._translator)
+        self.ground_target_page = GroundTargetPage(self._translator)
         self.build_page = BuildPage(self._translator)
         self._page_widgets = (
             self.devices_page,
             self.flight_configuration_page,
             self.algorithm_parameters_page,
             self.board_hardware_page,
+            self.air_link_page,
+            self.ground_target_page,
             self.build_page,
         )
         for page in self._page_widgets:
@@ -371,6 +383,7 @@ class MainWindow(QMainWindow):
         self.refresh_plugins_action.triggered.connect(self._Plugins_Refresh)
         self.about_action.triggered.connect(self._About_Show)
         self.devices_page.instanceChanged.connect(self._DeviceInstance_Change)
+        self.devices_page.variantChanged.connect(self._DeviceVariant_Change)
         self.devices_page.instanceAddRequested.connect(self._DeviceInstance_Add)
         self.devices_page.otherDeviceToggled.connect(self._OtherDevice_Toggle)
         self.devices_page.installRequested.connect(self._PluginInstall_Dialog)
@@ -400,6 +413,13 @@ class MainWindow(QMainWindow):
         self.board_hardware_page.prepareRequested.connect(
             self._HardwarePrepare_Request
         )
+        self.air_link_page.configurationChanged.connect(self._AirLink_Change)
+        self.ground_target_page.enabledChanged.connect(
+            lambda enabled: self._GroundTarget_Change("enabled", enabled)
+        )
+        self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
+        self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
+        self.ground_target_page.importRequested.connect(self._GroundCubeMxImport_Request)
         self.flight_configuration_page.strategyChanged.connect(
             self._Strategy_Change
         )
@@ -682,6 +702,7 @@ class MainWindow(QMainWindow):
             )
             self.build_page.QualityResults_Set(display.quality_results)
             self._BoardPage_Refresh(display)
+            self._TargetPages_Refresh(display.model)
             self._HeaderProject_Refresh(display.model)
         finally:
             self._displaying_model = False
@@ -961,6 +982,27 @@ class MainWindow(QMainWindow):
                     for item in candidate.device_instances
                     if item.instance_id != instance_id
                 ]
+
+        self._ProjectConfiguration_Change(
+            change, logging_availability_changed=True
+        )
+
+    def _DeviceVariant_Change(
+        self, instance_id: str, interface: str, profile: str
+    ) -> None:
+        if self._displaying_model:
+            return
+
+        def change(candidate: ProjectModel) -> None:
+            candidate.device_instances = [
+                replace(instance, interface=interface, profile=profile)
+                if instance.instance_id == instance_id else instance
+                for instance in candidate.device_instances
+            ]
+            candidate.resource_assignments = {
+                key: value for key, value in candidate.resource_assignments.items()
+                if not key.startswith(instance_id + ":")
+            }
 
         self._ProjectConfiguration_Change(
             change, logging_availability_changed=True
@@ -1349,6 +1391,167 @@ class MainWindow(QMainWindow):
                 "status.cubemx_imported", count=len(result.peripherals)
             )
         )
+
+    def _TargetPages_Refresh(self, model: ProjectModel) -> None:
+        radios = tuple(
+            (
+                f"{'LoRa' if manifest.radio.technology == 'lora' else 'Packet Radio / Other'} · "
+                f"{manifest.DisplayName_Get(self._translator.language)}",
+                manifest.component_id,
+            )
+            for manifest in self._service.catalog.Type_Get("device")
+            if manifest.radio is not None
+            and RadioLinkCompatible_Get(model.air_link, manifest.radio)
+        )
+        boards = tuple(
+            (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
+            for manifest in self._service.catalog.Type_Get("board")
+            if manifest.board is not None and manifest.board.verified
+        )
+        selected = model.ground_target.radio_plugin
+        manifest = self._service.catalog.Component_Get(selected) if selected else None
+        requirements = {
+            "modules": tuple(
+                (str(item.get("display_name", identity)), identity)
+                for identity, item in (manifest.radio.modules.items()
+                                       if manifest is not None and manifest.radio is not None else ())
+            ),
+            "resources": tuple(
+                (requirement.name, requirement.kind)
+                for requirement in (manifest.resource_requirements if manifest is not None else ())
+                if requirement.required
+            ),
+        }
+        self.air_link_page.Configuration_Set(
+            model.air_link, AirLinkIssues_Get(model, self._service.catalog)
+        )
+        self.ground_target_page.Configuration_Set(
+            model.ground_target, boards, radios, requirements,
+            GroundTargetIssues_Get(model, self._service.catalog),
+        )
+
+    def _AirLink_Change(self, field: str, value: object) -> None:
+        self._ProjectConfiguration_Change(
+            lambda candidate: setattr(
+                candidate, "air_link", replace(candidate.air_link, **{field: value})
+            )
+        )
+
+    def _GroundTarget_Change(self, field: str, value: object) -> None:
+        if field == "board":
+            self._GroundBoard_Change(str(value or ""))
+            return
+        def change(candidate: ProjectModel) -> None:
+            ground = candidate.ground_target
+            updates = {field: value}
+            if field == "radio_plugin":
+                updates["module_variant"] = ""
+                updates["resource_assignments"] = {}
+            if field == "pc_interface":
+                updates["pc_resource"] = ""
+            candidate.ground_target = replace(ground, **updates)
+        self._ProjectConfiguration_Change(change)
+
+    def _GroundBoard_Change(self, board_id: str) -> None:
+        if not board_id:
+            self._ProjectConfiguration_Change(
+                lambda candidate: setattr(
+                    candidate, "ground_target", replace(
+                        candidate.ground_target, board="", mcu="",
+                        hardware=HardwareConfiguration(), resource_assignments={},
+                        pc_resource="",
+                    )
+                )
+            )
+            return
+        from silverstar_fccg.project.resources import (
+            BoardHardwareInventory_Get, BoardResourceProvisions_Get,
+        )
+
+        board = self._service.catalog.Component_Get(board_id)
+        inventory = BoardHardwareInventory_Get(board)
+        if board.board is None or inventory is None:
+            self._Error_Show("Ground board has no CubeMX hardware inventory")
+            return
+        mcu = next(
+            (component_id for component_id in board.board.compatible_mcus
+             if component_id in {item.component_id for item in self._service.catalog.Type_Get("mcu")}),
+            "",
+        )
+        if not mcu:
+            self._Error_Show("Ground board has no installed MCU platform")
+            return
+        hardware = HardwareConfiguration(
+            mode="board_plugin", source_kind=board.board.source_kind,
+            mcu=inventory.mcu_part, source_label=board.DisplayName_Get(
+                self._translator.language
+            ),
+            inventory=inventory.Dictionary_Get(),
+            resources=tuple(
+                HardwareResource(item.resource_id, item.kind, item.metadata)
+                for item in BoardResourceProvisions_Get(board)
+            ),
+            source_digest=str(board.metadata.get("reference", {}).get("snapshot_digest", "")),
+        )
+        self._ProjectConfiguration_Change(
+            lambda candidate: setattr(
+                candidate, "ground_target", replace(
+                    candidate.ground_target, board=board_id, mcu=mcu,
+                    hardware=hardware, resource_assignments={}, pc_resource="",
+                )
+            )
+        )
+
+    def _GroundAssignment_Change(self, requirement: str, resource: str) -> None:
+        def change(candidate: ProjectModel) -> None:
+            assignments = dict(candidate.ground_target.resource_assignments)
+            key = f"radio0:{requirement}"
+            if resource:
+                assignments[key] = resource
+            else:
+                assignments.pop(key, None)
+            candidate.ground_target = replace(
+                candidate.ground_target, resource_assignments=assignments
+            )
+        self._ProjectConfiguration_Change(change)
+
+    def _GroundCubeMxImport_Request(self, directory: bool) -> None:
+        if directory:
+            selected = QFileDialog.getExistingDirectory(
+                self, self._translator.Text_Get("dialog.import_cubemx_directory")
+            )
+        else:
+            selected, _filter = QFileDialog.getOpenFileName(
+                self, self._translator.Text_Get("dialog.import_cubemx_ioc"), "",
+                self._translator.Text_Get("filter.cubemx_ioc"),
+            )
+        if not selected:
+            return
+        self.Task_Run(
+            lambda _context: self._service.CubeMxProject_Import(
+                Path(selected), self._model, risk_acknowledged=True
+            ),
+            self._GroundCubeMxImport_Complete,
+        )
+
+    def _GroundCubeMxImport_Complete(self, result) -> None:
+        from silverstar_fccg.hardware.platform import (
+            DetectedMcuFacts_FromInventory, PlatformMatch_Resolve,
+        )
+
+        match = PlatformMatch_Resolve(
+            DetectedMcuFacts_FromInventory(
+                result.inventory, vendor="STM32", provider="stm32_cubemx"
+            ),
+            self._service.catalog,
+        )
+        def change(candidate: ProjectModel) -> None:
+            candidate.ground_target = replace(
+                candidate.ground_target, mcu=match.selected.component_id,
+                board="", hardware=result.hardware,
+                resource_assignments={}, pc_resource="",
+            )
+        self._ProjectConfiguration_Change(change)
 
     def _CustomBoardExport_Request(self) -> None:
         name, accepted = QInputDialog.getText(
@@ -2336,8 +2539,37 @@ class MainWindow(QMainWindow):
             return True
         return False
 
+    def _Targets_Generate(self, action_text: str) -> None:
+        if self._project_root is None:
+            selected = QFileDialog.getExistingDirectory(
+                self, self._translator.Text_Get("dialog.select_project_root")
+            )
+            if not selected:
+                return
+            self._project_root = Path(selected)
+        scope = {
+            "generate_flight": TargetScope.FLIGHT,
+            "generate_ground": TargetScope.GROUND,
+            "generate_all": TargetScope.ALL,
+        }[action_text]
+        model = deepcopy(self._model)
+        destination = self._project_root
+        self.Task_Run(
+            lambda _context: TargetGeneration_Apply(
+                model, self._service.catalog, self._service.policy,
+                destination, scope,
+            ),
+            lambda result: self.status_label.setText(
+                self._translator.Text_Get("status.targets_generated")
+                + ": " + ", ".join(result.targets)
+            ),
+        )
+
     def _Build_Request(self, action_text: str) -> None:
         self._ProjectModel_Sync()
+        if action_text in {"generate_flight", "generate_ground", "generate_all"}:
+            self._Targets_Generate(action_text)
+            return
         if action_text == "generate_apply":
             self._Project_Save()
             return

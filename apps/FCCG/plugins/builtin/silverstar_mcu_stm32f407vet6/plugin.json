@@ -763,6 +763,31 @@
         ],
         "always": false
       },
+      "usb_device_cdc": {
+        "inventory_modules": [
+          "USB_DEVICE",
+          "USB_OTG_FS"
+        ],
+        "init_sources": [
+          "USB_DEVICE/App/usb_device.c",
+          "Core/Src/usb_otg.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.usb_device_cdc"
+        ],
+        "limitations": [
+          "CubeMX USB Device CDC middleware remains hardware-owned"
+        ],
+        "always": false
+      },
       "fatfs": {
         "inventory_modules": [
           "FATFS"

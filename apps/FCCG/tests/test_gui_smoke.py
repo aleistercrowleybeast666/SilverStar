@@ -236,17 +236,20 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
     try:
         assert window.windowTitle() == PRODUCT_NAME
         assert window.version_label.text() == f"v{__version__}"
-        assert window.pages.count() == 5
-        assert window.navigation_list.count() == 5
+        assert window.pages.count() == 7
+        assert window.navigation_list.count() == 7
         assert not hasattr(window, "project_page")
         assert not hasattr(window, "plugins_page")
         assert [
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
-        ] == ["设备", "飞控配置", "算法参数", "硬件连接", "代码生成与构建"]
+        ] == ["设备", "飞控配置", "算法参数", "硬件连接", "AIR Link", "地面站", "代码生成与构建"]
         assert not hasattr(window.build_page, "configuration_combo")
         assert set(window.build_page.action_buttons) == {
             "generate_apply",
+            "generate_flight",
+            "generate_ground",
+            "generate_all",
             "open_vscode",
             "open_folder",
             "open_firmware_output",
@@ -268,13 +271,13 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
         assert "build_release" not in window.build_page.action_buttons
         assert "flash" not in window.build_page.action_buttons
         assert window.save_as_action.shortcut().toString() == "Ctrl+Shift+S"
-        assert window.plugin_manager_dialog.panel.plugin_table.rowCount() == 65
+        assert window.plugin_manager_dialog.panel.plugin_table.rowCount() == 54
         for index in range(window.pages.count()):
             window.navigation_list.setCurrentRow(index)
             assert window.pages.currentIndex() == index
 
         window.Language_Apply("en_US")
-        assert window.title_label.text() == "SilverStar Flight Controller Code Generator"
+        assert window.title_label.text() == "SilverStar Flight & Ground Code Generator"
         assert [
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
@@ -283,6 +286,8 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
                 "Flight Configuration",
                 "Algorithm Parameters",
                 "Hardware Connection",
+                "AIR Link",
+                "Ground Station",
                 "Code Generation & Build",
             ]
         assert window.build_page.action_buttons["build"].text() == "Build Firmware in FCCG"
@@ -295,6 +300,42 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
         assert "#0B2447" in qapp.styleSheet()
         window.Theme_Apply("light")
         assert "#123A78" in qapp.styleSheet()
+    finally:
+        window.close()
+
+
+def test_ground_page_selects_verified_board_radio_and_uart(tmp_path: Path, qapp) -> None:
+    window = _Window_Create(tmp_path, qapp)
+    try:
+        page = window.ground_target_page
+        page.enabled.setChecked(True)
+        page.board.setCurrentIndex(
+            page.board.findData("silverstar.board.silverstar_0_5")
+        )
+        assert window._model.ground_target.mcu == "silverstar.mcu.stm32f407vet6"
+        assert window._model.ground_target.hardware.mode == "board_plugin"
+        page.radio.setCurrentIndex(
+            page.radio.findData("silverstar.device.telemetry.sx1281")
+        )
+        page.module.setCurrentIndex(page.module.findData("e28_2g4m12sx"))
+        for requirement, resource in (
+            ("radio_bus", "PLATFORM_SPI_1"),
+            ("radio_nss", "PLATFORM_GPIO_0"),
+            ("radio_reset", "PLATFORM_GPIO_1"),
+            ("radio_busy", "PLATFORM_GPIO_2"),
+            ("radio_dio1", "PLATFORM_GPIO_3"),
+            ("time", "PLATFORM_TIME_1"),
+        ):
+            combo = page.assignments[requirement]
+            combo.setCurrentIndex(combo.findData(resource))
+        page.pc_interface.setCurrentIndex(page.pc_interface.findData("uart"))
+        page.pc_resource.setCurrentIndex(
+            page.pc_resource.findData("PLATFORM_UART_1")
+        )
+        assert page.status.text() == "地面站：READY"
+        assert window._model.ground_target.pc_resource == "PLATFORM_UART_1"
+        window.air_link_page.fields["frequency_hz"].setValue(2400.0)
+        assert "AIR_LINK_FREQUENCY_OUT_OF_RANGE" in window.air_link_page.status.text()
     finally:
         window.close()
 
@@ -592,6 +633,29 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
         assert window._model.hardware.mode == "board_plugin"
         assert not hardware_page.auto_button.isEnabled()
         assert not hardware_page.manual_validation_button.isEnabled()
+    finally:
+        window.close()
+
+
+def test_device_interface_profile_selector_updates_one_chip_instance(
+    tmp_path: Path, qapp
+) -> None:
+    window = _Window_Create(tmp_path, qapp)
+    try:
+        window._DeviceInstance_Change("imu0", "silverstar.device.imu.bmi088")
+        qapp.processEvents()
+        combo = window.devices_page.variant_combos["imu0"]
+        assert combo.count() == 4
+        selected = combo.findData(("spi", "bosch_sync_400_hz"))
+        assert selected >= 0
+        combo.setCurrentIndex(selected)
+        qapp.processEvents()
+        instance = window._model.DeviceInstance_Get("imu0")
+        assert instance is not None
+        assert instance.plugin == "silverstar.device.imu.bmi088"
+        assert (instance.interface, instance.profile) == (
+            "spi", "bosch_sync_400_hz"
+        )
     finally:
         window.close()
 

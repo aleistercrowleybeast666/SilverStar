@@ -102,6 +102,7 @@ def _ModuleProviderActive_Is(
 
 
 def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGraph:
+    catalog = catalog.ProjectView_Get(model)
     sources: list[str] = []
     asm_sources: list[str] = []
     include_dirs: list[str] = []
@@ -412,6 +413,11 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
         )
     sources.extend(generated_sources)
     include_dirs.append("Generated/Inc")
+    if any(
+        catalog.Component_Get(instance.plugin).radio is not None
+        for instance in model.device_instances
+    ):
+        defines.append("SILVERSTAR_AIR_LINK_ENABLED=1")
     forced_includes.append("Generated/Inc/project_flight_config.h")
     if model.device_instances:
         include_dirs.append("Devices")

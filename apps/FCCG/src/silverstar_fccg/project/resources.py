@@ -874,7 +874,7 @@ def _RequirementOwners_Get(
         (
             instance.instance_id,
             instance.plugin,
-            catalog.Component_Get(instance.plugin),
+            catalog.InstanceComponent_Get(instance),
         )
         for instance in model.device_instances
     )
@@ -934,6 +934,7 @@ def ResourceAssignments_Resolve(
     *,
     auto_assign: bool = False,
 ) -> ResourceAssignmentResult:
+    catalog = catalog.ProjectView_Get(model)
     provisions: dict[str, ResourceProvision] = {}
     roles: dict[str, ResourceRole] = {}
     board_conflicts = ()

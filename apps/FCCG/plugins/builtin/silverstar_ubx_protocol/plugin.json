@@ -2,7 +2,7 @@
   "schema_version": 0,
   "id": "silverstar.sensor.ubx",
   "name": "UBX receiver protocol",
-  "type": "device",
+  "type": "core",
   "class": "ubx_library",
   "version": "0.1.0",
   "description": "Bounded UBX identification, configuration, readback and conditional persistence.",
@@ -43,20 +43,7 @@
     "source_origins": {
       "default": "fccg_joint_sensor_library"
     },
-    "device_category": "sensor.gnss",
-    "device_selection_style": "instance"
-  },
-  "instance_policy": {
-    "plugin_max": 4,
-    "class_max": 4,
-    "same_plugin_multiple": true,
-    "multi_instance_ready": true
-  },
-  "physical_device": {
-    "vendor": "SilverStar",
-    "model": "Sensor register bus",
-    "chipset": "Sensor register bus",
-    "driver": "Sensor register bus register driver"
+    "support_library": true
   },
   "transports": []
 }

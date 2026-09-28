@@ -2,7 +2,7 @@
   "schema_version": 0,
   "id": "silverstar.sensor.register_bus",
   "name": "Sensor register bus",
-  "type": "device",
+  "type": "core",
   "class": "sensor_library",
   "version": "0.1.0",
   "description": "Sensor register bus raw sensor driver; HARDWARE_UNVERIFIED.",
@@ -48,20 +48,7 @@
     "source_origins": {
       "default": "fccg_joint_sensor_library"
     },
-    "device_category": "sensor.bus",
-    "device_selection_style": "instance"
-  },
-  "instance_policy": {
-    "plugin_max": 4,
-    "class_max": 4,
-    "same_plugin_multiple": true,
-    "multi_instance_ready": true
-  },
-  "physical_device": {
-    "vendor": "SilverStar",
-    "model": "Sensor register bus",
-    "chipset": "Sensor register bus",
-    "driver": "Sensor register bus register driver"
+    "support_library": true
   },
   "transports": []
 }

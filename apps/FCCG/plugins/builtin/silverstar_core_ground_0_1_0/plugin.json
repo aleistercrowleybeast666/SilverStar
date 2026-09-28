@@ -1,0 +1,29 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.core.ground.0_1_0",
+  "name": "SilverStar Ground Bridge Core",
+  "type": "core",
+  "class": "ground_bridge",
+  "version": "0.1.0",
+  "description": "Opaque AIR frame bridge between GSP byte stream and packet radio.",
+  "requires": {"components": [], "resources": [], "capabilities": []},
+  "resources": {"provides": [], "roles": [], "conflicts": []},
+  "provides": ["ground.bridge", "ground.gsp"],
+  "build": {
+    "sources": [
+      "Ground/Core/Src/ground_bridge.c",
+      "Ground/Radio/Src/ground_radio_sx1281.c",
+      "Ground/Protocol/Src/gsp_min_protocol.c",
+      "Ground/Protocol/Src/protocol_crc16.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": ["Ground/Core/Inc", "Ground/Protocol/Inc"],
+    "defines": []
+  },
+  "payload": {"roots": ["Ground"]},
+  "metadata": {
+    "target_role": "ground_station",
+    "reference_repository": "aleistercrowleybeast666/GS_SS1",
+    "reference_commit": "7fe0f61142c7360f7dbae0ac0000036315631320"
+  }
+}

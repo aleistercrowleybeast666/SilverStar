@@ -64,6 +64,15 @@ class BuildPage(ScrollableLocalizedPage):
             primary_actions.addWidget(button)
         primary_actions.addStretch(1)
         self.root_layout.addLayout(primary_actions)
+        target_actions = QHBoxLayout()
+        for action_id, key in (
+            ("generate_flight", "action.generate_flight"),
+            ("generate_ground", "action.generate_ground"),
+            ("generate_all", "action.generate_all"),
+        ):
+            target_actions.addWidget(self._ActionButton_Create(action_id, key))
+        target_actions.addStretch(1)
+        self.root_layout.addLayout(target_actions)
 
         advanced_layout = QVBoxLayout()
         verification_label = QLabel()

@@ -1,5 +1,7 @@
 # SilverStar_FCCG Documentation
 
+当前 0.1.0 pre-release 工程同时支持 Flight Controller 与可选 Ground Station Target，共享项目级 AIR Link。新边界见[Target model](../architecture/TARGET_MODEL.md)、[AIR Link](../architecture/AIR_LINK.md)、[Ground Station](../architecture/GROUND_STATION.md) 和 [Device variants](../architecture/DEVICE_VARIANTS.md)。本目录保留较详细的飞控规范与合仓前历史资料；历史验证数据不代表本轮新工程的实机验收。
+
 本目录分成两层：
 
 1. **FCCG软件文档**：本目录根部，描述配置器、插件、工程模型、生成器、构建和GUI；

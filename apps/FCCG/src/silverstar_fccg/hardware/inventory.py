@@ -111,6 +111,7 @@ class HardwareInventory:
     clocks: dict[str, Any]
     peripherals: tuple[str, ...]
     generated_sources: tuple[str, ...] = ()
+    usb_cdc: bool = False
     timebase: TimebaseInventory = field(default_factory=TimebaseInventory)
     fatfs: FatFsInventory = field(default_factory=FatFsInventory)
     issues: tuple[str, ...] = ()
@@ -123,6 +124,11 @@ class HardwareInventory:
 
     def HardwareResources_Get(self) -> tuple[HardwareResource, ...]:
         resources: list[HardwareResource] = []
+        if self.usb_cdc:
+            resources.append(HardwareResource(
+                "USB_CDC", "usb_cdc", {"capabilities": ["usb.device", "usb.cdc"],
+                                         "physical_resource": "USB Device CDC"}
+            ))
         groups = (
             (self.uarts, "platform_uart.h", "huart"),
             (self.spis, "platform_spi.h", "hspi"),
@@ -1144,6 +1150,16 @@ def CubeMxInventory_Parse(
             key=_NaturalKey_Get,
         )
     )
+    usb_device_selected = "USB_DEVICE" in peripherals
+    cdc_class_selected = any(
+        key.startswith("USB_DEVICE.") and "CDC" in value.upper()
+        for key, value in values.items()
+    )
+    cdc_source_present = any(
+        path.replace("\\", "/").lower().endswith("usbd_cdc_if.c")
+        for path in normalized_generated_files
+    )
+    usb_cdc = usb_device_selected and cdc_class_selected and cdc_source_present
     pins: list[PinInventory] = []
     for key, signal in values.items():
         if not key.endswith(".Signal"):
@@ -1356,6 +1372,7 @@ def CubeMxInventory_Parse(
         nvic=nvic,
         clocks=clocks,
         peripherals=peripherals,
+        usb_cdc=usb_cdc,
         generated_sources=tuple(sorted(normalized_generated_files)),
         timebase=timebase,
         fatfs=fatfs,

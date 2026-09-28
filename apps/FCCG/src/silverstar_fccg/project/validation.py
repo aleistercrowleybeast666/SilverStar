@@ -696,6 +696,12 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         return ProjectValidationResult(
             (ValidationIssue("error", "project_model", str(error)),)
         )
+    try:
+        catalog = catalog.ProjectView_Get(model)
+    except ValueError as error:
+        return ProjectValidationResult(
+            (ValidationIssue("error", "device_variant", str(error)),)
+        )
     if model.core == SILVERSTAR_CORE_COMPONENT_ID and (
         model.identity.firmware_version != SILVERSTAR_PLATFORM_VERSION
         or model.identity.build_target != SILVERSTAR_BUILD_ID
@@ -999,6 +1005,17 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
                         f"Required SSLOG record cannot be disabled: {definition.record}",
                     )
                 )
+    from silverstar_fccg.project.air_link import (
+        AirLinkIssues_Get, GroundTargetIssues_Get,
+    )
+
+    issues.extend(
+        ValidationIssue("error", issue.code, issue.message)
+        for issue in (
+            GroundTargetIssues_Get(model, catalog)
+            if model.ground_target.enabled else AirLinkIssues_Get(model, catalog)
+        )
+    )
     return ProjectValidationResult(tuple(issues))
 
 
@@ -1017,6 +1034,12 @@ def Project_EditValidate(
     except ProjectModelError as error:
         return ProjectValidationResult(
             (ValidationIssue("error", "project_model", str(error)),)
+        )
+    try:
+        catalog = catalog.ProjectView_Get(model)
+    except ValueError as error:
+        return ProjectValidationResult(
+            (ValidationIssue("error", "device_variant", str(error)),)
         )
 
     if model.hardware.mode == "unselected":

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
+from dataclasses import replace
 from pathlib import Path
 
 from silverstar_fccg.core.errors import FccgError
@@ -10,6 +11,7 @@ from silverstar_fccg.plugins.manifest import (
     PluginManifest,
     PluginManifestError,
     PluginManifest_Load,
+    PluginManifest_VariantResolve,
 )
 
 
@@ -22,6 +24,78 @@ class PluginCatalog:
         self.builtin_root = builtin_root.resolve()
         self.installed_root = installed_root.resolve()
         self._components: dict[str, PluginManifest] = {}
+        self._project_variant_view = False
+        self._instance_components: dict[str, PluginManifest] = {}
+
+    def InstanceComponent_Get(self, instance) -> PluginManifest:
+        return self._instance_components.get(
+            instance.instance_id, self.Component_Get(instance.plugin)
+        )
+
+    def InstanceIdComponent_Get(self, instance_id: str) -> PluginManifest:
+        try:
+            return self._instance_components[instance_id]
+        except KeyError as error:
+            raise PluginCatalogError(f"Unknown device instance: {instance_id}") from error
+
+    def ProjectView_Get(self, model) -> PluginCatalog:
+        """Resolve selected Device variants without registering duplicate chip plugins."""
+        if self._project_variant_view:
+            return self
+        view = PluginCatalog(self.builtin_root, self.installed_root)
+        view._components = dict(self._components)
+        view._project_variant_view = True
+        selected: dict[str, list[PluginManifest]] = {}
+        for instance in model.device_instances:
+            manifest = self.Component_Get(instance.plugin)
+            if not manifest.device_variants:
+                if instance.interface or instance.profile:
+                    raise PluginCatalogError(f"{instance.plugin} has no Device variants")
+                view._instance_components[instance.instance_id] = manifest
+                continue
+            default_variant = next(iter(manifest.device_variants.values()))
+            interface = instance.interface or default_variant["interface"]
+            profile = instance.profile or default_variant["profile"]
+            matches = [
+                variant_id for variant_id, variant in manifest.device_variants.items()
+                if variant["interface"] == interface
+                and variant["profile"] == profile
+            ]
+            if len(matches) != 1:
+                raise PluginCatalogError(
+                    f"{instance.plugin} requires a valid interface and profile"
+                )
+            resolved = PluginManifest_VariantResolve(manifest, matches[0])
+            view._instance_components[instance.instance_id] = resolved
+            selected.setdefault(instance.plugin, []).append(resolved)
+        for plugin_id, variants in selected.items():
+            first = variants[0]
+            if len(variants) == 1:
+                view._components[plugin_id] = first
+                continue
+            build = replace(
+                first.build,
+                sources=tuple(dict.fromkeys(
+                    source for variant in variants for source in variant.build.sources
+                )),
+                include_dirs=tuple(dict.fromkeys(
+                    path for variant in variants for path in variant.build.include_dirs
+                )),
+                defines=tuple(dict.fromkeys(
+                    value for variant in variants for value in variant.build.defines
+                )),
+            )
+            view._components[plugin_id] = replace(
+                first, build=build,
+                payload_roots=tuple(dict.fromkeys(
+                    path for variant in variants for path in variant.payload_roots
+                )),
+                provides=tuple(dict.fromkeys(
+                    capability for variant in variants
+                    for capability in variant.provides
+                )),
+            )
+        return view
 
     def Scan(self) -> tuple[PluginManifest, ...]:
         manifests: dict[str, PluginManifest] = {}

@@ -1,43 +1,28 @@
-from silverstar_fccg.project.model import (
-    BuildOptions,
-    DeviceInstance,
-    HardwareConfiguration,
-    HardwareResource,
-    LogStreamConfig,
-    ProjectIdentity,
-    ProjectModel,
-    ProjectModel_Load,
-    ProjectModel_Save,
-)
-from silverstar_fccg.project.resources import (
-    BoardCompatibilityResult,
-    BoardCompatibility_Resolve,
-    ResourceAssignmentResult,
-    ResourceAssignments_Resolve,
-)
-from silverstar_fccg.project.lifecycle import (
-    BUILDABLE_MAKE_TARGETS,
-    ProjectLifecycleState,
-    ProjectReadiness,
-    ProjectReadiness_Inspect,
-)
+"""Public project exports, loaded on demand to avoid import cycles."""
 
-__all__ = [
-    "BUILDABLE_MAKE_TARGETS",
-    "BuildOptions",
-    "DeviceInstance",
-    "BoardCompatibilityResult",
-    "BoardCompatibility_Resolve",
-    "HardwareConfiguration",
-    "HardwareResource",
-    "LogStreamConfig",
-    "ProjectIdentity",
-    "ProjectLifecycleState",
-    "ProjectModel",
-    "ProjectModel_Load",
-    "ProjectModel_Save",
-    "ProjectReadiness",
-    "ProjectReadiness_Inspect",
-    "ResourceAssignmentResult",
-    "ResourceAssignments_Resolve",
-]
+from importlib import import_module
+
+_EXPORT_MODULES = {
+    "model": (
+        "BuildOptions", "DeviceInstance", "HardwareConfiguration", "HardwareResource",
+        "LogStreamConfig", "ProjectIdentity", "ProjectModel", "ProjectModel_Load",
+        "ProjectModel_Save",
+    ),
+    "resources": (
+        "BoardCompatibilityResult", "BoardCompatibility_Resolve",
+        "ResourceAssignmentResult", "ResourceAssignments_Resolve",
+    ),
+    "lifecycle": (
+        "BUILDABLE_MAKE_TARGETS", "ProjectLifecycleState", "ProjectReadiness",
+        "ProjectReadiness_Inspect",
+    ),
+}
+
+__all__ = [name for names in _EXPORT_MODULES.values() for name in names]
+
+
+def __getattr__(name: str):
+    for module, names in _EXPORT_MODULES.items():
+        if name in names:
+            return getattr(import_module(f"silverstar_fccg.project.{module}"), name)
+    raise AttributeError(name)

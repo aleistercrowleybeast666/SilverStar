@@ -1071,17 +1071,18 @@ class FccgService:
         self, model: ProjectModel, language: str = "zh_CN"
     ) -> tuple[DeviceInstanceView, ...]:
         resolution = CapabilityResolution_Resolve(model, self.catalog)
+        project_catalog = self.catalog.ProjectView_Get(model)
         return tuple(
             DeviceInstanceView(
                 instance_id=instance.instance_id,
                 plugin_id=instance.plugin,
-                name=self.catalog.Component_Get(instance.plugin).DisplayName_Get(
+                name=project_catalog.InstanceComponent_Get(instance).DisplayName_Get(
                     language
                 ),
                 component_class=self.catalog.Component_Get(
                     instance.plugin
                 ).component_class,
-                provides=self.catalog.Component_Get(instance.plugin).provides,
+                provides=project_catalog.InstanceComponent_Get(instance).provides,
                 consumed=resolution.ConsumedCapabilitiesForInstance_Get(
                     instance.instance_id
                 ),
@@ -1091,8 +1092,8 @@ class FccgService:
                 ),
                 unqualified=tuple(
                     str(capability)
-                    for capability in self.catalog.Component_Get(
-                        instance.plugin
+                    for capability in project_catalog.InstanceComponent_Get(
+                        instance
                     ).metadata.get("unqualified_capabilities", {})
                 ),
                 required=bool(
@@ -1116,12 +1117,18 @@ class FccgService:
                 multi_instance_ready=self.catalog.Component_Get(
                     instance.plugin
                 ).instance_policy.multi_instance_ready,
-                initialization=deepcopy(self.catalog.Component_Get(
-                    instance.plugin
-                ).metadata.get("initialization", {})),
-                runtime_defaults=deepcopy(self.catalog.Component_Get(
-                    instance.plugin
-                ).metadata.get("runtime_defaults", {})),
+                initialization=deepcopy(
+                    project_catalog.InstanceComponent_Get(instance).metadata.get(
+                        "initialization", {}
+                    )
+                ),
+                runtime_defaults=deepcopy(
+                    project_catalog.InstanceComponent_Get(instance).metadata.get(
+                        "runtime_defaults", {}
+                    )
+                ),
+                interface=instance.interface,
+                profile=instance.profile,
             )
             for instance in model.device_instances
         )
@@ -1129,12 +1136,23 @@ class FccgService:
     def DeviceSelectionAvailabilities_Get(
         self, model: ProjectModel
     ) -> dict[str, SelectionAvailability]:
+        from silverstar_fccg.project.air_link import RadioLinkCompatible_Get
+
         values: dict[str, SelectionAvailability] = {}
         hardware_contract_prepared = bool(model.board) or (
             model.hardware.mode == "custom"
             and bool(model.hardware.snapshot_id)
         )
         for manifest in self.catalog.Type_Get("device"):
+            if (
+                manifest.radio is not None
+                and model.ground_target.enabled
+                and not RadioLinkCompatible_Get(model.air_link, manifest.radio)
+            ):
+                values[manifest.component_id] = SelectionAvailability(
+                    False, reason_code="selection.unavailable.air_link"
+                )
+                continue
             if (
                 manifest.metadata.get("hardware_contract_required") is not True
                 or not hardware_contract_prepared
@@ -1304,6 +1322,10 @@ class FccgService:
             provides=manifest.provides,
             requirements=requirements,
             options={
+                "device_variants": tuple(
+                    (variant_id, value["interface"], value["profile"])
+                    for variant_id, value in manifest.device_variants.items()
+                ),
                 "internal": manifest.metadata.get("internal") is True,
                 "device_category": str(
                     manifest.metadata.get("device_category", "")

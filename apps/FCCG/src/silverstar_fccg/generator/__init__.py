@@ -1,9 +1,6 @@
-from silverstar_fccg.generator.assembler import (
-    ApplyResult,
-    GenerationPlan,
-    ProjectAssembler,
-)
-from silverstar_fccg.generator.source_graph import SourceGraph, SourceGraph_Resolve
+"""Public generator exports, loaded on demand to avoid import cycles."""
+
+from importlib import import_module
 
 __all__ = [
     "ApplyResult",
@@ -12,3 +9,10 @@ __all__ = [
     "SourceGraph",
     "SourceGraph_Resolve",
 ]
+
+
+def __getattr__(name: str):
+    if name not in __all__:
+        raise AttributeError(name)
+    module = "source_graph" if name in {"SourceGraph", "SourceGraph_Resolve"} else "assembler"
+    return getattr(import_module(f"silverstar_fccg.generator.{module}"), name)

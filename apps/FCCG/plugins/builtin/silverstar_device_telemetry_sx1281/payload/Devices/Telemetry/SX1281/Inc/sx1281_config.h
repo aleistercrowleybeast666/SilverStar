@@ -77,6 +77,28 @@
 #define LORA_CFG_CRC_MODE               LORA_CRC_ON
 #define LORA_CFG_IQ_MODE                LORA_IQ_NORMAL
 
+#ifdef SILVERSTAR_AIR_LINK_ENABLED
+#include "air_link_config.h"
+#undef LORA_RF_FREQUENCY_HZ
+#undef LORA_CFG_SF
+#undef LORA_CFG_BW
+#undef LORA_CFG_CR
+#undef LORA_CFG_PREAMBLE_SYMBOLS
+#undef LORA_CFG_PREAMBLE_LEN
+#undef LORA_CFG_HEADER_TYPE
+#undef LORA_CFG_CRC_MODE
+#undef LORA_CFG_IQ_MODE
+#define LORA_RF_FREQUENCY_HZ            AIR_LINK_FREQUENCY_HZ
+#define LORA_CFG_SF                     AIR_LINK_SX128X_SF
+#define LORA_CFG_BW                     AIR_LINK_SX128X_BW
+#define LORA_CFG_CR                     AIR_LINK_SX128X_CR
+#define LORA_CFG_PREAMBLE_SYMBOLS       AIR_LINK_PREAMBLE_SYMBOLS
+#define LORA_CFG_PREAMBLE_LEN           AIR_LINK_SX128X_PREAMBLE_ENCODED
+#define LORA_CFG_HEADER_TYPE            AIR_LINK_SX128X_HEADER
+#define LORA_CFG_CRC_MODE               AIR_LINK_SX128X_CRC
+#define LORA_CFG_IQ_MODE                AIR_LINK_SX128X_IQ
+#endif
+
 #if (LORA_CFG_PREAMBLE_SYMBOLS == 16U) && (LORA_CFG_PREAMBLE_LEN != 0x18U)
 #error "SX1280 LoRa preamble 16 symbols must use encoded value 0x18, not 16U"
 #endif /* __SX1281_CONFIG_H */

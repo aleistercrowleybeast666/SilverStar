@@ -11,7 +11,6 @@ from silverstar_fccg.plugins.manifest import PluginManifest, SelectionKind
 from silverstar_fccg.hardware.platform import (
     DetectedMcuFacts,
     DetectedMcuFacts_FromInventory,
-    PlatformCompatibilityErrors_Get,
     PlatformMatch_Resolve,
 )
 from silverstar_fccg.project.capabilities import (

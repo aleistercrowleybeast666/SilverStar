@@ -144,7 +144,7 @@ def _Providers_Get(
 ) -> dict[str, tuple[CapabilityProvider, ...]]:
     values: dict[str, list[CapabilityProvider]] = {}
     for instance in instances:
-        manifest = catalog.Component_Get(instance.plugin)
+        manifest = catalog.InstanceComponent_Get(instance)
         provider = CapabilityProvider(instance.instance_id, instance.plugin)
         for capability in manifest.provides:
             values.setdefault(capability, []).append(provider)
@@ -157,6 +157,7 @@ def _Providers_Get(
 def CapabilityResolution_Resolve(
     model: ProjectModel, catalog: PluginCatalog
 ) -> CapabilityResolution:
+    catalog = catalog.ProjectView_Get(model)
     requirements = _Requirements_Get(model, catalog)
     providers_by_capability = _Providers_Get(model.device_instances, catalog)
     requirements_by_capability: dict[str, list[CapabilityUse]] = {}
@@ -220,7 +221,7 @@ def CapabilityResolution_Resolve(
     enabled_by_instance: dict[str, tuple[str, ...]] = {}
     unused_by_instance: dict[str, tuple[str, ...]] = {}
     for instance in model.device_instances:
-        provided = catalog.Component_Get(instance.plugin).provides
+        provided = catalog.InstanceComponent_Get(instance).provides
         required = tuple(
             capability
             for capability in provided

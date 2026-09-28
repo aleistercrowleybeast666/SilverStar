@@ -57,6 +57,7 @@ from silverstar_fccg.ui.widgets import (
 
 class DevicesPage(ScrollableLocalizedPage):
     instanceChanged = Signal(str, str)
+    variantChanged = Signal(str, str, str)
     instanceAddRequested = Signal(str)
     otherDeviceToggled = Signal(str, bool)
     installRequested = Signal()
@@ -152,6 +153,7 @@ class DevicesPage(ScrollableLocalizedPage):
 
         self.root_layout.addStretch(1)
         self.device_combos: dict[str, StandardComboBox] = {}
+        self.variant_combos: dict[str, StandardComboBox] = {}
         self.device_checks: dict[str, StandardCheckBox] = {}
         self.add_buttons: dict[str, QPushButton] = {}
         self.remove_buttons: dict[str, QPushButton] = {}
@@ -189,6 +191,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self._Layout_Clear(self.other_form)
         self._Layout_Clear(self.storage_form)
         self.device_combos.clear()
+        self.variant_combos.clear()
         self.add_buttons.clear()
         self.remove_buttons.clear()
         components_by_class: defaultdict[str, list[ComponentView]] = defaultdict(list)
@@ -333,6 +336,41 @@ class DevicesPage(ScrollableLocalizedPage):
                 )
                 self.device_combos[instance_id] = combo
                 if instance is not None:
+                    selected_component = next(
+                        (item for item in candidates if item.component_id == selected_plugin),
+                        None,
+                    )
+                    variants = (
+                        selected_component.options.get("device_variants", ())
+                        if selected_component is not None else ()
+                    )
+                    if variants:
+                        variant_combo = StandardComboBox()
+                        variant_combo.setObjectName(f"deviceVariant_{instance_id}")
+                        for variant_id, interface, profile in variants:
+                            variant_combo.addItem(
+                                f"{interface.upper()} · {profile.replace('_', ' ')}",
+                                (interface, profile),
+                            )
+                        selected_pair = (
+                            instance.interface or variants[0][1],
+                            instance.profile or variants[0][2],
+                        )
+                        selected_variant = variant_combo.findData(selected_pair)
+                        variant_combo.setCurrentIndex(max(0, selected_variant))
+                        variant_combo.currentIndexChanged.connect(
+                            lambda _index, selected_instance=instance_id,
+                            editor=variant_combo: self.variantChanged.emit(
+                                selected_instance,
+                                str(editor.currentData()[0]),
+                                str(editor.currentData()[1]),
+                            )
+                        )
+                        form.addRow(
+                            QLabel(self._translator.Text_Get("device.interface_profile")),
+                            variant_combo,
+                        )
+                        self.variant_combos[instance_id] = variant_combo
                     summary = QLabel(self._CapabilitySummary_Get(instance))
                     summary.setObjectName(f"deviceCapabilitySummary_{instance_id}")
                     summary.setWordWrap(True)

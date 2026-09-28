@@ -113,7 +113,9 @@ class CubeMxImporter:
                 f"CubeMX MCU {actual_mcu!r} does not match selected MCU {expected_mcu!r}"
             )
         self._RtosConflict_Validate(root, ioc_text)
-        self._GeneratedLayout_Validate(root)
+        generated_layout = (root / "Core" / "Src" / "main.c").is_file()
+        if generated_layout or (root / "Core").exists() or (root / "Drivers").exists():
+            self._GeneratedLayout_Validate(root)
         source_files = self._SourceFiles_Get(root)
         digest = self._SnapshotDigest_Get(root, source_files)
         progress(5, True)
@@ -131,6 +133,10 @@ class CubeMxImporter:
             root / "Core" / "Src",
             root / "FATFS" / "App",
             root / "FATFS" / "Target",
+            root / "USB_DEVICE" / "App",
+            root / "USB_DEVICE" / "Target",
+            root / "Middlewares" / "ST" / "STM32_USB_Device_Library" / "Core" / "Src",
+            root / "Middlewares" / "ST" / "STM32_USB_Device_Library" / "Class" / "CDC" / "Src",
         )
         build_sources = tuple(
             f"{prefix}/{path.relative_to(root).as_posix()}"
@@ -139,13 +145,20 @@ class CubeMxImporter:
             for path in sorted(source_root.glob("*.c"))
             if path.name.casefold() not in {"freertos.c", "sysmem.c"}
         )
+        if not generated_layout:
+            warnings = (*warnings, "CubeMX .ioc imported; generate CubeMX project sources before firmware generation")
         # The imported tree is retained as an auditable snapshot, but only
-        # controlled application/board-generated Core code enters the source
-        # graph.  HAL, CMSIS, startup and linker ownership remains with the
-        # matched Platform plugin.
+        # Controlled application/board-generated code and the CubeMX USB
+        # Device middleware enter the source graph. HAL, CMSIS, startup and
+        # linker ownership remains with the matched Platform plugin.
         include_dirs = tuple(
             f"{prefix}/{relative}"
-            for relative in ("Core/Inc", "FATFS/App", "FATFS/Target")
+            for relative in (
+                "Core/Inc", "FATFS/App", "FATFS/Target",
+                "USB_DEVICE/App", "USB_DEVICE/Target",
+                "Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+                "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+            )
             if (root / Path(*relative.split("/"))).is_dir()
         )
         hardware = HardwareConfiguration(
@@ -216,7 +229,10 @@ class CubeMxImporter:
     @classmethod
     def _GeneratedFiles_Get(cls, root: Path) -> dict[str, str]:
         files: dict[str, str] = {}
-        for relative_root in ("Core/Src", "Core/Inc", "FATFS/App", "FATFS/Target"):
+        for relative_root in (
+            "Core/Src", "Core/Inc", "FATFS/App", "FATFS/Target",
+            "USB_DEVICE/App", "USB_DEVICE/Target",
+        ):
             directory = root / Path(*relative_root.split("/"))
             if not directory.is_dir():
                 continue

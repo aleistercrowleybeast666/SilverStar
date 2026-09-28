@@ -184,5 +184,540 @@
     "chipset": "BMI088",
     "driver": "BMI088 register driver"
   },
-  "transports": []
+  "transports": [],
+  "device_variants": {
+    "i2c_raw200": {
+      "interface": "i2c",
+      "profile": "raw_200_hz",
+      "overrides": {}
+    },
+    "spi_raw200": {
+      "interface": "spi",
+      "profile": "raw_200_hz",
+      "overrides": {
+        "name": "BMI088 · SPI",
+        "description": "BMI088 raw SPI driver with CS/DRDY binding; HARDWARE_UNVERIFIED.",
+        "requires": {
+          "resources": [
+            {
+              "name": "data",
+              "kind": "spi",
+              "constraints": {
+                "spi": {
+                  "mode": "master",
+                  "cpol": "low",
+                  "cpha": "1edge",
+                  "data_bits": 8,
+                  "bit_order": "msb",
+                  "minimum_clock_hz": 100000,
+                  "maximum_clock_hz": 1000000,
+                  "dma": false,
+                  "irq": false
+                }
+              },
+              "mode": "shared"
+            },
+            {
+              "name": "cs",
+              "kind": "gpio_output",
+              "electrical_constraints": {
+                "mode": "gpio_output",
+                "output_type": "push_pull",
+                "pull": "none",
+                "speed": "low",
+                "safe_initial_level": "inactive",
+                "active_polarity": "low",
+                "startup_glitch_free": true
+              }
+            },
+            {
+              "name": "drdy",
+              "kind": "gpio_interrupt",
+              "electrical_constraints": {
+                "mode": "gpio_interrupt",
+                "pull": "none",
+                "exti_trigger": "rising",
+                "irq": true,
+                "maximum_irq_priority": 5
+              }
+            },
+            {
+              "name": "time",
+              "kind": "time",
+              "mode": "shared"
+            },
+            {
+              "name": "auxiliary_cs",
+              "kind": "gpio_output",
+              "electrical_constraints": {
+                "mode": "gpio_output",
+                "output_type": "push_pull",
+                "pull": "none",
+                "speed": "low",
+                "safe_initial_level": "inactive",
+                "active_polarity": "low",
+                "startup_glitch_free": true
+              }
+            },
+            {
+              "name": "auxiliary_drdy",
+              "kind": "gpio_interrupt",
+              "electrical_constraints": {
+                "mode": "gpio_interrupt",
+                "pull": "none",
+                "exti_trigger": "rising",
+                "irq": true,
+                "maximum_irq_priority": 5
+              }
+            }
+          ]
+        },
+        "build": {
+          "sources": [
+            "Devices/IMU/BMI088_SPI/Src/bmi088_spi_device.c",
+            "Devices/IMU/BMI088_SPI/Src/bmi088_spi_instance.c"
+          ],
+          "include_dirs": [
+            "Devices/IMU/BMI088_SPI/Inc"
+          ]
+        },
+        "payload": {
+          "roots": [
+            "Devices/IMU/BMI088_SPI"
+          ]
+        },
+        "metadata": {
+          "display_names": {
+            "en_US": "BMI088 · SPI",
+            "zh_CN": "BMI088 · SPI"
+          },
+          "device_instance_bindings": {
+            "SYSTEM_DEVICE_CLASS_IMU": {
+              "function_prefix": "Bmi088SpiImuInstance",
+              "headers": [
+                "bmi088_spi_instance.h"
+              ]
+            }
+          },
+          "instance_resource_binding": {
+            "struct_type": "ProjectBmi088SpiResources",
+            "accessor": "ProjectBmi088SpiResources_Get",
+            "count_symbol": "PROJECT_BMI088_SPI_INSTANCE_COUNT",
+            "fields": [
+              {
+                "requirement": "data",
+                "member": "spi"
+              },
+              {
+                "requirement": "cs",
+                "member": "cs"
+              },
+              {
+                "requirement": "drdy",
+                "member": "drdy"
+              },
+              {
+                "requirement": "time",
+                "member": "time"
+              },
+              {
+                "requirement": "auxiliary_cs",
+                "member": "auxiliary_cs"
+              },
+              {
+                "requirement": "auxiliary_drdy",
+                "member": "auxiliary_drdy"
+              }
+            ]
+          },
+          "device_descriptors": [
+            {
+              "order": 1,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_BMI088_SPI",
+              "class": "SYSTEM_DEVICE_CLASS_IMU",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+              "capability": "SYSTEM_CAPABILITY_IMU",
+              "rate": "200U",
+              "driver_hash": "0x01000001UL",
+              "name_hash": "0x01000002UL"
+            }
+          ]
+        }
+      }
+    },
+    "i2c_sync400": {
+      "interface": "i2c",
+      "profile": "bosch_sync_400_hz",
+      "overrides": {
+        "name": "BMI088 · I²C · Sync 400 Hz",
+        "description": "Bosch synchronized 400Hz profile; requires INT3(G)-INT1(A) interconnect and INT2(A) ready IRQ; HARDWARE_UNVERIFIED.",
+        "requires": {
+          "resources": [
+            {
+              "name": "data",
+              "kind": "i2c",
+              "constraints": {
+                "i2c": {
+                  "address_7bit": 24,
+                  "maximum_bus_frequency_hz": 400000
+                }
+              },
+              "platform_capabilities": [
+                "i2c.master_blocking",
+                "i2c.memory_read_write"
+              ],
+              "mode": "shared"
+            },
+            {
+              "name": "gyro",
+              "kind": "i2c",
+              "constraints": {
+                "i2c": {
+                  "address_7bit": 104,
+                  "maximum_bus_frequency_hz": 400000
+                }
+              },
+              "platform_capabilities": [
+                "i2c.master_blocking",
+                "i2c.memory_read_write"
+              ],
+              "mode": "shared"
+            },
+            {
+              "name": "time",
+              "kind": "time",
+              "mode": "shared"
+            },
+            {
+              "kind": "gpio_interrupt",
+              "electrical_constraints": {
+                "mode": "gpio_interrupt",
+                "pull": "none",
+                "exti_trigger": "rising",
+                "irq": true,
+                "maximum_irq_priority": 5
+              },
+              "name": "drdy",
+              "constraints": {
+                "pin_label": "BMI088_A_INT2_SYNC_READY"
+              },
+              "display_names": {
+                "en_US": "BMI088 accel INT2 synchronized ready",
+                "zh_CN": "BMI088 加计 INT2 同步就绪"
+              }
+            },
+            {
+              "kind": "gpio_interrupt",
+              "electrical_constraints": {
+                "mode": "gpio_interrupt",
+                "pull": "none",
+                "exti_trigger": "rising",
+                "irq": true,
+                "maximum_irq_priority": 5
+              },
+              "name": "auxiliary_drdy",
+              "constraints": {
+                "pin_label": "BMI088_G_INT3_A_INT1_SYNC_NET"
+              },
+              "display_names": {
+                "en_US": "BMI088 gyro INT3 to accel INT1 sync net",
+                "zh_CN": "BMI088 陀螺 INT3 → 加计 INT1 同步互连网"
+              }
+            }
+          ]
+        },
+        "provides": [
+          "device.imu",
+          "imu.acceleration",
+          "imu.angular_rate",
+          "imu.software_alignment_qualified",
+          "imu.software_propagation_qualified",
+          "imu.landing_stillness_qualified"
+        ],
+        "build": {
+          "sources": [
+            "Devices/IMU/BMI088_SYNC400/Src/bmi088_sync400_device.c",
+            "Devices/IMU/BMI088_SYNC400/Src/bmi088_sync400_instance.c"
+          ],
+          "include_dirs": [
+            "Devices/IMU/BMI088_SYNC400/Inc"
+          ]
+        },
+        "payload": {
+          "roots": [
+            "Devices/IMU/BMI088_SYNC400"
+          ]
+        },
+        "metadata": {
+          "display_names": {
+            "en_US": "BMI088 · I²C · Sync 400 Hz",
+            "zh_CN": "BMI088 · I²C · Sync 400 Hz"
+          },
+          "initialization": {
+            "profile": "bosch_sync_400_hz",
+            "fifo": {
+              "en_US": "Synchronized direct GP0/GP4 + gyro reads; raw independent FIFO disabled in this profile",
+              "zh_CN": "同步GP0/GP4与陀螺直接配对读取；此profile关闭独立raw FIFO"
+            },
+            "clock_contract": "INT3(G) to INT1(A); INT2(A) synchronized-ready; IRQ pairs required; TIME_UNCERTAIN receive proxy",
+            "output_rate_hz": 400,
+            "filter": {
+              "en_US": "400Hz accel normal / 400Hz gyro 47Hz BW",
+              "zh_CN": "加计400Hz normal；陀螺400Hz/47Hz带宽"
+            },
+            "interconnect": "INT3(G) -> INT1(A); INT2(A) -> MCU ready; both nets monitored by distinct MCU IRQs",
+            "sync_image_sha256": "996efc7079e75bc0b93f302f520e8a3bfa74c147b0a28fd6a2306d74a690fe88"
+          },
+          "device_instance_bindings": {
+            "SYSTEM_DEVICE_CLASS_IMU": {
+              "function_prefix": "Bmi088Sync400ImuInstance",
+              "headers": [
+                "bmi088_sync400_instance.h"
+              ]
+            }
+          },
+          "instance_resource_binding": {
+            "struct_type": "ProjectBmi088Sync400Resources",
+            "accessor": "ProjectBmi088Sync400Resources_Get",
+            "count_symbol": "PROJECT_BMI088_SYNC400_INSTANCE_COUNT",
+            "fields": [
+              {
+                "requirement": "data",
+                "member": "i2c"
+              },
+              {
+                "requirement": "gyro",
+                "member": "gyro_i2c"
+              },
+              {
+                "requirement": "time",
+                "member": "time"
+              },
+              {
+                "requirement": "drdy",
+                "member": "drdy"
+              },
+              {
+                "requirement": "auxiliary_drdy",
+                "member": "auxiliary_drdy"
+              }
+            ]
+          },
+          "device_descriptors": [
+            {
+              "order": 1,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_BMI088_SYNC400",
+              "class": "SYSTEM_DEVICE_CLASS_IMU",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+              "capability": "SYSTEM_CAPABILITY_IMU",
+              "rate": "400U",
+              "driver_hash": "0x01000001UL",
+              "name_hash": "0x01000002UL"
+            }
+          ],
+          "runtime_defaults": {
+            "SYSTEM_DEVICE_CLASS_IMU": {
+              "SYSTEM_IMU_OUTPUT_RATE_HZ": 400
+            }
+          }
+        }
+      }
+    },
+    "spi_sync400": {
+      "interface": "spi",
+      "profile": "bosch_sync_400_hz",
+      "overrides": {
+        "name": "BMI088 · SPI · Sync 400 Hz",
+        "description": "Bosch synchronized 400Hz profile; requires INT3(G)-INT1(A) interconnect and INT2(A) ready IRQ; HARDWARE_UNVERIFIED.",
+        "requires": {
+          "resources": [
+            {
+              "name": "data",
+              "kind": "spi",
+              "constraints": {
+                "spi": {
+                  "mode": "master",
+                  "cpol": "low",
+                  "cpha": "1edge",
+                  "data_bits": 8,
+                  "bit_order": "msb",
+                  "minimum_clock_hz": 100000,
+                  "maximum_clock_hz": 1000000,
+                  "dma": false,
+                  "irq": false
+                }
+              },
+              "mode": "shared"
+            },
+            {
+              "name": "cs",
+              "kind": "gpio_output",
+              "electrical_constraints": {
+                "mode": "gpio_output",
+                "output_type": "push_pull",
+                "pull": "none",
+                "speed": "low",
+                "safe_initial_level": "inactive",
+                "active_polarity": "low",
+                "startup_glitch_free": true
+              }
+            },
+            {
+              "name": "drdy",
+              "kind": "gpio_interrupt",
+              "electrical_constraints": {
+                "mode": "gpio_interrupt",
+                "pull": "none",
+                "exti_trigger": "rising",
+                "irq": true,
+                "maximum_irq_priority": 5
+              },
+              "constraints": {
+                "pin_label": "BMI088_A_INT2_SYNC_READY"
+              },
+              "display_names": {
+                "en_US": "BMI088 accel INT2 synchronized ready",
+                "zh_CN": "BMI088 加计 INT2 同步就绪"
+              }
+            },
+            {
+              "name": "time",
+              "kind": "time",
+              "mode": "shared"
+            },
+            {
+              "name": "auxiliary_cs",
+              "kind": "gpio_output",
+              "electrical_constraints": {
+                "mode": "gpio_output",
+                "output_type": "push_pull",
+                "pull": "none",
+                "speed": "low",
+                "safe_initial_level": "inactive",
+                "active_polarity": "low",
+                "startup_glitch_free": true
+              }
+            },
+            {
+              "name": "auxiliary_drdy",
+              "kind": "gpio_interrupt",
+              "electrical_constraints": {
+                "mode": "gpio_interrupt",
+                "pull": "none",
+                "exti_trigger": "rising",
+                "irq": true,
+                "maximum_irq_priority": 5
+              },
+              "constraints": {
+                "pin_label": "BMI088_G_INT3_A_INT1_SYNC_NET"
+              },
+              "display_names": {
+                "en_US": "BMI088 gyro INT3 to accel INT1 sync net",
+                "zh_CN": "BMI088 陀螺 INT3 → 加计 INT1 同步互连网"
+              }
+            }
+          ]
+        },
+        "provides": [
+          "device.imu",
+          "imu.acceleration",
+          "imu.angular_rate",
+          "imu.software_alignment_qualified",
+          "imu.software_propagation_qualified",
+          "imu.landing_stillness_qualified"
+        ],
+        "build": {
+          "sources": [
+            "Devices/IMU/BMI088_SYNC400_SPI/Src/bmi088_sync400_spi_device.c",
+            "Devices/IMU/BMI088_SYNC400_SPI/Src/bmi088_sync400_spi_instance.c"
+          ],
+          "include_dirs": [
+            "Devices/IMU/BMI088_SYNC400_SPI/Inc"
+          ]
+        },
+        "payload": {
+          "roots": [
+            "Devices/IMU/BMI088_SYNC400_SPI"
+          ]
+        },
+        "metadata": {
+          "display_names": {
+            "en_US": "BMI088 · SPI · Sync 400 Hz",
+            "zh_CN": "BMI088 · SPI · Sync 400 Hz"
+          },
+          "initialization": {
+            "profile": "bosch_sync_400_hz",
+            "fifo": {
+              "en_US": "Synchronized direct GP0/GP4 + gyro reads; raw independent FIFO disabled in this profile",
+              "zh_CN": "同步GP0/GP4与陀螺直接配对读取；此profile关闭独立raw FIFO"
+            },
+            "clock_contract": "INT3(G) to INT1(A); INT2(A) synchronized-ready; IRQ pairs required; TIME_UNCERTAIN receive proxy",
+            "output_rate_hz": 400,
+            "filter": {
+              "en_US": "400Hz accel normal / 400Hz gyro 47Hz BW",
+              "zh_CN": "加计400Hz normal；陀螺400Hz/47Hz带宽"
+            },
+            "interconnect": "INT3(G) -> INT1(A); INT2(A) -> MCU ready; both nets monitored by distinct MCU IRQs",
+            "sync_image_sha256": "996efc7079e75bc0b93f302f520e8a3bfa74c147b0a28fd6a2306d74a690fe88"
+          },
+          "device_instance_bindings": {
+            "SYSTEM_DEVICE_CLASS_IMU": {
+              "function_prefix": "Bmi088Sync400SpiImuInstance",
+              "headers": [
+                "bmi088_sync400_spi_instance.h"
+              ]
+            }
+          },
+          "instance_resource_binding": {
+            "struct_type": "ProjectBmi088Sync400SpiResources",
+            "accessor": "ProjectBmi088Sync400SpiResources_Get",
+            "count_symbol": "PROJECT_BMI088_SYNC400_SPI_INSTANCE_COUNT",
+            "fields": [
+              {
+                "requirement": "data",
+                "member": "spi"
+              },
+              {
+                "requirement": "cs",
+                "member": "cs"
+              },
+              {
+                "requirement": "drdy",
+                "member": "drdy"
+              },
+              {
+                "requirement": "time",
+                "member": "time"
+              },
+              {
+                "requirement": "auxiliary_cs",
+                "member": "auxiliary_cs"
+              },
+              {
+                "requirement": "auxiliary_drdy",
+                "member": "auxiliary_drdy"
+              }
+            ]
+          },
+          "device_descriptors": [
+            {
+              "order": 1,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_BMI088_SYNC400_SPI",
+              "class": "SYSTEM_DEVICE_CLASS_IMU",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+              "capability": "SYSTEM_CAPABILITY_IMU",
+              "rate": "400U",
+              "driver_hash": "0x01000001UL",
+              "name_hash": "0x01000002UL"
+            }
+          ],
+          "runtime_defaults": {
+            "SYSTEM_DEVICE_CLASS_IMU": {
+              "SYSTEM_IMU_OUTPUT_RATE_HZ": 400
+            }
+          }
+        }
+      }
+    }
+  }
 }

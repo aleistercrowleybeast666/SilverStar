@@ -90,6 +90,11 @@ class ProjectAssembler:
         self.catalog = catalog
 
     def Plan(self, model: ProjectModel, project_root: Path) -> GenerationPlan:
+        resolved_catalog = self.catalog.ProjectView_Get(model)
+        if resolved_catalog is not self.catalog:
+            return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Plan(
+                model, project_root
+            )
         destination = self.policy.Path_Resolve(project_root, allow_root=True)
         if destination.exists() and not destination.is_dir():
             raise ProjectAssemblerError(
@@ -317,6 +322,12 @@ class ProjectAssembler:
         confirm_dangerous: bool = False,
         progress_callback: GenerationProgressCallback | None = None,
     ) -> ApplyResult:
+        resolved_catalog = self.catalog.ProjectView_Get(model)
+        if resolved_catalog is not self.catalog:
+            return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+                model, plan, confirm_dangerous=confirm_dangerous,
+                progress_callback=progress_callback,
+            )
         if not plan.valid:
             raise ProjectAssemblerError(
                 "Cannot apply an invalid or conflicting generation plan"
