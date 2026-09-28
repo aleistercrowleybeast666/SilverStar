@@ -425,7 +425,7 @@ def GroundFiles_Render(
 
 def TargetGeneration_Apply(
     model: ProjectModel, catalog: PluginCatalog, internal_policy: WorkspacePolicy,
-    project_root: Path, scope: TargetScope,
+    project_root: Path, scope: TargetScope, *, confirm_dangerous: bool = False,
 ) -> TargetGenerationResult:
     output_policy = WorkspacePolicy(project_root)
     root = output_policy.root
@@ -475,9 +475,9 @@ def TargetGeneration_Apply(
             and GroundTargetIssues_Get(model, catalog) else model
         )
         plan = assembler.Plan(flight_model, flight_root)
-        if not plan.valid or plan.dangerous:
+        if not plan.valid or (plan.dangerous and not confirm_dangerous):
             raise ValueError("Flight generation plan is invalid or needs user review")
-        assembler.Apply(flight_model, plan)
+        assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous)
         flight_descriptor = ProjectModel_Load(flight_root / PROJECT_FILENAME)
         model.log_decoder_profile = flight_descriptor.log_decoder_profile
         decoder = flight_root / f"{model.identity.name}.ssdecoder"

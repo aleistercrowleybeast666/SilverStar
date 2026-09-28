@@ -5,6 +5,8 @@ from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
 
+import pytest
+
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.multi_target import (
     GroundFiles_Render, TargetGeneration_Apply, TargetScope,
@@ -241,7 +243,7 @@ def test_usb_cdc_adapter_uses_the_same_gsp_byte_stream(
 
 
 def test_standalone_ground_ioc_import_is_pending_generation(
-    builtin_catalog, workspace_root: Path, tmp_path: Path,
+    builtin_catalog, tmp_path: Path,
 ) -> None:
     board = builtin_catalog.Component_Get("silverstar.board.silverstar_0_5")
     assert board.board is not None
@@ -250,7 +252,7 @@ def test_standalone_ground_ioc_import_is_pending_generation(
     ioc = input_root / "Ground.ioc"
     ioc.write_bytes((board.package_root / board.board.ioc_file).read_bytes())
     imported = CubeMxImporter(
-        WorkspacePolicy(workspace_root), cache_root=tmp_path / "import_cache"
+        WorkspacePolicy(tmp_path), cache_root=tmp_path / "import_cache"
     ).Project_Import(ioc, risk_acknowledged=True)
     assert imported.hardware.mode == "custom"
     assert imported.hardware.build_sources == ()
@@ -343,3 +345,10 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
     assert b"make -j2" in (
         both.project_root / "Ground_Station/Ground_Station.code-workspace"
     ).read_bytes()
+    owned = both.project_root / "Ground_Station/Generated/Inc/air_link_config.h"
+    owned.write_text("user-owned edit", encoding="utf-8")
+    with pytest.raises(ValueError, match="local changes"):
+        TargetGeneration_Apply(
+            changed, builtin_catalog, WorkspacePolicy(workspace_root),
+            both.project_root, TargetScope.GROUND,
+        )

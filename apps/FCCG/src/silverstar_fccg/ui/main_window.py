@@ -2589,12 +2589,34 @@ class MainWindow(QMainWindow):
                 + ": " + ", ".join(result.targets)
             )
 
+        def apply(confirm_dangerous: bool) -> None:
+            self.Task_Run(
+                lambda _context: TargetGeneration_Apply(
+                    model, self._service.catalog, self._service.policy,
+                    destination, scope, confirm_dangerous=confirm_dangerous,
+                ),
+                generated,
+            )
+
+        if scope == TargetScope.GROUND:
+            apply(False)
+            return
+        flight_model = (
+            replace(model, ground_target=replace(model.ground_target, enabled=False))
+            if scope == TargetScope.FLIGHT
+            and GroundTargetIssues_Get(model, self._service.catalog)
+            else model
+        )
+
+        def planned(plan: GenerationPlan) -> None:
+            if self._GenerationPlan_ApplyAllowed(plan):
+                apply(plan.dangerous)
+
         self.Task_Run(
-            lambda _context: TargetGeneration_Apply(
-                model, self._service.catalog, self._service.policy,
-                destination, scope,
+            lambda _context: self._service.GenerationPlan_Create(
+                flight_model, destination / FLIGHT_DIRECTORY
             ),
-            generated,
+            planned,
         )
 
     def _Build_Request(self, action_text: str) -> None:
