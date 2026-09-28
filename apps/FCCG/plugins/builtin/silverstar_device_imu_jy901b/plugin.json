@@ -67,6 +67,7 @@
     "sources": [
       "Devices/IMU/JY901B/Src/jy901b_device.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c",

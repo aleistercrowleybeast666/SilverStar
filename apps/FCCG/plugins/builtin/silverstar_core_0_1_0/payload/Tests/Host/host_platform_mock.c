@@ -95,6 +95,21 @@ void HostPlatformMock_Jy901bEnable(PlatformUartId id, uint8_t enabled,
     s_uart[id].jy901b_ignore_writes = ignore_writes;
 }
 
+void HostPlatformMock_Jy901bRegisterSet(PlatformUartId id,
+    uint8_t reg, uint16_t value)
+{
+    if ((HostPlatformMock_UartIdValid(id) == 0U) || (reg >= 128U))
+    { return; }
+    s_uart[id].jy901b_registers[reg] = value;
+}
+
+uint16_t HostPlatformMock_Jy901bRegisterGet(PlatformUartId id, uint8_t reg)
+{
+    if ((HostPlatformMock_UartIdValid(id) == 0U) || (reg >= 128U))
+    { return 0U; }
+    return s_uart[id].jy901b_registers[reg];
+}
+
 static void HostPlatformMock_Jy901bRespond(PlatformUartId id,
     const uint8_t *data, uint16_t length)
 {
