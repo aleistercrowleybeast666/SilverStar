@@ -153,6 +153,25 @@ GnssNeoM9nIdentifyResult GnssNeoM9n_Identify(uint8_t instance);
 
 typedef enum
 {
+    GnssNeoM9nProbeStartResult_Ok = 0,
+    GnssNeoM9nProbeStartResult_NotReady,
+    GnssNeoM9nProbeStartResult_IoError
+} GnssNeoM9nProbeStartResult;
+
+typedef enum
+{
+    GnssNeoM9nProbePollResult_Pending = 0,
+    GnssNeoM9nProbePollResult_Identified,
+    GnssNeoM9nProbePollResult_WrongModel,
+    GnssNeoM9nProbePollResult_NotReady
+} GnssNeoM9nProbePollResult;
+
+GnssNeoM9nProbeStartResult GnssNeoM9n_ProbeStart(
+    uint8_t instance, uint32_t baudrate);
+GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance);
+
+typedef enum
+{
     GnssNeoM9n_UpdateOk = 0,
     GnssNeoM9n_UpdateNoData
 } GnssNeoM9nUpdateResult;

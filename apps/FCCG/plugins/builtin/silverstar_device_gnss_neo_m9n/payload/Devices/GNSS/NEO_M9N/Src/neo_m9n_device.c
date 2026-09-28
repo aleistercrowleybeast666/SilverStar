@@ -1966,6 +1966,37 @@ GnssNeoM9nIdentifyResult GnssNeoM9n_Identify(uint8_t instance)
     return GnssNeoM9nIdentifyTimeout;
 }
 
+GnssNeoM9nProbeStartResult GnssNeoM9n_ProbeStart(
+    uint8_t instance, uint32_t baudrate)
+{
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
+        (s_contexts[instance].initialized == 0U))
+    { return GnssNeoM9nProbeStartResult_NotReady; }
+    if (PlatformUart_BaudSet(NeoM9nResource_UartGet(instance), baudrate) !=
+        PLATFORM_OK)
+    { return GnssNeoM9nProbeStartResult_IoError; }
+    Gnss_ParserReset(instance);
+    s_contexts[instance].identity_seen = 0U;
+    s_contexts[instance].identity_verified = 0U;
+    if (GnssNeoM9n_SendUbx(instance, GNSS_UBX_MON_CLASS, 0x04U,
+            NULL, 0U) != 0)
+    { return GnssNeoM9nProbeStartResult_IoError; }
+    return GnssNeoM9nProbeStartResult_Ok;
+}
+
+GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
+{
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
+        (s_contexts[instance].initialized == 0U))
+    { return GnssNeoM9nProbePollResult_NotReady; }
+    (void)GnssNeoM9n_Process(instance, PlatformTime_Ms());
+    if (s_contexts[instance].identity_seen == 0U)
+    { return GnssNeoM9nProbePollResult_Pending; }
+    return (s_contexts[instance].identity_verified != 0U) ?
+        GnssNeoM9nProbePollResult_Identified :
+        GnssNeoM9nProbePollResult_WrongModel;
+}
+
 static void Gnss_ParsedFrameDispatch(uint8_t instance, uint32_t now_ms)
 {
     SILVERSTAR_ASSERT_OBJECT(&s_parser, GnssUbxParser_t,

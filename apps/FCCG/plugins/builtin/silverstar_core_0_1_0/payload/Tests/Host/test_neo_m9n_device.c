@@ -862,6 +862,22 @@ static void Test_ConfigDiffReadbackPersistence(void)
     s_wrong_model = 0U;
 }
 
+static void Test_NonblockingProbe(void)
+{
+    s_wrong_model = 0U;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(GnssNeoM9n_ProbeStart(0U, GNSS_DEFAULT_BAUDRATE) ==
+        GnssNeoM9nProbeStartResult_Ok);
+    TEST_CHECK(GnssNeoM9n_ProbePoll(0U) ==
+        GnssNeoM9nProbePollResult_Identified);
+    s_wrong_model = 1U;
+    TEST_CHECK(GnssNeoM9n_ProbeStart(0U, 38400U) ==
+        GnssNeoM9nProbeStartResult_Ok);
+    TEST_CHECK(GnssNeoM9n_ProbePoll(0U) ==
+        GnssNeoM9nProbePollResult_WrongModel);
+    s_wrong_model = 0U;
+}
+
 int main(void)
 {
     (void)memset(&s_uart_diagnostics, 0, sizeof(s_uart_diagnostics));
@@ -873,5 +889,6 @@ int main(void)
     Test_AsyncRuntimeTransactions();
     Test_DiscontinuityCompletesTransactions();
     Test_ConfigDiffReadbackPersistence();
+    Test_NonblockingProbe();
     return Test_Finish("neo_m9n_device");
 }

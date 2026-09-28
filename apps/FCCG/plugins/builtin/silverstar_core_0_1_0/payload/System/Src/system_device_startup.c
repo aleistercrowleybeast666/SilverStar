@@ -47,6 +47,8 @@ SystemDeviceStartupResult SystemDeviceStartup_Init(
         (config->probe_timeout_ms == 0U) ||
         (config->stage_timeout_ms == 0U) ||
         (config->sample_timeout_ms == 0U) ||
+        ((config->persistence != SystemDeviceStartupPersistence_None) &&
+         (config->persistence != SystemDeviceStartupPersistence_Persistent)) ||
         ((config->supported_candidate_count != 0U) &&
          (config->supported_candidates == NULL)))
     { return SystemDeviceStartupResult_InvalidArgument; }
@@ -104,12 +106,15 @@ static void SystemDeviceStartup_ProbeTick(SystemDeviceStartup *startup,
 
     if (startup->probe_started == 0U)
     {
+        if ((uint32_t)(now_ms - startup->state_entered_ms) >=
+            startup->config.probe_timeout_ms)
+        { SystemDeviceStartup_ProbeNext(startup, now_ms); return; }
         result = operations->probe_start(startup->config.owner,
             &startup->candidates[startup->candidate_index]);
         if (result == SystemDeviceStartupStep_Failed)
         { SystemDeviceStartup_ProbeNext(startup, now_ms); return; }
+        if (result == SystemDeviceStartupStep_Pending) { return; }
         startup->probe_started = 1U;
-        startup->state_entered_ms = now_ms;
         return;
     }
     result = operations->probe_poll(startup->config.owner);
