@@ -86,6 +86,7 @@ static uint32_t s_layer_writes[3];
 static uint8_t s_ignore_config_write;
 static uint8_t s_drop_config_ack;
 static uint8_t s_wrong_model;
+static uint8_t s_async_busy_once;
 
 static uint16_t Test_ReadU16Le(const uint8_t *data)
 {
@@ -465,6 +466,11 @@ PlatformResult PlatformUart_WriteFrameAsync(PlatformUartId id,
     const uint8_t *data, uint16_t length, PlatformUartTxPriority priority)
 {
     (void)priority;
+    if (s_async_busy_once != 0U)
+    {
+        s_async_busy_once = 0U;
+        return PLATFORM_BUSY;
+    }
     return PlatformUart_Write(id, data, length, 0U);
 }
 
@@ -885,6 +891,38 @@ static void Test_NonblockingProbe(void)
     s_wrong_model = 0U;
 }
 
+static void Test_AsyncConfigReadBackpressure(void)
+{
+    GnssNeoM9nConfigSnapshot snapshot;
+    GnssNeoM9nConfigReadDiagnostics diagnostics;
+    GnssNeoM9nConfigReadResult result;
+    GnssNeoM9nAsyncPollResult poll_result = GnssNeoM9nAsyncPollPending;
+    uint32_t cycle;
+    uint32_t tx_before;
+
+    s_mode = TEST_RESPONSE_OK;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(GnssNeoM9n_ConfigReadAsyncStart() ==
+        GnssNeoM9nAsyncStartOk);
+    tx_before = s_uart_diagnostics.tx_bytes;
+    s_async_busy_once = 1U;
+    TEST_CHECK(GnssNeoM9n_ConfigReadAsyncPoll(
+        &snapshot, NULL, &diagnostics, &result) ==
+        GnssNeoM9nAsyncPollPending);
+    TEST_CHECK(s_uart_diagnostics.tx_bytes == tx_before);
+    for (cycle = 0U; (cycle < 5000U) &&
+         (poll_result == GnssNeoM9nAsyncPollPending); cycle++)
+    {
+        (void)GnssNeoM9n_Process(s_tick_ms);
+        poll_result = GnssNeoM9n_ConfigReadAsyncPoll(
+            &snapshot, NULL, &diagnostics, &result);
+        s_tick_ms++;
+    }
+    TEST_CHECK(poll_result == GnssNeoM9nAsyncPollComplete);
+    TEST_CHECK(result == GnssNeoM9nConfigReadResponseOk);
+    TEST_CHECK(s_uart_diagnostics.tx_bytes > tx_before);
+}
+
 int main(void)
 {
     (void)memset(&s_uart_diagnostics, 0, sizeof(s_uart_diagnostics));
@@ -897,5 +935,6 @@ int main(void)
     Test_DiscontinuityCompletesTransactions();
     Test_ConfigDiffReadbackPersistence();
     Test_NonblockingProbe();
+    Test_AsyncConfigReadBackpressure();
     return Test_Finish("neo_m9n_device");
 }
