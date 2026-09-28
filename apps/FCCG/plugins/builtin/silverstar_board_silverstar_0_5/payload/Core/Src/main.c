@@ -113,9 +113,6 @@ int main(void)
     {
       Error_Handler();
     }
-    DebugLog_Init();
-    DebugLog_Print(SILVERSTAR_PRODUCT_STRING
-                   " startup result=%u", (unsigned int)startup_result);
   }
   /* USER CODE END 2 */
 

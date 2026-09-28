@@ -42,6 +42,10 @@ static uint32_t s_gnss_verify_count;
 static uint32_t s_mag_init_count;
 static uint32_t s_imu_process_count;
 static uint32_t s_gnss_process_count;
+static uint32_t s_imu_init_count;
+static uint32_t s_gnss_init_count;
+static uint8_t s_async_config;
+static uint8_t s_async_busy_ticks;
 static uint32_t s_power_process_count;
 static uint32_t s_output_process_count;
 
@@ -166,7 +170,8 @@ SystemDeviceResult SystemConsoleDevice_HealthGet(SystemConsoleHealth *health)
 void SystemConsoleDevice_Process(void) {}
 
 const char *SystemImu_NameGet(void) { return "Mock IMU"; }
-SystemDeviceResult SystemImu_Init(void) { return s_imu_init_result; }
+SystemDeviceResult SystemImu_Init(void)
+{ s_imu_init_count++; return s_imu_init_result; }
 SystemDeviceResult SystemImu_Start(void) { return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemImu_InfoGet(SystemDeviceInfo *info)
 { return Test_InfoFill(info, "Mock IMU Adapter", "Mock IMU"); }
@@ -175,6 +180,15 @@ SystemDeviceResult SystemImu_ConfigApply(
 {
     if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     s_imu_apply_count++;
+    if (s_async_config != 0U)
+    {
+        (void)Test_ConfigApply(config->requested_mask,
+            config->required_mask, report);
+        report->delegated_mask = report->applied_mask;
+        report->applied_mask = 0U;
+        report->persisted = 0U;
+        return SYSTEM_DEVICE_CONFIG_DELEGATED;
+    }
     return Test_ConfigApply(
         config->requested_mask, config->required_mask, report);
 }
@@ -182,6 +196,8 @@ SystemDeviceResult SystemImu_ConfigVerify(
     const SystemImuConfig *config, SystemDeviceConfigReport *report)
 {
     if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((s_async_config != 0U) && (s_async_busy_ticks > 0U))
+    { s_async_busy_ticks--; return SYSTEM_DEVICE_BUSY; }
     return Test_ConfigVerify(
         config->requested_mask, config->required_mask, report);
 }
@@ -194,7 +210,8 @@ SystemDeviceResult SystemImu_LatestSampleGet(SystemImuSample *sample)
 void SystemImu_Process(void) { s_imu_process_count++; }
 
 const char *SystemGnss_NameGet(void) { return "Mock GNSS"; }
-SystemDeviceResult SystemGnss_Init(void) { return s_gnss_init_result; }
+SystemDeviceResult SystemGnss_Init(void)
+{ s_gnss_init_count++; return s_gnss_init_result; }
 SystemDeviceResult SystemGnss_Start(void) { return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemGnss_InfoGet(SystemDeviceInfo *info)
 { return Test_InfoFill(info, "Mock GNSS Adapter", "Mock GNSS"); }
@@ -203,6 +220,15 @@ SystemDeviceResult SystemGnss_ConfigApply(
 {
     if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     s_gnss_apply_count++;
+    if (s_async_config != 0U)
+    {
+        (void)Test_ConfigApply(config->requested_mask,
+            config->required_mask, report);
+        report->delegated_mask = report->applied_mask;
+        report->applied_mask = 0U;
+        report->persisted = 0U;
+        return SYSTEM_DEVICE_CONFIG_DELEGATED;
+    }
     return Test_ConfigApply(
         config->requested_mask, config->required_mask, report);
 }
@@ -211,6 +237,8 @@ SystemDeviceResult SystemGnss_ConfigVerify(
 {
     if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     s_gnss_verify_count++;
+    if ((s_async_config != 0U) && (s_async_busy_ticks > 0U))
+    { s_async_busy_ticks--; return SYSTEM_DEVICE_BUSY; }
     return Test_ConfigVerify(
         config->requested_mask, config->required_mask, report);
 }
@@ -371,8 +399,31 @@ static void Test_Reset(void)
     s_mag_init_count = 0U;
     s_imu_process_count = 0U;
     s_gnss_process_count = 0U;
+    s_imu_init_count = 0U;
+    s_gnss_init_count = 0U;
+    s_async_config = 0U;
+    s_async_busy_ticks = 0U;
     s_power_process_count = 0U;
     s_output_process_count = 0U;
+}
+
+static SystemStartupResult Test_StartupComplete(void)
+{
+    SystemStartupResult result = SystemStartup_Run();
+    uint16_t tick;
+
+    if (SystemStartup_ResultIsFatal(result) != 0U) { return result; }
+    for (tick = 0U; tick < 256U; tick++)
+    {
+        if (SystemStartup_GetReport()->completed != 0U) { break; }
+        SystemStartup_ProcessDevices();
+    }
+    if (SystemStartup_GetReport()->completed == 0U)
+    { return SYSTEM_STARTUP_STATE_ERROR; }
+    if (SystemStartup_GetReport()->mission_capable == 0U)
+    { return SYSTEM_STARTUP_MISSION_BLOCKED; }
+    return (SystemStartup_GetReport()->degraded != 0U) ?
+        SYSTEM_STARTUP_DEGRADED : SYSTEM_STARTUP_OK;
 }
 
 static void Test_AllEnabledDevicesPass(void)
@@ -381,7 +432,7 @@ static void Test_AllEnabledDevicesPass(void)
     const SystemStartupDeviceReport *imu;
 
     Test_Reset();
-    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_OK);
+    TEST_CHECK(Test_StartupComplete() == SYSTEM_STARTUP_OK);
     report = SystemStartup_GetReport();
     imu = SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_IMU);
     TEST_CHECK(report->completed != 0U);
@@ -405,6 +456,58 @@ static void Test_AllEnabledDevicesPass(void)
     TEST_CHECK(s_debug_print_count == (SYSTEM_STARTUP_DEVICE_COUNT + 1U));
 }
 
+static void Test_DeviceInitStartsAfterSchedulerTick(void)
+{
+    uint16_t tick;
+
+    Test_Reset();
+    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_OK);
+    TEST_CHECK(SystemStartup_GetReport()->completed == 0U);
+    TEST_CHECK(s_imu_init_count == 0U);
+    TEST_CHECK(s_gnss_init_count == 0U);
+    SystemStartup_ProcessDevices();
+    TEST_CHECK(s_imu_init_count == 0U);
+    TEST_CHECK(s_gnss_init_count == 0U);
+    SystemStartup_ProcessDevices();
+    TEST_CHECK(s_imu_init_count == 1U);
+    TEST_CHECK(s_gnss_init_count == 0U);
+    for (tick = 0U; tick < 32U; tick++)
+    {
+        if (SystemStartup_GetReport()->completed != 0U) { break; }
+        SystemStartup_ProcessDevices();
+    }
+    TEST_CHECK(SystemStartup_GetReport()->completed != 0U);
+    TEST_CHECK(SystemStartup_GetReport()->mission_capable != 0U);
+}
+
+static void Test_DelegatedConfigWaitsWithoutBlocking(void)
+{
+#if (SYSTEM_IMU_BOOT_WRITE_CONFIG != 0U) && \
+    (SYSTEM_GNSS_BOOT_WRITE_CONFIG != 0U)
+    uint16_t tick;
+
+    Test_Reset();
+    s_async_config = 1U;
+    s_async_busy_ticks = 6U;
+    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_OK);
+    for (tick = 0U; tick < 7U; tick++)
+    { SystemStartup_ProcessDevices(); }
+    TEST_CHECK(SystemStartup_GetReport()->completed == 0U);
+    TEST_CHECK(s_preflight_count == 0U);
+    for (tick = 0U; tick < 32U; tick++)
+    {
+        if (SystemStartup_GetReport()->completed != 0U) { break; }
+        SystemStartup_ProcessDevices();
+    }
+    TEST_CHECK(SystemStartup_GetReport()->completed != 0U);
+    TEST_CHECK(SystemStartup_GetReport()->mission_capable != 0U);
+    TEST_CHECK(SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_IMU)->
+        verify_result == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_GNSS)->
+        verify_result == SYSTEM_DEVICE_OK);
+#endif
+}
+
 static void Test_OptionalFailureDegrades(void)
 {
     const SystemStartupReport *report;
@@ -412,7 +515,7 @@ static void Test_OptionalFailureDegrades(void)
     Test_Reset();
     s_gnss_init_result = SYSTEM_DEVICE_IO_ERROR;
     s_gnss_sample_result = SYSTEM_DEVICE_NOT_READY;
-    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_DEGRADED);
+    TEST_CHECK(Test_StartupComplete() == SYSTEM_STARTUP_DEGRADED);
     report = SystemStartup_GetReport();
     TEST_CHECK(report->mission_capable != 0U);
     TEST_CHECK(report->degraded != 0U);
@@ -426,7 +529,7 @@ static void Test_RequiredFailureBlocks(void)
 
     Test_Reset();
     s_imu_init_result = SYSTEM_DEVICE_IO_ERROR;
-    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_MISSION_BLOCKED);
+    TEST_CHECK(Test_StartupComplete() == SYSTEM_STARTUP_MISSION_BLOCKED);
     report = SystemStartup_GetReport();
     TEST_CHECK(report->mission_capable == 0U);
     TEST_CHECK((report->required_failure_mask &
@@ -441,7 +544,7 @@ static void Test_ProfileCanRequireGnss(void)
     s_profile.required_capabilities |= SYSTEM_CAPABILITY_GNSS;
     s_gnss_init_result = SYSTEM_DEVICE_IO_ERROR;
     s_gnss_sample_result = SYSTEM_DEVICE_NOT_READY;
-    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_MISSION_BLOCKED);
+    TEST_CHECK(Test_StartupComplete() == SYSTEM_STARTUP_MISSION_BLOCKED);
     TEST_CHECK((SystemStartup_GetReport()->required_failure_mask &
                 (1UL << SYSTEM_STARTUP_DEVICE_GNSS)) != 0U);
 }
@@ -450,7 +553,7 @@ static void Test_OutputSafetyFailureIsFatal(void)
 {
     Test_Reset();
     s_output_safe_result = SYSTEM_DEVICE_IO_ERROR;
-    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_OUTPUT_SAFETY_ERROR);
+    TEST_CHECK(Test_StartupComplete() == SYSTEM_STARTUP_OUTPUT_SAFETY_ERROR);
     TEST_CHECK(SystemStartup_ResultIsFatal(
         SYSTEM_STARTUP_OUTPUT_SAFETY_ERROR) != 0U);
     TEST_CHECK(s_preflight_count == 0U);
@@ -462,7 +565,7 @@ static void Test_GnssConfigurationSwitches(void)
     const SystemStartupDeviceReport *gnss;
 
     Test_Reset();
-    TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_OK);
+    TEST_CHECK(Test_StartupComplete() == SYSTEM_STARTUP_OK);
     gnss = SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_GNSS);
     TEST_CHECK(gnss != NULL);
 #if SYSTEM_GNSS_BOOT_WRITE_CONFIG
@@ -506,6 +609,8 @@ int main(void)
     TEST_CHECK(SystemStartup_DeviceResultIsSuccessful(
         SYSTEM_DEVICE_IO_ERROR) == 0U);
     Test_AllEnabledDevicesPass();
+    Test_DeviceInitStartsAfterSchedulerTick();
+    Test_DelegatedConfigWaitsWithoutBlocking();
     Test_OptionalFailureDegrades();
     Test_RequiredFailureBlocks();
     Test_ProfileCanRequireGnss();

@@ -764,7 +764,8 @@ Invoke-HostTest -Name 'jy901b_device' -Sources @(
     "$repoRoot\Devices\IMU\JY901B\Src\jy901b_device.c"
 )
 Invoke-HostTest -Name 'jy901b_adapter' -ExtraCompilerArgs @(
-    '-DJY901B_BAUD_RESCUE_ENABLE=0U'
+    '-DJY901B_BAUD_RESCUE_ENABLE=0U',
+    '-DJY901B_LEGACY_STARTUP_ENABLE=1U'
 ) -Sources @(
     "$repoRoot\Tests\Host\test_jy901b_adapter.c",
     $hostPlatformMock,
@@ -781,7 +782,9 @@ Invoke-HostTest -Name 'neo_m9n_device' -Sources @(
     "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c",
     "$repoRoot\System\Src\system_device_startup.c"
 )
-Invoke-HostTest -Name 'neo_m9n_adapter' -Sources @(
+Invoke-HostTest -Name 'neo_m9n_adapter' -ExtraCompilerArgs @(
+    '-DNEO_M9N_LEGACY_STARTUP_ENABLE=1U'
+) -Sources @(
     "$repoRoot\Tests\Host\test_neo_m9n_adapter.c",
     $hostPlatformMock,
     "$repoRoot\Generated\Src\project_resources.c",
@@ -978,6 +981,11 @@ Invoke-HostTest -Name 'system_startup' -Sources $startupSources
 Invoke-HostTest -Name 'system_startup_write_verify' -ExtraCompilerArgs @(
     '-DSYSTEM_GNSS_BOOT_WRITE_CONFIG=1U',
     '-DSYSTEM_GNSS_BOOT_VERIFY_CONFIG=1U'
+) -Sources $startupSources
+Invoke-HostTest -Name 'system_startup_async_no_explicit_verify' -ExtraCompilerArgs @(
+    '-DSYSTEM_GNSS_BOOT_WRITE_CONFIG=1U',
+    '-DSYSTEM_GNSS_BOOT_VERIFY_CONFIG=0U',
+    '-DSYSTEM_IMU_BOOT_VERIFY_CONFIG=0U'
 ) -Sources $startupSources
 Invoke-HostTest -Name 'system_startup_no_writes' -ExtraCompilerArgs @(
     '-DSYSTEM_GNSS_BOOT_WRITE_CONFIG=0U',

@@ -55,7 +55,7 @@ typedef struct
     uint32_t optional_failure_mask;
     uint32_t warning_mask;
     uint8_t device_count;
-    uint8_t completed;
+    volatile uint8_t completed;
     uint8_t passed;
     uint8_t mission_capable;
     uint8_t degraded;
@@ -101,6 +101,8 @@ static inline uint8_t SystemStartup_DeviceReportIsAvailable(
                          device->start_result) != 0U));
 }
 
+/* Call before scheduler start: initializes internal state and drives mission
+ * outputs SAFE. Device I/O begins in SystemStartup_ProcessDevices from DeviceTask. */
 SYSTEM_WARN_UNUSED_RESULT SystemStartupResult SystemStartup_Run(void);
 uint8_t SystemStartup_ResultIsFatal(SystemStartupResult result);
 const SystemStartupReport *SystemStartup_GetReport(void);

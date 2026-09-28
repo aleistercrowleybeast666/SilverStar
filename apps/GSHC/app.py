@@ -2792,7 +2792,6 @@ class Controller(QObject):
         if not selected_root.is_absolute():
             raise ValueError("The data root must be an absolute path")
         selected_log_dir = selected_root / "logs"
-        selected_data_dir = selected_root / "data"
         previous_log_dir = self.log_dir
 
         self.logger.set_log_dir(selected_log_dir)

@@ -1,9 +1,10 @@
 #ifndef __SYSTEM_USER_STARTUP_CONFIG_H
 #define __SYSTEM_USER_STARTUP_CONFIG_H
 
-/* Device boot configuration policy. WRITE never performs a pre-read. */
+/* Device boot policy. Asynchronous adapters read, compare, write only
+ * differences, verify, and wait for a new sample after the scheduler starts. */
 #ifndef SYSTEM_GNSS_BOOT_WRITE_CONFIG
-#define SYSTEM_GNSS_BOOT_WRITE_CONFIG       0U
+#define SYSTEM_GNSS_BOOT_WRITE_CONFIG       1U
 #endif
 #ifndef SYSTEM_GNSS_BOOT_VERIFY_CONFIG
 #define SYSTEM_GNSS_BOOT_VERIFY_CONFIG      1U
@@ -12,7 +13,7 @@
 #define SYSTEM_IMU_BOOT_WRITE_CONFIG        1U
 #endif
 #ifndef SYSTEM_IMU_BOOT_VERIFY_CONFIG
-#define SYSTEM_IMU_BOOT_VERIFY_CONFIG       0U
+#define SYSTEM_IMU_BOOT_VERIFY_CONFIG       1U
 #endif
 #ifndef SYSTEM_TELEMETRY_BOOT_WRITE_CONFIG
 #define SYSTEM_TELEMETRY_BOOT_WRITE_CONFIG  1U

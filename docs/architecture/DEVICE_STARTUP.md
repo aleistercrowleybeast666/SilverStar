@@ -1,8 +1,8 @@
 # Device startup contract
 
-The required Round 3 design limits pre-scheduler startup to deterministic MCU
-state, placing mission outputs in SAFE,
-initialize internal objects and create static tasks. Device discovery, UART
+The Round 3 implementation limits pre-scheduler startup to deterministic MCU
+state, places mission outputs in SAFE, initializes internal objects and
+creates static tasks. Device discovery, UART
 baud or protocol search, response waits, configuration readback, SD mount and
 sample readiness belong to `DeviceTask` after the scheduler starts.
 
@@ -31,14 +31,24 @@ callback asynchronous.
 
 ## Integration status
 
-The controller and host tests are present. JY901B and NEO-M9N have bounded
-request/poll startup controllers and Host tests for probe fallback, per-field
-read/diff/write, readback, and sample gates. Their older adapter startup paths
-still call synchronous operations. `SystemStartup_Run` still executes device
-startup and waits before scheduler start; `DeviceTask` does not yet own these
-controllers. The contract is therefore **not yet integrated**. Firmware
-startup must not be described as asynchronous until the adapter routing and
-scheduler-first path are verified together.
+`SystemStartup_Run` now initializes time, lifecycle, health and SAFE outputs
+before `vTaskStartScheduler`. `DeviceTask` advances console, physical adapter
+startup, configuration and communication checks after scheduling begins.
+It waits for delegated configuration verification before marking the startup
+report complete and entering preflight. The Flight task cannot enter READY
+while lifecycle remains in self test. The configuration and communication
+waits are bounded, and an unfinished required device blocks mission readiness.
+
+JY901B and NEO-M9N adapters run their request/poll startup controllers from
+their `Process` callbacks. Both use target, factory and declared candidate
+bootstrap profiles; read current settings before writing differences; change
+baud last; verify by readback; and require a new sample. Their production
+paths do not issue SAVE, BBR or Flash writes. Older synchronous adapter paths
+are compiled only by legacy host regression tests. Other existing device
+adapters continue their bounded immediate task startup as a transition path.
+The host controller and system startup tests and an ARM compile/link smoke
+verify software integration. Device timing and electrical behavior remain
+**HARDWARE_UNVERIFIED** until tested on a board.
 
 Factory UART defaults used for bounded fallback come from the
 [WitMotion standard protocol](https://wit-motion.gitbook.io/witmotion-sdk/wit-standard-protocol/wit-standard-communication-protocol)

@@ -59,4 +59,8 @@
 #define GNSS_COURSE_MAX_HEADACC_E5    1500000U   /* Motion-course maximum 1-sigma accuracy. */
 #define GNSS_NAV_MAX_AGE_MS          500U
 
+#ifndef NEO_M9N_LEGACY_STARTUP_ENABLE
+#define NEO_M9N_LEGACY_STARTUP_ENABLE 0U
+#endif
+
 #endif /* __NEO_M9N_CONFIG_H */

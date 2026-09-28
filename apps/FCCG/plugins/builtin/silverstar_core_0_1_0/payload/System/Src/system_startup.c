@@ -30,9 +30,25 @@
 #include "system_user_startup_config.h"
 
 #define SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US 2000000ULL
-#define SYSTEM_STARTUP_COMMUNICATION_MAX_POLLS 1000000UL
+#define SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US 120000000ULL
+
+typedef enum
+{
+    SystemStartupPhase_Idle = 0,
+    SystemStartupPhase_Console,
+    SystemStartupPhase_LogicalStart,
+    SystemStartupPhase_LogicalConfig,
+    SystemStartupPhase_ImuConfig,
+    SystemStartupPhase_GnssStart,
+    SystemStartupPhase_OtherAdapters,
+    SystemStartupPhase_WaitConfig,
+    SystemStartupPhase_WaitCommunication,
+    SystemStartupPhase_Complete
+} SystemStartupPhase;
 
 static SystemStartupReport s_startup_report;
+static SystemStartupPhase s_startup_phase;
+static uint64_t s_phase_started_us;
 
 static uint8_t SystemStartup_CapabilityEnabled(uint32_t capability_mask)
 {
@@ -378,7 +394,8 @@ static void SystemStartup_ImuConfig(void)
         device->config_result = SYSTEM_DEVICE_CONFIG_NO_ACTION;
         device->persist_result = SYSTEM_DEVICE_CONFIG_NO_ACTION;
     }
-    if (SYSTEM_IMU_BOOT_VERIFY_CONFIG != 0U)
+    if ((SYSTEM_IMU_BOOT_VERIFY_CONFIG != 0U) &&
+        (device->config_result != SYSTEM_DEVICE_CONFIG_DELEGATED))
     {
         (void)memset(&report, 0, sizeof(report));
         result = SystemImu_ConfigVerify(&config, &report);
@@ -393,7 +410,9 @@ static void SystemStartup_ImuConfig(void)
     }
     else
     {
-        device->verify_result = SYSTEM_DEVICE_CONFIG_NO_ACTION;
+        device->verify_result =
+            (device->config_result == SYSTEM_DEVICE_CONFIG_DELEGATED) ?
+            SYSTEM_DEVICE_NOT_EXECUTED : SYSTEM_DEVICE_CONFIG_NO_ACTION;
     }
 }
 
@@ -444,7 +463,8 @@ static void SystemStartup_GnssConfigExecute(
         /* Boot initializes RAM. Explicit Save owns BBR/Flash transactions. */
         device->persist_result = SYSTEM_DEVICE_CONFIG_NO_ACTION;
     }
-    if (SYSTEM_GNSS_BOOT_VERIFY_CONFIG != 0U)
+    if ((SYSTEM_GNSS_BOOT_VERIFY_CONFIG != 0U) &&
+        (device->config_result != SYSTEM_DEVICE_CONFIG_DELEGATED))
     {
         (void)memset(&report, 0, sizeof(report));
         result = SystemGnss_ConfigVerify(config, &report);
@@ -459,7 +479,9 @@ static void SystemStartup_GnssConfigExecute(
     }
     else
     {
-        device->verify_result = SYSTEM_DEVICE_CONFIG_NO_ACTION;
+        device->verify_result =
+            (device->config_result == SYSTEM_DEVICE_CONFIG_DELEGATED) ?
+            SYSTEM_DEVICE_NOT_EXECUTED : SYSTEM_DEVICE_CONFIG_NO_ACTION;
     }
     (void)SystemGnss_LastConfigReportGet(&s_startup_report.gnss_config);
 }
@@ -653,38 +675,24 @@ static void SystemStartup_ServiceCommunicationEvaluate(void)
     { device->communication_result = SYSTEM_DEVICE_OK; }
 }
 
-static void SystemStartup_CommunicationEvaluate(void)
+static uint8_t SystemStartup_CommunicationEvaluate(void)
 {
     SystemStartupDeviceReport *device;
-    uint64_t start_us = SystemTime_GetMonotonicUs();
-    uint64_t now_us = start_us;
-    uint32_t poll;
+    uint8_t pending = 0U;
 
     SILVERSTAR_ASSERT_OBJECT(&s_startup_report, SystemStartupReport,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    for (poll = 0U;
-         poll < SYSTEM_STARTUP_COMMUNICATION_MAX_POLLS;
-         poll++)
-    {
-        SystemStartup_CommunicationProcess();
-        SystemStartup_SensorCommunicationEvaluate();
-        SystemStartup_ServiceCommunicationEvaluate();
-        now_us = SystemTime_GetMonotonicUs();
-        if ((now_us - start_us) >= SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US)
-        {
-            break;
-        }
-    }
-
+    SystemStartup_CommunicationProcess();
+    SystemStartup_SensorCommunicationEvaluate();
+    SystemStartup_ServiceCommunicationEvaluate();
     for (device = &s_startup_report.devices[0];
          device < &s_startup_report.devices[SYSTEM_STARTUP_DEVICE_COUNT]; device++)
     {
         if ((device->present != 0U) &&
             (device->communication_result == SYSTEM_DEVICE_NOT_EXECUTED))
-        {
-            device->communication_result = SYSTEM_DEVICE_TIMEOUT;
-        }
+        { pending = 1U; }
     }
+    return pending;
 }
 
 static uint8_t SystemStartup_DeviceFailed(const SystemStartupDeviceReport *device)
@@ -733,13 +741,14 @@ static void SystemStartup_ReportFinalize(void)
         { s_startup_report.optional_failure_mask |= bit; }
     }
     s_startup_report.warning_mask = s_startup_report.optional_failure_mask;
-    s_startup_report.completed = 1U;
     s_startup_report.mission_capable =
         (s_startup_report.required_failure_mask == 0U) ? 1U : 0U;
     s_startup_report.passed = s_startup_report.mission_capable;
     s_startup_report.degraded =
         (s_startup_report.optional_failure_mask != 0U) ? 1U : 0U;
     s_startup_report.timestamp_us = SystemTime_GetMonotonicUs();
+    /* Publish completion only after every report field is final. */
+    s_startup_report.completed = 1U;
 }
 
 static void SystemStartup_ReportPrint(void)
@@ -778,12 +787,79 @@ static void SystemStartup_ReportPrint(void)
     }
 }
 
-SystemStartupResult SystemStartup_Run(void)
+static uint8_t SystemStartup_ConfigVerifyPending(void)
 {
+    SystemStartupDeviceReport *imu =
+        &s_startup_report.devices[SYSTEM_STARTUP_DEVICE_IMU];
+    SystemStartupDeviceReport *gnss =
+        &s_startup_report.devices[SYSTEM_STARTUP_DEVICE_GNSS];
+    SystemDeviceConfigReport report;
     SystemDeviceResult result;
 
+    if ((imu->config_result == SYSTEM_DEVICE_CONFIG_DELEGATED) &&
+        (imu->verify_result == SYSTEM_DEVICE_NOT_EXECUTED))
+    {
+        SystemImuConfig config;
+        (void)memset(&config, 0, sizeof(config));
+        config.requested_mask = SYSTEM_IMU_CFG_OUTPUT_RATE;
+        config.required_mask = SYSTEM_IMU_CFG_OUTPUT_RATE;
+        config.output_rate_hz = SYSTEM_IMU_OUTPUT_RATE_HZ;
+        (void)memset(&report, 0, sizeof(report));
+        result = SystemImu_ConfigVerify(&config, &report);
+        if (result != SYSTEM_DEVICE_BUSY)
+        {
+            imu->verify_result = result;
+            imu->verify_failed_mask = report.failed_mask |
+                                      report.verify_failed_mask;
+            imu->failed_mask |= imu->verify_failed_mask;
+            imu->applied_mask = report.applied_mask;
+            imu->detail_code = report.detail_code;
+        }
+    }
+    if ((gnss->config_result == SYSTEM_DEVICE_CONFIG_DELEGATED) &&
+        (gnss->verify_result == SYSTEM_DEVICE_NOT_EXECUTED))
+    {
+        SystemGnssConfig config;
+        SystemStartup_GnssConfigGet(&config);
+        (void)memset(&report, 0, sizeof(report));
+        result = SystemGnss_ConfigVerify(&config, &report);
+        if (result != SYSTEM_DEVICE_BUSY)
+        {
+            gnss->verify_result = result;
+            gnss->verify_failed_mask = report.failed_mask |
+                                       report.verify_failed_mask;
+            gnss->failed_mask |= gnss->verify_failed_mask;
+            gnss->applied_mask = report.applied_mask;
+            gnss->detail_code = report.detail_code;
+            (void)SystemGnss_LastConfigReportGet(&s_startup_report.gnss_config);
+        }
+    }
+    return (uint8_t)(
+        ((imu->config_result == SYSTEM_DEVICE_CONFIG_DELEGATED) &&
+         (imu->verify_result == SYSTEM_DEVICE_NOT_EXECUTED)) ||
+        ((gnss->config_result == SYSTEM_DEVICE_CONFIG_DELEGATED) &&
+         (gnss->verify_result == SYSTEM_DEVICE_NOT_EXECUTED)));
+}
+
+static void SystemStartup_TimeoutMark(void)
+{
+    SystemStartupDeviceReport *device;
+
+    for (device = &s_startup_report.devices[0];
+         device < &s_startup_report.devices[SYSTEM_STARTUP_DEVICE_COUNT];
+         device++)
+    {
+        if ((device->present != 0U) &&
+            (device->communication_result == SYSTEM_DEVICE_NOT_EXECUTED))
+        { device->communication_result = SYSTEM_DEVICE_TIMEOUT; }
+    }
+}
+
+SystemStartupResult SystemStartup_Run(void)
+{
     SILVERSTAR_ASSERT_OBJECT(&s_startup_report, SystemStartupReport,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    s_startup_phase = SystemStartupPhase_Idle;
     SystemStartup_ReportReset();
     if (SystemTime_Init() != SYSTEM_DEVICE_OK) { return SYSTEM_STARTUP_TIME_ERROR; }
     SystemLifecycle_Init();
@@ -801,24 +877,8 @@ SystemStartupResult SystemStartup_Run(void)
         SystemStartup_ReportFinalize();
         return SYSTEM_STARTUP_OUTPUT_SAFETY_ERROR;
     }
-#if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U)
-    SystemStartup_ConsoleStart();
-#endif
-    SystemStartup_JyLogicalStart();
-    SystemStartup_JyLogicalConfig();
-    SystemStartup_ImuConfig();
-    SystemStartup_GnssStart();
-    SystemStartup_OtherAdaptersStart();
-    SystemStartup_CommunicationEvaluate();
-    SystemStartup_ReportFinalize();
-    result = SystemLifecycle_EnterPreflight();
-    SystemHealth_Process();
-    SystemStartup_ReportPrint();
-    if (result != SYSTEM_DEVICE_OK) { return SYSTEM_STARTUP_STATE_ERROR; }
-    if (s_startup_report.mission_capable == 0U)
-    { return SYSTEM_STARTUP_MISSION_BLOCKED; }
-    return (s_startup_report.degraded != 0U) ?
-        SYSTEM_STARTUP_DEGRADED : SYSTEM_STARTUP_OK;
+    s_startup_phase = SystemStartupPhase_Console;
+    return SYSTEM_STARTUP_OK;
 }
 
 uint8_t SystemStartup_ResultIsFatal(SystemStartupResult result)
@@ -842,6 +902,76 @@ const SystemStartupDeviceReport *SystemStartup_GetDeviceReport(
 
 void SystemStartup_ProcessDevices(void)
 {
+    uint64_t now_us;
+
+    switch (s_startup_phase)
+    {
+        case SystemStartupPhase_Console:
+#if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U)
+            SystemStartup_ConsoleStart();
+#endif
+            s_startup_phase = SystemStartupPhase_LogicalStart;
+            return;
+        case SystemStartupPhase_LogicalStart:
+            SystemStartup_JyLogicalStart();
+            s_startup_phase = SystemStartupPhase_LogicalConfig;
+            return;
+        case SystemStartupPhase_LogicalConfig:
+            SystemStartup_JyLogicalConfig();
+            s_startup_phase = SystemStartupPhase_ImuConfig;
+            return;
+        case SystemStartupPhase_ImuConfig:
+            SystemStartup_ImuConfig();
+            s_startup_phase = SystemStartupPhase_GnssStart;
+            return;
+        case SystemStartupPhase_GnssStart:
+            SystemStartup_GnssStart();
+            s_startup_phase = SystemStartupPhase_OtherAdapters;
+            return;
+        case SystemStartupPhase_OtherAdapters:
+            SystemStartup_OtherAdaptersStart();
+            s_phase_started_us = SystemTime_GetMonotonicUs();
+            s_startup_phase = SystemStartupPhase_WaitConfig;
+            return;
+        case SystemStartupPhase_WaitConfig:
+            SystemStartup_CommunicationProcess();
+            if (SystemStartup_ConfigVerifyPending() != 0U)
+            {
+                now_us = SystemTime_GetMonotonicUs();
+                if ((now_us - s_phase_started_us) <
+                    SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US)
+                { return; }
+                if (s_startup_report.devices[SYSTEM_STARTUP_DEVICE_IMU].verify_result ==
+                    SYSTEM_DEVICE_NOT_EXECUTED)
+                { s_startup_report.devices[SYSTEM_STARTUP_DEVICE_IMU].verify_result =
+                    SYSTEM_DEVICE_TIMEOUT; }
+                if (s_startup_report.devices[SYSTEM_STARTUP_DEVICE_GNSS].verify_result ==
+                    SYSTEM_DEVICE_NOT_EXECUTED)
+                { s_startup_report.devices[SYSTEM_STARTUP_DEVICE_GNSS].verify_result =
+                    SYSTEM_DEVICE_TIMEOUT; }
+            }
+            s_phase_started_us = SystemTime_GetMonotonicUs();
+            s_startup_phase = SystemStartupPhase_WaitCommunication;
+            return;
+        case SystemStartupPhase_WaitCommunication:
+            now_us = SystemTime_GetMonotonicUs();
+            if ((SystemStartup_CommunicationEvaluate() != 0U) &&
+                ((now_us - s_phase_started_us) <
+                    SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US))
+            { return; }
+            SystemStartup_TimeoutMark();
+            SystemStartup_ReportFinalize();
+            if (SystemLifecycle_EnterPreflight() != SYSTEM_DEVICE_OK)
+            { DebugLog_Print("STARTUP preflight transition failed"); }
+            SystemHealth_Process();
+            SystemStartup_ReportPrint();
+            s_startup_phase = SystemStartupPhase_Complete;
+            return;
+        case SystemStartupPhase_Idle:
+        case SystemStartupPhase_Complete:
+        default:
+            break;
+    }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_IMU) != 0U)
     { SystemImu_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_GNSS) != 0U)

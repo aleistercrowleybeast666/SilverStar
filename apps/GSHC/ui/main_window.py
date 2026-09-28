@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import math
 from pathlib import Path
 from typing import Callable
 
@@ -36,7 +35,6 @@ from PySide6.QtWidgets import (
 )
 
 from config import (
-    APP_WINDOW_TITLE,
     PLOT_REFRESH_INTERVAL_MS,
     PLOT_WINDOW_SECONDS,
 )
@@ -2358,7 +2356,8 @@ class MainWindow(QMainWindow):
         lifecycle = (
             "—" if state.lifecycle_state is None else self.i18n.enum("lifecycle", lifecycle_name)
         )
-        yes_no = lambda value: self.i18n.tr("common.yes" if value else "common.no")
+        def yes_no(value: bool) -> str:
+            return self.i18n.tr("common.yes" if value else "common.no")
 
         self.lbl_pf_lifecycle.setText(lifecycle)
         self.lbl_flight_lifecycle.setText(lifecycle)

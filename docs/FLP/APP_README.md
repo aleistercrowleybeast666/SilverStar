@@ -25,27 +25,25 @@ independent vertical velocity noise, default project roots and per-log result di
 
 ## Start here
 
-### 1. Create the virtual environment
+### 1. Install the shared environment
 
-From this directory in PowerShell:
+From the SilverStar monorepo root in PowerShell:
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev,packaging]"
+.\tools\setup_venv.ps1
 ```
 
-The repository's `main.py` automatically re-enters `.venv` when it exists, so after the first
-installation you can also start it without manually activating the environment.
+FCCG, GSHC and FLP use this one root `.venv`.
 
 ### 2. Open the application
 
 ```powershell
-python main.py
+python FLP.py
 ```
 
-Choose **New Project** to select the new `.ssflp` location first, then select exactly one flight
+The recommended path is **Open SilverStar Project Folder** and select the FCCG
+project root. FLP lists log files only below `Log/` and uses the root decoder.
+For standalone analysis, choose **New Project** to select a `.ssflp` location first, then select exactly one flight
 log plus its `.ssdecoder` (or run the bounded task-folder search). The project file is written
 only after exact-pair validation succeeds. Choose **Import Log / Decoder** for a temporary
 session that does not require an immediate project save. You can drag one log with an optional
@@ -53,7 +51,7 @@ package onto the window; a log by itself invokes the same bounded exact search. 
 startup accepts the explicit pair:
 
 ```powershell
-python main.py D:\logs\flight.BIN --decoder D:\logs\flight.ssdecoder
+python FLP.py D:\logs\flight.BIN --decoder D:\logs\flight.ssdecoder
 ```
 
 The dark-blue brand header shows the localized application name, `v0.1.0`, developer credit,
@@ -97,8 +95,9 @@ to **Follow UI**, with explicit Simplified Chinese and English choices. Standard
 the deploy-segmented mission-relative ENU trajectory, and the combined attitude/trajectory GIF use
 matching `_ZH` or `_EN` filenames and localized titles, axes, and legends. The GUI and export
 share the same rocket attitude model, START-relative origin, and deploy/landing/current markers.
-With a saved/open project, export defaults to `<project-directory>/Result`; a temporary log
-defaults to `<log-directory>/<log-stem>_Data`. The destination remains editable, no fixed drive is
+For a SilverStar project root, export defaults to `Log/<LogStem>_Export/`.
+With a standalone `.ssflp` project, export defaults to `<project-directory>/Result`;
+a temporary log defaults to `<log-directory>/<log-stem>_Data`. The destination remains editable, no fixed drive is
 used, and FLP does not offer a source-code-package export.
 
 An FCCG `SilverStar.ssproject` may sit beside a log, decoder, and `.ssflp`, but FLP neither parses

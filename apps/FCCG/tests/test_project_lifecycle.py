@@ -45,7 +45,7 @@ def test_first_save_materializes_a_ready_dry_runnable_project(
         ".fccg/ownership.json",
         ".eide/eide.yml",
         ".vscode/tasks.json",
-        "LifecycleProject.code-workspace",
+        "Flight_Controller.code-workspace",
         "Flight_Controller0.5.ioc",
         "startup_stm32f407xx.s",
         "STM32F407XX_FLASH.ld",
@@ -414,7 +414,7 @@ def test_advanced_build_defaults_release_and_generated_debug_remains_available(
     assert "packDir: null" in eide
     assert re.search(r"(?m)^  uid: [0-9a-f]{32}$", eide)
     workspace = (
-        project_root / "BuildConfigurations.code-workspace"
+        project_root / "Flight_Controller.code-workspace"
     ).read_text(encoding="utf-8")
     assert '"path": "."' in workspace
     configuration = (project_root / "SilverStar_Configuration.md").read_text(

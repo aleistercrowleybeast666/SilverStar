@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 from PIL import Image
-from PySide6.QtCore import QSettings, Qt
+from PySide6.QtCore import QSettings
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication
 
@@ -41,7 +41,6 @@ def test_constant_speed_and_real_gif_hold(tmp_path, seconds, pages, motion, spee
     np.testing.assert_allclose(np.diff(times), speed / 30, atol=1e-12)
     plotter = FlightPlotter(PlotterConfig())
     seen = []
-    limits_seen = []
     encoded = []
     plotter.encoding_progress = lambda: encoded.append(1)
 
@@ -143,7 +142,9 @@ def test_real_61s_png_pages_and_full_text(tmp_path):
 
 
 def test_gif_cancel_during_encoding_removes_only_current_output(tmp_path):
-    keep = tmp_path / "existing"; keep.mkdir(); (keep / "keep.txt").write_text("keep")
+    keep = tmp_path / "existing"
+    keep.mkdir()
+    (keep / "keep.txt").write_text("keep")
     data = Data_Build(1)
     processor = FlightLogProcessor(tmp_path, export_options=ResolvedExportOptions(items=frozenset({ExportItem.ATTITUDE_3D})))
     state = {"cancel": False}
@@ -164,7 +165,8 @@ def test_export_dialog_range_controls_1000_700(qtbot, tmp_path, language, theme)
     QFontDatabase.addApplicationFont("C:/Windows/Fonts/msyh.ttc")
     QApplication.setFont(QFont("Microsoft YaHei", 9))
     settings = QSettings(str(tmp_path / "ui.ini"), QSettings.Format.IniFormat)
-    i18n = I18n(settings); i18n.set_language(language)
+    i18n = I18n(settings)
+    i18n.set_language(language)
     window = MainWindow(i18n)
     qtbot.addWidget(window)
     window._apply_theme(theme, persist=False)

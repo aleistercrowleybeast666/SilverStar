@@ -4,13 +4,22 @@
 
 FCCG now saves `SilverStar.ssproject` and creates `Log/` before either firmware target is generated. Generate Flight from **Flight Hardware** and Ground from **Ground Station Hardware**; each action prepares hardware and generates into its own `Flight_Controller/` or `Ground_Station/` directory. The Build & Validation page builds and inspects generated targets. Flight logging generation places the canonical decoder at the project root. See the [project folder contract](../architecture/PROJECT_FOLDER_CONTRACT.md).
 
-## Algorithm actual parameters / 算法实际参数
+## Current configuration pages
 
-新增独立算法参数页面（硬件连接之前），插件声明实际值、单位和 representation。
-Project format 12；`.ssdecoder` / project-semantics 1.2，拒绝 decoder 1.1；
-产品版本为 0.1.0，保留旧记录布局；独立 ESKF15 与导航质量记录仍要求精确 decoder 1.2，当前 FLP 产品版本为 0.1.0。
-参数清单、生成绑定与 Recorded Configuration / Offline What-if 边界见[参数契约](ALGORITHM_PARAMETERS.md)。
-精确验证结果仅见仓库根 VALIDATION.md。
+FCCG uses seven pages in order: **Flight Devices**, **Flight Configuration**,
+**Navigation Configuration**, **Telemetry Configuration**, **Flight Hardware**,
+**Ground Station Hardware**, and **Build & Validation**. Physical Flight
+sensors stay under Flight Devices; AIR protocol, shared radio PHY and both
+radio endpoints are configured under Telemetry. Navigation source, calibration,
+alignment, INS, estimator selection and manifest-driven algorithm parameters
+share the Navigation page. Firmware generation belongs to each hardware page;
+Build & Validation detects toolchains and builds or inspects either target.
+
+Project format is **13**. Product version is **0.1.0**; decoder schema 1.2,
+project semantics 1.2, navigation contract revision and wire protocols have
+independent versions. See the [parameter contract](ALGORITHM_PARAMETERS.md)
+for actual values, generated bindings and Recorded Configuration boundaries.
+Historical validation paths in this document are records of earlier work.
 
 ## Joint navigation implementation
 

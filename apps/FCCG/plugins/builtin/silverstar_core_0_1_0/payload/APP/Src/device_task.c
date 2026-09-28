@@ -231,13 +231,24 @@ static void DeviceTask_LogPeriodic(void)
 
 void AppTask_Device(void *argument)
 {
+    uint8_t runtime_owner_active = 0U;
+
     (void)argument;
-    (void)SystemImu_RuntimeOwnerActivate();
-    (void)SystemGnss_RuntimeOwnerActivate();
 
     for (;;)
     {
         SystemStartup_ProcessDevices();
+        if (SystemStartup_GetReport()->completed == 0U)
+        {
+            vTaskDelay(pdMS_TO_TICKS(1U));
+            continue;
+        }
+        if (runtime_owner_active == 0U)
+        {
+            (void)SystemImu_RuntimeOwnerActivate();
+            (void)SystemGnss_RuntimeOwnerActivate();
+            runtime_owner_active = 1U;
+        }
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
         DeviceNativeLog_Process();
 #endif
