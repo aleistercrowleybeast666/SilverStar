@@ -427,7 +427,7 @@ class MainWindow(QMainWindow):
             lambda: self._CubeMxImport_Request(True)
         )
         self.board_hardware_page.exportRequested.connect(
-            self._CustomBoardExport_Request
+            lambda: self._BoardInstanceSave_Request("flight")
         )
         self.board_hardware_page.autoAssignRequested.connect(
             self._Resources_AutoAssign
@@ -455,6 +455,9 @@ class MainWindow(QMainWindow):
         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
         self.ground_target_page.importRequested.connect(self._GroundCubeMxImport_Request)
+        self.ground_target_page.saveInstanceRequested.connect(
+            lambda: self._BoardInstanceSave_Request("ground")
+        )
         self.ground_target_page.generateRequested.connect(
             lambda: self._Targets_Generate("generate_ground")
         )
@@ -1461,8 +1464,8 @@ class MainWindow(QMainWindow):
             (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
             for manifest in self._service.catalog.Type_Get("board")
             if manifest.board is not None
-            and manifest.board.verified
             and manifest.metadata.get("target_role") == "ground_station"
+            and (manifest.board.verified or manifest.source == "installed")
         )
         selected = model.ground_target.radio_plugin
         manifest = self._service.catalog.Component_Get(selected) if selected else None
@@ -1661,7 +1664,7 @@ class MainWindow(QMainWindow):
             )
         self._ProjectConfiguration_Change(change)
 
-    def _CustomBoardExport_Request(self) -> None:
+    def _BoardInstanceSave_Request(self, target_role: str) -> None:
         name, accepted = QInputDialog.getText(
             self,
             self._translator.Text_Get("dialog.export_board_title"),
@@ -1669,7 +1672,9 @@ class MainWindow(QMainWindow):
         )
         if not accepted or not name.strip():
             return
-        default_id = "local.board." + "_".join(name.lower().split())
+        default_id = "local.board." + target_role + "." + "_".join(
+            name.lower().split()
+        )
         component_id, accepted = QInputDialog.getText(
             self,
             self._translator.Text_Get("dialog.export_board_title"),
@@ -1678,28 +1683,22 @@ class MainWindow(QMainWindow):
         )
         if not accepted:
             return
-        default_path = Path.home() / "Documents" / f"{name}.ssplugin"
-        selected, _filter = QFileDialog.getSaveFileName(
-            self,
-            self._translator.Text_Get("dialog.export_board_title"),
-            str(default_path),
-            self._translator.Text_Get("filter.silverstar_plugin"),
-        )
-        if not selected:
-            return
         try:
-            path = self._service.CustomBoardPlugin_Export(
+            installed = self._service.CustomBoardPlugin_SaveLocal(
                 self._model,
-                Path(selected),
                 component_id=component_id.strip(),
                 name=name.strip(),
+                target_role=target_role,
             )
         except Exception as error:
             self._Error_Show(error)
             return
         self.status_label.setText(
-            self._translator.Text_Get("status.board_exported", path=str(path))
+            self._translator.Text_Get(
+                "status.pcb_instance_saved", identity=installed.component_id,
+            )
         )
+        self._Project_Refresh()
 
     def _Resources_AutoAssign(self, *, silent: bool = False) -> None:
         if self._model.hardware.mode != "custom":

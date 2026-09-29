@@ -171,6 +171,7 @@ class GroundTargetPage(ScrollableLocalizedPage):
     configurationChanged = Signal(str, object)
     assignmentChanged = Signal(str, str)
     importRequested = Signal(bool)
+    saveInstanceRequested = Signal()
     generateRequested = Signal()
 
     def __init__(self, translator: Translator) -> None:
@@ -200,8 +201,12 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.import_directory = QPushButton()
         self.Text_Register(self.import_directory, "action.import_cubemx_directory")
         self.import_directory.clicked.connect(lambda: self.importRequested.emit(True))
+        self.save_instance = QPushButton()
+        self.Text_Register(self.save_instance, "action.save_pcb_instance")
+        self.save_instance.clicked.connect(self.saveInstanceRequested.emit)
         import_row.addWidget(self.import_ioc)
         import_row.addWidget(self.import_directory)
+        import_row.addWidget(self.save_instance)
         import_row.addStretch(1)
         self.root_layout.addLayout(import_row)
         radio_form = QFormLayout()
@@ -280,6 +285,11 @@ class GroundTargetPage(ScrollableLocalizedPage):
             widget.blockSignals(True)
         self.enabled.setChecked(ground.enabled)
         self.generate_button.setEnabled(ground.enabled)
+        self.save_instance.setEnabled(
+            ground.hardware.mode == "custom"
+            and bool(ground.hardware.snapshot_id)
+            and bool(ground.hardware.build_sources)
+        )
         self.hardware_summary.setText(
             f"{ground.hardware.mcu or '—'} · {ground.hardware.source_label or ground.hardware.mode}"
         )

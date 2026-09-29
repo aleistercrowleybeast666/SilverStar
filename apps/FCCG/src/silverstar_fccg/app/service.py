@@ -1004,9 +1004,12 @@ class FccgService:
         *,
         component_id: str,
         name: str,
+        target_role: str = "flight",
     ) -> Path:
+        hardware = (model.hardware if target_role == "flight"
+                    else model.ground_target.hardware)
         snapshot = self.hardware_importer.SnapshotRoot_Get(
-            model.hardware.snapshot_id
+            hardware.snapshot_id
         )
         output = Path(output_path).resolve(strict=False)
         exporter = BoardPluginExporter(
@@ -1018,7 +1021,37 @@ class FccgService:
             output,
             component_id=component_id,
             name=name,
+            target_role=target_role,
         )
+
+    def CustomBoardPlugin_SaveLocal(
+        self, model: ProjectModel, *, component_id: str, name: str,
+        target_role: str,
+    ) -> PluginManifest:
+        if target_role not in {"flight", "ground"}:
+            raise ValueError("Board target role must be flight or ground")
+        hardware = (model.hardware if target_role == "flight"
+                    else model.ground_target.hardware)
+        mcu_id = model.mcu if target_role == "flight" else model.ground_target.mcu
+        from silverstar_fccg.project.clock_plan import ClockPlan_Validate
+
+        issues = ClockPlan_Validate(
+            hardware.inventory, self.catalog.Component_Get(mcu_id).metadata,
+        )
+        if issues:
+            raise ValueError("Cannot save PCB instance: " + ", ".join(
+                issue.code for issue in issues
+            ))
+        if not hardware.source_digest or not hardware.build_sources:
+            raise ValueError("Generated CubeMX hardware snapshot is required")
+        snapshot = self.hardware_importer.SnapshotRoot_Get(hardware.snapshot_id)
+        archive = self.board_exporter.Plugin_Export(
+            model, snapshot,
+            self.workspace_root / ".work" / "board_exports"
+            / f"{component_id}.ssplugin",
+            component_id=component_id, name=name, target_role=target_role,
+        )
+        return self.installer.Install(archive)
 
     def BoardCompatibilities_Get(
         self, model: ProjectModel, *, language: str = "zh_CN"

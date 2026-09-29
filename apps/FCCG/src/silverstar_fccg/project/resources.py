@@ -95,23 +95,23 @@ def BoardHardwareInventory_Get(manifest: PluginManifest) -> HardwareInventory | 
         return None
     ioc_path = manifest.package_root.joinpath(*manifest.board.ioc_file.split("/"))
     try:
-        generated_files = {
-            path.relative_to(ioc_path.parent).as_posix(): path.read_text(
-                encoding="utf-8-sig"
-            )
+        generated_files: dict[str, str] = {}
+        snapshot_root = manifest.payload_root.joinpath(
+            *manifest.board.hardware_root.split("/")
+        )
+        for source_root in (ioc_path.parent, snapshot_root):
             for relative_root in (
-                "Core/Src",
-                "Core/Inc",
-                "FATFS/App",
-                "FATFS/Target",
-            )
-            for directory in (
-                ioc_path.parent.joinpath(*relative_root.split("/")),
-            )
-            if directory.is_dir()
-            for path in sorted(directory.glob("*"))
-            if path.is_file() and path.suffix.casefold() in {".c", ".h"}
-        }
+                "Core/Src", "Core/Inc", "FATFS/App", "FATFS/Target",
+                "USB_DEVICE/App", "USB_DEVICE/Target",
+            ):
+                directory = source_root.joinpath(*relative_root.split("/"))
+                if not directory.is_dir():
+                    continue
+                for path in sorted(directory.glob("*")):
+                    if path.is_file() and path.suffix.casefold() in {".c", ".h"}:
+                        generated_files[path.relative_to(source_root).as_posix()] = (
+                            path.read_text(encoding="utf-8-sig")
+                        )
         return CubeMxInventory_Parse(
             ioc_path.read_text(encoding="utf-8-sig"),
             generated_files=generated_files,

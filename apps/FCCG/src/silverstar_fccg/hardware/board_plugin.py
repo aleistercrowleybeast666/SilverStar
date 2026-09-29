@@ -7,7 +7,7 @@ from pathlib import Path
 
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.core.errors import FccgError
-from silverstar_fccg.project.model import ProjectModel
+from silverstar_fccg.project.model import HardwareConfiguration, ProjectModel
 
 
 class BoardPluginExportError(FccgError):
@@ -36,8 +36,13 @@ class BoardPluginExporter:
         component_id: str,
         name: str,
         version: str | None = None,
+        target_role: str = "flight",
     ) -> Path:
-        if model.hardware.mode != "custom":
+        if target_role not in {"flight", "ground"}:
+            raise BoardPluginExportError("Board target role must be flight or ground")
+        hardware = (model.hardware if target_role == "flight"
+                    else model.ground_target.hardware)
+        if hardware.mode != "custom":
             raise BoardPluginExportError("Only imported custom hardware can be exported")
         if not self._COMPONENT_ID_PATTERN.fullmatch(component_id):
             raise BoardPluginExportError("Invalid Board component id")
@@ -55,6 +60,7 @@ class BoardPluginExporter:
             component_id=component_id,
             name=name.strip(),
             version=version or model.identity.firmware_version,
+            target_role=target_role,
         )
         stage = self.output_policy.StagingDirectory_Create("board-export-")
         staged_archive = stage / output.name
@@ -68,7 +74,7 @@ class BoardPluginExporter:
                 )
                 archive.writestr(
                     "docs/HARDWARE_PROVENANCE.md",
-                    self._Provenance_Render(model, name),
+                    self._Provenance_Render(model, name, hardware, target_role),
                 )
                 connections = {
                     "format_version": 1,
@@ -78,7 +84,7 @@ class BoardPluginExporter:
                             "fixed": False,
                             "purpose": "custom",
                         }
-                        for resource in model.hardware.resources
+                        for resource in hardware.resources
                     },
                 }
                 archive.writestr(
@@ -97,7 +103,7 @@ class BoardPluginExporter:
                         source,
                         f"payload/HardwareGenerated/STM32CubeMX/{relative}",
                     )
-                    if relative == model.hardware.ioc_file:
+                    if relative == hardware.ioc_file:
                         archive.write(source, f"hardware/{source.name}")
             output.parent.mkdir(parents=True, exist_ok=True)
             self.output_policy.Path_Replace(staged_archive, output)
@@ -113,8 +119,14 @@ class BoardPluginExporter:
 
     @staticmethod
     def _Manifest_Get(
-        model: ProjectModel, *, component_id: str, name: str, version: str
+        model: ProjectModel, *, component_id: str, name: str, version: str,
+        target_role: str = "flight",
     ) -> dict:
+        hardware = (model.hardware if target_role == "flight"
+                    else model.ground_target.hardware)
+        mcu = model.mcu if target_role == "flight" else model.ground_target.mcu
+        assignments = (model.resource_assignments if target_role == "flight"
+                       else model.ground_target.resource_assignments)
         provisions = [
             {
                 "id": resource.resource_id,
@@ -125,19 +137,19 @@ class BoardPluginExporter:
                     if key in resource.metadata
                 },
             }
-            for resource in model.hardware.resources
+            for resource in hardware.resources
         ]
         by_id = {
-            resource.resource_id: resource for resource in model.hardware.resources
+            resource.resource_id: resource for resource in hardware.resources
         }
         roles = []
-        for key, selected in sorted(model.resource_assignments.items()):
+        for key, selected in sorted(assignments.items()):
             resource = by_id.get(selected)
             if resource is None:
                 continue
             candidates = [
                 candidate.resource_id
-                for candidate in model.hardware.resources
+                for candidate in hardware.resources
                 if candidate.kind == resource.kind
             ]
             roles.append(
@@ -150,19 +162,21 @@ class BoardPluginExporter:
                 }
             )
         capability_slug = component_id.replace("-", "_").replace(".", "_")
-        ioc_name = Path(model.hardware.ioc_file).name
+        ioc_name = Path(hardware.ioc_file).name
         return {
             "schema_version": 0,
             "id": component_id,
             "name": name,
             "type": "board",
-            "class": "flight_controller_board",
+            "class": ("flight_controller_board" if target_role == "flight"
+                      else "ground_station_board"),
             "version": version,
             "description": "Custom Board imported through the trusted STM32CubeMX provider.",
             "requires": {
                 "components": [
-                    {"id": model.core, "optional": False},
-                    {"id": model.mcu, "optional": False},
+                    *([{"id": model.core, "optional": False}]
+                      if target_role == "flight" else []),
+                    {"id": mcu, "optional": False},
                 ],
                 "resources": [],
                 "capabilities": [],
@@ -177,29 +191,33 @@ class BoardPluginExporter:
                 "hardware.stm32.generated",
             ],
             "build": {
-                "sources": list(model.hardware.build_sources),
-                "asm_sources": list(model.hardware.asm_sources),
-                "include_dirs": list(model.hardware.include_dirs),
-                "defines": list(model.hardware.defines),
-                "linker_script": model.hardware.linker_script,
+                "sources": list(hardware.build_sources),
+                "asm_sources": list(hardware.asm_sources),
+                "include_dirs": list(hardware.include_dirs),
+                "defines": list(hardware.defines),
+                "linker_script": hardware.linker_script,
             },
             "payload": {"roots": ["HardwareGenerated/STM32CubeMX"]},
             "metadata": {
                 "display_names": {"zh_CN": f"{name}（自定义硬件）", "en_US": f"{name} (Custom)"},
+                "hardware_maturity": "local_unverified",
+                "target_role": ("flight_controller" if target_role == "flight"
+                                else "ground_station"),
                 "hardware_provenance": {
-                    "provider": model.hardware.provider,
+                    "provider": hardware.provider,
                     "source_kind": "manual_import",
-                    "source_label": model.hardware.source_label,
-                    "source_digest": model.hardware.source_digest,
-                    "ioc_file": model.hardware.ioc_file,
-                    "mcu": model.hardware.mcu,
+                    "source_label": hardware.source_label,
+                    "source_digest": hardware.source_digest,
+                    "ioc_file": hardware.ioc_file,
+                    "mcu": hardware.mcu,
+                    "clock": hardware.inventory.get("clocks", {}),
                 },
             },
             "board": {
                 "source_kind": "manual_import",
-                "compatible_mcus": [model.mcu],
+                "compatible_mcus": [mcu],
                 "vendor": "STM32",
-                "provider": model.hardware.provider,
+                "provider": hardware.provider,
                 "verified": False,
                 "hardware_root": "HardwareGenerated/STM32CubeMX",
                 "ioc_file": f"hardware/{ioc_name}",
@@ -208,14 +226,18 @@ class BoardPluginExporter:
         }
 
     @staticmethod
-    def _Provenance_Render(model: ProjectModel, name: str) -> str:
+    def _Provenance_Render(
+        model: ProjectModel, name: str, hardware: HardwareConfiguration,
+        target_role: str,
+    ) -> str:
         return f"""# {name} hardware provenance
 
 - Source kind: `manual_import`
-- Provider: `{model.hardware.provider}`
-- MCU: `{model.hardware.mcu}`
-- CubeMX input: `{model.hardware.source_label}/{model.hardware.ioc_file}`
-- Source digest: `{model.hardware.source_digest}`
+- Target role: `{target_role}`
+- Provider: `{hardware.provider}`
+- MCU: `{hardware.mcu}`
+- CubeMX input: `{hardware.source_label}/{hardware.ioc_file}`
+- Source digest: `{hardware.source_digest}`
 
 This package contains vendor-generated hardware data. It is not an official
 SilverStar hardware verification claim. Validate clocks, DMA, interrupts,

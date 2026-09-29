@@ -727,7 +727,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
             lambda _checked=False: self.importDirectoryRequested.emit()
         )
         self.export_button = QPushButton()
-        self.Text_Register(self.export_button, "action.export_board_plugin")
+        self.Text_Register(self.export_button, "action.save_pcb_instance")
         self.export_button.clicked.connect(
             lambda _checked=False: self.exportRequested.emit()
         )

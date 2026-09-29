@@ -2,8 +2,8 @@
 
 The target plan uses four separate authorities: memory, peripheral assignment,
 CPU/real-time work, and I/O throughput. A successful ARM link alone establishes
-none of the latter three. This page records the checks currently implemented and
-the evidence still needed before the complete Round 4 gate can pass.
+none of the latter three. This page records implemented checks and remaining
+Round 4 structural work; target WCET qualification belongs to Round 5.
 
 ## Memory and clock
 
@@ -42,6 +42,19 @@ currently declares only Cortex-M4F hard-float; Cortex-M3 selection yields
 GNSS and barometer measurement admission still depends on fresh measurement
 timestamps in the estimator. No sensor is raised to a fictitious IMU cadence.
 
+## Timing evidence levels
+
+Timing evidence is separate from the static rate/resource facts. The
+`TimingEvidence_Assess` interface reports `INVALID` when any required work
+bound is missing, `STALE` when a reviewed profile has a different source
+fingerprint, and `MEASUREMENT_PENDING` when all structural checks are supplied
+but reviewed task/ISR execution bounds are absent. It invokes the existing
+fixed-priority response-time calculation only with nonempty reviewed budgets
+and a matching source fingerprint. A missing WCET is never treated as zero.
+`QUALIFIED_STATIC` requires conservative execution, blocking and ISR budgets
+and a passing deadline analysis. This permits Round 4 software work to
+continue while Round 5 collects actual target evidence.
+
 ## Pending CPU and I/O authority
 
 The repository has actual FreeRTOS priorities and service cadences, but no
@@ -51,9 +64,9 @@ Host benchmarks and observed target cycles are not WCET. `ResponseTime_Analyze`
 implements a bounded fixed-priority recurrence with task execution, blocking,
 higher/equal-priority peers, ISR interference and deadlines. It intentionally
 has no invented built-in timing budgets. Until qualified target-specific upper
-bounds and event rates are supplied to it,
-the CPU timing portion is unqualified; neither F407 nor F103 receives a
-complete static schedulability PASS from this page.
+bounds and event rates are supplied to it, the WCET-based result is
+`MEASUREMENT_PENDING`; neither F407 nor F103 receives a static schedulability
+PASS from this page. This does not block the remaining Round 4 phases.
 
 Peripheral matching validates selected resource kinds and detailed bus/electrical
 constraints through the shared FCCG resource planner. Ground radio binding uses

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import shutil
 import zipfile
+from dataclasses import replace
 from pathlib import Path, PurePosixPath
 
 import pytest
@@ -27,7 +28,10 @@ from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
 from silverstar_fccg.project.logging import LoggingProfile_Reconcile
 from silverstar_fccg.project.model import DeviceInstance, HardwareConfiguration
 from silverstar_fccg.project.reference import ReferenceProject_Create
-from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+from silverstar_fccg.project.resources import (
+    BoardHardwareInventory_Get, BoardResourceProvisions_Get,
+    ResourceAssignments_Resolve,
+)
 from silverstar_fccg.project.validation import Project_Validate
 
 
@@ -385,3 +389,42 @@ def test_cubemx_freertos_conflict_is_rejected(
             expected_mcu="STM32F407VET6",
             risk_acknowledged=True,
         )
+
+
+def test_custom_ground_hardware_exports_local_unverified_pcb_instance(
+    tmp_path: Path, workspace_root: Path,
+) -> None:
+    policy = WorkspacePolicy(tmp_path)
+    installed_root = tmp_path / "plugins" / "installed"
+    catalog = _Catalog_Create(workspace_root, installed_root)
+    fixture = workspace_root / "tests" / "fixtures" / "cubemx_minimal"
+    imported = CubeMxImporter(policy).Project_Import(
+        fixture, expected_mcu="STM32F407VET6", risk_acknowledged=True,
+    )
+    model = ReferenceProject_Create("CustomGround", catalog=catalog)
+    model.ground_target = replace(
+        model.ground_target, enabled=True,
+        mcu="silverstar.mcu.stm32f407vet6", board="",
+        hardware=imported.hardware,
+        resource_assignments={"radio0:radio_bus": "PLATFORM_SPI_1"},
+    )
+    archive = BoardPluginExporter(policy).Plugin_Export(
+        model, imported.snapshot_root,
+        tmp_path / "ground.ssplugin",
+        component_id="local.board.ground.custom", name="Custom Ground",
+        target_role="ground",
+    )
+    installed = PluginInstaller(policy, installed_root, catalog).Install(archive)
+    assert installed.component_type == "board"
+    assert installed.component_class == "ground_station_board"
+    assert installed.metadata["hardware_maturity"] == "local_unverified"
+    assert installed.metadata["target_role"] == "ground_station"
+    assert installed.board is not None and not installed.board.verified
+    assert installed.board.compatible_mcus == ("silverstar.mcu.stm32f407vet6",)
+    assert installed.metadata["hardware_provenance"]["clock"]
+    inventory = BoardHardwareInventory_Get(installed)
+    assert inventory is not None
+    assert inventory.Dictionary_Get() == imported.inventory.Dictionary_Get()
+    assert len(BoardResourceProvisions_Get(installed)) == len(
+        imported.hardware.resources
+    )
