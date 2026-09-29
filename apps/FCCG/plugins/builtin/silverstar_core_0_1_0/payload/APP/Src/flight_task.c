@@ -910,12 +910,15 @@ uint8_t SystemLifecycleBackend_StorageReadyGet(void)
     LoggerTaskDiagnostics logger;
     SystemLogSinkHealth sink;
     SystemStorageHealth storage;
+    uint32_t mission_id = 0U;
     if ((LoggerBus_StartupStateGet() != LOGGER_STREAMING_READY) ||
         (LoggerTask_DiagnosticsGet(&logger) != SYSTEM_DEVICE_OK) ||
         (SystemLogSink_HealthGet(&sink) != SYSTEM_DEVICE_OK) ||
-        (SystemStorage_HealthGet(&storage) != SYSTEM_DEVICE_OK))
+        (SystemStorage_HealthGet(&storage) != SYSTEM_DEVICE_OK) ||
+        (SystemStorage_MissionIdGet(&mission_id) != SYSTEM_DEVICE_OK))
     { return 0U; }
     return (uint8_t)((logger.io_fault == 0U) &&
+        (mission_id != 0U) &&
         (sink.initialized != 0U) && (sink.session_active != 0U) &&
         (sink.healthy != 0U) && (storage.initialized != 0U) &&
         (storage.mounted != 0U) && (storage.healthy != 0U));

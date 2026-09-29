@@ -30,8 +30,9 @@ rejects foreign names outside printable ASCII. An imported CubeMX FatFs
 configuration must use a compatible static LFN setting and must not compile
 another `ff_convert` implementation into the same target.
 
-The current START check requires a mounted, healthy, writable log sink and
-the logger's streaming-ready state. Post-START storage failure marks the sink
+The current START check requires a mounted, healthy, writable log sink, a
+reserved mission directory number and the logger's streaming-ready state.
+Post-START storage failure marks the sink
 unhealthy without stopping navigation or the flight state machine. Mission
 metadata, configuration/calibration snapshots and final status still need to
 be integrated before this storage feature is considered complete.

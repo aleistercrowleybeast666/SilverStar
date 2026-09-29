@@ -75,6 +75,7 @@ static LoggerBusResult s_initial_state_push_result;
 static LoggerBusResult s_event_push_result;
 
 static uint8_t s_log_sink_available;
+static uint8_t s_mission_directory_available;
 static SystemDeviceResult s_sink_init_result;
 static uint32_t s_sink_init_count;
 static uint32_t s_sink_begin_count;
@@ -722,6 +723,15 @@ SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health)
     return SYSTEM_DEVICE_OK;
 }
 
+SystemDeviceResult SystemStorage_MissionIdGet(uint32_t *mission_id)
+{
+    if (mission_id == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *mission_id = ((s_log_sink_available != 0U) &&
+        (s_mission_directory_available != 0U)) ? 1U : 0U;
+    return (*mission_id != 0U) ?
+        SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY;
+}
+
 const char *SystemLogSink_NameGet(void) { return "Host TF"; }
 SystemDeviceResult SystemLogSink_Init(void)
 {
@@ -897,6 +907,7 @@ static void Test_StateReset(void)
     (void)memset(&s_flight_recovery_status, 0,
                  sizeof(s_flight_recovery_status));
     s_log_sink_available = 0U;
+    s_mission_directory_available = 1U;
     s_sink_init_result = SYSTEM_DEVICE_OK;
     s_sink_init_count = 0U;
     s_sink_begin_count = 0U;
@@ -1035,6 +1046,20 @@ static void Test_StartRequiresStorage(void)
     TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_READY);
     TEST_CHECK(s_mission_started == 0U);
     TEST_CHECK(s_system_config_push_count == 0U);
+    TEST_CHECK(SystemLifecycle_GetLastStartDiagnostic(
+        SYSTEM_START_SOURCE_CONSOLE, &diagnostic) != 0U);
+    TEST_CHECK(diagnostic.response.reason ==
+        SYSTEM_START_REASON_STORAGE_NOT_READY);
+}
+
+static void Test_StartRequiresMissionDirectory(void)
+{
+    SystemLifecycleStartDiagnostic diagnostic;
+    Test_StateReset();
+    s_mission_directory_available = 0U;
+    Test_FlightTaskRunWithStorage(1U);
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_READY);
+    TEST_CHECK(s_mission_started == 0U);
     TEST_CHECK(SystemLifecycle_GetLastStartDiagnostic(
         SYSTEM_START_SOURCE_CONSOLE, &diagnostic) != 0U);
     TEST_CHECK(diagnostic.response.reason ==
@@ -1268,6 +1293,7 @@ static void Test_IncompleteStartupKeepsSession(void)
 int main(void)
 {
     Test_StartRequiresStorage();
+    Test_StartRequiresMissionDirectory();
     Test_PostStartStorageLossAndFullBusKeepsFlight();
     Test_NoneCalibrationResultSnapshot();
     Test_StartRecordFailureDoesNotRollback();
