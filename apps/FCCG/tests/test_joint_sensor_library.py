@@ -6,11 +6,14 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from silverstar_fccg.plugins.manifest import PluginManifest_Load, PluginManifest_VariantResolve
+from silverstar_fccg.plugins.manifest import (
+    PluginManifest_Load,
+    PluginManifest_VariantResolve,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILTIN = ROOT / "plugins" / "builtin"
+PLATFORM_API_INCLUDES = BUILTIN / "silverstar_platform_api/payload/Platform/Inc"
 FIXTURES = ROOT / "tests" / "fixtures" / "sensors"
 IMU_MODELS = (
     "MPU6000", "MPU6050", "MPU6500", "MPU9250", "LSM6DSV32X", "LSM6DSV320X",
@@ -46,7 +49,7 @@ def test_joint_bmi088_sync_actual_c_mock(tmp_path: Path) -> None:
     common = BUILTIN / "silverstar_sensor_register_bus/payload/Devices/SensorBus"
     core = BUILTIN / "silverstar_core_0_1_0/payload"
     includes = [common / "Inc", core / "Interfaces/Inc", core / "System/Inc",
-                BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/Inc"]
+                PLATFORM_API_INCLUDES]
     sources = [common / "Src" / name for name in ("sensor_register_bus.c", "sensor_imu.c",
                "sensor_imu_adapter.c", "sensor_imu_spi_adapter.c", "sensor_bmi088_sync.c")]
     binary = tmp_path / "bmi088_sync.exe"
@@ -59,13 +62,12 @@ def test_joint_bmi088_sync_actual_c_mock(tmp_path: Path) -> None:
 
 
 def test_joint_sensor_real_generation_dual_i2c_binding(builtin_catalog, tmp_path: Path) -> None:
-    from test_internal_platform_refactor import _CustomModel_Create
-
     from silverstar_fccg.generator.render import _ResourceHeader_Render
     from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
     from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
     from silverstar_fccg.project.model import DeviceInstance
     from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+    from test_internal_platform_refactor import _CustomModel_Create
 
     model = _CustomModel_Create(builtin_catalog, [DeviceInstance("imu0", "silverstar.device.imu.bmi088")])
     model.resource_assignments = {"imu0:data": "I2C1", "imu0:gyro": "I2C1", "imu0:time": "SYSTEM_TIME"}
@@ -81,7 +83,12 @@ def test_joint_sensor_real_generation_dual_i2c_binding(builtin_catalog, tmp_path
     (tmp_path / "project_resources.h").write_text(header, encoding="utf-8")
     source = tmp_path / "check.c"
     source.write_text('#include "project_resources.h"\nint main(void) { return sizeof(ProjectBmi088Resources) == 0; }\n', encoding="utf-8")
-    includes = [tmp_path, BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/Inc", BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/STM32F4/Inc", BUILTIN / "silverstar_core_0_1_0/payload/Interfaces/Inc"]
+    includes = [
+        tmp_path,
+        PLATFORM_API_INCLUDES,
+        BUILTIN / "silverstar_mcu_family_stm32f4/payload/Platform/STM32F4/Inc",
+        BUILTIN / "silverstar_core_0_1_0/payload/Interfaces/Inc",
+    ]
     _Command_Run([_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror", "-c", str(source), "-o", str(tmp_path / "check.o")] + ["-I"+str(path) for path in includes], tmp_path, "compile_resource")
     # The separate gyro address must participate in ordinary collision checking.
     model.device_instances.append(DeviceInstance("conflict", "silverstar.device.imu.mpu6050"))
@@ -193,7 +200,7 @@ def test_joint_ubx_adapter_actual_transactions(tmp_path: Path) -> None:
     source = BUILTIN / "silverstar_ubx_protocol/payload/Devices/GNSS/UBX"
     core = BUILTIN / "silverstar_core_0_1_0/payload"
     includes = [source / "Inc", core / "Interfaces/Inc", core / "System/Inc",
-                BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/Inc"]
+                PLATFORM_API_INCLUDES]
     binary = tmp_path / "ubx_adapter.exe"
     command = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror", "-pedantic"]
     command += ["-I" + str(path) for path in includes]
@@ -225,7 +232,7 @@ def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> N
     imu_names = IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS
     folders += [_ImuVariant_Get(name)[0] for name in imu_names]
     folders += ["silverstar_device_gnss_" + name for name in GNSS_MODELS]
-    includes = [tmp_path, BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/Inc"]
+    includes = [tmp_path, PLATFORM_API_INCLUDES]
     includes += [BUILTIN / "silverstar_core_0_1_0/payload" / name / "Inc" for name in ("Interfaces", "System", "Common")]
     sources: list[Path] = []
     resource_lines = ['#ifndef __PROJECT_RESOURCES_H', '#define __PROJECT_RESOURCES_H', '#include "system_device_types.h"', '#include "platform_i2c.h"', '#include "platform_uart.h"', '#include "platform_time.h"', '#include "platform_spi.h"', '#include "platform_gpio.h"']
@@ -291,7 +298,7 @@ def test_jy901b_actual_quality_and_ram_contract(tmp_path: Path) -> None:
 def test_joint_spi_actual_transport_and_drdy(tmp_path: Path) -> None:
     common = BUILTIN / "silverstar_sensor_register_bus/payload/Devices/SensorBus"
     core = BUILTIN / "silverstar_core_0_1_0/payload"
-    includes = [common / "Inc", core / "Interfaces/Inc", BUILTIN / "silverstar_mcu_stm32f407vet6/payload/Platform/Inc"]
+    includes = [common / "Inc", core / "Interfaces/Inc", PLATFORM_API_INCLUDES]
     sources = [common / "Src" / name for name in ("sensor_register_bus.c", "sensor_imu.c", "sensor_imu_adapter.c", "sensor_imu_spi_adapter.c")]
     for model in ("MPU6000_SPI", "BMI088_SPI", "BMI323_SPI"):
         root = BUILTIN / ("silverstar_device_imu_" + model.lower().removesuffix("_spi")) / "payload/Devices/IMU" / model

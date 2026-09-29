@@ -8,17 +8,16 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from silverstar_fccg.project.model import DeviceInstance
 from test_joint_sensor_library import (
     GNSS_MODELS,
     IMU_MODELS,
     SPECIAL_IMU_MODELS,
     SPI_IMU_MODELS,
     SYNC_IMU_MODELS,
-    _ImuVariant_Get,
     _Command_Run,
+    _ImuVariant_Get,
 )
-
-from silverstar_fccg.project.model import DeviceInstance
 
 
 def _SensorInventory_Create():
@@ -98,22 +97,26 @@ def _GnssNavigationModel_Create(catalog, component_id: str, output: Path):
 
 def test_gpio_mode_token_preserves_push_pull_and_open_drain() -> None:
     from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
-    inventory = CubeMxInventory_Parse("\n".join([
-        "Mcu.CPN=STM32F407VET6", "PC0.Signal=GPIO_Output", "PC0.GPIO_ModeDefaultOutputPP=GPIO_MODE_OUTPUT_PP", "PC0.PinState=GPIO_PIN_SET",
-        "PC1.Signal=GPIO_Output", "PC1.GPIO_ModeDefaultOutputPP=GPIO_MODE_OUTPUT_OD", "PC1.PinState=GPIO_PIN_RESET",
-    ]))
+    inventory = CubeMxInventory_Parse(
+        "Mcu.CPN=STM32F407VET6\n"
+        "PC0.Signal=GPIO_Output\n"
+        "PC0.GPIO_ModeDefaultOutputPP=GPIO_MODE_OUTPUT_PP\n"
+        "PC0.PinState=GPIO_PIN_SET\n"
+        "PC1.Signal=GPIO_Output\n"
+        "PC1.GPIO_ModeDefaultOutputPP=GPIO_MODE_OUTPUT_OD\n"
+        "PC1.PinState=GPIO_PIN_RESET"
+    )
     assert {pin.pin: pin.output_type for pin in inventory.pins} == {"PC0": "push_pull", "PC1": "open_drain"}
     assert {pin.pin: pin.output_default for pin in inventory.pins} == {"PC0": "high", "PC1": "low"}
 
 
 def test_bmi088_sync_binding_requires_declared_nets_and_invalidates_fingerprint(builtin_catalog) -> None:
-    from test_internal_platform_refactor import _CustomModel_Create
-
     from silverstar_fccg.generator.hardware_preparation import (
         HardwareAssignmentFingerprint_Get,
         HardwareResourceBindingFingerprint_Get,
     )
     from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+    from test_internal_platform_refactor import _CustomModel_Create
 
     model = _CustomModel_Create(builtin_catalog, [DeviceInstance(
         "sync0", "silverstar.device.imu.bmi088", "i2c", "bosch_sync_400_hz"
@@ -182,8 +185,6 @@ def test_bmi088_sync_image_is_exact_pinned_bosch_blob_and_license() -> None:
 
 @pytest.mark.parametrize(("kind", "name"), DEVICES)
 def test_each_sensor_real_generated_graph_compiles(builtin_catalog, tmp_path: Path, kind: str, name: str) -> None:
-    from test_internal_rc_closeout import _CustomStorageModel_Get
-
     from silverstar_fccg.generator.render import GeneratedFiles_Render
     from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
     from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
@@ -192,8 +193,9 @@ def test_each_sensor_real_generated_graph_compiles(builtin_catalog, tmp_path: Pa
         BoardHardwareInventory_Get,
         ResourceAssignments_Resolve,
     )
+    from test_internal_rc_closeout import _CustomStorageModel_Get
     if kind == "imu":
-        folder, manifest, interface, profile = _ImuVariant_Get(name)
+        _folder, manifest, interface, profile = _ImuVariant_Get(name)
         component_id = manifest.component_id
         selected_instance = DeviceInstance("sensor0", component_id, interface, profile)
     else:
@@ -266,7 +268,9 @@ def test_each_sensor_real_generated_graph_compiles(builtin_catalog, tmp_path: Pa
     for header in graph.forced_includes:
         candidates = [tmp_path / header] + [item.payload_root / header for item in selected]
         command += ["-include", str(next(path for path in candidates if path.is_file()))]
-    sources = [path for path in graph.sources if path.startswith("Devices/")]
+    # This fixture compiles the selected sensor and its bus dependencies. Storage
+    # services need a qualified complete flight profile and have their own tests.
+    sources = [path for path in graph.sources if path.startswith("Devices/") and not path.startswith("Devices/Storage/")]
     sources += ["Generated/Src/project_resources.c", "Generated/Src/project_device_instances.c"]
     for index, relative in enumerate(sources):
         candidates = [tmp_path / relative] + [item.payload_root / relative for item in selected]
