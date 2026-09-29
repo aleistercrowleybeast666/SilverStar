@@ -20,7 +20,7 @@ typedef struct
 typedef struct
 {
     float quaternion_reference_wxyz[4];
-    float quaternion_sum_wxyz[4];
+    float quaternion_dyad[4][4];
     float acceleration_sum_b_mps2[3];
     float gyro_sum_b_radps[3];
     float quaternion_samples_wxyz[ATTITUDE_ALIGNMENT_WINDOW_CAPACITY][4];

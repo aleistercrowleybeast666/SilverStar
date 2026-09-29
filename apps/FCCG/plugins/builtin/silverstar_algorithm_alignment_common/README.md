@@ -22,3 +22,8 @@ collinearity and inconsistent vectors are rejected.
 This is a software-validated numerical core. Project schema, source capture,
 strategy binding and the Navigation Configuration page still need to select
 and feed it before it becomes a user-facing alignment method.
+
+The existing external-quaternion window now accumulates a 4×4 quaternion
+dyad and extracts its dominant eigenvector with a fixed 24-step iteration.
+This gives a sign-invariant rotation average for JY901B samples. The current
+six-axis path still needs a separately configured authoritative yaw source.

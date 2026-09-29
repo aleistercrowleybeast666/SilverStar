@@ -11,6 +11,7 @@
 #define ATTITUDE_ALIGNMENT_DEG_TO_RAD 0.01745329251994329577f
 #define ATTITUDE_ALIGNMENT_PI 3.14159265358979323846f
 #define ATTITUDE_ALIGNMENT_TWO_PI 6.28318530717958647692f
+#define ATTITUDE_ALIGNMENT_MEAN_ITERATIONS 24U
 
 typedef struct
 {
@@ -216,6 +217,7 @@ static void AttitudeAlignmentWindow_SlotPrepare(
 {
     uint16_t slot;
     uint8_t index;
+    uint8_t other;
 
     SILVERSTAR_ASSERT_OBJECT(context, AttitudeAlignmentWindow,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
@@ -227,8 +229,12 @@ static void AttitudeAlignmentWindow_SlotPrepare(
     {
         for (index = 0U; index < 4U; index++)
         {
-            context->quaternion_sum_wxyz[index] -=
-                context->quaternion_samples_wxyz[slot][index];
+            for (other = 0U; other < 4U; other++)
+            {
+                context->quaternion_dyad[index][other] -=
+                    context->quaternion_samples_wxyz[slot][index] *
+                    context->quaternion_samples_wxyz[slot][other];
+            }
         }
         for (index = 0U; index < 3U; index++)
         {
@@ -258,6 +264,7 @@ static void AttitudeAlignmentWindow_SampleStore(
     const float gyro_b_radps[3])
 {
     uint8_t index;
+    uint8_t other;
 
     SILVERSTAR_ASSERT_OBJECT(context, AttitudeAlignmentWindow,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
@@ -277,7 +284,12 @@ static void AttitudeAlignmentWindow_SampleStore(
                                config->maximum_samples);
     for (index = 0U; index < 4U; index++)
     {
-        context->quaternion_sum_wxyz[index] += sample->quaternion_wxyz[index];
+        for (other = 0U; other < 4U; other++)
+        {
+            context->quaternion_dyad[index][other] +=
+                sample->quaternion_wxyz[index] *
+                sample->quaternion_wxyz[other];
+        }
     }
     for (index = 0U; index < 3U; index++)
     {
@@ -415,7 +427,10 @@ uint8_t AttitudeAlignmentWindow_GetAverage(
     float acceleration_b_mps2[3],
     float gyro_b_radps[3])
 {
+    float next[4];
+    uint8_t iteration;
     uint8_t index;
+    uint8_t other;
 
     if ((context == NULL) || (quaternion_wxyz == NULL) ||
         (context->quaternion_sample_count != context->sample_count) ||
@@ -427,12 +442,30 @@ uint8_t AttitudeAlignmentWindow_GetAverage(
     }
     SILVERSTAR_ASSERT_OBJECT(context, AttitudeAlignmentWindow,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
-    for (index = 0U; index < 4U; index++)
+    (void)memcpy(quaternion_wxyz, context->quaternion_reference_wxyz,
+                 sizeof(context->quaternion_reference_wxyz));
+    for (iteration = 0U;
+         iteration < ATTITUDE_ALIGNMENT_MEAN_ITERATIONS; iteration++)
     {
-        quaternion_wxyz[index] = context->quaternion_sum_wxyz[index] /
-                                 (float)context->quaternion_sample_count;
+        for (index = 0U; index < 4U; index++)
+        {
+            next[index] = 0.0f;
+            for (other = 0U; other < 4U; other++)
+            {
+                next[index] += context->quaternion_dyad[index][other] *
+                    quaternion_wxyz[other];
+            }
+        }
+        if (Attitude_QuaternionNormalize(next) == 0U) { return 0U; }
+        (void)memcpy(quaternion_wxyz, next, sizeof(next));
     }
-    return Attitude_QuaternionNormalize(quaternion_wxyz);
+    if (Attitude_QuaternionDot(quaternion_wxyz,
+                              context->quaternion_reference_wxyz) < 0.0f)
+    {
+        for (index = 0U; index < 4U; index++)
+        { quaternion_wxyz[index] = -quaternion_wxyz[index]; }
+    }
+    return 1U;
 }
 
 uint8_t AttitudeAlignment_ApplyKnownYaw(

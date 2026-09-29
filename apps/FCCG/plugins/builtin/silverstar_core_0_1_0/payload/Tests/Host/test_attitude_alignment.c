@@ -263,7 +263,7 @@ static void Test_HardwareQuaternionWindowSignAlignment(void)
 
     Test_QuaternionFromYaw(30.0f, quaternion);
     AttitudeAlignmentWindow_Init(&context);
-    for (index = 0U; index < 101U; index++)
+    for (index = 0U; index < 151U; index++)
     {
         for (component = 0U; component < 4U; component++)
         {
@@ -276,6 +276,10 @@ static void Test_HardwareQuaternionWindowSignAlignment(void)
     }
     TEST_CHECK(AttitudeAlignmentWindow_GetAverage(
         &context, q_average, acceleration_average, gyro_average) != 0U);
+    TEST_CHECK(context.sample_count == config.maximum_samples);
+    TEST_CHECK_NEAR(context.quaternion_dyad[0][0],
+                    (float)config.maximum_samples *
+                    quaternion[0] * quaternion[0], 1.0e-3f);
     TEST_CHECK(fabsf(Attitude_QuaternionDot(q_average, quaternion)) >
                0.99999f);
 }
