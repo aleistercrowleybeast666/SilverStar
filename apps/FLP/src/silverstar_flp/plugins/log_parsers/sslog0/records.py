@@ -666,6 +666,31 @@ def _Payload_AlignmentResultDecode(payload: bytes) -> dict[str, Any]:
     return result
 
 
+def _Payload_AlignmentEvidenceDecode(payload: bytes) -> dict[str, Any]:
+    reader = PayloadReader(payload)
+    result = {
+        "alignment_algorithm": reader.u8(),
+        "constraint_count": reader.u8(),
+        "valid_pair_count": reader.u8(),
+        "yaw_authoritative": reader.u8(),
+        "imu_source_instance": reader.u8(),
+        "magnetometer_instance": reader.u8(),
+        "external_source_instance": reader.u8(),
+        "failure_reason": reader.u8(),
+        "magnetometer_physical_device_id": reader.u16(),
+        "flags": reader.u16(),
+        "mag_calibration_generation": reader.u32(),
+        "mag_calibration_set_hash": reader.u32(),
+        "first_timestamp_us": reader.u64(),
+        "last_timestamp_us": reader.u64(),
+        "minimum_pair_sine": reader.f32(),
+        "rms_mismatch_rad": reader.f32(),
+        "max_mismatch_rad": reader.f32(),
+    }
+    reader.finish()
+    return result
+
+
 def _Payload_MissionConfigDecode(payload: bytes) -> dict[str, Any]:
     reader = PayloadReader(payload)
     internal_version = reader.u8()
@@ -1249,6 +1274,10 @@ RECORD_DEFINITIONS = {
             ),
         ),
         RecordDefinition(0x19, "MISSION_CONFIG", (0,), (52, 92), _Payload_MissionConfigDecode),
+        RecordDefinition(
+            0x28, "ALIGNMENT_EVIDENCE", (1,), (48,),
+            _Payload_AlignmentEvidenceDecode,
+        ),
     )
 }
 

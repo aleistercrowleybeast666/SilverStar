@@ -397,6 +397,8 @@
   "alignment.mode.gravity_mag_triad": "重力 + 磁场 TRIAD",
   "alignment.mode.hw_6axis_known_yaw": "六轴硬件姿态 + 已知偏航角",
   "alignment.mode.hw_9axis": "九轴硬件姿态",
+  "alignment.mode.vector_constraints": "矢量约束",
+  "alignment.mode.external_attitude_source": "外部姿态源",
   "alignment.mode.unknown": "未知模式",
   "alignment.known_yaw": "已知偏航角",
   "alignment.known_yaw_tooltip": "机体 +X 轴水平投影相对 ENU 东向的夹角；不是指南针航向。",

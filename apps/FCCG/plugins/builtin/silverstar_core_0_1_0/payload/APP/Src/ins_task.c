@@ -278,6 +278,9 @@ static void InsTask_AlignmentOptionalSamplesGet(
         sample->magnetometer_timestamp_us =
             magnetometer.sample_timestamp_us;
         sample->magnetometer_sequence = magnetometer.sequence;
+        sample->magnetometer_physical_device_id =
+            magnetometer.physical_device_id;
+        sample->magnetometer_instance_id = magnetometer.instance_id;
         (void)memcpy(sample->magnetic_field_b_uT,
                      magnetometer.magnetic_field_b_uT,
                      sizeof(sample->magnetic_field_b_uT));
@@ -358,6 +361,10 @@ static void InsTask_AlignmentSnapshotCommit(
     s_alignment_snapshot.mode_verified = mode_verified;
     s_alignment_snapshot.constraint_count = quality->constraint_count;
     s_alignment_snapshot.valid_pair_count = quality->valid_pair_count;
+    s_alignment_snapshot.magnetometer_physical_device_id =
+        quality->magnetometer_physical_device_id;
+    s_alignment_snapshot.magnetometer_instance_id =
+        quality->magnetometer_instance_id;
     s_alignment_snapshot.minimum_pair_sine = quality->minimum_pair_sine;
     s_alignment_snapshot.rms_mismatch_rad = quality->rms_mismatch_rad;
     s_alignment_snapshot.max_mismatch_rad = quality->max_mismatch_rad;

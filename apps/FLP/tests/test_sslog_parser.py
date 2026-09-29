@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from struct import pack
 
 import pytest
 
@@ -24,8 +25,34 @@ def test_every_documented_payload_layout_decodes_at_exact_size() -> None:
                 payload = bytes(payload_length)
             definition.decoder(payload)
             decoded_layouts += 1
-    assert len(RECORD_DEFINITIONS) == 25
-    assert decoded_layouts == 26
+    assert len(RECORD_DEFINITIONS) == 26
+    assert decoded_layouts == 27
+
+
+def test_alignment_evidence_decodes_exact_wire_layout(tmp_path: Path) -> None:
+    payload = pack(
+        "<8B2H2I2Q3f",
+        4, 3, 2, 0, 1, 0, 255, 0,
+        0x5983, 0x000F, 7, 0xAABBCCDD,
+        1_000_000, 1_020_000, 0.5, 0.02, 0.04,
+    )
+    assert len(payload) == 48
+    builder = SyntheticSslogBuilder()
+    builder.Record_Add(0x28, payload, START_TIMESTAMP_US, record_version=1)
+    dataset = Sslog0ParserPlugin().parse(
+        builder.File_Write(tmp_path / "SYNTHETIC_alignment_evidence.BIN")
+    )
+    record = dataset.Records_Get("ALIGNMENT_EVIDENCE")[0].payload
+    assert record["alignment_algorithm"] == 4
+    assert record["constraint_count"] == 3
+    assert record["valid_pair_count"] == 2
+    assert record["magnetometer_physical_device_id"] == 0x5983
+    assert record["mag_calibration_generation"] == 7
+    assert record["mag_calibration_set_hash"] == 0xAABBCCDD
+    assert record["first_timestamp_us"] == 1_000_000
+    assert record["last_timestamp_us"] == 1_020_000
+    assert record["minimum_pair_sine"] == 0.5
+    assert record["rms_mismatch_rad"] == pytest.approx(0.02)
 
 
 def test_parser_decodes_known_records_and_skips_unknown_type(tmp_path: Path) -> None:

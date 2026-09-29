@@ -289,6 +289,23 @@ uint8_t AlignmentStrategy_MagnetometerRequired(void)
 uint8_t AlignmentStrategy_HardwareQuaternionRequired(void)
 { return 0U; }
 
+static void AlignmentStrategy_ReadySourceSet(
+    const AlignmentStrategySample *sample,
+    uint8_t magnetic_required,
+    AlignmentStrategyOutput *output)
+{
+    SILVERSTAR_ASSERT_OBJECT(sample, AlignmentStrategySample,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(output, AlignmentStrategyOutput,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    if (magnetic_required != 0U)
+    {
+        output->magnetometer_physical_device_id =
+            sample->magnetometer_physical_device_id;
+        output->magnetometer_instance_id = sample->magnetometer_instance_id;
+    }
+}
+
 AlignmentStrategyProcessResult AlignmentStrategy_SampleProcess(
     AlignmentStrategyContext *context,
     const AlignmentStrategyConfig *config,
@@ -337,7 +354,11 @@ AlignmentStrategyProcessResult AlignmentStrategy_SampleProcess(
     }
     AlignmentStrategy_MeansGet(context, magnetic_required, output);
     if (AlignmentStrategy_SolutionBuild(config, output) != 0U)
-    { return ALIGNMENT_STRATEGY_PROCESS_READY; }
+    {
+        AlignmentStrategy_ReadySourceSet(
+            sample, magnetic_required, output);
+        return ALIGNMENT_STRATEGY_PROCESS_READY;
+    }
     if (context->sample_count >= config->maximum_samples)
     { return AlignmentStrategy_SampleReject(context, output); }
     return ALIGNMENT_STRATEGY_PROCESS_ACCEPTED;

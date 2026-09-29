@@ -12,6 +12,8 @@
 
 static const SslogRecordMetadata s_sslog_metadata[] =
 {
+    { FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE, 1U,
+      FLIGHT_LOG_ALIGNMENT_EVIDENCE_PAYLOAD_SIZE, "ALIGNMENT_EVIDENCE" },
     { FLIGHT_LOG_RECORD_NAV_QUALITY, 1U, FLIGHT_LOG_NAV_QUALITY_PAYLOAD_SIZE, "NAV_QUALITY" },
     { FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT, 1U, FLIGHT_LOG_ESKF15_BODY_INPUT_PAYLOAD_SIZE, "ESKF15_BODY_INPUT" },
     { FLIGHT_LOG_RECORD_ESKF15_STATE, 1U, FLIGHT_LOG_ESKF15_STATE_PAYLOAD_SIZE, "ESKF15_STATE" },
@@ -1250,6 +1252,41 @@ static uint16_t SslogRecords_AlignmentResultSerialize(
     return writer.offset;
 }
 
+static uint16_t SslogRecords_AlignmentEvidenceSerialize(
+    const FlightLogAlignmentEvidenceRecord *payload,
+    uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogWriteCursor writer = { buffer, buffer_size, 0U };
+    SILVERSTAR_ASSERT_OBJECT(payload, FlightLogAlignmentEvidenceRecord,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(buffer != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SslogRecords_WriterU8Put(&writer, payload->alignment_algorithm);
+    SslogRecords_WriterU8Put(&writer, payload->constraint_count);
+    SslogRecords_WriterU8Put(&writer, payload->valid_pair_count);
+    SslogRecords_WriterU8Put(&writer, payload->yaw_authoritative);
+    SslogRecords_WriterU8Put(&writer, payload->imu_source_instance);
+    SslogRecords_WriterU8Put(&writer, payload->magnetometer_instance);
+    SslogRecords_WriterU8Put(&writer, payload->external_source_instance);
+    SslogRecords_WriterU8Put(&writer, payload->failure_reason);
+    SslogRecords_WriterU16Put(&writer,
+        payload->magnetometer_physical_device_id);
+    SslogRecords_WriterU16Put(&writer, payload->flags);
+    SslogRecords_WriterU32Put(&writer,
+        payload->mag_calibration_generation);
+    SslogRecords_WriterU32Put(&writer,
+        payload->mag_calibration_set_hash);
+    SslogRecords_WriterU64Put(&writer, payload->first_timestamp_us);
+    SslogRecords_WriterU64Put(&writer, payload->last_timestamp_us);
+    SslogRecords_WriterF32Put(&writer, payload->minimum_pair_sine);
+    SslogRecords_WriterF32Put(&writer, payload->rms_mismatch_rad);
+    SslogRecords_WriterF32Put(&writer, payload->max_mismatch_rad);
+    SILVERSTAR_ASSERT(writer.offset == buffer_size,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_POSTCONDITION);
+    return writer.offset;
+}
+
 static uint16_t SslogRecords_MissionConfigSerialize(
     const FlightLogMissionConfigRecord *payload,
     uint8_t *buffer,
@@ -2315,6 +2352,41 @@ static uint16_t SslogRecords_AlignmentResultDeserialize(
     return reader.offset;
 }
 
+static uint16_t SslogRecords_AlignmentEvidenceDeserialize(
+    FlightLogAlignmentEvidenceRecord *payload,
+    const uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogReadCursor reader = { buffer, buffer_size, 0U };
+    SILVERSTAR_ASSERT_OBJECT(payload, FlightLogAlignmentEvidenceRecord,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(buffer != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    payload->alignment_algorithm = SslogRecords_ReaderU8Get(&reader);
+    payload->constraint_count = SslogRecords_ReaderU8Get(&reader);
+    payload->valid_pair_count = SslogRecords_ReaderU8Get(&reader);
+    payload->yaw_authoritative = SslogRecords_ReaderU8Get(&reader);
+    payload->imu_source_instance = SslogRecords_ReaderU8Get(&reader);
+    payload->magnetometer_instance = SslogRecords_ReaderU8Get(&reader);
+    payload->external_source_instance = SslogRecords_ReaderU8Get(&reader);
+    payload->failure_reason = SslogRecords_ReaderU8Get(&reader);
+    payload->magnetometer_physical_device_id =
+        SslogRecords_ReaderU16Get(&reader);
+    payload->flags = SslogRecords_ReaderU16Get(&reader);
+    payload->mag_calibration_generation =
+        SslogRecords_ReaderU32Get(&reader);
+    payload->mag_calibration_set_hash =
+        SslogRecords_ReaderU32Get(&reader);
+    payload->first_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->last_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->minimum_pair_sine = SslogRecords_ReaderF32Get(&reader);
+    payload->rms_mismatch_rad = SslogRecords_ReaderF32Get(&reader);
+    payload->max_mismatch_rad = SslogRecords_ReaderF32Get(&reader);
+    SILVERSTAR_ASSERT(reader.offset == buffer_size,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_POSTCONDITION);
+    return reader.offset;
+}
+
 static uint16_t SslogRecords_MissionConfigDeserialize(
     FlightLogMissionConfigRecord *payload,
     const uint8_t *buffer,
@@ -2887,6 +2959,9 @@ static uint16_t SslogRecords_PayloadNavigationSerialize(
         SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     switch ((uint32_t)record->record_type)
     {
+        case FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE: return
+            SslogRecords_AlignmentEvidenceSerialize(
+                &record->payload.alignment_evidence, buffer, payload_size);
         case FLIGHT_LOG_RECORD_NAV_QUALITY: return SslogRecords_NavigationQualitySerialize(
             &record->payload.navigation_quality, buffer, payload_size);
         case FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT: return SslogRecords_Eskf15BodyInputSerialize(
@@ -3032,6 +3107,9 @@ static uint16_t SslogRecords_PayloadNavigationDeserialize(
         SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     switch ((uint32_t)record->record_type)
     {
+        case FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE: return
+            SslogRecords_AlignmentEvidenceDeserialize(
+                &record->payload.alignment_evidence, buffer, payload_size);
         case FLIGHT_LOG_RECORD_NAV_QUALITY: return SslogRecords_NavigationQualityDeserialize(
             &record->payload.navigation_quality, buffer, payload_size);
         case FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT: return SslogRecords_Eskf15BodyInputDeserialize(

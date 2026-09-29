@@ -61,6 +61,8 @@ typedef struct
     float gyro_b_radps[3];
     uint64_t magnetometer_timestamp_us;
     uint32_t magnetometer_sequence;
+    uint16_t magnetometer_physical_device_id;
+    uint8_t magnetometer_instance_id;
     float magnetic_field_b_uT[3];
     uint8_t magnetometer_available;
     uint8_t magnetometer_calibrated;
@@ -87,6 +89,8 @@ typedef struct
     uint8_t magnetic_field_valid;
     uint8_t constraint_count;
     uint8_t valid_pair_count;
+    uint16_t magnetometer_physical_device_id;
+    uint8_t magnetometer_instance_id;
     float minimum_pair_sine;
     float rms_mismatch_rad;
     float max_mismatch_rad;

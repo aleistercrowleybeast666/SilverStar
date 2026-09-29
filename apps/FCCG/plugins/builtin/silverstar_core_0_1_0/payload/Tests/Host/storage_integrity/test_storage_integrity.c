@@ -246,6 +246,38 @@ static int Test_RecordStream(const char *output)
     return 1;
 }
 
+static int Test_AlignmentEvidenceCodec(void)
+{
+    FlightLogRecord source = {0};
+    FlightLogRecord decoded = {0};
+    uint8_t buffer[FLIGHT_LOG_MAX_RECORD_SIZE];
+    uint16_t length = 0U;
+    uint16_t consumed = 0U;
+    uint32_t sequence = 0U;
+    source.record_type = FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE;
+    source.timestamp_us = 1020000ULL;
+    source.payload.alignment_evidence.alignment_algorithm = 4U;
+    source.payload.alignment_evidence.constraint_count = 3U;
+    source.payload.alignment_evidence.valid_pair_count = 2U;
+    source.payload.alignment_evidence.magnetometer_physical_device_id = 0x5983U;
+    source.payload.alignment_evidence.mag_calibration_generation = 7U;
+    source.payload.alignment_evidence.mag_calibration_set_hash = 0xAABBCCDDUL;
+    source.payload.alignment_evidence.first_timestamp_us = 1000000ULL;
+    source.payload.alignment_evidence.last_timestamp_us = 1020000ULL;
+    source.payload.alignment_evidence.minimum_pair_sine = 0.5f;
+    CHECK(FlightLog_RecordSerialize(&source, 19U, buffer,
+        sizeof(buffer), &length) == FLIGHT_LOG_SERIALIZE_RESULT_OK);
+    CHECK(FlightLog_RecordDeserialize(buffer, length, &decoded,
+        &sequence, &consumed) == FLIGHT_LOG_DESERIALIZE_RESULT_OK);
+    CHECK(sequence == 19U && consumed == length);
+    CHECK(decoded.record_type == FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE);
+    CHECK(decoded.payload.alignment_evidence.constraint_count == 3U);
+    CHECK(decoded.payload.alignment_evidence.mag_calibration_generation == 7U);
+    CHECK(decoded.payload.alignment_evidence.mag_calibration_set_hash == 0xAABBCCDDUL);
+    CHECK(decoded.payload.alignment_evidence.minimum_pair_sine == 0.5f);
+    return 1;
+}
+
 static int Test_DiskFailure(const char *mode)
 {
     uint8_t buffer[513];
@@ -302,6 +334,7 @@ int main(int argc, char **argv)
         return result == StorageIntegrityResult_Ok ? 0 : 1;
     }
     if (argc == 3) { return Test_DiskFailure(argv[2]) ? 0 : 1; }
-    if (!Test_ByteStream() || !Test_RecordStream(argv[1])) { return 1; }
+    if (!Test_AlignmentEvidenceCodec() || !Test_ByteStream() ||
+        !Test_RecordStream(argv[1])) { return 1; }
     return s_failures ? 1 : 0;
 }

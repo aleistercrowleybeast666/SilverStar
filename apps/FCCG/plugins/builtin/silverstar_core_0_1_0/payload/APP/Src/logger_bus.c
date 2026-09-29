@@ -873,6 +873,15 @@ LoggerBusResult LoggerBus_AlignmentResultPush(
         record, sizeof(*record), 0U);
 }
 
+LoggerBusResult LoggerBus_AlignmentEvidencePush(
+    uint64_t timestamp_us,
+    const FlightLogAlignmentEvidenceRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(
+        FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE, timestamp_us, 0U,
+        record, sizeof(*record), 0U);
+}
+
 LoggerBusResult LoggerBus_FinalizationArm(uint64_t landing_timestamp_us)
 {
     const uint64_t grace_us =

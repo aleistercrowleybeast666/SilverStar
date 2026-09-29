@@ -122,6 +122,9 @@ LoggerBusResult LoggerBus_CalibrationResultPush(
 LoggerBusResult LoggerBus_AlignmentResultPush(
     uint64_t timestamp_us,
     const FlightLogAlignmentResultRecord *record);
+LoggerBusResult LoggerBus_AlignmentEvidencePush(
+    uint64_t timestamp_us,
+    const FlightLogAlignmentEvidenceRecord *record);
 LoggerBusResult LoggerBus_FinalizationArm(uint64_t landing_timestamp_us);
 LoggerBusFinalizationState LoggerBus_FinalizationProcess(uint64_t now_us);
 void LoggerBus_FinalizationComplete(void);

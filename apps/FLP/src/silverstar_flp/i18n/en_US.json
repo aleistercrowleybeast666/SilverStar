@@ -332,6 +332,8 @@
   "alignment.mode.gravity_mag_triad": "Gravity + Magnetic TRIAD",
   "alignment.mode.hw_6axis_known_yaw": "6-axis Hardware Attitude + Known Yaw",
   "alignment.mode.hw_9axis": "9-axis Hardware Attitude",
+  "alignment.mode.vector_constraints": "Vector Constraints",
+  "alignment.mode.external_attitude_source": "External Attitude Source",
   "alignment.mode.unknown": "Unknown Mode",
   "alignment.q_nb_title": "Final q_nb · WXYZ · Body → ENU (authoritative result)",
   "alignment.quaternion_source": "Quaternion record: {record}",

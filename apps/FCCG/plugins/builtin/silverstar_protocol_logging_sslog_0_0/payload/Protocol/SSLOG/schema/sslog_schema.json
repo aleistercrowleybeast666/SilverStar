@@ -165,6 +165,7 @@
     "IMU_CORRECTED": "source-driven",
     "CALIBRATION_RESULT": "event",
     "ALIGNMENT_RESULT": "event",
+    "ALIGNMENT_EVIDENCE": "event",
     "MISSION_CONFIG": "one-shot",
     "DEVICE_DESCRIPTOR": "one-shot",
     "ALGORITHM_DESCRIPTOR": "one-shot",
@@ -3118,6 +3119,41 @@
         "decimation": 1,
         "period_us": 0
       }
+    },
+    {
+      "id": "0x28",
+      "enum": "FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE",
+      "name": "ALIGNMENT_EVIDENCE",
+      "version": 1,
+      "payload_size": 48,
+      "size_macro": "FLIGHT_LOG_ALIGNMENT_EVIDENCE_PAYLOAD_SIZE",
+      "c_type": "FlightLogAlignmentEvidenceRecord",
+      "member": "alignment_evidence",
+      "default_stream": {
+        "enabled": true,
+        "policy": "event",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        { "name": "alignment_algorithm", "type": "u8" },
+        { "name": "constraint_count", "type": "u8" },
+        { "name": "valid_pair_count", "type": "u8" },
+        { "name": "yaw_authoritative", "type": "u8" },
+        { "name": "imu_source_instance", "type": "u8" },
+        { "name": "magnetometer_instance", "type": "u8" },
+        { "name": "external_source_instance", "type": "u8" },
+        { "name": "failure_reason", "type": "u8" },
+        { "name": "magnetometer_physical_device_id", "type": "u16" },
+        { "name": "flags", "type": "u16" },
+        { "name": "mag_calibration_generation", "type": "u32" },
+        { "name": "mag_calibration_set_hash", "type": "u32" },
+        { "name": "first_timestamp_us", "type": "u64" },
+        { "name": "last_timestamp_us", "type": "u64" },
+        { "name": "minimum_pair_sine", "type": "f32" },
+        { "name": "rms_mismatch_rad", "type": "f32" },
+        { "name": "max_mismatch_rad", "type": "f32" }
+      ]
     }
   ]
 }

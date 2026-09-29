@@ -470,6 +470,8 @@ class OverviewPage(QWidget):
             1: "alignment.mode.gravity_mag_triad",
             2: "alignment.mode.hw_9axis",
             3: "alignment.mode.gravity_known_yaw",
+            4: "alignment.mode.vector_constraints",
+            5: "alignment.mode.external_attitude_source",
         }
         if not alignment.present:
             values = {

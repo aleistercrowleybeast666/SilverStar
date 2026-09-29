@@ -466,6 +466,27 @@ typedef struct
 typedef struct
 {
     uint8_t alignment_algorithm;
+    uint8_t constraint_count;
+    uint8_t valid_pair_count;
+    uint8_t yaw_authoritative;
+    uint8_t imu_source_instance;
+    uint8_t magnetometer_instance;
+    uint8_t external_source_instance;
+    uint8_t failure_reason;
+    uint16_t magnetometer_physical_device_id;
+    uint16_t flags;
+    uint32_t mag_calibration_generation;
+    uint32_t mag_calibration_set_hash;
+    uint64_t first_timestamp_us;
+    uint64_t last_timestamp_us;
+    float minimum_pair_sine;
+    float rms_mismatch_rad;
+    float max_mismatch_rad;
+} FlightLogAlignmentEvidenceRecord;
+
+typedef struct
+{
+    uint8_t alignment_algorithm;
     uint8_t rocket_longitudinal_axis;
     uint8_t deploy_trigger_mask;
     uint8_t tilt_reference;
@@ -726,6 +747,7 @@ typedef union
     FlightLogImuCorrectedRecord imu_corrected;
     FlightLogCalibrationResultRecord calibration_result;
     FlightLogAlignmentResultRecord alignment_result;
+    FlightLogAlignmentEvidenceRecord alignment_evidence;
     FlightLogMissionConfigRecord mission_config;
     FlightLogDeviceDescriptorRecord device_descriptor;
     FlightLogAlgorithmDescriptorRecord algorithm_descriptor;

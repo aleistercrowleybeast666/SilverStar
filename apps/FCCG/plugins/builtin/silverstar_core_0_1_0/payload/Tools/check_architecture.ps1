@@ -403,6 +403,7 @@ $expectedGeneratedFiles = @(
     'Generated\Src\project_log_config.c',
     'Generated\Src\project_log_decoder_profile.c',
     'Generated\Src\project_metadata.c',
+    'Generated\Src\project_mission_parameters.c',
     'Generated\Src\project_resources.c',
     'Generated\Inc\project_capability_routes.h',
     'Generated\Src\project_capability_routes.c',
@@ -693,8 +694,6 @@ if ($makeExitCode -eq 0) {
         'Algorithm/Calibration/Src/imu_six_face_calibration.c',
         'Algorithm/Alignment/Common/Src/attitude_alignment.c',
         'Algorithm/Alignment/Common/Src/attitude_preflight.c',
-        'Algorithm/Alignment/GravityKnownYaw/Src/alignment_gravity_known_yaw.c',
-        'Algorithm/Alignment/GravityKnownYaw/Src/alignment_strategy_binding.c',
         'Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c',
         'FlightLogic/Deployment/MultiTrigger/Src/flight_deployment.c',
         'FlightLogic/Landing/BarometerImuWindow/Src/flight_landing.c'
@@ -719,6 +718,14 @@ if ($makeExitCode -eq 0) {
         -Condition ($missingStrategySources.Count -eq 0) `
         -Message ("Selected Strategy/Mode component sources are missing: " +
             ($missingStrategySources -join ', '))
+
+    $selectedAlignmentBindings = @($uniqueSources | Where-Object {
+        $_ -match '^Algorithm/Alignment/[^/]+/Src/alignment_strategy_binding\.c$'
+    })
+    Assert-ArchitectureCondition `
+        -Condition ($selectedAlignmentBindings.Count -eq 1) `
+        -Message ('Exactly one selected Alignment strategy binding is required: ' +
+            ($selectedAlignmentBindings -join ', '))
 
     $unselectedStrategySources = @($uniqueSources | Where-Object {
         ($_ -like 'Algorithm/Alignment/GravityMagTriad/*') -or
@@ -1166,8 +1173,8 @@ try {
         ConvertFrom-Json
     $sslogHeader = Get-Content -Raw -LiteralPath $sslogHeaderPath
     $sslogRecords = @($sslogSchema.records)
-    # First 28 wire identities are immutable. The seven appended navigation
-    # codecs are explicit; neither an arbitrary count nor an unknown ID passes.
+    # Existing wire identities are immutable. New codecs are explicit;
+    # neither an arbitrary count nor an unknown ID passes.
     $sslogWireIdentities = @(
         '0x02|FLIGHT_LOG_RECORD_EVENT|EVENT|0|12|FLIGHT_LOG_EVENT_PAYLOAD_SIZE|FlightLogEventRecord|event|event_id,u8,1;,pad,3;arg0,u32,1;arg1,u32,1',
         '0x03|FLIGHT_LOG_RECORD_STATS|STATS|0|16|FLIGHT_LOG_STATS_PAYLOAD_SIZE|FlightLogStatsRecord|stats|imu_queue_overflow_count,u32,1;logger_queue_overflow_count,u32,1;ins_update_count,u32,1;health_flags,u32,1',
@@ -1203,10 +1210,11 @@ try {
         '0x24|FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART|ESKF15_INITIAL_P_PART|1|144|FLIGHT_LOG_ESKF15_INITIAL_P_PART_PAYLOAD_SIZE|FlightLogEskf15CovariancePartRecord|eskf15_initial_p_part|snapshot_id,u32,1;epoch,u32,1;source_id,u32,1;calibration_generation,u32,1;algorithm_id,u8,1;phase,u8,1;part_index,u8,1;part_count,u8,1;offset,u16,1;count,u16,1;values,f32,30',
         '0x25|FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT|ESKF15_MEASUREMENT|1|100|FLIGHT_LOG_ESKF15_MEASUREMENT_PAYLOAD_SIZE|FlightLogEskf15MeasurementRecord|eskf15_measurement|sample_timestamp_us,u64,1;receive_timestamp_us,u64,1;measurement_timestamp_us,u64,1;evaluation_timestamp_us,u64,1;operation_sequence,u32,1;epoch,u32,1;source_id,u32,1;calibration_generation,u32,1;group,u8,1;physically_valid,u8,1;admitted,u8,1;update_result,u8,1;observation,f32,2;innovation,f32,2;base_variance,f32,2;effective_variance,f32,2;nis,f32,1;quality_scale,f32,1;consistency_scale,f32,1;robust_scale,f32,1',
         '0x26|FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT|ESKF15_BODY_INPUT|1|84|FLIGHT_LOG_ESKF15_BODY_INPUT_PAYLOAD_SIZE|FlightLogEskf15BodyInputRecord|eskf15_body_input|interval_start_timestamp_us,u64,1;interval_end_timestamp_us,u64,1;sequence,u32,1;source_id,u32,1;calibration_generation,u32,1;quality_flags,u32,1;dt_s,f32,1;body_gyro_radps,f32,6;body_accel_mps2,f32,6',
-        '0x27|FLIGHT_LOG_RECORD_NAV_QUALITY|NAV_QUALITY|1|100|FLIGHT_LOG_NAV_QUALITY_PAYLOAD_SIZE|FlightLogNavigationQualityRecord|navigation_quality|native_epoch_us,u64,1;receive_us,u64,1;evaluation_us,u64,1;window_start_us,u64,1;window_end_us,u64,1;evidence_age_us,u64,1;native_sequence,u32,1;source_id,u32,1;calibration_generation,u32,1;covered_us,u32,1;position_epoch_count,u32,1;velocity_epoch_count,u32,1;closure_en_m,f32,2;closure_norm_m,f32,1;variance_scale,f32,1;quality_revision,u8,1;physical_mask,u8,1;admitted_mask,u8,1;accepted_mask,u8,1;nav_output_valid,u8,1;health,u8,1;evidence_valid,u8,1;numsv,u8,1;window_reason,u8,1;numsv_valid,u8,1;window_index,u8,1;quality_degraded_mask,u8,1'
+        '0x27|FLIGHT_LOG_RECORD_NAV_QUALITY|NAV_QUALITY|1|100|FLIGHT_LOG_NAV_QUALITY_PAYLOAD_SIZE|FlightLogNavigationQualityRecord|navigation_quality|native_epoch_us,u64,1;receive_us,u64,1;evaluation_us,u64,1;window_start_us,u64,1;window_end_us,u64,1;evidence_age_us,u64,1;native_sequence,u32,1;source_id,u32,1;calibration_generation,u32,1;covered_us,u32,1;position_epoch_count,u32,1;velocity_epoch_count,u32,1;closure_en_m,f32,2;closure_norm_m,f32,1;variance_scale,f32,1;quality_revision,u8,1;physical_mask,u8,1;admitted_mask,u8,1;accepted_mask,u8,1;nav_output_valid,u8,1;health,u8,1;evidence_valid,u8,1;numsv,u8,1;window_reason,u8,1;numsv_valid,u8,1;window_index,u8,1;quality_degraded_mask,u8,1',
+        '0x28|FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE|ALIGNMENT_EVIDENCE|1|48|FLIGHT_LOG_ALIGNMENT_EVIDENCE_PAYLOAD_SIZE|FlightLogAlignmentEvidenceRecord|alignment_evidence|alignment_algorithm,u8,1;constraint_count,u8,1;valid_pair_count,u8,1;yaw_authoritative,u8,1;imu_source_instance,u8,1;magnetometer_instance,u8,1;external_source_instance,u8,1;failure_reason,u8,1;magnetometer_physical_device_id,u16,1;flags,u16,1;mag_calibration_generation,u32,1;mag_calibration_set_hash,u32,1;first_timestamp_us,u64,1;last_timestamp_us,u64,1;minimum_pair_sine,f32,1;rms_mismatch_rad,f32,1;max_mismatch_rad,f32,1'
     )
     Assert-ArchitectureCondition -Condition ($sslogRecords.Count -eq $sslogWireIdentities.Count) `
-        -Message 'SSLOG Record Catalog must contain exactly the 28 legacy and 7 navigation codecs.'
+        -Message 'SSLOG Record Catalog must contain exactly the reviewed wire codecs.'
     foreach ($record in $sslogRecords) {
         $fieldIdentities = @($record.fields | ForEach-Object {
             $count = if ($null -eq $_.count) { 1 } else { $_.count }

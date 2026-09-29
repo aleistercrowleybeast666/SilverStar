@@ -24,7 +24,11 @@ from silverstar_fccg.project.logging import (
     ProtocolLogDefinitions_Get,
     ProtocolLogDefinitions_Load,
 )
-from silverstar_fccg.project.model import ProjectModel_Load, ProjectModel_Save
+from silverstar_fccg.project.model import (
+    PROJECT_FORMAT_VERSION,
+    ProjectModel_Load,
+    ProjectModel_Save,
+)
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.ui.main_window import MainWindow
 from silverstar_fccg.ui.widgets import StandardCheckBox
@@ -51,7 +55,7 @@ def test_purpose_metadata_is_explicit_and_strict(
     metadata_path = ProjectProtocolLogMetadataPath_Get(model, builtin_catalog)
     data = json.loads(metadata_path.read_text(encoding="utf-8"))
     definitions = ProtocolLogDefinitions_Load(metadata_path)
-    assert len(definitions) == 35
+    assert len(definitions) == 36
     assert {definition.purpose for definition in definitions} == {
         LogPurpose.FLIGHT, LogPurpose.TEST
     }
@@ -263,7 +267,7 @@ def test_three_logging_buttons_are_one_shot_and_save_only_stream_values(
         project_file = tmp_path / "PurposeProfiles.ssproject"
         ProjectModel_Save(window._model, project_file, WorkspacePolicy(tmp_path))
         saved_data = json.loads(project_file.read_text(encoding="utf-8"))
-        assert saved_data["format_version"] == 12
+        assert saved_data["format_version"] == PROJECT_FORMAT_VERSION
         assert "logging_profile" not in saved_data["logging"]
         saved = ProjectModel_Load(project_file)
         assert _States_Get(saved) == _States_Get(window._model)

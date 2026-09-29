@@ -30,6 +30,7 @@
 #include "system_time.h"
 #include "system_navigation_health.h"
 #include "system_navigation_profile.h"
+#include "system_source_selector.h"
 
 #define FLIGHT_TASK_FAULT_READY_TRANSITION 0x52445954UL
 #define FLIGHT_TASK_FAULT_RECOVERY_INIT 0x52435649UL
@@ -121,11 +122,73 @@ static void FlightTask_CalibrationResultWrite(
     }
 }
 
+static void FlightTask_AlignmentEvidenceWrite(
+    const SystemAlignmentStatus *status,
+    const InsAlignmentSnapshot *snapshot, uint8_t snapshot_valid)
+{
+    FlightLogAlignmentEvidenceRecord record;
+    SystemMagCalibrationStatus calibration;
+    uint8_t imu_instance = 0xFFU;
+
+    SILVERSTAR_ASSERT_OBJECT(status, SystemAlignmentStatus,
+        SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT_OBJECT(snapshot, InsAlignmentSnapshot,
+        SILVERSTAR_ASSERT_MODULE_APP);
+    (void)memset(&record, 0, sizeof(record));
+    record.alignment_algorithm = (uint8_t)SYSTEM_ALIGNMENT_ALGORITHM;
+    record.constraint_count = SYSTEM_ALIGNMENT_CONSTRAINT_COUNT;
+    record.yaw_authoritative =
+        SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE;
+    record.imu_source_instance = 0xFFU;
+    record.magnetometer_instance = 0xFFU;
+    record.external_source_instance = 0xFFU;
+    record.failure_reason = (uint8_t)status->config_result;
+    if (SystemSourceSelector_ImuActiveInstanceGet(&imu_instance) ==
+        SYSTEM_DEVICE_OK)
+    { record.imu_source_instance = imu_instance; }
+    if (SYSTEM_ALIGNMENT_ALGORITHM ==
+        SYSTEM_ALIGNMENT_EXTERNAL_ATTITUDE_SOURCE)
+    { record.external_source_instance = imu_instance; }
+    if (snapshot_valid != 0U)
+    {
+        record.flags |= 1U;
+        record.constraint_count = snapshot->constraint_count;
+        record.valid_pair_count = snapshot->valid_pair_count;
+        record.first_timestamp_us = snapshot->first_timestamp_us;
+        record.last_timestamp_us = snapshot->last_timestamp_us;
+        record.minimum_pair_sine = snapshot->minimum_pair_sine;
+        record.rms_mismatch_rad = snapshot->rms_mismatch_rad;
+        record.max_mismatch_rad = snapshot->max_mismatch_rad;
+        record.magnetometer_physical_device_id =
+            snapshot->magnetometer_physical_device_id;
+        if (SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT != 0U)
+        {
+            record.flags |= 2U;
+            record.magnetometer_instance =
+                snapshot->magnetometer_instance_id;
+            if (SystemMagCalibration_StatusGet(
+                    record.magnetometer_instance, &calibration) ==
+                SystemMagCalibrationResult_Ok)
+            {
+                record.mag_calibration_generation =
+                    calibration.generation;
+                if (calibration.saved != 0U) { record.flags |= 4U; }
+            }
+        }
+    }
+    if (status->ready != 0U) { record.flags |= 8U; }
+    record.mag_calibration_set_hash =
+        SystemMagCalibration_GenerationHashGet();
+    (void)LoggerBus_AlignmentEvidencePush(
+        SystemTime_GetMonotonicUs(), &record);
+}
+
 static void FlightTask_AlignmentResultWrite(
     const SystemAlignmentStatus *status)
 {
     FlightLogAlignmentResultRecord record;
     InsAlignmentSnapshot attitude_snapshot;
+    uint8_t snapshot_valid;
     const SystemAlignmentSourceStatus *attitude_status;
     const SystemAlignmentSourceStatus *gnss_status;
     const SystemAlignmentSourceStatus *baro_status;
@@ -153,7 +216,9 @@ static void FlightTask_AlignmentResultWrite(
         (uint8_t)attitude_status->detail.attitude.source;
     record.attitude_timestamp_us =
         attitude_status->detail.attitude.timestamp_us;
-    if (Ins_GetAlignmentSnapshot(&attitude_snapshot) != 0U)
+    (void)memset(&attitude_snapshot, 0, sizeof(attitude_snapshot));
+    snapshot_valid = Ins_GetAlignmentSnapshot(&attitude_snapshot);
+    if (snapshot_valid != 0U)
     {
         (void)memcpy(record.q_nb, attitude_snapshot.q_nb,
                      sizeof(record.q_nb));
@@ -175,6 +240,8 @@ static void FlightTask_AlignmentResultWrite(
     record.barometer_origin_altitude_m =
         baro_status->detail.barometer.origin_altitude_m;
     (void)LoggerBus_AlignmentResultPush(SystemTime_GetMonotonicUs(), &record);
+    FlightTask_AlignmentEvidenceWrite(
+        status, &attitude_snapshot, snapshot_valid);
 }
 
 static uint8_t FlightTask_AlignmentStateEventWrite(

@@ -41,6 +41,8 @@ typedef struct
     float max_mismatch_rad;
     uint8_t constraint_count;
     uint8_t valid_pair_count;
+    uint16_t magnetometer_physical_device_id;
+    uint8_t magnetometer_instance_id;
     uint8_t mode_verified;
     uint8_t valid;
 } InsAlignmentSnapshot;
