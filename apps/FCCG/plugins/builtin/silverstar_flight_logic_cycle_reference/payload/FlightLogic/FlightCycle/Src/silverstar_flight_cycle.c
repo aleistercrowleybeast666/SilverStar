@@ -144,6 +144,12 @@ static SystemLifecycleStartResult SystemLifecycle_StartPreconditionsGet(
         }
         return SYSTEM_LIFECYCLE_START_NOT_READY;
     }
+    if (SystemLifecycleBackend_StorageReadyGet() == 0U)
+    {
+        if (reason != NULL)
+        { *reason = SYSTEM_START_REASON_STORAGE_NOT_READY; }
+        return SYSTEM_LIFECYCLE_START_NOT_READY;
+    }
     if ((s_lifecycle_state != SYSTEM_STATE_READY) ||
         (SystemHealth_IsReady() == 0U))
     {
@@ -541,6 +547,7 @@ static const char *SystemLifecycle_StartReadinessReasonText(
         case SYSTEM_START_REASON_ATTITUDE_INVALID: return "ATTITUDE_INVALID";
         case SYSTEM_START_REASON_ATTITUDE_STALE: return "ATTITUDE_STALE";
         case SYSTEM_START_REASON_SYSTEM_NOT_READY: return "SYSTEM_NOT_READY";
+        case SYSTEM_START_REASON_STORAGE_NOT_READY: return "STORAGE_NOT_READY";
         default: return NULL;
     }
 }

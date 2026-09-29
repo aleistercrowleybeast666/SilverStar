@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "platform_time.h"
+#include "platform_critical.h"
 #include "silverstar_assert.h"
 #include "system_user_config.h"
 #include "system_storage_if.h"
@@ -223,8 +224,11 @@ static SystemDeviceResult SilverStarLogSinkService_EndSession(void)
 
 static SystemDeviceResult SilverStarLogSinkService_GetHealth(SystemLogSinkHealth *health)
 {
+    PlatformCriticalState state;
     if (health == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    state = PlatformCritical_Enter();
     *health = s_sink.health;
+    PlatformCritical_Exit(state);
     return SYSTEM_DEVICE_OK;
 }
 

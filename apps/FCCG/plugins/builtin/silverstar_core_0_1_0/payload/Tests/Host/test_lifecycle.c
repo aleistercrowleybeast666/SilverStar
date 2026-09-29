@@ -27,6 +27,7 @@ static uint8_t s_fail_stage;
 static SystemDeviceResult s_prepare_result;
 static SystemHealthAttitudeStatus s_attitude_status;
 static uint8_t s_calibration_ready;
+static uint8_t s_storage_ready;
 static SystemAlignmentStatus s_alignment_status;
 
 uint8_t SystemCalibration_IsReady(void) { return s_calibration_ready; }
@@ -108,6 +109,8 @@ SystemDeviceResult SystemLifecycleBackend_InitializeNavigation(void)
 { return Hook_Navigation(); }
 SystemDeviceResult SystemLifecycleBackend_ResetFlightQueues(void)
 { return Hook_Queues(); }
+uint8_t SystemLifecycleBackend_StorageReadyGet(void)
+{ return s_storage_ready; }
 void SystemLifecycleBackend_AbortStart(void) { Hook_Abort(); }
 
 static void Test_StateReset(void)
@@ -128,6 +131,7 @@ static void Test_StateReset(void)
     s_prepare_result = SYSTEM_DEVICE_IO_ERROR;
     s_attitude_status = SYSTEM_HEALTH_ATTITUDE_READY;
     s_calibration_ready = 1U;
+    s_storage_ready = 1U;
     (void)memset(&s_alignment_status, 0, sizeof(s_alignment_status));
     s_alignment_status.state = SYSTEM_ALIGNMENT_STATE_READY;
     s_alignment_status.ready = 1U;
@@ -240,6 +244,19 @@ static void Test_StartReasonsAndPending(void)
         SYSTEM_START_SOURCE_LOCAL, &diagnostic) != 0U);
     TEST_CHECK(diagnostic.response.reason ==
                SYSTEM_START_REASON_ALIGNMENT_REQUIRED);
+
+    Test_StateReset();
+    s_storage_ready = 0U;
+    TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemLifecycle_StartReadinessGet(&readiness_reason) ==
+               SYSTEM_LIFECYCLE_START_NOT_READY);
+    TEST_CHECK(readiness_reason == SYSTEM_START_REASON_STORAGE_NOT_READY);
+    TEST_CHECK(SystemLifecycle_StartTransaction() ==
+               SYSTEM_LIFECYCLE_START_NOT_READY);
+    TEST_CHECK(s_prepare_count == 0U && s_mission_started == 0U);
+    s_storage_ready = 1U;
+    TEST_CHECK(SystemLifecycle_StartReadinessGet(&readiness_reason) ==
+               SYSTEM_LIFECYCLE_START_OK);
 
     Test_StateReset();
     s_alignment_status.state = SYSTEM_ALIGNMENT_STATE_STALE;

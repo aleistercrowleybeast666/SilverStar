@@ -415,6 +415,8 @@ static AirAckResult TelemetryService_StartResultMap(
             return AIR_ACK_RESULT_ATTITUDE_STALE;
         case SYSTEM_START_REASON_SYSTEM_NOT_READY:
             return AIR_ACK_RESULT_SYSTEM_NOT_READY;
+        case SYSTEM_START_REASON_STORAGE_NOT_READY:
+            return AIR_ACK_RESULT_SYSTEM_NOT_READY;
         case SYSTEM_START_REASON_ORIGIN_FAILED:
             return AIR_ACK_RESULT_ORIGIN_FAILED;
         case SYSTEM_START_REASON_NAVIGATION_FAILED:

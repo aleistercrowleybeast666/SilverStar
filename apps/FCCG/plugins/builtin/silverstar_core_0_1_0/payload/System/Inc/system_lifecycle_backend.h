@@ -8,6 +8,7 @@ SystemDeviceResult SystemLifecycleBackend_PrepareStart(void);
 SystemDeviceResult SystemLifecycleBackend_FreezeOrigins(void);
 SystemDeviceResult SystemLifecycleBackend_InitializeNavigation(void);
 SystemDeviceResult SystemLifecycleBackend_ResetFlightQueues(void);
+uint8_t SystemLifecycleBackend_StorageReadyGet(void);
 void SystemLifecycleBackend_AbortStart(void);
 
 #endif /* __SYSTEM_LIFECYCLE_BACKEND_H */

@@ -19,6 +19,7 @@
 #include "system_inertial.h"
 #include "system_lifecycle.h"
 #include "system_log_sink_if.h"
+#include "system_storage_if.h"
 #include "system_output_if.h"
 #include "system_profile.h"
 #include "system_startup.h"
@@ -39,6 +40,7 @@ static jmp_buf s_task_exit;
 static uint32_t s_delay_count;
 static uint32_t s_delay_limit;
 static uint8_t s_enable_sink_after_first_delay;
+static uint8_t s_disable_sink_after_first_delay;
 static uint8_t s_enable_event_after_first_delay;
 static uint8_t s_complete_startup_after_delay;
 static uint32_t s_first_delay_ticks;
@@ -100,6 +102,8 @@ void vTaskDelay(TickType_t ticks)
         s_sink_init_result = SYSTEM_DEVICE_OK;
         s_now_us += TEST_LOGGER_RETRY_ADVANCE_US;
     }
+    if ((s_disable_sink_after_first_delay != 0U) && (s_delay_count == 1U))
+    { s_log_sink_available = 0U; }
     if ((s_enable_event_after_first_delay != 0U) && (s_delay_count == 1U))
     {
         s_event_push_result = LOGGER_BUS_RESULT_OK;
@@ -702,7 +706,19 @@ static SystemDeviceResult Mock_LogHealthGet(SystemLogSinkHealth *health)
         return SYSTEM_DEVICE_INVALID_ARGUMENT;
     }
     (void)memset(health, 0, sizeof(*health));
+    health->initialized = 1U;
+    health->session_active = 1U;
     health->healthy = 1U;
+    return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health)
+{
+    if (health == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    (void)memset(health, 0, sizeof(*health));
+    health->initialized = s_log_sink_available;
+    health->mounted = s_log_sink_available;
+    health->healthy = s_log_sink_available;
     return SYSTEM_DEVICE_OK;
 }
 
@@ -846,6 +862,7 @@ static void Test_StateReset(void)
     s_delay_count = 0U;
     s_delay_limit = 1U;
     s_enable_sink_after_first_delay = 0U;
+    s_disable_sink_after_first_delay = 0U;
     s_complete_startup_after_delay = 0U;
     s_first_delay_ticks = 0U;
     s_startup_state = LOGGER_BOOTSTRAP;
@@ -914,10 +931,14 @@ static void Test_LoggerEventQueuePush(uint64_t timestamp_us,
     s_logger_record_count++;
 }
 
-static void Test_FlightTaskRun(void)
+static void Test_FlightTaskRunWithStorage(uint8_t storage_ready)
 {
     SystemLifecycleStartRequest request;
 
+    /* FlightTask begins after the LoggerTask has admitted a writable session. */
+    s_log_sink_available = storage_ready;
+    s_startup_state = (storage_ready != 0U) ?
+        LOGGER_STREAMING_READY : LOGGER_BOOTSTRAP;
     SystemLifecycle_Init();
     SystemAlignment_Init();
     TEST_CHECK(SystemAlignment_Start() == SYSTEM_DEVICE_OK);
@@ -933,9 +954,15 @@ static void Test_FlightTaskRun(void)
     }
 }
 
-static void Test_StartIgnoresMissingTfAndFullBus(void)
+static void Test_FlightTaskRun(void)
+{
+    Test_FlightTaskRunWithStorage(1U);
+}
+
+static void Test_PostStartStorageLossAndFullBusKeepsFlight(void)
 {
     Test_StateReset();
+    s_disable_sink_after_first_delay = 1U;
     s_system_config_push_result = LOGGER_BUS_RESULT_FULL;
     s_mission_config_push_result = LOGGER_BUS_RESULT_FULL;
     s_initial_state_push_result = LOGGER_BUS_RESULT_FULL;
@@ -1000,6 +1027,20 @@ static void Test_NoneCalibrationResultSnapshot(void)
     }
 }
 
+static void Test_StartRequiresStorage(void)
+{
+    SystemLifecycleStartDiagnostic diagnostic;
+    Test_StateReset();
+    Test_FlightTaskRunWithStorage(0U);
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_READY);
+    TEST_CHECK(s_mission_started == 0U);
+    TEST_CHECK(s_system_config_push_count == 0U);
+    TEST_CHECK(SystemLifecycle_GetLastStartDiagnostic(
+        SYSTEM_START_SOURCE_CONSOLE, &diagnostic) != 0U);
+    TEST_CHECK(diagnostic.response.reason ==
+        SYSTEM_START_REASON_STORAGE_NOT_READY);
+}
+
 static void Test_StartRecordFailureDoesNotRollback(void)
 {
     Test_StateReset();
@@ -1016,7 +1057,7 @@ static void Test_StartRecordFailureDoesNotRollback(void)
     TEST_CHECK(s_abort_count == 0U);
 }
 
-static void Test_MissingTfDoesNotChangeFlightState(void)
+static void Test_PostStartMissingTfDoesNotChangeFlightState(void)
 {
     Test_StateReset();
     Test_FlightTaskRun();
@@ -1226,10 +1267,11 @@ static void Test_IncompleteStartupKeepsSession(void)
 
 int main(void)
 {
-    Test_StartIgnoresMissingTfAndFullBus();
+    Test_StartRequiresStorage();
+    Test_PostStartStorageLossAndFullBusKeepsFlight();
     Test_NoneCalibrationResultSnapshot();
     Test_StartRecordFailureDoesNotRollback();
-    Test_MissingTfDoesNotChangeFlightState();
+    Test_PostStartMissingTfDoesNotChangeFlightState();
     Test_FlightRecoveryEventRetry();
     Test_LoggerFinalizesAfterLandingGrace();
     Test_FinalFlushFailureLatchesWithoutPrematureFinalize();
