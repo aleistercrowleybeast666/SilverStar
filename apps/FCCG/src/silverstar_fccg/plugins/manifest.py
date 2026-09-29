@@ -167,6 +167,7 @@ class RadioContribution:
     coding_rates: tuple[str, ...]
     maximum_payload: int
     maximum_tx_power_dbm: int
+    datasheet_capabilities: dict[str, Any]
     modules: dict[str, dict[str, Any]]
 
 
@@ -2905,7 +2906,8 @@ def PluginManifest_Parse(
         expected_radio = {
             "technology", "family", "phy_modes", "frequency_min_hz",
             "frequency_max_hz", "bandwidths_hz", "spreading_factors",
-            "coding_rates", "maximum_payload", "maximum_tx_power_dbm", "modules",
+            "coding_rates", "maximum_payload", "maximum_tx_power_dbm",
+            "datasheet_capabilities", "modules",
         }
         if component_type != "device" or not isinstance(radio_data, dict) or set(radio_data) != expected_radio:
             raise PluginManifestError("radio metadata requires a Device and complete fields")
@@ -2923,15 +2925,42 @@ def PluginManifest_Parse(
                 raise PluginManifestError(f"radio.{field_name} is invalid")
         if (radio_data["frequency_min_hz"] <= 0 or radio_data["frequency_max_hz"] < radio_data["frequency_min_hz"] or radio_data["maximum_payload"] <= 0):
             raise PluginManifestError("radio frequency range or payload is invalid")
+        datasheet = radio_data["datasheet_capabilities"]
+        if (
+            not isinstance(datasheet, dict)
+            or set(datasheet) != {
+                "frequency_min_hz", "frequency_max_hz", "maximum_tx_power_dbm", "source"
+            }
+            or any(type(datasheet[key]) is not int for key in (
+                "frequency_min_hz", "frequency_max_hz", "maximum_tx_power_dbm"
+            ))
+            or datasheet["frequency_min_hz"] <= 0
+            or datasheet["frequency_min_hz"] > radio_data["frequency_min_hz"]
+            or datasheet["frequency_max_hz"] < radio_data["frequency_max_hz"]
+            or datasheet["maximum_tx_power_dbm"] < radio_data["maximum_tx_power_dbm"]
+            or not isinstance(datasheet["source"], str)
+            or not datasheet["source"].startswith("https://")
+        ):
+            raise PluginManifestError("radio.datasheet_capabilities is invalid")
         modules = radio_data["modules"]
         if not isinstance(modules, dict) or not modules or any(
             not isinstance(module_id, str) or not PLUGIN_ID_PATTERN.fullmatch(module_id)
-            or not isinstance(module, dict) or set(module) != {"model", "tx_power_limit_dbm", "supported_tx_powers_dbm"}
+            or not isinstance(module, dict) or set(module) != {
+                "model", "tx_power_limit_dbm", "supported_tx_powers_dbm",
+                "validated_frequency_min_hz", "validated_frequency_max_hz",
+            }
             or not isinstance(module["model"], str) or type(module["tx_power_limit_dbm"]) is not int
+            or module["tx_power_limit_dbm"] > datasheet["maximum_tx_power_dbm"]
             or not isinstance(module["supported_tx_powers_dbm"], list)
             or not module["supported_tx_powers_dbm"]
             or any(type(power) is not int or power > module["tx_power_limit_dbm"]
+                   or power > radio_data["maximum_tx_power_dbm"]
                    for power in module["supported_tx_powers_dbm"])
+            or type(module["validated_frequency_min_hz"]) is not int
+            or type(module["validated_frequency_max_hz"]) is not int
+            or module["validated_frequency_min_hz"] < radio_data["frequency_min_hz"]
+            or module["validated_frequency_max_hz"] > radio_data["frequency_max_hz"]
+            or module["validated_frequency_min_hz"] > module["validated_frequency_max_hz"]
             for module_id, module in modules.items()
         ):
             raise PluginManifestError("radio.modules is invalid")
@@ -2945,6 +2974,7 @@ def PluginManifest_Parse(
             coding_rates=tuple(radio_data["coding_rates"]),
             maximum_payload=radio_data["maximum_payload"],
             maximum_tx_power_dbm=radio_data["maximum_tx_power_dbm"],
+            datasheet_capabilities=dict(datasheet),
             modules=dict(modules),
         )
 

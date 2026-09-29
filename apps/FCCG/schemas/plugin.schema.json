@@ -39,7 +39,7 @@
     },
     "radio": {
       "type": "object",
-      "required": ["technology", "family", "phy_modes", "frequency_min_hz", "frequency_max_hz", "bandwidths_hz", "spreading_factors", "coding_rates", "maximum_payload", "maximum_tx_power_dbm", "modules"],
+      "required": ["technology", "family", "phy_modes", "frequency_min_hz", "frequency_max_hz", "bandwidths_hz", "spreading_factors", "coding_rates", "maximum_payload", "maximum_tx_power_dbm", "datasheet_capabilities", "modules"],
       "properties": {
         "technology": {"$ref": "#/$defs/lowerIdentifier"},
         "family": {"$ref": "#/$defs/lowerIdentifier"},
@@ -51,11 +51,22 @@
         "coding_rates": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
         "maximum_payload": {"type": "integer", "minimum": 1},
         "maximum_tx_power_dbm": {"type": "integer"},
+        "datasheet_capabilities": {
+          "type": "object",
+          "required": ["frequency_min_hz", "frequency_max_hz", "maximum_tx_power_dbm", "source"],
+          "properties": {
+            "frequency_min_hz": {"type": "integer", "minimum": 1},
+            "frequency_max_hz": {"type": "integer", "minimum": 1},
+            "maximum_tx_power_dbm": {"type": "integer"},
+            "source": {"type": "string", "format": "uri"}
+          },
+          "additionalProperties": false
+        },
         "modules": {
           "type": "object", "minProperties": 1,
           "additionalProperties": {
-            "type": "object", "required": ["model", "tx_power_limit_dbm", "supported_tx_powers_dbm"],
-            "properties": {"model": {"type": "string"}, "tx_power_limit_dbm": {"type": "integer"}, "supported_tx_powers_dbm": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer"}}},
+            "type": "object", "required": ["model", "tx_power_limit_dbm", "supported_tx_powers_dbm", "validated_frequency_min_hz", "validated_frequency_max_hz"],
+            "properties": {"model": {"type": "string"}, "tx_power_limit_dbm": {"type": "integer"}, "supported_tx_powers_dbm": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer"}}, "validated_frequency_min_hz": {"type": "integer", "minimum": 1}, "validated_frequency_max_hz": {"type": "integer", "minimum": 1}},
             "additionalProperties": false
           }
         }

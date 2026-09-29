@@ -30,6 +30,7 @@ class _EnterCommitMixin:
     def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
             if not self.lineEdit().hasAcceptableInput():
+                self.rejected.emit(self.lineEdit().text())
                 self._Draft_Restore()
                 if self.toolTip():
                     QToolTip.showText(
@@ -61,7 +62,9 @@ class _EnterCommitMixin:
 
 class EnterCommittedSpinBox(_EnterCommitMixin, QSpinBox):
     committed = Signal(int)
+    rejected = Signal(str)
 
 
 class EnterCommittedDoubleSpinBox(_EnterCommitMixin, QDoubleSpinBox):
     committed = Signal(float)
+    rejected = Signal(str)

@@ -94,6 +94,13 @@ static uint32_t s_startup_last_write_key;
 static uint8_t s_startup_write_count;
 static GnssNeoM9nConfigItem s_startup_items[32];
 static uint8_t s_startup_item_count;
+static uint8_t s_startup_nmea_only;
+static uint8_t s_startup_nmea_bad_checksum;
+static uint8_t s_startup_ubx_enabled;
+static uint8_t s_startup_pubx_count;
+static uint8_t s_startup_pubx_fail;
+static uint8_t s_startup_nmea_count;
+static uint32_t s_startup_next_nmea_ms;
 
 static uint16_t Test_ReadU16Le(const uint8_t *data)
 {
@@ -173,6 +180,30 @@ static void Test_FrameInject(uint8_t *frame, uint16_t length,
     s_uart_diagnostics.rx_bytes += length;
     s_uart_diagnostics.rx_event_count++;
     s_uart_diagnostics.rx_active = 1U;
+}
+
+static void Test_NmeaInject(uint8_t corrupt_checksum)
+{
+    static const char body[] = "GPGGA,1";
+    static const char hex[] = "0123456789ABCDEF";
+    uint8_t frame[16U];
+    uint8_t checksum = 0U;
+    uint16_t index;
+    uint16_t length = 0U;
+
+    frame[length++] = (uint8_t)'$';
+    for (index = 0U; index < sizeof(body) - 1U; index++)
+    {
+        checksum ^= (uint8_t)body[index];
+        frame[length++] = (uint8_t)body[index];
+    }
+    if (corrupt_checksum != 0U) { checksum ^= 1U; }
+    frame[length++] = (uint8_t)'*';
+    frame[length++] = (uint8_t)hex[checksum >> 4U];
+    frame[length++] = (uint8_t)hex[checksum & 0x0FU];
+    frame[length++] = (uint8_t)'\r';
+    frame[length++] = (uint8_t)'\n';
+    Test_FrameInject(frame, length, 0U);
 }
 
 static uint8_t Test_KeyValueLength(uint32_t key)
@@ -416,6 +447,24 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
         return PLATFORM_INVALID_ARGUMENT;
     }
     TEST_CHECK(data != NULL && length >= 8U);
+    if (data[0] == (uint8_t)'$')
+    {
+        uint8_t checksum = 0U;
+        uint16_t index;
+        TEST_CHECK(length < 64U);
+        TEST_CHECK(memcmp(data, "$PUBX,41,1,0007,0003,", 21U) == 0);
+        TEST_CHECK(data[length - 5U] == (uint8_t)'*');
+        TEST_CHECK(data[length - 2U] == (uint8_t)'\r');
+        TEST_CHECK(data[length - 1U] == (uint8_t)'\n');
+        for (index = 1U; index < length - 5U; index++)
+        { checksum ^= data[index]; }
+        TEST_CHECK(data[length - 4U] == (uint8_t)"0123456789ABCDEF"[checksum >> 4U]);
+        TEST_CHECK(data[length - 3U] == (uint8_t)"0123456789ABCDEF"[checksum & 0x0FU]);
+        s_startup_pubx_count++;
+        if (s_startup_pubx_fail != 0U) { return PLATFORM_IO_ERROR; }
+        s_startup_ubx_enabled = 1U;
+        return PLATFORM_OK;
+    }
     payload_length = Test_ReadU16Le(&data[4]);
     if ((s_startup_item_mode != 0U) &&
         (s_uart_baudrate != s_startup_physical_baud))
@@ -450,6 +499,8 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
         uint8_t version[100] = {0U};
         uint8_t frame[108];
         uint16_t frame_length;
+        if ((s_startup_nmea_only != 0U) && (s_startup_ubx_enabled == 0U))
+        { return PLATFORM_OK; }
         (void)memcpy(&version[40], (s_wrong_model != 0U) ? "MOD=NEO-M8N" : "MOD=NEO-M9N", 11U);
         (void)memcpy(&version[70], "PROTVER=27.12", 12U);
         frame_length = Test_FrameBuild(TEST_MON_CLASS, 4U, version, 100U, frame);
@@ -544,6 +595,14 @@ PlatformResult PlatformUart_Read(PlatformUartId id,
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
+    if ((s_startup_nmea_only != 0U) &&
+        (s_startup_nmea_count == 1U) &&
+        (s_uart_baudrate == s_startup_physical_baud) &&
+        (s_tick_ms >= s_startup_next_nmea_ms))
+    {
+        Test_NmeaInject(s_startup_nmea_bad_checksum);
+        s_startup_nmea_count = 2U;
+    }
     while ((count < capacity) && (s_rx_count != 0U))
     {
         data[count] = s_rx_buffer[s_rx_tail];
@@ -562,6 +621,14 @@ PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
         return PLATFORM_INVALID_ARGUMENT;
     }
     s_uart_baudrate = baudrate;
+    if ((s_startup_nmea_only != 0U) &&
+        (s_startup_nmea_count == 0U) &&
+        (baudrate == s_startup_physical_baud))
+    {
+        Test_NmeaInject(s_startup_nmea_bad_checksum);
+        s_startup_nmea_count = 1U;
+        s_startup_next_nmea_ms = s_tick_ms + 1000U;
+    }
     return PLATFORM_OK;
 }
 
@@ -940,10 +1007,18 @@ static void Test_NonblockingProbe(void)
     TEST_CHECK(GnssNeoM9n_ProbeStart(0U, GNSS_DEFAULT_BAUDRATE) ==
         GnssNeoM9nProbeStartResult_Ok);
     TEST_CHECK(GnssNeoM9n_ProbePoll(0U) ==
+        GnssNeoM9nProbePollResult_Pending);
+    s_tick_ms += 200U;
+    TEST_CHECK(GnssNeoM9n_ProbePoll(0U) ==
+        GnssNeoM9nProbePollResult_Pending);
+    TEST_CHECK(GnssNeoM9n_ProbePoll(0U) ==
         GnssNeoM9nProbePollResult_Identified);
     s_wrong_model = 1U;
     TEST_CHECK(GnssNeoM9n_ProbeStart(0U, 38400U) ==
         GnssNeoM9nProbeStartResult_Ok);
+    s_tick_ms += 200U;
+    TEST_CHECK(GnssNeoM9n_ProbePoll(0U) ==
+        GnssNeoM9nProbePollResult_Pending);
     TEST_CHECK(GnssNeoM9n_ProbePoll(0U) ==
         GnssNeoM9nProbePollResult_WrongModel);
     s_wrong_model = 0U;
@@ -1083,7 +1158,7 @@ static void Test_AsyncStartup(void)
     s_startup_physical_baud = 0U;
     TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
     TEST_CHECK(NeoM9nStartup_Init(0U, &target) == NeoM9nStartupResult_Ok);
-    for (cycle = 0U; cycle < 1000U; cycle++)
+    for (cycle = 0U; cycle < 3500U; cycle++)
     {
         NeoM9nStartup_Tick(0U, s_tick_ms);
         if (NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Failed)
@@ -1093,6 +1168,68 @@ static void Test_AsyncStartup(void)
     TEST_CHECK(NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Failed);
     TEST_CHECK(NeoM9nStartup_FailureGet(0U) ==
         SystemDeviceStartupFailure_NotPresent);
+    s_startup_item_mode = 0U;
+}
+
+static void Test_NmeaRescue(uint8_t bad_checksum, uint8_t wrong_model,
+    uint8_t pubx_fail, uint8_t expect_ready)
+{
+    SystemGnssConfig target = {0U};
+    uint8_t pvt_payload[92] = {0U};
+    uint8_t pvt_frame[100];
+    uint16_t pvt_length;
+    uint32_t cycle;
+
+    s_mode = TEST_RESPONSE_OK;
+    s_rx_count = 0U;
+    s_rx_head = 0U;
+    s_rx_tail = 0U;
+    s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
+    s_startup_physical_baud = GNSS_UART_BAUD_576000;
+    s_startup_item_mode = 1U;
+    s_startup_nmea_only = 1U;
+    s_startup_nmea_bad_checksum = bad_checksum;
+    s_startup_ubx_enabled = 0U;
+    s_startup_pubx_count = 0U;
+    s_startup_pubx_fail = pubx_fail;
+    s_startup_nmea_count = 0U;
+    s_wrong_model = wrong_model;
+    s_startup_item_count = 0U;
+    target.navigation_rate_hz = 25U;
+    target.constellation_mask = SYSTEM_GNSS_CONSTELLATION_GPS |
+        SYSTEM_GNSS_CONSTELLATION_BDS |
+        SYSTEM_GNSS_CONSTELLATION_GALILEO;
+    target.dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G;
+    target.output_protocol = SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX;
+    target.enabled_message_mask = SYSTEM_GNSS_MESSAGE_NAV_PVT;
+    pvt_length = Test_FrameBuild(TEST_NAV_CLASS, 0x07U,
+        pvt_payload, sizeof(pvt_payload), pvt_frame);
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(NeoM9nStartup_Init(0U, &target) == NeoM9nStartupResult_Ok);
+    for (cycle = 0U; cycle < 4500U; cycle++)
+    {
+        SystemDeviceStartupState state = NeoM9nStartup_StateGet(0U);
+        if (state == SystemDeviceStartupState_WaitingSample)
+        { Test_FrameInject(pvt_frame, pvt_length, 0U); }
+        NeoM9nStartup_Tick(0U, s_tick_ms);
+        state = NeoM9nStartup_StateGet(0U);
+        if ((state == SystemDeviceStartupState_Ready) ||
+            (state == SystemDeviceStartupState_Failed))
+        { break; }
+        s_tick_ms += 10U;
+    }
+    TEST_CHECK((NeoM9nStartup_StateGet(0U) ==
+        SystemDeviceStartupState_Ready) == (expect_ready != 0U));
+    TEST_CHECK((s_startup_pubx_count != 0U) ==
+        ((bad_checksum == 0U) && (expect_ready != 0U ||
+        wrong_model != 0U || pubx_fail != 0U)));
+    if (expect_ready != 0U)
+    { TEST_CHECK(s_startup_physical_baud == GNSS_DEFAULT_BAUDRATE); }
+    s_startup_nmea_only = 0U;
+    s_startup_nmea_bad_checksum = 0U;
+    s_startup_ubx_enabled = 0U;
+    s_startup_pubx_fail = 0U;
+    s_wrong_model = 0U;
     s_startup_item_mode = 0U;
 }
 
@@ -1111,5 +1248,9 @@ int main(void)
     Test_AsyncConfigReadBackpressure();
     Test_AsyncItemReadWrite();
     Test_AsyncStartup();
+    Test_NmeaRescue(0U, 0U, 0U, 1U);
+    Test_NmeaRescue(1U, 0U, 0U, 0U);
+    Test_NmeaRescue(0U, 1U, 0U, 0U);
+    Test_NmeaRescue(0U, 0U, 1U, 0U);
     return Test_Finish("neo_m9n_device");
 }

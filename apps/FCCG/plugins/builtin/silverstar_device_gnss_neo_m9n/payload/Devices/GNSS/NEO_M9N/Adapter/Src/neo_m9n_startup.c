@@ -9,6 +9,7 @@
 #include "platform_time.h"
 
 #define NEO_M9N_STARTUP_ITEM_COUNT 23U
+#define NEO_M9N_STARTUP_PROBE_TIMEOUT_MS 5000U
 #define NEO_M9N_STARTUP_STAGE_TIMEOUT_MS 45000U
 #define NEO_M9N_STARTUP_SAMPLE_TIMEOUT_MS 3000U
 
@@ -31,10 +32,20 @@ typedef struct
 
 static NeoM9nStartupContext s_contexts[PROJECT_NEO_M9N_INSTANCE_COUNT];
 
-/* These are the baud candidates supported by the previous M9N identify path. */
+/* The supported UART baud set is finite. The controller deduplicates target
+ * and factory baud before walking these remaining declared candidates. */
 static const SystemDeviceStartupCandidate s_supported_candidates[] =
 {
-    {GNSS_UART_BAUD_9600, 1U}
+    {GNSS_UART_BAUD_4800, 1U},
+    {GNSS_UART_BAUD_9600, 1U},
+    {GNSS_UART_BAUD_19200, 1U},
+    {GNSS_UART_BAUD_38400, 1U},
+    {GNSS_UART_BAUD_57600, 1U},
+    {GNSS_UART_BAUD_115200, 1U},
+    {GNSS_UART_BAUD_230400, 1U},
+    {GNSS_UART_BAUD_460800, 1U},
+    {GNSS_UART_BAUD_576000, 1U},
+    {GNSS_UART_BAUD_921600, 1U}
 };
 
 static const uint32_t s_item_keys[NEO_M9N_STARTUP_ITEM_COUNT] =
@@ -358,7 +369,7 @@ NeoM9nStartupResult NeoM9nStartup_Init(
     config.supported_candidates = s_supported_candidates;
     config.supported_candidate_count = (uint8_t)(
         sizeof(s_supported_candidates) / sizeof(s_supported_candidates[0]));
-    config.probe_timeout_ms = GNSS_TIMEOUT_MS;
+    config.probe_timeout_ms = NEO_M9N_STARTUP_PROBE_TIMEOUT_MS;
     config.stage_timeout_ms = NEO_M9N_STARTUP_STAGE_TIMEOUT_MS;
     config.sample_timeout_ms = NEO_M9N_STARTUP_SAMPLE_TIMEOUT_MS;
     config.operations = &s_operations;

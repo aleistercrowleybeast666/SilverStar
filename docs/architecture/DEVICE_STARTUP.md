@@ -56,3 +56,28 @@ Factory UART defaults used for bounded fallback come from the
 [u-blox NEO-M9N integration manual](https://content.u-blox.com/sites/default/files/NEO-M9N_Integrationmanual_UBX-19014286.pdf)
 (38400 baud, UBX input enabled). The other fallback baud rates are the
 explicit sets already declared by the SilverStar JY901B and M9N drivers.
+
+## Round 4 M9N rescue (software path)
+
+NEO-M9N startup now walks the driver's finite supported UART baud set:
+project target, factory 38400, then 4800, 9600, 19200, 38400, 57600,
+115200, 230400, 460800, 576000 and 921600, with duplicates removed.
+Each probe first listens passively, then sends UBX-MON-VER. The NMEA parser
+counts only sentences with a valid checksum. If a candidate has at least two
+valid sentences but no MON-VER response, the M9N plugin sends the documented
+`PUBX,41` UART1 command to enable UBX input and UBX/NMEA output at that
+candidate baud, then retries MON-VER. The normal RAM-only VALGET, diff,
+VALSET, reconnect, readback and fresh NAV-PVT sequence follows. A MON-VER
+response with the exact `MOD=NEO-M9N` and supported `PROTVER=27.` identity
+is still required before configuration or READY. Generic NMEA receivers do
+not use this vendor rescue path.
+
+The [u-blox M9 interface description](https://content.u-blox.com/sites/default/files/u-blox-M9-SPG-4.04_InterfaceDescription_UBX-21022436.pdf)
+specifies `PUBX,41`; the [NEO-M9N integration manual](https://content.u-blox.com/sites/default/files/NEO-M9N_Integrationmanual_UBX-19014286.pdf)
+specifies the factory UART settings. Host tests cover recovery, invalid
+checksums, wrong identity and a failed PUBX write. Physical receiver behavior
+remains **HARDWARE_UNVERIFIED**.
+
+The bounded probe window allows two valid NMEA sentences one second apart;
+with no stream, each candidate advances after its MON-VER wait. Exhausting
+all declared candidates reports device absence rather than retrying forever.

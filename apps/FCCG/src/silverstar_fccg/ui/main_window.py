@@ -1477,6 +1477,41 @@ class MainWindow(QMainWindow):
                 if requirement.required
             ),
         }
+        flight_instance = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
+        try:
+            flight_manifest = (
+                self._service.catalog.Component_Get(flight_instance.plugin)
+                if flight_instance is not None else None
+            )
+        except ValueError:
+            flight_manifest = None
+        flight_modules = (
+            tuple(flight_manifest.radio.modules.values())
+            if flight_manifest is not None and flight_manifest.radio is not None else ()
+        )
+        flight_module = flight_modules[0] if len(flight_modules) == 1 else None
+        ground_module = (
+            manifest.radio.modules.get(model.ground_target.module_variant)
+            if manifest is not None and manifest.radio is not None else None
+        )
+        active_modules = [item for item in (
+            flight_module,
+            ground_module if model.ground_target.enabled else None,
+        ) if item is not None]
+        frequency_range = None
+        if active_modules and flight_module is not None and (
+            not model.ground_target.enabled or ground_module is not None
+        ):
+            low = max(item["validated_frequency_min_hz"] for item in active_modules)
+            high = min(item["validated_frequency_max_hz"] for item in active_modules)
+            if low <= high:
+                frequency_range = (low, high)
+        self.air_link_page.RadioConstraints_Set(
+            frequency_range,
+            tuple(flight_module["supported_tx_powers_dbm"]) if flight_module else (),
+            tuple(ground_module["supported_tx_powers_dbm"]) if ground_module else (),
+            model.ground_target.enabled,
+        )
         self.air_link_page.Configuration_Set(
             model.air_link, AirLinkIssues_Get(model, self._service.catalog)
         )

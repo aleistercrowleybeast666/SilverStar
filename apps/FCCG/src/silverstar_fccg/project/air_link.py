@@ -19,6 +19,11 @@ def RadioLinkCompatible_Get(link, radio: RadioContribution) -> bool:
         and radio.family == link.radio_family
         and link.frequency_hz >= radio.frequency_min_hz
         and link.frequency_hz <= radio.frequency_max_hz
+        and any(
+            module["validated_frequency_min_hz"] <= link.frequency_hz
+            <= module["validated_frequency_max_hz"]
+            for module in radio.modules.values()
+        )
         and link.phy_mode in radio.phy_modes
         and link.bandwidth_hz in radio.bandwidths_hz
         and link.spreading_factor in radio.spreading_factors
@@ -102,8 +107,25 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
             "AIR_LINK_FAMILY_MISMATCH", "Selected radio family differs from AIR Link"
         ))
     if radios:
-        minimum_frequency = max(radio.frequency_min_hz for _endpoint, radio in radios)
-        maximum_frequency = min(radio.frequency_max_hz for _endpoint, radio in radios)
+        selected_modules = {
+            "Flight": next(iter(flight.radio.modules.values()), None)
+            if flight is not None and flight.radio is not None
+            and len(flight.radio.modules) == 1 else None,
+            "Ground": ground.radio.modules.get(model.ground_target.module_variant)
+            if ground is not None and ground.radio is not None else None,
+        }
+        minimum_frequency = max(
+            max(radio.frequency_min_hz,
+                selected_modules[endpoint]["validated_frequency_min_hz"])
+            if selected_modules[endpoint] is not None else radio.frequency_min_hz
+            for endpoint, radio in radios
+        )
+        maximum_frequency = min(
+            min(radio.frequency_max_hz,
+                selected_modules[endpoint]["validated_frequency_max_hz"])
+            if selected_modules[endpoint] is not None else radio.frequency_max_hz
+            for endpoint, radio in radios
+        )
         if not minimum_frequency <= link.frequency_hz <= maximum_frequency:
             issues.append(AirLinkIssue(
                 "AIR_LINK_FREQUENCY_OUT_OF_RANGE",

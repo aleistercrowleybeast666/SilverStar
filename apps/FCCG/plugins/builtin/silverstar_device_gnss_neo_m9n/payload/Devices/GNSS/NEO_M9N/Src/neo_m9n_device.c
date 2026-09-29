@@ -57,6 +57,23 @@
 #define GNSS_UART_BAUDRATE_MIN      4800U
 #define GNSS_MAX_WAIT_POLL_ITERATIONS 8192U
 #define GNSS_MAX_BYTES_PER_PROCESS    512U
+#define GNSS_PROBE_PASSIVE_MS        200U
+#define GNSS_PROBE_UBX_WAIT_MS       2200U
+#define GNSS_PROBE_RESCUE_SETTLE_MS  250U
+#define GNSS_PROBE_VALID_NMEA_MIN    2U
+#define GNSS_PUBX_FRAME_MAX_LEN     64U
+
+typedef enum
+{
+    GnssProbePhasePassive = 0,
+    GnssProbePhaseMonRequest,
+    GnssProbePhaseMonResponse,
+    GnssProbePhasePubxRequest,
+    GnssProbePhasePubxSettle,
+    GnssProbePhaseRescueMonRequest,
+    GnssProbePhaseRescueMonResponse,
+    GnssProbePhaseComplete
+} GnssProbePhase;
 #define GNSS_MAX_VALGET_ITEMS_PER_FRAME GNSS_VALGET_CACHE_MAX_ITEMS
 
 typedef enum
@@ -121,7 +138,9 @@ typedef struct
     uint8_t valget_layer;
     uint8_t identity_seen;
     uint8_t identity_verified;
-    uint8_t probe_prepared;
+    GnssProbePhase probe_phase;
+    uint32_t probe_phase_started_ms;
+    uint32_t probe_nmea_baseline;
     uint32_t probe_baudrate;
     uint32_t item_read_started_ms;
     uint32_t item_write_started_ms;
@@ -1960,15 +1979,27 @@ static GnssNeoM9nIdentifyResult Gnss_IdentityPoll(uint8_t instance)
 
 GnssNeoM9nIdentifyResult GnssNeoM9n_Identify(uint8_t instance)
 {
-    uint32_t candidates[3] = {GNSS_DEFAULT_BAUDRATE, 38400U, 9600U};
+    uint32_t candidates[] =
+    {
+        GNSS_DEFAULT_BAUDRATE, GNSS_FACTORY_BAUDRATE,
+        GNSS_UART_BAUD_4800, GNSS_UART_BAUD_9600,
+        GNSS_UART_BAUD_19200, GNSS_UART_BAUD_38400,
+        GNSS_UART_BAUD_57600, GNSS_UART_BAUD_115200,
+        GNSS_UART_BAUD_230400, GNSS_UART_BAUD_460800,
+        GNSS_UART_BAUD_576000, GNSS_UART_BAUD_921600
+    };
     uint8_t index;
+    uint8_t prior;
     GnssNeoM9nIdentifyResult result;
     if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) { return GnssNeoM9nIdentifyIoError; }
     SILVERSTAR_ASSERT_OBJECT(&s_parser, GnssUbxParser_t, SILVERSTAR_ASSERT_MODULE_DEVICE);
     if (s_contexts[instance].identity_verified != 0U) { return GnssNeoM9nIdentifyOk; }
     candidates[0] = Gnss_UartBaudrateGet(instance);
-    for (index = 0U; index < 3U; index++)
+    for (index = 0U; index < sizeof(candidates) / sizeof(candidates[0]); index++)
     {
+        for (prior = 0U; prior < index; prior++)
+        { if (candidates[prior] == candidates[index]) { break; } }
+        if (prior < index) { continue; }
         if (PlatformUart_BaudSet(NeoM9nResource_UartGet(instance), candidates[index]) != PLATFORM_OK)
         { return GnssNeoM9nIdentifyIoError; }
         Gnss_ParserReset(instance);
@@ -1982,55 +2013,137 @@ GnssNeoM9nIdentifyResult GnssNeoM9n_Identify(uint8_t instance)
 GnssNeoM9nProbeStartResult GnssNeoM9n_ProbeStart(
     uint8_t instance, uint32_t baudrate)
 {
-    static const uint8_t mon_ver_request[8] =
-    {
-        GNSS_UBX_SYNC1, GNSS_UBX_SYNC2, GNSS_UBX_MON_CLASS,
-        0x04U, 0x00U, 0x00U, 0x0EU, 0x34U
-    };
-    PlatformResult send_result;
-
     if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
         (s_contexts[instance].initialized == 0U))
     { return GnssNeoM9nProbeStartResult_NotReady; }
-    if ((s_contexts[instance].probe_prepared == 0U) ||
-        (s_contexts[instance].probe_baudrate != baudrate))
-    {
-        if (PlatformUart_BaudSet(NeoM9nResource_UartGet(instance), baudrate) !=
-            PLATFORM_OK)
-        { return GnssNeoM9nProbeStartResult_IoError; }
-        Gnss_ParserReset(instance);
-        s_contexts[instance].identity_seen = 0U;
-        s_contexts[instance].identity_verified = 0U;
-        s_contexts[instance].probe_prepared = 1U;
-        s_contexts[instance].probe_baudrate = baudrate;
-    }
-    send_result = PlatformUart_WriteFrameAsync(
-        NeoM9nResource_UartGet(instance), mon_ver_request,
-        sizeof(mon_ver_request), PLATFORM_UART_TX_PRIORITY);
-    if (send_result == PLATFORM_BUSY)
-    { return GnssNeoM9nProbeStartResult_Busy; }
-    if (send_result != PLATFORM_OK)
-    {
-        s_contexts[instance].probe_prepared = 0U;
-        return GnssNeoM9nProbeStartResult_IoError;
-    }
-    s_contexts[instance].probe_prepared = 0U;
+    if (PlatformUart_BaudSet(NeoM9nResource_UartGet(instance), baudrate) !=
+        PLATFORM_OK)
+    { return GnssNeoM9nProbeStartResult_IoError; }
+    Gnss_ParserReset(instance);
+    Gnss_NmeaReset(instance);
+    s_contexts[instance].identity_seen = 0U;
+    s_contexts[instance].identity_verified = 0U;
+    s_contexts[instance].probe_phase = GnssProbePhasePassive;
+    s_contexts[instance].probe_phase_started_ms = PlatformTime_Ms();
+    s_contexts[instance].probe_nmea_baseline = s_status.nmea_checksum_ok_count;
+    s_contexts[instance].probe_baudrate = baudrate;
     s_contexts[instance].item_read_active = 0U;
     s_contexts[instance].item_write_active = 0U;
     return GnssNeoM9nProbeStartResult_Ok;
 }
 
+static PlatformResult Gnss_ProbeMonVerSend(uint8_t instance)
+{
+    static const uint8_t request[8] =
+    {
+        GNSS_UBX_SYNC1, GNSS_UBX_SYNC2, GNSS_UBX_MON_CLASS,
+        0x04U, 0x00U, 0x00U, 0x0EU, 0x34U
+    };
+    return PlatformUart_WriteFrameAsync(NeoM9nResource_UartGet(instance),
+        request, sizeof(request), PLATFORM_UART_TX_PRIORITY);
+}
+
+/* PUBX,41 is specified by the u-blox M9 interface description. It changes
+ * only volatile UART protocol settings here; the normal VALGET/VALSET path
+ * later applies the project baud and verifies the exact M9N identity. */
+static PlatformResult Gnss_ProbePubxSend(uint8_t instance)
+{
+    static const char prefix[] = "PUBX,41,1,0007,0003,";
+    static const char suffix[] = ",0";
+    static const char hex[] = "0123456789ABCDEF";
+    uint8_t frame[GNSS_PUBX_FRAME_MAX_LEN];
+    uint8_t digits[10U];
+    uint8_t digit_count = 0U;
+    uint16_t length = 0U;
+    uint16_t index;
+    uint32_t baudrate = s_contexts[instance].probe_baudrate;
+    uint8_t checksum = 0U;
+
+    frame[length++] = (uint8_t)'$';
+    for (index = 0U; index < sizeof(prefix) - 1U; index++)
+    { frame[length++] = (uint8_t)prefix[index]; }
+    do
+    {
+        digits[digit_count++] = (uint8_t)('0' + (baudrate % 10U));
+        baudrate /= 10U;
+    } while ((baudrate != 0U) && (digit_count < sizeof(digits)));
+    while (digit_count != 0U)
+    { frame[length++] = digits[--digit_count]; }
+    for (index = 0U; index < sizeof(suffix) - 1U; index++)
+    { frame[length++] = (uint8_t)suffix[index]; }
+    for (index = 1U; index < length; index++) { checksum ^= frame[index]; }
+    frame[length++] = (uint8_t)'*';
+    frame[length++] = (uint8_t)hex[checksum >> 4U];
+    frame[length++] = (uint8_t)hex[checksum & 0x0FU];
+    frame[length++] = (uint8_t)'\r';
+    frame[length++] = (uint8_t)'\n';
+    return PlatformUart_WriteFrameAsync(NeoM9nResource_UartGet(instance),
+        frame, length, PLATFORM_UART_TX_PRIORITY);
+}
+
 GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
 {
+    uint32_t now_ms;
+    PlatformResult result;
+    GnssProbePhase phase;
+
     if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
         (s_contexts[instance].initialized == 0U))
     { return GnssNeoM9nProbePollResult_NotReady; }
-    (void)GnssNeoM9n_Process(instance, PlatformTime_Ms());
-    if (s_contexts[instance].identity_seen == 0U)
-    { return GnssNeoM9nProbePollResult_Pending; }
-    return (s_contexts[instance].identity_verified != 0U) ?
-        GnssNeoM9nProbePollResult_Identified :
-        GnssNeoM9nProbePollResult_WrongModel;
+    now_ms = PlatformTime_Ms();
+    (void)GnssNeoM9n_Process(instance, now_ms);
+    phase = s_contexts[instance].probe_phase;
+    if (s_contexts[instance].identity_seen != 0U)
+    {
+        s_contexts[instance].probe_phase = GnssProbePhaseComplete;
+        return (s_contexts[instance].identity_verified != 0U) ?
+            GnssNeoM9nProbePollResult_Identified :
+            GnssNeoM9nProbePollResult_WrongModel;
+    }
+    if ((phase == GnssProbePhasePassive) &&
+        ((uint32_t)(now_ms - s_contexts[instance].probe_phase_started_ms) >=
+            GNSS_PROBE_PASSIVE_MS))
+    { s_contexts[instance].probe_phase = GnssProbePhaseMonRequest; }
+    else if ((phase == GnssProbePhaseMonResponse) &&
+        ((uint32_t)(now_ms - s_contexts[instance].probe_phase_started_ms) >=
+            GNSS_PROBE_UBX_WAIT_MS))
+    {
+        if ((uint32_t)(s_status.nmea_checksum_ok_count -
+                s_contexts[instance].probe_nmea_baseline) <
+            GNSS_PROBE_VALID_NMEA_MIN)
+        { return GnssNeoM9nProbePollResult_WrongModel; }
+        s_contexts[instance].probe_phase = GnssProbePhasePubxRequest;
+    }
+    else if ((phase == GnssProbePhasePubxSettle) &&
+        ((uint32_t)(now_ms - s_contexts[instance].probe_phase_started_ms) >=
+            GNSS_PROBE_RESCUE_SETTLE_MS))
+    { s_contexts[instance].probe_phase = GnssProbePhaseRescueMonRequest; }
+    else if ((phase == GnssProbePhaseRescueMonResponse) &&
+        ((uint32_t)(now_ms - s_contexts[instance].probe_phase_started_ms) >=
+            GNSS_PROBE_UBX_WAIT_MS))
+    { return GnssNeoM9nProbePollResult_WrongModel; }
+
+    phase = s_contexts[instance].probe_phase;
+    if ((phase == GnssProbePhaseMonRequest) ||
+        (phase == GnssProbePhaseRescueMonRequest))
+    {
+        result = Gnss_ProbeMonVerSend(instance);
+        if (result == PLATFORM_BUSY) { return GnssNeoM9nProbePollResult_Pending; }
+        if (result != PLATFORM_OK) { return GnssNeoM9nProbePollResult_WrongModel; }
+        s_contexts[instance].probe_phase =
+            (phase == GnssProbePhaseMonRequest) ?
+                GnssProbePhaseMonResponse : GnssProbePhaseRescueMonResponse;
+        s_contexts[instance].probe_phase_started_ms = now_ms;
+    }
+    else if (phase == GnssProbePhasePubxRequest)
+    {
+        result = Gnss_ProbePubxSend(instance);
+        if (result == PLATFORM_BUSY) { return GnssNeoM9nProbePollResult_Pending; }
+        if (result != PLATFORM_OK) { return GnssNeoM9nProbePollResult_WrongModel; }
+        s_contexts[instance].probe_phase = GnssProbePhasePubxSettle;
+        s_contexts[instance].probe_phase_started_ms = now_ms;
+    }
+    return GnssNeoM9nProbePollResult_Pending;
 }
 
 static void Gnss_ParsedFrameDispatch(uint8_t instance, uint32_t now_ms)
@@ -2209,7 +2322,7 @@ static void Gnss_TransactionStateResetLocked(uint8_t instance)
     s_config_cache_count = 0U;
     s_contexts[instance].identity_seen = 0U;
     s_contexts[instance].identity_verified = 0U;
-    s_contexts[instance].probe_prepared = 0U;
+    s_contexts[instance].probe_phase = GnssProbePhaseComplete;
     s_valget_layer = GNSS_VALGET_LAYER_RAM;
     s_uart_baud_changed = 0U;
     s_uart_baseline_ubx_frames = 0U;

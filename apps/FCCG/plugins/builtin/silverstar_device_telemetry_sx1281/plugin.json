@@ -230,11 +230,19 @@
     "coding_rates": ["4/5"],
     "maximum_payload": 64,
     "maximum_tx_power_dbm": 12,
+    "datasheet_capabilities": {
+      "frequency_min_hz": 2400000000,
+      "frequency_max_hz": 2500000000,
+      "maximum_tx_power_dbm": 14,
+      "source": "https://www.ebyte.com/Uploadfiles/Files/2023-7-12/20237121022567349.pdf"
+    },
     "modules": {
       "e28_2g4m12sx": {
         "model": "E28-2G4M12SX",
         "tx_power_limit_dbm": 12,
-        "supported_tx_powers_dbm": [12]
+        "supported_tx_powers_dbm": [12],
+        "validated_frequency_min_hz": 2473000000,
+        "validated_frequency_max_hz": 2473000000
       }
     }
   },

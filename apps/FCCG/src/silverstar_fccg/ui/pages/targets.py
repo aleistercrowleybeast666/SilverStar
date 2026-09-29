@@ -37,7 +37,8 @@ class AirLinkPage(ScrollableLocalizedPage):
         frequency_label = QLabel()
         self.Text_Register(frequency_label, "field.air_frequency")
         frequency = EnterCommittedDoubleSpinBox()
-        frequency.setRange(100.0, 6000.0)
+        frequency.setRange(0.0, 0.0)
+        frequency.setEnabled(False)
         frequency.setDecimals(3)
         frequency.setSuffix(" MHz")
         frequency.committed.connect(
@@ -45,22 +46,40 @@ class AirLinkPage(ScrollableLocalizedPage):
                 "frequency_hz", round(selected * 1000000)
             )
         )
+        frequency.rejected.connect(
+            lambda _draft: self.status.setText(
+                "AIR_LINK_FREQUENCY_OUT_OF_RANGE: " + frequency.toolTip()
+            )
+        )
         form.insertRow(0, frequency_label, frequency)
         self.fields["frequency_hz"] = frequency
         self.flight_tx_power = EnterCommittedSpinBox()
-        self.flight_tx_power.setRange(-30, 30)
+        self._ground_power_available = False
+        self.flight_tx_power.setRange(0, 0)
+        self.flight_tx_power.setEnabled(False)
         self.flight_tx_power.setSuffix(" dBm")
         self.flight_tx_power.committed.connect(
             lambda value: self.endpointPowerChanged.emit("flight", value)
+        )
+        self.flight_tx_power.rejected.connect(
+            lambda _draft: self.status.setText(
+                "AIR_LINK_TX_POWER_UNSUPPORTED: " + self.flight_tx_power.toolTip()
+            )
         )
         flight_power_label = QLabel()
         self.Text_Register(flight_power_label, "field.flight_tx_power")
         form.addRow(flight_power_label, self.flight_tx_power)
         self.ground_tx_power = EnterCommittedSpinBox()
-        self.ground_tx_power.setRange(-30, 30)
+        self.ground_tx_power.setRange(0, 0)
+        self.ground_tx_power.setEnabled(False)
         self.ground_tx_power.setSuffix(" dBm")
         self.ground_tx_power.committed.connect(
             lambda value: self.endpointPowerChanged.emit("ground", value)
+        )
+        self.ground_tx_power.rejected.connect(
+            lambda _draft: self.status.setText(
+                "AIR_LINK_TX_POWER_UNSUPPORTED: " + self.ground_tx_power.toolTip()
+            )
         )
         ground_power_label = QLabel()
         self.Text_Register(ground_power_label, "field.ground_tx_power")
@@ -119,7 +138,32 @@ class AirLinkPage(ScrollableLocalizedPage):
     def EndpointPowers_Set(self, flight_power: int, ground_power: int, ground_enabled: bool) -> None:
         self.flight_tx_power.CommittedValue_Set(flight_power)
         self.ground_tx_power.CommittedValue_Set(ground_power)
-        self.ground_tx_power.setEnabled(ground_enabled)
+        self.ground_tx_power.setEnabled(ground_enabled and self._ground_power_available)
+
+    def RadioConstraints_Set(
+        self, frequency_range_hz: tuple[int, int] | None,
+        flight_powers_dbm: tuple[int, ...],
+        ground_powers_dbm: tuple[int, ...],
+        ground_enabled: bool,
+    ) -> None:
+        self._ground_power_available = bool(ground_powers_dbm)
+        frequency = self.fields["frequency_hz"]
+        if frequency_range_hz is None:
+            frequency.setEnabled(False)
+        else:
+            low, high = frequency_range_hz
+            frequency.setRange(low / 1000000, high / 1000000)
+            frequency.setToolTip(f"Validated module frequency: {low / 1000000:g}–{high / 1000000:g} MHz")
+            frequency.setEnabled(True)
+        for widget, powers, enabled in (
+            (self.flight_tx_power, flight_powers_dbm, True),
+            (self.ground_tx_power, ground_powers_dbm, ground_enabled),
+        ):
+            if powers:
+                widget.setRange(min(powers), max(powers))
+                widget.setToolTip("Validated module TX power: " +
+                                  ", ".join(str(value) for value in powers) + " dBm")
+            widget.setEnabled(enabled and bool(powers))
 
 
 class GroundTargetPage(ScrollableLocalizedPage):

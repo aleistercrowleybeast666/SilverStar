@@ -48,23 +48,26 @@ def test_frequency_and_endpoint_power_commit_only_on_enter(tmp_path: Path, qapp)
         window.navigation_list.setCurrentRow(3)
         qapp.processEvents()
         frequency = window.air_link_page.fields["frequency_hz"]
+        assert frequency.minimum() == 2473.0
+        assert frequency.maximum() == 2473.0
         frequency.setFocus()
         frequency.lineEdit().setText("2400.000")
         qapp.processEvents()
         assert window._model.air_link.frequency_hz == 2473000000
         QTest.keyClick(frequency, Qt.Key.Key_Return)
-        assert window._model.air_link.frequency_hz == 2400000000
+        assert window._model.air_link.frequency_hz == 2473000000
         assert "AIR_LINK_FREQUENCY_OUT_OF_RANGE" in window.air_link_page.status.text()
 
         power = window.air_link_page.flight_tx_power
+        assert (power.minimum(), power.maximum()) == (12, 12)
         commits = QSignalSpy(power.committed)
         power.setFocus()
         power.lineEdit().setText("11 dBm")
         assert window._model.flight_tx_power_dbm == 12
-        assert power.lineEdit().hasAcceptableInput(), power.lineEdit().text()
+        assert not power.lineEdit().hasAcceptableInput(), power.lineEdit().text()
         QTest.keyClick(power, Qt.Key.Key_Return)
-        assert commits.count() == 1, (power.value(), power.lineEdit().text())
-        assert window._model.flight_tx_power_dbm == 11
+        assert commits.count() == 0, (power.value(), power.lineEdit().text())
+        assert window._model.flight_tx_power_dbm == 12
         assert "AIR_LINK_TX_POWER_UNSUPPORTED" in window.air_link_page.status.text()
     finally:
         window.close()

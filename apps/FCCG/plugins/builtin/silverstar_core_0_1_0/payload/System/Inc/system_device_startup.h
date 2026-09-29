@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define SYSTEM_DEVICE_STARTUP_MAX_CANDIDATES 8U
+#define SYSTEM_DEVICE_STARTUP_MAX_CANDIDATES 10U
 
 typedef enum
 {
