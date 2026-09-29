@@ -2089,25 +2089,15 @@ static PlatformResult Gnss_ProbePubxSend(uint8_t instance)
         frame, length, PLATFORM_UART_TX_PRIORITY);
 }
 
-GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
+static uint8_t Gnss_ProbeTimeoutCheck(
+    uint8_t instance, uint32_t now_ms, GnssProbePhase phase)
 {
-    uint32_t now_ms;
-    PlatformResult result;
-    GnssProbePhase phase;
-
-    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
-        (s_contexts[instance].initialized == 0U))
-    { return GnssNeoM9nProbePollResult_NotReady; }
-    now_ms = PlatformTime_Ms();
-    (void)GnssNeoM9n_Process(instance, now_ms);
-    phase = s_contexts[instance].probe_phase;
-    if (s_contexts[instance].identity_seen != 0U)
-    {
-        s_contexts[instance].probe_phase = GnssProbePhaseComplete;
-        return (s_contexts[instance].identity_verified != 0U) ?
-            GnssNeoM9nProbePollResult_Identified :
-            GnssNeoM9nProbePollResult_WrongModel;
-    }
+    SILVERSTAR_ASSERT(instance < PROJECT_NEO_M9N_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(phase <= GnssProbePhaseComplete,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     if ((phase == GnssProbePhasePassive) &&
         ((uint32_t)(now_ms - s_contexts[instance].probe_phase_started_ms) >=
             GNSS_PROBE_PASSIVE_MS))
@@ -2119,7 +2109,7 @@ GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
         if ((uint32_t)(s_status.nmea_checksum_ok_count -
                 s_contexts[instance].probe_nmea_baseline) <
             GNSS_PROBE_VALID_NMEA_MIN)
-        { return GnssNeoM9nProbePollResult_WrongModel; }
+        { return 1U; }
         s_contexts[instance].probe_phase = GnssProbePhasePubxRequest;
     }
     else if ((phase == GnssProbePhasePubxSettle) &&
@@ -2129,9 +2119,20 @@ GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
     else if ((phase == GnssProbePhaseRescueMonResponse) &&
         ((uint32_t)(now_ms - s_contexts[instance].probe_phase_started_ms) >=
             GNSS_PROBE_UBX_WAIT_MS))
-    { return GnssNeoM9nProbePollResult_WrongModel; }
+    { return 1U; }
+    return 0U;
+}
 
-    phase = s_contexts[instance].probe_phase;
+static GnssNeoM9nProbePollResult Gnss_ProbeRequestSend(
+    uint8_t instance, uint32_t now_ms, GnssProbePhase phase)
+{
+    PlatformResult result;
+    SILVERSTAR_ASSERT(instance < PROJECT_NEO_M9N_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(phase <= GnssProbePhaseComplete,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     if ((phase == GnssProbePhaseMonRequest) ||
         (phase == GnssProbePhaseRescueMonRequest))
     {
@@ -2152,6 +2153,35 @@ GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
         s_contexts[instance].probe_phase_started_ms = now_ms;
     }
     return GnssNeoM9nProbePollResult_Pending;
+}
+
+GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
+{
+    uint32_t now_ms;
+    GnssProbePhase phase;
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
+        (s_contexts[instance].initialized == 0U))
+    { return GnssNeoM9nProbePollResult_NotReady; }
+    SILVERSTAR_ASSERT(s_contexts[instance].probe_phase <= GnssProbePhaseComplete,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(s_contexts[instance].identity_seen <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    now_ms = PlatformTime_Ms();
+    (void)GnssNeoM9n_Process(instance, now_ms);
+    phase = s_contexts[instance].probe_phase;
+    if (s_contexts[instance].identity_seen != 0U)
+    {
+        s_contexts[instance].probe_phase = GnssProbePhaseComplete;
+        return (s_contexts[instance].identity_verified != 0U) ?
+            GnssNeoM9nProbePollResult_Identified :
+            GnssNeoM9nProbePollResult_WrongModel;
+    }
+    if (Gnss_ProbeTimeoutCheck(instance, now_ms, phase) != 0U)
+    { return GnssNeoM9nProbePollResult_WrongModel; }
+    return Gnss_ProbeRequestSend(instance, now_ms,
+        s_contexts[instance].probe_phase);
 }
 
 static void Gnss_ParsedFrameDispatch(uint8_t instance, uint32_t now_ms)
