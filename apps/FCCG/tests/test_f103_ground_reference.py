@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 from silverstar_fccg.core.workspace import WorkspacePolicy
@@ -67,6 +68,51 @@ def test_f103_ground_reference_has_exact_hardware_contract(builtin_catalog) -> N
     assert exact.metadata["flash_bytes"] == 65536
     assert exact.metadata["sram_bytes"] == 20480
     assert exact.metadata["platform_family_id"] == "silverstar.mcu_family.stm32f1"
+
+
+def test_ground_radio_reuses_physical_resource_constraints(builtin_catalog) -> None:
+    model = _GroundF103Model_Get(builtin_catalog)
+    assert not GroundTargetIssues_Get(model, builtin_catalog)
+    resources = tuple(
+        replace(item, metadata={**item.metadata, "clock_hz": 20_000_000})
+        if item.resource_id == "PLATFORM_SPI_1" else item
+        for item in model.ground_target.hardware.resources
+    )
+    model.ground_target = replace(
+        model.ground_target,
+        hardware=replace(model.ground_target.hardware, resources=resources),
+    )
+    assert "GROUND_RADIO_RESOURCE_CONSTRAINT" in {
+        issue.code for issue in GroundTargetIssues_Get(model, builtin_catalog)
+    }
+
+
+def test_ground_radio_rejects_two_outputs_on_one_pin(builtin_catalog) -> None:
+    model = _GroundF103Model_Get(builtin_catalog)
+    assignments = dict(model.ground_target.resource_assignments)
+    assignments["radio0:radio_reset"] = assignments["radio0:radio_nss"]
+    model.ground_target = replace(model.ground_target,
+                                  resource_assignments=assignments)
+    assert "GROUND_RESOURCE_CONFLICT" in {
+        issue.code for issue in GroundTargetIssues_Get(model, builtin_catalog)
+    }
+
+
+def test_ground_radio_rejects_pc_uart_pin_overlap(builtin_catalog) -> None:
+    model = _GroundF103Model_Get(builtin_catalog)
+    resources = tuple(
+        replace(item, metadata={
+            **item.metadata, "pins": {**item.metadata["pins"], "tx": "PA4"},
+        }) if item.resource_id == "PLATFORM_UART_1" else item
+        for item in model.ground_target.hardware.resources
+    )
+    model.ground_target = replace(
+        model.ground_target,
+        hardware=replace(model.ground_target.hardware, resources=resources),
+    )
+    assert "GROUND_RESOURCE_CONFLICT" in {
+        issue.code for issue in GroundTargetIssues_Get(model, builtin_catalog)
+    }
 
 
 def test_f103_ground_generation_uses_f1_family_and_build_audit(

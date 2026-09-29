@@ -55,7 +55,15 @@ bounds and event rates are supplied to it,
 the CPU timing portion is unqualified; neither F407 nor F103 receives a
 complete static schedulability PASS from this page.
 
-Peripheral matching currently validates selected resource kinds and detailed
-bus constraints through the FCCG resource planner. An end-to-end I/O throughput
-budget covering radio packet rate, PC serial framing, storage latency, DMA and
-bounded queues is still required for the complete target resource plan.
+Peripheral matching validates selected resource kinds and detailed bus/electrical
+constraints through the shared FCCG resource planner. Ground radio binding uses
+the same physical SPI, GPIO, EXTI and safe-output requirements as Flight radio
+binding; exclusive Ground radio pins cannot be assigned twice. The GS_SS1 IOC
+topology passes these checks, including its 9 Mbit/s SPI1. Ground UART PC
+capacity uses the configured 8N1 baudrate and the canonical GSP framing sizes:
+at 230400 baud the theoretical line ceiling is 23,040 bytes/s per direction;
+a full 61-byte AIR_RX frame occupies 70 GSP bytes. This upper ceiling excludes
+GS_STATUS and ACK traffic. USB CDC has no capacity inferred from its virtual
+COM baudrate. An end-to-end I/O throughput budget covering offered radio packet
+rate, PC serial framing, storage latency, DMA and bounded queues is still
+required for the complete target resource plan.

@@ -251,16 +251,71 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
         except ValueError:
             radio = None
         if radio is not None:
+            from silverstar_fccg.plugins.manifest import (
+                ResourceMode, ResourceProvision,
+            )
+            from silverstar_fccg.project.resources import (
+                _RequirementConstraintsErrors_Get,
+            )
+
             if radio.radio is not None and ground.module_variant not in radio.radio.modules:
                 issues.append(AirLinkIssue(
                     "AIR_LINK_NO_RADIO", "Ground radio module variant is unavailable"
                 ))
+            exclusive: dict[str, str] = {}
+            occupied_pins: dict[str, str] = {}
+            pc_resource = available.get(ground.pc_resource) if ground.pc_interface == "uart" else None
+            if pc_resource is not None:
+                pc_pins = pc_resource.metadata.get("pins", {})
+                if isinstance(pc_pins, dict):
+                    occupied_pins.update((str(pin), "pc_interface")
+                                         for pin in pc_pins.values() if pin)
             for requirement in radio.resource_requirements:
-                assigned = ground.resource_assignments.get(f"radio0:{requirement.name}")
+                key = f"radio0:{requirement.name}"
+                assigned = ground.resource_assignments.get(key)
                 resource = available.get(assigned or "")
-                if requirement.required and (resource is None or resource.kind != requirement.kind):
+                if (requirement.required and resource is None) or (
+                    resource is not None and resource.kind != requirement.kind
+                ):
                     issues.append(AirLinkIssue(
                         "GROUND_RADIO_RESOURCE_UNBOUND",
                         f"Ground radio {requirement.name} needs a {requirement.kind} resource",
                     ))
+                    continue
+                if resource is None:
+                    continue
+                for detail in _RequirementConstraintsErrors_Get(
+                    key, requirement,
+                    ResourceProvision(resource.resource_id, resource.kind,
+                                      metadata=resource.metadata),
+                    model,
+                ):
+                    issues.append(AirLinkIssue(
+                        "GROUND_RADIO_RESOURCE_CONSTRAINT", detail,
+                    ))
+                if requirement.mode == ResourceMode.EXCLUSIVE:
+                    physical = str(resource.metadata.get(
+                        "physical_pin", resource.metadata.get(
+                            "physical_resource", resource.resource_id,
+                        ),
+                    ))
+                    previous = exclusive.setdefault(physical, key)
+                    if previous != key:
+                        issues.append(AirLinkIssue(
+                            "GROUND_RESOURCE_CONFLICT",
+                            f"{previous} and {key} both use {physical}",
+                        ))
+                    pins = resource.metadata.get("pins", {})
+                    physical_pins = (
+                        pins.values() if isinstance(pins, dict) else ()
+                    )
+                    physical_pins = (*physical_pins,
+                                     resource.metadata.get("physical_pin"))
+                    for pin in (str(value) for value in physical_pins if value):
+                        previous = occupied_pins.setdefault(pin, key)
+                        if previous != key:
+                            issues.append(AirLinkIssue(
+                                "GROUND_RESOURCE_CONFLICT",
+                                f"{previous} and {key} both use pin {pin}",
+                            ))
     return tuple(issues)
