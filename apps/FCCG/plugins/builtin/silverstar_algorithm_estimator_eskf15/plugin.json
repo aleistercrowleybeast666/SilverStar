@@ -59,6 +59,12 @@
     ]
   },
   "metadata": {
+    "arithmetic_requirements": ["fp32"],
+    "qualified_timing_profiles": ["cortex_m4f_hardfp"],
+    "replay_contract": {
+      "window_ms": 600,
+      "history_capacity": 192
+    },
     "display_names": {
       "zh_CN": "ESKF15 误差状态融合估计",
       "en_US": "ESKF15 Navigation Estimator"

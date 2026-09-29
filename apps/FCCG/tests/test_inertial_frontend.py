@@ -40,6 +40,7 @@ def test_inertial_frontend_and_selected_navigation(tmp_path, workspace_root):
 #define SYSTEM_FUSION_KF6 1U
 #define SYSTEM_FUSION_ESKF15 2U
 #define SYSTEM_FUSION_ALGORITHM SYSTEM_FUSION_KF6
+#define SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT 2U
 #define SILVERSTAR_PROTOCOL_LOGGING_ENABLED 1U
 #define SILVERSTAR_ASSERT_OBJECT(p,t,m) ((void)(p))
 #define INS_INERTIAL_UPDATE_READY 0

@@ -69,6 +69,7 @@ from silverstar_fccg.generator.hardware_preparation import (
     HardwareAssignmentFingerprint_Get,
 )
 from silverstar_fccg.project.algorithm_parameters import AlgorithmParameterOwners_Get
+from silverstar_fccg.project.build_audit import BuildAudit_Run
 from silverstar_fccg.project.air_link import (
     AirLinkIssues_Get, GroundTargetIssues_Get, RadioLinkCompatible_Get,
 )
@@ -2102,29 +2103,35 @@ class MainWindow(QMainWindow):
             return
         self._ValidationIssue_Clear()
         code = issue.code
-        page_index = 4
+        page_index = 6
         target: QWidget = self.build_page.tool_status_group
-        if code.startswith(("hardware", "board", "resource", "platform")) or code in {
+        if code.startswith(("hardware", "board", "resource", "platform", "mcu", "HCLK", "MCU_HCLK")) or code in {
             "protocol_transport",
             "protocol_transport_ambiguous",
             "hal_cmsis_source_policy",
         }:
-            page_index = 3
+            page_index = 4
             target = (
                 self.board_hardware_page.resource_table
                 if code.startswith("resource") or code.startswith("protocol_transport")
                 else self.board_hardware_page.board_combo
             )
-        elif code.startswith(
-            ("strategy", "mode", "capability", "logging", "protocol")
-        ):
+        elif code.startswith(("GROUND_", "GROUND", "GROUND_HCLK")):
+            page_index = 5
+            target = self.ground_target_page
+        elif code.startswith(("AIR_LINK", "protocol_telemetry")):
+            page_index = 3
+            target = self.air_link_page
+        elif code.startswith(("strategy", "capability", "TIMING_PROFILE", "REPLAY", "IMU_RATE")):
+            page_index = 2
+            target = (
+                next(iter(self.flight_configuration_page.strategy_combos.values()),
+                     self.algorithm_parameters_page)
+                if code.startswith("strategy") else self.algorithm_parameters_page
+            )
+        elif code.startswith(("mode", "logging", "protocol")):
             page_index = 1
-            if code.startswith("strategy"):
-                target = next(
-                    iter(self.flight_configuration_page.strategy_combos.values()),
-                    self.flight_configuration_page,
-                )
-            elif code.startswith("mode"):
+            if code.startswith("mode"):
                 target = next(
                     (
                         check
@@ -2141,13 +2148,10 @@ class MainWindow(QMainWindow):
                     self.flight_configuration_page,
                 )
             else:
-                target = self.flight_configuration_page.capability_table
+                target = self.flight_configuration_page
         elif code == "algorithm_parameters":
             page_index = 2
             target = self.algorithm_parameters_page
-        elif code.startswith("mcu"):
-            page_index = 3
-            target = self.board_hardware_page.board_combo
         elif code.startswith("device"):
             page_index = 0
             target = next(
@@ -2827,11 +2831,49 @@ class MainWindow(QMainWindow):
                 return BuildResult(action, ("clean", str(build_root)), 0, "Build directory cleaned")
             runner = BuildRunner(output_policy)
             command = runner.Command_Get(selected_model, BuildAction.BUILD)
+            environment = runner._Environment_Get(selected_model, action)
             return_code, lines = runner._Process_Run(
-                command, target_root, runner._Environment_Get(selected_model, action),
+                command, target_root, environment,
                 context.token if hasattr(context, "token") else context,
                 context.Line_Report,
             )
+            if return_code == 0:
+                try:
+                    if target == "ground":
+                        elf = target_root / "build/ground.elf"
+                        mcu_id = selected_model.ground_target.mcu
+                    else:
+                        release = (target_root / "build/FCCG"
+                                   / selected_model.build.target_profile / "Release")
+                        artifacts = tuple(release.glob("*.elf"))
+                        if len(artifacts) != 1:
+                            raise ValueError("Flight build has no unique Release ELF")
+                        elf = artifacts[0]
+                        mcu_id = selected_model.mcu
+                    exact = self._service.catalog.Component_Get(mcu_id)
+                    audit = BuildAudit_Run(
+                        elf, elf.with_suffix(".map"),
+                        target_root / exact.build.linker_script,
+                        target_root / "build", exact.metadata,
+                        toolchain_prefix=selected_model.build.toolchain_prefix,
+                        environment=environment,
+                    )
+                    audit_line = (
+                        "Target static audit: "
+                        + (", ".join(audit.errors) if audit.errors else "PASS")
+                        + " | " + ", ".join(
+                            f"{region.name} {region.occupied_bytes}/{region.official_bytes} B"
+                            for region in audit.regions
+                        )
+                    )
+                    context.Line_Report(audit_line)
+                    lines.append(audit_line + "\n")
+                    if audit.errors:
+                        return_code = 1
+                except (OSError, ValueError, subprocess.SubprocessError) as error:
+                    context.Line_Report(f"Target static audit failed: {error}")
+                    lines.append(f"Target static audit failed: {error}\n")
+                    return_code = 1
             return BuildResult(action, command, return_code, "".join(lines),
                                live_streamed=True)
 

@@ -1,4 +1,4 @@
-/* Exercise the real APP correction/pairing and common frontend at 400 Hz.
+/* Exercise the real APP correction/pairing at 200 or 400 Hz raw IMU ODR.
  * Device acquisition is synthetic; no claim about physical IRQ timing is made. */
 #include <math.h>
 #include <stdio.h>
@@ -44,19 +44,26 @@ int main(void)
     raw.accel_b_mps2[2] = config.gravity_mps2;
     raw.valid_mask = SYSTEM_INERTIAL_VALID_ACCEL | SYSTEM_INERTIAL_VALID_GYRO;
     raw.quality_flags = SYSTEM_IMU_QUALITY_TIME_UNCERTAIN;
-    for (uint32_t index = 0U; index <= 800U; index++)
+    for (uint32_t index = 0U;
+         index <= ((SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 1U) ? 400U : 800U);
+         index++)
     {
         InsInertialUpdateResult result;
         /* Actual 1 ms polling can observe alternating 2/3 ms proxy spacing.
          * Two intervals are still a measured 5 ms, not a fabricated 2.5 ms clock. */
+#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 1U)
+        raw.sample_timestamp_us = 1000000ULL + (uint64_t)index * 5000ULL;
+#else
         raw.sample_timestamp_us = 1000000ULL + (uint64_t)(index / 2U) * 5000ULL +
             (uint64_t)(index % 2U) * 2000ULL;
+#endif
         raw.receive_timestamp_us = raw.sample_timestamp_us;
         raw.sequence = index + 1U;
         TEST_CHECK(InsTask_SampleCorrect(&raw, &corrected) == 1U);
         TEST_CHECK(corrected.timestamp_us == raw.sample_timestamp_us);
         TEST_CHECK(corrected.quality_flags == SYSTEM_IMU_QUALITY_TIME_UNCERTAIN);
-        if (s_navigation_input.inertial.sample_count == 2U)
+        if (s_navigation_input.inertial.sample_count ==
+            SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT)
         { InsTask_BodyPairBuild(&corrected); }
         result = InsInertial_Update(&s_navigation_input.inertial, &corrected, &inertial);
         if (result != INS_INERTIAL_UPDATE_READY)
@@ -83,6 +90,7 @@ int main(void)
     TEST_CHECK(s_test_state.timestamp_us == 3000000ULL);
     TEST_CHECK_NEAR(s_test_state.position[2], 0.0f, 1.0e-4f);
     TEST_CHECK_NEAR(s_test_state.velocity[2], 0.0f, 1.0e-4f);
-    (void)printf("raw=801 intervals=800 BODY=400 duration_us=2000000 max_history=120/192\n");
+    (void)printf("aggregation=%u BODY=400 duration_us=2000000 max_history=120/192\n",
+        SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT);
     return Test_Finish("eskf_actual_app_body_cadence");
 }

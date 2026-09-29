@@ -194,6 +194,22 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
         issues.append(AirLinkIssue(
             "GROUND_HARDWARE_UNBOUND", "Ground CubeMX snapshot is unavailable",
         ))
+    if ground.hardware.mode != "unselected" and ground.mcu:
+        from silverstar_fccg.project.clock_plan import ClockPlan_Validate
+
+        try:
+            exact_mcu = catalog.Component_Get(ground.mcu)
+        except ValueError:
+            issues.append(AirLinkIssue(
+                "GROUND_MCU_UNKNOWN", "Selected Ground MCU is not in the catalog",
+            ))
+        else:
+            issues.extend(
+                AirLinkIssue("GROUND_" + issue.code, issue.message)
+                for issue in ClockPlan_Validate(
+                    ground.hardware.inventory, exact_mcu.metadata,
+                )
+            )
     available = {resource.resource_id: resource for resource in ground.hardware.resources}
     if ground.pc_interface == "uart":
         resource = available.get(ground.pc_resource)

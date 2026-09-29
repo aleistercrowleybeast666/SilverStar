@@ -555,6 +555,7 @@ static uint32_t s_eskf_quality_flags;
 
 /* Integrate the actual adjacent sample segments onto two equal physical halves.
  * This preserves nonuniform timestamp spacing without duplicating coning. */
+#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
 static float InsTask_HalfMean(float first, float middle, float last,
     uint64_t middle_us, uint64_t end_us, uint8_t half)
 {
@@ -580,13 +581,35 @@ static float InsTask_HalfMean(float first, float middle, float last,
     }
     return integral / (float)(end - begin);
 }
+#endif
 
 static void InsTask_BodyPairBuild(const InsAlgorithmSample *last)
 {
     const InsAlgorithmSample *first = &s_navigation_input.inertial.sample_history[0];
+#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
     const InsAlgorithmSample *middle = &s_navigation_input.inertial.sample_history[1];
     uint64_t middle_us, end_us;
+#endif
     SILVERSTAR_ASSERT_OBJECT(last, InsAlgorithmSample, SILVERSTAR_ASSERT_MODULE_APP);
+#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 1U)
+    SILVERSTAR_ASSERT(s_navigation_input.inertial.sample_count == 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    s_eskf_quality_flags = first->quality_flags | last->quality_flags;
+    if (last->timestamp_us <= first->timestamp_us)
+    { s_eskf_quality_flags |= SYSTEM_IMU_QUALITY_TIME_DISCONTINUITY; return; }
+    for (uint8_t axis = 0U; axis < 3U; axis++)
+    {
+        /* Two half-interval means from the same real endpoint samples. */
+        s_eskf_gyro_pair[0][axis] =
+            (3.0f * first->gyro_b_radps[axis] + last->gyro_b_radps[axis]) * 0.25f;
+        s_eskf_gyro_pair[1][axis] =
+            (first->gyro_b_radps[axis] + 3.0f * last->gyro_b_radps[axis]) * 0.25f;
+        s_eskf_accel_pair[0][axis] =
+            (3.0f * first->accel_b_mps2[axis] + last->accel_b_mps2[axis]) * 0.25f;
+        s_eskf_accel_pair[1][axis] =
+            (first->accel_b_mps2[axis] + 3.0f * last->accel_b_mps2[axis]) * 0.25f;
+    }
+#else
     SILVERSTAR_ASSERT(s_navigation_input.inertial.sample_count == 2U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     s_eskf_quality_flags = first->quality_flags | middle->quality_flags | last->quality_flags;
@@ -604,6 +627,7 @@ static void InsTask_BodyPairBuild(const InsAlgorithmSample *last)
                 middle->accel_b_mps2[axis], last->accel_b_mps2[axis], middle_us, end_us, half);
         }
     }
+#endif
 }
 
 static void InsTask_InertialOutputsPublish(
@@ -706,7 +730,8 @@ static void InsTask_Propagate(const InsImuSample *imu_sample)
     if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
     {
         if ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) &&
-            (s_navigation_input.inertial.sample_count == 2U))
+            (s_navigation_input.inertial.sample_count ==
+             SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT))
         {
             InsTask_BodyPairBuild(&algorithm_sample);
         }

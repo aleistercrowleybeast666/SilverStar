@@ -65,6 +65,10 @@
     "max_hclk_hz": 72000000,
     "flash_bytes": 65536,
     "sram_bytes": 20480,
+    "memory_regions": [
+      {"name": "FLASH", "origin": 134217728, "bytes": 65536},
+      {"name": "RAM", "origin": 536870912, "bytes": 20480}
+    ],
     "display_names": {
       "zh_CN": "STM32F103C8T6",
       "en_US": "STM32F103C8T6"

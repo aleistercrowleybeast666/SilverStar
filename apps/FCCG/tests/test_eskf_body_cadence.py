@@ -8,17 +8,25 @@ import subprocess
 from copy import deepcopy
 from pathlib import Path
 
+import pytest
+
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.project.logging import LoggingProfile_AvailabilityTransitionApply
 
 
-def test_actual_app_400hz_samples_produce_200hz_body(tmp_path: Path, workspace_root: Path):
+@pytest.mark.parametrize("aggregation", (1, 2))
+def test_actual_app_samples_produce_200hz_body(
+    aggregation: int, tmp_path: Path, workspace_root: Path,
+):
     service = FccgService(workspace_root)
     model = service.ReferenceProject_Create("BodyCadence400")
     previous = deepcopy(model)
     model.strategies["estimator"] = "silverstar.algorithm.estimator.eskf15"
     LoggingProfile_AvailabilityTransitionApply(previous, model, service.catalog)
     model = service.ProjectConfiguration_Reconcile(model).model
+    model.algorithm_parameters[
+        "silverstar.algorithm.ins.coning2_sculling2"
+    ]["mechanization_aggregation"] = aggregation
     project = tmp_path / "generated"
     service.Project_Save(model, project, confirm_dangerous=True)
     output = project / "build/FCCG/Host/BodyCadence"

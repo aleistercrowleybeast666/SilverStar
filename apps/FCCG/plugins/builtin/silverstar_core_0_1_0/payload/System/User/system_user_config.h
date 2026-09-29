@@ -108,7 +108,9 @@
 #define SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ             200U
 #define SYSTEM_BAROMETER_OUTPUT_RATE_HZ                200U
 
+#ifndef SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT
 #define SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT           2U
+#endif
 #define SYSTEM_MECHANIZATION_SAMPLE_RATE_MIN_HZ        50U
 #define SYSTEM_MECHANIZATION_SAMPLE_RATE_MAX_HZ        500U
 #define SYSTEM_MECHANIZATION_DT_TOLERANCE_RATIO        0.35f
@@ -280,8 +282,9 @@
 #error "System indicator timing values must be non-zero"
 #endif
 
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT != 2U)
-#error "Only the two-subsample coning/sculling mechanization is implemented"
+#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT != 1U) && \
+    (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT != 2U)
+#error "Mechanization aggregation must be one or two real IMU intervals"
 #endif
 #if (SYSTEM_IMU_OUTPUT_RATE_HZ < SYSTEM_MECHANIZATION_SAMPLE_RATE_MIN_HZ) || \
     (SYSTEM_IMU_OUTPUT_RATE_HZ > SYSTEM_MECHANIZATION_SAMPLE_RATE_MAX_HZ)

@@ -40,8 +40,10 @@ KF = 'silverstar.algorithm.estimator.kf6'
 
 def test_actual_defaults_roundtrip_and_decoder(builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
-    assert model.format_version == 12
-    assert model.algorithm_parameters[INS] == {'gravity_mps2':9.78}
+    assert model.format_version == 13
+    assert model.algorithm_parameters[INS] == {
+        'gravity_mps2': 9.78, 'mechanization_aggregation': 2,
+    }
     values = model.algorithm_parameters[KF]
     assert values['p0_position_u'] == 9.0
     assert values['process_accel_std_u'] == 2.0
@@ -209,8 +211,8 @@ def test_gui_page_edit_reset_dirty_and_readonly_display(tmp_path,qapp,monkeypatc
     window=MainWindow(SettingsStore(tmp_path/'parameters.ini'))
     monkeypatch.setattr(window,'_Error_Show',lambda *args:pytest.fail(str(args)))
     try:
-        assert window.PAGE_CODES.index('page.algorithm_parameters')+1 == window.PAGE_CODES.index('page.board_hardware')
-        assert window.pages.count()==5
+        assert window.PAGE_CODES.index('page.navigation_configuration')+2 == window.PAGE_CODES.index('page.board_hardware')
+        assert window.pages.count()==7
         old=window._model.Dictionary_Get()
         window._Project_Refresh()
         assert window._model.Dictionary_Get()==old

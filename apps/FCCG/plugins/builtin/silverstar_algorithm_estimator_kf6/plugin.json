@@ -58,6 +58,12 @@
     ]
   },
   "metadata": {
+    "arithmetic_requirements": ["fp32"],
+    "qualified_timing_profiles": ["cortex_m3_softfp", "cortex_m4f_hardfp"],
+    "replay_contract": {
+      "window_ms": 600,
+      "history_capacity": 144
+    },
     "reference": {
       "source_kind": "reference_snapshot",
       "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",

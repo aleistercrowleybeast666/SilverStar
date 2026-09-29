@@ -111,6 +111,28 @@
           "zh_CN": "仅用于导航重力扣除；校准、对准和传感器换算保留独立的平台重力配置。"
         },
         "shared_key": "navigation.gravity_mps2"
+      },
+      {
+        "id": "mechanization_aggregation",
+        "type": "integer",
+        "default": 2,
+        "unit": "samples",
+        "representation": "value",
+        "min": 1,
+        "max": 2,
+        "precision": 0,
+        "step": 1,
+        "group": "basic",
+        "order": 1,
+        "generated_symbol": "SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT",
+        "display_names": {
+          "en_US": "IMU samples per propagation",
+          "zh_CN": "每次惯性传播的 IMU 样本数"
+        },
+        "description": {
+          "en_US": "One propagates each real IMU interval; two aggregate adjacent intervals for second-order coning/sculling. No synthetic IMU samples are created.",
+          "zh_CN": "1 表示每个真实 IMU 区间传播一次；2 表示聚合相邻区间执行二阶锥运动与划桨补偿，不合成新样本。"
+        }
       }
     ]
   }

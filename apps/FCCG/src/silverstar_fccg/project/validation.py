@@ -762,6 +762,15 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
                 "error", "mcu_family_mismatch",
                 "Selected MCU family backend does not match the exact MCU",
             ))
+        if model.hardware.mode != "unselected":
+            from silverstar_fccg.project.clock_plan import ClockPlan_Validate
+
+            issues.extend(
+                ValidationIssue("error", issue.code, issue.message)
+                for issue in ClockPlan_Validate(
+                    model.hardware.inventory, exact_mcu.metadata,
+                )
+            )
     except ValueError:
         pass
     if model.hardware.mode == "board_plugin":
@@ -1032,6 +1041,20 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
             if model.ground_target.enabled else AirLinkIssues_Get(model, catalog)
         )
     )
+    if model.strategies.get("ins"):
+        from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
+
+        try:
+            rate_plan = InertialRatePlan_Resolve(model, catalog)
+        except ValueError as error:
+            issues.append(ValidationIssue(
+                "error", "IMU_RATE_UNDECLARED", str(error),
+            ))
+        else:
+            issues.extend(
+                ValidationIssue("error", issue.code, issue.message)
+                for issue in rate_plan.issues
+            )
     return ProjectValidationResult(tuple(issues))
 
 

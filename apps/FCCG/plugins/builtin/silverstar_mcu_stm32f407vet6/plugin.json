@@ -78,6 +78,15 @@
     },
     "vendor": "STM32",
     "mcu_model": "STM32F407VET6",
+    "cpu_profile": "cortex_m4f_hardfp",
+    "max_hclk_hz": 168000000,
+    "flash_bytes": 524288,
+    "sram_bytes": 196608,
+    "memory_regions": [
+      {"name": "FLASH", "origin": 134217728, "bytes": 524288},
+      {"name": "RAM", "origin": 536870912, "bytes": 131072},
+      {"name": "CCMRAM", "origin": 268435456, "bytes": 65536}
+    ],
     "display_names": {
       "zh_CN": "STM32F407VET6",
       "en_US": "STM32F407VET6"
