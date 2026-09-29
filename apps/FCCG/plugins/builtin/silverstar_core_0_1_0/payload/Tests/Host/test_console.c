@@ -16,6 +16,7 @@
 #include "system_imu_if.h"
 #include "system_lifecycle.h"
 #include "system_magnetometer_if.h"
+#include "system_mag_calibration.h"
 #include "system_output_if.h"
 #include "system_power_if.h"
 #include "system_profile.h"
@@ -24,6 +25,8 @@
 #include "system_task_stack.h"
 #include "system_telemetry_transport_if.h"
 #include "test_common.h"
+
+void TestFixture_MagEnabledSet(uint8_t enabled);
 
 static uint8_t s_locked;
 static SystemLifecycleState s_state = SYSTEM_STATE_PREFLIGHT;
@@ -54,6 +57,7 @@ static SystemAlignmentStatus s_alignment_status;
 static SystemCalibrationStatus s_calibration_status;
 static SystemFlightRecoveryStatus s_flight_recovery_status;
 static SystemDeviceResult s_console_write_result = SYSTEM_DEVICE_OK;
+static SystemMagnetometerSample s_mag_sample;
 
 static SystemDeviceResult Test_IoDiagnosticsGet(
     SystemDeviceIoDiagnostics *diagnostics)
@@ -441,8 +445,9 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
     SystemMagnetometerSample *sample)
 {
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    (void)memset(sample, 0, sizeof(*sample));
-    return SYSTEM_DEVICE_UNSUPPORTED;
+    *sample = s_mag_sample;
+    return (s_mag_sample.valid_mask & SYSTEM_MAG_VALID_PHYSICAL_UNIT) != 0U ?
+        SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY;
 }
 SystemDeviceResult SystemMagnetometer_EffectiveConfigGet(
     SystemMagnetometerConfig *config)
@@ -1541,6 +1546,91 @@ static void Test_MultiInstanceFacade(void)
                SYSTEM_DEVICE_NOT_PRESENT);
 }
 
+static void Test_MagStream(void)
+{
+    TestFixture_MagEnabledSet(1U);
+    (void)memset(&s_mag_sample, 0, sizeof(s_mag_sample));
+    s_mag_sample.valid_mask = SYSTEM_MAG_VALID_PHYSICAL_UNIT;
+    s_mag_sample.sequence = 17U;
+    s_mag_sample.sample_timestamp_us = s_now_us;
+    s_mag_sample.magnetic_field_b_uT[0] = 25.5f;
+    s_mag_sample.magnetic_field_b_uT[1] = -18.25f;
+    s_mag_sample.magnetic_field_b_uT[2] = 42.0f;
+    TEST_CHECK(SystemConsole_Init() == SYSTEM_DEVICE_OK);
+    Test_Execute("MAG 0 STREAM START", SYSTEM_CONSOLE_EXECUTE_OK,
+        "state=STARTED rate_hz=20");
+    (void)memset(s_console_write_buffer, 0, sizeof(s_console_write_buffer));
+    SystemConsole_Process();
+    TEST_CHECK(strstr(s_console_write_buffer,
+        "EVENT MAG SAMPLE instance=0 physical_device_id=11 seq=17") != NULL);
+    (void)memset(s_console_write_buffer, 0, sizeof(s_console_write_buffer));
+    SystemConsole_Process();
+    TEST_CHECK(s_console_write_buffer[0] == '\0');
+    s_now_us += 50000ULL;
+    s_mag_sample.sequence++;
+    s_mag_sample.sample_timestamp_us = s_now_us;
+    SystemConsole_Process();
+    TEST_CHECK(strstr(s_console_write_buffer, "seq=18") != NULL);
+    Test_Execute("MAG 0 STREAM STOP", SYSTEM_CONSOLE_EXECUTE_OK,
+        "state=STOPPED");
+    TestFixture_MagEnabledSet(0U);
+}
+
+#define TEST_MAG_PACKET_GOOD \
+    "01010B00000000004041000000C1000040400000803F0000000000000000" \
+    "000000000000803F0000000000000000000000000000803F00004842CDCC" \
+    "4C3ECDCC4C3F9A99993F4B4B4B4B4B4B4B4B58024754EB56"
+#define TEST_MAG_PACKET_WRONG_DEVICE \
+    "01012A00000000004041000000C1000040400000803F0000000000000000" \
+    "000000000000803F0000000000000000000000000000803F00004842CDCC" \
+    "4C3ECDCC4C3F9A99993F4B4B4B4B4B4B4B4B580211E8A9C5"
+
+static void Test_MagCalibrationObject(void)
+{
+    SystemMagnetometerSample sample;
+    uint8_t packet[SYSTEM_MAG_CAL_PACKET_BYTES];
+    uint8_t instance_id = UINT8_MAX;
+    uint32_t request_id = 0U;
+    TestFixture_MagEnabledSet(1U);
+    SystemMagCalibration_Init();
+    Test_Execute("MAG 0 CAL APPLY " TEST_MAG_PACKET_WRONG_DEVICE,
+        SYSTEM_CONSOLE_EXECUTE_FAILED, "WRONG_DEVICE");
+    Test_Execute("MAG 0 CAL APPLY " TEST_MAG_PACKET_GOOD,
+        SYSTEM_CONSOLE_EXECUTE_OK, "action=APPLY accepted=1");
+    Test_Execute("MAG 0 CAL READ", SYSTEM_CONSOLE_EXECUTE_OK,
+        "state=APPLIED generation=0 physical_device_id=11");
+    (void)memset(&sample, 0, sizeof(sample));
+    sample.valid_mask = SYSTEM_MAG_VALID_PHYSICAL_UNIT;
+    sample.magnetic_field_b_uT[0] = 13.0f;
+    sample.magnetic_field_b_uT[1] = -6.0f;
+    sample.magnetic_field_b_uT[2] = 6.0f;
+    TEST_CHECK(SystemMagCalibration_SampleApply(0U, &sample) ==
+        SystemMagCalibrationResult_Ok);
+    TEST_CHECK(sample.magnetic_field_b_uT[0] == 1.0f);
+    TEST_CHECK(sample.magnetic_field_b_uT[1] == 2.0f);
+    TEST_CHECK(sample.magnetic_field_b_uT[2] == 3.0f);
+    TEST_CHECK(sample.calibration_valid == 1U);
+    Test_Execute("MAG 0 CAL SAVE", SYSTEM_CONSOLE_EXECUTE_OK,
+        "action=SAVE accepted=1");
+    TEST_CHECK(SystemMagCalibration_PendingGet(
+        &instance_id, packet, &request_id) == SystemMagCalibrationResult_Ok);
+    TEST_CHECK(instance_id == 0U && packet[2] == 11U && request_id != 0U);
+    TEST_CHECK(SystemMagCalibration_SaveComplete(0U, request_id, 1U, 7U) ==
+        SystemMagCalibrationResult_Ok);
+    Test_Execute("MAG 0 CAL READ", SYSTEM_CONSOLE_EXECUTE_OK,
+        "generation=7 physical_device_id=11 instance=0 saved=1 pending=0");
+    Test_Execute("MAG 0 CAL CLEAR", SYSTEM_CONSOLE_EXECUTE_OK,
+        "action=CLEAR accepted=1");
+    TEST_CHECK(SystemMagCalibration_PendingGet(
+        &instance_id, packet, &request_id) == SystemMagCalibrationResult_Ok);
+    TEST_CHECK(packet[0] == 0U);
+    TEST_CHECK(SystemMagCalibration_SaveComplete(0U, request_id, 1U, 8U) ==
+        SystemMagCalibrationResult_Ok);
+    Test_Execute("MAG 0 CAL READ", SYSTEM_CONSOLE_EXECUTE_OK,
+        "state=EMPTY generation=8");
+    TestFixture_MagEnabledSet(0U);
+}
+
 int main(void)
 {
     char response[64];
@@ -1891,6 +1981,8 @@ int main(void)
     Test_ConsoleDiscontinuityClearsPartialLine();
     Test_AsyncCalibrationAlignmentEvents();
     Test_AsyncFlightRecoveryEvents();
+    Test_MagStream();
+    Test_MagCalibrationObject();
 
     s_state = SYSTEM_STATE_FAULT;
     Test_Execute("CAL START NONE", SYSTEM_CONSOLE_EXECUTE_FAILED,

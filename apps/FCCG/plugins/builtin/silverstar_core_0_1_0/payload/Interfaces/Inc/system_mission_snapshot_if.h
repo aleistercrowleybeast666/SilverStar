@@ -20,6 +20,7 @@ typedef struct
     uint32_t calibration_generation;
     uint32_t imu_correction_hash;
     uint32_t mag_calibration_generation;
+    uint32_t mag_calibration_set_hash;
     uint8_t imu_source_instance;
     uint8_t gnss_source_instance;
     uint8_t snapshot_base_instance;

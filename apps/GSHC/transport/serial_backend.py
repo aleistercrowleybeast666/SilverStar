@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from typing import Optional
 
 import serial
+from PySide6.QtCore import QThread, Signal, Slot
 from serial import SerialException
 from serial.tools import list_ports
-from PySide6.QtCore import QThread, Signal, Slot
 
 
 @dataclass(frozen=True)
@@ -140,11 +140,12 @@ class SerialLink:
     def __init__(self) -> None:
         self.worker: Optional[SerialWorker] = None
 
-    def open(self, config: SerialConfig) -> SerialWorker:
+    def open(self, config: SerialConfig, *, start: bool = True) -> SerialWorker:
         if not self.close():
             raise RuntimeError("previous serial thread is still stopping")
         self.worker = SerialWorker(config)
-        self.worker.start()
+        if start:
+            self.worker.start()
         return self.worker
 
     def close(self) -> bool:

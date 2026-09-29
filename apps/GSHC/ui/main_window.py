@@ -23,9 +23,9 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QListWidget,
     QMainWindow,
+    QPlainTextEdit,
     QProgressBar,
     QPushButton,
-    QPlainTextEdit,
     QSizePolicy,
     QSpinBox,
     QSplitter,
@@ -56,6 +56,7 @@ from protocol.common import (
 )
 from services.data_migration import DataMigrationConflictPolicy
 from services.i18n import I18n, Language
+from services.navigation_state import NavigationStartResult
 from services.preferences import (
     ALL_EXPORT_ITEMS,
     AppPreferences,
@@ -74,11 +75,11 @@ from services.state_model import (
     HandshakeState,
     MissionPhase,
 )
-from ui.port_combo import PortComboBox
+from ui.magnetometer_calibration_page import MagnetometerCalibrationPage
 from ui.navigation_panel import NavigationPanel
-from services.navigation_state import NavigationStartResult
-from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
+from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
+from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
 
 
 def calibration_mode_text(i18n: I18n, state: FlightControllerState) -> str:
@@ -1370,6 +1371,11 @@ class MainWindow(QMainWindow):
         self.pages.setTabText(
             self.pages.indexOf(self.post_process_page), self.i18n.tr("page.post_process")
         )
+        self.pages.setTabText(
+            self.pages.indexOf(self.magnetometer_calibration_page),
+            self.i18n.tr("page.magnetometer_calibration"),
+        )
+        self.magnetometer_calibration_page.retranslate_ui()
         language_index = self.language_combo.findData(self.i18n.language.value)
         if language_index >= 0 and language_index != self.language_combo.currentIndex():
             blocked = self.language_combo.blockSignals(True)
@@ -1450,9 +1456,11 @@ class MainWindow(QMainWindow):
         self.preflight_page = self._build_preflight_page()
         self.flight_page = self._build_flight_page()
         self.post_process_page = self._build_post_process_page()
+        self.magnetometer_calibration_page = MagnetometerCalibrationPage(self.i18n, self)
         self.pages.addTab(self.preflight_page, "")
         self.pages.addTab(self.flight_page, "")
         self.pages.addTab(self.post_process_page, "")
+        self.pages.addTab(self.magnetometer_calibration_page, "")
         splitter.addWidget(self.pages)
         splitter.setSizes([420, 1340])
         splitter.setStretchFactor(0, 0)
@@ -3114,6 +3122,12 @@ class MainWindow(QMainWindow):
         if norm == 0:
             return None
         return w / norm, x / norm, y / norm, z / norm
+
+    def closeEvent(self, event) -> None:
+        if not self.magnetometer_calibration_page.close_session():
+            event.ignore()
+            return
+        super().closeEvent(event)
 
     def _apply_quat_to_mesh(self, quat: tuple[float, float, float, float]) -> None:
         normalized = self._normalize_quat(quat)

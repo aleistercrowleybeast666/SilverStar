@@ -9,6 +9,7 @@
 #include "project_device_instances.h"
 #include "system_gnss_if.h"
 #include "system_imu_if.h"
+#include "system_mag_calibration.h"
 #include "system_source_selector.h"
 #include "system_telemetry_transport_if.h"
 #include "system_time.h"
@@ -16,6 +17,14 @@
 
 #define TEST_INSTANCE_COUNT 3U
 #define TEST_EVENT_COUNT_MAX 32U
+
+SystemMagCalibrationResult SystemMagCalibration_SampleApply(
+    uint8_t instance_id, SystemMagnetometerSample *sample)
+{
+    (void)instance_id;
+    (void)sample;
+    return SystemMagCalibrationResult_NotReady;
+}
 
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
 typedef struct

@@ -4,6 +4,13 @@
 
 #include "system_user_config.h"
 
+static uint8_t s_fixture_mag_enabled;
+
+void TestFixture_MagEnabledSet(uint8_t enabled)
+{
+    s_fixture_mag_enabled = (uint8_t)(enabled != 0U);
+}
+
 static const SystemDeviceDescriptor s_fixture_devices[] =
 {
     {1U, 1U, SYSTEM_DEVICE_CLASS_IMU, 0U, 1U,
@@ -43,13 +50,16 @@ static const SystemDeviceDescriptor s_fixture_devices[] =
      0U, 0U, 11U, 11U},
     {12U, 0U, SYSTEM_DEVICE_CLASS_TIME, 0U, 1U,
      SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY,
-     0U, 1000000U, 12U, 12U}
+     0U, 1000000U, 12U, 12U},
+    {13U, 11U, SYSTEM_DEVICE_CLASS_MAGNETOMETER, 0U, 1U,
+     SYSTEM_DESCRIPTOR_FLAG_ENABLED, 0U, 20U, 13U, 13U}
 };
 
 uint16_t SystemDescriptor_DeviceCountGet(void)
 {
-    return (uint16_t)(sizeof(s_fixture_devices) /
-                      sizeof(s_fixture_devices[0]));
+    return (uint16_t)((sizeof(s_fixture_devices) /
+                      sizeof(s_fixture_devices[0])) -
+                      (uint16_t)(s_fixture_mag_enabled == 0U));
 }
 
 SystemDeviceResult SystemDescriptor_DeviceGet(

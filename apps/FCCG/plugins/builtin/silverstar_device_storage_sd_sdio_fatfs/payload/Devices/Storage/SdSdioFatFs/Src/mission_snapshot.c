@@ -5,12 +5,14 @@
 
 #include "air_link_config.h"
 #include "persistent_storage.h"
+#include "project_device_instances.h"
 #include "silverstar_assert.h"
 #include "system_calibration.h"
 #include "system_descriptor_if.h"
 #include "system_flight_recovery.h"
 #include "system_health.h"
 #include "system_lifecycle.h"
+#include "system_mag_calibration.h"
 #include "system_profile.h"
 #include "system_project_parameters_if.h"
 #include "system_source_selector.h"
@@ -227,6 +229,49 @@ static SystemMissionSnapshotResult MissionSnapshot_ParametersWrite(
         generation, hash);
 }
 
+static SystemMissionSnapshotResult MissionSnapshot_MagSetWrite(
+    MissionSnapshotWriter *writer, SystemMissionSnapshotStatus *status)
+{
+    uint8_t count = ProjectMagnetometerInstance_CountGet();
+    uint8_t instance;
+    SILVERSTAR_ASSERT_OBJECT(writer, MissionSnapshotWriter,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(status, SystemMissionSnapshotStatus,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    if (count > PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX)
+    { return SystemMissionSnapshotResult_DataError; }
+    status->mag_calibration_set_hash =
+        SystemMagCalibration_GenerationHashGet();
+    MissionSnapshot_U32Write(writer, status->mag_calibration_set_hash);
+    MissionSnapshot_U8Write(writer, count);
+    for (instance = 0U; instance < PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX;
+         instance++)
+    {
+        SystemDeviceDescriptor descriptor;
+        uint16_t length = 0U;
+        uint32_t generation = 0U;
+        PersistentStorageResult result;
+        if (instance >= count) { break; }
+        if (ProjectDeviceInstance_DescriptorGet(
+                SYSTEM_DEVICE_CLASS_MAGNETOMETER, instance,
+                &descriptor) != SYSTEM_DEVICE_OK)
+        { return SystemMissionSnapshotResult_DataError; }
+        result = PersistentStorage_ObjectRead(
+            PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION, instance,
+            s_mag_data, sizeof(s_mag_data), &length, &generation);
+        if ((result != PERSISTENT_STORAGE_OK) &&
+            (result != PERSISTENT_STORAGE_NOT_FOUND))
+        { return SystemMissionSnapshotResult_StorageError; }
+        MissionSnapshot_U8Write(writer, instance);
+        MissionSnapshot_U16Write(writer, descriptor.physical_device_id);
+        MissionSnapshot_U32Write(writer, generation);
+        MissionSnapshot_U32Write(writer,
+            (result == PERSISTENT_STORAGE_OK) ?
+            MissionSnapshot_HashGet(s_mag_data, length) : 0U);
+    }
+    return SystemMissionSnapshotResult_Ok;
+}
+
 static SystemMissionSnapshotResult MissionSnapshot_CalibrationWrite(
     uint8_t base, uint32_t *generation, uint32_t *hash,
     SystemMissionSnapshotStatus *status)
@@ -273,6 +318,9 @@ static SystemMissionSnapshotResult MissionSnapshot_CalibrationWrite(
     MissionSnapshot_U32Write(&writer,
         (mag_result == PERSISTENT_STORAGE_OK) ?
         MissionSnapshot_HashGet(s_mag_data, mag_length) : 0U);
+    if (MissionSnapshot_MagSetWrite(&writer, status) !=
+        SystemMissionSnapshotResult_Ok)
+    { return SystemMissionSnapshotResult_StorageError; }
     return MissionSnapshot_SectionCommit(&writer, (uint8_t)(base + 6U),
         generation, hash);
 }
@@ -334,6 +382,7 @@ static SystemMissionSnapshotResult MissionSnapshot_HeaderWrite(
     MissionSnapshot_U32Write(&writer, status->calibration_generation);
     MissionSnapshot_U32Write(&writer, status->imu_correction_hash);
     MissionSnapshot_U32Write(&writer, status->mag_calibration_generation);
+    MissionSnapshot_U32Write(&writer, status->mag_calibration_set_hash);
     MissionSnapshot_AirProfileWrite(&writer);
     for (index = 0U; index < MISSION_SNAPSHOT_OBJECT_COUNT; index++)
     {

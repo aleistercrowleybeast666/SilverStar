@@ -14,6 +14,7 @@
 #include "silverstar_assert.h"
 #include "system_alignment.h"
 #include "system_calibration.h"
+#include "system_mag_calibration.h"
 #include "system_gnss_if.h"
 #include "system_indicator.h"
 #include "system_navigation_health.h"
@@ -59,6 +60,7 @@ SystemDeviceResult SystemSourceSelector_ImuSelectAndLock(void)
 }
 void SystemSourceSelector_PendingEventsFlush(void) { }
 void SystemAlignment_Init(void) { s_alignment_initialized = 1U; }
+void SystemMagCalibration_Init(void) {}
 SystemDeviceResult SystemAlignment_CalibrationInvalidate(void)
 {
     return (s_alignment_initialized != 0U) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY;

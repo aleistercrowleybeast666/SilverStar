@@ -10,6 +10,7 @@ static SystemImuSample s_imu[1];
 static SystemGnssSample s_gnss[1];
 static SystemBarometerSample s_barometer[1];
 static SystemMagnetometerSample s_magnetometer[1];
+static uint8_t s_mag_calibration_test_enabled;
 static SystemHardwareQuaternionSample s_attitude[1];
 static SystemPowerSample s_power[1];
 static SystemInertialSample s_source_sample;
@@ -21,7 +22,7 @@ uint8_t ProjectImuInstance_CountGet(void) { return 1U; }
 uint8_t ProjectGnssInstance_CountGet(void) { return 1U; }
 uint8_t ProjectBarometerInstance_CountGet(void) { return 1U; }
 uint8_t ProjectMagnetometerInstance_CountGet(void)
-{ return 0U; }
+{ return s_mag_calibration_test_enabled; }
 uint8_t ProjectAttitudeInstance_CountGet(void) { return 1U; }
 uint8_t ProjectPowerInstance_CountGet(void) { return 1U; }
 
@@ -36,6 +37,8 @@ SystemDeviceResult ProjectDeviceInstance_DescriptorGet(
         0x100U + ((uint16_t)device_class * 4U) + instance_id);
     descriptor->physical_device_id = (uint16_t)(
         0x20U + ((uint16_t)device_class * 2U) + instance_id);
+    if (device_class == SYSTEM_DEVICE_CLASS_MAGNETOMETER)
+    { descriptor->physical_device_id = 11U; }
     descriptor->device_class = device_class;
     descriptor->instance_id = instance_id;
     return SYSTEM_DEVICE_OK;

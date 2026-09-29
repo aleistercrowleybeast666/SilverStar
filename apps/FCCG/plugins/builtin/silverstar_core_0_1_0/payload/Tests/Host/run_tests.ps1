@@ -1002,6 +1002,7 @@ Invoke-HostTest -Name 'console' -Sources @(
     $hostPlatformMock,
     "$repoRoot\Common\Src\common_format.c",
     "$repoRoot\System\Src\system_console.c",
+    "$repoRoot\System\Calibration\Src\system_mag_calibration.c",
     "$repoRoot\System\Src\system_barometer.c",
     "$repoRoot\System\Src\system_estimator_diagnostics.c",
     "$repoRoot\System\Alignment\Src\system_alignment_source.c",

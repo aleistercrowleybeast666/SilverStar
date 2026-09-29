@@ -24,6 +24,7 @@
 #include "system_imu_if.h"
 #include "system_lifecycle.h"
 #include "system_magnetometer_if.h"
+#include "system_mag_calibration.h"
 #include "system_output_if.h"
 #include "system_power_if.h"
 #include "system_profile.h"
@@ -83,6 +84,12 @@ static uint32_t s_console_impact_event_sequence;
 static uint32_t s_console_landing_event_sequence;
 static SystemAlignmentState s_console_alignment_state;
 static char s_async_event[320];
+static uint8_t s_mag_stream_enabled;
+static uint8_t s_mag_stream_instance;
+static uint32_t s_mag_stream_last_sequence;
+static uint64_t s_mag_stream_next_us;
+
+#define SYSTEM_CONSOLE_MAG_STREAM_PERIOD_US 50000ULL
 
 #define SYSTEM_CONSOLE_MAX_READ_CHUNKS_PER_CYCLE 8U
 #define SYSTEM_CONSOLE_TOKEN_COUNT_MAX 5U
@@ -3613,6 +3620,55 @@ static uint8_t SystemConsole_AsyncWrite(const char *text)
                                                 length) == SYSTEM_DEVICE_OK);
 }
 
+static uint8_t SystemConsole_MagStreamAsyncProcess(void)
+{
+    SystemMagnetometerSample sample;
+    SystemDeviceDescriptor descriptor;
+    uint64_t now_us;
+    if (s_mag_stream_enabled == 0U) { return 0U; }
+    if (SystemLifecycle_IsConfigurationLocked() != 0U)
+    { s_mag_stream_enabled = 0U; return 0U; }
+    now_us = SystemTime_GetMonotonicUs();
+    if (now_us < s_mag_stream_next_us) { return 0U; }
+    s_mag_stream_next_us = now_us + SYSTEM_CONSOLE_MAG_STREAM_PERIOD_US;
+    if (ProjectMagnetometerInstance_LatestSampleGet(
+            s_mag_stream_instance, &sample) != SYSTEM_DEVICE_OK)
+    { return 0U; }
+    if (ProjectDeviceInstance_DescriptorGet(
+            SYSTEM_DEVICE_CLASS_MAGNETOMETER, s_mag_stream_instance,
+            &descriptor) != SYSTEM_DEVICE_OK)
+    { return 0U; }
+    SILVERSTAR_ASSERT_OBJECT(&sample, SystemMagnetometerSample,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT_OBJECT(&descriptor, SystemDeviceDescriptor,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    if (((sample.valid_mask & SYSTEM_MAG_VALID_PHYSICAL_UNIT) == 0U) ||
+        (sample.sequence == s_mag_stream_last_sequence) ||
+        (!isfinite(sample.magnetic_field_b_uT[0])) ||
+        (!isfinite(sample.magnetic_field_b_uT[1])) ||
+        (!isfinite(sample.magnetic_field_b_uT[2])))
+    { return 0U; }
+    s_mag_stream_last_sequence = sample.sequence;
+    (void)CommonFormat_Print(s_async_event, sizeof(s_async_event),
+        "EVENT MAG SAMPLE instance=%u physical_device_id=%u seq=%lu sample_us=%lu x_uT=%.4f y_uT=%.4f z_uT=%.4f\r\n",
+        (unsigned int)s_mag_stream_instance,
+        (unsigned int)descriptor.physical_device_id,
+        (unsigned long)sample.sequence,
+        SystemConsole_TimestampDisplay(sample.sample_timestamp_us),
+        (double)sample.magnetic_field_b_uT[0],
+        (double)sample.magnetic_field_b_uT[1],
+        (double)sample.magnetic_field_b_uT[2]);
+    return SystemConsole_AsyncWrite(s_async_event);
+}
+
+static void SystemConsole_MagStreamReset(void)
+{
+    s_mag_stream_enabled = 0U;
+    s_mag_stream_instance = 0U;
+    s_mag_stream_last_sequence = 0U;
+    s_mag_stream_next_us = 0ULL;
+}
+
 static uint8_t SystemConsole_CalibrationDiagnosticAsyncWrite(
     const SystemCalibrationStatus *status)
 {
@@ -3857,7 +3913,8 @@ static void SystemConsole_AsyncEventProcess(void)
        command responses responsive and bounds TX-ring pressure. */
     if (SystemConsole_FlightRecoveryAsyncProcess() != 0U) { return; }
     if (SystemConsole_CalibrationAsyncProcess() != 0U) { return; }
-    (void)SystemConsole_AlignmentAsyncProcess();
+    if (SystemConsole_AlignmentAsyncProcess() != 0U) { return; }
+    (void)SystemConsole_MagStreamAsyncProcess();
 }
 
 SystemDeviceResult SystemConsole_Init(void)
@@ -3868,6 +3925,7 @@ SystemDeviceResult SystemConsole_Init(void)
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
     s_line_length = 0U;
     s_console_start_request_id = 0U;
+    SystemConsole_MagStreamReset();
     s_console_discontinuity_sequence = 0U;
     s_console_calibration_face_event_sequence = 0U;
     s_console_calibration_completion_sequence = 0U;
@@ -4068,7 +4126,11 @@ static SystemConsoleExecuteResult SystemConsole_IndexedCommandParse(
             "BAD_FORMAT", "INSTANCE_REQUIRED",
             SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT);
     }
-    if (parsed->token_count > 4U)
+    if ((parsed->token_count > 4U) &&
+        !((parsed->module == SYSTEM_CONSOLE_MODULE_MAG) &&
+          (parsed->token_count == 5U) &&
+          (strcmp(parsed->tokens[2], "CAL") == 0) &&
+          (strcmp(parsed->tokens[3], "APPLY") == 0)))
     {
         return SystemConsole_ErrorWrite(response, capacity,
             parsed->module_token, parsed->tokens[2],
@@ -4079,6 +4141,11 @@ static SystemConsoleExecuteResult SystemConsole_IndexedCommandParse(
     if (result != SYSTEM_CONSOLE_EXECUTE_OK) { return result; }
     parsed->command = parsed->tokens[2];
     if (parsed->token_count == 4U) { parsed->subcommand = parsed->tokens[3]; }
+    if (parsed->token_count == 5U)
+    {
+        parsed->subcommand = parsed->tokens[3];
+        parsed->extra = parsed->tokens[4];
+    }
     if (ProjectDeviceInstance_DescriptorGet(
             SystemConsole_DeviceClassGet(parsed->module),
             parsed->instance_id, &descriptor) != SYSTEM_DEVICE_OK)
@@ -4366,6 +4433,129 @@ static uint8_t SystemConsole_DiagnosticsTryExecute(
     return 1U;
 }
 
+static SystemConsoleExecuteResult SystemConsole_MagStreamExecute(
+    const SystemConsoleCommand *parsed, char *response, uint16_t capacity)
+{
+    SILVERSTAR_ASSERT_OBJECT(parsed, SystemConsoleCommand,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT_OBJECT(response, char,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    if (parsed->subcommand == NULL)
+    {
+        return SystemConsole_ErrorWrite(response, capacity,
+            parsed->module_text, "STREAM", "BAD_FORMAT", "SUBCOMMAND_REQUIRED",
+            SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT);
+    }
+    if (strcmp(parsed->subcommand, "STOP") == 0)
+    {
+        s_mag_stream_enabled = 0U;
+        (void)CommonFormat_Print(response, capacity,
+            "OK %s STREAM state=STOPPED", parsed->module_text);
+        return SYSTEM_CONSOLE_EXECUTE_OK;
+    }
+    if (strcmp(parsed->subcommand, "START") != 0)
+    {
+        return SystemConsole_ErrorWrite(response, capacity,
+            parsed->module_text, "STREAM", "BAD_COMMAND", "UNKNOWN_SUBCOMMAND",
+            SYSTEM_CONSOLE_EXECUTE_BAD_COMMAND);
+    }
+    s_mag_stream_instance = parsed->instance_id;
+    s_mag_stream_last_sequence = UINT32_MAX;
+    s_mag_stream_next_us = 0ULL;
+    s_mag_stream_enabled = 1U;
+    (void)CommonFormat_Print(response, capacity,
+        "OK %s STREAM state=STARTED rate_hz=20", parsed->module_text);
+    return SYSTEM_CONSOLE_EXECUTE_OK;
+}
+
+static const char *SystemConsole_MagCalResultText(
+    SystemMagCalibrationResult result)
+{
+    switch (result)
+    {
+        case SystemMagCalibrationResult_Ok: return "OK";
+        case SystemMagCalibrationResult_NotReady: return "NOT_READY";
+        case SystemMagCalibrationResult_InvalidArgument: return "BAD_ARGUMENT";
+        case SystemMagCalibrationResult_InvalidObject: return "INVALID_OBJECT";
+        case SystemMagCalibrationResult_WrongDevice: return "WRONG_DEVICE";
+        case SystemMagCalibrationResult_Busy: return "BUSY";
+        case SystemMagCalibrationResult_NotPresent: return "NOT_PRESENT";
+        case SystemMagCalibrationResult_StorageError: return "STORAGE_ERROR";
+        default: return "FAILED";
+    }
+}
+
+static SystemConsoleExecuteResult SystemConsole_MagCalStatusExecute(
+    const SystemConsoleCommand *parsed, char *response, uint16_t capacity)
+{
+    SystemMagCalibrationStatus status;
+    SystemMagCalibrationResult result = SystemMagCalibration_StatusGet(
+        parsed->instance_id, &status);
+    if (result != SystemMagCalibrationResult_Ok)
+    {
+        return SystemConsole_ErrorWrite(response, capacity,
+            parsed->module_text, "CAL", "FAILED",
+            SystemConsole_MagCalResultText(result), SYSTEM_CONSOLE_EXECUTE_FAILED);
+    }
+    SILVERSTAR_ASSERT_OBJECT(&status, SystemMagCalibrationStatus,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(status.saved <= 1U, SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    (void)CommonFormat_Print(response, capacity,
+        "OK %s CAL state=%s generation=%lu physical_device_id=%u instance=%u saved=%u pending=%u failed=%u load_error=%s",
+        parsed->module_text,
+        (status.active != 0U) ? "APPLIED" : "EMPTY",
+        (unsigned long)status.generation,
+        (unsigned int)status.physical_device_id,
+        (unsigned int)status.instance_id,
+        (unsigned int)status.saved,
+        (unsigned int)status.save_pending,
+        (unsigned int)status.save_failed,
+        SystemConsole_MagCalResultText(status.load_error));
+    return SYSTEM_CONSOLE_EXECUTE_OK;
+}
+
+static SystemConsoleExecuteResult SystemConsole_MagCalExecute(
+    const SystemConsoleCommand *parsed, char *response, uint16_t capacity)
+{
+    SystemMagCalibrationResult result;
+    SILVERSTAR_ASSERT_OBJECT(parsed, SystemConsoleCommand,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT_OBJECT(response, char,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    if (parsed->subcommand == NULL)
+    { return SystemConsole_MagCalStatusExecute(parsed, response, capacity); }
+    if (strcmp(parsed->subcommand, "READ") == 0)
+    { return SystemConsole_MagCalStatusExecute(parsed, response, capacity); }
+    if (strcmp(parsed->subcommand, "APPLY") == 0)
+    {
+        result = (parsed->extra == NULL) ?
+            SystemMagCalibrationResult_InvalidArgument :
+            SystemMagCalibration_PacketApply(
+                parsed->instance_id, parsed->extra);
+    }
+    else if (strcmp(parsed->subcommand, "SAVE") == 0)
+    { result = SystemMagCalibration_SaveRequest(parsed->instance_id); }
+    else if (strcmp(parsed->subcommand, "CLEAR") == 0)
+    { result = SystemMagCalibration_ClearRequest(parsed->instance_id); }
+    else
+    {
+        return SystemConsole_ErrorWrite(response, capacity,
+            parsed->module_text, "CAL", "BAD_COMMAND", "UNKNOWN_SUBCOMMAND",
+            SYSTEM_CONSOLE_EXECUTE_BAD_COMMAND);
+    }
+    if (result != SystemMagCalibrationResult_Ok)
+    {
+        return SystemConsole_ErrorWrite(response, capacity,
+            parsed->module_text, "CAL", "FAILED",
+            SystemConsole_MagCalResultText(result), SYSTEM_CONSOLE_EXECUTE_FAILED);
+    }
+    (void)CommonFormat_Print(response, capacity,
+        "OK %s CAL action=%s accepted=1", parsed->module_text,
+        parsed->subcommand);
+    return SYSTEM_CONSOLE_EXECUTE_OK;
+}
+
 SystemConsoleExecuteResult SystemConsole_ExecuteLine(const char *line,
                                                      char *response,
                                                      uint16_t capacity)
@@ -4381,7 +4571,8 @@ SystemConsoleExecuteResult SystemConsole_ExecuteLine(const char *line,
     if (result != SYSTEM_CONSOLE_EXECUTE_OK) { return result; }
     if (parsed.list_requested != 0U)
     { return SystemConsole_ListExecute(&parsed, response, capacity); }
-    if (parsed.extra != NULL)
+    if ((parsed.extra != NULL) &&
+        (parsed.module == SYSTEM_CONSOLE_MODULE_SYSTEM))
     {
         return SystemConsole_IoClearExecute(SYSTEM_CONSOLE_MODULE_SYSTEM,
             "SYSTEM CONSOLE", 0U, response, capacity);
@@ -4389,6 +4580,12 @@ SystemConsoleExecuteResult SystemConsole_ExecuteLine(const char *line,
     if (SystemConsole_CoreModuleTryExecute(
             &parsed, response, capacity, &result) != 0U)
     { return result; }
+    if ((parsed.module == SYSTEM_CONSOLE_MODULE_MAG) &&
+        (strcmp(parsed.command, "STREAM") == 0))
+    { return SystemConsole_MagStreamExecute(&parsed, response, capacity); }
+    if ((parsed.module == SYSTEM_CONSOLE_MODULE_MAG) &&
+        (strcmp(parsed.command, "CAL") == 0))
+    { return SystemConsole_MagCalExecute(&parsed, response, capacity); }
     if (strcmp(parsed.command, "SAMPLE") == 0)
     { return SystemConsole_SampleCommandExecute(&parsed, response, capacity); }
     if (SystemConsole_DiagnosticsTryExecute(

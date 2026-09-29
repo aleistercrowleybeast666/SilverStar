@@ -13,6 +13,8 @@
 #include "system_calibration.h"
 #include "system_log_sink_if.h"
 #include "system_mission_snapshot_if.h"
+#include "system_mag_calibration_storage_if.h"
+#include "system_mag_calibration.h"
 #include "system_profile.h"
 #include "system_startup.h"
 #include "system_time.h"
@@ -531,9 +533,19 @@ static uint8_t LoggerTask_SnapshotMaintain(void)
         SILVERSTAR_ASSERT_MODULE_APP,
         SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_logger.session_active == 0U) { return 0U; }
+    if ((SystemMagCalibrationStorage_LoadCompleteGet() == 0U) ||
+        (SystemMagCalibration_ReadyForMissionGet() == 0U))
+    {
+        state = PlatformCritical_Enter();
+        s_diagnostics.snapshot_ready = 0U;
+        PlatformCritical_Exit(state);
+        return 0U;
+    }
     if ((s_diagnostics.snapshot_ready != 0U) &&
         (s_logger.snapshot.calibration_generation ==
-         SystemCalibration_GenerationGet()))
+         SystemCalibration_GenerationGet()) &&
+        (s_logger.snapshot.mag_calibration_set_hash ==
+         SystemMagCalibration_GenerationHashGet()))
     { return 1U; }
     state = PlatformCritical_Enter();
     s_diagnostics.snapshot_ready = 0U;
@@ -555,6 +567,8 @@ static uint8_t LoggerTask_SnapshotMaintain(void)
         s_logger.snapshot.snapshot_base_instance;
     s_diagnostics.snapshot_calibration_generation =
         s_logger.snapshot.calibration_generation;
+    s_diagnostics.snapshot_mag_calibration_set_hash =
+        s_logger.snapshot.mag_calibration_set_hash;
     s_diagnostics.snapshot_ready = 1U;
     PlatformCritical_Exit(state);
     return 1U;
@@ -699,6 +713,7 @@ void AppTask_Logger(void *argument)
             continue;
         }
         LoggerTask_PeriodicFlushTry(now_us);
+        SystemMagCalibrationStorage_Service();
         if (LoggerBus_StartupStateGet() == LOGGER_STREAMING_READY)
         { (void)LoggerTask_SnapshotMaintain(); }
         LoggerTask_BootstrapProcess(now_us);

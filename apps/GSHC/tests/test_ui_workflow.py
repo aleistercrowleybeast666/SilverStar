@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
-from tempfile import TemporaryDirectory
 import time
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -26,6 +26,7 @@ from protocol.common import (
 )
 from services.data_migration import DataMigrationConflictPolicy
 from services.i18n import I18n, Language
+from services.navigation_state import PreparationSnapshot
 from services.preferences import ExportItem, ExportLanguage, Theme
 from services.state_model import (
     EventHistory,
@@ -34,7 +35,6 @@ from services.state_model import (
     HandshakeState,
     MissionPhase,
 )
-from services.navigation_state import PreparationSnapshot
 from ui.main_window import MainWindow
 
 
@@ -95,9 +95,9 @@ class UiWorkflowTests(unittest.TestCase):
         self.window.close()
         self.temporary_directory.cleanup()
 
-    def test_three_pages_are_always_manually_selectable(self) -> None:
+    def test_four_pages_are_always_manually_selectable(self) -> None:
         labels = [self.window.pages.tabText(index) for index in range(self.window.pages.count())]
-        self.assertEqual(labels, ["预飞行", "飞行", "后期处理"])
+        self.assertEqual(labels, ["预飞行", "飞行", "后期处理", "磁力计校准"])
         self.assertEqual(self.window.pages.objectName(), "pageTabs")
         self.assertEqual(self.window.pages.tabBar().objectName(), "pageNavigation")
         self.assertTrue(self.window.pages.tabBar().expanding())
@@ -106,6 +106,7 @@ class UiWorkflowTests(unittest.TestCase):
             self.window.preflight_page,
             self.window.flight_page,
             self.window.post_process_page,
+            self.window.magnetometer_calibration_page,
         ):
             self.window.pages.setCurrentWidget(page)
             self.assertIs(self.window.pages.currentWidget(), page)

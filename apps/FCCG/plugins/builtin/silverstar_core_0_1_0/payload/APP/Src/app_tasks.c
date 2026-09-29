@@ -15,6 +15,7 @@
 #include "platform_memory.h"
 #include "system_alignment.h"
 #include "system_calibration.h"
+#include "system_mag_calibration.h"
 #include "system_inertial.h"
 #include "system_indicator.h"
 #include "system_lifecycle.h"
@@ -179,6 +180,7 @@ AppTasksInitResult AppTasks_Init(void)
                       SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
 #endif
     SystemCalibration_Init();
+    SystemMagCalibration_Init();
     SystemAlignment_Init();
     SystemIndicator_Init();
     if ((SystemInertial_Init() != SYSTEM_DEVICE_OK) ||

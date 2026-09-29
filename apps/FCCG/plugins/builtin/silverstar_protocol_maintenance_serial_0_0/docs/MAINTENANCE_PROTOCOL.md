@@ -113,7 +113,9 @@ IMU 2 STATUS -> NOT_PRESENT/INSTANCE
 | IMU `<instance>` | `LIST`；实例命令`INFO`、`STATUS`、`CAPABILITIES`、`SAMPLE`、`IO`、`IO CLEAR`、`CONFIG SHOW` |
 | GNSS `<instance>` | `LIST`；实例命令`INFO`、`STATUS`、`CAPABILITIES`、`SAMPLE`、`SAMPLE DETAIL`、`IO`、`IO CLEAR`、`CONFIG SHOW`、`CONFIG READ`、`CONFIG VERIFY`、`CONFIG APPLY`、`NAV SAT`、`MON RF` |
 | BARO `<instance>` | `LIST`；实例命令`INFO`、`STATUS`、`CAPABILITIES`、`SAMPLE`、`SAMPLE DETAIL`、`IO`、`IO CLEAR`、`CONFIG SHOW` |
-| MAG `<instance>` | `LIST`；实例命令`INFO`、`STATUS`、`CAPABILITIES`、`SAMPLE`、`IO`、`IO CLEAR`、`CONFIG SHOW` |
+| MAG `<instance>` | `LIST`；实例命令`INFO`、`STATUS`、`CAPABILITIES`、`SAMPLE`、`STREAM START`、`STREAM STOP`、`IO`、`IO CLEAR`、`CONFIG SHOW` |
+
+`MAG <instance> STREAM START` 在维护串口输出最多 20 Hz 的 `EVENT MAG SAMPLE`，`STREAM STOP` 关闭。每条记录只包含新 sequence 且有有效物理单位的样本，格式为 `instance`、`physical_device_id`、`seq`、`sample_us`、`x_uT`、`y_uT`、`z_uT`。这仍是现有 ASCII Maintenance Serial，不能混入 GSP/AIR 二进制连接。流在飞行配置锁定后自动关闭；每次 Console tick 最多写一条异步记录。
 | ATTITUDE `<instance>` | `LIST`；实例命令`INFO`、`STATUS`、`CAPABILITIES`、`SAMPLE`、`IO`、`IO CLEAR`、`CONFIG SHOW` |
 | ESTIMATOR | `STATUS`、`GNSS`、`BARO` |
 | KF | `STATUS` |
@@ -231,7 +233,21 @@ EVENT ALIGN STALE reason=MOTION ready_mask=0x00000005
 
 以上异步输出均由现有 System Console/SerialTask 非阻塞发送路径产生，不增加线程，不由 Calibration/Alignment 算法直接访问 UART。
 
-## 12. 格式错误示例
+## 12. 磁力计采集与持久校准
+
+GSHC 的磁力计校准页面使用独立的飞控 Maintenance Serial 连接，不经 AIR M0 或 Ground GSP。`MAG <instance> STREAM START|STOP` 控制一个实例的原始物理单位磁场流。飞控只在新样本到达时、最多每 50 ms 输出一行：
+
+```text
+EVENT MAG SAMPLE instance=0 physical_device_id=11 seq=42 sample_us=123456 x_uT=12.0000 y_uT=-3.0000 z_uT=44.0000
+```
+
+流只用于预飞采集，进入飞行锁定配置后自动停止。GSHC 对同一实例最多保留 4096 个样本，要求设备身份在采集中不变，并在拟合完成后显示覆盖、残差、硬铁偏置和软铁矩阵。
+
+`MAG <instance> CAL APPLY <hex>` 传输固定 84-byte 小端对象的 168 个十六进制字符；对象含 schema/algorithm revision、精确 `physical_device_id` 与实例、3 个硬铁值、3×3 软铁矩阵、参考磁场、RMS/最大残差、轴条件数、8 个 octant 计数、样本数及 CRC32。飞控验证 CRC、有限值、矩阵正定、覆盖、质量门限和物理身份后才应用到 RAM；身份不匹配返回 `WRONG_DEVICE`。`CAL APPLY` 的 `accepted=1` 只表示 RAM 已应用。
+
+`MAG <instance> CAL SAVE` 请求 LoggerTask 将当前对象原子写入 Persistent Storage 双槽，并完成 sync、读回和 CRC 验证。`MAG <instance> CAL READ` 返回 `state/generation/physical_device_id/instance/saved/pending/failed/load_error`；GSHC 必须等待 `saved=1`、`pending=0` 和非零 generation 后才显示保存成功。`MAG <instance> CAL CLEAR` 立即停用 RAM 校准，并持久写入全零 tombstone。载入时，错误长度、CRC、身份或非零 tombstone 会被拒绝，并通过 `load_error` 报告。未完成或失败的保存阻止任务快照与 START。维护命令使用现有有界 ASCII 行，固件最大命令行长度 192 字节，不创建第二套串口 framing。
+
+## 13. 格式错误示例
 
 以下输入的返回结果按错误类型区分：
 

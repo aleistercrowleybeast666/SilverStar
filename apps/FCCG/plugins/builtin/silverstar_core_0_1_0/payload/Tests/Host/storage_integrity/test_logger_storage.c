@@ -21,6 +21,8 @@
 #include "system_flight_recovery.h"
 #include "system_health.h"
 #include "system_mission_snapshot_if.h"
+#include "system_mag_calibration.h"
+#include "system_mag_calibration_storage_if.h"
 #include "system_source_selector.h"
 #include "system_startup.h"
 #include "system_user_config.h"
@@ -59,6 +61,7 @@ static uint32_t s_start_accepted;
 static uint32_t s_last_jitter_transaction;
 static uint32_t s_jitter_count;
 static SystemStartupReport s_startup;
+
 
 PlatformCriticalState PlatformCritical_Enter(void) { return 0U; }
 void PlatformCritical_Exit(PlatformCriticalState state) { (void)state; }
@@ -463,6 +466,57 @@ static int Test_Writer(const char *output)
     return 1;
 }
 
+static int Test_MagCalibrationPersistent(void)
+{
+    static const char valid_hex[] =
+        "01010B00000000004041000000C1000040400000803F000000000000000000000000"
+        "0000803F0000000000000000000000000000803F00004842CDCC4C3ECDCC4C3F"
+        "9A99993F4B4B4B4B4B4B4B4B58024754EB56";
+    static const char wrong_device_hex[] =
+        "01012A00000000004041000000C1000040400000803F000000000000000000000000"
+        "0000803F0000000000000000000000000000803F00004842CDCC4C3ECDCC4C3F"
+        "9A99993F4B4B4B4B4B4B4B4B580211E8A9C5";
+    uint8_t readback[SYSTEM_MAG_CAL_PACKET_BYTES];
+    uint16_t length = 0U;
+    uint32_t generation = 0U;
+    SystemMagCalibrationStatus status;
+    s_mag_calibration_test_enabled = 1U;
+    SystemMagCalibration_Init();
+    SystemMagCalibrationStorage_Service();
+    SystemMagCalibrationStorage_Service();
+    CHECK(SystemMagCalibrationStorage_LoadCompleteGet() == 1U);
+    CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
+        SystemMagCalibrationResult_Ok &&
+        status.load_error == SystemMagCalibrationResult_InvalidObject);
+    CHECK(SystemMagCalibration_PacketApply(0U, wrong_device_hex) ==
+        SystemMagCalibrationResult_WrongDevice);
+    CHECK(SystemMagCalibration_PacketApply(0U, valid_hex) ==
+        SystemMagCalibrationResult_Ok);
+    CHECK(SystemMagCalibration_SaveRequest(0U) ==
+        SystemMagCalibrationResult_Ok);
+    CHECK(SystemMagCalibration_ReadyForMissionGet() == 0U);
+    SystemMagCalibrationStorage_Service();
+    CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
+        SystemMagCalibrationResult_Ok);
+    CHECK(status.active == 1U && status.saved == 1U &&
+        status.physical_device_id == 11U && status.generation == 3U &&
+        status.load_error == SystemMagCalibrationResult_Ok);
+    CHECK(SystemMagCalibration_ReadyForMissionGet() == 1U);
+    CHECK(PersistentStorage_ObjectRead(
+        PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION, 0U,
+        readback, sizeof(readback), &length, &generation) ==
+        PERSISTENT_STORAGE_OK);
+    CHECK(length == sizeof(readback) && generation == status.generation);
+    SystemMagCalibration_Init();
+    CHECK(SystemMagCalibration_PacketApply(0U, wrong_device_hex) ==
+        SystemMagCalibrationResult_WrongDevice);
+    CHECK(SystemMagCalibration_StoredLoad(0U, readback, generation) ==
+        SystemMagCalibrationResult_Ok);
+    CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
+        SystemMagCalibrationResult_Ok && status.saved == 1U);
+    return 1;
+}
+
 static int Test_PersistentObjects(void)
 {
     static const uint8_t calibration_a[] = {1U, 2U, 3U};
@@ -570,6 +624,7 @@ static int Test_PersistentObjects(void)
     CHECK(snapshot_readback[23] == 1U);
     CHECK(snapshot_readback[24] == 1U);
     CHECK(snapshot_readback[25] == 0U);
+    CHECK(Test_MagCalibrationPersistent());
     printf("PERSISTENT_OBJECTS generation=%lu fallback=1 lfn=1\n",
         (unsigned long)generation);
     return 1;

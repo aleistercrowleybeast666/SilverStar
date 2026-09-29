@@ -12,6 +12,7 @@
 #include "system_hardware_quaternion_if.h"
 #include "system_imu_if.h"
 #include "system_magnetometer_if.h"
+#include "system_mag_calibration.h"
 #include "system_telemetry_transport_if.h"
 #include "system_time.h"
 
@@ -1906,9 +1907,24 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
     result = ProjectDeviceInstance_DescriptorGet(
         SYSTEM_DEVICE_CLASS_MAGNETOMETER, active, &descriptor);
     if (result != SYSTEM_DEVICE_OK) { return result; }
+    SILVERSTAR_ASSERT_OBJECT(sample, SystemMagnetometerSample,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT_OBJECT(&descriptor, SystemDeviceDescriptor,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
     sample->physical_device_id = descriptor.physical_device_id;
     sample->descriptor_id = descriptor.descriptor_id;
     sample->instance_id = active;
+    {
+        SystemMagCalibrationResult calibration_result =
+            SystemMagCalibration_SampleApply(active, sample);
+        if ((calibration_result != SystemMagCalibrationResult_Ok) &&
+            (calibration_result != SystemMagCalibrationResult_NotReady))
+        {
+            sample->calibration_valid = 0U;
+            sample->valid_mask &= ~SYSTEM_MAG_VALID_CALIBRATED;
+            return SYSTEM_DEVICE_VERIFY_FAILED;
+        }
+    }
     return SYSTEM_DEVICE_OK;
 }
 

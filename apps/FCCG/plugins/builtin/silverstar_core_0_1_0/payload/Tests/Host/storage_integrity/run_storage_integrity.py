@@ -58,6 +58,7 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
     logger_sources += [project / relative for relative in (
         "APP/Src/device_native_log.c", "APP/Src/imu_sample_bus.c",
         "System/Calibration/Src/system_calibration_correction.c",
+        "System/Calibration/Src/system_mag_calibration.c",
         "APP/Src/logger_bus.c", "APP/Src/logger_task.c", "Common/Src/common_spsc_queue.c",
         "System/Src/system_log_policy.c", "System/Src/system_profile.c",
         "System/Src/system_navigation_profile.c", "System/Src/system_estimator_profile.c",
@@ -67,6 +68,7 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
         "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
         "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
         "Devices/Storage/SdSdioFatFs/Src/mission_snapshot.c",
+        "Devices/Storage/SdSdioFatFs/Src/mag_calibration_storage.c",
         "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c")]
     # Reuse the generated Host include contract; never discover production sources.
     host_script = (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf-8")

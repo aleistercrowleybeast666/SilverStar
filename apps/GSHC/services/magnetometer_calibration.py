@@ -7,12 +7,12 @@ from enum import Enum, auto
 
 import numpy as np
 
-
 MAG_CALIBRATION_MAX_SAMPLES = 4096
 MAG_CALIBRATION_MIN_SAMPLES = 128
 MAG_CALIBRATION_MIN_OCTANT_SAMPLES = 4
 MAG_CALIBRATION_MAX_AXIS_CONDITION = 25.0
 MAG_CALIBRATION_MAX_RELATIVE_RMS = 0.15
+MAG_CALIBRATION_MAX_RELATIVE_RESIDUAL = 0.50
 
 
 class MagCalibrationFitStatus(Enum):
@@ -53,7 +53,7 @@ def MagCalibration_Fit(
         or points.shape[0] > MAG_CALIBRATION_MAX_SAMPLES
         or not np.isfinite(points).all()
         or not np.isfinite(reference)
-        or reference <= 0.0
+        or not 10.0 <= reference <= 100.0
     ):
         return MagCalibrationFitResult(
             MagCalibrationFitStatus.INVALID_INPUT,
@@ -121,7 +121,10 @@ def MagCalibration_Fit(
     status = MagCalibrationFitStatus.READY
     if min(octant_counts) < MAG_CALIBRATION_MIN_OCTANT_SAMPLES:
         status = MagCalibrationFitStatus.INSUFFICIENT_COVERAGE
-    elif rms > reference * MAG_CALIBRATION_MAX_RELATIVE_RMS:
+    elif (
+        rms > reference * MAG_CALIBRATION_MAX_RELATIVE_RMS
+        or maximum > reference * MAG_CALIBRATION_MAX_RELATIVE_RESIDUAL
+    ):
         status = MagCalibrationFitStatus.EXCESSIVE_RESIDUAL
     return MagCalibrationFitResult(
         status=status,

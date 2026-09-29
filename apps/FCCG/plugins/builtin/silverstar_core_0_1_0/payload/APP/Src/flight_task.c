@@ -19,6 +19,8 @@
 #include "system_alignment.h"
 #include "system_alignment_backend.h"
 #include "system_calibration.h"
+#include "system_mag_calibration.h"
+#include "system_mag_calibration_storage_if.h"
 #include "system_flight_recovery.h"
 #include "system_health.h"
 #include "system_indicator.h"
@@ -929,6 +931,10 @@ uint8_t SystemLifecycleBackend_StorageReadyGet(void)
         (logger.snapshot_commit_generation != 0U) &&
         (logger.snapshot_calibration_generation ==
          SystemCalibration_GenerationGet()) &&
+        (logger.snapshot_mag_calibration_set_hash ==
+         SystemMagCalibration_GenerationHashGet()) &&
+        (SystemMagCalibrationStorage_LoadCompleteGet() != 0U) &&
+        (SystemMagCalibration_ReadyForMissionGet() != 0U) &&
         (mission_id != 0U) &&
         (sink.initialized != 0U) && (sink.session_active != 0U) &&
         (sink.healthy != 0U) && (storage.initialized != 0U) &&

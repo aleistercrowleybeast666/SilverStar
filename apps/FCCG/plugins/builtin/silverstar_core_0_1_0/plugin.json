@@ -52,6 +52,7 @@
       "System/Alignment/Src/system_alignment_source.c",
       "System/Calibration/Src/system_calibration.c",
       "System/Calibration/Src/system_calibration_correction.c",
+      "System/Calibration/Src/system_mag_calibration.c",
       "System/Indicator/Src/system_indicator.c",
       "System/Inertial/Src/system_inertial.c",
       "System/User/system_user_inertial_config.c",

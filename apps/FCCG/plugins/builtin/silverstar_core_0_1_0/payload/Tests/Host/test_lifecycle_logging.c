@@ -19,6 +19,8 @@
 #include "system_inertial.h"
 #include "system_lifecycle.h"
 #include "system_log_sink_if.h"
+#include "system_mag_calibration.h"
+#include "system_mag_calibration_storage_if.h"
 #include "system_mission_snapshot_if.h"
 #include "system_storage_if.h"
 #include "system_output_if.h"
@@ -305,6 +307,11 @@ uint32_t SystemCalibration_GenerationGet(void)
     return 1U;
 }
 
+void SystemMagCalibrationStorage_Service(void) {}
+uint8_t SystemMagCalibrationStorage_LoadCompleteGet(void) { return 1U; }
+uint8_t SystemMagCalibration_ReadyForMissionGet(void) { return 1U; }
+uint32_t SystemMagCalibration_GenerationHashGet(void) { return 0x12345678UL; }
+
 SystemMissionSnapshotResult SystemMissionSnapshot_Create(
     SystemMissionSnapshotStatus *status)
 {
@@ -318,6 +325,7 @@ SystemMissionSnapshotResult SystemMissionSnapshot_Create(
     status->commit_generation = s_snapshot_create_count;
     status->snapshot_sequence = s_snapshot_create_count;
     status->calibration_generation = SystemCalibration_GenerationGet();
+    status->mag_calibration_set_hash = SystemMagCalibration_GenerationHashGet();
     return SystemMissionSnapshotResult_Ok;
 }
 

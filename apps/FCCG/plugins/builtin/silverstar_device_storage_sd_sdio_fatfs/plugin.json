@@ -62,6 +62,7 @@
       "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
       "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
       "Devices/Storage/SdSdioFatFs/Src/mission_snapshot.c",
+      "Devices/Storage/SdSdioFatFs/Src/mag_calibration_storage.c",
       "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c"
     ],
     "asm_sources": [],
@@ -80,6 +81,7 @@
       "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
       "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
       "Devices/Storage/SdSdioFatFs/Src/mission_snapshot.c",
+      "Devices/Storage/SdSdioFatFs/Src/mag_calibration_storage.c",
       "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
       "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
       "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"

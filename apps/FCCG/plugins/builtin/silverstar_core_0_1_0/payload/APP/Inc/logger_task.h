@@ -25,6 +25,7 @@ typedef struct
     uint32_t snapshot_commit_generation;
     uint32_t snapshot_sequence;
     uint32_t snapshot_calibration_generation;
+    uint32_t snapshot_mag_calibration_set_hash;
     uint8_t snapshot_ready;
     uint8_t snapshot_base_instance;
     uint8_t final_status_write_failed;
