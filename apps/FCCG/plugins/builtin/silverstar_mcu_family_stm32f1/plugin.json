@@ -45,6 +45,7 @@
   "metadata": {
     "vendor": "STM32",
     "family": "STM32F1",
+    "pc_uart_dma_adapter": "stm32_hal_receive_to_idle",
     "source_policy": "plugin_payload_authoritative",
     "reference": {
       "source_repository": "aleistercrowleybeast666/GS_SS1",

@@ -4,6 +4,13 @@
 #include <stdint.h>
 
 /* UART and USB CDC implementations expose the same bounded byte stream. */
+typedef enum
+{
+    PC_BYTE_STREAM_INIT_OK = 0,
+    PC_BYTE_STREAM_INIT_HARDWARE_ERROR
+} PcByteStreamInitResult;
+
+PcByteStreamInitResult PcByteStream_Init(void);
 uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity);
 uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length);
 void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length);

@@ -163,17 +163,34 @@ def _UsbCallback_Integrate(content: bytes) -> bytes:
     return source.encode("utf-8")
 
 
-def _PcAdapter_Render(model: ProjectModel) -> str:
+def _PcAdapter_Render(model: ProjectModel, family=None) -> str:
     ground = model.ground_target
     if ground.pc_interface == "uart":
         resources = {resource.resource_id: resource for resource in ground.hardware.resources}
         handle = str(resources[ground.pc_resource].metadata.get("handle", ""))
         if re.fullmatch(r"huart[0-9]+", handle) is None:
             raise ValueError("Ground UART handle is unavailable from CubeMX inventory")
+        dma = resources[ground.pc_resource].metadata.get("dma", ())
+        dma_directions = {
+            str(item.get("direction", ""))
+            for item in dma if isinstance(item, dict)
+        }
+        if (
+            family is not None
+            and family.metadata.get("pc_uart_dma_adapter") == "stm32_hal_receive_to_idle"
+            and {"DMA_PERIPH_TO_MEMORY", "DMA_MEMORY_TO_PERIPH"}.issubset(dma_directions)
+        ):
+            from silverstar_fccg.generator.ground_pc_uart_dma import PcUartDma_Render
+            return PcUartDma_Render(handle)
         return f"""#include "pc_byte_stream.h"
 #include "main.h"
 
 extern UART_HandleTypeDef {handle};
+
+PcByteStreamInitResult PcByteStream_Init(void)
+{{
+    return PC_BYTE_STREAM_INIT_OK;
+}}
 
 uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
 {{
@@ -202,6 +219,11 @@ static uint8_t s_rx_buffer[PC_USB_RX_CAPACITY];
 static volatile uint16_t s_rx_head;
 static volatile uint16_t s_rx_tail;
 static volatile uint32_t s_rx_overflow_count;
+
+PcByteStreamInitResult PcByteStream_Init(void)
+{
+    return PC_BYTE_STREAM_INIT_OK;
+}
 
 void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
 {
@@ -365,7 +387,7 @@ def GroundFiles_Render(
         ground_model, catalog
     ).encode("utf-8")
     files["Generated/Inc/air_link_config.h"] = AirLinkHeader_Render(model, target="ground").encode("utf-8")
-    files["Generated/Src/pc_byte_stream.c"] = _PcAdapter_Render(model).encode("utf-8")
+    files["Generated/Src/pc_byte_stream.c"] = _PcAdapter_Render(model, family).encode("utf-8")
 
     base_graph = SourceGraph_Resolve(ground_model, catalog)
     sources = tuple(dict.fromkeys([

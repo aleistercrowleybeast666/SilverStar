@@ -89,3 +89,9 @@ def test_f103_ground_generation_uses_f1_family_and_build_audit(
     assert "GroundBridge_Init()" in main
     assert "GroundBridge_Process(HAL_GetTick())" in main
     assert "legacy" not in main.casefold()
+    adapter = (ground / "Generated/Src/pc_byte_stream.c").read_text(
+        encoding="utf-8"
+    )
+    assert "HAL_UARTEx_ReceiveToIdle_DMA" in adapter
+    assert "HAL_UART_Transmit_DMA" in adapter
+    assert "s_rx_overflow_count" in adapter

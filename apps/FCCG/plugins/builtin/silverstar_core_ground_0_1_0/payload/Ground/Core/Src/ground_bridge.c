@@ -140,6 +140,10 @@ GroundBridgeResult GroundBridge_Init(void)
     s_pc_frame_tail = 0U;
     s_pc_frame_count = 0U;
     s_initialized = 0U;
+    if (PcByteStream_Init() != PC_BYTE_STREAM_INIT_OK)
+    {
+        return GROUND_BRIDGE_PC_ERROR;
+    }
     if (GroundRadio_Init() != GROUND_RADIO_OK)
     {
         return GROUND_BRIDGE_RADIO_ERROR;
