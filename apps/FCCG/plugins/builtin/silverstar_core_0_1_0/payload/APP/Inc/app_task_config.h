@@ -5,7 +5,7 @@
 
 /* Bytes and call-chain margins are verified by make stack-report in both
  * Release and Debug. Keep overflow detection and runtime HWM enabled. */
-#define APP_TASK_STACK_DEVICE_WORDS       512U
+#define APP_TASK_STACK_DEVICE_WORDS       640U
 #define APP_TASK_STACK_INS_WORDS          768U
 #define APP_TASK_STACK_ESTIMATOR_WORDS   1024U
 #define APP_TASK_STACK_FLIGHT_WORDS      1024U

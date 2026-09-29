@@ -391,6 +391,7 @@ $generatedFiles = @(Get-ChildItem -LiteralPath `
     ForEach-Object { $_.FullName.Substring($repoRoot.Length + 1) } |
     Sort-Object)
 $expectedGeneratedFiles = @(
+    'Generated\Inc\air_link_config.h',
     'Generated\Inc\project_device_instances.h',
     'Generated\Inc\project_device_build_capabilities.h',
     'Generated\Inc\project_log_config.h',

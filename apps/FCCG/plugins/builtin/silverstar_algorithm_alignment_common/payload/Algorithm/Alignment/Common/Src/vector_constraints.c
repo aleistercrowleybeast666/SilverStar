@@ -50,7 +50,7 @@ static uint8_t VectorConstraints_QuaternionNormalize(float q[4])
 }
 
 static uint8_t VectorConstraints_QuaternionFromMatrix(
-    const float matrix[3][3], float q[4])
+    float matrix[3][3], float q[4])
 {
     float trace = matrix[0][0] + matrix[1][1] + matrix[2][2];
     float root;
@@ -145,7 +145,7 @@ static void VectorConstraints_Rotate(const float q[4],
         (q[0] * cross[axis] + second[axis]); }
 }
 
-static uint8_t VectorConstraints_MeanGet(const float covariance[4][4],
+static uint8_t VectorConstraints_MeanGet(float covariance[4][4],
     float q[4])
 {
     float next[4];

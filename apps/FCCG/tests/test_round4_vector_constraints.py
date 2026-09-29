@@ -4,7 +4,6 @@ from pathlib import Path
 
 from test_joint_sensor_library import _Command_Run, _Compiler_Get
 
-
 ROOT = Path(__file__).resolve().parents[1]
 COMMON = (
     ROOT

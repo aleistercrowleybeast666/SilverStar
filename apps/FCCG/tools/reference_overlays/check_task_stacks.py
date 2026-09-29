@@ -16,7 +16,6 @@ import re
 import subprocess
 from pathlib import Path
 
-
 TASKS = {
     "Device": ("AppTask_Device", "s_device_stack"),
     "INS": ("AppTask_Ins", "s_ins_stack"),
@@ -33,6 +32,10 @@ DISK_CALLBACKS = {
     "disk_initialize": "SD_initialize", "disk_status": "SD_status",
     "disk_read": "SD_read", "disk_write": "SD_write", "disk_ioctl": "SD_ioctl",
 }
+STARTUP_CALLBACK_SOURCES = (
+    "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+    "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c",
+)
 # Cortex-M4F: hardware core + FP exception frame (104), software r4-r11/lr
 # and s16-s31 (100), worst alignment padding (4), rounded up to 256 bytes.
 # Nested ISR frames use MSP, whose separate linker reservation is audited too.
@@ -106,9 +109,13 @@ def StackReport_Build(root: Path, config: str, prefix: str) -> dict:
         edges[name] = set()
         frame = 0
         for op, args in rows:
-            if (op.startswith("b") or op in ("cbz", "cbnz")) and (match := re.search(r"<([^>+]+)(?:\+[^>]+)?>", args)):
-                if (match[1] != name or op in ("bl", "bl.w", "blx")) and match[1] in instructions:
-                    edges[name].add(match[1])
+            if (
+                (op.startswith("b") or op in ("cbz", "cbnz"))
+                and (match := re.search(r"<([^>+]+)(?:\+[^>]+)?>", args))
+                and (match[1] != name or op in ("bl", "bl.w", "blx"))
+                and match[1] in instructions
+            ):
+                edges[name].add(match[1])
             if (op == "blx" and "<" not in args) or (op.startswith("bx") and args.strip() != "lr"):
                 indirect.add(name)
             if name in frames:
@@ -121,9 +128,7 @@ def StackReport_Build(root: Path, config: str, prefix: str) -> dict:
                 frame += int(re.search(r"#(0x[0-9a-f]+|\d+)", args)[1], 0)
             elif re.search(r"\[sp,\s*#-(0x[0-9a-f]+|\d+)\]!", args):
                 frame += int(re.search(r"#-(0x[0-9a-f]+|\d+)", args)[1], 0)
-            elif re.search(r"\[sp[^\]]*\]!", args):
-                unbounded.add(name)
-            elif re.match(r"sp,", args) and op.startswith(("sub", "mov", "bic")):
+            elif re.search(r"\[sp[^\]]*\]!", args) or re.match(r"sp,", args) and op.startswith(("sub", "mov", "bic")):
                 unbounded.add(name)
         if name not in frames:
             frames[name] = frame
@@ -134,13 +139,44 @@ def StackReport_Build(root: Path, config: str, prefix: str) -> dict:
         sd_source = root / "FATFS/Target/sd_diskio.c"
     if sd_source.exists():
         source = sd_source.read_text(encoding="utf-8")
-        table = re.search(r"const\s+Diskio_drvTypeDef\s+SD_Driver\s*=\s*\{(.*?)\};", source, re.S)
+        table = re.search(r"const\s+Diskio_drvTypeDef\s+SD_Driver\s*=\s*\{(.*?)\};", source, re.DOTALL)
         fatfs = next(iter(root.glob("HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.c")), root / "FATFS/App/fatfs.c")
         if not table or not fatfs.exists() or not re.search(r"FATFS_LinkDriver\(&SD_Driver,", fatfs.read_text(encoding="utf-8")):
             raise ValueError("Cannot verify the single SD_Driver callback binding")
         for caller, callee in DISK_CALLBACKS.items():
             if caller in indirect and callee in instructions and re.search(rf"\b{callee}\b", table[1]):
                 edges[caller].add(callee)
+                indirect.remove(caller)
+
+    # SystemDeviceStartup has one immutable operations table per linked device.
+    # Resolve every callback to both tables, conservatively taking the deeper
+    # branch. Refuse new callers or tables until their binding is reviewed.
+    if "SystemDeviceStartup_Tick" in instructions:
+        startup_callers = {caller for caller, callees in edges.items()
+                           if "SystemDeviceStartup_Init" in callees}
+        expected_callers = {"Jy901bStartup_Init", "NeoM9nStartup_Init"}
+        if startup_callers != expected_callers:
+            raise ValueError("Unreviewed device startup operation binding: " +
+                             repr(sorted(startup_callers)))
+        callbacks: set[str] = set()
+        for source_name in STARTUP_CALLBACK_SOURCES:
+            if source_name not in sources:
+                raise ValueError("Missing reviewed startup callback source: " + source_name)
+            source_text = (root / source_name).read_text(encoding="utf-8")
+            tables = re.findall(
+                r"static\s+const\s+SystemDeviceStartupOperations\s+s_operations\s*=\s*\{(.*?)\};",
+                source_text, re.DOTALL)
+            if len(tables) != 1 or len(entries := re.findall(r"\b[A-Za-z]\w*\b", tables[0])) != 7:
+                raise ValueError("Unreviewed device startup operation table: " + source_name)
+            if not re.search(r"config\.operations\s*=\s*&s_operations\s*;", source_text):
+                raise ValueError("Unbound device startup operation table: " + source_name)
+            if not all(entry in instructions for entry in entries):
+                raise ValueError("Missing linked device startup callback: " + source_name)
+            callbacks.update(entries)
+        for caller in ("SystemDeviceStartup_ProbeTick", "SystemDeviceStartup_ReadTick",
+                       "SystemDeviceStartup_ApplyTick", "SystemDeviceStartup_Tick"):
+            if caller in indirect:
+                edges[caller].update(callbacks)
                 indirect.remove(caller)
 
     def Closure_Get(name: str) -> set[str]:

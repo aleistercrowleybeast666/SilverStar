@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdarg.h>
 #include "common_format.h"
+#include "platform_memory.h"
 #include "project_device_instances.h"
 #include "silverstar_assert.h"
 #include <string.h>
@@ -206,7 +207,8 @@ typedef struct
     uint8_t valid;
 } SystemConsoleIoBaseline;
 
-static SystemConsoleIoBaseline
+/* SerialTask diagnostics are CPU-only; no peripheral DMA reads this table. */
+static PLATFORM_CPU_FAST_BSS SystemConsoleIoBaseline
     s_io_baselines[SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX];
 
 static const char *SystemConsole_SensorStatusText(
