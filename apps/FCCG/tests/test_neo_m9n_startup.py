@@ -14,7 +14,7 @@ def test_neo_m9n_startup(tmp_path: Path) -> None:
     builtin = Path(__file__).resolve().parents[1] / "plugins" / "builtin"
     core = builtin / "silverstar_core_0_1_0" / "payload"
     m9 = builtin / "silverstar_device_gnss_neo_m9n" / "payload"
-    mcu = builtin / "silverstar_mcu_stm32f407vet6" / "payload"
+    platform = builtin / "silverstar_platform_api" / "payload"
     fixture = core / "Tests" / "Host" / "Fixtures" / "MultiInstance"
     device = m9 / "Devices" / "GNSS" / "NEO_M9N"
     executable = tmp_path / "neo_m9n_startup.exe"
@@ -22,7 +22,7 @@ def test_neo_m9n_startup(tmp_path: Path) -> None:
         compiler, "-std=c11", "-Wall", "-Wextra", "-Werror",
         "-DPROJECT_RESOURCE_GNSS_UART=PLATFORM_UART_1",
         "-I", str(fixture / "Inc"),
-        "-I", str(mcu / "Platform" / "Inc"),
+        "-I", str(platform / "Platform" / "Inc"),
         "-I", str(core / "System" / "Inc"),
         "-I", str(core / "Interfaces" / "Inc"),
         "-I", str(core / "Common" / "Inc"),
