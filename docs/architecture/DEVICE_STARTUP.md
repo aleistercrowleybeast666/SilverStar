@@ -131,3 +131,20 @@ is the register, compensation and 10 MHz SPI limit authority. Official
 compensation-vector, timeout, I²C/SPI mock, variant/source-graph and strict
 ARM compile tests pass. The full existing F407 Flight reference still links.
 The new physical BMP280 path remains **HARDWARE_UNVERIFIED**.
+
+## MS5611 barometer (Round 4 software path)
+
+`silverstar.device.barometer.ms5611` has one physical chip identity and I²C
+and four-wire SPI interface variants. The bounded `osr4096_20_hz` profile
+resets the device, reads all eight PROM words, checks CRC4, and commands fresh
+temperature and pressure conversions. Each process tick performs at most one
+bus transaction. A missing response, invalid calibration CRC or conversion
+timeout fails startup; the first compensated sample gates readiness. No
+persistent configuration is written. The chip supplies pressure and
+temperature only; the common barometer layer derives altitude.
+
+The [TE Connectivity MS5611-01BA03 datasheet](https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50)
+is the command, compensation, CRC and SPI limit authority. Host tests cover
+the datasheet compensation vector, bad PROM CRC, conversion timeout, both bus
+adapters and generated variant bindings. Board behavior remains
+**HARDWARE_UNVERIFIED**.

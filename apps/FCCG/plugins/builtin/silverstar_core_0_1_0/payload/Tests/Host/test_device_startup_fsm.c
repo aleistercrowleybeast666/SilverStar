@@ -213,7 +213,7 @@ static void Test_NoDifferenceSkipsWriteAndSampleIsBounded(void)
 
 static void Test_InvalidCandidateListRejected(void)
 {
-    SystemDeviceStartupCandidate candidates[8];
+    SystemDeviceStartupCandidate candidates[9];
     SystemDeviceStartupConfig config;
     SystemDeviceStartup startup;
     TestOwner owner;
@@ -221,7 +221,7 @@ static void Test_InvalidCandidateListRejected(void)
 
     (void)memset(&owner, 0, sizeof(owner));
     (void)memset(&config, 0, sizeof(config));
-    for (index = 0U; index < 8U; index++)
+    for (index = 0U; index < 9U; index++)
     {
         candidates[index].baudrate = 4800U + ((uint32_t)index * 100U);
         candidates[index].protocol = 1U;
@@ -230,7 +230,7 @@ static void Test_InvalidCandidateListRejected(void)
     config.target.baudrate = 230400U;
     config.factory.baudrate = 9600U;
     config.supported_candidates = candidates;
-    config.supported_candidate_count = 8U;
+    config.supported_candidate_count = 9U;
     config.probe_timeout_ms = 3U;
     config.stage_timeout_ms = 3U;
     config.sample_timeout_ms = 3U;
