@@ -1,0 +1,159 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.magnetometer.lis3mdl",
+  "name": "LIS3MDL · I²C",
+  "type": "device",
+  "class": "magnetometer",
+  "version": "0.1.0",
+  "description": "LIS3MDL 3-axis magnetic sensor with bounded 20 Hz startup and sample processing; HARDWARE_UNVERIFIED.",
+  "requires": {
+    "components": [{"id": "silverstar.core.0_1_0", "optional": false}],
+    "resources": [
+      {
+        "name": "data", "kind": "i2c",
+        "constraints": {"i2c": {"address_7bit": 28, "maximum_bus_frequency_hz": 400000}},
+        "platform_capabilities": ["i2c.master_blocking", "i2c.memory_read_write"],
+        "mode": "shared"
+      },
+      {"name": "time", "kind": "time", "mode": "shared"}
+    ],
+    "capabilities": []
+  },
+  "resources": {"provides": [], "roles": [], "conflicts": []},
+  "provides": ["device.magnetometer", "magnetometer.field"],
+  "build": {
+    "sources": [
+      "Devices/Magnetometer/LIS3MDL/Src/lis3mdl_core.c",
+      "Devices/Magnetometer/LIS3MDL/Src/lis3mdl_adapter.c",
+      "Devices/Magnetometer/LIS3MDL/Src/lis3mdl_instance.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": ["Devices/Magnetometer/LIS3MDL/Inc"],
+    "defines": []
+  },
+  "payload": {"roots": ["Devices/Magnetometer/LIS3MDL"]},
+  "metadata": {
+    "display_names": {"zh_CN": "LIS3MDL · I²C", "en_US": "LIS3MDL · I²C"},
+    "device_descriptors": [{
+      "order": 3,
+      "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_LIS3MDL",
+      "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+      "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+      "capability": "SYSTEM_CAPABILITY_MAGNETOMETER",
+      "rate": "20U",
+      "driver_hash": "0x4C495333UL",
+      "name_hash": "0x4D444C33UL"
+    }],
+    "device_group": "primary_devices",
+    "device_group_order": 40,
+    "device_selection_style": "instance",
+    "device_category": "sensor.magnetometer",
+    "build_feature_symbols": ["SYSTEM_USER_MAGNETOMETER_ENABLE"],
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {
+        "function_prefix": "Lis3mdlI2cMagnetometerInstance",
+        "headers": ["lis3mdl_instance.h"],
+        "pass_instance": true
+      }
+    },
+    "instance_resource_binding": {
+      "struct_type": "ProjectLis3mdlI2cResources",
+      "accessor": "ProjectLis3mdlI2cResources_Get",
+      "count_symbol": "PROJECT_LIS3MDL_I2C_INSTANCE_COUNT",
+      "runtime_context_upper_bound": 4,
+      "fields": [
+        {"requirement": "data", "member": "i2c"},
+        {"requirement": "time", "member": "time"}
+      ]
+    },
+    "runtime_defaults": {
+      "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {"SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ": 20}
+    },
+    "recordable_outputs": {
+      "magnetometer.field": {
+        "enabled": false,
+        "reason_code": "logging.unavailable.magnetometer_output_disabled"
+      }
+    },
+    "unqualified_capabilities": {
+      "magnetometer.absolute_vector_qualified": "Physical calibration and hardware integration pending"
+    },
+    "source_origins": {"default": "silverstar_lis3mdl_datasheet_implementation"},
+    "initialization": {
+      "configure_on_boot": true,
+      "persistent_storage": "none",
+      "hardware_status": "HARDWARE_UNVERIFIED",
+      "register_evidence": "https://www.st.com/resource/en/datasheet/lis3mdl.pdf",
+      "readback": {
+        "zh_CN": "确认 0x3D 芯片身份；只写入不同的 CTRL1-5 配置并读回；首个新磁场样本前不 READY",
+        "en_US": "Verify identity 0x3D, update only differing CTRL1-5 settings with readback, and gate READY on a fresh magnetic sample"
+      }
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 4, "class_max": 4,
+    "same_plugin_multiple": true, "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "STMicroelectronics",
+    "model": "LIS3MDL",
+    "chipset": "LIS3MDL",
+    "driver": "SilverStar bounded LIS3MDL magnetic-field driver"
+  },
+  "transports": [],
+  "device_variants": {
+    "i2c": {"interface": "i2c", "profile": "uhp_20_hz_4g", "overrides": {}},
+    "spi": {
+      "interface": "spi",
+      "profile": "uhp_20_hz_4g",
+      "overrides": {
+        "name": "LIS3MDL · SPI",
+        "requires": {"resources": [
+          {
+            "name": "data", "kind": "spi",
+            "constraints": {"spi": {
+              "mode": "master", "cpol": "high", "cpha": "2edge",
+              "data_bits": 8, "bit_order": "msb",
+              "minimum_clock_hz": 100000,
+              "maximum_clock_hz": 10000000,
+              "dma": false, "irq": false
+            }},
+            "mode": "shared"
+          },
+          {
+            "name": "cs", "kind": "gpio_output",
+            "electrical_constraints": {
+              "mode": "gpio_output", "output_type": "push_pull",
+              "pull": "none", "speed": "low",
+              "safe_initial_level": "inactive",
+              "active_polarity": "low",
+              "startup_glitch_free": true
+            }
+          },
+          {"name": "time", "kind": "time", "mode": "shared"}
+        ]},
+        "metadata": {
+          "display_names": {"zh_CN": "LIS3MDL · SPI", "en_US": "LIS3MDL · SPI"},
+          "device_instance_bindings": {
+            "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {
+              "function_prefix": "Lis3mdlSpiMagnetometerInstance",
+              "headers": ["lis3mdl_instance.h"],
+              "pass_instance": true
+            }
+          },
+          "instance_resource_binding": {
+            "struct_type": "ProjectLis3mdlSpiResources",
+            "accessor": "ProjectLis3mdlSpiResources_Get",
+            "count_symbol": "PROJECT_LIS3MDL_SPI_INSTANCE_COUNT",
+            "runtime_context_upper_bound": 4,
+            "fields": [
+              {"requirement": "data", "member": "spi"},
+              {"requirement": "cs", "member": "cs"},
+              {"requirement": "time", "member": "time"}
+            ]
+          }
+        }
+      }
+    }
+  }
+}

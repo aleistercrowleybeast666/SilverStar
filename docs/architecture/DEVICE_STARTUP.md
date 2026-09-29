@@ -165,3 +165,20 @@ is the register, compensation, conversion-time and 10 MHz SPI authority.
 The current 20 Hz profile uses pressure ×8 and temperature ×1 oversampling.
 Host compensation, timeout, I²C/SPI mock and variant/source-graph tests pass.
 The physical device remains **HARDWARE_UNVERIFIED**.
+
+## LIS3MDL magnetometer (Round 4 software path)
+
+`silverstar.device.magnetometer.lis3mdl` supplies I²C and four-wire SPI
+variants from one physical plugin. Its bounded startup verifies WHO_AM_I,
+reads all five control registers, writes only differences and reads them back.
+The current 20 Hz, ±4 gauss profile enables temperature and block data
+update. A new XYZ status bit gates the eight-byte magnetic/temperature burst;
+the driver reports raw counts and uncalibrated µT, without claiming a
+calibrated absolute vector. No persistent sensor settings are written.
+
+The [ST datasheet](https://www.st.com/resource/en/datasheet/lis3mdl.pdf)
+defines identity, controls, 6842 LSB/gauss sensitivity and 10 MHz SPI limit;
+[AN4602](https://www.st.com/resource/en/application_note/an4602-lis3mdl-threeaxis-digital-output-magnetometer-stmicroelectronics.pdf)
+defines the nominal temperature conversion. Host tests cover signed XYZ,
+identity, readback, fresh status gating and both bus variants. The device
+remains **HARDWARE_UNVERIFIED**.
