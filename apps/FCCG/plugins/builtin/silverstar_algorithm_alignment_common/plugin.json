@@ -27,7 +27,8 @@
   "build": {
     "sources": [
       "Algorithm/Alignment/Common/Src/attitude_alignment.c",
-      "Algorithm/Alignment/Common/Src/attitude_preflight.c"
+      "Algorithm/Alignment/Common/Src/attitude_preflight.c",
+      "Algorithm/Alignment/Common/Src/vector_constraints.c"
     ],
     "asm_sources": [],
     "include_dirs": [
