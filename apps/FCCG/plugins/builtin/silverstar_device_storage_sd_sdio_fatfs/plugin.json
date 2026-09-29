@@ -59,10 +59,13 @@
   ],
   "build": {
     "sources": [
-      "Devices/Storage/SdSdioFatFs/Src/storage_service.c"
+      "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+      "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c"
     ],
     "asm_sources": [],
-    "include_dirs": [],
+    "include_dirs": [
+      "Devices/Storage/SdSdioFatFs/Inc"
+    ],
     "defines": [],
     "protocol_sources": {
       "logging": [
@@ -73,6 +76,8 @@
   "payload": {
     "roots": [
       "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+      "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+      "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
       "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"
     ]
   },

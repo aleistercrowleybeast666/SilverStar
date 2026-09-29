@@ -314,7 +314,7 @@ SIZE := {toolchain_prefix}size
 C_SOURCES := {source_lines}
 ASM_SOURCES := {asm_lines}
 OBJECTS := $(patsubst %.c,build/%.o,$(C_SOURCES)) $(patsubst %.s,build/%.o,$(ASM_SOURCES))
-CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections -fstack-usage {flags} {include_flags} {define_flags}
+CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections -fstack-usage -Wvla -Werror=vla {flags} {include_flags} {define_flags}
 LDFLAGS := {flags} -Wl,--gc-sections,-Map=build/ground.map -T{linker} -specs=nano.specs -lc -lm -lnosys
 
 ifeq ($(OS),Windows_NT)

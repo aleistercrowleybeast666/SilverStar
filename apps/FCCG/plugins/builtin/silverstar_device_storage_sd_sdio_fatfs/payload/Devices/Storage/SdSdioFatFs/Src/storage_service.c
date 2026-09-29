@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "project_storage_binding.h"
+#include "persistent_storage.h"
 #include "platform_critical.h"
 #include "platform_time.h"
 #include "silverstar_assert.h"
@@ -12,6 +13,7 @@
 #define TF_SDIO_STORAGE_SLOT 0U
 
 static FIL s_file;
+static FIL s_object_file;
 static uint16_t s_generation = 1U;
 static uint8_t s_initialized;
 static uint8_t s_mounted;
@@ -299,3 +301,164 @@ SystemDeviceResult SystemStorage_Close(SystemStorageFileHandle *handle)
 { return SilverStarStorageService_Close(handle); }
 SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health)
 { return SilverStarStorageService_GetHealth(health); }
+
+typedef struct
+{
+    char path[40];
+    const char *directory;
+} SilverStarStorageObjectPath;
+
+static SystemDeviceResult SilverStarStorageService_ObjectPathBuild(
+    uint8_t kind, uint8_t instance, uint8_t slot,
+    SilverStarStorageObjectPath *object_path)
+{
+    const char *prefix;
+    uint8_t length;
+    if ((instance >= 32U) || (slot > 1U) || (object_path == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(object_path, SilverStarStorageObjectPath,
+        SILVERSTAR_ASSERT_MODULE_BOARD);
+    switch (kind)
+    {
+        case PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION:
+            object_path->directory = "0:/system/calibration";
+            prefix = "0:/system/calibration/mag";
+            break;
+        case PERSISTENT_STORAGE_OBJECT_DEVICE_CONFIG:
+            object_path->directory = "0:/system/device";
+            prefix = "0:/system/device/dev";
+            break;
+        case PERSISTENT_STORAGE_OBJECT_PREFERENCES:
+            object_path->directory = "0:/system/preferences";
+            prefix = "0:/system/preferences/pre";
+            break;
+        case PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT:
+            object_path->directory = "0:/missions/000001";
+            prefix = "0:/missions/000001/snap";
+            break;
+        default:
+            return SYSTEM_DEVICE_INVALID_ARGUMENT;
+    }
+    length = (uint8_t)strlen(prefix);
+    if ((uint32_t)length + 5U > 40U)
+    { return SYSTEM_DEVICE_INTERNAL_ERROR; }
+    (void)memcpy(object_path->path, prefix, length);
+    object_path->path[length] = (char)('0' + instance / 10U);
+    object_path->path[length + 1U] = (char)('0' + instance % 10U);
+    object_path->path[length + 2U] = '.';
+    object_path->path[length + 3U] = (char)('0' + slot);
+    object_path->path[length + 4U] = '\0';
+    return SYSTEM_DEVICE_OK;
+}
+
+static SystemDeviceResult SilverStarStorageService_DirectoryEnsure(
+    uint8_t kind, const char *directory)
+{
+    FRESULT result;
+    const char *parent = "0:/system";
+    if (kind == PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT)
+    { parent = "0:/missions"; }
+    result = f_mkdir(parent);
+    if ((result != FR_OK) && (result != FR_EXIST))
+    { return SilverStarStorageService_ResultMap(result); }
+    result = f_mkdir(directory);
+    if ((result != FR_OK) && (result != FR_EXIST))
+    { return SilverStarStorageService_ResultMap(result); }
+    return SYSTEM_DEVICE_OK;
+}
+
+static void SilverStarStorageService_ObjectFaultRecord(void)
+{
+    uint32_t primask = SilverStarStorageService_IrqLock();
+    s_health.error_count++;
+    s_health.healthy = 0U;
+    SilverStarStorageService_IrqUnlock(primask);
+}
+
+SystemDeviceResult SystemStorage_ObjectSlotRead(
+    uint8_t kind, uint8_t instance, uint8_t slot,
+    uint8_t *data, uint16_t capacity, uint16_t *length)
+{
+    SilverStarStorageObjectPath object_path;
+    FRESULT result;
+    FRESULT close_result;
+    UINT read_count = 0U;
+    UINT extra_count = 0U;
+    uint8_t extra;
+    if ((data == NULL) || (length == NULL) || (capacity == 0U))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(length, uint16_t,
+        SILVERSTAR_ASSERT_MODULE_BOARD);
+    SILVERSTAR_ASSERT(s_mounted <= 1U,
+        SILVERSTAR_ASSERT_MODULE_BOARD,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    *length = 0U;
+    if (SilverStarStorageService_ObjectPathBuild(kind, instance,
+            slot, &object_path) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (s_mounted == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    result = f_open(&s_object_file, object_path.path, FA_READ);
+    if ((result == FR_NO_FILE) || (result == FR_NO_PATH))
+    { return SYSTEM_DEVICE_NOT_PRESENT; }
+    if (result != FR_OK)
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SilverStarStorageService_ResultMap(result);
+    }
+    result = f_read(&s_object_file, data, capacity, &read_count);
+    if (result == FR_OK)
+    { result = f_read(&s_object_file, &extra, 1U, &extra_count); }
+    close_result = f_close(&s_object_file);
+    if ((result != FR_OK) || (close_result != FR_OK))
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SYSTEM_DEVICE_IO_ERROR;
+    }
+    if (extra_count != 0U) { return SYSTEM_DEVICE_OK; }
+    *length = (uint16_t)read_count;
+    return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemStorage_ObjectSlotWrite(
+    uint8_t kind, uint8_t instance, uint8_t slot,
+    const uint8_t *data, uint16_t length)
+{
+    SilverStarStorageObjectPath object_path;
+    FRESULT result;
+    FRESULT close_result;
+    UINT written = 0U;
+    if ((data == NULL) || (length == 0U))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_BOARD);
+    SILVERSTAR_ASSERT(s_mounted <= 1U,
+        SILVERSTAR_ASSERT_MODULE_BOARD,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (SilverStarStorageService_ObjectPathBuild(kind, instance,
+            slot, &object_path) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (s_mounted == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    if (SilverStarStorageService_DirectoryEnsure(
+            kind, object_path.directory) != SYSTEM_DEVICE_OK)
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SYSTEM_DEVICE_IO_ERROR;
+    }
+    result = f_open(&s_object_file, object_path.path,
+        FA_CREATE_ALWAYS | FA_WRITE);
+    if (result != FR_OK)
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SilverStarStorageService_ResultMap(result);
+    }
+    result = f_write(&s_object_file, data, length, &written);
+    if ((result == FR_OK) && (written == length))
+    { result = f_sync(&s_object_file); }
+    close_result = f_close(&s_object_file);
+    if ((result != FR_OK) || (written != length) || (close_result != FR_OK))
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SYSTEM_DEVICE_IO_ERROR;
+    }
+    return SYSTEM_DEVICE_OK;
+}

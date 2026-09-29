@@ -63,11 +63,13 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
         "Generated/Src/project_metadata.c", "Generated/Src/project_log_config.c",
         "Generated/Src/project_log_decoder_profile.c",
         "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+        "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
         "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c")]
     # Reuse the generated Host include contract; never discover production sources.
     host_script = (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf-8")
     host_includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"', host_script)
     logger_includes = includes + [project / relative.replace("\\", "/") for relative in host_includes]
+    logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Inc")
     writer = output / "logger_storage.exe"
     command = flags + ["-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
                        "-include", str(project / "Generated/Inc/project_flight_config.h")]

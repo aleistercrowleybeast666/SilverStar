@@ -50,4 +50,12 @@ SystemDeviceResult SystemStorage_Sync(SystemStorageFileHandle *handle);
 SystemDeviceResult SystemStorage_Close(SystemStorageFileHandle *handle);
 SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health);
 
+/* Fixed object slots share LoggerTask ownership with the stream sink. */
+SystemDeviceResult SystemStorage_ObjectSlotRead(
+    uint8_t kind, uint8_t instance, uint8_t slot,
+    uint8_t *data, uint16_t capacity, uint16_t *length);
+SystemDeviceResult SystemStorage_ObjectSlotWrite(
+    uint8_t kind, uint8_t instance, uint8_t slot,
+    const uint8_t *data, uint16_t length);
+
 #endif /* __SYSTEM_STORAGE_IF_H */

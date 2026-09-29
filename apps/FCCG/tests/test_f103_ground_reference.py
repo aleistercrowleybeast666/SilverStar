@@ -129,6 +129,7 @@ def test_f103_ground_generation_uses_f1_family_and_build_audit(
     assert "Platform/STM32F4/Inc" not in makefile
     assert "startup_stm32f103xb.s" in makefile
     assert "-fstack-usage" in makefile
+    assert "-Werror=vla" in makefile
     assert "ground.map" in makefile
     assert "ground.size" in makefile
     main = (ground / "Core/Src/main.c").read_text(encoding="utf-8")
