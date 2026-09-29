@@ -1896,10 +1896,20 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
 {
     uint8_t active = SystemSourceSelector_CompanionActiveGet(
         SYSTEM_DEVICE_CLASS_MAGNETOMETER);
+    SystemDeviceDescriptor descriptor;
+    SystemDeviceResult result;
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
     { return SYSTEM_DEVICE_NOT_READY; }
-    return ProjectMagnetometerInstance_LatestSampleGet(active, sample);
+    result = ProjectMagnetometerInstance_LatestSampleGet(active, sample);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    result = ProjectDeviceInstance_DescriptorGet(
+        SYSTEM_DEVICE_CLASS_MAGNETOMETER, active, &descriptor);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    sample->physical_device_id = descriptor.physical_device_id;
+    sample->descriptor_id = descriptor.descriptor_id;
+    sample->instance_id = active;
+    return SYSTEM_DEVICE_OK;
 }
 
 SystemDeviceResult SystemMagnetometer_SelfTestRun(

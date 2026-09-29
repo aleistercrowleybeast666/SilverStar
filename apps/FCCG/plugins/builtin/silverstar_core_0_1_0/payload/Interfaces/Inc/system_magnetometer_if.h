@@ -29,6 +29,9 @@ typedef struct
     float temperature_c;
     uint32_t valid_mask;
     uint8_t calibration_valid;
+    uint16_t physical_device_id;
+    uint16_t descriptor_id;
+    uint8_t instance_id;
 } SystemMagnetometerSample;
 
 typedef struct

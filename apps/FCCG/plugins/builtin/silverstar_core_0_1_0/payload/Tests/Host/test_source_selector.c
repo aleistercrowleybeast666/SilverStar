@@ -29,6 +29,7 @@ typedef struct
 static uint8_t s_imu_count = TEST_INSTANCE_COUNT;
 static uint8_t s_gnss_count = TEST_INSTANCE_COUNT;
 static uint8_t s_telemetry_count = TEST_INSTANCE_COUNT;
+static uint8_t s_magnetometer_count = 1U;
 static uint8_t s_primary_imu;
 static uint8_t s_primary_gnss;
 static uint8_t s_primary_telemetry;
@@ -63,6 +64,7 @@ static uint32_t s_telemetry_stop_count[TEST_INSTANCE_COUNT];
 static uint32_t s_telemetry_send_count[TEST_INSTANCE_COUNT];
 static uint32_t s_telemetry_receive_count[TEST_INSTANCE_COUNT];
 static uint32_t s_telemetry_process_count[TEST_INSTANCE_COUNT];
+static SystemMagnetometerSample s_magnetometer_sample;
 
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
 static TestEvent s_events[TEST_EVENT_COUNT_MAX];
@@ -76,6 +78,7 @@ static void Test_StateReset(void)
     s_imu_count = TEST_INSTANCE_COUNT;
     s_gnss_count = TEST_INSTANCE_COUNT;
     s_telemetry_count = TEST_INSTANCE_COUNT;
+    s_magnetometer_count = 1U;
     s_primary_imu = 0U;
     s_primary_gnss = 0U;
     s_primary_telemetry = 0U;
@@ -94,6 +97,7 @@ static void Test_StateReset(void)
     (void)memset(s_gnss_apply_count, 0, sizeof(s_gnss_apply_count));
     (void)memset(s_gnss_verify_count, 0, sizeof(s_gnss_verify_count));
     (void)memset(s_telemetry_health, 0, sizeof(s_telemetry_health));
+    (void)memset(&s_magnetometer_sample, 0, sizeof(s_magnetometer_sample));
     (void)memset(s_telemetry_init_count, 0,
                  sizeof(s_telemetry_init_count));
     (void)memset(s_telemetry_start_count, 0,
@@ -167,6 +171,8 @@ uint8_t ProjectDeviceInstance_CountGet(SystemDeviceClass device_class)
         case SYSTEM_DEVICE_CLASS_IMU: return s_imu_count;
         case SYSTEM_DEVICE_CLASS_GNSS: return s_gnss_count;
         case SYSTEM_DEVICE_CLASS_TELEMETRY: return s_telemetry_count;
+        case SYSTEM_DEVICE_CLASS_MAGNETOMETER:
+            return s_magnetometer_count;
         default: return 0U;
     }
 }
@@ -430,7 +436,6 @@ TEST_STUB_OUTPUT(ProjectTelemetryInstance_MtuGet, uint16_t)
     TEST_STUB_OUTPUT(prefix ## _InfoGet, SystemDeviceInfo) \
     TEST_STUB_OUTPUT(prefix ## _CapabilitiesGet, uint32_t) \
     TEST_STUB_OUTPUT(prefix ## _HealthGet, SystemDeviceHealth) \
-    TEST_STUB_OUTPUT(prefix ## _LatestSampleGet, sample_type) \
     TEST_STUB_OUTPUT(prefix ## _SelfTestRun, SystemDeviceSelfTestResult) \
     TEST_STUB_CONFIG(prefix ## _ConfigApply, config_type) \
     TEST_STUB_CONFIG(prefix ## _ConfigVerify, config_type) \
@@ -438,15 +443,27 @@ TEST_STUB_OUTPUT(ProjectTelemetryInstance_MtuGet, uint16_t)
 
 TEST_PASSIVE_STUBS(ProjectBarometerInstance, SystemBarometerSample,
                    SystemBarometerConfig)
+TEST_STUB_OUTPUT(ProjectBarometerInstance_LatestSampleGet,
+                 SystemBarometerSample)
 TEST_STUB_NO_OUTPUT(ProjectBarometerInstance_Process)
 TEST_STUB_OUTPUT(ProjectBarometerInstance_NoiseCharacteristicsGet,
                  SystemBarometerNoiseCharacteristics)
 TEST_PASSIVE_STUBS(ProjectMagnetometerInstance, SystemMagnetometerSample,
                    SystemMagnetometerConfig)
+SystemDeviceResult ProjectMagnetometerInstance_LatestSampleGet(
+    uint8_t instance_id, SystemMagnetometerSample *sample)
+{
+    if ((instance_id >= s_magnetometer_count) || (sample == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *sample = s_magnetometer_sample;
+    return SYSTEM_DEVICE_OK;
+}
 TEST_STUB_NO_OUTPUT(ProjectMagnetometerInstance_Process)
 TEST_PASSIVE_STUBS(ProjectAttitudeInstance,
                    SystemHardwareQuaternionSample,
                    SystemHardwareQuaternionConfig)
+TEST_STUB_OUTPUT(ProjectAttitudeInstance_LatestSampleGet,
+                 SystemHardwareQuaternionSample)
 
 #undef TEST_PASSIVE_STUBS
 #undef TEST_STUB_CONFIG
@@ -758,6 +775,16 @@ static void Test_TelemetryInitFailureSkipsCandidate(void)
 
 int main(void)
 {
+    SystemMagnetometerSample magnetometer;
+    Test_StateReset();
+    s_magnetometer_sample.sequence = 7U;
+    TEST_CHECK(SystemMagnetometer_LatestSampleGet(&magnetometer) ==
+        SYSTEM_DEVICE_OK);
+    TEST_CHECK(magnetometer.sequence == 7U);
+    TEST_CHECK(magnetometer.instance_id == 0U);
+    TEST_CHECK(magnetometer.descriptor_id ==
+        (uint16_t)(SYSTEM_DEVICE_CLASS_MAGNETOMETER * 16U + 1U));
+    TEST_CHECK(magnetometer.physical_device_id == magnetometer.descriptor_id);
     Test_ImuSelectionAndLock();
     Test_GnssOneWayLiveness();
     Test_GnssReadOnlyConfigFanout();
