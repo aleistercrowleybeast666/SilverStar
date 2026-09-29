@@ -1,0 +1,33 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.platform.api",
+  "name": "SilverStar Platform API",
+  "type": "platform_api",
+  "class": "platform",
+  "version": "0.1.0",
+  "description": "MCU-family-independent SilverStar peripheral and critical-section interfaces.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": ["platform.api.v1"],
+  "build": {
+    "include_dirs": ["Platform/Inc"]
+  },
+  "payload": {
+    "roots": ["Platform/Inc"]
+  },
+  "metadata": {
+    "declarative": false,
+    "display_names": {
+      "zh_CN": "SilverStar 平台 API",
+      "en_US": "SilverStar Platform API"
+    }
+  }
+}

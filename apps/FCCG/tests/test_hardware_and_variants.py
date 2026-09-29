@@ -104,7 +104,7 @@ def test_environment_plugin_renders_one_resolved_source_graph(
     assert not any("estimator_task_none.c" in path for path in graph.sources)
     metadata = MetadataFiles_Render(model, builtin_catalog, graph)
     expected_outputs = {
-        "EnvironmentTruth.code-workspace",
+        "Flight_Controller.code-workspace",
         ".vscode/tasks.json",
         ".vscode/settings.json",
         ".vscode/extensions.json",
@@ -140,7 +140,7 @@ def test_environment_plugin_renders_one_resolved_source_graph(
         assert define in eide
     assert graph.linker_script in eide
     workspace = json.loads(
-        metadata["EnvironmentTruth.code-workspace"].decode("utf-8")
+        metadata["Flight_Controller.code-workspace"].decode("utf-8")
     )
     assert set(workspace) == {"folders", "settings", "extensions"}
     assert workspace["folders"] == [

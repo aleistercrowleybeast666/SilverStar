@@ -210,6 +210,7 @@ class ProjectModel:
     mcu: str
     board: str
     os: str
+    mcu_family: str = "silverstar.mcu_family.stm32f4"
     device_instances: list[DeviceInstance] = field(default_factory=list)
     base_components: list[str] = field(default_factory=list)
     strategies: dict[str, str | None] = field(default_factory=dict)
@@ -256,7 +257,10 @@ class ProjectModel:
     format_version: int = PROJECT_FORMAT_VERSION
 
     def ComponentIds_Get(self) -> tuple[str, ...]:
-        ordered = [self.core, self.mcu, self.board, self.os]
+        ordered = [
+            self.core, "silverstar.platform.api", self.mcu_family,
+            self.mcu, self.board, self.os,
+        ]
         ordered.extend(self.DevicePluginIds_Get())
         ordered.extend(self.base_components)
         ordered.extend(
@@ -307,6 +311,7 @@ class ProjectModel:
             },
             "components": {
                 "core": self.core,
+                "mcu_family": self.mcu_family,
                 "mcu": self.mcu,
                 "board": self.board,
                 "os": self.os,
@@ -967,6 +972,7 @@ def _Components_Parse(data: Any) -> tuple[
     str,
     str,
     str,
+    str,
     list[DeviceInstance],
     list[str],
     dict[str, str | None],
@@ -975,6 +981,7 @@ def _Components_Parse(data: Any) -> tuple[
     components = _Object_Require(data, "components")
     expected = {
         "core",
+        "mcu_family",
         "mcu",
         "board",
         "os",
@@ -983,9 +990,12 @@ def _Components_Parse(data: Any) -> tuple[
         "strategies",
         "development_environment",
     }
+    if "mcu_family" not in components:
+        components["mcu_family"] = "silverstar.mcu_family.stm32f4"
     if set(components) != expected:
         raise ProjectModelError("components has missing or unknown fields")
     core = _String_Require(components, "core")
+    mcu_family = _String_Require(components, "mcu_family")
     mcu = _String_Require(components, "mcu")
     board = _String_Require(components, "board", allow_empty=True)
     os_component = _String_Require(components, "os")
@@ -994,6 +1004,7 @@ def _Components_Parse(data: Any) -> tuple[
     environment = _String_Require(components, "development_environment")
     for name, value, allow_empty in (
         ("core component", core, False),
+        ("mcu family component", mcu_family, False),
         ("mcu component", mcu, False),
         ("board component", board, True),
         ("os component", os_component, False),
@@ -1017,6 +1028,7 @@ def _Components_Parse(data: Any) -> tuple[
         strategies[slot] = component_id
     return (
         core,
+        mcu_family,
         mcu,
         board,
         os_component,
@@ -1677,6 +1689,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         raise ProjectModelError(f"Invalid build target: {build_target!r}")
     (
         core,
+        mcu_family,
         mcu,
         board,
         os_component,
@@ -1729,6 +1742,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     return ProjectModel(
         identity=ProjectIdentity(name, firmware_version, build_target),
         core=core,
+        mcu_family=mcu_family,
         mcu=mcu,
         board=board,
         os=os_component,

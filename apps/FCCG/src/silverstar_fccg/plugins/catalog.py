@@ -242,9 +242,22 @@ class PluginCatalog:
             platform = manifest.platform
             if platform is None:
                 continue
+            payload_owners = [manifest]
+            for dependency in manifest.dependencies:
+                if dependency.optional:
+                    continue
+                owner = manifests.get(dependency.component_id)
+                if owner is None:
+                    errors.append(
+                        f"Platform {manifest.component_id} needs missing payload "
+                        f"component {dependency.component_id}"
+                    )
+                    continue
+                payload_owners.append(owner)
             payload_files = {
-                path.relative_to(manifest.payload_root).as_posix()
-                for path in manifest.PayloadFiles_Get()
+                path.relative_to(owner.payload_root).as_posix()
+                for owner in payload_owners
+                for path in owner.PayloadFiles_Get()
             }
             if not any(
                 path == platform.resource_header
@@ -263,10 +276,11 @@ class PluginCatalog:
                             f"{backend.backend_id} source is missing: {source}"
                         )
                 for include_dir in backend.include_dirs:
-                    directory = manifest.payload_root.joinpath(
-                        *include_dir.split("/")
-                    )
-                    if not directory.is_dir() or directory.is_symlink():
+                    if not any(
+                        (owner.payload_root / include_dir).is_dir()
+                        and not (owner.payload_root / include_dir).is_symlink()
+                        for owner in payload_owners
+                    ):
                         errors.append(
                             f"Platform {manifest.component_id} backend "
                             f"{backend.backend_id} include directory is missing: "
@@ -283,10 +297,11 @@ class PluginCatalog:
                             f"{provider.provider_id} source is missing: {source}"
                         )
                 for include_dir in provider.include_dirs:
-                    directory = manifest.payload_root.joinpath(
-                        *include_dir.split("/")
-                    )
-                    if not directory.is_dir() or directory.is_symlink():
+                    if not any(
+                        (owner.payload_root / include_dir).is_dir()
+                        and not (owner.payload_root / include_dir).is_symlink()
+                        for owner in payload_owners
+                    ):
                         errors.append(
                             f"Platform {manifest.component_id} module provider "
                             f"{provider.provider_id} include directory is missing: "

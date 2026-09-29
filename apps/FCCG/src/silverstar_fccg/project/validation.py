@@ -722,7 +722,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
                 "create a new 0.1.0 output directory instead of mixing payload trains",
             )
         )
-    raw_components = [model.core, model.mcu, model.board, model.os]
+    raw_components = [model.core, model.mcu_family, model.mcu, model.board, model.os]
     raw_components.extend(model.base_components)
     raw_components.extend(
         component_id
@@ -743,11 +743,27 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
 
     for expected_type, component_id in (
         ("core", model.core),
+        ("platform_api", "silverstar.platform.api"),
+        ("mcu_family", model.mcu_family),
         ("mcu", model.mcu),
         ("os", model.os),
         ("development_environment", model.development_environment),
     ):
         _ComponentType_Validate(catalog, component_id, expected_type, issues)
+    if any(
+        issue.code == "missing_component"
+        for issue in issues
+    ):
+        return ProjectValidationResult(tuple(issues))
+    try:
+        exact_mcu = catalog.Component_Get(model.mcu)
+        if exact_mcu.metadata.get("platform_family_id") != model.mcu_family:
+            issues.append(ValidationIssue(
+                "error", "mcu_family_mismatch",
+                "Selected MCU family backend does not match the exact MCU",
+            ))
+    except ValueError:
+        pass
     if model.hardware.mode == "board_plugin":
         _ComponentType_Validate(catalog, model.board, "board", issues)
     elif model.hardware.mode == "custom":

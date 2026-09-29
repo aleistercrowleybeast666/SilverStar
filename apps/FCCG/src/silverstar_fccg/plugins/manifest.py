@@ -41,6 +41,8 @@ ALLOWED_PLUGIN_TYPES = frozenset(
     {
         "core",
         "mcu",
+        "mcu_family",
+        "platform_api",
         "board",
         "device",
         "algorithm",
@@ -2998,9 +3000,9 @@ def PluginManifest_Parse(
         raise PluginManifestError(
             "protocol plugins must declare one strict protocol.category"
         )
-    if (component_type == "mcu") != (platform is not None):
+    if (component_type in {"mcu", "mcu_family"}) != (platform is not None):
         raise PluginManifestError(
-            "MCU plugins must declare exactly one platform contract"
+            "MCU and MCU family plugins must declare a platform contract"
         )
     if component_type == "device":
         device_category = metadata.get("device_category")
@@ -3146,6 +3148,29 @@ def PluginManifest_Load(path: Path, *, source: str = "builtin") -> PluginManifes
         raise PluginManifestError(
             f"Cannot read plugin manifest {path}: {error}"
         ) from error
+    if data.get("type") == "mcu":
+        family_id = data.get("metadata", {}).get("platform_family_id")
+        if family_id:
+            if not isinstance(family_id, str) or not PLUGIN_ID_PATTERN.fullmatch(family_id):
+                raise PluginManifestError("MCU platform family id is invalid")
+            family_path = path.parent.parent / family_id.replace(".", "_") / "plugin.json"
+            try:
+                family_data = json.loads(family_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                raise PluginManifestError(
+                    f"MCU family backend is unavailable: {family_id}"
+                ) from error
+            if (family_data.get("id") != family_id
+                    or family_data.get("type") != "mcu_family"
+                    or not isinstance(family_data.get("platform"), dict)
+                    or not isinstance(data.get("platform"), dict)
+                    or not {"match_rules"}.issubset(data["platform"])
+                    or set(data["platform"]) - {"match_rules", "build_target"}):
+                raise PluginManifestError("MCU family platform contract is invalid")
+            data = {
+                **data,
+                "platform": {**family_data["platform"], **data["platform"]},
+            }
     manifest = PluginManifest_Parse(data, path, source=source)
     for variant_id in manifest.device_variants:
         PluginManifest_VariantResolve(manifest, variant_id)

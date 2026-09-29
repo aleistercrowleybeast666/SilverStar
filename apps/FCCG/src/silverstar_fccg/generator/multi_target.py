@@ -53,10 +53,16 @@ def _PayloadFiles_Add(files: dict[str, bytes], manifest, *, skip_adapter: bool =
             raise ValueError(f"Ground source collision: {relative}")
 
 
-def _GroundModel_Get(model: ProjectModel) -> ProjectModel:
+def _GroundModel_Get(model: ProjectModel, catalog: PluginCatalog) -> ProjectModel:
     ground = model.ground_target
+    mcu_family = str(
+        catalog.Component_Get(ground.mcu).metadata.get("platform_family_id", "")
+    )
+    if not mcu_family:
+        raise ValueError("Ground exact MCU does not declare a family backend")
     return replace(
-        model, core=GROUND_CORE_ID, mcu=ground.mcu, board=ground.board, os="",
+        model, core=GROUND_CORE_ID, mcu_family=mcu_family,
+        mcu=ground.mcu, board=ground.board, os="",
         device_instances=[DeviceInstance("radio0", ground.radio_plugin)],
         base_components=[], strategies={}, modes={}, protocols={
             "telemetry": None, "maintenance": None, "logging": None,
@@ -289,21 +295,24 @@ def GroundFiles_Render(
     if issues:
         raise ValueError("; ".join(f"{issue.code}: {issue.message}" for issue in issues))
     ground = model.ground_target
-    ground_model = _GroundModel_Get(model)
+    ground_model = _GroundModel_Get(model, catalog)
     core = catalog.Component_Get(GROUND_CORE_ID)
     radio = catalog.Component_Get(ground.radio_plugin)
     mcu = catalog.Component_Get(ground.mcu)
     files: dict[str, bytes] = {}
     _PayloadFiles_Add(files, core)
     _PayloadFiles_Add(files, radio, skip_adapter=True)
-    for source in mcu.PayloadFiles_Get():
-        relative = source.relative_to(mcu.payload_root).as_posix()
-        if relative.startswith(("Middlewares/Third_Party/FatFs/", "FATFS/")):
-            continue
-        if relative.startswith(("Platform/", "Drivers/", "BuildSystem/", "Middlewares/")) or relative in {
-            mcu.build.linker_script, *mcu.build.asm_sources,
-        }:
-            files[relative] = source.read_bytes()
+    family = catalog.Component_Get(ground_model.mcu_family)
+    platform_api = catalog.Component_Get("silverstar.platform.api")
+    for owner in (platform_api, family, mcu):
+        for source in owner.PayloadFiles_Get():
+            relative = source.relative_to(owner.payload_root).as_posix()
+            if relative.startswith(("Middlewares/Third_Party/FatFs/", "FATFS/")):
+                continue
+            if relative.startswith(("Platform/", "Drivers/", "BuildSystem/", "Middlewares/")) or relative in {
+                mcu.build.linker_script, *mcu.build.asm_sources,
+            }:
+                files[relative] = source.read_bytes()
     flight_core = catalog.Component_Get(model.core)
     for relative in (
         "Common/Inc/silverstar_assert.h", "Common/Inc/silverstar_compiler.h",
@@ -357,7 +366,6 @@ def GroundFiles_Render(
     includes = tuple(dict.fromkeys([
         *base_graph.include_dirs,
         "Generated/Inc", "Common/Inc", "Interfaces/Inc", "Platform/Inc",
-        "Platform/STM32F4/Inc",
     ]))
     defines = tuple(dict.fromkeys([
         "SILVERSTAR_AIR_LINK_ENABLED=1", *base_graph.defines,

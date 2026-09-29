@@ -291,7 +291,7 @@ def test_unknown_cubemx_module_has_no_implicit_compile_all_fallback(
             **model.hardware.inventory,
             "peripherals": [
                 *model.hardware.inventory["peripherals"],
-                "USB_OTG_FS",
+                "CRYP",
             ],
         },
     )
@@ -1144,7 +1144,7 @@ def test_i2c_public_abi_has_no_hal_constants_or_generic_write_read(
         workspace_root
         / "plugins"
         / "builtin"
-        / "silverstar_mcu_stm32f407vet6"
+        / "silverstar_platform_api"
         / "payload"
         / "Platform"
     )

@@ -182,7 +182,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
         forced_includes.extend(build.forced_includes)
         virtual_sources.extend(build.virtual_sources)
         exclude_sources.extend(build.exclude_sources)
-        if manifest.platform is not None:
+        if manifest.platform is not None and manifest.component_type == "mcu":
             inventory_modules = tuple(
                 str(value)
                 for value in model.hardware.inventory.get("peripherals", ())

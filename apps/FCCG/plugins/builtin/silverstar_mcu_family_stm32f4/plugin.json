@@ -1,0 +1,592 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.mcu_family.stm32f4",
+  "name": "STM32F4 family backend",
+  "type": "mcu_family",
+  "class": "stm32f4",
+  "version": "0.1.0",
+  "description": "Shared STM32F4 HAL, CMSIS and SilverStar peripheral Platform backend.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.platform.api",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "platform.stm32f4"
+  ],
+  "build": {
+    "sources": [
+      "Platform/STM32F4/Src/platform_critical_stm32f4.c",
+      "Platform/STM32F4/Src/platform_memory_stm32f4.c"
+    ],
+    "include_dirs": [
+      "Platform/STM32F4/Inc",
+      "Drivers/STM32F4xx_HAL_Driver/Inc",
+      "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+      "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+      "Drivers/CMSIS/Include"
+    ],
+    "exclude_sources": [
+      "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_mmc.c"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Platform/STM32F4",
+      "Drivers",
+      "Middlewares/Third_Party/FatFs",
+      "BuildSystem/stm32_hal.mk"
+    ]
+  },
+  "metadata": {
+    "vendor": "STM32",
+    "family": "STM32F4",
+    "source_policy": "plugin_payload_authoritative",
+    "display_names": {
+      "zh_CN": "STM32F4 系列后端",
+      "en_US": "STM32F4 Family Backend"
+    }
+  },
+  "platform": {
+    "abi": {
+      "id": "silverstar.platform.resources",
+      "major": 1,
+      "minor": 0
+    },
+    "provider": "stm32_cubemx",
+    "build_target": {
+      "profile": "STM32F4"
+    },
+    "match_rules": [
+      {
+        "vendor": "STM32",
+        "family_pattern": "STM32F4*",
+        "priority": 10,
+        "specificity": 10,
+        "verification": "supported"
+      }
+    ],
+    "resource_binding": {
+      "header": "platform_stm32f4_resources.h",
+      "bindings": {
+        "uart": {
+          "collection": "uarts",
+          "include_header": "usart.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformUartId",
+          "count_symbol": "PLATFORM_UART_COUNT",
+          "table_symbol": "s_uart_handles",
+          "getter": "PlatformStm32f4Resource_UartHandleGet",
+          "struct_type": ""
+        },
+        "spi": {
+          "collection": "spis",
+          "include_header": "spi.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformSpiId",
+          "count_symbol": "PLATFORM_SPI_COUNT",
+          "table_symbol": "s_spi_handles",
+          "getter": "PlatformStm32f4Resource_SpiHandleGet",
+          "struct_type": ""
+        },
+        "adc": {
+          "collection": "adcs",
+          "include_header": "adc.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformAdcId",
+          "count_symbol": "PLATFORM_ADC_COUNT",
+          "table_symbol": "s_adc_handles",
+          "getter": "PlatformStm32f4Resource_AdcHandleGet",
+          "struct_type": ""
+        },
+        "gpio": {
+          "collection": "gpios",
+          "include_header": "main.h",
+          "entry_kind": "gpio",
+          "id_type": "PlatformGpioId",
+          "count_symbol": "PLATFORM_GPIO_COUNT",
+          "table_symbol": "s_gpio_resources",
+          "getter": "PlatformStm32f4Resource_GpioGet",
+          "struct_type": "PlatformStm32f4GpioResource"
+        },
+        "i2c": {
+          "collection": "i2cs",
+          "include_header": "i2c.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformI2cId",
+          "count_symbol": "PLATFORM_I2C_COUNT",
+          "table_symbol": "s_i2c_handles",
+          "getter": "PlatformStm32f4Resource_I2cHandleGet",
+          "struct_type": ""
+        },
+        "can_classic": {
+          "collection": "cans",
+          "include_header": "can.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformCanId",
+          "count_symbol": "PLATFORM_CAN_COUNT",
+          "table_symbol": "s_can_handles",
+          "getter": "PlatformStm32f4Resource_CanHandleGet",
+          "struct_type": ""
+        },
+        "pwm": {
+          "collection": "pwms",
+          "include_header": "tim.h",
+          "entry_kind": "pwm",
+          "id_type": "PlatformPwmId",
+          "count_symbol": "PLATFORM_PWM_COUNT",
+          "table_symbol": "s_pwm_resources",
+          "getter": "PlatformStm32f4Resource_PwmGet",
+          "struct_type": "PlatformStm32f4PwmResource"
+        },
+        "time": {
+          "collection": "timebases",
+          "include_header": "stm32f4xx_hal_tim.h",
+          "entry_kind": "timebase",
+          "id_type": "PlatformTimeId",
+          "count_symbol": "PLATFORM_TIME_COUNT",
+          "table_symbol": "s_time_resources",
+          "getter": "PlatformStm32f4Resource_TimeGet",
+          "struct_type": "PlatformStm32f4TimeResource"
+        }
+      }
+    },
+    "resource_backends": {
+      "uart": {
+        "maturity": "verified",
+        "inventory_kinds": [
+          "uart"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_uart_stm32f4.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "uart.blocking",
+          "uart.interrupt_dma"
+        ],
+        "ownership": "shared"
+      },
+      "spi": {
+        "maturity": "verified",
+        "inventory_kinds": [
+          "spi"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_spi_stm32f4.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "spi.master_blocking"
+        ],
+        "ownership": "shared"
+      },
+      "adc": {
+        "maturity": "verified",
+        "inventory_kinds": [
+          "adc"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_adc_stm32f4.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "adc.polling"
+        ],
+        "ownership": "single_owner"
+      },
+      "gpio": {
+        "maturity": "verified",
+        "inventory_kinds": [
+          "gpio_input",
+          "gpio_output",
+          "gpio_interrupt"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_gpio_stm32f4.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "gpio.digital",
+          "gpio.exti"
+        ],
+        "ownership": "single_owner"
+      },
+      "time": {
+        "maturity": "verified",
+        "inventory_kinds": [
+          "time"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_time_stm32f4.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "time.monotonic_us"
+        ],
+        "ownership": "shared"
+      },
+      "i2c": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "i2c"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_i2c_stm32f4.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c"
+        ],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "i2c.master_blocking",
+          "i2c.memory_read_write"
+        ],
+        "ownership": "shared_bus_unique_address"
+      },
+      "can_classic": {
+        "maturity": "reserved",
+        "inventory_kinds": [
+          "can_classic"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_can_stm32f4.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c"
+        ],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "can.classic_bxcan"
+        ],
+        "ownership": "single_owner"
+      },
+      "pwm": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "pwm"
+        ],
+        "sources": [
+          "Platform/STM32F4/Src/platform_pwm_stm32f4.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "pwm.output_fixed_frequency"
+        ],
+        "ownership": "exclusive_channel_shared_timer"
+      }
+    },
+    "module_providers": {
+      "base": {
+        "inventory_modules": [
+          "NVIC",
+          "RCC",
+          "SYS"
+        ],
+        "init_sources": [
+          "Core/Src/main.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.base"
+        ],
+        "limitations": [],
+        "always": true
+      },
+      "gpio": {
+        "inventory_modules": [
+          "GPIO"
+        ],
+        "init_sources": [
+          "Core/Src/gpio.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.gpio"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "dma": {
+        "inventory_modules": [
+          "DMA"
+        ],
+        "init_sources": [
+          "Core/Src/dma.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.dma"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "uart": {
+        "inventory_modules": [
+          "USART*",
+          "UART*",
+          "LPUART*"
+        ],
+        "init_sources": [
+          "Core/Src/usart.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.uart"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "spi": {
+        "inventory_modules": [
+          "SPI*"
+        ],
+        "init_sources": [
+          "Core/Src/spi.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.spi"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "adc": {
+        "inventory_modules": [
+          "ADC*"
+        ],
+        "init_sources": [
+          "Core/Src/adc.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.adc"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "i2c": {
+        "inventory_modules": [
+          "I2C*"
+        ],
+        "init_sources": [
+          "Core/Src/i2c.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.i2c"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "tim": {
+        "inventory_modules": [
+          "TIM*",
+          "LPTIM*"
+        ],
+        "init_sources": [
+          "Core/Src/tim.c",
+          "Core/Src/stm32f4xx_hal_timebase_tim.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.tim"
+        ],
+        "limitations": [
+          "TIM HAL Timebase must prove a 1 MHz counter"
+        ],
+        "always": false
+      },
+      "can": {
+        "inventory_modules": [
+          "CAN*"
+        ],
+        "init_sources": [
+          "Core/Src/can.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.can_classic"
+        ],
+        "limitations": [
+          "Classic CAN Device consumption remains reserved"
+        ],
+        "always": false
+      },
+      "sdio": {
+        "inventory_modules": [
+          "SDIO"
+        ],
+        "init_sources": [
+          "Core/Src/sdio.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.sdio"
+        ],
+        "limitations": [
+          "STM32F407 SDIO only"
+        ],
+        "always": false
+      },
+      "usb_device_cdc": {
+        "inventory_modules": [
+          "USB_DEVICE",
+          "USB_OTG_FS"
+        ],
+        "init_sources": [
+          "USB_DEVICE/App/usb_device.c",
+          "Core/Src/usb_otg.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c",
+          "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.usb_device_cdc"
+        ],
+        "limitations": [
+          "CubeMX USB Device CDC middleware remains hardware-owned"
+        ],
+        "always": false
+      },
+      "fatfs": {
+        "inventory_modules": [
+          "FATFS"
+        ],
+        "init_sources": [
+          "FATFS/App/fatfs.c"
+        ],
+        "provider_sources": [],
+        "middleware_sources": [
+          "Middlewares/Third_Party/FatFs/src/diskio.c",
+          "Middlewares/Third_Party/FatFs/src/ff.c",
+          "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c"
+        ],
+        "include_dirs": [
+          "Middlewares/Third_Party/FatFs/src"
+        ],
+        "defines": [],
+        "capabilities": [
+          "middleware.fatfs"
+        ],
+        "limitations": [
+          "CubeMX FatFs App/Target glue remains hardware-owned"
+        ],
+        "always": false
+      }
+    },
+    "compatibility": {
+      "cubemx_versions": [
+        "6.15.0"
+      ],
+      "firmware_packages": [
+        "STM32Cube FW_F4 V1.28.3"
+      ],
+      "source_policy": "plugin_payload_authoritative"
+    },
+    "support": {
+      "level": "verified",
+      "limitations": [
+        "Validated production target: STM32F407VET6 and SS0.5",
+        "I2C v0 provides blocking master transfers and memory-register operations; generic repeated-start is not advertised",
+        "Classic CAN inventory is recognized, but the STM32F407 backend is reserved and unavailable to normal consumers",
+        "PWM v0 uses CubeMX static timer frequency and ordinary non-complementary output channels"
+      ]
+    }
+  }
+}
