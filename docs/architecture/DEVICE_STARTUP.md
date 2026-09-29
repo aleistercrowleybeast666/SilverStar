@@ -148,3 +148,20 @@ is the command, compensation, CRC and SPI limit authority. Host tests cover
 the datasheet compensation vector, bad PROM CRC, conversion timeout, both bus
 adapters and generated variant bindings. Board behavior remains
 **HARDWARE_UNVERIFIED**.
+
+## BMP390 barometer (Round 4 software path)
+
+`silverstar.device.barometer.bmp390` uses one physical chip identity with
+I²C and four-wire SPI variants. Its separate BMP390 core verifies chip ID
+`0x60`, reads the 21-byte trim block, and compares, writes only differences,
+and reads back the oversampling and filter settings. Forced pressure and
+temperature conversion is bounded by a 40 ms timeout; the first fresh,
+compensated sample gates readiness. A process tick performs at most one bus
+transaction. SPI reads account for the BMP390 dummy byte. The device reports
+pressure and temperature; the common barometer layer derives altitude.
+
+The [Bosch BMP390 datasheet](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp390-ds002.pdf)
+is the register, compensation, conversion-time and 10 MHz SPI authority.
+The current 20 Hz profile uses pressure ×8 and temperature ×1 oversampling.
+Host compensation, timeout, I²C/SPI mock and variant/source-graph tests pass.
+The physical device remains **HARDWARE_UNVERIFIED**.
