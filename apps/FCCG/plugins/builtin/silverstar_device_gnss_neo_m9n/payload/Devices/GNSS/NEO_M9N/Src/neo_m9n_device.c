@@ -2056,19 +2056,27 @@ static PlatformResult Gnss_ProbePubxSend(uint8_t instance)
     uint8_t digit_count = 0U;
     uint16_t length = 0U;
     uint16_t index;
-    uint32_t baudrate = s_contexts[instance].probe_baudrate;
+    uint32_t baudrate;
     uint8_t checksum = 0U;
 
+    SILVERSTAR_ASSERT(instance < PROJECT_NEO_M9N_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    baudrate = s_contexts[instance].probe_baudrate;
+    SILVERSTAR_ASSERT(baudrate != 0U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     frame[length++] = (uint8_t)'$';
     for (index = 0U; index < sizeof(prefix) - 1U; index++)
     { frame[length++] = (uint8_t)prefix[index]; }
-    do
+    for (index = 0U; index < sizeof(digits); index++)
     {
         digits[digit_count++] = (uint8_t)('0' + (baudrate % 10U));
         baudrate /= 10U;
-    } while ((baudrate != 0U) && (digit_count < sizeof(digits)));
-    while (digit_count != 0U)
-    { frame[length++] = digits[--digit_count]; }
+        if (baudrate == 0U) { break; }
+    }
+    for (index = digit_count; index > 0U; index--)
+    { frame[length++] = digits[index - 1U]; }
     for (index = 0U; index < sizeof(suffix) - 1U; index++)
     { frame[length++] = (uint8_t)suffix[index]; }
     for (index = 1U; index < length; index++) { checksum ^= frame[index]; }
