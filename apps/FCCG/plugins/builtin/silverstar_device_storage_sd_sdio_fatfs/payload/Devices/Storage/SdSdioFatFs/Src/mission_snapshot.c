@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "air_link_config.h"
+#include "alignment_strategy_types.h"
 #include "persistent_storage.h"
 #include "project_device_instances.h"
 #include "silverstar_assert.h"
@@ -19,7 +20,7 @@
 #include "system_storage_if.h"
 #include "system_user_config.h"
 
-#define MISSION_SNAPSHOT_SCHEMA 1U
+#define MISSION_SNAPSHOT_SCHEMA 2U
 #define MISSION_SNAPSHOT_DEVICE_CHUNK_COUNT 16U
 #define MISSION_SNAPSHOT_PARAMETER_CHUNK_COUNT 48U
 #define MISSION_SNAPSHOT_OBJECT_COUNT 6U
@@ -336,6 +337,63 @@ static void MissionSnapshot_AirProfileWrite(MissionSnapshotWriter *writer)
     MissionSnapshot_U8Write(writer, (uint8_t)AIR_LINK_TX_POWER_DBM);
 }
 
+static void MissionSnapshot_AlignmentWrite(MissionSnapshotWriter *writer)
+{
+    static const AlignmentConstraintSpec constraints[] =
+        SYSTEM_ALIGNMENT_CONSTRAINTS_INITIALIZER;
+    uint8_t index;
+
+    _Static_assert(SYSTEM_ALIGNMENT_CONSTRAINT_COUNT >= 2U,
+        "Mission alignment needs at least two constraints");
+    _Static_assert(SYSTEM_ALIGNMENT_CONSTRAINT_COUNT <=
+        ALIGNMENT_STRATEGY_MAX_CONSTRAINTS,
+        "Mission alignment constraint count exceeds the static bound");
+    _Static_assert(sizeof(constraints) / sizeof(constraints[0]) ==
+        SYSTEM_ALIGNMENT_CONSTRAINT_COUNT,
+        "Mission alignment initializer and count disagree");
+    SILVERSTAR_ASSERT_OBJECT(writer, MissionSnapshotWriter,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    MissionSnapshot_U8Write(writer, (uint8_t)SYSTEM_ALIGNMENT_ALGORITHM);
+    MissionSnapshot_U8Write(writer, SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
+    MissionSnapshot_U8Write(writer,
+        SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
+    MissionSnapshot_FloatWrite(writer, SYSTEM_ALIGNMENT_KNOWN_YAW_DEG);
+    MissionSnapshot_U32Write(writer, SYSTEM_USER_ALIGNMENT_SELECTED_MASK);
+    MissionSnapshot_U32Write(writer, SYSTEM_USER_ALIGNMENT_REQUIRED_MASK);
+    for (index = 0U; index < SYSTEM_ALIGNMENT_CONSTRAINT_COUNT; index++)
+    {
+        const AlignmentConstraintSpec *constraint = &constraints[index];
+        MissionSnapshot_U8Write(writer, (uint8_t)constraint->kind);
+        MissionSnapshot_U8Write(writer, (uint8_t)constraint->body_axis);
+        MissionSnapshot_FloatWrite(writer, constraint->weight);
+        MissionSnapshot_FloatWrite(writer, constraint->declination_deg);
+        MissionSnapshot_FloatWrite(writer, constraint->nav_azimuth_deg);
+    }
+}
+
+static void MissionSnapshot_BuildIdentityWrite(
+    MissionSnapshotWriter *writer, const SystemProfile *profile)
+{
+    static const uint8_t build_tag[] = SILVERSTAR_LOG_BUILD_TAG;
+    uint8_t index;
+
+    _Static_assert(sizeof(build_tag) == 9U,
+        "Mission snapshot build tag must contain eight bytes");
+    SILVERSTAR_ASSERT_OBJECT(writer, MissionSnapshotWriter,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(profile, SystemProfile,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    MissionSnapshot_U32Write(writer, profile->profile_id);
+    MissionSnapshot_U32Write(writer, SystemDescriptor_ConfigDigestGet());
+    MissionSnapshot_U8Write(writer, SILVERSTAR_VERSION_MAJOR);
+    MissionSnapshot_U8Write(writer, SILVERSTAR_VERSION_MINOR);
+    MissionSnapshot_U8Write(writer, SILVERSTAR_VERSION_PATCH);
+    MissionSnapshot_U8Write(writer, SILVERSTAR_VERSION_BUILD);
+    for (index = 0U; index < 8U; index++)
+    { MissionSnapshot_U8Write(writer, build_tag[index]); }
+    MissionSnapshot_U8Write(writer, 0U); /* No trajectory guidance plan. */
+}
+
 static SystemMissionSnapshotResult MissionSnapshot_HeaderWrite(
     uint8_t base,
     const SystemMissionSnapshotStatus *status,
@@ -345,11 +403,8 @@ static SystemMissionSnapshotResult MissionSnapshot_HeaderWrite(
 {
     MissionSnapshotWriter writer;
     const SystemProfile *profile = SystemProfile_Get();
-    static const uint8_t build_tag[] = SILVERSTAR_LOG_BUILD_TAG;
     uint8_t index;
 
-    _Static_assert(sizeof(build_tag) == 9U,
-        "Mission snapshot build tag must contain eight bytes");
     SILVERSTAR_ASSERT_OBJECT(status, SystemMissionSnapshotStatus,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     SILVERSTAR_ASSERT_OBJECT(generations, uint32_t,
@@ -364,15 +419,7 @@ static SystemMissionSnapshotResult MissionSnapshot_HeaderWrite(
     MissionSnapshot_U8Write(&writer, base);
     MissionSnapshot_U32Write(&writer, status->mission_id);
     MissionSnapshot_U32Write(&writer, status->snapshot_sequence);
-    MissionSnapshot_U32Write(&writer, profile->profile_id);
-    MissionSnapshot_U32Write(&writer, SystemDescriptor_ConfigDigestGet());
-    MissionSnapshot_U8Write(&writer, SILVERSTAR_VERSION_MAJOR);
-    MissionSnapshot_U8Write(&writer, SILVERSTAR_VERSION_MINOR);
-    MissionSnapshot_U8Write(&writer, SILVERSTAR_VERSION_PATCH);
-    MissionSnapshot_U8Write(&writer, SILVERSTAR_VERSION_BUILD);
-    for (index = 0U; index < 8U; index++)
-    { MissionSnapshot_U8Write(&writer, build_tag[index]); }
-    MissionSnapshot_U8Write(&writer, 0U); /* No trajectory guidance plan. */
+    MissionSnapshot_BuildIdentityWrite(&writer, profile);
     MissionSnapshot_U32Write(&writer, SYSTEM_IMU_OUTPUT_RATE_HZ);
     MissionSnapshot_U16Write(&writer, SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT);
     MissionSnapshot_U32Write(&writer, SYSTEM_IMU_OUTPUT_RATE_HZ /
@@ -384,6 +431,7 @@ static SystemMissionSnapshotResult MissionSnapshot_HeaderWrite(
     MissionSnapshot_U32Write(&writer, status->mag_calibration_generation);
     MissionSnapshot_U32Write(&writer, status->mag_calibration_set_hash);
     MissionSnapshot_AirProfileWrite(&writer);
+    MissionSnapshot_AlignmentWrite(&writer);
     for (index = 0U; index < MISSION_SNAPSHOT_OBJECT_COUNT; index++)
     {
         MissionSnapshot_U32Write(&writer, generations[index]);

@@ -1,0 +1,73 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.alignment.vector_constraints",
+  "name": "Vector Constraints",
+  "type": "algorithm",
+  "class": "alignment",
+  "version": "0.1.0",
+  "description": "Bounded gravity, calibrated magnetic-field and reference-direction preflight alignment.",
+  "requires": {
+    "components": [
+      { "id": "silverstar.algorithm.alignment.common", "optional": false }
+    ],
+    "resources": [],
+    "capabilities": [
+      { "capability": "imu.acceleration", "purpose": "initialization" },
+      { "capability": "imu.angular_rate", "purpose": "initialization" },
+      { "capability": "imu.software_alignment_qualified", "purpose": "initialization" }
+    ]
+  },
+  "resources": { "provides": [], "roles": [], "conflicts": [] },
+  "provides": [ "algorithm.alignment" ],
+  "build": {
+    "sources": [
+      "Algorithm/Alignment/VectorConstraints/Src/alignment_strategy_binding.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Alignment/VectorConstraints/Inc"
+    ],
+    "defines": [
+      "SYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS",
+      "SYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS",
+      "SYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U",
+      "SYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT",
+      "SYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U",
+      "SYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U"
+    ]
+  },
+  "payload": { "roots": [ "Algorithm/Alignment/VectorConstraints" ] },
+  "metadata": {
+    "display_names": {
+      "zh_CN": "矢量约束",
+      "en_US": "Vector Constraints"
+    },
+    "descriptions": {
+      "zh_CN": "重力、已校准磁场和已知方向，最多六项；两项使用 TRIAD，多项使用有界加权均值。",
+      "en_US": "Gravity, calibrated magnetic field and known direction; two constraints use TRIAD, more use a bounded weighted mean."
+    },
+    "algorithm_descriptors": [
+      {
+        "order": 1,
+        "class": "SYSTEM_ALGORITHM_CLASS_ALIGNMENT",
+        "algorithm": "SYSTEM_ALIGNMENT_ALGORITHM",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "name_hash": "0x718DB3B1UL"
+      },
+      {
+        "order": 2,
+        "class": "SYSTEM_ALGORITHM_CLASS_ATTITUDE",
+        "algorithm": "SYSTEM_ATTITUDE_POLICY",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "name_hash": "0x7A33877DUL"
+      }
+    ]
+  },
+  "selection": {
+    "kind": "strategy",
+    "slot": "alignment",
+    "required": true,
+    "allow_none": false,
+    "ui_order": 10
+  }
+}

@@ -36,6 +36,11 @@ typedef struct
     float acceleration_mean_b_mps2[3];
     float gyro_mean_b_radps[3];
     float magnetic_field_mean_b_uT[3];
+    float minimum_pair_sine;
+    float rms_mismatch_rad;
+    float max_mismatch_rad;
+    uint8_t constraint_count;
+    uint8_t valid_pair_count;
     uint8_t mode_verified;
     uint8_t valid;
 } InsAlignmentSnapshot;

@@ -48,7 +48,10 @@ def test_real_fatfs_delayed_dma_logger_and_queue(storage_project):
     mixed = Audit_Bytes((output / "mixed.sslog").read_bytes(), catalog)
     assert mixed["passed"] and mixed["records"] == 40000
     normal = Audit_Bytes((output / "logger-normal.sslog").read_bytes(), catalog, decoder_hashes=hashes)
-    assert normal["passed"] and normal["records"] >= 40000
+    # Startup suppresses a bounded number of native records until the logger
+    # and mission snapshot are ready; the remaining sustained stream must be
+    # intact and free of queue drops.
+    assert normal["passed"] and normal["records"] >= 39900
     assert normal["queue_overflow_max"] == 0 and normal["sequence_gap_records"] == 0
     dropped = Audit_Bytes((output / "logger-overflow.sslog").read_bytes(), catalog,
                           decoder_hashes=hashes, allow_queue_drops=True)

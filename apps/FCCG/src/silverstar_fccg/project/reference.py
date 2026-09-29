@@ -51,7 +51,7 @@ REFERENCE_COMPONENT_IDS = {
     ),
     "algorithm_common": "silverstar.algorithm.common",
     "alignment_common": "silverstar.algorithm.alignment.common",
-    "alignment": "silverstar.algorithm.alignment.gravity_known_yaw",
+    "alignment": "silverstar.algorithm.alignment.vector_constraints",
     "calibration": "silverstar.algorithm.calibration",
     "ins": "silverstar.algorithm.ins.coning2_sculling2",
     "kf6": "silverstar.algorithm.estimator.kf6",

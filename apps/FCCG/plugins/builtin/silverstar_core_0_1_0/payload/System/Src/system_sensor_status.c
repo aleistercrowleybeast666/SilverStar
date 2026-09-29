@@ -221,8 +221,11 @@ static void SystemSensorStatus_AlignmentUsageResolve(
             break;
         case SILVERSTAR_SENSOR_ID_MAGNETOMETER:
             *used = (uint8_t)((navigation != NULL) &&
-                (navigation->alignment_algorithm ==
-                 SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD));
+                ((navigation->alignment_algorithm ==
+                  SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD) ||
+                 ((navigation->alignment_algorithm ==
+                   SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS) &&
+                  (SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT != 0U))));
             *required = (uint8_t)((*used != 0U) && ((required_mask &
                 SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE) != 0U));
             break;
@@ -231,7 +234,9 @@ static void SystemSensorStatus_AlignmentUsageResolve(
                 ((navigation->alignment_algorithm ==
                   SYSTEM_ALIGNMENT_HW_QUAT_9AXIS) ||
                  (navigation->alignment_algorithm ==
-                  SYSTEM_ALIGNMENT_HW_QUAT_6AXIS_KNOWN_YAW)));
+                  SYSTEM_ALIGNMENT_HW_QUAT_6AXIS_KNOWN_YAW) ||
+                 (navigation->alignment_algorithm ==
+                  SYSTEM_ALIGNMENT_EXTERNAL_ATTITUDE_SOURCE)));
             *required = (uint8_t)((*used != 0U) && ((required_mask &
                 SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE) != 0U));
             break;

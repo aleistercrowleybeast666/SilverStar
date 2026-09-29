@@ -591,8 +591,17 @@ static int Test_PersistentObjects(void)
             &generation) == PERSISTENT_STORAGE_OK);
         CHECK(length >= 8U);
         CHECK(memcmp(snapshot_readback, "SSMS", 4U) == 0);
-        CHECK(snapshot_readback[4] == 1U);
+        CHECK(snapshot_readback[4] == 2U);
         CHECK(snapshot_readback[5] == section);
+        if (section == 0U)
+        {
+            /* Header fields after the fixed AIR PHY profile. */
+            CHECK(length > 83U);
+            CHECK(snapshot_readback[82] ==
+                SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
+            CHECK(snapshot_readback[83] ==
+                SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
+        }
     }
     CHECK(SystemMissionSnapshot_Create(&snapshot_status) ==
         SystemMissionSnapshotResult_Ok);

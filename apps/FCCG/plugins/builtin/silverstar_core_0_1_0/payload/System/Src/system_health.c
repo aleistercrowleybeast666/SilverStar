@@ -141,7 +141,10 @@ static uint32_t SystemHealth_SensorBlockingMaskGet(
         blocking_mask |= SYSTEM_HEALTH_BLOCK_ALIGNMENT_NOT_READY;
     }
     if ((navigation != NULL) &&
-        (navigation->alignment_algorithm == SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD) &&
+        ((navigation->alignment_algorithm == SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD) ||
+         ((navigation->alignment_algorithm ==
+           SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS) &&
+          (SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT != 0U))) &&
         (((snapshot->capabilities.present_mask &
            SYSTEM_CAPABILITY_MAGNETOMETER) == 0U) ||
          ((snapshot->capabilities.healthy_mask &

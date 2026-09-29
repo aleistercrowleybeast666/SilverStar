@@ -1,0 +1,70 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.alignment.external_attitude_source",
+  "name": "External Attitude Source",
+  "type": "algorithm",
+  "class": "alignment",
+  "version": "0.1.0",
+  "description": "JY901B quaternion preflight alignment with explicit yaw authority.",
+  "requires": {
+    "components": [
+      { "id": "silverstar.algorithm.alignment.common", "optional": false }
+    ],
+    "resources": [],
+    "capabilities": [
+      { "capability": "attitude.external", "purpose": "initialization" },
+      { "capability": "attitude.external.preflight_alignment_6axis_qualified", "purpose": "initialization" }
+    ]
+  },
+  "resources": { "provides": [], "roles": [], "conflicts": [] },
+  "provides": [ "algorithm.alignment" ],
+  "build": {
+    "sources": [
+      "Algorithm/Alignment/ExternalAttitude/Src/alignment_strategy_binding.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [ "Algorithm/Alignment/ExternalAttitude/Inc" ],
+    "defines": [
+      "SYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_EXTERNAL_ATTITUDE_SOURCE",
+      "SYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_HARDWARE_QUATERNION",
+      "SYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=0U",
+      "SYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=0U",
+      "SYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=1U",
+      "SYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=1U"
+    ]
+  },
+  "payload": { "roots": [ "Algorithm/Alignment/ExternalAttitude" ] },
+  "metadata": {
+    "display_names": {
+      "zh_CN": "外部姿态源",
+      "en_US": "External Attitude Source"
+    },
+    "descriptions": {
+      "zh_CN": "JY901B 硬件四元数；六轴 yaw 必须用已知真北方位校正，九轴仅在模式经验证时可作为绝对航向。",
+      "en_US": "JY901B hardware quaternion; six-axis yaw needs a known true-north azimuth, and nine-axis yaw is authoritative only after mode verification."
+    },
+    "algorithm_descriptors": [
+      {
+        "order": 1,
+        "class": "SYSTEM_ALGORITHM_CLASS_ALIGNMENT",
+        "algorithm": "SYSTEM_ALIGNMENT_ALGORITHM",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "name_hash": "0x550EA8B7UL"
+      },
+      {
+        "order": 2,
+        "class": "SYSTEM_ALGORITHM_CLASS_ATTITUDE",
+        "algorithm": "SYSTEM_ATTITUDE_POLICY",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "name_hash": "0x58E5AA34UL"
+      }
+    ]
+  },
+  "selection": {
+    "kind": "strategy",
+    "slot": "alignment",
+    "required": true,
+    "allow_none": false,
+    "ui_order": 20
+  }
+}

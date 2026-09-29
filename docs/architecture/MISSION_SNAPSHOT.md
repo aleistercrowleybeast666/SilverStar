@@ -3,7 +3,7 @@
 The Flight logger owns all mission snapshot FatFs operations. Before it admits
 streaming and before `START` can pass its storage gate, it writes a bounded
 binary `SSMS` snapshot for the reserved mission directory. The format has its
-own schema revision (`1`); it does not change AIR M0, SSLOG 0.0, or the
+own schema revision (`2`); it does not change AIR M0, SSLOG 0.0, or the
 SilverStar product version.
 
 Each object has an eight-byte prefix: `SSMS`, schema revision, logical section,
@@ -13,7 +13,7 @@ which syncs, reads back, checks CRC, and commits a dual-slot generation.
 
 | Logical section | Contents |
 | --- | --- |
-| 0 | Commit header: bank, mission and profile identity, project digest, SilverStar version/build tag, no trajectory plan, IMU ODR/aggregation/propagation rate, selected source instances, calibration identity, AIR PHY, and each section generation/hash. |
+| 0 | Commit header: bank, mission and profile identity, project digest, SilverStar version/build tag, no trajectory plan, IMU ODR/aggregation/propagation rate, selected source instances, calibration identity, AIR PHY, bounded alignment strategy/constraints/yaw/source masks, and each section generation/hash. |
 | 1–2 | Selected device descriptors, physical identities, instances, capabilities, rates, and generated driver/model hashes. |
 | 3 | Selected algorithm descriptors and configuration digests. |
 | 4–5 | Generated actual algorithm parameter keys, types, and binary32/int32 values. |
@@ -39,8 +39,11 @@ telemetry one-way failover policies remain in force.
 
 `project_mission_parameters.c` is generated from selected manifest parameters
 and their effective values. Its bounded table is the authority for the
-parameter sections. The snapshot stores no JSON and does not parse a project
-file on the MCU. The mission-local object paths are under
+parameter sections. Section 0 also freezes the selected alignment algorithm,
+two to six typed constraints (kind, body axis, weight, declination and
+true-north azimuth), yaw authority, ENU yaw and selected/required source masks.
+The snapshot stores no JSON and does not parse a project file on the MCU.
+The mission-local object paths are under
 `0:/missions/<mission-id>/`; they are distinct from the user-selected project
 root and its `Log/` folder.
 

@@ -683,6 +683,41 @@ def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCa
 """
 
 
+def _AlignmentFloat_Render(value: float) -> str:
+    literal = f"{value:.9g}"
+    if "." not in literal and "e" not in literal:
+        literal += ".0"
+    return literal + "F"
+
+
+def _AlignmentDefinitions_Get(model: ProjectModel) -> tuple[tuple[str, str], ...]:
+    kind_symbols = {
+        "gravity": "ALIGNMENT_CONSTRAINT_GRAVITY",
+        "magnetic_field": "ALIGNMENT_CONSTRAINT_MAGNETIC_FIELD",
+        "reference_direction": "ALIGNMENT_CONSTRAINT_REFERENCE_DIRECTION",
+    }
+    axes = {"+X": 1, "-X": -1, "+Y": 2, "-Y": -2, "+Z": 3, "-Z": -3}
+    rows = [
+        "{ " + ", ".join((
+            kind_symbols[item.kind],
+            _AlignmentFloat_Render(item.weight),
+            _AlignmentFloat_Render(item.declination_deg),
+            str(axes[item.body_axis]),
+            _AlignmentFloat_Render(item.nav_azimuth_deg),
+        )) + " }"
+        for item in model.alignment.constraints
+    ]
+    known_azimuth = model.alignment.external_known_azimuth_deg
+    known_yaw = 0.0 if known_azimuth is None else 90.0 - known_azimuth
+    return (
+        ("SYSTEM_ALIGNMENT_CONSTRAINT_COUNT", f"{len(rows)}U"),
+        ("SYSTEM_ALIGNMENT_CONSTRAINTS_INITIALIZER", "{ " + ", ".join(rows) + " }"),
+        ("SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE", "1U" if model.alignment.external_yaw_authoritative else "0U"),
+        ("SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT", "1U" if any(item.kind == "magnetic_field" for item in model.alignment.constraints) else "0U"),
+        ("SYSTEM_ALIGNMENT_KNOWN_YAW_DEG", _AlignmentFloat_Render(known_yaw)),
+    )
+
+
 def _FlightConfigHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
@@ -701,6 +736,7 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
+    definitions.extend(_AlignmentDefinitions_Get(model))
     telemetry_tag = b"\0" * 8
     telemetry_selection = model.protocols.get("telemetry")
     if telemetry_selection is not None:

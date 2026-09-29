@@ -211,6 +211,12 @@ static void InsTask_AlignmentConfigGet(
     const SystemNavigationProfile *profile,
     AlignmentStrategyConfig *config)
 {
+    static const AlignmentConstraintSpec constraints[] =
+        SYSTEM_ALIGNMENT_CONSTRAINTS_INITIALIZER;
+    _Static_assert((sizeof(constraints) / sizeof(constraints[0])) ==
+        SYSTEM_ALIGNMENT_CONSTRAINT_COUNT, "Alignment count mismatch");
+    _Static_assert(SYSTEM_ALIGNMENT_CONSTRAINT_COUNT <=
+        ALIGNMENT_STRATEGY_MAX_CONSTRAINTS, "Alignment exceeds fixed capacity");
     if ((profile == NULL) || (config == NULL))
     {
         return;
@@ -244,6 +250,13 @@ static void InsTask_AlignmentConfigGet(
         SYSTEM_ALIGNMENT_MAG_DIRECTION_MIN_DOT;
     config->magnetic_horizontal_min_ratio =
         SYSTEM_ALIGNMENT_MAG_HORIZONTAL_MIN_RATIO;
+    SILVERSTAR_ASSERT(SYSTEM_ALIGNMENT_CONSTRAINT_COUNT <=
+        ALIGNMENT_STRATEGY_MAX_CONSTRAINTS, SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    config->constraint_count = SYSTEM_ALIGNMENT_CONSTRAINT_COUNT;
+    config->external_yaw_authoritative =
+        SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE;
+    (void)memcpy(config->constraints, constraints, sizeof(constraints));
 }
 
 static void InsTask_AlignmentOptionalSamplesGet(
@@ -321,13 +334,14 @@ static void InsTask_AlignmentSourceSet(
 static void InsTask_AlignmentSnapshotCommit(
     const SystemNavigationProfile *profile,
     const AttitudePreflightSample *sample,
+    const AlignmentStrategyOutput *quality,
     const float acceleration_mean_b_mps2[3],
     const float gyro_mean_b_radps[3],
     const float magnetic_field_mean_b_uT[3],
     SystemHardwareQuaternionMode hardware_mode,
     uint8_t mode_verified)
 {
-    if ((profile == NULL) || (sample == NULL) ||
+    if ((profile == NULL) || (sample == NULL) || (quality == NULL) ||
         (acceleration_mean_b_mps2 == NULL) ||
         (gyro_mean_b_radps == NULL))
     {
@@ -337,9 +351,16 @@ static void InsTask_AlignmentSnapshotCommit(
         SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT_OBJECT(sample, AttitudePreflightSample,
         SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT_OBJECT(quality, AlignmentStrategyOutput,
+        SILVERSTAR_ASSERT_MODULE_APP);
     s_alignment_snapshot.algorithm = profile->alignment_algorithm;
     s_alignment_snapshot.hardware_mode = hardware_mode;
     s_alignment_snapshot.mode_verified = mode_verified;
+    s_alignment_snapshot.constraint_count = quality->constraint_count;
+    s_alignment_snapshot.valid_pair_count = quality->valid_pair_count;
+    s_alignment_snapshot.minimum_pair_sine = quality->minimum_pair_sine;
+    s_alignment_snapshot.rms_mismatch_rad = quality->rms_mismatch_rad;
+    s_alignment_snapshot.max_mismatch_rad = quality->max_mismatch_rad;
     s_alignment_snapshot.valid = 1U;
     (void)memcpy(s_alignment_snapshot.q_nb,
                  s_preflight_attitude.latest.quaternion_wxyz,
@@ -369,6 +390,7 @@ static void InsTask_AlignmentSnapshotCommit(
 static uint8_t InsTask_AlignmentFinalize(
     const SystemNavigationProfile *profile,
     const InsImuSample *imu_sample,
+    const AlignmentStrategyOutput *quality,
     const float q_nb[4],
     const float acceleration_mean_b_mps2[3],
     const float gyro_mean_b_radps[3],
@@ -380,7 +402,8 @@ static uint8_t InsTask_AlignmentFinalize(
     AttitudePreflightResult result;
     uint32_t primask;
 
-    if ((profile == NULL) || (imu_sample == NULL) || (q_nb == NULL) ||
+    if ((profile == NULL) || (imu_sample == NULL) ||
+        (quality == NULL) || (q_nb == NULL) ||
         (acceleration_mean_b_mps2 == NULL) ||
         (gyro_mean_b_radps == NULL))
     {
@@ -408,7 +431,7 @@ static uint8_t InsTask_AlignmentFinalize(
     if (result == ATTITUDE_PREFLIGHT_RESULT_OK)
     {
         InsTask_AlignmentSnapshotCommit(
-            profile, &sample, acceleration_mean_b_mps2,
+            profile, &sample, quality, acceleration_mean_b_mps2,
             gyro_mean_b_radps, magnetic_field_mean_b_uT,
             hardware_mode, mode_verified);
     }
@@ -471,7 +494,7 @@ static void InsTask_AlignmentReadyFinalize(
         magnetic_field = output->magnetic_field_mean_b_uT;
     }
     (void)InsTask_AlignmentFinalize(
-        profile, imu_sample, output->q_nb,
+        profile, imu_sample, output, output->q_nb,
         output->acceleration_mean_b_mps2,
         output->gyro_mean_b_radps, magnetic_field,
         (SystemHardwareQuaternionMode)output->hardware_mode,
@@ -1154,6 +1177,10 @@ static void InsTask_AttitudeSourceResolve(
     else if (algorithm == SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD)
     {
         status->source = SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_GRAVITY_MAG_TRIAD;
+    }
+    else if (algorithm == SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS)
+    {
+        status->source = SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS;
     }
     else
     {

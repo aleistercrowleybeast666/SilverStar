@@ -17,10 +17,12 @@ from silverstar_fccg.project.algorithm_parameters import (
 )
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
+from silverstar_fccg.ui.pages.navigation_alignment import AlignmentConfigurationEditor
 from silverstar_fccg.ui.widgets import CollapsibleSection
 
 
-class AlgorithmParametersPage(ScrollableLocalizedPage):
+class NavigationConfigurationPage(ScrollableLocalizedPage):
+    alignmentChanged = Signal(object)
     parameterChanged = Signal(str, str, object)
     defaultsRequested = Signal(str)
     sharedParameterChanged = Signal(str, object)
@@ -28,14 +30,81 @@ class AlgorithmParametersPage(ScrollableLocalizedPage):
 
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, "page.navigation_configuration", "page.navigation_configuration.description")
+        self.sources_section, self.sources_layout = self._Section_Create("navigation.sources")
+        self.calibration_section, self.calibration_layout = self._Section_Create("navigation.calibration")
+        self.alignment_section, self.alignment_layout = self._Section_Create("navigation.initial_alignment")
+        self.alignment_editor = AlignmentConfigurationEditor(translator)
+        self.alignment_editor.configurationChanged.connect(self.alignmentChanged)
+        self.alignment_layout.addWidget(self.alignment_editor)
+        self.ins_section, self.ins_layout = self._Section_Create("navigation.ins")
+        self.estimator_section, self.estimator_layout = self._Section_Create("navigation.estimator")
+        self.parameters_section, self.parameters_layout = self._Section_Create("navigation.parameters")
+        self.impact_section, self.impact_layout = self._Section_Create("navigation.resource_timing")
+        self.rate_label = QLabel()
+        self.rate_label.setWordWrap(True)
+        self.ins_layout.addWidget(self.rate_label)
+        self.impact_label = QLabel()
+        self.impact_label.setWordWrap(True)
+        self.impact_layout.addWidget(self.impact_label)
         self._content = QWidget()
-        self.root_layout.addWidget(self._content)
+        self.parameters_layout.addWidget(self._content)
         self.root_layout.addStretch(1)
         self._owners: tuple[PluginManifest, ...] = ()
         self._values: dict = {}
         self._recommendations: tuple[dict, ...] = ()
         self._expanded: dict[tuple[str, str], bool] = {}
         self.editors: dict[tuple[str, str], EnterCommittedDoubleSpinBox] = {}
+        self._rate_plan = None
+        self._rate_error = ""
+        self.Language_Apply(translator)
+
+    def _Section_Create(self, key: str) -> tuple[QGroupBox, QVBoxLayout]:
+        section = QGroupBox(self._translator.Text_Get(key))
+        section.setProperty("navigationSectionKey", key)
+        layout = QVBoxLayout(section)
+        self.root_layout.addWidget(section)
+        return section, layout
+
+    def ExistingEditors_Attach(
+        self, *, sources: QWidget, calibration: QWidget,
+        alignment: QWidget, ins: QWidget, estimator: QWidget,
+    ) -> None:
+        self.sources_layout.addWidget(sources)
+        self.calibration_layout.addWidget(calibration)
+        self.alignment_layout.addWidget(alignment)
+        self.ins_layout.insertWidget(0, ins)
+        self.estimator_layout.addWidget(estimator)
+
+    def RatePlan_Set(self, rate_plan: object | None, error: str = "") -> None:
+        self._rate_plan = rate_plan
+        self._rate_error = error
+        if rate_plan is None:
+            self.rate_label.setText(error or self._translator.Text_Get("navigation.rate_unavailable"))
+            self.impact_label.setText(error or self._translator.Text_Get("navigation.rate_unavailable"))
+            return
+        self.rate_label.setText(self._translator.Text_Get(
+            "navigation.rate_summary",
+            odr=rate_plan.raw_imu_odr_hz,
+            aggregation=rate_plan.aggregation,
+            propagation=f"{rate_plan.effective_propagation_rate_hz:g}",
+        ))
+        issue_text = "; ".join(issue.code for issue in rate_plan.issues)
+        self.impact_label.setText(self._translator.Text_Get(
+            "navigation.impact_summary",
+            replay=rate_plan.maximum_replay_steps,
+            history=rate_plan.required_history_steps,
+            capacity=rate_plan.history_capacity,
+            cpu=rate_plan.cpu_profile,
+            issues=issue_text or "READY",
+        ))
+
+    def AlignmentConfiguration_Set(
+        self, configuration: object, strategy: str | None,
+        device_instances: tuple,
+    ) -> None:
+        self.alignment_editor.Configuration_Set(
+            configuration, strategy, device_instances,
+        )
 
     def Configuration_Set(self, owners: tuple[PluginManifest, ...], values: dict, recommendations: tuple[dict, ...] = ()) -> None:
         self._owners = owners
@@ -109,7 +178,7 @@ class AlgorithmParametersPage(ScrollableLocalizedPage):
             else:
                 group_layout.addWidget(QLabel(self._translator.Text_Get("algorithm_parameters.no_private")))
             layout.addWidget(group)
-        self.root_layout.replaceWidget(self._content, content)
+        self.parameters_layout.replaceWidget(self._content, content)
         self._content.hide()
         self._content.deleteLater()
         self._content = content
@@ -130,4 +199,13 @@ class AlgorithmParametersPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        for section in self.findChildren(QGroupBox):
+            key = section.property("navigationSectionKey")
+            if key:
+                section.setTitle(self._translator.Text_Get(key))
         self.Configuration_Set(self._owners, self._values, self._recommendations)
+        self.alignment_editor.Language_Apply(translator)
+        self.RatePlan_Set(self._rate_plan, self._rate_error)
+
+
+AlgorithmParametersPage = NavigationConfigurationPage

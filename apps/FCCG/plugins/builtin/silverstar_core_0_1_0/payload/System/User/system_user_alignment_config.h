@@ -4,6 +4,22 @@
 #include "system_alignment.h"
 #include "system_configuration_types.h"
 
+/* Generated project_flight_config.h overrides these bounded defaults. */
+#ifndef SYSTEM_ALIGNMENT_CONSTRAINT_COUNT
+#define SYSTEM_ALIGNMENT_CONSTRAINT_COUNT 2U
+#endif
+#ifndef SYSTEM_ALIGNMENT_CONSTRAINTS_INITIALIZER
+#define SYSTEM_ALIGNMENT_CONSTRAINTS_INITIALIZER \
+    { { ALIGNMENT_CONSTRAINT_GRAVITY, 1.0F, 0.0F, 0, 90.0F }, \
+      { ALIGNMENT_CONSTRAINT_REFERENCE_DIRECTION, 1.0F, 0.0F, 0, 90.0F } }
+#endif
+#ifndef SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE
+#define SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE 0U
+#endif
+#ifndef SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT
+#define SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT 0U
+#endif
+
 /* Build manifests select the one compiled Alignment Strategy. */
 #ifndef SYSTEM_ALIGNMENT_BUILD_ALGORITHM
 #define SYSTEM_ALIGNMENT_BUILD_ALGORITHM \

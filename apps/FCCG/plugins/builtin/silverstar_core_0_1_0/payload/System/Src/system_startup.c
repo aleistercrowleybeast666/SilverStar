@@ -318,7 +318,10 @@ static void SystemStartup_JyLogicalConfig(void)
         (void)memset(&config, 0, sizeof(config));
         config.requested_mask = SYSTEM_HW_QUAT_CAP_CONFIG_MODE;
         config.mode = (SystemNavigationProfile_Get()->alignment_algorithm ==
-                       SYSTEM_ALIGNMENT_HW_QUAT_9AXIS) ?
+                       SYSTEM_ALIGNMENT_HW_QUAT_9AXIS ||
+                       ((SystemNavigationProfile_Get()->alignment_algorithm ==
+                         SYSTEM_ALIGNMENT_EXTERNAL_ATTITUDE_SOURCE) &&
+                        (SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE != 0U))) ?
             SYSTEM_HW_QUAT_MODE_9AXIS : SYSTEM_HW_QUAT_MODE_6AXIS;
         config.output_rate_hz = SYSTEM_HARDWARE_QUATERNION_OUTPUT_RATE_HZ;
         (void)memset(&report, 0, sizeof(report));

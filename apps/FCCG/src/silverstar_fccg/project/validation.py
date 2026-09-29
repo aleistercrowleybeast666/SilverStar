@@ -48,6 +48,53 @@ class ProjectValidationResult:
         return not any(issue.level == "error" for issue in self.issues)
 
 
+def _AlignmentConfigurationIssues_Get(
+    model: ProjectModel, catalog: PluginCatalog,
+) -> tuple[ValidationIssue, ...]:
+    selected = model.strategies.get("alignment")
+    if selected not in {
+        "silverstar.algorithm.alignment.vector_constraints",
+        "silverstar.algorithm.alignment.external_attitude_source",
+    }:
+        return ()
+    instances = {item.instance_id: item for item in model.device_instances}
+    if selected.endswith("vector_constraints"):
+        if not any(item.kind == "magnetic_field" for item in model.alignment.constraints):
+            return ()
+        providers = [
+            catalog.Component_Get(item.plugin)
+            for item in model.device_instances
+        ]
+        if any(
+            {"magnetometer.field", "magnetometer.absolute_vector_qualified"}
+            <= set(provider.provides)
+            for provider in providers
+        ):
+            return ()
+        return (ValidationIssue(
+            "error", "ALIGNMENT_MAGNETOMETER_UNQUALIFIED",
+            "Magnetic constraint needs a selected qualified magnetometer",
+        ),)
+    source = instances.get(model.alignment.external_source_instance)
+    if source is None or source.plugin != "silverstar.device.imu.jy901b":
+        return (ValidationIssue(
+            "error", "ALIGNMENT_EXTERNAL_SOURCE_UNBOUND",
+            "External Attitude Source requires a selected JY901B instance",
+        ),)
+    manifest = catalog.Component_Get(source.plugin)
+    qualification = (
+        "attitude.external.preflight_alignment_9axis_qualified"
+        if model.alignment.external_yaw_authoritative else
+        "attitude.external.preflight_alignment_6axis_qualified"
+    )
+    if qualification not in manifest.provides:
+        return (ValidationIssue(
+            "error", "ALIGNMENT_EXTERNAL_YAW_UNQUALIFIED",
+            f"Selected source does not provide {qualification}",
+        ),)
+    return ()
+
+
 def _ComponentType_Validate(
     catalog: PluginCatalog,
     component_id: str,
@@ -1031,7 +1078,8 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
                     )
                 )
     from silverstar_fccg.project.air_link import (
-        AirLinkIssues_Get, GroundTargetIssues_Get,
+        AirLinkIssues_Get,
+        GroundTargetIssues_Get,
     )
 
     issues.extend(
@@ -1041,6 +1089,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
             if model.ground_target.enabled else AirLinkIssues_Get(model, catalog)
         )
     )
+    issues.extend(_AlignmentConfigurationIssues_Get(model, catalog))
     if model.strategies.get("ins"):
         from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
 

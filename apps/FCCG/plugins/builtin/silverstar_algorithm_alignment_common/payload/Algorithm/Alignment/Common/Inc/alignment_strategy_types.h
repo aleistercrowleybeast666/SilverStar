@@ -3,6 +3,24 @@
 
 #include <stdint.h>
 
+#define ALIGNMENT_STRATEGY_MAX_CONSTRAINTS 6U
+
+typedef enum
+{
+    ALIGNMENT_CONSTRAINT_GRAVITY = 1,
+    ALIGNMENT_CONSTRAINT_MAGNETIC_FIELD,
+    ALIGNMENT_CONSTRAINT_REFERENCE_DIRECTION
+} AlignmentConstraintKind;
+
+typedef struct
+{
+    AlignmentConstraintKind kind;
+    float weight;
+    float declination_deg;
+    int8_t body_axis;
+    float nav_azimuth_deg;
+} AlignmentConstraintSpec;
+
 typedef enum
 {
     ALIGNMENT_STRATEGY_PROCESS_INVALID = 0,
@@ -31,6 +49,9 @@ typedef struct
     float magnetic_magnitude_max_deviation_ratio;
     float magnetic_direction_min_dot;
     float magnetic_horizontal_min_ratio;
+    AlignmentConstraintSpec constraints[ALIGNMENT_STRATEGY_MAX_CONSTRAINTS];
+    uint8_t constraint_count;
+    uint8_t external_yaw_authoritative;
 } AlignmentStrategyConfig;
 
 typedef struct
@@ -64,6 +85,11 @@ typedef struct
     uint8_t hardware_mode;
     uint8_t hardware_mode_verified;
     uint8_t magnetic_field_valid;
+    uint8_t constraint_count;
+    uint8_t valid_pair_count;
+    float minimum_pair_sine;
+    float rms_mismatch_rad;
+    float max_mismatch_rad;
 } AlignmentStrategyOutput;
 
 #endif /* __ALIGNMENT_STRATEGY_TYPES_H */

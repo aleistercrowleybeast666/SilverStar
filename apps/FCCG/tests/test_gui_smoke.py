@@ -271,7 +271,7 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
         assert "build_release" not in window.build_page.action_buttons
         assert "flash" not in window.build_page.action_buttons
         assert window.save_as_action.shortcut().toString() == "Ctrl+Shift+S"
-        assert window.plugin_manager_dialog.panel.plugin_table.rowCount() == 54
+        assert window.plugin_manager_dialog.panel.plugin_table.rowCount() == len(window._component_views)
         for index in range(window.pages.count()):
             window.navigation_list.setCurrentRow(index)
             assert window.pages.currentIndex() == index
@@ -398,6 +398,8 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
         assert set(window.devices_page.device_combos) == {
             "imu0",
             "gnss0",
+            "barometer0",
+            "magnetometer0",
             "telemetry0",
         }
         telemetry_label = window.devices_page.telemetry_form.labelForField(
@@ -536,21 +538,20 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             )
             >= 0
         )
-        triad_item = alignment_combo.model().item(
-            alignment_combo.findData(
-                "silverstar.algorithm.alignment.gravity_mag_triad"
-            )
-        )
-        assert triad_item is not None and not triad_item.isEnabled()
+        assert {
+            alignment_combo.itemData(index)
+            for index in range(alignment_combo.count())
+        } == {
+            "silverstar.algorithm.alignment.vector_constraints",
+            "silverstar.algorithm.alignment.external_attitude_source",
+        }
         assert qapp.palette().color(
             QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text
         ) == QColor("#64748B")
         assert qapp.palette().color(
             QPalette.ColorGroup.Disabled, QPalette.ColorRole.Base
         ) == QColor("#E2E8F0")
-        assert triad_item.background().color() == QColor("#E2E8F0")
         assert "background: #E2E8F0;" in qapp.styleSheet()
-        assert "不具备绝对矢量初始对准资格" in triad_item.toolTip()
         landing_combo = window.flight_configuration_page.strategy_combos["landing"]
         impact_item = landing_combo.model().item(
             landing_combo.findData(

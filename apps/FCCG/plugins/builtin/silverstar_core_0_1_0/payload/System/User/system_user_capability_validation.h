@@ -85,6 +85,20 @@ _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
                "TRIAD requires an enabled, absolute-vector-qualified magnetometer");
 
 _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+                SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS) ||
+               ((SYSTEM_SELECTED_IMU_ACCEL_AVAILABLE != 0U) &&
+                (SYSTEM_SELECTED_IMU_GYRO_AVAILABLE != 0U) &&
+                (SYSTEM_SELECTED_IMU_SOFTWARE_ALIGNMENT_QUALIFIED != 0U)),
+               "Vector Constraints requires qualified inertial samples");
+_Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+                SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS) ||
+               (SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT == 0U) ||
+               ((SYSTEM_USER_MAGNETOMETER_ENABLE != 0U) &&
+                (SYSTEM_SELECTED_MAGNETOMETER_PHYSICAL_UNIT_AVAILABLE != 0U) &&
+                (SYSTEM_SELECTED_MAGNETOMETER_ABSOLUTE_VECTOR_QUALIFIED != 0U)),
+               "Magnetic Vector Constraint needs a qualified magnetometer");
+
+_Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
                 SYSTEM_ALIGNMENT_HW_QUAT_6AXIS_KNOWN_YAW) ||
                ((SYSTEM_USER_HARDWARE_QUATERNION_ENABLE != 0U) &&
                 (SYSTEM_SELECTED_HARDWARE_QUATERNION_OUTPUT_AVAILABLE != 0U) &&
@@ -97,6 +111,16 @@ _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
                 (SYSTEM_SELECTED_HARDWARE_QUATERNION_OUTPUT_AVAILABLE != 0U) &&
                 (SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED != 0U)),
                "HW 9-axis alignment requires a qualified preflight source");
+
+_Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+                SYSTEM_ALIGNMENT_EXTERNAL_ATTITUDE_SOURCE) ||
+               ((SYSTEM_USER_HARDWARE_QUATERNION_ENABLE != 0U) &&
+                (SYSTEM_SELECTED_HARDWARE_QUATERNION_OUTPUT_AVAILABLE != 0U) &&
+                (((SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE == 0U) &&
+                  (SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_6AXIS_QUALIFIED != 0U)) ||
+                 ((SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE != 0U) &&
+                  (SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED != 0U)))),
+               "External attitude needs a qualified quaternion and yaw mode");
 
 _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
                  SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) == 0U) ||

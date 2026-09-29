@@ -44,13 +44,17 @@ from PySide6.QtWidgets import (
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.app.version import PRODUCT_NAME, __version__
-from silverstar_fccg.build.runner import BuildAction, BuildProgress, BuildResult, BuildRunner
+from silverstar_fccg.build.runner import (
+    BuildAction,
+    BuildProgress,
+    BuildResult,
+    BuildRunner,
+)
 from silverstar_fccg.build.toolchain import ArmGnuSubtoolPaths_Derive
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.path_preferences import PathPreferences
 from silverstar_fccg.core.settings import SettingsStore
-from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.core.task import (
     TaskProgressEvent_Parse,
     TaskProgressState,
@@ -63,21 +67,31 @@ from silverstar_fccg.core.view_models import (
     ProtocolProfileView,
     ToolchainToolView,
 )
+from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.assembler import ApplyResult, GenerationPlan
-from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.generator.hardware_preparation import (
     HardwareAssignmentFingerprint_Get,
 )
-from silverstar_fccg.project.algorithm_parameters import AlgorithmParameterOwners_Get
-from silverstar_fccg.project.build_audit import BuildAudit_Run
+from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.project.air_link import (
-    AirLinkIssues_Get, GroundTargetIssues_Get, RadioLinkCompatible_Get,
+    AirLinkIssues_Get,
+    GroundTargetIssues_Get,
+    RadioLinkCompatible_Get,
 )
+from silverstar_fccg.project.algorithm_parameters import AlgorithmParameterOwners_Get
+from silverstar_fccg.project.alignment import (
+    RETIRED_ALIGNMENT_STRATEGIES,
+    AlignmentConfiguration,
+)
+from silverstar_fccg.project.build_audit import BuildAudit_Run
 from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
 from silverstar_fccg.project.configuration import (
     ModeOptionAvailabilities_Get,
     ProjectConfigurationResult,
     StrategyAvailabilities_Get,
+)
+from silverstar_fccg.project.folder_contract import (
+    FLIGHT_DIRECTORY,
 )
 from silverstar_fccg.project.lifecycle import ProjectLifecycleState
 from silverstar_fccg.project.logging import (
@@ -95,9 +109,6 @@ from silverstar_fccg.project.model import (
     ProjectModel,
     ProtocolSelection,
 )
-from silverstar_fccg.project.folder_contract import (
-    FLIGHT_DIRECTORY,
-)
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
 from silverstar_fccg.project.quality_results import QualityResultRecord
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
@@ -111,9 +122,9 @@ from silverstar_fccg.ui.pages import (
     FlightConfigurationPage,
     PluginManagerDialog,
 )
-from silverstar_fccg.ui.pages.algorithm_parameters import AlgorithmParametersPage
-from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage
+from silverstar_fccg.ui.pages.algorithm_parameters import NavigationConfigurationPage
 from silverstar_fccg.ui.pages.build import DefaultTools_Get
+from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage
 from silverstar_fccg.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 from silverstar_fccg.ui.widgets import EngineeringTable, HeaderComboBox
@@ -295,11 +306,12 @@ class MainWindow(QMainWindow):
         self.pages = QStackedWidget()
         self.devices_page = DevicesPage(self._translator)
         self.flight_configuration_page = FlightConfigurationPage(self._translator)
-        self.algorithm_parameters_page = AlgorithmParametersPage(self._translator)
+        self.algorithm_parameters_page = NavigationConfigurationPage(self._translator)
         self.algorithm_parameters_page.parameterChanged.connect(self._AlgorithmParameter_Change)
         self.algorithm_parameters_page.defaultsRequested.connect(self._AlgorithmDefaults_Reset)
         self.algorithm_parameters_page.sharedParameterChanged.connect(self._SharedAlgorithmParameter_Change)
         self.algorithm_parameters_page.sharedDefaultsRequested.connect(self._SharedAlgorithmDefaults_Reset)
+        self.algorithm_parameters_page.alignmentChanged.connect(self._AlignmentConfiguration_Change)
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
@@ -308,16 +320,19 @@ class MainWindow(QMainWindow):
         # configuration group on the page that owns it in the user workflow.
         for group in (
             self.flight_configuration_page.strategy_group,
+            self.flight_configuration_page.ins_strategy_group,
+            self.flight_configuration_page.estimator_strategy_group,
             self.flight_configuration_page.mode_group,
             self.flight_configuration_page.capability_group,
         ):
             self.flight_configuration_page.root_layout.removeWidget(group)
-        for index, group in enumerate((
-            self.flight_configuration_page.capability_group,
-            self.flight_configuration_page.mode_group,
-            self.flight_configuration_page.strategy_group,
-        ), start=1):
-            self.algorithm_parameters_page.root_layout.insertWidget(index, group)
+        self.algorithm_parameters_page.ExistingEditors_Attach(
+            sources=self.flight_configuration_page.capability_group,
+            calibration=self.flight_configuration_page.mode_group,
+            alignment=self.flight_configuration_page.strategy_group,
+            ins=self.flight_configuration_page.ins_strategy_group,
+            estimator=self.flight_configuration_page.estimator_strategy_group,
+        )
         self.devices_page.root_layout.removeWidget(self.devices_page.telemetry_group)
         self.ground_target_page.root_layout.removeWidget(
             self.ground_target_page.radio_selection_group
@@ -511,7 +526,9 @@ class MainWindow(QMainWindow):
             if component.component_type == ComponentType.DEVICE
         )
         selectable = tuple(
-            component for component in self._component_views if component.selection_kind
+            component for component in self._component_views
+            if component.selection_kind
+            and component.component_id not in RETIRED_ALIGNMENT_STRATEGIES
         )
         protocol_profiles: dict[str, list[ProtocolProfileView]] = {}
         protocol_availability = ProtocolProfileAvailabilities_Get(
@@ -743,6 +760,21 @@ class MainWindow(QMainWindow):
             self.build_page.GeneratedProject_Set(
                 display.generated_project
             )
+            self.algorithm_parameters_page.AlignmentConfiguration_Set(
+                display.model.alignment,
+                display.model.strategies.get("alignment"),
+                tuple(display.model.device_instances),
+            )
+            from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
+
+            try:
+                rate_plan = InertialRatePlan_Resolve(
+                    display.model, self._service.catalog,
+                )
+            except ValueError as error:
+                self.algorithm_parameters_page.RatePlan_Set(None, str(error))
+            else:
+                self.algorithm_parameters_page.RatePlan_Set(rate_plan)
             project_root = self._project_root
             self.build_page.Targets_Set(
                 flight_generated=bool(
@@ -1576,7 +1608,8 @@ class MainWindow(QMainWindow):
             )
             return
         from silverstar_fccg.project.resources import (
-            BoardHardwareInventory_Get, BoardResourceProvisions_Get,
+            BoardHardwareInventory_Get,
+            BoardResourceProvisions_Get,
         )
 
         board = self._service.catalog.Component_Get(board_id)
@@ -1647,7 +1680,8 @@ class MainWindow(QMainWindow):
 
     def _GroundCubeMxImport_Complete(self, result) -> None:
         from silverstar_fccg.hardware.platform import (
-            DetectedMcuFacts_FromInventory, PlatformMatch_Resolve,
+            DetectedMcuFacts_FromInventory,
+            PlatformMatch_Resolve,
         )
 
         match = PlatformMatch_Resolve(
@@ -2248,6 +2282,21 @@ class MainWindow(QMainWindow):
                 "status.project_opened", name=self._model.identity.name
             )
         )
+
+    def _AlignmentConfiguration_Change(self, configuration: object) -> None:
+        if not isinstance(configuration, AlignmentConfiguration):
+            return
+
+        def update(candidate: ProjectModel) -> None:
+            candidate.alignment = configuration
+            if configuration.external_source_instance:
+                candidate.capability_source_overrides["attitude.external"] = (
+                    configuration.external_source_instance
+                )
+            else:
+                candidate.capability_source_overrides.pop("attitude.external", None)
+
+        self._ProjectConfiguration_Change(update)
 
     def _Project_Save(self) -> None:
         self._ProjectModel_Sync()

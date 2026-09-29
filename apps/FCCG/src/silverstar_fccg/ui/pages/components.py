@@ -1272,6 +1272,16 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             "group.strategy_selection", self.strategy_form
         )
         self.root_layout.addWidget(self.strategy_group)
+        self.ins_strategy_form = QFormLayout()
+        self.ins_strategy_group = self.Group_Create(
+            "navigation.ins", self.ins_strategy_form
+        )
+        self.root_layout.addWidget(self.ins_strategy_group)
+        self.estimator_strategy_form = QFormLayout()
+        self.estimator_strategy_group = self.Group_Create(
+            "navigation.estimator", self.estimator_strategy_form
+        )
+        self.root_layout.addWidget(self.estimator_strategy_group)
         self.mission_mode_layout = QVBoxLayout()
         self.mission_mode_group = self.Group_Create(
             "group.mission_modes", self.mission_mode_layout
@@ -1432,6 +1442,10 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         self._mode_availability = dict(mode_availability or {})
         while self.strategy_form.rowCount():
             self.strategy_form.removeRow(0)
+        while self.ins_strategy_form.rowCount():
+            self.ins_strategy_form.removeRow(0)
+        while self.estimator_strategy_form.rowCount():
+            self.estimator_strategy_form.removeRow(0)
         while self.mission_strategy_form.rowCount():
             self.mission_strategy_form.removeRow(0)
         for target_layout in (self.mode_layout, self.mission_mode_layout):
@@ -1487,10 +1501,11 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                     selected_slot, editor.currentData()
                 )
             )
-            target_form = (
-                self.strategy_form if slot in {"alignment", "ins", "estimator"}
-                else self.mission_strategy_form
-            )
+            target_form = {
+                "alignment": self.strategy_form,
+                "ins": self.ins_strategy_form,
+                "estimator": self.estimator_strategy_form,
+            }.get(slot, self.mission_strategy_form)
             target_form.addRow(
                 QLabel(self._translator.Text_Get(f"strategy.slot.{slot}")), combo
             )

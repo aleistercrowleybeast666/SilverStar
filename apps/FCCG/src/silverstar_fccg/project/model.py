@@ -13,9 +13,13 @@ from silverstar_fccg.app.version import (
     SILVERSTAR_CORE_COMPONENT_ID,
     SILVERSTAR_PLATFORM_VERSION,
 )
-from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.core.errors import FccgError
-
+from silverstar_fccg.core.workspace import WorkspacePolicy
+from silverstar_fccg.project.alignment import (
+    AlignmentConfiguration,
+    AlignmentConfiguration_Parse,
+    AlignmentConstraint,
+)
 
 PROJECT_NAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_. -]{0,79}$")
 PROJECT_TOKEN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$")
@@ -39,7 +43,7 @@ TOOLCHAIN_PREFIX_PATTERN = re.compile(r"^[A-Za-z0-9_.+-]+$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 RELATIVE_FILE_PATTERN = re.compile(r"^[A-Za-z0-9_./+@ -]+$")
 
-PROJECT_FORMAT_VERSION = 13
+PROJECT_FORMAT_VERSION = 14
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
     "telemetry": "air.m0",
@@ -214,6 +218,7 @@ class ProjectModel:
     device_instances: list[DeviceInstance] = field(default_factory=list)
     base_components: list[str] = field(default_factory=list)
     strategies: dict[str, str | None] = field(default_factory=dict)
+    alignment: AlignmentConfiguration = field(default_factory=AlignmentConfiguration)
     modes: dict[str, list[str]] = field(default_factory=dict)
     algorithm_parameters: dict[str, dict[str, float | int]] = field(default_factory=dict)
     mode_parameters: dict[str, dict[str, dict[str, float | int]]] = field(
@@ -333,6 +338,7 @@ class ProjectModel:
                 for slot, selection in sorted(self.modes.items())
             },
             "algorithm_parameters": deepcopy(self.algorithm_parameters),
+            "alignment": self.alignment.Dictionary_Get(),
             "mode_parameters": {
                 slot: {
                     option: dict(sorted(parameters.items()))
@@ -1636,6 +1642,32 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         root["algorithm_parameters"] = {}
         if isinstance(root.get("generated_glue"), list):
             root["generated_glue"] = list(dict.fromkeys([*root["generated_glue"], "project_algorithm_parameters"]))
+    if root.get("format_version") == 13:
+        root = deepcopy(root)
+        root["format_version"] = PROJECT_FORMAT_VERSION
+        alignment = AlignmentConfiguration()
+        components = root.get("components")
+        strategies = components.get("strategies") if isinstance(components, dict) else None
+        if isinstance(strategies, dict):
+            selected = strategies.get("alignment")
+            if selected == "silverstar.algorithm.alignment.gravity_mag_triad":
+                alignment = AlignmentConfiguration(constraints=(
+                    AlignmentConstraint("gravity"),
+                    AlignmentConstraint("magnetic_field"),
+                ))
+                strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+            elif selected in {
+                "silverstar.algorithm.alignment.hardware_quat_6axis_known_yaw",
+                "silverstar.algorithm.alignment.hardware_quat_9axis",
+            }:
+                alignment = AlignmentConfiguration(
+                    external_yaw_authoritative=selected.endswith("9axis"),
+                    external_known_azimuth_deg=None if selected.endswith("9axis") else 90.0,
+                )
+                strategies["alignment"] = "silverstar.algorithm.alignment.external_attitude_source"
+            elif selected == "silverstar.algorithm.alignment.gravity_known_yaw":
+                strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+        root["alignment"] = alignment.Dictionary_Get()
     root = _CurrentPreRelease_Migrate(root)
     root = _OfficialCoreV10_Migrate(root)
     required_root = {
@@ -1645,6 +1677,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         "modes",
         "mode_parameters",
         "algorithm_parameters",
+        "alignment",
         "protocols",
         "hardware",
         "air_link",
@@ -1700,6 +1733,10 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     ) = _Components_Parse(root.get("components"))
     modes = _Modes_Parse(root.get("modes"))
     algorithm_parameters = _AlgorithmParameters_Parse(root.get("algorithm_parameters"))
+    try:
+        alignment = AlignmentConfiguration_Parse(root.get("alignment"))
+    except ValueError as error:
+        raise ProjectModelError(str(error)) from error
     mode_parameters = _ModeParameters_Parse(root.get("mode_parameters"))
     protocols = _Protocols_Parse(root.get("protocols"))
     hardware = _Hardware_Parse(root.get("hardware"), board=board)
@@ -1749,6 +1786,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         device_instances=device_instances,
         base_components=base,
         strategies=strategies,
+        alignment=alignment,
         modes=modes,
         mode_parameters=mode_parameters,
         algorithm_parameters=algorithm_parameters,

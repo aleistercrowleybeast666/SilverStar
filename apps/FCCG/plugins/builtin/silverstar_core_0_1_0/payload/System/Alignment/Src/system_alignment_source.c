@@ -257,6 +257,8 @@ const char *SystemAlignment_AttitudeSourceText(
             return "GRAVITY_KNOWN_YAW";
         case SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_GRAVITY_MAG_TRIAD:
             return "GRAVITY_MAG_TRIAD";
+        case SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS:
+            return "VECTOR_CONSTRAINTS";
         case SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_NONE:
         default:
             return "NONE";
