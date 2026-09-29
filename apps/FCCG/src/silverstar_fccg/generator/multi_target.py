@@ -108,8 +108,15 @@ def _Main_Integrate(content: bytes) -> bytes:
     return source.encode("utf-8")
 
 
-def _VerifiedBoardMain_Prepare(content: bytes, board_id: str) -> bytes:
-    if board_id != "silverstar.board.silverstar_0_5":
+def _VerifiedBoardMain_Prepare(content: bytes, board) -> bytes:
+    if (
+        board.source == "builtin"
+        and board.board is not None
+        and board.board.verified
+        and board.metadata.get("ground_entry") == "clean_cubemx_main"
+    ):
+        return content
+    if board.component_id != "silverstar.board.silverstar_0_5":
         raise ValueError("Ground board application entry is not verified for this board")
     source = content.decode("utf-8-sig")
     expected = (
@@ -256,11 +263,12 @@ def _Makefile_Render(
     return f"""# Generated Ground target; source graph is Generated/ground_source_graph.json.
 CC := {toolchain_prefix}gcc
 OBJCOPY := {toolchain_prefix}objcopy
+SIZE := {toolchain_prefix}size
 C_SOURCES := {source_lines}
 ASM_SOURCES := {asm_lines}
 OBJECTS := $(patsubst %.c,build/%.o,$(C_SOURCES)) $(patsubst %.s,build/%.o,$(ASM_SOURCES))
-CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections {flags} {include_flags} {define_flags}
-LDFLAGS := {flags} -Wl,--gc-sections -T{linker} -specs=nano.specs -lc -lm -lnosys
+CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections -fstack-usage {flags} {include_flags} {define_flags}
+LDFLAGS := {flags} -Wl,--gc-sections,-Map=build/ground.map -T{linker} -specs=nano.specs -lc -lm -lnosys
 
 ifeq ($(OS),Windows_NT)
 MKDIR_P = if not exist "$(dir $@)" mkdir "$(dir $@)"
@@ -268,13 +276,16 @@ else
 MKDIR_P = mkdir -p "$(dir $@)"
 endif
 
-all: build/ground.elf build/ground.bin
+all: build/ground.elf build/ground.bin build/ground.size
 
 build/ground.elf: $(OBJECTS)
 \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
 build/ground.bin: build/ground.elf
 \t$(OBJCOPY) -O binary $< $@
+
+build/ground.size: build/ground.elf
+\t$(SIZE) $< > $@
 
 build/%.o: %.c
 \t@$(MKDIR_P)
@@ -334,7 +345,9 @@ def GroundFiles_Render(
     if main_path not in files:
         raise ValueError("Ground CubeMX hardware has no generated Core/Src/main.c")
     if ground.hardware.mode == "board_plugin":
-        files[main_path] = _VerifiedBoardMain_Prepare(files[main_path], ground.board)
+        files[main_path] = _VerifiedBoardMain_Prepare(
+            files[main_path], catalog.Component_Get(ground.board)
+        )
     files[main_path] = _Main_Integrate(files[main_path])
     if ground.pc_interface == "usb_cdc":
         callback_paths = [path for path in files if path.endswith("/usbd_cdc_if.c")]

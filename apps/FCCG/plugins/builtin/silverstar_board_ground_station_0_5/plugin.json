@@ -1,0 +1,203 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.board.ground_station_0_5",
+  "name": "Ground Station 0.5",
+  "type": "board",
+  "class": "ground_station_board",
+  "version": "0.1.0",
+  "description": "GS_SS1 STM32F103C8T6 hardware-validated PCB reference, with a new clean SilverStar application entry.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.mcu.stm32f103c8t6",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [
+      {
+        "id": "PLATFORM_UART_1",
+        "kind": "uart",
+        "metadata": {
+          "c_id": "PLATFORM_UART_1",
+          "header": "platform_uart.h"
+        }
+      },
+      {
+        "id": "PLATFORM_SPI_1",
+        "kind": "spi",
+        "metadata": {
+          "c_id": "PLATFORM_SPI_1",
+          "header": "platform_spi.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_0",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_0",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_1",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_1",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_2",
+        "kind": "gpio_input",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_2",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_3",
+        "kind": "gpio_interrupt",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_3",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_4",
+        "kind": "gpio_input",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_4",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_GPIO_5",
+        "kind": "gpio_input",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_5",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
+        "id": "PLATFORM_TIME_1",
+        "kind": "time",
+        "metadata": {
+          "c_id": "PLATFORM_TIME_1",
+          "header": "platform_time.h"
+        }
+      }
+    ],
+    "roles": [
+      {
+        "key": "telemetry:radio_bus",
+        "kind": "spi",
+        "default": "PLATFORM_SPI_1",
+        "candidates": [
+          "PLATFORM_SPI_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_nss",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_0",
+        "candidates": [
+          "PLATFORM_GPIO_0"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_reset",
+        "kind": "gpio_output",
+        "default": "PLATFORM_GPIO_1",
+        "candidates": [
+          "PLATFORM_GPIO_1"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_busy",
+        "kind": "gpio_input",
+        "default": "PLATFORM_GPIO_2",
+        "candidates": [
+          "PLATFORM_GPIO_2"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:radio_dio1",
+        "kind": "gpio_interrupt",
+        "default": "PLATFORM_GPIO_3",
+        "candidates": [
+          "PLATFORM_GPIO_3"
+        ],
+        "fixed": true
+      },
+      {
+        "key": "telemetry:time",
+        "kind": "time",
+        "default": "PLATFORM_TIME_1",
+        "candidates": [
+          "PLATFORM_TIME_1"
+        ],
+        "fixed": true
+      }
+    ],
+    "conflicts": []
+  },
+  "provides": [
+    "board.ground_station_0_5",
+    "hardware.stm32.generated"
+  ],
+  "build": {
+    "sources": [
+      "Core/Src/dma.c",
+      "Core/Src/gpio.c",
+      "Core/Src/main.c",
+      "Core/Src/spi.c",
+      "Core/Src/stm32f1xx_hal_msp.c",
+      "Core/Src/stm32f1xx_it.c",
+      "Core/Src/system_stm32f1xx.c",
+      "Core/Src/usart.c"
+    ],
+    "include_dirs": [
+      "Core/Inc"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Core",
+      "Ground_Station0.5.ioc"
+    ]
+  },
+  "metadata": {
+    "target_role": "ground_station",
+    "ground_entry": "clean_cubemx_main",
+    "hardware_maturity": "hardware_validated_reference",
+    "reference": {
+      "repository": "aleistercrowleybeast666/GS_SS1",
+      "commit": "7fe0f61142c7360f7dbae0ac0000036315631320",
+      "evidence": "User-reported burn and successful operation on GS_SS1 PCB"
+    },
+    "display_names": {
+      "zh_CN": "Ground Station 0.5（硬件参考已验证）",
+      "en_US": "Ground Station 0.5 (Hardware-validated reference)"
+    }
+  },
+  "board": {
+    "source_kind": "verified_builtin",
+    "compatible_mcus": [
+      "silverstar.mcu.stm32f103c8t6"
+    ],
+    "vendor": "STM32",
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "verified": true,
+    "hardware_root": "Core",
+    "ioc_file": "payload/Ground_Station0.5.ioc",
+    "connections_file": "connections.json"
+  }
+}

@@ -1310,6 +1310,11 @@ def _PlatformBinding_Render(binding, entries: list[dict[str, Any]]) -> str:
                 f"{{&{handle}, {numeric_fields[0]}U, {numeric_fields[1]}U, "
                 f"{numeric_fields[2]}U}}"
             )
+        elif binding.entry_kind == "systick":
+            frequency = int(entry.get("tick_frequency_hz", 0))
+            if frequency != 1_000:
+                raise ValueError("SysTick resource must have a verified 1 kHz HAL tick")
+            initializer = f"{{{frequency}U}}"
         else:
             raise ValueError(
                 f"Unsupported Platform resource entry kind: {binding.entry_kind}"

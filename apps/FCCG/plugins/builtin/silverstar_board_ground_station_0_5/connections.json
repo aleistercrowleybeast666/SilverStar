@@ -1,0 +1,50 @@
+{
+  "format_version": 1,
+  "resources": {
+    "PLATFORM_UART_1": {
+      "physical": "USART1",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_SPI_1": {
+      "physical": "SPI1",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_GPIO_0": {
+      "physical": "SPI_RADIO_NSS",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_GPIO_1": {
+      "physical": "RADIO_RST",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_GPIO_2": {
+      "physical": "RADIO_BUSY",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_GPIO_3": {
+      "physical": "RADIO_DIO1",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_GPIO_4": {
+      "physical": "RADIO_DIO2",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_GPIO_5": {
+      "physical": "RADIO_DIO3",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_TIME_1": {
+      "physical": "SYSTEM_TIME",
+      "fixed": true,
+      "purpose": "GS_SS1 validated hardware wiring"
+    }
+  }
+}

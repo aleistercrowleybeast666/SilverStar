@@ -268,7 +268,10 @@ def test_protocol_controls_artifact_gate_and_assignment_fingerprint(
         project_root = tmp_path / "GeneratedProject"
         window._project_root = project_root
         assert window._FirmwareArtifact_Get(window._model) == (None, "")
-        non_artifact = project_root / "build" / "FCCG" / window._model.build.target_profile / "Release" / "notes.txt"
+        non_artifact = (
+            project_root / "Flight_Controller" / "build" / "FCCG"
+            / window._model.build.target_profile / "Release" / "notes.txt"
+        )
         non_artifact.parent.mkdir(parents=True)
         non_artifact.write_text("not firmware", encoding="utf-8")
         assert window._FirmwareArtifact_Get(window._model) == (None, "")

@@ -10,6 +10,8 @@ from silverstar_fccg.app.version import SILVERSTAR_PLATFORM_VERSION
 
 class ComponentType(StrEnum):
     CORE = "core"
+    PLATFORM_API = "platform_api"
+    MCU_FAMILY = "mcu_family"
     MCU = "mcu"
     BOARD = "board"
     DEVICE = "device"

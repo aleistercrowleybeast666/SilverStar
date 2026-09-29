@@ -885,6 +885,22 @@ def _TimebaseInventory_Get(
     }
     errors: list[str] = []
     if not re.fullmatch(r"TIM\d+", expected_instance):
+        if (
+            not expected_instance
+            and values.get("Mcu.Family", "").upper() == "STM32F1"
+            and values.get("VP_SYS_VS_Systick.Mode", "").casefold() == "systick"
+            and values.get("NVIC.SysTick_IRQn", "").casefold().startswith("true")
+        ):
+            handler_valid = not generated_files or any(
+                "SysTick_Handler" in text and "HAL_IncTick()" in text
+                for text in generated_files.values()
+            )
+            return TimebaseInventory(
+                kind="systick", irq="SysTick_IRQn", tick_frequency_hz=1000,
+                errors=() if handler_valid else (
+                    "Generated F1 SysTick handler does not advance HAL tick",
+                ),
+            )
         return TimebaseInventory(
             kind="systick" if not expected_instance else expected_instance.casefold(),
             irq=expected_irq,

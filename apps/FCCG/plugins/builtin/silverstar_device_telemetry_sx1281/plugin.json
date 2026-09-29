@@ -39,7 +39,7 @@
         "electrical_constraints": {
           "mode": "gpio_output",
           "output_type": "push_pull",
-          "pull": "none",
+          "allowed_pulls": ["none", "up"],
           "speed": "low",
           "safe_initial_level": "inactive",
           "active_polarity": "low",

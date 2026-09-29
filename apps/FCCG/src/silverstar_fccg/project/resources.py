@@ -370,6 +370,11 @@ def BoardResourceProvisions_Get(
                 )
                 if isinstance(token, str) and token
             )
+            if (
+                provision.kind == "time"
+                and metadata.get("timebase", {}).get("kind") == "systick"
+            ):
+                symbol_tokens = ("SysTick_Handler", "HAL_IncTick")
             missing_tokens = tuple(
                 token
                 for token in symbol_tokens
@@ -710,6 +715,9 @@ def _RequirementConstraintsErrors_Get(
                     electrical[field_name],
                     metadata.get(field_name),
                 )
+        allowed_pulls = electrical.get("allowed_pulls")
+        if allowed_pulls and metadata.get("pull") not in allowed_pulls:
+            mismatch("electrical.allowed_pulls", allowed_pulls, metadata.get("pull"))
         if "alternate_function" in electrical and str(
             metadata.get("alternate_function", "")
         ).casefold() != str(electrical["alternate_function"]).casefold():

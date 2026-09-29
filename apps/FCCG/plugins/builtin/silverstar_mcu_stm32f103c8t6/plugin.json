@@ -1,0 +1,101 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.mcu.stm32f103c8t6",
+  "name": "STM32F103C8T6",
+  "type": "mcu",
+  "class": "stm32f1",
+  "version": "0.1.0",
+  "description": "Official 64 KiB Flash / 20 KiB SRAM STM32F103C8T6 exact MCU contract.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.mcu_family.stm32f1",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "mcu.cortex_m3",
+    "hardware_provider.stm32_cubemx"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [
+      "startup_stm32f103xb.s"
+    ],
+    "include_dirs": [],
+    "defines": [
+      "USE_HAL_DRIVER",
+      "STM32F103xB"
+    ],
+    "mcu_flags": [
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft"
+    ],
+    "specs": [
+      "-specs=nano.specs"
+    ],
+    "libraries": [
+      "-lc",
+      "-lm",
+      "-lnosys"
+    ],
+    "linker_script": "STM32F103XX_FLASH.ld",
+    "toolchain_prefix": "arm-none-eabi-"
+  },
+  "payload": {
+    "roots": [
+      "startup_stm32f103xb.s",
+      "STM32F103XX_FLASH.ld"
+    ]
+  },
+  "metadata": {
+    "platform_family_id": "silverstar.mcu_family.stm32f1",
+    "vendor": "STM32",
+    "mcu_model": "STM32F103C8T6",
+    "cpu_profile": "cortex_m3_softfp",
+    "max_hclk_hz": 72000000,
+    "flash_bytes": 65536,
+    "sram_bytes": 20480,
+    "display_names": {
+      "zh_CN": "STM32F103C8T6",
+      "en_US": "STM32F103C8T6"
+    },
+    "supported_environments": [
+      "silverstar.environment.vscode_eide_gcc"
+    ],
+    "supported_toolchains": [
+      "arm-none-eabi-gcc"
+    ],
+    "resource_capacities": {
+      "uarts": 3,
+      "spis": 2,
+      "gpios": 48,
+      "timebases": 1
+    }
+  },
+  "platform": {
+    "build_target": {
+      "profile": "SilverStar_F103"
+    },
+    "match_rules": [
+      {
+        "vendor": "STM32",
+        "exact_part": "STM32F103C8T6",
+        "family_pattern": "STM32F1*",
+        "package_pattern": "LQFP48",
+        "priority": 100,
+        "specificity": 1000,
+        "verification": "supported"
+      }
+    ]
+  }
+}

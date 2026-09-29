@@ -1,0 +1,319 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.mcu_family.stm32f1",
+  "name": "STM32F1 family backend",
+  "type": "mcu_family",
+  "class": "stm32f1",
+  "version": "0.1.0",
+  "description": "STM32F1 HAL/CMSIS and bounded SilverStar UART, SPI, GPIO/EXTI and SysTick Platform backend.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.platform.api",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "platform.stm32f1"
+  ],
+  "build": {
+    "sources": [
+      "Platform/STM32F1/Src/platform_critical_stm32f1.c"
+    ],
+    "include_dirs": [
+      "Platform/STM32F1/Inc",
+      "Drivers/STM32F1xx_HAL_Driver/Inc",
+      "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+      "Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+      "Drivers/CMSIS/Include"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Platform/STM32F1",
+      "Drivers"
+    ]
+  },
+  "metadata": {
+    "vendor": "STM32",
+    "family": "STM32F1",
+    "source_policy": "plugin_payload_authoritative",
+    "reference": {
+      "source_repository": "aleistercrowleybeast666/GS_SS1",
+      "commit": "7fe0f61142c7360f7dbae0ac0000036315631320",
+      "vendor_package": "STM32Cube FW_F1 V1.8.7"
+    },
+    "display_names": {
+      "zh_CN": "STM32F1 系列后端",
+      "en_US": "STM32F1 Family Backend"
+    }
+  },
+  "platform": {
+    "abi": {
+      "id": "silverstar.platform.resources",
+      "major": 1,
+      "minor": 0
+    },
+    "provider": "stm32_cubemx",
+    "build_target": {
+      "profile": "STM32F1"
+    },
+    "match_rules": [
+      {
+        "vendor": "STM32",
+        "family_pattern": "STM32F1*",
+        "priority": 10,
+        "specificity": 10,
+        "verification": "supported"
+      }
+    ],
+    "resource_binding": {
+      "header": "platform_stm32f1_resources.h",
+      "bindings": {
+        "uart": {
+          "collection": "uarts",
+          "include_header": "usart.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformUartId",
+          "count_symbol": "PLATFORM_UART_COUNT",
+          "table_symbol": "s_uart_handles",
+          "getter": "PlatformStm32f1Resource_UartHandleGet",
+          "struct_type": ""
+        },
+        "spi": {
+          "collection": "spis",
+          "include_header": "spi.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformSpiId",
+          "count_symbol": "PLATFORM_SPI_COUNT",
+          "table_symbol": "s_spi_handles",
+          "getter": "PlatformStm32f1Resource_SpiHandleGet",
+          "struct_type": ""
+        },
+        "gpio": {
+          "collection": "gpios",
+          "include_header": "main.h",
+          "entry_kind": "gpio",
+          "id_type": "PlatformGpioId",
+          "count_symbol": "PLATFORM_GPIO_COUNT",
+          "table_symbol": "s_gpio_resources",
+          "getter": "PlatformStm32f1Resource_GpioGet",
+          "struct_type": "PlatformStm32f1GpioResource"
+        },
+        "time": {
+          "collection": "timebases",
+          "include_header": "main.h",
+          "entry_kind": "systick",
+          "id_type": "PlatformTimeId",
+          "count_symbol": "PLATFORM_TIME_COUNT",
+          "table_symbol": "s_time_resources",
+          "getter": "PlatformStm32f1Resource_TimeGet",
+          "struct_type": "PlatformStm32f1TimeResource"
+        }
+      }
+    },
+    "resource_backends": {
+      "uart": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "uart"
+        ],
+        "sources": [
+          "Platform/STM32F1/Src/platform_uart_stm32f1.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "uart.blocking"
+        ],
+        "ownership": "shared"
+      },
+      "spi": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "spi"
+        ],
+        "sources": [
+          "Platform/STM32F1/Src/platform_spi_stm32f1.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "spi.master_blocking"
+        ],
+        "ownership": "shared"
+      },
+      "gpio": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "gpio_input",
+          "gpio_output",
+          "gpio_interrupt"
+        ],
+        "sources": [
+          "Platform/STM32F1/Src/platform_gpio_stm32f1.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "gpio.digital",
+          "gpio.exti"
+        ],
+        "ownership": "single_owner"
+      },
+      "time": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "time"
+        ],
+        "sources": [
+          "Platform/STM32F1/Src/platform_time_stm32f1.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "time.monotonic_ms"
+        ],
+        "ownership": "shared"
+      }
+    },
+    "module_providers": {
+      "base": {
+        "inventory_modules": [
+          "NVIC",
+          "RCC",
+          "SYS"
+        ],
+        "init_sources": [
+          "Core/Src/main.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.base"
+        ],
+        "limitations": [],
+        "always": true
+      },
+      "gpio": {
+        "inventory_modules": [
+          "GPIO"
+        ],
+        "init_sources": [
+          "Core/Src/gpio.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.gpio"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "dma": {
+        "inventory_modules": [
+          "DMA"
+        ],
+        "init_sources": [
+          "Core/Src/dma.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.dma"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "uart": {
+        "inventory_modules": [
+          "USART*",
+          "UART*",
+          "LPUART*"
+        ],
+        "init_sources": [
+          "Core/Src/usart.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.uart"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "spi": {
+        "inventory_modules": [
+          "SPI*"
+        ],
+        "init_sources": [
+          "Core/Src/spi.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.spi"
+        ],
+        "limitations": [],
+        "always": false
+      }
+    },
+    "compatibility": {
+      "cubemx_versions": [
+        "6.15.0"
+      ],
+      "firmware_packages": [
+        "STM32Cube FW_F1 V1.8.7"
+      ],
+      "source_policy": "plugin_payload_authoritative"
+    },
+    "support": {
+      "level": "supported",
+      "limitations": [
+        "F103 Ground software requires ARM build and new-board integration validation",
+        "SysTick Ground time has millisecond resolution",
+        "F1 UART Platform backend provides bounded blocking operations; asynchronous operations are unsupported"
+      ]
+    }
+  }
+}

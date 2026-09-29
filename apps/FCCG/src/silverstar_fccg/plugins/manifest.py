@@ -1160,6 +1160,7 @@ def _ElectricalConstraints_Validate(
         "mode",
         "output_type",
         "pull",
+        "allowed_pulls",
         "speed",
         "safe_initial_level",
         "active_polarity",
@@ -1188,6 +1189,19 @@ def _ElectricalConstraints_Validate(
         if field_name in electrical and electrical[field_name] not in accepted:
             raise PluginManifestError(
                 f"Electrical {field_name} for {name} is invalid"
+            )
+    if "allowed_pulls" in electrical:
+        pulls = electrical["allowed_pulls"]
+        if (
+            "pull" in electrical
+            or not isinstance(pulls, list)
+            or not pulls
+            or any(not isinstance(value, str) for value in pulls)
+            or len(pulls) != len(set(pulls))
+            or any(value not in allowed_values["pull"] for value in pulls)
+        ):
+            raise PluginManifestError(
+                f"Electrical allowed_pulls for {name} must be distinct valid pulls without pull"
             )
     for flag in ("irq", "startup_glitch_free"):
         if flag in electrical and not isinstance(electrical[flag], bool):
@@ -1919,7 +1933,7 @@ def _Platform_Parse(value: Any) -> PlatformContribution | None:
             or not isinstance(include_header, str)
             or re.fullmatch(r"[A-Za-z0-9_./-]+\.h", include_header) is None
             or ".." in Path(include_header).parts
-            or entry_kind not in {"handle", "gpio", "pwm", "timebase"}
+            or entry_kind not in {"handle", "gpio", "pwm", "timebase", "systick"}
             or not isinstance(struct_type, str)
             or (struct_type and identifier.fullmatch(struct_type) is None)
             or (entry_kind != "handle" and not struct_type)
