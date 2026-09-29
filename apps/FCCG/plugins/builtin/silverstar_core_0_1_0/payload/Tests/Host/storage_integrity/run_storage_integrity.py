@@ -23,7 +23,8 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
         configuration = configuration.replace(f'#include "{header}"', "")
     (output / "ffconf.h").write_text(configuration, encoding="utf-8")
     binary = output / "storage_integrity.exe"
-    sources = [fixture / "test_storage_integrity.c", output / "sd_diskio.c"]
+    sources = [fixture / "test_storage_integrity.c", output / "sd_diskio.c",
+               project / "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c"]
     sources += [fatfs / name for name in ("ff.c", "ff_gen_drv.c", "diskio.c")]
     sources += [project / "Protocol/SSLOG/Src" / name for name in ("sslog_protocol.c", "sslog_records.c")]
     sources += [project / "Common/Src/silverstar_assert.c"]
@@ -91,6 +92,9 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
     subprocess.run(command, check=True, cwd=project, env=environment)
     print("FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|3|4|logger-compile", flush=True)
     print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|4|4|logger-integrity", flush=True)
+    subprocess.run([str(writer), str(output / "persistent-objects.sslog"),
+                    "persistent-objects"], check=True, cwd=project,
+                   env=environment)
     decoders = list(project.glob("*.ssdecoder"))
     if len(decoders) != 1:
         raise ValueError("exactly one generated decoder is required for writer acceptance")

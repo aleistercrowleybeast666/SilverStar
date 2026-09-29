@@ -109,8 +109,8 @@
 /   950 - Traditional Chinese (DBCS)
 */
 
-#define _USE_LFN     0    /* 0 to 3 */
-#define _MAX_LFN     255  /* Maximum LFN length to handle (12 to 255) */
+#define _USE_LFN     1    /* Static BSS workspace; LoggerTask owns FatFs. */
+#define _MAX_LFN     48   /* Longest SilverStar path component is bounded. */
 /* The _USE_LFN switches the support of long file name (LFN).
 /
 /   0: Disable support of LFN. _MAX_LFN has no effect.

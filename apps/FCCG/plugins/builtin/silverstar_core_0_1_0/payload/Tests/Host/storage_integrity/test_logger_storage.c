@@ -16,6 +16,7 @@
 #include "platform_critical.h"
 #include "system_log_policy.h"
 #include "system_storage_if.h"
+#include "persistent_storage.h"
 #include "system_startup.h"
 #include "system_user_config.h"
 
@@ -378,7 +379,7 @@ static int Test_Writer(const char *output)
     CHECK(bus.overflow_count == s_recovery_drops);
     CHECK(f_mount(NULL, "0:", 0U) == FR_OK);
     CHECK(f_mount(&s_fs, "0:", 1U) == FR_OK);
-    CHECK(f_open(&s_file, "0:/SS0000.BIN", FA_READ) == FR_OK);
+    CHECK(f_open(&s_file, "0:/missions/000001/flight.sslog", FA_READ) == FR_OK);
     CHECK(f_size(&s_file) == storage.bytes_written);
     exported = fopen(output, "wb");
     CHECK(exported != NULL);
@@ -424,6 +425,48 @@ static int Test_Writer(const char *output)
     return 1;
 }
 
+static int Test_PersistentObjects(void)
+{
+    static const uint8_t calibration_a[] = {1U, 2U, 3U};
+    static const uint8_t calibration_b[] = {4U, 5U, 6U, 7U};
+    static const uint8_t snapshot[] = {9U, 8U, 7U};
+    static const uint8_t torn[] = {0U, 0U, 0U};
+    uint8_t readback[8];
+    uint16_t length = 0U;
+    uint32_t generation = 0U;
+    FILINFO info = {0};
+    CHECK(SystemStorage_Init() == SYSTEM_DEVICE_OK);
+    CHECK(SystemStorage_Mount() == SYSTEM_DEVICE_OK);
+    CHECK(SystemStorage_MissionDirectoryReserve(1U) == SYSTEM_DEVICE_OK);
+    CHECK(PersistentStorage_ObjectWriteAtomic(
+        PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION, 0U,
+        calibration_a, sizeof(calibration_a), &generation) ==
+        PERSISTENT_STORAGE_OK);
+    CHECK(generation == 1U);
+    CHECK(PersistentStorage_ObjectWriteAtomic(
+        PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION, 0U,
+        calibration_b, sizeof(calibration_b), &generation) ==
+        PERSISTENT_STORAGE_OK);
+    CHECK(generation == 2U);
+    CHECK(f_stat("0:/system/calibration/mag00.1", &info) == FR_OK);
+    CHECK(SystemStorage_ObjectSlotWrite(
+        PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION, 0U, 0U,
+        torn, sizeof(torn)) == SYSTEM_DEVICE_OK);
+    CHECK(PersistentStorage_ObjectRead(
+        PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION, 0U,
+        readback, sizeof(readback), &length, &generation) ==
+        PERSISTENT_STORAGE_OK);
+    CHECK(generation == 2U && length == sizeof(calibration_b));
+    CHECK(memcmp(readback, calibration_b, length) == 0);
+    CHECK(PersistentStorage_ObjectWriteAtomic(
+        PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT, 0U,
+        snapshot, sizeof(snapshot), &generation) == PERSISTENT_STORAGE_OK);
+    CHECK(f_stat("0:/missions/000001/snap00.0", &info) == FR_OK);
+    printf("PERSISTENT_OBJECTS generation=%lu fallback=1 lfn=1\n",
+        (unsigned long)generation);
+    return 1;
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2 && argc != 3 && argc != 4) { return 2; }
@@ -444,5 +487,7 @@ int main(int argc, char **argv)
     if (FATFS_LinkDriver(&SD_Driver, SDPath) != 0U) { return 3; }
     if (f_mkfs(SDPath, FM_FAT | FM_SFD, 512U, s_work, sizeof(s_work)) != FR_OK) { return 4; }
     if (f_mount(&s_fs, SDPath, 1U) != FR_OK) { return 5; }
+    if (argc == 3 && strcmp(argv[2], "persistent-objects") == 0)
+    { return Test_PersistentObjects() ? 0 : 1; }
     return Test_Writer(argv[1]) ? 0 : 1;
 }

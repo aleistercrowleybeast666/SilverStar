@@ -1337,6 +1337,11 @@ def _Components_Get(
                 "FATFS/Target/sd_diskio.c": "storage/sd_diskio.c",
                 "FATFS/Target/bsp_driver_sd.c": "storage/bsp_driver_sd.c",
             },
+            fccg_owned_files={
+                "FATFS/Target/ffconf.h":
+                    "plugins/builtin/silverstar_board_silverstar_0_5/"
+                    "payload/FATFS/Target/ffconf.h",
+            },
             board={"source_kind": "verified_builtin", "compatible_mcus": [mcu_id], "vendor": "STM32", "provider": "silverstar.hardware_provider.stm32_cubemx", "verified": True, "hardware_root": "Core", "ioc_file": "payload/Flight_Controller0.5.ioc", "connections_file": "connections.json"},
             docs=["docs/details/BUILD_AND_TARGETS.md"],
         )
@@ -1419,11 +1424,18 @@ def _Components_Get(
             "storage",
             [
                 "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+                "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+                "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
+                "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
                 "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c",
             ],
             description="Single-instance SD/TF physical storage and sequential SSLOG sink using CubeMX SDIO and FatFs glue.",
             provenance=provenance,
-            sources=["Devices/Storage/SdSdioFatFs/Src/storage_service.c"],
+            sources=[
+                "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+                "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+                "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
+            ],
             build_extra={
                 "protocol_sources": {
                     "logging": [
@@ -1431,7 +1443,7 @@ def _Components_Get(
                     ]
                 }
             },
-            includes=[],
+            includes=["Devices/Storage/SdSdioFatFs/Inc"],
             dependencies=[core_id, mcu_id],
             resources_required=[
                 {
@@ -1511,7 +1523,14 @@ def _Components_Get(
                 f"Devices/Storage/SdSdioFatFs/Src/{name}":
                     "plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload/"
                     f"Devices/Storage/SdSdioFatFs/Src/{name}"
-                for name in ("storage_service.c", "log_sink_service.c")
+                for name in (
+                    "storage_service.c", "log_sink_service.c",
+                    "persistent_storage.c", "fatfs_lfn_ascii.c",
+                )
+            } | {
+                "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h":
+                    "plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/"
+                    "payload/Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
             },
             docs=["docs/details/STORAGE_AND_FLIGHT_LOG.md"],
         )
@@ -2880,7 +2899,11 @@ def _Components_Get(
                 "Interfaces/Inc/system_storage_if.h",
             )
         elif component_id == board_id:
-            storage_files = ("FATFS/Target/sd_diskio.c", "FATFS/Target/bsp_driver_sd.c")
+            storage_files = (
+                "FATFS/Target/sd_diskio.c",
+                "FATFS/Target/bsp_driver_sd.c",
+                "FATFS/Target/ffconf.h",
+            )
         elif component_id == storage_id:
             storage_files = tuple(component["fccg_owned_files"])
         if storage_files:

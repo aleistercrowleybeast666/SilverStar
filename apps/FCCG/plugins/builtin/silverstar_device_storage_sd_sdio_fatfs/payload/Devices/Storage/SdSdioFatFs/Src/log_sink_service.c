@@ -9,7 +9,7 @@
 #include "system_user_config.h"
 #include "system_storage_if.h"
 
-#define TF_LOG_PATH_SIZE 16U
+#define TF_LOG_PATH_SIZE 48U
 
 typedef struct
 {
@@ -23,16 +23,19 @@ static SilverStarLogSinkServiceRuntime s_sink;
 
 static void SilverStarLogSinkService_PathBuild(uint16_t index, char path[TF_LOG_PATH_SIZE])
 {
-    static const char prefix[] = "0:/SS";
-    static const char suffix[] = ".BIN";
+    static const char prefix[] = "0:/missions/";
+    static const char suffix[] = "/flight.sslog";
+    uint32_t mission_id = (uint32_t)index + 1U;
+    uint8_t digit;
 
     (void)memset(path, 0, TF_LOG_PATH_SIZE);
     (void)memcpy(path, prefix, sizeof(prefix) - 1U);
-    path[5] = (char)('0' + ((index / 1000U) % 10U));
-    path[6] = (char)('0' + ((index / 100U) % 10U));
-    path[7] = (char)('0' + ((index / 10U) % 10U));
-    path[8] = (char)('0' + (index % 10U));
-    (void)memcpy(&path[9], suffix, sizeof(suffix));
+    for (digit = 0U; digit < 6U; digit++)
+    {
+        path[17U - digit] = (char)('0' + mission_id % 10U);
+        mission_id /= 10U;
+    }
+    (void)memcpy(&path[18], suffix, sizeof(suffix));
 }
 
 static SystemDeviceResult SilverStarLogSinkService_Init(void)
@@ -98,6 +101,14 @@ static SystemDeviceResult SilverStarLogSinkService_NewFileOpen(void)
     for (index = 0U; index <= SYSTEM_LOG_FILE_INDEX_MAX; index++)
     {
         SilverStarLogSinkService_PathBuild(index, s_sink.path);
+        result = SystemStorage_MissionDirectoryReserve((uint32_t)index + 1U);
+        if (result == SYSTEM_DEVICE_ALREADY_MATCHED) { continue; }
+        if (result != SYSTEM_DEVICE_OK)
+        {
+            s_sink.health.error_count++;
+            s_sink.health.healthy = 0U;
+            return result;
+        }
         result = SystemStorage_Open(s_sink.path,
                                     SYSTEM_STORAGE_OPEN_CREATE_NEW,
                                     &s_sink.file);

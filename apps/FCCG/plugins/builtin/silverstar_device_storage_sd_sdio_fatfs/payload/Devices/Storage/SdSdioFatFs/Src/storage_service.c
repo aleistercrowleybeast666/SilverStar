@@ -11,6 +11,8 @@
 #include "silverstar_assert.h"
 
 #define TF_SDIO_STORAGE_SLOT 0U
+#define TF_SDIO_MISSION_ID_MAX 999999UL
+#define TF_SDIO_MISSION_DIRECTORY_SIZE 24U
 
 static FIL s_file;
 static FIL s_object_file;
@@ -19,6 +21,8 @@ static uint8_t s_initialized;
 static uint8_t s_mounted;
 static uint8_t s_file_open;
 static SystemStorageHealth s_health;
+static uint32_t s_mission_id;
+static void SilverStarStorageService_ObjectFaultRecord(void);
 
 static uint32_t SilverStarStorageService_IrqLock(void)
 {
@@ -304,15 +308,33 @@ SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health)
 
 typedef struct
 {
-    char path[40];
+    char path[48];
+    char directory_buffer[TF_SDIO_MISSION_DIRECTORY_SIZE];
     const char *directory;
 } SilverStarStorageObjectPath;
+
+static SystemDeviceResult SilverStarStorageService_MissionDirectoryBuild(
+    uint32_t mission_id, char path[TF_SDIO_MISSION_DIRECTORY_SIZE])
+{
+    static const char prefix[] = "0:/missions/";
+    uint8_t digit;
+    if ((mission_id == 0U) || (mission_id > TF_SDIO_MISSION_ID_MAX) ||
+        (path == NULL)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    (void)memcpy(path, prefix, sizeof(prefix) - 1U);
+    for (digit = 0U; digit < 6U; digit++)
+    {
+        path[17U - digit] = (char)('0' + mission_id % 10U);
+        mission_id /= 10U;
+    }
+    path[18] = '\0';
+    return SYSTEM_DEVICE_OK;
+}
 
 static SystemDeviceResult SilverStarStorageService_ObjectPathBuild(
     uint8_t kind, uint8_t instance, uint8_t slot,
     SilverStarStorageObjectPath *object_path)
 {
-    const char *prefix;
+    const char *prefix = NULL;
     uint8_t length;
     if ((instance >= 32U) || (slot > 1U) || (object_path == NULL))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
@@ -333,22 +355,76 @@ static SystemDeviceResult SilverStarStorageService_ObjectPathBuild(
             prefix = "0:/system/preferences/pre";
             break;
         case PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT:
-            object_path->directory = "0:/missions/000001";
-            prefix = "0:/missions/000001/snap";
+            if (SilverStarStorageService_MissionDirectoryBuild(
+                    s_mission_id, object_path->directory_buffer) !=
+                SYSTEM_DEVICE_OK)
+            { return SYSTEM_DEVICE_NOT_READY; }
+            object_path->directory = object_path->directory_buffer;
+            (void)memcpy(object_path->path,
+                object_path->directory_buffer, 18U);
+            (void)memcpy(&object_path->path[18], "/snap", 5U);
+            length = 23U;
             break;
         default:
             return SYSTEM_DEVICE_INVALID_ARGUMENT;
     }
-    length = (uint8_t)strlen(prefix);
-    if ((uint32_t)length + 5U > 40U)
+    if (kind != PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT)
+    {
+        length = (uint8_t)strlen(prefix);
+        (void)memcpy(object_path->path, prefix, length);
+    }
+    if ((uint32_t)length + 5U > sizeof(object_path->path))
     { return SYSTEM_DEVICE_INTERNAL_ERROR; }
-    (void)memcpy(object_path->path, prefix, length);
     object_path->path[length] = (char)('0' + instance / 10U);
     object_path->path[length + 1U] = (char)('0' + instance % 10U);
     object_path->path[length + 2U] = '.';
     object_path->path[length + 3U] = (char)('0' + slot);
     object_path->path[length + 4U] = '\0';
     return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemStorage_MissionDirectoryReserve(uint32_t mission_id)
+{
+    char path[TF_SDIO_MISSION_DIRECTORY_SIZE];
+    FRESULT result;
+    uint32_t primask;
+    if (SilverStarStorageService_MissionDirectoryBuild(
+            mission_id, path) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT(s_mounted <= 1U,
+        SILVERSTAR_ASSERT_MODULE_BOARD,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_mission_id <= TF_SDIO_MISSION_ID_MAX,
+        SILVERSTAR_ASSERT_MODULE_BOARD,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    if (s_mounted == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    result = f_mkdir("0:/missions");
+    if ((result != FR_OK) && (result != FR_EXIST))
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SilverStarStorageService_ResultMap(result);
+    }
+    result = f_mkdir(path);
+    if (result == FR_EXIST) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
+    if (result != FR_OK)
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SilverStarStorageService_ResultMap(result);
+    }
+    primask = SilverStarStorageService_IrqLock();
+    s_mission_id = mission_id;
+    SilverStarStorageService_IrqUnlock(primask);
+    return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemStorage_MissionIdGet(uint32_t *mission_id)
+{
+    uint32_t primask;
+    if (mission_id == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    primask = SilverStarStorageService_IrqLock();
+    *mission_id = s_mission_id;
+    SilverStarStorageService_IrqUnlock(primask);
+    return (*mission_id == 0U) ? SYSTEM_DEVICE_NOT_READY : SYSTEM_DEVICE_OK;
 }
 
 static SystemDeviceResult SilverStarStorageService_DirectoryEnsure(
@@ -393,9 +469,11 @@ SystemDeviceResult SystemStorage_ObjectSlotRead(
         SILVERSTAR_ASSERT_MODULE_BOARD,
         SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     *length = 0U;
-    if (SilverStarStorageService_ObjectPathBuild(kind, instance,
-            slot, &object_path) != SYSTEM_DEVICE_OK)
-    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    {
+        SystemDeviceResult path_result = SilverStarStorageService_ObjectPathBuild(
+            kind, instance, slot, &object_path);
+        if (path_result != SYSTEM_DEVICE_OK) { return path_result; }
+    }
     if (s_mounted == 0U) { return SYSTEM_DEVICE_NOT_READY; }
     result = f_open(&s_object_file, object_path.path, FA_READ);
     if ((result == FR_NO_FILE) || (result == FR_NO_PATH))
@@ -434,9 +512,11 @@ SystemDeviceResult SystemStorage_ObjectSlotWrite(
     SILVERSTAR_ASSERT(s_mounted <= 1U,
         SILVERSTAR_ASSERT_MODULE_BOARD,
         SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    if (SilverStarStorageService_ObjectPathBuild(kind, instance,
-            slot, &object_path) != SYSTEM_DEVICE_OK)
-    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    {
+        SystemDeviceResult path_result = SilverStarStorageService_ObjectPathBuild(
+            kind, instance, slot, &object_path);
+        if (path_result != SYSTEM_DEVICE_OK) { return path_result; }
+    }
     if (s_mounted == 0U) { return SYSTEM_DEVICE_NOT_READY; }
     if (SilverStarStorageService_DirectoryEnsure(
             kind, object_path.directory) != SYSTEM_DEVICE_OK)

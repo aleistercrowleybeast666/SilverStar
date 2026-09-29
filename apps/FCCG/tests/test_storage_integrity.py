@@ -172,6 +172,10 @@ def test_storage_sources_survive_reference_reimport(monkeypatch, workspace_root)
         source = workspace_root / core["fccg_owned_files"][relative]
         assert source.is_file()
         assert source.read_bytes() == (workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload" / relative).read_bytes()
+    board = components["silverstar.board.silverstar_0_5"]
+    ffconf = "FATFS/Target/ffconf.h"
+    assert board["fccg_owned_files"][ffconf].endswith("payload/FATFS/Target/ffconf.h")
+    assert (workspace_root / board["fccg_owned_files"][ffconf]).is_file()
     for component in components.values():
         if component["manifest"]["id"].startswith("silverstar.board."):
             for relative in ("sd_diskio.c", "bsp_driver_sd.c"):
@@ -179,7 +183,15 @@ def test_storage_sources_survive_reference_reimport(monkeypatch, workspace_root)
                 assert (workspace_root / "tools/reference_overlays" / overlay).read_bytes() == (
                     workspace_root / "plugins/builtin/silverstar_board_silverstar_0_5/payload/FATFS/Target" / relative).read_bytes()
         if component["manifest"]["id"].startswith("silverstar.device.storage."):
-            assert len(component["fccg_owned_files"]) == 2
+            owned = component["fccg_owned_files"]
+            assert set(owned) == {
+                "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+                "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c",
+                "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+                "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
+                "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
+            }
+            assert all((workspace_root / path).is_file() for path in owned.values())
 
 
 def test_protocol_layout_is_unchanged(workspace_root):

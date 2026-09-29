@@ -382,7 +382,8 @@
     "device_descriptors": [],
     "source_origins": {
       "FATFS/Target/sd_diskio.c": "fccg_storage_integrity",
-      "FATFS/Target/bsp_driver_sd.c": "fccg_storage_integrity"
+      "FATFS/Target/bsp_driver_sd.c": "fccg_storage_integrity",
+      "FATFS/Target/ffconf.h": "fccg_persistent_storage"
     }
   },
   "board": {
