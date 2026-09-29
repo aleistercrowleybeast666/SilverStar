@@ -319,9 +319,8 @@ static InsSamplePrepareResult InsMechanization_SamplePrepare(
         context->sample_count = 1U;
         return INS_SAMPLE_PREPARE_WAITING;
     }
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 1U)
-    return INS_SAMPLE_PREPARE_READY;
-#else
+    if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 1U)
+    { return INS_SAMPLE_PREPARE_READY; }
     if (context->sample_count == 1U)
     {
         context->sample_history[1] = work->current_sample;
@@ -329,7 +328,6 @@ static InsSamplePrepareResult InsMechanization_SamplePrepare(
         return INS_SAMPLE_PREPARE_WAITING;
     }
     return INS_SAMPLE_PREPARE_READY;
-#endif
 }
 
 static uint8_t InsMechanization_IncrementsPrepare(
@@ -338,30 +336,34 @@ static uint8_t InsMechanization_IncrementsPrepare(
     InsMechanizationWork *work)
 {
     float dt_1;
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
-    float dt_2;
-#endif
+    float dt_2 = 0.0F;
+    uint8_t valid;
 
     SILVERSTAR_ASSERT_OBJECT(context, InsInertialContext,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(work, InsMechanizationWork,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
-    Ins_ComputeSubIntervalIncrement(
-        &context->sample_history[0], &context->sample_history[1],
-        work->delta_theta_1, work->delta_velocity_1, &dt_1);
-    Ins_ComputeSubIntervalIncrement(
-        &context->sample_history[1], &work->current_sample,
-        work->delta_theta_2, work->delta_velocity_2, &dt_2);
-    if ((Ins_SampleDtValid(dt_1) == 0U) || (Ins_SampleDtValid(dt_2) == 0U))
-#else
-    Ins_ComputeSubIntervalIncrement(
-        &context->sample_history[0], &work->current_sample,
-        work->delta_theta_1, work->delta_velocity_1, &dt_1);
-    (void)memset(work->delta_theta_2, 0, sizeof(work->delta_theta_2));
-    (void)memset(work->delta_velocity_2, 0, sizeof(work->delta_velocity_2));
-    if (Ins_SampleDtValid(dt_1) == 0U)
-#endif
+    if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
+    {
+        Ins_ComputeSubIntervalIncrement(
+            &context->sample_history[0], &context->sample_history[1],
+            work->delta_theta_1, work->delta_velocity_1, &dt_1);
+        Ins_ComputeSubIntervalIncrement(
+            &context->sample_history[1], &work->current_sample,
+            work->delta_theta_2, work->delta_velocity_2, &dt_2);
+        valid = (uint8_t)((Ins_SampleDtValid(dt_1) != 0U) &&
+            (Ins_SampleDtValid(dt_2) != 0U));
+    }
+    else
+    {
+        Ins_ComputeSubIntervalIncrement(
+            &context->sample_history[0], &work->current_sample,
+            work->delta_theta_1, work->delta_velocity_1, &dt_1);
+        (void)memset(work->delta_theta_2, 0, sizeof(work->delta_theta_2));
+        (void)memset(work->delta_velocity_2, 0, sizeof(work->delta_velocity_2));
+        valid = Ins_SampleDtValid(dt_1);
+    }
+    if (valid == 0U)
     {
         context->health_flags |= INS_HEALTH_SAMPLE_GAP;
         context->sample_history[0] = work->current_sample;
@@ -370,11 +372,7 @@ static uint8_t InsMechanization_IncrementsPrepare(
         state->health_flags = context->health_flags;
         return 0U;
     }
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
     work->total_dt = dt_1 + dt_2;
-#else
-    work->total_dt = dt_1;
-#endif
     return 1U;
 }
 

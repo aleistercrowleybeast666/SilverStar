@@ -29,8 +29,16 @@ def test_vector_constraints_host_and_arm(tmp_path: Path) -> None:
     ]
     source = COMMON / "Src/vector_constraints.c"
     test_source = ROOT / "tests/host_alignment/test_vector_constraints.c"
+    core_common = (
+        ROOT / "plugins/builtin/silverstar_core_0_1_0/payload/Common"
+    )
     _Command_Run(
-        flags + [str(source), str(test_source), "-lm", "-o", str(host)],
+        flags + [
+            "-I" + str(core_common / "Inc"),
+            str(source),
+            str(test_source),
+            "-lm", "-o", str(host),
+        ],
         tmp_path,
         "compile",
     )

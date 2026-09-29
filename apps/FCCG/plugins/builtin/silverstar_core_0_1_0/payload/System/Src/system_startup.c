@@ -800,6 +800,11 @@ static uint8_t SystemStartup_ConfigVerifyPending(void)
     SystemDeviceConfigReport report;
     SystemDeviceResult result;
 
+    SILVERSTAR_ASSERT_OBJECT(imu, SystemStartupDeviceReport,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT_OBJECT(gnss, SystemStartupDeviceReport,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+
     if ((imu->config_result == SYSTEM_DEVICE_CONFIG_DELEGATED) &&
         (imu->verify_result == SYSTEM_DEVICE_NOT_EXECUTED))
     {
@@ -904,9 +909,62 @@ const SystemStartupDeviceReport *SystemStartup_GetDeviceReport(
     return &s_startup_report.devices[device_id];
 }
 
-void SystemStartup_ProcessDevices(void)
+static uint8_t SystemStartup_WaitConfigTick(void)
 {
     uint64_t now_us;
+
+    SILVERSTAR_ASSERT_OBJECT(&s_startup_report, SystemStartupReport,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(s_startup_phase == SystemStartupPhase_WaitConfig,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+
+    SystemStartup_CommunicationProcess();
+    if (SystemStartup_ConfigVerifyPending() != 0U)
+    {
+        now_us = SystemTime_GetMonotonicUs();
+        if ((now_us - s_phase_started_us) <
+            SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US)
+        { return 0U; }
+        if (s_startup_report.devices[SYSTEM_STARTUP_DEVICE_IMU].verify_result ==
+            SYSTEM_DEVICE_NOT_EXECUTED)
+        { s_startup_report.devices[SYSTEM_STARTUP_DEVICE_IMU].verify_result =
+            SYSTEM_DEVICE_TIMEOUT; }
+        if (s_startup_report.devices[SYSTEM_STARTUP_DEVICE_GNSS].verify_result ==
+            SYSTEM_DEVICE_NOT_EXECUTED)
+        { s_startup_report.devices[SYSTEM_STARTUP_DEVICE_GNSS].verify_result =
+            SYSTEM_DEVICE_TIMEOUT; }
+    }
+    s_phase_started_us = SystemTime_GetMonotonicUs();
+    s_startup_phase = SystemStartupPhase_WaitCommunication;
+    return 1U;
+}
+
+static uint8_t SystemStartup_WaitCommunicationTick(void)
+{
+    const uint64_t now_us = SystemTime_GetMonotonicUs();
+
+    if ((SystemStartup_CommunicationEvaluate() != 0U) &&
+        ((now_us - s_phase_started_us) <
+         SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US))
+    { return 0U; }
+    SystemStartup_TimeoutMark();
+    SystemStartup_ReportFinalize();
+    if (SystemLifecycle_EnterPreflight() != SYSTEM_DEVICE_OK)
+    { DebugLog_Print("STARTUP preflight transition failed"); }
+    SystemHealth_Process();
+    SystemStartup_ReportPrint();
+    s_startup_phase = SystemStartupPhase_Complete;
+    return 1U;
+}
+
+void SystemStartup_ProcessDevices(void)
+{
+    SILVERSTAR_ASSERT_OBJECT(&s_startup_report, SystemStartupReport,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(s_startup_phase <= SystemStartupPhase_Complete,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
 
     switch (s_startup_phase)
     {
@@ -938,38 +996,10 @@ void SystemStartup_ProcessDevices(void)
             s_startup_phase = SystemStartupPhase_WaitConfig;
             return;
         case SystemStartupPhase_WaitConfig:
-            SystemStartup_CommunicationProcess();
-            if (SystemStartup_ConfigVerifyPending() != 0U)
-            {
-                now_us = SystemTime_GetMonotonicUs();
-                if ((now_us - s_phase_started_us) <
-                    SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US)
-                { return; }
-                if (s_startup_report.devices[SYSTEM_STARTUP_DEVICE_IMU].verify_result ==
-                    SYSTEM_DEVICE_NOT_EXECUTED)
-                { s_startup_report.devices[SYSTEM_STARTUP_DEVICE_IMU].verify_result =
-                    SYSTEM_DEVICE_TIMEOUT; }
-                if (s_startup_report.devices[SYSTEM_STARTUP_DEVICE_GNSS].verify_result ==
-                    SYSTEM_DEVICE_NOT_EXECUTED)
-                { s_startup_report.devices[SYSTEM_STARTUP_DEVICE_GNSS].verify_result =
-                    SYSTEM_DEVICE_TIMEOUT; }
-            }
-            s_phase_started_us = SystemTime_GetMonotonicUs();
-            s_startup_phase = SystemStartupPhase_WaitCommunication;
+            (void)SystemStartup_WaitConfigTick();
             return;
         case SystemStartupPhase_WaitCommunication:
-            now_us = SystemTime_GetMonotonicUs();
-            if ((SystemStartup_CommunicationEvaluate() != 0U) &&
-                ((now_us - s_phase_started_us) <
-                    SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US))
-            { return; }
-            SystemStartup_TimeoutMark();
-            SystemStartup_ReportFinalize();
-            if (SystemLifecycle_EnterPreflight() != SYSTEM_DEVICE_OK)
-            { DebugLog_Print("STARTUP preflight transition failed"); }
-            SystemHealth_Process();
-            SystemStartup_ReportPrint();
-            s_startup_phase = SystemStartupPhase_Complete;
+            (void)SystemStartup_WaitCommunicationTick();
             return;
         case SystemStartupPhase_Idle:
         case SystemStartupPhase_Complete:

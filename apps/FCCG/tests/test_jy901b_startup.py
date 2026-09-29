@@ -14,13 +14,13 @@ def test_jy901b_startup(tmp_path: Path) -> None:
     builtin = Path(__file__).resolve().parents[1] / "plugins" / "builtin"
     core = builtin / "silverstar_core_0_1_0" / "payload"
     jy = builtin / "silverstar_device_imu_jy901b" / "payload"
-    mcu = builtin / "silverstar_mcu_stm32f407vet6" / "payload"
+    platform = builtin / "silverstar_platform_api" / "payload"
     fixture = core / "Tests" / "Host" / "Fixtures" / "MultiInstance"
     executable = tmp_path / "jy901b_startup.exe"
     command = [
         compiler, "-std=c11", "-Wall", "-Wextra", "-Werror",
         "-I", str(fixture / "Inc"),
-        "-I", str(mcu / "Platform" / "Inc"),
+        "-I", str(platform / "Platform" / "Inc"),
         "-I", str(core / "System" / "Inc"),
         "-I", str(core / "Interfaces" / "Inc"),
         "-I", str(core / "Common" / "Inc"),

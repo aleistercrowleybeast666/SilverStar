@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "silverstar_assert.h"
+
 #define VECTOR_CONSTRAINTS_NORM_MIN 1.0e-6F
 #define VECTOR_CONSTRAINTS_PAIR_SINE_MIN 0.17364818F
 #define VECTOR_CONSTRAINTS_MAX_RMS_RAD 0.35F
@@ -52,8 +54,13 @@ static uint8_t VectorConstraints_QuaternionNormalize(float q[4])
 static uint8_t VectorConstraints_QuaternionFromMatrix(
     float matrix[3][3], float q[4])
 {
-    float trace = matrix[0][0] + matrix[1][1] + matrix[2][2];
+    float trace;
     float root;
+    SILVERSTAR_ASSERT(matrix != NULL, SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SILVERSTAR_ASSERT(q != NULL, SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    trace = matrix[0][0] + matrix[1][1] + matrix[2][2];
     if (trace > 0.0F)
     {
         root = sqrtf(trace + 1.0F) * 2.0F;
@@ -104,6 +111,13 @@ static uint8_t VectorConstraints_PairSolve(
     float matrix[3][3];
     uint8_t row;
     uint8_t column;
+    SILVERSTAR_ASSERT(first != NULL, SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SILVERSTAR_ASSERT(second != NULL, SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SILVERSTAR_ASSERT((q != NULL) && (body_sine != NULL) &&
+        (navigation_sine != NULL), SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     VectorConstraints_Cross(first->body, second->body, body_cross);
     VectorConstraints_Cross(first->navigation, second->navigation,
         navigation_cross);
@@ -152,6 +166,11 @@ static uint8_t VectorConstraints_MeanGet(float covariance[4][4],
     uint8_t iteration;
     uint8_t row;
     uint8_t column;
+    SILVERSTAR_ASSERT(covariance != NULL,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SILVERSTAR_ASSERT(q != NULL, SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     for (iteration = 0U; iteration < VECTOR_CONSTRAINTS_MEAN_ITERATIONS;
          iteration++)
     {
@@ -168,35 +187,39 @@ static uint8_t VectorConstraints_MeanGet(float covariance[4][4],
     return 1U;
 }
 
-VectorConstraintsSolveResult VectorConstraints_Solve(
-    const VectorConstraint *constraints, uint8_t count,
+typedef struct
+{
+    float covariance[4][4];
+    float strongest[4];
+    float strongest_weight;
+} VectorConstraintsPairAccumulation;
+
+static void VectorConstraints_PairGeometryUpdate(
+    VectorConstraintsSolution *solution, float body_sine,
+    float navigation_sine)
+{
+    if (body_sine < solution->minimum_pair_sine)
+    { solution->minimum_pair_sine = body_sine; }
+    if (navigation_sine < solution->minimum_pair_sine)
+    { solution->minimum_pair_sine = navigation_sine; }
+    solution->valid_pair_count++;
+}
+
+static VectorConstraintsSolveResult VectorConstraints_PairsAccumulate(
+    const VectorConstraint normalized[VECTOR_CONSTRAINTS_MAX_COUNT],
+    uint8_t count, VectorConstraintsPairAccumulation *accumulation,
     VectorConstraintsSolution *solution)
 {
-    VectorConstraint normalized[VECTOR_CONSTRAINTS_MAX_COUNT];
-    float covariance[4][4] = {{0.0F}};
-    float strongest[4] = {1.0F, 0.0F, 0.0F, 0.0F};
-    float strongest_weight = 0.0F;
-    float total_error = 0.0F;
-    float total_weight = 0.0F;
     uint8_t first;
     uint8_t second;
     uint8_t row;
     uint8_t column;
-    if ((constraints == NULL) || (solution == NULL) ||
-        (count < 2U) || (count > VECTOR_CONSTRAINTS_MAX_COUNT))
-    { return VectorConstraintsSolveInvalidArgument; }
-    (void)memset(solution, 0, sizeof(*solution));
-    for (first = 0U; first < VECTOR_CONSTRAINTS_MAX_COUNT; first++)
-    {
-        if (first >= count) { break; }
-        normalized[first] = constraints[first];
-        if ((!isfinite(normalized[first].weight)) ||
-            (normalized[first].weight <= 0.0F) ||
-            (normalized[first].weight > 1000000.0F) ||
-            (VectorConstraints_Normalize(normalized[first].body) == 0U) ||
-            (VectorConstraints_Normalize(normalized[first].navigation) == 0U))
-        { return VectorConstraintsSolveInvalidArgument; }
-    }
+    SILVERSTAR_ASSERT_OBJECT(normalized, VectorConstraint,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(accumulation, VectorConstraintsPairAccumulation,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(solution, VectorConstraintsSolution,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     solution->minimum_pair_sine = 1.0F;
     for (first = 0U; first < VECTOR_CONSTRAINTS_MAX_COUNT; first++)
     {
@@ -219,29 +242,40 @@ VectorConstraintsSolveResult VectorConstraints_Solve(
                 navigation_sine * navigation_sine;
             if ((!isfinite(weight)) || (weight <= 0.0F))
             { return VectorConstraintsSolveInvalidArgument; }
-            if (weight > strongest_weight)
+            if (weight > accumulation->strongest_weight)
             {
-                strongest_weight = weight;
-                (void)memcpy(strongest, q, sizeof(strongest));
+                accumulation->strongest_weight = weight;
+                (void)memcpy(accumulation->strongest, q,
+                    sizeof(accumulation->strongest));
             }
             for (row = 0U; row < 4U; row++)
             {
                 for (column = 0U; column < 4U; column++)
-                { covariance[row][column] += weight * q[row] * q[column]; }
+                {
+                    accumulation->covariance[row][column] +=
+                        weight * q[row] * q[column];
+                }
             }
-            if (body_sine < solution->minimum_pair_sine)
-            { solution->minimum_pair_sine = body_sine; }
-            if (navigation_sine < solution->minimum_pair_sine)
-            { solution->minimum_pair_sine = navigation_sine; }
-            solution->valid_pair_count++;
+            VectorConstraints_PairGeometryUpdate(
+                solution, body_sine, navigation_sine);
         }
     }
     if (solution->valid_pair_count == 0U)
     { return VectorConstraintsSolveDegenerate; }
-    (void)memcpy(solution->q_nb, strongest, sizeof(strongest));
-    if ((count > 2U) &&
-        (VectorConstraints_MeanGet(covariance, solution->q_nb) == 0U))
-    { return VectorConstraintsSolveDegenerate; }
+    return VectorConstraintsSolveOk;
+}
+
+static VectorConstraintsSolveResult VectorConstraints_MismatchEvaluate(
+    const VectorConstraint normalized[VECTOR_CONSTRAINTS_MAX_COUNT],
+    uint8_t count, VectorConstraintsSolution *solution)
+{
+    float total_error = 0.0F;
+    float total_weight = 0.0F;
+    uint8_t first;
+    SILVERSTAR_ASSERT_OBJECT(normalized, VectorConstraint,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(solution, VectorConstraintsSolution,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     for (first = 0U; first < VECTOR_CONSTRAINTS_MAX_COUNT; first++)
     {
         float rotated[3];
@@ -265,4 +299,44 @@ VectorConstraintsSolveResult VectorConstraints_Solve(
     if (solution->rms_mismatch_rad > VECTOR_CONSTRAINTS_MAX_RMS_RAD)
     { return VectorConstraintsSolveInconsistent; }
     return VectorConstraintsSolveOk;
+}
+
+VectorConstraintsSolveResult VectorConstraints_Solve(
+    const VectorConstraint *constraints, uint8_t count,
+    VectorConstraintsSolution *solution)
+{
+    VectorConstraint normalized[VECTOR_CONSTRAINTS_MAX_COUNT];
+    VectorConstraintsPairAccumulation accumulation = {0};
+    VectorConstraintsSolveResult result;
+    uint8_t index;
+    if ((constraints == NULL) || (solution == NULL) ||
+        (count < 2U) || (count > VECTOR_CONSTRAINTS_MAX_COUNT))
+    { return VectorConstraintsSolveInvalidArgument; }
+    SILVERSTAR_ASSERT_OBJECT(constraints, VectorConstraint,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(solution, VectorConstraintsSolution,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    (void)memset(solution, 0, sizeof(*solution));
+    for (index = 0U; index < VECTOR_CONSTRAINTS_MAX_COUNT; index++)
+    {
+        if (index >= count) { break; }
+        normalized[index] = constraints[index];
+        if ((!isfinite(normalized[index].weight)) ||
+            (normalized[index].weight <= 0.0F) ||
+            (normalized[index].weight > 1000000.0F) ||
+            (VectorConstraints_Normalize(normalized[index].body) == 0U) ||
+            (VectorConstraints_Normalize(normalized[index].navigation) == 0U))
+        { return VectorConstraintsSolveInvalidArgument; }
+    }
+    accumulation.strongest[0] = 1.0F;
+    result = VectorConstraints_PairsAccumulate(
+        normalized, count, &accumulation, solution);
+    if (result != VectorConstraintsSolveOk) { return result; }
+    (void)memcpy(solution->q_nb, accumulation.strongest,
+        sizeof(solution->q_nb));
+    if ((count > 2U) &&
+        (VectorConstraints_MeanGet(accumulation.covariance,
+            solution->q_nb) == 0U))
+    { return VectorConstraintsSolveDegenerate; }
+    return VectorConstraints_MismatchEvaluate(normalized, count, solution);
 }

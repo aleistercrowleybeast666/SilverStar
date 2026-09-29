@@ -19,7 +19,9 @@ def test_device_startup_state_machine(tmp_path: Path) -> None:
     command = [
         compiler, "-std=c11", "-Wall", "-Wextra", "-Werror",
         "-I", str(payload / "System/Inc"),
+        "-I", str(payload / "Common/Inc"),
         str(payload / "System/Src/system_device_startup.c"),
+        str(payload / "Common/Src/silverstar_assert.c"),
         str(payload / "Tests/Host/test_device_startup_fsm.c"),
         "-o", str(executable),
     ]

@@ -1,4 +1,5 @@
 #include "system_device_startup.h"
+#include "silverstar_assert.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -52,6 +53,10 @@ SystemDeviceStartupResult SystemDeviceStartup_Init(
         ((config->supported_candidate_count != 0U) &&
          (config->supported_candidates == NULL)))
     { return SystemDeviceStartupResult_InvalidArgument; }
+    SILVERSTAR_ASSERT_OBJECT(startup, SystemDeviceStartup,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT_OBJECT(config, SystemDeviceStartupConfig,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
     (void)memset(startup, 0, sizeof(*startup));
     startup->config = *config;
     result = SystemDeviceStartup_CandidateAdd(startup, &config->target);
@@ -103,6 +108,12 @@ static void SystemDeviceStartup_ProbeTick(SystemDeviceStartup *startup,
 {
     SystemDeviceStartupStepResult result;
     const SystemDeviceStartupOperations *operations = startup->config.operations;
+
+    SILVERSTAR_ASSERT_OBJECT(startup, SystemDeviceStartup,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(startup->candidate_index < startup->candidate_count,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
 
     if (startup->probe_started == 0U)
     {
@@ -187,6 +198,11 @@ void SystemDeviceStartup_Tick(SystemDeviceStartup *startup, uint32_t now_ms)
     SystemDeviceStartupStepResult result;
 
     if (startup == NULL) { return; }
+    SILVERSTAR_ASSERT_OBJECT(startup, SystemDeviceStartup,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(startup->state <= SystemDeviceStartupState_Failed,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     switch (startup->state)
     {
         case SystemDeviceStartupState_Uninitialized:

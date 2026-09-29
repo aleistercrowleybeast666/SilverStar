@@ -555,7 +555,6 @@ static uint32_t s_eskf_quality_flags;
 
 /* Integrate the actual adjacent sample segments onto two equal physical halves.
  * This preserves nonuniform timestamp spacing without duplicating coning. */
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
 static float InsTask_HalfMean(float first, float middle, float last,
     uint64_t middle_us, uint64_t end_us, uint8_t half)
 {
@@ -581,17 +580,12 @@ static float InsTask_HalfMean(float first, float middle, float last,
     }
     return integral / (float)(end - begin);
 }
-#endif
 
-static void InsTask_BodyPairBuild(const InsAlgorithmSample *last)
+static void InsTask_BodyPairBuildOne(
+    const InsAlgorithmSample *first, const InsAlgorithmSample *last)
 {
-    const InsAlgorithmSample *first = &s_navigation_input.inertial.sample_history[0];
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 2U)
-    const InsAlgorithmSample *middle = &s_navigation_input.inertial.sample_history[1];
-    uint64_t middle_us, end_us;
-#endif
+    SILVERSTAR_ASSERT_OBJECT(first, InsAlgorithmSample, SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT_OBJECT(last, InsAlgorithmSample, SILVERSTAR_ASSERT_MODULE_APP);
-#if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 1U)
     SILVERSTAR_ASSERT(s_navigation_input.inertial.sample_count == 1U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     s_eskf_quality_flags = first->quality_flags | last->quality_flags;
@@ -609,7 +603,17 @@ static void InsTask_BodyPairBuild(const InsAlgorithmSample *last)
         s_eskf_accel_pair[1][axis] =
             (first->accel_b_mps2[axis] + 3.0f * last->accel_b_mps2[axis]) * 0.25f;
     }
-#else
+}
+
+static void InsTask_BodyPairBuildTwo(
+    const InsAlgorithmSample *first, const InsAlgorithmSample *middle,
+    const InsAlgorithmSample *last)
+{
+    uint64_t middle_us;
+    uint64_t end_us;
+    SILVERSTAR_ASSERT_OBJECT(first, InsAlgorithmSample, SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT_OBJECT(middle, InsAlgorithmSample, SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT_OBJECT(last, InsAlgorithmSample, SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT(s_navigation_input.inertial.sample_count == 2U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     s_eskf_quality_flags = first->quality_flags | middle->quality_flags | last->quality_flags;
@@ -627,7 +631,20 @@ static void InsTask_BodyPairBuild(const InsAlgorithmSample *last)
                 middle->accel_b_mps2[axis], last->accel_b_mps2[axis], middle_us, end_us, half);
         }
     }
-#endif
+}
+
+static void InsTask_BodyPairBuild(const InsAlgorithmSample *last)
+{
+    const InsAlgorithmSample *first =
+        &s_navigation_input.inertial.sample_history[0];
+    SILVERSTAR_ASSERT_OBJECT(last, InsAlgorithmSample, SILVERSTAR_ASSERT_MODULE_APP);
+    if (SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT == 1U)
+    { InsTask_BodyPairBuildOne(first, last); }
+    else
+    {
+        InsTask_BodyPairBuildTwo(first,
+            &s_navigation_input.inertial.sample_history[1], last);
+    }
 }
 
 static void InsTask_InertialOutputsPublish(
