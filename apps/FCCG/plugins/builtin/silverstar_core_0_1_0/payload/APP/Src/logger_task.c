@@ -10,7 +10,9 @@
 #include "platform_critical.h"
 #include "platform_memory.h"
 #include "silverstar_assert.h"
+#include "system_calibration.h"
 #include "system_log_sink_if.h"
+#include "system_mission_snapshot_if.h"
 #include "system_profile.h"
 #include "system_startup.h"
 #include "system_time.h"
@@ -38,6 +40,7 @@ typedef struct
     uint8_t decoder_profile_queued;
     uint8_t bootstrap_config_queued;
     uint16_t sink_offset_mod_quantum;
+    SystemMissionSnapshotStatus snapshot;
 } LoggerRuntime;
 
 static LoggerRuntime s_logger;
@@ -296,6 +299,12 @@ static uint8_t LoggerTask_RecordIsCritical(const FlightLogRecord *record)
 
 static uint8_t LoggerTask_Finalize(void)
 {
+    SILVERSTAR_ASSERT(s_logger.session_active <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_logger.session_finalized <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((s_logger.session_active == 0U) ||
         (LoggerTask_AggregateWrite() == 0U) ||
         (LoggerTask_SinkFlush() == 0U) ||
@@ -306,6 +315,10 @@ static uint8_t LoggerTask_Finalize(void)
         return 0U;
     }
     s_logger.last_flush_us = SystemTime_GetMonotonicUs();
+    if (SystemMissionSnapshot_FinalStatusWrite(
+            s_logger.last_flush_us, s_diagnostics.io_fault) !=
+        SystemMissionSnapshotResult_Ok)
+    { s_diagnostics.final_status_write_failed = 1U; }
     s_logger.session_active = 0U;
     s_logger.session_finalized = 1U;
     s_logger.aggregate_length = 0U;
@@ -507,6 +520,46 @@ static void LoggerTask_SessionOpenTry(uint64_t now_us)
     }
 }
 
+static uint8_t LoggerTask_SnapshotMaintain(void)
+{
+    SystemMissionSnapshotResult result;
+    PlatformCriticalState state;
+    SILVERSTAR_ASSERT(s_logger.session_active <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_diagnostics.snapshot_ready <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (s_logger.session_active == 0U) { return 0U; }
+    if ((s_diagnostics.snapshot_ready != 0U) &&
+        (s_logger.snapshot.calibration_generation ==
+         SystemCalibration_GenerationGet()))
+    { return 1U; }
+    state = PlatformCritical_Enter();
+    s_diagnostics.snapshot_ready = 0U;
+    PlatformCritical_Exit(state);
+    result = SystemMissionSnapshot_Create(&s_logger.snapshot);
+    if (result == SystemMissionSnapshotResult_NotReady) { return 0U; }
+    if (result != SystemMissionSnapshotResult_Ok)
+    {
+        s_diagnostics.io_fault = 1U;
+        LoggerTask_Close();
+        return 0U;
+    }
+    state = PlatformCritical_Enter();
+    s_diagnostics.snapshot_mission_id = s_logger.snapshot.mission_id;
+    s_diagnostics.snapshot_commit_generation =
+        s_logger.snapshot.commit_generation;
+    s_diagnostics.snapshot_sequence = s_logger.snapshot.snapshot_sequence;
+    s_diagnostics.snapshot_base_instance =
+        s_logger.snapshot.snapshot_base_instance;
+    s_diagnostics.snapshot_calibration_generation =
+        s_logger.snapshot.calibration_generation;
+    s_diagnostics.snapshot_ready = 1U;
+    PlatformCritical_Exit(state);
+    return 1U;
+}
+
 static void LoggerTask_BootstrapProcess(uint64_t now_us)
 {
     const SystemStartupReport *report = SystemStartup_GetReport();
@@ -536,6 +589,7 @@ static void LoggerTask_BootstrapProcess(uint64_t now_us)
         s_logger.startup_report_written = 1U;
     }
     if (LoggerTask_Flush() == 0U) { LoggerTask_Close(); return; }
+    if (LoggerTask_SnapshotMaintain() == 0U) { return; }
     /* Producers can run during sync. Admission opens only if their critical
      * records have also drained; no producer waits for this transition. */
     if (LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_OK)
@@ -645,6 +699,8 @@ void AppTask_Logger(void *argument)
             continue;
         }
         LoggerTask_PeriodicFlushTry(now_us);
+        if (LoggerBus_StartupStateGet() == LOGGER_STREAMING_READY)
+        { (void)LoggerTask_SnapshotMaintain(); }
         LoggerTask_BootstrapProcess(now_us);
     }
 }

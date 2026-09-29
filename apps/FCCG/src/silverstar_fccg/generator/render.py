@@ -27,6 +27,7 @@ from silverstar_fccg.plugins.manifest import PluginManifest
 from silverstar_fccg.project.algorithm_parameters import (
     AlgorithmParameters_Resolve,
     AlgorithmParametersHeader_Render,
+    ProjectMissionParametersSource_Render,
 )
 from silverstar_fccg.project.capabilities import (
     CapabilityResolution,
@@ -42,7 +43,11 @@ from silverstar_fccg.project.logging import (
     ProjectProtocolLogMetadataPath_Get,
     ProtocolLogDefinitions_Get,
 )
-from silverstar_fccg.project.model import DeviceInstance, LogDecoderProfileReference, ProjectModel
+from silverstar_fccg.project.model import (
+    DeviceInstance,
+    LogDecoderProfileReference,
+    ProjectModel,
+)
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
 from silverstar_fccg.project.record_catalog import (
     RecordCatalog_Merge,
@@ -306,6 +311,9 @@ def GeneratedFiles_Render(
             model, catalog
         ),
         "Generated/Src/project_metadata.c": _MetadataSource_Render(model, catalog),
+        "Generated/Src/project_mission_parameters.c": (
+            ProjectMissionParametersSource_Render(model, catalog)
+        ),
     }
     if decoder_profile is not None:
         files.update(
@@ -342,6 +350,9 @@ def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
 /* Shared SilverStar AIR Link snapshot; AIR M0 remains a separate wire protocol. */
 #define AIR_LINK_FREQUENCY_HZ {link.frequency_hz}UL
 #define AIR_LINK_TX_POWER_DBM {model.flight_tx_power_dbm if target == "flight" else model.ground_target.tx_power_dbm}
+#define AIR_LINK_SPREADING_FACTOR {link.spreading_factor}U
+#define AIR_LINK_BANDWIDTH_HZ {link.bandwidth_hz}UL
+#define AIR_LINK_CODING_RATE_DENOMINATOR {int(link.coding_rate[-1])}U
 #define AIR_LINK_SX128X_SF LORA_SF{link.spreading_factor}
 #define AIR_LINK_SX128X_BW {bandwidths[link.bandwidth_hz]}
 #define AIR_LINK_SX128X_CR {coding_rates[link.coding_rate]}
@@ -430,7 +441,10 @@ def _GeneratedModule_Render(model: ProjectModel) -> str:
                 "Generated/Src/project_log_decoder_profile.c",
             )
         )
-    sources.append("Generated/Src/project_metadata.c")
+    sources.extend((
+        "Generated/Src/project_metadata.c",
+        "Generated/Src/project_mission_parameters.c",
+    ))
     source_lines = "\n".join(
         "  " + source + (" \\" if index < len(sources) - 1 else "")
         for index, source in enumerate(sources)

@@ -17,6 +17,11 @@
 #include "system_log_policy.h"
 #include "system_storage_if.h"
 #include "persistent_storage.h"
+#include "system_calibration.h"
+#include "system_flight_recovery.h"
+#include "system_health.h"
+#include "system_mission_snapshot_if.h"
+#include "system_source_selector.h"
 #include "system_startup.h"
 #include "system_user_config.h"
 
@@ -60,6 +65,37 @@ void PlatformCritical_Exit(PlatformCriticalState state) { (void)state; }
 uint64_t PlatformTime_Us(void) { return s_clock_us + (uint64_t)s_ticks * 1000ULL; }
 uint64_t SystemTime_GetMonotonicUs(void) { s_clock_us += 20ULL; return PlatformTime_Us(); }
 const SystemStartupReport *SystemStartup_GetReport(void) { return &s_startup; }
+
+uint8_t SystemCalibration_IsReady(void) { return 1U; }
+uint32_t SystemCalibration_GenerationGet(void) { return 1U; }
+SystemDeviceResult SystemFlightRecovery_StatusGet(
+    SystemFlightRecoveryStatus *status)
+{
+    if (status == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    (void)memset(status, 0, sizeof(*status));
+    status->landing_detected = s_final_armed;
+    status->deploy_triggered = s_final_armed;
+    status->deploy_completed = s_final_armed;
+    return SYSTEM_DEVICE_OK;
+}
+void SystemHealth_GetSnapshot(SystemHealthSnapshot *snapshot)
+{
+    if (snapshot == NULL) { return; }
+    (void)memset(snapshot, 0, sizeof(*snapshot));
+    snapshot->ready = 1U;
+}
+SystemDeviceResult SystemSourceSelector_ImuActiveInstanceGet(uint8_t *instance)
+{
+    if (instance == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *instance = 0U;
+    return SYSTEM_DEVICE_OK;
+}
+SystemDeviceResult SystemSourceSelector_GnssActiveInstanceGet(uint8_t *instance)
+{
+    if (instance == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *instance = 0U;
+    return SYSTEM_DEVICE_OK;
+}
 
 TickType_t xTaskGetTickCount(void)
 {
@@ -440,6 +476,9 @@ static int Test_PersistentObjects(void)
     uint32_t generation = 0U;
     uint32_t mission_id = 0U;
     FILINFO info = {0};
+    SystemMissionSnapshotStatus snapshot_status;
+    uint8_t section;
+    uint8_t snapshot_readback[PERSISTENT_STORAGE_OBJECT_MAX_BYTES];
     CHECK(SystemStorage_Init() == SYSTEM_DEVICE_OK);
     CHECK(SystemStorage_Mount() == SYSTEM_DEVICE_OK);
     CHECK(SystemStorage_MissionDirectoryReserve(1U) == SYSTEM_DEVICE_OK);
@@ -482,6 +521,55 @@ static int Test_PersistentObjects(void)
         PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT, 0U,
         snapshot, sizeof(snapshot), &generation) == PERSISTENT_STORAGE_OK);
     CHECK(f_stat("0:/missions/000001/snap00.0", &info) == FR_OK);
+    CHECK(SystemMissionSnapshot_Create(&snapshot_status) ==
+        SystemMissionSnapshotResult_Ok);
+    CHECK(snapshot_status.mission_id == mission_id);
+    CHECK(snapshot_status.commit_generation == 2U);
+    CHECK(snapshot_status.snapshot_sequence == 1U);
+    CHECK(snapshot_status.snapshot_base_instance == 0U);
+    CHECK(snapshot_status.calibration_generation == 1U);
+    CHECK(snapshot_status.mag_calibration_generation == 2U);
+    for (section = 0U; section <= 6U; section++)
+    {
+        CHECK(PersistentStorage_ObjectRead(
+            PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT, section,
+            snapshot_readback, sizeof(snapshot_readback), &length,
+            &generation) == PERSISTENT_STORAGE_OK);
+        CHECK(length >= 8U);
+        CHECK(memcmp(snapshot_readback, "SSMS", 4U) == 0);
+        CHECK(snapshot_readback[4] == 1U);
+        CHECK(snapshot_readback[5] == section);
+    }
+    CHECK(SystemMissionSnapshot_Create(&snapshot_status) ==
+        SystemMissionSnapshotResult_Ok);
+    CHECK(snapshot_status.snapshot_sequence == 2U);
+    CHECK(snapshot_status.snapshot_base_instance == 8U);
+    for (section = 0U; section <= 6U; section++)
+    {
+        CHECK(PersistentStorage_ObjectRead(
+            PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT,
+            (uint8_t)(8U + section), snapshot_readback,
+            sizeof(snapshot_readback), &length, &generation) ==
+            PERSISTENT_STORAGE_OK);
+        CHECK(snapshot_readback[5] == section);
+    }
+    CHECK(PersistentStorage_ObjectRead(
+        PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT, 0U,
+        snapshot_readback, sizeof(snapshot_readback), &length,
+        &generation) == PERSISTENT_STORAGE_OK);
+    CHECK(generation == 2U && snapshot_readback[5] == 0U);
+    s_final_armed = 1U;
+    CHECK(SystemMissionSnapshot_FinalStatusWrite(123456ULL, 0U) ==
+        SystemMissionSnapshotResult_Ok);
+    CHECK(PersistentStorage_ObjectRead(
+        PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT, 7U,
+        snapshot_readback, sizeof(snapshot_readback), &length,
+        &generation) == PERSISTENT_STORAGE_OK);
+    CHECK(length >= 40U && snapshot_readback[5] == 7U);
+    CHECK(snapshot_readback[22] == 1U);
+    CHECK(snapshot_readback[23] == 1U);
+    CHECK(snapshot_readback[24] == 1U);
+    CHECK(snapshot_readback[25] == 0U);
     printf("PERSISTENT_OBJECTS generation=%lu fallback=1 lfn=1\n",
         (unsigned long)generation);
     return 1;

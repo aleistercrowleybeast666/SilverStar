@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from silverstar_fccg.core.errors import FccgError
-
-from dataclasses import dataclass
 import fnmatch
+from dataclasses import dataclass
 
+from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.project.model import ProjectModel
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
@@ -403,6 +402,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
         "Generated/Src/project_device_instances.c",
         "Generated/Src/project_resources.c",
         "Generated/Src/project_metadata.c",
+        "Generated/Src/project_mission_parameters.c",
     ]
     if model.protocols.get("logging") is not None:
         generated_sources.extend(

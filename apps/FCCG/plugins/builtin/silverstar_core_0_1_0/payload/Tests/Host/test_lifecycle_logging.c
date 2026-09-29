@@ -19,6 +19,7 @@
 #include "system_inertial.h"
 #include "system_lifecycle.h"
 #include "system_log_sink_if.h"
+#include "system_mission_snapshot_if.h"
 #include "system_storage_if.h"
 #include "system_output_if.h"
 #include "system_profile.h"
@@ -91,6 +92,10 @@ static uint32_t s_header_serialize_count;
 static uint32_t s_record_serialize_count;
 static FlightLogEventId s_serialized_events[TEST_SERIALIZED_EVENT_CAPACITY];
 static SystemStartupReport s_startup_report;
+static SystemMissionSnapshotResult s_snapshot_result;
+static uint32_t s_snapshot_create_count;
+static uint32_t s_final_status_count;
+static SystemMissionSnapshotResult s_final_status_result;
 
 void vTaskDelay(TickType_t ticks)
 {
@@ -293,6 +298,37 @@ void SystemCalibration_Process(void) {}
 uint8_t SystemCalibration_IsReady(void)
 {
     return 1U;
+}
+
+uint32_t SystemCalibration_GenerationGet(void)
+{
+    return 1U;
+}
+
+SystemMissionSnapshotResult SystemMissionSnapshot_Create(
+    SystemMissionSnapshotStatus *status)
+{
+    s_snapshot_create_count++;
+    if (status == NULL)
+    { return SystemMissionSnapshotResult_DataError; }
+    if (s_snapshot_result != SystemMissionSnapshotResult_Ok)
+    { return s_snapshot_result; }
+    (void)memset(status, 0, sizeof(*status));
+    status->mission_id = 1U;
+    status->commit_generation = s_snapshot_create_count;
+    status->snapshot_sequence = s_snapshot_create_count;
+    status->calibration_generation = SystemCalibration_GenerationGet();
+    return SystemMissionSnapshotResult_Ok;
+}
+
+SystemMissionSnapshotResult SystemMissionSnapshot_FinalStatusWrite(
+    uint64_t timestamp_us, uint8_t logger_fault)
+{
+    (void)logger_fault;
+    if (timestamp_us == 0ULL)
+    { return SystemMissionSnapshotResult_DataError; }
+    s_final_status_count++;
+    return s_final_status_result;
 }
 
 SystemDeviceResult SystemCalibration_StatusGet(SystemCalibrationStatus *status)
@@ -922,6 +958,10 @@ static void Test_StateReset(void)
     s_record_serialize_count = 0U;
     (void)memset(s_serialized_events, 0, sizeof(s_serialized_events));
     (void)memset(&s_startup_report, 0, sizeof(s_startup_report));
+    s_snapshot_result = SystemMissionSnapshotResult_Ok;
+    s_snapshot_create_count = 0U;
+    s_final_status_count = 0U;
+    s_final_status_result = SystemMissionSnapshotResult_Ok;
 }
 
 static void Test_LoggerEventQueuePush(uint64_t timestamp_us,
@@ -945,11 +985,58 @@ static void Test_LoggerEventQueuePush(uint64_t timestamp_us,
 static void Test_FlightTaskRunWithStorage(uint8_t storage_ready)
 {
     SystemLifecycleStartRequest request;
+    LoggerTaskDiagnostics logger;
+    const uint8_t disable_sink_after_start =
+        s_disable_sink_after_first_delay;
+    const uint8_t enable_event_after_start =
+        s_enable_event_after_first_delay;
+    const LoggerBusResult system_push_after_start =
+        s_system_config_push_result;
+    const LoggerBusResult mission_push_after_start =
+        s_mission_config_push_result;
+    const LoggerBusResult initial_push_after_start =
+        s_initial_state_push_result;
+    const LoggerBusResult event_push_after_start = s_event_push_result;
+    const uint32_t delay_limit_after_start = s_delay_limit;
 
-    /* FlightTask begins after the LoggerTask has admitted a writable session. */
+    /* Exercise the real LoggerTask bootstrap before submitting START. */
     s_log_sink_available = storage_ready;
-    s_startup_state = (storage_ready != 0U) ?
-        LOGGER_STREAMING_READY : LOGGER_BOOTSTRAP;
+    s_disable_sink_after_first_delay = 0U;
+    s_enable_event_after_first_delay = 0U;
+    s_system_config_push_result = LOGGER_BUS_RESULT_OK;
+    s_mission_config_push_result = LOGGER_BUS_RESULT_OK;
+    s_initial_state_push_result = LOGGER_BUS_RESULT_OK;
+    s_event_push_result = LOGGER_BUS_RESULT_OK;
+    if ((storage_ready != 0U) && (s_mission_directory_available != 0U))
+    {
+        s_startup_report.completed = 1U;
+        s_startup_report.passed = 1U;
+        s_delay_limit = 12U;
+        if (setjmp(s_task_exit) == 0) { AppTask_Logger(NULL); }
+        TEST_CHECK(LoggerTask_DiagnosticsGet(&logger) == SYSTEM_DEVICE_OK);
+        if (s_snapshot_result == SystemMissionSnapshotResult_Ok)
+        {
+            TEST_CHECK(logger.snapshot_ready != 0U);
+            TEST_CHECK(s_snapshot_create_count == 1U);
+        }
+        s_delay_count = 0U;
+        s_delay_limit = delay_limit_after_start;
+        s_system_config_push_count = 0U;
+        s_sink_init_count = 0U;
+        s_sink_begin_count = 0U;
+        s_sink_write_count = 0U;
+        s_sink_flush_count = 0U;
+        s_sink_end_count = 0U;
+        /* The flight fixture starts in preflight, before startup completes. */
+        s_startup_report.completed = 0U;
+        s_startup_report.passed = 0U;
+    }
+    s_disable_sink_after_first_delay = disable_sink_after_start;
+    s_enable_event_after_first_delay = enable_event_after_start;
+    s_system_config_push_result = system_push_after_start;
+    s_mission_config_push_result = mission_push_after_start;
+    s_initial_state_push_result = initial_push_after_start;
+    s_event_push_result = event_push_after_start;
     SystemLifecycle_Init();
     SystemAlignment_Init();
     TEST_CHECK(SystemAlignment_Start() == SYSTEM_DEVICE_OK);
@@ -1066,6 +1153,21 @@ static void Test_StartRequiresMissionDirectory(void)
         SYSTEM_START_REASON_STORAGE_NOT_READY);
 }
 
+static void Test_StartRequiresMissionSnapshot(void)
+{
+    SystemLifecycleStartDiagnostic diagnostic;
+    Test_StateReset();
+    s_snapshot_result = SystemMissionSnapshotResult_StorageError;
+    Test_FlightTaskRunWithStorage(1U);
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_READY);
+    TEST_CHECK(s_mission_started == 0U);
+    TEST_CHECK(s_snapshot_create_count == 1U);
+    TEST_CHECK(SystemLifecycle_GetLastStartDiagnostic(
+        SYSTEM_START_SOURCE_CONSOLE, &diagnostic) != 0U);
+    TEST_CHECK(diagnostic.response.reason ==
+        SYSTEM_START_REASON_STORAGE_NOT_READY);
+}
+
 static void Test_StartRecordFailureDoesNotRollback(void)
 {
     Test_StateReset();
@@ -1154,6 +1256,26 @@ static void Test_LoggerFinalizesAfterLandingGrace(void)
     TEST_CHECK(s_sink_begin_count == 1U);
     TEST_CHECK(s_decoder_profile_push_count == 1U);
     TEST_CHECK(s_finalization_state == LOGGER_BUS_FINALIZATION_FINALIZED);
+    TEST_CHECK(s_final_status_count == 1U);
+}
+
+static void Test_FinalStatusFailureDoesNotBlockRecovery(void)
+{
+    LoggerTaskDiagnostics diagnostics;
+    Test_StateReset();
+    s_log_sink_available = 1U;
+    s_startup_report.completed = 1U;
+    s_startup_report.passed = 1U;
+    s_final_status_result = SystemMissionSnapshotResult_StorageError;
+    TEST_CHECK(LoggerBus_FinalizationArm(1000000ULL) ==
+        LOGGER_BUS_RESULT_OK);
+    Test_LoggerEventQueuePush(1000000ULL, FLIGHT_LOG_EVENT_LANDING);
+    s_delay_limit = 3U;
+    if (setjmp(s_task_exit) == 0) { AppTask_Logger(NULL); }
+    TEST_CHECK(s_final_status_count == 1U);
+    TEST_CHECK(s_finalization_state == LOGGER_BUS_FINALIZATION_FINALIZED);
+    TEST_CHECK(LoggerTask_DiagnosticsGet(&diagnostics) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(diagnostics.final_status_write_failed != 0U);
 }
 
 static void Test_FinalFlushFailureLatchesWithoutPrematureFinalize(void)
@@ -1294,12 +1416,14 @@ int main(void)
 {
     Test_StartRequiresStorage();
     Test_StartRequiresMissionDirectory();
+    Test_StartRequiresMissionSnapshot();
     Test_PostStartStorageLossAndFullBusKeepsFlight();
     Test_NoneCalibrationResultSnapshot();
     Test_StartRecordFailureDoesNotRollback();
     Test_PostStartMissingTfDoesNotChangeFlightState();
     Test_FlightRecoveryEventRetry();
     Test_LoggerFinalizesAfterLandingGrace();
+    Test_FinalStatusFailureDoesNotBlockRecovery();
     Test_FinalFlushFailureLatchesWithoutPrematureFinalize();
     Test_PartialWriteNeverReplaysAggregate();
     Test_StartupReportBackfillsAfterLateOpen();

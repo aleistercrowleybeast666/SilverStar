@@ -62,9 +62,11 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
         "System/Src/system_log_policy.c", "System/Src/system_profile.c",
         "System/Src/system_navigation_profile.c", "System/Src/system_estimator_profile.c",
         "Generated/Src/project_metadata.c", "Generated/Src/project_log_config.c",
+        "Generated/Src/project_mission_parameters.c",
         "Generated/Src/project_log_decoder_profile.c",
         "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
         "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+        "Devices/Storage/SdSdioFatFs/Src/mission_snapshot.c",
         "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c")]
     # Reuse the generated Host include contract; never discover production sources.
     host_script = (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf-8")

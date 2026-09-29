@@ -917,7 +917,18 @@ uint8_t SystemLifecycleBackend_StorageReadyGet(void)
         (SystemStorage_HealthGet(&storage) != SYSTEM_DEVICE_OK) ||
         (SystemStorage_MissionIdGet(&mission_id) != SYSTEM_DEVICE_OK))
     { return 0U; }
+    SILVERSTAR_ASSERT(logger.snapshot_ready <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(sink.session_active <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     return (uint8_t)((logger.io_fault == 0U) &&
+        (logger.snapshot_ready != 0U) &&
+        (logger.snapshot_mission_id == mission_id) &&
+        (logger.snapshot_commit_generation != 0U) &&
+        (logger.snapshot_calibration_generation ==
+         SystemCalibration_GenerationGet()) &&
         (mission_id != 0U) &&
         (sink.initialized != 0U) && (sink.session_active != 0U) &&
         (sink.healthy != 0U) && (storage.initialized != 0U) &&

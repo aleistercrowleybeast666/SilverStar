@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import struct
 from typing import Any
 
 from silverstar_fccg.plugins.algorithm_parameters import PARAMETER_SCHEMA_ID
@@ -99,3 +100,69 @@ def AlgorithmParametersHeader_Render(model: ProjectModel, catalog: PluginCatalog
             rows.extend((f"#ifndef {parameter.generated_symbol}",
                          f"#define {parameter.generated_symbol} {literal}", "#endif"))
     return "\n".join((*rows, "", "#endif /* __PROJECT_ALGORITHM_PARAMETERS_H */", ""))
+
+
+def _ParameterKeyHash_Get(key: str) -> int:
+    value = 0x811C9DC5
+    for byte in key.encode("utf-8"):
+        value = ((value ^ byte) * 0x01000193) & 0xFFFFFFFF
+    return value
+
+
+def ProjectMissionParametersSource_Render(
+    model: ProjectModel, catalog: PluginCatalog
+) -> str:
+    entries: list[tuple[int, int, str]] = []
+    hashes: set[int] = set()
+    for owner in AlgorithmParameters_Resolve(model, catalog):
+        for parameter in owner["parameters"]:
+            key_hash = _ParameterKeyHash_Get(
+                f'{owner["component"]}/{parameter["id"]}'
+            )
+            if key_hash in hashes:
+                raise ValueError("Mission parameter key hash collision")
+            hashes.add(key_hash)
+            if parameter["storage_type"] == "float32":
+                value_bits = struct.unpack("<I", struct.pack("<f", parameter["value"]))[0]
+                kind = "SystemProjectParameterKind_Float32"
+            else:
+                value_bits = int(parameter["value"]) & 0xFFFFFFFF
+                kind = "SystemProjectParameterKind_Int32"
+            entries.append((key_hash, value_bits, kind))
+    if len(entries) > 96:
+        raise ValueError("Mission parameter snapshot exceeds the static 96-entry bound")
+    rows = [
+        '#include "system_project_parameters_if.h"',
+        "#include <stddef.h>",
+        '#include "silverstar_assert.h"',
+        "",
+        "/* Generated from the selected manifest parameters and their actual values. */",
+        f"#define PROJECT_MISSION_PARAMETER_COUNT {len(entries)}U",
+        "static const SystemProjectParameter s_parameters[] =",
+        "{",
+    ]
+    for key_hash, value_bits, kind in entries:
+        rows.append(f"    {{0x{key_hash:08X}UL, 0x{value_bits:08X}UL, {kind}}},")
+    if not entries:
+        rows.append("    {0U, 0U, SystemProjectParameterKind_Int32},")
+    rows.extend((
+        "};",
+        "",
+        "uint16_t SystemProjectParameter_CountGet(void)",
+        "{ return PROJECT_MISSION_PARAMETER_COUNT; }",
+        "",
+        "SystemProjectParameterResult SystemProjectParameter_Get(",
+        "    uint16_t index, SystemProjectParameter *parameter)",
+        "{",
+        "    if (parameter == NULL)",
+        "    { return SystemProjectParameterResult_InvalidArgument; }",
+        "    if (index >= PROJECT_MISSION_PARAMETER_COUNT)",
+        "    { return SystemProjectParameterResult_NotFound; }",
+        "    SILVERSTAR_ASSERT_OBJECT(parameter, SystemProjectParameter,",
+        "        SILVERSTAR_ASSERT_MODULE_GENERATED);",
+        "    *parameter = s_parameters[index];",
+        "    return SystemProjectParameterResult_Ok;",
+        "}",
+        "",
+    ))
+    return "\n".join(rows)

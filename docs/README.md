@@ -6,6 +6,7 @@
 - [Monorepo architecture](architecture/MONOREPO_ARCHITECTURE.md)
 - [Flight and Ground target model](architecture/TARGET_MODEL.md), [AIR Link](architecture/AIR_LINK.md), [Ground Station firmware](architecture/GROUND_STATION.md), [Device variants](architecture/DEVICE_VARIANTS.md)
 - [Project folder contract](architecture/PROJECT_FOLDER_CONTRACT.md)
+- [Mission snapshot and final status](architecture/MISSION_SNAPSHOT.md)
 - [Round 2 multi-target report](architecture/ROUND2_MULTI_TARGET_REPORT.md)
 - [0.1.0 migration report](architecture/MIGRATION_0_1_0.md)
 - [Canonical navigation contract](../contracts/navigation_v1.json)

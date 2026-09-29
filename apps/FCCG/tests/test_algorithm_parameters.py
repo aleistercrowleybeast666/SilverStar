@@ -11,7 +11,6 @@ import pytest
 from algorithm_parameters_support import Trajectory_Run
 from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
-
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.settings import SettingsStore
 from silverstar_fccg.generator.log_decoder_profile import (
@@ -25,6 +24,8 @@ from silverstar_fccg.project.algorithm_parameters import (
     AlgorithmParameterOwners_Get,
     AlgorithmParameters_Resolve,
     AlgorithmParametersHeader_Render,
+    ProjectMissionParametersSource_Render,
+    _ParameterKeyHash_Get,
 )
 from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
 from silverstar_fccg.project.generation_state import ProjectGenerationFingerprint_Get
@@ -72,6 +73,23 @@ def test_actual_defaults_roundtrip_and_decoder(builtin_catalog):
     assert semantics['firmware_algorithm_parameters'] == sets
     assert [next(p['value'] for p in s['parameters'] if p['id']=='gravity_mps2') for s in sets] == [gravity['value']]*2
     assert all(p['representation'] == 'sigma' for p in sets[1]['parameters'] if '_std' in p['id'])
+
+
+def test_mission_snapshot_parameter_table_uses_effective_values(builtin_catalog):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.algorithm_parameters[KF]['baro_std_m'] = 5.25
+    model.algorithm_parameters[KF]['gnss_integrity_enable'] = 0
+    source = ProjectMissionParametersSource_Render(model, builtin_catalog)
+    count = sum(len(group['parameters']) for group in
+                AlgorithmParameters_Resolve(model, builtin_catalog))
+    assert f'#define PROJECT_MISSION_PARAMETER_COUNT {count}U' in source
+    baro_key = _ParameterKeyHash_Get(f'{KF}/baro_std_m')
+    baro_bits = struct.unpack('<I', struct.pack('<f', 5.25))[0]
+    assert (f'{{0x{baro_key:08X}UL, 0x{baro_bits:08X}UL, '
+            'SystemProjectParameterKind_Float32}') in source
+    gate_key = _ParameterKeyHash_Get(f'{KF}/gnss_integrity_enable')
+    assert (f'{{0x{gate_key:08X}UL, 0x00000000UL, '
+            'SystemProjectParameterKind_Int32}') in source
 
 
 @pytest.mark.parametrize('value',[float('nan'),float('inf'),-1.,0.,10000001.,True,'5'])
