@@ -13,6 +13,7 @@
 #define TF_SDIO_STORAGE_SLOT 0U
 #define TF_SDIO_MISSION_ID_MAX 999999UL
 #define TF_SDIO_MISSION_DIRECTORY_SIZE 24U
+#define TF_SDIO_MANIFEST_SIZE 20U
 
 static FIL s_file;
 static FIL s_object_file;
@@ -22,6 +23,7 @@ static uint8_t s_mounted;
 static uint8_t s_file_open;
 static SystemStorageHealth s_health;
 static uint32_t s_mission_id;
+static uint8_t s_manifest_ready;
 static void SilverStarStorageService_ObjectFaultRecord(void);
 
 static uint32_t SilverStarStorageService_IrqLock(void)
@@ -63,6 +65,8 @@ static SystemDeviceResult SilverStarStorageService_Init(void)
 
     if (s_initialized != 0U) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
     (void)memset(&s_file, 0, sizeof(s_file));
+    s_mission_id = 0U;
+    s_manifest_ready = 0U;
     primask = SilverStarStorageService_IrqLock();
     (void)memset(&s_health, 0, sizeof(s_health));
     s_initialized = 1U;
@@ -413,6 +417,106 @@ SystemDeviceResult SystemStorage_MissionDirectoryReserve(uint32_t mission_id)
     }
     primask = SilverStarStorageService_IrqLock();
     s_mission_id = mission_id;
+    s_manifest_ready = 0U;
+    SilverStarStorageService_IrqUnlock(primask);
+    return SYSTEM_DEVICE_OK;
+}
+
+static uint32_t SilverStarStorageService_ManifestCrcGet(
+    const uint8_t data[TF_SDIO_MANIFEST_SIZE])
+{
+    uint32_t crc = 0xFFFFFFFFUL;
+    uint8_t index;
+    uint8_t bit;
+    for (index = 0U; index < TF_SDIO_MANIFEST_SIZE - 4U; index++)
+    {
+        crc ^= data[index];
+        for (bit = 0U; bit < 8U; bit++)
+        { crc = (crc >> 1U) ^ ((crc & 1U) ? 0xEDB88320UL : 0UL); }
+    }
+    return ~crc;
+}
+
+static void SilverStarStorageService_ManifestU32Write(
+    uint8_t *data, uint32_t value)
+{
+    data[0] = (uint8_t)value;
+    data[1] = (uint8_t)(value >> 8U);
+    data[2] = (uint8_t)(value >> 16U);
+    data[3] = (uint8_t)(value >> 24U);
+}
+
+static SystemDeviceResult SilverStarStorageService_ManifestWrite(
+    const char *path, const uint8_t record[TF_SDIO_MANIFEST_SIZE])
+{
+    UINT count = 0U;
+    FRESULT result = f_open(&s_object_file, path, FA_CREATE_NEW | FA_WRITE);
+    FRESULT close_result;
+    if (result != FR_OK) { return SYSTEM_DEVICE_IO_ERROR; }
+    result = f_write(&s_object_file, record, TF_SDIO_MANIFEST_SIZE, &count);
+    if ((result == FR_OK) && (count == TF_SDIO_MANIFEST_SIZE))
+    { result = f_sync(&s_object_file); }
+    close_result = f_close(&s_object_file);
+    return ((result == FR_OK) && (count == TF_SDIO_MANIFEST_SIZE) &&
+        (close_result == FR_OK)) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_IO_ERROR;
+}
+
+static SystemDeviceResult SilverStarStorageService_ManifestVerify(
+    const char *path, const uint8_t record[TF_SDIO_MANIFEST_SIZE])
+{
+    uint8_t readback[TF_SDIO_MANIFEST_SIZE] = {0U};
+    UINT count = 0U;
+    FRESULT result = f_open(&s_object_file, path, FA_READ);
+    FRESULT close_result;
+    if (result != FR_OK) { return SYSTEM_DEVICE_IO_ERROR; }
+    result = f_read(&s_object_file, readback, sizeof(readback), &count);
+    close_result = f_close(&s_object_file);
+    return ((result == FR_OK) && (count == sizeof(readback)) &&
+        (close_result == FR_OK) &&
+        (memcmp(record, readback, sizeof(readback)) == 0)) ?
+        SYSTEM_DEVICE_OK : SYSTEM_DEVICE_IO_ERROR;
+}
+
+SystemDeviceResult SystemStorage_MissionManifestCreate(
+    uint32_t profile_id, uint8_t version_major,
+    uint8_t version_minor, uint8_t version_patch)
+{
+    static const char suffix[] = "/manifest";
+    char path[TF_SDIO_MISSION_DIRECTORY_SIZE + sizeof(suffix)];
+    uint8_t record[TF_SDIO_MANIFEST_SIZE] = {0U};
+    uint32_t primask;
+    SILVERSTAR_ASSERT(s_mounted <= 1U,
+        SILVERSTAR_ASSERT_MODULE_BOARD,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_mission_id <= TF_SDIO_MISSION_ID_MAX,
+        SILVERSTAR_ASSERT_MODULE_BOARD,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    if ((s_mounted == 0U) || (s_mission_id == 0U))
+    { return SYSTEM_DEVICE_NOT_READY; }
+    if (s_manifest_ready != 0U) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
+    if (SilverStarStorageService_MissionDirectoryBuild(
+            s_mission_id, path) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    (void)memcpy(&path[18], suffix, sizeof(suffix));
+    (void)memcpy(record, "SSMF", 4U);
+    record[4] = 1U;
+    record[5] = version_major;
+    record[6] = version_minor;
+    record[7] = version_patch;
+    SilverStarStorageService_ManifestU32Write(&record[8], s_mission_id);
+    SilverStarStorageService_ManifestU32Write(&record[12], profile_id);
+    SilverStarStorageService_ManifestU32Write(&record[16],
+        SilverStarStorageService_ManifestCrcGet(record));
+    if ((SilverStarStorageService_ManifestWrite(path, record) !=
+            SYSTEM_DEVICE_OK) ||
+        (SilverStarStorageService_ManifestVerify(path, record) !=
+            SYSTEM_DEVICE_OK))
+    {
+        SilverStarStorageService_ObjectFaultRecord();
+        return SYSTEM_DEVICE_IO_ERROR;
+    }
+    primask = SilverStarStorageService_IrqLock();
+    s_manifest_ready = 1U;
     SilverStarStorageService_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
 }
@@ -420,11 +524,14 @@ SystemDeviceResult SystemStorage_MissionDirectoryReserve(uint32_t mission_id)
 SystemDeviceResult SystemStorage_MissionIdGet(uint32_t *mission_id)
 {
     uint32_t primask;
+    uint8_t manifest_ready;
     if (mission_id == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     primask = SilverStarStorageService_IrqLock();
     *mission_id = s_mission_id;
+    manifest_ready = s_manifest_ready;
     SilverStarStorageService_IrqUnlock(primask);
-    return (*mission_id == 0U) ? SYSTEM_DEVICE_NOT_READY : SYSTEM_DEVICE_OK;
+    return ((*mission_id == 0U) || (manifest_ready == 0U)) ?
+        SYSTEM_DEVICE_NOT_READY : SYSTEM_DEVICE_OK;
 }
 
 static SystemDeviceResult SilverStarStorageService_DirectoryEnsure(

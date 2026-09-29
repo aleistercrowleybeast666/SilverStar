@@ -290,6 +290,7 @@ static int Test_Writer(const char *output)
     SystemLogStreamConfig power_config;
     SystemLogStreamConfig imu_config;
     FILE *exported;
+    FILINFO info = {0};
     uint8_t buffer[513];
     UINT read;
     CHECK(LoggerBus_Init() == LOGGER_BUS_RESULT_OK);
@@ -379,6 +380,7 @@ static int Test_Writer(const char *output)
     CHECK(bus.overflow_count == s_recovery_drops);
     CHECK(f_mount(NULL, "0:", 0U) == FR_OK);
     CHECK(f_mount(&s_fs, "0:", 1U) == FR_OK);
+    CHECK(f_stat("0:/missions/000001/manifest", &info) == FR_OK);
     CHECK(f_open(&s_file, "0:/missions/000001/flight.sslog", FA_READ) == FR_OK);
     CHECK(f_size(&s_file) == storage.bytes_written);
     exported = fopen(output, "wb");
@@ -432,12 +434,30 @@ static int Test_PersistentObjects(void)
     static const uint8_t snapshot[] = {9U, 8U, 7U};
     static const uint8_t torn[] = {0U, 0U, 0U};
     uint8_t readback[8];
+    uint8_t manifest[20];
+    UINT manifest_read = 0U;
     uint16_t length = 0U;
     uint32_t generation = 0U;
+    uint32_t mission_id = 0U;
     FILINFO info = {0};
     CHECK(SystemStorage_Init() == SYSTEM_DEVICE_OK);
     CHECK(SystemStorage_Mount() == SYSTEM_DEVICE_OK);
     CHECK(SystemStorage_MissionDirectoryReserve(1U) == SYSTEM_DEVICE_OK);
+    CHECK(SystemStorage_MissionIdGet(&mission_id) == SYSTEM_DEVICE_NOT_READY);
+    CHECK(SystemStorage_MissionManifestCreate(0x12345678UL, 0U, 1U, 0U) ==
+        SYSTEM_DEVICE_OK);
+    CHECK(SystemStorage_MissionIdGet(&mission_id) == SYSTEM_DEVICE_OK);
+    CHECK(mission_id == 1U);
+    CHECK(f_open(&s_file, "0:/missions/000001/manifest", FA_READ) == FR_OK);
+    CHECK(f_read(&s_file, manifest, sizeof(manifest), &manifest_read) == FR_OK);
+    CHECK(f_close(&s_file) == FR_OK);
+    CHECK(manifest_read == sizeof(manifest));
+    CHECK(memcmp(manifest, "SSMF", 4U) == 0);
+    CHECK(manifest[4] == 1U && manifest[5] == 0U &&
+        manifest[6] == 1U && manifest[7] == 0U);
+    CHECK(manifest[8] == 1U && manifest[12] == 0x78U &&
+        manifest[13] == 0x56U && manifest[14] == 0x34U &&
+        manifest[15] == 0x12U);
     CHECK(PersistentStorage_ObjectWriteAtomic(
         PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION, 0U,
         calibration_a, sizeof(calibration_a), &generation) ==

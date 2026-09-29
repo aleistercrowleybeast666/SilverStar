@@ -51,6 +51,9 @@ SystemDeviceResult SystemStorage_Close(SystemStorageFileHandle *handle);
 SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health);
 /* LoggerTask reserves one numbered mission directory before opening its log. */
 SystemDeviceResult SystemStorage_MissionDirectoryReserve(uint32_t mission_id);
+SystemDeviceResult SystemStorage_MissionManifestCreate(
+    uint32_t profile_id, uint8_t version_major,
+    uint8_t version_minor, uint8_t version_patch);
 SystemDeviceResult SystemStorage_MissionIdGet(uint32_t *mission_id);
 
 /* Fixed object slots share LoggerTask ownership with the stream sink. */

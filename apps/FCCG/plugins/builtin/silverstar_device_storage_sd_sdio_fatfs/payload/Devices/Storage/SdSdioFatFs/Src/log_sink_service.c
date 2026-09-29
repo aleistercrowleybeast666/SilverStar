@@ -17,6 +17,7 @@ typedef struct
     char path[TF_LOG_PATH_SIZE];
     SystemLogSinkHealth health;
     uint8_t file_selected;
+    uint8_t manifest_failed;
 } SilverStarLogSinkServiceRuntime;
 
 static SilverStarLogSinkServiceRuntime s_sink;
@@ -79,7 +80,8 @@ static SystemDeviceResult SilverStarLogSinkService_OpenSelected(void)
     return SYSTEM_DEVICE_NOT_READY;
 }
 
-static SystemDeviceResult SilverStarLogSinkService_NewFileOpen(void)
+static SystemDeviceResult SilverStarLogSinkService_NewFileOpen(
+    const SystemLogSessionInfo *session)
 {
     uint16_t index;
     SystemDeviceResult result;
@@ -90,6 +92,7 @@ static SystemDeviceResult SilverStarLogSinkService_NewFileOpen(void)
     SILVERSTAR_ASSERT(s_sink.health.session_active == 0U,
                       SILVERSTAR_ASSERT_MODULE_BOARD,
                       SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (s_sink.manifest_failed != 0U) { return SYSTEM_DEVICE_IO_ERROR; }
     result = SystemStorage_Mount();
     if ((result != SYSTEM_DEVICE_OK) &&
         (result != SYSTEM_DEVICE_ALREADY_MATCHED))
@@ -105,6 +108,16 @@ static SystemDeviceResult SilverStarLogSinkService_NewFileOpen(void)
         if (result == SYSTEM_DEVICE_ALREADY_MATCHED) { continue; }
         if (result != SYSTEM_DEVICE_OK)
         {
+            s_sink.health.error_count++;
+            s_sink.health.healthy = 0U;
+            return result;
+        }
+        result = SystemStorage_MissionManifestCreate(
+            session->profile_id, session->version_major,
+            session->version_minor, session->version_patch);
+        if (result != SYSTEM_DEVICE_OK)
+        {
+            s_sink.manifest_failed = 1U;
             s_sink.health.error_count++;
             s_sink.health.healthy = 0U;
             return result;
@@ -160,7 +173,7 @@ static SystemDeviceResult SilverStarLogSinkService_BeginSession(
         }
         return result;
     }
-    return SilverStarLogSinkService_NewFileOpen();
+    return SilverStarLogSinkService_NewFileOpen(session);
 }
 
 static SystemDeviceResult SilverStarLogSinkService_Write(const uint8_t *data,

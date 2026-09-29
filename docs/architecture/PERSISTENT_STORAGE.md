@@ -12,6 +12,7 @@ The SD card layout currently produced by the F407 reference is:
 /system/device/devNN.0, devNN.1
 /system/preferences/preNN.0, preNN.1
 /missions/000001/flight.sslog
+/missions/000001/manifest
 /missions/000001/snap00.0, snap00.1
 ```
 
@@ -24,6 +25,13 @@ slot, synced and read back. Readers choose the highest valid generation and
 can fall back after a torn write. The object payload limit is fixed at build
 time. These files are compact binary data, not JSON.
 
+The immutable 20-byte `manifest` is created in a new mission directory
+before `flight.sslog` is opened. It contains `SSMF`, schema 1, the SilverStar
+product version, mission ID, profile ID and CRC32. Creation requires sync and
+readback. The START readiness getter only reports a mission ID after this
+check succeeds. A failed manifest write latches the log session fault rather
+than allocating another directory on each retry.
+
 FatFs long-file-name support uses static BSS storage and an ASCII-only
 conversion adapter. This supports the fixed SilverStar directory names and
 rejects foreign names outside printable ASCII. An imported CubeMX FatFs
@@ -31,7 +39,7 @@ configuration must use a compatible static LFN setting and must not compile
 another `ff_convert` implementation into the same target.
 
 The current START check requires a mounted, healthy, writable log sink, a
-reserved mission directory number and the logger's streaming-ready state.
+verified mission manifest and the logger's streaming-ready state.
 Post-START storage failure marks the sink
 unhealthy without stopping navigation or the flight state machine. Mission
 metadata, configuration/calibration snapshots and final status still need to
