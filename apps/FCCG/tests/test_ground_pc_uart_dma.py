@@ -5,7 +5,6 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
 from silverstar_fccg.generator.ground_pc_uart_dma import PcUartDma_Render
 
 _HAL_STUB = r"""
@@ -114,11 +113,16 @@ def test_uart_dma_ring_backpressure_and_overflow(tmp_path: Path) -> None:
     core = Path(__file__).resolve().parents[1] / (
         "plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground"
     )
+    common = Path(__file__).resolve().parents[1] / (
+        "plugins/builtin/silverstar_core_0_1_0/payload/Common"
+    )
     executable = tmp_path / "uart_dma_test.exe"
     subprocess.run(
         [compiler, "-std=c11", "-Wall", "-Wextra", "-Werror",
          f"-I{tmp_path}", f"-I{core / 'Core/Inc'}",
-         f"-I{core / 'Protocol/Inc'}", str(tmp_path / "pc_byte_stream.c"),
+         f"-I{core / 'Protocol/Inc'}", f"-I{common / 'Inc'}",
+         str(common / "Src/silverstar_assert.c"),
+         str(tmp_path / "pc_byte_stream.c"),
          str(tmp_path / "harness.c"), "-o", str(executable)],
         check=True, capture_output=True, text=True,
     )

@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "platform_stm32f1_resources.h"
+#include "silverstar_assert.h"
 #include "stm32f1xx_hal.h"
 
 #define PLATFORM_UART_POLL_BATCH_MAX 64U
@@ -36,10 +37,16 @@ PlatformResult PlatformUart_Write(
     UART_HandleTypeDef *handle = PlatformUart_HandleGet(id);
     HAL_StatusTypeDef result;
 
-    if ((handle == NULL) || (data == NULL) || (length == 0U))
+    if ((handle == NULL) || (data == NULL) || (length == 0U) ||
+        ((uint32_t)id >= PLATFORM_UART_COUNT))
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
+    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_PLATFORM);
+    SILVERSTAR_ASSERT((uint32_t)id < PLATFORM_UART_COUNT,
+        SILVERSTAR_ASSERT_MODULE_PLATFORM,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     result = HAL_UART_Transmit(
         handle, (uint8_t *)(uintptr_t)data, length, timeout_ms);
     if (result == HAL_OK)
@@ -84,10 +91,15 @@ PlatformResult PlatformUart_Read(
     uint16_t limit;
     uint16_t count;
 
-    if ((handle == NULL) || (data == NULL) || (read_length == NULL))
+    if ((handle == NULL) || (data == NULL) || (read_length == NULL) ||
+        ((uint32_t)id >= PLATFORM_UART_COUNT))
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
+    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_PLATFORM);
+    SILVERSTAR_ASSERT_OBJECT(read_length, uint16_t,
+        SILVERSTAR_ASSERT_MODULE_PLATFORM);
     *read_length = 0U;
     limit = (capacity < PLATFORM_UART_POLL_BATCH_MAX) ?
         capacity : PLATFORM_UART_POLL_BATCH_MAX;

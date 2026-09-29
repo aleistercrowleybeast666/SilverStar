@@ -1,14 +1,23 @@
+param(
+    [ValidateSet('Flight', 'Ground')]
+    [string]$TargetKind = 'Flight'
+)
+
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $script:checkCount = 0
 $script:failures = New-Object 'System.Collections.Generic.List[string]'
 
-$firstPartyPaths = @(
-    'APP', 'Algorithm', 'Board', 'Common', 'Devices', 'FlightLogic',
-    'Generated', 'Interfaces', 'Modules', 'OS\FreeRTOS', 'Platform',
-    'Protocol', 'System', 'Targets'
-)
+$firstPartyPaths = if ($TargetKind -eq 'Ground') {
+    @('Common', 'Devices', 'Generated', 'Ground', 'Platform')
+} else {
+    @(
+        'APP', 'Algorithm', 'Board', 'Common', 'Devices', 'FlightLogic',
+        'Generated', 'Interfaces', 'Modules', 'OS\FreeRTOS', 'Platform',
+        'Protocol', 'System', 'Targets'
+    )
+}
 
 $approvedInfiniteFunctions = @(
     'AppTask_Device', 'AppTask_Estimator', 'AppTask_Flight', 'AppTask_Ins',
@@ -382,8 +391,24 @@ Add-PowerTenCheck -Condition ($makefile -match 'FIRST_PARTY_C_SOURCES') `
 Add-PowerTenCheck -Condition ($makefile -match 'power10-check') `
     -Message 'Makefile does not expose the power10-check target.'
 
-$linker = Get-Content -Raw -LiteralPath (
-    Join-Path $repoRoot 'STM32F407XX_FLASH.ld')
+$linkerName = if ($TargetKind -eq 'Ground') {
+    $match = [regex]::Match($makefile, '(?m)\-T([^\s]+\.ld)')
+    if (-not $match.Success) {
+        Add-PowerTenFailure -Message 'Ground Makefile has no linker script.'
+        ''
+    } else {
+        $match.Groups[1].Value
+    }
+} else {
+    'STM32F407XX_FLASH.ld'
+}
+$linkerPath = Join-Path $repoRoot $linkerName
+$linker = if (Test-Path -LiteralPath $linkerPath -PathType Leaf) {
+    Get-Content -Raw -LiteralPath $linkerPath
+} else {
+    Add-PowerTenFailure -Message "Linker script is missing: $linkerName"
+    ''
+}
 Add-PowerTenCheck -Condition ($linker -match '_Min_Heap_Size\s*=\s*0x0') `
     -Message 'The authoritative linker script does not keep heap size at zero.'
 Add-PowerTenCheck -Condition ($makefile -notmatch '(?m)^\s*[^#\r\n]*sysmem\.c') `

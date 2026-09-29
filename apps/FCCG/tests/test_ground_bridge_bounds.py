@@ -21,6 +21,7 @@ def test_ground_radio_rx_work_is_bounded_even_for_invalid_packets(
 #include <string.h>
 #include "ground_bridge.h"
 #include "ground_radio.h"
+#include "gsp_min_protocol.h"
 #include "pc_byte_stream.h"
 
 static uint32_t s_rx_dequeue_calls;
@@ -54,6 +55,10 @@ uint32_t PcByteStream_OverflowCount_Get(void) { return 0U; }
 
 int main(void)
 {
+    uint8_t oversized_air[UINT8_MAX] = {0U};
+    uint8_t gsp_output[GSP_MIN_MAX_FRAME_LEN];
+    assert(GspMin_BuildAirRxFrame(-70, 4, oversized_air,
+        UINT8_MAX, gsp_output, sizeof(gsp_output)) == 0U);
     assert(GroundBridge_Init() == GROUND_BRIDGE_OK);
     assert(s_pc_write_calls == 1U);
     assert(GroundBridge_Process(1U) == GROUND_BRIDGE_OK);

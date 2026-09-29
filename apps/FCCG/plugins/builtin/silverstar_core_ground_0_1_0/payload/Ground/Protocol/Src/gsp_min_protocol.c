@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include "protocol_crc16.h"
+#include "silverstar_assert.h"
 
 #define GSP_PARSE_WAIT_SOF1             0U
 #define GSP_PARSE_WAIT_SOF2             1U
@@ -55,14 +56,65 @@ uint32_t GspMinParser_GetCrcErrorCount(const GspMinParser *parser)
     return parser->crc_error_count;
 }
 
-GspParserResult GspMinParser_InputByte(GspMinParser *parser, uint8_t byte, GspMinFrame *out_frame)
+static GspParserResult GspMinParser_FixedByteProcess(
+    GspMinParser *parser, uint8_t byte)
+{
+    SILVERSTAR_ASSERT_OBJECT(parser, GspMinParser,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    if (parser->fixed_index >= 2U)
+    { GspMinParser_Reset(parser); return GSP_PARSER_BAD_LENGTH; }
+    parser->crc_buf[parser->fixed_index] = byte;
+    parser->fixed_index++;
+    if (parser->fixed_index < 2U) { return GSP_PARSER_NO_FRAME; }
+    parser->payload_len = parser->crc_buf[1];
+    if (parser->payload_len > GSP_MIN_MAX_PAYLOAD_LEN)
+    { GspMinParser_Reset(parser); return GSP_PARSER_BAD_LENGTH; }
+    parser->payload_index = 0U;
+    parser->state = (parser->payload_len == 0U) ?
+        GSP_PARSE_READ_CRC_LO : GSP_PARSE_READ_PAYLOAD;
+    return GSP_PARSER_NO_FRAME;
+}
+
+static GspParserResult GspMinParser_CrcHighProcess(
+    GspMinParser *parser, uint8_t byte, GspMinFrame *out_frame)
 {
     uint16_t crc_calc;
+    SILVERSTAR_ASSERT_OBJECT(parser, GspMinParser,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT_OBJECT(out_frame, GspMinFrame,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(parser->payload_len <= GSP_MIN_MAX_PAYLOAD_LEN,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    parser->rx_crc |= (uint16_t)((uint16_t)byte << 8);
+    crc_calc = ProtocolCrc16_CcittFalse(
+        parser->crc_buf, (uint16_t)(2U + parser->payload_len));
+    if (crc_calc == parser->rx_crc)
+    {
+        out_frame->type = parser->crc_buf[0];
+        out_frame->payload_len = parser->payload_len;
+        if (parser->payload_len > 0U)
+        { memcpy(out_frame->payload, parser->payload, parser->payload_len); }
+        GspMinParser_Reset(parser);
+        return GSP_PARSER_FRAME_READY;
+    }
+    if (parser->crc_error_count < UINT32_MAX)
+    { parser->crc_error_count++; }
+    GspMinParser_Reset(parser);
+    return GSP_PARSER_BAD_CRC;
+}
+
+GspParserResult GspMinParser_InputByte(GspMinParser *parser, uint8_t byte, GspMinFrame *out_frame)
+{
 
     if ((parser == NULL) || (out_frame == NULL))
     {
         return GSP_PARSER_NO_FRAME;
     }
+    SILVERSTAR_ASSERT_OBJECT(parser, GspMinParser,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT_OBJECT(out_frame, GspMinFrame,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
 
     switch (parser->state)
     {
@@ -86,24 +138,12 @@ GspParserResult GspMinParser_InputByte(GspMinParser *parser, uint8_t byte, GspMi
         break;
 
     case GSP_PARSE_READ_FIXED:
-        parser->crc_buf[parser->fixed_index] = byte;
-        parser->fixed_index++;
-
-        if (parser->fixed_index >= 2U)
-        {
-            parser->payload_len = parser->crc_buf[1];
-            if (parser->payload_len > GSP_MIN_MAX_PAYLOAD_LEN)
-            {
-                GspMinParser_Reset(parser);
-                return GSP_PARSER_BAD_LENGTH;
-            }
-
-            parser->payload_index = 0U;
-            parser->state = (parser->payload_len == 0U) ? GSP_PARSE_READ_CRC_LO : GSP_PARSE_READ_PAYLOAD;
-        }
-        break;
+        return GspMinParser_FixedByteProcess(parser, byte);
 
     case GSP_PARSE_READ_PAYLOAD:
+        if ((parser->payload_index >= parser->payload_len) ||
+            (parser->payload_index >= GSP_MIN_MAX_PAYLOAD_LEN))
+        { GspMinParser_Reset(parser); return GSP_PARSER_BAD_LENGTH; }
         parser->payload[parser->payload_index] = byte;
         parser->crc_buf[2U + parser->payload_index] = byte;
         parser->payload_index++;
@@ -120,25 +160,7 @@ GspParserResult GspMinParser_InputByte(GspMinParser *parser, uint8_t byte, GspMi
         break;
 
     case GSP_PARSE_READ_CRC_HI:
-        parser->rx_crc |= (uint16_t)((uint16_t)byte << 8);
-        crc_calc = ProtocolCrc16_CcittFalse(parser->crc_buf, (uint16_t)(2U + parser->payload_len));
-
-        if (crc_calc == parser->rx_crc)
-        {
-            out_frame->type = parser->crc_buf[0];
-            out_frame->payload_len = parser->payload_len;
-            if (parser->payload_len > 0U)
-            {
-                memcpy(out_frame->payload, parser->payload, parser->payload_len);
-            }
-
-            GspMinParser_Reset(parser);
-            return GSP_PARSER_FRAME_READY;
-        }
-
-        parser->crc_error_count++;
-        GspMinParser_Reset(parser);
-        return GSP_PARSER_BAD_CRC;
+        return GspMinParser_CrcHighProcess(parser, byte, out_frame);
 
     default:
         GspMinParser_Reset(parser);
@@ -166,6 +188,11 @@ uint16_t GspMin_BuildFrame(uint8_t type,
     {
         return 0U;
     }
+    SILVERSTAR_ASSERT_OBJECT(out_buf, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(payload_len <= GSP_MIN_MAX_PAYLOAD_LEN,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
 
     total_len = (uint16_t)(6U + payload_len);
     if (out_size < total_len)
@@ -234,16 +261,18 @@ uint16_t GspMin_BuildAirRxFrame(int8_t rssi_dbm,
     uint8_t payload[GSP_MIN_MAX_PAYLOAD_LEN];
     uint8_t payload_len;
 
-    if ((air_frame == NULL) || (air_len == 0U))
+    if ((air_frame == NULL) || (air_len == 0U) ||
+        (air_len > (GSP_MIN_MAX_PAYLOAD_LEN - 3U)))
     {
         return 0U;
     }
 
+    SILVERSTAR_ASSERT_OBJECT(air_frame, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
     payload_len = (uint8_t)(3U + air_len);
-    if (payload_len > GSP_MIN_MAX_PAYLOAD_LEN)
-    {
-        return 0U;
-    }
+    SILVERSTAR_ASSERT(payload_len <= GSP_MIN_MAX_PAYLOAD_LEN,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
 
     payload[0] = (uint8_t)rssi_dbm;
     payload[1] = (uint8_t)snr_q4;

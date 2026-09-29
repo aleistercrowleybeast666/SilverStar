@@ -130,6 +130,13 @@ def test_f103_ground_generation_uses_f1_family_and_build_audit(
     assert "startup_stm32f103xb.s" in makefile
     assert "-fstack-usage" in makefile
     assert "-Werror=vla" in makefile
+    assert "FIRST_PARTY_C_SOURCES" in makefile
+    assert "FIRST_PARTY_WARNINGS" in makefile
+    assert "power10-check" in makefile
+    assert (ground / "Tools/check_power_of_ten.ps1").is_file()
+    assert "_Min_Heap_Size = 0x0" in (
+        ground / "STM32F103XX_FLASH.ld"
+    ).read_text(encoding="utf-8")
     assert "ground.map" in makefile
     assert "ground.size" in makefile
     main = (ground / "Core/Src/main.c").read_text(encoding="utf-8")

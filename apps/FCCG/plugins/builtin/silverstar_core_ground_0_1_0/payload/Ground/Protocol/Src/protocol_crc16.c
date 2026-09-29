@@ -1,5 +1,7 @@
 #include "protocol_crc16.h"
 #include <stddef.h>
+#include "gsp_min_protocol.h"
+#include "silverstar_assert.h"
 
 uint16_t ProtocolCrc16_CcittFalse(const uint8_t *data, uint16_t len)
 {
@@ -7,10 +9,12 @@ uint16_t ProtocolCrc16_CcittFalse(const uint8_t *data, uint16_t len)
     uint16_t i;
     uint8_t bit;
 
-    if (data == NULL)
+    if ((data == NULL) || (len > (GSP_MIN_MAX_PAYLOAD_LEN + 2U)))
     {
         return crc;
     }
+    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
 
     for (i = 0U; i < len; i++)
     {

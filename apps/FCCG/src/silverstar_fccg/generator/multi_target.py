@@ -224,6 +224,7 @@ uint32_t PcByteStream_OverflowCount_Get(void)
 """
     return """#include "pc_byte_stream.h"
 #include "gsp_min_protocol.h"
+#include "silverstar_assert.h"
 #include "usbd_cdc_if.h"
 
 #define PC_USB_RX_CAPACITY 512U
@@ -243,6 +244,12 @@ void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
     uint16_t index;
     uint32_t skipped;
     if (data == NULL) { return; }
+    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_GENERATED);
+    SILVERSTAR_ASSERT((s_rx_head < PC_USB_RX_CAPACITY) &&
+        (s_rx_tail < PC_USB_RX_CAPACITY),
+        SILVERSTAR_ASSERT_MODULE_GENERATED,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     for (index = 0U; (index < length) && (index < PC_USB_RX_CAPACITY);
          index++)
     {
@@ -313,7 +320,19 @@ OBJCOPY := {toolchain_prefix}objcopy
 SIZE := {toolchain_prefix}size
 C_SOURCES := {source_lines}
 ASM_SOURCES := {asm_lines}
+FIRST_PARTY_C_SOURCES := $(filter Common/% Devices/% Generated/% Ground/% Platform/%,$(C_SOURCES))
+VENDOR_C_SOURCES := $(filter Core/% Drivers/% HardwareGenerated/% Middlewares/%,$(C_SOURCES))
+CLASSIFIED_C_SOURCES := $(FIRST_PARTY_C_SOURCES) $(VENDOR_C_SOURCES)
+ifneq ($(words $(C_SOURCES)),$(words $(CLASSIFIED_C_SOURCES)))
+$(error Ground compiler policy does not classify every C source)
+endif
 OBJECTS := $(patsubst %.c,build/%.o,$(C_SOURCES)) $(patsubst %.s,build/%.o,$(ASM_SOURCES))
+FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror \\
+  -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 \\
+  -Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes \\
+  -Wmissing-prototypes -Wswitch-enum -Wvla
+VENDOR_WARNINGS := -Wall -Werror=implicit-function-declaration \\
+  -Werror=incompatible-pointer-types -Werror=return-type
 CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections -fstack-usage -Wvla -Werror=vla {flags} {include_flags} {define_flags}
 LDFLAGS := {flags} -Wl,--gc-sections,-Map=build/ground.map -T{linker} -specs=nano.specs -lc -lm -lnosys
 
@@ -324,6 +343,9 @@ MKDIR_P = mkdir -p "$(dir $@)"
 endif
 
 all: build/ground.elf build/ground.bin build/ground.size
+
+power10-check:
+\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1 -TargetKind Ground
 
 build/ground.elf: $(OBJECTS)
 \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
@@ -336,7 +358,7 @@ build/ground.size: build/ground.elf
 
 build/%.o: %.c
 \t@$(MKDIR_P)
-\t$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+\t$(CC) $(CFLAGS) $(if $(filter $<,$(FIRST_PARTY_C_SOURCES)),$(FIRST_PARTY_WARNINGS),$(VENDOR_WARNINGS)) -MMD -MP -c $< -o $@
 
 build/%.o: %.s
 \t@$(MKDIR_P)
@@ -375,6 +397,7 @@ def GroundFiles_Render(
     for relative in (
         "Common/Inc/silverstar_assert.h", "Common/Inc/silverstar_compiler.h",
         "Common/Src/silverstar_assert.c", "Interfaces/Inc/system_device_types.h",
+        "Tools/check_power_of_ten.ps1",
     ):
         files[relative] = (flight_core.payload_root / relative).read_bytes()
     if ground.hardware.mode == "board_plugin":

@@ -25,13 +25,19 @@ def ground_gsp_tool(tmp_path_factory) -> Path:
         ROOT / "apps/FCCG/plugins/builtin/silverstar_core_ground_0_1_0"
         / "payload/Ground/Protocol"
     )
+    common = (
+        ROOT / "apps/FCCG/plugins/builtin/silverstar_core_0_1_0"
+        / "payload/Common"
+    )
     subprocess.run(
         [
             compiler, "-std=c11", "-Wall", "-Wextra", "-Werror",
             "-I" + str(protocol / "Inc"),
+            "-I" + str(common / "Inc"),
             str(ROOT / "tests/integration/ground_gsp_vectors.c"),
             str(protocol / "Src/gsp_min_protocol.c"),
             str(protocol / "Src/protocol_crc16.c"),
+            str(common / "Src/silverstar_assert.c"),
             "-o", str(output),
         ],
         check=True, capture_output=True, text=True,

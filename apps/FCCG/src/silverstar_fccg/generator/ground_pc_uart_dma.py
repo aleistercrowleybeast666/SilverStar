@@ -15,6 +15,7 @@ _SOURCE = r'''#include "pc_byte_stream.h"
 
 #include "gsp_min_protocol.h"
 #include "main.h"
+#include "silverstar_assert.h"
 
 #define PC_UART_DMA_RX_CHUNK 128U
 #define PC_UART_RX_CAPACITY 512U
@@ -66,6 +67,12 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *uart, uint16_t length)
     uint16_t index;
 
     if (uart != &__PC_UART_HANDLE__) { return; }
+    SILVERSTAR_ASSERT_OBJECT(uart, UART_HandleTypeDef,
+        SILVERSTAR_ASSERT_MODULE_GENERATED);
+    SILVERSTAR_ASSERT((s_rx_head < PC_UART_RX_CAPACITY) &&
+        (s_rx_tail < PC_UART_RX_CAPACITY),
+        SILVERSTAR_ASSERT_MODULE_GENERATED,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     s_rx_armed = 0U;
     if (length > PC_UART_DMA_RX_CHUNK)
     {
@@ -131,6 +138,11 @@ PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
     {
         return PC_BYTE_STREAM_WRITE_ERROR;
     }
+    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_GENERATED);
+    SILVERSTAR_ASSERT(length <= GSP_MIN_MAX_FRAME_LEN,
+        SILVERSTAR_ASSERT_MODULE_GENERATED,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     if (s_tx_busy != 0U) { return PC_BYTE_STREAM_WRITE_BUSY; }
     for (index = 0U; index < length; index++) { s_tx_buffer[index] = data[index]; }
     s_tx_busy = 1U;
