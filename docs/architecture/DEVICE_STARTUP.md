@@ -81,3 +81,31 @@ remains **HARDWARE_UNVERIFIED**.
 The bounded probe window allows two valid NMEA sentences one second apart;
 with no stream, each candidate advances after its MON-VER wait. Exhausting
 all declared candidates reports device absence rather than retrying forever.
+
+## Generic NMEA receiver (Round 4 software path)
+
+`silverstar.device.gnss.generic_nmea` is a separate, read-only receiver
+plugin. It accepts GGA, GNS, RMC, VTG and GST with a strict checksum and a
+96-byte sentence bound. Each `Process` call consumes at most 256 bytes and
+8 sentences. A new `$` resynchronizes a malformed stream. No vendor commands
+are sent, including during startup or failover. The source selector skips
+configuration for read-only instances while still configuring other selected
+GNSS instances.
+
+The parser assembles fields within one UTC epoch and publishes at the next
+epoch boundary, with receive time marked as an untrusted measurement time.
+RMC-only 2D fixes never claim vertical position or velocity. GGA/GNS altitude
+is MSL; an ellipsoid estimate is filled only when a valid geoid separation is
+also present. GST metric standard deviations are published only when present;
+GSA DOP is not substituted for metric accuracy. The existing strict preflight
+origin gate still requires horizontal and vertical position, while the
+per-group quality mask allows horizontal-only data to be represented honestly.
+The UART baud and receiver output mode remain user-configured external facts.
+
+The [NMEA 0183 owner](https://www.nmea.org/nmea-0183.html) describes the
+standard and warns that informal sentence lists can be inaccurate. The
+[u-blox interface description](https://content.u-blox.com/sites/default/files/ZED-F9T-10B_InterfaceDescription_UBX-20033631.pdf)
+is the public primary reference used for the supported sentence fields.
+Host parser, source selector and startup tests and an F407 ARM compile/link
+smoke cover software behavior. Physical receiver operation remains
+**HARDWARE_UNVERIFIED**.

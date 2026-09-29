@@ -1093,14 +1093,20 @@ SystemDeviceResult SystemGnss_ConfigApply(const SystemGnssConfig *config,
     {
         SystemDeviceConfigReport candidate_report;
         SystemDeviceResult candidate_result;
+        uint32_t capabilities = 0U;
         uint8_t instance_id;
 
         if (position >= s_gnss.count) { break; }
         instance_id = s_gnss.order[position];
         if (s_gnss.initialized[instance_id] == 0U) { continue; }
         (void)memset(&candidate_report, 0, sizeof(candidate_report));
-        candidate_result = ProjectGnssInstance_ConfigApply(instance_id,
-            config, &candidate_report);
+        if ((ProjectGnssInstance_CapabilitiesGet(instance_id,
+                &capabilities) == SYSTEM_DEVICE_OK) &&
+            ((capabilities & SYSTEM_GNSS_CAP_READ_ONLY) != 0U))
+        { candidate_result = SYSTEM_DEVICE_CONFIG_NO_ACTION; }
+        else
+        { candidate_result = ProjectGnssInstance_ConfigApply(instance_id,
+            config, &candidate_report); }
         if (instance_id == s_gnss.active)
         {
             *report = candidate_report;
@@ -1126,14 +1132,20 @@ SystemDeviceResult SystemGnss_ConfigVerify(const SystemGnssConfig *config,
     {
         SystemDeviceConfigReport candidate_report;
         SystemDeviceResult candidate_result;
+        uint32_t capabilities = 0U;
         uint8_t instance_id;
 
         if (position >= s_gnss.count) { break; }
         instance_id = s_gnss.order[position];
         if (s_gnss.initialized[instance_id] == 0U) { continue; }
         (void)memset(&candidate_report, 0, sizeof(candidate_report));
-        candidate_result = ProjectGnssInstance_ConfigVerify(instance_id,
-            config, &candidate_report);
+        if ((ProjectGnssInstance_CapabilitiesGet(instance_id,
+                &capabilities) == SYSTEM_DEVICE_OK) &&
+            ((capabilities & SYSTEM_GNSS_CAP_READ_ONLY) != 0U))
+        { candidate_result = SYSTEM_DEVICE_CONFIG_NO_ACTION; }
+        else
+        { candidate_result = ProjectGnssInstance_ConfigVerify(instance_id,
+            config, &candidate_report); }
         if (instance_id == s_gnss.active)
         {
             *report = candidate_report;

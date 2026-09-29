@@ -7,6 +7,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import yaml
+import pytest
 from PySide6.QtWidgets import QFileDialog
 
 from silverstar_fccg.app.service import FccgService
@@ -35,6 +36,7 @@ from silverstar_fccg.project.model import (
     PROJECT_FORMAT_VERSION,
     DeviceInstance,
     ProjectModel_Load,
+    ProjectModelError,
     ProjectModel_Parse,
 )
 from silverstar_fccg.project.reference import ReferenceProject_Create
@@ -312,7 +314,7 @@ def _MixedSingletonDeviceCatalog_Create(
     return catalog
 
 
-def test_project_v2_migrates_devices_and_resource_owners() -> None:
+def test_project_v2_legacy_device_shape_is_rejected() -> None:
     data = ReferenceProject_Create("MigrateV2").Dictionary_Get()
     instances = list(data["components"]["devices"])
     instance_to_plugin = {
@@ -332,23 +334,10 @@ def test_project_v2_migrates_devices_and_resource_owners() -> None:
     data.pop("capability_sources")
     data["generated_glue"].remove("project_capability_routes")
 
-    migrated = ProjectModel_Parse(data)
-    assert migrated.format_version == PROJECT_FORMAT_VERSION
-    assert [instance.instance_id for instance in migrated.device_instances] == [
-        "imu0",
-        "gnss0",
-            "telemetry0",
-            "maintenance0",
-            "storage0",
-            "sensor0",
-        "actuator0",
-        "actuator1",
-        "indicator0",
-    ]
-    assert migrated.resource_assignments["imu0:data"] == "PLATFORM_UART_1"
-    assert migrated.capability_source_overrides == {}
-    assert "capability_selections" not in migrated.Dictionary_Get()
-    assert "project_capability_routes" in migrated.generated_glue
+    # The 0.1.0 project format requires explicit instance/interface/profile
+    # identities; a pre-release v2 positional device list must not be guessed.
+    with pytest.raises(ProjectModelError, match="device instance"):
+        ProjectModel_Parse(data)
 
 
 def test_project_v3_migrates_without_capability_selections() -> None:
@@ -918,7 +907,9 @@ def test_context_ready_mock_devices_support_independent_instances_and_dedup_sour
     assert isinstance(model.strategies["estimator"], str)
 
     facade_header = _DeviceInstancesHeader_Render(model, catalog)
-    facade_source = _DeviceInstancesSource_Render(model, catalog)
+    facade_source = _DeviceInstancesSource_Render(
+        model, catalog.ProjectView_Get(model)
+    )
     metadata_source = _MetadataSource_Render(model, catalog)
     assert "PROJECT_DESCRIPTOR_ID_IMU_0" in facade_header
     assert "PROJECT_DESCRIPTOR_ID_IMU_1" in facade_header
@@ -1015,7 +1006,7 @@ def test_save_as_copies_full_source_and_excludes_intermediates(
     )
 
 
-def test_gui_save_as_action_switches_to_complete_project_copy(
+def test_gui_save_as_action_creates_draft_project_root(
     tmp_path: Path, workspace_root: Path, qapp, monkeypatch
 ) -> None:
     service = FccgService(workspace_root)
@@ -1052,7 +1043,9 @@ def test_gui_save_as_action_switches_to_complete_project_copy(
         assert not errors, errors
         assert window._project_root == destination.resolve()
         assert (destination / "SilverStar.ssproject").is_file()
-        assert (destination / "Devices" / "IMU" / "JY901B").is_dir()
+        assert (destination / "Log").is_dir()
+        # Save As creates a new draft root; firmware is generated separately.
+        assert not (destination / "Flight_Controller").exists()
     finally:
         window.close()
         qapp.processEvents()

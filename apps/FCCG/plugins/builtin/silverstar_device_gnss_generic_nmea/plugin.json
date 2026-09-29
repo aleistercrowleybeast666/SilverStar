@@ -1,0 +1,92 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.device.gnss.generic_nmea",
+  "name": "Generic NMEA GNSS",
+  "type": "device",
+  "class": "gnss",
+  "version": "0.1.0",
+  "description": "Read-only bounded NMEA 0183 GNSS receiver; no vendor configuration commands.",
+  "requires": {
+    "components": [{"id": "silverstar.core.0_1_0", "optional": false}],
+    "resources": [
+      {"name": "data", "kind": "uart", "constraints": {"uart": {
+        "baud": {"allowed_values": [4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600], "configurable": true},
+        "word_length": 8, "parity": "none", "stop_bits": 1.0,
+        "rx_dma": true, "tx_dma": false, "irq": true
+      }}},
+      {"name": "time", "kind": "time", "mode": "shared"}
+    ],
+    "capabilities": []
+  },
+  "resources": {"provides": [], "roles": [], "conflicts": []},
+  "provides": ["device.gnss", "gnss.position", "gnss.velocity"],
+  "build": {
+    "sources": [
+      "Devices/GNSS/GENERIC_NMEA/Src/generic_nmea_parser.c",
+      "Devices/GNSS/GENERIC_NMEA/Src/generic_nmea_instance.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": ["Devices/GNSS/GENERIC_NMEA/Inc"],
+    "defines": []
+  },
+  "payload": {"roots": ["Devices/GNSS/GENERIC_NMEA"]},
+  "metadata": {
+    "display_names": {"zh_CN": "通用 NMEA GNSS", "en_US": "Generic NMEA GNSS"},
+    "device_descriptors": [{
+      "order": 2,
+      "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_GENERIC_NMEA",
+      "class": "SYSTEM_DEVICE_CLASS_GNSS",
+      "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+      "capability": "SYSTEM_CAPABILITY_GNSS",
+      "rate": "5U",
+      "driver_hash": "0x4E4D4541UL",
+      "name_hash": "0x474E5353UL"
+    }],
+    "device_group": "primary_devices",
+    "device_group_order": 20,
+    "device_selection_style": "instance",
+    "device_category": "sensor.gnss",
+    "build_feature_symbols": ["SYSTEM_USER_GNSS_ENABLE"],
+    "device_instance_bindings": {
+      "SYSTEM_DEVICE_CLASS_GNSS": {
+        "function_prefix": "GenericNmeaGnssInstance",
+        "headers": ["generic_nmea_instance.h"],
+        "pass_instance": true
+      }
+    },
+    "instance_resource_binding": {
+      "struct_type": "ProjectGenericNmeaResources",
+      "accessor": "ProjectGenericNmeaResources_Get",
+      "count_symbol": "PROJECT_GENERIC_NMEA_INSTANCE_COUNT",
+      "runtime_context_upper_bound": 4,
+      "fields": [
+        {"requirement": "data", "member": "uart"},
+        {"requirement": "time", "member": "time"}
+      ]
+    },
+    "recordable_outputs": {
+      "gnss.position": {"enabled": true},
+      "gnss.velocity": {"enabled": true}
+    },
+    "source_origins": {"default": "silverstar_generic_nmea"},
+    "initialization": {
+      "configure_on_boot": false,
+      "hardware_status": "HARDWARE_UNVERIFIED",
+      "readback": {
+        "zh_CN": "只读接收并校验 NMEA；不发送任何配置命令",
+        "en_US": "Read-only NMEA reception with checksum; no configuration commands"
+      }
+    }
+  },
+  "instance_policy": {
+    "plugin_max": 4, "class_max": 4,
+    "same_plugin_multiple": true, "multi_instance_ready": true
+  },
+  "physical_device": {
+    "vendor": "Multiple",
+    "model": "NMEA 0183 GNSS receiver",
+    "chipset": "Receiver dependent",
+    "driver": "Generic read-only NMEA parser"
+  },
+  "transports": []
+}

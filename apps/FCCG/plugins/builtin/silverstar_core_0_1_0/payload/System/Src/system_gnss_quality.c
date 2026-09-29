@@ -69,7 +69,8 @@ static uint8_t SystemGnssQuality_BasicFixCheck(
                         SYSTEM_GNSS_REJECT_FIELD_INVALID;
         blocking = 1U;
     }
-    else if ((sample->fix_type != 3U) && (sample->fix_type != 4U))
+    else if ((sample->fix_type != 2U) && (sample->fix_type != 3U) &&
+             (sample->fix_type != 4U))
     {
         *reject_mask |= SYSTEM_GNSS_REJECT_NO_FIX |
                         SYSTEM_GNSS_REJECT_FIX_TYPE;
@@ -203,6 +204,9 @@ static uint8_t SystemGnssQuality_GroupEvaluate(
             !isfinite(sample->velocity_enu_mps[2]))
         { *reason |= SYSTEM_GNSS_REJECT_FIELD_INVALID; blocking = 1U; }
     }
+    if ((group == SYSTEM_GNSS_QUALITY_POSITION_VERTICAL) &&
+        (sample->fix_type == 2U))
+    { *reason |= SYSTEM_GNSS_REJECT_FIX_TYPE; blocking = 1U; }
     return (uint8_t)(blocking == 0U);
 }
 

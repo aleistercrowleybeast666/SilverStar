@@ -49,6 +49,9 @@ static SystemGnssSample s_gnss_sample[TEST_INSTANCE_COUNT];
 static uint32_t s_gnss_init_count[TEST_INSTANCE_COUNT];
 static uint32_t s_gnss_start_count[TEST_INSTANCE_COUNT];
 static uint32_t s_gnss_process_count[TEST_INSTANCE_COUNT];
+static uint32_t s_gnss_capabilities[TEST_INSTANCE_COUNT];
+static uint32_t s_gnss_apply_count[TEST_INSTANCE_COUNT];
+static uint32_t s_gnss_verify_count[TEST_INSTANCE_COUNT];
 
 static SystemDeviceResult s_telemetry_init_result[TEST_INSTANCE_COUNT];
 static SystemDeviceResult s_telemetry_start_result[TEST_INSTANCE_COUNT];
@@ -87,6 +90,9 @@ static void Test_StateReset(void)
     (void)memset(s_gnss_init_count, 0, sizeof(s_gnss_init_count));
     (void)memset(s_gnss_start_count, 0, sizeof(s_gnss_start_count));
     (void)memset(s_gnss_process_count, 0, sizeof(s_gnss_process_count));
+    (void)memset(s_gnss_capabilities, 0, sizeof(s_gnss_capabilities));
+    (void)memset(s_gnss_apply_count, 0, sizeof(s_gnss_apply_count));
+    (void)memset(s_gnss_verify_count, 0, sizeof(s_gnss_verify_count));
     (void)memset(s_telemetry_health, 0, sizeof(s_telemetry_health));
     (void)memset(s_telemetry_init_count, 0,
                  sizeof(s_telemetry_init_count));
@@ -292,15 +298,46 @@ SystemDeviceResult ProjectGnssInstance_LatestSampleGet(
 TEST_STUB_NO_OUTPUT(ProjectGnssInstance_Stop)
 TEST_STUB_NO_OUTPUT(ProjectGnssInstance_RuntimeOwnerActivate)
 TEST_STUB_OUTPUT(ProjectGnssInstance_InfoGet, SystemDeviceInfo)
-TEST_STUB_OUTPUT(ProjectGnssInstance_CapabilitiesGet, uint32_t)
+SystemDeviceResult ProjectGnssInstance_CapabilitiesGet(uint8_t instance_id,
+    uint32_t *capability_mask)
+{
+    if ((instance_id >= s_gnss_count) || (capability_mask == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *capability_mask = s_gnss_capabilities[instance_id];
+    return SYSTEM_DEVICE_OK;
+}
 TEST_STUB_OUTPUT(ProjectGnssInstance_IoDiagnosticsGet,
                  SystemDeviceIoDiagnostics)
 TEST_STUB_OUTPUT(ProjectGnssInstance_IoDetailGet, SystemGnssIoDetail)
 TEST_STUB_OUTPUT(ProjectGnssInstance_TimeGet, SystemGnssTime)
 TEST_STUB_OUTPUT(ProjectGnssInstance_SelfTestRun,
                  SystemDeviceSelfTestResult)
-TEST_STUB_CONFIG(ProjectGnssInstance_ConfigApply, SystemGnssConfig)
-TEST_STUB_CONFIG(ProjectGnssInstance_ConfigVerify, SystemGnssConfig)
+SystemDeviceResult ProjectGnssInstance_ConfigApply(uint8_t instance_id,
+    const SystemGnssConfig *config, SystemDeviceConfigReport *report)
+{
+    if ((instance_id >= s_gnss_count) || (config == NULL) || (report == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    s_gnss_apply_count[instance_id]++;
+    (void)memset(report, 0, sizeof(*report));
+    report->requested_mask = config->requested_mask;
+    report->supported_mask = config->requested_mask;
+    report->applied_mask = config->requested_mask;
+    report->success = 1U;
+    return SYSTEM_DEVICE_OK;
+}
+SystemDeviceResult ProjectGnssInstance_ConfigVerify(uint8_t instance_id,
+    const SystemGnssConfig *config, SystemDeviceConfigReport *report)
+{
+    if ((instance_id >= s_gnss_count) || (config == NULL) || (report == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    s_gnss_verify_count[instance_id]++;
+    (void)memset(report, 0, sizeof(*report));
+    report->requested_mask = config->requested_mask;
+    report->supported_mask = config->requested_mask;
+    report->matched_mask = config->requested_mask;
+    report->success = 1U;
+    return SYSTEM_DEVICE_OK;
+}
 TEST_STUB_OUTPUT(ProjectGnssInstance_EffectiveConfigGet, SystemGnssConfig)
 TEST_STUB_OUTPUT(ProjectGnssInstance_NoiseCharacteristicsGet,
                  SystemGnssNoiseCharacteristics)
@@ -558,6 +595,28 @@ static void Test_GnssOneWayLiveness(void)
     TEST_CHECK(s_event_count == 0U);
 }
 
+static void Test_GnssReadOnlyConfigFanout(void)
+{
+    SystemGnssConfig config;
+    SystemDeviceConfigReport report;
+    Test_StateReset();
+    s_gnss_capabilities[0] = SYSTEM_GNSS_CAP_READ_ONLY;
+    TEST_CHECK(SystemGnss_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
+    (void)memset(&config, 0, sizeof(config));
+    config.requested_mask = SYSTEM_GNSS_CFG_NAVIGATION_RATE;
+    config.required_mask = config.requested_mask;
+    TEST_CHECK(SystemGnss_ConfigApply(&config, &report) ==
+        SYSTEM_DEVICE_CONFIG_NO_ACTION);
+    TEST_CHECK(SystemGnss_ConfigVerify(&config, &report) ==
+        SYSTEM_DEVICE_CONFIG_NO_ACTION);
+    TEST_CHECK(s_gnss_apply_count[0] == 0U);
+    TEST_CHECK(s_gnss_verify_count[0] == 0U);
+    TEST_CHECK(s_gnss_apply_count[1] == 1U && s_gnss_apply_count[2] == 1U);
+    TEST_CHECK(s_gnss_verify_count[1] == 1U && s_gnss_verify_count[2] == 1U);
+    TEST_CHECK(report.requested_mask == 0U);
+}
+
 static void Test_TelemetryAttempt(
     uint8_t instance, SystemDeviceResult result, uint16_t count)
 {
@@ -699,6 +758,7 @@ int main(void)
 {
     Test_ImuSelectionAndLock();
     Test_GnssOneWayLiveness();
+    Test_GnssReadOnlyConfigFanout();
     Test_TelemetryThresholdAndReset();
     Test_TelemetryChainAndLastCandidate();
     Test_TelemetryInitFailureSkipsCandidate();

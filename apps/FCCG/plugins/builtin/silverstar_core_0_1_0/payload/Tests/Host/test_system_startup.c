@@ -39,6 +39,7 @@ static uint32_t s_debug_print_count;
 static uint32_t s_imu_apply_count;
 static uint32_t s_gnss_apply_count;
 static uint32_t s_gnss_verify_count;
+static uint32_t s_gnss_capabilities;
 static uint32_t s_mag_init_count;
 static uint32_t s_imu_process_count;
 static uint32_t s_gnss_process_count;
@@ -215,10 +216,20 @@ SystemDeviceResult SystemGnss_Init(void)
 SystemDeviceResult SystemGnss_Start(void) { return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemGnss_InfoGet(SystemDeviceInfo *info)
 { return Test_InfoFill(info, "Mock GNSS Adapter", "Mock GNSS"); }
+SystemDeviceResult SystemGnss_CapabilitiesGet(uint32_t *capability_mask)
+{
+    if (capability_mask == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *capability_mask = s_gnss_capabilities;
+    return SYSTEM_DEVICE_OK;
+}
 SystemDeviceResult SystemGnss_ConfigApply(
     const SystemGnssConfig *config, SystemDeviceConfigReport *report)
 {
-    if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((config == NULL) || (report == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((s_gnss_capabilities & SYSTEM_GNSS_CAP_READ_ONLY) != 0U)
+    { (void)memset(report, 0, sizeof(*report));
+      return SYSTEM_DEVICE_CONFIG_NO_ACTION; }
     s_gnss_apply_count++;
     if (s_async_config != 0U)
     {
@@ -235,7 +246,11 @@ SystemDeviceResult SystemGnss_ConfigApply(
 SystemDeviceResult SystemGnss_ConfigVerify(
     const SystemGnssConfig *config, SystemDeviceConfigReport *report)
 {
-    if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((config == NULL) || (report == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((s_gnss_capabilities & SYSTEM_GNSS_CAP_READ_ONLY) != 0U)
+    { (void)memset(report, 0, sizeof(*report));
+      return SYSTEM_DEVICE_CONFIG_NO_ACTION; }
     s_gnss_verify_count++;
     if ((s_async_config != 0U) && (s_async_busy_ticks > 0U))
     { s_async_busy_ticks--; return SYSTEM_DEVICE_BUSY; }
@@ -396,6 +411,7 @@ static void Test_Reset(void)
     s_imu_apply_count = 0U;
     s_gnss_apply_count = 0U;
     s_gnss_verify_count = 0U;
+    s_gnss_capabilities = 0U;
     s_mag_init_count = 0U;
     s_imu_process_count = 0U;
     s_gnss_process_count = 0U;
@@ -583,6 +599,21 @@ static void Test_GnssConfigurationSwitches(void)
 #endif
 }
 
+static void Test_ReadOnlyGnssNeverConfigured(void)
+{
+    const SystemStartupDeviceReport *gnss;
+    Test_Reset();
+    s_gnss_capabilities = SYSTEM_GNSS_CAP_READ_ONLY |
+        SYSTEM_GNSS_CAP_POSITION;
+    TEST_CHECK(Test_StartupComplete() == SYSTEM_STARTUP_OK);
+    gnss = SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_GNSS);
+    TEST_CHECK(gnss != NULL);
+    TEST_CHECK(s_gnss_apply_count == 0U);
+    TEST_CHECK(s_gnss_verify_count == 0U);
+    TEST_CHECK(gnss->config_result == SYSTEM_DEVICE_CONFIG_NO_ACTION);
+    TEST_CHECK(gnss->verify_result == SYSTEM_DEVICE_CONFIG_NO_ACTION);
+}
+
 static void Test_ProcessUsesEnabledCapabilities(void)
 {
     Test_Reset();
@@ -616,6 +647,7 @@ int main(void)
     Test_ProfileCanRequireGnss();
     Test_OutputSafetyFailureIsFatal();
     Test_GnssConfigurationSwitches();
+    Test_ReadOnlyGnssNeverConfigured();
     Test_ProcessUsesEnabledCapabilities();
     TEST_CHECK(SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_COUNT) ==
                NULL);
