@@ -125,9 +125,11 @@ static SystemDeviceResult SilverStarLogSinkService_NewFileOpen(
         result = SystemStorage_Open(s_sink.path,
                                     SYSTEM_STORAGE_OPEN_CREATE_NEW,
                                     &s_sink.file);
-        if (result == SYSTEM_DEVICE_ALREADY_MATCHED) { continue; }
         if (result != SYSTEM_DEVICE_OK)
         {
+            /* The manifest is durable; do not allocate a new mission on
+             * every retry after this session's log create fails. */
+            s_sink.manifest_failed = 1U;
             s_sink.health.error_count++;
             s_sink.health.healthy = 0U;
             return result;

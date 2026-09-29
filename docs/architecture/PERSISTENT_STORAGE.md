@@ -29,8 +29,9 @@ The immutable 20-byte `manifest` is created in a new mission directory
 before `flight.sslog` is opened. It contains `SSMF`, schema 1, the SilverStar
 product version, mission ID, profile ID and CRC32. Creation requires sync and
 readback. The START readiness getter only reports a mission ID after this
-check succeeds. A failed manifest write latches the log session fault rather
-than allocating another directory on each retry.
+check succeeds. A failed manifest write or a log create failure after the
+manifest is durable latches the session fault rather than allocating another
+directory on each retry.
 
 FatFs long-file-name support uses static BSS storage and an ASCII-only
 conversion adapter. This supports the fixed SilverStar directory names and
