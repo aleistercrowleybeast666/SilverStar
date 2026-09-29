@@ -13,6 +13,7 @@
 #include "logger_bus.h"
 #endif
 #include "silverstar_assert.h"
+#include "system_barometer.h"
 #include "system_barometer_if.h"
 #include "system_gnss_if.h"
 #include "system_health.h"
@@ -50,6 +51,14 @@ static void DeviceTask_PublishBarometer(void)
     snapshot.variance_m2 = sample.altitude_variance_m2;
     snapshot.supported_fields = sample.supported_fields;
     snapshot.valid_fields = sample.valid_fields;
+    if (((snapshot.valid_fields & SYSTEM_BARO_FIELD_ALTITUDE) == 0U) &&
+        ((snapshot.valid_fields & SYSTEM_BARO_FIELD_PRESSURE) != 0U) &&
+        (SystemBarometer_AltitudeResolve(&sample, &snapshot.altitude_m) ==
+            SYSTEM_DEVICE_OK))
+    {
+        snapshot.supported_fields |= SYSTEM_BARO_FIELD_ALTITUDE;
+        snapshot.valid_fields |= SYSTEM_BARO_FIELD_ALTITUDE;
+    }
     (void)memset(&health, 0, sizeof(health));
     snapshot.healthy = (uint8_t)(
         (SystemBarometer_HealthGet(&health) == SYSTEM_DEVICE_OK) &&

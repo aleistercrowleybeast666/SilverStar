@@ -148,6 +148,7 @@ uint8_t ProjectBarometerInstance_CountGet(void);
 SystemDeviceResult ProjectBarometerInstance_Init(uint8_t instance_id);
 SystemDeviceResult ProjectBarometerInstance_Start(uint8_t instance_id);
 SystemDeviceResult ProjectBarometerInstance_Stop(uint8_t instance_id);
+SystemDeviceResult ProjectBarometerInstance_Process(uint8_t instance_id);
 SystemDeviceResult ProjectBarometerInstance_InfoGet(
     uint8_t instance_id, SystemDeviceInfo *info);
 SystemDeviceResult ProjectBarometerInstance_CapabilitiesGet(
@@ -173,6 +174,7 @@ uint8_t ProjectMagnetometerInstance_CountGet(void);
 SystemDeviceResult ProjectMagnetometerInstance_Init(uint8_t instance_id);
 SystemDeviceResult ProjectMagnetometerInstance_Start(uint8_t instance_id);
 SystemDeviceResult ProjectMagnetometerInstance_Stop(uint8_t instance_id);
+SystemDeviceResult ProjectMagnetometerInstance_Process(uint8_t instance_id);
 SystemDeviceResult ProjectMagnetometerInstance_InfoGet(
     uint8_t instance_id, SystemDeviceInfo *info);
 SystemDeviceResult ProjectMagnetometerInstance_CapabilitiesGet(

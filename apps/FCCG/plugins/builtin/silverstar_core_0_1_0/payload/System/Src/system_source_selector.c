@@ -1701,6 +1701,24 @@ static SystemDeviceResult SystemSourceSelector_PassiveStop(
     return result;
 }
 
+static void SystemSourceSelector_PassiveProcess(SystemDeviceClass device_class)
+{
+    uint8_t count = ProjectDeviceInstance_CountGet(device_class);
+    uint8_t instance_id;
+    SILVERSTAR_ASSERT(count <= PROJECT_IMU_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    for (instance_id = 0U; instance_id < PROJECT_IMU_INSTANCE_COUNT_MAX;
+         instance_id++)
+    {
+        if (instance_id >= count) { break; }
+        if (device_class == SYSTEM_DEVICE_CLASS_BAROMETER)
+        { (void)ProjectBarometerInstance_Process(instance_id); }
+        else if (device_class == SYSTEM_DEVICE_CLASS_MAGNETOMETER)
+        { (void)ProjectMagnetometerInstance_Process(instance_id); }
+    }
+}
+
 const char *SystemBarometer_NameGet(void)
 {
     SystemDeviceInfo info;
@@ -1718,7 +1736,11 @@ SystemDeviceResult SystemBarometer_Start(void)
 { return SystemSourceSelector_PassiveStart(SYSTEM_DEVICE_CLASS_BAROMETER); }
 SystemDeviceResult SystemBarometer_Stop(void)
 { return SystemSourceSelector_PassiveStop(SYSTEM_DEVICE_CLASS_BAROMETER); }
-void SystemBarometer_Process(void) { }
+SystemDeviceResult SystemBarometer_Process(void)
+{
+    SystemSourceSelector_PassiveProcess(SYSTEM_DEVICE_CLASS_BAROMETER);
+    return SYSTEM_DEVICE_OK;
+}
 
 SystemDeviceResult SystemBarometer_InfoGet(SystemDeviceInfo *info)
 {
@@ -1833,7 +1855,11 @@ SystemDeviceResult SystemMagnetometer_Start(void)
 { return SystemSourceSelector_PassiveStart(SYSTEM_DEVICE_CLASS_MAGNETOMETER); }
 SystemDeviceResult SystemMagnetometer_Stop(void)
 { return SystemSourceSelector_PassiveStop(SYSTEM_DEVICE_CLASS_MAGNETOMETER); }
-void SystemMagnetometer_Process(void) { }
+SystemDeviceResult SystemMagnetometer_Process(void)
+{
+    SystemSourceSelector_PassiveProcess(SYSTEM_DEVICE_CLASS_MAGNETOMETER);
+    return SYSTEM_DEVICE_OK;
+}
 
 SystemDeviceResult SystemMagnetometer_InfoGet(SystemDeviceInfo *info)
 {

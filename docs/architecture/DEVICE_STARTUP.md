@@ -109,3 +109,25 @@ is the public primary reference used for the supported sentence fields.
 Host parser, source selector and startup tests and an F407 ARM compile/link
 smoke cover software behavior. Physical receiver operation remains
 **HARDWARE_UNVERIFIED**.
+
+## BMP280 barometer (Round 4 software path)
+
+`silverstar.device.barometer.bmp280` owns one physical chip definition with
+I²C and four-wire SPI interface variants. The first I²C profile uses the
+SDO-low `0x76` address. Both variants run the same bounded forced-mode state
+machine: chip ID, calibration trim, filter read/diff/write/readback, fresh
+conversion and compensated pressure/temperature. Each DeviceTask tick performs
+at most one bus transaction; a conversion has a finite timeout and failure
+removes the device from readiness. No persistent sensor settings are written.
+
+The device publishes pressure and temperature only. The existing common
+barometer layer derives altitude from pressure before estimator and recovery
+consumption; the chip does not claim a native altitude or variance. Device
+startup and steady-state processing now dispatch all selected physical
+barometer and magnetometer instances, including JY901B's shared logical
+adapters without replaying its UART parser. The Bosch
+[BMP280 datasheet](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp280-ds001.pdf)
+is the register, compensation and 10 MHz SPI limit authority. Official
+compensation-vector, timeout, I²C/SPI mock, variant/source-graph and strict
+ARM compile tests pass. The full existing F407 Flight reference still links.
+The new physical BMP280 path remains **HARDWARE_UNVERIFIED**.

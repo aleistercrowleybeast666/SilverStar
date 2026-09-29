@@ -701,6 +701,15 @@ SystemDeviceResult ProjectBarometerInstance_Stop(uint8_t instance_id)
     }
 }
 
+SystemDeviceResult ProjectBarometerInstance_Process(uint8_t instance_id)
+{
+    switch (instance_id)
+    {
+        case 0U: return SystemBarometer_Process();
+        default: return SYSTEM_DEVICE_NOT_PRESENT;
+    }
+}
+
 SystemDeviceResult ProjectBarometerInstance_InfoGet(
     uint8_t instance_id, SystemDeviceInfo *info)
 {
@@ -832,6 +841,15 @@ SystemDeviceResult ProjectMagnetometerInstance_Stop(uint8_t instance_id)
     switch (instance_id)
     {
         case 0U: return SystemMagnetometer_Stop();
+        default: return SYSTEM_DEVICE_NOT_PRESENT;
+    }
+}
+
+SystemDeviceResult ProjectMagnetometerInstance_Process(uint8_t instance_id)
+{
+    switch (instance_id)
+    {
+        case 0U: return SystemMagnetometer_Process();
         default: return SYSTEM_DEVICE_NOT_PRESENT;
     }
 }

@@ -45,7 +45,7 @@ const char *Jy901bBarometerInstance_NameGet(uint8_t instance);
 SystemDeviceResult Jy901bBarometerInstance_Init(uint8_t instance);
 SystemDeviceResult Jy901bBarometerInstance_Start(uint8_t instance);
 SystemDeviceResult Jy901bBarometerInstance_Stop(uint8_t instance);
-void Jy901bBarometerInstance_Process(uint8_t instance);
+SystemDeviceResult Jy901bBarometerInstance_Process(uint8_t instance);
 SystemDeviceResult Jy901bBarometerInstance_InfoGet(
     uint8_t instance, SystemDeviceInfo *info);
 SystemDeviceResult Jy901bBarometerInstance_CapabilitiesGet(
@@ -71,7 +71,7 @@ const char *Jy901bMagnetometerInstance_NameGet(uint8_t instance);
 SystemDeviceResult Jy901bMagnetometerInstance_Init(uint8_t instance);
 SystemDeviceResult Jy901bMagnetometerInstance_Start(uint8_t instance);
 SystemDeviceResult Jy901bMagnetometerInstance_Stop(uint8_t instance);
-void Jy901bMagnetometerInstance_Process(uint8_t instance);
+SystemDeviceResult Jy901bMagnetometerInstance_Process(uint8_t instance);
 SystemDeviceResult Jy901bMagnetometerInstance_InfoGet(
     uint8_t instance, SystemDeviceInfo *info);
 SystemDeviceResult Jy901bMagnetometerInstance_CapabilitiesGet(

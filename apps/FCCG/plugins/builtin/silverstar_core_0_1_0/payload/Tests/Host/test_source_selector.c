@@ -438,10 +438,12 @@ TEST_STUB_OUTPUT(ProjectTelemetryInstance_MtuGet, uint16_t)
 
 TEST_PASSIVE_STUBS(ProjectBarometerInstance, SystemBarometerSample,
                    SystemBarometerConfig)
+TEST_STUB_NO_OUTPUT(ProjectBarometerInstance_Process)
 TEST_STUB_OUTPUT(ProjectBarometerInstance_NoiseCharacteristicsGet,
                  SystemBarometerNoiseCharacteristics)
 TEST_PASSIVE_STUBS(ProjectMagnetometerInstance, SystemMagnetometerSample,
                    SystemMagnetometerConfig)
+TEST_STUB_NO_OUTPUT(ProjectMagnetometerInstance_Process)
 TEST_PASSIVE_STUBS(ProjectAttitudeInstance,
                    SystemHardwareQuaternionSample,
                    SystemHardwareQuaternionConfig)

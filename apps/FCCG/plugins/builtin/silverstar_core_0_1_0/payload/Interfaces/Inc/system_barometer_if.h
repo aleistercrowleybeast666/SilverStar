@@ -53,7 +53,7 @@ const char *SystemBarometer_NameGet(void);
 SystemDeviceResult SystemBarometer_Init(void);
 SystemDeviceResult SystemBarometer_Start(void);
 SystemDeviceResult SystemBarometer_Stop(void);
-void SystemBarometer_Process(void);
+SystemDeviceResult SystemBarometer_Process(void);
 SystemDeviceResult SystemBarometer_InfoGet(SystemDeviceInfo *info);
 SystemDeviceResult SystemBarometer_CapabilitiesGet(uint32_t *capability_mask);
 SystemDeviceResult SystemBarometer_HealthGet(SystemDeviceHealth *health);

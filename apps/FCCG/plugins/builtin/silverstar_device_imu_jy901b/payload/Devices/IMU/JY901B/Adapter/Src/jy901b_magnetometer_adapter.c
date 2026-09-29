@@ -236,8 +236,9 @@ SystemDeviceResult Jy901bMagnetometerInstance_Start(uint8_t instance)
 SystemDeviceResult Jy901bMagnetometerInstance_Stop(uint8_t instance)
 {
     (void)instance; return Jy901bMagnetometerAdapter_Stop(instance); }
-void Jy901bMagnetometerInstance_Process(uint8_t instance) {
-    (void)instance; Jy901bMagnetometerAdapter_Process(instance); }
+SystemDeviceResult Jy901bMagnetometerInstance_Process(uint8_t instance) {
+    Jy901bMagnetometerAdapter_Process(instance);
+    return SYSTEM_DEVICE_OK; }
 SystemDeviceResult Jy901bMagnetometerInstance_InfoGet(uint8_t instance, SystemDeviceInfo *info)
 {
     (void)instance; return Jy901bMagnetometerAdapter_GetInfo(instance, info); }

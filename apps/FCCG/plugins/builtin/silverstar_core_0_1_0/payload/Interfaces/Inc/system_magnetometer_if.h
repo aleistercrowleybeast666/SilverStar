@@ -43,7 +43,7 @@ const char *SystemMagnetometer_NameGet(void);
 SystemDeviceResult SystemMagnetometer_Init(void);
 SystemDeviceResult SystemMagnetometer_Start(void);
 SystemDeviceResult SystemMagnetometer_Stop(void);
-void SystemMagnetometer_Process(void);
+SystemDeviceResult SystemMagnetometer_Process(void);
 SystemDeviceResult SystemMagnetometer_InfoGet(SystemDeviceInfo *info);
 SystemDeviceResult SystemMagnetometer_CapabilitiesGet(
     uint32_t *capability_mask);

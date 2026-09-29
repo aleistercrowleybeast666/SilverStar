@@ -585,6 +585,10 @@ static void SystemStartup_CommunicationProcess(void)
     { SystemImu_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_GNSS) != 0U)
     { SystemGnss_Process(); }
+    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_BAROMETER) != 0U)
+    { SystemBarometer_Process(); }
+    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_MAGNETOMETER) != 0U)
+    { SystemMagnetometer_Process(); }
 #if (SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U)
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_TELEMETRY) != 0U)
     { SystemTelemetry_Process(); }
@@ -976,6 +980,10 @@ void SystemStartup_ProcessDevices(void)
     { SystemImu_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_GNSS) != 0U)
     { SystemGnss_Process(); }
+    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_BAROMETER) != 0U)
+    { (void)SystemBarometer_Process(); }
+    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_MAGNETOMETER) != 0U)
+    { (void)SystemMagnetometer_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U)
     { SystemPower_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_OUTPUT) != 0U)

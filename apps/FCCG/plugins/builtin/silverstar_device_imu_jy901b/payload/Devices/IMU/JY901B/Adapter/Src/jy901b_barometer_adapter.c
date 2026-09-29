@@ -230,8 +230,9 @@ SystemDeviceResult Jy901bBarometerInstance_Start(uint8_t instance)
 SystemDeviceResult Jy901bBarometerInstance_Stop(uint8_t instance)
 {
     (void)instance; return Jy901bBarometerAdapter_Stop(instance); }
-void Jy901bBarometerInstance_Process(uint8_t instance) {
-    (void)instance; Jy901bBarometerAdapter_Process(instance); }
+SystemDeviceResult Jy901bBarometerInstance_Process(uint8_t instance) {
+    Jy901bBarometerAdapter_Process(instance);
+    return SYSTEM_DEVICE_OK; }
 SystemDeviceResult Jy901bBarometerInstance_InfoGet(uint8_t instance, SystemDeviceInfo *info)
 {
     (void)instance; return Jy901bBarometerAdapter_GetInfo(instance, info); }

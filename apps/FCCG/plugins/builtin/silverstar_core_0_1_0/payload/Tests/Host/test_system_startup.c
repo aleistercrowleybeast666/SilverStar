@@ -43,6 +43,8 @@ static uint32_t s_gnss_capabilities;
 static uint32_t s_mag_init_count;
 static uint32_t s_imu_process_count;
 static uint32_t s_gnss_process_count;
+static uint32_t s_baro_process_count;
+static uint32_t s_mag_process_count;
 static uint32_t s_imu_init_count;
 static uint32_t s_gnss_init_count;
 static uint8_t s_async_config;
@@ -304,6 +306,8 @@ SystemDeviceResult SystemMagnetometer_Init(void)
     return SYSTEM_DEVICE_OK;
 }
 SystemDeviceResult SystemMagnetometer_Start(void) { return SYSTEM_DEVICE_OK; }
+SystemDeviceResult SystemMagnetometer_Process(void)
+{ s_mag_process_count++; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemMagnetometer_InfoGet(SystemDeviceInfo *info)
 { return Test_InfoFill(info, "Mock Magnetometer Adapter", "Magnetometer"); }
 SystemDeviceResult SystemMagnetometer_ConfigApply(
@@ -324,6 +328,8 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
 const char *SystemBarometer_NameGet(void) { return "Mock Barometer"; }
 SystemDeviceResult SystemBarometer_Init(void) { return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemBarometer_Start(void) { return SYSTEM_DEVICE_OK; }
+SystemDeviceResult SystemBarometer_Process(void)
+{ s_baro_process_count++; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemBarometer_InfoGet(SystemDeviceInfo *info)
 { return Test_InfoFill(info, "Mock Barometer Adapter", "Barometer"); }
 SystemDeviceResult SystemBarometer_ConfigApply(
@@ -415,6 +421,8 @@ static void Test_Reset(void)
     s_mag_init_count = 0U;
     s_imu_process_count = 0U;
     s_gnss_process_count = 0U;
+    s_baro_process_count = 0U;
+    s_mag_process_count = 0U;
     s_imu_init_count = 0U;
     s_gnss_init_count = 0U;
     s_async_config = 0U;
@@ -617,9 +625,12 @@ static void Test_ReadOnlyGnssNeverConfigured(void)
 static void Test_ProcessUsesEnabledCapabilities(void)
 {
     Test_Reset();
+    s_profile.enabled_capabilities |= SYSTEM_CAPABILITY_MAGNETOMETER;
     SystemStartup_ProcessDevices();
     TEST_CHECK(s_imu_process_count == 1U);
     TEST_CHECK(s_gnss_process_count == 1U);
+    TEST_CHECK(s_baro_process_count == 1U);
+    TEST_CHECK(s_mag_process_count == 1U);
     TEST_CHECK(s_power_process_count == 1U);
     TEST_CHECK(s_output_process_count == 1U);
 
