@@ -80,3 +80,11 @@ GS_STATUS and ACK traffic. USB CDC has no capacity inferred from its virtual
 COM baudrate. An end-to-end I/O throughput budget covering offered radio packet
 rate, PC serial framing, storage latency, DMA and bounded queues is still
 required for the complete target resource plan.
+
+Ground bridge per-call work now has explicit limits: 64 PC input bytes, four
+radio RX packets (including invalid packets), and four queued PC frames per
+flush. UART/USB ring reads are capped at 512 bytes per call; the actual bridge
+request is 64. USB receive callbacks inspect at most 512 bytes and account for
+any discarded remainder. These bounds are covered by host execution tests and
+the F103 UART reference still compiles and links. Target execution time remains
+`MEASUREMENT_PENDING`.

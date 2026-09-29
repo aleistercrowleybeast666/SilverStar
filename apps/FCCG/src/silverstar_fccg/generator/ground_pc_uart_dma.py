@@ -103,7 +103,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *uart)
 
 uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
 {
-    uint16_t count = 0U;
+    uint16_t count;
 
     if (buffer == NULL) { return 0U; }
     if (s_rx_armed == 0U)
@@ -111,31 +111,37 @@ uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
         (void)HAL_UART_AbortReceive(&__PC_UART_HANDLE__);
         (void)PcByteStream_DmaReceiveStart();
     }
-    while ((count < capacity) && (s_rx_tail != s_rx_head))
+    for (count = 0U; (count < capacity) &&
+         (count < PC_UART_RX_CAPACITY); count++)
     {
-        buffer[count++] = s_rx_buffer[s_rx_tail];
+        if (s_rx_tail == s_rx_head) { break; }
+        buffer[count] = s_rx_buffer[s_rx_tail];
         s_rx_tail = (uint16_t)((s_rx_tail + 1U) % PC_UART_RX_CAPACITY);
     }
     return count;
 }
 
-uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length)
+PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
+                                          uint16_t length)
 {
     uint16_t index;
+    HAL_StatusTypeDef result;
 
-    if (data == NULL || length == 0U || length > sizeof(s_tx_buffer)
-        || s_tx_busy != 0U)
+    if (data == NULL || length == 0U || length > sizeof(s_tx_buffer))
     {
-        return 0U;
+        return PC_BYTE_STREAM_WRITE_ERROR;
     }
+    if (s_tx_busy != 0U) { return PC_BYTE_STREAM_WRITE_BUSY; }
     for (index = 0U; index < length; index++) { s_tx_buffer[index] = data[index]; }
     s_tx_busy = 1U;
-    if (HAL_UART_Transmit_DMA(&__PC_UART_HANDLE__, s_tx_buffer, length) != HAL_OK)
+    result = HAL_UART_Transmit_DMA(&__PC_UART_HANDLE__, s_tx_buffer, length);
+    if (result != HAL_OK)
     {
         s_tx_busy = 0U;
-        return 0U;
+        return (result == HAL_BUSY) ? PC_BYTE_STREAM_WRITE_BUSY :
+            PC_BYTE_STREAM_WRITE_ERROR;
     }
-    return length;
+    return PC_BYTE_STREAM_WRITE_OK;
 }
 
 void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)

@@ -8,7 +8,6 @@ import pytest
 
 from silverstar_fccg.generator.ground_pc_uart_dma import PcUartDma_Render
 
-
 _HAL_STUB = r"""
 #ifndef __MAIN_H
 #define __MAIN_H
@@ -38,6 +37,7 @@ UART_HandleTypeDef huart1 = {&s_rx_dma, &s_tx_dma};
 static uint8_t *s_dma_destination;
 static uint16_t s_dma_capacity;
 static uint8_t *s_tx_source;
+static HAL_StatusTypeDef s_tx_status = HAL_OK;
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *, uint16_t);
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *);
@@ -56,7 +56,7 @@ HAL_StatusTypeDef HAL_UART_Transmit_DMA(
 {
     assert(uart == &huart1 && length != 0U);
     s_tx_source = source;
-    return HAL_OK;
+    return s_tx_status;
 }
 
 HAL_StatusTypeDef HAL_UART_AbortReceive(UART_HandleTypeDef *uart)
@@ -80,11 +80,16 @@ int main(void)
     HAL_UARTEx_RxEventCallback(&huart1, 5U);
     assert(PcByteStream_Read(output, sizeof(output)) == 5U);
     assert(memcmp(output, bytes, 5U) == 0);
-    assert(PcByteStream_Write(tx, sizeof(tx)) == sizeof(tx));
+    assert(PcByteStream_Write(tx, sizeof(tx)) == PC_BYTE_STREAM_WRITE_OK);
     assert(s_tx_source != tx && memcmp(s_tx_source, tx, sizeof(tx)) == 0);
-    assert(PcByteStream_Write(tx, sizeof(tx)) == 0U);
+    assert(PcByteStream_Write(tx, sizeof(tx)) == PC_BYTE_STREAM_WRITE_BUSY);
     HAL_UART_TxCpltCallback(&huart1);
-    assert(PcByteStream_Write(tx, sizeof(tx)) == sizeof(tx));
+    s_tx_status = HAL_BUSY;
+    assert(PcByteStream_Write(tx, sizeof(tx)) == PC_BYTE_STREAM_WRITE_BUSY);
+    s_tx_status = HAL_ERROR;
+    assert(PcByteStream_Write(tx, sizeof(tx)) == PC_BYTE_STREAM_WRITE_ERROR);
+    s_tx_status = HAL_OK;
+    assert(PcByteStream_Write(tx, sizeof(tx)) == PC_BYTE_STREAM_WRITE_OK);
     for (batch = 0U; batch < 5U; batch++)
     {
         memset(s_dma_destination, (int)batch, s_dma_capacity);

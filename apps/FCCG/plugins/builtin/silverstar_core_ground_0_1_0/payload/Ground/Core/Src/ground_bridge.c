@@ -12,11 +12,13 @@
 #define GROUND_AIR_MAX_LEN (GSP_MIN_MAX_PAYLOAD_LEN - 3U)
 #define GROUND_RADIO_BUFFER_LEN 64U
 #define GROUND_PC_QUEUE_DEPTH 4U
+#define GROUND_RADIO_RX_MAX_PER_PROCESS 4U
 
 static GspMinParser s_gsp_parser;
 static uint32_t s_last_status_ms;
 static uint32_t s_bridge_crc_error_count;
 static uint32_t s_pc_write_error_count;
+static uint32_t s_pc_write_busy_count;
 static uint8_t s_initialized;
 static uint8_t s_pc_frames[GROUND_PC_QUEUE_DEPTH][GSP_MIN_MAX_FRAME_LEN];
 static uint16_t s_pc_frame_lengths[GROUND_PC_QUEUE_DEPTH];
@@ -41,17 +43,21 @@ static GroundBridgeResult GroundBridge_FrameWrite(const uint8_t *frame, uint16_t
 
 static GroundBridgeResult GroundBridge_PcFlush(void)
 {
-    while (s_pc_frame_count > 0U)
+    uint8_t flushed;
+    for (flushed = 0U; flushed < GROUND_PC_QUEUE_DEPTH; flushed++)
     {
+        if (s_pc_frame_count == 0U) { break; }
         uint16_t expected = s_pc_frame_lengths[s_pc_frame_head];
-        uint16_t written = PcByteStream_Write(s_pc_frames[s_pc_frame_head], expected);
-        if (written == 0U)
+        PcByteStreamWriteResult write_result = PcByteStream_Write(
+            s_pc_frames[s_pc_frame_head], expected);
+        if (write_result == PC_BYTE_STREAM_WRITE_BUSY)
         {
+            if (s_pc_write_busy_count < UINT32_MAX) { s_pc_write_busy_count++; }
             return GROUND_BRIDGE_OK;
         }
-        if (written != expected)
+        if (write_result != PC_BYTE_STREAM_WRITE_OK)
         {
-            s_pc_write_error_count++;
+            if (s_pc_write_error_count < UINT32_MAX) { s_pc_write_error_count++; }
             return GROUND_BRIDGE_PC_ERROR;
         }
         s_pc_frame_head = (uint8_t)((s_pc_frame_head + 1U) % GROUND_PC_QUEUE_DEPTH);
@@ -136,6 +142,7 @@ GroundBridgeResult GroundBridge_Init(void)
     s_last_status_ms = 0U;
     s_bridge_crc_error_count = 0U;
     s_pc_write_error_count = 0U;
+    s_pc_write_busy_count = 0U;
     s_pc_frame_head = 0U;
     s_pc_frame_tail = 0U;
     s_pc_frame_count = 0U;
@@ -168,6 +175,7 @@ GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
     int8_t snr_db;
     uint8_t output[GSP_MIN_MAX_FRAME_LEN];
     uint16_t output_length;
+    uint8_t radio_processed;
     GroundBridgeResult bridge_result = GROUND_BRIDGE_OK;
 
     if (s_initialized == 0U)
@@ -195,10 +203,13 @@ GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
             }
         }
     }
-    while ((s_pc_frame_count < GROUND_PC_QUEUE_DEPTH)
-           && GroundRadio_RxDequeue(air_bytes, &air_length, &rssi_dbm, &snr_db)
-           == GROUND_RADIO_OK)
+    for (radio_processed = 0U;
+         radio_processed < GROUND_RADIO_RX_MAX_PER_PROCESS;
+         radio_processed++)
     {
+        if (s_pc_frame_count >= GROUND_PC_QUEUE_DEPTH) { break; }
+        if (GroundRadio_RxDequeue(air_bytes, &air_length, &rssi_dbm, &snr_db)
+            != GROUND_RADIO_OK) { break; }
         if ((air_length == 0U) || (air_length > GROUND_AIR_MAX_LEN))
         {
             s_bridge_crc_error_count++;
@@ -225,4 +236,15 @@ GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
         bridge_result = GROUND_BRIDGE_PC_ERROR;
     }
     return bridge_result;
+}
+
+GroundBridgeResult GroundBridge_DiagnosticsGet(
+    GroundBridgeDiagnostics *diagnostics)
+{
+    if (diagnostics == NULL) { return GROUND_BRIDGE_PC_ERROR; }
+    diagnostics->pc_write_busy_count = s_pc_write_busy_count;
+    diagnostics->pc_write_error_count = s_pc_write_error_count;
+    diagnostics->pc_rx_overflow_count = PcByteStream_OverflowCount_Get();
+    diagnostics->pc_queued_frames = s_pc_frame_count;
+    return GROUND_BRIDGE_OK;
 }

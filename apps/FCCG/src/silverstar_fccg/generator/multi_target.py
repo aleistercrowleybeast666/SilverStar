@@ -19,11 +19,17 @@ from silverstar_fccg.generator.render import (
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.project.air_link import GroundTargetIssues_Get
-from silverstar_fccg.project.model import DeviceInstance, ProjectModel, ProjectModel_Load
 from silverstar_fccg.project.folder_contract import (
-    FLIGHT_DIRECTORY, GROUND_DIRECTORY, PROJECT_FILENAME, ProjectRoot_Save,
+    FLIGHT_DIRECTORY,
+    GROUND_DIRECTORY,
+    PROJECT_FILENAME,
+    ProjectRoot_Save,
 )
-
+from silverstar_fccg.project.model import (
+    DeviceInstance,
+    ProjectModel,
+    ProjectModel_Load,
+)
 
 GROUND_CORE_ID = "silverstar.core.ground.0_1_0"
 GROUND_OWNERSHIP_FILE = ".silverstar-ground-ownership.json"
@@ -198,11 +204,17 @@ uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
     return (HAL_UART_Receive(&{handle}, buffer, 1U, 0U) == HAL_OK) ? 1U : 0U;
 }}
 
-uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length)
+PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
+                                          uint16_t length)
 {{
-    if ((data == NULL) || (length == 0U)) {{ return 0U; }}
-    return (HAL_UART_Transmit(&{handle}, (uint8_t *)(uintptr_t)data, length, 100U)
-            == HAL_OK) ? length : 0U;
+    HAL_StatusTypeDef result;
+    if ((data == NULL) || (length == 0U))
+    {{ return PC_BYTE_STREAM_WRITE_ERROR; }}
+    result = HAL_UART_Transmit(&{handle},
+        (uint8_t *)(uintptr_t)data, length, 100U);
+    if (result == HAL_BUSY) {{ return PC_BYTE_STREAM_WRITE_BUSY; }}
+    return (result == HAL_OK) ? PC_BYTE_STREAM_WRITE_OK :
+        PC_BYTE_STREAM_WRITE_ERROR;
 }}
 
 uint32_t PcByteStream_OverflowCount_Get(void)
@@ -211,6 +223,7 @@ uint32_t PcByteStream_OverflowCount_Get(void)
 }}
 """
     return """#include "pc_byte_stream.h"
+#include "gsp_min_protocol.h"
 #include "usbd_cdc_if.h"
 
 #define PC_USB_RX_CAPACITY 512U
@@ -228,40 +241,52 @@ PcByteStreamInitResult PcByteStream_Init(void)
 void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
 {
     uint16_t index;
+    uint32_t skipped;
     if (data == NULL) { return; }
-    for (index = 0U; index < length; index++)
+    for (index = 0U; (index < length) && (index < PC_USB_RX_CAPACITY);
+         index++)
     {
         uint16_t next = (uint16_t)((s_rx_head + 1U) % PC_USB_RX_CAPACITY);
         if (next == s_rx_tail)
         {
-            s_rx_overflow_count += (uint32_t)(length - index);
             break;
         }
         s_rx_buffer[s_rx_head] = data[index];
         s_rx_head = next;
     }
+    skipped = (uint32_t)(length - index);
+    if (skipped > (UINT32_MAX - s_rx_overflow_count))
+    { s_rx_overflow_count = UINT32_MAX; }
+    else
+    { s_rx_overflow_count += skipped; }
 }
 
 uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
 {
-    uint16_t count = 0U;
+    uint16_t count;
     if (buffer == NULL) { return 0U; }
-    while ((count < capacity) && (s_rx_tail != s_rx_head))
+    for (count = 0U; (count < capacity) &&
+         (count < PC_USB_RX_CAPACITY); count++)
     {
-        buffer[count++] = s_rx_buffer[s_rx_tail];
+        if (s_rx_tail == s_rx_head) { break; }
+        buffer[count] = s_rx_buffer[s_rx_tail];
         s_rx_tail = (uint16_t)((s_rx_tail + 1U) % PC_USB_RX_CAPACITY);
     }
     return count;
 }
 
-uint16_t PcByteStream_Write(const uint8_t *data, uint16_t length)
+PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
+                                          uint16_t length)
 {
     uint8_t result;
-    if ((data == NULL) || (length == 0U)) { return 0U; }
+    if ((data == NULL) || (length == 0U) ||
+        (length > GSP_MIN_MAX_FRAME_LEN))
+    { return PC_BYTE_STREAM_WRITE_ERROR; }
     result = CDC_Transmit_FS((uint8_t *)(uintptr_t)data, length);
     /* USBD_BUSY is transient: the bounded Ground PC queue retries this frame. */
-    if (result == USBD_BUSY) { return 0U; }
-    return (result == USBD_OK) ? length : 0U;
+    if (result == USBD_BUSY) { return PC_BYTE_STREAM_WRITE_BUSY; }
+    return (result == USBD_OK) ? PC_BYTE_STREAM_WRITE_OK :
+        PC_BYTE_STREAM_WRITE_ERROR;
 }
 
 uint32_t PcByteStream_OverflowCount_Get(void)
