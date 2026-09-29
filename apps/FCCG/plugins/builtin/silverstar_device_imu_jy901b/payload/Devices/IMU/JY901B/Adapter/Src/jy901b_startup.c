@@ -7,6 +7,7 @@
 #include "platform_time.h"
 #include "platform_uart.h"
 #include "project_resources.h"
+#include "silverstar_assert.h"
 
 #define JY901B_STARTUP_STAGE_TIMEOUT_MS 10000U
 #define JY901B_STARTUP_SAMPLE_TIMEOUT_MS 2000U
@@ -87,6 +88,18 @@ static SystemDeviceStartupStepResult Jy901bStartup_RegisterReadStep(
     Jy901bRegisterReadStartResult start_result;
     Jy901bRegisterReadPollResult poll_result;
 
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(position, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(active, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(values, uint16_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(*position <= JY901B_STARTUP_REGISTER_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+
     if (*position >= JY901B_STARTUP_REGISTER_COUNT)
     { return SystemDeviceStartupStep_Ok; }
     if (IMU_StartupRegisterGet(*position, context->output_rate,
@@ -122,6 +135,11 @@ static SystemDeviceStartupStepResult Jy901bStartup_ConfigRead(
     SystemDeviceStartupStepResult result;
     uint8_t index;
 
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(difference_mask, uint32_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+
     result = Jy901bStartup_RegisterReadStep(context,
         &context->read_index, &context->read_active, context->actual);
     if (result != SystemDeviceStartupStep_Ok) { return result; }
@@ -145,6 +163,14 @@ static SystemDeviceStartupStepResult Jy901bStartup_ConfigApply(
     uint8_t index;
     uint8_t reg;
     uint16_t expected;
+
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(reconnect_required, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->apply_index <= JY901B_STARTUP_REGISTER_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
 
     if (context->apply_index >= JY901B_STARTUP_REGISTER_COUNT)
     {
@@ -234,6 +260,12 @@ static SystemDeviceStartupStepResult Jy901bStartup_ConfigVerify(void *owner)
     uint8_t index;
     const IMUData *data;
 
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->verify_index <= JY901B_STARTUP_REGISTER_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+
     result = Jy901bStartup_RegisterReadStep(context,
         &context->verify_index, &context->verify_active,
         context->verified);
@@ -284,9 +316,13 @@ Jy901bStartupResult Jy901bStartup_Init(
     SystemDeviceStartupConfig config;
     Jy901bStartupContext *context;
 
-    if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
+    if ((instance >= PROJECT_JY901B_INSTANCE_COUNT) ||
+        ((algorithm != Algorithm_6Axis) &&
+         (algorithm != Algorithm_9Axis)))
     { return Jy901bStartupResult_InvalidArgument; }
     context = &s_contexts[instance];
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     (void)memset(context, 0, sizeof(*context));
     context->instance = instance;
     context->output_rate = output_rate;
@@ -298,6 +334,10 @@ Jy901bStartupResult Jy901bStartup_Init(
     config.supported_candidates = s_supported_candidates;
     config.supported_candidate_count = (uint8_t)(
         sizeof(s_supported_candidates) / sizeof(s_supported_candidates[0]));
+    SILVERSTAR_ASSERT(config.supported_candidate_count + 2U <=
+                      SYSTEM_DEVICE_STARTUP_MAX_CANDIDATES,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     config.probe_timeout_ms = JY901B_BAUD_SCAN_DWELL_MS;
     config.stage_timeout_ms = JY901B_STARTUP_STAGE_TIMEOUT_MS;
     config.sample_timeout_ms = JY901B_STARTUP_SAMPLE_TIMEOUT_MS;

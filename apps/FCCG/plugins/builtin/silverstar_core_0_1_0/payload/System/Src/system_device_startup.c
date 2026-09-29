@@ -107,13 +107,14 @@ static void SystemDeviceStartup_ProbeTick(SystemDeviceStartup *startup,
     uint32_t now_ms)
 {
     SystemDeviceStartupStepResult result;
-    const SystemDeviceStartupOperations *operations = startup->config.operations;
+    const SystemDeviceStartupOperations *operations;
 
     SILVERSTAR_ASSERT_OBJECT(startup, SystemDeviceStartup,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
     SILVERSTAR_ASSERT(startup->candidate_index < startup->candidate_count,
         SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    operations = startup->config.operations;
 
     if (startup->probe_started == 0U)
     {

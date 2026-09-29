@@ -377,8 +377,15 @@ static PlatformResult Gnss_UbxFrameEnqueue(uint8_t instance,
     uint16_t index;
 
     if (((payload == NULL) && (length != 0U)) ||
-        (length > GNSS_UBX_TX_MAX_PAYLOAD_LEN))
+        (length > GNSS_UBX_TX_MAX_PAYLOAD_LEN) ||
+        (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT))
     { return PLATFORM_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT((uint32_t)length + GNSS_UBX_TX_FRAME_OVERHEAD <=
+                      sizeof(frame),
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     frame[0] = GNSS_UBX_SYNC1;
     frame[1] = GNSS_UBX_SYNC2;
     frame[2] = cls;
@@ -395,6 +402,23 @@ static PlatformResult Gnss_UbxFrameEnqueue(uint8_t instance,
     return PlatformUart_WriteFrameAsync(NeoM9nResource_UartGet(instance),
         frame, (uint16_t)(length + GNSS_UBX_TX_FRAME_OVERHEAD),
         PLATFORM_UART_TX_PRIORITY);
+}
+
+static GnssNeoM9nAsyncStartResult Gnss_ValgetAsyncSend(
+    uint8_t instance, const uint8_t *payload, uint16_t payload_len)
+{
+    const PlatformResult send_result = Gnss_UbxFrameEnqueue(instance,
+        GNSS_UBX_CFG_CLASS, GNSS_UBX_CFG_VALGET_ID, payload, payload_len);
+
+    if (send_result == PLATFORM_OK)
+    { return GnssNeoM9nAsyncStartOk; }
+    s_valget_wait_active = 0U;
+    if (send_result == PLATFORM_BUSY)
+    { return GnssNeoM9nAsyncStartBusy; }
+    s_valget_diagnostics.result = GnssNeoM9nConfigReadTxError;
+    s_valget_diagnostics.detailed_result =
+        GnssNeoM9nTransactionDetailTxError;
+    return GnssNeoM9nAsyncStartTxError;
 }
 
 static GnssNeoM9nAsyncStartResult Gnss_ValgetAsyncStart(uint8_t instance,
@@ -1109,7 +1133,8 @@ static GnssNeoM9nAsyncStartResult Gnss_ValgetAsyncStart(uint8_t instance,
     uint16_t payload_len = GNSS_VALGET_HEADER_LEN;
     uint8_t index;
 
-    if ((keys == NULL) || (count == 0U) ||
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
+        (keys == NULL) || (count == 0U) ||
         (count > GNSS_VALGET_EXPECTED_MAX) || (layer > GNSS_VALGET_LAYER_FLASH) ||
         ((uint16_t)(GNSS_VALGET_HEADER_LEN + ((uint16_t)count * 4U)) >
          GNSS_UBX_TX_MAX_PAYLOAD_LEN))
@@ -1145,22 +1170,7 @@ static GnssNeoM9nAsyncStartResult Gnss_ValgetAsyncStart(uint8_t instance,
         payload_len = (uint16_t)(payload_len + 4U);
     }
 
-    {
-        PlatformResult send_result = Gnss_UbxFrameEnqueue(instance,
-            GNSS_UBX_CFG_CLASS, GNSS_UBX_CFG_VALGET_ID,
-            payload, payload_len);
-        if (send_result == PLATFORM_OK)
-        { return GnssNeoM9nAsyncStartOk; }
-        s_valget_wait_active = 0U;
-        if (send_result == PLATFORM_BUSY)
-        { return GnssNeoM9nAsyncStartBusy; }
-    }
-    {
-        s_valget_diagnostics.result = GnssNeoM9nConfigReadTxError;
-        s_valget_diagnostics.detailed_result =
-            GnssNeoM9nTransactionDetailTxError;
-        return GnssNeoM9nAsyncStartTxError;
-    }
+    return Gnss_ValgetAsyncSend(instance, payload, payload_len);
 }
 
 static GnssNeoM9nAsyncPollResult Gnss_ValgetAsyncPoll(uint8_t instance,
@@ -2016,6 +2026,11 @@ GnssNeoM9nProbeStartResult GnssNeoM9n_ProbeStart(
     if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
         (s_contexts[instance].initialized == 0U))
     { return GnssNeoM9nProbeStartResult_NotReady; }
+    SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(s_contexts[instance].probe_phase <= GnssProbePhaseComplete,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (PlatformUart_BaudSet(NeoM9nResource_UartGet(instance), baudrate) !=
         PLATFORM_OK)
     { return GnssNeoM9nProbeStartResult_IoError; }
@@ -3020,6 +3035,11 @@ GnssNeoM9nAsyncPollResult GnssNeoM9n_ConfigReadAsyncPoll(uint8_t instance,
 {
     const GnssConfigReadGroupDefinition *group;
 
+    if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT)
+    {
+        if (result != NULL) { *result = GnssNeoM9nConfigReadNotReady; }
+        return GnssNeoM9nAsyncPollComplete;
+    }
     SILVERSTAR_ASSERT_OBJECT(&s_config_async, GnssConfigAsyncTransaction,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     group = NULL;
@@ -3099,6 +3119,11 @@ GnssNeoM9nItemStartResult GnssNeoM9n_ItemReadStart(
     { return GnssNeoM9nItemStartResult_InvalidArgument; }
     if (s_initialized == 0U)
     { return GnssNeoM9nItemStartResult_NotReady; }
+    SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(s_contexts[instance].item_read_active <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((s_contexts[instance].item_read_active != 0U) ||
         (s_contexts[instance].item_write_active != 0U) ||
         (s_config_async.state != GnssConfigAsyncIdle))
@@ -3124,6 +3149,10 @@ GnssNeoM9nItemPollResult GnssNeoM9n_ItemReadPoll(
     if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) || (item == NULL) ||
         (s_contexts[instance].item_read_active == 0U))
     { return GnssNeoM9nItemPollResult_NotReady; }
+    SILVERSTAR_ASSERT_OBJECT(item, GnssNeoM9nConfigItem,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     (void)GnssNeoM9n_Process(instance, PlatformTime_Ms());
     if ((s_valget_received == 0U) &&
         ((uint32_t)(PlatformTime_Ms() -
@@ -3160,6 +3189,11 @@ GnssNeoM9nItemStartResult GnssNeoM9n_ItemWriteStart(
         (item->value_len == 0U) || (item->value_len > 4U) ||
         (item->value_len != Gnss_ConfigKeyValueLen(item->key)))
     { return GnssNeoM9nItemStartResult_InvalidArgument; }
+    SILVERSTAR_ASSERT_OBJECT(item, GnssNeoM9nConfigItem,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT((uint32_t)8U + item->value_len <= sizeof(payload),
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     if (s_initialized == 0U)
     { return GnssNeoM9nItemStartResult_NotReady; }
     if ((s_contexts[instance].item_read_active != 0U) ||
@@ -3190,6 +3224,11 @@ GnssNeoM9nItemPollResult GnssNeoM9n_ItemWritePoll(uint8_t instance)
     if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) ||
         (s_contexts[instance].item_write_active == 0U))
     { return GnssNeoM9nItemPollResult_NotReady; }
+    SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(s_contexts[instance].item_write_active <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     (void)GnssNeoM9n_Process(instance, PlatformTime_Ms());
     if (s_transaction_discontinuity != 0U)
     {

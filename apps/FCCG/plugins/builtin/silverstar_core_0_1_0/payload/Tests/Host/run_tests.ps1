@@ -763,17 +763,16 @@ Invoke-HostTest -Name 'jy901b_device' -Sources @(
     "$repoRoot\Generated\Src\project_resources.c",
     "$repoRoot\Devices\IMU\JY901B\Src\jy901b_device.c"
 )
-Invoke-HostTest -Name 'jy901b_adapter' -ExtraCompilerArgs @(
-    '-DJY901B_BAUD_RESCUE_ENABLE=0U',
-    '-DJY901B_LEGACY_STARTUP_ENABLE=1U'
-) -Sources @(
+Invoke-HostTest -Name 'jy901b_adapter' -Sources @(
     "$repoRoot\Tests\Host\test_jy901b_adapter.c",
     $hostPlatformMock,
     "$repoRoot\Generated\Src\project_resources.c",
     "$repoRoot\Devices\IMU\JY901B\Src\jy901b_device.c",
     "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_imu_adapter.c",
+    "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_startup.c",
     "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_sample_quality.c",
-    "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_barometer_adapter.c"
+    "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_barometer_adapter.c",
+    "$repoRoot\System\Src\system_device_startup.c"
 )
 Invoke-HostTest -Name 'neo_m9n_device' -Sources @(
     "$repoRoot\Tests\Host\test_neo_m9n_device.c",
@@ -782,14 +781,14 @@ Invoke-HostTest -Name 'neo_m9n_device' -Sources @(
     "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c",
     "$repoRoot\System\Src\system_device_startup.c"
 )
-Invoke-HostTest -Name 'neo_m9n_adapter' -ExtraCompilerArgs @(
-    '-DNEO_M9N_LEGACY_STARTUP_ENABLE=1U'
-) -Sources @(
+Invoke-HostTest -Name 'neo_m9n_adapter' -Sources @(
     "$repoRoot\Tests\Host\test_neo_m9n_adapter.c",
     $hostPlatformMock,
     "$repoRoot\Generated\Src\project_resources.c",
     "$repoRoot\Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c",
     "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c",
+    "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c",
+    "$repoRoot\System\Src\system_device_startup.c",
     "$repoRoot\System\Src\system_gnss_quality.c"
 )
 Invoke-HostTest -Name 'sx1281_device' -Sources @(

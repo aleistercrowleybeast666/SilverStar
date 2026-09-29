@@ -114,20 +114,6 @@ static void Jy901bAdapter_NativeSampleConvert(const Jy901bImuSample *native,
                          SYSTEM_IMU_VALID_TEMPERATURE;
 }
 
-#if (JY901B_LEGACY_STARTUP_ENABLE != 0U)
-static const uint32_t s_baud_candidates[] =
-{
-    IMU_UART_BAUD_230400,
-    IMU_UART_BAUD_115200,
-    IMU_UART_BAUD_57600,
-    IMU_UART_BAUD_38400,
-    IMU_UART_BAUD_19200,
-    IMU_UART_BAUD_9600,
-    IMU_UART_BAUD_4800
-};
-
-#define JY901B_LEGAL_FRAME_WAIT_MAX_POLLS 1024U
-#endif
 
 static void Jy901bAdapter_EffectiveRangeUpdate(uint8_t instance, const IMUConfig *config)
 {
@@ -212,103 +198,6 @@ static void Jy901bAdapter_EffectiveConfigUpdate(uint8_t instance,
     }
 }
 
-#if (JY901B_LEGACY_STARTUP_ENABLE != 0U)
-static uint8_t Jy901bAdapter_LegalFramesWait(uint8_t instance, uint32_t timeout_ms)
-{
-    uint32_t start_tick = PlatformTime_Ms();
-    uint32_t poll;
-
-    for (poll = 0U; poll < JY901B_LEGAL_FRAME_WAIT_MAX_POLLS; poll++)
-    {
-        IMU_Poll(instance);
-        if (IMU_GetConsecutiveLegalFrameCount(instance) >=
-            JY901B_BAUD_VERIFY_FRAME_COUNT)
-        {
-            return 1U;
-        }
-        PlatformTime_DelayMs(1U);
-        if ((PlatformTime_Ms() - start_tick) >= timeout_ms)
-        {
-            break;
-        }
-    }
-
-    return 0U;
-}
-
-static uint8_t Jy901bAdapter_BaudCandidateTry(uint8_t instance, uint32_t baudrate)
-{
-    if (PlatformUart_BaudSet(Jy901bAdapter_UartGet(instance), baudrate) != PLATFORM_OK)
-    {
-        return 0U;
-    }
-    IMU_StreamReset(instance);
-    (void)PlatformUart_RxFlush(Jy901bAdapter_UartGet(instance));
-    return Jy901bAdapter_LegalFramesWait(instance, JY901B_BAUD_SCAN_DWELL_MS);
-}
-
-static uint8_t Jy901bAdapter_BaudRescueRun(uint8_t instance)
-{
-    IMUConfig private_config;
-    uint32_t elapsed_ms;
-    uint32_t detected_baudrate = 0U;
-    uint8_t pass;
-    uint8_t index;
-
-    SILVERSTAR_ASSERT_OBJECT(&s_health, SystemDeviceHealth,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if (JY901B_BAUD_RESCUE_ENABLE == 0U)
-    {
-        return 1U;
-    }
-
-    for (pass = 0U; pass < JY901B_BAUD_SCAN_PASS_COUNT; pass++)
-    {
-        for (index = 0U;
-             index < (uint8_t)(sizeof(s_baud_candidates) /
-                               sizeof(s_baud_candidates[0]));
-             index++)
-        {
-            if (Jy901bAdapter_BaudCandidateTry(instance, s_baud_candidates[index]) != 0U)
-            {
-                detected_baudrate = s_baud_candidates[index];
-                break;
-            }
-        }
-        if (detected_baudrate == 0U)
-        {
-            continue;
-        }
-
-        (void)IMU_ReadCurrentConfigPartial(instance, &private_config, &elapsed_ms);
-        Jy901bAdapter_EffectiveConfigUpdate(instance, &private_config);
-        if ((JY901B_BAUD_NORMALIZE_ENABLE != 0U) &&
-            (detected_baudrate != IMU_DEFAULT_BAUDRATE))
-        {
-            if (IMU_SetBaudrate(instance, Baudrate_230400) != IMU_OK)
-            {
-                detected_baudrate = 0U;
-                continue;
-            }
-            detected_baudrate = IMU_DEFAULT_BAUDRATE;
-        }
-
-        IMU_StreamReset(instance);
-        (void)PlatformUart_RxFlush(Jy901bAdapter_UartGet(instance));
-        if (Jy901bAdapter_LegalFramesWait(instance,
-                JY901B_BAUD_SCAN_DWELL_MS) != 0U)
-        {
-            return 1U;
-        }
-        detected_baudrate = 0U;
-    }
-
-    (void)PlatformUart_BaudSet(Jy901bAdapter_UartGet(instance), JY901B_UART_BOOT_BAUD);
-    IMU_StreamReset(instance);
-    (void)PlatformUart_RxFlush(Jy901bAdapter_UartGet(instance));
-    return 0U;
-}
-#endif
 
 static uint32_t Jy901bAdapter_IrqLock(void)
 {
@@ -352,13 +241,6 @@ SystemDeviceResult Jy901bAdapter_SharedInit(uint8_t instance)
         return (state == IMU_RESP_TIMEOUT) ? SYSTEM_DEVICE_TIMEOUT :
                                              SYSTEM_DEVICE_IO_ERROR;
     }
-#if (JY901B_LEGACY_STARTUP_ENABLE != 0U)
-    if (Jy901bAdapter_BaudRescueRun(instance) == 0U)
-    {
-        s_health.timeout_count++;
-        return SYSTEM_DEVICE_TIMEOUT;
-    }
-#endif
     s_initialized = 1U;
     s_health.initialized = 1U;
     return SYSTEM_DEVICE_OK;
@@ -397,6 +279,41 @@ SystemDeviceResult Jy901bAdapter_SharedStop(uint8_t instance)
     return SYSTEM_DEVICE_OK;
 }
 
+static uint8_t Jy901bAdapter_StartupProcess(uint8_t instance)
+{
+    SystemDeviceStartupState state;
+
+    SILVERSTAR_ASSERT(instance < PROJECT_JY901B_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], Jy901bImuAdapterContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    if (s_contexts[instance].startup_active == 0U) { return 1U; }
+    Jy901bStartup_Tick(instance, PlatformTime_Ms());
+    state = Jy901bStartup_StateGet(instance);
+    if (s_contexts[instance].startup_reported != (uint8_t)state)
+    {
+        DebugLog_Print("JY901B startup state=%u failure=%u",
+            (unsigned int)state,
+            (unsigned int)Jy901bStartup_FailureGet(instance));
+        s_contexts[instance].startup_reported = (uint8_t)state;
+    }
+    if (state == SystemDeviceStartupState_Ready)
+    {
+        IMUConfig readback;
+        IMU_ConfigCacheGet(instance, &readback);
+        Jy901bAdapter_EffectiveConfigUpdate(instance, &readback);
+        s_contexts[instance].startup_active = 0U;
+        return 1U;
+    }
+    if (state == SystemDeviceStartupState_Failed)
+    {
+        s_health.error_count++;
+        s_contexts[instance].startup_active = 0U;
+    }
+    return 0U;
+}
+
 void Jy901bAdapter_SharedProcess(uint8_t instance)
 {
     const IMUData *data;
@@ -409,35 +326,7 @@ void Jy901bAdapter_SharedProcess(uint8_t instance)
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     if (s_started == 0U) { return; }
     IMU_Poll(instance);
-#if (JY901B_LEGACY_STARTUP_ENABLE == 0U)
-    if (s_contexts[instance].startup_active != 0U)
-    {
-        SystemDeviceStartupState state;
-        Jy901bStartup_Tick(instance, PlatformTime_Ms());
-        state = Jy901bStartup_StateGet(instance);
-        if (s_contexts[instance].startup_reported != (uint8_t)state)
-        {
-            DebugLog_Print("JY901B startup state=%u failure=%u",
-                (unsigned int)state,
-                (unsigned int)Jy901bStartup_FailureGet(instance));
-            s_contexts[instance].startup_reported = (uint8_t)state;
-        }
-        if (state == SystemDeviceStartupState_Ready)
-        {
-            IMUConfig readback;
-            IMU_ConfigCacheGet(instance, &readback);
-            Jy901bAdapter_EffectiveConfigUpdate(instance, &readback);
-            s_contexts[instance].startup_active = 0U;
-        }
-        else if (state == SystemDeviceStartupState_Failed)
-        {
-            s_health.error_count++;
-            s_contexts[instance].startup_active = 0U;
-            return;
-        }
-        else { return; }
-    }
-#endif
+    if (Jy901bAdapter_StartupProcess(instance) == 0U) { return; }
     (void)PlatformUart_DiagnosticsGet(Jy901bAdapter_UartGet(instance), &io_diagnostics);
     data = IMU_GetData(instance);
     snapshot = *data;
@@ -703,12 +592,17 @@ static SystemDeviceResult Jy901bImuAdapter_ApplyConfig(uint8_t instance,
     const SystemImuConfig *config,
     SystemDeviceConfigReport *report)
 {
-#if (JY901B_LEGACY_STARTUP_ENABLE == 0U)
     IMUOutputRate rate = OutputRate_200Hz;
     SystemDeviceResult result;
 
     if ((config == NULL) || (report == NULL))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(config, SystemImuConfig,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     if (Jy901bAdapter_ConfigAccessCheck(instance) != SYSTEM_DEVICE_OK)
     { return SYSTEM_DEVICE_BUSY; }
     result = Jy901bImuAdapter_ConfigValidate(config, report);
@@ -725,58 +619,6 @@ static SystemDeviceResult Jy901bImuAdapter_ApplyConfig(uint8_t instance,
     report->applied_mask = 0U;
     report->persisted = 0U;
     return SYSTEM_DEVICE_CONFIG_DELEGATED;
-#else
-    IMUOutputRate rate;
-    IMUState state;
-    IMUConfig readback;
-    SystemDeviceResult result;
-
-    if ((config == NULL) || (report == NULL))
-    {
-        return SYSTEM_DEVICE_INVALID_ARGUMENT;
-    }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemImuConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if (Jy901bAdapter_ConfigAccessCheck(instance) != SYSTEM_DEVICE_OK)
-    {
-        (void)memset(report, 0, sizeof(*report));
-        return SYSTEM_DEVICE_BUSY;
-    }
-    result = Jy901bImuAdapter_ConfigValidate(config, report);
-
-    if ((result != SYSTEM_DEVICE_OK) && (result != SYSTEM_DEVICE_UNSUPPORTED))
-    {
-        return result;
-    }
-    rate = OutputRate_200Hz;
-    if ((config->requested_mask & SYSTEM_IMU_CFG_OUTPUT_RATE) != 0U)
-    {
-        (void)Jy901bAdapter_OutputRateValueGet(config->output_rate_hz, &rate);
-    }
-    state = IMU_ApplyDefaultConfig(instance, rate, s_staged_algorithm);
-    if (state != IMU_OK)
-    {
-        report->verify_failed_mask = config->requested_mask;
-        report->failed_mask = report->matched_mask;
-        report->detail_code = (uint32_t)state;
-        report->success = 0U;
-        return (state == IMU_RESP_TIMEOUT) ? SYSTEM_DEVICE_TIMEOUT :
-                                             SYSTEM_DEVICE_IO_ERROR;
-    }
-    report->applied_mask = report->matched_mask;
-    state = IMU_ReadCurrentConfig(instance, &readback);
-    if (state != IMU_OK)
-    {
-        report->success = 0U;
-        report->verify_failed_mask = report->applied_mask;
-        return SYSTEM_DEVICE_VERIFY_FAILED;
-    }
-    Jy901bAdapter_EffectiveConfigUpdate(instance, &readback);
-    /* JY901B does not expose a separately readable persistent layer. */
-    report->persisted = 0U;
-    report->success = 1U;
-    return result;
-#endif
 }
 
 static uint32_t Jy901bImuAdapter_ConfigMismatchMaskGet(uint8_t instance,
@@ -814,7 +656,6 @@ static SystemDeviceResult Jy901bImuAdapter_VerifyConfig(uint8_t instance,
     const SystemImuConfig *config,
     SystemDeviceConfigReport *report)
 {
-#if (JY901B_LEGACY_STARTUP_ENABLE == 0U)
     IMUConfig private_config;
     IMUOutputRate expected_rate = OutputRate_200Hz;
     SystemDeviceStartupState state;
@@ -823,6 +664,12 @@ static SystemDeviceResult Jy901bImuAdapter_VerifyConfig(uint8_t instance,
 
     if ((config == NULL) || (report == NULL))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(config, SystemImuConfig,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     validation = Jy901bImuAdapter_ConfigValidate(config, report);
     if ((validation != SYSTEM_DEVICE_OK) &&
         (validation != SYSTEM_DEVICE_UNSUPPORTED))
@@ -854,61 +701,6 @@ static SystemDeviceResult Jy901bImuAdapter_VerifyConfig(uint8_t instance,
     report->applied_mask = report->matched_mask;
     report->success = 1U;
     return validation;
-#else
-    IMUConfig private_config;
-    IMUOutputRate expected_rate = OutputRate_200Hz;
-    IMUState state;
-    uint32_t mismatch_mask = 0U;
-    SystemDeviceResult validation;
-
-    if ((config == NULL) || (report == NULL))
-    {
-        return SYSTEM_DEVICE_INVALID_ARGUMENT;
-    }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemImuConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if (Jy901bAdapter_ConfigAccessCheck(instance) != SYSTEM_DEVICE_OK)
-    {
-        (void)memset(report, 0, sizeof(*report));
-        return SYSTEM_DEVICE_BUSY;
-    }
-    validation = Jy901bImuAdapter_ConfigValidate(config, report);
-
-    if ((validation != SYSTEM_DEVICE_OK) &&
-        (validation != SYSTEM_DEVICE_UNSUPPORTED))
-    {
-        return validation;
-    }
-    if ((config->requested_mask & SYSTEM_IMU_CFG_OUTPUT_RATE) != 0U)
-    {
-        (void)Jy901bAdapter_OutputRateValueGet(config->output_rate_hz,
-                                                 &expected_rate);
-    }
-    state = IMU_ReadCurrentConfig(instance, &private_config);
-    if (state != IMU_OK)
-    {
-        report->matched_mask = 0U;
-        report->verify_failed_mask = config->requested_mask;
-        report->failed_mask = report->verify_failed_mask;
-        report->detail_code = (uint32_t)state;
-        report->success = 0U;
-        return (state == IMU_RESP_TIMEOUT) ? SYSTEM_DEVICE_TIMEOUT :
-                                             SYSTEM_DEVICE_IO_ERROR;
-    }
-    mismatch_mask = Jy901bImuAdapter_ConfigMismatchMaskGet(instance, &private_config,
-        expected_rate);
-    report->detail_code = mismatch_mask;
-    if (mismatch_mask != 0U)
-    {
-        report->matched_mask = 0U;
-        report->verify_failed_mask = config->requested_mask;
-        report->failed_mask = report->verify_failed_mask;
-        report->success = 0U;
-        return SYSTEM_DEVICE_VERIFY_FAILED;
-    }
-    report->success = 1U;
-    return validation;
-#endif
 }
 
 static SystemDeviceResult Jy901bImuAdapter_GetIoDiagnostics(uint8_t instance,

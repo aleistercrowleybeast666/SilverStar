@@ -246,8 +246,16 @@ void AppTask_Device(void *argument)
 
     for (;;)
     {
+        const SystemStartupReport *report;
+
         SystemStartup_ProcessDevices();
-        if (SystemStartup_GetReport()->completed == 0U)
+        report = SystemStartup_GetReport();
+        SILVERSTAR_ASSERT_OBJECT(report, SystemStartupReport,
+                                SILVERSTAR_ASSERT_MODULE_APP);
+        SILVERSTAR_ASSERT(report->completed <= 1U,
+                          SILVERSTAR_ASSERT_MODULE_APP,
+                          SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+        if (report->completed == 0U)
         {
             vTaskDelay(pdMS_TO_TICKS(1U));
             continue;

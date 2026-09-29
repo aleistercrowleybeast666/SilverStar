@@ -7,6 +7,7 @@
 #include "neo_m9n_config_keys.h"
 #include "neo_m9n_device.h"
 #include "platform_time.h"
+#include "silverstar_assert.h"
 
 #define NEO_M9N_STARTUP_ITEM_COUNT 23U
 #define NEO_M9N_STARTUP_PROBE_TIMEOUT_MS 5000U
@@ -83,14 +84,41 @@ static uint8_t NeoM9nStartup_DynamicModelGet(
     }
 }
 
+static uint64_t NeoM9nStartup_ConstellationValueGet(
+    uint8_t index, uint32_t mask)
+{
+    uint32_t constellation = 0U;
+
+    switch (index)
+    {
+        case 11U:
+        case 12U: constellation = SYSTEM_GNSS_CONSTELLATION_GPS; break;
+        case 15U:
+        case 16U: constellation = SYSTEM_GNSS_CONSTELLATION_GALILEO; break;
+        case 17U:
+        case 18U: constellation = SYSTEM_GNSS_CONSTELLATION_BDS; break;
+        case 21U:
+        case 22U: constellation = SYSTEM_GNSS_CONSTELLATION_GLONASS; break;
+        default: break;
+    }
+    return (uint64_t)((mask & constellation) != 0U);
+}
+
 static GnssNeoM9nConfigItem NeoM9nStartup_ItemGet(
     const NeoM9nStartupContext *context, uint8_t index)
 {
     GnssNeoM9nConfigItem item = {0U};
-    uint32_t mask = context->target.constellation_mask;
-    uint8_t out_ubx = (uint8_t)(
+    uint8_t out_ubx;
+    uint8_t out_nmea;
+
+    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(index < NEO_M9N_STARTUP_ITEM_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    out_ubx = (uint8_t)(
         context->target.output_protocol != SYSTEM_GNSS_OUTPUT_PROTOCOL_NMEA);
-    uint8_t out_nmea = (uint8_t)(
+    out_nmea = (uint8_t)(
         context->target.output_protocol != SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX);
 
     item.key = s_item_keys[index];
@@ -118,27 +146,10 @@ static GnssNeoM9nConfigItem NeoM9nStartup_ItemGet(
             item.value = NeoM9nStartup_DynamicModelGet(
                 context->target.dynamic_model);
             break;
-        case 11U:
-        case 12U:
-            item.value = (uint64_t)((mask & SYSTEM_GNSS_CONSTELLATION_GPS)
-                != 0U);
+        default:
+            item.value = NeoM9nStartup_ConstellationValueGet(index,
+                context->target.constellation_mask);
             break;
-        case 15U:
-        case 16U:
-            item.value = (uint64_t)((mask &
-                SYSTEM_GNSS_CONSTELLATION_GALILEO) != 0U);
-            break;
-        case 17U:
-        case 18U:
-            item.value = (uint64_t)((mask & SYSTEM_GNSS_CONSTELLATION_BDS)
-                != 0U);
-            break;
-        case 21U:
-        case 22U:
-            item.value = (uint64_t)((mask & SYSTEM_GNSS_CONSTELLATION_GLONASS)
-                != 0U);
-            break;
-        default: item.value = 0U; break;
     }
     return item;
 }
@@ -176,6 +187,15 @@ static SystemDeviceStartupStepResult NeoM9nStartup_ItemReadStep(
     GnssNeoM9nConfigItem expected;
     GnssNeoM9nItemStartResult start_result;
     GnssNeoM9nItemPollResult poll_result;
+
+    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(index, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(active, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(values, uint64_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
 
     if (*index >= NEO_M9N_STARTUP_ITEM_COUNT)
     { return SystemDeviceStartupStep_Ok; }
@@ -236,6 +256,14 @@ static SystemDeviceStartupStepResult NeoM9nStartup_ConfigApply(
     GnssNeoM9nItemPollResult poll_result;
     uint8_t index;
 
+    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(reconnect_required, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->apply_index <= NEO_M9N_STARTUP_ITEM_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+
     if (context->apply_index >= NEO_M9N_STARTUP_ITEM_COUNT)
     {
         *reconnect_required = (uint8_t)((difference_mask & 1UL) != 0U);
@@ -278,6 +306,12 @@ static SystemDeviceStartupStepResult NeoM9nStartup_Reconnect(void *owner)
     NeoM9nStartupContext *context = (NeoM9nStartupContext *)owner;
     GnssNeoM9nProbeStartResult start_result;
     GnssNeoM9nProbePollResult poll_result;
+
+    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->reconnect_phase <= 2U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
 
     if (context->reconnect_phase == 0U)
     {
@@ -357,6 +391,10 @@ NeoM9nStartupResult NeoM9nStartup_Init(
         (target->output_protocol > SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX_AND_NMEA))
     { return NeoM9nStartupResult_InvalidArgument; }
     context = &s_contexts[instance];
+    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(target, SystemGnssConfig,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     (void)memset(context, 0, sizeof(*context));
     context->instance = instance;
     context->target = *target;

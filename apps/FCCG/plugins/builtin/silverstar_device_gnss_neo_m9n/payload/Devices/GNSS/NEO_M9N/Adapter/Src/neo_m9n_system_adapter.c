@@ -87,15 +87,6 @@ typedef struct
     NeoM9nRuntimeTransactionOutput output;
 } NeoM9nRuntimeTransaction;
 
-#if (NEO_M9N_LEGACY_STARTUP_ENABLE != 0U)
-typedef struct
-{
-    int device_result;
-    uint32_t step_id;
-    uint32_t failed_mask;
-    uint8_t layers;
-} NeoM9nConfigApplyContext;
-#endif
 
 typedef struct
 {
@@ -241,6 +232,45 @@ static SystemDeviceResult NeoM9nGnssAdapter_RuntimeOwnerActivate(uint8_t instanc
     return SYSTEM_DEVICE_OK;
 }
 
+static uint8_t NeoM9nGnssAdapter_StartupProcess(
+    uint8_t instance, uint32_t now_ms)
+{
+    SystemDeviceStartupState state;
+
+    SILVERSTAR_ASSERT(instance < PROJECT_NEO_M9N_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nAdapterContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    if (s_contexts[instance].startup_active == 0U) { return 1U; }
+    NeoM9nStartup_Tick(instance, now_ms);
+    state = NeoM9nStartup_StateGet(instance);
+    if (s_contexts[instance].startup_reported != (uint8_t)state)
+    {
+        DebugLog_Print("NEO-M9N startup state=%u failure=%u",
+            (unsigned int)state,
+            (unsigned int)NeoM9nStartup_FailureGet(instance));
+        s_contexts[instance].startup_reported = (uint8_t)state;
+    }
+    if (state == SystemDeviceStartupState_Ready)
+    {
+        s_effective_config = s_contexts[instance].startup_target;
+        s_config_transaction.verify_result = SYSTEM_DEVICE_OK;
+        s_config_transaction.verify_read_result =
+            SYSTEM_GNSS_CONFIG_READ_RESPONSE_OK;
+        s_contexts[instance].startup_active = 0U;
+        return 1U;
+    }
+    if (state == SystemDeviceStartupState_Failed)
+    {
+        s_health.error_count++;
+        s_config_transaction.verify_result = SYSTEM_DEVICE_VERIFY_FAILED;
+        s_config_transaction.failed_stage = SYSTEM_GNSS_CONFIG_STAGE_VERIFY;
+        s_contexts[instance].startup_active = 0U;
+    }
+    return 0U;
+}
+
 static void NeoM9nGnssAdapter_Process(uint8_t instance)
 {
     GnssNeoM9nData data;
@@ -259,38 +289,8 @@ static void NeoM9nGnssAdapter_Process(uint8_t instance)
     now_us = PlatformTime_Us();
     now_ms = (uint32_t)(now_us / 1000ULL);
     (void)GnssNeoM9n_Process(instance, now_ms);
-#if (NEO_M9N_LEGACY_STARTUP_ENABLE == 0U)
-    if (s_contexts[instance].startup_active != 0U)
-    {
-        SystemDeviceStartupState state;
-        NeoM9nStartup_Tick(instance, now_ms);
-        state = NeoM9nStartup_StateGet(instance);
-        if (s_contexts[instance].startup_reported != (uint8_t)state)
-        {
-            DebugLog_Print("NEO-M9N startup state=%u failure=%u",
-                (unsigned int)state,
-                (unsigned int)NeoM9nStartup_FailureGet(instance));
-            s_contexts[instance].startup_reported = (uint8_t)state;
-        }
-        if (state == SystemDeviceStartupState_Ready)
-        {
-            s_effective_config = s_contexts[instance].startup_target;
-            s_config_transaction.verify_result = SYSTEM_DEVICE_OK;
-            s_config_transaction.verify_read_result =
-                SYSTEM_GNSS_CONFIG_READ_RESPONSE_OK;
-            s_contexts[instance].startup_active = 0U;
-        }
-        else if (state == SystemDeviceStartupState_Failed)
-        {
-            s_health.error_count++;
-            s_config_transaction.verify_result = SYSTEM_DEVICE_VERIFY_FAILED;
-            s_config_transaction.failed_stage = SYSTEM_GNSS_CONFIG_STAGE_VERIFY;
-            s_contexts[instance].startup_active = 0U;
-            return;
-        }
-        else { return; }
-    }
-#endif
+    if (NeoM9nGnssAdapter_StartupProcess(instance, now_ms) == 0U)
+    { return; }
     NeoM9nGnssAdapter_RuntimeTransactionProcess(instance);
     (void)GnssNeoM9n_GetData(instance, &data);
     GnssNeoM9n_GetStatusSnapshot(instance, &status);
@@ -587,53 +587,6 @@ static SystemDeviceResult NeoM9nGnssAdapter_ConfigCheck(
         SYSTEM_DEVICE_UNSUPPORTED : SYSTEM_DEVICE_OK;
 }
 
-#if (NEO_M9N_LEGACY_STARTUP_ENABLE != 0U)
-static uint8_t NeoM9nGnssAdapter_DynamicModelGet(
-    SystemGnssDynamicModel model)
-{
-    switch (model)
-    {
-        case SYSTEM_GNSS_DYNAMIC_MODEL_STATIONARY: return GNSS_DYNMODEL_STATIONARY;
-        case SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_1G: return GNSS_DYNMODEL_AIRBORNE_1G;
-        case SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_2G: return GNSS_DYNMODEL_AIRBORNE_2G;
-        case SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G: return GNSS_DYNMODEL_AIRBORNE_4G;
-        case SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE:
-        default: return GNSS_DYNMODEL_PORTABLE;
-    }
-}
-
-static uint32_t NeoM9nGnssAdapter_ConstellationMaskGet(uint8_t instance, uint32_t mask)
-{
-    uint32_t device_mask = 0U;
-
-    SILVERSTAR_ASSERT_OBJECT(&s_effective_config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if ((mask & SYSTEM_GNSS_CONSTELLATION_GPS) != 0U)
-    {
-        device_mask |= GNSS_CONSTELLATION_GPS;
-    }
-    if ((mask & SYSTEM_GNSS_CONSTELLATION_BDS) != 0U)
-    {
-        device_mask |= GNSS_CONSTELLATION_BDS;
-    }
-    if ((mask & SYSTEM_GNSS_CONSTELLATION_GALILEO) != 0U)
-    {
-        device_mask |= GNSS_CONSTELLATION_GALILEO;
-    }
-    if ((mask & SYSTEM_GNSS_CONSTELLATION_GLONASS) != 0U)
-    {
-        device_mask |= GNSS_CONSTELLATION_GLONASS;
-    }
-    return device_mask;
-}
-
-static SystemDeviceResult NeoM9nGnssAdapter_DeviceResultMap(int result)
-{
-    if (result == 0) { return SYSTEM_DEVICE_OK; }
-    if (result == -2) { return SYSTEM_DEVICE_TIMEOUT; }
-    return SYSTEM_DEVICE_IO_ERROR;
-}
-#endif
 
 static SystemGnssConfigReadResult NeoM9nGnssAdapter_ConfigReadResultMap(uint8_t instance,
     GnssNeoM9nConfigReadResult result)
@@ -717,176 +670,23 @@ static SystemGnssOutputProtocol NeoM9nGnssAdapter_OutputProtocolMap(
     return SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX;
 }
 
-#if (NEO_M9N_LEGACY_STARTUP_ENABLE != 0U)
-static SystemDeviceResult NeoM9nGnssAdapter_ConfigFailureMap(
-    int device_result,
-    uint32_t step_id,
-    uint32_t failed_mask,
-    SystemDeviceConfigReport *report)
-{
-    if (device_result == 0) { return SYSTEM_DEVICE_OK; }
-    report->verify_failed_mask |= failed_mask;
-    report->failed_mask |= failed_mask;
-    report->detail_code = (step_id << 16) |
-        (uint32_t)((device_result < 0) ? -device_result : device_result);
-    report->success = 0U;
-    if (device_result == -2) { return SYSTEM_DEVICE_TIMEOUT; }
-    return SYSTEM_DEVICE_IO_ERROR;
-}
-
-static void NeoM9nGnssAdapter_TransportConfigApply(uint8_t instance,
-    const SystemGnssConfig *config,
-    NeoM9nConfigApplyContext *context)
-{
-    if ((config == NULL) || (context == NULL)) { return; }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nConfigApplyContext,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    context->step_id = SYSTEM_GNSS_CONFIG_STAGE_UART;
-    context->failed_mask = config->requested_mask;
-    context->device_result = GnssNeoM9n_ConfigUartBaudrate(instance,
-        context->layers, GNSS_DEFAULT_BAUDRATE);
-    s_config_transaction.uart_baudrate_result =
-        NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-    if (context->device_result == 0)
-    {
-        context->step_id = SYSTEM_GNSS_CONFIG_STAGE_UART_SETTLE;
-        context->device_result = GnssNeoM9n_WaitUartConfigSettle(instance,
-            GNSS_UART_CONFIG_SETTLE_MS,
-            GNSS_SIGNAL_STREAM_RECOVERY_TIMEOUT_MS);
-        s_config_transaction.uart_settle_result =
-            NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-    }
-    if ((context->device_result == 0) &&
-        ((config->requested_mask & SYSTEM_GNSS_CFG_OUTPUT_PROTOCOL) != 0U))
-    {
-        GnssOutputProtocol protocol =
-            (config->output_protocol == SYSTEM_GNSS_OUTPUT_PROTOCOL_NMEA) ?
-                GnssOutputProtocolNmeaOnly :
-            (config->output_protocol == SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX_AND_NMEA) ?
-                GnssOutputProtocolUbxNmea : GnssOutputProtocolUbxOnly;
-        context->step_id = SYSTEM_GNSS_CONFIG_STAGE_PROTOCOL;
-        context->failed_mask = SYSTEM_GNSS_CFG_OUTPUT_PROTOCOL;
-        context->device_result = GnssNeoM9n_ConfigOutputProtocol(instance,
-            context->layers, protocol);
-        s_config_transaction.protocol_result =
-            NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-    }
-    if ((context->device_result == 0) &&
-        ((config->requested_mask & SYSTEM_GNSS_CFG_ENABLED_MESSAGES) != 0U))
-    {
-        context->step_id = SYSTEM_GNSS_CONFIG_STAGE_NAV_PVT;
-        context->failed_mask = SYSTEM_GNSS_CFG_ENABLED_MESSAGES;
-        context->device_result = GnssNeoM9n_ConfigNavPvtOutput(instance,
-            context->layers,
-            ((config->enabled_message_mask & SYSTEM_GNSS_MESSAGE_NAV_PVT) !=
-             0U) ? 1U : 0U);
-        s_config_transaction.nav_pvt_result =
-            NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-    }
-}
-
-static void NeoM9nGnssAdapter_NavigationConfigApply(uint8_t instance,
-    const SystemGnssConfig *config,
-    NeoM9nConfigApplyContext *context)
-{
-    GnssNeoM9nData data;
-
-    if ((config == NULL) || (context == NULL)) { return; }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nConfigApplyContext,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if ((context->device_result == 0) &&
-        ((config->requested_mask & SYSTEM_GNSS_CFG_NAVIGATION_RATE) != 0U))
-    {
-        context->step_id = SYSTEM_GNSS_CONFIG_STAGE_RATE;
-        context->failed_mask = SYSTEM_GNSS_CFG_NAVIGATION_RATE;
-        context->device_result = GnssNeoM9n_ConfigNavRate(instance,
-            context->layers, (uint8_t)config->navigation_rate_hz);
-        s_config_transaction.rate_result =
-            NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-    }
-    if ((context->device_result == 0) &&
-        ((config->requested_mask & SYSTEM_GNSS_CFG_DYNAMIC_MODEL) != 0U))
-    {
-        context->step_id = SYSTEM_GNSS_CONFIG_STAGE_DYNAMIC_MODEL;
-        context->failed_mask = SYSTEM_GNSS_CFG_DYNAMIC_MODEL;
-        context->device_result = GnssNeoM9n_ConfigDynamicModel(instance,
-            context->layers,
-            NeoM9nGnssAdapter_DynamicModelGet(config->dynamic_model));
-        s_config_transaction.dynamic_model_result =
-            NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-    }
-    if ((context->device_result == 0) &&
-        ((config->requested_mask & SYSTEM_GNSS_CFG_CONSTELLATIONS) != 0U))
-    {
-        (void)GnssNeoM9n_GetData(instance, &data);
-        s_config_transaction.baseline_pvt_sequence = data.pvtSequence;
-        context->step_id = SYSTEM_GNSS_CONFIG_STAGE_SIGNALS;
-        context->failed_mask = SYSTEM_GNSS_CFG_CONSTELLATIONS;
-        context->device_result = GnssNeoM9n_ConfigSignals(instance, context->layers,
-            NeoM9nGnssAdapter_ConstellationMaskGet(instance,
-                config->constellation_mask));
-        s_config_transaction.signals_result =
-            NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-        if (context->device_result == 0)
-        {
-            s_config_transaction.signal_complete_timestamp_us =
-                PlatformTime_Us();
-            context->step_id = SYSTEM_GNSS_CONFIG_STAGE_PVT_RECOVERY;
-            context->device_result = GnssNeoM9n_WaitForNewNavPvt(instance,
-                s_config_transaction.baseline_pvt_sequence,
-                s_config_transaction.signal_complete_timestamp_us,
-                GNSS_SIGNAL_STREAM_RECOVERY_TIMEOUT_MS);
-            s_config_transaction.pvt_recovery_result =
-                NeoM9nGnssAdapter_DeviceResultMap(context->device_result);
-            (void)GnssNeoM9n_GetData(instance, &data);
-            s_config_transaction.recovered_pvt_sequence = data.pvtSequence;
-        }
-    }
-}
-
-static void NeoM9nGnssAdapter_EffectiveConfigUpdate(uint8_t instance,
-    const SystemGnssConfig *config,
-    const SystemDeviceConfigReport *report)
-{
-    if ((config == NULL) || (report == NULL)) { return; }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    s_effective_config.requested_mask |= report->applied_mask;
-    s_effective_config.required_mask =
-        (s_effective_config.required_mask & ~report->applied_mask) |
-        (config->required_mask & report->applied_mask);
-    if ((report->applied_mask & SYSTEM_GNSS_CFG_NAVIGATION_RATE) != 0U)
-    { s_effective_config.navigation_rate_hz = config->navigation_rate_hz; }
-    if ((report->applied_mask & SYSTEM_GNSS_CFG_CONSTELLATIONS) != 0U)
-    { s_effective_config.constellation_mask = config->constellation_mask; }
-    if ((report->applied_mask & SYSTEM_GNSS_CFG_DYNAMIC_MODEL) != 0U)
-    { s_effective_config.dynamic_model = config->dynamic_model; }
-    if ((report->applied_mask & SYSTEM_GNSS_CFG_OUTPUT_PROTOCOL) != 0U)
-    { s_effective_config.output_protocol = config->output_protocol; }
-    if ((report->applied_mask & SYSTEM_GNSS_CFG_ENABLED_MESSAGES) != 0U)
-    {
-        s_effective_config.enabled_message_mask = config->enabled_message_mask;
-    }
-}
-#endif
 
 static SystemDeviceResult NeoM9nGnssAdapter_ApplyConfig(uint8_t instance,
     const SystemGnssConfig *config,
     SystemDeviceConfigReport *report)
 {
-#if (NEO_M9N_LEGACY_STARTUP_ENABLE == 0U)
     SystemDeviceResult validation =
         NeoM9nGnssAdapter_ConfigCheck(config, report);
 
     if ((validation != SYSTEM_DEVICE_OK) &&
         (validation != SYSTEM_DEVICE_UNSUPPORTED))
     { return validation; }
+    if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     if (s_runtime_owner_active != 0U) { return SYSTEM_DEVICE_BUSY; }
     if (NeoM9nStartup_Init(instance, config) != NeoM9nStartupResult_Ok)
     {
@@ -902,42 +702,6 @@ static SystemDeviceResult NeoM9nGnssAdapter_ApplyConfig(uint8_t instance,
     report->applied_mask = 0U;
     report->persisted = 0U;
     return SYSTEM_DEVICE_CONFIG_DELEGATED;
-#else
-    NeoM9nConfigApplyContext context;
-    SystemDeviceResult validation =
-        NeoM9nGnssAdapter_ConfigCheck(config, report);
-
-    if ((validation != SYSTEM_DEVICE_OK) &&
-        (validation != SYSTEM_DEVICE_UNSUPPORTED))
-    { return validation; }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if (s_runtime_owner_active != 0U) { return SYSTEM_DEVICE_BUSY; }
-    NeoM9nGnssAdapter_TransactionReset(instance);
-    (void)memset(&context, 0, sizeof(context));
-    context.layers = GNSS_CFG_LAYER_RAM;
-    context.failed_mask = config->requested_mask;
-    s_config_transaction.write_layers = context.layers;
-    NeoM9nGnssAdapter_TransportConfigApply(instance, config, &context);
-    NeoM9nGnssAdapter_NavigationConfigApply(instance, config, &context);
-    s_config_transaction.ack_result = (uint8_t)GnssNeoM9n_GetLastAck(instance);
-    if (context.device_result != 0)
-    {
-        s_config_transaction.failed_stage =
-            (SystemGnssConfigStage)context.step_id;
-        return NeoM9nGnssAdapter_ConfigFailureMap(
-            context.device_result, context.step_id,
-            context.failed_mask, report);
-    }
-    report->applied_mask = config->requested_mask &
-                           NEO_M9N_SUPPORTED_CONFIG_MASK;
-    report->persisted = 0U;
-    report->success = 1U;
-    NeoM9nGnssAdapter_EffectiveConfigUpdate(instance, config, report);
-    return validation;
-#endif
 }
 
 static SystemDeviceResult NeoM9nGnssAdapter_GetConfig(uint8_t instance, SystemGnssConfig *config)
@@ -1801,149 +1565,11 @@ static SystemDeviceResult NeoM9nGnssAdapter_GetRfDiagnostics(uint8_t instance,
     return NeoM9nGnssAdapter_RfDiagnosticsMap(instance, &source, diagnostics);
 }
 
-#if (NEO_M9N_LEGACY_STARTUP_ENABLE != 0U)
-static void NeoM9nGnssAdapter_VerifyDiagnosticsCapture(uint8_t instance,
-    const GnssNeoM9nConfigSnapshot *snapshot,
-    const GnssNeoM9nConfigReadDiagnostics *diagnostics,
-    GnssNeoM9nConfigReadResult result)
-{
-    if ((snapshot == NULL) || (diagnostics == NULL)) { return; }
-    SILVERSTAR_ASSERT_OBJECT(snapshot, GnssNeoM9nConfigSnapshot,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(diagnostics, GnssNeoM9nConfigReadDiagnostics,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    s_config_transaction.verify_read_result =
-        NeoM9nGnssAdapter_ConfigReadResultMap(instance, result);
-    s_config_transaction.verify_failed_group =
-        NeoM9nGnssAdapter_ConfigReadGroupMap(
-            diagnostics->failed_group);
-    s_config_transaction.verify_failed_key = diagnostics->failed_key;
-    s_config_transaction.verify_valid_mask = snapshot->valid_mask;
-    s_config_transaction.verify_response_length =
-        diagnostics->response_length;
-    s_config_transaction.verify_nak_class = diagnostics->nak_class;
-    s_config_transaction.verify_nak_id = diagnostics->nak_id;
-    s_config_transaction.verify_detailed_result =
-        NeoM9nGnssAdapter_DetailMap(diagnostics->detailed_result);
-    s_config_transaction.verify_expected_class =
-        diagnostics->expected_class;
-    s_config_transaction.verify_expected_id = diagnostics->expected_id;
-    s_config_transaction.verify_received_class =
-        diagnostics->received_class;
-    s_config_transaction.verify_received_id = diagnostics->received_id;
-    s_config_transaction.verify_response_version =
-        diagnostics->response_version;
-}
-
-static uint32_t NeoM9nGnssAdapter_VerifyMismatchGet(uint8_t instance,
-    const SystemGnssConfig *config,
-    const GnssNeoM9nConfigSnapshot *snapshot)
-{
-    uint32_t mismatch_mask = 0U;
-    uint8_t expected_protocol;
-
-    if ((config == NULL) || (snapshot == NULL)) { return UINT32_MAX; }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(snapshot, GnssNeoM9nConfigSnapshot,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if (((snapshot->valid_mask & GNSS_CONFIG_VALID_BAUD) == 0U) ||
-        (snapshot->baudrate != GNSS_DEFAULT_BAUDRATE))
-    { mismatch_mask |= GNSS_CONFIG_VALID_BAUD; }
-    if ((config->requested_mask & SYSTEM_GNSS_CFG_NAVIGATION_RATE) != 0U)
-    {
-        if (((snapshot->valid_mask & GNSS_CONFIG_VALID_RATE) == 0U) ||
-            (snapshot->rate_hz != config->navigation_rate_hz))
-        { mismatch_mask |= GNSS_CONFIG_VALID_RATE; }
-    }
-    if ((config->requested_mask & SYSTEM_GNSS_CFG_DYNAMIC_MODEL) != 0U)
-    {
-        if (((snapshot->valid_mask & GNSS_CONFIG_VALID_DYNAMIC) == 0U) ||
-            (snapshot->dynamic_model !=
-             NeoM9nGnssAdapter_DynamicModelGet(config->dynamic_model)))
-        { mismatch_mask |= GNSS_CONFIG_VALID_DYNAMIC; }
-    }
-    if ((config->requested_mask & SYSTEM_GNSS_CFG_CONSTELLATIONS) != 0U)
-    {
-        if (((snapshot->valid_mask & GNSS_CONFIG_VALID_CONSTELLATIONS) == 0U) ||
-            (snapshot->constellations_mask !=
-             NeoM9nGnssAdapter_ConstellationMaskGet(instance,
-                 config->constellation_mask)))
-        { mismatch_mask |= GNSS_CONFIG_VALID_CONSTELLATIONS; }
-    }
-    if ((config->requested_mask & SYSTEM_GNSS_CFG_OUTPUT_PROTOCOL) != 0U)
-    {
-        expected_protocol =
-            (config->output_protocol == SYSTEM_GNSS_OUTPUT_PROTOCOL_NMEA) ?
-                0x02U :
-            (config->output_protocol == SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX_AND_NMEA) ?
-                0x03U : 0x01U;
-        if (((snapshot->valid_mask & GNSS_CONFIG_VALID_PROTOCOL_OUT) == 0U) ||
-            (snapshot->protocol_out != expected_protocol))
-        { mismatch_mask |= GNSS_CONFIG_VALID_PROTOCOL_OUT; }
-    }
-    if ((config->requested_mask & SYSTEM_GNSS_CFG_ENABLED_MESSAGES) != 0U)
-    {
-        uint8_t expected_rate =
-            ((config->enabled_message_mask & SYSTEM_GNSS_MESSAGE_NAV_PVT) != 0U) ?
-                1U : 0U;
-        if (((snapshot->valid_mask & GNSS_CONFIG_VALID_NAV_PVT) == 0U) ||
-            (snapshot->nav_pvt_known == 0U) ||
-            (snapshot->nav_pvt_rate != expected_rate))
-        { mismatch_mask |= GNSS_CONFIG_VALID_NAV_PVT; }
-    }
-    return mismatch_mask;
-}
-
-static SystemDeviceResult NeoM9nGnssAdapter_VerifyReadFailureSet(uint8_t instance,
-    const SystemGnssConfig *config,
-    SystemDeviceConfigReport *report,
-    GnssNeoM9nConfigReadResult result)
-{
-    SystemDeviceResult mapped_result;
-
-    if ((config == NULL) || (report == NULL))
-    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    report->matched_mask = 0U;
-    report->verify_failed_mask = config->requested_mask;
-    report->failed_mask = report->verify_failed_mask;
-    report->detail_code = (7UL << 16) | (uint32_t)result;
-    report->success = 0U;
-    mapped_result = NeoM9nGnssAdapter_ConfigReadDeviceResultMap(result);
-    s_config_transaction.verify_result = mapped_result;
-    s_config_transaction.failed_stage = SYSTEM_GNSS_CONFIG_STAGE_VERIFY;
-    return mapped_result;
-}
-
-static SystemDeviceResult NeoM9nGnssAdapter_VerifyMismatchSet(uint8_t instance,
-    const SystemGnssConfig *config,
-    SystemDeviceConfigReport *report,
-    uint32_t mismatch_mask)
-{
-    if ((config == NULL) || (report == NULL))
-    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    report->matched_mask = 0U;
-    report->verify_failed_mask = config->requested_mask;
-    report->failed_mask = report->verify_failed_mask;
-    report->detail_code = mismatch_mask;
-    report->success = 0U;
-    s_config_transaction.verify_result = SYSTEM_DEVICE_VERIFY_FAILED;
-    s_config_transaction.failed_stage = SYSTEM_GNSS_CONFIG_STAGE_VERIFY;
-    return SYSTEM_DEVICE_VERIFY_FAILED;
-}
-#endif
 
 static SystemDeviceResult NeoM9nGnssAdapter_VerifyConfig(uint8_t instance,
     const SystemGnssConfig *config,
     SystemDeviceConfigReport *report)
 {
-#if (NEO_M9N_LEGACY_STARTUP_ENABLE == 0U)
     SystemDeviceResult validation =
         NeoM9nGnssAdapter_ConfigCheck(config, report);
     SystemDeviceStartupState state;
@@ -1951,6 +1577,12 @@ static SystemDeviceResult NeoM9nGnssAdapter_VerifyConfig(uint8_t instance,
     if ((validation != SYSTEM_DEVICE_OK) &&
         (validation != SYSTEM_DEVICE_UNSUPPORTED))
     { return validation; }
+    if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT)
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     state = NeoM9nStartup_StateGet(instance);
     if (state == SystemDeviceStartupState_Failed)
     {
@@ -1965,50 +1597,6 @@ static SystemDeviceResult NeoM9nGnssAdapter_VerifyConfig(uint8_t instance,
     report->applied_mask = report->matched_mask;
     report->success = 1U;
     return validation;
-#else
-    GnssNeoM9nConfigSnapshot snapshot;
-    GnssNeoM9nConfigReadDiagnostics read_diagnostics;
-    uint32_t elapsed_ms = 0U;
-    uint32_t mismatch_mask;
-    GnssNeoM9nConfigReadResult result;
-    SystemDeviceResult validation =
-        NeoM9nGnssAdapter_ConfigCheck(config, report);
-
-    if ((validation != SYSTEM_DEVICE_OK) &&
-        (validation != SYSTEM_DEVICE_UNSUPPORTED))
-    {
-        s_config_transaction.verify_result = validation;
-        s_config_transaction.failed_stage = SYSTEM_GNSS_CONFIG_STAGE_VERIFY;
-        return validation;
-    }
-    SILVERSTAR_ASSERT_OBJECT(config, SystemGnssConfig,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(report, SystemDeviceConfigReport,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if (s_runtime_owner_active != 0U)
-    {
-        s_config_transaction.verify_result = SYSTEM_DEVICE_BUSY;
-        s_config_transaction.failed_stage = SYSTEM_GNSS_CONFIG_STAGE_VERIFY;
-        return SYSTEM_DEVICE_BUSY;
-    }
-    (void)memset(&snapshot, 0, sizeof(snapshot));
-    (void)memset(&read_diagnostics, 0, sizeof(read_diagnostics));
-    result = GnssNeoM9n_ReadHardwareConfig(instance, &snapshot, &elapsed_ms,
-                                            &read_diagnostics);
-    NeoM9nGnssAdapter_VerifyDiagnosticsCapture(instance,
-        &snapshot, &read_diagnostics, result);
-    report->retry_count = 0U;
-    if (result != GnssNeoM9nConfigReadResponseOk)
-    { return NeoM9nGnssAdapter_VerifyReadFailureSet(instance, config, report, result); }
-    mismatch_mask = NeoM9nGnssAdapter_VerifyMismatchGet(instance, config, &snapshot);
-    if (mismatch_mask != 0U)
-    { return NeoM9nGnssAdapter_VerifyMismatchSet(instance,
-        config, report, mismatch_mask); }
-    report->detail_code = elapsed_ms;
-    report->success = 1U;
-    s_config_transaction.verify_result = validation;
-    return validation;
-#endif
 }
 
 const char *NeoM9nGnssInstance_NameGet(uint8_t instance)

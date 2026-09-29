@@ -1,11 +1,17 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "debug_log.h"
 #include "host_platform_mock.h"
 #include "neo_m9n_instance.h"
 #include "project_resources.h"
 #include "system_gnss_if.h"
 #include "test_common.h"
+
+void DebugLog_Print(const char *fmt, ...)
+{
+    (void)fmt;
+}
 
 #define TEST_NAV_PVT_PAYLOAD_SIZE 92U
 #define TEST_NAV_PVT_FRAME_SIZE   (TEST_NAV_PVT_PAYLOAD_SIZE + 8U)

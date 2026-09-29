@@ -575,6 +575,11 @@ Jy901bRegisterReadStartResult IMU_RegisterReadAsyncStart(
     if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
     { return Jy901bRegisterReadStartResult_InvalidArgument; }
     context = &s_contexts[instance];
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->register_write_phase <= 2U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((context->register_read_active != 0U) ||
         (context->register_write_phase != 0U))
     { return Jy901bRegisterReadStartResult_Busy; }
@@ -606,6 +611,11 @@ Jy901bRegisterReadPollResult IMU_RegisterReadAsyncPoll(
     if ((instance >= PROJECT_JY901B_INSTANCE_COUNT) || (value == NULL))
     { return Jy901bRegisterReadPollResult_NotReady; }
     context = &s_contexts[instance];
+    SILVERSTAR_ASSERT_OBJECT(value, uint16_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->register_read_index <= IMU_FRAME_LEN,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     if (context->register_read_active == 0U)
     { return Jy901bRegisterReadPollResult_NotReady; }
     if (PlatformUart_Read(Jy901bResource_UartGet(instance), buffer,
@@ -644,6 +654,11 @@ Jy901bRegisterWriteStartResult IMU_RegisterWriteAsyncStart(
     if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
     { return Jy901bRegisterWriteStartResult_InvalidArgument; }
     context = &s_contexts[instance];
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->register_write_phase <= 2U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((context->register_read_active != 0U) ||
         (context->register_write_phase != 0U))
     { return Jy901bRegisterWriteStartResult_Busy; }
@@ -680,6 +695,11 @@ Jy901bRegisterWritePollResult IMU_RegisterWriteAsyncPoll(uint8_t instance)
     if (instance >= PROJECT_JY901B_INSTANCE_COUNT)
     { return Jy901bRegisterWritePollResult_NotReady; }
     context = &s_contexts[instance];
+    SILVERSTAR_ASSERT_OBJECT(context, Jy901bContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->register_write_phase <= 2U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (context->register_write_phase == 0U)
     { return Jy901bRegisterWritePollResult_NotReady; }
     uart = Jy901bResource_UartGet(instance);
@@ -1172,6 +1192,10 @@ Jy901bStartupRegisterResult IMU_StartupRegisterGet(
     if ((index >= JY901B_STARTUP_REGISTER_COUNT) ||
         (reg == NULL) || (expected_value == NULL))
     { return Jy901bStartupRegisterResult_InvalidArgument; }
+    SILVERSTAR_ASSERT_OBJECT(reg, uint8_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT_OBJECT(expected_value, uint16_t,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
     *reg = registers[index];
     *expected_value = values[index];
     return Jy901bStartupRegisterResult_Ok;

@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "debug_log.h"
 #include "host_platform_mock.h"
 #include "jy901b_config.h"
 #include "jy901b_device.h"
@@ -10,6 +11,11 @@
 #include "system_imu_if.h"
 #include "system_user_config.h"
 #include "test_common.h"
+
+void DebugLog_Print(const char *fmt, ...)
+{
+    (void)fmt;
+}
 
 #ifndef PROJECT_RESOURCE_IMU_UART
 #define PROJECT_RESOURCE_IMU_UART PLATFORM_UART_1

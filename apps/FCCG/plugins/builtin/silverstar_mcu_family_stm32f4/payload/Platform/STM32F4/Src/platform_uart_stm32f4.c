@@ -351,8 +351,12 @@ PlatformResult PlatformUart_WriteFrameAsync(PlatformUartId id,
 
     if ((context == NULL) || (data == NULL) || (length == 0U))
     { return PLATFORM_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
+                            SILVERSTAR_ASSERT_MODULE_PLATFORM);
     ring = PlatformUart_TxRingGet(context, priority);
     if (ring == NULL) { return PLATFORM_UNSUPPORTED; }
+    SILVERSTAR_ASSERT_OBJECT(ring, ringbuf_t,
+                            SILVERSTAR_ASSERT_MODULE_PLATFORM);
     state = PlatformCritical_Enter();
     if (RingBuf_GetFree(ring) < length)
     {
