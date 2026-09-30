@@ -13,6 +13,7 @@ import pytest
 from silverstar_flp.core.dataset import DecodedRecord
 from silverstar_flp.decoder_profiles.catalog import RecordCatalog
 from silverstar_flp.decoder_profiles.eskf15_records import Eskf15Records_Adapt
+from tests.fccg_source_fixture import FccgCommon_RootGet
 
 
 def _Parts():
@@ -71,7 +72,7 @@ def test_covariance_parts_identity_missing_duplicate_and_psd():
 def test_actual_c_record_codec_catalog_and_fragment_roundtrip(tmp_path):
     root = Path(os.environ["SILVERSTAR_FCCG_ROOT"])
     protocol = root / "plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG"
-    common = root / "plugins/builtin/silverstar_core_0_0_12/payload/Common/Inc"
+    common = FccgCommon_RootGet(root) / "Inc"
     source = tmp_path / "codec.c"
     source.write_text(
         r"""
