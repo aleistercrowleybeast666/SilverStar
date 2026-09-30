@@ -9,13 +9,18 @@ from silverstar_fccg.core.settings import SettingsStore
 from silverstar_fccg.ui.main_window import MainWindow
 
 
-def test_seven_pages_own_existing_editors_without_duplicate_radio(tmp_path: Path, qapp) -> None:
+def test_eight_pages_own_existing_editors_without_duplicate_radio(tmp_path: Path, qapp) -> None:
     window = MainWindow(SettingsStore(tmp_path / "round3.ini"))
     try:
-        assert tuple(window.navigation_list.item(i).text() for i in range(7)) == (
+        assert window.navigation_list.count() == window.pages.count() == 8
+        assert tuple(window.navigation_list.item(i).text() for i in range(8)) == (
             "飞控设备", "飞行配置", "导航配置", "遥测配置",
-            "飞控硬件", "地面站硬件", "构建与检测",
+            "地面站配置", "飞控硬件", "地面站硬件", "构建与检测",
         )
+        for editor in (window.ground_target_page.pc_interface,
+                       window.ground_target_page.pc_resource):
+            assert window.ground_configuration_page.isAncestorOf(editor)
+            assert not window.ground_target_page.isAncestorOf(editor)
         assert window.devices_page.telemetry_group.parent() is not window.devices_page
         assert window.air_link_page.isAncestorOf(window.devices_page.telemetry_group)
         assert window.air_link_page.isAncestorOf(

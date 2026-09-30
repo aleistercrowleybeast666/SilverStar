@@ -50,7 +50,9 @@ def test_current_docs_release_and_calibration_claims():
             continue
         content = path.read_text(encoding="utf-8")
         assert not stale_declaration.search(content), path
-        assert not re.search(r"\bExisting\b|使用现有校准", content), path
+        # "Existing" is valid hardware-route prose. Reject the retired
+        # calibration operation, not unrelated English words in audit reports.
+        assert not re.search(r"使用现有校准|\bExisting\s+Calibration\b", content, re.I), path
         assert not fixed_mask.search(content), path
 
 

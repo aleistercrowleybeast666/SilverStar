@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -19,6 +20,35 @@ from silverstar_fccg.plugins.manifest import (
     PluginManifestError,
     PluginManifest_Load,
 )
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Real Windows CopyFile2 path boundary")
+def test_windows_overlong_copy_rejected_before_io_and_preserves_boundary(tmp_path: Path, monkeypatch):
+    source = tmp_path / "input.bin"
+    source.write_bytes(bytes(range(256)) * 3)
+    policy = WorkspacePolicy(tmp_path / "owned")
+    destination = policy.root / ("nested_" + "x" * 65) / ("nested_" + "y" * 65) / ("nested_" + "z" * 65) / "output.bin"
+    assert len(str(destination)) > 260
+    calls = []
+    monkeypatch.setattr(workspace_module.shutil, "copy2", lambda *args: calls.append(args))
+    with pytest.raises(WorkspacePolicyError, match="WINDOWS_PATH_TOO_LONG.*shorten"):
+        policy.File_Copy(source, destination)
+    assert not destination.parent.exists()
+    assert source.read_bytes() == bytes(range(256)) * 3
+    with pytest.raises(WorkspacePolicyError, match="escapes"):
+        policy.File_Copy(source, tmp_path / "outside" / destination.name)
+    assert not calls
+
+
+def test_copy_error_is_not_hidden_by_long_path_support(tmp_path: Path, monkeypatch):
+    source = tmp_path / "input.bin"
+    source.write_bytes(b"input")
+    policy = WorkspacePolicy(tmp_path / "owned")
+    def denied(*args):
+        raise PermissionError("fixture access denied")
+    monkeypatch.setattr(workspace_module.shutil, "copy2", denied)
+    with pytest.raises(PermissionError, match="access denied"):
+        policy.File_Copy(source, policy.root / "output.bin")
 
 
 def test_workspace_policy_rejects_escape_and_unsafe_portable_paths(tmp_path: Path) -> None:

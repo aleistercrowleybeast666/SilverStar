@@ -638,8 +638,7 @@ class ProjectAssembler:
                 for source in manifest.PayloadFiles_Get():
                     relative = source.relative_to(manifest.payload_root)
                     target = staged_project / relative
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(source, target)
+                    self.policy.File_Copy(source, target)
                     added += 1
             self._Progress_Report(
                 progress_callback, 3, "copy_components", True
@@ -749,8 +748,7 @@ class ProjectAssembler:
                         preserved += 1
                         continue
                     staged = staged_files / "components" / relative
-                    staged.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(source, staged)
+                    self.policy.File_Copy(source, staged)
                     component_files_to_add.append(relative)
             self._Progress_Report(
                 progress_callback, 3, "copy_components", True
@@ -785,8 +783,7 @@ class ProjectAssembler:
                 managed_targets.append((target, staged, existed))
                 if existed:
                     backup = backup_files / relative_path
-                    backup.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(target, backup)
+                    self.policy.File_Copy(target, backup)
                     modified += 1
                 else:
                     added += 1
@@ -799,8 +796,7 @@ class ProjectAssembler:
                 target = self.policy.Path_Resolve(
                     destination / relative, allow_root=False
                 )
-                target.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(staged, target)
+                self.policy.File_Copy(staged, target)
                 copied_components.append(target)
                 added += 1
 

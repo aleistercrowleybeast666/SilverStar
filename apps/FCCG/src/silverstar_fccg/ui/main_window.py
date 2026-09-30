@@ -2198,34 +2198,34 @@ class MainWindow(QMainWindow):
             return
         self._ValidationIssue_Clear()
         code = issue.code
-        page_index = 6
         target: QWidget = self.build_page.tool_status_group
         if code.startswith(("hardware", "board", "resource", "platform", "mcu", "HCLK", "MCU_HCLK")) or code in {
             "protocol_transport",
             "protocol_transport_ambiguous",
             "hal_cmsis_source_policy",
         }:
-            page_index = 4
             target = (
                 self.board_hardware_page.resource_table
                 if code.startswith("resource") or code.startswith("protocol_transport")
                 else self.board_hardware_page.board_combo
             )
         elif code.startswith(("GROUND_", "GROUND", "GROUND_HCLK")):
-            page_index = 5
-            target = self.ground_target_page
+            target = (self.ground_target_page.pc_interface
+                      if code.startswith("GROUND_PC_") else self.ground_target_page)
+        elif code.startswith("STORAGE_"):
+            target = (self.devices_page if code in {
+                "STORAGE_DEVICE_REQUIRED", "STORAGE_DEVICE_AMBIGUOUS",
+                "STORAGE_COMPONENT_UNAVAILABLE",
+            } else self.board_hardware_page.resource_table)
         elif code.startswith(("AIR_LINK", "protocol_telemetry")):
-            page_index = 3
             target = self.air_link_page
         elif code.startswith(("strategy", "capability", "TIMING_PROFILE", "REPLAY", "IMU_RATE")):
-            page_index = 2
             target = (
                 next(iter(self.flight_configuration_page.strategy_combos.values()),
                      self.algorithm_parameters_page)
                 if code.startswith("strategy") else self.algorithm_parameters_page
             )
         elif code.startswith(("mode", "logging", "protocol")):
-            page_index = 1
             if code.startswith("mode"):
                 target = next(
                     (
@@ -2245,14 +2245,17 @@ class MainWindow(QMainWindow):
             else:
                 target = self.flight_configuration_page
         elif code == "algorithm_parameters":
-            page_index = 2
             target = self.algorithm_parameters_page
         elif code.startswith("device"):
-            page_index = 0
             target = next(
                 iter(self.devices_page.device_combos.values()),
                 self.devices_page,
             )
+        # Editors can move between pages without changing their stable IDs.
+        # Find the actual owner instead of retaining obsolete numeric indices.
+        page_index = next((index for index, page in enumerate(self._page_widgets)
+                           if page is target or page.isAncestorOf(target)),
+                          self.PAGE_CODES.index("page.build"))
         self.navigation_list.setCurrentRow(page_index)
         target.setProperty("validationIssue", True)
         target.style().unpolish(target)

@@ -2,3 +2,7 @@
 # New root code and integration tests retain Git's normal whitespace checks.
 apps/** whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 docs/** whitespace=-blank-at-eol,-blank-at-eof
+
+# Wire-source provenance is byte-exact, including imported line endings.
+apps/FCCG/plugins/builtin/silverstar_protocol_telemetry_air_m0/payload/Protocol/Src/air_protocol.c -text
+apps/FCCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Src/sslog_protocol.c -text

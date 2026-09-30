@@ -1068,7 +1068,9 @@ def test_required_logging_checkbox_is_active_locked_and_model_forced(
         check = table.cellWidget(required_row, 0).findChild(StandardCheckBox)
         assert isinstance(check, LockedCheckBox)
         assert check.isEnabled() and check.isChecked()
-        assert check.toolTip() == "系统必须日志"
+        # P0 explains the true dependency instead of the old opaque label.
+        assert "系统必需" in check.toolTip()
+        assert "不能取消" in check.toolTip()
         check.click()
         assert check.isChecked()
         stream = window.flight_configuration_page.Streams_Get()[required_row]

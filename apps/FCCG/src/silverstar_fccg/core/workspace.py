@@ -154,6 +154,17 @@ class WorkspacePolicy:
         if source.is_symlink() or not source.is_file():
             raise WorkspacePolicyError(f"Only regular files may be copied: {source}")
         target = self.Path_Resolve(destination, allow_root=False)
+        # Generation and downstream ARM tools use ordinary Windows paths.
+        # Reject their legacy API boundary before mkdir/copy instead of a
+        # misleading missing-file error or a partial extended-path workaround.
+        if os.name == "nt" and (len(str(source)) >= 260 or
+                                len(str(target)) >= 260 or
+                                len(str(target.parent)) >= 248):
+            raise WorkspacePolicyError(
+                "WINDOWS_PATH_TOO_LONG: shorten the workspace/project root; "
+                "copied file paths must be under 260 characters and parent "
+                f"directories under 248 characters: {target}"
+            )
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
         return target
