@@ -17,7 +17,6 @@ from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
 from silverstar_fccg.ui.main_window import MainWindow
 
-
 SYSTEM_INDICATOR_ID = "silverstar.device.indicator.system_status"
 GNSS_INDICATOR_ID = "silverstar.device.indicator.gnss_status"
 
@@ -249,6 +248,9 @@ def test_build_page_tool_roles_and_missing_tool_gates(tmp_path: Path, qapp) -> N
     window = MainWindow(SettingsStore(tmp_path / "tool-roles.ini"))
     page = window.build_page
     try:
+        page.Targets_Set(
+            flight_generated=True, ground_enabled=False, ground_generated=False
+        )
         assert not hasattr(page, "toolchain_status")
         assert not hasattr(page, "tool_path_combo")
         assert not hasattr(page, "browse_button")
@@ -268,8 +270,9 @@ def test_build_page_tool_roles_and_missing_tool_gates(tmp_path: Path, qapp) -> N
                 ),
             )
         )
-        assert page.action_buttons["generate_apply"].isEnabled()
-        assert page.action_buttons["build"].isEnabled()
+        assert "generate_apply" not in page.action_buttons
+        assert page.action_buttons["flight_build"].isEnabled()
+        assert not page.action_buttons["ground_build"].isEnabled()
         assert page.action_buttons["static_analysis"].isEnabled()
         assert not page.action_buttons["host_tests"].isEnabled()
         assert not page.install_guide_button.isHidden()
@@ -292,8 +295,8 @@ def test_build_page_tool_roles_and_missing_tool_gates(tmp_path: Path, qapp) -> N
                 ),
             )
         )
-        assert page.action_buttons["generate_apply"].isEnabled()
-        assert not page.action_buttons["build"].isEnabled()
+        assert "generate_apply" not in page.action_buttons
+        assert not page.action_buttons["flight_build"].isEnabled()
         assert not page.action_buttons["static_analysis"].isEnabled()
         assert page.action_buttons["host_tests"].isEnabled()
     finally:

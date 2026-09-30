@@ -23,7 +23,7 @@ def test_f407_platform_backends_compile_and_pass_host_boundaries(
         "-pedantic",
         f"-I{workspace_root / 'tests' / 'host_platform'}",
         f"-I{workspace_root / 'tools' / 'reference_overlays' / 'platform'}",
-        f"-I{workspace_root / 'plugins' / 'builtin' / 'silverstar_mcu_stm32f407vet6' / 'payload' / 'Platform' / 'Inc'}",
+        f"-I{workspace_root / 'plugins' / 'builtin' / 'silverstar_platform_api' / 'payload' / 'Platform' / 'Inc'}",
         str(workspace_root / "tools" / "reference_overlays" / "platform" / "platform_i2c_stm32f4.c"),
         str(workspace_root / "tools" / "reference_overlays" / "platform" / "platform_can_stm32f4.c"),
         str(workspace_root / "tools" / "reference_overlays" / "platform" / "platform_pwm_stm32f4.c"),

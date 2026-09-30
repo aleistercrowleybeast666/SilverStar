@@ -771,18 +771,14 @@ def test_protocol_split_preserves_reference_source_hashes(
             encoding="utf-8"
         )
     )
+    # Import provenance is historical. Active console and SSLOG record sources
+    # evolved after import and are covered by generated Host/decoder tests.
     targets = {
         "Protocol/Src/air_protocol.c": (
             "silverstar_protocol_telemetry_air_m0/payload/Protocol/Src/air_protocol.c"
         ),
-        "System/Src/system_console.c": (
-            "silverstar_core_0_1_0/payload/System/Src/system_console.c"
-        ),
         "Protocol/SSLOG/Src/sslog_protocol.c": (
             "silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Src/sslog_protocol.c"
-        ),
-        "Protocol/SSLOG/Src/sslog_records.c": (
-            "silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Src/sslog_records.c"
         ),
     }
     for source, target in targets.items():

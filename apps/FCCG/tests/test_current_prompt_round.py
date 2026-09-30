@@ -19,7 +19,8 @@ from silverstar_fccg.project.quality_results import (
 )
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.validation import Project_Validate
-import tools.clean_all as clean_all
+
+from tools import clean_all
 
 
 def test_protocol_profiles_resolve_four_layers_and_selected_source_graph(
@@ -131,6 +132,21 @@ def test_source_package_is_deterministic_and_keeps_real_test_sources(
     assert "SilverStar_FCCG/src/silverstar_fccg/build/runner.py" in names
     assert not any("/build/FCCG/" in name for name in names)
     assert not any(name.endswith((".o", ".d", ".lst", ".elf", ".bin", ".hex", ".map")) for name in names)
+
+
+def test_source_package_omits_disposable_workspaces(tmp_path: Path) -> None:
+    root = tmp_path / "Source"
+    root.mkdir()
+    (root / "source.py").write_text("VALUE = 1\n", encoding="utf-8")
+    scratch = root / ".work" / "generated"
+    scratch.mkdir(parents=True)
+    (scratch / "generated.py").write_text("VALUE = 2\n", encoding="utf-8")
+    nested_scratch = root / "nested" / ".work"
+    nested_scratch.mkdir(parents=True)
+    (nested_scratch / "generated.py").write_text("VALUE = 3\n", encoding="utf-8")
+    result = SourcePackage_Export(root, tmp_path / "source.zip")
+    with zipfile.ZipFile(result.destination) as archive:
+        assert archive.namelist() == ["SilverStar_FCCG/source.py"]
 
 
 def test_non_build_tasks_have_one_task_step_and_host_compiler_is_absolute(

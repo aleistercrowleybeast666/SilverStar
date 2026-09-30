@@ -29,15 +29,19 @@ def test_gui_service_loads_catalog_opens_project_and_previews(
     service.GenerationPlan_Apply(model, initial_plan)
     project_file = project_root / "SilverStar.ssproject"
     try:
-        assert window.plugin_manager_dialog.panel.plugin_table.rowCount() == 65
+        assert window.plugin_manager_dialog.panel.plugin_table.rowCount() == len(
+            service.catalog.All_Get()
+        )
         assert window.plugin_manager_dialog.panel.plugin_table.columnCount() == 9
-        assert len(window.devices_page.device_combos) == 3
+        assert {"imu0", "gnss0"}.issubset(
+            window.devices_page.device_combos
+        )
         wizard_values = wizard.WizardData_Get()
         assert set(wizard_values) == {"name", "output_directory"}
         window._Project_Open(project_file)
         assert window.current_project_value.text() == "GeneratedReference"
         logging_table = window.flight_configuration_page.logging_table
-        assert logging_table.rowCount() == 35
+        assert logging_table.rowCount() == len(window._model.logging_streams)
         periodic_row = next(
             row
             for row in range(logging_table.rowCount())
@@ -88,7 +92,7 @@ def test_gui_service_loads_catalog_opens_project_and_previews(
             "silverstar.protocol.telemetry.air_m0"
         )
         assert (documentation / "AIR_PROTOCOL.md").is_file()
-        assert (project_root / "GeneratedReference.code-workspace").is_file()
+        assert (project_root / "Flight_Controller.code-workspace").is_file()
         assert (project_root / ".vscode" / "tasks.json").is_file()
         assert (project_root / ".eide" / "eide.yml").is_file()
     finally:

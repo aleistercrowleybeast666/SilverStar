@@ -80,7 +80,7 @@ def test_reference_import_definition_preserves_current_fccg_overlays(
         for component in components
     }
 
-    assert len(manifests) == 65
+    assert len(manifests) == 53
     assert {
         "silverstar.protocol.telemetry.air_m0",
         "silverstar.protocol.maintenance.serial_0_0",
@@ -662,25 +662,35 @@ def test_reference_import_restores_protocol_owned_fccg_metadata(
     expected = json.loads(builtin.read_text(encoding="utf-8"))
     reference_copy = json.loads(json.dumps(expected))
     reference_copy.pop("fccg")
+    # The reference import overlay predates the three Round 4 SSLOG records.
+    overlay_path = workspace_root / "tools" / "reference_overlays" / "sslog_fccg_metadata.json"
+    overlay = json.loads(overlay_path.read_text(encoding="utf-8"))
+    reference_copy["records"] = [
+        record for record in reference_copy["records"]
+        if record["enum"] in overlay["fccg"]["records"]
+    ]
     wire_records = json.loads(json.dumps(reference_copy["records"]))
     metadata = tmp_path / "sslog_parser_metadata.json"
     metadata.write_text(json.dumps(reference_copy), encoding="utf-8")
 
     _ProtocolMetadata_Adapt(
         metadata,
-        workspace_root / "tools" / "reference_overlays" / "sslog_fccg_metadata.json",
+        overlay_path,
         WorkspacePolicy(tmp_path),
     )
     adapted = json.loads(metadata.read_text(encoding="utf-8"))
     assert adapted["records"] == wire_records
-    assert adapted["fccg"] == expected["fccg"]
+    assert adapted["fccg"] == overlay["fccg"]
     policies = adapted["fccg"]["records"]
     assert policies["FLIGHT_LOG_RECORD_IMU_CORRECTED"].get("default_enabled", True)
     assert policies["FLIGHT_LOG_RECORD_MAG_NATIVE"].get("default_enabled", True)
 
     schema_path = builtin.with_name("sslog_schema.json")
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    assert adapted["records"] == schema["records"]
+    assert adapted["records"] == [
+        record for record in schema["records"]
+        if record["enum"] in overlay["fccg"]["records"]
+    ]
 
 
 def test_resource_contract_schema_rejects_unknown_constraints(

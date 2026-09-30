@@ -69,6 +69,7 @@ from silverstar_fccg.project.configuration import (
     ProjectConfigurationResult,
     SelectionAvailability,
 )
+from silverstar_fccg.project.folder_contract import FLIGHT_DIRECTORY, ProjectRoot_Save
 from silverstar_fccg.project.lifecycle import (
     ProjectReadiness,
     ProjectReadiness_Inspect,
@@ -80,7 +81,6 @@ from silverstar_fccg.project.model import (
     ProjectModel,
     ProjectModel_Load,
 )
-from silverstar_fccg.project.folder_contract import ProjectRoot_Save
 from silverstar_fccg.project.quality_results import (
     QualityResult_Save,
     QualityResultRecord,
@@ -587,7 +587,17 @@ class FccgService:
                 "Logging Protocol is disabled",
             )
         root = self._OutputPolicy_Get(project_root).root
-        readiness = ProjectReadiness_Inspect(model, root, self.catalog)
+        flight_root = root / FLIGHT_DIRECTORY
+        if flight_root.is_symlink():
+            raise FccgError(
+                "error.log_decoder_profile_project_not_ready",
+                {},
+                "Flight target directory must not be a symbolic link",
+            )
+        # ProjectRoot keeps the canonical decoder at root while generated
+        # descriptors and readiness evidence belong to the Flight target.
+        target_root = flight_root if flight_root.is_dir() else root
+        readiness = ProjectReadiness_Inspect(model, target_root, self.catalog)
         if not readiness.ready:
             detail = "\n".join(
                 (
@@ -625,12 +635,12 @@ class FccgService:
                 "Generated decoder-profile package is missing or does not match its descriptor",
             )
         expected_descriptor_files = {
-            root / "Generated" / "Inc" / "project_log_decoder_profile.h": (
+            target_root / "Generated" / "Inc" / "project_log_decoder_profile.h": (
                 LogDecoderProfileHeader_Render(package.Reference_Get()).encode(
                     "utf-8"
                 )
             ),
-            root / "Generated" / "Src" / "project_log_decoder_profile.c": (
+            target_root / "Generated" / "Src" / "project_log_decoder_profile.c": (
                 LogDecoderProfileSource_Render(package).encode("utf-8")
             ),
         }

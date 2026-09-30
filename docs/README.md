@@ -8,6 +8,7 @@
 - [Project folder contract](architecture/PROJECT_FOLDER_CONTRACT.md)
 - [Mission snapshot and final status](architecture/MISSION_SNAPSHOT.md)
 - [Round 4 device and navigation report](architecture/ROUND4_DEVICE_NAVIGATION_REPORT.md)
+- [Round 5 field qualification report](architecture/ROUND5_FIELD_QUALIFICATION_REPORT.md), [frozen software reference](field/FIELD_TEST_REFERENCE.md), [field-test checklist](field/FIELD_TEST_CHECKLIST_0_1_0.md)
 - [Round 2 multi-target report](architecture/ROUND2_MULTI_TARGET_REPORT.md)
 - [0.1.0 migration report](architecture/MIGRATION_0_1_0.md)
 - [Canonical navigation contract](../contracts/navigation_v1.json)

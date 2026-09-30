@@ -4,10 +4,9 @@ import json
 import logging
 from pathlib import Path
 
+import shiboken6
 from PySide6.QtCore import QCoreApplication, QEvent
 from PySide6.QtGui import QPalette
-import shiboken6
-
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.settings import SettingsStore
 from silverstar_fccg.plugins.catalog import PluginCatalog
@@ -19,7 +18,6 @@ from silverstar_fccg.project.model import DeviceInstance, HardwareConfiguration
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.validation import Project_EditValidate, Project_Validate
 from silverstar_fccg.ui.main_window import MainWindow
-
 
 ACCEL_DEVICE_ID = "fixture.device.imu.accel_only"
 
@@ -191,11 +189,9 @@ def test_device_change_safely_replaces_invalid_strategy_and_modes(
 
     result = ProjectConfiguration_Reconcile(model, catalog)
 
-    assert result.model.strategies["alignment"] == (
-        "silverstar.algorithm.alignment.gravity_known_yaw"
-    )
+    assert result.model.strategies["alignment"] is None
     assert any(
-        notice.code == "configuration.strategy_auto_selected"
+        notice.code == "configuration.strategy_reselect"
         for notice in result.notices
     )
     assert result.edit_validation.valid
@@ -372,13 +368,19 @@ def test_flight_page_disables_incompatible_strategy_and_shows_multiple_sources(
         window._model = model
         window._Project_Refresh()
         combo = window.flight_configuration_page.strategy_combos["alignment"]
+        assert combo.findData("silverstar.algorithm.alignment.gravity_mag_triad") == -1
+        vector_index = combo.findData(
+            "silverstar.algorithm.alignment.vector_constraints"
+        )
+        assert vector_index >= 0
+        assert combo.model().item(vector_index).isEnabled()
         unavailable_index = combo.findData(
-            "silverstar.algorithm.alignment.gravity_mag_triad"
+            "silverstar.algorithm.alignment.external_attitude_source"
         )
         unavailable_item = combo.model().item(unavailable_index)
         assert unavailable_item is not None
         assert not unavailable_item.isEnabled()
-        assert unavailable_item.text() == "重力磁场双矢量对准"
+        assert unavailable_item.text() == "外部姿态源"
         assert unavailable_item.foreground().color() == combo.palette().color(
             QPalette.ColorGroup.Disabled,
             QPalette.ColorRole.Text,
@@ -389,7 +391,7 @@ def test_flight_page_disables_incompatible_strategy_and_shows_multiple_sources(
         )
         assert "background: #E2E8F0;" in qapp.styleSheet()
         assert "缺少能力" in unavailable_item.toolTip()
-        assert "磁场" in unavailable_item.toolTip()
+        assert "姿态" in unavailable_item.toolTip()
         landing_combo = window.flight_configuration_page.strategy_combos["landing"]
         impact_index = landing_combo.findData(
             "silverstar.flight_logic.landing.impact_then_stillness"

@@ -395,15 +395,17 @@ SystemMagCalibrationResult SystemMagCalibration_StoredLoad(
     SystemMagCalibrationResult result;
     float values[16];
     PlatformCriticalState state;
+    uint8_t calibration_present;
     if ((packet == NULL) || (generation == 0U))
     { return SystemMagCalibrationResult_InvalidArgument; }
     SILVERSTAR_ASSERT_OBJECT(packet, uint8_t,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    calibration_present = (uint8_t)(packet[0] != 0U);
     result = SystemMagCalibration_DescriptorGet(instance_id, &descriptor);
     if (result != SystemMagCalibrationResult_Ok) { return result; }
     SILVERSTAR_ASSERT_OBJECT(&descriptor, SystemDeviceDescriptor,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    if (packet[0] != 0U)
+    if (calibration_present != 0U)
     {
         result = SystemMagCalibration_PacketValidate(
             instance_id, descriptor.physical_device_id, packet, values);
@@ -422,7 +424,7 @@ SystemMagCalibrationResult SystemMagCalibration_StoredLoad(
     if ((s_mag_calibration[instance_id].status.active != 0U) ||
         (s_mag_calibration[instance_id].status.save_pending != 0U))
     { PlatformCritical_Exit(state); return SystemMagCalibrationResult_Busy; }
-    if (packet[0] != 0U)
+    if (calibration_present != 0U)
     { SystemMagCalibration_EntrySet(instance_id, packet, values, generation); }
     else
     {

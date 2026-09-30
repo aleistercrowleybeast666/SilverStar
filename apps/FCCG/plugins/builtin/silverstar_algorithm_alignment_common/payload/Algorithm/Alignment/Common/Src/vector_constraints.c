@@ -305,7 +305,7 @@ VectorConstraintsSolveResult VectorConstraints_Solve(
     const VectorConstraint *constraints, uint8_t count,
     VectorConstraintsSolution *solution)
 {
-    VectorConstraint normalized[VECTOR_CONSTRAINTS_MAX_COUNT];
+    VectorConstraint normalized[VECTOR_CONSTRAINTS_MAX_COUNT] = {0};
     VectorConstraintsPairAccumulation accumulation = {0};
     VectorConstraintsSolveResult result;
     uint8_t index;

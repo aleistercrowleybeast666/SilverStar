@@ -1129,7 +1129,7 @@ static GnssNeoM9nAsyncStartResult Gnss_ValgetAsyncStart(uint8_t instance,
     if (keys == NULL) { return GnssNeoM9nAsyncStartInvalidArgument; }
     SILVERSTAR_ASSERT_OBJECT(keys, uint32_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
-    uint8_t payload[GNSS_UBX_TX_MAX_PAYLOAD_LEN];
+    uint8_t payload[GNSS_UBX_TX_MAX_PAYLOAD_LEN] = {0U};
     uint16_t payload_len = GNSS_VALGET_HEADER_LEN;
     uint8_t index;
 
@@ -1276,7 +1276,7 @@ static int Gnss_ValsetRawSend(uint8_t instance, uint8_t layers, const GnssCfgIte
     if (items == NULL) { return -1; }
     SILVERSTAR_ASSERT_OBJECT(items, GnssCfgItem_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
-    uint8_t payload[GNSS_UBX_TX_MAX_PAYLOAD_LEN];
+    uint8_t payload[GNSS_UBX_TX_MAX_PAYLOAD_LEN] = {0U};
     uint16_t payload_len = GNSS_VALSET_HEADER_LEN;
     uint8_t i;
 

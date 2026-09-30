@@ -477,6 +477,7 @@ static int Test_MagCalibrationPersistent(void)
         "0000803F0000000000000000000000000000803F00004842CDCC4C3ECDCC4C3F"
         "9A99993F4B4B4B4B4B4B4B4B580211E8A9C5";
     uint8_t readback[SYSTEM_MAG_CAL_PACKET_BYTES];
+    uint8_t tombstone[SYSTEM_MAG_CAL_PACKET_BYTES] = {0U};
     uint16_t length = 0U;
     uint32_t generation = 0U;
     SystemMagCalibrationStatus status;
@@ -514,6 +515,12 @@ static int Test_MagCalibrationPersistent(void)
         SystemMagCalibrationResult_Ok);
     CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
         SystemMagCalibrationResult_Ok && status.saved == 1U);
+    SystemMagCalibration_Init();
+    CHECK(SystemMagCalibration_StoredLoad(0U, tombstone, generation + 1U) ==
+        SystemMagCalibrationResult_Ok);
+    CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
+        SystemMagCalibrationResult_Ok && status.active == 0U &&
+        status.saved == 0U && status.generation == generation + 1U);
     return 1;
 }
 

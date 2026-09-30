@@ -565,39 +565,27 @@ def test_two_physical_log_sinks_are_rejected(builtin_catalog) -> None:
     assert "storage1" in cardinality[0].message
 
 
-def test_format9_storage_migration_is_deterministic_and_idempotent(
+def test_legacy_format9_device_shape_rejected_and_current_roundtrip_stable(
     builtin_catalog,
 ) -> None:
-    data = ReferenceProject_Create("MigrateStorage", catalog=builtin_catalog).Dictionary_Get()
+    current = ReferenceProject_Create("CurrentStorage", catalog=builtin_catalog)
+    assert ProjectModel_Parse(current.Dictionary_Get()).Dictionary_Get() == (
+        current.Dictionary_Get()
+    )
+    data = current.Dictionary_Get()
     data["format_version"] = 9
-    data["components"]["devices"] = [
-        item for item in data["components"]["devices"] if item["plugin"] != STORAGE_PLUGIN
-    ]
-    data["resources"].pop("storage0:storage")
-    data["resources"].pop("storage0:time")
-    data["resources"][f"{BOARD_PLUGIN}:storage"] = "PLATFORM_SDIO_1"
-    data["generated_glue"].remove("project_storage_binding")
-
-    migrated = ProjectModel_Parse(data)
-    assert migrated.format_version == PROJECT_FORMAT_VERSION
-    assert [
-        instance.instance_id
-        for instance in migrated.device_instances
-        if instance.plugin == STORAGE_PLUGIN
-    ] == ["storage0"]
-    assert migrated.resource_assignments["storage0:storage"] == "PLATFORM_SDIO_1"
-    assert migrated.resource_assignments["storage0:time"] == "PLATFORM_TIME_1"
-    assert "project_storage_binding" in migrated.generated_glue
-
-    reparsed = ProjectModel_Parse(migrated.Dictionary_Get())
-    assert reparsed.Dictionary_Get() == migrated.Dictionary_Get()
-    unknown = migrated.Dictionary_Get()
+    for item in data["components"]["devices"]:
+        item.pop("interface", None)
+        item.pop("profile", None)
+    with pytest.raises(ProjectModelError):
+        ProjectModel_Parse(data)
+    unknown = current.Dictionary_Get()
     unknown["format_version"] = PROJECT_FORMAT_VERSION + 1
     with pytest.raises(ProjectModelError, match="Only project format_version"):
         ProjectModel_Parse(unknown)
 
 
-def test_format9_generated_project_adds_device_owned_storage_without_board_collision(
+def test_legacy_board_owned_storage_collision_is_rejected(
     tmp_path: Path, builtin_catalog
 ) -> None:
     project_root = tmp_path / "StorageOwnershipMigration"
@@ -628,16 +616,25 @@ def test_format9_generated_project_adds_device_owned_storage_without_board_colli
     )
 
     plan = assembler.Plan(model, project_root)
-    assert plan.valid
+    assert not plan.valid
+    conflicts = {
+        operation.target for operation in plan.operations
+        if operation.operation == "CONFLICT"
+    }
+    assert any(target.endswith("persistent_storage.c") for target in conflicts)
+    assert any(target.endswith("persistent_storage.h") for target in conflicts)
     storage_operations = {
         operation.target: operation.operation
         for operation in plan.operations
         if operation.target.startswith("Devices/Storage/SdSdioFatFs/")
     }
-    assert storage_operations == {
-        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c": "ADD",
-        "Devices/Storage/SdSdioFatFs/Src/storage_service.c": "ADD",
-    }
+    assert storage_operations[
+        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"
+    ] == "ADD"
+    assert storage_operations[
+        "Devices/Storage/SdSdioFatFs/Src/storage_service.c"
+    ] == "ADD"
+    assert all(storage_operations[target] == "CONFLICT" for target in conflicts)
     assert not any(
         operation.operation == "CONFLICT"
         and operation.target.startswith("Board/SilverStar_0_5/Services/")
@@ -788,7 +785,8 @@ def test_known_board_still_enforces_compatible_mcu(builtin_catalog) -> None:
             compatible_mcus=("fixture.mcu.stm32h743zit6",),
         ),
     )
-    catalog = _CatalogOverlay(builtin_catalog, (incompatible_board,))
     model = ReferenceProject_Create("BoardMcuGuard", catalog=builtin_catalog)
+    catalog = builtin_catalog.ProjectView_Get(model)
+    catalog._components[BOARD_PLUGIN] = incompatible_board
     validation = Project_Validate(model, catalog)
     assert any(issue.code == "board_mcu" for issue in validation.issues)

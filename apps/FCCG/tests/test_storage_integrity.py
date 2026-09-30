@@ -37,7 +37,9 @@ def storage_project(tmp_path_factory):
                             env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
                             capture_output=True, text=True, timeout=300,
                             check=False)
-    WorkspacePolicy(root).Text_AtomicWrite(output / "integrity.log", result.stdout + result.stderr)
+    WorkspacePolicy(project).Text_AtomicWrite(
+        output / "integrity.log", result.stdout + result.stderr
+    )
     assert result.returncode == 0, result.stdout + result.stderr
     return project, output
 

@@ -16,6 +16,7 @@ from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.settings import SettingsStore
 from silverstar_fccg.core.view_models import LoggingStreamView
 from silverstar_fccg.core.workspace import WorkspacePolicy
+from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.project.lifecycle import ProjectLifecycleState
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
@@ -50,7 +51,7 @@ def test_logging_metadata_declares_cadence_and_legacy_policy_fallback(
         definition.record: definition
         for definition in ProtocolLogDefinitions_Get(model, builtin_catalog)
     }
-    assert len(definitions) == 35
+    assert len(definitions) == 38
     assert definitions[
         "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR"
     ].cadence.kind == "one_shot"
@@ -377,7 +378,14 @@ def test_log_decoder_export_button_writes_verified_profile_without_dirtying_proj
     service = FccgService(Path(__file__).resolve().parents[1])
     model = service.ReferenceProject_Create("DecoderExport")
     project_root = tmp_path / "project"
-    service.Project_Save(model, project_root)
+    service.ProjectRoot_Save(model, project_root)
+    TargetGeneration_Apply(
+        model,
+        service.catalog,
+        WorkspacePolicy(service.workspace_root),
+        project_root,
+        TargetScope.FLIGHT,
+    )
     window = MainWindow(
         SettingsStore(tmp_path / "settings.ini"),
         service=service,
@@ -401,6 +409,11 @@ def test_log_decoder_export_button_writes_verified_profile_without_dirtying_proj
         lambda *_arguments, **_keywords: (_ for _ in ()).throw(
             AssertionError("decoder-profile export must not start a background task")
         ),
+    )
+    monkeypatch.setattr(
+        window,
+        "_Error_Show",
+        lambda error: (_ for _ in ()).throw(AssertionError(str(error))),
     )
     try:
         before_model = deepcopy(window._model.Dictionary_Get())

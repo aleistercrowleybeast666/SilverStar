@@ -22,6 +22,7 @@ _EXCLUDED_ROOTS = frozenset(
     {
         ".git",
         ".venv",
+        ".work",
         ".pytest_cache",
         ".ruff_cache",
         ".fccg",
@@ -52,25 +53,21 @@ def _SourcePathIncluded_Is(relative: PurePosixPath) -> bool:
         return False
     if relative.parts[:2] == ("plugins", "installed"):
         return False
-    if "__pycache__" in relative.parts:
+    if "__pycache__" in relative.parts or ".work" in relative.parts:
         return False
     if relative.parts[0] == "tests" and len(relative.parts) > 1:
         test_root = relative.parts[1]
         if (
             test_root in _EXCLUDED_TEST_ROOTS
-            or test_root.startswith("acceptance_")
-            or test_root.startswith(".pytest-")
-            or test_root.startswith(".probe")
-            or test_root.startswith(".startup")
-            or test_root.startswith(".vscode-")
-            or test_root.startswith(".work")
+            or test_root.startswith((
+                "acceptance_", ".pytest-", ".probe", ".startup",
+                ".vscode-", ".work",
+            ))
         ):
             return False
     if relative.suffix.casefold() in _EXCLUDED_SUFFIXES:
         return False
-    if relative.suffix.casefold() == ".zip" or relative.name == "main.zip":
-        return False
-    return True
+    return not (relative.suffix.casefold() == ".zip" or relative.name == "main.zip")
 
 
 def SourcePackage_Export(
