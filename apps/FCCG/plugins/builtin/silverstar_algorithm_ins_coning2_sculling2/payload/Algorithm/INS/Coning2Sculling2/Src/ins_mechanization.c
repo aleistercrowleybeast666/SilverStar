@@ -52,6 +52,21 @@ static uint8_t Ins_SampleDtValid(float dt_s)
             (dt_s <= INS_MECHANIZATION_DT_MAX_S)) ? 1U : 0U;
 }
 
+static uint8_t Ins_VectorFinite(const float values[3])
+{
+    return (uint8_t)(isfinite(values[0]) && isfinite(values[1]) &&
+                     isfinite(values[2]));
+}
+
+static uint8_t Ins_IncrementsFinite(const InsState *state)
+{
+    return (uint8_t)((Ins_VectorFinite(state->delta_theta_b) != 0U) &&
+        (Ins_VectorFinite(state->delta_theta_b_coning_corrected) != 0U) &&
+        (Ins_VectorFinite(state->delta_velocity_b) != 0U) &&
+        (Ins_VectorFinite(state->delta_velocity_b_rotation_corrected) != 0U) &&
+        (Ins_VectorFinite(state->delta_velocity_b_sculling_corrected) != 0U));
+}
+
 static void Ins_StateCopyNavigation(const InsMechanizationContext *context,
                                     InsState *state)
 {
@@ -306,7 +321,9 @@ static InsSamplePrepareResult InsMechanization_SamplePrepare(
     (void)memset(state, 0, sizeof(*state));
     if ((sample->valid_flags &
          (INS_ALGORITHM_VALID_ACCEL | INS_ALGORITHM_VALID_GYRO)) !=
-        (INS_ALGORITHM_VALID_ACCEL | INS_ALGORITHM_VALID_GYRO))
+        (INS_ALGORITHM_VALID_ACCEL | INS_ALGORITHM_VALID_GYRO) ||
+        (Ins_VectorFinite(sample->accel_b_mps2) == 0U) ||
+        (Ins_VectorFinite(sample->gyro_b_radps) == 0U))
     {
         context->health_flags |= INS_HEALTH_INVALID_SAMPLE;
         state->health_flags = context->health_flags;
@@ -421,6 +438,12 @@ static uint8_t InsMechanization_NavigationCompute(
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(work, InsMechanizationWork,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    if (!isfinite(context->gravity_mps2) || (context->gravity_mps2 <= 0.0f))
+    {
+        context->health_flags |= INS_HEALTH_INVALID_SAMPLE;
+        state->health_flags = context->health_flags;
+        return 0U;
+    }
     (void)memcpy(work->q_nb_start, context->q_nb_propagated,
                  sizeof(work->q_nb_start));
     Ins_TransformDeltaVelocityToNavigation(
@@ -438,6 +461,13 @@ static uint8_t InsMechanization_NavigationCompute(
     Ins_IntegratePositionTrapezoidal(
         context->position_n_m, work->previous_velocity,
         work->current_velocity, work->total_dt, work->current_position);
+    if ((Ins_VectorFinite(work->current_velocity) == 0U) ||
+        (Ins_VectorFinite(work->current_position) == 0U))
+    {
+        context->health_flags |= INS_HEALTH_INVALID_SAMPLE;
+        state->health_flags = context->health_flags;
+        return 0U;
+    }
     if (Attitude_PropagateQuaternionBodyIncrement(
             work->q_nb_start, state->delta_theta_b_coning_corrected,
             work->q_nb_end) == 0U)
@@ -515,6 +545,13 @@ InsInertialUpdateResult InsInertial_Update(InsInertialContext *context,
         return INS_INERTIAL_UPDATE_INVALID;
     }
     InsMechanization_CorrectionsCompute(&work, state);
+    if (Ins_IncrementsFinite(state) == 0U)
+    {
+        context->health_flags |= INS_HEALTH_INVALID_SAMPLE;
+        context->sample_count = 0U;
+        state->health_flags = context->health_flags;
+        return INS_INERTIAL_UPDATE_INVALID;
+    }
     state->interval_start_timestamp_us = context->sample_history[0].timestamp_us;
     state->timestamp_us = sample->timestamp_us;
     state->dt_s = work.total_dt;
