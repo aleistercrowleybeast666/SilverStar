@@ -1,5 +1,7 @@
 .venv/
 .work/
+# Durable local copies of frozen evidence; tracked audit lives under docs/field/.
+/release-evidence/
 apps/*/.work/
 __pycache__/
 *.pyc
@@ -7,6 +9,9 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 build/
+# This Python package is source code; generated build trees stay ignored.
+!apps/FCCG/src/silverstar_fccg/build/
+!apps/FCCG/src/silverstar_fccg/build/*.py
 dist/
 release/
 *.egg-info/

@@ -5,7 +5,7 @@
   "type": "object",
   "required": [
     "format_version", "algorithm_parameters", "project", "components", "modes", "mode_parameters",
-    "protocols", "hardware", "air_link", "ground_target",
+    "protocols", "hardware", "air_link", "ground_target", "alignment", "flight_tx_power_dbm",
     "resources", "capability_sources", "logging", "log_decoder_profile", "build", "generated_glue",
     "component_provenance", "reference_provenance"
   ],
@@ -25,7 +25,29 @@
       },
       "additionalProperties": false
     },
-    "format_version": {"const": 13},
+    "format_version": {"const": 14},
+    "flight_tx_power_dbm": {"type": "integer"},
+    "alignment": {
+      "type": "object",
+      "required": ["constraints", "external_source_instance", "external_yaw_authoritative", "external_known_azimuth_deg"],
+      "properties": {
+        "constraints": {"type": "array", "minItems": 2, "maxItems": 6, "items": {
+          "type": "object",
+          "required": ["kind", "weight", "declination_deg", "body_axis", "nav_azimuth_deg"],
+          "properties": {
+            "kind": {"enum": ["gravity", "magnetic_field", "reference_direction"]},
+            "weight": {"type": "number", "minimum": 0.01, "maximum": 100},
+            "declination_deg": {"type": "number", "minimum": -180, "maximum": 180},
+            "body_axis": {"enum": ["+X", "-X", "+Y", "-Y", "+Z", "-Z"]},
+            "nav_azimuth_deg": {"type": "number", "minimum": 0, "exclusiveMaximum": 360}
+          }, "additionalProperties": false
+        }},
+        "external_source_instance": {"type": "string", "maxLength": 64},
+        "external_yaw_authoritative": {"type": "boolean"},
+        "external_known_azimuth_deg": {"type": ["number", "null"], "minimum": 0, "exclusiveMaximum": 360}
+      },
+      "additionalProperties": false
+    },
     "air_link": {
       "type": "object",
       "required": ["protocol_profile", "radio_technology", "radio_family", "phy_mode", "frequency_hz", "spreading_factor", "bandwidth_hz", "coding_rate", "preamble_symbols", "header_mode", "crc_enabled", "iq_mode", "packet_mtu", "flight_radio_instance"],
@@ -49,7 +71,7 @@
     },
     "ground_target": {
       "type": "object",
-      "required": ["enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant", "resources", "pc_interface", "pc_resource", "baudrate", "build"],
+      "required": ["enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant", "resources", "pc_interface", "pc_resource", "baudrate", "tx_power_dbm", "build"],
       "properties": {
         "enabled": {"type": "boolean"},
         "mcu": {"type": "string"},
@@ -61,6 +83,7 @@
         "pc_interface": {"enum": ["", "uart", "usb_cdc"]},
         "pc_resource": {"type": "string"},
         "baudrate": {"type": "integer", "minimum": 1},
+        "tx_power_dbm": {"type": "integer"},
         "build": {"$ref": "#/properties/build"}
       },
       "additionalProperties": false
@@ -77,10 +100,11 @@
     },
     "components": {
       "type": "object",
-      "required": ["core", "mcu", "board", "os", "devices", "base", "strategies", "development_environment"],
+      "required": ["core", "mcu", "mcu_family", "board", "os", "devices", "base", "strategies", "development_environment"],
       "properties": {
         "core": {"$ref": "#/$defs/componentId"},
         "mcu": {"$ref": "#/$defs/componentId"},
+        "mcu_family": {"$ref": "#/$defs/componentId"},
         "board": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/componentId"}]},
         "os": {"$ref": "#/$defs/componentId"},
         "devices": {
@@ -174,6 +198,22 @@
         "risk_acknowledged": {"type": "boolean"},
         "assignment_fingerprint": {
           "oneOf": [{"const": ""}, {"$ref": "#/$defs/sha256"}]
+        },
+        "cubemx_version": {"type": "string"},
+        "firmware_package": {"type": "string"},
+        "hal_cmsis_source_policy": {"enum": ["", "plugin_payload_authoritative", "imported_tree_authoritative"]},
+        "i2c_external_pullup_confirmations": {
+          "type": "object",
+          "propertyNames": {"pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"},
+          "additionalProperties": {
+            "type": "object",
+            "required": ["source_digest", "snapshot_id"],
+            "properties": {
+              "source_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "snapshot_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            },
+            "additionalProperties": false
+          }
         }
       },
       "additionalProperties": false
@@ -222,22 +262,6 @@
             {"const": ""},
             {"type": "string", "pattern": "^[A-Za-z0-9_./+@ -]+\\.ssdecoder$"}
           ]
-        },
-        "cubemx_version": {"type": "string"},
-        "firmware_package": {"type": "string"},
-        "hal_cmsis_source_policy": {"enum": ["", "plugin_payload_authoritative", "imported_tree_authoritative"]},
-        "i2c_external_pullup_confirmations": {
-          "type": "object",
-          "propertyNames": {"pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"},
-          "additionalProperties": {
-            "type": "object",
-            "required": ["source_digest", "snapshot_id"],
-            "properties": {
-              "source_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-              "snapshot_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
-            },
-            "additionalProperties": false
-          }
         },
         "package_schema": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/version"}]},
         "container_plugin_id": {

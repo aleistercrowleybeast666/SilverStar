@@ -1,5 +1,9 @@
 # SilverStar 0.1.0 field-test software reference
 
+The six pre-existing files were verified against the hashes below and copied without rebuilding to the Git-ignored durable local archive `release-evidence/round5-frozen-4a1f3db/`. Its `archive-manifest.json` records source and destination paths, byte counts, and SHA-256 values. This archive is local evidence, not a release package; see [the blank qualification record](FIELD_QUALIFICATION_RECORD_TEMPLATE.md) for a future controlled bench session.
+
+The Round5 qualification wording below is a historical software-candidate statement. A later [source-only checker audit](../FCCG/POWER_OF_TEN_SUPPLEMENTAL_REPAIR.md) exposed open Rule 5 assertion-coverage findings. Neither that audit nor a fresh local build changes the six frozen identities or supplies missing physical evidence. Current field readiness remains **NO** pending review and bench evidence.
+
 **Qualification state: SOFTWARE FIELD CANDIDATE READY; HARDWARE ACTIONS PENDING.** This is not `FIELD TEST READY`, a public release, or authorization to use live deployment loads. The hashes below identify the fresh FCCG project generated from the Round 5 repository state and ARM GCC 14.3.1. The ignored local candidate is `.work/round5/final/Round5_Field_Qualification/`; `.work/round5/final-artifacts.json` contains the machine-readable file sizes and exact-MCU BuildAudit output. Copy the chosen firmware/project/decoder together to a durable user project before field work; `.work/` is disposable.
 
 ## Frozen software files

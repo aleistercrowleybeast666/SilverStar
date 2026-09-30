@@ -293,9 +293,11 @@ static void FlightTask_AlignmentEventsProcess(uint64_t now_us)
 {
     SystemAlignmentSummary alignment;
 
-    SILVERSTAR_ASSERT_OBJECT(s_start_diagnostic_sequence, uint32_t,
-        SILVERSTAR_ASSERT_MODULE_APP);
     if (SystemAlignment_SummaryGet(&alignment) != SYSTEM_DEVICE_OK) { return; }
+    SILVERSTAR_ASSERT(alignment.state <= SYSTEM_ALIGNMENT_STATE_STALE,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(alignment.ready <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (alignment.start_sequence != s_alignment_start_sequence)
     {
         s_alignment_start_sequence = alignment.start_sequence;
@@ -365,12 +367,14 @@ static void FlightTask_CalibrationEventsProcess(uint64_t now_us)
 {
     SystemCalibrationStatus calibration;
 
-    SILVERSTAR_ASSERT_OBJECT(s_start_diagnostic_sequence, uint32_t,
-        SILVERSTAR_ASSERT_MODULE_APP);
     if (SystemCalibration_StatusGet(&calibration) != SYSTEM_DEVICE_OK)
     {
         return;
     }
+    SILVERSTAR_ASSERT(calibration.state <= SYSTEM_CALIBRATION_STATE_FAILED,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(calibration.ready <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (calibration.diagnostic_sequence != s_calibration_diagnostic_sequence)
     {
         s_calibration_diagnostic_sequence = calibration.diagnostic_sequence;
@@ -402,8 +406,6 @@ static void FlightTask_StartDiagnosticProcess(void)
     SystemLifecycleStartDiagnostic diagnostic;
     uint8_t source;
 
-    SILVERSTAR_ASSERT_OBJECT(s_start_diagnostic_sequence, uint32_t,
-        SILVERSTAR_ASSERT_MODULE_APP);
     for (source = 0U; source < 3U; source++)
     {
         if ((SystemLifecycle_GetLastStartDiagnostic(
@@ -412,6 +414,12 @@ static void FlightTask_StartDiagnosticProcess(void)
         {
             continue;
         }
+        SILVERSTAR_ASSERT(diagnostic.response.result <=
+            SYSTEM_LIFECYCLE_START_INTERNAL_ERROR,
+            SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+        SILVERSTAR_ASSERT(diagnostic.response.reason <=
+            SYSTEM_START_REASON_QUEUE_FAILED,
+            SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
         s_start_diagnostic_sequence[source] = diagnostic.sequence;
         if (diagnostic.response.result != SYSTEM_LIFECYCLE_START_OK)
         {
@@ -581,8 +589,6 @@ static void FlightTask_FlightRecoveryEventsProcess(void)
 {
     SystemFlightRecoveryStatus status;
 
-    SILVERSTAR_ASSERT_OBJECT(s_start_diagnostic_sequence, uint32_t,
-        SILVERSTAR_ASSERT_MODULE_APP);
     if (SystemFlightRecovery_StatusGet(&status) != SYSTEM_DEVICE_OK)
     {
         return;
@@ -1017,8 +1023,6 @@ static void FlightTask_RuntimeInitialize(void)
         SystemLifecycle_EnterFault(FLIGHT_TASK_FAULT_RECOVERY_INIT);
     }
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-    SILVERSTAR_ASSERT_OBJECT(s_start_diagnostic_sequence, uint32_t,
-        SILVERSTAR_ASSERT_MODULE_APP);
     s_fault_event_written = 0U;
     s_calibration_start_sequence = 0U;
     s_calibration_state_sequence = 0U;
@@ -1108,8 +1112,6 @@ void AppTask_Flight(void *argument)
 
     (void)argument;
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-    SILVERSTAR_ASSERT_OBJECT(s_start_diagnostic_sequence, uint32_t,
-        SILVERSTAR_ASSERT_MODULE_APP);
 #endif
     FlightTask_RuntimeInitialize();
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)

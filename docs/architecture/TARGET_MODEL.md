@@ -1,6 +1,6 @@
 # SilverStar project targets
 
-A format 13 SilverStar project contains one Flight Controller configuration, an optional Ground Station target, and one project-owned AIR Link. The in-memory Flight fields retain the first-round FCCG API to keep existing Flight generation stable; Ground has independent MCU, board or imported CubeMX hardware, radio resources, PC interface, and build options. Ground and link are serialized under ground_target and air_link alongside the existing Flight fields.
+A format 14 SilverStar project contains one Flight Controller configuration, an optional Ground Station target, and one project-owned AIR Link. The in-memory Flight fields retain the first-round FCCG API to keep existing Flight generation stable; Ground has independent MCU, board or imported CubeMX hardware, radio resources, PC interface, and build options. Ground and link are serialized under ground_target and air_link alongside the existing Flight fields.
 
     SilverStar project
     ├─ Flight Controller

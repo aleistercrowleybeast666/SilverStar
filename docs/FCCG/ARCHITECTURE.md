@@ -1,5 +1,7 @@
 # SilverStar_FCCG Architecture
 
+The current 0.1.0 pre-release project format is 14. The following “Algorithm actual parameters” paragraph describes a historical format-12 stage; the current UI uses Navigation Configuration and separate Flight and Ground targets.
+
 ## Algorithm actual parameters / 算法实际参数
 
 新增独立算法参数页面（硬件连接之前），插件声明实际值、单位和 representation。
@@ -13,7 +15,7 @@ FCCG 是 SilverStar 平台的中央配置、组件装配、接口冻结与版本
 
 ## 1. 应用层
 ```text
-PySide6 Devices / Flight Configuration / Algorithm Parameters / Hardware Connection / Build
+PySide6 Flight Devices / Flight Configuration / Navigation Configuration / Telemetry Configuration / Flight Hardware / Ground Station Hardware / Build & Validation
         ↓
 FccgService
         ├─ Project model + validation

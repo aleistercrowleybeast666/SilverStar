@@ -16,6 +16,8 @@ FCCG keeps Flight Controller configuration and adds an optional Ground Station t
 
 Recommended project workflow: create a [SilverStar project root](docs/architecture/PROJECT_FOLDER_CONTRACT.md) in FCCG, configure the two targets and AIR Link, generate Flight and/or Ground from their hardware pages, build each target independently, copy TF/SD logs into `Log/`, then open that project folder in FLP. USB CDC Ground firmware still needs a complete CubeMX-generated CDC project and real hardware verification.
 
-Round 5 has a [frozen software reference](docs/field/FIELD_TEST_REFERENCE.md), [field qualification checklist](docs/field/FIELD_TEST_CHECKLIST_0_1_0.md), and [evidence report](docs/architecture/ROUND5_FIELD_QUALIFICATION_REPORT.md). The software candidate awaits F407/F103 bench integration, actual TF logs and target timing evidence before it can be called field-test ready.
+Round 5 has a [frozen software reference](docs/field/FIELD_TEST_REFERENCE.md), [field qualification checklist](docs/field/FIELD_TEST_CHECKLIST_0_1_0.md), [blank session record](docs/field/FIELD_QUALIFICATION_RECORD_TEMPLATE.md), and [evidence report](docs/architecture/ROUND5_FIELD_QUALIFICATION_REPORT.md). The software candidate awaits F407/F103 bench integration, actual TF logs and target timing evidence before it can be called field-test ready.
+
+Original SilverStar first-party source is offered under the [Apache License 2.0](LICENSE). Bundled vendor code and Python dependencies retain their own terms; see the [source license audit](docs/architecture/SOURCE_LICENSE_AUDIT.md).
 
 No public 0.1.0 release has been made.

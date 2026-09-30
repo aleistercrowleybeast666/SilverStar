@@ -190,6 +190,7 @@ def _PcAdapter_Render(model: ProjectModel, family=None) -> str:
             return PcUartDma_Render(handle)
         return f"""#include "pc_byte_stream.h"
 #include "main.h"
+#include <stddef.h>
 
 extern UART_HandleTypeDef {handle};
 
@@ -226,6 +227,7 @@ uint32_t PcByteStream_OverflowCount_Get(void)
 #include "gsp_min_protocol.h"
 #include "silverstar_assert.h"
 #include "usbd_cdc_if.h"
+#include <stddef.h>
 
 #define PC_USB_RX_CAPACITY 512U
 

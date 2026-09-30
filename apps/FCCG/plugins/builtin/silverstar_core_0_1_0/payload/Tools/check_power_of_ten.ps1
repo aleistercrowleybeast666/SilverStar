@@ -136,11 +136,34 @@ function Get-BraceDelta {
     return $openCount - $closeCount
 }
 
+function Get-MeaningfulAssertionCount {
+    param([string]$FunctionText, [string[]]$StaticArrayNames)
+    $count = 0
+    foreach ($match in [regex]::Matches($FunctionText,
+            '\bSILVERSTAR_ASSERT\s*\(\s*([^,\r\n]+)')) {
+        if ($match.Groups[1].Value.Trim() -notmatch '^(?:0|1)(?:U|UL)?$') {
+            $count++
+        }
+    }
+    foreach ($match in [regex]::Matches($FunctionText,
+            '\bSILVERSTAR_ASSERT_OBJECT\s*\(\s*([^,\r\n]+)')) {
+        $object = $match.Groups[1].Value.Trim()
+        if (($object -notmatch '^&') -and
+            ($StaticArrayNames -notcontains $object)) {
+            $count += 2
+        }
+    }
+    return $count
+}
+
 function Get-CFunctions {
     param([Parameter(Mandatory = $true)][string]$SanitizedText)
 
     $lines = @($SanitizedText -split "`r?`n")
     $functions = New-Object 'System.Collections.Generic.List[object]'
+    $staticArrayNames = @([regex]::Matches($SanitizedText,
+        '(?m)^\s*static\s+[^;\r\n=]+?\s+([A-Za-z_][A-Za-z0-9_]*)\s*\[[^\]]+\]\s*;') |
+        ForEach-Object { $_.Groups[1].Value })
     $globalDepth = 0
     $candidate = ''
     $candidateStart = 0
@@ -159,11 +182,8 @@ function Get-CFunctions {
                 $codeLineCount = @($functionLines |
                     Where-Object { $_.Trim().Length -ne 0 }).Count
                 $functionText = $functionLines -join "`n"
-                $assertionCount = ([regex]::Matches(
-                    $functionText, '\bSILVERSTAR_ASSERT\s*\(')).Count
-                $assertionCount += 2 * ([regex]::Matches(
-                    $functionText,
-                    '\bSILVERSTAR_ASSERT_OBJECT\s*\(')).Count
+                $assertionCount = Get-MeaningfulAssertionCount `
+                    $functionText $staticArrayNames
                 $functions.Add([pscustomobject]@{
                     Name = $functionName
                     StartLine = $functionStart + 1
@@ -209,15 +229,10 @@ function Get-CFunctions {
                         CodeLines = @($functionLines | Where-Object {
                             $_.Trim().Length -ne 0
                         }).Count
-                        AssertionCount = ([regex]::Matches(
-                            $functionText,
-                            '\bSILVERSTAR_ASSERT\s*\(')).Count
+                        AssertionCount = Get-MeaningfulAssertionCount `
+                            $functionText $staticArrayNames
                         Text = $functionText
                     })
-                    $functions[$functions.Count - 1].AssertionCount +=
-                        2 * ([regex]::Matches(
-                            $functionText,
-                            '\bSILVERSTAR_ASSERT_OBJECT\s*\(')).Count
                     $functionName = $null
                     $candidate = ''
                 }
@@ -253,6 +268,29 @@ function Get-PatternDiagnostics {
         }
     }
     return $diagnostics
+}
+
+function Get-PowerTenRelativePath {
+    param([Parameter(Mandatory = $true)][string]$FullName)
+    return ($FullName.Substring($repoRoot.Length + 1) -replace '\\', '/')
+}
+
+function Test-PowerTenApprovedConditional {
+    param([string]$RelativePath, [string]$Line)
+    $normalized = $RelativePath -replace '\\', '/'
+    return (($Line -match $protocolConditionalPattern) -or
+            (($normalized -eq 'APP/Src/estimator_task.c') -and
+             ($Line -match $estimatorConditionalPattern)) -or
+            ($Line -match '^\s*#\s*(?:else|endif)\b'))
+}
+
+function Test-PowerTenApprovedDoublePointer {
+    param([string]$RelativePath, [string]$Line)
+    $normalized = $RelativePath -replace '\\', '/'
+    $idleHookOutput = '^\s*(?:StaticTask_t|StackType_t)\s+\*\*\s*' +
+        '(?:task_control|stack)\s*,?\s*$'
+    return (($normalized -eq 'OS/FreeRTOS/freertos_hooks.c') -and
+        ($Line -match $idleHookOutput))
 }
 
 $files = Get-FirstPartyCFiles
@@ -297,12 +335,8 @@ foreach ($file in $files) {
     $conditionalDiagnostics = Get-PatternDiagnostics -File $file `
         -Lines $lines -Pattern $conditionalPattern -Approved {
             param($candidateFile, $line, $lineNumber)
-            $candidateRelative = $candidateFile.FullName.Substring(
-                $repoRoot.Length + 1)
-            return (($line -match $protocolConditionalPattern) -or
-                    (($candidateRelative -eq 'APP\Src\estimator_task.c') -and
-                     ($line -match $estimatorConditionalPattern)) -or
-                    ($line -match '^\s*#\s*(?:else|endif)\b'))
+            $candidateRelative = Get-PowerTenRelativePath $candidateFile.FullName
+            return (Test-PowerTenApprovedConditional $candidateRelative $line)
         }
     Add-PowerTenCheck -Condition ($conditionalDiagnostics.Count -eq 0) `
         -Message ("first-party C conditional compilation violation:`n  " +
@@ -311,13 +345,8 @@ foreach ($file in $files) {
     $doublePointerDiagnostics = Get-PatternDiagnostics -File $file `
         -Lines $lines -Pattern '\*\s*\*' -Approved {
             param($candidateFile, $line, $lineNumber)
-            $candidateRelative = $candidateFile.FullName.Substring(
-                $repoRoot.Length + 1)
-            $idleHookOutput =
-                '^\s*(?:StaticTask_t|StackType_t)\s+\*\*\s*' +
-                '(?:task_control|stack)\s*,?\s*$'
-            return (($candidateRelative -eq 'OS\FreeRTOS\freertos_hooks.c') -and
-                ($line -match $idleHookOutput))
+            $candidateRelative = Get-PowerTenRelativePath $candidateFile.FullName
+            return (Test-PowerTenApprovedDoublePointer $candidateRelative $line)
         }
     Add-PowerTenCheck -Condition ($doublePointerDiagnostics.Count -eq 0) `
         -Message ("double-pointer violation:`n  " +

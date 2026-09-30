@@ -37,8 +37,10 @@ static void DeviceTask_PublishBarometer(void)
     {
         return;
     }
-    SILVERSTAR_ASSERT_OBJECT(&sample, SystemBarometerSample,
-                             SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT((sample.valid_fields & ~sample.supported_fields) == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(sample.measurement_timestamp_trusted <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     last_sequence = sample.sequence;
     snapshot.timestamp_us = sample.sample_timestamp_us;
     snapshot.receive_timestamp_us = sample.receive_timestamp_us;
@@ -82,8 +84,10 @@ static void DeviceTask_LogGnssState(void)
     {
         return;
     }
-    SILVERSTAR_ASSERT_OBJECT(&sample, SystemGnssSample,
-                             SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT((sample.valid_fields & ~sample.supported_fields) == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(sample.position_usable <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     last_sequence = sample.sequence;
     usable = (uint8_t)(sample.position_usable != 0U);
     if ((state_known == 0U) || (usable != last_usable))
@@ -110,8 +114,12 @@ static void DeviceTask_LogGnssSatelliteDiagnostic(void)
     (void)memset(&satellite, 0, sizeof(satellite));
     satellite_result =
         SystemGnss_LatestSatelliteDiagnosticsGet(&satellite);
-    SILVERSTAR_ASSERT_OBJECT(&satellite, SystemGnssSatelliteDiagnostics,
-                             SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT((satellite.valid_fields & ~satellite.supported_fields) == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT((satellite.supported_fields &
+        ~(SYSTEM_GNSS_SAT_DIAG_FIELD_COUNTS | SYSTEM_GNSS_SAT_DIAG_FIELD_CNO |
+          SYSTEM_GNSS_SAT_DIAG_FIELD_QUALITY)) == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (((satellite_result == SYSTEM_DEVICE_OK) ||
          (satellite_result == SYSTEM_DEVICE_NOT_READY)) &&
         (satellite.sequence != last_satellite_sequence))
@@ -147,8 +155,12 @@ static void DeviceTask_LogGnssRfDiagnostic(void)
 
     (void)memset(&rf, 0, sizeof(rf));
     rf_result = SystemGnss_LatestRfDiagnosticsGet(&rf);
-    SILVERSTAR_ASSERT_OBJECT(&rf, SystemGnssRfDiagnostics,
-                             SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT((rf.valid_fields & ~rf.supported_fields) == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT((rf.supported_fields &
+        ~(SYSTEM_GNSS_RF_DIAG_FIELD_ANTENNA | SYSTEM_GNSS_RF_DIAG_FIELD_JAMMING |
+          SYSTEM_GNSS_RF_DIAG_FIELD_NOISE | SYSTEM_GNSS_RF_DIAG_FIELD_AGC)) == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (((rf_result == SYSTEM_DEVICE_OK) ||
          (rf_result == SYSTEM_DEVICE_NOT_READY)) &&
         (rf.sequence != last_rf_sequence))

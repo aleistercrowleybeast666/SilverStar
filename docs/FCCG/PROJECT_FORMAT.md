@@ -1,6 +1,8 @@
 # SilverStar Project Format
 
-当前 0.1.0 pre-release 工程格式为 **13**。项目包括现有 Flight Controller 配置、可选 ground_target 和共享 air_link；Device instance 记录 plugin、interface、profile。详见[Target model](../architecture/TARGET_MODEL.md)、[AIR Link](../architecture/AIR_LINK.md)与[Device variants](../architecture/DEVICE_VARIANTS.md)。以下 format 12 段落保留作为合仓前历史说明，不代表当前 schema。
+当前 0.1.0 pre-release 工程格式为 **14**（`PROJECT_FORMAT_VERSION` 与 `schemas/project.schema.json`）。项目包括 Flight Controller 配置、可选 ground_target、共享 air_link、alignment 与两端独立 TX power；Device instance 记录 plugin、interface、profile。详见[Target model](../architecture/TARGET_MODEL.md)、[AIR Link](../architecture/AIR_LINK.md)与[Device variants](../architecture/DEVICE_VARIANTS.md)。以下 format 12/13 段落保留作为历史说明，不代表当前 schema。
+
+## 历史：format 12/13
 
 ## Algorithm actual parameters / 算法实际参数
 
@@ -11,7 +13,7 @@ Platform 仍为 0.0.12，Record Catalog 与协议布局不变。
 精确验证结果仅见仓库根 VALIDATION.md。
 
 
-以下核心字段原属 Flight Controller；format 13 保留其运行时 API 以保证原有 Flight 生成能力。
+以下核心字段原属 Flight Controller；format 13 起保留其运行时 API 以保证原有 Flight 生成能力，format 14 延续该结构。
 
 ## 核心数据
 - project identity：name、SilverStar firmware/platform version；

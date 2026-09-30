@@ -21,7 +21,8 @@ For each row, record `PASS`, `FAIL`, or `NOT RUN`, timestamp, exact hardware/fir
 | Flight ↔ AIR ↔ Ground ↔ GSP/UART ↔ GSHC command, rejection reason, telemetry and link-loss recovery | `NOT RUN — HARDWARE_ACTION_REQUIRED` |
 | IMU calibration and selected alignment result; compare actual orientation and SSLOG `0x28` evidence | `NOT RUN — HARDWARE_ACTION_REQUIRED` |
 | If a physical magnetometer is selected: GSHC collection, fit, Apply/Save/Read, power-cycle identity and wrong-device rejection | `NOT RUN — only if reference configuration selects a magnetometer` |
-| KF6 representative run and ESKF15 basic smoke; real ODR/aggregation, fresh measurements and replay bounds | `NOT RUN — HARDWARE_ACTION_REQUIRED` |
+| KF6 representative run; real ODR/aggregation, fresh measurements and replay bounds | `NOT RUN — HARDWARE_ACTION_REQUIRED` |
+| ESKF15 basic smoke, only for a candidate configured with ESKF15 | `N/A — current frozen candidate selects KF6; not a PASS` |
 | Capture target timing, stack/queue/logger/replay high-water marks and offered-load diagnostics; label observed maxima as measured, not WCET | `NOT RUN — HARDWARE_ACTION_REQUIRED` |
 | Copy actual TF log into Project Root `Log/`; FLP opens Project Root with exact decoder and decodes `0x28`, `0x29`, optional `0x2A` | `NOT RUN — ACTUAL_LOG_REQUIRED` |
 | Inspect trajectory, velocity, altitude, attitude, state, GNSS, estimator and gap diagnostics; export PNG/CSV/GIF plus manifest to `Log/<LogStem>_Export/` | `NOT RUN — ACTUAL_LOG_REQUIRED` |
