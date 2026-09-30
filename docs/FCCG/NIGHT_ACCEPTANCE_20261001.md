@@ -1,5 +1,10 @@
 # Native GUI and generated firmware acceptance, 2026-09-30/10-01
 
+Later checkpoints: [five real GUI quality checks](NIGHT_QUALITY_20261001.md) and
+[navigation resources, numeric protection and independent lifecycle regression](NIGHT_NAVIGATION_RESOURCES_20261001.md).
+The P1 generated projects remain preserved snapshots; later firmware/checker fixes
+were verified in independent P3 projects, not silently copied into these outputs.
+
 This checkpoint covers the authorized P0 GUI repairs and P1 software acceptance on CHD. Starting HEAD was `55cf801a8453370eb6229c06b839f2460d960602`, initially clean, in `D:\python_software\SilverStar`. The commit containing this report is the source checkpoint; no push, tag, Release, application packaging, hardware connection, flashing, START or actuator operation occurred. This is software evidence for preparation before handheld walking collection, not navigation accuracy or flight qualification.
 
 ## Repairs and preserved contracts
