@@ -79,10 +79,19 @@ def test_root_launchers_create_offscreen_gui_without_old_source() -> None:
             stdout, stderr = process.communicate(timeout=10)
         assert "Traceback" not in stdout + stderr
     for app in ("FCCG", "GSHC", "FLP"):
-        for path in (ROOT / "apps" / app).rglob("*.py"):
-            if "joint_rework_20260927" in path.parts:
-                continue
-            assert not re.search(r"[A-Za-z]:[/\\]python_software[/\\]SilverStar_(?:FCCG|GSHC|FLP)", path.read_text(encoding="utf-8")), path
+        for current, dirs, files in os.walk(ROOT / "apps" / app):
+            dirs[:] = [
+                name for name in dirs
+                if name not in {".work", ".venv", "build", "dist", "joint_rework_20260927"}
+            ]
+            for name in files:
+                if not name.endswith(".py"):
+                    continue
+                path = Path(current) / name
+                assert not re.search(
+                    r"[A-Za-z]:[/\\]python_software[/\\]SilverStar_(?:FCCG|GSHC|FLP)",
+                    path.read_text(encoding="utf-8"),
+                ), path
 
 
 def test_current_document_links_resolve() -> None:
@@ -104,5 +113,7 @@ def test_disposable_work_is_ignored_and_no_nested_repositories() -> None:
         assert subprocess.run(["git", "check-ignore", "-q", relative], cwd=ROOT, check=False).returncode == 0
     for app in ("FCCG", "GSHC", "FLP"):
         subtree = ROOT / "apps" / app
-        assert not list(subtree.rglob(".git"))
-        assert not list(subtree.rglob(".venv"))
+        for current, dirs, _files in os.walk(subtree):
+            assert ".git" not in dirs, current
+            assert ".venv" not in dirs, current
+            dirs[:] = [name for name in dirs if name not in {".work", "build", "dist"}]

@@ -4,7 +4,7 @@
 
 起始/当前 HEAD `26abf3033f92b1dac7b607ae722eefff2ecee9bc`，初始工作区干净；
 本轮没有 commit、push、tag 或 Release。当前文件清单由 FCCG 联合报告的 Git 快照记录。
-新契约见 [Field Log Replay](docs/Field_Log_Replay.md)。历史验收段落仅适用于其日期。
+新契约见 [Field Log Replay](Field_Log_Replay.md)。历史验收段落仅适用于其日期。
 
 ### 实施与输入边界
 
@@ -224,7 +224,7 @@ GNSS CONFIG READ/SHOW 的既有差异没有在本轮诊断或修复，按提示�
 初始 HEAD：`2a301d8c6c0c7f37568998acc675a0c5d68b9d3c`；初始 `git status --short` 为空。
 本轮按附件分别本地中文提交，不 push；未 reset/checkout/clean。FLP 0.0.2、.ssflp v3、
 decoder/project-semantics 1.2、算法参数 schema 1.0 均未升级，无 FCCG/GSHC 运行时依赖。
-详细行为与 CLI 见 [KF6 分析与工程路径](docs/KF6_FIELD_ANALYSIS.md)。
+详细行为与 CLI 见 [KF6 分析与工程路径](KF6_FIELD_ANALYSIS.md)。
 
 ### 改动与兼容结论
 

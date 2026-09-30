@@ -2969,6 +2969,58 @@
         { "name": "rms_mismatch_rad", "type": "f32" },
         { "name": "max_mismatch_rad", "type": "f32" }
       ]
+    },
+    {
+      "id": "0x29",
+      "enum": "FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY",
+      "name": "MISSION_SNAPSHOT_IDENTITY",
+      "version": 1,
+      "payload_size": 24,
+      "size_macro": "FLIGHT_LOG_MISSION_SNAPSHOT_IDENTITY_PAYLOAD_SIZE",
+      "c_type": "FlightLogMissionSnapshotIdentityRecord",
+      "member": "mission_snapshot_identity",
+      "default_stream": {
+        "enabled": true,
+        "policy": "one_shot",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        { "name": "mission_id", "type": "u32" },
+        { "name": "commit_generation", "type": "u32" },
+        { "name": "snapshot_sequence", "type": "u32" },
+        { "name": "imu_calibration_generation", "type": "u32" },
+        { "name": "mag_calibration_set_hash", "type": "u32" },
+        { "name": "base_instance", "type": "u8" },
+        { "name": "ready", "type": "u8" },
+        { "name": "reserved", "type": "u16" }
+      ]
+    },
+    {
+      "id": "0x2A",
+      "enum": "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY",
+      "name": "MAG_CALIBRATION_IDENTITY",
+      "version": 1,
+      "payload_size": 16,
+      "size_macro": "FLIGHT_LOG_MAG_CALIBRATION_IDENTITY_PAYLOAD_SIZE",
+      "c_type": "FlightLogMagCalibrationIdentityRecord",
+      "member": "mag_calibration_identity",
+      "default_stream": {
+        "enabled": true,
+        "policy": "one_shot",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        { "name": "physical_device_id", "type": "u16" },
+        { "name": "instance_id", "type": "u8" },
+        { "name": "active", "type": "u8" },
+        { "name": "saved", "type": "u8" },
+        { "name": "load_error", "type": "u8" },
+        { "name": "reserved", "type": "u16" },
+        { "name": "generation", "type": "u32" },
+        { "name": "calibration_set_hash", "type": "u32" }
+      ]
     }
   ],
   "fccg": {
@@ -3322,6 +3374,29 @@
           "strategy_slots": ["alignment"]
         },
         "cadence": { "kind": "event" },
+        "producer_components": ["silverstar.core.flight_task"]
+      },
+      "FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "任务快照身份",
+          "en_US": "Mission Snapshot Identity"
+        },
+        "cadence": { "kind": "one_shot" },
+        "producer_components": ["silverstar.core.flight_task"]
+      },
+      "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY": {
+        "level": "required",
+        "purpose": "flight",
+        "display_names": {
+          "zh_CN": "磁力计校准身份",
+          "en_US": "Magnetometer Calibration Identity"
+        },
+        "requires": {
+          "recordable_capabilities": ["magnetometer.field"]
+        },
+        "cadence": { "kind": "one_shot" },
         "producer_components": ["silverstar.core.flight_task"]
       },
       "FLIGHT_LOG_RECORD_MISSION_CONFIG": {

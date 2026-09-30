@@ -29,6 +29,7 @@ from services.magnetometer_maintenance import (
 )
 from transport.maintenance_backend import MagMaintenanceSession
 from transport.serial_backend import list_serial_port_names
+from ui.touch_scroll import TouchScroll_Wrap
 
 
 class MagnetometerCalibrationPage(QWidget):
@@ -57,6 +58,8 @@ class MagnetometerCalibrationPage(QWidget):
 
     def _build_ui(self) -> None:
         layout = QVBoxLayout(self)
+        connection_content = QWidget()
+        connection_layout = QVBoxLayout(connection_content)
         connection = QHBoxLayout()
         self.port_label = QLabel()
         self.port_combo = QComboBox()
@@ -74,7 +77,7 @@ class MagnetometerCalibrationPage(QWidget):
             self.disconnect_button,
         ):
             connection.addWidget(widget)
-        layout.addLayout(connection)
+        connection_layout.addLayout(connection)
 
         controls = QHBoxLayout()
         self.instance_label = QLabel()
@@ -100,7 +103,8 @@ class MagnetometerCalibrationPage(QWidget):
             self.clear_device_button,
         ):
             controls.addWidget(widget)
-        layout.addLayout(controls)
+        connection_layout.addLayout(controls)
+        layout.addWidget(TouchScroll_Wrap(connection_content))
 
         self.cloud_view = gl.GLViewWidget()
         self.cloud_view.setMinimumHeight(300)
@@ -112,6 +116,8 @@ class MagnetometerCalibrationPage(QWidget):
         self.cloud_view.addItem(self.cloud_item)
         layout.addWidget(self.cloud_view, 1)
 
+        metrics_content = QWidget()
+        metrics_layout = QVBoxLayout(metrics_content)
         metrics = QGridLayout()
         self.status_label = QLabel()
         self.count_label = QLabel()
@@ -129,7 +135,8 @@ class MagnetometerCalibrationPage(QWidget):
             self.hard_iron_label, self.soft_iron_label,
         )):
             metrics.addWidget(widget, row // 2, row % 2)
-        layout.addLayout(metrics)
+        metrics_layout.addLayout(metrics)
+        layout.addWidget(TouchScroll_Wrap(metrics_content))
 
         self.refresh_button.clicked.connect(self.refresh_ports)
         self.connect_button.clicked.connect(self._connect)

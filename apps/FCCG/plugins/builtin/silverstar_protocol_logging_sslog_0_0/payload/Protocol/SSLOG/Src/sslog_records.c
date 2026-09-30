@@ -12,6 +12,12 @@
 
 static const SslogRecordMetadata s_sslog_metadata[] =
 {
+    { FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY, 1U,
+      FLIGHT_LOG_MAG_CALIBRATION_IDENTITY_PAYLOAD_SIZE,
+      "MAG_CALIBRATION_IDENTITY" },
+    { FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY, 1U,
+      FLIGHT_LOG_MISSION_SNAPSHOT_IDENTITY_PAYLOAD_SIZE,
+      "MISSION_SNAPSHOT_IDENTITY" },
     { FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE, 1U,
       FLIGHT_LOG_ALIGNMENT_EVIDENCE_PAYLOAD_SIZE, "ALIGNMENT_EVIDENCE" },
     { FLIGHT_LOG_RECORD_NAV_QUALITY, 1U, FLIGHT_LOG_NAV_QUALITY_PAYLOAD_SIZE, "NAV_QUALITY" },
@@ -1287,6 +1293,52 @@ static uint16_t SslogRecords_AlignmentEvidenceSerialize(
     return writer.offset;
 }
 
+static uint16_t SslogRecords_MissionSnapshotIdentitySerialize(
+    const FlightLogMissionSnapshotIdentityRecord *payload,
+    uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogWriteCursor writer = { buffer, buffer_size, 0U };
+    SILVERSTAR_ASSERT_OBJECT(payload, FlightLogMissionSnapshotIdentityRecord,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(buffer != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SslogRecords_WriterU32Put(&writer, payload->mission_id);
+    SslogRecords_WriterU32Put(&writer, payload->commit_generation);
+    SslogRecords_WriterU32Put(&writer, payload->snapshot_sequence);
+    SslogRecords_WriterU32Put(&writer, payload->imu_calibration_generation);
+    SslogRecords_WriterU32Put(&writer, payload->mag_calibration_set_hash);
+    SslogRecords_WriterU8Put(&writer, payload->base_instance);
+    SslogRecords_WriterU8Put(&writer, payload->ready);
+    SslogRecords_WriterU16Put(&writer, payload->reserved);
+    SILVERSTAR_ASSERT(writer.offset == buffer_size,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_POSTCONDITION);
+    return writer.offset;
+}
+
+static uint16_t SslogRecords_MagCalibrationIdentitySerialize(
+    const FlightLogMagCalibrationIdentityRecord *payload,
+    uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogWriteCursor writer = { buffer, buffer_size, 0U };
+    SILVERSTAR_ASSERT_OBJECT(payload, FlightLogMagCalibrationIdentityRecord,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(buffer != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SslogRecords_WriterU16Put(&writer, payload->physical_device_id);
+    SslogRecords_WriterU8Put(&writer, payload->instance_id);
+    SslogRecords_WriterU8Put(&writer, payload->active);
+    SslogRecords_WriterU8Put(&writer, payload->saved);
+    SslogRecords_WriterU8Put(&writer, payload->load_error);
+    SslogRecords_WriterU16Put(&writer, payload->reserved);
+    SslogRecords_WriterU32Put(&writer, payload->generation);
+    SslogRecords_WriterU32Put(&writer, payload->calibration_set_hash);
+    SILVERSTAR_ASSERT(writer.offset == buffer_size,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_POSTCONDITION);
+    return writer.offset;
+}
+
 static uint16_t SslogRecords_MissionConfigSerialize(
     const FlightLogMissionConfigRecord *payload,
     uint8_t *buffer,
@@ -2387,6 +2439,52 @@ static uint16_t SslogRecords_AlignmentEvidenceDeserialize(
     return reader.offset;
 }
 
+static uint16_t SslogRecords_MissionSnapshotIdentityDeserialize(
+    FlightLogMissionSnapshotIdentityRecord *payload,
+    const uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogReadCursor reader = { buffer, buffer_size, 0U };
+    SILVERSTAR_ASSERT_OBJECT(payload, FlightLogMissionSnapshotIdentityRecord,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(buffer != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    payload->mission_id = SslogRecords_ReaderU32Get(&reader);
+    payload->commit_generation = SslogRecords_ReaderU32Get(&reader);
+    payload->snapshot_sequence = SslogRecords_ReaderU32Get(&reader);
+    payload->imu_calibration_generation = SslogRecords_ReaderU32Get(&reader);
+    payload->mag_calibration_set_hash = SslogRecords_ReaderU32Get(&reader);
+    payload->base_instance = SslogRecords_ReaderU8Get(&reader);
+    payload->ready = SslogRecords_ReaderU8Get(&reader);
+    payload->reserved = SslogRecords_ReaderU16Get(&reader);
+    SILVERSTAR_ASSERT(reader.offset == buffer_size,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_POSTCONDITION);
+    return reader.offset;
+}
+
+static uint16_t SslogRecords_MagCalibrationIdentityDeserialize(
+    FlightLogMagCalibrationIdentityRecord *payload,
+    const uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogReadCursor reader = { buffer, buffer_size, 0U };
+    SILVERSTAR_ASSERT_OBJECT(payload, FlightLogMagCalibrationIdentityRecord,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(buffer != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    payload->physical_device_id = SslogRecords_ReaderU16Get(&reader);
+    payload->instance_id = SslogRecords_ReaderU8Get(&reader);
+    payload->active = SslogRecords_ReaderU8Get(&reader);
+    payload->saved = SslogRecords_ReaderU8Get(&reader);
+    payload->load_error = SslogRecords_ReaderU8Get(&reader);
+    payload->reserved = SslogRecords_ReaderU16Get(&reader);
+    payload->generation = SslogRecords_ReaderU32Get(&reader);
+    payload->calibration_set_hash = SslogRecords_ReaderU32Get(&reader);
+    SILVERSTAR_ASSERT(reader.offset == buffer_size,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+        SILVERSTAR_ASSERT_REASON_POSTCONDITION);
+    return reader.offset;
+}
+
 static uint16_t SslogRecords_MissionConfigDeserialize(
     FlightLogMissionConfigRecord *payload,
     const uint8_t *buffer,
@@ -2959,6 +3057,14 @@ static uint16_t SslogRecords_PayloadNavigationSerialize(
         SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     switch ((uint32_t)record->record_type)
     {
+        case FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY: return
+            SslogRecords_MagCalibrationIdentitySerialize(
+                &record->payload.mag_calibration_identity,
+                buffer, payload_size);
+        case FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY: return
+            SslogRecords_MissionSnapshotIdentitySerialize(
+                &record->payload.mission_snapshot_identity,
+                buffer, payload_size);
         case FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE: return
             SslogRecords_AlignmentEvidenceSerialize(
                 &record->payload.alignment_evidence, buffer, payload_size);
@@ -3107,6 +3213,14 @@ static uint16_t SslogRecords_PayloadNavigationDeserialize(
         SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     switch ((uint32_t)record->record_type)
     {
+        case FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY: return
+            SslogRecords_MagCalibrationIdentityDeserialize(
+                &record->payload.mag_calibration_identity,
+                buffer, payload_size);
+        case FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY: return
+            SslogRecords_MissionSnapshotIdentityDeserialize(
+                &record->payload.mission_snapshot_identity,
+                buffer, payload_size);
         case FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE: return
             SslogRecords_AlignmentEvidenceDeserialize(
                 &record->payload.alignment_evidence, buffer, payload_size);

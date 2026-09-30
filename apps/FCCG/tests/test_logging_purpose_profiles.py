@@ -9,7 +9,6 @@ from pathlib import Path
 import pytest
 from PySide6.QtCore import QPoint
 from PySide6.QtWidgets import QAbstractItemView
-
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.settings import SettingsStore
 from silverstar_fccg.core.workspace import WorkspacePolicy
@@ -55,7 +54,7 @@ def test_purpose_metadata_is_explicit_and_strict(
     metadata_path = ProjectProtocolLogMetadataPath_Get(model, builtin_catalog)
     data = json.loads(metadata_path.read_text(encoding="utf-8"))
     definitions = ProtocolLogDefinitions_Load(metadata_path)
-    assert len(definitions) == 36
+    assert len(definitions) == 38
     assert {definition.purpose for definition in definitions} == {
         LogPurpose.FLIGHT, LogPurpose.TEST
     }

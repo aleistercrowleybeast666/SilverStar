@@ -161,6 +161,7 @@ def estimator_trace_run(project: Path, output: Path, fixture: Path) -> dict:
 #include "system_user_config.h"
 #include "system_gnss_if.h"
 #include "system_estimator_diagnostics.h"
+#include "system_estimator_profile.h"
 #include "sslog_protocol.h"
 #include "silverstar_assert.h"
 #include "system_time.h"
@@ -202,6 +203,8 @@ SystemDeviceResult SystemGnss_TimeGet(SystemGnssTime *time) { (void)time; return
     diagnostic_end = app.index("#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED", diagnostic_start)
     operation_start = app.index("static uint32_t Estimator_OperationNext(")
     operation_end = app.index("\n}", operation_start) + 2
+    scale_start = app.index("static float Estimator_ResultScale(")
+    scale_end = app.index("\n}", scale_start) + 2
     dispatch = app[start:end]
     quality_start = dispatch.index("static void Estimator_NavigationQualityLog(")
     quality_end = dispatch.index("\n}", quality_start) + 2
@@ -209,7 +212,8 @@ SystemDeviceResult SystemGnss_TimeGet(SystemGnssTime *time) { (void)time; return
     source += (app[type_start:type_end] + "\n"
                + app[conversion_start:conversion_end] + "\n"
                + app[diagnostic_start:diagnostic_end]
-               + app[operation_start:operation_end] + "\n" + dispatch
+               + app[operation_start:operation_end] + "\n"
+               + app[scale_start:scale_end] + "\n" + dispatch
                + fixture.read_text(encoding="utf-8"))
     instrumented = output / "app_trace.c"
     instrumented.write_text(source, encoding="utf-8")
@@ -223,6 +227,7 @@ SystemDeviceResult SystemGnss_TimeGet(SystemGnssTime *time) { (void)time; return
         "Algorithm/Estimator/KF6/Src/navigation_integrity.c",
         "Algorithm/Common/Src/navigation_quality.c",
         "System/Src/system_navigation_health.c", "System/Src/system_time.c", "Common/Src/silverstar_assert.c")]
+    command.append(str(project / "System/Src/system_estimator_profile.c"))
     command += [str(instrumented), "-lm", "-o", str(output / "app.exe")]
     env = dict(os.environ, TEMP=str(output), TMP=str(output))
     env["PATH"] = "D:/msys64/ucrt64/bin;" + env.get("PATH", "")

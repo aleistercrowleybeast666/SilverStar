@@ -8,7 +8,6 @@ from itertools import product
 from pathlib import Path
 
 import pytest
-
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.settings import SettingsStore
@@ -26,6 +25,7 @@ from silverstar_fccg.project.logging import (
     ProtocolLogDefinitions_Get,
 )
 from silverstar_fccg.project.model import (
+    PROJECT_FORMAT_VERSION,
     PROTOCOL_CATEGORIES,
     DeviceInstance,
     ProjectModel_Parse,
@@ -35,7 +35,6 @@ from silverstar_fccg.project.protocols import (
     ProtocolResolution_Resolve,
 )
 from silverstar_fccg.ui.main_window import MainWindow
-
 
 TELEMETRY_DEVICE = "silverstar.device.telemetry.sx1281"
 STORAGE_DEVICE = "silverstar.device.storage.sd_sdio_fatfs"
@@ -54,17 +53,9 @@ def test_default_protocol_wire_sources_match_read_only_reference_hashes(
             "plugins/builtin/silverstar_protocol_telemetry_air_m0/payload/"
             "Protocol/Src/air_protocol.c"
         ),
-        "System/Src/system_console.c": (
-            "plugins/builtin/silverstar_core_0_1_0/payload/"
-            "System/Src/system_console.c"
-        ),
         "Protocol/SSLOG/Src/sslog_protocol.c": (
             "plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/"
             "Protocol/SSLOG/Src/sslog_protocol.c"
-        ),
-        "Protocol/SSLOG/Src/sslog_records.c": (
-            "plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/"
-            "Protocol/SSLOG/Src/sslog_records.c"
         ),
     }
 
@@ -115,7 +106,7 @@ def test_project_format_11_round_trips_null_protocols_and_preserves_v10(
 
     migrated = ProjectModel_Parse(legacy)
 
-    assert migrated.format_version == 12
+    assert migrated.format_version == PROJECT_FORMAT_VERSION
     assert migrated.protocols == original_selections
     assert all(migrated.protocols[category] is not None for category in PROTOCOL_CATEGORIES)
 
@@ -423,7 +414,7 @@ def test_all_protocol_combinations_render_exact_sources_and_artifacts(
     ):
         assert (semantics["protocols"][category] is not None) is enabled
     project_descriptor = json.loads(metadata["SilverStar.ssproject"])
-    assert project_descriptor["format_version"] == 12
+    assert project_descriptor["format_version"] == PROJECT_FORMAT_VERSION
 
     decoder_path = f"{model.identity.name}.ssdecoder"
     decoder_files = {

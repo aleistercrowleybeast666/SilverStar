@@ -10,7 +10,6 @@ import zlib
 from pathlib import Path
 
 import pytest
-
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from tools.sslog_audit import (
@@ -36,7 +35,8 @@ def storage_project(tmp_path_factory):
     result = subprocess.run([sys.executable, str(runner), "--project", str(project),
                              "--compiler", compiler], cwd=project,
                             env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
-                            capture_output=True, text=True, timeout=300)
+                            capture_output=True, text=True, timeout=300,
+                            check=False)
     WorkspacePolicy(root).Text_AtomicWrite(output / "integrity.log", result.stdout + result.stderr)
     assert result.returncode == 0, result.stdout + result.stderr
     return project, output
@@ -47,6 +47,9 @@ def test_real_fatfs_delayed_dma_logger_and_queue(storage_project):
     catalog, hashes = Audit_ProfileLoad(project / "StorageRegression.ssdecoder")
     mixed = Audit_Bytes((output / "mixed.sslog").read_bytes(), catalog)
     assert mixed["passed"] and mixed["records"] == 40000
+    assert mixed["record_counts"]["ALIGNMENT_EVIDENCE"] > 0
+    assert mixed["record_counts"]["MISSION_SNAPSHOT_IDENTITY"] > 0
+    assert mixed["record_counts"]["MAG_CALIBRATION_IDENTITY"] > 0
     normal = Audit_Bytes((output / "logger-normal.sslog").read_bytes(), catalog, decoder_hashes=hashes)
     # Startup suppresses a bounded number of native records until the logger
     # and mission snapshot are ready; the remaining sustained stream must be

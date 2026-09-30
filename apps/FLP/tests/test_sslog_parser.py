@@ -25,8 +25,8 @@ def test_every_documented_payload_layout_decodes_at_exact_size() -> None:
                 payload = bytes(payload_length)
             definition.decoder(payload)
             decoded_layouts += 1
-    assert len(RECORD_DEFINITIONS) == 26
-    assert decoded_layouts == 27
+    assert len(RECORD_DEFINITIONS) == 28
+    assert decoded_layouts == 29
 
 
 def test_alignment_evidence_decodes_exact_wire_layout(tmp_path: Path) -> None:
@@ -53,6 +53,40 @@ def test_alignment_evidence_decodes_exact_wire_layout(tmp_path: Path) -> None:
     assert record["last_timestamp_us"] == 1_020_000
     assert record["minimum_pair_sine"] == 0.5
     assert record["rms_mismatch_rad"] == pytest.approx(0.02)
+
+
+def test_mission_snapshot_identity_decodes_exact_wire_layout(tmp_path: Path) -> None:
+    payload = pack("<5IBBH", 41, 6, 9, 3, 0x11223344, 2, 1, 0)
+    assert len(payload) == 24
+    builder = SyntheticSslogBuilder()
+    builder.Record_Add(0x29, payload, START_TIMESTAMP_US, record_version=1)
+    dataset = Sslog0ParserPlugin().parse(
+        builder.File_Write(tmp_path / "SYNTHETIC_snapshot_identity.BIN")
+    )
+    record = dataset.Records_Get("MISSION_SNAPSHOT_IDENTITY")[0].payload
+    assert record["mission_id"] == 41
+    assert record["commit_generation"] == 6
+    assert record["snapshot_sequence"] == 9
+    assert record["imu_calibration_generation"] == 3
+    assert record["mag_calibration_set_hash"] == 0x11223344
+    assert record["base_instance"] == 2
+    assert record["ready"] == 1
+
+
+def test_mag_calibration_identity_is_per_physical_device(tmp_path: Path) -> None:
+    payload = pack("<HBBBBHII", 0x5983, 0, 1, 1, 0, 0, 7, 0xAABBCCDD)
+    assert len(payload) == 16
+    builder = SyntheticSslogBuilder()
+    builder.Record_Add(0x2A, payload, START_TIMESTAMP_US, record_version=1)
+    dataset = Sslog0ParserPlugin().parse(
+        builder.File_Write(tmp_path / "SYNTHETIC_mag_cal_identity.BIN")
+    )
+    record = dataset.Records_Get("MAG_CALIBRATION_IDENTITY")[0].payload
+    assert record["physical_device_id"] == 0x5983
+    assert record["instance_id"] == 0
+    assert record["saved"] == 1
+    assert record["generation"] == 7
+    assert record["calibration_set_hash"] == 0xAABBCCDD
 
 
 def test_parser_decodes_known_records_and_skips_unknown_type(tmp_path: Path) -> None:

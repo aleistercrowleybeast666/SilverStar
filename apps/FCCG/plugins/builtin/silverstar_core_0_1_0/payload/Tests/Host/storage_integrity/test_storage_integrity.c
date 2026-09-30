@@ -179,6 +179,9 @@ static int Test_RecordStream(const char *output)
         FLIGHT_LOG_RECORD_IMU_CORRECTED,
         FLIGHT_LOG_RECORD_GNSS_NATIVE, FLIGHT_LOG_RECORD_BARO_NATIVE,
         FLIGHT_LOG_RECORD_ALIGNMENT_RESULT,
+        FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE,
+        FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY,
+        FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY,
         FLIGHT_LOG_RECORD_CALIBRATION_RESULT, FLIGHT_LOG_RECORD_MISSION_CONFIG,
         FLIGHT_LOG_RECORD_INITIAL_STATE, FLIGHT_LOG_RECORD_EVENT, FLIGHT_LOG_RECORD_STATS};
     FlightLogFileHeaderInfo info = {0};
@@ -278,6 +281,65 @@ static int Test_AlignmentEvidenceCodec(void)
     return 1;
 }
 
+static int Test_MissionSnapshotIdentityCodec(void)
+{
+    FlightLogRecord source = {0};
+    FlightLogRecord decoded = {0};
+    uint8_t buffer[FLIGHT_LOG_MAX_RECORD_SIZE];
+    uint16_t length = 0U;
+    uint16_t consumed = 0U;
+    uint32_t sequence = 0U;
+    source.record_type = FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY;
+    source.payload.mission_snapshot_identity.mission_id = 41U;
+    source.payload.mission_snapshot_identity.commit_generation = 6U;
+    source.payload.mission_snapshot_identity.snapshot_sequence = 9U;
+    source.payload.mission_snapshot_identity.imu_calibration_generation = 3U;
+    source.payload.mission_snapshot_identity.mag_calibration_set_hash =
+        0x11223344UL;
+    source.payload.mission_snapshot_identity.base_instance = 2U;
+    source.payload.mission_snapshot_identity.ready = 1U;
+    CHECK(FlightLog_RecordSerialize(&source, 20U, buffer,
+        sizeof(buffer), &length) == FLIGHT_LOG_SERIALIZE_RESULT_OK);
+    CHECK(FlightLog_RecordDeserialize(buffer, length, &decoded,
+        &sequence, &consumed) == FLIGHT_LOG_DESERIALIZE_RESULT_OK);
+    CHECK(sequence == 20U && consumed == length);
+    CHECK(decoded.record_type == FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY);
+    CHECK(decoded.payload.mission_snapshot_identity.mission_id == 41U);
+    CHECK(decoded.payload.mission_snapshot_identity.commit_generation == 6U);
+    CHECK(decoded.payload.mission_snapshot_identity.mag_calibration_set_hash ==
+        0x11223344UL);
+    return 1;
+}
+
+static int Test_MagCalibrationIdentityCodec(void)
+{
+    FlightLogRecord source = {0};
+    FlightLogRecord decoded = {0};
+    uint8_t buffer[FLIGHT_LOG_MAX_RECORD_SIZE];
+    uint16_t length = 0U;
+    uint16_t consumed = 0U;
+    uint32_t sequence = 0U;
+    source.record_type = FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY;
+    source.payload.mag_calibration_identity.physical_device_id = 0x5983U;
+    source.payload.mag_calibration_identity.instance_id = 0U;
+    source.payload.mag_calibration_identity.active = 1U;
+    source.payload.mag_calibration_identity.saved = 1U;
+    source.payload.mag_calibration_identity.generation = 7U;
+    source.payload.mag_calibration_identity.calibration_set_hash =
+        0xAABBCCDDUL;
+    CHECK(FlightLog_RecordSerialize(&source, 21U, buffer,
+        sizeof(buffer), &length) == FLIGHT_LOG_SERIALIZE_RESULT_OK);
+    CHECK(FlightLog_RecordDeserialize(buffer, length, &decoded,
+        &sequence, &consumed) == FLIGHT_LOG_DESERIALIZE_RESULT_OK);
+    CHECK(sequence == 21U && consumed == length);
+    CHECK(decoded.record_type == FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY);
+    CHECK(decoded.payload.mag_calibration_identity.physical_device_id == 0x5983U);
+    CHECK(decoded.payload.mag_calibration_identity.generation == 7U);
+    CHECK(decoded.payload.mag_calibration_identity.calibration_set_hash ==
+        0xAABBCCDDUL);
+    return 1;
+}
+
 static int Test_DiskFailure(const char *mode)
 {
     uint8_t buffer[513];
@@ -334,7 +396,9 @@ int main(int argc, char **argv)
         return result == StorageIntegrityResult_Ok ? 0 : 1;
     }
     if (argc == 3) { return Test_DiskFailure(argv[2]) ? 0 : 1; }
-    if (!Test_AlignmentEvidenceCodec() || !Test_ByteStream() ||
+    if (!Test_AlignmentEvidenceCodec() ||
+        !Test_MissionSnapshotIdentityCodec() ||
+        !Test_MagCalibrationIdentityCodec() || !Test_ByteStream() ||
         !Test_RecordStream(argv[1])) { return 1; }
     return s_failures ? 1 : 0;
 }

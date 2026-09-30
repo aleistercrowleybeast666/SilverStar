@@ -101,7 +101,20 @@ static void Test_RecordMetadata(void)
     uint16_t index;
 
     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
-    TEST_CHECK(SSLOG_RECORD_COUNT == 35U);
+    TEST_CHECK(SSLOG_RECORD_COUNT == 38U);
+    TEST_CHECK(FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE == 0x28U);
+    TEST_CHECK(FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY == 0x29U);
+    TEST_CHECK(FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY == 0x2AU);
+    metadata = SslogRecords_MetadataGet(
+        FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY);
+    TEST_CHECK((metadata != NULL) &&
+               (metadata->payload_size == 24U) &&
+               (metadata->record_version == 1U));
+    metadata = SslogRecords_MetadataGet(
+        FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY);
+    TEST_CHECK((metadata != NULL) &&
+               (metadata->payload_size == 16U) &&
+               (metadata->record_version == 1U));
     for (index = 0U; index < 7U; index++)
     {
         TEST_CHECK((uint16_t)navigation_records[index] == (uint16_t)(0x21U + index));

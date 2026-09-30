@@ -43,6 +43,17 @@ parameter sections. Section 0 also freezes the selected alignment algorithm,
 two to six typed constraints (kind, body axis, weight, declination and
 true-north azimuth), yaw authority, ENU yaw and selected/required source masks.
 The snapshot stores no JSON and does not parse a project file on the MCU.
+At START, the logger also emits SSLOG `MISSION_SNAPSHOT_IDENTITY` version 1
+(record `0x29`). Its fixed 24-byte payload records the committed mission ID,
+commit generation, snapshot sequence, IMU calibration generation,
+magnetometer calibration set hash, bank base instance and READY flag. FLP
+decodes this identity from the matched log/decoder pair; the authoritative
+snapshot contents remain the dual-slot objects on the flight storage medium.
+For each configured magnetometer instance, SSLOG
+`MAG_CALIBRATION_IDENTITY` version 1 (record `0x2A`) separately records the
+physical device ID, instance, active/saved state, load result, persistent
+generation and frozen calibration set hash. This preserves per-device
+provenance even when alignment uses an external attitude source.
 The mission-local object paths are under
 `0:/missions/<mission-id>/`; they are distinct from the user-selected project
 root and its `Log/` folder.

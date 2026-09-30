@@ -11,7 +11,6 @@ from pathlib import Path
 
 import pytest
 from PySide6.QtWidgets import QLabel
-
 from silverstar_fccg import __version__
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.app.version import (
@@ -64,6 +63,7 @@ CALIBRATION_COMPONENT = "silverstar.algorithm.calibration"
 CALIBRATION_RECORD = "FLIGHT_LOG_RECORD_CALIBRATION_RESULT"
 F407_MCU = "silverstar.mcu.stm32f407vet6"
 H743_FIXTURE_MCU = "fixture.mcu.stm32h743zit6"
+H743_FIXTURE_FAMILY = "fixture.mcu_family.stm32h7"
 H743_FIXTURE_BOARD = "fixture.board.stm32h743"
 H743_FIXTURE_OS = "fixture.os.freertos_h743"
 H743_FIXTURE_STORAGE = "fixture.device.storage_sdio_h743"
@@ -104,6 +104,21 @@ def _H743Catalog_Create(
     workspace_root: Path,
 ) -> tuple[PluginCatalog, Path]:
     installed_root = tmp_path / "plugins" / "installed"
+    family_source = (
+        workspace_root / "plugins" / "builtin" / "silverstar_mcu_family_stm32f4"
+    )
+    family_package = installed_root / H743_FIXTURE_FAMILY.replace(".", "_")
+    shutil.copytree(family_source, family_package)
+    family_manifest_path = family_package / "plugin.json"
+    family_data = json.loads(family_manifest_path.read_text(encoding="utf-8"))
+    family_data["id"] = H743_FIXTURE_FAMILY
+    family_data["name"] = "Synthetic STM32H7 family backend fixture"
+    family_data["metadata"]["family"] = "STM32H7"
+    family_data["platform"]["match_rules"][0]["family_pattern"] = "STM32H7*"
+    family_manifest_path.write_text(
+        json.dumps(family_data, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     source = (
         workspace_root
         / "plugins"
@@ -135,6 +150,10 @@ def _H743Catalog_Create(
     manifest_path = package / "plugin.json"
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
     data["id"] = H743_FIXTURE_MCU
+    data["metadata"]["platform_family_id"] = H743_FIXTURE_FAMILY
+    for requirement in data["requires"]["components"]:
+        if requirement["id"] == "silverstar.mcu_family.stm32f4":
+            requirement["id"] = H743_FIXTURE_FAMILY
     data["name"] = "Fixture STM32H743ZIT6 Platform"
     data["class"] = "stm32h7_test_fixture"
     data["description"] = (
@@ -166,12 +185,16 @@ def _H743Catalog_Create(
             "verification": "experimental",
         }
     ]
-    data["platform"]["support"] = {
+    family_data["platform"]["support"] = {
         "level": "experimental",
         "limitations": [
             "Test fixture only; no firmware, hardware, flash or flight support claim"
         ],
     }
+    family_manifest_path.write_text(
+        json.dumps(family_data, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     manifest_path.write_text(
         json.dumps(data, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -293,6 +316,7 @@ def _H743Catalog_Create(
 def _CustomH743Model_Get(catalog: PluginCatalog):
     model = ReferenceProject_Create("AlternateTarget", catalog=catalog)
     model.board = H743_FIXTURE_BOARD
+    model.mcu_family = H743_FIXTURE_FAMILY
     model.mcu = H743_FIXTURE_MCU
     model.os = H743_FIXTURE_OS
     model.protocols["logging"] = None
@@ -306,6 +330,23 @@ def _CustomH743Model_Get(catalog: PluginCatalog):
     ]
     model.resource_assignments = {}
     return ProjectConfiguration_Reconcile(model, catalog).model
+
+
+def _F407ComposedManifestData_Get(workspace_root: Path) -> dict[str, object]:
+    """Use the same family/exact platform composition as the catalog loader."""
+    builtin = workspace_root / "plugins" / "builtin"
+    exact = json.loads(
+        (builtin / "silverstar_mcu_stm32f407vet6" / "plugin.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    family = json.loads(
+        (builtin / "silverstar_mcu_family_stm32f4" / "plugin.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    exact["platform"] = {**family["platform"], **exact["platform"]}
+    return exact
 
 
 def test_platform_release_has_one_runtime_version_truth(
@@ -331,7 +372,12 @@ def test_platform_release_has_one_runtime_version_truth(
             )
         )
     ]
-    assert len(manifests) == 65
+    manifest_ids = {manifest["id"] for manifest in manifests}
+    assert len(manifests) == len(manifest_ids)
+    assert {
+        "silverstar.algorithm.alignment.vector_constraints",
+        "silverstar.algorithm.alignment.external_attitude_source",
+    } <= manifest_ids
     for manifest in manifests:
         expected = (
             "11.3.0"
@@ -363,7 +409,7 @@ def test_new_project_and_generated_identity_are_consistently_0_0_12(
     builtin_catalog: PluginCatalog,
 ) -> None:
     model = ReferenceProject_Create("VersionTruth", catalog=builtin_catalog)
-    assert model.format_version == PROJECT_FORMAT_VERSION == 12
+    assert model.format_version == PROJECT_FORMAT_VERSION
     assert model.identity.firmware_version == "0.1.0"
     assert model.identity.build_target == "SilverStar_0_1_0"
     assert model.core == "silverstar.core.0_1_0"
@@ -423,7 +469,7 @@ def test_official_format12_core_migrates_on_open_generate_save_reopen(
     )
 
     migrated = service.Project_Open(old_root)
-    assert migrated.format_version == 12
+    assert migrated.format_version == PROJECT_FORMAT_VERSION
     assert migrated.identity.firmware_version == "0.1.0"
     assert migrated.core == "silverstar.core.0_1_0"
     fresh_root = tmp_path / "revision_0_0_12"
@@ -449,18 +495,18 @@ def test_architecture_gate_accepts_current_and_rejects_old_patch(
 ) -> None:
     core = workspace_root / "plugins" / "builtin" / "silverstar_core_0_1_0" / "payload"
     checker = (core / "Tools" / "check_architecture.ps1").read_text(encoding="utf-8")
-    assert "-Pattern 'SILVERSTAR_VERSION_PATCH\\s+12'" in checker
-    pattern = r"SILVERSTAR_VERSION_PATCH\s+12"
+    assert "-Pattern 'SILVERSTAR_VERSION_MINOR\\s+1'" in checker
+    pattern = r"SILVERSTAR_VERSION_MINOR\s+1"
     current = (core / "System" / "User" / "system_user_config.h").read_text(
         encoding="utf-8"
     )
     assert re.search(pattern, current)
     assert not re.search(pattern, current.replace(
-        "SILVERSTAR_VERSION_PATCH     12", "SILVERSTAR_VERSION_PATCH     10"
+        "SILVERSTAR_VERSION_MINOR     1", "SILVERSTAR_VERSION_MINOR     0"
     ))
 
 
-def test_generated_firmware_version_macros_are_revision_twelve(
+def test_generated_firmware_version_macros_match_product_version(
     workspace_root: Path,
 ) -> None:
     config = (
@@ -474,8 +520,8 @@ def test_generated_firmware_version_macros_are_revision_twelve(
         / "system_user_config.h"
     ).read_text(encoding="utf-8")
     assert re.search(r"#define\s+SILVERSTAR_VERSION_MAJOR\s+0\b", config)
-    assert re.search(r"#define\s+SILVERSTAR_VERSION_MINOR\s+0\b", config)
-    assert re.search(r"#define\s+SILVERSTAR_VERSION_PATCH\s+12\b", config)
+    assert re.search(r"#define\s+SILVERSTAR_VERSION_MINOR\s+1\b", config)
+    assert re.search(r"#define\s+SILVERSTAR_VERSION_PATCH\s+0\b", config)
     assert re.search(r"#define\s+SILVERSTAR_VERSION_BUILD\s+0\b", config)
     assert re.search(
         r'#define\s+SILVERSTAR_LOG_BUILD_TAG\s+"SILV0100"', config
@@ -505,7 +551,7 @@ def test_current_pre_release_calibration_migration_is_deterministic(
     migrated = ProjectModel_Parse(
         _LegacyProjectData_Get(builtin_catalog, legacy)
     )
-    assert migrated.format_version == 12
+    assert migrated.format_version == PROJECT_FORMAT_VERSION
     assert migrated.identity.firmware_version == "0.1.0"
     assert migrated.identity.build_target == "SilverStar_0_1_0"
     assert migrated.core == "silverstar.core.0_1_0"
@@ -843,7 +889,7 @@ def test_mcu_manifest_rejects_missing_or_unsafe_target_profiles(
         / "silverstar_mcu_stm32f407vet6"
         / "plugin.json"
     )
-    data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    data = _F407ComposedManifestData_Get(workspace_root)
     data["platform"]["build_target"]["profile"] = invalid
     with pytest.raises(
         PluginManifestError,
@@ -862,17 +908,17 @@ def test_mcu_manifest_requires_target_and_non_mcu_cannot_declare_platform(
         / "silverstar_mcu_stm32f407vet6"
         / "plugin.json"
     )
-    missing = json.loads(manifest_path.read_text(encoding="utf-8"))
+    missing = _F407ComposedManifestData_Get(workspace_root)
     del missing["platform"]["build_target"]
     with pytest.raises(PluginManifestError, match="build_target"):
         PluginManifest_Parse(missing, manifest_path, source="installed")
 
-    wrong_type = json.loads(manifest_path.read_text(encoding="utf-8"))
+    wrong_type = _F407ComposedManifestData_Get(workspace_root)
     wrong_type["id"] = "fixture.algorithm.invalid_platform"
     wrong_type["type"] = "algorithm"
     with pytest.raises(
         PluginManifestError,
-        match="MCU plugins must declare exactly one platform contract",
+        match="MCU and MCU family plugins must declare a platform contract",
     ):
         PluginManifest_Parse(wrong_type, manifest_path, source="installed")
 

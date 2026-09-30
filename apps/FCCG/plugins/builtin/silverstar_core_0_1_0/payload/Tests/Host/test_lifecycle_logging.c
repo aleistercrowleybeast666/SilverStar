@@ -8,6 +8,7 @@
 #include "ins_task.h"
 #include "logger_bus.h"
 #include "logger_task.h"
+#include "project_device_instances.h"
 #include "system_alignment.h"
 #include "system_barometer_if.h"
 #include "system_calibration.h"
@@ -25,6 +26,7 @@
 #include "system_storage_if.h"
 #include "system_output_if.h"
 #include "system_profile.h"
+#include "system_source_selector.h"
 #include "system_startup.h"
 #include "system_user_config.h"
 #include "task.h"
@@ -54,6 +56,12 @@ static uint64_t s_now_us;
 static uint32_t s_abort_count;
 static uint32_t s_system_config_push_count;
 static uint32_t s_mission_config_push_count;
+static uint32_t s_snapshot_identity_push_count;
+static FlightLogMissionSnapshotIdentityRecord s_snapshot_identity_record;
+static uint32_t s_mag_identity_push_count;
+static FlightLogMagCalibrationIdentityRecord s_mag_identity_record;
+static uint32_t s_alignment_evidence_push_count;
+static uint8_t s_mag_instance_count;
 static uint32_t s_decoder_profile_push_count;
 static uint32_t s_initial_state_push_count;
 static uint32_t s_calibration_result_push_count;
@@ -311,6 +319,32 @@ void SystemMagCalibrationStorage_Service(void) {}
 uint8_t SystemMagCalibrationStorage_LoadCompleteGet(void) { return 1U; }
 uint8_t SystemMagCalibration_ReadyForMissionGet(void) { return 1U; }
 uint32_t SystemMagCalibration_GenerationHashGet(void) { return 0x12345678UL; }
+uint8_t ProjectMagnetometerInstance_CountGet(void)
+{ return s_mag_instance_count; }
+
+SystemMagCalibrationResult SystemMagCalibration_StatusGet(
+    uint8_t instance_id, SystemMagCalibrationStatus *status)
+{
+    if ((instance_id >= PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX) ||
+        (status == NULL))
+    { return SystemMagCalibrationResult_InvalidArgument; }
+    (void)memset(status, 0, sizeof(*status));
+    status->physical_device_id = 11U;
+    status->instance_id = instance_id;
+    status->active = 1U;
+    status->saved = 1U;
+    status->generation = 3U;
+    status->load_error = SystemMagCalibrationResult_Ok;
+    return SystemMagCalibrationResult_Ok;
+}
+
+SystemDeviceResult SystemSourceSelector_ImuActiveInstanceGet(
+    uint8_t *instance_id)
+{
+    if (instance_id == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *instance_id = 0U;
+    return SYSTEM_DEVICE_OK;
+}
 
 SystemMissionSnapshotResult SystemMissionSnapshot_Create(
     SystemMissionSnapshotStatus *status)
@@ -600,6 +634,37 @@ LoggerBusResult LoggerBus_AlignmentResultPush(
 {
     (void)timestamp_us;
     return (record != NULL) ? LOGGER_BUS_RESULT_OK : LOGGER_BUS_RESULT_BAD_PARAM;
+}
+
+LoggerBusResult LoggerBus_AlignmentEvidencePush(
+    uint64_t timestamp_us, const FlightLogAlignmentEvidenceRecord *record)
+{
+    (void)timestamp_us;
+    if (record == NULL) { return LOGGER_BUS_RESULT_BAD_PARAM; }
+    s_alignment_evidence_push_count++;
+    return LOGGER_BUS_RESULT_OK;
+}
+
+LoggerBusResult LoggerBus_MissionSnapshotIdentityPush(
+    uint64_t timestamp_us,
+    const FlightLogMissionSnapshotIdentityRecord *record)
+{
+    (void)timestamp_us;
+    if (record == NULL) { return LOGGER_BUS_RESULT_BAD_PARAM; }
+    s_snapshot_identity_record = *record;
+    s_snapshot_identity_push_count++;
+    return LOGGER_BUS_RESULT_OK;
+}
+
+LoggerBusResult LoggerBus_MagCalibrationIdentityPush(
+    uint64_t timestamp_us,
+    const FlightLogMagCalibrationIdentityRecord *record)
+{
+    (void)timestamp_us;
+    if (record == NULL) { return LOGGER_BUS_RESULT_BAD_PARAM; }
+    s_mag_identity_record = *record;
+    s_mag_identity_push_count++;
+    return LOGGER_BUS_RESULT_OK;
 }
 
 LoggerBusResult LoggerBus_EventPush(uint64_t timestamp_us,
@@ -926,6 +991,14 @@ static void Test_StateReset(void)
     s_abort_count = 0U;
     s_system_config_push_count = 0U;
     s_mission_config_push_count = 0U;
+    s_snapshot_identity_push_count = 0U;
+    (void)memset(&s_snapshot_identity_record, 0,
+                 sizeof(s_snapshot_identity_record));
+    s_mag_identity_push_count = 0U;
+    (void)memset(&s_mag_identity_record, 0,
+                 sizeof(s_mag_identity_record));
+    s_alignment_evidence_push_count = 0U;
+    s_mag_instance_count = 0U;
     s_decoder_profile_push_count = 0U;
     s_initial_state_push_count = 0U;
     s_calibration_result_push_count = 0U;
@@ -1174,6 +1247,29 @@ static void Test_StartRequiresMissionSnapshot(void)
         SYSTEM_START_SOURCE_CONSOLE, &diagnostic) != 0U);
     TEST_CHECK(diagnostic.response.reason ==
         SYSTEM_START_REASON_STORAGE_NOT_READY);
+}
+
+static void Test_StartRecordsCaptureIdentity(void)
+{
+    Test_StateReset();
+    s_mag_instance_count = 1U;
+    Test_FlightTaskRun();
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_FLIGHT);
+    TEST_CHECK(s_snapshot_identity_push_count == 1U);
+    TEST_CHECK(s_snapshot_identity_record.mission_id == 1U);
+    TEST_CHECK(s_snapshot_identity_record.commit_generation == 1U);
+    TEST_CHECK(s_snapshot_identity_record.snapshot_sequence == 1U);
+    TEST_CHECK(s_snapshot_identity_record.imu_calibration_generation == 1U);
+    TEST_CHECK(s_snapshot_identity_record.mag_calibration_set_hash ==
+               0x12345678UL);
+    TEST_CHECK(s_snapshot_identity_record.ready == 1U);
+    TEST_CHECK(s_mag_identity_push_count == 1U);
+    TEST_CHECK(s_mag_identity_record.physical_device_id == 11U);
+    TEST_CHECK(s_mag_identity_record.instance_id == 0U);
+    TEST_CHECK(s_mag_identity_record.saved == 1U);
+    TEST_CHECK(s_mag_identity_record.generation == 3U);
+    TEST_CHECK(s_mag_identity_record.calibration_set_hash == 0x12345678UL);
+    TEST_CHECK(s_alignment_evidence_push_count >= 1U);
 }
 
 static void Test_StartRecordFailureDoesNotRollback(void)
@@ -1425,6 +1521,7 @@ int main(void)
     Test_StartRequiresStorage();
     Test_StartRequiresMissionDirectory();
     Test_StartRequiresMissionSnapshot();
+    Test_StartRecordsCaptureIdentity();
     Test_PostStartStorageLossAndFullBusKeepsFlight();
     Test_NoneCalibrationResultSnapshot();
     Test_StartRecordFailureDoesNotRollback();

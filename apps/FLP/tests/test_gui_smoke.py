@@ -148,9 +148,10 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
         )
     ] == [0, 1, 2, 3, 4, 6, 7, 8, 9]
     assert [action for action in window.file_menu.actions() if not action.isSeparator()] == [
-        window.new_project_action,
-        window.open_project_action,
-        window.save_project_action,
+            window.new_project_action,
+            window.open_project_action,
+            window.open_silverstar_project_action,
+            window.save_project_action,
         window.save_project_as_action,
         window.default_root_action,
         window.import_action,

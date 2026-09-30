@@ -1,4 +1,4 @@
-# Flight persistent storage (Round 4 checkpoint)
+# Flight persistent storage (SilverStar 0.1.0)
 
 The Flight target's current provider is SD/TF over SDIO with FatFs. Ground
 does not require persistent storage. LoggerTask is the sole FatFs owner;
@@ -40,13 +40,16 @@ configuration must use a compatible static LFN setting and must not compile
 another `ff_convert` implementation into the same target.
 
 The current START check requires a mounted, healthy, writable log sink, a
-verified mission manifest and the logger's streaming-ready state.
-Post-START storage failure marks the sink
-unhealthy without stopping navigation or the flight state machine. Mission
-metadata, configuration/calibration snapshots and final status still need to
-be integrated before this storage feature is considered complete.
+verified mission manifest, a committed mission snapshot and the logger's
+streaming-ready state. The snapshot freezes selected devices, source priority,
+effective navigation parameters, alignment inputs, and calibration identities
+through bounded binary dual-slot objects. Its committed identity is also
+recorded in SSLOG. Landing/finalization writes a best-effort final-status
+object. Post-START storage failure marks the sink unhealthy without stopping
+navigation or the flight state machine. See [mission snapshot](MISSION_SNAPSHOT.md)
+for the section layout, atomicity and failure behavior.
 
 The real FatFs Host fixture covers long paths, log output, two object
-generations and torn-slot fallback. F407 ARM Release compile/link and static
-memory/stack checks cover this checkpoint. Physical SD card behavior remains
-hardware unverified.
+generations, snapshot banks, final status and torn-slot fallback. F407 ARM
+Release compile/link and static memory/stack checks cover this software path.
+Physical SD card behavior remains hardware unverified.

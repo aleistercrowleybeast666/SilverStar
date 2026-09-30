@@ -30,6 +30,8 @@
 
 当前产品版本为 SilverStar 0.1.0；AIR仍为M0，Maintenance/SSLOG仍为0.0，`.ssdecoder`/Project Semantics为1.2（拒绝1.1）。平台细节沿用合仓前 0.0.12 规范快照，未改变 wire identity。
 
+Round 4 当前实现与旧平台快照的差异见[设备与导航集成报告](../architecture/ROUND4_DEVICE_NAVIGATION_REPORT.md)：导航页使用 Vector Constraints / External Attitude Source，新增设备通过公共 Barometer/Magnetometer 接口进入生成链，任务快照及其身份记录已接入日志。历史 `platform/details/` 文件中的 0.0.12 页面和测试数据应按其原版本阅读。
+
 GUI规范同时参见[CXYL Python GUI Style Guide](CXYL_Python_GUI_STYLE_GUIDE.md)。完整平台条目见[文档清单](platform/details/DOCUMENT_LIST.md)，实际验收快照见[VALIDATION](VALIDATION.md)。
 
 ## Algorithm configuration contract

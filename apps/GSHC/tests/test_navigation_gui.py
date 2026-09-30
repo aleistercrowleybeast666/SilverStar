@@ -12,11 +12,10 @@ import pytest
 from PySide6.QtCore import QSettings, QSize
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication, QLabel
-from test_ui_workflow import ready_state
-
 from services.i18n import I18n, Language
 from services.preferences import Theme
 from services.state_model import EventHistory
+from test_ui_workflow import ready_state
 from ui.main_window import MainWindow
 
 
@@ -69,7 +68,9 @@ def test_navigation_live_gui_languages_themes_and_start(tmp_path, language, them
     assert "1.25/2.50" in window.navigation_health_panel.unavailable.text()
     assert "4.00" in window.navigation_health_panel.health.text()
     window.render_timer.stop()
-    root = Path(__file__).parent / "joint_rework_20260927" / ("gui-fit-hidpi" if os.environ.get("QT_SCALE_FACTOR") == "2" else "gui-fit")
+    root = Path(__file__).resolve().parents[1] / ".work" / (
+        "gui-fit-hidpi" if os.environ.get("QT_SCALE_FACTOR") == "2" else "gui-fit"
+    )
     root.mkdir(parents=True, exist_ok=True)
     # resize() alone does not prove the layout accepted the requested geometry.
     window.resize(1000, 700)

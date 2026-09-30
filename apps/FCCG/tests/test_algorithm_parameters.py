@@ -29,7 +29,7 @@ from silverstar_fccg.project.algorithm_parameters import (
 )
 from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
 from silverstar_fccg.project.generation_state import ProjectGenerationFingerprint_Get
-from silverstar_fccg.project.model import ProjectModel_Parse
+from silverstar_fccg.project.model import PROJECT_FORMAT_VERSION, ProjectModel_Parse
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.validation import Project_Validate
 from silverstar_fccg.ui.main_window import MainWindow
@@ -41,7 +41,7 @@ KF = 'silverstar.algorithm.estimator.kf6'
 
 def test_actual_defaults_roundtrip_and_decoder(builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
-    assert model.format_version == 13
+    assert model.format_version == PROJECT_FORMAT_VERSION
     assert model.algorithm_parameters[INS] == {
         'gravity_mps2': 9.78, 'mechanization_aggregation': 2,
     }

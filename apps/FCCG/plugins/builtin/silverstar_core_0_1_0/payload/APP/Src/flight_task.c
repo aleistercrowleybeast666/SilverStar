@@ -11,6 +11,7 @@
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
 #include "logger_bus.h"
 #include "logger_task.h"
+#include "project_device_instances.h"
 #include "system_log_sink_if.h"
 #include "system_storage_if.h"
 #endif
@@ -874,18 +875,97 @@ static void FlightTask_InitialStateRecordBuild(
                  sizeof(record->p0_diagonal));
 }
 
+static LoggerBusResult FlightTask_MissionSnapshotIdentityWrite(
+    uint64_t timestamp_us)
+{
+    LoggerTaskDiagnostics diagnostics;
+    FlightLogMissionSnapshotIdentityRecord record;
+    if (LoggerTask_DiagnosticsGet(&diagnostics) != SYSTEM_DEVICE_OK)
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    SILVERSTAR_ASSERT_OBJECT(&diagnostics, LoggerTaskDiagnostics,
+        SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT(diagnostics.snapshot_ready <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((diagnostics.snapshot_ready == 0U) ||
+        (diagnostics.snapshot_mission_id == 0U) ||
+        (diagnostics.snapshot_commit_generation == 0U))
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    (void)memset(&record, 0, sizeof(record));
+    record.mission_id = diagnostics.snapshot_mission_id;
+    record.commit_generation = diagnostics.snapshot_commit_generation;
+    record.snapshot_sequence = diagnostics.snapshot_sequence;
+    record.imu_calibration_generation =
+        diagnostics.snapshot_calibration_generation;
+    record.mag_calibration_set_hash =
+        diagnostics.snapshot_mag_calibration_set_hash;
+    record.base_instance = diagnostics.snapshot_base_instance;
+    record.ready = diagnostics.snapshot_ready;
+    return LoggerBus_MissionSnapshotIdentityPush(timestamp_us, &record);
+}
+
+static LoggerBusResult FlightTask_MagCalibrationIdentityWrite(
+    uint8_t instance_id, uint64_t timestamp_us)
+{
+    SystemMagCalibrationStatus status;
+    FlightLogMagCalibrationIdentityRecord record;
+    if (SystemMagCalibration_StatusGet(instance_id, &status) !=
+        SystemMagCalibrationResult_Ok)
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    SILVERSTAR_ASSERT_OBJECT(&status, SystemMagCalibrationStatus,
+        SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT(status.instance_id == instance_id,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    (void)memset(&record, 0, sizeof(record));
+    record.physical_device_id = status.physical_device_id;
+    record.instance_id = status.instance_id;
+    record.active = status.active;
+    record.saved = status.saved;
+    record.load_error = (uint8_t)status.load_error;
+    record.generation = status.generation;
+    record.calibration_set_hash =
+        SystemMagCalibration_GenerationHashGet();
+    return LoggerBus_MagCalibrationIdentityPush(timestamp_us, &record);
+}
+
+static LoggerBusResult FlightTask_MagCalibrationIdentitiesWrite(
+    uint64_t timestamp_us)
+{
+    uint8_t count = ProjectMagnetometerInstance_CountGet();
+    SILVERSTAR_ASSERT(count <= PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    for (uint8_t instance_id = 0U;
+         instance_id < PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX;
+         instance_id++)
+    {
+        if (instance_id >= count) { break; }
+        if (FlightTask_MagCalibrationIdentityWrite(
+                instance_id, timestamp_us) != LOGGER_BUS_RESULT_OK)
+        { return LOGGER_BUS_RESULT_BAD_STATE; }
+    }
+    return LOGGER_BUS_RESULT_OK;
+}
+
 static void FlightTask_WriteStartRecords(void)
 {
     InsAlignmentSnapshot alignment;
     EstimatorInitialStateSnapshot estimator;
     FlightLogInitialStateRecord initial_record;
     LoggerBusResult config_log_result;
+    LoggerBusResult snapshot_log_result;
+    LoggerBusResult mag_calibration_log_result;
     LoggerBusResult mission_config_log_result;
     LoggerBusResult initial_log_result;
     LoggerBusResult event_log_result;
     uint64_t timestamp_us = SystemTime_GetMonotonicUs();
 
     mission_config_log_result = LoggerBus_MissionConfigPush(timestamp_us);
+    snapshot_log_result =
+        FlightTask_MissionSnapshotIdentityWrite(timestamp_us);
+    mag_calibration_log_result =
+        FlightTask_MagCalibrationIdentitiesWrite(timestamp_us);
     if ((Ins_GetAlignmentSnapshot(&alignment) == 0U) ||
         (Estimator_GetInitialStateSnapshot(&estimator) == 0U))
     {
@@ -904,6 +984,8 @@ static void FlightTask_WriteStartRecords(void)
                                            0U,
                                            0U);
     if ((mission_config_log_result != LOGGER_BUS_RESULT_OK) ||
+        (snapshot_log_result != LOGGER_BUS_RESULT_OK) ||
+        (mag_calibration_log_result != LOGGER_BUS_RESULT_OK) ||
         (config_log_result != LOGGER_BUS_RESULT_OK) ||
         (initial_log_result != LOGGER_BUS_RESULT_OK) ||
         (event_log_result != LOGGER_BUS_RESULT_OK))

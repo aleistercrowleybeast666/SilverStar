@@ -21,6 +21,8 @@ independent versions. See the [parameter contract](ALGORITHM_PARAMETERS.md)
 for actual values, generated bindings and Recorded Configuration boundaries.
 Historical validation paths in this document are records of earlier work.
 
+Round 4 navigation and device integration is summarized in the [current report](../architecture/ROUND4_DEVICE_NAVIGATION_REPORT.md). The Navigation Configuration page now uses Vector Constraints or External Attitude Source, shows the effective inertial rate and replay bound, and records the selected alignment and calibration provenance. Mission START requires a committed bounded storage snapshot; its identity appears in the matched SSLOG/decoder pair.
+
 ## Joint navigation implementation
 
 Pure INS、KF6、ESKF15 按选择生成。当前质量策略 revision 3 使用低卫星数有界方差降权、

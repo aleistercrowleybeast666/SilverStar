@@ -486,6 +486,30 @@ typedef struct
 
 typedef struct
 {
+    uint32_t mission_id;
+    uint32_t commit_generation;
+    uint32_t snapshot_sequence;
+    uint32_t imu_calibration_generation;
+    uint32_t mag_calibration_set_hash;
+    uint8_t base_instance;
+    uint8_t ready;
+    uint16_t reserved;
+} FlightLogMissionSnapshotIdentityRecord;
+
+typedef struct
+{
+    uint16_t physical_device_id;
+    uint8_t instance_id;
+    uint8_t active;
+    uint8_t saved;
+    uint8_t load_error;
+    uint16_t reserved;
+    uint32_t generation;
+    uint32_t calibration_set_hash;
+} FlightLogMagCalibrationIdentityRecord;
+
+typedef struct
+{
     uint8_t alignment_algorithm;
     uint8_t rocket_longitudinal_axis;
     uint8_t deploy_trigger_mask;
@@ -748,6 +772,8 @@ typedef union
     FlightLogCalibrationResultRecord calibration_result;
     FlightLogAlignmentResultRecord alignment_result;
     FlightLogAlignmentEvidenceRecord alignment_evidence;
+    FlightLogMissionSnapshotIdentityRecord mission_snapshot_identity;
+    FlightLogMagCalibrationIdentityRecord mag_calibration_identity;
     FlightLogMissionConfigRecord mission_config;
     FlightLogDeviceDescriptorRecord device_descriptor;
     FlightLogAlgorithmDescriptorRecord algorithm_descriptor;

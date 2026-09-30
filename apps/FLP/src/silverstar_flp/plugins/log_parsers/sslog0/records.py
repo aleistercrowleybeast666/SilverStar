@@ -691,6 +691,38 @@ def _Payload_AlignmentEvidenceDecode(payload: bytes) -> dict[str, Any]:
     return result
 
 
+def _Payload_MissionSnapshotIdentityDecode(payload: bytes) -> dict[str, Any]:
+    reader = PayloadReader(payload)
+    result = {
+        "mission_id": reader.u32(),
+        "commit_generation": reader.u32(),
+        "snapshot_sequence": reader.u32(),
+        "imu_calibration_generation": reader.u32(),
+        "mag_calibration_set_hash": reader.u32(),
+        "base_instance": reader.u8(),
+        "ready": reader.u8(),
+        "reserved": reader.u16(),
+    }
+    reader.finish()
+    return result
+
+
+def _Payload_MagCalibrationIdentityDecode(payload: bytes) -> dict[str, Any]:
+    reader = PayloadReader(payload)
+    result = {
+        "physical_device_id": reader.u16(),
+        "instance_id": reader.u8(),
+        "active": reader.u8(),
+        "saved": reader.u8(),
+        "load_error": reader.u8(),
+        "reserved": reader.u16(),
+        "generation": reader.u32(),
+        "calibration_set_hash": reader.u32(),
+    }
+    reader.finish()
+    return result
+
+
 def _Payload_MissionConfigDecode(payload: bytes) -> dict[str, Any]:
     reader = PayloadReader(payload)
     internal_version = reader.u8()
@@ -1277,6 +1309,14 @@ RECORD_DEFINITIONS = {
         RecordDefinition(
             0x28, "ALIGNMENT_EVIDENCE", (1,), (48,),
             _Payload_AlignmentEvidenceDecode,
+        ),
+        RecordDefinition(
+            0x29, "MISSION_SNAPSHOT_IDENTITY", (1,), (24,),
+            _Payload_MissionSnapshotIdentityDecode,
+        ),
+        RecordDefinition(
+            0x2A, "MAG_CALIBRATION_IDENTITY", (1,), (16,),
+            _Payload_MagCalibrationIdentityDecode,
         ),
     )
 }

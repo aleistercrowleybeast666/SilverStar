@@ -882,6 +882,24 @@ LoggerBusResult LoggerBus_AlignmentEvidencePush(
         record, sizeof(*record), 0U);
 }
 
+LoggerBusResult LoggerBus_MissionSnapshotIdentityPush(
+    uint64_t timestamp_us,
+    const FlightLogMissionSnapshotIdentityRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(
+        FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY, timestamp_us, 0U,
+        record, sizeof(*record), 0U);
+}
+
+LoggerBusResult LoggerBus_MagCalibrationIdentityPush(
+    uint64_t timestamp_us,
+    const FlightLogMagCalibrationIdentityRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(
+        FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY, timestamp_us, 0U,
+        record, sizeof(*record), 0U);
+}
+
 LoggerBusResult LoggerBus_FinalizationArm(uint64_t landing_timestamp_us)
 {
     const uint64_t grace_us =

@@ -6,26 +6,35 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.multi_target import (
-    GroundFiles_Render, TargetGeneration_Apply, TargetScope,
-    _PcAdapter_Render, _UsbCallback_Integrate,
+    GroundFiles_Render,
+    TargetGeneration_Apply,
+    TargetScope,
+    _PcAdapter_Render,
+    _UsbCallback_Integrate,
 )
 from silverstar_fccg.hardware.cubemx import CubeMxImporter
 from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.project.air_link import (
-    AirLinkIssues_Get, GroundTargetIssues_Get, RadioLinkCompatible_Get,
+    AirLinkIssues_Get,
+    GroundTargetIssues_Get,
+    RadioLinkCompatible_Get,
 )
+from silverstar_fccg.project.folder_contract import ProjectRoot_Save
 from silverstar_fccg.project.model import (
-    DeviceInstance, GroundTargetConfiguration, HardwareConfiguration, HardwareResource,
+    PROJECT_FORMAT_VERSION,
+    DeviceInstance,
+    GroundTargetConfiguration,
+    HardwareConfiguration,
+    HardwareResource,
     ProjectModel_Parse,
 )
 from silverstar_fccg.project.reference import ReferenceProject_Create
-from silverstar_fccg.project.folder_contract import ProjectRoot_Save
 from silverstar_fccg.project.resources import (
-    BoardHardwareInventory_Get, BoardResourceProvisions_Get,
+    BoardHardwareInventory_Get,
+    BoardResourceProvisions_Get,
 )
 from silverstar_fccg.project.validation import Project_Validate
 
@@ -77,7 +86,7 @@ def test_two_targets_have_independent_hardware_and_serialization(builtin_catalog
     assert model.hardware is not model.ground_target.hardware
     assert model.resource_assignments is not model.ground_target.resource_assignments
     restored = ProjectModel_Parse(model.Dictionary_Get())
-    assert restored.format_version == 13
+    assert restored.format_version == PROJECT_FORMAT_VERSION
     assert restored.ground_target == model.ground_target
     assert restored.air_link == model.air_link
     assert restored.hardware == model.hardware
@@ -214,12 +223,12 @@ def test_usb_cdc_adapter_uses_the_same_gsp_byte_stream(
     assert "s_rx_overflow_count" in adapter
     assert "PcByteStream_OverflowCount_Get" in adapter
     callback = (
-        '#include "usbd_cdc_if.h"\n'
-        "static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len)\n"
-        "{\n  /* USER CODE BEGIN 6 */\n"
-        "  USBD_CDC_ReceivePacket(&hUsbDeviceFS);\n"
-        "  /* USER CODE END 6 */\n  return USBD_OK;\n}\n"
-    ).encode()
+        b'#include "usbd_cdc_if.h"\n'
+        b"static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len)\n"
+        b"{\n  /* USER CODE BEGIN 6 */\n"
+        b"  USBD_CDC_ReceivePacket(&hUsbDeviceFS);\n"
+        b"  /* USER CODE END 6 */\n  return USBD_OK;\n}\n"
+    )
     integrated = _UsbCallback_Integrate(callback)
     assert b"PcByteStream_OnUsbReceive(Buf, (uint16_t)*Len)" in integrated
     assert b"USBD_CDC_ReceivePacket" in integrated

@@ -94,22 +94,24 @@ def test_symlink_escape_and_replaced_parent_are_refused(tmp_path):
 
 def test_gitignore_does_not_hide_sources_or_fixtures(tmp_path):
     root = _Repository_Create(tmp_path)
-    source_root = Path(__file__).resolve().parents[1]
+    source_root = Path(__file__).resolve().parents[3]
     (root / ".gitignore").write_bytes((source_root / ".gitignore").read_bytes())
     for path in (
-        ".codex_pytest_new/a.json",
+        ".work/pytest/a.json",
         ".acceptance/export.png",
-        "tests/.tmp_release/full/report.json",
-        "tests/.pytest-full/basetemp/result.csv",
-        "tests/.integrity-generated/result.json",
-        "tests/joint_rework_20260927/approved_quality_final_temp/report.json",
-        "tests/joint_rework_20260927/compile_cache/result.pyc",
+        "apps/FLP/.work/export.png",
+        "apps/FLP/tests/.tmp_release/full/report.json",
+        "apps/FLP/tests/.pytest-full/basetemp/result.csv",
+        "apps/FLP/tests/artifacts/result.json",
+        "apps/FLP/tests/joint_rework_20260927/work/report.json",
+        "apps/FLP/tests/joint_rework_20260927/compile_cache/result.pyc",
         "build/a.png",
         "src/pkg/__pycache__/a.pyc",
     ):
         assert subprocess.run(["git", "-C", str(root), "check-ignore", "-q", path]).returncode == 0
     for path in (
-        "tests/fixtures/golden.png",
+        "apps/FLP/tests/fixtures/golden.png",
+        "apps/FLP/tests/joint_rework_20260927/evidence_final/report.json",
         "docs/plot.png",
         "src/change.py",
         "flight.BIN",
@@ -139,7 +141,13 @@ def test_test_workspaces_clean_only_generated_files_and_keep_evidence(tmp_path):
     result, removed = WorkspaceClean_Apply(root, targets)
     assert result == WorkspaceCleanResult.APPLIED
     assert generated in removed and acceptance_csv in removed
-    assert all(path.exists() for path in (synthetic_input, summary, acceptance_summary, acceptance_gif, gui_screenshot))
+    assert all(
+        path.exists()
+        for path in (
+            synthetic_input, summary, acceptance_summary,
+            acceptance_gif, gui_screenshot,
+        )
+    )
 
 
 def test_explicit_retirement_removes_tracked_test_outputs_only(tmp_path):

@@ -43,6 +43,8 @@ $includeArgs = @(
     "-I$repoRoot\Algorithm\Alignment\Common\Inc",
     "-I$repoRoot\Algorithm\Alignment\GravityKnownYaw\Inc",
     "-I$repoRoot\Algorithm\Alignment\GravityMagTriad\Inc",
+    "-I$repoRoot\Algorithm\Alignment\VectorConstraints\Inc",
+    "-I$repoRoot\Algorithm\Alignment\ExternalAttitude\Inc",
     "-I$repoRoot\Algorithm\INS\Coning2Sculling2\Inc",
     "-I$repoRoot\Algorithm\Estimator\KF6\Inc",
     "-I$repoRoot\Common\Inc",

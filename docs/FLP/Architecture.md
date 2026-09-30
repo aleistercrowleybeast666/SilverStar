@@ -111,6 +111,14 @@ All `ALIGNMENT_RESULT` records remain history. The latest valid-ready result at 
 provides result provenance, but the latest valid `INITIAL_STATE` at or before START is the
 authoritative adopted state and quaternion. A later stale/failed Alignment record does not erase
 an earlier valid result.
+`ALIGNMENT_EVIDENCE` (record `0x28`) preserves bounded source and quality
+metadata, including the active magnetometer calibration generation when used.
+`MISSION_SNAPSHOT_IDENTITY` (record `0x29`) identifies the committed mission
+snapshot and frozen IMU/magnetometer calibration generations. Both are decoded
+only through the exact matched `.ssdecoder`; the SSLOG record does not replace
+the authoritative persistent snapshot objects on the flight medium.
+`MAG_CALIBRATION_IDENTITY` (record `0x2A`) adds physical-device and instance
+provenance for each configured magnetometer calibration at START.
 
 ## Visualization invariants
 

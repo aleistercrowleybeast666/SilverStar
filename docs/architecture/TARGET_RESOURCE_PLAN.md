@@ -1,9 +1,9 @@
-# Target resource plan (Round 4 work in progress)
+# Target resource plan (SilverStar 0.1.0)
 
 The target plan uses four separate authorities: memory, peripheral assignment,
 CPU/real-time work, and I/O throughput. A successful ARM link alone establishes
-none of the latter three. This page records implemented checks and remaining
-Round 4 structural work; target WCET qualification belongs to Round 5.
+none of the latter three. This page records implemented checks and the
+remaining target qualification work for Round 5.
 
 ## Memory and clock
 

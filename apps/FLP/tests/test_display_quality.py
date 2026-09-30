@@ -254,9 +254,9 @@ def test_gif_samples_use_the_same_event_geometry():
 def test_local_document_links_resolve():
     import re
 
-    root = Path(__file__).resolve().parents[1]
-    documents = [root / name for name in ("README.md", "AGENTS.md", "TARGETS.md", "CHANGELOG.md")]
-    documents.extend((root / "docs").glob("*.md"))
+    root = Path(__file__).resolve().parents[3]
+    documents = [root / name for name in ("README.md", "AGENTS.md")]
+    documents.extend((root / "docs" / "FLP").glob("*.md"))
     for document in documents:
         for target in re.findall(r"\[[^\]]*\]\(([^)]+)\)", document.read_text(encoding="utf8")):
             if "://" in target or target.startswith("#"):
