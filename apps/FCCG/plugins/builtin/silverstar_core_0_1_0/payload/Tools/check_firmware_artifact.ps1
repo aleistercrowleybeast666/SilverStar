@@ -183,18 +183,23 @@ if ($sections.ContainsKey('.ccmram_bss')) {
             ('vma=0x{0:X8} size={1}' -f $ccmBss.Vma, $ccmBss.Size))
 }
 
-$loggingEnabled = $true
+$protocolEnabled = @{ LOGGING = $true; MAINTENANCE = $true; TELEMETRY = $true }
 $generatedConfigPath = Join-Path $repoRoot 'Generated\Inc\project_flight_config.h'
 if (Test-Path -LiteralPath $generatedConfigPath -PathType Leaf) {
     $generatedConfig = Get-Content -Raw -LiteralPath $generatedConfigPath
-    $loggingDefinitions = [regex]::Matches($generatedConfig,
-        '(?m)^\s*#define\s+SILVERSTAR_PROTOCOL_LOGGING_ENABLED\s+([01])U?\s*$')
-    Assert-ArtifactCondition -Condition ($loggingDefinitions.Count -eq 1) `
-        -Message 'Generated logging selection must have exactly one literal 0/1 definition.'
-    if ($loggingDefinitions.Count -eq 1) {
-        $loggingEnabled = $loggingDefinitions[0].Groups[1].Value -eq '1'
+    foreach ($protocol in @('LOGGING', 'MAINTENANCE', 'TELEMETRY')) {
+        $definitions = [regex]::Matches($generatedConfig,
+            ('(?m)^\s*#define\s+SILVERSTAR_PROTOCOL_' + $protocol +
+             '_ENABLED\s+([01])U?\s*$'))
+        Assert-ArtifactCondition -Condition ($definitions.Count -eq 1) `
+            -Message "Generated $protocol selection must have exactly one literal 0/1 definition."
+        if ($definitions.Count -eq 1) {
+            $protocolEnabled[$protocol] = $definitions[0].Groups[1].Value -eq '1'
+        }
     }
 }
+else { Add-ArtifactFailure -Message 'Generated protocol selection header is missing.' }
+$loggingEnabled = $protocolEnabled.LOGGING
 $requiredCcmSymbols = @(
     's_estimator',
     's_alignment_strategy',
@@ -202,10 +207,19 @@ $requiredCcmSymbols = @(
     's_ins_stack',
     's_estimator_stack',
     's_flight_stack',
-    's_serial_stack',
-    's_telemetry_stack',
     's_idle_task_stack'
 )
+foreach ($entry in @(
+    @{ Protocol = 'MAINTENANCE'; Stack = 's_serial_stack' },
+    @{ Protocol = 'TELEMETRY'; Stack = 's_telemetry_stack' }
+)) {
+    if ($protocolEnabled[$entry.Protocol]) { $requiredCcmSymbols += $entry.Stack }
+    else {
+        Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey($entry.Stack)) `
+            -Message ("Disabled {0} must not allocate task stack {1}." -f `
+                $entry.Protocol, $entry.Stack)
+    }
+}
 if ($loggingEnabled) { $requiredCcmSymbols += 's_logger_stack' }
 else {
     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_logger_stack')) `
