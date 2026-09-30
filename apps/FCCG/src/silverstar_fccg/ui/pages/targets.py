@@ -209,7 +209,7 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.Text_Register(label, "field.ground_hardware")
         hardware_form.addRow(label, self.hardware_summary)
         board_label = QLabel()
-        self.Text_Register(board_label, "field.ground_board")
+        self.Text_Register(board_label, "hardware.existing")
         self.board = QComboBox()
         self.board.currentIndexChanged.connect(
             lambda: self.configurationChanged.emit("board", self.board.currentData())
@@ -224,7 +224,7 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.Text_Register(self.import_directory, "action.import_cubemx_directory")
         self.import_directory.clicked.connect(lambda: self.importRequested.emit(True))
         self.save_instance = QPushButton()
-        self.Text_Register(self.save_instance, "action.save_pcb_instance")
+        self.Text_Register(self.save_instance, "action.save_hardware")
         self.save_instance.clicked.connect(self.saveInstanceRequested.emit)
         import_row.addWidget(self.import_ioc)
         import_row.addWidget(self.import_directory)
@@ -281,7 +281,8 @@ class GroundTargetPage(ScrollableLocalizedPage):
             lambda selected: self.configurationChanged.emit("baudrate", selected)
         )
         pc_form.addRow(label, self.baudrate)
-        self.root_layout.addWidget(self.Group_Create("group.ground_pc", pc_form))
+        self.pc_group = self.Group_Create("group.ground_pc", pc_form)
+        self.root_layout.addWidget(self.pc_group)
         build_form = QFormLayout()
         build_label = QLabel()
         self.Text_Register(build_label, "field.ground_build")
@@ -316,7 +317,7 @@ class GroundTargetPage(ScrollableLocalizedPage):
             f"{ground.hardware.mcu or '—'} · {ground.hardware.source_label or ground.hardware.mode}"
         )
         self.board.clear()
-        self.board.addItem("Custom CubeMX", "")
+        self.board.addItem(self._translator.Text_Get("board.custom_hardware"), "")
         for title, identity in boards:
             self.board.addItem(title, identity)
         self.board.setCurrentIndex(max(0, self.board.findData(ground.board)))

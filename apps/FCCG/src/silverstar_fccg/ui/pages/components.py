@@ -285,9 +285,23 @@ class DevicesPage(ScrollableLocalizedPage):
                         selected_plugin_counts[component.component_id] < plugin_limit
                         or current_uses_plugin
                     )
+                    availability = self._device_availability.get(
+                        component.component_id, SelectionAvailability(True)
+                    )
+                    available = plugin_available and availability.available
+                    detail = self._PhysicalDetails_Get(component)
+                    if not plugin_available:
+                        detail = self._translator.Text_Get(
+                            "device.plugin_instance_limit", count=plugin_limit,
+                        )
+                    if not availability.available:
+                        detail = "\n".join(filter(None, (
+                            detail,
+                            self._translator.Text_Get(availability.reason_code),
+                        )))
                     if item is not None:
-                        item.setEnabled(plugin_available)
-                        if not plugin_available:
+                        item.setEnabled(available)
+                        if not available:
                             item.setForeground(
                                 combo.palette().color(
                                     QPalette.ColorGroup.Disabled,
@@ -300,22 +314,9 @@ class DevicesPage(ScrollableLocalizedPage):
                                     QPalette.ColorRole.Base,
                                 )
                             )
-                            item.setToolTip(
-                                self._translator.Text_Get(
-                                    "device.plugin_instance_limit",
-                                    count=plugin_limit,
-                                )
-                            )
                     combo.setItemData(
                         combo.count() - 1,
-                        (
-                            self._PhysicalDetails_Get(component)
-                            if plugin_available
-                            else self._translator.Text_Get(
-                                "device.plugin_instance_limit",
-                                count=plugin_limit,
-                            )
-                        ),
+                        detail,
                         Qt.ItemDataRole.ToolTipRole,
                     )
                 selected_plugin = instance.plugin_id if instance is not None else ""
@@ -328,9 +329,7 @@ class DevicesPage(ScrollableLocalizedPage):
                 )
                 form.addRow(
                     QLabel(
-                        self._translator.Text_Get(
-                            f"device.instance.{component_class}", index=row_index
-                        )
+                        self._DeviceInstanceTitle_Get(candidates[0], row_index)
                     ),
                     combo,
                 )
@@ -372,6 +371,7 @@ class DevicesPage(ScrollableLocalizedPage):
                         )
                         self.variant_combos[instance_id] = variant_combo
                     summary = QLabel(self._CapabilitySummary_Get(instance))
+                    summary.setToolTip("\n".join(instance.provides))
                     summary.setObjectName(f"deviceCapabilitySummary_{instance_id}")
                     summary.setWordWrap(True)
                     summary.setProperty("muted", True)
@@ -415,9 +415,7 @@ class DevicesPage(ScrollableLocalizedPage):
                 add_button = QPushButton(
                     self._translator.Text_Get(
                         "action.add_device",
-                        device=self._translator.Text_Get(
-                            f"device.class.{component_class}"
-                        ),
+                        device=self._DeviceClassTitle_Get(candidates[0]),
                     )
                 )
                 add_button.setObjectName(f"addDeviceButton_{component_class}")
@@ -574,21 +572,41 @@ class DevicesPage(ScrollableLocalizedPage):
                 self._device_availability,
             )
 
+    def _DeviceClassTitle_Get(self, component: ComponentView) -> str:
+        key = f"device.class.{component.component_class}"
+        title = self._translator.Text_Get(key)
+        return component.name if title == key else title
+
+    def _DeviceInstanceTitle_Get(self, component: ComponentView, index: int) -> str:
+        key = f"device.instance.{component.component_class}"
+        title = self._translator.Text_Get(key, index=index)
+        if title == key:
+            return self._translator.Text_Get(
+                "device.instance.named", device=self._DeviceClassTitle_Get(component),
+                index=index,
+            )
+        return title
+
+    def _CapabilityTitle_Get(self, capability: str) -> str:
+        key = f"capability.{capability}"
+        title = self._translator.Text_Get(key)
+        return self._translator.Text_Get("capability.extension") if title == key else title
+
     def _CapabilitySummary_Get(self, instance: DeviceInstanceView) -> str:
         raw_capabilities = ", ".join(
-            self._translator.Text_Get(f"capability.{capability}")
+            self._CapabilityTitle_Get(capability)
             for capability in instance.provides
             if Capability_UserSelectable_Is(capability)
             and CapabilityKind_Get(capability) == CapabilityKind.RAW_DATA
         )
         qualified_capabilities = ", ".join(
-            self._translator.Text_Get(f"capability.{capability}")
+            self._CapabilityTitle_Get(capability)
             for capability in instance.provides
             if Capability_UserSelectable_Is(capability)
             and CapabilityKind_Get(capability) == CapabilityKind.QUALIFIED
         )
         unqualified_capabilities = ", ".join(
-            self._translator.Text_Get(f"capability.{capability}")
+            self._CapabilityTitle_Get(capability)
             for capability in instance.unqualified
         )
         return self._translator.Text_Get(
@@ -628,7 +646,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         )
         selection_form = QFormLayout()
         self.board_label = QLabel()
-        self.Text_Register(self.board_label, "field.board")
+        self.Text_Register(self.board_label, "hardware.existing")
         self.board_combo = StandardComboBox()
         self.board_combo.currentIndexChanged.connect(self._Board_Emit)
         selection_form.addRow(self.board_label, self.board_combo)
@@ -727,7 +745,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
             lambda _checked=False: self.importDirectoryRequested.emit()
         )
         self.export_button = QPushButton()
-        self.Text_Register(self.export_button, "action.save_pcb_instance")
+        self.Text_Register(self.export_button, "action.save_hardware")
         self.export_button.clicked.connect(
             lambda _checked=False: self.exportRequested.emit()
         )
@@ -737,7 +755,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         custom_actions.addStretch(1)
         self.custom_widget = QWidget()
         self.custom_widget.setLayout(custom_actions)
-        self.root_layout.addWidget(self.custom_widget)
+        self.root_layout.insertWidget(2, self.custom_widget)
 
         pullup_layout = QVBoxLayout()
         self.i2c_pullup_notice = QLabel()
@@ -900,7 +918,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         index = self.board_combo.findData(current_data)
         self.board_combo.setCurrentIndex(index)
         self.board_combo.blockSignals(False)
-        self.custom_widget.setVisible(custom_selected)
+        self.custom_widget.setVisible(custom_available)
         self.export_button.setEnabled(custom_ready)
         board_selected = hardware_mode == "board_plugin"
         self.preparation_label.setVisible(False)
@@ -1930,6 +1948,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             description = stream.description or "—"
             if not stream.available and stream.availability_reason:
                 description = stream.availability_reason
+            elif stream.required:
+                description = self._translator.Text_Get("logging.required_tooltip")
             description_item = self.logging_table.item(row, 6)
             if description_item is None:
                 description_item = QTableWidgetItem()

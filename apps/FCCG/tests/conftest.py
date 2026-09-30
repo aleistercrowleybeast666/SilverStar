@@ -7,6 +7,8 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 os.environ.setdefault("PYTHONDONTWRITEBYTECODE", "1")
 
 import pytest
+import shiboken6
+from PySide6.QtCore import QCoreApplication, QEvent
 from PySide6.QtWidgets import QApplication
 
 from silverstar_fccg.plugins.catalog import PluginCatalog
@@ -16,6 +18,18 @@ from silverstar_fccg.plugins.catalog import PluginCatalog
 def qapp() -> QApplication:
     application = QApplication.instance() or QApplication([])
     yield application
+
+
+@pytest.fixture(autouse=True)
+def _QtTestWindows_Dispose(qapp):
+    """Release each test's widgets before global theme changes in later tests."""
+    previous = set(qapp.topLevelWidgets())
+    yield
+    for widget in set(qapp.topLevelWidgets()) - previous:
+        if shiboken6.isValid(widget):
+            widget.deleteLater()
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    qapp.processEvents()
 
 
 @pytest.fixture(scope="session")

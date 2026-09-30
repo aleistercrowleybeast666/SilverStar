@@ -129,6 +129,7 @@ from silverstar_fccg.ui.pages import (
 from silverstar_fccg.ui.pages.algorithm_parameters import NavigationConfigurationPage
 from silverstar_fccg.ui.pages.build import DefaultTools_Get
 from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage
+from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 from silverstar_fccg.ui.widgets import EngineeringTable, HeaderComboBox
@@ -175,6 +176,7 @@ class MainWindow(QMainWindow):
         "page.flight_configuration",
         "page.navigation_configuration",
         "page.telemetry_configuration",
+        "page.ground_configuration",
         "page.board_hardware",
         "page.ground",
         "page.build",
@@ -324,6 +326,14 @@ class MainWindow(QMainWindow):
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
+        self.ground_configuration_page = ScrollableLocalizedPage(
+            self._translator, "page.ground_configuration",
+            "page.ground_configuration.description",
+        )
+        for group in (self.ground_target_page.enabled, self.ground_target_page.pc_group):
+            self.ground_target_page.root_layout.removeWidget(group)
+            self.ground_configuration_page.root_layout.addWidget(group)
+        self.ground_configuration_page.root_layout.addStretch(1)
         self.build_page = BuildPage(self._translator)
         # Keep the existing editors and signal ownership while placing each
         # configuration group on the page that owns it in the user workflow.
@@ -357,6 +367,7 @@ class MainWindow(QMainWindow):
             self.flight_configuration_page,
             self.algorithm_parameters_page,
             self.air_link_page,
+            self.ground_configuration_page,
             self.board_hardware_page,
             self.ground_target_page,
             self.build_page,
@@ -2278,15 +2289,17 @@ class MainWindow(QMainWindow):
         if wizard.exec() != QDialog.DialogCode.Accepted:
             return
         values = wizard.WizardData_Get()
-        self._pending_strategy_changes.clear()
-        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
-        self._model = self._service.ProjectDraft_Create(values["name"])
-        self._project_root = Path(values["output_directory"]).resolve(strict=False)
         try:
-            self._service.ProjectRoot_Save(self._model, self._project_root)
+            model = self._service.ProjectDraft_Create(values["name"])
+            project_root = Path(values["output_directory"]).resolve(strict=False)
+            self._service.ProjectRoot_Save(model, project_root, create_new=True)
         except Exception as error:
             self._Error_Show(error)
             return
+        self._pending_strategy_changes.clear()
+        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
+        self._model = model
+        self._project_root = project_root
         self._generation_plan = None
         self._project_state = ProjectLifecycleState.DRAFT
         self._Project_Refresh()

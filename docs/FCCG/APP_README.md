@@ -99,7 +99,7 @@ Python 3.11 or newer and PySide6 6.8 or newer are required.
 python main.py
 ```
 
-The main window has exactly five pages: **Devices**, **Flight Configuration**, **Algorithm Parameters**, **Hardware Connection**, and **Code Generation & Build**. Project commands live in **File** and plugin management lives in the **Plugins** menu/dialog. Simplified Chinese/English, Light/Dark themes, manifest-driven controls, visible checkbox states, repository-local settings, and shared background-task progress follow the copied GUI standard. Advanced hardware/verification sections collapse by visibility only; Logging remains directly available.
+The main window has eight pages: **Flight Devices**, **Flight Configuration**, **Navigation Configuration**, **Telemetry Configuration**, **Ground Configuration**, **Flight Hardware**, **Ground Hardware**, and **Build & Checks**. Ground Configuration owns the ground target enable switch and PC interface settings; each hardware page keeps existing hardware selection, CubeMX import, hardware saving, and target generation. Project commands live in **File** and plugin management lives in the **Plugins** menu/dialog. Simplified Chinese/English, Light/Dark themes, manifest-driven controls, visible checkbox states, repository-local settings, and shared background-task progress follow the copied GUI standard. Advanced hardware/verification sections collapse by visibility only; Logging remains directly available. Required alignment logs are selected automatically and explain their locked state. Confirming a new project creates `Flight_Controller`, `Ground_Station`, and `Log` without generating firmware or replacing an existing project descriptor.
 
 ## Device-first workflow
 

@@ -241,14 +241,14 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
     try:
         assert window.windowTitle() == PRODUCT_NAME
         assert window.version_label.text() == f"v{__version__}"
-        assert window.pages.count() == 7
-        assert window.navigation_list.count() == 7
+        assert window.pages.count() == 8
+        assert window.navigation_list.count() == 8
         assert not hasattr(window, "project_page")
         assert not hasattr(window, "plugins_page")
         assert [
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
-        ] == ["飞控设备", "飞行配置", "导航配置", "遥测配置", "飞控硬件", "地面站硬件", "构建与检测"]
+        ] == ["飞控设备", "飞行配置", "导航配置", "遥测配置", "地面站配置", "飞控硬件", "地面站硬件", "构建与检测"]
         assert not hasattr(window.build_page, "configuration_combo")
         assert set(window.build_page.action_buttons) == {
             "flight_build", "flight_clean", "flight_open_vscode",
@@ -286,6 +286,7 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
                 "Flight Configuration",
                 "Navigation Configuration",
                 "Telemetry Configuration",
+                "Ground Station Configuration",
                 "Flight Hardware",
                 "Ground Station Hardware",
                 "Build & Validation",

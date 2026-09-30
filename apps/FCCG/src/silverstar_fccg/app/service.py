@@ -148,9 +148,11 @@ class FccgService:
         project_file = path / "SilverStar.ssproject" if path.is_dir() else path
         return ProjectModel_Load(project_file.resolve())
 
-    def ProjectRoot_Save(self, model: ProjectModel, project_root: Path) -> Path:
-        """Save project configuration and its Log directory independently of targets."""
-        return ProjectRoot_Save(model, project_root)
+    def ProjectRoot_Save(
+        self, model: ProjectModel, project_root: Path, *, create_new: bool = False,
+    ) -> Path:
+        """Save configuration and target directories without generating firmware."""
+        return ProjectRoot_Save(model, project_root, create_new=create_new)
 
     def Project_Save(
         self,

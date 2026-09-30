@@ -75,8 +75,10 @@ def test_project_root_can_exist_without_generated_targets(builtin_catalog, tmp_p
     root = ProjectRoot_Save(model, tmp_path / "folder_only")
     assert (root / "SilverStar.ssproject").is_file()
     assert (root / "Log").is_dir()
-    assert not (root / "Flight_Controller").exists()
-    assert not (root / "Ground_Station").exists()
+    assert (root / "Flight_Controller").is_dir()
+    assert (root / "Ground_Station").is_dir()
+    assert not (root / "Flight_Controller" / "Makefile").exists()
+    assert not (root / "Ground_Station" / "Makefile").exists()
     assert not list(root.glob("*.ssdecoder"))
 
 
@@ -299,7 +301,8 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
         tmp_path / "flight_only", TargetScope.FLIGHT,
     )
     assert flight.targets == ("Flight_Controller",)
-    assert not (flight.project_root / "Ground_Station").exists()
+    assert (flight.project_root / "Ground_Station").is_dir()
+    assert not (flight.project_root / "Ground_Station" / "Makefile").exists()
     flight_sources = (
         flight.project_root / "Flight_Controller/Generated/project_sources.mk"
     ).read_text()
@@ -311,7 +314,8 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
         tmp_path / "ground_disabled", TargetScope.FLIGHT,
     )
     assert disabled.targets == ("Flight_Controller",)
-    assert not (disabled.project_root / "Ground_Station").exists()
+    assert (disabled.project_root / "Ground_Station").is_dir()
+    assert not (disabled.project_root / "Ground_Station" / "Makefile").exists()
     both = TargetGeneration_Apply(
         model, builtin_catalog, WorkspacePolicy(workspace_root),
         tmp_path / "both", TargetScope.ALL,
