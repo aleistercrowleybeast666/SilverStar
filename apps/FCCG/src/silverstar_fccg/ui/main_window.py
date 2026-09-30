@@ -111,6 +111,7 @@ from silverstar_fccg.project.model import (
 )
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
 from silverstar_fccg.project.quality_results import QualityResultRecord
+from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
 from silverstar_fccg.project.validation import (
     AlignmentConfigurationIssues_Get,
@@ -3480,6 +3481,10 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def _QualitySummary_Get(result: BuildResult) -> str:
+        if result.action == BuildAction.ARTIFACT_CHECK:
+            memory = ArtifactMemorySummary_Encode(result.output)
+            if memory:
+                return memory
         if not result.succeeded:
             return f"exit_code={result.return_code}"
         patterns = (

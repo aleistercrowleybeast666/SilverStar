@@ -326,6 +326,7 @@ static InsSamplePrepareResult InsMechanization_SamplePrepare(
         (Ins_VectorFinite(sample->gyro_b_radps) == 0U))
     {
         context->health_flags |= INS_HEALTH_INVALID_SAMPLE;
+        state->timestamp_us = sample->timestamp_us;
         state->health_flags = context->health_flags;
         return INS_SAMPLE_PREPARE_REJECTED;
     }
@@ -429,6 +430,22 @@ static void InsMechanization_CorrectionsCompute(
     }
 }
 
+static uint8_t Ins_NavigationCandidateFinite(
+    const InsMechanizationWork *work, InsState *state)
+{
+    uint8_t index;
+    for (index = 0U; index < 3U; index++)
+    {
+        state->accel_n_mps2[index] =
+            state->delta_velocity_n_corrected[index] / work->total_dt;
+    }
+    return (uint8_t)((Ins_VectorFinite(work->current_velocity) != 0U) &&
+        (Ins_VectorFinite(work->current_position) != 0U) &&
+        (Ins_VectorFinite(state->delta_velocity_n_basic) != 0U) &&
+        (Ins_VectorFinite(state->delta_velocity_n_corrected) != 0U) &&
+        (Ins_VectorFinite(state->accel_n_mps2) != 0U));
+}
+
 static uint8_t InsMechanization_NavigationCompute(
     InsMechanizationContext *context,
     InsMechanizationWork *work,
@@ -461,8 +478,7 @@ static uint8_t InsMechanization_NavigationCompute(
     Ins_IntegratePositionTrapezoidal(
         context->position_n_m, work->previous_velocity,
         work->current_velocity, work->total_dt, work->current_position);
-    if ((Ins_VectorFinite(work->current_velocity) == 0U) ||
-        (Ins_VectorFinite(work->current_position) == 0U))
+    if (Ins_NavigationCandidateFinite(work, state) == 0U)
     {
         context->health_flags |= INS_HEALTH_INVALID_SAMPLE;
         state->health_flags = context->health_flags;
@@ -505,8 +521,6 @@ static void InsMechanization_StatePublish(
     (void)memcpy(state->q_nb, work->q_nb_end, sizeof(state->q_nb));
     for (index = 0U; index < 3U; index++)
     {
-        state->accel_n_mps2[index] =
-            state->delta_velocity_n_corrected[index] / work->total_dt;
         state->velocity_n_mps[index] = work->current_velocity[index];
         state->position_n_m[index] = work->current_position[index];
     }
@@ -549,6 +563,7 @@ InsInertialUpdateResult InsInertial_Update(InsInertialContext *context,
     {
         context->health_flags |= INS_HEALTH_INVALID_SAMPLE;
         context->sample_count = 0U;
+        state->timestamp_us = sample->timestamp_us;
         state->health_flags = context->health_flags;
         return INS_INERTIAL_UPDATE_INVALID;
     }
@@ -581,6 +596,7 @@ uint8_t InsMechanization_Update(InsMechanizationContext *context,
     {
         context->health_flags |= INS_HEALTH_INVALID_QUATERNION;
         (void)memset(state, 0, sizeof(*state));
+        state->timestamp_us = sample->timestamp_us;
         Ins_StateCopyNavigation(context, state);
         return 0U;
     }
@@ -596,6 +612,8 @@ uint8_t InsMechanization_Update(InsMechanizationContext *context,
     work.total_dt = state->dt_s;
     if (InsMechanization_NavigationCompute(context, &work, state) == 0U)
     {
+        Ins_StateCopyNavigation(context, state);
+        (void)memset(state->accel_n_mps2, 0, sizeof(state->accel_n_mps2));
         state->valid = 0U;
         return 0U;
     }

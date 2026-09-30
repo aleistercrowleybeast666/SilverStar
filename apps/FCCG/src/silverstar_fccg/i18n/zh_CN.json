@@ -885,5 +885,10 @@
   "status.ground_ready": "地面站：READY",
   "status.targets_generated": "已生成 Target",
   "dialog.select_project_root": "选择 SilverStar 项目目录",
-  "selection.unavailable.air_link": "与所选 AIR Link 不兼容"
+  "selection.unavailable.air_link": "与所选 AIR Link 不兼容",
+  "field.linked_memory": "最近产物检查的内存占用",
+  "memory.region": "{name}：{used} / {capacity} 字节；剩余 {remaining} 字节",
+  "memory.not_checked": "运行固件产物检查以获取链接占用；运行时余量尚未测量。",
+  "memory.static_only": "以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。",
+  "memory.ccm_narrow": "CCMRAM 剩余不足 4 KiB，扩展余量很小，不能视为运行安全余量足够；修改后须重新链接并进行实机测量。"
 }

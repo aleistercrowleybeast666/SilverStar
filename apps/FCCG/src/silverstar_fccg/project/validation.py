@@ -30,6 +30,7 @@ from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get,
     ResourceAssignments_Resolve,
 )
+from silverstar_fccg.project.storage_binding import StorageBinding_Resolve
 
 
 @dataclass(frozen=True, slots=True)
@@ -970,6 +971,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
     else:
         for error in resource_result.errors:
             issues.append(ValidationIssue("error", "resource", error))
+
+    issues.extend(ValidationIssue("error", issue.code, issue.message)
+                  for issue in StorageBinding_Resolve(model, catalog).issues)
 
     try:
         capability_result = CapabilityResolution_Resolve(model, catalog)

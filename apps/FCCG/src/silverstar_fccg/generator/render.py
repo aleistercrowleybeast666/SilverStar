@@ -49,6 +49,7 @@ from silverstar_fccg.project.model import (
     ProjectModel,
 )
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
+from silverstar_fccg.project.storage_binding import StorageBinding_Resolve
 from silverstar_fccg.project.record_catalog import (
     RecordCatalog_Merge,
     RecordCatalogFragment_Load,
@@ -1094,38 +1095,11 @@ def _InstanceResourcesSource_Render(
 def _StorageBindingHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
-    storage_instances = tuple(
-        instance
-        for instance in model.device_instances
-        if "service.storage" in catalog.InstanceComponent_Get(instance).provides
-    )
-    if len(storage_instances) != 1:
-        raise ValueError(
-            "Exactly one physical Storage Device must provide service.storage"
-        )
-    result = ResourceAssignments_Resolve(model, catalog)
-    assignment = next(
-        (
-            item
-            for item in result.assignments
-            if item.component_id == storage_instances[0].instance_id
-            and item.requirement.kind == "sdio"
-        ),
-        None,
-    )
-    if assignment is None:
-        raise ValueError("Storage Device has no resolved SDIO resource")
-    fatfs = assignment.provision.metadata.get("fatfs", {})
-    if not isinstance(fatfs, dict) or fatfs.get("errors"):
-        raise ValueError("Storage Device has no valid CubeMX FatFs binding")
-    object_symbol = _CIdentifier_Require(
-        fatfs.get("object_symbol"), "FatFs object symbol"
-    )
-    path_symbol = _CIdentifier_Require(
-        fatfs.get("path_symbol"), "FatFs path symbol"
-    )
-    driver_symbol = _CIdentifier_Require(
-        fatfs.get("driver_symbol"), "FatFs driver symbol"
+    binding = StorageBinding_Resolve(model, catalog)
+    if not binding.valid:
+        raise ValueError("\n".join(f"{issue.code}: {issue.message}" for issue in binding.issues))
+    object_symbol, path_symbol, driver_symbol = (
+        binding.object_symbol, binding.path_symbol, binding.driver_symbol,
     )
     return f"""#ifndef __PROJECT_STORAGE_BINDING_H
 #define __PROJECT_STORAGE_BINDING_H

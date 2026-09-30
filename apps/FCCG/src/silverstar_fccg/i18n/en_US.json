@@ -885,5 +885,10 @@
   "status.ground_ready": "Ground Station: READY",
   "status.targets_generated": "Generated targets",
   "dialog.select_project_root": "Select SilverStar project directory",
-  "selection.unavailable.air_link": "Incompatible with the selected AIR Link"
+  "selection.unavailable.air_link": "Incompatible with the selected AIR Link",
+  "field.linked_memory": "Latest artifact memory",
+  "memory.region": "{name}: {used} / {capacity} bytes; {remaining} bytes remaining",
+  "memory.not_checked": "Run Firmware Artifact Check to obtain linked memory usage. Runtime margin has not been measured.",
+  "memory.static_only": "Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.",
+  "memory.ccm_narrow": "CCMRAM has less than 4 KiB remaining. Extension margin is narrow; this is not evidence of a safe runtime margin. Repeat linking and target measurements after changes."
 }
