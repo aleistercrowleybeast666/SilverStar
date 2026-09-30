@@ -1,0 +1,59 @@
+{
+  "scope": "Windows Qt widgets and real LogOpenCoordinator; REAL generated immutable final candidate decoder + synthetic SSLOG data; no recorded field log/hardware evidence",
+  "steps": [
+    {
+      "step": "new_invalid_name_disabled_and_cancel_preserves_state"
+    },
+    {
+      "step": "missing_pair_rejected_inline"
+    },
+    {
+      "step": "new_exact_synthetic_pair_import_and_initial_project_saved",
+      "project": "D:\\python_software\\SilverStar\\.work\\flp_final_native_realdecoder_1\\SS_0_5_NATIVE_FLP\\SS_0_5_NATIVE_FLP.ssflp"
+    },
+    {
+      "step": "pages_language_theme_project_header",
+      "language": "zh_CN",
+      "theme": "light",
+      "pages": 5,
+      "bright_text_pixels": 955,
+      "scale": 1.25
+    },
+    {
+      "step": "pages_language_theme_project_header",
+      "language": "zh_CN",
+      "theme": "dark",
+      "pages": 5,
+      "bright_text_pixels": 955,
+      "scale": 1.25
+    },
+    {
+      "step": "pages_language_theme_project_header",
+      "language": "en_US",
+      "theme": "light",
+      "pages": 5,
+      "bright_text_pixels": 955,
+      "scale": 1.25
+    },
+    {
+      "step": "pages_language_theme_project_header",
+      "language": "en_US",
+      "theme": "dark",
+      "pages": 5,
+      "bright_text_pixels": 955,
+      "scale": 1.25
+    },
+    {
+      "step": "saved_project_reopened_through_qt_file_chooser"
+    },
+    {
+      "step": "source_log_and_decoder_immutable"
+    }
+  ],
+  "dialogs": [],
+  "source_hashes": {
+    "D:\\python_software\\SilverStar\\.work\\flp_final_native_realdecoder_1\\SYNTHETIC_pair\\SYNTHETIC_GENERATED_DECODER.BIN": "93a8e1028a605cb509179729c2ce1410929148ae9283c57c624162af03c5af1c",
+    "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\SS_0_5_TEST_4_FINAL_EXISTING.ssdecoder": "63673624043bfb1064cb6645b8b13837a42c91ea7085162844f035c0d0b217e6"
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,11 @@
+{
+  "firmware_and_generator_commit": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+  "flp_reader_fix_commit": "cd9d99fd289ca412958f844e9d0fe751e41c965a",
+  "final_application_and_test_commit": "b3f53a76432b464020199605501a82d589b6988a",
+  "primary_project": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\SilverStar.ssproject",
+  "firmware_rebuilt_for_reader_only_change": false,
+  "packages_modified": false,
+  "production_loader_exact_identity": "PASS on real generated packages; synthetic data and actual C-generated synthetic ESKF data tested",
+  "native_flp_import_save_reopen": "PASS with real final existing package + synthetic log",
+  "warning": "Old FLP readers reject mechanization_aggregation. Use the updated source. PoT Flight194/Ground13 remains FAIL. No hardware/flight qualification."
+}

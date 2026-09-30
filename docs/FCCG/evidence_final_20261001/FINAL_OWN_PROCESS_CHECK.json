@@ -1,0 +1,37 @@
+{
+  "TimestampUtc": "2026-09-30T23:43:58.2234932Z",
+  "Scope": "Only this task workspace scripts; no termination or unrelated application inspection",
+  "RunningOwnTestProcesses": [],
+  "ExitResults": [
+    {
+      "Name": "fccg_final_full",
+      "ExitFileExists": true,
+      "ExitCode": "1"
+    },
+    {
+      "Name": "flp_final_full",
+      "ExitFileExists": true,
+      "ExitCode": "0"
+    },
+    {
+      "Name": "final_docs_check",
+      "ExitFileExists": true,
+      "ExitCode": "0"
+    },
+    {
+      "Name": "flp_native_realdecoder",
+      "ExitFileExists": true,
+      "ExitCode": "0"
+    },
+    {
+      "Name": "p51_decoder_identity_fixed",
+      "ExitFileExists": true,
+      "ExitCode": "0"
+    },
+    {
+      "Name": "p51_native_validation3",
+      "ExitFileExists": true,
+      "ExitCode": "0"
+    }
+  ]
+}

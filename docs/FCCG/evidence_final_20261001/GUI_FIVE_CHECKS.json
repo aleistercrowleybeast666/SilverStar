@@ -1,0 +1,107 @@
+{
+  "scope": "Real Windows QtTest button clicks, BuildRunner subprocesses; no hardware",
+  "pid": 13032,
+  "platform": "windows",
+  "results": [
+    {
+      "action": "host_tests",
+      "command": [
+        "mingw32-make",
+        "TARGET_PROFILE=SilverStar_F407",
+        "CONFIG=Release",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe",
+        "host-tests"
+      ],
+      "return_code": 0,
+      "succeeded": true,
+      "elapsed": 329.21035710000433,
+      "output_file": "D:\\python_software\\SilverStar\\.work\\p51_quality\\host_tests.log"
+    },
+    {
+      "action": "architecture_check",
+      "command": [
+        "mingw32-make",
+        "TARGET_PROFILE=SilverStar_F407",
+        "CONFIG=Release",
+        "architecture-check"
+      ],
+      "return_code": 0,
+      "succeeded": true,
+      "elapsed": 13.703996500000358,
+      "output_file": "D:\\python_software\\SilverStar\\.work\\p51_quality\\architecture_check.log"
+    },
+    {
+      "action": "power10_check",
+      "command": [
+        "mingw32-make",
+        "TARGET_PROFILE=SilverStar_F407",
+        "CONFIG=Release",
+        "power10-check"
+      ],
+      "return_code": 2,
+      "succeeded": false,
+      "elapsed": 13.45656130000134,
+      "output_file": "D:\\python_software\\SilverStar\\.work\\p51_quality\\power10_check.log"
+    },
+    {
+      "action": "static_analysis",
+      "command": [
+        "mingw32-make",
+        "TARGET_PROFILE=SilverStar_F407",
+        "CONFIG=Release",
+        "static-analysis"
+      ],
+      "return_code": 0,
+      "succeeded": true,
+      "elapsed": 185.0024293999886,
+      "output_file": "D:\\python_software\\SilverStar\\.work\\p51_quality\\static_analysis.log"
+    },
+    {
+      "action": "artifact_check",
+      "command": [
+        "mingw32-make",
+        "TARGET_PROFILE=SilverStar_F407",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "return_code": 0,
+      "succeeded": true,
+      "elapsed": 3.558949099999154,
+      "output_file": "D:\\python_software\\SilverStar\\.work\\p51_quality\\artifact_check.log"
+    }
+  ],
+  "dialogs": [
+    {
+      "text": "Power of Ten Check failed. Inspect the log.",
+      "details_log": "GUI_power10_check.log"
+    }
+  ],
+  "tools": [
+    {
+      "id": "compiler",
+      "path": "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.exe",
+      "status": "found",
+      "version": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623"
+    },
+    {
+      "id": "make",
+      "path": "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "status": "found",
+      "version": "GNU Make 4.4.1"
+    },
+    {
+      "id": "host_gcc",
+      "path": "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "status": "found",
+      "version": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0"
+    }
+  ],
+  "buttons": {
+    "host_tests": "Host Tests",
+    "architecture_check": "Architecture Check",
+    "power10_check": "Power of Ten Check",
+    "static_analysis": "Static Analysis",
+    "artifact_check": "Firmware Artifact Check"
+  },
+  "status": "ALL_FIVE_EXECUTED"
+}

@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\decoder_profiles\algorithm_parameters.py", line 111, in FirmwareParameters_CheckPlugins
+    raise ValueError(f"parameter_unknown:{name}")
+ValueError: parameter_unknown:mechanization_aggregation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\p51_decoder_identity.py", line 54, in <module>
+    package = DecoderProfilePackage.Load(path)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\decoder_profiles\package.py", line 197, in Load
+    FirmwareParameters_CheckPlugins(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        semantics_document["firmware_algorithm_parameters"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        integrity_revision=integrity_revision,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\decoder_profiles\algorithm_parameters.py", line 125, in FirmwareParameters_CheckPlugins
+    raise DecoderProfileError("firmware_parameter_contract_invalid", str(exc)) from exc
+silverstar_flp.decoder_profiles.errors.DecoderProfileError: firmware_parameter_contract_invalid: parameter_unknown:mechanization_aggregation

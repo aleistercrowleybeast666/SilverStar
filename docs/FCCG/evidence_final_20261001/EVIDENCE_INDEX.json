@@ -1,0 +1,119 @@
+{
+  "timestamp_utc": "2026-09-30T22:22:31.152606+00:00",
+  "test_head": "499531dea0d3d4fd281448c86795554f3d3119a6",
+  "firmware_and_generation_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+  "full_suite_complete": false,
+  "logs": [
+    {
+      "file": "existing_Flight_Controller.json",
+      "source": ".work\\p51_candidates\\existing_Flight_Controller.json",
+      "sha256": "fdbed2bd96c989ebb4d3d761f2b727bde378cccd1b4e03c1dbebf615e5e49ef3",
+      "bytes": 4162
+    },
+    {
+      "file": "existing_Ground_Station.json",
+      "source": ".work\\p51_candidates\\existing_Ground_Station.json",
+      "sha256": "00db64c56b3dd55fc9082e07680cbd7b6ff2831f2c205f4aa72bb34fe20240dd",
+      "bytes": 3047
+    },
+    {
+      "file": "imported_Flight_Controller.json",
+      "source": ".work\\p51_candidates\\imported_Flight_Controller.json",
+      "sha256": "fede169a22c10b5919eb3929b92c412eaba8f34688d874b23e61c757c420343d",
+      "bytes": 4164
+    },
+    {
+      "file": "imported_Ground_Station.json",
+      "source": ".work\\p51_candidates\\imported_Ground_Station.json",
+      "sha256": "615be67291c997e70853622a6edb6e47aa2e885ff4149cd5e1e7f4ae971eae92",
+      "bytes": 3047
+    },
+    {
+      "file": "ARTIFACT_CONFIG_DECODER_MANIFEST.json",
+      "source": ".work\\p51_candidates\\artifact_config_decoder_manifest.json",
+      "sha256": "35e5b18119f990d648b86af78d1a8e487e8b40960fe62e58677cb292de07ae55",
+      "bytes": 16922
+    },
+    {
+      "file": "REQUIREMENT_AND_FAILURE_CLASSIFICATION.json",
+      "source": ".work\\p51_requirement_changes.json",
+      "sha256": "dee92ec1629508ecfdc1a7827b846fe52a64e37caeb73e359c38b428ac5ac273",
+      "bytes": 3287
+    },
+    {
+      "file": "WIRE_CLEAN_CHECKOUT_BYTES.json",
+      "source": ".work\\p51_wire_clean_bytes.json",
+      "sha256": "7f71e5cd75ab29eb5c044fcd2152b5a2183d774f18b10235a90124727b704505",
+      "bytes": 614
+    },
+    {
+      "file": "NATIVE_VALIDATION_RESULT.json",
+      "source": ".work\\p51_native_validation\\result.json",
+      "sha256": "34c8cd1238183038f982b92b44ef75dd4838c778986785bf18d6c21a24d688cc",
+      "bytes": 6403
+    },
+    {
+      "file": "native_missing_storage.png",
+      "source": ".work\\p51_native_validation\\storage_missing_logging_off.png",
+      "sha256": "ed81c9b9e9428f01edc01cd432a24c79fdfb885f5a3c04e0918c093c3ce2683a",
+      "bytes": 95407
+    },
+    {
+      "file": "FCCG_NATIVE_REGRESSION.json",
+      "source": ".work\\p51_edges\\result.json",
+      "sha256": "906343b2c511b50e1ba617c28407bd966a59cc8090222f8beefca4f3ed7b9ee3",
+      "bytes": 1957
+    },
+    {
+      "file": "STACK_AND_GROUND_GATES.json",
+      "source": ".work\\p51_additional_gates\\result.json",
+      "sha256": "b1c4985db810b540ee509b26c0aa89d79e55c6b1c11c758e1e513d6e6ce6cbc1",
+      "bytes": 1770
+    },
+    {
+      "file": "GUI_host_tests.log",
+      "source": ".work\\p51_quality\\host_tests.log",
+      "sha256": "4954ff65ad3128fc507473f55bcbb599b534e455781254f1abb86b015e7e0051",
+      "bytes": 56498
+    },
+    {
+      "file": "GUI_architecture_check.log",
+      "source": ".work\\p51_quality\\architecture_check.log",
+      "sha256": "bf907f9d87edd79cd8c5718b2d7b978ab25a3d6e5c48a29d1c355f4d5a560965",
+      "bytes": 1154
+    },
+    {
+      "file": "GUI_power10_check.log",
+      "source": ".work\\p51_quality\\power10_check.log",
+      "sha256": "af25cd48ed4022e5d5618daadef32fcdb919a404e4f8fe933d4495d40b0ea958",
+      "bytes": 46191
+    },
+    {
+      "file": "GUI_static_analysis.log",
+      "source": ".work\\p51_quality\\static_analysis.log",
+      "sha256": "325d08aff0dc93f539188d54492f977b89dcc449ef3804cdbbdcb415b52e31eb",
+      "bytes": 439966
+    },
+    {
+      "file": "GUI_artifact_check.log",
+      "source": ".work\\p51_quality\\artifact_check.log",
+      "sha256": "dc66fb6f5f5c2efe7fb72e802a2ca5c68fcc312ce9cfb94f7e1d938c064296f7",
+      "bytes": 1998
+    },
+    {
+      "file": "GROUND_POWER10.log",
+      "source": ".work\\p51_additional_gates\\ground_power10.log",
+      "sha256": "9824ba2bb70d3284fe861693f825e7144961369343ee93045078e19598524af6",
+      "bytes": 4522
+    },
+    {
+      "file": "INTERIM_FULL_SUITE_2222.log",
+      "source": ".work\\p51_full.log",
+      "sha256": "aad4f1031c8ae3d7442b90671bc076b091525dc7002ff8a8d07f5bef1cfe0656",
+      "bytes": 162
+    }
+  ],
+  "quota": "last trusted user82% at17:20UTC; dynamic unknown",
+  "early_windows_av": "unexplained; not reproduced in later bounded native tests",
+  "status": "Historical interim snapshot at22:22UTC; some named payloads were later replaced by final versions. Original historical hashes record the interim state only. FINAL_EVIDENCE_INDEX.json provides authoritative current file hashes and complete suite results."
+}

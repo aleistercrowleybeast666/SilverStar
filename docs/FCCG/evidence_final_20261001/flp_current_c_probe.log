@@ -1,0 +1,219 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_______________ test_actual_c_float32_against_float64_reference _______________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FLP/.work/p51_c_source_probe/test_actual_c_float32_against_0')
+
+    @pytest.mark.skipif(
+        not os.environ.get("SILVERSTAR_FCCG_ROOT"),
+        reason="actual FCCG C source must be explicitly provided",
+    )
+    def test_actual_c_float32_against_float64_reference(tmp_path):
+        root = Path(os.environ["SILVERSTAR_FCCG_ROOT"])
+        core = (
+            root
+            / "plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15"
+        )
+        compiler = shutil.which("gcc")
+        common = root / "plugins/builtin/silverstar_core_0_0_12/payload/Common"
+        assert compiler, "Host GCC required"
+        dll = tmp_path / "eskf15.dll"
+        build = subprocess.run(
+            [
+                compiler,
+                "-shared",
+                "-O2",
+                "-std=c11",
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-static-libgcc",
+                "-I",
+                str(core / "Inc"),
+                "-I",
+                str(common / "Inc"),
+                str(common / "Src/silverstar_assert.c"),
+                str(core / "Src/navigation_eskf.c"),
+                "-o",
+                str(dll),
+                "-lm",
+            ],
+            capture_output=True,
+            text=True,
+            env=dict(os.environ, TEMP=str(tmp_path), TMP=str(tmp_path)),
+        )
+>       assert build.returncode == 0, build.stdout + build.stderr
+E       AssertionError: cc1.exe: fatal error: D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_0_12\payload\Common\Src\silverstar_assert.c: No such file or directory
+E         compilation terminated.
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_algorithm_estimator_eskf15\payload\Algorithm\Estimator\ESKF15\Src\navigation_eskf.c:2:10: fatal error: silverstar_assert.h: No such file or directory
+E             2 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-shared', '-O2', '-std=c11', '-Wall', '-Wextra', '-Werror'... directory\n    2 | #include "silverstar_assert.h"\n      |          ^~~~~~~~~~~~~~~~~~~~~\ncompilation terminated.\n').returncode
+
+tests\test_eskf15_c_parity.py:59: AssertionError
+_______ test_actual_c_producer_exact_decoder_and_15_state_replay[False] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FLP/.work/p51_c_source_probe/test_actual_c_producer_exact_d0')
+interleaved = False
+
+    @pytest.mark.parametrize("interleaved", [False, True])
+    def test_actual_c_producer_exact_decoder_and_15_state_replay(tmp_path, interleaved):
+        root_value = os.environ.get("SILVERSTAR_FCCG_ROOT")
+        project_value = os.environ.get("SILVERSTAR_ESKF_GENERATED")
+        if not root_value or not project_value:
+            pytest.skip("explicit actual FCCG source and generated ESKF project required")
+        root, project = Path(root_value), Path(project_value)
+        builtin = root / "plugins/builtin"
+        core = builtin / "silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15"
+        protocol = builtin / "silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG"
+        common = builtin / "silverstar_core_0_0_12/payload/Common"
+        decoder = next(project.glob("*.ssdecoder"))
+        captured = tmp_path / decoder.name
+        shutil.copy2(decoder, captured)
+        for relative in (
+            "Generated/Src/project_log_decoder_profile.c",
+            "Generated/Inc/project_log_decoder_profile.h",
+            "Generated/Inc/project_algorithm_parameters.h",
+        ):
+            shutil.copy2(project / relative, tmp_path / Path(relative).name)
+        executable = tmp_path / "producer.exe"
+        command = [
+            shutil.which("gcc"),
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-I",
+            str(tmp_path),
+            "-I",
+            str(core / "Inc"),
+            "-I",
+            str(protocol / "Inc"),
+            "-I",
+            str(common / "Inc"),
+            "-include",
+            str(tmp_path / "project_algorithm_parameters.h"),
+            str(Path(__file__).parent / "fixtures/eskf15_producer.c"),
+            str(core / "Src/navigation_eskf.c"),
+            str(protocol / "Src/sslog_records.c"),
+            str(protocol / "Src/sslog_protocol.c"),
+            str(common / "Src/silverstar_assert.c"),
+            str(tmp_path / "project_log_decoder_profile.c"),
+            "-o",
+            str(executable),
+            "-lm",
+        ]
+        environment = dict(os.environ, TEMP=str(tmp_path), TMP=str(tmp_path))
+        built = subprocess.run(command, capture_output=True, text=True, env=environment)
+>       assert built.returncode == 0, built.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_algorithm_estimator_eskf15\payload\Algorithm\Estimator\ESKF15\Src\navigation_eskf.c:2:10: fatal error: silverstar_assert.h: No such file or directory
+E             2 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_protocol_logging_sslog_0_0\payload\Protocol\SSLOG\Src\sslog_records.c:8:10: fatal error: silverstar_assert.h: No such file or directory
+E             8 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_protocol_logging_sslog_0_0\payload\Protocol\SSLOG\Src\sslog_protocol.c:6:10: fatal error: silverstar_assert.h: No such file or directory
+E             6 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         cc1.exe: fatal error: D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_0_12\payload\Common\Src\silverstar_assert.c: No such file or directory
+E         compilation terminated.
+E         D:\python_software\SilverStar\apps\FLP\.work\p51_c_source_probe\test_actual_c_producer_exact_d0\project_log_decoder_profile.c:7:10: fatal error: silverstar_assert.h: No such file or directory
+E             7 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-I', 'D:... directory\n    7 | #include "silverstar_assert.h"\n      |          ^~~~~~~~~~~~~~~~~~~~~\ncompilation terminated.\n').returncode
+
+tests\test_eskf15_golden.py:73: AssertionError
+_______ test_actual_c_producer_exact_decoder_and_15_state_replay[True] ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FLP/.work/p51_c_source_probe/test_actual_c_producer_exact_d1')
+interleaved = True
+
+    @pytest.mark.parametrize("interleaved", [False, True])
+    def test_actual_c_producer_exact_decoder_and_15_state_replay(tmp_path, interleaved):
+        root_value = os.environ.get("SILVERSTAR_FCCG_ROOT")
+        project_value = os.environ.get("SILVERSTAR_ESKF_GENERATED")
+        if not root_value or not project_value:
+            pytest.skip("explicit actual FCCG source and generated ESKF project required")
+        root, project = Path(root_value), Path(project_value)
+        builtin = root / "plugins/builtin"
+        core = builtin / "silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15"
+        protocol = builtin / "silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG"
+        common = builtin / "silverstar_core_0_0_12/payload/Common"
+        decoder = next(project.glob("*.ssdecoder"))
+        captured = tmp_path / decoder.name
+        shutil.copy2(decoder, captured)
+        for relative in (
+            "Generated/Src/project_log_decoder_profile.c",
+            "Generated/Inc/project_log_decoder_profile.h",
+            "Generated/Inc/project_algorithm_parameters.h",
+        ):
+            shutil.copy2(project / relative, tmp_path / Path(relative).name)
+        executable = tmp_path / "producer.exe"
+        command = [
+            shutil.which("gcc"),
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-I",
+            str(tmp_path),
+            "-I",
+            str(core / "Inc"),
+            "-I",
+            str(protocol / "Inc"),
+            "-I",
+            str(common / "Inc"),
+            "-include",
+            str(tmp_path / "project_algorithm_parameters.h"),
+            str(Path(__file__).parent / "fixtures/eskf15_producer.c"),
+            str(core / "Src/navigation_eskf.c"),
+            str(protocol / "Src/sslog_records.c"),
+            str(protocol / "Src/sslog_protocol.c"),
+            str(common / "Src/silverstar_assert.c"),
+            str(tmp_path / "project_log_decoder_profile.c"),
+            "-o",
+            str(executable),
+            "-lm",
+        ]
+        environment = dict(os.environ, TEMP=str(tmp_path), TMP=str(tmp_path))
+        built = subprocess.run(command, capture_output=True, text=True, env=environment)
+>       assert built.returncode == 0, built.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_algorithm_estimator_eskf15\payload\Algorithm\Estimator\ESKF15\Src\navigation_eskf.c:2:10: fatal error: silverstar_assert.h: No such file or directory
+E             2 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_protocol_logging_sslog_0_0\payload\Protocol\SSLOG\Src\sslog_records.c:8:10: fatal error: silverstar_assert.h: No such file or directory
+E             8 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_protocol_logging_sslog_0_0\payload\Protocol\SSLOG\Src\sslog_protocol.c:6:10: fatal error: silverstar_assert.h: No such file or directory
+E             6 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         cc1.exe: fatal error: D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_0_12\payload\Common\Src\silverstar_assert.c: No such file or directory
+E         compilation terminated.
+E         D:\python_software\SilverStar\apps\FLP\.work\p51_c_source_probe\test_actual_c_producer_exact_d1\project_log_decoder_profile.c:7:10: fatal error: silverstar_assert.h: No such file or directory
+E             7 | #include "silverstar_assert.h"
+E               |          ^~~~~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-I', 'D:... directory\n    7 | #include "silverstar_assert.h"\n      |          ^~~~~~~~~~~~~~~~~~~~~\ncompilation terminated.\n').returncode
+
+tests\test_eskf15_golden.py:73: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_eskf15_c_parity.py::test_actual_c_float32_against_float64_reference
+FAILED tests/test_eskf15_golden.py::test_actual_c_producer_exact_decoder_and_15_state_replay[False]
+FAILED tests/test_eskf15_golden.py::test_actual_c_producer_exact_decoder_and_15_state_replay[True]
+3 failed in 2.85s

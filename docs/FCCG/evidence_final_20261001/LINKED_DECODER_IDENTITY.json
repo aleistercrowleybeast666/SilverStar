@@ -1,0 +1,78 @@
+{
+  "scope": "Immutable real ARM linked constants + production FLP package loader/exact Descriptor validator; no MCU execution or recorded log",
+  "results": [
+    {
+      "route": "existing",
+      "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "elf_sha256": "40913eeb7b1eba8951308d41a270f6b35002683b99169f7a87b124e6b0fce6a9",
+      "descriptor_constants_vma": "0x804aa94",
+      "descriptor": {
+        "package_schema_major": 1,
+        "package_schema_minor": 2,
+        "container_format_major": 0,
+        "container_format_minor": 0,
+        "record_catalog_hash_128": "68c230a2da816f79acdb818b1ad188cb",
+        "project_semantics_hash_128": "f5d55d019e761ce87f408826d5f40804",
+        "generation_profile_hash_128": "385f58668aae2847d3cf619e6c3324b2"
+      },
+      "packages": [
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\SS_0_5_TEST_4_FINAL_EXISTING.ssdecoder",
+          "package_sha256": "63673624043bfb1064cb6645b8b13837a42c91ea7085162844f035c0d0b217e6",
+          "generation_profile_hash_128": "385f58668aae2847d3cf619e6c3324b2",
+          "mismatch_rejected": "decoder_profile_hash_mismatch: generation_profile:log=00000000000000000000000000000000:package=385f58668aae2847d3cf619e6c3324b2"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\SS_0_5_TEST_4_FINAL_EXISTING.ssdecoder",
+          "package_sha256": "63673624043bfb1064cb6645b8b13837a42c91ea7085162844f035c0d0b217e6",
+          "generation_profile_hash_128": "385f58668aae2847d3cf619e6c3324b2",
+          "mismatch_rejected": "decoder_profile_hash_mismatch: generation_profile:log=00000000000000000000000000000000:package=385f58668aae2847d3cf619e6c3324b2"
+        }
+      ],
+      "disassembly_command": [
+        "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objdump.exe",
+        "-d",
+        "--disassemble=ProjectLogDecoderProfile_Get",
+        "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ],
+      "status": "PASS"
+    },
+    {
+      "route": "imported",
+      "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "elf_sha256": "6cf7e186a118ada8f386d082796d2e3f1496b80fd850a0c42da0389a9219399f",
+      "descriptor_constants_vma": "0x804aa94",
+      "descriptor": {
+        "package_schema_major": 1,
+        "package_schema_minor": 2,
+        "container_format_major": 0,
+        "container_format_minor": 0,
+        "record_catalog_hash_128": "68c230a2da816f79acdb818b1ad188cb",
+        "project_semantics_hash_128": "411e3cf8c9783f5082341a6815549133",
+        "generation_profile_hash_128": "c79a672983f840d1ee8f5e95553eb9ec"
+      },
+      "packages": [
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\SS_0_5_TEST_4_FINAL_IMPORTED.ssdecoder",
+          "package_sha256": "775fa6d3cb144992d3a4dedfa47b62bb6b0a3e319e7eb31aae92e8239f3a97df",
+          "generation_profile_hash_128": "c79a672983f840d1ee8f5e95553eb9ec",
+          "mismatch_rejected": "decoder_profile_hash_mismatch: generation_profile:log=00000000000000000000000000000000:package=c79a672983f840d1ee8f5e95553eb9ec"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\SS_0_5_TEST_4_FINAL_IMPORTED.ssdecoder",
+          "package_sha256": "775fa6d3cb144992d3a4dedfa47b62bb6b0a3e319e7eb31aae92e8239f3a97df",
+          "generation_profile_hash_128": "c79a672983f840d1ee8f5e95553eb9ec",
+          "mismatch_rejected": "decoder_profile_hash_mismatch: generation_profile:log=00000000000000000000000000000000:package=c79a672983f840d1ee8f5e95553eb9ec"
+        }
+      ],
+      "disassembly_command": [
+        "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objdump.exe",
+        "-d",
+        "--disassemble=ProjectLogDecoderProfile_Get",
+        "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,61 @@
+{
+  "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+  "original_suite": "51 failed, 627 passed, 1 skipped; .work/night_finish_clean_final.log",
+  "gui_path_boundary_subset": "46 passed; .work/p51_gui_fixed.log",
+  "short_clean_subset": "42 passed; .work/p51_clean_subset.log",
+  "requirement_changes": [
+    {
+      "test": "algorithm_parameters page sequence/count",
+      "reason": "User requires Ground logical configuration separate from hardware; navigation/telemetry/Ground config/Flight hardware exact order and eight pages asserted."
+    },
+    {
+      "test": "configuration_reconcile hardware error navigation",
+      "reason": "Numeric old index 4 became Ground configuration. Product retained obsolete index; fixed actual owner routing. Original currentWidget is BoardHardwarePage and highlight assertions retained."
+    },
+    {
+      "test": "required logging tooltip",
+      "reason": "User requested true dependency explanation. Required active checked locked behavior, click rejection and model forced reconciliation retained; opaque old text replaced with explanatory meaning."
+    },
+    {
+      "test": "round3 page ownership",
+      "reason": "Eight pages per explicit Ground PC move; added actual ownership assertions for PC interface/resource, retained independent radio/editor/build checks."
+    },
+    {
+      "test": "documentation Existing word",
+      "reason": "Existing hardware route is legitimate. Retired Existing Calibration operation remains rejected; unrelated English hardware/acceptance prose is permitted."
+    },
+    {
+      "test": "GUI Save As empty project directories",
+      "reason": "Confirmed project roots must immediately create Flight_Controller/Ground_Station/Log per user requirement. New assertion requires all three directories empty, preserving the no implicit firmware generation contract. Single test passed in 12.46s."
+    }
+  ],
+  "path_boundary": "Windows copied full paths must be <260 chars, copied parent directories <248. Unsupported deep project paths reject with WINDOWS_PATH_TOO_LONG and shortening instruction; source/ownership/ACL errors not swallowed. No OS/network/security setting changes. Test checkout uses .work/c and app-local .work/t*.",
+  "wire_bytes": "Frozen expected hashes unchanged. -text attributes and exact original bytes recorded in Git. Original and clean raw AIR/SSLOG SHA256 now identical; .work/p51_wire_clean_bytes.json. Protocol diff ignoring EOL is empty.",
+  "running": "Completed499531d full suite; independent FLP fix in .work/f under verification",
+  "pot": "Independent Flight194/Ground13 Rule5 FAIL remains; tests requiring PoT PASS not weakened.",
+  "final_test_head": "499531dea0d3d4fd281448c86795554f3d3119a6",
+  "failed_subset": {
+    "head": "ddb73bb",
+    "result": "48 passed, 3 failed in 1065.31s",
+    "remaining": [
+      "GUI Save As obsolete absence assertion (now independently fixed and passed)",
+      "KF6 Rule5 quality gate",
+      "PureINS Rule5 quality gate"
+    ],
+    "log": "D:\\python_software\\SilverStar\\.work\\p51_failed_subset.log"
+  },
+  "timestamp_utc": "2026-09-30T22:11:54.108162+00:00",
+  "full_run_499531d": {
+    "tests": 688,
+    "passed": 685,
+    "failed": 2,
+    "skipped": 1,
+    "seconds": 1787.51,
+    "exit_code": 1,
+    "failures": [
+      "test_estimator_release_debug_build_and_quality_matrix[KF6]",
+      "test_estimator_release_debug_build_and_quality_matrix[PureINS]"
+    ],
+    "skip": "read-only reference firmware not present; test_prompt_acceptance.py:283"
+  }
+}

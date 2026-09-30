@@ -1,0 +1,12 @@
+[
+  {
+    "path": "apps/FCCG/plugins/builtin/silverstar_protocol_telemetry_air_m0/payload/Protocol/Src/air_protocol.c",
+    "workspace_sha": "f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4",
+    "clean_sha": "f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4"
+  },
+  {
+    "path": "apps/FCCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Src/sslog_protocol.c",
+    "workspace_sha": "b065b6733fe87dea5e220e8eaed4ef61569fff831e3dd3d14f1c218fc6aaa3bc",
+    "clean_sha": "b065b6733fe87dea5e220e8eaed4ef61569fff831e3dd3d14f1c218fc6aaa3bc"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "closed_utc": "2026-09-30 23:40 UTC",
+  "tested_source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+  "fccg": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "2",
+    "skipped": "1",
+    "tests": "688",
+    "time": "1796.627",
+    "timestamp": "2026-10-01T07:10:13.078985+08:00",
+    "hostname": "CHD"
+  },
+  "fccg_summary": "2 failed, 685 passed, 1 skipped in 1796.75s (0:29:56)",
+  "failures": [
+    "test_estimator_release_debug_build_and_quality_matrix[KF6]",
+    "test_estimator_release_debug_build_and_quality_matrix[PureINS]"
+  ],
+  "firmware_commit": "ddb73bb40b15decbf5914933f2822aa98849b8f6"
+}

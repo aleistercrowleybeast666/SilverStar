@@ -1,0 +1,535 @@
+{
+  "timestamp_utc": "2026-09-30T23:47:19.951202+00:00",
+  "code_and_test_commit": "b3f53a76432b464020199605501a82d589b6988a",
+  "working_head": "b3f53a76432b464020199605501a82d589b6988a",
+  "firmware_commit": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+  "suites": [
+    {
+      "suite": "FCCG_499531d",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "1",
+        "tests": "688",
+        "time": "1787.325",
+        "timestamp": "2026-10-01T06:11:00.946371+08:00",
+        "hostname": "CHD"
+      },
+      "nonpass": [
+        {
+          "class": "tests.test_estimator_build_matrix",
+          "name": "test_estimator_release_debug_build_and_quality_matrix[KF6]",
+          "status": "failure",
+          "message": "AssertionError: quality: 623: function SystemConsole_MagStreamAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3791: function SystemConsole_AlignmentAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\n  mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\n  mingw32-make.EXE: *** Waiting for unfinished jobs....\n  FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.\n  FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\n  SilverStar architecture check passed: checks=328 failures=0\n  SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\n  Record Catalog, decoder profile, and static instance facade contracts are valid.\n  Authoritative target source graph and FreeRTOS source set are valid.\n  FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\n  \nassert 2 == 0\n +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode",
+          "detail": "tmp_path = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t3/test_estimator_release_debug_b0')\nworkspace_root = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG')\nestimator_enabled = True\n\n    @pytest.mark.parametrize(\"estimator_enabled\", [True, False], ids=[\"KF6\", \"PureINS\"])\n    def test_estimator_release_debug_build_and_quality_matrix(\n        tmp_path: Path, workspace_root: Path, estimator_enabled: bool\n    ) -> None:\n        make = shutil.which(\"mingw32-make\") or r\"D:\\msys64\\ucrt64\\bin\\mingw32-make.exe\"\n        if os.name != \"nt\" or not Path(make).is_file() or not shutil.which(\"arm-none-eabi-gcc\"):\n            pytest.skip(\"Windows Arm GNU/MinGW build toolchain unavailable\")\n    \n        service = FccgService(workspace_root)\n        name = \"KF6LoggingMatrix\" if estimator_enabled else \"PureINSLoggingMatrix\"\n        model = service.ReferenceProject_Create(name)\n        if not estimator_enabled:\n            model.strategies[\"estimator\"] = None\n            model = service.ProjectConfiguration_Reconcile(model).model\n        assert model.protocols[\"logging\"] is not None\n        graph = SourceGraph_Resolve(model, service.catalog)\n        project = tmp_path / name\n        service.Project_Save(model, project, confirm_dangerous=True)\n        reloaded = service.Project_Open(project)\n        assert reloaded.strategies[\"estimator\"] == model.strategies[\"estimator\"]\n        assert SourceGraph_Resolve(reloaded, service.catalog).defines == graph.defines\n    \n        expected_fusion = \"SYSTEM_FUSION_KF6\" if estimator_enabled else \"SYSTEM_FUSION_NONE\"\n        assert f\"SYSTEM_BUILD_FUSION_ALGORITHM={expected_fusion}\" in graph.defines\n        assert f\"SYSTEM_BUILD_ESTIMATOR_ENABLED={int(estimator_enabled)}U\" in graph.defines\n        assert \"SYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW\" in graph.defines\n        sources = [source for source in graph.sources if \"Algorithm/Estimator/KF6\" in source]\n        assert len(sources) == (3 if estimator_enabled else 0)\n        for config in (\"Release\", \"Debug\"):\n            build = _Make_Run(\n                make, project, f\"{config.lower()}-build\",\n                f\"CONFIG={config}\", \"all\", \"stack-report\",\n                \"memory-report\", \"artifact-check\",\n            )\n            include = \"-IAlgorithm/Estimator/KF6/Inc\"\n            assert (include in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf_replay.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_integrity.c\" in build) == estimator_enabled\n    \n>       quality = _Make_Run(\n            make, project, \"quality\", \"CONFIG=Release\",\n            \"architecture-check\", \"power10-check\",\n        )\n\ntests\\test_estimator_build_matrix.py:75: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmake = 'D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE'\nproject = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t3/test_estimator_release_debug_b0/KF6LoggingMatrix')\nname = 'quality'\ntargets = ('CONFIG=Release', 'architecture-check', 'power10-check')\n\n    def _Make_Run(\n        make: str, project: Path, name: str, *targets: str\n    ) -> str:\n        report_root = project / \"build/FCCG/Matrix\"\n        report_root.mkdir(parents=True, exist_ok=True)\n        temp_root = report_root / \"Temp\"\n        temp_root.mkdir(exist_ok=True)\n        log = report_root / f\"{name}.log\"\n        env = dict(os.environ, TEMP=str(temp_root), TMP=str(temp_root),\n                   TMPDIR=str(temp_root), PYTHONDONTWRITEBYTECODE=\"1\")\n        command = [make, \"-j4\", \"SHELL=cmd.exe\", *targets]\n        with log.open(\"w\", encoding=\"utf-8\", errors=\"replace\") as output:\n            result = subprocess.run(\n                command, cwd=project, env=env, stdout=output,\n                stderr=subprocess.STDOUT, check=False,\n            )\n        text = log.read_text(encoding=\"utf-8\", errors=\"replace\")\n>       assert result.returncode == 0, f\"{name}: {text[-6000:]}\"\nE       AssertionError: quality: 623: function SystemConsole_MagStreamAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3791: function SystemConsole_AlignmentAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\nE         mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\nE         mingw32-make.EXE: *** Waiting for unfinished jobs....\nE         FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\nE         SilverStar architecture check passed: checks=328 failures=0\nE         SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\nE         Record Catalog, decoder profile, and static instance facade contracts are valid.\nE         Authoritative target source graph and FreeRTOS source set are valid.\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode\n\ntests\\test_estimator_build_matrix.py:31: AssertionError"
+        },
+        {
+          "class": "tests.test_estimator_build_matrix",
+          "name": "test_estimator_release_debug_build_and_quality_matrix[PureINS]",
+          "status": "failure",
+          "message": "AssertionError: quality: ncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\n  mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\n  mingw32-make.EXE: *** Waiting for unfinished jobs....\n  FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos\n  FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol\n  FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.\n  FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\n  SilverStar architecture check passed: checks=328 failures=0\n  SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\n  Record Catalog, decoder profile, and static instance facade contracts are valid.\n  Authoritative target source graph and FreeRTOS source set are valid.\n  FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\n  \nassert 2 == 0\n +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode",
+          "detail": "tmp_path = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t3/test_estimator_release_debug_b1')\nworkspace_root = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG')\nestimator_enabled = False\n\n    @pytest.mark.parametrize(\"estimator_enabled\", [True, False], ids=[\"KF6\", \"PureINS\"])\n    def test_estimator_release_debug_build_and_quality_matrix(\n        tmp_path: Path, workspace_root: Path, estimator_enabled: bool\n    ) -> None:\n        make = shutil.which(\"mingw32-make\") or r\"D:\\msys64\\ucrt64\\bin\\mingw32-make.exe\"\n        if os.name != \"nt\" or not Path(make).is_file() or not shutil.which(\"arm-none-eabi-gcc\"):\n            pytest.skip(\"Windows Arm GNU/MinGW build toolchain unavailable\")\n    \n        service = FccgService(workspace_root)\n        name = \"KF6LoggingMatrix\" if estimator_enabled else \"PureINSLoggingMatrix\"\n        model = service.ReferenceProject_Create(name)\n        if not estimator_enabled:\n            model.strategies[\"estimator\"] = None\n            model = service.ProjectConfiguration_Reconcile(model).model\n        assert model.protocols[\"logging\"] is not None\n        graph = SourceGraph_Resolve(model, service.catalog)\n        project = tmp_path / name\n        service.Project_Save(model, project, confirm_dangerous=True)\n        reloaded = service.Project_Open(project)\n        assert reloaded.strategies[\"estimator\"] == model.strategies[\"estimator\"]\n        assert SourceGraph_Resolve(reloaded, service.catalog).defines == graph.defines\n    \n        expected_fusion = \"SYSTEM_FUSION_KF6\" if estimator_enabled else \"SYSTEM_FUSION_NONE\"\n        assert f\"SYSTEM_BUILD_FUSION_ALGORITHM={expected_fusion}\" in graph.defines\n        assert f\"SYSTEM_BUILD_ESTIMATOR_ENABLED={int(estimator_enabled)}U\" in graph.defines\n        assert \"SYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW\" in graph.defines\n        sources = [source for source in graph.sources if \"Algorithm/Estimator/KF6\" in source]\n        assert len(sources) == (3 if estimator_enabled else 0)\n        for config in (\"Release\", \"Debug\"):\n            build = _Make_Run(\n                make, project, f\"{config.lower()}-build\",\n                f\"CONFIG={config}\", \"all\", \"stack-report\",\n                \"memory-report\", \"artifact-check\",\n            )\n            include = \"-IAlgorithm/Estimator/KF6/Inc\"\n            assert (include in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf_replay.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_integrity.c\" in build) == estimator_enabled\n    \n>       quality = _Make_Run(\n            make, project, \"quality\", \"CONFIG=Release\",\n            \"architecture-check\", \"power10-check\",\n        )\n\ntests\\test_estimator_build_matrix.py:75: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmake = 'D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE'\nproject = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t3/test_estimator_release_debug_b1/PureINSLoggingMatrix')\nname = 'quality'\ntargets = ('CONFIG=Release', 'architecture-check', 'power10-check')\n\n    def _Make_Run(\n        make: str, project: Path, name: str, *targets: str\n    ) -> str:\n        report_root = project / \"build/FCCG/Matrix\"\n        report_root.mkdir(parents=True, exist_ok=True)\n        temp_root = report_root / \"Temp\"\n        temp_root.mkdir(exist_ok=True)\n        log = report_root / f\"{name}.log\"\n        env = dict(os.environ, TEMP=str(temp_root), TMP=str(temp_root),\n                   TMPDIR=str(temp_root), PYTHONDONTWRITEBYTECODE=\"1\")\n        command = [make, \"-j4\", \"SHELL=cmd.exe\", *targets]\n        with log.open(\"w\", encoding=\"utf-8\", errors=\"replace\") as output:\n            result = subprocess.run(\n                command, cwd=project, env=env, stdout=output,\n                stderr=subprocess.STDOUT, check=False,\n            )\n        text = log.read_text(encoding=\"utf-8\", errors=\"replace\")\n>       assert result.returncode == 0, f\"{name}: {text[-6000:]}\"\nE       AssertionError: quality: ncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\nE         mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\nE         mingw32-make.EXE: *** Waiting for unfinished jobs....\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol\nE         FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\nE         SilverStar architecture check passed: checks=328 failures=0\nE         SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\nE         Record Catalog, decoder profile, and static instance facade contracts are valid.\nE         Authoritative target source graph and FreeRTOS source set are valid.\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode\n\ntests\\test_estimator_build_matrix.py:31: AssertionError"
+        },
+        {
+          "class": "tests.test_prompt_acceptance",
+          "name": "test_reference_payload_sync_and_environment_templates_are_read_only",
+          "status": "skipped",
+          "message": "read-only reference firmware is not present on this host",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FCCG\\tests\\test_prompt_acceptance.py:283: read-only reference firmware is not present on this host"
+        }
+      ]
+    },
+    {
+      "suite": "FLP_FINAL",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "9",
+        "tests": "521",
+        "time": "362.069",
+        "timestamp": "2026-10-01T07:02:03.901030+08:00",
+        "hostname": "CHD"
+      },
+      "nonpass": [
+        {
+          "class": "tests.test_current_log_manual",
+          "name": "test_current_log_display_and_quality_acceptance",
+          "status": "skipped",
+          "message": "set SILVERSTAR_CURRENT_LOG_ROOT for the hash-locked SS0000 log",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_current_log_manual.py:37: set SILVERSTAR_CURRENT_LOG_ROOT for the hash-locked SS0000 log"
+        },
+        {
+          "class": "tests.test_joint_c_golden",
+          "name": "test_generated_c_log_exact_decoder_replay_and_mechanization",
+          "status": "skipped",
+          "message": "explicit FCCG generated project and C golden required",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_joint_c_golden.py:26: explicit FCCG generated project and C golden required"
+        },
+        {
+          "class": "tests.test_ss0007_manual",
+          "name": "test_ss0007_real_log_landing_horizon_and_bounds",
+          "status": "skipped",
+          "message": "set SILVERSTAR_SS0007_PATH for the real-log validation gate",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_ss0007_manual.py:36: set SILVERSTAR_SS0007_PATH for the real-log validation gate"
+        },
+        {
+          "class": "tests.test_ss0007_manual",
+          "name": "test_ss0007_real_log_recorded_recomputed_and_what_if_marker_lifecycle",
+          "status": "skipped",
+          "message": "set SILVERSTAR_SS0007_PATH for the real-log validation gate",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_ss0007_manual.py:100: set SILVERSTAR_SS0007_PATH for the real-log validation gate"
+        },
+        {
+          "class": "tests.test_ss0007_manual",
+          "name": "test_ss0007_real_log_gui_worker_exports_gif_manifest_and_metadata_plots",
+          "status": "skipped",
+          "message": "set SILVERSTAR_SS0007_PATH for the real-log validation gate",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_ss0007_manual.py:154: set SILVERSTAR_SS0007_PATH for the real-log validation gate"
+        },
+        {
+          "class": "tests.test_ss0014_manual",
+          "name": "test_ss0014_current_log_compatibility_gate",
+          "status": "skipped",
+          "message": "set SILVERSTAR_SS0014_ROOT to the matching SS0014 task root",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_ss0014_manual.py:48: set SILVERSTAR_SS0014_ROOT to the matching SS0014 task root"
+        },
+        {
+          "class": "tests.test_ss_test_0_manual",
+          "name": "test_ss_test_0_real_package_discovery_manual_import_and_cache",
+          "status": "skipped",
+          "message": "set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_ss_test_0_manual.py:36: set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate"
+        },
+        {
+          "class": "tests.test_ss_test_0_manual",
+          "name": "test_ss_test_0_real_golden_matches_expected_exactly",
+          "status": "skipped",
+          "message": "set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_ss_test_0_manual.py:36: set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate"
+        },
+        {
+          "class": "tests.test_ss_test_0_manual",
+          "name": "test_ss_test_0_real_dataset_existing_gui_and_csv_json_export_smoke",
+          "status": "skipped",
+          "message": "set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FLP\\tests\\test_ss_test_0_manual.py:36: set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate"
+        }
+      ]
+    },
+    {
+      "suite": "FCCG_FINAL",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "1",
+        "tests": "688",
+        "time": "1796.627",
+        "timestamp": "2026-10-01T07:10:13.078985+08:00",
+        "hostname": "CHD"
+      },
+      "nonpass": [
+        {
+          "class": "tests.test_estimator_build_matrix",
+          "name": "test_estimator_release_debug_build_and_quality_matrix[KF6]",
+          "status": "failure",
+          "message": "AssertionError: quality: ction SystemConsole_InsStatusExecute has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3623: function SystemConsole_MagStreamAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3791: function SystemConsole_AlignmentAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\n  mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\n  mingw32-make.EXE: *** Waiting for unfinished jobs....\n  FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\n  SilverStar architecture check passed: checks=328 failures=0\n  SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\n  Record Catalog, decoder profile, and static instance facade contracts are valid.\n  Authoritative target source graph and FreeRTOS source set are valid.\n  FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\n  \nassert 2 == 0\n +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode",
+          "detail": "tmp_path = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t4/test_estimator_release_debug_b0')\nworkspace_root = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG')\nestimator_enabled = True\n\n    @pytest.mark.parametrize(\"estimator_enabled\", [True, False], ids=[\"KF6\", \"PureINS\"])\n    def test_estimator_release_debug_build_and_quality_matrix(\n        tmp_path: Path, workspace_root: Path, estimator_enabled: bool\n    ) -> None:\n        make = shutil.which(\"mingw32-make\") or r\"D:\\msys64\\ucrt64\\bin\\mingw32-make.exe\"\n        if os.name != \"nt\" or not Path(make).is_file() or not shutil.which(\"arm-none-eabi-gcc\"):\n            pytest.skip(\"Windows Arm GNU/MinGW build toolchain unavailable\")\n    \n        service = FccgService(workspace_root)\n        name = \"KF6LoggingMatrix\" if estimator_enabled else \"PureINSLoggingMatrix\"\n        model = service.ReferenceProject_Create(name)\n        if not estimator_enabled:\n            model.strategies[\"estimator\"] = None\n            model = service.ProjectConfiguration_Reconcile(model).model\n        assert model.protocols[\"logging\"] is not None\n        graph = SourceGraph_Resolve(model, service.catalog)\n        project = tmp_path / name\n        service.Project_Save(model, project, confirm_dangerous=True)\n        reloaded = service.Project_Open(project)\n        assert reloaded.strategies[\"estimator\"] == model.strategies[\"estimator\"]\n        assert SourceGraph_Resolve(reloaded, service.catalog).defines == graph.defines\n    \n        expected_fusion = \"SYSTEM_FUSION_KF6\" if estimator_enabled else \"SYSTEM_FUSION_NONE\"\n        assert f\"SYSTEM_BUILD_FUSION_ALGORITHM={expected_fusion}\" in graph.defines\n        assert f\"SYSTEM_BUILD_ESTIMATOR_ENABLED={int(estimator_enabled)}U\" in graph.defines\n        assert \"SYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW\" in graph.defines\n        sources = [source for source in graph.sources if \"Algorithm/Estimator/KF6\" in source]\n        assert len(sources) == (3 if estimator_enabled else 0)\n        for config in (\"Release\", \"Debug\"):\n            build = _Make_Run(\n                make, project, f\"{config.lower()}-build\",\n                f\"CONFIG={config}\", \"all\", \"stack-report\",\n                \"memory-report\", \"artifact-check\",\n            )\n            include = \"-IAlgorithm/Estimator/KF6/Inc\"\n            assert (include in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf_replay.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_integrity.c\" in build) == estimator_enabled\n    \n>       quality = _Make_Run(\n            make, project, \"quality\", \"CONFIG=Release\",\n            \"architecture-check\", \"power10-check\",\n        )\n\ntests\\test_estimator_build_matrix.py:75: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmake = 'D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE'\nproject = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t4/test_estimator_release_debug_b0/KF6LoggingMatrix')\nname = 'quality'\ntargets = ('CONFIG=Release', 'architecture-check', 'power10-check')\n\n    def _Make_Run(\n        make: str, project: Path, name: str, *targets: str\n    ) -> str:\n        report_root = project / \"build/FCCG/Matrix\"\n        report_root.mkdir(parents=True, exist_ok=True)\n        temp_root = report_root / \"Temp\"\n        temp_root.mkdir(exist_ok=True)\n        log = report_root / f\"{name}.log\"\n        env = dict(os.environ, TEMP=str(temp_root), TMP=str(temp_root),\n                   TMPDIR=str(temp_root), PYTHONDONTWRITEBYTECODE=\"1\")\n        command = [make, \"-j4\", \"SHELL=cmd.exe\", *targets]\n        with log.open(\"w\", encoding=\"utf-8\", errors=\"replace\") as output:\n            result = subprocess.run(\n                command, cwd=project, env=env, stdout=output,\n                stderr=subprocess.STDOUT, check=False,\n            )\n        text = log.read_text(encoding=\"utf-8\", errors=\"replace\")\n>       assert result.returncode == 0, f\"{name}: {text[-6000:]}\"\nE       AssertionError: quality: ction SystemConsole_InsStatusExecute has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3623: function SystemConsole_MagStreamAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3791: function SystemConsole_AlignmentAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\nE         mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\nE         mingw32-make.EXE: *** Waiting for unfinished jobs....\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\nE         SilverStar architecture check passed: checks=328 failures=0\nE         SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\nE         Record Catalog, decoder profile, and static instance facade contracts are valid.\nE         Authoritative target source graph and FreeRTOS source set are valid.\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode\n\ntests\\test_estimator_build_matrix.py:31: AssertionError"
+        },
+        {
+          "class": "tests.test_estimator_build_matrix",
+          "name": "test_estimator_release_debug_build_and_quality_matrix[PureINS]",
+          "status": "failure",
+          "message": "AssertionError: quality: ncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\n  - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\n  FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos\n  mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\n  mingw32-make.EXE: *** Waiting for unfinished jobs....\n  FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol\n  FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.\n  FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\n  FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\n  SilverStar architecture check passed: checks=328 failures=0\n  SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\n  Record Catalog, decoder profile, and static instance facade contracts are valid.\n  Authoritative target source graph and FreeRTOS source set are valid.\n  FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\n  \nassert 2 == 0\n +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode",
+          "detail": "tmp_path = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t4/test_estimator_release_debug_b1')\nworkspace_root = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG')\nestimator_enabled = False\n\n    @pytest.mark.parametrize(\"estimator_enabled\", [True, False], ids=[\"KF6\", \"PureINS\"])\n    def test_estimator_release_debug_build_and_quality_matrix(\n        tmp_path: Path, workspace_root: Path, estimator_enabled: bool\n    ) -> None:\n        make = shutil.which(\"mingw32-make\") or r\"D:\\msys64\\ucrt64\\bin\\mingw32-make.exe\"\n        if os.name != \"nt\" or not Path(make).is_file() or not shutil.which(\"arm-none-eabi-gcc\"):\n            pytest.skip(\"Windows Arm GNU/MinGW build toolchain unavailable\")\n    \n        service = FccgService(workspace_root)\n        name = \"KF6LoggingMatrix\" if estimator_enabled else \"PureINSLoggingMatrix\"\n        model = service.ReferenceProject_Create(name)\n        if not estimator_enabled:\n            model.strategies[\"estimator\"] = None\n            model = service.ProjectConfiguration_Reconcile(model).model\n        assert model.protocols[\"logging\"] is not None\n        graph = SourceGraph_Resolve(model, service.catalog)\n        project = tmp_path / name\n        service.Project_Save(model, project, confirm_dangerous=True)\n        reloaded = service.Project_Open(project)\n        assert reloaded.strategies[\"estimator\"] == model.strategies[\"estimator\"]\n        assert SourceGraph_Resolve(reloaded, service.catalog).defines == graph.defines\n    \n        expected_fusion = \"SYSTEM_FUSION_KF6\" if estimator_enabled else \"SYSTEM_FUSION_NONE\"\n        assert f\"SYSTEM_BUILD_FUSION_ALGORITHM={expected_fusion}\" in graph.defines\n        assert f\"SYSTEM_BUILD_ESTIMATOR_ENABLED={int(estimator_enabled)}U\" in graph.defines\n        assert \"SYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW\" in graph.defines\n        sources = [source for source in graph.sources if \"Algorithm/Estimator/KF6\" in source]\n        assert len(sources) == (3 if estimator_enabled else 0)\n        for config in (\"Release\", \"Debug\"):\n            build = _Make_Run(\n                make, project, f\"{config.lower()}-build\",\n                f\"CONFIG={config}\", \"all\", \"stack-report\",\n                \"memory-report\", \"artifact-check\",\n            )\n            include = \"-IAlgorithm/Estimator/KF6/Inc\"\n            assert (include in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_kf_replay.c\" in build) == estimator_enabled\n            assert (\"Algorithm/Estimator/KF6/Src/navigation_integrity.c\" in build) == estimator_enabled\n    \n>       quality = _Make_Run(\n            make, project, \"quality\", \"CONFIG=Release\",\n            \"architecture-check\", \"power10-check\",\n        )\n\ntests\\test_estimator_build_matrix.py:75: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmake = 'D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE'\nproject = WindowsPath('D:/python_software/SilverStar/.work/c/apps/FCCG/.work/t4/test_estimator_release_debug_b1/PureINSLoggingMatrix')\nname = 'quality'\ntargets = ('CONFIG=Release', 'architecture-check', 'power10-check')\n\n    def _Make_Run(\n        make: str, project: Path, name: str, *targets: str\n    ) -> str:\n        report_root = project / \"build/FCCG/Matrix\"\n        report_root.mkdir(parents=True, exist_ok=True)\n        temp_root = report_root / \"Temp\"\n        temp_root.mkdir(exist_ok=True)\n        log = report_root / f\"{name}.log\"\n        env = dict(os.environ, TEMP=str(temp_root), TMP=str(temp_root),\n                   TMPDIR=str(temp_root), PYTHONDONTWRITEBYTECODE=\"1\")\n        command = [make, \"-j4\", \"SHELL=cmd.exe\", *targets]\n        with log.open(\"w\", encoding=\"utf-8\", errors=\"replace\") as output:\n            result = subprocess.run(\n                command, cwd=project, env=env, stdout=output,\n                stderr=subprocess.STDOUT, check=False,\n            )\n        text = log.read_text(encoding=\"utf-8\", errors=\"replace\")\n>       assert result.returncode == 0, f\"{name}: {text[-6000:]}\"\nE       AssertionError: quality: ncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2\nE         - System\\Src\\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos\nE         mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1\nE         mingw32-make.EXE: *** Waiting for unfinished jobs....\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol\nE         FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol\nE         FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary\nE         SilverStar architecture check passed: checks=328 failures=0\nE         SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.\nE         Record Catalog, decoder profile, and static instance facade contracts are valid.\nE         Authoritative target source graph and FreeRTOS source set are valid.\nE         FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['D:\\\\msys64\\\\ucrt64\\\\bin\\\\mingw32-make.EXE', '-j4', 'SHELL=cmd.exe', 'CONFIG=Release', 'architecture-check', 'power10-check'], returncode=2).returncode\n\ntests\\test_estimator_build_matrix.py:31: AssertionError"
+        },
+        {
+          "class": "tests.test_prompt_acceptance",
+          "name": "test_reference_payload_sync_and_environment_templates_are_read_only",
+          "status": "skipped",
+          "message": "read-only reference firmware is not present on this host",
+          "detail": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FCCG\\tests\\test_prompt_acceptance.py:283: read-only reference firmware is not present on this host"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "file": "FCCG_499531d.log",
+      "source": ".work/p51_full.log",
+      "source_commit": "499531dea0d3d4fd281448c86795554f3d3119a6",
+      "sha256": "4f796933aa937164d06888b56d940190f01d1a12cf28777593a4e1ec9d06b3b8",
+      "bytes": 23638
+    },
+    {
+      "file": "FCCG_499531d.xml",
+      "source": ".work/p51_full.xml",
+      "source_commit": "499531dea0d3d4fd281448c86795554f3d3119a6",
+      "sha256": "691fbbda650ffb885dacbaf30a7537529cbb3ac98ddf6ee7f24877533ff274a3",
+      "bytes": 133119
+    },
+    {
+      "file": "FCCG_499531d.exit.txt",
+      "source": ".work/p51_full.exit.txt",
+      "source_commit": "499531dea0d3d4fd281448c86795554f3d3119a6",
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "bytes": 3
+    },
+    {
+      "file": "FLP_FINAL.log",
+      "source": ".work/flp_final_full.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "4958df8ef94ed30c48799101c3ff251f16b5767dc08b7a951ec2cc286fbc4636",
+      "bytes": 1531
+    },
+    {
+      "file": "FLP_FINAL.xml",
+      "source": ".work/flp_final_full.xml",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "7ce868c5f73d66fab2972bf2a12796092b9a198627048c51979c58d0fe542e80",
+      "bytes": 74211
+    },
+    {
+      "file": "FLP_FINAL.exit.txt",
+      "source": ".work/flp_final_full.exit.txt",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    {
+      "file": "FCCG_FINAL.log",
+      "source": ".work/fccg_final_full.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "d68c522543db52e602d3b28d202c7a1adc0c10a8be7e493f9067d14523da6527",
+      "bytes": 23638
+    },
+    {
+      "file": "FCCG_FINAL.xml",
+      "source": ".work/fccg_final_full.xml",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "daf526b41c441182d4e8b1c06bf4f0ae7f37e6e48451e750a3c383c8910a7094",
+      "bytes": 133122
+    },
+    {
+      "file": "FCCG_FINAL.exit.txt",
+      "source": ".work/fccg_final_full.exit.txt",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "bytes": 3
+    },
+    {
+      "file": "LINKED_DECODER_IDENTITY.json",
+      "source": ".work/p51_decoder_identity/result.json",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "3aea76a12db3aed22046127008828be05310eb4972a249339e677f082e6f72a3",
+      "bytes": 4431
+    },
+    {
+      "file": "FLP_READER_COMPATIBILITY.json",
+      "source": ".work/final_reader_compatibility.json",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "502af9b9e1eea3b35861761e881c701dea5b7f10d02e5f3b21f0384fa2c79855",
+      "bytes": 858
+    },
+    {
+      "file": "FLP_REAL_DECODER_NATIVE.json",
+      "source": ".work/flp_final_native_realdecoder_1/result.json",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "4ef176d3c90210990fb53db1a061cfb75f203c575921fcaf94cde7bdb4ced420",
+      "bytes": 1967
+    },
+    {
+      "file": "REQUIREMENT_AND_FAILURE_CLASSIFICATION.json",
+      "source": ".work/p51_requirement_changes.json",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "e382d6a65eb5638702ba99d5c6e25a62a96af76efce8801266effb708cc50623",
+      "bytes": 3587
+    },
+    {
+      "file": "flp_real_decoder_light_header.png",
+      "source": ".work/flp_final_native_realdecoder_1/en_US_light_project_header.png",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "00fbb19c3a5f6882de5a305417233e4543fe543620fc81378ababc8f7865c527",
+      "bytes": 1116
+    },
+    {
+      "file": "REAL_DECODER_en_US_light_page.flight.png",
+      "source": ".work/flp_final_native_realdecoder_1/en_US_light_page.flight.png",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "aa896da1b4355a275934987c22d49252127d881e17bee9d877a538ed5c03b72b",
+      "bytes": 61466
+    },
+    {
+      "file": "REAL_DECODER_zh_CN_light_page.overview.png",
+      "source": ".work/flp_final_native_realdecoder_1/zh_CN_light_page.overview.png",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "771699d0f38d6ef9120a29b4c209beae14a49efb6394754e6047923fc141b9ec",
+      "bytes": 97726
+    },
+    {
+      "file": "REAL_DECODER_exact_pair_import.png",
+      "source": ".work/flp_final_native_realdecoder_1/exact_pair_import.png",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "8590bc9c593dbaa504fda7c8c99b5e1f4548d495c3e5b7fb7bd43966146aaec6",
+      "bytes": 39266
+    },
+    {
+      "file": "existing_ARM_DESCRIPTOR_DISASSEMBLY.txt",
+      "source": ".work/p51_decoder_identity/existing_descriptor_disassembly.txt",
+      "source_commit": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "sha256": "4453e137aac3fcce193600f545586e7f5898e8205479969d32cd7df1118edc61",
+      "bytes": 1757
+    },
+    {
+      "file": "imported_ARM_DESCRIPTOR_DISASSEMBLY.txt",
+      "source": ".work/p51_decoder_identity/imported_descriptor_disassembly.txt",
+      "source_commit": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "sha256": "e52a072ff870a41066704b1300133db7962a84c2d03f806962b5e8e184f6b81c",
+      "bytes": 1757
+    },
+    {
+      "file": "FCCG_FINAL_POT_FAILURE_CLASSIFICATION.json",
+      "source": ".work/fccg_final_matrix_failures.json",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "682303b86c7139324d9d8701d6ba40c9f3797c4404f824a626f4203d0a46d379",
+      "bytes": 899
+    },
+    {
+      "file": "PYTHON375_READONLY_INVENTORY.json",
+      "source": ".work/python375_inventory.json",
+      "source_commit": "Read-only installed-component inventory; no source mutation",
+      "sha256": "e51b28943b0fd013071058ab155de0c750a02ac78b2441ca1e90db93fed3c63a",
+      "bytes": 5326
+    },
+    {
+      "file": "FINAL_OWN_PROCESS_CHECK.json",
+      "source": ".work/final_own_process_check.json",
+      "source_commit": "Read-only own-test process/exit check",
+      "sha256": "25ab736988026ec130f6f85e285555b4a20923e6b7dca735868e10f45eef3040",
+      "bytes": 858
+    },
+    {
+      "file": "FINAL_MORNING_LOCATION.json",
+      "source": ".work/final_morning_copy.json",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "ff51e11ab69a345f92ae7b217148362864f8076467832e8e45638a072b094376",
+      "bytes": 432
+    },
+    {
+      "file": "FINAL_TEST_RESULTS.json",
+      "source": ".work/final_report_results.json",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "9720b79ac9a355c3790c1a631f6b60359c8a85a6d32cad6f4d46ce5a1160ebe5",
+      "bytes": 645
+    },
+    {
+      "file": "FCCG_FINAL_KF6LoggingMatrix_QUALITY.log",
+      "source": ".work/c/apps/FCCG/.work/t4/test_estimator_release_debug_b0/KF6LoggingMatrix/build/FCCG/Matrix/quality.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "09b3a163528c65e3e8e88bbc12c2e6ca73bc3c449ab87f2f6ae1dd6833b537eb",
+      "bytes": 47209
+    },
+    {
+      "file": "FCCG_FINAL_PureINSLoggingMatrix_QUALITY.log",
+      "source": ".work/c/apps/FCCG/.work/t4/test_estimator_release_debug_b1/PureINSLoggingMatrix/build/FCCG/Matrix/quality.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "096a9c6f4c9098e44b5cf5756bfc47ed2796c36cf0148459f7bac2603369e283",
+      "bytes": 46698
+    },
+    {
+      "file": "flp_current_c_probe.log",
+      "source": ".work/flp_current_c_probe.log",
+      "source_commit": "See individual diagnostic log; historical initial failure retained",
+      "sha256": "d1dd478217b41c74a7f44eafe2f0e282159e4fefff8fcf0188aff146fe8f3c77",
+      "bytes": 12348
+    },
+    {
+      "file": "flp_current_c_fixed.log",
+      "source": ".work/flp_current_c_fixed.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "f9d367162d7848d7a2b2e4f1838aa77d9c57a2f92eb6fe711c201403f421a96e",
+      "bytes": 102
+    },
+    {
+      "file": "flp_aggregation_related.log",
+      "source": ".work/flp_aggregation_related.log",
+      "source_commit": "See individual diagnostic log; historical initial failure retained",
+      "sha256": "3f65bf92af47af591fc4d5a8c3da12501e59dd3d71eeb6143f43ad428a846171",
+      "bytes": 11221
+    },
+    {
+      "file": "flp_aggregation_related_fixed.log",
+      "source": ".work/flp_aggregation_related_fixed.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "e4e4aa0a53105176944f5722bdae5743bf0136d28559b5de625cd18a34344be1",
+      "bytes": 182
+    },
+    {
+      "file": "flp_aggregation_header.log",
+      "source": ".work/flp_aggregation_header.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "4e303d6a0a67db3a310bb71cd2a3e7a7daddd7ca5897ba9496ff9aa33cdf12e9",
+      "bytes": 101
+    },
+    {
+      "file": "p51_decoder_identity_driver.log",
+      "source": ".work/p51_decoder_identity_driver.log",
+      "source_commit": "See individual diagnostic log; historical initial failure retained",
+      "sha256": "9e0a6b78c0e740c3627d00ba0a541828f2e21a2ffde0ed3f18834c36e7d36871",
+      "bytes": 1360
+    },
+    {
+      "file": "p51_decoder_identity_fixed.log",
+      "source": ".work/p51_decoder_identity_fixed.log",
+      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+      "sha256": "084211251aa42a3921ad27b9b0f0a81aed461bd6822fd2400a0d44c7eb9c0986",
+      "bytes": 78
+    },
+    {
+      "file": "final_docs_check.log",
+      "source": ".work/final_docs_check.log",
+      "source_commit": "See individual diagnostic log; historical initial failure retained",
+      "sha256": "1b2f5d88896d8f687e32c91e815b0ad11778b6d1d3a8a5e6c35e2f037fff8bc7",
+      "bytes": 100
+    }
+  ],
+  "supporting_evidence": [
+    {
+      "file": "ARTIFACT_CONFIG_DECODER_MANIFEST.json",
+      "sha256": "35e5b18119f990d648b86af78d1a8e487e8b40960fe62e58677cb292de07ae55",
+      "bytes": 16922,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "eskf_actual_ccm_warning.png",
+      "sha256": "16d8f66cba3b0f47190d065e075d94aa4b77ea138241200431f8f3dec243a496",
+      "bytes": 107473,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "EVIDENCE_INDEX.json",
+      "sha256": "d42049641f3b5d48104f3de4cc974c7bdfec0a6f67e14145316bbfa9c361d3ba",
+      "bytes": 4825,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "existing_Flight_Controller.json",
+      "sha256": "fdbed2bd96c989ebb4d3d761f2b727bde378cccd1b4e03c1dbebf615e5e49ef3",
+      "bytes": 4162,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "existing_Ground_Station.json",
+      "sha256": "00db64c56b3dd55fc9082e07680cbd7b6ff2831f2c205f4aa72bb34fe20240dd",
+      "bytes": 3047,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "FCCG_NATIVE_REGRESSION.json",
+      "sha256": "906343b2c511b50e1ba617c28407bd966a59cc8090222f8beefca4f3ed7b9ee3",
+      "bytes": 1957,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "flp_native_light_project_header.png",
+      "sha256": "00fbb19c3a5f6882de5a305417233e4543fe543620fc81378ababc8f7865c527",
+      "bytes": 1116,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "GROUND_POWER10.log",
+      "sha256": "9824ba2bb70d3284fe861693f825e7144961369343ee93045078e19598524af6",
+      "bytes": 4522,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "gshc_native_large_font.png",
+      "sha256": "4119c73c97a391337cd27fbcb0d76441870004ca0865b02a106c4ef200de9672",
+      "bytes": 268829,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "GUI_architecture_check.log",
+      "sha256": "bf907f9d87edd79cd8c5718b2d7b978ab25a3d6e5c48a29d1c355f4d5a560965",
+      "bytes": 1154,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "GUI_artifact_check.log",
+      "sha256": "dc66fb6f5f5c2efe7fb72e802a2ca5c68fcc312ce9cfb94f7e1d938c064296f7",
+      "bytes": 1998,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "GUI_FIVE_CHECKS.json",
+      "sha256": "9e95e7e40d15f8da6287e76e1b695061eb6a1f5a8c256371b42537c570ad876d",
+      "bytes": 3161,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "GUI_host_tests.log",
+      "sha256": "4954ff65ad3128fc507473f55bcbb599b534e455781254f1abb86b015e7e0051",
+      "bytes": 56498,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "GUI_power10_check.log",
+      "sha256": "af25cd48ed4022e5d5618daadef32fcdb919a404e4f8fe933d4495d40b0ea958",
+      "bytes": 46191,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "GUI_static_analysis.log",
+      "sha256": "325d08aff0dc93f539188d54492f977b89dcc449ef3804cdbbdcb415b52e31eb",
+      "bytes": 439966,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "imported_Flight_Controller.json",
+      "sha256": "fede169a22c10b5919eb3929b92c412eaba8f34688d874b23e61c757c420343d",
+      "bytes": 4164,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "imported_Ground_Station.json",
+      "sha256": "615be67291c997e70853622a6edb6e47aa2e885ff4149cd5e1e7f4ae971eae92",
+      "bytes": 3047,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "INTERIM_FULL_SUITE_2222.log",
+      "sha256": "aad4f1031c8ae3d7442b90671bc076b091525dc7002ff8a8d07f5bef1cfe0656",
+      "bytes": 162,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "native_missing_storage.png",
+      "sha256": "ed81c9b9e9428f01edc01cd432a24c79fdfb885f5a3c04e0918c093c3ce2683a",
+      "bytes": 95407,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "NATIVE_VALIDATION_RESULT.json",
+      "sha256": "34c8cd1238183038f982b92b44ef75dd4838c778986785bf18d6c21a24d688cc",
+      "bytes": 6403,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "STACK_AND_GROUND_GATES.json",
+      "sha256": "b1c4985db810b540ee509b26c0aa89d79e55c6b1c11c758e1e513d6e6ce6cbc1",
+      "bytes": 1770,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    },
+    {
+      "file": "WIRE_CLEAN_CHECKOUT_BYTES.json",
+      "sha256": "7f71e5cd75ab29eb5c044fcd2152b5a2183d774f18b10235a90124727b704505",
+      "bytes": 614,
+      "role": "Earlier workflow supporting evidence; source/details in individual payload or historical interim index. Final suites are FCCG_FINAL and FLP_FINAL."
+    }
+  ],
+  "quota": "last trusted user82%17:20UTC; dynamic unknown",
+  "hardware": "NOT TESTED; no flashing/START/actuator connection",
+  "early_windows_av": "unexplained; subsequent bounded native regression not reproduced"
+}

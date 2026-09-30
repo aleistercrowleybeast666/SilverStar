@@ -6,3 +6,6 @@ docs/** whitespace=-blank-at-eol,-blank-at-eof
 # Wire-source provenance is byte-exact, including imported line endings.
 apps/FCCG/plugins/builtin/silverstar_protocol_telemetry_air_m0/payload/Protocol/Src/air_protocol.c -text
 apps/FCCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Src/sslog_protocol.c -text
+
+# Acceptance hashes describe exact evidence bytes, independent of checkout EOL settings.
+docs/FCCG/evidence_final_20261001/** -text

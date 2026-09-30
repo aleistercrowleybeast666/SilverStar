@@ -1,0 +1,71 @@
+{
+  "scope": "Real Windows Qt with actual invalid generation plans; no hardware",
+  "steps": [
+    {
+      "name": "board_unselected",
+      "page": "page.board_hardware",
+      "issue_codes": [
+        "HCLK_UNDECLARED",
+        "platform_lock",
+        "platform_compatibility",
+        "platform_compatibility",
+        "hal_cmsis_source_policy",
+        "hardware_import_incomplete",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "resource",
+        "STORAGE_SDIO_UNBOUND"
+      ]
+    },
+    {
+      "name": "storage_missing_logging_on",
+      "page": "page.board_hardware",
+      "issue_codes": [
+        "protocol_transport",
+        "STORAGE_DEVICE_REQUIRED",
+        "log_sink_cardinality"
+      ]
+    },
+    {
+      "name": "storage_missing_logging_off",
+      "page": "page.devices",
+      "issue_codes": [
+        "STORAGE_DEVICE_REQUIRED"
+      ]
+    }
+  ],
+  "dialogs": [
+    {
+      "text": "配置验证未通过（代码：HCLK_UNDECLARED）\n配置验证未通过（代码：platform_lock）\n配置验证未通过（代码：platform_compatibility）\n配置验证未通过（代码：platform_compatibility）\n配置验证未通过（代码：hal_cmsis_source_policy）\n配置验证未通过（代码：hardware_import_incomplete）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：resource）\n配置验证未通过（代码：STORAGE_SDIO_UNBOUND）",
+      "details": "[HCLK_UNDECLARED] Hardware inventory has no positive CubeMX HCLK\n[platform_lock] Detected MCU/Platform plugin lock is incomplete; it will be filled by hardware reconciliation before the next save\n[platform_compatibility] CubeMX version is missing; silverstar.mcu.stm32f407vet6 requires 6.15.0\n[platform_compatibility] STM32Cube firmware package is missing; silverstar.mcu.stm32f407vet6 requires STM32Cube FW_F4 V1.28.3\n[hal_cmsis_source_policy] Platform silverstar.mcu.stm32f407vet6 requires HAL/CMSIS source policy plugin_payload_authoritative, got missing\n[hardware_import_incomplete] Custom STM32CubeMX hardware import metadata is incomplete\n[resource] Unassigned resource requirement: imu0:data (uart)\n[resource] Unassigned resource requirement: imu0:time (time)\n[resource] Unassigned resource requirement: gnss0:data (uart)\n[resource] Unassigned resource requirement: gnss0:reset (gpio_output)\n[resource] Unassigned resource requirement: gnss0:timepulse (gpio_interrupt)\n[resource] Unassigned resource requirement: gnss0:time (time)\n[resource] Unassigned resource requirement: telemetry0:radio_bus (spi)\n[resource] Unassigned resource requirement: telemetry0:radio_nss (gpio_output)\n[resource] Unassigned resource requirement: telemetry0:radio_reset (gpio_output)\n[resource] Unassigned resource requirement: telemetry0:radio_busy (gpio_input)\n[resource] Unassigned resource requirement: telemetry0:radio_dio1 (gpio_interrupt)\n[resource] Unassigned resource requirement: telemetry0:time (time)\n[resource] Unassigned resource requirement: maintenance0:console (uart)\n[resource] Unassigned resource requirement: storage0:storage (sdio)\n[resource] Unassigned resource requirement: storage0:time (time)\n[resource] Unassigned resource requirement: voltage_monitor0:input_voltage (adc)\n[resource] Unassigned resource requirement: voltage_monitor0:time (time)\n[resource] Unassigned resource requirement: launch_ignition0:output (gpio_output)\n[resource] Unassigned resource requirement: launch_ignition0:time (time)\n[resource] Unassigned resource requirement: parachute_pyro0:output (gpio_output)\n[resource] Unassigned resource requirement: parachute_pyro0:time (time)\n[resource] Unassigned resource requirement: system_indicator0:output (gpio_output)\n[STORAGE_SDIO_UNBOUND] Bind the storage device to a valid SDIO resource / 请为存储设备绑定有效的 SDIO 资源。"
+    },
+    {
+      "text": "配置验证未通过（代码：protocol_transport）\n配置验证未通过（代码：STORAGE_DEVICE_REQUIRED）\n配置验证未通过（代码：log_sink_cardinality）",
+      "details": "[protocol_transport] Protocol profile logging/flight_log.0_0 requires transport.sequential_file_sink (sequential_file_sink, file, MTU >= 280)\n[STORAGE_DEVICE_REQUIRED] Select exactly one physical TF/SD storage device and bind its SDIO resource; storage is required even when flight logging is disabled / 请选择且仅选择一个物理 TF/SD 存储设备，并绑定 SDIO 资源；关闭飞行日志仍需要存储服务。\n[log_sink_cardinality] Exactly one physical Log Sink Device is required / 必须且只能选择一个物理日志接收设备: none"
+    },
+    {
+      "text": "配置验证未通过（代码：STORAGE_DEVICE_REQUIRED）",
+      "details": "[STORAGE_DEVICE_REQUIRED] Select exactly one physical TF/SD storage device and bind its SDIO resource; storage is required even when flight logging is disabled / 请选择且仅选择一个物理 TF/SD 存储设备，并绑定 SDIO 资源；关闭飞行日志仍需要存储服务。"
+    }
+  ],
+  "status": "PASS"
+}

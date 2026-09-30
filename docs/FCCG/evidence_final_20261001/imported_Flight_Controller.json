@@ -1,0 +1,50 @@
+{
+  "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+  "route": "imported",
+  "target": "Flight_Controller",
+  "directory": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller",
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+    "-j2",
+    "all",
+    "CONFIG=Release",
+    "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+  ],
+  "timestamp_utc": "2026-09-30T21:51:06.847570+00:00",
+  "fresh_output_precondition": "No ELF before build",
+  "toolchain_version": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "make_version": "GNU Make 4.4.1",
+  "exit_code": 0,
+  "seconds": 108.53307540000242,
+  "log": "D:\\python_software\\SilverStar\\.work\\p51_candidates\\imported_Flight_Controller.log",
+  "artifacts": [
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+      "bytes": 3215800,
+      "sha256": "6cf7e186a118ada8f386d082796d2e3f1496b80fd850a0c42da0389a9219399f"
+    },
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.map",
+      "bytes": 1497005,
+      "sha256": "fa8e84f0cde98fc6230be7eb855397d75117e73f15eb837385567c4c5894882d"
+    },
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.bin",
+      "bytes": 313632,
+      "sha256": "78a4f73809c5ae614742b0fba62cf129921f4a8735c76382f435d98a96775c60"
+    },
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.hex",
+      "bytes": 882253,
+      "sha256": "86c0584faf59e63a456d1a9fda5b2f3c0d56648bcb7c43a39bc373d518bbb671"
+    }
+  ],
+  "sizes": [
+    {
+      "elf": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+      "berkeley": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 312492\t   1136\t 155584\t 469212\t  728dc\tD:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf\n",
+      "sections": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf  :\nsection                size        addr\n.isr_vector             392   134217728\n.text                284892   134218120\n.rodata               27192   134503016\n.ARM.extab                0   134530208\n.ARM                      8   134530208\n.preinit_array            0   134530216\n.init_array               4   134530216\n.fini_array               4   134530220\n.data                  1136   536870912\n.ccmram_data              0   268435456\n.ccmram_bss           55432   268435456\n.dma_bss               8064   536872048\n.bss                  91060   536880112\n._user_heap_stack      1028   536971172\n.ARM.attributes          48           0\n.comment                 70           0\n.debug_info         1171273           0\n.debug_abbrev        100328           0\n.debug_loclists      525046           0\n.debug_aranges        19632           0\n.debug_rnglists       69370           0\n.debug_line          587360           0\n.debug_str           208453           0\n.debug_frame          74104           0\n.debug_line_str         602           0\nTotal               3225498\n\n\n"
+    }
+  ],
+  "status": "PASS"
+}

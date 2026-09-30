@@ -1,0 +1,43 @@
+{
+  "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+  "route": "existing",
+  "target": "Ground_Station",
+  "directory": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station",
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+    "-j2",
+    "all"
+  ],
+  "timestamp_utc": "2026-09-30T21:48:59.651522+00:00",
+  "fresh_output_precondition": "No ELF before build",
+  "toolchain_version": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "make_version": "GNU Make 4.4.1",
+  "exit_code": 0,
+  "seconds": 6.751832300011301,
+  "log": "D:\\python_software\\SilverStar\\.work\\p51_candidates\\existing_Ground_Station.log",
+  "artifacts": [
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf",
+      "bytes": 47856,
+      "sha256": "115e3cc7e4e7d6cb17b625b5616e4643f12557e7785d220b3bd0d5810b3ef596"
+    },
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.map",
+      "bytes": 197029,
+      "sha256": "6c7fd881d50bc92cc7d6d764a2c6359e4ad2c0e957bac217910fdc6e57be708a"
+    },
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.bin",
+      "bytes": 20860,
+      "sha256": "9f140e72b6faadcc9f19b58e4c6fe1c6aab84f26387baa74ca3b17dc1a0b5c45"
+    }
+  ],
+  "sizes": [
+    {
+      "elf": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf",
+      "berkeley": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  20844\t     12\t  14112\t  34968\t   8898\tD:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf\n",
+      "sections": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf  :\nsection              size        addr\n.isr_vector           268   134217728\n.text               19416   134218000\n.rodata              1152   134237416\n.ARM.extab              0   134238568\n.ARM                    0   134238568\n.preinit_array          0   134238568\n.init_array             4   134238568\n.fini_array             4   134238572\n.data                  12   536870912\n.bss                13084   536870928\n._user_heap_stack    1028   536884012\n.ARM.attributes        41           0\n.comment               70           0\n.debug_frame          404           0\n.debug_line_str       202           0\nTotal               35685\n\n\n"
+    }
+  ],
+  "status": "PASS"
+}

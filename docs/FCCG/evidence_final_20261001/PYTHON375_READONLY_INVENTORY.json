@@ -1,0 +1,109 @@
+{
+  "TimestampUtc": "2026-09-30T23:27:09.7141078Z",
+  "Mode": "Read-only; no Win32_Product, uninstall, installer execution, or unrelated process termination",
+  "UninstallEntries": [
+    {
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{1822F1DC-2972-499D-9FE2-C27395C06766}",
+      "DisplayName": "Python 3.7.5 Test Suite (64-bit)",
+      "DisplayVersion": "3.7.5150.0",
+      "Publisher": "Python Software Foundation",
+      "InstallLocation": "",
+      "UninstallString": "MsiExec.exe /I{1822F1DC-2972-499D-9FE2-C27395C06766}",
+      "QuietUninstallString": null,
+      "WindowsInstaller": 1
+    },
+    {
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{45CB356A-C0DF-430E-B75F-7764DBA06DF9}",
+      "DisplayName": "Python 3.7.5 Standard Library (64-bit)",
+      "DisplayVersion": "3.7.5150.0",
+      "Publisher": "Python Software Foundation",
+      "InstallLocation": "",
+      "UninstallString": "MsiExec.exe /I{45CB356A-C0DF-430E-B75F-7764DBA06DF9}",
+      "QuietUninstallString": null,
+      "WindowsInstaller": 1
+    },
+    {
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{5A54B213-36D8-40CB-9E55-D20864AEF3C8}",
+      "DisplayName": "Python 3.7.5 Development Libraries (64-bit)",
+      "DisplayVersion": "3.7.5150.0",
+      "Publisher": "Python Software Foundation",
+      "InstallLocation": "",
+      "UninstallString": "MsiExec.exe /I{5A54B213-36D8-40CB-9E55-D20864AEF3C8}",
+      "QuietUninstallString": null,
+      "WindowsInstaller": 1
+    },
+    {
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{6DC6BC71-F1FB-412D-A16A-2FE8C463E89F}",
+      "DisplayName": "Python 3.7.5 Core Interpreter (64-bit)",
+      "DisplayVersion": "3.7.5150.0",
+      "Publisher": "Python Software Foundation",
+      "InstallLocation": "",
+      "UninstallString": "MsiExec.exe /I{6DC6BC71-F1FB-412D-A16A-2FE8C463E89F}",
+      "QuietUninstallString": null,
+      "WindowsInstaller": 1
+    },
+    {
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8864B390-4DFB-43AB-934B-F02C48577666}",
+      "DisplayName": "Python 3.7.5 Executables (64-bit)",
+      "DisplayVersion": "3.7.5150.0",
+      "Publisher": "Python Software Foundation",
+      "InstallLocation": "",
+      "UninstallString": "MsiExec.exe /I{8864B390-4DFB-43AB-934B-F02C48577666}",
+      "QuietUninstallString": null,
+      "WindowsInstaller": 1
+    },
+    {
+      "RegistryPath": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{B33E7CE3-8BFE-4F55-8505-2F74D97392C4}",
+      "DisplayName": "Python 3.7.5 Documentation (64-bit)",
+      "DisplayVersion": "3.7.5150.0",
+      "Publisher": "Python Software Foundation",
+      "InstallLocation": "",
+      "UninstallString": "MsiExec.exe /I{B33E7CE3-8BFE-4F55-8505-2F74D97392C4}",
+      "QuietUninstallString": null,
+      "WindowsInstaller": 1
+    }
+  ],
+  "Python37InstallPaths": [],
+  "LauncherListing": "No installed Pythons found!",
+  "SilverStarVenv": "home = C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\r\ninclude-system-site-packages = true\r\nversion = 3.14.0\r\nexecutable = C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe\r\ncommand = C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m venv --system-site-packages --clear D:\\python_software\\SilverStar\\.venv\r\n",
+  "Decision": "No uninstall attempted. Component maintenance MSI /I entries alone do not prove intact cached installer, absence of elevation/reboot, or safety to other projects. Preserve registrations and all other Python installations.",
+  "KnownFileCandidates": [
+    {
+      "Path": "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+      "Exists": false,
+      "ProductVersion": null
+    },
+    {
+      "Path": "C:\\Program Files\\Python37\\python.exe",
+      "Exists": false,
+      "ProductVersion": null
+    },
+    {
+      "Path": "C:\\Program Files (x86)\\Python37\\python.exe",
+      "Exists": false,
+      "ProductVersion": null
+    },
+    {
+      "Path": "C:\\Python37\\python.exe",
+      "Exists": false,
+      "ProductVersion": null
+    },
+    {
+      "Path": "D:\\Python37\\python.exe",
+      "Exists": false,
+      "ProductVersion": null
+    },
+    {
+      "Path": "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "Exists": true,
+      "ProductVersion": "3.14.0"
+    }
+  ],
+  "DependencyEvidence": {
+    "repo_requires_python": ">=3.11 in root/FCCG/FLP pyproject.toml",
+    "active_venv": "Python3.14.0; current tests use explicit .venv interpreter",
+    "tracked_python37_references": "No matches in scoped root/apps requirements search",
+    "scope_limit": "No global dependency proof; no full drive or unrelated project scan; absence at common paths does not prove all files removed",
+    "assessment": "Six machine-wide official MSI component registrations; no aggregate Python3.7.5 uninstaller in queried view and no PythonCore3.7 install path. Do not infer a complete independent installation."
+  }
+}

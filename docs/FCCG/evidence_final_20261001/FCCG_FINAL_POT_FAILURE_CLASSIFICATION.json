@@ -1,0 +1,20 @@
+[
+  {
+    "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+    "path": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FCCG\\.work\\t4\\test_estimator_release_debug_b0\\KF6LoggingMatrix\\build\\FCCG\\Matrix\\quality.log",
+    "summary": [
+      "Power of Ten check FAILED (194 failures).",
+      "SilverStar architecture check passed: checks=328 failures=0"
+    ],
+    "rule5_runtime_assertion_coverage_violations": 194
+  },
+  {
+    "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
+    "path": "D:\\python_software\\SilverStar\\.work\\c\\apps\\FCCG\\.work\\t4\\test_estimator_release_debug_b1\\PureINSLoggingMatrix\\build\\FCCG\\Matrix\\quality.log",
+    "summary": [
+      "Power of Ten check FAILED (194 failures).",
+      "SilverStar architecture check passed: checks=328 failures=0"
+    ],
+    "rule5_runtime_assertion_coverage_violations": 194
+  }
+]

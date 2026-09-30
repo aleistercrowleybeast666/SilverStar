@@ -1,0 +1,50 @@
+[
+  {
+    "name": "existing_stack",
+    "directory": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "CONFIG=Release",
+      "stack-report"
+    ],
+    "exit_code": 0,
+    "seconds": 3.8918101000017487,
+    "log": "D:\\python_software\\SilverStar\\.work\\p51_additional_gates\\existing_stack.log"
+  },
+  {
+    "name": "imported_stack",
+    "directory": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "CONFIG=Release",
+      "stack-report"
+    ],
+    "exit_code": 0,
+    "seconds": 2.8795011000038357,
+    "log": "D:\\python_software\\SilverStar\\.work\\p51_additional_gates\\imported_stack.log"
+  },
+  {
+    "name": "eskf_stack",
+    "directory": "D:\\stm32_project\\.resource\\20261001\\final_18afe8c\\capture_logs_on_eskf15\\Flight_Controller",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "CONFIG=Release",
+      "stack-report"
+    ],
+    "exit_code": 0,
+    "seconds": 2.6579440999921644,
+    "log": "D:\\python_software\\SilverStar\\.work\\p51_additional_gates\\eskf_stack.log"
+  },
+  {
+    "name": "ground_power10",
+    "directory": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "CONFIG=Release",
+      "power10-check"
+    ],
+    "exit_code": 2,
+    "seconds": 1.9155356000119355,
+    "log": "D:\\python_software\\SilverStar\\.work\\p51_additional_gates\\ground_power10.log"
+  }
+]

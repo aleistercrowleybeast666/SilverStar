@@ -1,0 +1,167 @@
+..............FF.F...................................................... [ 83%]
+..............                                                           [100%]
+================================== FAILURES ===================================
+_ test_real_generated_package_production_open_cache_roundtrip_and_replay[existing-silverstar.algorithm.kf6] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/f/apps/FLP/.work/aggregation_related/test_real_generated_package_pr0')
+name = 'existing', algorithm = 'silverstar.algorithm.kf6'
+
+    @pytest.mark.parametrize('name,algorithm',(
+        ('existing','silverstar.algorithm.kf6'),('imported','silverstar.algorithm.kf6'),
+        ('pure','silverstar.algorithm.pure_ins'),('eskf','silverstar.algorithm.estimator.eskf15')))
+    def test_real_generated_package_production_open_cache_roundtrip_and_replay(tmp_path,name,algorithm):
+        decoder=decoder_root(name)
+        log,package=GeneratedPair_Build(decoder,tmp_path)
+        before={path:hashlib.sha256(path.read_bytes()).hexdigest() for path in (log,decoder)}
+        registry=builtin_registry()
+        coordinator=LogOpenCoordinator(registry,cache=DecoderProfileCache(tmp_path/'cache'))
+        opened=coordinator.Open(LogOpenRequest(log_path=log,decoder_package_path=decoder))
+        reopened=coordinator.Open(LogOpenRequest(log_path=log,cache_reference=opened.cache_reference))
+        assert reopened.descriptor==opened.descriptor
+        assert reopened.package.generation_profile_hash_128==package.generation_profile_hash_128
+        plugin=next(p for p in registry.algorithms if p.metadata.plugin_id==algorithm)
+>       result=plugin.run(opened.dataset,ReplayRequest(mode=ReplayMode.RECORDED_CONFIGURATION,input_source='corrected_imu'))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_generated_aggregation_pair.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_flp\plugins\algorithms\kf6\plugin.py:1129: in run
+    schedule, integrity_diagnostics = self._IntegritySchedule_Apply(
+src\silverstar_flp\plugins\algorithms\kf6\plugin.py:1479: in _IntegritySchedule_Apply
+    return QualitySchedule_Apply(dataset, schedule, parameters)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dataset = FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/f/apps/FLP/.work/aggregation_related/test_r...ogger_overflow_event_count=0, sequence_gaps=(), mission_record_continuity='continuous', structural_integrity='normal'))
+schedule = ()
+parameters = {'gravity_mps2': 9.779999732971191, 'p0_position_e': 4.0, 'p0_position_n': 4.0, 'p0_position_u': 9.0, ...}
+
+    def QualitySchedule_Apply(dataset, schedule, parameters):
+        initial = dataset.initial_state.payload
+        if not int(initial.get("origin_valid_flags", 0)) & 1:
+>           raise ValueError("gnss_origin_unavailable")
+E           ValueError: gnss_origin_unavailable
+
+src\silverstar_flp\analysis\navigation_revision3.py:22: ValueError
+_ test_real_generated_package_production_open_cache_roundtrip_and_replay[imported-silverstar.algorithm.kf6] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/f/apps/FLP/.work/aggregation_related/test_real_generated_package_pr1')
+name = 'imported', algorithm = 'silverstar.algorithm.kf6'
+
+    @pytest.mark.parametrize('name,algorithm',(
+        ('existing','silverstar.algorithm.kf6'),('imported','silverstar.algorithm.kf6'),
+        ('pure','silverstar.algorithm.pure_ins'),('eskf','silverstar.algorithm.estimator.eskf15')))
+    def test_real_generated_package_production_open_cache_roundtrip_and_replay(tmp_path,name,algorithm):
+        decoder=decoder_root(name)
+        log,package=GeneratedPair_Build(decoder,tmp_path)
+        before={path:hashlib.sha256(path.read_bytes()).hexdigest() for path in (log,decoder)}
+        registry=builtin_registry()
+        coordinator=LogOpenCoordinator(registry,cache=DecoderProfileCache(tmp_path/'cache'))
+        opened=coordinator.Open(LogOpenRequest(log_path=log,decoder_package_path=decoder))
+        reopened=coordinator.Open(LogOpenRequest(log_path=log,cache_reference=opened.cache_reference))
+        assert reopened.descriptor==opened.descriptor
+        assert reopened.package.generation_profile_hash_128==package.generation_profile_hash_128
+        plugin=next(p for p in registry.algorithms if p.metadata.plugin_id==algorithm)
+>       result=plugin.run(opened.dataset,ReplayRequest(mode=ReplayMode.RECORDED_CONFIGURATION,input_source='corrected_imu'))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_generated_aggregation_pair.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_flp\plugins\algorithms\kf6\plugin.py:1129: in run
+    schedule, integrity_diagnostics = self._IntegritySchedule_Apply(
+src\silverstar_flp\plugins\algorithms\kf6\plugin.py:1479: in _IntegritySchedule_Apply
+    return QualitySchedule_Apply(dataset, schedule, parameters)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dataset = FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/f/apps/FLP/.work/aggregation_related/test_r...ogger_overflow_event_count=0, sequence_gaps=(), mission_record_continuity='continuous', structural_integrity='normal'))
+schedule = ()
+parameters = {'gravity_mps2': 9.779999732971191, 'p0_position_e': 4.0, 'p0_position_n': 4.0, 'p0_position_u': 9.0, ...}
+
+    def QualitySchedule_Apply(dataset, schedule, parameters):
+        initial = dataset.initial_state.payload
+        if not int(initial.get("origin_valid_flags", 0)) & 1:
+>           raise ValueError("gnss_origin_unavailable")
+E           ValueError: gnss_origin_unavailable
+
+src\silverstar_flp\analysis\navigation_revision3.py:22: ValueError
+_ test_real_generated_package_production_open_cache_roundtrip_and_replay[eskf-silverstar.algorithm.estimator.eskf15] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/f/apps/FLP/.work/aggregation_related/test_real_generated_package_pr3')
+name = 'eskf', algorithm = 'silverstar.algorithm.estimator.eskf15'
+
+    @pytest.mark.parametrize('name,algorithm',(
+        ('existing','silverstar.algorithm.kf6'),('imported','silverstar.algorithm.kf6'),
+        ('pure','silverstar.algorithm.pure_ins'),('eskf','silverstar.algorithm.estimator.eskf15')))
+    def test_real_generated_package_production_open_cache_roundtrip_and_replay(tmp_path,name,algorithm):
+        decoder=decoder_root(name)
+        log,package=GeneratedPair_Build(decoder,tmp_path)
+        before={path:hashlib.sha256(path.read_bytes()).hexdigest() for path in (log,decoder)}
+        registry=builtin_registry()
+        coordinator=LogOpenCoordinator(registry,cache=DecoderProfileCache(tmp_path/'cache'))
+        opened=coordinator.Open(LogOpenRequest(log_path=log,decoder_package_path=decoder))
+        reopened=coordinator.Open(LogOpenRequest(log_path=log,cache_reference=opened.cache_reference))
+        assert reopened.descriptor==opened.descriptor
+        assert reopened.package.generation_profile_hash_128==package.generation_profile_hash_128
+        plugin=next(p for p in registry.algorithms if p.metadata.plugin_id==algorithm)
+>       result=plugin.run(opened.dataset,ReplayRequest(mode=ReplayMode.RECORDED_CONFIGURATION,input_source='corrected_imu'))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_generated_aggregation_pair.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.plugins.algorithms.eskf15.plugin.Eskf15AlgorithmPlugin object at 0x0000019717D16E40>
+dataset = FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/f/apps/FLP/.work/aggregation_related/test_r...ogger_overflow_event_count=0, sequence_gaps=(), mission_record_continuity='continuous', structural_integrity='normal'))
+request = ReplayRequest(mode=<ReplayMode.RECORDED_CONFIGURATION: 'recorded_configuration'>, input_source='corrected_imu', parameters=mappingproxy({}), quality_policy_revision=None)
+context = TaskContext(cancellation_event=<threading.Event at 0x1977d88eb70: unset>, progress_callback=None)
+
+    def run(
+        self, dataset: FlightDataset, request: ReplayRequest, context: TaskContext | None = None
+    ) -> AlgorithmResult:
+        context = context or TaskContext()
+        available = self.availability(dataset, request.input_source)
+        if not available.available:
+            raise ValueError("replay_unavailable:" + ",".join(available.missing_inputs))
+        if request.mode == ReplayMode.RECORDED_CONFIGURATION and not self.FirmwareMember_Is(
+            dataset
+        ):
+            raise ValueError("eskf15_not_recorded_use_what_if")
+        parameters = self.Parameters_Resolve(dataset, request)
+        bounds = MissionReplayBounds_Get(dataset)
+        steps, input_failure, exact_body = BodySteps_Build(dataset, bounds)
+        if not steps:
+            raise ValueError("eskf15_body_history_insufficient")
+        start = steps[0].start_us
+        p0 = [
+            parameters["p0_" + name]
+            for name in (
+                "position_e",
+                "position_n",
+                "position_u",
+                "velocity_e",
+                "velocity_n",
+                "velocity_u",
+                "theta_x",
+                "theta_y",
+                "theta_z",
+                "gyro_bias_x",
+                "gyro_bias_y",
+                "gyro_bias_z",
+                "accel_bias_x",
+                "accel_bias_y",
+                "accel_bias_z",
+            )
+        ]
+        if self.FirmwareMember_Is(dataset):
+            snapshot = dataset.RecordAtOrBefore_Get("ESKF15_INITIAL_STATE", start)
+            initial_p = dataset.Series_Get("eskf15.initial.covariance.upper_triangle")
+            if snapshot is None or initial_p is None or not exact_body:
+>               raise ValueError("eskf15_recorded_initialization_evidence_missing")
+E               ValueError: eskf15_recorded_initialization_evidence_missing
+
+src\silverstar_flp\plugins\algorithms\eskf15\plugin.py:501: ValueError
+=========================== short test summary info ===========================
+FAILED tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[existing-silverstar.algorithm.kf6]
+FAILED tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[imported-silverstar.algorithm.kf6]
+FAILED tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[eskf-silverstar.algorithm.estimator.eskf15]
+3 failed, 83 passed in 9.60s

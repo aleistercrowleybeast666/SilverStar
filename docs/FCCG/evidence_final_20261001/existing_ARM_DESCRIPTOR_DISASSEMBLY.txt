@@ -1,0 +1,40 @@
+
+D:\stm32_project\SS_0_5_TEST_4_versions\FinalCandidate_ddb73bb_20261001\ExistingHardware\Flight_Controller\build\FCCG\SilverStar_F407\Release\SilverStar_0_1_0.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+08041380 <ProjectLogDecoderProfile_Get>:
+ 8041380:	b530      	push	{r4, r5, lr}
+ 8041382:	b083      	sub	sp, #12
+ 8041384:	221b      	movs	r2, #27
+ 8041386:	4b12      	ldr	r3, [pc, #72]	@ (80413d0 <ProjectLogDecoderProfile_Get+0x50>)
+ 8041388:	9200      	str	r2, [sp, #0]
+ 804138a:	4604      	mov	r4, r0
+ 804138c:	2207      	movs	r2, #7
+ 804138e:	2102      	movs	r1, #2
+ 8041390:	f7c8 fb06 	bl	80099a0 <SilverStarAssert_ObjectCheck>
+ 8041394:	2234      	movs	r2, #52	@ 0x34
+ 8041396:	2100      	movs	r1, #0
+ 8041398:	1d20      	adds	r0, r4, #4
+ 804139a:	f000 f8a7 	bl	80414ec <memset>
+ 804139e:	46a4      	mov	ip, r4
+ 80413a0:	4b0c      	ldr	r3, [pc, #48]	@ (80413d4 <ProjectLogDecoderProfile_Get+0x54>)
+ 80413a2:	4d0d      	ldr	r5, [pc, #52]	@ (80413d8 <ProjectLogDecoderProfile_Get+0x58>)
+ 80413a4:	f84c 3b08 	str.w	r3, [ip], #8
+ 80413a8:	f105 0e30 	add.w	lr, r5, #48	@ 0x30
+ 80413ac:	462c      	mov	r4, r5
+ 80413ae:	cc0f      	ldmia	r4!, {r0, r1, r2, r3}
+ 80413b0:	4574      	cmp	r4, lr
+ 80413b2:	f10c 0c10 	add.w	ip, ip, #16
+ 80413b6:	f105 0510 	add.w	r5, r5, #16
+ 80413ba:	f84c 0c10 	str.w	r0, [ip, #-16]
+ 80413be:	f84c 1c0c 	str.w	r1, [ip, #-12]
+ 80413c2:	f84c 2c08 	str.w	r2, [ip, #-8]
+ 80413c6:	f84c 3c04 	str.w	r3, [ip, #-4]
+ 80413ca:	d1ef      	bne.n	80413ac <ProjectLogDecoderProfile_Get+0x2c>
+ 80413cc:	b003      	add	sp, #12
+ 80413ce:	bd30      	pop	{r4, r5, pc}
+ 80413d0:	0804aa68 	.word	0x0804aa68
+ 80413d4:	00020001 	.word	0x00020001
+ 80413d8:	0804aa94 	.word	0x0804aa94

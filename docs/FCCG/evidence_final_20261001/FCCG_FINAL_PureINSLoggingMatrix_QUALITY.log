@@ -1,0 +1,431 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1
+FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+FCCG_PROGRESS|POWER10|PLAN|107
+FCCG_PROGRESS|POWER10|BEGIN|1|107|Algorithm\Alignment\Common\Src\attitude_alignment.c
+FCCG_PROGRESS|POWER10|DONE|1|107|Algorithm\Alignment\Common\Src\attitude_alignment.c
+FCCG_PROGRESS|POWER10|BEGIN|2|107|Algorithm\Alignment\Common\Src\attitude_preflight.c
+FCCG_PROGRESS|POWER10|DONE|2|107|Algorithm\Alignment\Common\Src\attitude_preflight.c
+FCCG_PROGRESS|POWER10|BEGIN|3|107|Algorithm\Alignment\Common\Src\vector_constraints.c
+FCCG_PROGRESS|POWER10|DONE|3|107|Algorithm\Alignment\Common\Src\vector_constraints.c
+FCCG_PROGRESS|POWER10|BEGIN|4|107|Algorithm\Alignment\VectorConstraints\Src\alignment_strategy_binding.c
+FCCG_PROGRESS|POWER10|DONE|4|107|Algorithm\Alignment\VectorConstraints\Src\alignment_strategy_binding.c
+FCCG_PROGRESS|POWER10|BEGIN|5|107|Algorithm\Calibration\Src\imu_six_face_calibration.c
+FCCG_PROGRESS|POWER10|DONE|5|107|Algorithm\Calibration\Src\imu_six_face_calibration.c
+FCCG_PROGRESS|POWER10|BEGIN|6|107|Algorithm\Common\Src\attitude_frame.c
+FCCG_PROGRESS|POWER10|DONE|6|107|Algorithm\Common\Src\attitude_frame.c
+FCCG_PROGRESS|POWER10|BEGIN|7|107|Algorithm\Common\Src\geodesy_local.c
+FCCG_PROGRESS|POWER10|DONE|7|107|Algorithm\Common\Src\geodesy_local.c
+FCCG_PROGRESS|POWER10|BEGIN|8|107|Algorithm\Common\Src\navigation_quality.c
+FCCG_PROGRESS|POWER10|DONE|8|107|Algorithm\Common\Src\navigation_quality.c
+FCCG_PROGRESS|POWER10|BEGIN|9|107|Algorithm\INS\Coning2Sculling2\Src\ins_mechanization.c
+FCCG_PROGRESS|POWER10|DONE|9|107|Algorithm\INS\Coning2Sculling2\Src\ins_mechanization.c
+FCCG_PROGRESS|POWER10|BEGIN|10|107|APP\Src\app_tasks.c
+FCCG_PROGRESS|POWER10|DONE|10|107|APP\Src\app_tasks.c
+FCCG_PROGRESS|POWER10|BEGIN|11|107|APP\Src\device_native_log.c
+FCCG_PROGRESS|POWER10|DONE|11|107|APP\Src\device_native_log.c
+FCCG_PROGRESS|POWER10|BEGIN|12|107|APP\Src\device_task.c
+FCCG_PROGRESS|POWER10|DONE|12|107|APP\Src\device_task.c
+FCCG_PROGRESS|POWER10|BEGIN|13|107|APP\Src\diagnostic_log.c
+FCCG_PROGRESS|POWER10|DONE|13|107|APP\Src\diagnostic_log.c
+FCCG_PROGRESS|POWER10|BEGIN|14|107|APP\Src\estimator_barometer_pending.c
+FCCG_PROGRESS|POWER10|DONE|14|107|APP\Src\estimator_barometer_pending.c
+FCCG_PROGRESS|POWER10|BEGIN|15|107|APP\Src\estimator_bus.c
+FCCG_PROGRESS|POWER10|DONE|15|107|APP\Src\estimator_bus.c
+FCCG_PROGRESS|POWER10|BEGIN|16|107|APP\Src\estimator_task.c
+FCCG_PROGRESS|POWER10|DONE|16|107|APP\Src\estimator_task.c
+FCCG_PROGRESS|POWER10|BEGIN|17|107|APP\Src\flight_task.c
+FCCG_PROGRESS|POWER10|DONE|17|107|APP\Src\flight_task.c
+FCCG_PROGRESS|POWER10|BEGIN|18|107|APP\Src\imu_sample_bus.c
+FCCG_PROGRESS|POWER10|DONE|18|107|APP\Src\imu_sample_bus.c
+FCCG_PROGRESS|POWER10|BEGIN|19|107|APP\Src\ins_task.c
+FCCG_PROGRESS|POWER10|DONE|19|107|APP\Src\ins_task.c
+FCCG_PROGRESS|POWER10|BEGIN|20|107|APP\Src\logger_bus.c
+FCCG_PROGRESS|POWER10|DONE|20|107|APP\Src\logger_bus.c
+FCCG_PROGRESS|POWER10|BEGIN|21|107|APP\Src\logger_task.c
+FCCG_PROGRESS|POWER10|DONE|21|107|APP\Src\logger_task.c
+FCCG_PROGRESS|POWER10|BEGIN|22|107|APP\Src\serial_task.c
+FCCG_PROGRESS|POWER10|DONE|22|107|APP\Src\serial_task.c
+FCCG_PROGRESS|POWER10|BEGIN|23|107|APP\Src\telemetry_task.c
+FCCG_PROGRESS|POWER10|DONE|23|107|APP\Src\telemetry_task.c
+FCCG_PROGRESS|POWER10|BEGIN|24|107|Common\Src\common_format.c
+FCCG_PROGRESS|POWER10|DONE|24|107|Common\Src\common_format.c
+FCCG_PROGRESS|POWER10|BEGIN|25|107|Common\Src\common_ringbuf.c
+FCCG_PROGRESS|POWER10|DONE|25|107|Common\Src\common_ringbuf.c
+FCCG_PROGRESS|POWER10|BEGIN|26|107|Common\Src\common_spsc_queue.c
+FCCG_PROGRESS|POWER10|DONE|26|107|Common\Src\common_spsc_queue.c
+FCCG_PROGRESS|POWER10|BEGIN|27|107|Common\Src\debug_log.c
+FCCG_PROGRESS|POWER10|DONE|27|107|Common\Src\debug_log.c
+FCCG_PROGRESS|POWER10|BEGIN|28|107|Common\Src\silverstar_assert.c
+FCCG_PROGRESS|POWER10|DONE|28|107|Common\Src\silverstar_assert.c
+FCCG_PROGRESS|POWER10|BEGIN|29|107|Devices\Console\UART\Adapter\Src\uart_console_adapter.c
+FCCG_PROGRESS|POWER10|DONE|29|107|Devices\Console\UART\Adapter\Src\uart_console_adapter.c
+FCCG_PROGRESS|POWER10|BEGIN|30|107|Devices\Console\UART\Src\console_uart_device.c
+FCCG_PROGRESS|POWER10|DONE|30|107|Devices\Console\UART\Src\console_uart_device.c
+FCCG_PROGRESS|POWER10|BEGIN|31|107|Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c
+FCCG_PROGRESS|POWER10|DONE|31|107|Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c
+FCCG_PROGRESS|POWER10|BEGIN|32|107|Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c
+FCCG_PROGRESS|POWER10|DONE|32|107|Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c
+FCCG_PROGRESS|POWER10|BEGIN|33|107|Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c
+FCCG_PROGRESS|POWER10|DONE|33|107|Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c
+FCCG_PROGRESS|POWER10|BEGIN|34|107|Devices\IMU\JY901B\Adapter\Src\jy901b_barometer_adapter.c
+FCCG_PROGRESS|POWER10|DONE|34|107|Devices\IMU\JY901B\Adapter\Src\jy901b_barometer_adapter.c
+FCCG_PROGRESS|POWER10|BEGIN|35|107|Devices\IMU\JY901B\Adapter\Src\jy901b_imu_adapter.c
+FCCG_PROGRESS|POWER10|DONE|35|107|Devices\IMU\JY901B\Adapter\Src\jy901b_imu_adapter.c
+FCCG_PROGRESS|POWER10|BEGIN|36|107|Devices\IMU\JY901B\Adapter\Src\jy901b_magnetometer_adapter.c
+FCCG_PROGRESS|POWER10|DONE|36|107|Devices\IMU\JY901B\Adapter\Src\jy901b_magnetometer_adapter.c
+FCCG_PROGRESS|POWER10|BEGIN|37|107|Devices\IMU\JY901B\Adapter\Src\jy901b_quaternion_adapter.c
+FCCG_PROGRESS|POWER10|DONE|37|107|Devices\IMU\JY901B\Adapter\Src\jy901b_quaternion_adapter.c
+FCCG_PROGRESS|POWER10|BEGIN|38|107|Devices\IMU\JY901B\Adapter\Src\jy901b_sample_quality.c
+FCCG_PROGRESS|POWER10|DONE|38|107|Devices\IMU\JY901B\Adapter\Src\jy901b_sample_quality.c
+FCCG_PROGRESS|POWER10|BEGIN|39|107|Devices\IMU\JY901B\Adapter\Src\jy901b_startup.c
+FCCG_PROGRESS|POWER10|DONE|39|107|Devices\IMU\JY901B\Adapter\Src\jy901b_startup.c
+FCCG_PROGRESS|POWER10|BEGIN|40|107|Devices\IMU\JY901B\Src\jy901b_device.c
+FCCG_PROGRESS|POWER10|DONE|40|107|Devices\IMU\JY901B\Src\jy901b_device.c
+FCCG_PROGRESS|POWER10|BEGIN|41|107|Devices\Power\InputVoltage\Src\power_service.c
+FCCG_PROGRESS|POWER10|DONE|41|107|Devices\Power\InputVoltage\Src\power_service.c
+FCCG_PROGRESS|POWER10|BEGIN|42|107|Devices\Storage\SdSdioFatFs\Src\fatfs_lfn_ascii.c
+FCCG_PROGRESS|POWER10|DONE|42|107|Devices\Storage\SdSdioFatFs\Src\fatfs_lfn_ascii.c
+FCCG_PROGRESS|POWER10|BEGIN|43|107|Devices\Storage\SdSdioFatFs\Src\log_sink_service.c
+FCCG_PROGRESS|POWER10|DONE|43|107|Devices\Storage\SdSdioFatFs\Src\log_sink_service.c
+FCCG_PROGRESS|POWER10|BEGIN|44|107|Devices\Storage\SdSdioFatFs\Src\mag_calibration_storage.c
+FCCG_PROGRESS|POWER10|DONE|44|107|Devices\Storage\SdSdioFatFs\Src\mag_calibration_storage.c
+FCCG_PROGRESS|POWER10|BEGIN|45|107|Devices\Storage\SdSdioFatFs\Src\mission_snapshot.c
+FCCG_PROGRESS|POWER10|DONE|45|107|Devices\Storage\SdSdioFatFs\Src\mission_snapshot.c
+FCCG_PROGRESS|POWER10|BEGIN|46|107|Devices\Storage\SdSdioFatFs\Src\persistent_storage.c
+FCCG_PROGRESS|POWER10|DONE|46|107|Devices\Storage\SdSdioFatFs\Src\persistent_storage.c
+FCCG_PROGRESS|POWER10|BEGIN|47|107|Devices\Storage\SdSdioFatFs\Src\storage_service.c
+FCCG_PROGRESS|POWER10|DONE|47|107|Devices\Storage\SdSdioFatFs\Src\storage_service.c
+FCCG_PROGRESS|POWER10|BEGIN|48|107|Devices\Telemetry\SX1281\Adapter\Src\sx1281_telemetry_adapter.c
+FCCG_PROGRESS|POWER10|DONE|48|107|Devices\Telemetry\SX1281\Adapter\Src\sx1281_telemetry_adapter.c
+FCCG_PROGRESS|POWER10|BEGIN|49|107|Devices\Telemetry\SX1281\Src\sx1281_bus.c
+FCCG_PROGRESS|POWER10|DONE|49|107|Devices\Telemetry\SX1281\Src\sx1281_bus.c
+FCCG_PROGRESS|POWER10|BEGIN|50|107|Devices\Telemetry\SX1281\Src\sx1281_device.c
+FCCG_PROGRESS|POWER10|DONE|50|107|Devices\Telemetry\SX1281\Src\sx1281_device.c
+FCCG_PROGRESS|POWER10|BEGIN|51|107|FlightLogic\Deployment\MultiTrigger\Src\flight_deployment.c
+FCCG_PROGRESS|POWER10|DONE|51|107|FlightLogic\Deployment\MultiTrigger\Src\flight_deployment.c
+FCCG_PROGRESS|POWER10|BEGIN|52|107|FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c
+FCCG_PROGRESS|POWER10|DONE|52|107|FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c
+FCCG_PROGRESS|POWER10|BEGIN|53|107|FlightLogic\FlightCycle\Src\silverstar_flight_recovery.c
+FCCG_PROGRESS|POWER10|DONE|53|107|FlightLogic\FlightCycle\Src\silverstar_flight_recovery.c
+FCCG_PROGRESS|POWER10|BEGIN|54|107|FlightLogic\Indicator\GpioStatus\Src\indicator_service.c
+FCCG_PROGRESS|POWER10|DONE|54|107|FlightLogic\Indicator\GpioStatus\Src\indicator_service.c
+FCCG_PROGRESS|POWER10|BEGIN|55|107|FlightLogic\Landing\BarometerImuWindow\Src\flight_landing.c
+FCCG_PROGRESS|POWER10|DONE|55|107|FlightLogic\Landing\BarometerImuWindow\Src\flight_landing.c
+FCCG_PROGRESS|POWER10|BEGIN|56|107|FlightLogic\MissionAction\GpioOutput\Src\mission_action_service.c
+FCCG_PROGRESS|POWER10|DONE|56|107|FlightLogic\MissionAction\GpioOutput\Src\mission_action_service.c
+FCCG_PROGRESS|POWER10|BEGIN|57|107|FlightLogic\MissionAction\GpioOutput\Src\output_service.c
+FCCG_PROGRESS|POWER10|DONE|57|107|FlightLogic\MissionAction\GpioOutput\Src\output_service.c
+FCCG_PROGRESS|POWER10|BEGIN|58|107|Generated\Src\platform_resources.c
+FCCG_PROGRESS|POWER10|DONE|58|107|Generated\Src\platform_resources.c
+FCCG_PROGRESS|POWER10|BEGIN|59|107|Generated\Src\project_capability_routes.c
+FCCG_PROGRESS|POWER10|DONE|59|107|Generated\Src\project_capability_routes.c
+FCCG_PROGRESS|POWER10|BEGIN|60|107|Generated\Src\project_device_instances.c
+FCCG_PROGRESS|POWER10|DONE|60|107|Generated\Src\project_device_instances.c
+FCCG_PROGRESS|POWER10|BEGIN|61|107|Generated\Src\project_log_config.c
+FCCG_PROGRESS|POWER10|DONE|61|107|Generated\Src\project_log_config.c
+FCCG_PROGRESS|POWER10|BEGIN|62|107|Generated\Src\project_log_decoder_profile.c
+FCCG_PROGRESS|POWER10|DONE|62|107|Generated\Src\project_log_decoder_profile.c
+FCCG_PROGRESS|POWER10|BEGIN|63|107|Generated\Src\project_metadata.c
+FCCG_PROGRESS|POWER10|DONE|63|107|Generated\Src\project_metadata.c
+FCCG_PROGRESS|POWER10|BEGIN|64|107|Generated\Src\project_mission_parameters.c
+FCCG_PROGRESS|POWER10|DONE|64|107|Generated\Src\project_mission_parameters.c
+FCCG_PROGRESS|POWER10|BEGIN|65|107|Generated\Src\project_resources.c
+FCCG_PROGRESS|POWER10|DONE|65|107|Generated\Src\project_resources.c
+FCCG_PROGRESS|POWER10|BEGIN|66|107|Modules\Src\telemetry_service.c
+FCCG_PROGRESS|POWER10|DONE|66|107|Modules\Src\telemetry_service.c
+FCCG_PROGRESS|POWER10|BEGIN|67|107|OS\FreeRTOS\freertos_hooks.c
+FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+FCCG_PROGRESS|POWER10|DONE|67|107|OS\FreeRTOS\freertos_hooks.c
+FCCG_PROGRESS|POWER10|BEGIN|68|107|Platform\STM32F4\Src\platform_adc_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|68|107|Platform\STM32F4\Src\platform_adc_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|69|107|Platform\STM32F4\Src\platform_can_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|69|107|Platform\STM32F4\Src\platform_can_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|70|107|Platform\STM32F4\Src\platform_critical_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|70|107|Platform\STM32F4\Src\platform_critical_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|71|107|Platform\STM32F4\Src\platform_gpio_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|71|107|Platform\STM32F4\Src\platform_gpio_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|72|107|Platform\STM32F4\Src\platform_i2c_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|72|107|Platform\STM32F4\Src\platform_i2c_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|73|107|Platform\STM32F4\Src\platform_memory_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|73|107|Platform\STM32F4\Src\platform_memory_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|74|107|Platform\STM32F4\Src\platform_pwm_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|74|107|Platform\STM32F4\Src\platform_pwm_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|75|107|Platform\STM32F4\Src\platform_spi_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|75|107|Platform\STM32F4\Src\platform_spi_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|76|107|Platform\STM32F4\Src\platform_time_stm32f4.c
+FCCG_PROGRESS|POWER10|DONE|76|107|Platform\STM32F4\Src\platform_time_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|77|107|Platform\STM32F4\Src\platform_uart_stm32f4.c
+FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+FCCG_PROGRESS|POWER10|DONE|77|107|Platform\STM32F4\Src\platform_uart_stm32f4.c
+FCCG_PROGRESS|POWER10|BEGIN|78|107|Protocol\Src\air_protocol.c
+FCCG_PROGRESS|POWER10|DONE|78|107|Protocol\Src\air_protocol.c
+FCCG_PROGRESS|POWER10|BEGIN|79|107|Protocol\SSLOG\Src\sslog_protocol.c
+FCCG_PROGRESS|POWER10|DONE|79|107|Protocol\SSLOG\Src\sslog_protocol.c
+FCCG_PROGRESS|POWER10|BEGIN|80|107|Protocol\SSLOG\Src\sslog_records.c
+FCCG_PROGRESS|POWER10|DONE|80|107|Protocol\SSLOG\Src\sslog_records.c
+FCCG_PROGRESS|POWER10|BEGIN|81|107|System\Alignment\Src\system_alignment.c
+FCCG_PROGRESS|POWER10|DONE|81|107|System\Alignment\Src\system_alignment.c
+FCCG_PROGRESS|POWER10|BEGIN|82|107|System\Alignment\Src\system_alignment_source.c
+FCCG_PROGRESS|POWER10|DONE|82|107|System\Alignment\Src\system_alignment_source.c
+FCCG_PROGRESS|POWER10|BEGIN|83|107|System\Calibration\Src\system_calibration.c
+FCCG_PROGRESS|POWER10|DONE|83|107|System\Calibration\Src\system_calibration.c
+FCCG_PROGRESS|POWER10|BEGIN|84|107|System\Calibration\Src\system_calibration_correction.c
+FCCG_PROGRESS|POWER10|DONE|84|107|System\Calibration\Src\system_calibration_correction.c
+FCCG_PROGRESS|POWER10|BEGIN|85|107|System\Calibration\Src\system_mag_calibration.c
+FCCG_PROGRESS|POWER10|DONE|85|107|System\Calibration\Src\system_mag_calibration.c
+FCCG_PROGRESS|POWER10|BEGIN|86|107|System\Indicator\Src\system_indicator.c
+FCCG_PROGRESS|POWER10|DONE|86|107|System\Indicator\Src\system_indicator.c
+FCCG_PROGRESS|POWER10|BEGIN|87|107|System\Inertial\Src\system_inertial.c
+FCCG_PROGRESS|POWER10|DONE|87|107|System\Inertial\Src\system_inertial.c
+FCCG_PROGRESS|POWER10|BEGIN|88|107|System\Src\system_barometer.c
+FCCG_PROGRESS|POWER10|DONE|88|107|System\Src\system_barometer.c
+FCCG_PROGRESS|POWER10|BEGIN|89|107|System\Src\system_capabilities.c
+FCCG_PROGRESS|POWER10|DONE|89|107|System\Src\system_capabilities.c
+FCCG_PROGRESS|POWER10|BEGIN|90|107|System\Src\system_console.c
+FCCG_PROGRESS|POWER10|DONE|90|107|System\Src\system_console.c
+FCCG_PROGRESS|POWER10|BEGIN|91|107|System\Src\system_device_startup.c
+FCCG_PROGRESS|POWER10|DONE|91|107|System\Src\system_device_startup.c
+FCCG_PROGRESS|POWER10|BEGIN|92|107|System\Src\system_estimator_diagnostics.c
+FCCG_PROGRESS|POWER10|DONE|92|107|System\Src\system_estimator_diagnostics.c
+FCCG_PROGRESS|POWER10|BEGIN|93|107|System\Src\system_estimator_profile.c
+FCCG_PROGRESS|POWER10|DONE|93|107|System\Src\system_estimator_profile.c
+FCCG_PROGRESS|POWER10|BEGIN|94|107|System\Src\system_gnss_quality.c
+FCCG_PROGRESS|POWER10|DONE|94|107|System\Src\system_gnss_quality.c
+FCCG_PROGRESS|POWER10|BEGIN|95|107|System\Src\system_health.c
+FCCG_PROGRESS|POWER10|DONE|95|107|System\Src\system_health.c
+FCCG_PROGRESS|POWER10|BEGIN|96|107|System\Src\system_log_policy.c
+FCCG_PROGRESS|POWER10|DONE|96|107|System\Src\system_log_policy.c
+FCCG_PROGRESS|POWER10|BEGIN|97|107|System\Src\system_navigation_health.c
+FCCG_PROGRESS|POWER10|DONE|97|107|System\Src\system_navigation_health.c
+FCCG_PROGRESS|POWER10|BEGIN|98|107|System\Src\system_navigation_profile.c
+FCCG_PROGRESS|POWER10|DONE|98|107|System\Src\system_navigation_profile.c
+FCCG_PROGRESS|POWER10|BEGIN|99|107|System\Src\system_profile.c
+FCCG_PROGRESS|POWER10|DONE|99|107|System\Src\system_profile.c
+FCCG_PROGRESS|POWER10|BEGIN|100|107|System\Src\system_sensor_status.c
+FCCG_PROGRESS|POWER10|DONE|100|107|System\Src\system_sensor_status.c
+FCCG_PROGRESS|POWER10|BEGIN|101|107|System\Src\system_source_selector.c
+FCCG_PROGRESS|POWER10|DONE|101|107|System\Src\system_source_selector.c
+FCCG_PROGRESS|POWER10|BEGIN|102|107|System\Src\system_startup.c
+FCCG_PROGRESS|POWER10|DONE|102|107|System\Src\system_startup.c
+FCCG_PROGRESS|POWER10|BEGIN|103|107|System\Src\system_time.c
+FCCG_PROGRESS|POWER10|DONE|103|107|System\Src\system_time.c
+FCCG_PROGRESS|POWER10|BEGIN|104|107|System\User\system_user_inertial_config.c
+FCCG_PROGRESS|POWER10|DONE|104|107|System\User\system_user_inertial_config.c
+FCCG_PROGRESS|POWER10|BEGIN|105|107|Targets\SilverStar_F407\Src\freertos_target_irq.c
+FCCG_PROGRESS|POWER10|DONE|105|107|Targets\SilverStar_F407\Src\freertos_target_irq.c
+FCCG_PROGRESS|POWER10|BEGIN|106|107|function_rules
+FCCG_PROGRESS|POWER10|DONE|106|107|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|107|107|build_policy
+Power of Ten check FAILED (194 failures).
+- APP\Src\estimator_task.c:3160: function Estimator_HealthEventsPublish has 1 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\flight_task.c:588: function FlightTask_FlightRecoveryEventsProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\flight_task.c:884: function FlightTask_MissionSnapshotIdentityWrite has 1 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\flight_task.c:913: function FlightTask_MagCalibrationIdentityWrite has 1 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\flight_task.c:957: function FlightTask_WriteStartRecords has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\flight_task.c:1016: function FlightTask_RuntimeInitialize has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\flight_task.c:1105: function AppTask_Flight has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\ins_task.c:91: function InsTask_DiagnosticsPublish has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\ins_task.c:857: function AppTask_Ins has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\ins_task.c:1008: function InsTask_InitializeMission has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\ins_task.c:1137: function InsTask_AlignmentReset has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\logger_bus.c:376: function LoggerBus_DeviceDescriptorsPush has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\logger_bus.c:417: function LoggerBus_AlgorithmDescriptorsPush has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\logger_bus.c:455: function LoggerBus_StreamDescriptorsPush has 0 runtime assertions; functions over 20 lines require at least 2
+- APP\Src\logger_bus.c:546: function LoggerBus_MissionConfigPush has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c:164: function NeoM9nGnssAdapter_Init has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c:235: function NeoM9nGnssAdapter_StartupProcess has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c:274: function NeoM9nGnssAdapter_Process has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c:591: function NeoM9nGnssAdapter_ConfigReadResultMap has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c:1186: function NeoM9nGnssAdapter_RuntimeTransactionCancel has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:371: function Gnss_UbxFrameEnqueue has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:461: function Gnss_DiscontinuityHandle has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:526: function Gnss_FinishNmea has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:575: function Gnss_ParseNmeaByte has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:750: function Gnss_PersistFromLayers has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:882: function Gnss_ValgetSignalStore has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:923: function Gnss_ValgetStore has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1015: function Gnss_GetDetected has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1046: function Gnss_WaitAck has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1092: function Gnss_WaitValget has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1176: function Gnss_ValgetAsyncPoll has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1401: function Gnss_ParseNavPvt has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1484: function Gnss_ParseNavSat has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1587: function Gnss_ParseMonRf has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1627: function Gnss_ParseAck has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1673: function Gnss_ValgetHeaderValidate has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1763: function Gnss_ParseValget has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1791: function Gnss_UpdateStatus has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1825: function Gnss_ChecksumErrorHandle has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:1990: function GnssNeoM9n_Identify has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2023: function GnssNeoM9n_ProbeStart has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2202: function Gnss_ParsedFrameDispatch has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2254: function Gnss_ParseByte has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2302: function GnssNeoM9n_ApplyDefaultConfig has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2369: function Gnss_TransactionStateResetLocked has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2455: function GnssNeoM9n_Process has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2730: function GnssNeoM9n_ReadHardwareConfig has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2785: function Gnss_ConfigAsyncNextGroup has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2813: function Gnss_ConfigAsyncKeyFinish has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:2860: function GnssNeoM9n_ConfigReadAsyncStart has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3030: function GnssNeoM9n_ConfigReadAsyncPoll has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3082: function GnssNeoM9n_ConfigReadAsyncCancel has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3112: function GnssNeoM9n_ItemReadStart has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3222: function GnssNeoM9n_ItemWritePoll has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3303: function GnssNeoM9n_SatelliteDiagnosticsAsyncStart has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3425: function GnssNeoM9n_RfDiagnosticsAsyncStart has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3538: function GnssNeoM9n_SendUbx has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3587: function GnssNeoM9n_ConfigOutputProtocol has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3675: function GnssNeoM9n_ConfigNavRate has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3720: function GnssNeoM9n_ConfigUartBaudrate has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3789: function GnssNeoM9n_ConfigDynamicModel has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3823: function GnssNeoM9n_ConfigSignals has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3884: function GnssNeoM9n_ConfigSignalsGpsBdsGal has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:3932: function GnssNeoM9n_WaitForNewNavPvt has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c:4009: function GnssNeoM9n_ConfigPreset has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Adapter\Src\jy901b_imu_adapter.c:212: function Jy901bAdapter_SharedInit has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Adapter\Src\jy901b_imu_adapter.c:282: function Jy901bAdapter_StartupProcess has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Adapter\Src\jy901b_imu_adapter.c:317: function Jy901bAdapter_SharedProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:110: function Jy901bImu_SampleQueue has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:201: function IMU_OnFrameDecoded has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:449: function IMU_WriteRegister has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1091: function IMU_StateToString has 1 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1226: function IMU_ApplyDefaultConfig has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1286: function IMU_Poll has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1431: function IMU_ConfigCacheSetField has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1503: function IMU_SetBaudrate has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1584: function IMU_SetInstallationOrientation has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1646: function IMU_EnsureAlgorithm6Axis has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\IMU\JY901B\Src\jy901b_device.c:1723: function IMU_EnsureQuaternionOutput has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:235: function Lora_DiagRecordIrq has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:331: function Lora_ClearRuntimeState has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:537: function Lora_TryStartNextTx has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:585: function Lora_Init has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:628: function Lora_StartRx has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:696: function Lora_IrqProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:740: function Lora_RawIrqProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:768: function Lora_DiagnosticsRefresh has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:820: function Lora_RxCompletionProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:855: function Lora_RxErrorProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:877: function Lora_Process has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:1004: function Lora_ForceRxContinuousDirect has 0 runtime assertions; functions over 20 lines require at least 2
+- Devices\Telemetry\SX1281\Src\sx1281_device.c:1201: function Lora_ControlProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:297: function TelemetryService_StatusQueueAt has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:334: function TelemetryService_AckQueue has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:359: function TelemetryService_DeviceResultMap has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:388: function TelemetryService_StartResultMap has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:482: function TelemetryService_StartResponseProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:770: function TelemetryService_ReceiveProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:820: function TelemetryService_GnssStateProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:895: function TelemetryService_AlignmentSnapshotSchedule has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:922: function TelemetryService_AlignmentStateProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:975: function TelemetryService_CalibrationStateProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1031: function TelemetryService_FlightRecoveryStateProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1156: function TelemetryService_StatusSend has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1209: function TelemetryService_SensorSnapshotSend has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1260: function TelemetryService_SensorSnapshotTerminalSend has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1286: function TelemetryService_CapabilitySend has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1333: function TelemetryService_PreflightStatusSend has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1416: function TelemetryService_PreflightStateSend has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1562: function TelemetryService_NavigationGnssMetric has 1 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1782: function TelemetryService_StreamSend has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1829: function TelemetryService_Init has 0 runtime assertions; functions over 20 lines require at least 2
+- Modules\Src\telemetry_service.c:1886: function TelemetryService_Process has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:438: function SystemAlignment_CapabilityDetect has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:471: function SystemAlignment_MasksValidate has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:532: function SystemAlignment_StatusReset has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:608: function SystemAlignment_Init has 1 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:638: function SystemAlignment_CalibrationUnavailableReset has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:774: function SystemAlignment_Process has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:969: function SystemAlignment_Start has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:1028: function SystemAlignment_Stop has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:1055: function SystemAlignment_Reset has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:1090: function SystemAlignment_CalibrationInvalidate has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:1130: function SystemAlignment_PrepareMission has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Alignment\Src\system_alignment.c:1174: function SystemAlignment_OriginsFreeze has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:174: function SystemCalibration_StatusReset has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:286: function SystemCalibration_VarianceValid has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:321: function SystemCalibration_WindowComplete has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:421: function SystemCalibration_SixFaceCorrectionApply has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:702: function SystemCalibration_Start has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:762: function SystemCalibration_FaceCollect has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:817: function SystemCalibration_Stop has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Calibration\Src\system_calibration.c:846: function SystemCalibration_Reset has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Indicator\Src\system_indicator.c:277: function SystemIndicator_ModeSet has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Indicator\Src\system_indicator.c:299: function SystemIndicator_Notify has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_capabilities.c:72: function SystemCapabilities_SensorHealthMaskGet has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_capabilities.c:109: function SystemCapabilities_ServiceHealthMaskGet has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:367: function SystemConsole_DeviceClassGet has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:398: function SystemConsole_DeviceErrorText has 1 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:482: function SystemConsole_GnssTransactionDetailText has 1 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:1339: function SystemConsole_IoBaselineCapture has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:1507: function SystemConsole_IoExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:1557: function SystemConsole_SystemFlightExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:1698: function SystemConsole_SystemStackExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:1791: function SystemConsole_SystemReadyExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:2338: function SystemConsole_GnssConfigReadExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:2382: function SystemConsole_GnssNavSatExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:2425: function SystemConsole_GnssMonRfExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:2798: function SystemConsole_GnssSampleDetailExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3007: function SystemConsole_BarometerUpdateStateText has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3052: function SystemConsole_EstimatorBarometerExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3131: function SystemConsole_EstimatorStatusExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3162: function SystemConsole_EstimatorGnssUpdateStateText has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3187: function SystemConsole_EstimatorGnssSkipReasonText has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3318: function SystemConsole_EstimatorGnssExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3357: function SystemConsole_KfStatusExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3392: function SystemConsole_InsStatusExecute has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3623: function SystemConsole_MagStreamAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3791: function SystemConsole_AlignmentAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3887: function SystemConsole_FlightRecoveryAsyncProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:3920: function SystemConsole_Init has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:4488: function SystemConsole_MagCalStatusExecute has 1 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:4559: function SystemConsole_ExecuteLine has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_console.c:4670: function SystemConsole_Process has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_health.c:30: function SystemHealth_OutputSafe has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_health.c:162: function SystemHealth_Process has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_navigation_health.c:163: function SystemNavigationHealth_OverallGet has 1 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_sensor_status.c:140: function SystemSensorStatus_DescriptorsRefresh has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_sensor_status.c:532: function SystemSensorStatus_SummaryFlagsGet has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_sensor_status.c:561: function SystemSensorStatus_SnapshotCapture has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:489: function SystemImu_Init has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:537: function SystemImu_Start has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:784: function SystemSourceSelector_GnssSwitchEvaluate has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:848: function SystemGnss_Init has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:901: function SystemGnss_Start has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:1249: function SystemSourceSelector_TelemetryNextStart has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:1280: function SystemSourceSelector_TelemetryHealthProcess has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:1348: function SystemTelemetry_Init has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_source_selector.c:1403: function SystemTelemetry_Start has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:87: function SystemStartup_ReportReset has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:173: function SystemStartup_OutputStart has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:211: function SystemStartup_ConsoleStart has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:244: function SystemStartup_JyLogicalStart has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:306: function SystemStartup_JyLogicalConfig has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:363: function SystemStartup_ImuConfig has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:492: function SystemStartup_GnssStart has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:519: function SystemStartup_OtherAdaptersStart has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:609: function SystemStartup_SensorCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:649: function SystemStartup_ServiceCommunicationEvaluate has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:734: function SystemStartup_ReportFinalize has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:761: function SystemStartup_ReportPrint has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:870: function SystemStartup_Run has 0 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:915: function SystemStartup_WaitConfigTick has 1 runtime assertions; functions over 20 lines require at least 2
+- System\Src\system_startup.c:964: function SystemStartup_ProcessDevices has 1 runtime assertions; functions over 20 lines require at least 2
+FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+mingw32-make.EXE: *** [Makefile:193: power10-check] Error 1
+mingw32-make.EXE: *** Waiting for unfinished jobs....
+FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+SilverStar architecture check passed: checks=328 failures=0
+SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.
+Record Catalog, decoder profile, and static instance facade contracts are valid.
+Authoritative target source graph and FreeRTOS source set are valid.
+FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary

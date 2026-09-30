@@ -1,5 +1,7 @@
 # Navigation resource and bounded safety review, 2026-10-01
 
+This is the historical P3 resource checkpoint, not the final candidate report. See [final handoff](NIGHT_FINAL_HANDOFF_20261001.md) for later source/candidate versions and full regression. The storage validation-versus-generation gap described below was subsequently repaired in `18afe8c` through the shared `StorageBinding_Resolve`, without weakening TF/START requirements. The nine tables below retain their original build provenance; the later ESKF15 logging build still has only1240 bytes of CCM spare.
+
 This P3 checkpoint follows [native acceptance](NIGHT_ACCEPTANCE_20261001.md) and [five GUI quality actions](NIGHT_QUALITY_20261001.md). Firmware source checkpoint is `4bc9442` (numeric rejection fix); checker checkpoint is `976caa7`. The final report commit changes documentation only. All final resource projects use the firmware source HEAD and record the INS source SHA256. Existing `SS_0_5_TEST_4`, its imported-hardware revision and old frozen fixtures were not regenerated or modified. Their earlier four PASS builds belong to the P1 source checkpoint; the new fix is present in the isolated P3 projects below. No hardware connection, flashing, START, actuator operation, packaging, push, tag or Release occurred.
 
 ## Reproduction and actual configurations

@@ -1,0 +1,17 @@
+............................................................s........... [ 13%]
+........................................................................ [ 27%]
+........................................................................ [ 41%]
+.................................s...................................... [ 55%]
+........................................................................ [ 69%]
+........................................................................ [ 82%]
+........................sssssss......................................... [ 96%]
+.................                                                        [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_current_log_manual.py:37: set SILVERSTAR_CURRENT_LOG_ROOT for the hash-locked SS0000 log
+SKIPPED [1] tests\test_joint_c_golden.py:26: explicit FCCG generated project and C golden required
+SKIPPED [1] tests\test_ss0007_manual.py:36: set SILVERSTAR_SS0007_PATH for the real-log validation gate
+SKIPPED [1] tests\test_ss0007_manual.py:100: set SILVERSTAR_SS0007_PATH for the real-log validation gate
+SKIPPED [1] tests\test_ss0007_manual.py:154: set SILVERSTAR_SS0007_PATH for the real-log validation gate
+SKIPPED [1] tests\test_ss0014_manual.py:48: set SILVERSTAR_SS0014_ROOT to the matching SS0014 task root
+SKIPPED [3] tests\test_ss_test_0_manual.py:36: set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate
+512 passed, 9 skipped in 362.09s (0:06:02)

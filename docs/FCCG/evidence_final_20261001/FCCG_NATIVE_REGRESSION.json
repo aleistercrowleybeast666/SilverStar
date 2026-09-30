@@ -1,0 +1,69 @@
+{
+  "scope": "Real Windows Qt windows, popups, controls, worker and persistence; no hardware or transport",
+  "steps": [
+    {
+      "step": "all_pages_locale_theme",
+      "language": "zh_CN",
+      "theme": "light",
+      "pages": 8,
+      "scale": 1.25
+    },
+    {
+      "step": "all_pages_locale_theme",
+      "language": "zh_CN",
+      "theme": "dark",
+      "pages": 8,
+      "scale": 1.25
+    },
+    {
+      "step": "all_pages_locale_theme",
+      "language": "en_US",
+      "theme": "light",
+      "pages": 8,
+      "scale": 1.25
+    },
+    {
+      "step": "all_pages_locale_theme",
+      "language": "en_US",
+      "theme": "dark",
+      "pages": 8,
+      "scale": 1.25
+    },
+    {
+      "step": "five_external_vector_native_popup_round_trips_and_cancel"
+    },
+    {
+      "step": "vector_capacity_two_to_six_to_two_keeps_committed_model"
+    },
+    {
+      "step": "invalid_gravity_and_number_rejected_focus_loss_preserved_atomic_confirm_save_cancel"
+    },
+    {
+      "step": "native_failed_new_preserves_current_project_and_same_named_input"
+    },
+    {
+      "step": "native_air_link_invalid_preserves_both_modules_blocks_generation_and_restores"
+    },
+    {
+      "step": "real_generation_busy_repeated_click_ignored_and_close_waits_for_worker"
+    }
+  ],
+  "dialogs": [
+    {
+      "text": "操作失败；请展开技术详情并查看本地日志。",
+      "details": "Project directory is occupied by a file: D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\p51_edges\\occupied\\Ground_Station",
+      "icon": 3
+    },
+    {
+      "text": "配置验证未通过（代码：AIR_LINK_PHY_INCOMPATIBLE）",
+      "details": "[AIR_LINK_PHY_INCOMPATIBLE] Flight radio cannot use selected PHY",
+      "icon": 3
+    },
+    {
+      "text": "后台任务仍在运行，是否取消任务并关闭？",
+      "details": "",
+      "icon": 4
+    }
+  ],
+  "status": "PASS"
+}

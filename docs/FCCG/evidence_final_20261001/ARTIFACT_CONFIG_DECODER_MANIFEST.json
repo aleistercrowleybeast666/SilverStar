@@ -1,0 +1,259 @@
+{
+  "timestamp_utc": "2026-09-30T22:03:27.165422+00:00",
+  "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+  "primary_route": "existing",
+  "primary_project": "D:/stm32_project/SS_0_5_TEST_4_versions/FinalCandidate_ddb73bb_20261001/ExistingHardware",
+  "no_flashing_performed": true,
+  "records": [
+    {
+      "route": "existing",
+      "target": "Flight_Controller",
+      "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "root": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware",
+      "config_sha256": "b819099f75eaf596f87679adf324d7afbb609c33ece34edd9850ec92b5a98313",
+      "decoder_packages": [
+        {
+          "path": "Flight_Controller\\SS_0_5_TEST_4_FINAL_EXISTING.ssdecoder",
+          "sha256": "63673624043bfb1064cb6645b8b13837a42c91ea7085162844f035c0d0b217e6",
+          "bytes": 140660
+        },
+        {
+          "path": "SS_0_5_TEST_4_FINAL_EXISTING.ssdecoder",
+          "sha256": "63673624043bfb1064cb6645b8b13837a42c91ea7085162844f035c0d0b217e6",
+          "bytes": 140660
+        }
+      ],
+      "build_evidence": "D:\\python_software\\SilverStar\\.work\\p51_candidates\\existing_Flight_Controller.json",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "all",
+        "CONFIG=Release",
+        "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+      ],
+      "exit_code": 0,
+      "artifacts": [
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+          "bytes": 3214624,
+          "sha256": "40913eeb7b1eba8951308d41a270f6b35002683b99169f7a87b124e6b0fce6a9"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.map",
+          "bytes": 1480005,
+          "sha256": "b7b77798d1c7298a7bb26989db4a87de015913eb7f3dcee6487ffc4caae8577d"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.bin",
+          "bytes": 313632,
+          "sha256": "936a467cb838053a14ba7b0969414ce2f30cde195de8034949eb78d8364f1225"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.hex",
+          "bytes": 882253,
+          "sha256": "bbc66bbec06d558d5a4f6ac864b9037c4dcff97fda5e741a05642b762cce0858"
+        }
+      ],
+      "sizes": [
+        {
+          "elf": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+          "berkeley": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 312492\t   1136\t 155576\t 469204\t  728d4\tD:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf\n",
+          "sections": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf  :\nsection                size        addr\n.isr_vector             392   134217728\n.text                284892   134218120\n.rodata               27192   134503016\n.ARM.extab                0   134530208\n.ARM                      8   134530208\n.preinit_array            0   134530216\n.init_array               4   134530216\n.fini_array               4   134530220\n.data                  1136   536870912\n.ccmram_data              0   268435456\n.ccmram_bss           55432   268435456\n.dma_bss               8064   536872048\n.bss                  91056   536880112\n._user_heap_stack      1024   536971168\n.ARM.attributes          48           0\n.comment                 70           0\n.debug_info         1171279           0\n.debug_abbrev        100337           0\n.debug_loclists      525046           0\n.debug_aranges        19632           0\n.debug_rnglists       69367           0\n.debug_line          586620           0\n.debug_str           208003           0\n.debug_frame          74104           0\n.debug_line_str         602           0\nTotal               3224312\n\n\n"
+        }
+      ],
+      "generated_source_hashes": [
+        {
+          "path": "Generated/Inc/project_flight_config.h",
+          "sha256": "8c0e2e9c3daa62f6d0778ca6fd192c35efb8c9a36ff675895162245d47d81d4b"
+        },
+        {
+          "path": "Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c",
+          "sha256": "74bd3041f9d3fdece4893416f1343289af4c559935d85263d565b31c06a440ad"
+        },
+        {
+          "path": "APP/Src/ins_task.c",
+          "sha256": "96e16cdda3e34f08939eb2e4107b5fb797ed6cd91821606271185db5a9d0c4f2"
+        },
+        {
+          "path": "Tools/check_firmware_artifact.ps1",
+          "sha256": "c0751d91b67fe2ef7a3a4b39f222d3034ba6dd7322414be3546c4f65f9c3a483"
+        }
+      ]
+    },
+    {
+      "route": "existing",
+      "target": "Ground_Station",
+      "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "root": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware",
+      "config_sha256": "b819099f75eaf596f87679adf324d7afbb609c33ece34edd9850ec92b5a98313",
+      "decoder_packages": [
+        {
+          "path": "Flight_Controller\\SS_0_5_TEST_4_FINAL_EXISTING.ssdecoder",
+          "sha256": "63673624043bfb1064cb6645b8b13837a42c91ea7085162844f035c0d0b217e6",
+          "bytes": 140660
+        },
+        {
+          "path": "SS_0_5_TEST_4_FINAL_EXISTING.ssdecoder",
+          "sha256": "63673624043bfb1064cb6645b8b13837a42c91ea7085162844f035c0d0b217e6",
+          "bytes": 140660
+        }
+      ],
+      "build_evidence": "D:\\python_software\\SilverStar\\.work\\p51_candidates\\existing_Ground_Station.json",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "all"
+      ],
+      "exit_code": 0,
+      "artifacts": [
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf",
+          "bytes": 47856,
+          "sha256": "115e3cc7e4e7d6cb17b625b5616e4643f12557e7785d220b3bd0d5810b3ef596"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.map",
+          "bytes": 197029,
+          "sha256": "6c7fd881d50bc92cc7d6d764a2c6359e4ad2c0e957bac217910fdc6e57be708a"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.bin",
+          "bytes": 20860,
+          "sha256": "9f140e72b6faadcc9f19b58e4c6fe1c6aab84f26387baa74ca3b17dc1a0b5c45"
+        }
+      ],
+      "sizes": [
+        {
+          "elf": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf",
+          "berkeley": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  20844\t     12\t  14112\t  34968\t   8898\tD:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf\n",
+          "sections": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ExistingHardware\\Ground_Station\\build\\ground.elf  :\nsection              size        addr\n.isr_vector           268   134217728\n.text               19416   134218000\n.rodata              1152   134237416\n.ARM.extab              0   134238568\n.ARM                    0   134238568\n.preinit_array          0   134238568\n.init_array             4   134238568\n.fini_array             4   134238572\n.data                  12   536870912\n.bss                13084   536870928\n._user_heap_stack    1028   536884012\n.ARM.attributes        41           0\n.comment               70           0\n.debug_frame          404           0\n.debug_line_str       202           0\nTotal               35685\n\n\n"
+        }
+      ]
+    },
+    {
+      "route": "imported",
+      "target": "Flight_Controller",
+      "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "root": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware",
+      "config_sha256": "7e798cef8131bc28c927e55799cffcc916ed98ca743dee891e865b1c8fb195fe",
+      "decoder_packages": [
+        {
+          "path": "Flight_Controller\\SS_0_5_TEST_4_FINAL_IMPORTED.ssdecoder",
+          "sha256": "775fa6d3cb144992d3a4dedfa47b62bb6b0a3e319e7eb31aae92e8239f3a97df",
+          "bytes": 140958
+        },
+        {
+          "path": "SS_0_5_TEST_4_FINAL_IMPORTED.ssdecoder",
+          "sha256": "775fa6d3cb144992d3a4dedfa47b62bb6b0a3e319e7eb31aae92e8239f3a97df",
+          "bytes": 140958
+        }
+      ],
+      "build_evidence": "D:\\python_software\\SilverStar\\.work\\p51_candidates\\imported_Flight_Controller.json",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "all",
+        "CONFIG=Release",
+        "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+      ],
+      "exit_code": 0,
+      "artifacts": [
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+          "bytes": 3215800,
+          "sha256": "6cf7e186a118ada8f386d082796d2e3f1496b80fd850a0c42da0389a9219399f"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.map",
+          "bytes": 1497005,
+          "sha256": "fa8e84f0cde98fc6230be7eb855397d75117e73f15eb837385567c4c5894882d"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.bin",
+          "bytes": 313632,
+          "sha256": "78a4f73809c5ae614742b0fba62cf129921f4a8735c76382f435d98a96775c60"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.hex",
+          "bytes": 882253,
+          "sha256": "86c0584faf59e63a456d1a9fda5b2f3c0d56648bcb7c43a39bc373d518bbb671"
+        }
+      ],
+      "sizes": [
+        {
+          "elf": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+          "berkeley": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 312492\t   1136\t 155584\t 469212\t  728dc\tD:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf\n",
+          "sections": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf  :\nsection                size        addr\n.isr_vector             392   134217728\n.text                284892   134218120\n.rodata               27192   134503016\n.ARM.extab                0   134530208\n.ARM                      8   134530208\n.preinit_array            0   134530216\n.init_array               4   134530216\n.fini_array               4   134530220\n.data                  1136   536870912\n.ccmram_data              0   268435456\n.ccmram_bss           55432   268435456\n.dma_bss               8064   536872048\n.bss                  91060   536880112\n._user_heap_stack      1028   536971172\n.ARM.attributes          48           0\n.comment                 70           0\n.debug_info         1171273           0\n.debug_abbrev        100328           0\n.debug_loclists      525046           0\n.debug_aranges        19632           0\n.debug_rnglists       69370           0\n.debug_line          587360           0\n.debug_str           208453           0\n.debug_frame          74104           0\n.debug_line_str         602           0\nTotal               3225498\n\n\n"
+        }
+      ],
+      "generated_source_hashes": [
+        {
+          "path": "Generated/Inc/project_flight_config.h",
+          "sha256": "8c0e2e9c3daa62f6d0778ca6fd192c35efb8c9a36ff675895162245d47d81d4b"
+        },
+        {
+          "path": "Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c",
+          "sha256": "74bd3041f9d3fdece4893416f1343289af4c559935d85263d565b31c06a440ad"
+        },
+        {
+          "path": "APP/Src/ins_task.c",
+          "sha256": "96e16cdda3e34f08939eb2e4107b5fb797ed6cd91821606271185db5a9d0c4f2"
+        },
+        {
+          "path": "Tools/check_firmware_artifact.ps1",
+          "sha256": "c0751d91b67fe2ef7a3a4b39f222d3034ba6dd7322414be3546c4f65f9c3a483"
+        }
+      ]
+    },
+    {
+      "route": "imported",
+      "target": "Ground_Station",
+      "source_head": "ddb73bb40b15decbf5914933f2822aa98849b8f6",
+      "root": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware",
+      "config_sha256": "7e798cef8131bc28c927e55799cffcc916ed98ca743dee891e865b1c8fb195fe",
+      "decoder_packages": [
+        {
+          "path": "Flight_Controller\\SS_0_5_TEST_4_FINAL_IMPORTED.ssdecoder",
+          "sha256": "775fa6d3cb144992d3a4dedfa47b62bb6b0a3e319e7eb31aae92e8239f3a97df",
+          "bytes": 140958
+        },
+        {
+          "path": "SS_0_5_TEST_4_FINAL_IMPORTED.ssdecoder",
+          "sha256": "775fa6d3cb144992d3a4dedfa47b62bb6b0a3e319e7eb31aae92e8239f3a97df",
+          "bytes": 140958
+        }
+      ],
+      "build_evidence": "D:\\python_software\\SilverStar\\.work\\p51_candidates\\imported_Ground_Station.json",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "all"
+      ],
+      "exit_code": 0,
+      "artifacts": [
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Ground_Station\\build\\ground.elf",
+          "bytes": 47856,
+          "sha256": "21cccbb48b383a23f2456f2e73fcaae132e383c0e8cd768ac6d67a80742edb95"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Ground_Station\\build\\ground.map",
+          "bytes": 199529,
+          "sha256": "bd266245e26b181fc7c0edd7e185a2411a4fc623a9f404256207083a3e7b16c4"
+        },
+        {
+          "path": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Ground_Station\\build\\ground.bin",
+          "bytes": 20860,
+          "sha256": "3448b54bd98de22100cdbb9b311d0a252dfc3435126d677f5e94aa8ba3541aa3"
+        }
+      ],
+      "sizes": [
+        {
+          "elf": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Ground_Station\\build\\ground.elf",
+          "berkeley": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  20844\t     12\t  14112\t  34968\t   8898\tD:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Ground_Station\\build\\ground.elf\n",
+          "sections": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\ImportedHardware\\Ground_Station\\build\\ground.elf  :\nsection              size        addr\n.isr_vector           268   134217728\n.text               19416   134218000\n.rodata              1152   134237416\n.ARM.extab              0   134238568\n.ARM                    0   134238568\n.preinit_array          0   134238568\n.init_array             4   134238568\n.fini_array             4   134238572\n.data                  12   536870912\n.bss                13084   536870928\n._user_heap_stack    1028   536884012\n.ARM.attributes        41           0\n.comment               70           0\n.debug_frame          404           0\n.debug_line_str       202           0\nTotal               35685\n\n\n"
+        }
+      ]
+    }
+  ]
+}
