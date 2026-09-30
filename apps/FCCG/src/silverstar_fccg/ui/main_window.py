@@ -13,7 +13,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import Qt, QThreadPool, QTimer, QUrl
+from PySide6.QtCore import QSignalBlocker, Qt, QThreadPool, QTimer, QUrl
 from PySide6.QtGui import (
     QAction,
     QCloseEvent,
@@ -76,7 +76,7 @@ from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, Targe
 from silverstar_fccg.project.air_link import (
     AirLinkIssues_Get,
     GroundTargetIssues_Get,
-    RadioLinkCompatible_Get,
+    RadioCandidateIssues_Get,
 )
 from silverstar_fccg.project.algorithm_parameters import AlgorithmParameterOwners_Get
 from silverstar_fccg.project.alignment import (
@@ -112,7 +112,11 @@ from silverstar_fccg.project.model import (
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
 from silverstar_fccg.project.quality_results import QualityResultRecord
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
-from silverstar_fccg.project.validation import Project_EditValidate, ValidationIssue
+from silverstar_fccg.project.validation import (
+    AlignmentConfigurationIssues_Get,
+    Project_EditValidate,
+    ValidationIssue,
+)
 from silverstar_fccg.ui.dialogs import NewProjectWizard
 from silverstar_fccg.ui.message_box import MessageBoxButtons_Localize
 from silverstar_fccg.ui.pages import (
@@ -217,6 +221,10 @@ class MainWindow(QMainWindow):
             tuple[str, str, str], float | int
         ] = {}
         self._mode_refresh_scheduled = False
+        self._pending_strategy_changes: dict[str, object] = {}
+        self._strategy_refresh_scheduled = False
+        self._alignment_commit_in_progress = False
+        self._close_after_worker = False
         self._pending_logging_streams: tuple[LoggingStreamView, ...] | None = None
         self._logging_refresh_scheduled = False
         self._validation_focus_widget: QWidget | None = None
@@ -311,7 +319,8 @@ class MainWindow(QMainWindow):
         self.algorithm_parameters_page.defaultsRequested.connect(self._AlgorithmDefaults_Reset)
         self.algorithm_parameters_page.sharedParameterChanged.connect(self._SharedAlgorithmParameter_Change)
         self.algorithm_parameters_page.sharedDefaultsRequested.connect(self._SharedAlgorithmDefaults_Reset)
-        self.algorithm_parameters_page.alignmentChanged.connect(self._AlignmentConfiguration_Change)
+        self.algorithm_parameters_page.alignmentConfirmed.connect(self._AlignmentConfiguration_Confirm)
+        self.algorithm_parameters_page.alignmentDraftCancelled.connect(self._AlignmentDraft_SelectorRestore)
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
@@ -760,11 +769,15 @@ class MainWindow(QMainWindow):
             self.build_page.GeneratedProject_Set(
                 display.generated_project
             )
-            self.algorithm_parameters_page.AlignmentConfiguration_Set(
-                display.model.alignment,
-                display.model.strategies.get("alignment"),
-                tuple(display.model.device_instances),
-            )
+            if not self._alignment_commit_in_progress:
+                self.algorithm_parameters_page.AlignmentConfiguration_Set(
+                    display.model.alignment,
+                    display.model.strategies.get("alignment"),
+                    tuple(display.model.device_instances),
+                )
+                self._AlignmentDraft_SelectorRestore(
+                    self.algorithm_parameters_page.alignment_editor.DraftStrategy_Get()
+                )
             from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
 
             try:
@@ -1482,16 +1495,35 @@ class MainWindow(QMainWindow):
         )
 
     def _TargetPages_Refresh(self, model: ProjectModel) -> None:
-        radios = tuple(
-            (
-                f"{'LoRa' if manifest.radio.technology == 'lora' else 'Packet Radio / Other'} · "
-                f"{manifest.DisplayName_Get(self._translator.language)}",
-                manifest.component_id,
-            )
-            for manifest in self._service.catalog.Type_Get("device")
+        radios = []
+        radio_contracts = tuple(
+            manifest.radio for manifest in self._service.catalog.Type_Get("device")
             if manifest.radio is not None
-            and RadioLinkCompatible_Get(model.air_link, manifest.radio)
         )
+        self.air_link_page.RadioOptions_Set(radio_contracts)
+        for candidate in self._service.catalog.Type_Get("device"):
+            if candidate.radio is None:
+                continue
+            selected_module = (
+                model.ground_target.module_variant
+                if model.ground_target.enabled
+                and candidate.component_id == model.ground_target.radio_plugin else ""
+            )
+            issues = RadioCandidateIssues_Get(
+                model.air_link, candidate.radio, selected_module, "Ground",
+            )
+            if model.ground_target.enabled and model.air_link.packet_mtu > 61:
+                issues = (*issues, "AIR_LINK_MTU_TOO_SMALL: Ground GSP bridge permits 61 bytes")
+            technology = "LoRa" if candidate.radio.technology == "lora" else "Packet Radio / Other"
+            radios.append((
+                f"{technology} · {candidate.DisplayName_Get(self._translator.language)}",
+                candidate.component_id,
+                not issues,
+                "; ".join(
+                    f"{issue.code}: {issue.message}" if hasattr(issue, "code") else issue
+                    for issue in issues
+                ),
+            ))
         boards = tuple(
             (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
             for manifest in self._service.catalog.Type_Get("board")
@@ -1556,7 +1588,7 @@ class MainWindow(QMainWindow):
             model.ground_target.enabled,
         )
         self.ground_target_page.Configuration_Set(
-            model.ground_target, boards, radios, requirements,
+            model.ground_target, boards, tuple(radios), requirements,
             GroundTargetIssues_Get(model, self._service.catalog),
         )
 
@@ -1828,12 +1860,30 @@ class MainWindow(QMainWindow):
         self._ProjectConfiguration_Change(change)
 
     def _Strategy_Change(self, slot: str, component_id: object) -> None:
-        self._ProjectConfiguration_Change(
-            lambda candidate: candidate.strategies.__setitem__(
-                slot, str(component_id) if component_id is not None else None
-            ),
-            logging_availability_changed=True,
-        )
+        if slot == "alignment":
+            self.algorithm_parameters_page.alignment_editor.DraftStrategy_Set(
+                str(component_id) if component_id is not None else ""
+            )
+            return
+        # A native QComboBox popup is still on the stack here.  Rebuilding its
+        # QFormLayout synchronously deletes the emitting combo and can crash Qt.
+        self._pending_strategy_changes[slot] = component_id
+        if not self._strategy_refresh_scheduled:
+            self._strategy_refresh_scheduled = True
+            QTimer.singleShot(0, self, self._StrategyChanges_Apply)
+
+    def _StrategyChanges_Apply(self) -> None:
+        self._strategy_refresh_scheduled = False
+        changes = self._pending_strategy_changes
+        self._pending_strategy_changes = {}
+        if changes:
+            self._ProjectConfiguration_Change(
+                lambda candidate: candidate.strategies.update({
+                    slot: str(value) if value is not None else None
+                    for slot, value in changes.items()
+                }),
+                logging_availability_changed=True,
+            )
 
     def _Mode_Change(self, slot: str, values: object) -> None:
         self._pending_mode_changes[slot] = (
@@ -2228,6 +2278,8 @@ class MainWindow(QMainWindow):
         if wizard.exec() != QDialog.DialogCode.Accepted:
             return
         values = wizard.WizardData_Get()
+        self._pending_strategy_changes.clear()
+        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
         self._model = self._service.ProjectDraft_Create(values["name"])
         self._project_root = Path(values["output_directory"]).resolve(strict=False)
         try:
@@ -2260,6 +2312,8 @@ class MainWindow(QMainWindow):
             changed_during_open = (
                 loaded.Dictionary_Get() != reconciled.Dictionary_Get()
             )
+            self._pending_strategy_changes.clear()
+            self.algorithm_parameters_page.alignment_editor.Draft_Discard()
             self._model = reconciled
             self._project_root = (
                 path.resolve() if path.is_dir() else path.resolve().parent
@@ -2283,11 +2337,21 @@ class MainWindow(QMainWindow):
             )
         )
 
-    def _AlignmentConfiguration_Change(self, configuration: object) -> None:
+    def _AlignmentDraft_SelectorRestore(self, strategy: str) -> None:
+        combo = self.flight_configuration_page.strategy_combos.get("alignment")
+        if combo is None:
+            return
+        index = combo.findData(strategy)
+        if index >= 0:
+            with QSignalBlocker(combo):
+                combo.setCurrentIndex(index)
+
+    def _AlignmentConfiguration_Confirm(self, strategy: str, configuration: object) -> None:
         if not isinstance(configuration, AlignmentConfiguration):
             return
 
         def update(candidate: ProjectModel) -> None:
+            candidate.strategies["alignment"] = strategy
             candidate.alignment = configuration
             if configuration.external_source_instance:
                 candidate.capability_source_overrides["attitude.external"] = (
@@ -2296,9 +2360,32 @@ class MainWindow(QMainWindow):
             else:
                 candidate.capability_source_overrides.pop("attitude.external", None)
 
-        self._ProjectConfiguration_Change(update)
+        candidate = deepcopy(self._model)
+        update(candidate)
+        issues = AlignmentConfigurationIssues_Get(candidate, self._service.catalog)
+        if issues:
+            self.algorithm_parameters_page.alignment_editor.Issue_Show(
+                "; ".join(f"{issue.code}: {issue.message}" for issue in issues)
+            )
+            return
+        self._alignment_commit_in_progress = True
+        try:
+            result = self._ProjectConfiguration_Change(
+                update, logging_availability_changed=True,
+            )
+        finally:
+            self._alignment_commit_in_progress = False
+        if result is not None:
+            self.algorithm_parameters_page.alignment_editor.Draft_Commit(
+                self._model.alignment,
+                self._model.strategies.get("alignment") or "",
+            )
+        self._AlignmentDraft_SelectorRestore(
+            self.algorithm_parameters_page.alignment_editor.DraftStrategy_Get()
+        )
 
     def _Project_Save(self) -> None:
+        draft_pending = self.algorithm_parameters_page.alignment_editor.draft_dirty
         self._ProjectModel_Sync()
         if self._project_root is None:
             self._Project_SaveAs()
@@ -2310,7 +2397,9 @@ class MainWindow(QMainWindow):
             return
         self._project_state = ProjectLifecycleState.DIRTY
         self._Project_Refresh()
-        self.status_label.setText(self._translator.Text_Get("status.project_saved_ready"))
+        self.status_label.setText(self._translator.Text_Get(
+            "alignment.pending_not_saved" if draft_pending else "status.project_saved_ready"
+        ))
 
     def _Project_Save_Complete(self, result: ApplyResult) -> None:
         self._project_root = result.project_root
@@ -2359,9 +2448,9 @@ class MainWindow(QMainWindow):
         self._generation_plan = None
         self._Project_Refresh()
         self.status_label.setText(
-            self._translator.Text_Get(
-                "status.project_saved_as", path=str(destination)
-            )
+            self._translator.Text_Get("alignment.pending_not_saved")
+            if self.algorithm_parameters_page.alignment_editor.draft_dirty else
+            self._translator.Text_Get("status.project_saved_as", path=str(destination))
         )
         if self._pending_build_action is not None:
             pending = self._pending_build_action
@@ -2647,6 +2736,11 @@ class MainWindow(QMainWindow):
         return False
 
     def _Targets_Generate(self, action_text: str) -> None:
+        if self._active_worker is not None:
+            return
+        if self.algorithm_parameters_page.alignment_editor.draft_dirty:
+            self._Error_Show(self._translator.Text_Get("alignment.confirm_before_generation"))
+            return
         self._ProjectModel_Sync()
         if self._project_root is None:
             selected = QFileDialog.getExistingDirectory(
@@ -2707,6 +2801,10 @@ class MainWindow(QMainWindow):
         )
 
     def _Build_Request(self, action_text: str) -> None:
+        if (action_text.startswith(("flight_build", "ground_build"))
+                and self.algorithm_parameters_page.alignment_editor.draft_dirty):
+            self._Error_Show(self._translator.Text_Get("alignment.confirm_before_generation"))
+            return
         self._ProjectModel_Sync()
         if action_text.startswith(("flight_", "ground_")):
             self._TargetAction_Request(action_text)
@@ -3520,6 +3618,7 @@ class MainWindow(QMainWindow):
 
     def _Task_Finish(self) -> None:
         worker = self._active_worker
+        closing = self._close_after_worker
         result_callback = self._worker_result_callback
         error_callback = self._worker_error_callback
         outcome = self._worker_outcome
@@ -3551,11 +3650,14 @@ class MainWindow(QMainWindow):
         self._progress_hide_timer.start(350)
         if worker is not None:
             self._retired_workers.append(worker)
-        self._TaskOutcome_Dispatch(outcome, result_callback, error_callback)
+        if not closing:
+            self._TaskOutcome_Dispatch(outcome, result_callback, error_callback)
         if worker is not None:
             QTimer.singleShot(
                 0, lambda retired=worker: self._TaskWorker_Release(retired)
             )
+        if closing:
+            QTimer.singleShot(0, self, self.close)
 
     def _TaskOutcome_Dispatch(
         self,
@@ -3600,6 +3702,8 @@ class MainWindow(QMainWindow):
             self.install_plugin_action,
             self.refresh_plugins_action,
             self.board_hardware_page.prepare_button,
+            self.board_hardware_page.generate_button,
+            self.ground_target_page.generate_button,
             *self.build_page.action_buttons.values(),
             self.build_page.detect_button,
         )
@@ -3793,6 +3897,9 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         if self._active_worker is not None:
+            if self._close_after_worker:
+                event.ignore()
+                return
             answer = self._MessageBox_Exec(
                 QMessageBox.Icon.Question,
                 PRODUCT_NAME,
@@ -3803,5 +3910,8 @@ class MainWindow(QMainWindow):
             if answer != QMessageBox.StandardButton.Yes:
                 event.ignore()
                 return
+            self._close_after_worker = True
             self._active_worker.Worker_Cancel()
+            event.ignore()
+            return
         event.accept()

@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication
@@ -11,14 +12,47 @@ from silverstar_flp.ui.theme import Theme_Apply
 from tests.synthetic_parameter_navigation import NavigationPair_Open
 
 
+def test_header_project_has_readable_pixels_and_elides_long_names(qtbot, tmp_path):
+    app = QApplication.instance()
+    window = MainWindow(builtin_registry())
+    qtbot.addWidget(window)
+    window.resize(1000, 700)
+    window.show()
+    for theme in ("light", "dark"):
+        window.Theme_Apply(theme)
+        window._project.project_path = None
+        window._ProjectHeader_Refresh()
+        app.processEvents()
+        assert window.project_name_label.text() == "未保存工程"
+        for saved in (False, True):
+            if saved:
+                path = tmp_path / (("long-project-" * 20) + ".ssflp")
+                window._project.project_path = path
+                window._ProjectHeader_Refresh()
+                app.processEvents()
+                assert window.project_name_label.text().endswith("…")
+                assert window.project_name_label.toolTip() == str(path.resolve())
+            label = window.project_name_label
+            image = label.grab().toImage()
+            bright = sum(
+                image.pixelColor(x, y).lightness() > 150
+                for y in range(image.height()) for x in range(image.width())
+            )
+            assert bright > 10
+            assert label.width() <= 600
+    window.close()
+
+
 @pytest.mark.parametrize('language', ['zh_CN','en_US'])
 @pytest.mark.parametrize('theme', ['light','dark'])
 def test_range_shell_1000_700_language_theme_and_pointer(qtbot, tmp_path, language, theme):
     app = QApplication.instance()
-    # The Windows offscreen backend does not discover fonts automatically.
-    font_id = QFontDatabase.addApplicationFont('C:/Windows/Fonts/msyh.ttc')
-    assert font_id >= 0
-    app.setFont(QFont(QFontDatabase.applicationFontFamilies(font_id)[0], 10))
+    # Use the real Microsoft font on Windows; Linux CI has its own font set.
+    font_path = Path('C:/Windows/Fonts/msyh.ttc')
+    if font_path.is_file():
+        font_id = QFontDatabase.addApplicationFont(str(font_path))
+        assert font_id >= 0
+        app.setFont(QFont(QFontDatabase.applicationFontFamilies(font_id)[0], 10))
     Theme_Apply(app, theme)
     window = MainWindow(builtin_registry())
     qtbot.addWidget(window)

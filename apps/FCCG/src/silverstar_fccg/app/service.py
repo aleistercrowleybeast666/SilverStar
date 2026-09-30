@@ -1194,7 +1194,6 @@ class FccgService:
         for manifest in self.catalog.Type_Get("device"):
             if (
                 manifest.radio is not None
-                and model.ground_target.enabled
                 and not RadioLinkCompatible_Get(model.air_link, manifest.radio)
             ):
                 values[manifest.component_id] = SelectionAvailability(

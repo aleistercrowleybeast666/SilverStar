@@ -14,22 +14,7 @@ class AirLinkIssue:
 
 
 def RadioLinkCompatible_Get(link, radio: RadioContribution) -> bool:
-    return (
-        radio.technology == link.radio_technology
-        and radio.family == link.radio_family
-        and link.frequency_hz >= radio.frequency_min_hz
-        and link.frequency_hz <= radio.frequency_max_hz
-        and any(
-            module["validated_frequency_min_hz"] <= link.frequency_hz
-            <= module["validated_frequency_max_hz"]
-            for module in radio.modules.values()
-        )
-        and link.phy_mode in radio.phy_modes
-        and link.bandwidth_hz in radio.bandwidths_hz
-        and link.spreading_factor in radio.spreading_factors
-        and link.coding_rate in radio.coding_rates
-        and link.packet_mtu <= radio.maximum_payload
-    )
+    return not RadioCandidateIssues_Get(link, radio)
 
 
 def _AirLinkProfileIssues_Get(link) -> list[AirLinkIssue]:
@@ -79,6 +64,30 @@ def _PhyIssues_Get(link, radio: RadioContribution, endpoint: str) -> list[AirLin
     return issues
 
 
+def RadioCandidateIssues_Get(
+    link, radio: RadioContribution, module_id: str = "", endpoint: str = "Radio",
+) -> tuple[AirLinkIssue, ...]:
+    """One physical compatibility decision for selection and generation."""
+    issues: list[AirLinkIssue] = _AirLinkProfileIssues_Get(link)
+    if radio.technology != link.radio_technology or radio.family != link.radio_family:
+        issues.append(AirLinkIssue("AIR_LINK_FAMILY_MISMATCH",
+                                   f"{endpoint} technology or family differs from AIR Link"))
+    if module_id and module_id not in radio.modules:
+        issues.append(AirLinkIssue("AIR_LINK_NO_RADIO", f"{endpoint} module is unavailable"))
+    modules = ((radio.modules[module_id],) if module_id in radio.modules else
+               tuple(radio.modules.values()) if not module_id else ())
+    if not (radio.frequency_min_hz <= link.frequency_hz <= radio.frequency_max_hz
+            and any(module["validated_frequency_min_hz"] <= link.frequency_hz
+                    <= module["validated_frequency_max_hz"] for module in modules)):
+        issues.append(AirLinkIssue("AIR_LINK_FREQUENCY_OUT_OF_RANGE",
+                                   f"{endpoint} frequency is outside the qualified module range"))
+    issues.extend(_PhyIssues_Get(link, radio, endpoint))
+    if link.packet_mtu > radio.maximum_payload:
+        issues.append(AirLinkIssue("AIR_LINK_MTU_TOO_SMALL",
+                                   f"{endpoint} maximum payload is {radio.maximum_payload}"))
+    return tuple(issues)
+
+
 def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirLinkIssue, ...]:
     """Validate one shared AIR snapshot against both physical radio endpoints."""
     link = model.air_link
@@ -99,40 +108,9 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
         for endpoint, manifest in (("Flight", flight), ("Ground", ground))
         if manifest is not None and manifest.radio is not None
     )
-    if any(
-        radio.technology != link.radio_technology or radio.family != link.radio_family
-        for _endpoint, radio in radios
-    ):
-        issues.append(AirLinkIssue(
-            "AIR_LINK_FAMILY_MISMATCH", "Selected radio family differs from AIR Link"
-        ))
-    if radios:
-        selected_modules = {
-            "Flight": next(iter(flight.radio.modules.values()), None)
-            if flight is not None and flight.radio is not None
-            and len(flight.radio.modules) == 1 else None,
-            "Ground": ground.radio.modules.get(model.ground_target.module_variant)
-            if ground is not None and ground.radio is not None else None,
-        }
-        minimum_frequency = max(
-            max(radio.frequency_min_hz,
-                selected_modules[endpoint]["validated_frequency_min_hz"])
-            if selected_modules[endpoint] is not None else radio.frequency_min_hz
-            for endpoint, radio in radios
-        )
-        maximum_frequency = min(
-            min(radio.frequency_max_hz,
-                selected_modules[endpoint]["validated_frequency_max_hz"])
-            if selected_modules[endpoint] is not None else radio.frequency_max_hz
-            for endpoint, radio in radios
-        )
-        if not minimum_frequency <= link.frequency_hz <= maximum_frequency:
-            issues.append(AirLinkIssue(
-                "AIR_LINK_FREQUENCY_OUT_OF_RANGE",
-                "Selected frequency is outside the radio range overlap",
-            ))
     for endpoint, radio in radios:
-        issues.extend(_PhyIssues_Get(link, radio, endpoint))
+        module_id = model.ground_target.module_variant if endpoint == "Ground" else ""
+        issues.extend(RadioCandidateIssues_Get(link, radio, module_id, endpoint))
     if flight is not None and flight.radio is not None:
         flight_modules = tuple(flight.radio.modules.values())
         if len(flight_modules) != 1 or model.flight_tx_power_dbm not in flight_modules[0]["supported_tx_powers_dbm"]:
@@ -173,7 +151,7 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
             "AIR_LINK_MTU_TOO_SMALL",
             f"AIR requires {minimum_air_mtu} bytes and this bridge permits {usable_mtu}",
         ))
-    return tuple(issues)
+    return tuple(dict.fromkeys(issues))
 
 
 def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirLinkIssue, ...]:

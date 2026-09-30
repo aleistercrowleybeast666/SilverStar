@@ -1469,12 +1469,28 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             combo = StandardComboBox()
             allow_none = any(candidate.allow_none for candidate in candidates)
             if allow_none:
-                combo.addItem(self._translator.Text_Get("strategy.none"), None)
-            for candidate in sorted(candidates, key=lambda item: item.name):
+                none_key = "strategy.estimator.none" if slot == "estimator" else "strategy.none"
+                combo.addItem(self._translator.Text_Get(none_key), None)
+            ordered = (
+                sorted(candidates, key=lambda item: (
+                    0 if item.component_id == "silverstar.algorithm.estimator.kf6" else
+                    1 if item.component_id == "silverstar.algorithm.estimator.eskf15" else 2,
+                    item.ui_order,
+                ))
+                if slot == "estimator" else sorted(candidates, key=lambda item: item.name)
+            )
+            for candidate in ordered:
                 availability = self._strategy_availability.get(
                     candidate.component_id, SelectionAvailability(True)
                 )
-                combo.addItem(candidate.name, candidate.component_id)
+                name = (
+                    self._translator.Text_Get("strategy.estimator.kf6")
+                    if candidate.component_id == "silverstar.algorithm.estimator.kf6" else
+                    self._translator.Text_Get("strategy.estimator.eskf15")
+                    if candidate.component_id == "silverstar.algorithm.estimator.eskf15" else
+                    candidate.name
+                )
+                combo.addItem(name, candidate.component_id)
                 item = combo.model().item(combo.count() - 1)
                 if item is not None:
                     item.setEnabled(availability.available)

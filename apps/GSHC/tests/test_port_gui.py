@@ -96,3 +96,28 @@ def test_port_and_connected_status_dpi_geometry(tmp_path, scale, resolution):
         cwd=root, env=environment, capture_output=True, text=True, timeout=60,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_long_connection_status_reflows_without_changing_port(tmp_path):
+    application = QApplication.instance() or QApplication([])
+    window = MainWindow(I18n(QSettings(str(tmp_path / "long-status.ini"),
+                                     QSettings.Format.IniFormat)))
+    try:
+        window.resize(1280, 800)
+        window.conn_label.setFont(QFont("Segoe UI", 16))
+        window.show()
+        application.processEvents()
+        status = "COM" + "1234567890" * 18 + "@230400"
+        window.set_connection_status(status)
+        application.processEvents()
+        assert window.conn_label.toolTip() == status
+        assert "".join(window.conn_label.text().splitlines()) == status
+        assert "\n" in window.conn_label.text()
+        assert all(window.conn_label.fontMetrics().horizontalAdvance(line)
+                   <= window.conn_label.width()
+                   for line in window.conn_label.text().splitlines())
+    finally:
+        window.render_timer.stop()
+        window.close()
+        window.deleteLater()
+        application.processEvents()

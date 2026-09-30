@@ -489,7 +489,8 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             combo.count() == 2
             for combo in window.flight_configuration_page.protocol_combos.values()
         )
-        source = Path("src/silverstar_fccg/ui/pages/components.py").read_text(encoding="utf-8")
+        source = (Path(__file__).resolve().parents[1] /
+                  "src/silverstar_fccg/ui/pages/components.py").read_text(encoding="utf-8")
         assert "JY901B" not in source
         assert "BMI088" not in source
         jy901b_summary = window.devices_page.findChild(

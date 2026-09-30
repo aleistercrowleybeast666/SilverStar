@@ -48,7 +48,7 @@ class ProjectValidationResult:
         return not any(issue.level == "error" for issue in self.issues)
 
 
-def _AlignmentConfigurationIssues_Get(
+def AlignmentConfigurationIssues_Get(
     model: ProjectModel, catalog: PluginCatalog,
 ) -> tuple[ValidationIssue, ...]:
     selected = model.strategies.get("alignment")
@@ -1089,7 +1089,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
             if model.ground_target.enabled else AirLinkIssues_Get(model, catalog)
         )
     )
-    issues.extend(_AlignmentConfigurationIssues_Get(model, catalog))
+    issues.extend(AlignmentConfigurationIssues_Get(model, catalog))
     if model.strategies.get("ins"):
         from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
 

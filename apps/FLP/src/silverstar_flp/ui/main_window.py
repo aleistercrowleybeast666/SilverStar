@@ -165,9 +165,9 @@ class MainWindow(QMainWindow):
         header = QFrame()
         header.setObjectName("headerBar")
         header.setMinimumHeight(54)
-        header_layout = QHBoxLayout(header)
+        header_layout = QVBoxLayout(header)
         header_layout.setContentsMargins(14, 6, 14, 6)
-        header_layout.setSpacing(8)
+        header_layout.setSpacing(2)
         self.title_label = QLabel()
         self.title_label.setObjectName("headerTitle")
         self.version_label = QLabel(f"v{__version__}")
@@ -178,6 +178,7 @@ class MainWindow(QMainWindow):
         self.project_caption_label.setObjectName("headerControlLabel")
         self.project_name_label = QLabel()
         self.project_name_label.setObjectName("headerProject")
+        self.project_name_label.setMaximumWidth(600)
         self.language_label = QLabel()
         self.language_label.setObjectName("headerControlLabel")
         self.language_combo = StandardComboBox()
@@ -194,16 +195,22 @@ class MainWindow(QMainWindow):
         self.theme_combo.addItem("浅色", "light")
         self.theme_combo.addItem("深色", "dark")
         self.theme_combo.currentIndexChanged.connect(self._Theme_Selected)
-        header_layout.addWidget(self.title_label)
-        header_layout.addWidget(self.version_label)
-        header_layout.addWidget(self.credit_label)
-        header_layout.addWidget(self.project_caption_label)
-        header_layout.addWidget(self.project_name_label)
-        header_layout.addStretch(1)
-        header_layout.addWidget(self.language_label)
-        header_layout.addWidget(self.language_combo)
-        header_layout.addWidget(self.theme_label)
-        header_layout.addWidget(self.theme_combo)
+        identity_row = QHBoxLayout()
+        identity_row.setSpacing(8)
+        identity_row.addWidget(self.title_label)
+        identity_row.addWidget(self.version_label)
+        identity_row.addWidget(self.credit_label)
+        identity_row.addStretch(1)
+        identity_row.addWidget(self.language_label)
+        identity_row.addWidget(self.language_combo)
+        identity_row.addWidget(self.theme_label)
+        identity_row.addWidget(self.theme_combo)
+        header_layout.addLayout(identity_row)
+        project_row = QHBoxLayout()
+        project_row.setSpacing(8)
+        project_row.addWidget(self.project_caption_label)
+        project_row.addWidget(self.project_name_label, 1)
+        header_layout.addLayout(project_row)
         root_layout.addWidget(header)
 
         body = QWidget()
@@ -1131,9 +1138,10 @@ class MainWindow(QMainWindow):
 
     def _ProjectHeader_Refresh(self) -> None:
         path = self._project.project_path
-        self.project_name_label.setText(
-            path.stem if path is not None else self._translator.Text_Get("project.unsaved")
-        )
+        full_name = path.stem if path is not None else self._translator.Text_Get("project.unsaved")
+        self.project_name_label.setText(self.project_name_label.fontMetrics().elidedText(
+            full_name, Qt.TextElideMode.ElideRight, 595,
+        ))
         self.project_name_label.setToolTip(str(path.resolve()) if path is not None else "")
 
     def _ProjectChanges_Confirm(self) -> bool:

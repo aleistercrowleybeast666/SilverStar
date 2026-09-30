@@ -63,7 +63,7 @@ def test_runtime_diagnostics_log_version_python_package_and_export_path(
     assert "Python executable=" in text
     assert "silverstar_flp package path=" in text
     assert "export.service path=" in text
-    assert r"src\silverstar_flp\export\service.py" in text
+    assert str(Path("src") / "silverstar_flp" / "export" / "service.py") in text
 
 
 def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
@@ -133,20 +133,23 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
         window.help_menu,
     ]
     header_layout = window.title_label.parentWidget().layout()
+    identity_row = header_layout.itemAt(0).layout()
+    project_row = header_layout.itemAt(1).layout()
     assert [
-        header_layout.indexOf(widget)
+        identity_row.indexOf(widget)
         for widget in (
             window.title_label,
             window.version_label,
             window.credit_label,
-            window.project_caption_label,
-            window.project_name_label,
             window.language_label,
             window.language_combo,
             window.theme_label,
             window.theme_combo,
         )
-    ] == [0, 1, 2, 3, 4, 6, 7, 8, 9]
+    ] == [0, 1, 2, 4, 5, 6, 7]
+    assert [project_row.indexOf(widget) for widget in (
+        window.project_caption_label, window.project_name_label,
+    )] == [0, 1]
     assert [action for action in window.file_menu.actions() if not action.isSeparator()] == [
             window.new_project_action,
             window.open_project_action,
@@ -327,7 +330,8 @@ def test_export_dialog_uses_project_or_source_default_and_opens_manifest(
         tmp_path / "Result_SYNTHETIC_default_export"
     )
 
-    source_text = Path("src/silverstar_flp/ui/main_window.py").read_text(encoding="utf-8")
+    source_text = (Path(__file__).resolve().parents[1] /
+                   "src/silverstar_flp/ui/main_window.py").read_text(encoding="utf-8")
     assert "_DEFAULT_EXPORT_ROOT" not in source_text
     assert "SilverStar_FLP_Data" not in source_text
 

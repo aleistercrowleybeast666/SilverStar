@@ -1493,7 +1493,7 @@ class MainWindow(QMainWindow):
         bar.setObjectName("headerBar")
         self.header_bar = bar
         root_layout = QVBoxLayout(bar)
-        root_layout.setContentsMargins(10, 5, 10, 5)
+        root_layout.setContentsMargins(10, 4, 10, 4)
         root_layout.setSpacing(3)
         connection_layout = QHBoxLayout()
         connection_layout.setSpacing(4)
@@ -1509,7 +1509,9 @@ class MainWindow(QMainWindow):
         self.header_connection = QLabel()
         self.header_connection.setObjectName("headerSection")
         self._bind_text(self.header_connection, "group.connection")
-        identity_layout.addWidget(self.header_connection)
+        status_layout = QHBoxLayout()
+        status_layout.setSpacing(8)
+        status_layout.addWidget(self.header_connection)
 
         self.port_combo = PortComboBox()
         self.btn_refresh = QPushButton()
@@ -1523,9 +1525,10 @@ class MainWindow(QMainWindow):
         self._bind_text(self.btn_connect, "button.connect")
         self._bind_text(self.btn_disconnect, "button.disconnect")
         self.conn_label = QLabel()
-        self._configure_dynamic_label(self.conn_label, 110, show_tooltip=True)
+        self._connection_status_text = ""
+        self._configure_dynamic_label(self.conn_label, 0, show_tooltip=True)
         self.conn_label.setWordWrap(True)
-        self.conn_label.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        self.conn_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
 
         self.lbl_port_name = QLabel()
         self._bind_text(self.lbl_port_name, "field.port")
@@ -1538,9 +1541,10 @@ class MainWindow(QMainWindow):
         connection_layout.addWidget(self.baud_spin)
         connection_layout.addWidget(self.btn_connect)
         connection_layout.addWidget(self.btn_disconnect)
-        identity_layout.addWidget(self.conn_label, 1)
+        status_layout.addWidget(self.conn_label, 1)
         connection_layout.addStretch(1)
         root_layout.addLayout(connection_layout)
+        root_layout.addLayout(status_layout)
         identity_layout.addStretch(1)
 
         self.header_version = QLabel()
@@ -2180,7 +2184,32 @@ class MainWindow(QMainWindow):
         return int(self.baud_spin.value())
 
     def set_connection_status(self, text: str) -> None:
-        self._set_dynamic_label_text(self.conn_label, text)
+        self._connection_status_text = text
+        self._ConnectionStatus_Display()
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        if hasattr(self, "conn_label"):
+            self._ConnectionStatus_Display()
+
+    def _ConnectionStatus_Display(self) -> None:
+        text = self._connection_status_text
+        width = max(160, self.width() - self.header_connection.sizeHint().width() - 48)
+        metrics = self.conn_label.fontMetrics()
+        if metrics.horizontalAdvance(text) <= width:
+            displayed = text
+        else:
+            lines: list[str] = []
+            line = ""
+            for character in text:
+                if line and metrics.horizontalAdvance(line + character) > width:
+                    lines.append(line)
+                    line = ""
+                line += character
+            lines.append(line)
+            displayed = "\n".join(lines)
+        self._set_dynamic_label_text(self.conn_label, displayed)
+        self.conn_label.setToolTip(text)
 
     def begin_data_migration(
         self,

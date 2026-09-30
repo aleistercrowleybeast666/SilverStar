@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from PySide6.QtCore import Signal
+from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QHBoxLayout, QLabel,
     QPushButton, QSpinBox,
@@ -19,6 +20,8 @@ class AirLinkPage(ScrollableLocalizedPage):
         super().__init__(translator, "page.telemetry_configuration", "page.telemetry_configuration.description")
         form = QFormLayout()
         self.fields: dict[str, object] = {}
+        self._radio_choices: dict[str, tuple[tuple[str, str], ...]] = {}
+        self._radio_technologies: set[str] = set()
         for name, key, minimum, maximum in (
             ("spreading_factor", "field.air_sf", 5, 12),
             ("bandwidth_hz", "field.air_bandwidth", 1000, 2000000),
@@ -98,6 +101,7 @@ class AirLinkPage(ScrollableLocalizedPage):
             value = QComboBox()
             for title, identity in choices:
                 value.addItem(title, identity)
+            self._radio_choices[name] = choices
             value.currentIndexChanged.connect(
                 lambda _index, field=name, combo=value:
                 self.configurationChanged.emit(field, combo.currentData())
@@ -117,6 +121,9 @@ class AirLinkPage(ScrollableLocalizedPage):
         self.root_layout.addWidget(self.status)
         self.root_layout.addStretch(1)
 
+    def RadioOptions_Set(self, radios: tuple[object, ...]) -> None:
+        self._radio_technologies = {radio.technology for radio in radios}
+
     def Configuration_Set(self, link, issues) -> None:
         for name, widget in self.fields.items():
             widget.blockSignals(True)
@@ -125,7 +132,22 @@ class AirLinkPage(ScrollableLocalizedPage):
             elif isinstance(widget, QSpinBox):
                 widget.CommittedValue_Set(getattr(link, name))
             else:
-                widget.setCurrentIndex(max(0, widget.findData(getattr(link, name))))
+                widget.clear()
+                for title, identity in self._radio_choices[name]:
+                    widget.addItem(title, identity)
+                    item = widget.model().item(widget.count() - 1)
+                    if (name == "radio_technology" and
+                            identity not in self._radio_technologies and item is not None):
+                        item.setEnabled(False)
+                        item.setToolTip("No installed radio supports this technology")
+                selected = getattr(link, name)
+                if widget.findData(selected) < 0:
+                    widget.addItem(f"{selected} — unavailable", selected)
+                    item = widget.model().item(widget.count() - 1)
+                    if item is not None:
+                        item.setEnabled(False)
+                        item.setToolTip("Selected AIR option is unavailable")
+                widget.setCurrentIndex(max(0, widget.findData(selected)))
             widget.blockSignals(False)
         self.crc.blockSignals(True)
         self.crc.setChecked(link.crc_enabled)
@@ -300,13 +322,32 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.board.setCurrentIndex(max(0, self.board.findData(ground.board)))
         self.radio.clear()
         self.radio.addItem("—", "")
-        for title, identity in radios:
+        for title, identity, available, reason in radios:
             self.radio.addItem(title, identity)
+            item = self.radio.model().item(self.radio.count() - 1)
+            if item is not None:
+                item.setEnabled(available)
+                item.setToolTip(reason)
+                if not available:
+                    item.setForeground(self.radio.palette().color(
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text))
+        if ground.radio_plugin and self.radio.findData(ground.radio_plugin) < 0:
+            self.radio.addItem(f"{ground.radio_plugin} — unavailable", ground.radio_plugin)
+            item = self.radio.model().item(self.radio.count() - 1)
+            if item is not None:
+                item.setEnabled(False)
+                item.setToolTip("AIR_LINK_NO_RADIO: selected radio plugin is unavailable")
         self.radio.setCurrentIndex(max(0, self.radio.findData(ground.radio_plugin)))
         self.module.clear()
         self.module.addItem("—", "")
         for title, identity in requirements.get("modules", ()):
             self.module.addItem(title, identity)
+        if ground.module_variant and self.module.findData(ground.module_variant) < 0:
+            self.module.addItem(f"{ground.module_variant} — unavailable", ground.module_variant)
+            item = self.module.model().item(self.module.count() - 1)
+            if item is not None:
+                item.setEnabled(False)
+                item.setToolTip("AIR_LINK_NO_RADIO: selected module variant is unavailable")
         self.module.setCurrentIndex(max(0, self.module.findData(ground.module_variant)))
         self.pc_interface.setCurrentIndex(max(0, self.pc_interface.findData(ground.pc_interface)))
         uart_selected = ground.enabled and ground.pc_interface == "uart"

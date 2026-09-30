@@ -45,6 +45,7 @@ QLabel#headerCredit {
     font-weight: 500;
     padding: 4px 2px;
 }
+QLabel#headerProject { color: #FFFFFF; font-weight: 600; }
 QLabel#headerControlLabel { color: #FFFFFF; font-weight: 600; }
 QPushButton#topActionButton {
     background: #1C4F94;
@@ -284,6 +285,7 @@ QLabel#headerCredit {
     font-weight: 500;
     padding: 4px 2px;
 }
+QLabel#headerProject { color: #F8FAFC; font-weight: 600; }
 QLabel#headerControlLabel { color: #F8FAFC; font-weight: 600; }
 QPushButton#topActionButton {
     background: #163B6C;

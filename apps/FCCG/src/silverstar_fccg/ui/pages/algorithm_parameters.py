@@ -22,7 +22,8 @@ from silverstar_fccg.ui.widgets import CollapsibleSection
 
 
 class NavigationConfigurationPage(ScrollableLocalizedPage):
-    alignmentChanged = Signal(object)
+    alignmentConfirmed = Signal(str, object)
+    alignmentDraftCancelled = Signal(str)
     parameterChanged = Signal(str, str, object)
     defaultsRequested = Signal(str)
     sharedParameterChanged = Signal(str, object)
@@ -34,7 +35,8 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         self.calibration_section, self.calibration_layout = self._Section_Create("navigation.calibration")
         self.alignment_section, self.alignment_layout = self._Section_Create("navigation.initial_alignment")
         self.alignment_editor = AlignmentConfigurationEditor(translator)
-        self.alignment_editor.configurationChanged.connect(self.alignmentChanged)
+        self.alignment_editor.configurationConfirmed.connect(self.alignmentConfirmed)
+        self.alignment_editor.draftCancelled.connect(self.alignmentDraftCancelled)
         self.alignment_layout.addWidget(self.alignment_editor)
         self.ins_section, self.ins_layout = self._Section_Create("navigation.ins")
         self.estimator_section, self.estimator_layout = self._Section_Create("navigation.estimator")
@@ -58,10 +60,15 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         self._rate_error = ""
         self.Language_Apply(translator)
 
-    def _Section_Create(self, key: str) -> tuple[QGroupBox, QVBoxLayout]:
-        section = QGroupBox(self._translator.Text_Get(key))
-        section.setProperty("navigationSectionKey", key)
+    def _Section_Create(self, key: str) -> tuple[QWidget, QVBoxLayout]:
+        # The reparented editors already own their titled group boxes.  A
+        # second QGroupBox here produces two identical frames and titles.
+        section = QWidget()
         layout = QVBoxLayout(section)
+        if key in {"navigation.parameters", "navigation.resource_timing"}:
+            heading = QLabel(self._translator.Text_Get(key))
+            heading.setProperty("navigationSectionKey", key)
+            layout.addWidget(heading)
         self.root_layout.addWidget(section)
         return section, layout
 
@@ -199,10 +206,10 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
-        for section in self.findChildren(QGroupBox):
-            key = section.property("navigationSectionKey")
+        for heading in self.findChildren(QLabel):
+            key = heading.property("navigationSectionKey")
             if key:
-                section.setTitle(self._translator.Text_Get(key))
+                heading.setText(self._translator.Text_Get(key))
         self.Configuration_Set(self._owners, self._values, self._recommendations)
         self.alignment_editor.Language_Apply(translator)
         self.RatePlan_Set(self._rate_plan, self._rate_error)
