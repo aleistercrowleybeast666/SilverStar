@@ -242,6 +242,8 @@ class AlgorithmMetadata:
     exact_validation_reference: str = ""
     offline_default_parameters: Mapping[str, Any] = field(default_factory=dict)
     what_if_quality_revisions: tuple[int, ...] = ()
+    # Trusted firmware configuration fields which are not replay tunables.
+    firmware_only_parameter_schema: tuple[ParameterSpec, ...] = ()
 
     def ParameterSchemaIdentity_Get(self) -> str:
         payload = [spec.ToDict() for spec in self.parameter_schema]
@@ -262,10 +264,10 @@ class AlgorithmMetadata:
                 raise ValueError(f"parameter_missing:{name}")
 
     def __post_init__(self) -> None:
-        ids = [spec.parameter_id for spec in self.parameter_schema]
+        ids = [spec.parameter_id for spec in (*self.parameter_schema, *self.firmware_only_parameter_schema)]
         if len(ids) != len(set(ids)):
             raise ValueError("parameter_id_duplicate")
-        for spec in self.parameter_schema:
+        for spec in (*self.parameter_schema, *self.firmware_only_parameter_schema):
             spec.Value_Validate(spec.default)
         for field_name in (
             "cadence_contract",
@@ -354,7 +356,7 @@ class AlgorithmPlugin(ABC):
     def ParameterSchemaCompatible_Is(self, identity: str) -> bool:
         return identity == self.metadata.ParameterSchemaIdentity_Get()
 
-    def recorded_parameters(self, dataset: FlightDataset) -> Mapping[str, Any]:
+    def _FirmwareParameters_Get(self, dataset: FlightDataset) -> Mapping[str, Any]:
         if not self.FirmwareMember_Is(dataset) or dataset.semantic_context is None:
             return MappingProxyType({})
         sets = [
@@ -367,7 +369,8 @@ class AlgorithmPlugin(ABC):
         if not present:
             return MappingProxyType({})
         records = present[0]
-        specs = {spec.parameter_id: spec for spec in self.metadata.parameter_schema}
+        specs = {spec.parameter_id: spec for spec in (*self.metadata.parameter_schema,
+                                                     *self.metadata.firmware_only_parameter_schema)}
         values = {}
         for name, item in records.items():
             if name not in specs:
@@ -378,6 +381,18 @@ class AlgorithmPlugin(ABC):
             spec.Value_Validate(item["value"])
             values[name] = item["value"]
         return MappingProxyType(values)
+
+    def recorded_parameters(self, dataset: FlightDataset) -> Mapping[str, Any]:
+        values = self._FirmwareParameters_Get(dataset)
+        tunables = {spec.parameter_id for spec in self.metadata.parameter_schema}
+        return MappingProxyType({name: value for name, value in values.items() if name in tunables})
+
+    def FirmwareBuildParameters_Get(self, dataset: FlightDataset) -> Mapping[str, Any]:
+        fields = {spec.parameter_id for spec in self.metadata.firmware_only_parameter_schema}
+        if not fields:
+            return MappingProxyType({})
+        values = self._FirmwareParameters_Get(dataset)
+        return MappingProxyType({name: value for name, value in values.items() if name in fields})
 
     def Parameters_Resolve(self, dataset: FlightDataset, request: ReplayRequest) -> dict[str, Any]:
         if (
@@ -424,6 +439,7 @@ class AlgorithmPlugin(ABC):
                 else "Algorithm Plugin actual defaults"
             ),
             "parameter_schema_identity": self.metadata.ParameterSchemaIdentity_Get(),
+            "firmware_build_parameters": dict(self.FirmwareBuildParameters_Get(dataset)),
             "parameter_metadata": {
                 p.parameter_id: p.ToDict() for p in self.metadata.parameter_schema
             },

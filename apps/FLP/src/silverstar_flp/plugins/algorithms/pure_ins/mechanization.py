@@ -247,12 +247,15 @@ def Mechanization_Run(
 
 
 def Mechanization_ConfigurationGet(dataset: Any) -> dict[str, Any]:
+    from silverstar_flp.decoder_profiles.algorithm_parameters import FirmwareMechanizationAggregation_Get
+    aggregation = FirmwareMechanizationAggregation_Get(dataset)
     records = dataset.Records_Get("SYSTEM_CONFIG")
     if not records:
         return {
             "minimum_sample_rate_hz": 50.0,
             "maximum_sample_rate_hz": 500.0,
-            "subsample_count": int(dataset.header.get("mechanization_subsample_count", 2)),
+            "subsample_count": int(aggregation if aggregation is not None
+                                   else dataset.header.get("mechanization_subsample_count", 2)),
             "imu_corrected_decimation": None,
             "inertial_increment_decimation": None,
         }
@@ -294,7 +297,7 @@ def Mechanization_ConfigurationGet(dataset: Any) -> dict[str, Any]:
         "subsample_count": int(
             payload.get(
                 "mechanization_subsample_count",
-                dataset.header.get("mechanization_subsample_count", 2),
+                aggregation if aggregation is not None else dataset.header.get("mechanization_subsample_count", 2),
             )
         ),
         "imu_corrected_decimation": (

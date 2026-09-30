@@ -404,6 +404,8 @@ class LogOpenCoordinator:
         context.Cancel_RaiseIfRequested()
         context.Progress_Report(0.96, "log_open.semantics")
         dataset = SilverStarSslog0SemanticAdapter(package).Apply(dataset)
+        from silverstar_flp.decoder_profiles.algorithm_parameters import FirmwareMechanizationRecords_Validate
+        FirmwareMechanizationRecords_Validate(dataset)
         context.Progress_Report(1.0, "log_open.complete")
         return LogOpenResult(
             dataset=dataset,

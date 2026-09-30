@@ -93,6 +93,10 @@ class PureInsAlgorithmPlugin(AlgorithmPlugin):
             "mechanization.dt",
         ),
         firmware_component_ids=("silverstar.algorithm.ins.coning2_sculling2",),
+        firmware_only_parameter_schema=(
+            ParameterSpec("mechanization_aggregation", "int", 2, 1, 2, "samples",
+                          representation="value", required=False),
+        ),
         recorded_output_roles=(
             "pure_ins.recorded.attitude.q_nb",
             "pure_ins.recorded.navigation.velocity_enu",
