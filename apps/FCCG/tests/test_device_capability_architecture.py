@@ -1044,8 +1044,12 @@ def test_gui_save_as_action_creates_draft_project_root(
         assert window._project_root == destination.resolve()
         assert (destination / "SilverStar.ssproject").is_file()
         assert (destination / "Log").is_dir()
-        # Save As creates a new draft root; firmware is generated separately.
-        assert not (destination / "Flight_Controller").exists()
+        # A confirmed project root immediately owns the three empty directories.
+        # Save As remains a draft: generated firmware is a separate operation.
+        for name in ("Flight_Controller", "Ground_Station", "Log"):
+            directory = destination / name
+            assert directory.is_dir()
+            assert not any(directory.iterdir())
     finally:
         window.close()
         qapp.processEvents()
