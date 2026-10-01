@@ -1,0 +1,1331 @@
+FF..FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                       [100%]
+================================== FAILURES ===================================
+__________ test_first_character_and_function_location_preserved[-\n] __________
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_first_character_and_funct0')
+ending = '\n', bom = b''
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    def test_first_character_and_function_location_preserved(
+        checker_fixture: Path, ending: str, bom: bytes,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = '#include "unused.h"\n\n' + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+>       assert "POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|3|Fixture|5|2" in result.stdout
+E       AssertionError: assert 'POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|3|Fixture|5|2' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:306: AssertionError
+_________ test_first_character_and_function_location_preserved[-\r\n] _________
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_first_character_and_funct1')
+ending = '\r\n', bom = b''
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    def test_first_character_and_function_location_preserved(
+        checker_fixture: Path, ending: str, bom: bytes,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = '#include "unused.h"\n\n' + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+>       assert "POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|3|Fixture|5|2" in result.stdout
+E       AssertionError: assert 'POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|3|Fixture|5|2' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:306: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n--\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no0')
+ending = '\n', bom = b''
+macro = '#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+>       assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+E       AssertionError: assert 'POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|5|Fixture|5|2' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:324: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n--\r\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no1')
+ending = '\r\n', bom = b''
+macro = '#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+>       assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+E       AssertionError: assert 'POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|5|Fixture|5|2' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:324: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n-\xef\xbb\xbf-\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no2')
+ending = '\n', bom = b'\xef\xbb\xbf'
+macro = '#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+>       assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+E       AssertionError: assert 'POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|5|Fixture|5|2' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:324: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n-\xef\xbb\xbf-\r\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no3')
+ending = '\r\n', bom = b'\xef\xbb\xbf'
+macro = '#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+>       assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+E       AssertionError: assert 'POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|5|Fixture|5|2' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 30 checks, 1 first-party C files, 1 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:324: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n--\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no4')
+ending = '\n', bom = b''
+macro = '#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+        assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+>       assert "functions=1|eligible_assertions=2|" in result.stdout
+E       AssertionError: assert 'functions=1|eligible_assertions=2|' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:325: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n--\r\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no5')
+ending = '\r\n', bom = b''
+macro = '#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+        assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+>       assert "functions=1|eligible_assertions=2|" in result.stdout
+E       AssertionError: assert 'functions=1|eligible_assertions=2|' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:325: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n-\xef\xbb\xbf-\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no6')
+ending = '\n', bom = b'\xef\xbb\xbf'
+macro = '#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+        assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+>       assert "functions=1|eligible_assertions=2|" in result.stdout
+E       AssertionError: assert 'functions=1|eligible_assertions=2|' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:325: AssertionError
+_ test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n-\xef\xbb\xbf-\r\n] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_macro_continuations_do_no7')
+ending = '\r\n', bom = b'\xef\xbb\xbf'
+macro = '#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n'
+
+    @pytest.mark.parametrize("ending", ("\n", "\r\n"))
+    @pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+    @pytest.mark.parametrize("macro", (
+        "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+        "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+    ))
+    def test_macro_continuations_do_not_create_or_inflate_functions(
+        checker_fixture: Path, ending: str, bom: bytes, macro: str,
+    ) -> None:
+        path = checker_fixture / "APP/fixture.c"
+        source = macro + path.read_text(encoding="utf-8")
+        path.write_bytes(bom + source.replace("\n", ending).encode())
+        result = _Checker_Run(checker_fixture)
+        assert result.returncode == 0, result.stdout + result.stderr
+        start = macro.count("\n") + 1
+        assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+>       assert "functions=1|eligible_assertions=2|" in result.stdout
+E       AssertionError: assert 'functions=1|eligible_assertions=2|' in 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n'
+E        +  where 'FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\fixture.c\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\fix...wer of Ten check passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n' = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...heck passed: 32 checks, 1 first-party C files, 2 functions.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').stdout
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:325: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an0')
+statement = 'SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an0\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 106
+E         + ... T((&sample), Sample, M);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an1')
+statement = 'SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an1\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 110
+E         + ... (&sample))), Sample, M);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an2')
+statement = 'SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an2\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 112
+E         + ... d *)&s_state, State, M);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an3')
+statement = 'SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an3\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 123
+E         + ... )(&s_state)), State, M);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an4')
+statement = 'SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an4\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 122
+E         + ... e *)&sample), State, M);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an5')
+statement = 'SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an5\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 111
+E         + ... s_state) != NULL, M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an6')
+statement = 'SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an6\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 111
+E         + ... void *)&s_state), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((1U || count), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an7')
+statement = 'SILVERSTAR_ASSERT((1U || count), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an7\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 98
+E         + ... RT((1U || count), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT(((true || count)), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an8')
+statement = 'SILVERSTAR_ASSERT(((true || count)), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an8\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 102
+E         + ... (true || count)), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((count || true), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an9')
+statement = 'SILVERSTAR_ASSERT((count || true), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an9\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 100
+E         + ... ((count || true), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((false && count), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an10')
+statement = 'SILVERSTAR_ASSERT((false && count), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an10\\pro
+E         be.ps1:2 \ufffd\u05b7\ufffd: 101
+E         + ... (false && count), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((count && false), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an11')
+statement = 'SILVERSTAR_ASSERT((count && false), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an11\\pro
+E         be.ps1:2 \ufffd\u05b7\ufffd: 101
+E         + ... (count && false), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((0U && count), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an12')
+statement = 'SILVERSTAR_ASSERT((0U && count), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an12\\pro
+E         be.ps1:2 \ufffd\u05b7\ufffd: 98
+E         + ... RT((0U && count), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((count && 0U), M, R);] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_nested_fixed_addresses_an13')
+statement = 'SILVERSTAR_ASSERT((count && 0U), M, R);'
+
+    @pytest.mark.parametrize("statement", (
+        "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+        "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+        "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+        "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+        "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+        "SILVERSTAR_ASSERT((1U || count), M, R);",
+        "SILVERSTAR_ASSERT(((true || count)), M, R);",
+        "SILVERSTAR_ASSERT((count || true), M, R);",
+        "SILVERSTAR_ASSERT((false && count), M, R);",
+        "SILVERSTAR_ASSERT((count && false), M, R);",
+        "SILVERSTAR_ASSERT((0U && count), M, R);",
+        "SILVERSTAR_ASSERT((count && 0U), M, R);",
+    ))
+    def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+        checker_fixture: Path, statement: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_nested_fixed_addresses_an13\\pro
+E         be.ps1:2 \ufffd\u05b7\ufffd: 98
+E         + ... RT((count && 0U), M, R);' @()) -eq 0)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:351: AssertionError
+_ test_capacity_predicates_with_sizeof_remain_candidates[count <= sizeof(array)] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_capacity_predicates_with_0')
+predicate = 'count <= sizeof(array)'
+
+    @pytest.mark.parametrize("predicate", (
+        "count <= sizeof(array)",
+        "(count <= sizeof((array)))",
+        "count < sizeof(array) / sizeof(array[0])",
+        "(count >= 0) && (count <= sizeof(array))",
+        "isfinite(data[0]) && count <= sizeof(array)",
+    ))
+    def test_capacity_predicates_with_sizeof_remain_candidates(
+        checker_fixture: Path, predicate: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT({predicate}, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_capacity_predicates_with_0\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 107
+E         + ... <= sizeof(array), M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:368: AssertionError
+_ test_capacity_predicates_with_sizeof_remain_candidates[(count <= sizeof((array)))] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_capacity_predicates_with_1')
+predicate = '(count <= sizeof((array)))'
+
+    @pytest.mark.parametrize("predicate", (
+        "count <= sizeof(array)",
+        "(count <= sizeof((array)))",
+        "count < sizeof(array) / sizeof(array[0])",
+        "(count >= 0) && (count <= sizeof(array))",
+        "isfinite(data[0]) && count <= sizeof(array)",
+    ))
+    def test_capacity_predicates_with_sizeof_remain_candidates(
+        checker_fixture: Path, predicate: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT({predicate}, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_capacity_predicates_with_1\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 111
+E         + ... sizeof((array))), M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:368: AssertionError
+_ test_capacity_predicates_with_sizeof_remain_candidates[count < sizeof(array) / sizeof(array[0])] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_capacity_predicates_with_2')
+predicate = 'count < sizeof(array) / sizeof(array[0])'
+
+    @pytest.mark.parametrize("predicate", (
+        "count <= sizeof(array)",
+        "(count <= sizeof((array)))",
+        "count < sizeof(array) / sizeof(array[0])",
+        "(count >= 0) && (count <= sizeof(array))",
+        "isfinite(data[0]) && count <= sizeof(array)",
+    ))
+    def test_capacity_predicates_with_sizeof_remain_candidates(
+        checker_fixture: Path, predicate: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT({predicate}, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_capacity_predicates_with_2\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 125
+E         + ... sizeof(array[0]), M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:368: AssertionError
+_ test_capacity_predicates_with_sizeof_remain_candidates[(count >= 0) && (count <= sizeof(array))] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_capacity_predicates_with_3')
+predicate = '(count >= 0) && (count <= sizeof(array))'
+
+    @pytest.mark.parametrize("predicate", (
+        "count <= sizeof(array)",
+        "(count <= sizeof((array)))",
+        "count < sizeof(array) / sizeof(array[0])",
+        "(count >= 0) && (count <= sizeof(array))",
+        "isfinite(data[0]) && count <= sizeof(array)",
+    ))
+    def test_capacity_predicates_with_sizeof_remain_candidates(
+        checker_fixture: Path, predicate: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT({predicate}, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_capacity_predicates_with_3\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 125
+E         + ... = sizeof(array)), M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:368: AssertionError
+_ test_capacity_predicates_with_sizeof_remain_candidates[isfinite(data[0]) && count <= sizeof(array)] _
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_capacity_predicates_with_4')
+predicate = 'isfinite(data[0]) && count <= sizeof(array)'
+
+    @pytest.mark.parametrize("predicate", (
+        "count <= sizeof(array)",
+        "(count <= sizeof((array)))",
+        "count < sizeof(array) / sizeof(array[0])",
+        "(count >= 0) && (count <= sizeof(array))",
+        "isfinite(data[0]) && count <= sizeof(array)",
+    ))
+    def test_capacity_predicates_with_sizeof_remain_candidates(
+        checker_fixture: Path, predicate: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT({predicate}, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_capacity_predicates_with_4\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 128
+E         + ... <= sizeof(array), M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:368: AssertionError
+______ test_parenthesized_runtime_pointer_stays_one_candidate[(report)] _______
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_parenthesized_runtime_poi0')
+operand = '(report)'
+
+    @pytest.mark.parametrize("operand", ("(report)", "((Report *)report)", "(void *)(report)"))
+    def test_parenthesized_runtime_pointer_stays_one_candidate(
+        checker_fixture: Path, operand: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT_OBJECT({operand}, Report, M); "
+            "SILVERSTAR_ASSERT(report != NULL, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_parenthesized_runtime_poi0\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 146
+E         + ... T(report != NULL, M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:380: AssertionError
+_ test_parenthesized_runtime_pointer_stays_one_candidate[((Report *)report)] __
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_parenthesized_runtime_poi1')
+operand = '((Report *)report)'
+
+    @pytest.mark.parametrize("operand", ("(report)", "((Report *)report)", "(void *)(report)"))
+    def test_parenthesized_runtime_pointer_stays_one_candidate(
+        checker_fixture: Path, operand: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT_OBJECT({operand}, Report, M); "
+            "SILVERSTAR_ASSERT(report != NULL, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_parenthesized_runtime_poi1\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 156
+E         + ... T(report != NULL, M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:380: AssertionError
+__ test_parenthesized_runtime_pointer_stays_one_candidate[(void *)(report)] ___
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/PoTCheckerCorrectness_20261001_before/test_parenthesized_runtime_poi2')
+operand = '(void *)(report)'
+
+    @pytest.mark.parametrize("operand", ("(report)", "((Report *)report)", "(void *)(report)"))
+    def test_parenthesized_runtime_pointer_stays_one_candidate(
+        checker_fixture: Path, operand: str,
+    ) -> None:
+        result = _PowerShell_Run(checker_fixture, (
+            "(Get-MeaningfulAssertionCount "
+            f"'SILVERSTAR_ASSERT_OBJECT({operand}, Report, M); "
+            "SILVERSTAR_ASSERT(report != NULL, M, R);' @()) -eq 1"
+        ))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E         FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+E         FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E         POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|5|2
+E         POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=2|average=2.000000|minimum=2|semantic_review=required
+E         FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E         FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E         Power of Ten check passed: 30 checks, 1 first-party C files, 1 functions.
+E         FCCG_PROGRESS|POWER10|DONE|3|3|build_policy
+E         checker regression
+E         \ufffd\ufffd\ufffd\ufffd\u03bb\ufffd\ufffd D:\\python_software\\SilverStar\\.work\\PoTCheckerCorrectness_20261001_before\\test_parenthesized_runtime_poi2\\prob
+E         e.ps1:2 \ufffd\u05b7\ufffd: 154
+E         + ... T(report != NULL, M, R);' @()) -eq 1)) { throw 'checker regression' }
+E         +                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+E             + CategoryInfo          : OperationStopped: (checker regression:String) [], RuntimeException
+E             + FullyQualifiedErrorId : checker regression
+E          
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...ationStopped: (checker regression:String) [], RuntimeException\n    + FullyQualifiedErrorId : checker regression\n \n").returncode
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:380: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_first_character_and_function_location_preserved[-\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_first_character_and_function_location_preserved[-\r\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n--\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n--\r\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n-\xef\xbb\xbf-\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n-\xef\xbb\xbf-\r\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n--\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n--\r\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n-\xef\xbb\xbf-\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_macro_continuations_do_not_create_or_inflate_functions[#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n-\xef\xbb\xbf-\r\n]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((1U || count), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT(((true || count)), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((count || true), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((false && count), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((count && false), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((0U && count), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_nested_fixed_addresses_and_boolean_constants_get_no_credit[SILVERSTAR_ASSERT((count && 0U), M, R);]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_capacity_predicates_with_sizeof_remain_candidates[count <= sizeof(array)]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_capacity_predicates_with_sizeof_remain_candidates[(count <= sizeof((array)))]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_capacity_predicates_with_sizeof_remain_candidates[count < sizeof(array) / sizeof(array[0])]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_capacity_predicates_with_sizeof_remain_candidates[(count >= 0) && (count <= sizeof(array))]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_capacity_predicates_with_sizeof_remain_candidates[isfinite(data[0]) && count <= sizeof(array)]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_parenthesized_runtime_pointer_stays_one_candidate[(report)]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_parenthesized_runtime_pointer_stays_one_candidate[((Report *)report)]
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_parenthesized_runtime_pointer_stays_one_candidate[(void *)(report)]
+32 failed, 2 passed, 48 deselected in 34.37s

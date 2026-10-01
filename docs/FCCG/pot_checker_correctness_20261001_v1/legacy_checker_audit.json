@@ -1,0 +1,103 @@
+{
+  "repository": "D:\\python_software\\SilverStar_FCCG",
+  "stored_at_commit": "f58b17e98e73fc77afb288689e496b6e6bcf5832",
+  "checker_path": "plugins/builtin/silverstar_core_0_0_12/payload/Tools/check_power_of_ten.ps1",
+  "checker_sha256": "e5bef87b629245a7662289bc1b3ffcdb3b34ceb6498d862620d8f2927e3843e1",
+  "migration_normalized_bytes_identical": true,
+  "checker_history": "ec5e1a318b669b98344000e419dda8a140b66e97 2026-09-26T16:54:05+08:00 Release SilverStar 0.0.12 and migrate Core package\n",
+  "records": {
+    "summary": {
+      "path": "tests/joint_rework_20260927/evidence_final/matrix/FinalDelta_20260927_085218_568926/acceptance_summary.json",
+      "sha256": "b518f0390cdceeda9ad2bad189a39c44f4f7842acb4d21d4526574684255512d",
+      "bytes": 21520,
+      "relevant_lines": [
+        "            \"Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6270 checks, 99 first-party C files, 2354 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 5938 checks, 95 first-party C files, 2238 functions.\",",
+        "            \"SilverStar architecture check passed: checks=184 failures=0\"",
+        "            \"Power of Ten check passed: 5938 checks, 95 first-party C files, 2238 functions.\",",
+        "            \"SilverStar architecture check passed: checks=184 failures=0\"",
+        "            \"Power of Ten check passed: 6118 checks, 96 first-party C files, 2303 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\"",
+        "            \"Power of Ten check passed: 6118 checks, 96 first-party C files, 2303 functions.\",",
+        "            \"SilverStar architecture check passed: checks=318 failures=0\""
+      ]
+    },
+    "kf6_release": {
+      "path": "tests/joint_rework_20260927/evidence_final/matrix/kf6_flight/FinalDelta_20260927_085218_568926/Release-quality.log",
+      "sha256": "2f970ea1bc77a277da40c67a5c7dd57a223557fe571d1547bfbc8fca0629d292",
+      "bytes": 39592,
+      "relevant_lines": [
+        "powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1",
+        "D:/msys64/ucrt64/bin/mingw32-make.EXE TARGET_PROFILE=SilverStar_F407 CONFIG=Release ANALYZE=1 all",
+        "FCCG_PROGRESS|ARCHITECTURE|PLAN|6",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency",
+        "Power of Ten check passed: 6459 checks, 99 first-party C files, 2427 functions.",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol",
+        "FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary",
+        "SilverStar architecture check passed: checks=318 failures=0",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary"
+      ]
+    },
+    "pure_ins_release": {
+      "path": "tests/joint_rework_20260927/evidence_final/matrix/pure_ins/FinalDelta_20260927_085218_568926/Release-quality.log",
+      "sha256": "634e64d662051fe8389f25df375d7089549bf3930e2d7b80df2479c7ef9701d9",
+      "bytes": 33165,
+      "relevant_lines": [
+        "powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1",
+        "D:/msys64/ucrt64/bin/mingw32-make.EXE TARGET_PROFILE=SilverStar_F407 CONFIG=Release ANALYZE=1 all",
+        "FCCG_PROGRESS|ARCHITECTURE|PLAN|6",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency",
+        "Power of Ten check passed: 6118 checks, 96 first-party C files, 2303 functions.",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol",
+        "FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol",
+        "FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary",
+        "SilverStar architecture check passed: checks=318 failures=0",
+        "FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary"
+      ]
+    },
+    "navigation_subset": {
+      "path": "tests/joint_rework_20260927/evidence_final/navigation_review/power10_final.log",
+      "sha256": "6717cbe7c5e111b995c2f823ddc004484010702bbc8a4ea7e330b7cc4c0b402a",
+      "bytes": 552,
+      "relevant_lines": [
+        "Power of Ten check passed: 549 checks, 2 first-party C files, 196 functions."
+      ]
+    }
+  },
+  "limitations": [
+    "Stored-at commit proves Git object provenance, not executed source revision unless its own execution manifest establishes it.",
+    "Historical source/configuration and counters differ; no cross-revision binary attribution."
+  ]
+}

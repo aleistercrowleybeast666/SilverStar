@@ -176,10 +176,10 @@ def _Checker_Run(root: Path, target: str = "Flight") -> subprocess.CompletedProc
     )
 
 
-@pytest.mark.parametrize("counts,passed", (((2, 1), False), ((2, 2), True), ((3, 2), True), ((4, 0), True), ((2, 0), False)))
+@pytest.mark.parametrize("counts", ((2, 1), (2, 2), (3, 2), (4, 0), (2, 0)))
 @pytest.mark.parametrize("target", ("Flight", "Ground"))
-def test_average_threshold_includes_short_and_zero_functions(
-    checker_fixture: Path, counts: tuple[int, int], passed: bool, target: str,
+def test_average_is_informational_and_includes_short_and_zero_functions(
+    checker_fixture: Path, counts: tuple[int, int], target: str,
 ) -> None:
     functions = []
     for i, count in enumerate(counts):
@@ -194,8 +194,10 @@ def test_average_threshold_includes_short_and_zero_functions(
     makefile = checker_fixture / "Makefile"
     makefile.write_text(makefile.read_text(encoding="utf-8") + "LDFLAGS := -TSTM32F407XX_FLASH.ld\n", encoding="utf-8")
     result = _Checker_Run(checker_fixture, target)
-    assert (result.returncode == 0) is passed, result.stdout + result.stderr
+    assert result.returncode == 0, result.stdout + result.stderr
     assert f"functions=2|eligible_assertions={sum(counts)}|" in result.stdout
+    assert "|informational|policy=fprime_inspired_c|" in result.stdout
+    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in result.stdout
 
 
 def test_third_party_assertions_cannot_raise_first_party_average(checker_fixture: Path) -> None:
@@ -207,7 +209,7 @@ def test_third_party_assertions_cannot_raise_first_party_average(checker_fixture
     vendor.mkdir(parents=True)
     (vendor / "dense.c").write_text("void Dense(void) { " + "SILVERSTAR_ASSERT(1, M, R);" * 100 + " }", encoding="utf-8")
     result = _Checker_Run(checker_fixture)
-    assert result.returncode == 1
+    assert result.returncode == 0
     assert "files=1|functions=1|eligible_assertions=1|" in result.stdout
 
 
@@ -235,7 +237,7 @@ def test_sparse_long_function_is_nonblocking(checker_fixture: Path) -> None:
     (checker_fixture / "APP/fixture.c").write_text(source, encoding="utf-8")
     result = _Checker_Run(checker_fixture)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "POWER10_RULE5_SPARSE|APP\\fixture.c|1|Sparse|0|nonblocking" in result.stdout
+    assert "POWER10_RULE5_RECOMMENDATION|APP\\fixture.c|1|Sparse|24|zero_runtime_candidates|nonblocking" in result.stdout
 
 
 @pytest.mark.parametrize("ending", ("\n", "\r\n"))
@@ -261,7 +263,7 @@ def test_utf8_real_jy_source_has_identical_lf_crlf_coverage(checker_fixture: Pat
     for contents in (data, data.replace(b"\n", b"\r\n")):
         (checker_fixture / "APP/fixture.c").write_bytes(contents)
         result = _Checker_Run(checker_fixture)
-        assert result.returncode == 1  # Real driver has insufficient average.
+        assert result.returncode == 0  # Low density is informational; review remains pending.
         rows.append([line for line in result.stdout.splitlines()
                      if line.startswith("POWER10_RULE5_FUNCTION|")])
     assert rows[0] == rows[1]
@@ -291,3 +293,137 @@ def test_utf8_bom_preserves_coverage_and_other_rule_diagnostics(
     assert "functions=1|eligible_assertions=2|" in result.stdout
     if conditional:
         assert "first-party C conditional compilation violation" in result.stdout
+
+
+@pytest.mark.parametrize("ending", ("\n", "\r\n"))
+@pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+def test_first_character_and_function_location_preserved(
+    checker_fixture: Path, ending: str, bom: bytes,
+) -> None:
+    path = checker_fixture / "APP/fixture.c"
+    source = '#include "unused.h"\n\n' + path.read_text(encoding="utf-8")
+    path.write_bytes(bom + source.replace("\n", ending).encode())
+    result = _Checker_Run(checker_fixture)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|3|Fixture|5|2" in result.stdout
+
+
+@pytest.mark.parametrize("ending", ("\n", "\r\n"))
+@pytest.mark.parametrize("bom", (b"", b"\xef\xbb\xbf"))
+@pytest.mark.parametrize("macro", (
+    "#define VALUES \\\n (1U | \\\n  2U | \\\n  4U)\n",
+    "#define DEFINE_GHOST \\\n void Ghost(int value) { \\\n SILVERSTAR_ASSERT(value > 0, M, R); \\\n SILVERSTAR_ASSERT(value < 10, M, R); \\\n }\n",
+))
+def test_macro_continuations_do_not_create_or_inflate_functions(
+    checker_fixture: Path, ending: str, bom: bytes, macro: str,
+) -> None:
+    path = checker_fixture / "APP/fixture.c"
+    source = macro + path.read_text(encoding="utf-8")
+    path.write_bytes(bom + source.replace("\n", ending).encode())
+    result = _Checker_Run(checker_fixture)
+    assert result.returncode == 0, result.stdout + result.stderr
+    start = macro.count("\n") + 1
+    assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+    assert "functions=1|eligible_assertions=2|" in result.stdout
+    assert "|Ghost|" not in result.stdout
+
+
+@pytest.mark.parametrize("statement", (
+    "SILVERSTAR_ASSERT_OBJECT((&sample), Sample, M);",
+    "SILVERSTAR_ASSERT_OBJECT((((&sample))), Sample, M);",
+    "SILVERSTAR_ASSERT_OBJECT((void *)&s_state, State, M);",
+    "SILVERSTAR_ASSERT_OBJECT(((const State *)(&s_state)), State, M);",
+    "SILVERSTAR_ASSERT_OBJECT((void *)((State *)&sample), State, M);",
+    "SILVERSTAR_ASSERT(((void *)&s_state) != NULL, M, R);",
+    "SILVERSTAR_ASSERT(NULL != ((void *)&s_state), M, R);",
+    "SILVERSTAR_ASSERT((1U || count), M, R);",
+    "SILVERSTAR_ASSERT(((true || count)), M, R);",
+    "SILVERSTAR_ASSERT((count || true), M, R);",
+    "SILVERSTAR_ASSERT((false && count), M, R);",
+    "SILVERSTAR_ASSERT((count && false), M, R);",
+    "SILVERSTAR_ASSERT((0U && count), M, R);",
+    "SILVERSTAR_ASSERT((count && 0U), M, R);",
+))
+def test_nested_fixed_addresses_and_boolean_constants_get_no_credit(
+    checker_fixture: Path, statement: str,
+) -> None:
+    result = _PowerShell_Run(checker_fixture, (
+        f"(Get-MeaningfulAssertionCount '{statement}' @()) -eq 0"
+    ))
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("predicate", (
+    "count <= sizeof(array)",
+    "(count <= sizeof((array)))",
+    "count < sizeof(array) / sizeof(array[0])",
+    "(count >= 0) && (count <= sizeof(array))",
+    "isfinite(data[0]) && count <= sizeof(array)",
+))
+def test_capacity_predicates_with_sizeof_remain_candidates(
+    checker_fixture: Path, predicate: str,
+) -> None:
+    result = _PowerShell_Run(checker_fixture, (
+        "(Get-MeaningfulAssertionCount "
+        f"'SILVERSTAR_ASSERT({predicate}, M, R);' @()) -eq 1"
+    ))
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("operand", ("(report)", "((Report *)report)", "(void *)(report)"))
+def test_parenthesized_runtime_pointer_stays_one_candidate(
+    checker_fixture: Path, operand: str,
+) -> None:
+    result = _PowerShell_Run(checker_fixture, (
+        "(Get-MeaningfulAssertionCount "
+        f"'SILVERSTAR_ASSERT_OBJECT({operand}, Report, M); "
+        "SILVERSTAR_ASSERT(report != NULL, M, R);' @()) -eq 1"
+    ))
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("code_lines,reported", ((10, False), (11, True)))
+def test_fprime_inspired_recommendation_boundary_and_pending_review(
+    checker_fixture: Path, code_lines: int, reported: bool,
+) -> None:
+    source = "void Review(int value)\n{\n" + " value += 1;\n" * (code_lines - 3) + "}\n"
+    (checker_fixture / "APP/fixture.c").write_text(source, encoding="utf-8")
+    result = _Checker_Run(checker_fixture)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert ("POWER10_RULE5_RECOMMENDATION|" in result.stdout) is reported
+    assert f"|Review|{code_lines}|0" in result.stdout
+    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in result.stdout
+    assert "Critical-contract review NOT PROVEN" in result.stdout
+
+
+@pytest.mark.parametrize("predicate", (
+    "(ready || 1U) && valid",
+    "values[index || 1U] != 0",
+    "condition ? (1U || count) : other",
+))
+def test_nested_partial_constants_do_not_erase_runtime_predicate(
+    checker_fixture: Path, predicate: str,
+) -> None:
+    result = _PowerShell_Run(checker_fixture, (
+        "(Get-MeaningfulAssertionCount "
+        f"'SILVERSTAR_ASSERT({predicate}, M, R);' @()) -eq 1"
+    ))
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("statement,diagnostic", (
+    ("malloc(4);", "dynamic allocation violation"),
+    ("while (value > 0) { value--; }", "finite while/do loop violation"),
+    ("for (;;) { value += 1; }", "unapproved infinite loop"),
+    ("void (*callback)(void);", "function-pointer declaration violation"),
+))
+def test_recommendations_do_not_override_other_safety_failures(
+    checker_fixture: Path, statement: str, diagnostic: str,
+) -> None:
+    source = "void Unsafe(int value)\n{\n" + " value += 1;\n" * 8 + f" {statement}\n}}\n"
+    (checker_fixture / "APP/fixture.c").write_text(source, encoding="utf-8")
+    result = _Checker_Run(checker_fixture)
+    assert result.returncode == 1
+    assert diagnostic in result.stdout
+    assert "POWER10_RULE5_RECOMMENDATION|" in result.stdout
+    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in result.stdout

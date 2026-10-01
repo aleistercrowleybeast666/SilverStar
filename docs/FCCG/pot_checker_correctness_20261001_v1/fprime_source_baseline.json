@@ -1,0 +1,35 @@
+{
+  "commit": "4b58f3666fe4ca8a3cacd389aed5faf1fb32b063",
+  "sources": {
+    ".github/codeql/fprime-queries/FprimeUseOfAssertionsDensity.ql": {
+      "url": "https://raw.githubusercontent.com/nasa/fprime/4b58f3666fe4ca8a3cacd389aed5faf1fb32b063/.github/codeql/fprime-queries/FprimeUseOfAssertionsDensity.ql",
+      "sha256": "efff46ba3890776a8862b62c4ac81e23f6ac163a3a08f5be0a9f2adb57ad0a4a",
+      "bytes": 4522
+    },
+    ".github/actions/codeql/jpl-standard-pack-2.yml": {
+      "url": "https://raw.githubusercontent.com/nasa/fprime/4b58f3666fe4ca8a3cacd389aed5faf1fb32b063/.github/actions/codeql/jpl-standard-pack-2.yml",
+      "sha256": "8948602ecb0eeb8bd91fcc7141509bace1b04ce7ca28bd34c72c7e0ba5b426c7",
+      "bytes": 4452
+    },
+    ".github/workflows/codeql-jpl-standard.yml": {
+      "url": "https://raw.githubusercontent.com/nasa/fprime/4b58f3666fe4ca8a3cacd389aed5faf1fb32b063/.github/workflows/codeql-jpl-standard.yml",
+      "sha256": "bd0013346913ff213bb58ba3667169e190eb2c11830ddb2a15d1fef46f235e59",
+      "bytes": 6327
+    },
+    ".github/skills/fprime-cpp-design/SKILL.md": {
+      "url": "https://raw.githubusercontent.com/nasa/fprime/4b58f3666fe4ca8a3cacd389aed5faf1fb32b063/.github/skills/fprime-cpp-design/SKILL.md",
+      "sha256": "f59dd92a1c8a9e052c22af54d900c549d95545223dd29e916e5464b085197b16",
+      "bytes": 24753
+    },
+    ".github/codeql/fprime-queries/FprimeAssertions.qll": {
+      "url": "https://raw.githubusercontent.com/nasa/fprime/4b58f3666fe4ca8a3cacd389aed5faf1fb32b063/.github/codeql/fprime-queries/FprimeAssertions.qll",
+      "sha256": "3c823d190782247189b022612bb8ac783bee5093df833dcead4457a3753a3fa6",
+      "bytes": 949
+    },
+    ".github/actions/codeql/jpl-standard-known-autocode-issues.yml": {
+      "url": "https://raw.githubusercontent.com/nasa/fprime/4b58f3666fe4ca8a3cacd389aed5faf1fb32b063/.github/actions/codeql/jpl-standard-known-autocode-issues.yml",
+      "sha256": "78fa79a9a226a257735c3d6ca4bbf48f9a6a989ea5613e463dd25afef44d54ad",
+      "bytes": 3010
+    }
+  }
+}

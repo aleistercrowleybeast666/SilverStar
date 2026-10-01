@@ -1,0 +1,18 @@
+{
+  ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+  "after_flight_architecture.log": "bf907f9d87edd79cd8c5718b2d7b978ab25a3d6e5c48a29d1c355f4d5a560965",
+  "after_flight_power10.log": "58ab6e9a557a1322d5f753664833cb21bead280edfd64041b518f3a8275732e7",
+  "after_fprime_regressions_dev1.log": "629e3f353762eae8342fe906147dc8f3d93951824de43195f0466836df0f0de5",
+  "after_ground_power10.log": "eedd9ee0af204a09255467ff56da3afc5c1c7f97aa3b9557b918f5a9ae96fab9",
+  "after_regressions.log": "bc7c766bbbfbb0e95aa85d4712bdf41620dd5b6fbd6f823d21b3a3d880d7a143",
+  "after_regressions_dev1.log": "ebe7784b3e80f149b33454cecde64ad72ba824f51888d2f893d4ba1c4ce3cecd",
+  "before_regressions.log": "fddced760a8fbc62d5b6cbc8e9c3795b92b7e1836b4de6696bfe3d8e52e30455",
+  "flight_functions.csv": "6d2f4ef978a5a16ba0bb609d0a81a2cdec1f673d2a944b2020704e05ba81104d",
+  "fprime_source_baseline.json": "8ea2c704d6f3f8ca84c1e140b1dc23f3bc39dd58191e71a601d3ba3b63435f87",
+  "ground_functions.csv": "71e8b77841f03a98988ae3244ac0dcb8d0878da09477abce1dbb7ad593345906",
+  "legacy_checker_audit.json": "db6c9ca4f303c908339313c05f5e699dda58f8d7984609b775c4d0b65e50e633",
+  "REPORT.md": "323105d06b02e0f7a7bbb8512d50881a5bae7e26aad7bbf5cce63766146211f5",
+  "result.json": "56940c5d05d6032fb044cce881975e182345a9e12dbfc0f984e1c6342771fd19",
+  "source_snapshot.diff": "81cd7af22e975d65c6615348e1f8ec3a1c755b0c0950d577f990474024ee7659",
+  "verification_driver.py.txt": "a2259f27f866a46490119a3c090c3921b2557e5245a7cc6fb6fcdccee732597f"
+}
