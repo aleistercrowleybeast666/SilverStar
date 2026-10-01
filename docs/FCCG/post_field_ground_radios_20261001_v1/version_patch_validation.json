@@ -1,0 +1,41 @@
+{
+  "base": "d410f4a7254f0433e91a22adb237b2944939fd99",
+  "files": [
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/read_firmware_identity.ps1"
+  ],
+  "patch_sha256": "22fde3b3840adae53b73b4fca2f6506c2e3516ac1cce40c02d49b1e4a15e0b74",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "apply",
+        "--no-index",
+        "--check",
+        "D:\\python_software\\SilverStar\\docs\\FCCG\\post_field_ground_radios_20261001_v1\\version_identity_only.patch"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\SilverStarVersionPatch_ib30lgj6",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--no-index",
+        "D:\\python_software\\SilverStar\\docs\\FCCG\\post_field_ground_radios_20261001_v1\\version_identity_only.patch"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\SilverStarVersionPatch_ib30lgj6",
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "applied_file_sha256": {
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1": "05247bc435de47696686f07e5e601502490c9ce258affcdf17812bf8b07284f5",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1": "77953144cf0e3c0cb1183ff4b51b961a469d765a67147f3155c633b6e50695bd",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/read_firmware_identity.ps1": "91ca80b7e93489159b12ab4c52c9dd05060bd4230e2afa9bc07c23d6e7053c10"
+  },
+  "no_experimental_memory_hunks": true,
+  "initial_attempts": "Nested repository CWD skipped out-of-prefix paths; second attempt differed only by Git autocrlf. Final independent temp validation checks actual normalized content and all three files."
+}

@@ -1,0 +1,56 @@
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1
+@@ -473,9 +473,11 @@
+ 
+ Write-Output 'FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries'
+ Write-Output 'FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency'
++. (Join-Path $PSScriptRoot 'read_firmware_identity.ps1')
++$firmwareIdentity = FirmwareIdentity_Read -ProjectRoot $repoRoot
+ Assert-FileContainsPattern -RelativePath 'Makefile' `
+-    -Pattern 'TARGET\s*:=\s*SilverStar_0_1_0' `
+-    -Message 'Authoritative firmware target is not SilverStar_0_1_0.'
++    -Pattern ('(?m)^TARGET\s*:=\s*' + [regex]::Escape($firmwareIdentity.build_target) + '\s*$') `
++    -Message 'Authoritative firmware target does not match the project identity.'
+ Assert-FileContainsPattern -RelativePath 'Makefile' `
+     -Pattern 'BUILD_ROOT\s*:=\s*build/FCCG/\$\(TARGET_PROFILE\)/\$\(CONFIG\)' `
+     -Message 'Build output is not partitioned by target and configuration.'
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+@@ -7,7 +7,9 @@
+ $ErrorActionPreference = 'Stop'
+ 
+ $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+-$targetName = 'SilverStar_0_1_0'
++. (Join-Path $PSScriptRoot 'read_firmware_identity.ps1')
++$firmwareIdentity = FirmwareIdentity_Read -ProjectRoot $repoRoot
++$targetName = $firmwareIdentity.build_target
+ $buildRoot = Join-Path $repoRoot (Join-Path 'build\FCCG' `
+     (Join-Path $TargetProfile $Config))
+ $elfPath = Join-Path $buildRoot ($targetName + '.elf')
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/read_firmware_identity.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/read_firmware_identity.ps1
+new file mode 100644
+--- /dev/null
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/read_firmware_identity.ps1
+@@ -0,0 +1,20 @@
++# Read the generated project's authoritative identity without invoking FCCG.
++# Numeric release parts match the platform's version/build-ID contract.
++function FirmwareIdentity_Read {
++    param([Parameter(Mandatory = $true)][string]$ProjectRoot)
++
++    $descriptorPath = Join-Path $ProjectRoot 'SilverStar.ssproject'
++    $descriptor = Get-Content -Raw -Encoding UTF8 -LiteralPath $descriptorPath | ConvertFrom-Json
++    $identity = $descriptor.project
++    if (($null -eq $identity) -or
++        ($identity.firmware_version -isnot [string]) -or
++        ($identity.firmware_version -cnotmatch '^[0-9]+\.[0-9]+\.[0-9]+$')) {
++        throw 'Project firmware identity is missing or invalid.'
++    }
++    $expectedTarget = 'SilverStar_' + $identity.firmware_version.Replace('.', '_')
++    if (($identity.build_target -isnot [string]) -or
++        ($identity.build_target -cne $expectedTarget)) {
++        throw 'Project build target does not match its firmware version.'
++    }
++    return $identity
++}
