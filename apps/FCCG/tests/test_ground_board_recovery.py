@@ -27,6 +27,12 @@ def test_saved_board_without_resources_recovers_declarative_defaults(builtin_cat
     reopened.ground_target = replace(reopened.ground_target, pc_resource='MISSING')
     reopened = ProjectConfiguration_Reconcile(reopened, builtin_catalog).model
     assert 'GROUND_UART_UNBOUND' in {i.code for i in GroundTargetIssues_Get(reopened, builtin_catalog)}
+    assignments = dict(reopened.ground_target.resource_assignments)
+    assignments['radio0:radio_nss'] = 'PLATFORM_GPIO_1'
+    assignments['radio0:radio_reset'] = 'PLATFORM_GPIO_0'
+    reopened.ground_target = replace(reopened.ground_target, resource_assignments=assignments)
+    assert 'GROUND_BOARD_FIXED_RESOURCE_MISMATCH' in {
+        i.code for i in GroundTargetIssues_Get(reopened, builtin_catalog)}
 
 
 def test_ground_selection_defaults_and_checkbox_visibility(qapp, tmp_path, workspace_root):

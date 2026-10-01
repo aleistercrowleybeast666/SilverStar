@@ -159,6 +159,7 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
         return ()
     ground = model.ground_target
     issues = list(AirLinkIssues_Get(model, catalog))
+    board = None
     if ground.board:
         try:
             board = catalog.Component_Get(ground.board)
@@ -260,6 +261,12 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
             for requirement in radio.resource_requirements:
                 key = f"radio0:{requirement.name}"
                 assigned = ground.resource_assignments.get(key)
+                if board is not None and ground.hardware.mode == "board_plugin":
+                    role = next((item for item in board.resource_roles
+                                 if item.key == f"telemetry:{requirement.name}"), None)
+                    if role is not None and role.fixed and assigned != role.default:
+                        issues.append(AirLinkIssue("GROUND_BOARD_FIXED_RESOURCE_MISMATCH",
+                            f"Ground PCB fixes {requirement.name} to {role.default}"))
                 resource = available.get(assigned or "")
                 if (requirement.required and resource is None) or (
                     resource is not None and resource.kind != requirement.kind

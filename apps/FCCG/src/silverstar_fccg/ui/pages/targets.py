@@ -348,7 +348,9 @@ class GroundTargetPage(BoardHardwarePage):
                        self.pc_resource, self.baudrate):
             widget.blockSignals(False)
         required = tuple(requirements.get("resources", ()))
+        fixed_resources = requirements.get("fixed_resources", {})
         resource_views = tuple(ResourceRequirementView(kind=kind, name=name, key=name,
+            fixed=name in fixed_resources,
             assignment=ground.resource_assignments.get(f"radio0:{name}", ""),
             candidates=tuple(item.resource_id for item in ground.hardware.resources if item.kind == kind))
             for name, kind in required)

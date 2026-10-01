@@ -1568,6 +1568,14 @@ class MainWindow(QMainWindow):
         selected = model.ground_target.radio_plugin
         manifest = self._service.catalog.Component_Get(selected) if selected else None
         requirements = {
+            "fixed_resources": {
+                role.key.removeprefix("telemetry:"): role.default
+                for board in self._service.catalog.Type_Get("board")
+                if board.component_id == model.ground_target.board
+                and model.ground_target.hardware.mode == "board_plugin"
+                for role in board.resource_roles
+                if role.fixed and role.key.startswith("telemetry:")
+            },
             "modules": tuple(
                 (str(item.get("display_name", item.get("model", identity))), identity)
                 for identity, item in (manifest.radio.modules.items()
