@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import tempfile
 import zipfile
 from io import BytesIO
 from pathlib import Path
@@ -75,7 +76,12 @@ def test_sf6_legacy_project_preserves_old_algorithm_values(builtin_catalog):
 
 def test_sf6_gui_order_gains_edit_save_reopen(tmp_path, workspace_root, qapp, monkeypatch):
     monkeypatch.setenv("QT_QPA_PLATFORM", "offscreen")
-    window = MainWindow(SettingsStore(tmp_path / "sf6.ini"))
+    # MainWindow persists path preferences under its application policy. Keep
+    # this fixture inside that policy even when pytest runs at monorepo root.
+    fixture_parent = workspace_root / ".work"
+    fixture_parent.mkdir(exist_ok=True)
+    fixture_root = Path(tempfile.mkdtemp(prefix="SF6GuiRoundtrip-", dir=fixture_parent))
+    window = MainWindow(SettingsStore(fixture_root / "sf6.ini"))
     monkeypatch.setattr(window, "_Error_Show", lambda *args: pytest.fail(str(args)))
     try:
         # The GUI starts with an intentionally unbound draft. Use the declared
@@ -96,7 +102,7 @@ def test_sf6_gui_order_gains_edit_save_reopen(tmp_path, workspace_root, qapp, mo
         qapp.processEvents()
         assert window._model.algorithm_parameters[SF6]["gain_pe"] == 0.35
         service = FccgService(workspace_root)
-        project = workspace_root / ".work" / tmp_path.name / "SF6GuiRoundtrip"
+        project = fixture_root / "SF6GuiRoundtrip"
         service.Project_Save(window._model, project, confirm_dangerous=True)
         reopened = service.Project_Open(project)
         assert reopened.algorithm_parameters[SF6]["gain_pe"] == 0.35
