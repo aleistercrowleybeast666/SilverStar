@@ -113,6 +113,7 @@ class AirLinkPage(ScrollableLocalizedPage):
         crc_label = QLabel()
         self.Text_Register(crc_label, "field.air_crc")
         self.crc = QCheckBox()
+        self.crc.setObjectName("standardCheckBox")
         self.crc.toggled.connect(
             lambda checked: self.configurationChanged.emit("crc_enabled", checked)
         )
@@ -201,6 +202,7 @@ class GroundTargetPage(BoardHardwarePage):
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, target="ground")
         self.enabled = QCheckBox()
+        self.enabled.setObjectName("standardCheckBox")
         self.Text_Register(self.enabled, "field.ground_enabled")
         self.enabled.toggled.connect(self.enabledChanged.emit)
         self.root_layout.addWidget(self.enabled)
@@ -360,6 +362,10 @@ class GroundTargetPage(BoardHardwarePage):
         self.prepare_button.setToolTip("" if boards else self._translator.Text_Get("board.no_provider"))
         self.i2c_pullup_group.setVisible(False)
         self.status.setText(
+            self._translator.Text_Get("status.ground_disabled") if not ground.enabled else
             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
             if issues else self._translator.Text_Get("status.ground_ready")
         )
+        self.generate_button.setToolTip(self._translator.Text_Get(
+            "status.ground_ready" if ground.enabled else "status.ground_disabled"))
+        self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected")

@@ -903,5 +903,6 @@
   "release.migrate_confirm": "确认创建独立兼容副本？副本将移除磁力计选择及其资源/来源绑定，选择 KF6 与固定重力 + 已知方向双矢量，并清除旧 decoder 身份，生成新的匹配包。原文件与当前全部设置将备份到副本的 Compatibility 文件夹。保留已有已知方向；缺失时使用 +X / 90°，必须按实际摆放复核。旧日志和 decoder 留在原处，仍按原包解析，不自动搬移。",
   "release.migrate_destination": "选择新的空文件夹保存兼容副本",
   "release.migrated": "兼容副本已保存到 {path}。原始文件、全部旧设置与迁移记录位于 Compatibility；原日志/decoder 未更改。请在当前对准页复核已知方向，再生成新的固件与匹配 decoder。",
-  "board.ground_selection_pending": "可以先完成地面站通信配置；保存或构建前必须选择地面站板卡或导入自定义 STM32 硬件。"
+  "board.ground_selection_pending": "可以先完成地面站通信配置；保存或构建前必须选择地面站板卡或导入自定义 STM32 硬件。",
+  "status.ground_disabled": "地面站 Target 未启用；启用后可生成 Ground。"
 }
