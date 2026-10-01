@@ -98,6 +98,7 @@ static void Test_TargetFactoryCandidateOrder(void)
     config.factory.protocol = 1U;
     config.supported_candidates = supported;
     config.supported_candidate_count = 3U;
+    config.probe_pass_count = 2U;
     config.probe_timeout_ms = 3U;
     config.stage_timeout_ms = 3U;
     config.sample_timeout_ms = 5U;
@@ -240,11 +241,47 @@ static void Test_InvalidCandidateListRejected(void)
         SystemDeviceStartupResult_CandidateLimit);
 }
 
+static void Test_TwoPassExhaustionAndWrap(void)
+{
+    SystemDeviceStartupConfig config;
+    SystemDeviceStartup startup;
+    TestOwner owner;
+    uint32_t tick;
+    (void)memset(&owner, 0, sizeof(owner));
+    (void)memset(&config, 0, sizeof(config));
+    config.persistence = SystemDeviceStartupPersistence_Persistent;
+    config.target.baudrate = 230400U;
+    config.factory.baudrate = 115200U;
+    config.probe_pass_count = 2U;
+    config.probe_timeout_ms = 3U;
+    config.stage_timeout_ms = 3U;
+    config.sample_timeout_ms = 3U;
+    config.operations = &s_operations;
+    config.owner = &owner;
+    assert(SystemDeviceStartup_Init(&startup, &config) == SystemDeviceStartupResult_Ok);
+    for (tick = 0U; tick < 12U; tick++)
+    {
+        SystemDeviceStartup_Tick(&startup, UINT32_MAX - 5U + tick);
+        assert(startup.state != SystemDeviceStartupState_Failed);
+        assert(startup.failure == SystemDeviceStartupFailure_None);
+    }
+    SystemDeviceStartup_Tick(&startup, UINT32_MAX - 5U + 12U);
+    assert(startup.state == SystemDeviceStartupState_Failed);
+    assert(startup.failure == SystemDeviceStartupFailure_NotPresent);
+    assert(owner.probe_count == 4U);
+    assert(owner.probed_baud[0] == 230400U && owner.probed_baud[1] == 115200U);
+    assert(owner.probed_baud[2] == 230400U && owner.probed_baud[3] == 115200U);
+    assert(owner.read_count == 0U);
+    config.probe_pass_count = SYSTEM_DEVICE_STARTUP_MAX_PROBE_PASSES + 1U;
+    assert(SystemDeviceStartup_Init(&startup, &config) == SystemDeviceStartupResult_InvalidArgument);
+}
+
 int main(void)
 {
     Test_TargetFactoryCandidateOrder();
     Test_ExhaustedCandidatesFail();
     Test_NoDifferenceSkipsWriteAndSampleIsBounded();
     Test_InvalidCandidateListRejected();
+    Test_TwoPassExhaustionAndWrap();
     return 0;
 }

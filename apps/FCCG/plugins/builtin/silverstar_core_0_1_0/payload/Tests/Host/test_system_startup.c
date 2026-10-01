@@ -33,6 +33,7 @@ static SystemDeviceResult s_imu_init_result;
 static SystemDeviceResult s_gnss_init_result;
 static SystemDeviceResult s_gnss_sample_result;
 static uint64_t s_now_us;
+static uint8_t s_precise_time;
 static uint32_t s_health_process_count;
 static uint32_t s_preflight_count;
 static uint32_t s_debug_print_count;
@@ -48,7 +49,7 @@ static uint32_t s_mag_process_count;
 static uint32_t s_imu_init_count;
 static uint32_t s_gnss_init_count;
 static uint8_t s_async_config;
-static uint8_t s_async_busy_ticks;
+static uint16_t s_async_busy_ticks;
 static uint32_t s_power_process_count;
 static uint32_t s_output_process_count;
 
@@ -109,7 +110,7 @@ SystemDeviceResult SystemTime_Init(void)
 
 uint64_t SystemTime_GetMonotonicUs(void)
 {
-    s_now_us += 500000ULL;
+    if (s_precise_time == 0U) { s_now_us += 500000ULL; }
     return s_now_us;
 }
 
@@ -426,6 +427,7 @@ static void Test_Reset(void)
     s_imu_init_count = 0U;
     s_gnss_init_count = 0U;
     s_async_config = 0U;
+    s_precise_time = 0U;
     s_async_busy_ticks = 0U;
     s_power_process_count = 0U;
     s_output_process_count = 0U;
@@ -512,15 +514,27 @@ static void Test_DelegatedConfigWaitsWithoutBlocking(void)
 
     Test_Reset();
     s_async_config = 1U;
-    s_async_busy_ticks = 6U;
+    s_precise_time = 1U;
+    s_async_busy_ticks = 900U;
     TEST_CHECK(SystemStartup_Run() == SYSTEM_STARTUP_OK);
     for (tick = 0U; tick < 7U; tick++)
     { SystemStartup_ProcessDevices(); }
     TEST_CHECK(SystemStartup_GetReport()->completed == 0U);
     TEST_CHECK(s_preflight_count == 0U);
-    for (tick = 0U; tick < 32U; tick++)
+    /* BUSY remains pending through the first 2.1-second scan and into pass two. */
+    for (tick = 0U; tick < 220U; tick++)
+    {
+        s_now_us += 10000ULL;
+        SystemStartup_ProcessDevices();
+        TEST_CHECK(SystemStartup_GetReport()->completed == 0U);
+        TEST_CHECK(s_preflight_count == 0U);
+        TEST_CHECK(SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_IMU)->
+            verify_result == SYSTEM_DEVICE_NOT_EXECUTED);
+    }
+    for (tick = 0U; tick < 500U; tick++)
     {
         if (SystemStartup_GetReport()->completed != 0U) { break; }
+        s_now_us += 10000ULL;
         SystemStartup_ProcessDevices();
     }
     TEST_CHECK(SystemStartup_GetReport()->completed != 0U);
