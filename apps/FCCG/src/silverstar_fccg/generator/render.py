@@ -3088,7 +3088,7 @@ list-build-config:
 \t@$(foreach define,$(C_DEFS),echo DEFINE:$(define) & ) echo CONFIG-DEFINES-END
 
 stack-report: all
-\tpython Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"
+\tpython Tools/check_task_stacks.py --config $(CONFIG) --memory-layout $(MEMORY_LAYOUT) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"
 
 HOST_CC ?= gcc
 host-tests:
@@ -3563,7 +3563,20 @@ def _GeneratedReadme_Render(model: ProjectModel) -> str:
     return f"""# {model.identity.name}
 
 This standalone embedded project was assembled by SilverStar_FCCG from declarative source plugins.
-It does not require FCCG or Python to build.
+Legacy and manual layouts build without FCCG or Python. Explicit auto linking requires Python 3.
+
+The saved default memory layout is `{model.build.memory_layout}`. Old configurations without this
+field default to `legacy`; existing manual `eskf_window_sram` behavior is preserved. Select `auto`
+in FCCG's Build page or pass `MEMORY_LAYOUT=auto` to Make. Auto outputs use a separate build
+directory and `memory_layout/decision.json` records every real link candidate and the decision.
+At most 32 deterministic candidates place exact audited CPU-only static BSS groups; DMA buffers,
+initialized data and task stack sizes remain fixed. No heap or runtime object movement is added.
+
+Real physical region overflow remains a link error. Spare below 10% is red, over 20% is green,
+and intermediate spare is yellow; low spare warns without blocking generation. Moving objects
+does not add RAM or prove stack margin. In explicit auto mode the historical 100 KiB main-SRAM
+logging regression budget is advisory; legacy/manual budget checks remain blocking. Current
+dual-region support is F407 only; no-CCM uses ordinary SRAM without inventing another region.
 
 - Default / Release build: `{model.build.make_command} TARGET_PROFILE={model.build.target_profile} CONFIG=Release all`
 - Debug build: `{model.build.make_command} TARGET_PROFILE={model.build.target_profile} CONFIG=Debug all`

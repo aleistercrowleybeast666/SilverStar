@@ -60,9 +60,14 @@ def RegisterBytes_Get(registers: str, width: int) -> int:
     return total * width
 
 
-def StackReport_Build(root: Path, config: str, prefix: str) -> dict:
+def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
     target = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf-8"))["build"]["target_profile"]
-    build = (root / "build/FCCG" / target / config).resolve()
+    if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
+        raise ValueError("Unsupported memory layout")
+    build = root / "build/FCCG" / target / config
+    if memory_layout != "legacy":
+        build = build / memory_layout
+    build = build.resolve()
     build.relative_to(root.resolve())
     elfs = list(build.glob("*.elf"))
     if len(elfs) != 1:
@@ -244,12 +249,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--config", choices=("Release", "Debug"), default="Release")
+    parser.add_argument("--memory-layout", choices=("legacy", "eskf_window_sram", "auto"), default="legacy")
     parser.add_argument("--prefix", default="arm-none-eabi-")
     arguments = parser.parse_args()
     root = arguments.project.resolve(strict=True)
     print("FCCG_PROGRESS|STACK_REPORT|PLAN|1", flush=True)
     print("FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget", flush=True)
-    report = StackReport_Build(root, arguments.config, arguments.prefix)
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
     destination = root / Path(report["elf"]).parent / "stack-budget.json"
     destination.resolve().relative_to(root)
     destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

@@ -461,10 +461,13 @@ Assert-NoArchitecturePattern -Name `
 # its exact recipe is also allowed, never a source/catalog generator.
 $stackReportBlock = 'stack-report: all' + "`n`t" +
     'python Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
+$layoutStackReportBlock = 'stack-report: all' + "`n`t" +
+    'python Tools/check_task_stacks.py --config $(CONFIG) --memory-layout $(MEMORY_LAYOUT) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
 foreach ($manifestFile in $manifestFiles) {
     $buildContent = (Get-Content -Raw -LiteralPath (Join-Path $repoRoot $manifestFile)).Replace("`r`n", "`n")
     if ($manifestFile -eq 'Makefile') {
         $buildContent = $buildContent.Replace($stackReportBlock, '')
+        $buildContent = $buildContent.Replace($layoutStackReportBlock, '')
         $autoLinkRecipe = "`t" + '$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))' + "`n"
         $buildContent = $buildContent.Replace($autoLinkRecipe, '')
         foreach ($autoMetadata in @('PYTHON ?= python',

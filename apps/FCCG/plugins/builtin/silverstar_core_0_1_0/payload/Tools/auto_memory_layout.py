@@ -127,7 +127,7 @@ def Script_Render(script: str, assignment: dict[str, str], regions: dict) -> str
     return script
 
 
-def SourceOwners_Check(project: Path, groups: dict) -> None:
+def SourceOwners_Check(project: Path, groups: dict, linker: Path | None = None) -> None:
     """A preserved user edit cannot inherit a CPU-only proof from a symbol name."""
     identity = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))
     provenance = identity.get("component_provenance", {})
@@ -145,6 +145,14 @@ def SourceOwners_Check(project: Path, groups: dict) -> None:
                 raise ValueError(f"CPU-only source proof path escapes project: {relative}")
             if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != expected:
                 raise ValueError(f"CPU-only source proof does not cover preserved/edited helper {relative}; use audited fresh payload or legacy")
+    if linker is not None:
+        # Bind the actual linker argument, not only an unused canonical file.
+        # An alternate no-CCM script must not invent capacity for an F407 model.
+        relative = linker.resolve().relative_to(project.resolve()).as_posix()
+        mcu = identity.get("components", {}).get("mcu")
+        expected = provenance.get(mcu, {}).get("files", {}).get(relative)
+        if not mcu or not expected or hashlib.sha256(linker.read_bytes()).hexdigest() != expected:
+            raise ValueError("Actual linker lacks selected-MCU source proof; use audited fresh payload or legacy")
     for group, info in groups.items():
         relative = GROUPS[group][0][:-2] + ".c"
         owner = "silverstar.algorithm.estimator.eskf15" if group.startswith("eskf_") else "silverstar.core.0_1_0"
@@ -214,7 +222,7 @@ def Layout_Link(args: argparse.Namespace) -> None:
     if not objects or any(value.startswith("-T") or value == "-o" for value in args.command):
         raise ValueError("Auto requires explicit objects and owns the linker/output options")
     groups = Groups_Inspect(args.objdump, objects)
-    SourceOwners_Check(Path(getattr(args, "project", ".")), groups)
+    SourceOwners_Check(Path(getattr(args, "project", ".")), groups, Path(args.linker))
     names = sorted(groups)
     choices = ("CCMRAM", "RAM") if "CCMRAM" in regions else ("RAM",)
     attempts, successful = [], []

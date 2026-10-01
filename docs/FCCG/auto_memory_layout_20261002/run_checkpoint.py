@@ -95,6 +95,10 @@ if mode in ("matrix", "final"):
         for layout in ("legacy", "auto"):
             run(name + "_arm_" + layout, directory, [MAKE, "-j2", "CONFIG=Release", "MEMORY_LAYOUT=" + layout,
                                                       "PYTHON=" + sys.executable.replace("\\", "/"), "artifact-check"])
+    if mode == "final":
+        directory = Path(manifest["projects"]["ESKF15"]["directory"])
+        run("ESKF15_arm_eskf_window_sram", directory, [MAKE, "-j2", "CONFIG=Release", "MEMORY_LAYOUT=eskf_window_sram",
+                                                         "PYTHON=" + sys.executable.replace("\\", "/"), "artifact-check", "stack-report"])
 if mode in ("gates", "final"):
     for name in ("ESKF15", "KF6", "SF6", "PureINS"):
         directory = Path(manifest["projects"][name]["directory"])

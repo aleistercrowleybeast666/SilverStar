@@ -81,7 +81,7 @@ int main(void) { return s_work[0] + s_history[0] + s_eskf_window[0] +
             "-include", str(MCU / "Targets/SilverStar_F407/Inc/platform_memory_target.h")]
     result = subprocess.run([*base, "-DSILVERSTAR_MEMORY_LAYOUT_AUTO=1", "-c", str(source), "-o", str(owner)], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
-    (root / "SilverStar.ssproject").write_text(json.dumps({"component_provenance": {
+    (root / "SilverStar.ssproject").write_text(json.dumps({"components": {"mcu": "silverstar.mcu.synthetic"}, "component_provenance": {
         "silverstar.algorithm.estimator.eskf15": {"files": {
             "Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c": hashlib.sha256(source.read_bytes()).hexdigest()
         }}
@@ -90,6 +90,9 @@ int main(void) { return s_work[0] + s_history[0] + s_eskf_window[0] +
     subprocess.run([cc, "-mcpu=cortex-m4", "-mthumb", "-c", str(MCU / "startup_stm32f407xx.s"), "-o", str(startup)], check=True)
     script = root / "target.ld"
     script.write_bytes((MCU / "STM32F407XX_FLASH.ld").read_bytes())
+    identity = json.loads((root / "SilverStar.ssproject").read_text())
+    identity["component_provenance"]["silverstar.mcu.synthetic"] = {"files": {"target.ld": hashlib.sha256(script.read_bytes()).hexdigest()}}
+    (root / "SilverStar.ssproject").write_text(json.dumps(identity))
     return root, cc, objdump, owner, startup, script, source, base
 
 
@@ -137,10 +140,15 @@ def test_no_ccm_uses_real_sram_and_insufficient_capacity_really_fails(arm_fixtur
     text = text.replace("} >CCMRAM", "} >RAM").replace("LENGTH = 128K", "LENGTH = 256K")
     no_ccm = root / "no_ccm.ld"
     no_ccm.write_text(text, encoding="utf-8")
+    identity = json.loads((root / "SilverStar.ssproject").read_text())
+    identity["component_provenance"]["silverstar.mcu.synthetic"]["files"] = {"no_ccm.ld": hashlib.sha256(no_ccm.read_bytes()).hexdigest()}
+    (root / "SilverStar.ssproject").write_text(json.dumps(identity))
     _, report = link_fixture(arm_fixture, name="no_ccm", script=no_ccm)
     assert set(report["regions"]) == {"RAM"} and len(report["attempts"]) == 1
     assert set(report["assignment"].values()) == {"RAM"}
     no_ccm.write_text(text.replace("LENGTH = 256K", "LENGTH = 64K"), encoding="utf-8")
+    identity["component_provenance"]["silverstar.mcu.synthetic"]["files"]["no_ccm.ld"] = hashlib.sha256(no_ccm.read_bytes()).hexdigest()
+    (root / "SilverStar.ssproject").write_text(json.dumps(identity))
     with pytest.raises(ValueError, match="No candidate linked"):
         link_fixture(arm_fixture, name="too_small", script=no_ccm)
     assert not (root / "too_small/test.elf").exists()
@@ -182,6 +190,13 @@ def test_preserved_user_source_cannot_inherit_cpu_only_proof(arm_fixture):
     arm_fixture[6].write_text(arm_fixture[6].read_text() + "\n/* user edit, requires CPU/DMA re-review */\n")
     with pytest.raises(ValueError, match="source proof"):
         link_fixture(arm_fixture, name="edited_source")
+
+
+def test_alternate_linker_cannot_inherit_selected_mcu_physical_capacity(arm_fixture):
+    alternate = arm_fixture[0] / "unreviewed_capacity.ld"
+    alternate.write_bytes(arm_fixture[5].read_bytes())
+    with pytest.raises(ValueError, match="Actual linker lacks selected-MCU source proof"):
+        link_fixture(arm_fixture, name="alternate", script=alternate)
 
 
 @pytest.mark.parametrize("component,relative", [
