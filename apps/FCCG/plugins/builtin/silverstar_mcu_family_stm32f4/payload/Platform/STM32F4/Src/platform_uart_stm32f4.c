@@ -1,4 +1,5 @@
 #include "platform_uart.h"
+#include "project_resources.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -16,7 +17,6 @@ static uint8_t *PlatformUart_HalTransmitBufferGet(const uint8_t *data)
     return (uint8_t *)(uintptr_t)data;
 }
 
-#define PLATFORM_UART_RX_DMA_SIZE       128U
 #define PLATFORM_UART_TX_DMA_MAX_CHUNK  128U
 
 typedef struct
@@ -42,17 +42,32 @@ typedef struct
     PlatformUartDiagnostics diagnostics;
 } PlatformUartContext;
 
-static PLATFORM_DMA_ACCESSIBLE uint8_t
-    s_uart1_rx_dma[PLATFORM_UART_RX_DMA_SIZE];
-static uint8_t s_uart1_rx_ring[512U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t
-    s_uart2_rx_dma[PLATFORM_UART_RX_DMA_SIZE];
-static uint8_t s_uart2_rx_ring[1024U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t
-    s_uart3_rx_dma[PLATFORM_UART_RX_DMA_SIZE];
-static uint8_t s_uart3_rx_ring[1024U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_ring[2048U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_priority_ring[1024U];
+/* Sensor queues have 191 usable bytes, covering the 136-byte M9N command.
+ * Generated sizes preserve console capacity and avoid reserving inactive slots. */
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart1_rx_dma[PROJECT_PLATFORM_UART_1_RX_DMA_SIZE];
+static uint8_t s_uart1_rx_ring[PROJECT_PLATFORM_UART_1_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart1_tx_ring[PROJECT_PLATFORM_UART_1_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart1_tx_priority_ring[PROJECT_PLATFORM_UART_1_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart2_rx_dma[PROJECT_PLATFORM_UART_2_RX_DMA_SIZE];
+static uint8_t s_uart2_rx_ring[PROJECT_PLATFORM_UART_2_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart2_tx_ring[PROJECT_PLATFORM_UART_2_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart2_tx_priority_ring[PROJECT_PLATFORM_UART_2_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_rx_dma[PROJECT_PLATFORM_UART_3_RX_DMA_SIZE];
+static uint8_t s_uart3_rx_ring[PROJECT_PLATFORM_UART_3_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_ring[PROJECT_PLATFORM_UART_3_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_priority_ring[PROJECT_PLATFORM_UART_3_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart4_rx_dma[PROJECT_PLATFORM_UART_4_RX_DMA_SIZE];
+static uint8_t s_uart4_rx_ring[PROJECT_PLATFORM_UART_4_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart4_tx_ring[PROJECT_PLATFORM_UART_4_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart4_tx_priority_ring[PROJECT_PLATFORM_UART_4_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart5_rx_dma[PROJECT_PLATFORM_UART_5_RX_DMA_SIZE];
+static uint8_t s_uart5_rx_ring[PROJECT_PLATFORM_UART_5_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart5_tx_ring[PROJECT_PLATFORM_UART_5_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart5_tx_priority_ring[PROJECT_PLATFORM_UART_5_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart6_rx_dma[PROJECT_PLATFORM_UART_6_RX_DMA_SIZE];
+static uint8_t s_uart6_rx_ring[PROJECT_PLATFORM_UART_6_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart6_tx_ring[PROJECT_PLATFORM_UART_6_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart6_tx_priority_ring[PROJECT_PLATFORM_UART_6_TX_PRIORITY_SIZE];
 
 static PlatformUartContext s_uart[PLATFORM_UART_COUNT] =
 {
@@ -60,13 +75,21 @@ static PlatformUartContext s_uart[PLATFORM_UART_COUNT] =
         .rx_dma_buffer = s_uart1_rx_dma,
         .rx_dma_size = sizeof(s_uart1_rx_dma),
         .rx_ring_memory = s_uart1_rx_ring,
-        .rx_ring_size = sizeof(s_uart1_rx_ring)
+        .rx_ring_size = sizeof(s_uart1_rx_ring),
+        .tx_ring_memory = s_uart1_tx_ring,
+        .tx_ring_size = sizeof(s_uart1_tx_ring),
+        .tx_priority_memory = s_uart1_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart1_tx_priority_ring)
     },
     {
         .rx_dma_buffer = s_uart2_rx_dma,
         .rx_dma_size = sizeof(s_uart2_rx_dma),
         .rx_ring_memory = s_uart2_rx_ring,
-        .rx_ring_size = sizeof(s_uart2_rx_ring)
+        .rx_ring_size = sizeof(s_uart2_rx_ring),
+        .tx_ring_memory = s_uart2_tx_ring,
+        .tx_ring_size = sizeof(s_uart2_tx_ring),
+        .tx_priority_memory = s_uart2_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart2_tx_priority_ring)
     },
     {
         .rx_dma_buffer = s_uart3_rx_dma,
@@ -77,6 +100,36 @@ static PlatformUartContext s_uart[PLATFORM_UART_COUNT] =
         .tx_ring_size = sizeof(s_uart3_tx_ring),
         .tx_priority_memory = s_uart3_tx_priority_ring,
         .tx_priority_size = sizeof(s_uart3_tx_priority_ring)
+    },
+    {
+        .rx_dma_buffer = s_uart4_rx_dma,
+        .rx_dma_size = sizeof(s_uart4_rx_dma),
+        .rx_ring_memory = s_uart4_rx_ring,
+        .rx_ring_size = sizeof(s_uart4_rx_ring),
+        .tx_ring_memory = s_uart4_tx_ring,
+        .tx_ring_size = sizeof(s_uart4_tx_ring),
+        .tx_priority_memory = s_uart4_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart4_tx_priority_ring)
+    },
+    {
+        .rx_dma_buffer = s_uart5_rx_dma,
+        .rx_dma_size = sizeof(s_uart5_rx_dma),
+        .rx_ring_memory = s_uart5_rx_ring,
+        .rx_ring_size = sizeof(s_uart5_rx_ring),
+        .tx_ring_memory = s_uart5_tx_ring,
+        .tx_ring_size = sizeof(s_uart5_tx_ring),
+        .tx_priority_memory = s_uart5_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart5_tx_priority_ring)
+    },
+    {
+        .rx_dma_buffer = s_uart6_rx_dma,
+        .rx_dma_size = sizeof(s_uart6_rx_dma),
+        .rx_ring_memory = s_uart6_rx_ring,
+        .rx_ring_size = sizeof(s_uart6_rx_ring),
+        .tx_ring_memory = s_uart6_tx_ring,
+        .tx_ring_size = sizeof(s_uart6_tx_ring),
+        .tx_priority_memory = s_uart6_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart6_tx_priority_ring)
     }
 };
 
@@ -179,6 +232,9 @@ static void PlatformUart_RxPush(PlatformUartContext *context,
 static ringbuf_t *PlatformUart_TxRingGet(PlatformUartContext *context,
                                         PlatformUartTxPriority priority)
 {
+    /* HAL_UART_Transmit_DMA dereferences hdmatx; missing CubeMX TX DMA is
+     * an unsupported backend, never an accepted command or a null access. */
+    if (context->handle->hdmatx == NULL) { return NULL; }
     if (priority == PLATFORM_UART_TX_PRIORITY)
     {
         return (context->tx_priority_size >= 2U) ?
@@ -328,6 +384,10 @@ PlatformResult PlatformUart_WriteAsync(PlatformUartId id,
     }
     SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
                              SILVERSTAR_ASSERT_MODULE_PLATFORM);
+    if ((priority != PLATFORM_UART_TX_NORMAL) &&
+        (priority != PLATFORM_UART_TX_PRIORITY))
+    { return PLATFORM_INVALID_ARGUMENT; }
+    if (context->initialized == 0U) { return PLATFORM_NOT_READY; }
     ring = PlatformUart_TxRingGet(context, priority);
     if (ring == NULL) { return PLATFORM_UNSUPPORTED; }
     state = PlatformCritical_Enter();
@@ -353,6 +413,10 @@ PlatformResult PlatformUart_WriteFrameAsync(PlatformUartId id,
     { return PLATFORM_INVALID_ARGUMENT; }
     SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
                             SILVERSTAR_ASSERT_MODULE_PLATFORM);
+    if ((priority != PLATFORM_UART_TX_NORMAL) &&
+        (priority != PLATFORM_UART_TX_PRIORITY))
+    { return PLATFORM_INVALID_ARGUMENT; }
+    if (context->initialized == 0U) { return PLATFORM_NOT_READY; }
     ring = PlatformUart_TxRingGet(context, priority);
     if (ring == NULL) { return PLATFORM_UNSUPPORTED; }
     SILVERSTAR_ASSERT_OBJECT(ring, ringbuf_t,

@@ -5,7 +5,7 @@ typedef enum { HAL_OK, HAL_ERROR, HAL_BUSY, HAL_TIMEOUT } HAL_StatusTypeDef;
 typedef enum { HAL_UART_RXEVENT_IDLE, HAL_UART_RXEVENT_TC } HAL_UART_RxEventTypeTypeDef;
 typedef struct { uint32_t unused; } DMA_HandleTypeDef;
 typedef struct { uint32_t BaudRate; } UART_InitTypeDef;
-typedef struct { UART_InitTypeDef Init; DMA_HandleTypeDef *hdmarx;
+typedef struct { UART_InitTypeDef Init; DMA_HandleTypeDef *hdmarx; DMA_HandleTypeDef *hdmatx;
     uint32_t ErrorCode; } UART_HandleTypeDef;
 #define DMA_IT_HT 1U
 #define HAL_UART_ERROR_ORE 1U

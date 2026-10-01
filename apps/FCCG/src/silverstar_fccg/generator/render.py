@@ -970,6 +970,7 @@ def _ResourceHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
 
 {instance_declarations}
 
+{_PlatformUartConfigDefines_Render(model, catalog)}
 #endif /* __PROJECT_RESOURCES_H */
 """
 
@@ -1118,6 +1119,43 @@ def _StorageBindingHeader_Render(
 
 #endif /* __PROJECT_STORAGE_BINDING_H */
 """
+
+
+def _PlatformUartConfigDefines_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
+    """Size bounded F4 queues from the same logical bindings as the HAL table."""
+    resolution = ResourceAssignments_Resolve(model, catalog, auto_assign=False)
+    active_ids = {a.provision.resource_id for a in resolution.assignments}
+    collections = (
+        _CustomPlatformResources_Get(model, active_ids)
+        if model.hardware.mode == "custom"
+        else _BoardPlatformResources_Get(catalog.Component_Get(model.board), active_ids)
+    )
+    console_owners = {i.instance_id for i in model.device_instances
+                      if i.plugin == "silverstar.device.console.uart"}
+    console_ids = {a.provision.resource_id for a in resolution.assignments
+                   if a.provision.kind == "uart" and a.component_id in console_owners}
+    slots: dict[int, bool] = {}
+    for fallback, entry in enumerate(collections.get("uarts", [])):
+        index = _PlatformLogicalIndex_Get(entry, fallback)
+        if "logical_index" not in entry and "fixed_logical_index" not in entry:
+            token = str(entry.get("c_id", ""))
+            match = re.fullmatch(r"PLATFORM_UART_([1-6])", token)
+            cast = re.fullmatch(r"\(\(PlatformUartId\)([0-5])U\)", token)
+            if match:
+                index = int(match.group(1)) - 1
+            elif cast:
+                index = int(cast.group(1))
+        if not isinstance(index, int) or isinstance(index, bool) or not 0 <= index < 6:
+            raise ValueError("F4 UART buffer binding exceeds six logical slots")
+        slots[index] = entry.get("id") in console_ids or index == 2
+    lines = ["/* Bounded UART buffers follow the generated HAL logical-slot table. */"]
+    for index in range(6):
+        enabled = index in slots
+        # One-byte inactive sentinels keep ISO C arrays valid without reserving queues.
+        sizes = (128, 512 if index == 0 else 1024, 2048 if slots.get(index) else 192, 1024 if slots.get(index) else 192) if enabled else (1, 1, 1, 1)
+        for kind, size in zip(("RX_DMA", "RX_RING", "TX_RING", "TX_PRIORITY"), sizes):
+            lines.append(f"#define PROJECT_PLATFORM_UART_{index + 1}_{kind}_SIZE {size}U")
+    return "\n".join(lines) + "\n"
 
 
 def _PlatformResources_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
