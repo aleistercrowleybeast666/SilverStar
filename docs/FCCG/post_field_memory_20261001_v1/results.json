@@ -1,0 +1,221 @@
+{
+  "base_commit": "d410f4a7254f0433e91a22adb237b2944939fd99",
+  "branch": "feature/post-field-firmware-20261001",
+  "utc": "2026-10-01T15:22:54.042962+00:00",
+  "source_sha256": {
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c": "5f3930a2cdf4bc2b61929c7abf74dd18a654795df284781a8282ecb7b233fc68",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1": "3aa5c46d4b5eda239895fd9b3674af33ecf93aa217b374fe2ffacbcd8cb538c9",
+    "apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h": "aa97c30884c39e4e1f2bfcd92659bac14d11865890c4991257805f402c6818cc",
+    "apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h": "2cc0a2e1929f841660cc6ce78ddbcf3f895c375fed5397b1efe32c2655896cba",
+    "apps/FCCG/src/silverstar_fccg/generator/render.py": "3132b57865a783a7ddd5d3c14a3c2d7f6244dcfc176f80803dafe737e6bde09b",
+    "apps/FCCG/tests/test_static_memory_layout.py": "93359751b9c413bfdbf1bfadf1f941a42b00ff68fd34cdf11982328e6776916f"
+  },
+  "source_delta_sha256": "934a01d513ee9a85ac28f48dfb59021d48fb26c92e55e252b7e00765f0e1eaa5",
+  "stages": [
+    {
+      "name": "version_arm-none-eabi-gcc",
+      "cwd": "D:\\python_software\\SilverStar",
+      "command": [
+        "arm-none-eabi-gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06251780001912266,
+      "log_sha256": "cd6a323ba7731af79782d022373a1bdd2ab3c9e4fd8e6fdbd367916316c6bc98"
+    },
+    {
+      "name": "version_gcc",
+      "cwd": "D:\\python_software\\SilverStar",
+      "command": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05388999998103827,
+      "log_sha256": "d6334173e6c7d0b9aa942c21d117ef3c243b17c8697d007a2eb1ea6092d51d15"
+    },
+    {
+      "name": "version_mingw32-make",
+      "cwd": "D:\\python_software\\SilverStar",
+      "command": [
+        "mingw32-make",
+        "--version"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05725790001451969,
+      "log_sha256": "ae5db712d96509efa1ef4db3e98ba84b3cf635415b720b11906eff996bf7c1a3"
+    },
+    {
+      "name": "kf6_architecture-check",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "architecture-check"
+      ],
+      "exit_code": 2,
+      "seconds": 13.390104399994016,
+      "log_sha256": "f7133d34b209bc55308d6ea5a8270be6bab89b61518d8c9e80dd8bf53abc33e4"
+    },
+    {
+      "name": "kf6_power10-check",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "power10-check"
+      ],
+      "exit_code": 0,
+      "seconds": 27.275619299995014,
+      "log_sha256": "19b11ae6b02d60afac31979e7c07733eb05abd650d31be3502af75afafc50bc1"
+    },
+    {
+      "name": "kf6_host-tests",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "host-tests"
+      ],
+      "exit_code": 0,
+      "seconds": 242.68229590001283,
+      "log_sha256": "947d1bb833d32e4d6297a39061eaddef2712ffb63ae94335353f6cd027a62945"
+    },
+    {
+      "name": "kf6_arm_legacy",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "exit_code": 2,
+      "seconds": 48.69697970000561,
+      "log_sha256": "55bf8af64619d02e3ae4f25d701a6466c010ebba1caac62e343675cc6be74653"
+    },
+    {
+      "name": "eskf_architecture-check",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\eskf\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "architecture-check"
+      ],
+      "exit_code": 2,
+      "seconds": 14.779571099992609,
+      "log_sha256": "f7133d34b209bc55308d6ea5a8270be6bab89b61518d8c9e80dd8bf53abc33e4"
+    },
+    {
+      "name": "eskf_power10-check",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\eskf\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "power10-check"
+      ],
+      "exit_code": 0,
+      "seconds": 18.765064700011862,
+      "log_sha256": "89dece8d39e9864cb51087128582a42f473c67e58c0920f6dd86dce1fc32655f"
+    },
+    {
+      "name": "eskf_host-tests",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\eskf\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "host-tests"
+      ],
+      "exit_code": 0,
+      "seconds": 274.9657255000202,
+      "log_sha256": "91fd38e7af3eceff4dd96e4052d4d1d1b7f903c67f0f959bc7cb60d887f53700"
+    },
+    {
+      "name": "eskf_arm_legacy",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\eskf\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "exit_code": 2,
+      "seconds": 45.496500200009905,
+      "log_sha256": "b02d54da24819beef331f9c59375fd32a7c89f516e94b12469d793a03b081ecc"
+    },
+    {
+      "name": "eskf_arm_window_sram",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\eskf\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "MEMORY_LAYOUT=eskf_window_sram",
+        "artifact-check"
+      ],
+      "exit_code": 2,
+      "seconds": 49.24552749999566,
+      "log_sha256": "5dd22422c1aee4b83497d1d0bd3c4dcf4fa19c7b1be5f17c02093848af90c92e"
+    },
+    {
+      "name": "eskf_static_analysis",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\eskf\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "MEMORY_LAYOUT=eskf_window_sram",
+        "static-analysis"
+      ],
+      "exit_code": 0,
+      "seconds": 58.03003190000891,
+      "log_sha256": "cc1abebebb70a50df3c1407c4d4bfc298b55cee027f2339cb500c81e5ce5ba55"
+    },
+    {
+      "name": "ground_architecture-check",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Ground_Station",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "architecture-check"
+      ],
+      "exit_code": 2,
+      "seconds": 0.3417465000238735,
+      "log_sha256": "d53f11f4f5fa4c2ec80a2199ff07f5ee0983a37faca6802bebdaadbad9faa26c"
+    },
+    {
+      "name": "ground_power10-check",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Ground_Station",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "power10-check"
+      ],
+      "exit_code": 0,
+      "seconds": 2.124919599998975,
+      "log_sha256": "3b83b7dfdfab69ceda91dea5c3fe31e36b2eefe8bba476688a56a64984c3b485"
+    },
+    {
+      "name": "ground_host-tests",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Ground_Station",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "host-tests"
+      ],
+      "exit_code": 2,
+      "seconds": 0.3679263000085484,
+      "log_sha256": "d79f329096a1da8445664ae6c0e9d022bc26ec3424597e5d5c8fe929fa43c43e"
+    },
+    {
+      "name": "ground_artifact-check",
+      "cwd": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v2\\kf6\\Ground_Station",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-j6",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "exit_code": 2,
+      "seconds": 0.3530151000013575,
+      "log_sha256": "39c98fa3f2ae9faba700687d3a5dfee3090573476d01107ea28b3ddc3a61c3fe"
+    }
+  ]
+}

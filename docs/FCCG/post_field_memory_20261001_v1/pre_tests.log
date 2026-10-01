@@ -1,0 +1,214 @@
+FFFFFFFFF                                                                [100%]
+================================== FAILURES ===================================
+____________________ test_invalid_layout_is_rejected[bad] _____________________
+
+make_project = <function make_project.<locals>.create at 0x0000010DF7AC7110>
+value = 'bad'
+
+    @pytest.mark.parametrize("value", ["bad", "legacy eskf_workspace_sram", ""])
+    def test_invalid_layout_is_rejected(make_project, value):
+        result = make_project()(f"MEMORY_LAYOUT={value}")
+>       assert result.returncode != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '-np', 'list-build-config', 'MEMORY_LAYOUT=bad'], ...ad=728/8192=9%, Rehash=0, Collisions=84/1344=6%\n# Finished Make data base on Thu Oct  1 23:12:38 2026\n\n', stderr='').returncode
+
+apps\FCCG\tests\test_static_memory_layout.py:40: AssertionError
+_________ test_invalid_layout_is_rejected[legacy eskf_workspace_sram] _________
+
+make_project = <function make_project.<locals>.create at 0x0000010DF7AC7270>
+value = 'legacy eskf_workspace_sram'
+
+    @pytest.mark.parametrize("value", ["bad", "legacy eskf_workspace_sram", ""])
+    def test_invalid_layout_is_rejected(make_project, value):
+        result = make_project()(f"MEMORY_LAYOUT={value}")
+>       assert result.returncode != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '-np', 'list-build-config', 'MEMORY_LAYOUT=legacy ...ad=728/8192=9%, Rehash=0, Collisions=84/1344=6%\n# Finished Make data base on Thu Oct  1 23:12:39 2026\n\n', stderr='').returncode
+
+apps\FCCG\tests\test_static_memory_layout.py:40: AssertionError
+______________________ test_invalid_layout_is_rejected[] ______________________
+
+make_project = <function make_project.<locals>.create at 0x0000010DF7B840F0>
+value = ''
+
+    @pytest.mark.parametrize("value", ["bad", "legacy eskf_workspace_sram", ""])
+    def test_invalid_layout_is_rejected(make_project, value):
+        result = make_project()(f"MEMORY_LAYOUT={value}")
+>       assert result.returncode != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '-np', 'list-build-config', 'MEMORY_LAYOUT='], ret...ad=728/8192=9%, Rehash=0, Collisions=84/1344=6%\n# Finished Make data base on Thu Oct  1 23:12:40 2026\n\n', stderr='').returncode
+
+apps\FCCG\tests\test_static_memory_layout.py:40: AssertionError
+__________ test_unsupported_layout_is_rejected[SilverStar_F103-True] __________
+
+make_project = <function make_project.<locals>.create at 0x0000010DF7AC6140>
+target = 'SilverStar_F103', eskf = True
+
+    @pytest.mark.parametrize("target,eskf", [("SilverStar_F103", True), ("SilverStar_F407", False)])
+    def test_unsupported_layout_is_rejected(make_project, target, eskf):
+        result = make_project(target=target, eskf=eskf)("MEMORY_LAYOUT=eskf_workspace_sram")
+>       assert result.returncode != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '-np', 'list-build-config', 'MEMORY_LAYOUT=eskf_wo...ad=728/8192=9%, Rehash=0, Collisions=65/1344=5%\n# Finished Make data base on Thu Oct  1 23:12:41 2026\n\n', stderr='').returncode
+
+apps\FCCG\tests\test_static_memory_layout.py:47: AssertionError
+_________ test_unsupported_layout_is_rejected[SilverStar_F407-False] __________
+
+make_project = <function make_project.<locals>.create at 0x0000010DF7B85850>
+target = 'SilverStar_F407', eskf = False
+
+    @pytest.mark.parametrize("target,eskf", [("SilverStar_F103", True), ("SilverStar_F407", False)])
+    def test_unsupported_layout_is_rejected(make_project, target, eskf):
+        result = make_project(target=target, eskf=eskf)("MEMORY_LAYOUT=eskf_workspace_sram")
+>       assert result.returncode != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '-np', 'list-build-config', 'MEMORY_LAYOUT=eskf_wo...ad=728/8192=9%, Rehash=0, Collisions=97/1344=7%\n# Finished Make data base on Thu Oct  1 23:12:42 2026\n\n', stderr='').returncode
+
+apps\FCCG\tests\test_static_memory_layout.py:47: AssertionError
+________ test_layout_outputs_are_isolated_and_default_is_legacy[False] ________
+
+make_project = <function make_project.<locals>.create at 0x0000010DF7AC6F00>
+analyze = False
+
+    @pytest.mark.parametrize("analyze", [False, True])
+    def test_layout_outputs_are_isolated_and_default_is_legacy(make_project, analyze):
+        run = make_project()
+        args = ["ANALYZE=1"] if analyze else []
+        prefix = "build/FCCG/SilverStar_F407/" + ("StaticAnalysis/" if analyze else "") + "Release"
+        legacy = run(*args)
+        experimental = run(*args, "MEMORY_LAYOUT=eskf_workspace_sram")
+        assert legacy.returncode == experimental.returncode == 0
+        assert f"BUILD_ROOT := {prefix}\n" in legacy.stdout
+>       assert f"BUILD_ROOT := {prefix}/eskf_workspace_sram\n" in experimental.stdout
+E       AssertionError: assert 'BUILD_ROOT := build/FCCG/SilverStar_F407/Release/eskf_workspace_sram\n' in 'echo CONFIG-INCLUDES-END\necho CONFIG-DEFINES-END\n# GNU Make 4.4.1\n# Built for x86_64-w64-mingw32\n# Copyright (C) ...stats:\n# Load=728/8192=9%, Rehash=0, Collisions=84/1344=6%\n# Finished Make data base on Thu Oct  1 23:12:43 2026\n\n'
+E        +  where 'echo CONFIG-INCLUDES-END\necho CONFIG-DEFINES-END\n# GNU Make 4.4.1\n# Built for x86_64-w64-mingw32\n# Copyright (C) ...stats:\n# Load=728/8192=9%, Rehash=0, Collisions=84/1344=6%\n# Finished Make data base on Thu Oct  1 23:12:43 2026\n\n' = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '-np', 'list-build-config', 'MEMORY_LAYOUT=eskf_wo...ad=728/8192=9%, Rehash=0, Collisions=84/1344=6%\n# Finished Make data base on Thu Oct  1 23:12:43 2026\n\n', stderr='').stdout
+
+apps\FCCG\tests\test_static_memory_layout.py:60: AssertionError
+________ test_layout_outputs_are_isolated_and_default_is_legacy[True] _________
+
+make_project = <function make_project.<locals>.create at 0x0000010DF7B86CF0>
+analyze = True
+
+    @pytest.mark.parametrize("analyze", [False, True])
+    def test_layout_outputs_are_isolated_and_default_is_legacy(make_project, analyze):
+        run = make_project()
+        args = ["ANALYZE=1"] if analyze else []
+        prefix = "build/FCCG/SilverStar_F407/" + ("StaticAnalysis/" if analyze else "") + "Release"
+        legacy = run(*args)
+        experimental = run(*args, "MEMORY_LAYOUT=eskf_workspace_sram")
+        assert legacy.returncode == experimental.returncode == 0
+        assert f"BUILD_ROOT := {prefix}\n" in legacy.stdout
+>       assert f"BUILD_ROOT := {prefix}/eskf_workspace_sram\n" in experimental.stdout
+E       AssertionError: assert 'BUILD_ROOT := build/FCCG/SilverStar_F407/StaticAnalysis/Release/eskf_workspace_sram\n' in 'echo CONFIG-INCLUDES-END\necho CONFIG-DEFINES-END\n# GNU Make 4.4.1\n# Built for x86_64-w64-mingw32\n# Copyright (C) ...stats:\n# Load=728/8192=9%, Rehash=0, Collisions=92/1344=7%\n# Finished Make data base on Thu Oct  1 23:12:44 2026\n\n'
+E        +  where 'echo CONFIG-INCLUDES-END\necho CONFIG-DEFINES-END\n# GNU Make 4.4.1\n# Built for x86_64-w64-mingw32\n# Copyright (C) ...stats:\n# Load=728/8192=9%, Rehash=0, Collisions=92/1344=7%\n# Finished Make data base on Thu Oct  1 23:12:44 2026\n\n' = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '-np', 'list-build-config', 'ANALYZE=1', 'MEMORY_L...ad=728/8192=9%, Rehash=0, Collisions=92/1344=7%\n# Finished Make data base on Thu Oct  1 23:12:44 2026\n\n', stderr='').stdout
+
+apps\FCCG\tests\test_static_memory_layout.py:60: AssertionError
+___________ test_arm_workspace_section_and_alignment[0-.ccmram_bss] ___________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_pre_v1/test_arm_workspace_section_and0')
+layout = 0, section = '.ccmram_bss'
+
+    @pytest.mark.parametrize("layout,section", [(0, ".ccmram_bss"), (1, ".bss.silverstar_eskf_workspace")])
+    def test_arm_workspace_section_and_alignment(tmp_path, layout, section):
+        compiler, objdump = shutil.which("arm-none-eabi-gcc"), shutil.which("arm-none-eabi-objdump")
+        if compiler is None or objdump is None:
+            pytest.skip("ARM toolchain unavailable")
+        plugins = Path(__file__).resolve().parents[1] / "plugins/builtin"
+        target = plugins / "silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h"
+        api = plugins / "silverstar_platform_api/payload/Platform/Inc"
+        eskf = plugins / "silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc"
+        source = tmp_path / "workspace.c"
+        source.write_text('#include "platform_memory.h"\n#include "navigation_eskf.h"\n'
+                          'static PLATFORM_ESKF_WORKSPACE_BSS NavigationEskfWorkspace s_eskf_workspace;\n'
+                          'void *Workspace_Get(void);\nvoid *Workspace_Get(void) { return &s_eskf_workspace; }\n', encoding="utf-8")
+        output = tmp_path / "workspace.o"
+        result = subprocess.run([compiler, "-mcpu=cortex-m4", "-mthumb", "-std=c11", "-Wall", "-Wextra", "-Werror",
+                                 "-include", str(target), f"-DSILVERSTAR_MEMORY_LAYOUT_ESKF_WORKSPACE_SRAM={layout}",
+                                 "-I" + str(api), "-I" + str(eskf), "-c", str(source), "-o", str(output)],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and0\workspace.c:3:8: error: unknown type name 'PLATFORM_ESKF_WORKSPACE_BSS'
+E             3 | static PLATFORM_ESKF_WORKSPACE_BSS NavigationEskfWorkspace s_eskf_workspace;
+E               |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and0\workspace.c:3:60: error: expected '=', ',', ';', 'asm' or '__attribute__' before 's_eskf_workspace'
+E             3 | static PLATFORM_ESKF_WORKSPACE_BSS NavigationEskfWorkspace s_eskf_workspace;
+E               |                                                            ^~~~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and0\workspace.c: In function 'Workspace_Get':
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and0\workspace.c:5:37: error: 's_eskf_workspace' undeclared (first use in this function)
+E             5 | void *Workspace_Get(void) { return &s_eskf_workspace; }
+E               |                                     ^~~~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and0\workspace.c:5:37: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and0\workspace.c:5:55: error: control reaches end of non-void function [-Werror=return-type]
+E             5 | void *Workspace_Get(void) { return &s_eskf_workspace; }
+E               |                                                       ^
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.EXE', '-mcpu=cortex-m4', '-mthumb', '...; }\n      |                                                       ^\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_static_memory_layout.py:83: AssertionError
+_ test_arm_workspace_section_and_alignment[1-.bss.silverstar_eskf_workspace] __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_pre_v1/test_arm_workspace_section_and1')
+layout = 1, section = '.bss.silverstar_eskf_workspace'
+
+    @pytest.mark.parametrize("layout,section", [(0, ".ccmram_bss"), (1, ".bss.silverstar_eskf_workspace")])
+    def test_arm_workspace_section_and_alignment(tmp_path, layout, section):
+        compiler, objdump = shutil.which("arm-none-eabi-gcc"), shutil.which("arm-none-eabi-objdump")
+        if compiler is None or objdump is None:
+            pytest.skip("ARM toolchain unavailable")
+        plugins = Path(__file__).resolve().parents[1] / "plugins/builtin"
+        target = plugins / "silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h"
+        api = plugins / "silverstar_platform_api/payload/Platform/Inc"
+        eskf = plugins / "silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc"
+        source = tmp_path / "workspace.c"
+        source.write_text('#include "platform_memory.h"\n#include "navigation_eskf.h"\n'
+                          'static PLATFORM_ESKF_WORKSPACE_BSS NavigationEskfWorkspace s_eskf_workspace;\n'
+                          'void *Workspace_Get(void);\nvoid *Workspace_Get(void) { return &s_eskf_workspace; }\n', encoding="utf-8")
+        output = tmp_path / "workspace.o"
+        result = subprocess.run([compiler, "-mcpu=cortex-m4", "-mthumb", "-std=c11", "-Wall", "-Wextra", "-Werror",
+                                 "-include", str(target), f"-DSILVERSTAR_MEMORY_LAYOUT_ESKF_WORKSPACE_SRAM={layout}",
+                                 "-I" + str(api), "-I" + str(eskf), "-c", str(source), "-o", str(output)],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and1\workspace.c:3:8: error: unknown type name 'PLATFORM_ESKF_WORKSPACE_BSS'
+E             3 | static PLATFORM_ESKF_WORKSPACE_BSS NavigationEskfWorkspace s_eskf_workspace;
+E               |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and1\workspace.c:3:60: error: expected '=', ',', ';', 'asm' or '__attribute__' before 's_eskf_workspace'
+E             3 | static PLATFORM_ESKF_WORKSPACE_BSS NavigationEskfWorkspace s_eskf_workspace;
+E               |                                                            ^~~~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and1\workspace.c: In function 'Workspace_Get':
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and1\workspace.c:5:37: error: 's_eskf_workspace' undeclared (first use in this function)
+E             5 | void *Workspace_Get(void) { return &s_eskf_workspace; }
+E               |                                     ^~~~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and1\workspace.c:5:37: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\.work\post_field_memory_pre_v1\test_arm_workspace_section_and1\workspace.c:5:55: error: control reaches end of non-void function [-Werror=return-type]
+E             5 | void *Workspace_Get(void) { return &s_eskf_workspace; }
+E               |                                                       ^
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.EXE', '-mcpu=cortex-m4', '-mthumb', '...; }\n      |                                                       ^\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_static_memory_layout.py:83: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\apps\FCCG\.work\pytest-cache\v\cache\nodeids: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\apps\FCCG\.work\pytest-cache\v\cache\lastfailed: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_invalid_layout_is_rejected[bad]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_invalid_layout_is_rejected[legacy eskf_workspace_sram]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_invalid_layout_is_rejected[]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_unsupported_layout_is_rejected[SilverStar_F103-True]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_unsupported_layout_is_rejected[SilverStar_F407-False]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_layout_outputs_are_isolated_and_default_is_legacy[False]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_layout_outputs_are_isolated_and_default_is_legacy[True]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_arm_workspace_section_and_alignment[0-.ccmram_bss]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_arm_workspace_section_and_alignment[1-.bss.silverstar_eskf_workspace]
+9 failed, 2 warnings in 8.51s

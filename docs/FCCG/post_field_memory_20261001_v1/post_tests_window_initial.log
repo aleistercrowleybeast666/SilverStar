@@ -1,0 +1,68 @@
+.......FF                                                                [100%]
+================================== FAILURES ===================================
+____________ test_arm_window_section_and_alignment[0-.ccmram_bss] _____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_post_v2/test_arm_window_section_and_al0')
+layout = 0, section = '.ccmram_bss'
+
+    @pytest.mark.parametrize("layout,section", [(0, ".ccmram_bss"), (1, ".bss.silverstar_eskf_window")])
+    def test_arm_window_section_and_alignment(tmp_path, layout, section):
+        compiler, objdump = shutil.which("arm-none-eabi-gcc"), shutil.which("arm-none-eabi-objdump")
+        if compiler is None or objdump is None:
+            pytest.skip("ARM toolchain unavailable")
+        plugins = Path(__file__).resolve().parents[1] / "plugins/builtin"
+        target = plugins / "silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h"
+        api = plugins / "silverstar_platform_api/payload/Platform/Inc"
+        eskf = plugins / "silverstar_algorithm_common/payload/Algorithm/Common/Inc"
+        source = tmp_path / "window.c"
+        source.write_text('#include "platform_memory.h"\n#include "navigation_quality.h"\n'
+                          'static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;\n'
+                          'void *Window_Get(void);\nvoid *Window_Get(void) { return &s_eskf_window; }\n', encoding="utf-8")
+        output = tmp_path / "window.o"
+        result = subprocess.run([compiler, "-mcpu=cortex-m4", "-mthumb", "-std=c11", "-Wall", "-Wextra", "-Werror",
+                                 "-include", str(target), f"-DSILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM={layout}",
+                                 "-I" + str(api), "-I" + str(eskf), "-c", str(source), "-o", str(output)],
+                                capture_output=True, text=True, timeout=20)
+        assert result.returncode == 0, result.stdout + result.stderr
+        sections = subprocess.check_output([objdump, "-h", str(output)], text=True)
+        symbols = subprocess.check_output([objdump, "-t", str(output)], text=True)
+        assert section in sections and "2**3" in sections
+>       assert f"{section}\t000000b0 s_eskf_window" in symbols
+E       AssertionError: assert '.ccmram_bss\t000000b0 s_eskf_window' in '\nD:\\python_software\\SilverStar\\.work\\post_field_memory_post_v2\\test_arm_window_section_and_al0\\window.o:     f...comment\n00000000 l    d  .ARM.attributes\t00000000 .ARM.attributes\n00000000 g     F .text\t00000014 Window_Get\n\n\n'
+
+apps\FCCG\tests\test_static_memory_layout.py:87: AssertionError
+____ test_arm_window_section_and_alignment[1-.bss.silverstar_eskf_window] _____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_post_v2/test_arm_window_section_and_al1')
+layout = 1, section = '.bss.silverstar_eskf_window'
+
+    @pytest.mark.parametrize("layout,section", [(0, ".ccmram_bss"), (1, ".bss.silverstar_eskf_window")])
+    def test_arm_window_section_and_alignment(tmp_path, layout, section):
+        compiler, objdump = shutil.which("arm-none-eabi-gcc"), shutil.which("arm-none-eabi-objdump")
+        if compiler is None or objdump is None:
+            pytest.skip("ARM toolchain unavailable")
+        plugins = Path(__file__).resolve().parents[1] / "plugins/builtin"
+        target = plugins / "silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h"
+        api = plugins / "silverstar_platform_api/payload/Platform/Inc"
+        eskf = plugins / "silverstar_algorithm_common/payload/Algorithm/Common/Inc"
+        source = tmp_path / "window.c"
+        source.write_text('#include "platform_memory.h"\n#include "navigation_quality.h"\n'
+                          'static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;\n'
+                          'void *Window_Get(void);\nvoid *Window_Get(void) { return &s_eskf_window; }\n', encoding="utf-8")
+        output = tmp_path / "window.o"
+        result = subprocess.run([compiler, "-mcpu=cortex-m4", "-mthumb", "-std=c11", "-Wall", "-Wextra", "-Werror",
+                                 "-include", str(target), f"-DSILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM={layout}",
+                                 "-I" + str(api), "-I" + str(eskf), "-c", str(source), "-o", str(output)],
+                                capture_output=True, text=True, timeout=20)
+        assert result.returncode == 0, result.stdout + result.stderr
+        sections = subprocess.check_output([objdump, "-h", str(output)], text=True)
+        symbols = subprocess.check_output([objdump, "-t", str(output)], text=True)
+        assert section in sections and "2**3" in sections
+>       assert f"{section}\t000000b0 s_eskf_window" in symbols
+E       AssertionError: assert '.bss.silverstar_eskf_window\t000000b0 s_eskf_window' in '\nD:\\python_software\\SilverStar\\.work\\post_field_memory_post_v2\\test_arm_window_section_and_al1\\window.o:     f...comment\n00000000 l    d  .ARM.attributes\t00000000 .ARM.attributes\n00000000 g     F .text\t00000014 Window_Get\n\n\n'
+
+apps\FCCG\tests\test_static_memory_layout.py:87: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_arm_window_section_and_alignment[0-.ccmram_bss]
+FAILED apps\FCCG\tests\test_static_memory_layout.py::test_arm_window_section_and_alignment[1-.bss.silverstar_eskf_window]
+2 failed, 7 passed in 7.69s

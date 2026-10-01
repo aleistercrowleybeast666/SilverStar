@@ -1,0 +1,161 @@
+Expected compile rejection: capability_missing_imu_noise
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:49:1: error: static assertion failed: "Selected IMU needs estimator noise recommendations or all E/N/U overrides"
+   49 | _Static_assert(
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_missing_gnss_noise
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:57:1: error: static assertion failed: "Selected GNSS needs estimator floor recommendations or all floor overrides"
+   57 | _Static_assert(
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_missing_baro_noise
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:64:1: error: static assertion failed: "Selected Barometer needs an estimator noise recommendation or override"
+   64 | _Static_assert(
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_jy901b_gravity_mag_rejected
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from <command-line>:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Generated\Inc\project_flight_config.h:110:2: error: #error "Magnetometer selection is deferred in the first SCG release"
+  110 | #error "Magnetometer selection is deferred in the first SCG release"
+      |  ^~~~~
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_flight_config.h:5,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:19,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Targets\SilverStar_F407\Inc/target_system_config.h:272:1: error: static assertion failed: "Enabled magnetometer requires a selected physical provider"
+  272 | _Static_assert((SYSTEM_USER_MAGNETOMETER_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:77:1: error: static assertion failed: "TRIAD requires an enabled, absolute-vector-qualified magnetometer"
+   77 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_first_release_triad_deferred
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from <command-line>:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Generated\Inc\project_flight_config.h:110:2: error: #error "Magnetometer selection is deferred in the first SCG release"
+  110 | #error "Magnetometer selection is deferred in the first SCG release"
+      |  ^~~~~
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_flight_config.h:5,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:19,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Targets\SilverStar_F407\Inc/target_system_config.h:272:1: error: static assertion failed: "Enabled magnetometer requires a selected physical provider"
+  272 | _Static_assert((SYSTEM_USER_MAGNETOMETER_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_hw_quat_6axis_preflight_unqualified
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:101:1: error: static assertion failed: "HW 6-axis alignment requires a qualified preflight source"
+  101 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_hw_quat_9axis_preflight_unqualified
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:108:1: error: static assertion failed: "HW 9-axis alignment requires a qualified preflight source"
+  108 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_impact_unqualified
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:145:1: error: static assertion failed: "Impact landing requires stillness- and impact-qualified IMU data"
+  145 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_stillness_unqualified
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:138:1: error: static assertion failed: "Stillness landing requires a stillness-qualified IMU"
+  138 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_baro_imu_stillness_unqualified
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:154:1: error: static assertion failed: "Baro/IMU landing requires qualified IMU and direct altitude"
+  154 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_deploy_without_action
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:181:1: error: static assertion failed: "The current flight profile requires a START action"
+  181 | _Static_assert((SYSTEM_USER_MISSION_ACTION_ENABLE != 0U) &&
+      | ^~~~~~~~~~~~~~
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:184:1: error: static assertion failed: "Automatic deploy requires a parachute-deploy Mission Action"
+  184 | _Static_assert((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK == 0U) ||
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_required_baro_missing
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:125:1: error: static assertion failed: "Required Barometer origin needs a qualified altitude source"
+  125 | _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+      | ^~~~~~~~~~~~~~
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:154:1: error: static assertion failed: "Baro/IMU landing requires qualified IMU and direct altitude"
+  154 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_required_gnss_missing
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:132:1: error: static assertion failed: "Required GNSS origin needs a selected position source"
+  132 | _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_stillness_without_gyro
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:70:1: error: static assertion failed: "Gravity Known Yaw requires qualified accel/gyro software alignment"
+   70 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+      | ^~~~~~~~~~~~~~
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:138:1: error: static assertion failed: "Stillness landing requires a stillness-qualified IMU"
+  138 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:165:1: error: static assertion failed: "TILT deploy requires selected gyro software propagation"
+  165 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_tilt_without_propagation
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:165:1: error: static assertion failed: "TILT deploy requires selected gyro software propagation"
+  165 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: capability_delay_without_time
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_config.h:308,
+                 from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:176:1: error: static assertion failed: "DELAY deploy requires mission monotonic time"
+  176 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+      | ^~~~~~~~~~~~~~
+Expected compile rejection: impact_capability_guard
+Compiler: D:\msys64\ucrt64\bin\gcc.exe
+Target: x86_64-w64-mingw32
+In file included from D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\Tests\Host\test_flight_config_compile.c:1:
+D:\python_software\SilverStar\.work\PostFieldMemory_d410f4a_20261001_v3\eskf\Flight_Controller\System\User/system_user_capability_validation.h:145:1: error: static assertion failed: "Impact landing requires stillness- and impact-qualified IMU data"
+  145 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+      | ^~~~~~~~~~~~~~

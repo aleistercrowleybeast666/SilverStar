@@ -1,15 +1,22 @@
 param(
     [ValidateSet('Debug', 'Release')]
     [string]$Config = 'Debug',
-    [string]$TargetProfile = 'SilverStar_F407'
+    [string]$TargetProfile = 'SilverStar_F407',
+    [ValidateSet('legacy', 'eskf_window_sram')]
+    [string]$MemoryLayout = 'legacy'
 )
 
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-$targetName = 'SilverStar_0_1_0'
+. (Join-Path $PSScriptRoot 'read_firmware_identity.ps1')
+$firmwareIdentity = FirmwareIdentity_Read -ProjectRoot $repoRoot
+$targetName = $firmwareIdentity.build_target
 $buildRoot = Join-Path $repoRoot (Join-Path 'build\FCCG' `
     (Join-Path $TargetProfile $Config))
+if ($MemoryLayout -ne 'legacy') {
+    $buildRoot = Join-Path $buildRoot $MemoryLayout
+}
 $elfPath = Join-Path $buildRoot ($targetName + '.elf')
 $mapPath = Join-Path $buildRoot ($targetName + '.map')
 $linkerPath = Join-Path $repoRoot 'STM32F407XX_FLASH.ld'
@@ -133,6 +140,15 @@ if (($null -ne $nmCommand) -and
                 }
             }
         }
+        elseif ($line.ToString() -match
+            '^\s*(?<address>[0-9A-Fa-f]+)\s+(?<type>\S)\s+(?<name>\S+)\s*$') {
+            $symbols[$Matches['name']] = [pscustomobject]@{
+                Address = ConvertFrom-HexValue -Value $Matches['address']
+                Size = [uint64]0
+                Type = $Matches['type']
+                Name = $Matches['name']
+            }
+        }
     }
     $forbiddenSymbols = @($symbols.Keys | Where-Object {
         $_ -match ('(?i)(?:^|_)(?:malloc|calloc|realloc|free|sbrk)(?:$|_)|' +
@@ -169,6 +185,52 @@ $ccmLength = [uint64](64 * 1024)
 $mainSramStart = [uint64]0x20000000
 $mainSramLength = [uint64](128 * 1024)
 $flashLength = [uint64](512 * 1024)
+
+# The whitelist has one private CPU-only scratch object. Inspect the actual
+# linked address and the startup-cleared bounds, not just requested flags.
+$windowName = 's_eskf_window'
+$backendPath = Join-Path $repoRoot 'Algorithm\Estimator\ESKF15\Src\navigation_eskf_backend.c'
+$sourcesPath = Join-Path $repoRoot 'Generated\project_sources.mk'
+$eskfSelected = (Test-Path -LiteralPath $sourcesPath -PathType Leaf) -and
+    ((Get-Content -Raw -LiteralPath $sourcesPath) -match
+        'Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend\.c')
+$placementAware = (Test-Path -LiteralPath $backendPath -PathType Leaf) -and
+    ((Get-Content -Raw -LiteralPath $backendPath) -match 'PLATFORM_ESKF_WINDOW_BSS')
+if ($MemoryLayout -ne 'legacy') {
+    Assert-ArtifactCondition -Condition (($TargetProfile -eq 'SilverStar_F407') -and $eskfSelected) `
+        -Message 'Experimental placement requires SilverStar_F407 and the selected ESKF15 backend.'
+    Assert-ArtifactCondition -Condition $placementAware `
+        -Message 'Preserved ESKF payload does not support experimental placement; use a fresh validation project.'
+}
+if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
+    $startName = '_sccmram_bss'
+    $endName = '_eccmram_bss'
+    $memoryStart = $ccmStart
+    $memoryLength = $ccmLength
+    $memoryName = 'CCMRAM'
+    if ($MemoryLayout -eq 'eskf_window_sram') {
+        $startName = '_sbss'; $endName = '_ebss'
+        $memoryStart = $mainSramStart; $memoryLength = $mainSramLength
+        $memoryName = 'main SRAM'
+    }
+    Assert-SymbolRange -Symbols $symbols -Name $windowName -Start $memoryStart `
+        -Length $memoryLength -MemoryName $memoryName
+    Assert-ArtifactCondition -Condition ($symbols.ContainsKey($startName) -and $symbols.ContainsKey($endName)) `
+        -Message 'Window startup clear bounds are missing.'
+    if ($symbols.ContainsKey($windowName) -and $symbols.ContainsKey($startName) -and $symbols.ContainsKey($endName)) {
+        $window = $symbols[$windowName]
+        Assert-ArtifactCondition `
+            -Condition (($window.Size -gt 0) -and (($window.Address % 8) -eq 0) -and
+                ($window.Address -ge $symbols[$startName].Address) -and
+                (($window.Address + $window.Size) -le $symbols[$endName].Address)) `
+            -Message 'Window must be nonempty, 8-byte aligned, and fully inside startup-cleared BSS.'
+        Write-Output ('  placement layout={0} object={1} address=0x{2:X8} bytes={3} region={4} zero={5}/{6}' -f `
+            $MemoryLayout, $windowName, $window.Address, $window.Size, $memoryName, $startName, $endName)
+    }
+}
+elseif ($eskfSelected) {
+    Write-Output '  placement layout=legacy preserved_payload=unsupported experimental_audit=NOT_PROVEN'
+}
 
 Assert-ArtifactCondition -Condition $sections.ContainsKey('.ccmram_bss') `
     -Message 'ELF section .ccmram_bss is missing.'

@@ -2839,6 +2839,13 @@ def _Makefile_Render(model: ProjectModel) -> str:
 
 TARGET_PROFILE ?= {model.build.target_profile}
 CONFIG ?= Release
+MEMORY_LAYOUT ?= legacy
+
+ifneq ($(MEMORY_LAYOUT),legacy)
+ifneq ($(MEMORY_LAYOUT),eskf_window_sram)
+$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy or eskf_window_sram)
+endif
+endif
 
 SUPPORTED_TARGETS := {model.build.target_profile}
 SUPPORTED_CONFIGS := Debug Release
@@ -2856,6 +2863,9 @@ ANALYZE ?= 0
 ifeq ($(ANALYZE),1)
 BUILD_ROOT := build/FCCG/$(TARGET_PROFILE)/StaticAnalysis/$(CONFIG)
 endif
+ifneq ($(MEMORY_LAYOUT),legacy)
+BUILD_ROOT := $(BUILD_ROOT)/$(MEMORY_LAYOUT)
+endif
 LISTING ?= 0
 
 C_SOURCES :=
@@ -2867,6 +2877,16 @@ BUILD_MANIFESTS := Makefile
 
 include Targets/$(TARGET_PROFILE)/target.mk
 include Generated/project_sources.mk
+
+ifeq ($(MEMORY_LAYOUT),eskf_window_sram)
+ifneq ($(TARGET_PROFILE),SilverStar_F407)
+$(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
+endif
+ifeq ($(filter Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c,$(C_SOURCES)),)
+$(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
+endif
+C_DEFS += SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1
+endif
 
 FIRST_PARTY_C_SOURCES := $(filter APP/% Algorithm/% Board/% Common/% Devices/% FlightLogic/% Generated/% Interfaces/% Modules/% OS/FreeRTOS/% Platform/% Protocol/% System/% Targets/%,$(C_SOURCES))
 THIRD_PARTY_C_SOURCES := $(filter ThirdParty/% Middlewares/Third_Party/%,$(C_SOURCES))
@@ -3011,6 +3031,7 @@ list-sources:
 \t@$(foreach source,$(C_SOURCES),echo $(source) & ) echo Assembly: $(ASM_SOURCES)
 
 list-build-config:
+\t@echo MEMORY_LAYOUT:$(MEMORY_LAYOUT)
 \t@$(foreach include,$(C_INCLUDES),echo INCLUDE:$(include) & ) echo CONFIG-INCLUDES-END
 \t@$(foreach define,$(C_DEFS),echo DEFINE:$(define) & ) echo CONFIG-DEFINES-END
 
@@ -3031,7 +3052,7 @@ static-analysis:
 \t$(MAKE) TARGET_PROFILE=$(TARGET_PROFILE) CONFIG=$(CONFIG) ANALYZE=1 all
 
 artifact-check: all
-\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile $(TARGET_PROFILE) -Config $(CONFIG)
+\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile $(TARGET_PROFILE) -Config $(CONFIG) $(if $(filter legacy,$(MEMORY_LAYOUT)),,-MemoryLayout $(MEMORY_LAYOUT))
 
 memory-report: artifact-check
 

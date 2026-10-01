@@ -49,7 +49,7 @@ static NavigationEskfState s_state; /* CPU main SRAM, never DMA. */
 static PLATFORM_CPU_FAST_BSS NavigationEskfWorkspace s_work;
 static PLATFORM_CPU_FAST_BSS NavigationEskfReplay s_history;
 static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
-static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_window;
+static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;
 static GeoLocalFrame s_frame;
 static float s_baro_origin;
 static uint32_t s_gnss_sequence;
@@ -92,7 +92,7 @@ void SystemNavigationBackend_Reset(void)
     s_state.initialized = 0U; s_operation = 0U; s_snapshot_id = 0U;
     s_native_week_us = 0U; s_native_tow_ms = 0U; s_log_failures = 0U;
     s_imu_quality_flags = 0U;
-    (void)NavigationWindow_Reset(&s_window);
+    (void)NavigationWindow_Reset(&s_eskf_window);
 }
 
 SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
@@ -252,8 +252,8 @@ static float Backend_ConsistencyGet(const SystemGnssSample *sample, const float 
     memcpy(window_sample.velocity_en, sample->velocity_enu_mps, sizeof(window_sample.velocity_en));
     window_sample.position_valid = (uint8_t)((sample->valid_group_mask & 1U) != 0U);
     window_sample.velocity_valid = (uint8_t)((sample->valid_group_mask & 4U) != 0U);
-    (void)NavigationWindow_Receive(&s_window, &s_window_config, &window_sample);
-    return NavigationWindow_VarianceScale(&s_window, &s_window_config, window_sample.epoch_us);
+    (void)NavigationWindow_Receive(&s_eskf_window, &s_window_config, &window_sample);
+    return NavigationWindow_VarianceScale(&s_eskf_window, &s_window_config, window_sample.epoch_us);
 }
 
 static void Backend_AngularRateGet(uint64_t epoch_us, float rate[3])
@@ -438,18 +438,18 @@ static void Backend_NavigationQualityLog(const SystemGnssSample *sample, uint64_
     record.quality_degraded_mask = sample->quality_degraded_group_mask;
     record.numsv = sample->satellite_count;
     record.numsv_valid = (uint8_t)((sample->valid_fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U);
-    record.window_start_us = s_window.completed_start_us; record.window_end_us = s_window.completed_us;
-    record.covered_us = s_window.completed_covered_us; record.window_index = s_window.completed_window_index;
-    record.position_epoch_count = s_window.completed_position_epochs;
-    record.velocity_epoch_count = s_window.completed_velocity_epochs;
-    record.evidence_age_us = (record.native_epoch_us >= s_window.completed_us) ?
-        record.native_epoch_us - s_window.completed_us : UINT64_MAX;
-    record.evidence_valid = (uint8_t)(s_window.evidence_valid && (record.native_epoch_us != 0U) &&
+    record.window_start_us = s_eskf_window.completed_start_us; record.window_end_us = s_eskf_window.completed_us;
+    record.covered_us = s_eskf_window.completed_covered_us; record.window_index = s_eskf_window.completed_window_index;
+    record.position_epoch_count = s_eskf_window.completed_position_epochs;
+    record.velocity_epoch_count = s_eskf_window.completed_velocity_epochs;
+    record.evidence_age_us = (record.native_epoch_us >= s_eskf_window.completed_us) ?
+        record.native_epoch_us - s_eskf_window.completed_us : UINT64_MAX;
+    record.evidence_valid = (uint8_t)(s_eskf_window.evidence_valid && (record.native_epoch_us != 0U) &&
         (record.evidence_age_us <= 6000000ULL));
-    record.window_reason = record.evidence_valid ? 1U : (s_window.evidence_valid ? 4U : 0U);
-    record.variance_scale = record.evidence_valid ? s_window.variance_scale : 1.0f;
-    memcpy(record.closure_en_m, s_window.closure_en, sizeof(record.closure_en_m));
-    record.closure_norm_m = s_window.closure_norm_m;
+    record.window_reason = record.evidence_valid ? 1U : (s_eskf_window.evidence_valid ? 4U : 0U);
+    record.variance_scale = record.evidence_valid ? s_eskf_window.variance_scale : 1.0f;
+    memcpy(record.closure_en_m, s_eskf_window.closure_en, sizeof(record.closure_en_m));
+    record.closure_norm_m = s_eskf_window.closure_norm_m;
     for (group = 0U; group < 4U; group++)
     {
         if ((SystemNavigationHealth_GroupGet(group, evaluation_us, &health) == SYSTEM_DEVICE_OK) &&
@@ -484,7 +484,7 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
     if (source != s_gnss_source)
     {
         s_gnss_source = source; s_native_week_us = 0U; s_native_tow_ms = 0U;
-        (void)NavigationWindow_Reset(&s_window);
+        (void)NavigationWindow_Reset(&s_eskf_window);
     }
     s_gnss_seen = 1U; s_gnss_sequence = sample.sequence;
     if (SystemGnssQuality_Evaluate(&sample, s_state.timestamp_us) != SYSTEM_DEVICE_OK)

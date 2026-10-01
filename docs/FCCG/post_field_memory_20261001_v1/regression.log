@@ -1,0 +1,68 @@
+..............................FF...........                              [100%]
+================================== FAILURES ===================================
+________ test_disabled_logging_architecture_accepts_consistent_absence ________
+
+logging_disabled_project = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_regression_v1/logging_architecture0')
+
+    def test_disabled_logging_architecture_accepts_consistent_absence(logging_disabled_project):
+        result = _Architecture_Run(logging_disabled_project, "valid")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+E         FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+E         SilverStar architecture check failed: checks=185 failures=1
+E         FAIL: Authoritative firmware target is not SilverStar_0_1_0.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\Silver...ecture check failed: checks=185 failures=1\nFAIL: Authoritative firmware target is not SilverStar_0_1_0.\n', stderr='').returncode
+
+apps\FCCG\tests\test_architecture_logging_selection.py:38: AssertionError
+_______________ test_enabled_logging_keeps_complete_codec_gate ________________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_regression_v1/test_enabled_logging_keeps_com0')
+
+    def test_enabled_logging_keeps_complete_codec_gate(workspace_root, tmp_path):
+        service = FccgService(workspace_root)
+        model = service.ReferenceProject_Create("ArchitectureLoggingEnabled")
+        previous = deepcopy(model)
+        model.strategies["estimator"] = "silverstar.algorithm.estimator.eskf15"
+        LoggingProfile_AvailabilityTransitionApply(previous, model, service.catalog)
+        model = service.ProjectConfiguration_Reconcile(model).model
+        service.Project_Save(model, tmp_path, confirm_dangerous=True)
+        result = _Architecture_Run(tmp_path, "enabled")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+E         FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+E         FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+E         FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+E         SilverStar architecture check failed: checks=328 failures=1
+E         FAIL: Authoritative firmware target is not SilverStar_0_1_0.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\Silver...ecture check failed: checks=328 failures=1\nFAIL: Authoritative firmware target is not SilverStar_0_1_0.\n', stderr='').returncode
+
+apps\FCCG\tests\test_architecture_logging_selection.py:51: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_architecture_logging_selection.py::test_disabled_logging_architecture_accepts_consistent_absence
+FAILED apps\FCCG\tests\test_architecture_logging_selection.py::test_enabled_logging_keeps_complete_codec_gate
+2 failed, 41 passed in 202.96s (0:03:22)

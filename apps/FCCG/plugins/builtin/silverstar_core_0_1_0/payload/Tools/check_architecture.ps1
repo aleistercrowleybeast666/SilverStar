@@ -473,9 +473,11 @@ Assert-NoArchitecturePattern -Name `
 
 Write-Output 'FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries'
 Write-Output 'FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency'
+. (Join-Path $PSScriptRoot 'read_firmware_identity.ps1')
+$firmwareIdentity = FirmwareIdentity_Read -ProjectRoot $repoRoot
 Assert-FileContainsPattern -RelativePath 'Makefile' `
-    -Pattern 'TARGET\s*:=\s*SilverStar_0_1_0' `
-    -Message 'Authoritative firmware target is not SilverStar_0_1_0.'
+    -Pattern ('(?m)^TARGET\s*:=\s*' + [regex]::Escape($firmwareIdentity.build_target) + '\s*$') `
+    -Message 'Authoritative firmware target does not match the project identity.'
 Assert-FileContainsPattern -RelativePath 'Makefile' `
     -Pattern 'BUILD_ROOT\s*:=\s*build/FCCG/\$\(TARGET_PROFILE\)/\$\(CONFIG\)' `
     -Message 'Build output is not partitioned by target and configuration.'

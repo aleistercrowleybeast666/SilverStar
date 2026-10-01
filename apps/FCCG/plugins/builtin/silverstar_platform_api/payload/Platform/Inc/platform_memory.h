@@ -12,6 +12,18 @@
 #define PLATFORM_CPU_FAST_BSS
 #endif
 
+/* One audited CPU-only object; the target owns its section and alignment.
+ * An old target header cannot silently accept the experimental layout. */
+#ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+#define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+#endif
+#ifndef PLATFORM_ESKF_WINDOW_BSS
+#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+#error "The selected target does not support ESKF consistency window SRAM placement"
+#endif
+#define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
+#endif
+
 #ifndef PLATFORM_DMA_ACCESSIBLE
 #define PLATFORM_DMA_ACCESSIBLE
 #endif

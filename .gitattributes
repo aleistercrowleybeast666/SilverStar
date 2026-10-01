@@ -15,3 +15,6 @@ docs/FCCG/pot_inventory_20261001/** -text
 
 # Native GUI logs, screenshots and source snapshots retain their recorded bytes.
 docs/GSHC/gui_layout_20261001_v1/** -text
+
+# Local firmware experiment evidence hashes require exact stored bytes.
+docs/FCCG/post_field_memory_20261001_v1/** -text

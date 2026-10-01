@@ -1,0 +1,36 @@
+FCCG_PROGRESS|ARTIFACT|PLAN|8
+FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|DONE|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|BEGIN|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP
+  placement layout=eskf_window_sram object=s_eskf_window address=0x10009580 bytes=184 region=main SRAM zero=_sbss/_ebss
+FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|DONE|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|BEGIN|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap
+SilverStar memory report:
+  FLASH     used=301028 remaining=223260 capacity=524288
+  main SRAM used=99864 remaining=31208 capacity=131072
+  CCMRAM    used=63456 remaining=2080 capacity=65536
+  heap      reserved=0 runtime_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap
+FCCG_PROGRESS|ARTIFACT|BEGIN|8|8|summary
+  largest static objects:
+    s_history                        bytes= 16992 address=0x10009638 CCMRAM
+    s_logger_storage                 bytes= 16000 address=0x20008FB8 main SRAM
+    s_body_history                   bytes= 12288 address=0x20013EC0 main SRAM
+    s_estimator                      bytes= 10232 address=0x10006A00 CCMRAM
+    s_estimator_logger_storage       bytes=  9600 address=0x20006A18 main SRAM
+    s_hal_contexts                   bytes=  8190 address=0x20010C3C main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10001000 CCMRAM
+    s_queue                          bytes=  5120 address=0x20004278 main SRAM
+    s_io_baselines                   bytes=  4864 address=0x1000E4E0 CCMRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000470 main SRAM
+SilverStar artifact check failed: target=SilverStar_F407 config=Release failures=2
+FAIL: Symbol s_eskf_window is outside main SRAM: address=0x10009580 size=184
+FAIL: Window must be nonempty, 8-byte aligned, and fully inside startup-cleared BSS.

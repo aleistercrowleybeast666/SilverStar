@@ -1,0 +1,22 @@
+{
+  "regions": [
+    {
+      "name": "FLASH",
+      "official_bytes": 65536,
+      "linker_bytes": 65536,
+      "occupied_bytes": 21900
+    },
+    {
+      "name": "RAM",
+      "official_bytes": 20480,
+      "linker_bytes": 20480,
+      "occupied_bytes": 14128
+    }
+  ],
+  "text_bytes": 21884,
+  "data_bytes": 12,
+  "bss_bytes": 14112,
+  "stack_files": 37,
+  "largest_function_stack_bytes": 296,
+  "errors": []
+}

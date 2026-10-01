@@ -1,0 +1,80 @@
+...........FF...............                                             [100%]
+================================== FAILURES ===================================
+________ test_firmware_identity_contract[0.1.0-SilverStar_0_1_0-True] _________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_identity_v3/test_firmware_identity_contrac0')
+version = '0.1.0', target = 'SilverStar_0_1_0', success = True
+
+    @pytest.mark.parametrize("version,target,success", [
+        ("0.1.0", "SilverStar_0_1_0", True),
+        ("0.1.1", "SilverStar_0_1_1", True),
+        ("0.1.1", "SilverStar_0_1_0", False),
+        ("0.1.0", "SilverStar_0_1_1", False),
+        ("../escape", "SilverStar_0_1_1", False),
+        (None, "SilverStar_0_1_1", False),
+    ])
+    def test_firmware_identity_contract(tmp_path, version, target, success):
+        powershell = shutil.which("powershell")
+        if powershell is None:
+            pytest.skip("PowerShell unavailable")
+        helper = Path(__file__).resolve().parents[1] / "plugins/builtin/silverstar_core_0_1_0/payload/Tools/read_firmware_identity.ps1"
+        shutil.copy2(helper, tmp_path / "identity.ps1")
+        (tmp_path / "SilverStar.ssproject").write_text(json.dumps({"project": {
+            "firmware_version": version, "build_target": target}}), encoding="utf-8")
+        script = tmp_path / "check.ps1"
+        script.write_text("$ErrorActionPreference='Stop'\n. (Join-Path $PSScriptRoot 'identity.ps1')\n"
+                          "(FirmwareIdentity_Read -ProjectRoot $PSScriptRoot).build_target\n", encoding="utf-8")
+        result = subprocess.run([powershell, "-NoProfile", "-File", str(script)],
+                                capture_output=True, text=True, timeout=15)
+>       assert (result.returncode == 0) == success, result.stdout + result.stderr
+E       AssertionError: 无法加载文件 D:\python_software\SilverStar\.work\post_field_memory_identity_v3\test_firmware_identity_contrac0\check.ps
+E         1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_P
+E         olicies。
+E             + CategoryInfo          : SecurityError: (:) []，ParentContainsErrorRecordException
+E             + FullyQualifiedErrorId : UnauthorizedAccess
+E         
+E       assert (1 == 0) == True
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-File', 'D:\\p...       : SecurityError: (:) []，ParentContainsErrorRecordException\n    + FullyQualifiedErrorId : UnauthorizedAccess\n').returncode
+
+apps\FCCG\tests\test_firmware_identity_gate.py:31: AssertionError
+________ test_firmware_identity_contract[0.1.1-SilverStar_0_1_1-True] _________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/post_field_memory_identity_v3/test_firmware_identity_contrac1')
+version = '0.1.1', target = 'SilverStar_0_1_1', success = True
+
+    @pytest.mark.parametrize("version,target,success", [
+        ("0.1.0", "SilverStar_0_1_0", True),
+        ("0.1.1", "SilverStar_0_1_1", True),
+        ("0.1.1", "SilverStar_0_1_0", False),
+        ("0.1.0", "SilverStar_0_1_1", False),
+        ("../escape", "SilverStar_0_1_1", False),
+        (None, "SilverStar_0_1_1", False),
+    ])
+    def test_firmware_identity_contract(tmp_path, version, target, success):
+        powershell = shutil.which("powershell")
+        if powershell is None:
+            pytest.skip("PowerShell unavailable")
+        helper = Path(__file__).resolve().parents[1] / "plugins/builtin/silverstar_core_0_1_0/payload/Tools/read_firmware_identity.ps1"
+        shutil.copy2(helper, tmp_path / "identity.ps1")
+        (tmp_path / "SilverStar.ssproject").write_text(json.dumps({"project": {
+            "firmware_version": version, "build_target": target}}), encoding="utf-8")
+        script = tmp_path / "check.ps1"
+        script.write_text("$ErrorActionPreference='Stop'\n. (Join-Path $PSScriptRoot 'identity.ps1')\n"
+                          "(FirmwareIdentity_Read -ProjectRoot $PSScriptRoot).build_target\n", encoding="utf-8")
+        result = subprocess.run([powershell, "-NoProfile", "-File", str(script)],
+                                capture_output=True, text=True, timeout=15)
+>       assert (result.returncode == 0) == success, result.stdout + result.stderr
+E       AssertionError: 无法加载文件 D:\python_software\SilverStar\.work\post_field_memory_identity_v3\test_firmware_identity_contrac1\check.ps
+E         1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_P
+E         olicies。
+E             + CategoryInfo          : SecurityError: (:) []，ParentContainsErrorRecordException
+E             + FullyQualifiedErrorId : UnauthorizedAccess
+E         
+E       assert (1 == 0) == True
+E        +  where 1 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-File', 'D:\\p...       : SecurityError: (:) []，ParentContainsErrorRecordException\n    + FullyQualifiedErrorId : UnauthorizedAccess\n').returncode
+
+apps\FCCG\tests\test_firmware_identity_gate.py:31: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_firmware_identity_gate.py::test_firmware_identity_contract[0.1.0-SilverStar_0_1_0-True]
+FAILED apps\FCCG\tests\test_firmware_identity_gate.py::test_firmware_identity_contract[0.1.1-SilverStar_0_1_1-True]
+2 failed, 26 passed in 150.97s (0:02:30)

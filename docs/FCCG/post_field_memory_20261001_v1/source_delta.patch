@@ -1,0 +1,288 @@
+diff --git a/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c b/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
+index a857d39..886d891 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
++++ b/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
+@@ -49,7 +49,7 @@ static NavigationEskfState s_state; /* CPU main SRAM, never DMA. */
+ static PLATFORM_CPU_FAST_BSS NavigationEskfWorkspace s_work;
+ static PLATFORM_CPU_FAST_BSS NavigationEskfReplay s_history;
+ static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
+-static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_window;
++static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;
+ static GeoLocalFrame s_frame;
+ static float s_baro_origin;
+ static uint32_t s_gnss_sequence;
+@@ -92,7 +92,7 @@ void SystemNavigationBackend_Reset(void)
+     s_state.initialized = 0U; s_operation = 0U; s_snapshot_id = 0U;
+     s_native_week_us = 0U; s_native_tow_ms = 0U; s_log_failures = 0U;
+     s_imu_quality_flags = 0U;
+-    (void)NavigationWindow_Reset(&s_window);
++    (void)NavigationWindow_Reset(&s_eskf_window);
+ }
+ 
+ SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
+@@ -252,8 +252,8 @@ static float Backend_ConsistencyGet(const SystemGnssSample *sample, const float
+     memcpy(window_sample.velocity_en, sample->velocity_enu_mps, sizeof(window_sample.velocity_en));
+     window_sample.position_valid = (uint8_t)((sample->valid_group_mask & 1U) != 0U);
+     window_sample.velocity_valid = (uint8_t)((sample->valid_group_mask & 4U) != 0U);
+-    (void)NavigationWindow_Receive(&s_window, &s_window_config, &window_sample);
+-    return NavigationWindow_VarianceScale(&s_window, &s_window_config, window_sample.epoch_us);
++    (void)NavigationWindow_Receive(&s_eskf_window, &s_window_config, &window_sample);
++    return NavigationWindow_VarianceScale(&s_eskf_window, &s_window_config, window_sample.epoch_us);
+ }
+ 
+ static void Backend_AngularRateGet(uint64_t epoch_us, float rate[3])
+@@ -438,18 +438,18 @@ static void Backend_NavigationQualityLog(const SystemGnssSample *sample, uint64_
+     record.quality_degraded_mask = sample->quality_degraded_group_mask;
+     record.numsv = sample->satellite_count;
+     record.numsv_valid = (uint8_t)((sample->valid_fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U);
+-    record.window_start_us = s_window.completed_start_us; record.window_end_us = s_window.completed_us;
+-    record.covered_us = s_window.completed_covered_us; record.window_index = s_window.completed_window_index;
+-    record.position_epoch_count = s_window.completed_position_epochs;
+-    record.velocity_epoch_count = s_window.completed_velocity_epochs;
+-    record.evidence_age_us = (record.native_epoch_us >= s_window.completed_us) ?
+-        record.native_epoch_us - s_window.completed_us : UINT64_MAX;
+-    record.evidence_valid = (uint8_t)(s_window.evidence_valid && (record.native_epoch_us != 0U) &&
++    record.window_start_us = s_eskf_window.completed_start_us; record.window_end_us = s_eskf_window.completed_us;
++    record.covered_us = s_eskf_window.completed_covered_us; record.window_index = s_eskf_window.completed_window_index;
++    record.position_epoch_count = s_eskf_window.completed_position_epochs;
++    record.velocity_epoch_count = s_eskf_window.completed_velocity_epochs;
++    record.evidence_age_us = (record.native_epoch_us >= s_eskf_window.completed_us) ?
++        record.native_epoch_us - s_eskf_window.completed_us : UINT64_MAX;
++    record.evidence_valid = (uint8_t)(s_eskf_window.evidence_valid && (record.native_epoch_us != 0U) &&
+         (record.evidence_age_us <= 6000000ULL));
+-    record.window_reason = record.evidence_valid ? 1U : (s_window.evidence_valid ? 4U : 0U);
+-    record.variance_scale = record.evidence_valid ? s_window.variance_scale : 1.0f;
+-    memcpy(record.closure_en_m, s_window.closure_en, sizeof(record.closure_en_m));
+-    record.closure_norm_m = s_window.closure_norm_m;
++    record.window_reason = record.evidence_valid ? 1U : (s_eskf_window.evidence_valid ? 4U : 0U);
++    record.variance_scale = record.evidence_valid ? s_eskf_window.variance_scale : 1.0f;
++    memcpy(record.closure_en_m, s_eskf_window.closure_en, sizeof(record.closure_en_m));
++    record.closure_norm_m = s_eskf_window.closure_norm_m;
+     for (group = 0U; group < 4U; group++)
+     {
+         if ((SystemNavigationHealth_GroupGet(group, evaluation_us, &health) == SYSTEM_DEVICE_OK) &&
+@@ -484,7 +484,7 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
+     if (source != s_gnss_source)
+     {
+         s_gnss_source = source; s_native_week_us = 0U; s_native_tow_ms = 0U;
+-        (void)NavigationWindow_Reset(&s_window);
++        (void)NavigationWindow_Reset(&s_eskf_window);
+     }
+     s_gnss_seen = 1U; s_gnss_sequence = sample.sequence;
+     if (SystemGnssQuality_Evaluate(&sample, s_state.timestamp_us) != SYSTEM_DEVICE_OK)
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+index 25927bc..878684f 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+@@ -1,7 +1,9 @@
+ param(
+     [ValidateSet('Debug', 'Release')]
+     [string]$Config = 'Debug',
+-    [string]$TargetProfile = 'SilverStar_F407'
++    [string]$TargetProfile = 'SilverStar_F407',
++    [ValidateSet('legacy', 'eskf_window_sram')]
++    [string]$MemoryLayout = 'legacy'
+ )
+ 
+ $ErrorActionPreference = 'Stop'
+@@ -10,6 +12,9 @@ $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+ $targetName = 'SilverStar_0_1_0'
+ $buildRoot = Join-Path $repoRoot (Join-Path 'build\FCCG' `
+     (Join-Path $TargetProfile $Config))
++if ($MemoryLayout -ne 'legacy') {
++    $buildRoot = Join-Path $buildRoot $MemoryLayout
++}
+ $elfPath = Join-Path $buildRoot ($targetName + '.elf')
+ $mapPath = Join-Path $buildRoot ($targetName + '.map')
+ $linkerPath = Join-Path $repoRoot 'STM32F407XX_FLASH.ld'
+@@ -133,6 +138,15 @@ if (($null -ne $nmCommand) -and
+                 }
+             }
+         }
++        elseif ($line.ToString() -match
++            '^\s*(?<address>[0-9A-Fa-f]+)\s+(?<type>\S)\s+(?<name>\S+)\s*$') {
++            $symbols[$Matches['name']] = [pscustomobject]@{
++                Address = ConvertFrom-HexValue -Value $Matches['address']
++                Size = [uint64]0
++                Type = $Matches['type']
++                Name = $Matches['name']
++            }
++        }
+     }
+     $forbiddenSymbols = @($symbols.Keys | Where-Object {
+         $_ -match ('(?i)(?:^|_)(?:malloc|calloc|realloc|free|sbrk)(?:$|_)|' +
+@@ -170,6 +184,52 @@ $mainSramStart = [uint64]0x20000000
+ $mainSramLength = [uint64](128 * 1024)
+ $flashLength = [uint64](512 * 1024)
+ 
++# The whitelist has one private CPU-only scratch object. Inspect the actual
++# linked address and the startup-cleared bounds, not just requested flags.
++$windowName = 's_eskf_window'
++$backendPath = Join-Path $repoRoot 'Algorithm\Estimator\ESKF15\Src\navigation_eskf_backend.c'
++$sourcesPath = Join-Path $repoRoot 'Generated\project_sources.mk'
++$eskfSelected = (Test-Path -LiteralPath $sourcesPath -PathType Leaf) -and
++    ((Get-Content -Raw -LiteralPath $sourcesPath) -match
++        'Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend\.c')
++$placementAware = (Test-Path -LiteralPath $backendPath -PathType Leaf) -and
++    ((Get-Content -Raw -LiteralPath $backendPath) -match 'PLATFORM_ESKF_WINDOW_BSS')
++if ($MemoryLayout -ne 'legacy') {
++    Assert-ArtifactCondition -Condition (($TargetProfile -eq 'SilverStar_F407') -and $eskfSelected) `
++        -Message 'Experimental placement requires SilverStar_F407 and the selected ESKF15 backend.'
++    Assert-ArtifactCondition -Condition $placementAware `
++        -Message 'Preserved ESKF payload does not support experimental placement; use a fresh validation project.'
++}
++if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
++    $startName = '_sccmram_bss'
++    $endName = '_eccmram_bss'
++    $memoryStart = $ccmStart
++    $memoryLength = $ccmLength
++    $memoryName = 'CCMRAM'
++    if ($MemoryLayout -eq 'eskf_window_sram') {
++        $startName = '_sbss'; $endName = '_ebss'
++        $memoryStart = $mainSramStart; $memoryLength = $mainSramLength
++        $memoryName = 'main SRAM'
++    }
++    Assert-SymbolRange -Symbols $symbols -Name $windowName -Start $memoryStart `
++        -Length $memoryLength -MemoryName $memoryName
++    Assert-ArtifactCondition -Condition ($symbols.ContainsKey($startName) -and $symbols.ContainsKey($endName)) `
++        -Message 'Window startup clear bounds are missing.'
++    if ($symbols.ContainsKey($windowName) -and $symbols.ContainsKey($startName) -and $symbols.ContainsKey($endName)) {
++        $window = $symbols[$windowName]
++        Assert-ArtifactCondition `
++            -Condition (($window.Size -gt 0) -and (($window.Address % 8) -eq 0) -and
++                ($window.Address -ge $symbols[$startName].Address) -and
++                (($window.Address + $window.Size) -le $symbols[$endName].Address)) `
++            -Message 'Window must be nonempty, 8-byte aligned, and fully inside startup-cleared BSS.'
++        Write-Output ('  placement layout={0} object={1} address=0x{2:X8} bytes={3} region={4} zero={5}/{6}' -f `
++            $MemoryLayout, $windowName, $window.Address, $window.Size, $memoryName, $startName, $endName)
++    }
++}
++elseif ($eskfSelected) {
++    Write-Output '  placement layout=legacy preserved_payload=unsupported experimental_audit=NOT_PROVEN'
++}
++
+ Assert-ArtifactCondition -Condition $sections.ContainsKey('.ccmram_bss') `
+     -Message 'ELF section .ccmram_bss is missing.'
+ if ($sections.ContainsKey('.ccmram_bss')) {
+diff --git a/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h b/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h
+index 617f443..f9e4a41 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h
++++ b/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h
+@@ -1,6 +1,14 @@
+ #ifndef __PLATFORM_MEMORY_TARGET_H
+ #define __PLATFORM_MEMORY_TARGET_H
+ 
++#ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
++#define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
++#endif
++#if ((SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0) && \
++     (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 1))
++#error "Invalid ESKF consistency window memory layout"
++#endif
++
+ #if defined(__GNUC__) || defined(__clang__)
+ #define PLATFORM_CPU_FAST_DATA \
+     __attribute__((section(".ccmram_data"), aligned(8)))
+@@ -14,4 +22,17 @@
+ #define PLATFORM_DMA_ACCESSIBLE
+ #endif
+ 
++/* .bss.* remains inside _sbss/_ebss and uses the unchanged startup clear.
++ * SRAM is a deliberate CCM relief tradeoff, not a timing qualification. */
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WINDOW_BSS \
++    __attribute__((section(".bss.silverstar_eskf_window"), aligned(8)))
++#else
++#error "ESKF consistency window SRAM placement requires a supported compiler"
++#endif
++#else
++#define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
++
+ #endif /* __PLATFORM_MEMORY_TARGET_H */
+diff --git a/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h b/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h
+index 5581e64..552ee02 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h
++++ b/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h
+@@ -12,6 +12,18 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* One audited CPU-only object; the target owns its section and alignment.
++ * An old target header cannot silently accept the experimental layout. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
++#define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
++#endif
++#ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
++#error "The selected target does not support ESKF consistency window SRAM placement"
++#endif
++#define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
++
+ #ifndef PLATFORM_DMA_ACCESSIBLE
+ #define PLATFORM_DMA_ACCESSIBLE
+ #endif
+diff --git a/apps/FCCG/src/silverstar_fccg/generator/render.py b/apps/FCCG/src/silverstar_fccg/generator/render.py
+index 3c1144e..875159c 100644
+--- a/apps/FCCG/src/silverstar_fccg/generator/render.py
++++ b/apps/FCCG/src/silverstar_fccg/generator/render.py
+@@ -2839,6 +2839,13 @@ def _Makefile_Render(model: ProjectModel) -> str:
+ 
+ TARGET_PROFILE ?= {model.build.target_profile}
+ CONFIG ?= Release
++MEMORY_LAYOUT ?= legacy
++
++ifneq ($(MEMORY_LAYOUT),legacy)
++ifneq ($(MEMORY_LAYOUT),eskf_window_sram)
++$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy or eskf_window_sram)
++endif
++endif
+ 
+ SUPPORTED_TARGETS := {model.build.target_profile}
+ SUPPORTED_CONFIGS := Debug Release
+@@ -2856,6 +2863,9 @@ ANALYZE ?= 0
+ ifeq ($(ANALYZE),1)
+ BUILD_ROOT := build/FCCG/$(TARGET_PROFILE)/StaticAnalysis/$(CONFIG)
+ endif
++ifneq ($(MEMORY_LAYOUT),legacy)
++BUILD_ROOT := $(BUILD_ROOT)/$(MEMORY_LAYOUT)
++endif
+ LISTING ?= 0
+ 
+ C_SOURCES :=
+@@ -2868,6 +2878,16 @@ BUILD_MANIFESTS := Makefile
+ include Targets/$(TARGET_PROFILE)/target.mk
+ include Generated/project_sources.mk
+ 
++ifeq ($(MEMORY_LAYOUT),eskf_window_sram)
++ifneq ($(TARGET_PROFILE),SilverStar_F407)
++$(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
++endif
++ifeq ($(filter Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c,$(C_SOURCES)),)
++$(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
++endif
++C_DEFS += SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1
++endif
++
+ FIRST_PARTY_C_SOURCES := $(filter APP/% Algorithm/% Board/% Common/% Devices/% FlightLogic/% Generated/% Interfaces/% Modules/% OS/FreeRTOS/% Platform/% Protocol/% System/% Targets/%,$(C_SOURCES))
+ THIRD_PARTY_C_SOURCES := $(filter ThirdParty/% Middlewares/Third_Party/%,$(C_SOURCES))
+ VENDOR_C_SOURCES := $(filter Core/% Drivers/% FATFS/% HardwareGenerated/%,$(C_SOURCES))
+@@ -3011,6 +3031,7 @@ list-sources:
+ \t@$(foreach source,$(C_SOURCES),echo $(source) & ) echo Assembly: $(ASM_SOURCES)
+ 
+ list-build-config:
++\t@echo MEMORY_LAYOUT:$(MEMORY_LAYOUT)
+ \t@$(foreach include,$(C_INCLUDES),echo INCLUDE:$(include) & ) echo CONFIG-INCLUDES-END
+ \t@$(foreach define,$(C_DEFS),echo DEFINE:$(define) & ) echo CONFIG-DEFINES-END
+ 
+@@ -3031,7 +3052,7 @@ static-analysis:
+ \t$(MAKE) TARGET_PROFILE=$(TARGET_PROFILE) CONFIG=$(CONFIG) ANALYZE=1 all
+ 
+ artifact-check: all
+-\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile $(TARGET_PROFILE) -Config $(CONFIG)
++\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile $(TARGET_PROFILE) -Config $(CONFIG) -MemoryLayout $(MEMORY_LAYOUT)
+ 
+ memory-report: artifact-check
+ 

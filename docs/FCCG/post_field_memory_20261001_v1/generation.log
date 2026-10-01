@@ -1,0 +1,9 @@
+{"project": "D:\\python_software\\SilverStar\\.work\\PostFieldMemory_d410f4a_20261001_v1\\kf6", "targets": ["Flight_Controller", "Ground_Station"], "files": 156}
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\FCCG\post_field_memory_20261001_v1\generate_validation.py", line 26, in <module>
+    result = TargetGeneration_Apply(model, service.catalog, service.policy, project,
+                                   TargetScope.ALL if name == "kf6" else TargetScope.FLIGHT,
+                                   confirm_dangerous=True)
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\generator\multi_target.py", line 572, in TargetGeneration_Apply
+    raise ValueError("Flight generation plan is invalid or needs user review")
+ValueError: Flight generation plan is invalid or needs user review
