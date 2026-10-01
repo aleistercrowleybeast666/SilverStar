@@ -612,6 +612,12 @@ SystemLifecycleStartResult SystemLifecycle_StartReadinessGet(
 const SystemStartupReport *SystemStartup_GetReport(void)
 { return &s_startup_report; }
 
+uint8_t SystemCalibration_IsReady(void)
+{
+    return (uint8_t)((s_calibration_status_result == SYSTEM_DEVICE_OK) &&
+                     (s_calibration_status.ready != 0U));
+}
+
 SystemDeviceResult SystemCalibration_StatusGet(SystemCalibrationStatus *status)
 {
     if (status == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
@@ -938,6 +944,7 @@ static void Test_CapabilityHandshake(void)
     const TestFrame *capability;
     uint8_t first_sequence;
     uint8_t latest_sequence;
+    uint8_t process_index;
 
     Test_Reset();
     first_sequence = Test_InitialCapabilitySend();
@@ -964,19 +971,24 @@ static void Test_CapabilityHandshake(void)
                AIR_ACK_RESULT_BAD_PARAM);
     Test_CapabilityAck(12U, latest_sequence);
     s_now_us += 2ULL * SYSTEM_TELEMETRY_CAPABILITY_PERIOD_US;
-    TelemetryService_Process();
-    TEST_CHECK(Test_TypeCount(AIR_TYPE_CAPABILITY) == 2U);
+    for (process_index = 0U; process_index < 4U; process_index++)
+    {
+        TelemetryService_Process();
+        if (Test_TypeCount(AIR_TYPE_CAPABILITY) == 3U) { break; }
+    }
+    TEST_CHECK(Test_TypeCount(AIR_TYPE_CAPABILITY) == 3U);
+    latest_sequence = Test_LastTypeGet(AIR_TYPE_CAPABILITY)->data[1];
 
     Test_CommandQueue(13U, AIR_CMD_CAPABILITY_ACK, 0U,
                       latest_sequence, AIR_PROFILE_COMPACT_V0);
     TelemetryService_Process();
     TEST_CHECK(Test_LastTypeGet(AIR_TYPE_ACK)->data[4] ==
-               AIR_ACK_RESULT_BAD_STATE);
+               AIR_ACK_RESULT_OK);
 
     TelemetryService_DiagnosticsGet(&diagnostics);
     TEST_CHECK(diagnostics.capability_state == TELEMETRY_CAPABILITY_ACKED);
     TEST_CHECK(diagnostics.capability_acked == 1U);
-    TEST_CHECK(diagnostics.capability_tx_count == 2U);
+    TEST_CHECK(diagnostics.capability_tx_count == 3U);
 }
 
 static void Test_DynamicCapabilityMask(void)
@@ -1503,7 +1515,13 @@ static void Test_PreflightCommandsAndEvents(void)
     Test_CommandQueue(42U, AIR_CMD_ALIGN_START, AIR_TOKEN_ALIGNMENT, 0U, 0U);
     TelemetryService_Process();
     TEST_CHECK(Test_LastTypeGet(AIR_TYPE_ACK)->data[4] ==
+               AIR_ACK_RESULT_SYSTEM_NOT_READY);
+    s_calibration_status.ready = 0U;
+    Test_CommandQueue(43U, AIR_CMD_ALIGN_START, AIR_TOKEN_ALIGNMENT, 0U, 0U);
+    TelemetryService_Process();
+    TEST_CHECK(Test_LastTypeGet(AIR_TYPE_ACK)->data[4] ==
                AIR_ACK_RESULT_CALIBRATION_REQUIRED);
+    s_calibration_status.ready = 1U;
 
     s_alignment_status.state = SYSTEM_ALIGNMENT_STATE_READY;
     s_alignment_status.ready = 1U;

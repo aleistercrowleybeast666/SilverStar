@@ -1047,3 +1047,11 @@ global指标同为10秒独立TTL；GNSS精度/卫星数据在生产端样本超�
 不用旧 alignment sensor snapshot 冒充实时状态。端到端硬件无线链路未验证：
 GSP-MIN文档与Python解析器透明转发，但本仓库没有地面接收板固件，必须实机验证新type
 不会被网关白名单丢弃。旧Golden帧逐字节保持。
+
+## Preflight reconnect recovery (2026-10-01)
+
+CAPABILITY remains a 9-byte AIR M0 frame. Before START, it continues at the existing 1 Hz period after acknowledgment so a PC reconnect can discover the actual profile and full scales. A CAPABILITY_ACK for the latest successfully sent Capability sequence and current profile is idempotent while preflight; an old sequence or wrong profile is rejected. ACK, sensor snapshot transactions and critical STATUS retain priority; after handshake, PREFLIGHT_STATUS precedes periodic CAPABILITY. START still stops preflight Capability transmission.
+
+GSHC cannot complete a local handshake from an acknowledged snapshot without a validated Capability and a pending acknowledgment transaction. BOOT or two advancing boot-relative PREFLIGHT_STATE timestamps below the previous timestamp starts a fresh local FC session, cancels pending commands and requires negotiation again. A first timestamp rollback temporarily blocks commands and cancels pending command retries; one delayed sample followed by current time restores the existing session. Mission-relative FLIGHT_STATE timestamps are excluded from this boot-time detector. No mission, unlock or alignment command is automatically replayed. Duplicate same-session Capability remains diagnostic only.
+
+AIR M0 has no FC boot nonce; identical delayed packets after 8-bit sequence reuse cannot be conclusively distinguished by the wire format alone. The rollback detector is a conservative recovery heuristic, not a proof of session identity. Hardware recovery and timeout diagnosis remain separate acceptance evidence.

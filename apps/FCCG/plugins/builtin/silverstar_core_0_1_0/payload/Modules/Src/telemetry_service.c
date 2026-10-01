@@ -537,19 +537,19 @@ static void TelemetryService_CapabilityCommand(
 {
     SILVERSTAR_ASSERT_OBJECT(command, AirCmdPayload,
         SILVERSTAR_ASSERT_MODULE_MODULES);
-    if ((s_capability_state != TELEMETRY_CAPABILITY_NOT_ACKED) ||
+    if ((TelemetryService_IsPreflightState() == 0U) ||
         (s_capability_sent == 0U) ||
         (command->param0 != s_capability_sequence) ||
         (command->param1 != AIR_PROFILE_ID_CURRENT))
     {
         (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
-            (s_capability_state == TELEMETRY_CAPABILITY_NOT_ACKED) ?
+            (TelemetryService_IsPreflightState() != 0U) ?
                 AIR_ACK_RESULT_BAD_PARAM : AIR_ACK_RESULT_BAD_STATE);
         return;
     }
     s_capability_state = TELEMETRY_CAPABILITY_ACKED;
     s_capability_send_pending = 0U;
-    s_next_capability_us = 0ULL;
+    /* Keep the existing deadline: reconnects still need periodic Capability. */
     s_preflight_status_send_pending = 1U;
     s_next_preflight_status_us = 0ULL;
     (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
@@ -633,7 +633,8 @@ static void TelemetryService_AlignmentCommand(
     }
     ack_result = ((command->cmd_id == AIR_CMD_ALIGN_START) &&
                   (result == SYSTEM_DEVICE_NOT_READY)) ?
-        AIR_ACK_RESULT_CALIBRATION_REQUIRED :
+        ((SystemCalibration_IsReady() == 0U) ?
+            AIR_ACK_RESULT_CALIBRATION_REQUIRED : AIR_ACK_RESULT_SYSTEM_NOT_READY) :
         TelemetryService_DeviceResultMap(result);
     (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
                                     ack_result);
@@ -1294,7 +1295,7 @@ static uint8_t TelemetryService_CapabilitySend(void)
     SILVERSTAR_ASSERT_OBJECT(&s_diagnostics, TelemetryServiceDiagnostics,
         SILVERSTAR_ASSERT_MODULE_MODULES);
     if ((TelemetryService_IsPreflightState() == 0U) ||
-        (s_capability_state != TELEMETRY_CAPABILITY_NOT_ACKED))
+        (s_capability_state == TELEMETRY_CAPABILITY_DISABLED_FOR_FLIGHT))
     {
         return 0U;
     }
@@ -1917,8 +1918,10 @@ void TelemetryService_Process(void)
     if (TelemetryService_SensorSnapshotSend() != 0U) { return; }
     if (TelemetryService_SensorSnapshotTerminalSend() != 0U) { return; }
     if (TelemetryService_StatusSend() != 0U) { return; }
-    if (TelemetryService_CapabilitySend() != 0U) { return; }
+    if ((s_capability_state == TELEMETRY_CAPABILITY_NOT_ACKED) &&
+        (TelemetryService_CapabilitySend() != 0U)) { return; }
     if (TelemetryService_PreflightStatusSend() != 0U) { return; }
+    if (TelemetryService_CapabilitySend() != 0U) { return; }
     if (TelemetryService_PreflightStateSend() != 0U) { return; }
     if (TelemetryService_NavigationSend() != 0U) { return; }
     TelemetryService_StreamSend();
