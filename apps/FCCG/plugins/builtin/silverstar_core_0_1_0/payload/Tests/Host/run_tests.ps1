@@ -47,6 +47,7 @@ $includeArgs = @(
     "-I$repoRoot\Algorithm\Alignment\ExternalAttitude\Inc",
     "-I$repoRoot\Algorithm\INS\Coning2Sculling2\Inc",
     "-I$repoRoot\Algorithm\Estimator\KF6\Inc",
+    "-I$repoRoot\Algorithm\Estimator\SF6\Inc",
     "-I$repoRoot\Common\Inc",
     "-I$repoRoot\Modules\Inc",
     "-I$repoRoot\Protocol\Inc",
@@ -746,6 +747,11 @@ Invoke-ExpectedCompileFailure -Name 'capability_delay_without_time' `
         '-DSYSTEM_BUILD_MISSION_MONOTONIC_TIME_AVAILABLE=0U'
     ) -Source $capabilitySource
 
+Invoke-HostTest -Name 'navigation_sf6' -Sources @(
+    "$repoRoot\Tests\Host\test_navigation_sf6.c",
+    "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6.c"
+)
+
 Invoke-HostTest -Name 'navigation_kf_replay' -Sources @(
     "$repoRoot\Tests\Host\test_navigation_kf_replay.c",
     "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf.c",
@@ -1072,6 +1078,12 @@ elseif ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_replay.c",
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_backend.c",
         "$repoRoot\System\Calibration\Src\system_calibration.c"
+    )
+}
+elseif ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
+    $preparationSources += @(
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6.c",
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6_backend.c"
     )
 }
 Invoke-HostTest -Name 'estimator_preparation_actual' -ExtraCompilerArgs $preparationArgs `

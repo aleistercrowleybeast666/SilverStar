@@ -102,7 +102,7 @@ class NavigationPanel(QGroupBox):
         navigation = state.navigation
         check = navigation.Navigation_StartCheck()
         self.setTitle(tr("navigation.preparation" if self.preflight else "navigation.health"))
-        algorithm = {0: "Pure INS", 1: "KF_6", 2: "ESKF_15"}.get(navigation.algorithm_id, tr("common.unknown"))
+        algorithm = {0: "Pure INS", 1: "KF_6", 2: "ESKF_15", 3: "SF6"}.get(navigation.algorithm_id, tr("common.unknown"))
         self.summary.setText(tr("navigation.summary", algorithm=algorithm, state=tr(f"navigation.{check.value}"),
                                 session=navigation.session if navigation.session is not None else "—",
                                 generation=navigation.generation if navigation.generation is not None else "—"))

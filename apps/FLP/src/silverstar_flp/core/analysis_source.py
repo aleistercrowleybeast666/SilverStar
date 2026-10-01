@@ -271,7 +271,7 @@ class ChannelResolver:
         return int(series.timestamp_us[valid_indices[-1]])
 
     def _RecordedPositionSolution_Get(self) -> str | None:
-        for solution in ("eskf15", "kf6", "pure_ins"):
+        for solution in ("sf6", "eskf15", "kf6", "pure_ins"):
             if self.RecordedSeries_Get(
                 "navigation.position_enu",
                 solution=solution,
@@ -368,7 +368,7 @@ class ChannelResolver:
         return self._trajectory_bounds_calculation_count.get(key, 0)
 
     def _TrajectoryBounds_Prime(self) -> None:
-        for solution in ("pure_ins", "kf6", "eskf15"):
+        for solution in ("pure_ins", "kf6", "eskf15", "sf6"):
             self.TrajectoryBounds_Get(
                 ReplayResultStore.RECORDED_SOURCE_ID,
                 solution=solution,
@@ -413,8 +413,10 @@ class ChannelResolver:
                 "pure_ins": ("pure_ins.recorded.navigation",),
                 "kf6": ("kf6.recorded.navigation",),
                 "eskf15": ("eskf15.recorded.navigation",),
-                "final": ("eskf15.recorded.navigation", "kf6.recorded.navigation"),
+                "sf6": ("sf6.recorded.navigation",),
+                "final": ("sf6.recorded.navigation", "eskf15.recorded.navigation", "kf6.recorded.navigation"),
                 None: (
+                    "sf6.recorded.navigation",
                     "eskf15.recorded.navigation",
                     "kf6.recorded.navigation",
                     "pure_ins.recorded.navigation",
@@ -472,6 +474,7 @@ class ChannelResolver:
             ("pure_ins", "silverstar.algorithm.pure_ins"),
             ("kf6", "silverstar.algorithm.kf6"),
             ("eskf15", "silverstar.algorithm.estimator.eskf15"),
+            ("sf6", "silverstar.algorithm.estimator.sf6"),
         ):
             series = self.RecordedSeries_Get(channel_id, solution=solution_id)
             if series is not None:
@@ -499,9 +502,13 @@ class ChannelResolver:
             "navigation.position_enu", solution="eskf15"
         ) is not None:
             sources.append("ESKF_15")
+        if self.RecordedSeries_Get("navigation.position_enu", solution="sf6") is not None:
+            sources.append("SF6")
         return tuple(sources)
 
     def RecordedNavigationSource_Get(self) -> str:
+        if self.RecordedSeries_Get("navigation.position_enu", solution="sf6") is not None:
+            return "SF6"
         if self.RecordedSeries_Get("navigation.position_enu", solution="eskf15") is not None:
             return "ESKF_15"
         if any(

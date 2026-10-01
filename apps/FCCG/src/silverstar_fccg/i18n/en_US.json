@@ -904,5 +904,6 @@
   "release.migrate_destination": "Select a new empty folder for the release copy",
   "release.migrated": "Release copy saved to {path}. Compatibility contains original bytes, all loaded settings and the migration receipt. Original logs/decoder are untouched. Review the known direction on this page, then generate new firmware and its matching decoder.",
   "board.ground_selection_pending": "Configure ground-station communication first; select a ground-station board or import custom STM32 hardware before saving or building.",
-  "status.ground_disabled": "Ground target disabled; enable it to generate Ground."
+  "status.ground_disabled": "Ground target disabled; enable it to generate Ground.",
+  "strategy.estimator.sf6": "SF6 Algorithm"
 }

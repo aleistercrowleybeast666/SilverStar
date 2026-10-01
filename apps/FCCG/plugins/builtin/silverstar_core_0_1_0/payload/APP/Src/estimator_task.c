@@ -415,6 +415,14 @@ static uint8_t Estimator_GnssOriginWindowReady(uint64_t now_us)
         (now_us - latest->receive_timestamp_us <= ESTIMATOR_GNSS_ORIGIN_MAX_AGE_US));
 }
 
+/* The selected statically linked backend owns prediction and initialization.
+ * Centralize the ownership decision for diagnostics, start, rollback and abort. */
+static uint8_t Estimator_NavigationBackendSelected(void)
+{
+    return (uint8_t)((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) ||
+                     (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6));
+}
+
 static void Estimator_StatusDiagnosticsPublish(
     uint64_t state_timestamp_us,
     uint8_t kf6_selected)
@@ -434,12 +442,15 @@ static void Estimator_StatusDiagnosticsPublish(
     status.position_source = (kf6_selected != 0U) ?
         SYSTEM_ESTIMATOR_POSITION_SOURCE_KF6 :
         SYSTEM_ESTIMATOR_POSITION_SOURCE_PURE_INS;
-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15)
+    if (Estimator_NavigationBackendSelected() != 0U)
     {
     status.imu_prediction_count = s_snapshot.predict_count;
-    status.mode = SYSTEM_ESTIMATOR_MODE_ESKF15;
-    status.attitude_source = SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_ESKF15;
-    status.position_source = SYSTEM_ESTIMATOR_POSITION_SOURCE_ESKF15;
+    status.mode = (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) ?
+        SYSTEM_ESTIMATOR_MODE_SF6 : SYSTEM_ESTIMATOR_MODE_ESKF15;
+    status.attitude_source = (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) ?
+        SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_SOFTWARE_INS : SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_ESKF15;
+    status.position_source = (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) ?
+        SYSTEM_ESTIMATOR_POSITION_SOURCE_SF6 : SYSTEM_ESTIMATOR_POSITION_SOURCE_ESKF15;
     }
     status.initialized = s_estimator.initialized;
     status.started = s_estimator.mission_running;
@@ -3078,7 +3089,7 @@ static NavigationReplayResult Estimator_PredictionApply(
 
 #endif
 
-static void Estimator_EskfPredictionProcess(const SystemInertialIncrement *prediction)
+static void Estimator_BackendPredictionProcess(const SystemInertialIncrement *prediction)
 {
     if (SystemNavigationBackend_Predict(prediction, &s_snapshot) != SYSTEM_DEVICE_OK)
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_KF_NUMERIC_ERROR; }
@@ -3107,8 +3118,8 @@ static void Estimator_PredictionProcess(
     {
         return;
     }
-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15)
-    { Estimator_EskfPredictionProcess(prediction); return; }
+    if (Estimator_NavigationBackendSelected() != 0U)
+    { Estimator_BackendPredictionProcess(prediction); return; }
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U)
     Estimator_PureInsPublish(prediction->timestamp_us);
     Estimator_DiagnosticsPublish(prediction->timestamp_us);
@@ -3520,7 +3531,7 @@ static void Estimator_KfRuntimeInitialize(uint8_t activate)
 
 #endif
 
-static SystemDeviceResult Estimator_EskfInitialize(uint8_t activate)
+static SystemDeviceResult Estimator_BackendInitialize(uint8_t activate)
 {
     SILVERSTAR_ASSERT(activate <= 1U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     SystemDeviceResult backend_result = SystemNavigationBackend_Initialize(
@@ -3567,9 +3578,9 @@ static SystemDeviceResult Estimator_InitializeNavigation(uint8_t activate)
     {
         return SYSTEM_DEVICE_NOT_READY;
     }
-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15)
+    if (Estimator_NavigationBackendSelected() != 0U)
     {
-        return Estimator_EskfInitialize(activate);
+        return Estimator_BackendInitialize(activate);
     }
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U)
     if ((activate == 0U) && (InsTask_PrepareNavigation(s_estimator.q_nb) != SYSTEM_DEVICE_OK))
@@ -3670,7 +3681,7 @@ void EstimatorTask_RollbackMissionStart(void)
     s_estimator.initialized = 0U;
     s_preparation.initialized = 0U;
     s_preparation.generation++;
-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15)
+    if (Estimator_NavigationBackendSelected() != 0U)
     { SystemNavigationBackend_Reset(); }
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     NavigationKf_Reset(&s_estimator.kf);
@@ -3719,7 +3730,7 @@ void EstimatorTask_RollbackMissionStart(void)
 
 void EstimatorTask_AbortMission(void)
 {
-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) { SystemNavigationBackend_Reset(); }
+    if (Estimator_NavigationBackendSelected() != 0U) { SystemNavigationBackend_Reset(); }
     s_preparation.initialized = 0U; s_preparation.generation++;
     s_estimator.mission_running = 0U;
     s_estimator.initialized = 0U;
@@ -3778,6 +3789,10 @@ uint8_t Estimator_GetInitialStateSnapshot(
     (void)memcpy(snapshot->p0_diagonal,
                  s_estimator.actual_p0_diagonal,
                  sizeof(snapshot->p0_diagonal));
+    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
+    {
+        for (uint8_t axis = 0U; axis < 6U; axis++) { snapshot->p0_diagonal[axis] = NAN; }
+    }
     snapshot->gnss_sample_count = s_estimator.gnss_origin_sample_count;
     snapshot->barometer_sample_count = s_estimator.baro_origin_sample_count;
     snapshot->gnss_origin_valid = s_estimator.gnss_origin_valid;

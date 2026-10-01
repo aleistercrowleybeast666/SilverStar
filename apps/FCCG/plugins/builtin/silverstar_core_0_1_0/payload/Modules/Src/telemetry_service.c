@@ -1748,6 +1748,7 @@ static uint16_t TelemetryService_NavigationMetricGet(uint8_t group,
         age = (now_us - health.last_successful_fusion_us) / 100000ULL;
         return (age >= UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)age;
     }
+    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) { return UINT16_MAX; }
     value = (metric == 2U) ? health.variance_scale : health.nis;
     if ((isfinite(value) == 0) || (value < 0.0f)) { return UINT16_MAX; }
     value *= 256.0f;

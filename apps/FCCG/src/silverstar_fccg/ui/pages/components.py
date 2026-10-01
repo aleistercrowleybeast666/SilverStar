@@ -1500,7 +1500,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             ordered = (
                 sorted(candidates, key=lambda item: (
                     0 if item.component_id == "silverstar.algorithm.estimator.kf6" else
-                    1 if item.component_id == "silverstar.algorithm.estimator.eskf15" else 2,
+                    1 if item.component_id == "silverstar.algorithm.estimator.eskf15" else
+                    2 if item.component_id == "silverstar.algorithm.estimator.sf6" else 3,
                     item.ui_order,
                 ))
                 if slot == "estimator" else sorted(candidates, key=lambda item: item.name)
@@ -1514,6 +1515,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                     if candidate.component_id == "silverstar.algorithm.estimator.kf6" else
                     self._translator.Text_Get("strategy.estimator.eskf15")
                     if candidate.component_id == "silverstar.algorithm.estimator.eskf15" else
+                    self._translator.Text_Get("strategy.estimator.sf6")
+                    if candidate.component_id == "silverstar.algorithm.estimator.sf6" else
                     candidate.name
                 )
                 combo.addItem(name, candidate.component_id)

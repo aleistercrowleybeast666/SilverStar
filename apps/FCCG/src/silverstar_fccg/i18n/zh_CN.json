@@ -904,5 +904,6 @@
   "release.migrate_destination": "选择新的空文件夹保存兼容副本",
   "release.migrated": "兼容副本已保存到 {path}。原始文件、全部旧设置与迁移记录位于 Compatibility；原日志/decoder 未更改。请在当前对准页复核已知方向，再生成新的固件与匹配 decoder。",
   "board.ground_selection_pending": "可以先完成地面站通信配置；保存或构建前必须选择地面站板卡或导入自定义 STM32 硬件。",
-  "status.ground_disabled": "地面站 Target 未启用；启用后可生成 Ground。"
+  "status.ground_disabled": "地面站 Target 未启用；启用后可生成 Ground。",
+  "strategy.estimator.sf6": "SF6算法"
 }

@@ -12,6 +12,9 @@
 
 static const SslogRecordMetadata s_sslog_metadata[] =
 {
+    { FLIGHT_LOG_RECORD_SF6_STATE, 1U, FLIGHT_LOG_SF6_STATE_PAYLOAD_SIZE, "SF6_STATE" },
+    { FLIGHT_LOG_RECORD_SF6_MEASUREMENT, 1U, FLIGHT_LOG_SF6_MEASUREMENT_PAYLOAD_SIZE, "SF6_MEASUREMENT" },
+
     { FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY, 1U,
       FLIGHT_LOG_MAG_CALIBRATION_IDENTITY_PAYLOAD_SIZE,
       "MAG_CALIBRATION_IDENTITY" },
@@ -2637,6 +2640,120 @@ static uint16_t SslogRecords_DecoderProfileDescriptorDeserialize(
     return reader.offset;
 }
 
+static uint16_t SslogRecords_Sf6StateSerialize(
+    const FlightLogSf6StateRecord *payload,
+    uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogWriteCursor writer = { buffer, buffer_size, 0U };
+    if (payload == NULL || buffer == NULL) { return 0U; }
+    SILVERSTAR_ASSERT(buffer_size == FLIGHT_LOG_SF6_STATE_PAYLOAD_SIZE,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SslogRecords_WriterU32Put(&writer, payload->snapshot_id);
+    SslogRecords_WriterU8Put(&writer, payload->algorithm_id);
+    SslogRecords_WriterU8Put(&writer, payload->algorithm_revision);
+    SslogRecords_WriterU8Put(&writer, payload->health);
+    SslogRecords_WriterU8Put(&writer, payload->reserved);
+    for (uint16_t index = 0U; index < 3U; index++)
+    {
+        SslogRecords_WriterF32Put(&writer, payload->position_enu_m[index]);
+    }
+    for (uint16_t index = 0U; index < 3U; index++)
+    {
+        SslogRecords_WriterF32Put(&writer, payload->velocity_enu_mps[index]);
+    }
+    for (uint16_t index = 0U; index < 4U; index++)
+    {
+        SslogRecords_WriterF32Put(&writer, payload->q_nb[index]);
+    }
+    for (uint16_t index = 0U; index < 6U; index++)
+    {
+        SslogRecords_WriterF32Put(&writer, payload->gain[index]);
+    }
+    return (writer.offset == buffer_size) ? writer.offset : 0U;
+}
+
+static uint16_t SslogRecords_Sf6StateDeserialize(
+    FlightLogSf6StateRecord *payload,
+    const uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogReadCursor reader = { buffer, buffer_size, 0U };
+    if (payload == NULL || buffer == NULL) { return 0U; }
+    SILVERSTAR_ASSERT(buffer_size == FLIGHT_LOG_SF6_STATE_PAYLOAD_SIZE,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    payload->snapshot_id = SslogRecords_ReaderU32Get(&reader);
+    payload->algorithm_id = SslogRecords_ReaderU8Get(&reader);
+    payload->algorithm_revision = SslogRecords_ReaderU8Get(&reader);
+    payload->health = SslogRecords_ReaderU8Get(&reader);
+    payload->reserved = SslogRecords_ReaderU8Get(&reader);
+    for (uint16_t index = 0U; index < 3U; index++)
+    {
+        payload->position_enu_m[index] = SslogRecords_ReaderF32Get(&reader);
+    }
+    for (uint16_t index = 0U; index < 3U; index++)
+    {
+        payload->velocity_enu_mps[index] = SslogRecords_ReaderF32Get(&reader);
+    }
+    for (uint16_t index = 0U; index < 4U; index++)
+    {
+        payload->q_nb[index] = SslogRecords_ReaderF32Get(&reader);
+    }
+    for (uint16_t index = 0U; index < 6U; index++)
+    {
+        payload->gain[index] = SslogRecords_ReaderF32Get(&reader);
+    }
+    return (reader.offset == buffer_size) ? reader.offset : 0U;
+}
+
+static uint16_t SslogRecords_Sf6MeasurementSerialize(
+    const FlightLogSf6MeasurementRecord *payload,
+    uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogWriteCursor writer = { buffer, buffer_size, 0U };
+    if (payload == NULL || buffer == NULL) { return 0U; }
+    SILVERSTAR_ASSERT(buffer_size == FLIGHT_LOG_SF6_MEASUREMENT_PAYLOAD_SIZE,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SslogRecords_WriterU64Put(&writer, payload->sample_timestamp_us);
+    SslogRecords_WriterU64Put(&writer, payload->receive_timestamp_us);
+    SslogRecords_WriterU64Put(&writer, payload->measurement_timestamp_us);
+    SslogRecords_WriterU64Put(&writer, payload->evaluation_timestamp_us);
+    SslogRecords_WriterU64Put(&writer, payload->boundary_timestamp_us);
+    SslogRecords_WriterU32Put(&writer, payload->sequence);
+    SslogRecords_WriterU8Put(&writer, payload->group);
+    SslogRecords_WriterU8Put(&writer, payload->physically_valid);
+    SslogRecords_WriterU8Put(&writer, payload->result);
+    SslogRecords_WriterU8Put(&writer, payload->effective_update);
+    for (uint16_t index = 0U; index < 2U; index++)
+    {
+        SslogRecords_WriterF32Put(&writer, payload->observation[index]);
+    }
+    return (writer.offset == buffer_size) ? writer.offset : 0U;
+}
+
+static uint16_t SslogRecords_Sf6MeasurementDeserialize(
+    FlightLogSf6MeasurementRecord *payload,
+    const uint8_t *buffer, uint16_t buffer_size)
+{
+    SslogReadCursor reader = { buffer, buffer_size, 0U };
+    if (payload == NULL || buffer == NULL) { return 0U; }
+    SILVERSTAR_ASSERT(buffer_size == FLIGHT_LOG_SF6_MEASUREMENT_PAYLOAD_SIZE,
+        SILVERSTAR_ASSERT_MODULE_PROTOCOL, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    payload->sample_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->receive_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->measurement_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->evaluation_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->boundary_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->sequence = SslogRecords_ReaderU32Get(&reader);
+    payload->group = SslogRecords_ReaderU8Get(&reader);
+    payload->physically_valid = SslogRecords_ReaderU8Get(&reader);
+    payload->result = SslogRecords_ReaderU8Get(&reader);
+    payload->effective_update = SslogRecords_ReaderU8Get(&reader);
+    for (uint16_t index = 0U; index < 2U; index++)
+    {
+        payload->observation[index] = SslogRecords_ReaderF32Get(&reader);
+    }
+    return (reader.offset == buffer_size) ? reader.offset : 0U;
+}
+
 static uint16_t SslogRecords_Eskf15StateSerialize(
     const FlightLogEskf15StateRecord *payload,
     uint8_t *buffer, uint16_t buffer_size)
@@ -3057,6 +3174,10 @@ static uint16_t SslogRecords_PayloadNavigationSerialize(
         SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     switch ((uint32_t)record->record_type)
     {
+        case FLIGHT_LOG_RECORD_SF6_STATE: return SslogRecords_Sf6StateSerialize(
+            &record->payload.sf6_state, buffer, payload_size);
+        case FLIGHT_LOG_RECORD_SF6_MEASUREMENT: return SslogRecords_Sf6MeasurementSerialize(
+            &record->payload.sf6_measurement, buffer, payload_size);
         case FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY: return
             SslogRecords_MagCalibrationIdentitySerialize(
                 &record->payload.mag_calibration_identity,
@@ -3213,6 +3334,10 @@ static uint16_t SslogRecords_PayloadNavigationDeserialize(
         SILVERSTAR_ASSERT_REASON_NULL_POINTER);
     switch ((uint32_t)record->record_type)
     {
+        case FLIGHT_LOG_RECORD_SF6_STATE: return SslogRecords_Sf6StateDeserialize(
+            &record->payload.sf6_state, buffer, payload_size);
+        case FLIGHT_LOG_RECORD_SF6_MEASUREMENT: return SslogRecords_Sf6MeasurementDeserialize(
+            &record->payload.sf6_measurement, buffer, payload_size);
         case FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY: return
             SslogRecords_MagCalibrationIdentityDeserialize(
                 &record->payload.mag_calibration_identity,
