@@ -1,0 +1,320 @@
+def Regions_Parse(script: str) -> dict[str, tuple[int, int]]:
+    declared = AuditModule_Get()._LinkerRegions_Parse(script)
+    regions = {name: region for name, region in declared.items() if name in ("RAM", "CCMRAM")}
+    declarations = re.findall(r"^\s*(RAM|CCMRAM)\s*\([^)]*\)\s*:\s*ORIGIN", script, re.MULTILINE)
+    if len(declarations) != len(regions) or any(size <= 0 for _, size in regions.values()):
+        raise ValueError("Invalid, unreadable or repeated physical memory region")
+    if "RAM" not in regions:
+        raise ValueError("Auto requires a literal RAM MEMORY region; unsupported target syntax")
+    if "CCMRAM" in regions:
+        a, b = regions["RAM"], regions["CCMRAM"]
+        if max(a[0], b[0]) < min(a[0] + a[1], b[0] + b[1]):
+            raise ValueError("Overlapping RAM regions")
+        # Only the reviewed F407 independent physical banks are enabled. A
+        # disjoint CPU address range does not prove independent storage (F413).
+        if a[0] != 0x20000000 or a[1] > 128 * 1024 or b[0] != 0x10000000 or b[1] > 64 * 1024:
+            raise ValueError("Unreviewed CCM physical layout or alias; dual-region auto supports F407 only")
+    names = set(re.findall(r"^\s*(\w+)\s*\([^)]*\)\s*:\s*ORIGIN", script, re.MULTILINE))
+    if names - {"RAM", "CCMRAM", "FLASH"}:
+        raise ValueError("Additional regions/aliases require a reviewed physical-memory model")
+    return regions
+
+
+def SourceOwners_Check(project: Path, groups: dict, linker: Path | None = None) -> None:
+    """A preserved user edit cannot inherit a CPU-only proof from a symbol name."""
+    identity = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))
+    provenance = identity.get("component_provenance", {})
+    # Include the algorithm kernels/helpers and core interfaces called by the
+    # private owners. A user-modified callee could otherwise start using DMA.
+    for component, entry in provenance.items():
+        if (component not in ("silverstar.core.0_1_0", "silverstar.platform.api") and
+                not component.startswith(("silverstar.algorithm.", "silverstar.mcu."))):
+            continue
+        for relative, expected in entry.get("files", {}).items():
+            if Path(relative).suffix.lower() not in (".c", ".h", ".s", ".ld"):
+                continue
+            source = (project / relative).resolve()
+            if not source.is_relative_to(project.resolve()):
+                raise ValueError(f"CPU-only source proof path escapes project: {relative}")
+            if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != expected:
+                raise ValueError(f"CPU-only source proof does not cover preserved/edited helper {relative}; use audited fresh payload or legacy")
+    if linker is not None:
+        # Bind the actual linker argument, not only an unused canonical file.
+        # An alternate no-CCM script must not invent capacity for an F407 model.
+        relative = linker.resolve().relative_to(project.resolve()).as_posix()
+        mcu = identity.get("components", {}).get("mcu")
+        expected = provenance.get(mcu, {}).get("files", {}).get(relative)
+        if not mcu or not expected or hashlib.sha256(linker.read_bytes()).hexdigest() != expected:
+            raise ValueError("Actual linker lacks selected-MCU source proof; use audited fresh payload or legacy")
+    for group, info in groups.items():
+        relative = GROUPS[group][0][:-2] + ".c"
+        owner = "silverstar.algorithm.estimator.eskf15" if group.startswith("eskf_") else "silverstar.core.0_1_0"
+        expected = provenance.get(owner, {}).get("files", {}).get(relative)
+        source = project / relative
+        if not expected or not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != expected:
+            raise ValueError(f"CPU-only source proof does not cover preserved/edited {relative}; use audited fresh payload or legacy")
+        info["source_sha256"] = expected
+
+
+def Score_Get(usage: dict[str, int], regions: dict, assignment: dict) -> tuple:
+    used = [Fraction(usage[name], capacity) for name, (_, capacity) in sorted(regions.items())]
+    # Physical feasibility is provided by GNU ld. Minimize worst utilization,
+    # then spread; ties prefer fewer moves from legacy CCM, then sorted names.
+    return max(used), max(used) - min(used), sum(value == "RAM" for value in assignment.values()), tuple(assignment.items())
+
+
+def LinkedGroups_Check(objdump: str, elf: Path, groups: dict, assignment: dict, regions: dict) -> None:
+    dump = Tool_Run([objdump, "-t", str(elf)])
+    symbols = {}
+    for address, section, size, name in re.findall(
+        r"^([\da-fA-F]+)\s+.*?\s+(\.\S+|\*ABS\*)\s+([\da-fA-F]+)\s+(\S+)\s*$", dump, re.MULTILINE,
+    ):
+        symbols.setdefault(name, []).append((int(address, 16), int(size, 16), section))
+    for group, info in groups.items():
+        entries = symbols.get(info["symbol"], [])
+        if len(entries) != 1:
+            raise ValueError(f"Linked whitelist symbol missing or ambiguous: {info['symbol']}")
+        address, size, section = entries[0]
+        region = assignment[group]
+        start, capacity = regions[region]
+        bounds = ("_sccmram_bss", "_eccmram_bss") if region == "CCMRAM" else ("_sbss", "_ebss")
+        if any(len(symbols.get(bound, [])) != 1 for bound in bounds):
+            raise ValueError(f"Missing startup zero bounds for {group}")
+        if not (size == info["size"] and address % info["alignment"] == 0 and
+                start <= address and address + size <= start + capacity and
+                symbols[bounds[0]][0][0] <= address and address + size <= symbols[bounds[1]][0][0]):
+            raise ValueError(f"Placement, size, alignment or startup zero bounds failed: {group}")
+        info.update(address=address, region=region, output_section=section, zero_bounds=bounds)
+
+
+def LayoutCandidates_Link(args: argparse.Namespace) -> None:
+    output = Path(args.output)
+    directory = output.parent / "memory_layout"
+    directory.mkdir(parents=True, exist_ok=True)
+    report_path = directory / "decision.json"
+    # Never let a failed relink leave a prior successful artifact/report behind.
+    for old in (output, report_path):
+        old.unlink(missing_ok=True)
+    script = Path(args.linker).read_text(encoding="utf-8")
+    regions = Regions_Parse(script)
+    objects = [value for value in args.command if value.endswith(".o")]
+    if not objects or any(value.startswith("-T") or value == "-o" for value in args.command):
+        raise ValueError("Auto requires explicit objects and owns the linker/output options")
+    groups = Groups_Inspect(args.objdump, objects)
+    SourceOwners_Check(Path(getattr(args, "project", ".")), groups, Path(args.linker))
+    names = sorted(groups)
+    choices = ("CCMRAM", "RAM") if "CCMRAM" in regions else ("RAM",)
+    attempts, successful = [], []
+    if len(choices) ** len(names) > MAX_CANDIDATES:
+        raise ValueError("Auto candidate bound exceeded")
+    print(f"MEMORY_LAYOUT:auto groups={len(names)} max_candidates={len(choices) ** len(names)}", flush=True)
+    if "CCMRAM" not in regions:
+        print("MEMORY_LAYOUT: target has no CCM; all CPU-only objects use ordinary SRAM", flush=True)
+    for index, values in enumerate(product(choices, repeat=len(names))):
+        if index >= MAX_CANDIDATES:
+            raise ValueError("Auto candidate bound exceeded")
+        assignment = dict(zip(names, values))
+        candidate = directory / f"candidate_{index:02d}.ld"
+        candidate.write_text(Script_Render(script, assignment, regions), encoding="utf-8")
+        command = [args.compiler, *args.command, "-T" + candidate.as_posix(), "-o", str(output)]
+        result = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        (directory / f"candidate_{index:02d}.log").write_text(result.stdout + result.stderr, encoding="utf-8")
+        record = {"index": index, "assignment": assignment, "exit_code": result.returncode, "command": command}
+        if result.returncode == 0:
+            usage = Usage_Read(args.objdump, output, regions)
+            record["usage"] = usage
+            successful.append((Score_Get(usage, regions, assignment), index, assignment, candidate))
+        attempts.append(record)
+    report = {"version": 1, "policy": "physical-fit/minimax-utilization/spread/legacy-tie", "max_candidates": MAX_CANDIDATES,
+              "regions": regions, "groups": groups, "attempts": attempts,
+              "linker_sha256": hashlib.sha256(Path(args.linker).read_bytes()).hexdigest(),
+              "object_sha256": {obj: hashlib.sha256(Path(obj).read_bytes()).hexdigest() for obj in objects}}
+    if not successful:
+        output.unlink(missing_ok=True)
+        report["status"] = "failed-no-physical-fit"
+        report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        raise ValueError(f"No candidate linked within physical RAM; see {directory} (real ld failures retained)")
+    _, index, assignment, candidate = min(successful)
+    # One final real link ensures ELF and map belong to the selected assignment.
+    Tool_Run([args.compiler, *args.command, "-T" + candidate.as_posix(), "-o", str(output)])
+    LinkedGroups_Check(args.objdump, output, groups, assignment, regions)
+    usage = Usage_Read(args.objdump, output, regions)
+    report.update(status="linked", selected=index, assignment=assignment, usage=usage,
+                  elf_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
+                  selected_linker_sha256=hashlib.sha256(candidate.read_bytes()).hexdigest())
+    report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    print(f"MEMORY_LAYOUT:auto selected={index} attempts={len(attempts)} decision={report_path}", flush=True)
+    for group, info in groups.items():
+        print(f"MEMORY_LAYOUT: {group} {info['symbol']} bytes={info['size']} address=0x{info['address']:08x} -> {info['region']}", flush=True)
+    for name, (_, capacity) in sorted(regions.items()):
+        remaining = capacity - usage[name]
+        color = "red" if remaining * 100 < capacity * 10 else "yellow" if remaining * 100 <= capacity * 20 else "green"
+        print(f"MEMORY_LAYOUT: region={name} occupied={usage[name]} spare={remaining} capacity={capacity} margin={color}", flush=True)
+        if color != "green":
+            print(f"WARNING: {name} margin <=20%; aim for green. Spare bytes are not a stack/timing proof.", flush=True)
+
+
+def Layout_Link(args: argparse.Namespace) -> None:
+    """Publish no successful artifact when any link/audit/report step fails."""
+    try:
+        LayoutCandidates_Link(args)
+    except BaseException:
+        output = Path(args.output)
+        directory = output.parent / "memory_layout"
+        failure = traceback.format_exc()
+        output.unlink(missing_ok=True)
+        (directory / "decision.json").unlink(missing_ok=True)
+        # Keep all candidate linker scripts/logs, and record late audit or
+        # report-write failures even when GNU ld itself returned success.
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / "failure.log").write_text(failure, encoding="utf-8")
+        raise
+
+
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+index af9bc66..46b7df6 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+@@ -2,7 +2,7 @@ param(
+     [ValidateSet('Debug', 'Release')]
+     [string]$Config = 'Debug',
+     [string]$TargetProfile = 'SilverStar_F407',
+-    [ValidateSet('legacy', 'eskf_window_sram')]
++    [ValidateSet('legacy', 'eskf_window_sram', 'auto')]
+     [string]$MemoryLayout = 'legacy'
+ )
+ 
+@@ -121,6 +121,7 @@ Assert-ArtifactCondition -Condition ($null -ne $objdumpCommand) `
+     -Message 'arm-none-eabi-objdump is unavailable.'
+ 
+ $symbols = @{}
++$uartDmaSymbolCounts = @{}
+ if (($null -ne $nmCommand) -and
+     (Test-Path -LiteralPath $elfPath -PathType Leaf)) {
+     $nmOutput = @(& $nmCommand.Source -S --defined-only --radix=x `
+@@ -131,6 +132,10 @@ if (($null -ne $nmCommand) -and
+         if ($line.ToString() -match `
+             '^\s*(?<address>[0-9A-Fa-f]+)\s+(?<size>[0-9A-Fa-f]+)\s+(?<type>\S)\s+(?<name>.+?)\s*$') {
+             $name = $Matches['name']
++            if ([regex]::IsMatch($name, '^s_uart[1-6]_(?:rx_dma|tx_ring|tx_priority_ring)$')) {
++                if (-not $uartDmaSymbolCounts.ContainsKey($name)) { $uartDmaSymbolCounts[$name] = 0 }
++                $uartDmaSymbolCounts[$name]++
++            }
+             if (-not $symbols.ContainsKey($name)) {
+                 $symbols[$name] = [pscustomobject]@{
+                     Address = ConvertFrom-HexValue -Value $Matches['address']
+@@ -196,19 +201,64 @@ $eskfSelected = (Test-Path -LiteralPath $sourcesPath -PathType Leaf) -and
+         'Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend\.c')
+ $placementAware = (Test-Path -LiteralPath $backendPath -PathType Leaf) -and
+     ((Get-Content -Raw -LiteralPath $backendPath) -match 'PLATFORM_ESKF_WINDOW_BSS')
+-if ($MemoryLayout -ne 'legacy') {
++if ($MemoryLayout -eq 'eskf_window_sram') {
+     Assert-ArtifactCondition -Condition (($TargetProfile -eq 'SilverStar_F407') -and $eskfSelected) `
+         -Message 'Experimental placement requires SilverStar_F407 and the selected ESKF15 backend.'
+     Assert-ArtifactCondition -Condition $placementAware `
+         -Message 'Preserved ESKF payload does not support experimental placement; use a fresh validation project.'
+ }
++
++function ArtifactSha256_Get {
++    param([Parameter(Mandatory = $true)][string]$Path)
++    $algorithm = [System.Security.Cryptography.SHA256]::Create()
++    try {
++        $digest = $algorithm.ComputeHash([System.IO.File]::ReadAllBytes($Path))
++        return ([System.BitConverter]::ToString($digest)).Replace('-', '').ToLowerInvariant()
++    }
++    finally { $algorithm.Dispose() }
++}
++$autoDecision = $null
++if ($MemoryLayout -eq 'auto') {
++    $decisionPath = Join-Path $buildRoot 'memory_layout\decision.json'
++    Assert-ArtifactCondition -Condition (Test-Path -LiteralPath $decisionPath -PathType Leaf) `
++        -Message 'Auto memory decision is missing.'
++    if (Test-Path -LiteralPath $decisionPath -PathType Leaf) {
++        $autoDecision = Get-Content -Raw -LiteralPath $decisionPath | ConvertFrom-Json
++        Assert-ArtifactCondition -Condition (($autoDecision.status -eq 'linked') -and
++            ($autoDecision.elf_sha256 -eq (ArtifactSha256_Get -Path $elfPath))) `
++            -Message 'Auto decision does not describe this linked ELF.'
++        foreach ($property in $autoDecision.groups.PSObject.Properties) {
++            $group = $property.Value
++            $start = $mainSramStart; $length = $mainSramLength
++            if ($group.region -eq 'CCMRAM') { $start = $ccmStart; $length = $ccmLength }
++            Assert-SymbolRange -Symbols $symbols -Name $group.symbol -Start $start -Length $length -MemoryName $group.region
++            if ($symbols.ContainsKey($group.symbol)) {
++                $actual = $symbols[$group.symbol]
++                $begin = $group.zero_bounds[0]; $end = $group.zero_bounds[1]
++                Assert-ArtifactCondition -Condition ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) `
++                    -Message 'Auto startup zero bounds are missing.'
++                if ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) {
++                    Assert-ArtifactCondition -Condition (($actual.Address -eq $group.address) -and
++                        ($actual.Size -eq $group.size) -and (($actual.Address % $group.alignment) -eq 0) -and
++                        ($actual.Address -ge $symbols[$begin].Address) -and
++                        (($actual.Address + $actual.Size) -le $symbols[$end].Address)) `
++                        -Message ('Auto symbol size/alignment/zero range differs: ' + $group.symbol)
++                }
++            }
++            Write-Output ('  auto decision object={0} bytes={1} region={2} address=0x{3:X8}' -f `
++                $group.symbol, $group.size, $group.region, [uint64]$group.address)
++        }
++    }
++}
+ if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
+     $startName = '_sccmram_bss'
+     $endName = '_eccmram_bss'
+     $memoryStart = $ccmStart
+     $memoryLength = $ccmLength
+     $memoryName = 'CCMRAM'
+-    if ($MemoryLayout -eq 'eskf_window_sram') {
++    if (($MemoryLayout -eq 'eskf_window_sram') -or
++        (($MemoryLayout -eq 'auto') -and ($null -ne $autoDecision) -and
++         ($autoDecision.assignment.eskf_window -eq 'RAM'))) {
+         $startName = '_sbss'; $endName = '_ebss'
+         $memoryStart = $mainSramStart; $memoryLength = $mainSramLength
+         $memoryName = 'main SRAM'
+@@ -299,12 +349,26 @@ $requiredDmaSymbols = @(
+     's_uart3_tx_ring',
+     's_uart3_tx_priority_ring'
+ )
++# Preserved pre-UART-hotfix payloads remain supported; every linked TX ring
++# from the additive async UART implementation is audited when present.
++foreach ($uartNumber in 1..6) {
++    foreach ($suffix in @('rx_dma', 'tx_ring', 'tx_priority_ring')) {
++        $name = 's_uart{0}_{1}' -f $uartNumber, $suffix
++        if ($symbols.ContainsKey($name) -and ($requiredDmaSymbols -notcontains $name)) {
++            $requiredDmaSymbols += $name
++        }
++    }
++}
+ if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
+ else {
+     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_aggregate_buffer')) `
+         -Message 'Disabled logging must not allocate the log aggregation buffer.'
+ }
+ foreach ($name in $requiredDmaSymbols) {
++    if ($uartDmaSymbolCounts.ContainsKey($name)) {
++        Assert-ArtifactCondition -Condition ($uartDmaSymbolCounts[$name] -eq 1) `
++            -Message ('UART DMA symbol is ambiguous: ' + $name)
++    }
+     Assert-SymbolRange -Symbols $symbols -Name $name -Start $mainSramStart `
+         -Length $mainSramLength -MemoryName 'DMA-accessible main SRAM'
+ }
+@@ -350,9 +414,17 @@ Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM'
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM'
+ Assert-ArtifactCondition -Condition ($ccmUsed -le $ccmLength) `
+     -Message "CCMRAM overflow: used=$ccmUsed capacity=$ccmLength"
+-Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
+-    -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
+-        "used=$mainSramUsed maximum=102400")
++if ($MemoryLayout -eq 'auto') {
++    Write-Output ("  historical logging budget used={0} maximum=102400 physical_capacity={1}" -f $mainSramUsed, $mainSramLength)
++    if ($mainSramUsed -gt [uint64](100 * 1024)) {
++        Write-Warning 'Auto layout exceeds the historical 100 KiB main-SRAM regression budget by relocating CPU-only objects. Physical overflow, DMA, stack reservation and startup checks remain blocking; budget spare is not stack margin.'
++    }
++}
++else {
++    Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
++        -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
++            "used=$mainSramUsed maximum=102400")
++}
+ 
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM'
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap'
