@@ -452,13 +452,21 @@ Assert-NoArchitecturePattern -Name `
 
 # The standalone stack report reads an already linked ELF. It is not a source
 # generator and no compilation target may depend on it. Permit only its exact
-# recipe; continue rejecting every other Python invocation in build manifests.
+# recipe. The explicitly selected auto adapter links existing objects only;
+# its exact recipe is also allowed, never a source/catalog generator.
 $stackReportBlock = 'stack-report: all' + "`n`t" +
     'python Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
 foreach ($manifestFile in $manifestFiles) {
     $buildContent = (Get-Content -Raw -LiteralPath (Join-Path $repoRoot $manifestFile)).Replace("`r`n", "`n")
     if ($manifestFile -eq 'Makefile') {
         $buildContent = $buildContent.Replace($stackReportBlock, '')
+        $autoLinkRecipe = "`t" + '$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))' + "`n"
+        $buildContent = $buildContent.Replace($autoLinkRecipe, '')
+        foreach ($autoMetadata in @('PYTHON ?= python',
+            'BUILD_MANIFESTS += Tools/auto_memory_layout.py',
+            'BUILD_MANIFESTS += Generated/memory_audit.py')) {
+            $buildContent = $buildContent.Replace($autoMetadata + "`n", '')
+        }
         $buildContent = [regex]::Replace($buildContent, '(?m)^\.PHONY:.*$', '')
     }
     Assert-ArchitectureCondition `

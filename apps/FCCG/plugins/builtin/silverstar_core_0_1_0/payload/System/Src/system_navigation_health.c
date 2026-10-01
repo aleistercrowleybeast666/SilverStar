@@ -10,7 +10,7 @@
 _Static_assert(sizeof(SystemNavigationGroupHealth) == 64U,
     "Navigation group health must retain its bounded memory footprint");
 
-static PLATFORM_CPU_FAST_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
+static PLATFORM_NAV_HEALTH_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
 static uint64_t s_epoch_us;
 static uint32_t s_imu_faults;
 static uint32_t s_imu_quality;

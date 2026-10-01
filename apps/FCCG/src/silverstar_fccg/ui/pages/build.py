@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import QSignalBlocker, Signal
 from PySide6.QtWidgets import (
     QFormLayout,
+    QComboBox,
     QGridLayout,
     QHBoxLayout,
     QLabel,
@@ -26,6 +27,7 @@ from silverstar_fccg.ui.widgets import (
 class BuildPage(ScrollableLocalizedPage):
     detectionRequested = Signal()
     actionRequested = Signal(str)
+    memoryLayoutChanged = Signal(str)
 
     _PRIMARY_ACTIONS: tuple[tuple[str, str], ...] = ()
     _TARGET_ACTIONS = (
@@ -53,6 +55,15 @@ class BuildPage(ScrollableLocalizedPage):
         self.Text_Register(self.environment_label, "field.development_environment")
         self.environment_value = QLabel("VS Code + EIDE")
         summary_form.addRow(self.environment_label, self.environment_value)
+        self.memory_layout_label = QLabel()
+        self.Text_Register(self.memory_layout_label, "field.memory_layout")
+        self.memory_layout_combo = QComboBox()
+        for layout in ("legacy", "auto", "eskf_window_sram"):
+            self.memory_layout_combo.addItem(translator.Text_Get("memory.layout." + layout), layout)
+        self.memory_layout_combo.currentIndexChanged.connect(
+            lambda _: self.memoryLayoutChanged.emit(self.memory_layout_combo.currentData())
+        )
+        summary_form.addRow(self.memory_layout_label, self.memory_layout_combo)
         self.memory_margin_label = QLabel()
         self.Text_Register(self.memory_margin_label, "field.linked_memory")
         self.memory_margin_value = QLabel()
@@ -420,6 +431,10 @@ class BuildPage(ScrollableLocalizedPage):
         self.target_value.setText(target or "—")
         self.environment_value.setText(environment or "—")
 
+    def MemoryLayout_Set(self, layout: str) -> None:
+        with QSignalBlocker(self.memory_layout_combo):
+            self.memory_layout_combo.setCurrentIndex(self.memory_layout_combo.findData(layout))
+
     def GeneratedProject_Set(self, available: bool) -> None:
         self._target_generated["flight"] = available
         self._TargetActions_Update()
@@ -448,6 +463,8 @@ class BuildPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        for index in range(self.memory_layout_combo.count()):
+            self.memory_layout_combo.setItemText(index, translator.Text_Get("memory.layout." + self.memory_layout_combo.itemData(index)))
         self.advanced_section.Title_Set(translator.Text_Get("group.advanced_build"))
         self.build_detail_section.Title_Set(
             translator.Text_Get("group.build_detail_log")

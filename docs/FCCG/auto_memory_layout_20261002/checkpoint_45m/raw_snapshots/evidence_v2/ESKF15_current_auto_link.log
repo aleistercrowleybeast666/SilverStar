@@ -1,0 +1,9 @@
+MEMORY_LAYOUT:auto groups=4 max_candidates=16
+MEMORY_LAYOUT:auto selected=8 attempts=16 decision=build\FCCG\SilverStar_F407\Release\auto\memory_layout\decision.json
+MEMORY_LAYOUT: eskf_history s_history bytes=16992 address=0x20002738 -> RAM
+MEMORY_LAYOUT: eskf_window s_eskf_window bytes=184 address=0x10000000 -> CCMRAM
+MEMORY_LAYOUT: eskf_work s_work bytes=3140 address=0x100000b8 -> CCMRAM
+MEMORY_LAYOUT: nav_health s_groups bytes=320 address=0x10000d00 -> CCMRAM
+MEMORY_LAYOUT: CCMRAM used=46464 remaining=19072 capacity=65536 margin=green
+MEMORY_LAYOUT: RAM used=117912 remaining=13160 capacity=131072 margin=yellow
+WARNING: RAM margin <=20%; aim for green. Spare bytes are not a stack/timing proof.

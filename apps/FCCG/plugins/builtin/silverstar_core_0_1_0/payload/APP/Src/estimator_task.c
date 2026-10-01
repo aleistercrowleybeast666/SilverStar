@@ -246,7 +246,7 @@ static PLATFORM_CPU_FAST_BSS EstimatorRuntime s_estimator;
  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
 static NavigationReplayContext s_replay;
-static PLATFORM_CPU_FAST_BSS NavigationReplayStorage s_replay_storage;
+static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
 static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
 static uint64_t s_native_week_us;
 static uint32_t s_native_previous_tow_ms;

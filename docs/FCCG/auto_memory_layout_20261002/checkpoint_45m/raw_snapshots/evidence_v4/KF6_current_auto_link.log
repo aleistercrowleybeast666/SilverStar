@@ -1,0 +1,7 @@
+MEMORY_LAYOUT:auto groups=2 max_candidates=4
+MEMORY_LAYOUT:auto selected=1 attempts=4 decision=build\FCCG\SilverStar_F407\Release\auto\memory_layout\decision.json
+MEMORY_LAYOUT: kf_replay s_replay_storage bytes=10368 address=0x10000000 -> CCMRAM
+MEMORY_LAYOUT: nav_health s_groups bytes=320 address=0x20002738 -> RAM
+MEMORY_LAYOUT: region=CCMRAM occupied=55112 spare=10424 capacity=65536 margin=yellow
+WARNING: CCMRAM margin <=20%; aim for green. Spare bytes are not a stack/timing proof.
+MEMORY_LAYOUT: region=RAM occupied=102640 spare=28432 capacity=131072 margin=green

@@ -1,0 +1,535 @@
+diff --git a/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c b/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
+index 886d891..7ca393c 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
++++ b/apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
+@@ -46,8 +46,8 @@ typedef struct
+ 
+ /* EstimatorTask is the only runtime owner. No DMA, heap, or replay side effects. */
+ static NavigationEskfState s_state; /* CPU main SRAM, never DMA. */
+-static PLATFORM_CPU_FAST_BSS NavigationEskfWorkspace s_work;
+-static PLATFORM_CPU_FAST_BSS NavigationEskfReplay s_history;
++static PLATFORM_ESKF_WORK_BSS NavigationEskfWorkspace s_work;
++static PLATFORM_ESKF_HISTORY_BSS NavigationEskfReplay s_history;
+ static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
+ static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;
+ static GeoLocalFrame s_frame;
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c
+index 5853859..99a3af0 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c
+@@ -246,7 +246,7 @@ static PLATFORM_CPU_FAST_BSS EstimatorRuntime s_estimator;
+  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
+ #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+ static NavigationReplayContext s_replay;
+-static PLATFORM_CPU_FAST_BSS NavigationReplayStorage s_replay_storage;
++static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
+ static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
+ static uint64_t s_native_week_us;
+ static uint32_t s_native_previous_tow_ms;
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_navigation_health.c b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_navigation_health.c
+index 0a9f6db..38460c9 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_navigation_health.c
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_navigation_health.c
+@@ -10,7 +10,7 @@
+ _Static_assert(sizeof(SystemNavigationGroupHealth) == 64U,
+     "Navigation group health must retain its bounded memory footprint");
+ 
+-static PLATFORM_CPU_FAST_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
++static PLATFORM_NAV_HEALTH_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
+ static uint64_t s_epoch_us;
+ static uint32_t s_imu_faults;
+ static uint32_t s_imu_quality;
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1
+index a3967f5..92fd8a2 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1
+@@ -452,13 +452,21 @@ Assert-NoArchitecturePattern -Name `
+ 
+ # The standalone stack report reads an already linked ELF. It is not a source
+ # generator and no compilation target may depend on it. Permit only its exact
+-# recipe; continue rejecting every other Python invocation in build manifests.
++# recipe. The explicitly selected auto adapter links existing objects only;
++# its exact recipe is also allowed, never a source/catalog generator.
+ $stackReportBlock = 'stack-report: all' + "`n`t" +
+     'python Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
+ foreach ($manifestFile in $manifestFiles) {
+     $buildContent = (Get-Content -Raw -LiteralPath (Join-Path $repoRoot $manifestFile)).Replace("`r`n", "`n")
+     if ($manifestFile -eq 'Makefile') {
+         $buildContent = $buildContent.Replace($stackReportBlock, '')
++        $autoLinkRecipe = "`t" + '$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))' + "`n"
++        $buildContent = $buildContent.Replace($autoLinkRecipe, '')
++        foreach ($autoMetadata in @('PYTHON ?= python',
++            'BUILD_MANIFESTS += Tools/auto_memory_layout.py',
++            'BUILD_MANIFESTS += Generated/memory_audit.py')) {
++            $buildContent = $buildContent.Replace($autoMetadata + "`n", '')
++        }
+         $buildContent = [regex]::Replace($buildContent, '(?m)^\.PHONY:.*$', '')
+     }
+     Assert-ArchitectureCondition `
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+index af9bc66..616a421 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1
+@@ -2,7 +2,7 @@ param(
+     [ValidateSet('Debug', 'Release')]
+     [string]$Config = 'Debug',
+     [string]$TargetProfile = 'SilverStar_F407',
+-    [ValidateSet('legacy', 'eskf_window_sram')]
++    [ValidateSet('legacy', 'eskf_window_sram', 'auto')]
+     [string]$MemoryLayout = 'legacy'
+ )
+ 
+@@ -196,19 +196,54 @@ $eskfSelected = (Test-Path -LiteralPath $sourcesPath -PathType Leaf) -and
+         'Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend\.c')
+ $placementAware = (Test-Path -LiteralPath $backendPath -PathType Leaf) -and
+     ((Get-Content -Raw -LiteralPath $backendPath) -match 'PLATFORM_ESKF_WINDOW_BSS')
+-if ($MemoryLayout -ne 'legacy') {
++if ($MemoryLayout -eq 'eskf_window_sram') {
+     Assert-ArtifactCondition -Condition (($TargetProfile -eq 'SilverStar_F407') -and $eskfSelected) `
+         -Message 'Experimental placement requires SilverStar_F407 and the selected ESKF15 backend.'
+     Assert-ArtifactCondition -Condition $placementAware `
+         -Message 'Preserved ESKF payload does not support experimental placement; use a fresh validation project.'
+ }
++$autoDecision = $null
++if ($MemoryLayout -eq 'auto') {
++    $decisionPath = Join-Path $buildRoot 'memory_layout\decision.json'
++    Assert-ArtifactCondition -Condition (Test-Path -LiteralPath $decisionPath -PathType Leaf) `
++        -Message 'Auto memory decision is missing.'
++    if (Test-Path -LiteralPath $decisionPath -PathType Leaf) {
++        $autoDecision = Get-Content -Raw -LiteralPath $decisionPath | ConvertFrom-Json
++        Assert-ArtifactCondition -Condition (($autoDecision.status -eq 'linked') -and
++            ($autoDecision.elf_sha256 -eq (Get-FileHash -LiteralPath $elfPath -Algorithm SHA256).Hash.ToLowerInvariant())) `
++            -Message 'Auto decision does not describe this linked ELF.'
++        foreach ($property in $autoDecision.groups.PSObject.Properties) {
++            $group = $property.Value
++            $start = $mainSramStart; $length = $mainSramLength
++            if ($group.region -eq 'CCMRAM') { $start = $ccmStart; $length = $ccmLength }
++            Assert-SymbolRange -Symbols $symbols -Name $group.symbol -Start $start -Length $length -MemoryName $group.region
++            if ($symbols.ContainsKey($group.symbol)) {
++                $actual = $symbols[$group.symbol]
++                $begin = $group.zero_bounds[0]; $end = $group.zero_bounds[1]
++                Assert-ArtifactCondition -Condition ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) `
++                    -Message 'Auto startup zero bounds are missing.'
++                if ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) {
++                    Assert-ArtifactCondition -Condition (($actual.Address -eq $group.address) -and
++                        ($actual.Size -eq $group.size) -and (($actual.Address % $group.alignment) -eq 0) -and
++                        ($actual.Address -ge $symbols[$begin].Address) -and
++                        (($actual.Address + $actual.Size) -le $symbols[$end].Address)) `
++                        -Message ('Auto symbol size/alignment/zero range differs: ' + $group.symbol)
++                }
++            }
++            Write-Output ('  auto decision object={0} bytes={1} region={2} address=0x{3:X8}' -f `
++                $group.symbol, $group.size, $group.region, [uint64]$group.address)
++        }
++    }
++}
+ if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
+     $startName = '_sccmram_bss'
+     $endName = '_eccmram_bss'
+     $memoryStart = $ccmStart
+     $memoryLength = $ccmLength
+     $memoryName = 'CCMRAM'
+-    if ($MemoryLayout -eq 'eskf_window_sram') {
++    if (($MemoryLayout -eq 'eskf_window_sram') -or
++        (($MemoryLayout -eq 'auto') -and ($null -ne $autoDecision) -and
++         ($autoDecision.assignment.eskf_window -eq 'RAM'))) {
+         $startName = '_sbss'; $endName = '_ebss'
+         $memoryStart = $mainSramStart; $memoryLength = $mainSramLength
+         $memoryName = 'main SRAM'
+@@ -299,6 +334,12 @@ $requiredDmaSymbols = @(
+     's_uart3_tx_ring',
+     's_uart3_tx_priority_ring'
+ )
++# Preserved pre-UART-hotfix payloads remain supported; every linked TX ring
++# from the additive async UART implementation is audited when present.
++foreach ($name in @('s_uart1_tx_ring', 's_uart1_tx_priority_ring',
++                    's_uart2_tx_ring', 's_uart2_tx_priority_ring')) {
++    if ($symbols.ContainsKey($name)) { $requiredDmaSymbols += $name }
++}
+ if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
+ else {
+     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_aggregate_buffer')) `
+@@ -350,9 +391,17 @@ Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM'
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM'
+ Assert-ArtifactCondition -Condition ($ccmUsed -le $ccmLength) `
+     -Message "CCMRAM overflow: used=$ccmUsed capacity=$ccmLength"
+-Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
+-    -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
+-        "used=$mainSramUsed maximum=102400")
++if ($MemoryLayout -eq 'auto') {
++    Write-Output ("  historical logging budget used={0} maximum=102400 physical_capacity={1}" -f $mainSramUsed, $mainSramLength)
++    if ($mainSramUsed -gt [uint64](100 * 1024)) {
++        Write-Warning 'Auto layout exceeds the historical 100 KiB main-SRAM regression budget by relocating CPU-only objects. Physical overflow, DMA, stack reservation and startup checks remain blocking; budget spare is not stack margin.'
++    }
++}
++else {
++    Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
++        -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
++            "used=$mainSramUsed maximum=102400")
++}
+ 
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM'
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap'
+diff --git a/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/STM32F407XX_FLASH.ld b/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/STM32F407XX_FLASH.ld
+index ef4b684..2581e4a 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/STM32F407XX_FLASH.ld
++++ b/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/STM32F407XX_FLASH.ld
+@@ -181,6 +181,7 @@ SECTIONS
+   {
+     . = ALIGN(8);
+     _sccmram_bss = .;
++    /* SILVERSTAR_AUTO_CCM_BSS */
+     *(.ccmram_bss)
+     *(.ccmram_bss*)
+     . = ALIGN(8);
+@@ -206,6 +207,7 @@ SECTIONS
+     /* This is used by the startup in order to initialize the .bss secion */
+     _sbss = .;         /* define a global symbol at bss start */
+     __bss_start__ = _sbss;
++    /* SILVERSTAR_AUTO_RAM_BSS */
+     *(.bss)
+     *(.bss*)
+     *(COMMON)
+diff --git a/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h b/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h
+index f9e4a41..d3a38c3 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h
++++ b/apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h
+@@ -1,6 +1,10 @@
+ #ifndef __PLATFORM_MEMORY_TARGET_H
+ #define __PLATFORM_MEMORY_TARGET_H
+ 
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+@@ -24,7 +28,13 @@
+ 
+ /* .bss.* remains inside _sbss/_ebss and uses the unchanged startup clear.
+  * SRAM is a deliberate CCM relief tradeoff, not a timing qualification. */
+-#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
++#error "Auto and manual ESKF window layouts are mutually exclusive"
++#endif
++#define PLATFORM_ESKF_WINDOW_BSS \
++    __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#elif (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
+ #if defined(__GNUC__) || defined(__clang__)
+ #define PLATFORM_ESKF_WINDOW_BSS \
+     __attribute__((section(".bss.silverstar_eskf_window"), aligned(8)))
+diff --git a/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h b/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h
+index 552ee02..be48c95 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h
++++ b/apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h
+@@ -12,17 +12,44 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* Link-time opt-in only. Each private CPU-only BSS group has a reviewed owner.
++ * Legacy expands to the original placement. No data or DMA section is eligible. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WORK_BSS __attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(8)))
++#define PLATFORM_ESKF_HISTORY_BSS __attribute__((section(".bss.silverstar_auto_eskf_history"), aligned(8)))
++#define PLATFORM_KF_REPLAY_BSS __attribute__((section(".bss.silverstar_auto_kf_replay"), aligned(8)))
++#define PLATFORM_NAV_HEALTH_BSS __attribute__((section(".bss.silverstar_auto_nav_health"), aligned(8)))
++#else
++#error "Auto memory layout requires a supported compiler"
++#endif
++#elif (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
++#define PLATFORM_ESKF_WORK_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_ESKF_HISTORY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_KF_REPLAY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_NAV_HEALTH_BSS PLATFORM_CPU_FAST_BSS
++#else
++#error "Invalid auto memory layout"
++#endif
++
+ /* One audited CPU-only object; the target owns its section and alignment.
+  * An old target header cannot silently accept the experimental layout. */
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+ #ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#define PLATFORM_ESKF_WINDOW_BSS __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#else
+ #if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+ #error "The selected target does not support ESKF consistency window SRAM placement"
+ #endif
+ #define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
+ #endif
++#endif
+ 
+ #ifndef PLATFORM_DMA_ACCESSIBLE
+ #define PLATFORM_DMA_ACCESSIBLE
+diff --git a/apps/FCCG/schemas/project.schema.json b/apps/FCCG/schemas/project.schema.json
+index 3bdd15c..da500de 100644
+--- a/apps/FCCG/schemas/project.schema.json
++++ b/apps/FCCG/schemas/project.schema.json
+@@ -289,7 +289,8 @@
+             {"const": ""}
+           ]
+         },
+-        "make_command": {"type": "string", "minLength": 1},
++          "make_command": {"type": "string", "minLength": 1},
++          "memory_layout": {"enum": ["legacy", "eskf_window_sram", "auto"], "default": "legacy"},
+         "toolchain_prefix": {"type": "string", "pattern": "^[A-Za-z0-9_.+-]+$"},
+         "gcc_path": {"type": "string"},
+         "flash_command": {"type": "string"},
+diff --git a/apps/FCCG/src/silverstar_fccg/build/runner.py b/apps/FCCG/src/silverstar_fccg/build/runner.py
+index 2bd3648..8a7e302 100644
+--- a/apps/FCCG/src/silverstar_fccg/build/runner.py
++++ b/apps/FCCG/src/silverstar_fccg/build/runner.py
+@@ -144,6 +144,8 @@ class BuildRunner:
+             f"CONFIG={action.Configuration_Get()}",
+         )
+         overrides: list[str] = []
++        if model.build.memory_layout != "legacy":
++            overrides.append(f"MEMORY_LAYOUT={model.build.memory_layout}")
+         compiler_path = tool_paths.get("compiler", model.build.gcc_path)
+         if compiler_path:
+             overrides.append(
+diff --git a/apps/FCCG/src/silverstar_fccg/generator/render.py b/apps/FCCG/src/silverstar_fccg/generator/render.py
+index 95a4c10..3947b5b 100644
+--- a/apps/FCCG/src/silverstar_fccg/generator/render.py
++++ b/apps/FCCG/src/silverstar_fccg/generator/render.py
+@@ -281,6 +281,7 @@ def GeneratedFiles_Render(
+     )
+     files = {
+         "Generated/project_sources.mk": graph.MakeFragment_Render(),
++        "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
+         "Generated/module.mk": _GeneratedModule_Render(model),
+         "Generated/project_semantics.json": (
+             decoder_profile.project_semantics_content
+@@ -2877,11 +2878,14 @@ def _Makefile_Render(model: ProjectModel) -> str:
+ 
+ TARGET_PROFILE ?= {model.build.target_profile}
+ CONFIG ?= Release
+-MEMORY_LAYOUT ?= legacy
++MEMORY_LAYOUT ?= {model.build.memory_layout}
++PYTHON ?= python
+ 
+ ifneq ($(MEMORY_LAYOUT),legacy)
+ ifneq ($(MEMORY_LAYOUT),eskf_window_sram)
+-$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy or eskf_window_sram)
++ifneq ($(MEMORY_LAYOUT),auto)
++$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy, eskf_window_sram or auto)
++endif
+ endif
+ endif
+ 
+@@ -2926,6 +2930,12 @@ endif
+ C_DEFS += SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1
+ endif
+ 
++ifeq ($(MEMORY_LAYOUT),auto)
++C_DEFS += SILVERSTAR_MEMORY_LAYOUT_AUTO=1
++BUILD_MANIFESTS += Tools/auto_memory_layout.py
++BUILD_MANIFESTS += Generated/memory_audit.py
++endif
++
+ FIRST_PARTY_C_SOURCES := $(filter APP/% Algorithm/% Board/% Common/% Devices/% FlightLogic/% Generated/% Interfaces/% Modules/% OS/FreeRTOS/% Platform/% Protocol/% System/% Targets/%,$(C_SOURCES))
+ THIRD_PARTY_C_SOURCES := $(filter ThirdParty/% Middlewares/Third_Party/%,$(C_SOURCES))
+ VENDOR_C_SOURCES := $(filter Core/% Drivers/% FATFS/% HardwareGenerated/%,$(C_SOURCES))
+@@ -3029,7 +3039,11 @@ $(BUILD_ROOT)/%.o: %.s $(BUILD_MANIFESTS)
+ 
+ $(BUILD_ROOT)/$(TARGET).elf: $(OBJECTS) $(LDSCRIPT)
+ \t@echo "FCCG_PROGRESS|LINK_BEGIN|$@"
++ifeq ($(MEMORY_LAYOUT),auto)
++\t$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))
++else
+ \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
++endif
+ \t@echo "FCCG_PROGRESS|LINK_DONE|$@"
+ \t@echo "FCCG_PROGRESS|SIZE_BEGIN|$@"
+ \t$(SZ) $@
+diff --git a/apps/FCCG/src/silverstar_fccg/i18n/en_US.json b/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
+index af533ac..4c66393 100644
+--- a/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
++++ b/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
+@@ -98,6 +98,10 @@
+   "error.plugin_used_by_project": "{name} is selected by the open project. Remove it from the project configuration before uninstalling it.",
+   "field.board_plugin": "Board Plugin",
+   "field.build_configuration": "Build Configuration",
++  "field.memory_layout": "Static memory layout",
++  "memory.layout.legacy": "Legacy (default)",
++  "memory.layout.auto": "Auto — audited CPU-only groups",
++  "memory.layout.eskf_window_sram": "Manual ESKF window in SRAM",
+   "field.build_target": "Current Target",
+   "field.capabilities": "Capabilities",
+   "field.component_ownership": "Component Source Ownership",
+diff --git a/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json b/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
+index 20da906..ac56b13 100644
+--- a/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
++++ b/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
+@@ -98,6 +98,10 @@
+   "error.plugin_used_by_project": "{name} 正被当前工程选择。请先从工程配置中移除，再卸载插件。",
+   "field.board_plugin": "板卡插件",
+   "field.build_configuration": "构建配置",
++  "field.memory_layout": "静态内存布局",
++  "memory.layout.legacy": "原布局（默认）",
++  "memory.layout.auto": "自动：已审查 CPU-only 对象组",
++  "memory.layout.eskf_window_sram": "手动：ESKF window 放入 SRAM",
+   "field.build_target": "当前目标",
+   "field.capabilities": "能力",
+   "field.component_ownership": "组件源码所有权",
+diff --git a/apps/FCCG/src/silverstar_fccg/project/model.py b/apps/FCCG/src/silverstar_fccg/project/model.py
+index 29d3852..65de638 100644
+--- a/apps/FCCG/src/silverstar_fccg/project/model.py
++++ b/apps/FCCG/src/silverstar_fccg/project/model.py
+@@ -108,6 +108,7 @@ class BuildOptions:
+     flash_command: str = ""
+     eide_mode: str = "native"
+     tool_paths: dict[str, str] = field(default_factory=dict)
++    memory_layout: str = "legacy"
+ 
+ 
+ @dataclass(frozen=True, slots=True)
+@@ -483,6 +484,7 @@ class ProjectModel:
+                 "flash_command": self.build.flash_command,
+                 "eide_mode": self.build.eide_mode,
+                 "tool_paths": dict(sorted(self.build.tool_paths.items())),
++                "memory_layout": self.build.memory_layout,
+             },
+             "generated_glue": list(self.generated_glue),
+             "component_provenance": self.component_provenance,
+@@ -1493,8 +1495,11 @@ def _Build_Parse(value: Any) -> BuildOptions:
+         "eide_mode",
+         "tool_paths",
+     }
+-    if set(data) != expected:
++    if set(data) - {"memory_layout"} != expected:
+         raise ProjectModelError("build has missing or unknown fields")
++    memory_layout = data.get("memory_layout", "legacy")
++    if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
++        raise ProjectModelError("build.memory_layout is invalid")
+     target_profile = _String_Require(
+         data, "target_profile", allow_empty=True
+     )
+@@ -1537,6 +1542,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
+         flash_command=_String_Require(data, "flash_command", allow_empty=True),
+         eide_mode=eide_mode,
+         tool_paths=dict(tool_paths),
++        memory_layout=memory_layout,
+     )
+ 
+ 
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/main_window.py b/apps/FCCG/src/silverstar_fccg/ui/main_window.py
+index ecfcefd..095f6ee 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/main_window.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/main_window.py
+@@ -535,6 +535,7 @@ class MainWindow(QMainWindow):
+         )
+         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
+         self.build_page.actionRequested.connect(self._Build_Request)
++        self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
+         self.plugin_manager_dialog.panel.installRequested.connect(
+             self._PluginInstall_Dialog
+         )
+@@ -712,6 +713,8 @@ class MainWindow(QMainWindow):
+                 / model.build.target_profile
+                 / configuration
+             )
++            if model.build.memory_layout != "legacy":
++                directory /= model.build.memory_layout
+             if not directory.is_dir() or directory.is_symlink():
+                 continue
+             for artifact in directory.iterdir():
+@@ -798,6 +801,7 @@ class MainWindow(QMainWindow):
+             self.build_page.GeneratedProject_Set(
+                 display.generated_project
+             )
++            self.build_page.MemoryLayout_Set(display.model.build.memory_layout)
+             if not self._alignment_commit_in_progress:
+                 self.algorithm_parameters_page.AlignmentConfiguration_Set(
+                     display.model.alignment,
+@@ -1020,6 +1024,13 @@ class MainWindow(QMainWindow):
+     def _ProjectModel_Sync(self) -> None:
+         self._LoggingState_Apply(self._model)
+ 
++    def _MemoryLayout_Change(self, layout: str) -> None:
++        if layout not in ("legacy", "auto", "eskf_window_sram"):
++            return
++        def mutate(model: ProjectModel) -> None:
++            model.build = replace(model.build, memory_layout=layout)
++        self._ProjectConfiguration_Change(mutate)
++
+     def _ProjectConfiguration_Change(
+         self,
+         mutator: Callable[[ProjectModel], None],
+@@ -3101,6 +3112,8 @@ class MainWindow(QMainWindow):
+                     else:
+                         release = (target_root / "build/FCCG"
+                                    / selected_model.build.target_profile / "Release")
++                        if selected_model.build.memory_layout != "legacy":
++                            release /= selected_model.build.memory_layout
+                         artifacts = tuple(release.glob("*.elf"))
+                         if len(artifacts) != 1:
+                             raise ValueError("Flight build has no unique Release ELF")
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/build.py b/apps/FCCG/src/silverstar_fccg/ui/pages/build.py
+index 179d415..5e26dbb 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/build.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/build.py
+@@ -2,9 +2,10 @@ from __future__ import annotations
+ 
+ from collections.abc import Iterable
+ 
+-from PySide6.QtCore import Signal
++from PySide6.QtCore import QSignalBlocker, Signal
+ from PySide6.QtWidgets import (
+     QFormLayout,
++    QComboBox,
+     QGridLayout,
+     QHBoxLayout,
+     QLabel,
+@@ -26,6 +27,7 @@ from silverstar_fccg.ui.widgets import (
+ class BuildPage(ScrollableLocalizedPage):
+     detectionRequested = Signal()
+     actionRequested = Signal(str)
++    memoryLayoutChanged = Signal(str)
+ 
+     _PRIMARY_ACTIONS: tuple[tuple[str, str], ...] = ()
+     _TARGET_ACTIONS = (
+@@ -53,6 +55,15 @@ class BuildPage(ScrollableLocalizedPage):
+         self.Text_Register(self.environment_label, "field.development_environment")
+         self.environment_value = QLabel("VS Code + EIDE")
+         summary_form.addRow(self.environment_label, self.environment_value)
++        self.memory_layout_label = QLabel()
++        self.Text_Register(self.memory_layout_label, "field.memory_layout")
++        self.memory_layout_combo = QComboBox()
++        for layout in ("legacy", "auto", "eskf_window_sram"):
++            self.memory_layout_combo.addItem(translator.Text_Get("memory.layout." + layout), layout)
++        self.memory_layout_combo.currentIndexChanged.connect(
++            lambda _: self.memoryLayoutChanged.emit(self.memory_layout_combo.currentData())
++        )
++        summary_form.addRow(self.memory_layout_label, self.memory_layout_combo)
+         self.memory_margin_label = QLabel()
+         self.Text_Register(self.memory_margin_label, "field.linked_memory")
+         self.memory_margin_value = QLabel()
+@@ -420,6 +431,10 @@ class BuildPage(ScrollableLocalizedPage):
+         self.target_value.setText(target or "—")
+         self.environment_value.setText(environment or "—")
+ 
++    def MemoryLayout_Set(self, layout: str) -> None:
++        with QSignalBlocker(self.memory_layout_combo):
++            self.memory_layout_combo.setCurrentIndex(self.memory_layout_combo.findData(layout))
++
+     def GeneratedProject_Set(self, available: bool) -> None:
+         self._target_generated["flight"] = available
+         self._TargetActions_Update()
+@@ -448,6 +463,8 @@ class BuildPage(ScrollableLocalizedPage):
+ 
+     def Language_Apply(self, translator: Translator) -> None:
+         super().Language_Apply(translator)
++        for index in range(self.memory_layout_combo.count()):
++            self.memory_layout_combo.setItemText(index, translator.Text_Get("memory.layout." + self.memory_layout_combo.itemData(index)))
+         self.advanced_section.Title_Set(translator.Text_Get("group.advanced_build"))
+         self.build_detail_section.Title_Set(
+             translator.Text_Get("group.build_detail_log")

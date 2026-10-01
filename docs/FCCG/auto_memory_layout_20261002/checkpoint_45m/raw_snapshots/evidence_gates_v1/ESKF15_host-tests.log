@@ -1,0 +1,471 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tests/Host/run_tests.ps1 -HostCompiler "gcc"
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:/msys64/ucrt64/bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:/msys64/ucrt64/bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+record_catalog_sha256=7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b
+project_semantics_sha256=535b6bb1dfaa4e485ac4df687bce76d70208012169c1392e8a6cd5b84cf7369b
+generation_profile_sha256=f8bc7bfc1ed6a7e440061792b74be265332e2de8c613c068c39d6ada802df82c
+SSLOG Record Catalog validation passed: records=40 payloads=40
+FCCG_PROGRESS|HOST_TEST|PLAN|71
+FCCG_PROGRESS|HOST_COMPILE_PASS|PLAN|7
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|PLAN|17
+Skipped host test attitude_alignment: unselected component sources
+Skipped host test alignment_strategy_gravity_known_yaw: unselected component sources
+Skipped host test alignment_strategy_gravity_mag_triad: unselected component sources
+Skipped host test alignment_strategy_hardware_quat6_known_yaw: unselected component sources
+Skipped host test alignment_strategy_hardware_quat9: unselected component sources
+Skipped host test navigation_sf6: unselected component sources
+Skipped host test navigation_kf_replay: unselected component sources
+Skipped host test air_kf: unselected component sources
+Skipped host test board_power_service: unselected component sources
+Skipped host test board_mission_action_service: unselected component sources
+FCCG_PROGRESS|HOST_TEST|BEGIN|1|71|interfaces
+interfaces: 11 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|1|71|interfaces
+FCCG_PROGRESS|HOST_TEST|BEGIN|2|71|common_format
+common_format: 13 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|2|71|common_format
+FCCG_PROGRESS|HOST_TEST|BEGIN|3|71|system_time
+system_time: 49 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|3|71|system_time
+FCCG_PROGRESS|HOST_TEST|BEGIN|4|71|profiles_kf6
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|4|71|profiles_kf6
+FCCG_PROGRESS|HOST_TEST|BEGIN|5|71|profiles_estimator_noise_overrides
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|5|71|profiles_estimator_noise_overrides
+FCCG_PROGRESS|HOST_TEST|BEGIN|6|71|profiles_pure_ins
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|6|71|profiles_pure_ins
+FCCG_PROGRESS|HOST_TEST|BEGIN|7|71|system_alignment
+system_alignment: 297 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|7|71|system_alignment
+FCCG_PROGRESS|HOST_TEST|BEGIN|8|71|system_alignment_pure_ins
+system_alignment: 296 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|8|71|system_alignment_pure_ins
+FCCG_PROGRESS|HOST_TEST|BEGIN|9|71|system_inertial
+system_inertial: 27 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|9|71|system_inertial
+FCCG_PROGRESS|HOST_TEST|BEGIN|10|71|imu_sample_bus
+imu_sample_bus: 15 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|10|71|imu_sample_bus
+FCCG_PROGRESS|HOST_TEST|BEGIN|11|71|system_indicator
+system_indicator: 34 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|11|71|system_indicator
+FCCG_PROGRESS|HOST_TEST|BEGIN|12|71|system_calibration_default
+system_calibration: 410 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|12|71|system_calibration_default
+FCCG_PROGRESS|HOST_TEST|BEGIN|13|71|system_calibration_system_axis_direction_x_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|13|71|system_calibration_system_axis_direction_x_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|14|71|system_calibration_system_axis_direction_x_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|14|71|system_calibration_system_axis_direction_x_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|15|71|system_calibration_system_axis_direction_y_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|15|71|system_calibration_system_axis_direction_y_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|16|71|system_calibration_system_axis_direction_y_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|16|71|system_calibration_system_axis_direction_y_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|17|71|system_calibration_system_axis_direction_z_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|17|71|system_calibration_system_axis_direction_z_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|18|71|system_calibration_system_axis_direction_z_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|18|71|system_calibration_system_axis_direction_z_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|19|71|runtime_commands
+runtime_commands: 34 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|19|71|runtime_commands
+FCCG_PROGRESS|HOST_TEST|BEGIN|20|71|runtime_startup
+runtime_startup: 52 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|20|71|runtime_startup
+FCCG_PROGRESS|HOST_TEST|BEGIN|21|71|fault_hook
+fault_hook: 40 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|21|71|fault_hook
+FCCG_PROGRESS|HOST_TEST|BEGIN|22|71|calibration_build_gate_0
+calibration_build_gate: 29 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|22|71|calibration_build_gate_0
+FCCG_PROGRESS|HOST_TEST|BEGIN|23|71|telemetry_build_mask_0
+telemetry: 1015 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|23|71|telemetry_build_mask_0
+FCCG_PROGRESS|HOST_TEST|BEGIN|24|71|calibration_build_gate_2
+calibration_build_gate: 20 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|24|71|calibration_build_gate_2
+FCCG_PROGRESS|HOST_TEST|BEGIN|25|71|telemetry_build_mask_2
+telemetry: 1015 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|25|71|telemetry_build_mask_2
+FCCG_PROGRESS|HOST_TEST|BEGIN|26|71|calibration_build_gate_4
+calibration_build_gate: 20 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|26|71|calibration_build_gate_4
+FCCG_PROGRESS|HOST_TEST|BEGIN|27|71|telemetry_build_mask_4
+telemetry: 1015 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|27|71|telemetry_build_mask_4
+FCCG_PROGRESS|HOST_TEST|BEGIN|28|71|calibration_build_gate_6
+calibration_build_gate: 17 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|28|71|calibration_build_gate_6
+FCCG_PROGRESS|HOST_TEST|BEGIN|29|71|telemetry_build_mask_6
+telemetry: 1015 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|29|71|telemetry_build_mask_6
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|1|7|capability_jy901b_gravity_known_yaw
+Expected host compile success passed: capability_jy901b_gravity_known_yaw
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|1|7|capability_jy901b_gravity_known_yaw
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|1|17|capability_missing_imu_noise
+FCCG_EXPECTED_REJECTION|capability_missing_imu_noise
+FCCG_DETAIL|Expected compile rejection: capability_missing_imu_noise
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:49:1: error: static assertion failed: "Selected IMU needs estimator noise recommendations or all E/N/U overrides"
+FCCG_DETAIL|   49 | _Static_assert(
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|1|17|capability_missing_imu_noise
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|2|17|capability_missing_gnss_noise
+FCCG_EXPECTED_REJECTION|capability_missing_gnss_noise
+FCCG_DETAIL|Expected compile rejection: capability_missing_gnss_noise
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:57:1: error: static assertion failed: "Selected GNSS needs estimator floor recommendations or all floor overrides"
+FCCG_DETAIL|   57 | _Static_assert(
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|2|17|capability_missing_gnss_noise
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|3|17|capability_missing_baro_noise
+FCCG_EXPECTED_REJECTION|capability_missing_baro_noise
+FCCG_DETAIL|Expected compile rejection: capability_missing_baro_noise
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:64:1: error: static assertion failed: "Selected Barometer needs an estimator noise recommendation or override"
+FCCG_DETAIL|   64 | _Static_assert(
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|3|17|capability_missing_baro_noise
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|2|7|capability_noise_overrides
+Expected host compile success passed: capability_noise_overrides
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|2|7|capability_noise_overrides
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|4|17|capability_jy901b_gravity_mag_rejected
+FCCG_EXPECTED_REJECTION|capability_jy901b_gravity_mag_rejected
+FCCG_DETAIL|Expected compile rejection: capability_jy901b_gravity_mag_rejected
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from <command-line>:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Generated\Inc\project_flight_config.h:110:2: error: #error "Magnetometer selection is deferred in the first SCG release"
+FCCG_DETAIL|  110 | #error "Magnetometer selection is deferred in the first SCG release"
+FCCG_DETAIL|      |  ^~~~~
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_flight_config.h:5,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:19,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Targets\SilverStar_F407\Inc/target_system_config.h:272:1: error: static assertion failed: "Enabled magnetometer requires a selected physical provider"
+FCCG_DETAIL|  272 | _Static_assert((SYSTEM_USER_MAGNETOMETER_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:77:1: error: static assertion failed: "TRIAD requires an enabled, absolute-vector-qualified magnetometer"
+FCCG_DETAIL|   77 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|4|17|capability_jy901b_gravity_mag_rejected
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|5|17|capability_first_release_triad_deferred
+FCCG_EXPECTED_REJECTION|capability_first_release_triad_deferred
+FCCG_DETAIL|Expected compile rejection: capability_first_release_triad_deferred
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from <command-line>:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Generated\Inc\project_flight_config.h:110:2: error: #error "Magnetometer selection is deferred in the first SCG release"
+FCCG_DETAIL|  110 | #error "Magnetometer selection is deferred in the first SCG release"
+FCCG_DETAIL|      |  ^~~~~
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_flight_config.h:5,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:19,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Targets\SilverStar_F407\Inc/target_system_config.h:272:1: error: static assertion failed: "Enabled magnetometer requires a selected physical provider"
+FCCG_DETAIL|  272 | _Static_assert((SYSTEM_USER_MAGNETOMETER_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|5|17|capability_first_release_triad_deferred
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|3|7|capability_jy901b_hw_quat_6axis_preflight
+Expected host compile success passed: capability_jy901b_hw_quat_6axis_preflight
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|3|7|capability_jy901b_hw_quat_6axis_preflight
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|4|7|capability_jy901b_hw_quat_9axis_preflight
+Expected host compile success passed: capability_jy901b_hw_quat_9axis_preflight
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|4|7|capability_jy901b_hw_quat_9axis_preflight
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|6|17|capability_hw_quat_6axis_preflight_unqualified
+FCCG_EXPECTED_REJECTION|capability_hw_quat_6axis_preflight_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_hw_quat_6axis_preflight_unqualified
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:101:1: error: static assertion failed: "HW 6-axis alignment requires a qualified preflight source"
+FCCG_DETAIL|  101 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|6|17|capability_hw_quat_6axis_preflight_unqualified
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|7|17|capability_hw_quat_9axis_preflight_unqualified
+FCCG_EXPECTED_REJECTION|capability_hw_quat_9axis_preflight_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_hw_quat_9axis_preflight_unqualified
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:108:1: error: static assertion failed: "HW 9-axis alignment requires a qualified preflight source"
+FCCG_DETAIL|  108 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|7|17|capability_hw_quat_9axis_preflight_unqualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|5|7|capability_jy901b_stillness_landing
+Expected host compile success passed: capability_jy901b_stillness_landing
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|5|7|capability_jy901b_stillness_landing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|8|17|capability_impact_unqualified
+FCCG_EXPECTED_REJECTION|capability_impact_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_impact_unqualified
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:145:1: error: static assertion failed: "Impact landing requires stillness- and impact-qualified IMU data"
+FCCG_DETAIL|  145 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|8|17|capability_impact_unqualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|6|7|capability_future_impact_qualified
+Expected host compile success passed: capability_future_impact_qualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|6|7|capability_future_impact_qualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|7|7|capability_jy901b_baro_imu_window_landing
+Expected host compile success passed: capability_jy901b_baro_imu_window_landing
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|7|7|capability_jy901b_baro_imu_window_landing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|9|17|capability_stillness_unqualified
+FCCG_EXPECTED_REJECTION|capability_stillness_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_stillness_unqualified
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:138:1: error: static assertion failed: "Stillness landing requires a stillness-qualified IMU"
+FCCG_DETAIL|  138 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|9|17|capability_stillness_unqualified
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|10|17|capability_baro_imu_stillness_unqualified
+FCCG_EXPECTED_REJECTION|capability_baro_imu_stillness_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_baro_imu_stillness_unqualified
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:154:1: error: static assertion failed: "Baro/IMU landing requires qualified IMU and direct altitude"
+FCCG_DETAIL|  154 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|10|17|capability_baro_imu_stillness_unqualified
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|11|17|capability_deploy_without_action
+FCCG_EXPECTED_REJECTION|capability_deploy_without_action
+FCCG_DETAIL|Expected compile rejection: capability_deploy_without_action
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:181:1: error: static assertion failed: "The current flight profile requires a START action"
+FCCG_DETAIL|  181 | _Static_assert((SYSTEM_USER_MISSION_ACTION_ENABLE != 0U) &&
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:184:1: error: static assertion failed: "Automatic deploy requires a parachute-deploy Mission Action"
+FCCG_DETAIL|  184 | _Static_assert((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|11|17|capability_deploy_without_action
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|12|17|capability_required_baro_missing
+FCCG_EXPECTED_REJECTION|capability_required_baro_missing
+FCCG_DETAIL|Expected compile rejection: capability_required_baro_missing
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:125:1: error: static assertion failed: "Required Barometer origin needs a qualified altitude source"
+FCCG_DETAIL|  125 | _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:154:1: error: static assertion failed: "Baro/IMU landing requires qualified IMU and direct altitude"
+FCCG_DETAIL|  154 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|12|17|capability_required_baro_missing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|13|17|capability_required_gnss_missing
+FCCG_EXPECTED_REJECTION|capability_required_gnss_missing
+FCCG_DETAIL|Expected compile rejection: capability_required_gnss_missing
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:132:1: error: static assertion failed: "Required GNSS origin needs a selected position source"
+FCCG_DETAIL|  132 | _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|13|17|capability_required_gnss_missing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|14|17|capability_stillness_without_gyro
+FCCG_EXPECTED_REJECTION|capability_stillness_without_gyro
+FCCG_DETAIL|Expected compile rejection: capability_stillness_without_gyro
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:70:1: error: static assertion failed: "Gravity Known Yaw requires qualified accel/gyro software alignment"
+FCCG_DETAIL|   70 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:138:1: error: static assertion failed: "Stillness landing requires a stillness-qualified IMU"
+FCCG_DETAIL|  138 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:165:1: error: static assertion failed: "TILT deploy requires selected gyro software propagation"
+FCCG_DETAIL|  165 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|14|17|capability_stillness_without_gyro
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|15|17|capability_tilt_without_propagation
+FCCG_EXPECTED_REJECTION|capability_tilt_without_propagation
+FCCG_DETAIL|Expected compile rejection: capability_tilt_without_propagation
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:165:1: error: static assertion failed: "TILT deploy requires selected gyro software propagation"
+FCCG_DETAIL|  165 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|15|17|capability_tilt_without_propagation
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|16|17|capability_delay_without_time
+FCCG_EXPECTED_REJECTION|capability_delay_without_time
+FCCG_DETAIL|Expected compile rejection: capability_delay_without_time
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:176:1: error: static assertion failed: "DELAY deploy requires mission monotonic time"
+FCCG_DETAIL|  176 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|16|17|capability_delay_without_time
+FCCG_PROGRESS|HOST_TEST|BEGIN|30|71|jy901b_device
+jy901b_device: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|30|71|jy901b_device
+FCCG_PROGRESS|HOST_TEST|BEGIN|31|71|jy901b_adapter
+jy901b_adapter: 28 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|31|71|jy901b_adapter
+FCCG_PROGRESS|HOST_TEST|BEGIN|32|71|neo_m9n_device
+neo_m9n_device: 986 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|32|71|neo_m9n_device
+FCCG_PROGRESS|HOST_TEST|BEGIN|33|71|neo_m9n_adapter
+neo_m9n_adapter: 15 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|33|71|neo_m9n_adapter
+FCCG_PROGRESS|HOST_TEST|BEGIN|34|71|sx1281_device
+sx1281_device: 638 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|34|71|sx1281_device
+FCCG_PROGRESS|HOST_TEST|BEGIN|35|71|jy901b_multi_instance
+jy901b_multi_instance: 27 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|35|71|jy901b_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|36|71|neo_m9n_multi_instance
+neo_m9n_multi_instance: 29 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|36|71|neo_m9n_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|37|71|sx1280_hal_multi_instance
+sx1280_hal_multi_instance: 21 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|37|71|sx1280_hal_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|38|71|sx1281_multi_instance
+sx1281_multi_instance: 28 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|38|71|sx1281_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|39|71|source_selector
+source_selector: 235 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|39|71|source_selector
+FCCG_PROGRESS|HOST_TEST|BEGIN|40|71|sensor_quality
+sensor_quality: 12070 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|40|71|sensor_quality
+FCCG_PROGRESS|HOST_TEST|BEGIN|41|71|estimator_barometer_pending
+estimator_barometer_pending: 13 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|41|71|estimator_barometer_pending
+FCCG_PROGRESS|HOST_TEST|BEGIN|42|71|navigation_quality_supervisor
+window_context_bytes=184; two windows; no sample history
+navigation_quality_supervisor: 1853 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|42|71|navigation_quality_supervisor
+FCCG_PROGRESS|HOST_TEST|BEGIN|43|71|sensor_status
+sensor_status: 78 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|43|71|sensor_status
+FCCG_PROGRESS|HOST_TEST|BEGIN|44|71|device_native_log
+device_native_log: 21 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|44|71|device_native_log
+FCCG_PROGRESS|HOST_TEST|BEGIN|45|71|lifecycle
+lifecycle: 89 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|45|71|lifecycle
+FCCG_PROGRESS|HOST_TEST|BEGIN|46|71|flight_recovery_apogee
+flight_recovery: 10627 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|46|71|flight_recovery_apogee
+FCCG_PROGRESS|HOST_TEST|BEGIN|47|71|flight_recovery_apogee_immediate
+flight_recovery: 10600 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|47|71|flight_recovery_apogee_immediate
+FCCG_PROGRESS|HOST_TEST|BEGIN|48|71|flight_recovery_tilt
+flight_recovery: 10640 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|48|71|flight_recovery_tilt
+FCCG_PROGRESS|HOST_TEST|BEGIN|49|71|flight_recovery_tilt_immediate
+flight_recovery: 10612 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|49|71|flight_recovery_tilt_immediate
+FCCG_PROGRESS|HOST_TEST|BEGIN|50|71|flight_recovery_apogee_or_tilt
+flight_recovery: 10631 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|50|71|flight_recovery_apogee_or_tilt
+FCCG_PROGRESS|HOST_TEST|BEGIN|51|71|flight_recovery_apogee_or_delay
+flight_recovery: 10557 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|51|71|flight_recovery_apogee_or_delay
+FCCG_PROGRESS|HOST_TEST|BEGIN|52|71|flight_recovery_tilt_or_delay
+flight_recovery: 10557 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|52|71|flight_recovery_tilt_or_delay
+FCCG_PROGRESS|HOST_TEST|BEGIN|53|71|flight_recovery_delay
+flight_recovery: 10556 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|53|71|flight_recovery_delay
+FCCG_PROGRESS|HOST_TEST|BEGIN|54|71|flight_recovery_all_triggers
+flight_recovery: 10550 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|54|71|flight_recovery_all_triggers
+FCCG_PROGRESS|HOST_TEST|BEGIN|55|71|flight_recovery_none_landing
+flight_recovery: 10572 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|55|71|flight_recovery_none_landing
+FCCG_PROGRESS|HOST_TEST|BEGIN|56|71|flight_recovery_impact_landing
+flight_recovery: 10588 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|56|71|flight_recovery_impact_landing
+FCCG_PROGRESS|HOST_TEST|BEGIN|57|71|flight_recovery_baro_imu_landing
+flight_recovery: 11207 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|57|71|flight_recovery_baro_imu_landing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|17|17|impact_capability_guard
+FCCG_EXPECTED_REJECTION|impact_capability_guard
+FCCG_DETAIL|Expected compile rejection: impact_capability_guard
+FCCG_DETAIL|Compiler: D:/msys64/ucrt64/bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_flight_config_compile.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\System\User/system_user_capability_validation.h:145:1: error: static assertion failed: "Impact landing requires stillness- and impact-qualified IMU data"
+FCCG_DETAIL|  145 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|17|17|impact_capability_guard
+FCCG_PROGRESS|HOST_TEST|BEGIN|58|71|lifecycle_logging
+lifecycle_logging: 206 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|58|71|lifecycle_logging
+FCCG_PROGRESS|HOST_TEST|BEGIN|59|71|system_startup
+system_startup: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|59|71|system_startup
+FCCG_PROGRESS|HOST_TEST|BEGIN|60|71|system_startup_write_verify
+system_startup: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|60|71|system_startup_write_verify
+FCCG_PROGRESS|HOST_TEST|BEGIN|61|71|system_startup_async_no_explicit_verify
+system_startup: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|61|71|system_startup_async_no_explicit_verify
+FCCG_PROGRESS|HOST_TEST|BEGIN|62|71|system_startup_no_writes
+system_startup: 65 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|62|71|system_startup_no_writes
+FCCG_PROGRESS|HOST_TEST|BEGIN|63|71|health
+health: 16 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|63|71|health
+FCCG_PROGRESS|HOST_TEST|BEGIN|64|71|console
+console: 464 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|64|71|console
+FCCG_PROGRESS|HOST_TEST|BEGIN|65|71|telemetry
+telemetry: 1015 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|65|71|telemetry
+FCCG_PROGRESS|HOST_TEST|BEGIN|66|71|estimator_preparation_actual
+estimator_preparation_actual: 241 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|66|71|estimator_preparation_actual
+FCCG_PROGRESS|HOST_TEST|BEGIN|67|71|logger
+FAIL D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\Tests\Host\test_logger.c:104: SSLOG_RECORD_COUNT == 38U
+logger: 2102888 checks, 1 failures
+Host test failed: logger
+所在位置 D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\ESKF15\Flight_Controller\T
+ests\Host\run_tests.ps1:288 字符: 9
++         throw "Host test failed: $Name"
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Host test failed: logger:String) [], RuntimeException
+    + FullyQualifiedErrorId : Host test failed: logger
+ 
+mingw32-make: *** [Makefile:220: host-tests] Error 1

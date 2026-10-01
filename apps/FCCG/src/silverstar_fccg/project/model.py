@@ -108,6 +108,7 @@ class BuildOptions:
     flash_command: str = ""
     eide_mode: str = "native"
     tool_paths: dict[str, str] = field(default_factory=dict)
+    memory_layout: str = "legacy"
 
 
 @dataclass(frozen=True, slots=True)
@@ -483,6 +484,7 @@ class ProjectModel:
                 "flash_command": self.build.flash_command,
                 "eide_mode": self.build.eide_mode,
                 "tool_paths": dict(sorted(self.build.tool_paths.items())),
+                "memory_layout": self.build.memory_layout,
             },
             "generated_glue": list(self.generated_glue),
             "component_provenance": self.component_provenance,
@@ -1493,8 +1495,11 @@ def _Build_Parse(value: Any) -> BuildOptions:
         "eide_mode",
         "tool_paths",
     }
-    if set(data) != expected:
+    if set(data) - {"memory_layout"} != expected:
         raise ProjectModelError("build has missing or unknown fields")
+    memory_layout = data.get("memory_layout", "legacy")
+    if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
+        raise ProjectModelError("build.memory_layout is invalid")
     target_profile = _String_Require(
         data, "target_profile", allow_empty=True
     )
@@ -1537,6 +1542,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
         flash_command=_String_Require(data, "flash_command", allow_empty=True),
         eide_mode=eide_mode,
         tool_paths=dict(tool_paths),
+        memory_layout=memory_layout,
     )
 
 

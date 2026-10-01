@@ -1,0 +1,98 @@
+...FF...F............                                                    [100%]
+================================== FAILURES ===================================
+______ test_no_ccm_uses_real_sram_and_insufficient_capacity_really_fails ______
+
+arm_fixture = (WindowsPath('D:/python_software/SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_no_ccm_uses_real_s...SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_no_ccm_uses_real_sram_and0/fixture/target.ld'), ...)
+
+    def test_no_ccm_uses_real_sram_and_insufficient_capacity_really_fails(arm_fixture):
+        root, _, _, _, _, script, _, _ = arm_fixture
+>       text = script.read_text().replace("CCMRAM (xrw)      : ORIGIN = 0x10000000, LENGTH = 64K", "")
+               ^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_auto_memory_layout.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_no_ccm_uses_real_sram_and0/fixture/target.ld')
+encoding = 'locale', errors = None, newline = None
+
+    def read_text(self, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, read it, and close the file.
+        """
+        # Call io.text_encoding() here to ensure any warning is raised at an
+        # appropriate stack level.
+        encoding = io.text_encoding(encoding)
+        with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+>           return f.read()
+                   ^^^^^^^^
+E           UnicodeDecodeError: 'gbk' codec can't decode byte 0x9d in position 583: illegal multibyte sequence
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:793: UnicodeDecodeError
+________ test_unreviewed_dma_data_and_bad_alignment_are_rejected[dma] _________
+
+arm_fixture = (WindowsPath('D:/python_software/SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_unreviewed_dma_dat...SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_unreviewed_dma_data_and_b0/fixture/target.ld'), ...)
+change = 'dma'
+
+    @pytest.mark.parametrize("change", ["dma", "initialized", "alignment", "wrong_owner"])
+    def test_unreviewed_dma_data_and_bad_alignment_are_rejected(arm_fixture, change):
+        root, _, objdump, owner, _, _, source, base = arm_fixture
+        text = source.read_text()
+        if change == "dma":
+            text = text.replace("PLATFORM_ESKF_WORK_BSS unsigned char s_work", "PLATFORM_ESKF_WORK_BSS unsigned char s_uart1_rx_dma")
+        elif change == "initialized":
+            text = text.replace("s_work[24000];", "s_work[24000] = {1};")
+        elif change == "alignment":
+            text = text.replace("PLATFORM_ESKF_WORK_BSS", '__attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(1)))')
+        source.write_text(text)
+        compile_result = subprocess.run([*base, "-DSILVERSTAR_MEMORY_LAYOUT_AUTO=1", "-c", str(source), "-o", str(owner)], capture_output=True, text=True)
+        if change == "initialized":
+            assert compile_result.returncode != 0  # GNU assembler prohibits nonzero initialization in .bss
+            return
+>       assert compile_result.returncode == 0, compile_result.stderr
+E       AssertionError: D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\pytest_memory_v3\test_unreviewed_dma_data_and_b0\fixture\objects.c: In function 'main':
+E         D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\pytest_memory_v3\test_unreviewed_dma_data_and_b0\fixture\objects.c:10:25: error: 's_work' undeclared (first use in this function)
+E            10 | int main(void) { return s_work[0] + s_history[0] + s_eskf_window[0] +
+E               |                         ^~~~~~
+E         D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\pytest_memory_v3\test_unreviewed_dma_data_and_b0\fixture\objects.c:10:25: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\pytest_memory_v3\test_unreviewed_dma_data_and_b0\fixture\objects.c: At top level:
+E         D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\pytest_memory_v3\test_unreviewed_dma_data_and_b0\fixture\objects.c:2:45: error: 's_uart1_rx_dma' defined but not used [-Werror=unused-variable]
+E             2 | static PLATFORM_ESKF_WORK_BSS unsigned char s_uart1_rx_dma[24000];
+E               |                                             ^~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.EXE', '-mcpu=cortex-m4', '-mthumb', '...\n      |                                             ^~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_auto_memory_layout.py:156: AssertionError
+______________ test_preserved_linker_missing_hooks_fails_closed _______________
+
+arm_fixture = (WindowsPath('D:/python_software/SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_preserved_linker_m...SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_preserved_linker_missing_0/fixture/target.ld'), ...)
+
+    def test_preserved_linker_missing_hooks_fails_closed(arm_fixture):
+>       text = arm_fixture[5].read_text().replace("/* SILVERSTAR_AUTO_CCM_BSS */", "")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_auto_memory_layout.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/MemoryLayout_20261002/.work/pytest_memory_v3/test_preserved_linker_missing_0/fixture/target.ld')
+encoding = 'locale', errors = None, newline = None
+
+    def read_text(self, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, read it, and close the file.
+        """
+        # Call io.text_encoding() here to ensure any warning is raised at an
+        # appropriate stack level.
+        encoding = io.text_encoding(encoding)
+        with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+>           return f.read()
+                   ^^^^^^^^
+E           UnicodeDecodeError: 'gbk' codec can't decode byte 0x9d in position 583: illegal multibyte sequence
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:793: UnicodeDecodeError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_auto_memory_layout.py::test_no_ccm_uses_real_sram_and_insufficient_capacity_really_fails
+FAILED apps\FCCG\tests\test_auto_memory_layout.py::test_unreviewed_dma_data_and_bad_alignment_are_rejected[dma]
+FAILED apps\FCCG\tests\test_auto_memory_layout.py::test_preserved_linker_missing_hooks_fails_closed
+3 failed, 18 passed in 57.51s

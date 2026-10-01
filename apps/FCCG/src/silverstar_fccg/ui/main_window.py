@@ -535,6 +535,7 @@ class MainWindow(QMainWindow):
         )
         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
         self.build_page.actionRequested.connect(self._Build_Request)
+        self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
             self._PluginInstall_Dialog
         )
@@ -712,6 +713,8 @@ class MainWindow(QMainWindow):
                 / model.build.target_profile
                 / configuration
             )
+            if model.build.memory_layout != "legacy":
+                directory /= model.build.memory_layout
             if not directory.is_dir() or directory.is_symlink():
                 continue
             for artifact in directory.iterdir():
@@ -798,6 +801,7 @@ class MainWindow(QMainWindow):
             self.build_page.GeneratedProject_Set(
                 display.generated_project
             )
+            self.build_page.MemoryLayout_Set(display.model.build.memory_layout)
             if not self._alignment_commit_in_progress:
                 self.algorithm_parameters_page.AlignmentConfiguration_Set(
                     display.model.alignment,
@@ -1019,6 +1023,13 @@ class MainWindow(QMainWindow):
 
     def _ProjectModel_Sync(self) -> None:
         self._LoggingState_Apply(self._model)
+
+    def _MemoryLayout_Change(self, layout: str) -> None:
+        if layout not in ("legacy", "auto", "eskf_window_sram"):
+            return
+        def mutate(model: ProjectModel) -> None:
+            model.build = replace(model.build, memory_layout=layout)
+        self._ProjectConfiguration_Change(mutate)
 
     def _ProjectConfiguration_Change(
         self,
@@ -3101,6 +3112,8 @@ class MainWindow(QMainWindow):
                     else:
                         release = (target_root / "build/FCCG"
                                    / selected_model.build.target_profile / "Release")
+                        if selected_model.build.memory_layout != "legacy":
+                            release /= selected_model.build.memory_layout
                         artifacts = tuple(release.glob("*.elf"))
                         if len(artifacts) != 1:
                             raise ValueError("Flight build has no unique Release ELF")

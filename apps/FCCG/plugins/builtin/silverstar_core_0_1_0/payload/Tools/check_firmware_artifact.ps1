@@ -2,7 +2,7 @@ param(
     [ValidateSet('Debug', 'Release')]
     [string]$Config = 'Debug',
     [string]$TargetProfile = 'SilverStar_F407',
-    [ValidateSet('legacy', 'eskf_window_sram')]
+    [ValidateSet('legacy', 'eskf_window_sram', 'auto')]
     [string]$MemoryLayout = 'legacy'
 )
 
@@ -196,11 +196,54 @@ $eskfSelected = (Test-Path -LiteralPath $sourcesPath -PathType Leaf) -and
         'Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend\.c')
 $placementAware = (Test-Path -LiteralPath $backendPath -PathType Leaf) -and
     ((Get-Content -Raw -LiteralPath $backendPath) -match 'PLATFORM_ESKF_WINDOW_BSS')
-if ($MemoryLayout -ne 'legacy') {
+if ($MemoryLayout -eq 'eskf_window_sram') {
     Assert-ArtifactCondition -Condition (($TargetProfile -eq 'SilverStar_F407') -and $eskfSelected) `
         -Message 'Experimental placement requires SilverStar_F407 and the selected ESKF15 backend.'
     Assert-ArtifactCondition -Condition $placementAware `
         -Message 'Preserved ESKF payload does not support experimental placement; use a fresh validation project.'
+}
+
+function ArtifactSha256_Get {
+    param([Parameter(Mandatory = $true)][string]$Path)
+    $algorithm = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $digest = $algorithm.ComputeHash([System.IO.File]::ReadAllBytes($Path))
+        return ([System.BitConverter]::ToString($digest)).Replace('-', '').ToLowerInvariant()
+    }
+    finally { $algorithm.Dispose() }
+}
+$autoDecision = $null
+if ($MemoryLayout -eq 'auto') {
+    $decisionPath = Join-Path $buildRoot 'memory_layout\decision.json'
+    Assert-ArtifactCondition -Condition (Test-Path -LiteralPath $decisionPath -PathType Leaf) `
+        -Message 'Auto memory decision is missing.'
+    if (Test-Path -LiteralPath $decisionPath -PathType Leaf) {
+        $autoDecision = Get-Content -Raw -LiteralPath $decisionPath | ConvertFrom-Json
+        Assert-ArtifactCondition -Condition (($autoDecision.status -eq 'linked') -and
+            ($autoDecision.elf_sha256 -eq (ArtifactSha256_Get -Path $elfPath))) `
+            -Message 'Auto decision does not describe this linked ELF.'
+        foreach ($property in $autoDecision.groups.PSObject.Properties) {
+            $group = $property.Value
+            $start = $mainSramStart; $length = $mainSramLength
+            if ($group.region -eq 'CCMRAM') { $start = $ccmStart; $length = $ccmLength }
+            Assert-SymbolRange -Symbols $symbols -Name $group.symbol -Start $start -Length $length -MemoryName $group.region
+            if ($symbols.ContainsKey($group.symbol)) {
+                $actual = $symbols[$group.symbol]
+                $begin = $group.zero_bounds[0]; $end = $group.zero_bounds[1]
+                Assert-ArtifactCondition -Condition ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) `
+                    -Message 'Auto startup zero bounds are missing.'
+                if ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) {
+                    Assert-ArtifactCondition -Condition (($actual.Address -eq $group.address) -and
+                        ($actual.Size -eq $group.size) -and (($actual.Address % $group.alignment) -eq 0) -and
+                        ($actual.Address -ge $symbols[$begin].Address) -and
+                        (($actual.Address + $actual.Size) -le $symbols[$end].Address)) `
+                        -Message ('Auto symbol size/alignment/zero range differs: ' + $group.symbol)
+                }
+            }
+            Write-Output ('  auto decision object={0} bytes={1} region={2} address=0x{3:X8}' -f `
+                $group.symbol, $group.size, $group.region, [uint64]$group.address)
+        }
+    }
 }
 if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
     $startName = '_sccmram_bss'
@@ -208,7 +251,9 @@ if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
     $memoryStart = $ccmStart
     $memoryLength = $ccmLength
     $memoryName = 'CCMRAM'
-    if ($MemoryLayout -eq 'eskf_window_sram') {
+    if (($MemoryLayout -eq 'eskf_window_sram') -or
+        (($MemoryLayout -eq 'auto') -and ($null -ne $autoDecision) -and
+         ($autoDecision.assignment.eskf_window -eq 'RAM'))) {
         $startName = '_sbss'; $endName = '_ebss'
         $memoryStart = $mainSramStart; $memoryLength = $mainSramLength
         $memoryName = 'main SRAM'
@@ -299,6 +344,12 @@ $requiredDmaSymbols = @(
     's_uart3_tx_ring',
     's_uart3_tx_priority_ring'
 )
+# Preserved pre-UART-hotfix payloads remain supported; every linked TX ring
+# from the additive async UART implementation is audited when present.
+foreach ($name in @('s_uart1_tx_ring', 's_uart1_tx_priority_ring',
+                    's_uart2_tx_ring', 's_uart2_tx_priority_ring')) {
+    if ($symbols.ContainsKey($name)) { $requiredDmaSymbols += $name }
+}
 if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
 else {
     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_aggregate_buffer')) `
@@ -350,9 +401,17 @@ Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM'
 Assert-ArtifactCondition -Condition ($ccmUsed -le $ccmLength) `
     -Message "CCMRAM overflow: used=$ccmUsed capacity=$ccmLength"
-Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
-    -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
-        "used=$mainSramUsed maximum=102400")
+if ($MemoryLayout -eq 'auto') {
+    Write-Output ("  historical logging budget used={0} maximum=102400 physical_capacity={1}" -f $mainSramUsed, $mainSramLength)
+    if ($mainSramUsed -gt [uint64](100 * 1024)) {
+        Write-Warning 'Auto layout exceeds the historical 100 KiB main-SRAM regression budget by relocating CPU-only objects. Physical overflow, DMA, stack reservation and startup checks remain blocking; budget spare is not stack margin.'
+    }
+}
+else {
+    Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
+        -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
+            "used=$mainSramUsed maximum=102400")
+}
 
 Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap'

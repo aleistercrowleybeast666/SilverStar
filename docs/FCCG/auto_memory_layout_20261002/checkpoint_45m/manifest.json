@@ -1,0 +1,544 @@
+{
+  "utc": "2026-10-01T21:02:37.771846+00:00",
+  "base_commit": "fd0a71c2f78d86dd1d0b281ca04863b42df5ad1a",
+  "branches": {
+    "baseline": "fd0a71c2f78d86dd1d0b281ca04863b42df5ad1a",
+    "sf6": "548b89fdbc438bc2232bcbdde588d89c724cbdad",
+    "uart": "d1f766f4ae016b82119822d5b557c225c42aebd2"
+  },
+  "scope": "45-minute incomplete checkpoint; copied log snapshots may be partial and are labelled below",
+  "resources": {
+    "ESKF15": {
+      "legacy": {
+        "main_sram": 100920,
+        "ccm": 63456,
+        "flash": 302988,
+        "elf_sha256": "08d313ce6ef3ee7707e47ea77ced7e12796252ac3eebebd615a1e088cc100fec",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\ESKF15\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release",
+        "map_sha256": "3d93c3f62100c1f509397048df494a1ed70612c6d02da40768c911d7bae7ffa0",
+        "bin_sha256": "b4d7dd80e9915a9134b20748bdf19e6a8ad44fb2d9c51e0f02becf69c5a89983",
+        "hex_sha256": "538bfb26d3ecf4e78eb8513780d02b906f478966cf8b1f320a24d77cb35a4aa1"
+      },
+      "auto": {
+        "main_sram": 117912,
+        "ccm": 46464,
+        "flash": 302988,
+        "elf_sha256": "32ed7fc56fdf76e68e87d617b5c5211aaa3f5dd8f833c4cc2271e13b49d22b34",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\ESKF15\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto",
+        "assignment": {
+          "eskf_history": "RAM",
+          "eskf_window": "CCMRAM",
+          "eskf_work": "CCMRAM",
+          "nav_health": "CCMRAM"
+        },
+        "map_sha256": "f990c9e0623219107da81371c7cbcdc17cf80bbb7a10e9282d7adbe15e7d9e3a",
+        "bin_sha256": "509d752e623c3a3f61d27df13a9434f2d64e9b77edd97187f436037a2f171b26",
+        "hex_sha256": "ecdac0e6d80048e11c38ab442c1d1bbc83e860b4052124c8b8657bffd41205ed"
+      }
+    },
+    "KF6": {
+      "legacy": {
+        "main_sram": 102320,
+        "ccm": 55432,
+        "flash": 316844,
+        "elf_sha256": "e0b2e059ef49293c154cf6a8b141fad5ecf24549952bbc222313b364bb7c467e",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\KF6\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release",
+        "map_sha256": "5c74fb7c32e0a82396e66b510c30560d5a1309e28bd949813e611ae520195908",
+        "bin_sha256": "5c3029a686b32ad859a15f87c35b87080ea5a7cd098328c7e6011fb2d9599132",
+        "hex_sha256": "b26051832a30977839021cf4d30601a23ee93140b4d0849056994d8b14d4a160"
+      },
+      "auto": {
+        "main_sram": 102640,
+        "ccm": 55112,
+        "flash": 316844,
+        "elf_sha256": "150bdca27c1f3967ad94ffe4cdb7803c92c42487e91a33834d53b72fd8884f7c",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\KF6\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto",
+        "assignment": {
+          "kf_replay": "CCMRAM",
+          "nav_health": "RAM"
+        },
+        "map_sha256": "fd5a3281ee13d98c2057d7fe104ce2d0c3ed3bae0d44bd118774554b81af5186",
+        "bin_sha256": "34185f1d4b6eedab48a79981c63b016b8876b201baa11bd1383ede5381a9d669",
+        "hex_sha256": "f65968ca027c42b9b9f6b386b1db3e586f83ccde9121b9776cea747f5b84c512"
+      }
+    },
+    "SF6": {
+      "legacy": {
+        "main_sram": 91432,
+        "ccm": 44016,
+        "flash": 288788,
+        "elf_sha256": "2eab4f998e3eaf2f99a4c6b98141a0d2dfb1e4a01c13867ed970d84af65dbe45",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\SF6\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release",
+        "map_sha256": "06879c8aaa10932170b9f486bcedb57c5e200f64a1dcac905677b5715e026604",
+        "bin_sha256": "15d10f40b4a0e113705a2668f4bbed4349c54aab9fba3197e97bea20e5f4c186",
+        "hex_sha256": "44b111e0e660f9343aade2a7c5c4300f3768d9db25548f1591a6010660fde408"
+      },
+      "auto": {
+        "main_sram": 91432,
+        "ccm": 44016,
+        "flash": 288788,
+        "elf_sha256": "9889bffbc55830fbed8ca9170ebb17c2877795c0c98ffd03ebcb8605a9347c41",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\SF6\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto",
+        "assignment": {
+          "nav_health": "CCMRAM"
+        },
+        "map_sha256": "eb7cf2a78dee5613eef4a55f27c95750a12de7e322d4a6bc633c0bb7875e0c59",
+        "bin_sha256": "12b23c1bb47b3e5a1d62d36ce80a4b843c1703f93bddc5d2673bc0e2b4b23c04",
+        "hex_sha256": "8c0a4ec13806ce7a8bbf98a492115c1a955928c9d504cec40773ff5158f79832"
+      }
+    },
+    "PureINS": {
+      "legacy": {
+        "main_sram": 82992,
+        "ccm": 44016,
+        "flash": 284468,
+        "elf_sha256": "fee81e1cafae0aadb128581e5f07713b381162bb882832d2efaf90e4def46f08",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\PureINS\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release",
+        "map_sha256": "00885592be8faf4f99b6e1a18a55137493d4a43592f267372581ba0ecbbad453",
+        "bin_sha256": "42a9e0015679ac01d7a9642d5dea84de027375a75684a2bf33edcba35f7ff67e",
+        "hex_sha256": "a90a7ae98345ee003e926a3a4b3e19976b6e5313beb35b9d1b9ff2580fcc6eae"
+      },
+      "auto": {
+        "main_sram": 83312,
+        "ccm": 43696,
+        "flash": 284468,
+        "elf_sha256": "6c4fab2eaff868f05de3639443d6a55695e59881cc70dce17b47308c94985021",
+        "artifact_paths": "D:\\python_software\\SilverStar\\.work\\MemoryLayout_20261002\\.work\\AutoMemoryCandidates_v1\\PureINS\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto",
+        "assignment": {
+          "nav_health": "RAM"
+        },
+        "map_sha256": "545d63a98c2cf046337f4e25ba00df181d8ef28f9d64edab16d4280e813c93c5",
+        "bin_sha256": "502e73797d1ec7f2015f5c78d6bc3e8d5644644ccf832cdb986819daa8420552",
+        "hex_sha256": "4ec6aeccb9fa167897b9f8372903f9414655b2bf339a55c5cbdc5d179f34b7af"
+      }
+    }
+  },
+  "logs": {
+    "tests_v7.log": {
+      "snapshot_sha256": "5e033d4f8e99c6761174c8c94ae5e7c76b3a0300a7d21c82f2064bac47c1a91b",
+      "bytes": 102,
+      "may_be_partial": false
+    },
+    "tests_v8.log": {
+      "snapshot_sha256": "a079e160574f6e0ef95661ec24dbc5dadcf7b8051be75342e133253feb4d264c",
+      "bytes": 102,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\ESKF15_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\ESKF15_host-tests.log": {
+      "snapshot_sha256": "a45cb744b96ab6d192552717b516ce2dd66043a930022e6352b4e5fbb3406889",
+      "bytes": 37733,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\ESKF15_power10-check.log": {
+      "snapshot_sha256": "2e166cd5a26b0cacebaf646a7066715b23390afa5ef7d3b4fd4914c5e9b898d2",
+      "bytes": 702115,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\KF6_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\KF6_host-tests.log": {
+      "snapshot_sha256": "5cc25cfab98fc91f3af967bb2aedfb2e901f811045ab75a1bd9f8b2a90c5e086",
+      "bytes": 37925,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\KF6_power10-check.log": {
+      "snapshot_sha256": "2ceb60f3bceec8d7a9953631d9e85e9e70f01863a378e380c9ab89e40152b6b7",
+      "bytes": 723675,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\PureINS_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\PureINS_power10-check.log": {
+      "snapshot_sha256": "ddcb8f699beff76538a288a027052a44453b15bc4ac1ba327d20c8b0913deec9",
+      "bytes": 25113,
+      "may_be_partial": true
+    },
+    "evidence_gates_v1\\results.json": {
+      "snapshot_sha256": "64debc097e10ce5d256a6b765ed30b9d906db6dbf260286134318e3a297fb2c5",
+      "bytes": 8434,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\SF6_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\SF6_host-tests.log": {
+      "snapshot_sha256": "b7227d477eed7bcb63e4733a2382cd4e1af7645e4dd637c53978f473eb6732c3",
+      "bytes": 38844,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\SF6_power10-check.log": {
+      "snapshot_sha256": "c97dbbe743366e34d0776bcd4cf27c754f1429c5071f6abf4cae3ba026c847fa",
+      "bytes": 696681,
+      "may_be_partial": false
+    },
+    "evidence_gates_v1\\source_delta.patch": {
+      "snapshot_sha256": "d61a7b72041c9b5cad0983d2e989a625a6e2af4d338781b177d4bbd65c807179",
+      "bytes": 28873,
+      "may_be_partial": false
+    },
+    "evidence_v1\\ESKF15.ssproject": {
+      "snapshot_sha256": "086a75d9b3f6d914c236ef8a033cfbb5da0b7d602936c172063f10efa5b424ee",
+      "bytes": 44046,
+      "may_be_partial": false
+    },
+    "evidence_v1\\ESKF15_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_v1\\ESKF15_arm_auto.log": {
+      "snapshot_sha256": "15e01e4f241dd4098753b4c5396e1b429887cdb42a2ec2328ae23fca7af2a491",
+      "bytes": 446842,
+      "may_be_partial": true
+    },
+    "evidence_v1\\ESKF15_arm_legacy.log": {
+      "snapshot_sha256": "6f5316e4eaf0de481f496b7050addf07a33f418a88817476cc59a23a42a84413",
+      "bytes": 439483,
+      "may_be_partial": false
+    },
+    "evidence_v1\\ESKF15_host-tests.log": {
+      "snapshot_sha256": "a45cb744b96ab6d192552717b516ce2dd66043a930022e6352b4e5fbb3406889",
+      "bytes": 37733,
+      "may_be_partial": false
+    },
+    "evidence_v1\\ESKF15_power10-check.log": {
+      "snapshot_sha256": "2e166cd5a26b0cacebaf646a7066715b23390afa5ef7d3b4fd4914c5e9b898d2",
+      "bytes": 702115,
+      "may_be_partial": false
+    },
+    "evidence_v1\\ESKF15_structure_v1.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_v1\\KF6.ssproject": {
+      "snapshot_sha256": "a7f76a0356722d453af49211db354cc06d26e4e951aeead22d49a8228bdb6133",
+      "bytes": 44225,
+      "may_be_partial": false
+    },
+    "evidence_v1\\KF6_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_v1\\KF6_arm_auto.log": {
+      "snapshot_sha256": "7c922144ef943247ff9338fa6ac6439cd984d61e70a2dcdc206b4b08294a6c4d",
+      "bytes": 440663,
+      "may_be_partial": true
+    },
+    "evidence_v1\\KF6_arm_legacy.log": {
+      "snapshot_sha256": "ba0f758866e22fdc7e015c68028f5aadb951c904b7e52d41a6c75d053981ff56",
+      "bytes": 433332,
+      "may_be_partial": false
+    },
+    "evidence_v1\\KF6_host-tests.log": {
+      "snapshot_sha256": "5cc25cfab98fc91f3af967bb2aedfb2e901f811045ab75a1bd9f8b2a90c5e086",
+      "bytes": 37925,
+      "may_be_partial": false
+    },
+    "evidence_v1\\KF6_power10-check.log": {
+      "snapshot_sha256": "2ceb60f3bceec8d7a9953631d9e85e9e70f01863a378e380c9ab89e40152b6b7",
+      "bytes": 723675,
+      "may_be_partial": false
+    },
+    "evidence_v1\\PureINS.ssproject": {
+      "snapshot_sha256": "f63aa2179e3b30c10570da952020413eea523cd7d4f0b6734157ec5aff9d3bca",
+      "bytes": 42807,
+      "may_be_partial": false
+    },
+    "evidence_v1\\PureINS_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_v1\\PureINS_arm_auto.log": {
+      "snapshot_sha256": "df82896c00f0988321cafc2c9a0bd1163b87be2e4ba16f09eaeb4d2e8f0b27a5",
+      "bytes": 427319,
+      "may_be_partial": true
+    },
+    "evidence_v1\\PureINS_arm_legacy.log": {
+      "snapshot_sha256": "31eb059ba4942caef5daba10fe6fe3d4fecb092b68e986bc38c8fe4965c58621",
+      "bytes": 420301,
+      "may_be_partial": false
+    },
+    "evidence_v1\\PureINS_host-tests.log": {
+      "snapshot_sha256": "3d9515241c0fc5635996d6ccf715628aa5c8ece62e1a6ddc9571933b330cf791",
+      "bytes": 2814,
+      "may_be_partial": false
+    },
+    "evidence_v1\\PureINS_power10-check.log": {
+      "snapshot_sha256": "cc1dd2bd0ae6a55ff3e7a830b14a5a8ebc0f887d3372c2169e2190ffcffe6fa7",
+      "bytes": 688831,
+      "may_be_partial": false
+    },
+    "evidence_v1\\results.json": {
+      "snapshot_sha256": "c4e645c523d286fc0767b06e41ffe2faaa5dbfd0741bae261a4e18cf3bbeab6e",
+      "bytes": 10093,
+      "may_be_partial": false
+    },
+    "evidence_v1\\SF6.ssproject": {
+      "snapshot_sha256": "8a6348afc894f94ffd2e3286865b0b127405f5758d345522d83d584cbfa05fd3",
+      "bytes": 43151,
+      "may_be_partial": false
+    },
+    "evidence_v1\\SF6_architecture-check.log": {
+      "snapshot_sha256": "b8bf0f594ee1940bfc86a13a47f3047eee0e561763644e51c9be1dc5c6cb54d0",
+      "bytes": 1028,
+      "may_be_partial": false
+    },
+    "evidence_v1\\SF6_arm_auto.log": {
+      "snapshot_sha256": "aaf79f181fa3babf7fe5821565f519969f08b037373d038281717d2b0a3e2060",
+      "bytes": 437555,
+      "may_be_partial": true
+    },
+    "evidence_v1\\SF6_arm_legacy.log": {
+      "snapshot_sha256": "6e1f2860976a3f8f05c61a80d8616dc33866f58063c0fe43d6be526cdc5e2435",
+      "bytes": 430446,
+      "may_be_partial": false
+    },
+    "evidence_v1\\SF6_host-tests.log": {
+      "snapshot_sha256": "b7227d477eed7bcb63e4733a2382cd4e1af7645e4dd637c53978f473eb6732c3",
+      "bytes": 38844,
+      "may_be_partial": false
+    },
+    "evidence_v1\\SF6_power10-check.log": {
+      "snapshot_sha256": "c97dbbe743366e34d0776bcd4cf27c754f1429c5071f6abf4cae3ba026c847fa",
+      "bytes": 696681,
+      "may_be_partial": false
+    },
+    "evidence_v1\\source_delta.patch": {
+      "snapshot_sha256": "d61a7b72041c9b5cad0983d2e989a625a6e2af4d338781b177d4bbd65c807179",
+      "bytes": 28873,
+      "may_be_partial": false
+    },
+    "evidence_v2\\ESKF15_bin.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v2\\ESKF15_current_architecture.log": {
+      "snapshot_sha256": "6892538cb8bd6e9a62fcc21b7282db07c2e59280404ffb69247524d0c4691878",
+      "bytes": 1894,
+      "may_be_partial": false
+    },
+    "evidence_v2\\ESKF15_current_artifact.log": {
+      "snapshot_sha256": "145b3ed2c0431d0ddb741e0b6b844fedd57fd9a4605f3404b9e07a727777ff19",
+      "bytes": 2599,
+      "may_be_partial": false
+    },
+    "evidence_v2\\ESKF15_current_auto_link.log": {
+      "snapshot_sha256": "91e65478b05130fed75fd6f416c3817eabd9f272e85fd28405a197fac90e87a4",
+      "bytes": 714,
+      "may_be_partial": true
+    },
+    "evidence_v2\\ESKF15_current_power10.log": {
+      "snapshot_sha256": "2e166cd5a26b0cacebaf646a7066715b23390afa5ef7d3b4fd4914c5e9b898d2",
+      "bytes": 702115,
+      "may_be_partial": false
+    },
+    "evidence_v2\\ESKF15_hex.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v2\\ESKF15_source_sha256.json": {
+      "snapshot_sha256": "89fa029c2cd9ff15466f33fb11900ff894e3a405099509547ff85d20ff923e40",
+      "bytes": 69920,
+      "may_be_partial": false
+    },
+    "evidence_v2\\results.json": {
+      "snapshot_sha256": "eed1dbff199ee80b7a4165dfcdb867c51e1d18d5aeaf2114eca6bc391ce91cec",
+      "bytes": 300449,
+      "may_be_partial": false
+    },
+    "evidence_v3\\ESKF15_bin.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v3\\ESKF15_current_architecture.log": {
+      "snapshot_sha256": "6892538cb8bd6e9a62fcc21b7282db07c2e59280404ffb69247524d0c4691878",
+      "bytes": 1894,
+      "may_be_partial": false
+    },
+    "evidence_v3\\ESKF15_current_artifact.log": {
+      "snapshot_sha256": "145b3ed2c0431d0ddb741e0b6b844fedd57fd9a4605f3404b9e07a727777ff19",
+      "bytes": 2599,
+      "may_be_partial": false
+    },
+    "evidence_v3\\ESKF15_current_auto_link.log": {
+      "snapshot_sha256": "02f696258ffaeba110a44becc9116a8f62fcc232fa43d815ede3345c236987b4",
+      "bytes": 728,
+      "may_be_partial": true
+    },
+    "evidence_v3\\ESKF15_current_power10.log": {
+      "snapshot_sha256": "2e166cd5a26b0cacebaf646a7066715b23390afa5ef7d3b4fd4914c5e9b898d2",
+      "bytes": 702115,
+      "may_be_partial": false
+    },
+    "evidence_v3\\ESKF15_hex.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v3\\ESKF15_source_sha256.json": {
+      "snapshot_sha256": "78ed0393110649c91d244cb8e0055376340a439feaa76150c34ce7c12a9c2ffa",
+      "bytes": 69920,
+      "may_be_partial": false
+    },
+    "evidence_v3\\KF6_bin.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v3\\KF6_current_architecture.log": {
+      "snapshot_sha256": "6892538cb8bd6e9a62fcc21b7282db07c2e59280404ffb69247524d0c4691878",
+      "bytes": 1894,
+      "may_be_partial": false
+    },
+    "evidence_v3\\KF6_current_artifact.log": {
+      "snapshot_sha256": "3cf0436ab0ff664b95ba2cb98935917f68ce42e458e949fc0f4c863dc0d9011b",
+      "bytes": 2324,
+      "may_be_partial": false
+    },
+    "evidence_v3\\KF6_current_auto_link.log": {
+      "snapshot_sha256": "a07b54845a23f59532a487a3a200a98e50390d8b9001b07aaa7492c2adf8a520",
+      "bytes": 579,
+      "may_be_partial": true
+    },
+    "evidence_v3\\KF6_current_power10.log": {
+      "snapshot_sha256": "2ceb60f3bceec8d7a9953631d9e85e9e70f01863a378e380c9ab89e40152b6b7",
+      "bytes": 723675,
+      "may_be_partial": false
+    },
+    "evidence_v3\\KF6_hex.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v3\\KF6_source_sha256.json": {
+      "snapshot_sha256": "5d470363ec84e82f69fc2e6114769bfb268e11d018b8e3d8654815aff607f8c1",
+      "bytes": 69997,
+      "may_be_partial": false
+    },
+    "evidence_v3\\results.json": {
+      "snapshot_sha256": "cadaa540c5994ce0311110a57842ef679965bf46c394296fe31ca0b56d588d3e",
+      "bytes": 409114,
+      "may_be_partial": false
+    },
+    "evidence_v4\\ESKF15_bin.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v4\\ESKF15_current_architecture.log": {
+      "snapshot_sha256": "6892538cb8bd6e9a62fcc21b7282db07c2e59280404ffb69247524d0c4691878",
+      "bytes": 1894,
+      "may_be_partial": false
+    },
+    "evidence_v4\\ESKF15_current_artifact.log": {
+      "snapshot_sha256": "145b3ed2c0431d0ddb741e0b6b844fedd57fd9a4605f3404b9e07a727777ff19",
+      "bytes": 2599,
+      "may_be_partial": false
+    },
+    "evidence_v4\\ESKF15_current_auto_link.log": {
+      "snapshot_sha256": "02f696258ffaeba110a44becc9116a8f62fcc232fa43d815ede3345c236987b4",
+      "bytes": 728,
+      "may_be_partial": true
+    },
+    "evidence_v4\\ESKF15_current_power10.log": {
+      "snapshot_sha256": "2e166cd5a26b0cacebaf646a7066715b23390afa5ef7d3b4fd4914c5e9b898d2",
+      "bytes": 702115,
+      "may_be_partial": false
+    },
+    "evidence_v4\\ESKF15_hex.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v4\\ESKF15_source_sha256.json": {
+      "snapshot_sha256": "33259474b03da7b98af114218060fb813c46deb407d74d37dee7c8fd4e0ec577",
+      "bytes": 69920,
+      "may_be_partial": false
+    },
+    "evidence_v4\\KF6_bin.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v4\\KF6_current_architecture.log": {
+      "snapshot_sha256": "6892538cb8bd6e9a62fcc21b7282db07c2e59280404ffb69247524d0c4691878",
+      "bytes": 1894,
+      "may_be_partial": false
+    },
+    "evidence_v4\\KF6_current_artifact.log": {
+      "snapshot_sha256": "3cf0436ab0ff664b95ba2cb98935917f68ce42e458e949fc0f4c863dc0d9011b",
+      "bytes": 2324,
+      "may_be_partial": false
+    },
+    "evidence_v4\\KF6_current_auto_link.log": {
+      "snapshot_sha256": "a07b54845a23f59532a487a3a200a98e50390d8b9001b07aaa7492c2adf8a520",
+      "bytes": 579,
+      "may_be_partial": true
+    },
+    "evidence_v4\\KF6_current_power10.log": {
+      "snapshot_sha256": "2ceb60f3bceec8d7a9953631d9e85e9e70f01863a378e380c9ab89e40152b6b7",
+      "bytes": 723675,
+      "may_be_partial": false
+    },
+    "evidence_v4\\KF6_hex.log": {
+      "snapshot_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "may_be_partial": true
+    },
+    "evidence_v4\\KF6_source_sha256.json": {
+      "snapshot_sha256": "61edb00fad9c2496fa4454db6aee8c7d2266a6ebe471b2a39d7fe685bef21857",
+      "bytes": 69997,
+      "may_be_partial": false
+    },
+    "evidence_v4\\results.json": {
+      "snapshot_sha256": "3cf86bc8e95f63f40d3ab0fa5b4c1a6650decfa6db21bad189a99a5b60c4d1df",
+      "bytes": 409690,
+      "may_be_partial": false
+    }
+  },
+  "source_sha256": {
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c": "5166abe09e361eb4463ba7d523dc01649ead1c616c55ac361f93b5263d4fca00",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c": "5b04f3aeb88aa508e8ee44f128c2cd1a0e1bee28a851d59c08f37e6a4e08ed00",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_navigation_health.c": "6768f065e7baadf712b34ea4d5952feec9d4a3385416f3945dfbf93a1936091d",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_architecture.ps1": "b2ea101ef354ea3bd768415f82054caaee37782d5f21ffb29dadd894c09c8b48",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1": "a35aa095d33d27b77112c26e8071c1d108233aa51565a53bec4b3b73a1f00985",
+    "apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/STM32F407XX_FLASH.ld": "4e2be50ea60126e60570c2a55fa74777be091c1d5637afaeab3328d2a64c7d7d",
+    "apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h": "9f29e0ea69cc4fce4c7993061235f94ce4d1189d7c2a641c924150ed858cc50f",
+    "apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc/platform_memory.h": "d59f5d31496548020e86fa148872deb61d912c7df14b7f3b20d2f204884c23fc",
+    "apps/FCCG/schemas/project.schema.json": "e797dd32a95efaaed6733d7a3b65d5be2620e5964840b8dd24b36a514c130e6e",
+    "apps/FCCG/src/silverstar_fccg/build/runner.py": "b9d18fa6ac2dac48bc3b5aa33669ffb8b95b2ebb1a1188b43ea7fea91d40224d",
+    "apps/FCCG/src/silverstar_fccg/generator/render.py": "851ada80a5c64e805b175d9e8491b68641d5d9aa8c135f89bb4966cb2c789772",
+    "apps/FCCG/src/silverstar_fccg/i18n/en_US.json": "f5d83e7b2648c63460c332b20086b03ac6b5f1dd182f99bd0c03db0fec0e0704",
+    "apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json": "083f1ad2b97ec15d76d44ef766884475b48132d83ef30ea75fb0a9570542ede2",
+    "apps/FCCG/src/silverstar_fccg/project/model.py": "7989e4d7cbd7b56500d60b924cd1f2356152c4388ce25b8757c22932d3e22b12",
+    "apps/FCCG/src/silverstar_fccg/ui/main_window.py": "9b746031dec3a6eb797da205e466f9f9f77066e285e1d07b725ca5f6caa17b83",
+    "apps/FCCG/src/silverstar_fccg/ui/pages/build.py": "9ca18e803b07d51a1e9b62460823519684e6095f67d0826c9f44b27af4ee89dc",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/auto_memory_layout.py": "5fc6945434577768e547a230f1edca91e26ec30f42a87aac75a7df2c36490b82",
+    "apps/FCCG/tests/test_auto_memory_layout.py": "1453861b5a4c69482bdf849e182b28cd882233383c29cf0c0c7e2936e3e1b27c"
+  },
+  "versions": {
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+    "D:/msys64/ucrt64/bin/gcc.exe": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0",
+    "D:/msys64/ucrt64/bin/mingw32-make.exe": "GNU Make 4.4.1",
+    "python": "Python 3.14.0"
+  }
+}

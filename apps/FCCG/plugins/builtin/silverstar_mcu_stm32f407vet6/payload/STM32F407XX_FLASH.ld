@@ -181,6 +181,7 @@ SECTIONS
   {
     . = ALIGN(8);
     _sccmram_bss = .;
+    /* SILVERSTAR_AUTO_CCM_BSS */
     *(.ccmram_bss)
     *(.ccmram_bss*)
     . = ALIGN(8);
@@ -206,6 +207,7 @@ SECTIONS
     /* This is used by the startup in order to initialize the .bss secion */
     _sbss = .;         /* define a global symbol at bss start */
     __bss_start__ = _sbss;
+    /* SILVERSTAR_AUTO_RAM_BSS */
     *(.bss)
     *(.bss*)
     *(COMMON)

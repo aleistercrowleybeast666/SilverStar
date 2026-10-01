@@ -1,0 +1,55 @@
+
+D:\python_software\SilverStar\.work\MemoryLayout_20261002\.work\AutoMemoryCandidates_v1\PureINS\Flight_Controller\build\FCCG\SilverStar_F407\Release\SilverStar_0_1_1.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000188  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         0003e9fc  08000188  08000188  00001188  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00006730  0803eb88  0803eb88  0003fb88  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  080452b8  080452b8  00047470  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000008  080452b8  080452b8  000462b8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  5 .preinit_array 00000000  080452c0  080452c0  00047470  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  080452c0  080452c0  000462c0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  080452c4  080452c4  000462c4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         00000470  20000000  080452c8  00047000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .ccmram_data  00000000  10000000  10000000  00047470  2**0
+                  CONTENTS
+ 10 .ccmram_bss   0000abf0  10000000  08045738  00048000  2**3
+                  ALLOC
+ 11 .dma_bss      000022c8  20000470  20000470  00047470  2**3
+                  ALLOC
+ 12 .bss          000118f8  20002738  20002738  00047470  2**3
+                  ALLOC
+ 13 ._user_heap_stack 00000400  20014030  20014030  00047470  2**0
+                  ALLOC
+ 14 .ARM.attributes 00000030  00000000  00000000  00047470  2**0
+                  CONTENTS, READONLY
+ 15 .comment      00000046  00000000  00000000  000474a0  2**0
+                  CONTENTS, READONLY
+ 16 .debug_info   0010f0d7  00000000  00000000  000474e6  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_abbrev 000177f6  00000000  00000000  001565bd  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_loclists 00077a39  00000000  00000000  0016ddb3  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .debug_aranges 00004a90  00000000  00000000  001e57f0  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .debug_rnglists 0000fee8  00000000  00000000  001ea280  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_line   0008710e  00000000  00000000  001fa168  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 22 .debug_str    0003046e  00000000  00000000  00281276  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 23 .debug_frame  000115a0  00000000  00000000  002b16e4  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 24 .debug_line_str 00000261  00000000  00000000  002c2c84  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS

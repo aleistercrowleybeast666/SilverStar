@@ -281,6 +281,7 @@ def GeneratedFiles_Render(
     )
     files = {
         "Generated/project_sources.mk": graph.MakeFragment_Render(),
+        "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
         "Generated/module.mk": _GeneratedModule_Render(model),
         "Generated/project_semantics.json": (
             decoder_profile.project_semantics_content
@@ -2877,11 +2878,14 @@ def _Makefile_Render(model: ProjectModel) -> str:
 
 TARGET_PROFILE ?= {model.build.target_profile}
 CONFIG ?= Release
-MEMORY_LAYOUT ?= legacy
+MEMORY_LAYOUT ?= {model.build.memory_layout}
+PYTHON ?= python
 
 ifneq ($(MEMORY_LAYOUT),legacy)
 ifneq ($(MEMORY_LAYOUT),eskf_window_sram)
-$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy or eskf_window_sram)
+ifneq ($(MEMORY_LAYOUT),auto)
+$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy, eskf_window_sram or auto)
+endif
 endif
 endif
 
@@ -2924,6 +2928,12 @@ ifeq ($(filter Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c,$(C_SOUR
 $(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
 endif
 C_DEFS += SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1
+endif
+
+ifeq ($(MEMORY_LAYOUT),auto)
+C_DEFS += SILVERSTAR_MEMORY_LAYOUT_AUTO=1
+BUILD_MANIFESTS += Tools/auto_memory_layout.py
+BUILD_MANIFESTS += Generated/memory_audit.py
 endif
 
 FIRST_PARTY_C_SOURCES := $(filter APP/% Algorithm/% Board/% Common/% Devices/% FlightLogic/% Generated/% Interfaces/% Modules/% OS/FreeRTOS/% Platform/% Protocol/% System/% Targets/%,$(C_SOURCES))
@@ -3029,7 +3039,11 @@ $(BUILD_ROOT)/%.o: %.s $(BUILD_MANIFESTS)
 
 $(BUILD_ROOT)/$(TARGET).elf: $(OBJECTS) $(LDSCRIPT)
 \t@echo "FCCG_PROGRESS|LINK_BEGIN|$@"
+ifeq ($(MEMORY_LAYOUT),auto)
+\t$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))
+else
 \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+endif
 \t@echo "FCCG_PROGRESS|LINK_DONE|$@"
 \t@echo "FCCG_PROGRESS|SIZE_BEGIN|$@"
 \t$(SZ) $@

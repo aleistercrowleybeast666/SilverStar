@@ -1,0 +1,49 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tests/Host/run_tests.ps1 -HostCompiler "gcc"
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:/msys64/ucrt64/bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:/msys64/ucrt64/bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+record_catalog_sha256=7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b
+project_semantics_sha256=636212f32d0339d53afa3f0315c6603e3e989af331a4b05e12261f35cbac446e
+generation_profile_sha256=435094191a1a3106cabd671faa0be21c86006519a246acbb90425cf83ee17814
+SSLOG Record Catalog validation passed: records=40 payloads=40
+FCCG_PROGRESS|HOST_TEST|PLAN|70
+FCCG_PROGRESS|HOST_COMPILE_PASS|PLAN|7
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|PLAN|17
+Skipped host test attitude_alignment: unselected component sources
+Skipped host test alignment_strategy_gravity_known_yaw: unselected component sources
+Skipped host test alignment_strategy_gravity_mag_triad: unselected component sources
+Skipped host test alignment_strategy_hardware_quat6_known_yaw: unselected component sources
+Skipped host test alignment_strategy_hardware_quat9: unselected component sources
+Skipped host test navigation_sf6: unselected component sources
+Skipped host test navigation_kf_replay: unselected component sources
+Skipped host test air_kf: unselected component sources
+Skipped host test board_power_service: unselected component sources
+Skipped host test board_mission_action_service: unselected component sources
+FCCG_PROGRESS|HOST_TEST|BEGIN|1|70|interfaces
+interfaces: 11 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|1|70|interfaces
+FCCG_PROGRESS|HOST_TEST|BEGIN|2|70|common_format
+common_format: 13 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|2|70|common_format
+FCCG_PROGRESS|HOST_TEST|BEGIN|3|70|system_time
+system_time: 49 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|3|70|system_time
+FCCG_PROGRESS|HOST_TEST|BEGIN|4|70|profiles_kf6
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|4|70|profiles_kf6
+FCCG_PROGRESS|HOST_TEST|BEGIN|5|70|profiles_estimator_noise_overrides
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|5|70|profiles_estimator_noise_overrides
+FCCG_PROGRESS|HOST_TEST|BEGIN|6|70|profiles_pure_ins
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|6|70|profiles_pure_ins
+FCCG_PROGRESS|HOST_TEST|BEGIN|7|70|system_alignment
+system_alignment: 297 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|7|70|system_alignment
+FCCG_PROGRESS|HOST_TEST|BEGIN|8|70|system_alignment_pure_ins

@@ -46,8 +46,8 @@ typedef struct
 
 /* EstimatorTask is the only runtime owner. No DMA, heap, or replay side effects. */
 static NavigationEskfState s_state; /* CPU main SRAM, never DMA. */
-static PLATFORM_CPU_FAST_BSS NavigationEskfWorkspace s_work;
-static PLATFORM_CPU_FAST_BSS NavigationEskfReplay s_history;
+static PLATFORM_ESKF_WORK_BSS NavigationEskfWorkspace s_work;
+static PLATFORM_ESKF_HISTORY_BSS NavigationEskfReplay s_history;
 static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
 static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;
 static GeoLocalFrame s_frame;

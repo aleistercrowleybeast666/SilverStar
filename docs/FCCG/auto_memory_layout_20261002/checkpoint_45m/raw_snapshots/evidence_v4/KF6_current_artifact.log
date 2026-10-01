@@ -1,0 +1,39 @@
+FCCG_PROGRESS|ARTIFACT|PLAN|8
+FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|DONE|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|BEGIN|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP
+  auto decision object=s_replay_storage bytes=10368 region=CCMRAM address=0x10000000
+  auto decision object=s_groups bytes=320 region=RAM address=0x20002738
+FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|DONE|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|BEGIN|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM
+  historical logging budget used=102640 maximum=102400 physical_capacity=131072
+¾¯¸æ: Auto layout exceeds the historical 100 KiB main-SRAM regression budget by relocating CPU-only objects. Physical 
+overflow, DMA, stack reservation and startup checks remain blocking; budget spare is not stack margin.
+FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap
+SilverStar memory report:
+  FLASH     used=316844 remaining=207444 capacity=524288
+  main SRAM used=102640 remaining=28432 capacity=131072
+  CCMRAM    used=55112 remaining=10424 capacity=65536
+  heap      reserved=0 runtime_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap
+FCCG_PROGRESS|ARTIFACT|BEGIN|8|8|summary
+  largest static objects:
+    s_replay                         bytes= 19304 address=0x20003540 main SRAM
+    s_logger_storage                 bytes= 16000 address=0x2000CEA0 main SRAM
+    s_estimator                      bytes= 10944 address=0x10009740 CCMRAM
+    s_replay_storage                 bytes= 10368 address=0x10000000 CCMRAM
+    s_estimator_logger_storage       bytes=  9600 address=0x2000A900 main SRAM
+    s_hal_contexts                   bytes=  8190 address=0x20014B74 main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10003880 CCMRAM
+    s_io_baselines                   bytes=  4864 address=0x1000C448 CCMRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000470 main SRAM
+    s_estimator_stack                bytes=  4096 address=0x10006C80 CCMRAM
+SilverStar artifact check passed: target=SilverStar_F407 config=Release elf_bytes=3225552 bin_bytes=316848 heap_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|8|8|summary
