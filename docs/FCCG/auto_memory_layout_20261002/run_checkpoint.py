@@ -108,8 +108,8 @@ if mode in ("gates", "final"):
                                                       "PYTHON=" + sys.executable.replace("\\", "/"), "static-analysis"], timeout=2400)
         run(name + "_stack_report", directory, [MAKE, "CONFIG=Release", "MEMORY_LAYOUT=auto",
                                                    "PYTHON=" + sys.executable.replace("\\", "/"), "stack-report"])
-if mode not in ("matrix", "gates", "final"):
-    raise SystemExit("expected matrix, gates or final")
+if mode not in ("matrix", "gates", "final", "generate"):
+    raise SystemExit("expected matrix, gates, final or generate")
 manifest["artifact_sha256"] = {str(path.relative_to(PROJECTS)): hashlib.sha256(path.read_bytes()).hexdigest()
     for path in PROJECTS.rglob("*") if path.is_file() and path.suffix in (".elf", ".map", ".hex", ".bin", ".ssdecoder", ".ssproject", ".su")}
 manifest["source_unchanged_after"] = all(hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
