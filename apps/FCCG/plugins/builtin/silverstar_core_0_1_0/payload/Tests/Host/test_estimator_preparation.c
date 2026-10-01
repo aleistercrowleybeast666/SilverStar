@@ -136,7 +136,11 @@ static void Test_GnssHealthProducerVariance(void)
         else
         { event.velocity[axis] = sqrtf(target_nis * (s_estimator.kf.covariance[state_axis][state_axis] + scale)); }
         Estimator_GnssReplayEventApply(&event, &work);
-        TEST_CHECK(SystemNavigationHealth_GroupGet(group, 1010000ULL, &health) == SYSTEM_DEVICE_OK);
+        SystemDeviceResult health_result = SystemNavigationHealth_GroupGet(group, 1010000ULL, &health);
+        TEST_CHECK(health_result == SYSTEM_DEVICE_OK);
+        /* TEST_CHECK records a failure but continues. An error leaves health
+         * untouched, so do not inspect it after recording that failed check. */
+        if (health_result != SYSTEM_DEVICE_OK) { return; }
         TEST_CHECK(health.has_success == 1U && health.last_successful_fusion_us == 1010000ULL);
         TEST_CHECK(health.state == SYSTEM_NAVIGATION_SOFT_WEIGHTED);
         TEST_CHECK_NEAR(health.variance_scale, scale * robust, 0.0001f);
