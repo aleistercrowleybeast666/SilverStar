@@ -2085,6 +2085,53 @@ static void Test_NavigationDetails(void)
     TEST_CHECK(detail_mask == ((1ULL << 52U) - 1ULL));
 }
 
+static void Test_AckCacheSessionAndSequenceReuse(void)
+{
+    const TestFrame *frame;
+    uint8_t first_capability;
+    uint8_t next_capability;
+    uint8_t cycle;
+    Test_Reset();
+    first_capability = Test_InitialCapabilitySend();
+    Test_CapabilityAck(255U, first_capability);
+    s_alignment_start_result = SYSTEM_DEVICE_OK;
+    Test_CommandQueue(0U, AIR_CMD_ALIGN_START, AIR_TOKEN_ALIGNMENT, 0U, 0U);
+    TelemetryService_Process();
+    TEST_CHECK(s_alignment_start_count == 1U);
+    Test_CommandQueue(0U, AIR_CMD_ALIGN_START, AIR_TOKEN_ALIGNMENT, 0U, 0U);
+    TelemetryService_Process();
+    TEST_CHECK(s_alignment_start_count == 1U);
+    s_now_us += SYSTEM_TELEMETRY_CAPABILITY_PERIOD_US;
+    for (cycle = 0U; cycle < 8U; cycle++) { TelemetryService_Process(); }
+    frame = Test_LastTypeGet(AIR_TYPE_CAPABILITY);
+    TEST_CHECK(frame != NULL);
+    if (frame == NULL) { return; }
+    next_capability = frame->data[1];
+    TEST_CHECK(next_capability != first_capability);
+    /* Same seq/id and a superseded Capability must be rejected, not replay OK. */
+    Test_CommandQueue(255U, AIR_CMD_CAPABILITY_ACK, 0U, first_capability, AIR_PROFILE_COMPACT_V0);
+    TelemetryService_Process();
+    frame = Test_LastTypeGet(AIR_TYPE_ACK);
+    TEST_CHECK(frame != NULL && frame->data[4] == AIR_ACK_RESULT_BAD_PARAM);
+    Test_CapabilityAck(255U, next_capability);
+    s_alignment_start_result = SYSTEM_DEVICE_NOT_READY;
+    Test_CommandQueue(0U, AIR_CMD_ALIGN_START, AIR_TOKEN_ALIGNMENT, 0U, 0U);
+    TelemetryService_Process();
+    TEST_CHECK(s_alignment_start_count == 2U);
+    frame = Test_LastTypeGet(AIR_TYPE_ACK);
+    TEST_CHECK(frame != NULL && frame->data[4] != AIR_ACK_RESULT_OK);
+    /* Valid CAL_START payload changes must not hit a seq/id-only cache. */
+    Test_CommandQueue(7U, AIR_CMD_CAL_START, AIR_TOKEN_CALIBRATION, 0U, 0U);
+    TelemetryService_Process();
+    Test_CommandQueue(7U, AIR_CMD_CAL_START, AIR_TOKEN_CALIBRATION, 1U, 0U);
+    TelemetryService_Process();
+    TEST_CHECK(s_calibration_start_count == 2U);
+    s_now_us += 4000000ULL;
+    Test_CommandQueue(7U, AIR_CMD_CAL_START, AIR_TOKEN_CALIBRATION, 1U, 0U);
+    TelemetryService_Process();
+    TEST_CHECK(s_calibration_start_count == 3U);
+}
+
 int main(void)
 {
     TEST_CHECK(AIR_MAX_FRAME_LEN <= 64U);
@@ -2108,5 +2155,6 @@ int main(void)
     Test_NavigationSubscription();
     Test_NavigationHealth();
     Test_NavigationDetails();
+    Test_AckCacheSessionAndSequenceReuse();
     return Test_Finish("telemetry");
 }

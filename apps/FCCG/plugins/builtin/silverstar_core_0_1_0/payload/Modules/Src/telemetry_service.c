@@ -120,8 +120,8 @@ typedef struct
 typedef struct
 {
     uint8_t frame[AIR_ACK_LEN];
-    uint8_t command_sequence;
-    uint8_t command_id;
+    AirCmdPayload command;
+    uint64_t recorded_us;
     uint8_t valid;
 } TelemetryAckCacheEntry;
 
@@ -136,6 +136,10 @@ static uint8_t s_ack_cache_next;
 static uint8_t s_tx_sequence;
 static uint8_t s_start_request_pending;
 static uint8_t s_start_cmd_sequence;
+static AirCmdPayload s_start_command;
+static uint8_t s_capability_ack_known;
+static uint8_t s_capability_ack_sequence;
+static uint64_t s_capability_ack_us;
 static uint8_t s_locked;
 static uint8_t s_gnss_state_known;
 static uint8_t s_gnss_position_usable;
@@ -276,18 +280,37 @@ static uint8_t TelemetryService_AckFrameQueue(const uint8_t *frame)
     return 1U;
 }
 
-static uint8_t TelemetryService_CachedAckQueue(uint8_t command_sequence,
-                                               uint8_t command_id)
+/* Exact wire fields, not struct padding, identify an idempotent retry. */
+static uint8_t TelemetryService_CommandEqual(const AirCmdPayload *left,
+                                              const AirCmdPayload *right)
+{
+    SILVERSTAR_ASSERT_OBJECT(left, AirCmdPayload, SILVERSTAR_ASSERT_MODULE_MODULES);
+    SILVERSTAR_ASSERT_OBJECT(right, AirCmdPayload, SILVERSTAR_ASSERT_MODULE_MODULES);
+    return (uint8_t)((left->seq == right->seq) &&
+        (left->cmd_id == right->cmd_id) && (left->token == right->token) &&
+        (left->param0 == right->param0) && (left->param1 == right->param1));
+}
+
+static uint8_t TelemetryService_CachedAckQueue(const AirCmdPayload *command)
 {
     uint8_t index;
+    uint64_t now_us = SystemTime_GetMonotonicUs();
 
+    SILVERSTAR_ASSERT_OBJECT(command, AirCmdPayload, SILVERSTAR_ASSERT_MODULE_MODULES);
     for (index = 0U; index < TELEMETRY_ACK_CACHE_DEPTH; index++)
     {
-        if ((s_ack_cache[index].valid != 0U) &&
-            (s_ack_cache[index].command_sequence == command_sequence) &&
-            (s_ack_cache[index].command_id == command_id))
+        TelemetryAckCacheEntry *entry = &s_ack_cache[index];
+        /* GSHC's existing four attempts span 3.2 seconds. Bound reuse even if
+         * the 8-bit sequence wraps without a new Capability handshake. */
+        if ((entry->valid != 0U) &&
+            ((now_us - entry->recorded_us) >= 4000000ULL))
+        { entry->valid = 0U; }
+        if ((entry->valid != 0U) &&
+            (TelemetryService_CommandEqual(&entry->command, command) != 0U))
         {
-            (void)TelemetryService_AckFrameQueue(s_ack_cache[index].frame);
+            /* A full ACK queue drops this retry, not the idempotence record.
+             * Re-executing the command here would duplicate its side effects. */
+            if (TelemetryService_AckFrameQueue(entry->frame) == 0U) { return 1U; }
             return 1U;
         }
     }
@@ -331,9 +354,10 @@ static uint8_t TelemetryService_StatusQueue(uint8_t status_id,
                                            TelemetryService_AirTimeMs());
 }
 
-static uint8_t TelemetryService_AckQueue(uint8_t command_sequence,
-                                         uint8_t command_id,
-                                         AirAckResult result)
+static uint8_t TelemetryService_AckRawQueue(uint8_t command_sequence,
+                                            uint8_t command_id,
+                                            AirAckResult result,
+                                            const AirCmdPayload *command)
 {
     uint8_t frame[AIR_ACK_LEN];
     uint8_t length = 0U;
@@ -347,13 +371,24 @@ static uint8_t TelemetryService_AckQueue(uint8_t command_sequence,
         s_diagnostics.ack_queue_failure_count++;
         return 0U;
     }
-    (void)memcpy(s_ack_cache[s_ack_cache_next].frame,
-                 frame, AIR_ACK_LEN);
-    s_ack_cache[s_ack_cache_next].command_sequence = command_sequence;
-    s_ack_cache[s_ack_cache_next].command_id = command_id;
-    s_ack_cache[s_ack_cache_next].valid = 1U;
-    s_ack_cache_next = TelemetryService_AckCacheNext(s_ack_cache_next);
+    if (command != NULL)
+    {
+        SILVERSTAR_ASSERT(s_ack_cache_next < TELEMETRY_ACK_CACHE_DEPTH,
+            SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+        (void)memcpy(s_ack_cache[s_ack_cache_next].frame, frame, AIR_ACK_LEN);
+        s_ack_cache[s_ack_cache_next].command = *command;
+        s_ack_cache[s_ack_cache_next].recorded_us = SystemTime_GetMonotonicUs();
+        s_ack_cache[s_ack_cache_next].valid = 1U;
+        s_ack_cache_next = TelemetryService_AckCacheNext(s_ack_cache_next);
+    }
     return TelemetryService_AckFrameQueue(frame);
+}
+
+static uint8_t TelemetryService_AckQueue(const AirCmdPayload *command,
+                                         AirAckResult result)
+{
+    SILVERSTAR_ASSERT_OBJECT(command, AirCmdPayload, SILVERSTAR_ASSERT_MODULE_MODULES);
+    return TelemetryService_AckRawQueue(command->seq, command->cmd_id, result, command);
 }
 
 static AirAckResult TelemetryService_DeviceResultMap(
@@ -509,8 +544,7 @@ static void TelemetryService_StartResponseProcess(void)
             continue;
         }
         ack_result = TelemetryService_StartResponseMap(&response);
-        if (TelemetryService_AckQueue(s_start_cmd_sequence,
-                AIR_CMD_START_MISSION, ack_result) == 0U)
+        if (TelemetryService_AckQueue(&s_start_command, ack_result) == 0U)
         {
             return;
         }
@@ -542,17 +576,28 @@ static void TelemetryService_CapabilityCommand(
         (command->param0 != s_capability_sequence) ||
         (command->param1 != AIR_PROFILE_ID_CURRENT))
     {
-        (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+        (void)TelemetryService_AckQueue(command,
             (TelemetryService_IsPreflightState() != 0U) ?
                 AIR_ACK_RESULT_BAD_PARAM : AIR_ACK_RESULT_BAD_STATE);
         return;
+    }
+    if ((s_capability_ack_known == 0U) ||
+        (s_capability_ack_sequence != command->param0) ||
+        ((SystemTime_GetMonotonicUs() - s_capability_ack_us) >= 4000000ULL))
+    {
+        /* A newly validated handshake invalidates prior-session business ACKs.
+         * CAPABILITY_ACK itself always validates the current advertised frame. */
+        (void)memset(s_ack_cache, 0, sizeof(s_ack_cache));
+        s_capability_ack_sequence = command->param0;
+        s_capability_ack_us = SystemTime_GetMonotonicUs();
+        s_capability_ack_known = 1U;
     }
     s_capability_state = TELEMETRY_CAPABILITY_ACKED;
     s_capability_send_pending = 0U;
     /* Keep the existing deadline: reconnects still need periodic Capability. */
     s_preflight_status_send_pending = 1U;
     s_next_preflight_status_us = 0ULL;
-    (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+    (void)TelemetryService_AckQueue(command,
                               AIR_ACK_RESULT_OK);
 }
 
@@ -580,7 +625,7 @@ static void TelemetryService_NavigationSubscribe(const AirCmdPayload *command)
         s_navigation_detail_index = 0U;
         result = AIR_ACK_RESULT_OK;
     }
-    if (TelemetryService_AckQueue(command->seq, command->cmd_id, result) == 0U)
+    if (TelemetryService_AckQueue(command, result) == 0U)
     {
         /* No extension state is advertised when its request could not be acknowledged. */
         s_navigation_session = 0U;
@@ -614,7 +659,7 @@ static void TelemetryService_CalibrationCommand(
             result = SYSTEM_DEVICE_INVALID_ARGUMENT;
             break;
     }
-    (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+    (void)TelemetryService_AckQueue(command,
                               TelemetryService_DeviceResultMap(result));
 }
 
@@ -636,7 +681,7 @@ static void TelemetryService_AlignmentCommand(
         ((SystemCalibration_IsReady() == 0U) ?
             AIR_ACK_RESULT_CALIBRATION_REQUIRED : AIR_ACK_RESULT_SYSTEM_NOT_READY) :
         TelemetryService_DeviceResultMap(result);
-    (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+    (void)TelemetryService_AckQueue(command,
                                     ack_result);
 }
 
@@ -651,7 +696,7 @@ static void TelemetryService_StartCommand(const AirCmdPayload *command)
     block_reason = TelemetryService_AirStartBlockReasonGet();
     if (block_reason != AIR_ACK_RESULT_OK)
     {
-        (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+        (void)TelemetryService_AckQueue(command,
             block_reason);
         return;
     }
@@ -660,13 +705,14 @@ static void TelemetryService_StartCommand(const AirCmdPayload *command)
     result = SystemLifecycle_SubmitStart(&request);
     if (result != SYSTEM_DEVICE_OK)
     {
-        (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+        (void)TelemetryService_AckQueue(command,
             (result == SYSTEM_DEVICE_BUSY) ? AIR_ACK_RESULT_BUSY :
                                              AIR_ACK_RESULT_REJECTED);
         return;
     }
     s_start_request_pending = 1U;
     s_start_cmd_sequence = command->seq;
+    s_start_command = *command;
 }
 
 static void TelemetryService_LockCommand(const AirCmdPayload *command,
@@ -678,7 +724,7 @@ static void TelemetryService_LockCommand(const AirCmdPayload *command,
         SILVERSTAR_ASSERT_MODULE_MODULES);
     if (s_locked == lock_requested)
     {
-        (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+        (void)TelemetryService_AckQueue(command,
             (lock_requested != 0U) ? AIR_ACK_RESULT_ALREADY_LOCKED :
                                      AIR_ACK_RESULT_ALREADY_UNLOCKED);
         return;
@@ -686,7 +732,7 @@ static void TelemetryService_LockCommand(const AirCmdPayload *command,
     s_locked = lock_requested;
     status_id = (lock_requested != 0U) ? AIR_STATUS_LOCKED :
                                          AIR_STATUS_UNLOCKED;
-    (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+    (void)TelemetryService_AckQueue(command,
         AIR_ACK_RESULT_OK);
     (void)TelemetryService_StatusQueue(status_id, 0U, 0U,
         TELEMETRY_STATUS_REPEAT_COUNT);
@@ -696,8 +742,7 @@ static uint8_t TelemetryService_CommandIsPendingStart(
     const AirCmdPayload *command)
 {
     return (uint8_t)((s_start_request_pending != 0U) &&
-        (command->seq == s_start_cmd_sequence) &&
-        (command->cmd_id == AIR_CMD_START_MISSION));
+        (TelemetryService_CommandEqual(command, &s_start_command) != 0U));
 }
 
 static void TelemetryService_MissionCommand(const AirCmdPayload *command)
@@ -708,7 +753,7 @@ static void TelemetryService_MissionCommand(const AirCmdPayload *command)
         case AIR_CMD_LOCK: TelemetryService_LockCommand(command, 1U); break;
         case AIR_CMD_UNLOCK: TelemetryService_LockCommand(command, 0U); break;
         default:
-            (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+            (void)TelemetryService_AckQueue(command,
                 AIR_ACK_RESULT_BAD_CMD);
             break;
     }
@@ -725,7 +770,12 @@ static void TelemetryService_CommandDispatch(const AirCmdPayload *command)
         TelemetryService_NavigationSubscribe(command);
         return;
     }
-    if (TelemetryService_CachedAckQueue(command->seq, command->cmd_id) != 0U)
+    if (command->cmd_id == AIR_CMD_CAPABILITY_ACK)
+    {
+        TelemetryService_CapabilityCommand(command);
+        return;
+    }
+    if (TelemetryService_CachedAckQueue(command) != 0U)
     {
         return;
     }
@@ -735,19 +785,14 @@ static void TelemetryService_CommandDispatch(const AirCmdPayload *command)
     }
     if (command->cmd_id == AIR_CMD_PING)
     {
-        (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+        (void)TelemetryService_AckQueue(command,
             AIR_ACK_RESULT_OK);
-        return;
-    }
-    if (command->cmd_id == AIR_CMD_CAPABILITY_ACK)
-    {
-        TelemetryService_CapabilityCommand(command);
         return;
     }
     if ((TelemetryService_IsPreflightState() != 0U) &&
         (s_capability_state != TELEMETRY_CAPABILITY_ACKED))
     {
-        (void)TelemetryService_AckQueue(command->seq, command->cmd_id,
+        (void)TelemetryService_AckQueue(command,
                                   AIR_ACK_RESULT_CAPABILITY_REQUIRED);
         return;
     }
@@ -812,7 +857,7 @@ static void TelemetryService_ReceiveProcess(void)
             {
                 ack_result = AIR_ACK_RESULT_BAD_PARAM;
             }
-            (void)TelemetryService_AckQueue(frame[1], frame[2], ack_result);
+            (void)TelemetryService_AckRawQueue(frame[1], frame[2], ack_result, NULL);
         }
     }
     s_diagnostics.receive_limit_count++;
@@ -1842,6 +1887,10 @@ SystemDeviceResult TelemetryService_Init(void)
     s_ack_head = 0U;
     s_ack_tail = 0U;
     s_ack_cache_next = 0U;
+    s_capability_ack_known = 0U;
+    s_capability_ack_sequence = 0U;
+    s_capability_ack_us = 0ULL;
+    (void)memset(&s_start_command, 0, sizeof(s_start_command));
     s_tx_sequence = 0U;
     s_start_request_pending = 0U;
     s_start_cmd_sequence = 0U;

@@ -218,6 +218,9 @@ static void Test_ContextQueueAndIrqIsolation(void)
     TEST_CHECK(Lora_TxEnqueue(1U, payload1, sizeof(payload1)) ==
                LORA_TX_ENQUEUE_OK);
 
+    Lora_StartRx(0U);
+    Lora_StartRx(1U);
+    s_tick_ms += 120U;
     Lora_Process(0U);
     TEST_CHECK(s_radios[0].send_count == 1U);
     TEST_CHECK(s_radios[1].send_count == 0U);

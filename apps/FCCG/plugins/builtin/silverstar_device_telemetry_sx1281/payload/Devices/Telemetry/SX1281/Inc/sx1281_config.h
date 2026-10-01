@@ -18,6 +18,11 @@
 #define LORA_TX_QUEUE_DEPTH             8U
 #define LORA_RX_QUEUE_DEPTH             8U
 
+/* Owner-task scheduling policy: preserve a receive opportunity between TXs.
+ * This interval bounds software starvation; RF airtime/collisions still need
+ * verification for the selected PHY and host retry schedule. */
+#define LORA_RX_DWELL_MS                120U
+
 #define LORA_PROFILE_RANGE_1K           0
 #define LORA_PROFILE_2K                 1
 #define LORA_PROFILE_4K                 2

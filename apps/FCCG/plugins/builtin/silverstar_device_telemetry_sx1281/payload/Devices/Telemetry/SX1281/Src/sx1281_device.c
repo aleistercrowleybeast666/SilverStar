@@ -58,6 +58,7 @@ typedef struct
     volatile uint8_t inited;
     volatile uint8_t tx_busy;
     volatile uint8_t radio_in_rx;
+    uint32_t rx_started_ms;
     uint8_t rx_tmp_buf[LORA_MAX_PAYLOAD_LEN];
     PacketStatus_t pkt_status;
     ModulationParams_t mod_params;
@@ -99,6 +100,7 @@ _Static_assert((LORA_RX_QUEUE_DEPTH > 0U) && (LORA_RX_QUEUE_DEPTH <= UINT8_MAX),
 #define s_inited              (s_contexts[instance].inited)
 #define s_tx_busy             (s_contexts[instance].tx_busy)
 #define s_radio_in_rx         (s_contexts[instance].radio_in_rx)
+#define s_rx_started_ms       (s_contexts[instance].rx_started_ms)
 #define s_rx_tmp_buf          (s_contexts[instance].rx_tmp_buf)
 #define s_pkt_status          (s_contexts[instance].pkt_status)
 #define s_mod_params          (s_contexts[instance].mod_params)
@@ -697,6 +699,7 @@ void Lora_StartRx(uint8_t instance)
     Lora_DiagRecordSetRx(instance);
 
     s_radio_in_rx = 1U;
+    s_rx_started_ms = PlatformTime_Ms();
     if (s_tx_busy != 0)
     {
         Lora_SetRadioState(instance, LORA_RADIO_STATE_TX);
@@ -969,11 +972,17 @@ void Lora_Process(uint8_t instance)
     Lora_RxErrorProcess(instance);
     if (s_tx_busy == 0)
     {
-        Lora_TryStartNextTx(instance);
-        if ((s_tx_busy == 0) && (s_radio_in_rx == 0))
+        if (s_radio_in_rx == 0)
         {
             Lora_StartRx(instance);
+            return;
         }
+        /* RX starts after every completion/timeout, even with a full TX ring.
+         * The owner clock comparison is wrap-safe; ISR callbacks do not write
+         * this timestamp. Queue ordering and existing full-queue errors stay. */
+        if ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) < LORA_RX_DWELL_MS)
+        { return; }
+        Lora_TryStartNextTx(instance);
     }
 }
 
@@ -1123,6 +1132,7 @@ static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
 
     primask = Lora_IrqLock();
     s_radio_in_rx = 1U;
+    s_rx_started_ms = PlatformTime_Ms();
     Lora_IrqUnlock(primask);
     Lora_SetRadioState(instance, LORA_RADIO_STATE_RX);
 
