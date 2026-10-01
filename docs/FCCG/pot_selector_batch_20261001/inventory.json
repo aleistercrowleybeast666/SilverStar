@@ -1,0 +1,1781 @@
+{
+  "baseline_failures": 180,
+  "after_failures": 171,
+  "remaining_zero": 153,
+  "remaining_one": 18,
+  "closed_functions": [
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemImu_Init",
+      "CodeLines": 48,
+      "AssertionCount": 2
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemImu_Start",
+      "CodeLines": 34,
+      "AssertionCount": 3
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemSourceSelector_GnssSwitchEvaluate",
+      "CodeLines": 53,
+      "AssertionCount": 4
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemGnss_Init",
+      "CodeLines": 52,
+      "AssertionCount": 2
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemGnss_Start",
+      "CodeLines": 58,
+      "AssertionCount": 5
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemSourceSelector_TelemetryNextStart",
+      "CodeLines": 37,
+      "AssertionCount": 4
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemSourceSelector_TelemetryHealthProcess",
+      "CodeLines": 56,
+      "AssertionCount": 3
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemTelemetry_Init",
+      "CodeLines": 54,
+      "AssertionCount": 2
+    },
+    {
+      "File": "System\\Src\\system_source_selector.c",
+      "Name": "SystemTelemetry_Start",
+      "CodeLines": 31,
+      "AssertionCount": 3
+    }
+  ],
+  "supplementary_text_density": {
+    "baseline_count": 2513,
+    "after_count": 2541,
+    "denominator_functions": 2604,
+    "after_ratio": 0.9758064516129032,
+    "limitations": "Unmodified checker parser, first-party scan only; typed-object macro can count two checks; regex count is not proof of useful semantic assertion density, and it does not change N=2/M=20"
+  },
+  "remaining": [
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/estimator_task.c",
+      "function": "Estimator_HealthEventsPublish",
+      "line": 3160,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/flight_task.c",
+      "function": "FlightTask_FlightRecoveryEventsProcess",
+      "line": 588,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/flight_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/flight_task.c",
+      "function": "FlightTask_MissionSnapshotIdentityWrite",
+      "line": 884,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/flight_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/flight_task.c",
+      "function": "FlightTask_MagCalibrationIdentityWrite",
+      "line": 913,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/flight_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/flight_task.c",
+      "function": "FlightTask_WriteStartRecords",
+      "line": 957,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/flight_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/flight_task.c",
+      "function": "FlightTask_RuntimeInitialize",
+      "line": 1016,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/flight_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/flight_task.c",
+      "function": "AppTask_Flight",
+      "line": 1105,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/flight_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/ins_task.c",
+      "function": "InsTask_DiagnosticsPublish",
+      "line": 91,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/ins_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/ins_task.c",
+      "function": "AppTask_Ins",
+      "line": 857,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/ins_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/ins_task.c",
+      "function": "InsTask_InitializeMission",
+      "line": 1008,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/ins_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/ins_task.c",
+      "function": "InsTask_AlignmentReset",
+      "line": 1137,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/ins_task.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/logger_bus.c",
+      "function": "LoggerBus_DeviceDescriptorsPush",
+      "line": 376,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_bus.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/logger_bus.c",
+      "function": "LoggerBus_AlgorithmDescriptorsPush",
+      "line": 417,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_bus.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/logger_bus.c",
+      "function": "LoggerBus_StreamDescriptorsPush",
+      "line": 455,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_bus.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "APP/Src/logger_bus.c",
+      "function": "LoggerBus_MissionConfigPush",
+      "line": 546,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_bus.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "function": "NeoM9nGnssAdapter_Init",
+      "line": 164,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "function": "NeoM9nGnssAdapter_StartupProcess",
+      "line": 235,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "function": "NeoM9nGnssAdapter_Process",
+      "line": 274,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "function": "NeoM9nGnssAdapter_ConfigReadResultMap",
+      "line": 591,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "function": "NeoM9nGnssAdapter_RuntimeTransactionCancel",
+      "line": 1186,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_UbxFrameEnqueue",
+      "line": 371,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_DiscontinuityHandle",
+      "line": 461,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_FinishNmea",
+      "line": 526,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParseNmeaByte",
+      "line": 575,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_PersistFromLayers",
+      "line": 750,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ValgetSignalStore",
+      "line": 882,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ValgetStore",
+      "line": 923,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_GetDetected",
+      "line": 1015,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_WaitAck",
+      "line": 1046,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_WaitValget",
+      "line": 1092,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ValgetAsyncPoll",
+      "line": 1176,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParseNavPvt",
+      "line": 1401,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParseNavSat",
+      "line": 1484,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParseMonRf",
+      "line": 1587,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParseAck",
+      "line": 1627,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ValgetHeaderValidate",
+      "line": 1673,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParseValget",
+      "line": 1763,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_UpdateStatus",
+      "line": 1791,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ChecksumErrorHandle",
+      "line": 1825,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_Identify",
+      "line": 1990,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ProbeStart",
+      "line": 2023,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParsedFrameDispatch",
+      "line": 2202,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ParseByte",
+      "line": 2254,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ApplyDefaultConfig",
+      "line": 2302,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_TransactionStateResetLocked",
+      "line": 2369,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_Process",
+      "line": 2454,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ReadHardwareConfig",
+      "line": 2729,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ConfigAsyncNextGroup",
+      "line": 2784,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "Gnss_ConfigAsyncKeyFinish",
+      "line": 2812,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigReadAsyncStart",
+      "line": 2859,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigReadAsyncPoll",
+      "line": 3029,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigReadAsyncCancel",
+      "line": 3081,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ItemReadStart",
+      "line": 3111,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ItemWritePoll",
+      "line": 3221,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_SatelliteDiagnosticsAsyncStart",
+      "line": 3302,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_RfDiagnosticsAsyncStart",
+      "line": 3424,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_SendUbx",
+      "line": 3537,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigOutputProtocol",
+      "line": 3584,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigNavRate",
+      "line": 3666,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigUartBaudrate",
+      "line": 3708,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigDynamicModel",
+      "line": 3774,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigSignals",
+      "line": 3804,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigSignalsGpsBdsGal",
+      "line": 3865,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_WaitForNewNavPvt",
+      "line": 3904,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "function": "GnssNeoM9n_ConfigPreset",
+      "line": 3981,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "function": "Jy901bAdapter_SharedInit",
+      "line": 212,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "function": "Jy901bAdapter_StartupProcess",
+      "line": 282,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "function": "Jy901bAdapter_SharedProcess",
+      "line": 317,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "Jy901bImu_SampleQueue",
+      "line": 110,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_OnFrameDecoded",
+      "line": 201,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_WriteRegister",
+      "line": 449,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_StateToString",
+      "line": 1091,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_ApplyDefaultConfig",
+      "line": 1226,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_Poll",
+      "line": 1286,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_ConfigCacheSetField",
+      "line": 1431,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_SetBaudrate",
+      "line": 1503,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_SetInstallationOrientation",
+      "line": 1584,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_EnsureAlgorithm6Axis",
+      "line": 1646,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "function": "IMU_EnsureQuaternionOutput",
+      "line": 1723,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_StatusQueueAt",
+      "line": 297,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_AckQueue",
+      "line": 334,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_DeviceResultMap",
+      "line": 359,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_StartResultMap",
+      "line": 388,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_StartResponseProcess",
+      "line": 482,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_ReceiveProcess",
+      "line": 770,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_GnssStateProcess",
+      "line": 820,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_AlignmentSnapshotSchedule",
+      "line": 895,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_AlignmentStateProcess",
+      "line": 922,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_CalibrationStateProcess",
+      "line": 975,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_FlightRecoveryStateProcess",
+      "line": 1031,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_StatusSend",
+      "line": 1156,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_SensorSnapshotSend",
+      "line": 1209,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_SensorSnapshotTerminalSend",
+      "line": 1260,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_CapabilitySend",
+      "line": 1286,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_PreflightStatusSend",
+      "line": 1333,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_PreflightStateSend",
+      "line": 1416,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_NavigationGnssMetric",
+      "line": 1562,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_StreamSend",
+      "line": 1782,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_Init",
+      "line": 1829,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "Modules/Src/telemetry_service.c",
+      "function": "TelemetryService_Process",
+      "line": 1886,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_CapabilityDetect",
+      "line": 438,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_MasksValidate",
+      "line": 471,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_StatusReset",
+      "line": 532,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_Init",
+      "line": 608,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_CalibrationUnavailableReset",
+      "line": 638,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_Process",
+      "line": 774,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_Start",
+      "line": 969,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_Stop",
+      "line": 1028,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_Reset",
+      "line": 1055,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_CalibrationInvalidate",
+      "line": 1090,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_PrepareMission",
+      "line": 1130,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Alignment/Src/system_alignment.c",
+      "function": "SystemAlignment_OriginsFreeze",
+      "line": 1174,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_StatusReset",
+      "line": 174,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_VarianceValid",
+      "line": 286,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_WindowComplete",
+      "line": 321,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_SixFaceCorrectionApply",
+      "line": 421,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_Start",
+      "line": 702,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_FaceCollect",
+      "line": 762,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_Stop",
+      "line": 817,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Calibration/Src/system_calibration.c",
+      "function": "SystemCalibration_Reset",
+      "line": 846,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Indicator/Src/system_indicator.c",
+      "function": "SystemIndicator_ModeSet",
+      "line": 277,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Indicator/Src/system_indicator.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Indicator/Src/system_indicator.c",
+      "function": "SystemIndicator_Notify",
+      "line": 299,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Indicator/Src/system_indicator.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_capabilities.c",
+      "function": "SystemCapabilities_SensorHealthMaskGet",
+      "line": 72,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_capabilities.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_capabilities.c",
+      "function": "SystemCapabilities_ServiceHealthMaskGet",
+      "line": 109,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_capabilities.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_DeviceClassGet",
+      "line": 367,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_DeviceErrorText",
+      "line": 398,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_GnssTransactionDetailText",
+      "line": 482,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_IoBaselineCapture",
+      "line": 1339,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_IoExecute",
+      "line": 1507,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_SystemFlightExecute",
+      "line": 1557,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_SystemStackExecute",
+      "line": 1698,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_SystemReadyExecute",
+      "line": 1791,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_GnssConfigReadExecute",
+      "line": 2338,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_GnssNavSatExecute",
+      "line": 2382,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_GnssMonRfExecute",
+      "line": 2425,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_GnssSampleDetailExecute",
+      "line": 2798,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_BarometerUpdateStateText",
+      "line": 3007,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_EstimatorBarometerExecute",
+      "line": 3052,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_EstimatorStatusExecute",
+      "line": 3131,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_EstimatorGnssUpdateStateText",
+      "line": 3162,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_EstimatorGnssSkipReasonText",
+      "line": 3187,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_EstimatorGnssExecute",
+      "line": 3318,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_KfStatusExecute",
+      "line": 3357,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_InsStatusExecute",
+      "line": 3392,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_MagStreamAsyncProcess",
+      "line": 3623,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_AlignmentAsyncProcess",
+      "line": 3791,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_FlightRecoveryAsyncProcess",
+      "line": 3887,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_Init",
+      "line": 3920,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_MagCalStatusExecute",
+      "line": 4488,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_ExecuteLine",
+      "line": 4559,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_console.c",
+      "function": "SystemConsole_Process",
+      "line": 4670,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_health.c",
+      "function": "SystemHealth_OutputSafe",
+      "line": 30,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_health.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_health.c",
+      "function": "SystemHealth_Process",
+      "line": 162,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_health.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_sensor_status.c",
+      "function": "SystemSensorStatus_DescriptorsRefresh",
+      "line": 140,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_sensor_status.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_sensor_status.c",
+      "function": "SystemSensorStatus_SummaryFlagsGet",
+      "line": 532,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_sensor_status.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_sensor_status.c",
+      "function": "SystemSensorStatus_SnapshotCapture",
+      "line": 561,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_sensor_status.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_ReportReset",
+      "line": 87,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_OutputStart",
+      "line": 173,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_ConsoleStart",
+      "line": 211,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_JyLogicalStart",
+      "line": 244,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_JyLogicalConfig",
+      "line": 306,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_ImuConfig",
+      "line": 363,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_GnssStart",
+      "line": 492,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_OtherAdaptersStart",
+      "line": 519,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_SensorCommunicationEvaluate",
+      "line": 609,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_ServiceCommunicationEvaluate",
+      "line": 649,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_ReportFinalize",
+      "line": 734,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_ReportPrint",
+      "line": 761,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_Run",
+      "line": 870,
+      "assertions": 0,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_WaitConfigTick",
+      "line": 915,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    },
+    {
+      "rule": "Rule5",
+      "firmware_path": "System/Src/system_startup.c",
+      "function": "SystemStartup_ProcessDevices",
+      "line": 964,
+      "assertions": 1,
+      "required": 2,
+      "repository_owner": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "status": "FAIL"
+    }
+  ]
+}

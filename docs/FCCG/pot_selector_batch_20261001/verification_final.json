@@ -1,0 +1,497 @@
+{
+  "head": "70ce20d157545d9109491d004bd293e5c0b053db",
+  "completed_utc": "2026-10-01T05:46:55.586027+00:00",
+  "results": [
+    {
+      "name": "baseline_final_contract_compile",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline\\Flight_Controller\\System\\Src",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\source_selector",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\source_selector_contract_host.c",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_contract_compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "baseline_final_1_init_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "init_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_init_order.log",
+      "sha256": "7f8aca6786dd0ba1cb4aeb66e0901cdbcad0b1e65d43bf25a0fcb6f73b6721dd"
+    },
+    {
+      "name": "baseline_final_1_init_result",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "init_result"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_init_result.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_1_start_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "start_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_start_order.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_1_start_count",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "start_count"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_start_count.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_1_start_result",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "start_result"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_start_result.log",
+      "sha256": "cfda7241ed86fad379f4941848b590de28fe7f2ca47761565d23b93d261302c8"
+    },
+    {
+      "name": "baseline_final_1_failed_restart",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "failed_restart"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_failed_restart.log",
+      "sha256": "5cda46cc5daf0f2f3294d83075a4d523e7023b230aa008acd8b7113563192ad0"
+    },
+    {
+      "name": "baseline_final_1_init_capacity",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "init_capacity"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_init_capacity.log",
+      "sha256": "9dcf80d0cd189838370af3c837e4b6202abb6a6c13fc3c6fa5b45b151bbc4c78"
+    },
+    {
+      "name": "baseline_final_1_normal",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "1",
+        "normal"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_1_normal.log",
+      "sha256": "45c49e1fb468972e68edb879bc710ac0dbad919c12845c1b865f6d3f07a0e178"
+    },
+    {
+      "name": "baseline_final_2_init_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "init_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_init_order.log",
+      "sha256": "7f8aca6786dd0ba1cb4aeb66e0901cdbcad0b1e65d43bf25a0fcb6f73b6721dd"
+    },
+    {
+      "name": "baseline_final_2_init_result",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "init_result"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_init_result.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_2_start_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "start_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_start_order.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_2_start_count",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "start_count"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_start_count.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_2_start_result",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "start_result"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_start_result.log",
+      "sha256": "cfda7241ed86fad379f4941848b590de28fe7f2ca47761565d23b93d261302c8"
+    },
+    {
+      "name": "baseline_final_2_failed_restart",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "failed_restart"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_failed_restart.log",
+      "sha256": "5cda46cc5daf0f2f3294d83075a4d523e7023b230aa008acd8b7113563192ad0"
+    },
+    {
+      "name": "baseline_final_2_init_capacity",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "init_capacity"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_init_capacity.log",
+      "sha256": "9dcf80d0cd189838370af3c837e4b6202abb6a6c13fc3c6fa5b45b151bbc4c78"
+    },
+    {
+      "name": "baseline_final_2_normal",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "normal"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_normal.log",
+      "sha256": "45c49e1fb468972e68edb879bc710ac0dbad919c12845c1b865f6d3f07a0e178"
+    },
+    {
+      "name": "baseline_final_3_init_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "init_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_init_order.log",
+      "sha256": "7f8aca6786dd0ba1cb4aeb66e0901cdbcad0b1e65d43bf25a0fcb6f73b6721dd"
+    },
+    {
+      "name": "baseline_final_3_init_result",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "init_result"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_init_result.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_3_start_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "start_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_start_order.log",
+      "sha256": "342b8392751904ec1cfd87a1aa660bc6b896e39d38ce36eca9b4769d2bd28163"
+    },
+    {
+      "name": "baseline_final_3_start_count",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "start_count"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_start_count.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_3_start_result",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "start_result"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_start_result.log",
+      "sha256": "cfda7241ed86fad379f4941848b590de28fe7f2ca47761565d23b93d261302c8"
+    },
+    {
+      "name": "baseline_final_3_failed_restart",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "failed_restart"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_failed_restart.log",
+      "sha256": "ea2a68abcae72a0025d769158d8c1fab20aebb609286e1a501ebd111c4ad6742"
+    },
+    {
+      "name": "baseline_final_3_init_capacity",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "init_capacity"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_init_capacity.log",
+      "sha256": "9dcf80d0cd189838370af3c837e4b6202abb6a6c13fc3c6fa5b45b151bbc4c78"
+    },
+    {
+      "name": "baseline_final_3_normal",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "normal"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_normal.log",
+      "sha256": "45c49e1fb468972e68edb879bc710ac0dbad919c12845c1b865f6d3f07a0e178"
+    },
+    {
+      "name": "baseline_final_0_gnss_count",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "gnss_count"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_gnss_count.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_0_gnss_active",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "gnss_active"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_gnss_active.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_0_gnss_position",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "gnss_position"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_gnss_position.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_0_gnss_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "gnss_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_gnss_order.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_0_next_count",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "next_count"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_next_count.log",
+      "sha256": "b0f0df4391fa6a673c0ac00d9b6b9eca7acf38ae28fc222a0e6e5b309854efef"
+    },
+    {
+      "name": "baseline_final_0_next_position",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "next_position"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_next_position.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_0_next_order",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "next_order"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_next_order.log",
+      "sha256": "d825419299626c7288696d882123c61d6cd4f80aa1c45f6cb87958887ac86a22"
+    },
+    {
+      "name": "baseline_final_0_next_result",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "next_result"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_next_result.log",
+      "sha256": "d825419299626c7288696d882123c61d6cd4f80aa1c45f6cb87958887ac86a22"
+    },
+    {
+      "name": "baseline_final_0_health_count",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "health_count"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_health_count.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_0_health_active",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "health_active"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_health_active.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_0_health_timeout",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "0",
+        "health_timeout"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_0_health_timeout.log",
+      "sha256": "315d34a92171fb609fea8f40b64f2d83e521b1c93dca596d0280f46ffb789d4f"
+    },
+    {
+      "name": "baseline_final_3_next_failed_restart",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "3",
+        "next_failed_restart"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_3_next_failed_restart.log",
+      "sha256": "b6682060ca7878ba2be6773f43582a59dddd829f56c9a339b633736b3ff890b6"
+    },
+    {
+      "name": "baseline_final_2_start_active",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "start_active"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_start_active.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "baseline_final_2_start_position",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\baseline_contract_final.exe",
+        "2",
+        "start_position"
+      ],
+      "exit_code": 1,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\baseline_final_2_start_position.log",
+      "sha256": "75d4169240b1b7ffff6d012e6e98757e17df6e86a8bf423f39881c51be893a07"
+    },
+    {
+      "name": "after_pytest_final",
+      "command": [
+        "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "pytest",
+        "apps/FCCG/tests/test_source_selector_contract_host.py",
+        "apps/FCCG/tests/test_device_startup_fsm.py",
+        "apps/FCCG/tests/test_neo_m9n_startup.py",
+        "apps/FCCG/tests/test_jy901b_startup.py",
+        "apps/FCCG/tests/test_power_of_ten_checker_paths.py",
+        "-q",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\pytest_final",
+        "-o",
+        "cache_dir=D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\pytest_final_cache"
+      ],
+      "exit_code": 0,
+      "log": "docs\\FCCG\\pot_selector_batch_20261001\\after_pytest_final.log",
+      "sha256": "be8783e0f7894c8f7071582ff4b9093b4415c0635d9ea2178afb67edfd27d2b9"
+    }
+  ],
+  "firmware_unchanged_from_full_build_snapshot": true,
+  "original_full_checks": "result.json",
+  "final_test_sha256": {
+    "apps\\FCCG\\tests\\fixtures\\source_selector_contract_host.c": "391083388cd5d013e80307fb5cf379898e27423bd089a67fe8ad07f038981971",
+    "apps\\FCCG\\tests\\test_source_selector_contract_host.py": "79b5e3b122a05b326c130f5553fd600b79179339fdce3e14eca612e5fe884902"
+  },
+  "baseline_failed_cases": 32,
+  "baseline_passed_cases": 6,
+  "blockers": [
+    "Flight strict Power of Ten remains FAIL with 171 gaps",
+    "Hardware and whole-program task/library/MSP/ISR stack/timing qualification NOT PROVEN"
+  ],
+  "skips": []
+}

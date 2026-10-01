@@ -1,0 +1,4 @@
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:175: 0
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:184: s_telemetry_start_count[2] == 0U
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:185: s_telemetry.active == ((strcmp(case_name, "health_active") == 0) ? TEST_INSTANCE_COUNT : 0U)
+source_selector_switch_contract: 7 checks, 3 failures

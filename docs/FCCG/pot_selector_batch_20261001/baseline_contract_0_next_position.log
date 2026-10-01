@@ -1,0 +1,2 @@
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:169: 0
+source_selector_switch_contract: 7 checks, 1 failures

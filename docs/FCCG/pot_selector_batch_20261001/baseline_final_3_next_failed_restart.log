@@ -1,0 +1,2 @@
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:209: s_telemetry.started[1] == 0U
+source_selector_ordinary_boundary: 5 checks, 1 failures

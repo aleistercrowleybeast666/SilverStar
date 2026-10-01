@@ -1,0 +1,4 @@
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:73: ((kind == 1U) ? s_imu.started[0] : (kind == 2U) ? s_gnss.started[0] : s_telemetry.started[0]) == 0U
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:77: SystemTelemetry_Send(&payload, 1U) == SYSTEM_DEVICE_NOT_READY
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:78: s_telemetry_send_count[0] == 0U
+source_selector_contract: 7 checks, 3 failures

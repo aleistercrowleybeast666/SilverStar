@@ -1,0 +1,474 @@
+{
+  "Flight_Controller": {
+    "controlled_link_inputs": [
+      {
+        "source": "Core/Src/adc.c",
+        "sha256": "d97ea825eda51a68af477cb98e354f16579ac3f4643ba3adb681e87c0cc50668",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/adc.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/dma.c",
+        "sha256": "07b8188b8a07633bde3acc1bad31b941c281f331828e5868c9d613fa6b40cd1d",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/dma.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/gpio.c",
+        "sha256": "11509870a2afdba2f4266b65aa3e8983845eb21304a625716e32c9d2fd92f20c",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/gpio.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/main.c",
+        "sha256": "69ba52fbab7aa725e836ea923148624732f14f66b23df7e83e302f23815c2825",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/main.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/sdio.c",
+        "sha256": "c394155c73bb00b1fc8c1b6b16008e7175c3ece31e0e7a17a1a16f744ee204cd",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/sdio.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/spi.c",
+        "sha256": "cc0d5bf1fdf19c1f4cfc51386dd876c18e2e62d995765c990f2c5ff1f79de181",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/spi.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/stm32f4xx_hal_msp.c",
+        "sha256": "20068019c1fff792541802d587e12466025b3adc8611e3c8ed1267ab9b160688",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/stm32f4xx_hal_msp.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/stm32f4xx_hal_timebase_tim.c",
+        "sha256": "bfc01b357084f00c3799755d1c3d9ce7536a4072f31f6136fc3bdd431c1880aa",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/stm32f4xx_hal_timebase_tim.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/stm32f4xx_it.c",
+        "sha256": "02014d77cc3836c10d91b06a188aa04609d080a4a9d47e13415a784967ab2700",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/stm32f4xx_it.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/syscalls.c",
+        "sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/syscalls.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/system_stm32f4xx.c",
+        "sha256": "a31929eab936ac98db060c18917118acf79dc96e1f03ed4b57d614535dd06d70",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/system_stm32f4xx.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Core/Src/usart.c",
+        "sha256": "10a26d6de620fd1bba084c89185213414080ffc421192253e8b4e26aa7288406",
+        "object": "build/FCCG/SilverStar_F407/Release/Core/Src/usart.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c",
+        "sha256": "97e715cda2a34bd564b59ce4ba9b16bd29651f8f229161105aaec666d76ea91a",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c",
+        "sha256": "275b278044c92159719b25adebe672454387976ee5baeb1eb61e83c34deb13d1",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c",
+        "sha256": "54378229ed51c2b3e4665983bc0e9a644eca93a7838f622f7234710071967965",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c",
+        "sha256": "9aaa0f19137d700616bec01a5a806786c24e3f3386120365c5d2addaa4055505",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "sha256": "a345a1b1fe0221c827d5ad21d5a0f5387296bc2c075e06e5b8539c23da5678e4",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c",
+        "sha256": "90cafb5a5b17a46b478770ef4abdc9a641cb395419abbb80f288138a63d44582",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c",
+        "sha256": "f56651f86e5d89e8bba3bcb331353e00f291db15c902927a205d81bbe8951e6d",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c",
+        "sha256": "8bf12eeb6e6cfc12a17587ed6d761724e0835a4a3dc0f6b14a8d1ca068bcb55b",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c",
+        "sha256": "51a70deb9b19dd43f6f202430fae052f2deb26c39232c09c79230c8d8a61f773",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c",
+        "sha256": "d3b426e8cb9d617f9064d2b0cea2a1d02b7bb6a74cba3f094779d6e922e477e3",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c",
+        "sha256": "408908b15477b6ce2b0b9703caabcb053293d98f2f109d6e6940e076a6a3902b",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c",
+        "sha256": "d779468a95df34421bf6c8417136a79aa910753381a644afa9ed10b185ae18b5",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c",
+        "sha256": "4409dddc0d2019f918d0ddebecf659f06d4de3f9aa28566621a16ea47203331f",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c",
+        "sha256": "f3ac468e2f415adb74281107c0dec1448008950b64a7bb11c14cbe3ee1a936de",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c",
+        "sha256": "526324811fa113c3eadfa84cd24ea5e607ad8e8bf003a2085456c04b734ca25e",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "sha256": "02d7ccefa2b8574febacb1ad595bf1c20f3f0601853d4dd5ff536ce4f815c29b",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "sha256": "641ad467e834c17a83c445cf8eea7c8317a71976d7e0c77da740be999251efe4",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c",
+        "sha256": "a7dea3b10a771a380915007b9ece123654c6bd2a40f611102220df9bfdd143e4",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c",
+        "sha256": "4471b582d56545fbd48725401249b4a2a728ccc0d933b3f1a02e2b09dda8d8fa",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "sha256": "a74ed3a9a13a4fcbaada9e6f88f7d4fcabe2a75852a6ce4c09f8d4314a2e851a",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c",
+        "sha256": "9fe6fbeee8b8d44d8bc548f6d4abd8ee06693f56f12be013277dac2f767f19ec",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c",
+        "sha256": "888999f70d05daa37f57dc144c6cd31aa50259ac30d73a33ed628e663247f7a4",
+        "object": "build/FCCG/SilverStar_F407/Release/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "FATFS/App/fatfs.c",
+        "sha256": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6",
+        "object": "build/FCCG/SilverStar_F407/Release/FATFS/App/fatfs.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "FATFS/Target/bsp_driver_sd.c",
+        "sha256": "6ef6eb4e8ba3b3e2c7c84cc1ef4512ef2e7eb84ee0dee25ab48101cf9252292b",
+        "object": "build/FCCG/SilverStar_F407/Release/FATFS/Target/bsp_driver_sd.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "FATFS/Target/fatfs_platform.c",
+        "sha256": "f969058b6d48636d138a99109c1d2bd53dfcc1da7f888a2ddd3e10e820d06391",
+        "object": "build/FCCG/SilverStar_F407/Release/FATFS/Target/fatfs_platform.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "FATFS/Target/sd_diskio.c",
+        "sha256": "2a03fc2f56b14ccfbc1df0ba30e0b57ea45d49cb5b76ecdc2f153313ba273dce",
+        "object": "build/FCCG/SilverStar_F407/Release/FATFS/Target/sd_diskio.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Middlewares/Third_Party/FatFs/src/diskio.c",
+        "sha256": "cc80dbfeed02589df9effc6b45b250f521fc1a3db5abe58461b28e99b17900ea",
+        "object": "build/FCCG/SilverStar_F407/Release/Middlewares/Third_Party/FatFs/src/diskio.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Middlewares/Third_Party/FatFs/src/ff.c",
+        "sha256": "511a87724dadd27a358bac32e37e66d6808eeb514eb773734f18878ed731b3dc",
+        "object": "build/FCCG/SilverStar_F407/Release/Middlewares/Third_Party/FatFs/src/ff.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c",
+        "sha256": "3480734146b7b7cf86f752ad584cfbb6b95cf5be7e25ab8917caa325d4fee46b",
+        "object": "build/FCCG/SilverStar_F407/Release/Middlewares/Third_Party/FatFs/src/ff_gen_drv.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Middlewares/Third_Party/SX1280lib/sx1280-hal.c",
+        "sha256": "fcc307ffa9ad29a51ddce4baccd93c06e2151671e7056081428c024f04fdf257",
+        "object": "build/FCCG/SilverStar_F407/Release/Middlewares/Third_Party/SX1280lib/sx1280-hal.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "Middlewares/Third_Party/SX1280lib/sx1280.c",
+        "sha256": "8afe88a8156575e181830407295d68d5f0e2221749a9dd312a0cf6a66bc910f9",
+        "object": "build/FCCG/SilverStar_F407/Release/Middlewares/Third_Party/SX1280lib/sx1280.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "ThirdParty/FreeRTOS-Kernel/list.c",
+        "sha256": "729cbade5c3a032a1572d4a94719af0c86aafab795ca2dc69d0f1975438730ca",
+        "object": "build/FCCG/SilverStar_F407/Release/ThirdParty/FreeRTOS-Kernel/list.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c",
+        "sha256": "7fd7815cad4ceea4794fc75703aaee051ebdea5be4d8f6317d9593bd1bf763d2",
+        "object": "build/FCCG/SilverStar_F407/Release/ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "ThirdParty/FreeRTOS-Kernel/queue.c",
+        "sha256": "12b7f97c1f39bdda91735edc0718f45ef5a369fa1c1bed6e4175ead72456701d",
+        "object": "build/FCCG/SilverStar_F407/Release/ThirdParty/FreeRTOS-Kernel/queue.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      },
+      {
+        "source": "ThirdParty/FreeRTOS-Kernel/tasks.c",
+        "sha256": "c781a9fcd5c8456a6f8a7c0b47bfeb2ea33f998b275a54bbdd4bf348d4735af5",
+        "object": "build/FCCG/SilverStar_F407/Release/ThirdParty/FreeRTOS-Kernel/tasks.o",
+        "qualification": "link input; LOAD does not prove retained code after section GC"
+      }
+    ],
+    "archives_seen_in_map": [
+      "libc.a",
+      "libgcc.a",
+      "libm.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libm.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libnosys.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a"
+    ],
+    "version_headers": [
+      {
+        "header": "ThirdParty\\FreeRTOS-Kernel\\include\\task.h",
+        "sha256": "1461d6d125676a9bff0842dd97460cd72b3c7fd0a1db64b39e634b99e947e6b1",
+        "version_or_license_lines": [
+          " * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.",
+          " * Copyright 2025 Arm Limited and/or its affiliates <open-source-office@arm.com>",
+          " * If tskKERNEL_VERSION_NUMBER ends with + it represents the version in development",
+          "#define tskKERNEL_VERSION_NUMBER                      \"V11.3.0\""
+        ]
+      },
+      {
+        "header": "Middlewares\\Third_Party\\FatFs\\src\\ff.h",
+        "sha256": "644ecaf33339fc46ff447386f001c0199c54213ec14ea78b0ab77bba2184841d",
+        "version_or_license_lines": [
+          "/ Copyright (C) 2017, ChaN, all right reserved.",
+          "#ifndef _FATFS",
+          "#define _FATFS\t68300\t/* Revision ID */",
+          "#if _FATFS != _FFCONF",
+          "#endif /* _FATFS */"
+        ]
+      },
+      {
+        "header": "Drivers\\CMSIS\\Include\\cmsis_version.h",
+        "sha256": "184c19fd3ee73632edf35a0b4d49cd48be75fbf49e6ccb19d9db05fa83bea4b3",
+        "version_or_license_lines": [
+          " * Copyright (c) 2009-2022 ARM Limited. All rights reserved.",
+          "#ifndef __CMSIS_VERSION_H",
+          "#define __CMSIS_VERSION_H",
+          "#define __CM_CMSIS_VERSION_MAIN  ( 5U)                                      /*!< [31:16] CMSIS Core(M) main version */",
+          "#define __CM_CMSIS_VERSION_SUB   ( 6U)                                      /*!< [15:0]  CMSIS Core(M) sub version */",
+          "#define __CM_CMSIS_VERSION       ((__CM_CMSIS_VERSION_MAIN << 16U) | \\",
+          "                                   __CM_CMSIS_VERSION_SUB           )       /*!< CMSIS Core(M) version number */"
+        ]
+      }
+    ],
+    "map_sha256": {
+      "build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.map": "8b08e6b83300efcd1f2cee4051d1eb4f3894b7b78732c24cea4d3bccc64030bc"
+    },
+    "limitations": [
+      "Upstream licensing and version headers unchanged",
+      "Vendor/RTOS/FatFs/libc implementations excluded from first-party gate; their PoT compliance NOT PROVEN",
+      "RTOS task entry and HAL/RTOS callbacks and library indirect calls require separate recursion/stack/timing analysis",
+      "LOAD inventory is not an exhaustive retained-symbol call graph"
+    ]
+  },
+  "Ground_Station": {
+    "controlled_link_inputs": [],
+    "archives_seen_in_map": [
+      "libc.a",
+      "libgcc.a",
+      "libm.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libm.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libnosys.a",
+      "rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a"
+    ],
+    "version_headers": [
+      {
+        "header": "Drivers\\CMSIS\\Include\\cmsis_version.h",
+        "sha256": "280b9fc8739aefa878d47e68d7adbd4908a15f98ec193cdba1a4b514133f5c34",
+        "version_or_license_lines": [
+          " * Copyright (c) 2009-2017 ARM Limited. All rights reserved.",
+          "#ifndef __CMSIS_VERSION_H",
+          "#define __CMSIS_VERSION_H",
+          "#define __CM_CMSIS_VERSION_MAIN  ( 5U)                                      /*!< [31:16] CMSIS Core(M) main version */",
+          "#define __CM_CMSIS_VERSION_SUB   ( 1U)                                      /*!< [15:0]  CMSIS Core(M) sub version */",
+          "#define __CM_CMSIS_VERSION       ((__CM_CMSIS_VERSION_MAIN << 16U) | \\",
+          "                                   __CM_CMSIS_VERSION_SUB           )       /*!< CMSIS Core(M) version number */"
+        ]
+      }
+    ],
+    "map_sha256": {
+      "build\\ground.map": "cea18b1757ff68d93531fd3d4779974298e949936bcf3da5fc4e9806575e449b"
+    },
+    "limitations": [
+      "Upstream licensing and version headers unchanged",
+      "Vendor/RTOS/FatFs/libc implementations excluded from first-party gate; their PoT compliance NOT PROVEN",
+      "RTOS task entry and HAL/RTOS callbacks and library indirect calls require separate recursion/stack/timing analysis",
+      "LOAD inventory is not an exhaustive retained-symbol call graph",
+      "Ground single compile/link uses temporary object names; source identities come from the source graph and command, not LOAD-to-source attribution"
+    ],
+    "source_graph_sha256": "dd392f07ada28b2ccb550fa3ab5f9160b13861765f30c86be831ae1948b544df",
+    "controlled_compile_inputs": [
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+        "sha256": "6650fcfa559dca126b91c6c0f576e3dec25ddb26811c55e294cbcc01888a85ec"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+        "sha256": "024427c57b2f4413fe95806fb5e91b3703093d9b132f4976bd9a1525989f6e23"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+        "sha256": "2dd9d28fb9417ce038e4ec6cabdaffe3045367ca104acfad02e564101c794673"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+        "sha256": "ee943847b1c8ba91bdd6bbd16a31bc3ef1704d3dbd4e072aa88e1f6003729185"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+        "sha256": "b746471b45111f8a52f210a4375819bca8d91150fb82a0736f7711e7683cdf69"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+        "sha256": "ebacea8f41a177a467cf90344705f84f60fe60747ed86524d56e0c3dea7083f4"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+        "sha256": "5316062f62ea8b049b49f8e3d78102ba5ddd744ed975e1e627cf826cbab9e501"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c",
+        "sha256": "eb7503a6a1f0b7bfd7488bd851ae3cac2b88194f344847c74e0a15e563b41db1"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+        "sha256": "a2e12792c9d49eecdc567ab9fc1a49ed90723007f9579b702c28960dfd83e121"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c",
+        "sha256": "5ec9f22de1b3ee82e8437b3ba52725f8f031cf9075848582a0a297d4d1176450"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
+        "sha256": "0662e01264be0233a4f8f2206dadf1c223caa17fd54c3b0e2d4a1ae771bd9c2b"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c",
+        "sha256": "12921c287574a4eb75aa2b71a2e590963b4f869a3b05e1532d495390412df3b8"
+      },
+      {
+        "source": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c",
+        "sha256": "59f07b164acc82a90aba2b97e83340c2287d702307a79d9299b0e80855e0f899"
+      },
+      {
+        "source": "Core/Src/dma.c",
+        "sha256": "d01f597b35d1381bb4d246a2cab078f7786e62355d06c322cabbdecff5c84f35"
+      },
+      {
+        "source": "Core/Src/gpio.c",
+        "sha256": "81b05b5afd16a3619b1a2d0d4a5a0e251fb194feff547cd7a141e3d22ad8e5ae"
+      },
+      {
+        "source": "Core/Src/main.c",
+        "sha256": "dca7b488dddd3226d93e859dfee7e964adfb4a29cef256b97710d942cb4e2dd1"
+      },
+      {
+        "source": "Core/Src/spi.c",
+        "sha256": "e1607b65e151f22d84b8485d518740992186990e502902a6e98cdaa09e7a0a1f"
+      },
+      {
+        "source": "Core/Src/stm32f1xx_hal_msp.c",
+        "sha256": "0c660d42a5bdd0df9e096117351e75ff94a8fb2cf0ec996cac0f55c1355c3ab9"
+      },
+      {
+        "source": "Core/Src/stm32f1xx_it.c",
+        "sha256": "c8f56b7a14ee3250507ac7e47e5b7557a2c521b5da37945928ad71f70c44eebe"
+      },
+      {
+        "source": "Core/Src/system_stm32f1xx.c",
+        "sha256": "6d73104f1f3c9835f5e1a2b53ef59c98b5015675acdc09124d55ac9fe42dee79"
+      },
+      {
+        "source": "Core/Src/usart.c",
+        "sha256": "c3963ae03d9139ad636694b3bc626a2469502f54785acbf7d6139edc1d4cd164"
+      },
+      {
+        "source": "Middlewares/Third_Party/SX1280lib/sx1280.c",
+        "sha256": "8afe88a8156575e181830407295d68d5f0e2221749a9dd312a0cf6a66bc910f9"
+      },
+      {
+        "source": "Middlewares/Third_Party/SX1280lib/sx1280-hal.c",
+        "sha256": "fcc307ffa9ad29a51ddce4baccd93c06e2151671e7056081428c024f04fdf257"
+      }
+    ]
+  }
+}

@@ -578,7 +578,9 @@ static void Test_GnssOneWayLiveness(void)
     SystemGnss_Process();
     TEST_CHECK(Test_ActiveGet(
         SystemSourceSelector_GnssActiveInstanceGet) == 0U);
-    TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_OK);
+    SystemDeviceResult sample_result = SystemGnss_LatestSampleGet(&sample);
+    TEST_CHECK(sample_result == SYSTEM_DEVICE_OK);
+    if (sample_result != SYSTEM_DEVICE_OK) { return; }
     TEST_CHECK(sample.online != 0U && sample.fix_ok == 0U);
     TEST_CHECK(s_event_count == 0U);
 

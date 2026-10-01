@@ -1,0 +1,24 @@
+.......F.........................................                        [100%]
+================================== FAILURES ===================================
+________________ test_source_selector_contract[start_order-2] _________________
+
+source_selector_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/SelectorSafety_70ce20d_20261001_v1/pytest/selector-contract0/contract.exe')
+kind = '2', scenario = 'start_order'
+
+    @pytest.mark.parametrize("kind", ["1", "2", "3"])
+    @pytest.mark.parametrize("scenario", ["init_order", "init_result", "start_order", "start_count",
+                                          "start_result", "failed_restart", "init_capacity", "normal"])
+    def test_source_selector_contract(source_selector_contract_executable, kind, scenario):
+        result = subprocess.run([str(source_selector_contract_executable), kind, scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\source_selector_contract_host.c:127: record.reason_id == reason
+E         source_selector_contract: 6 checks, 1 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\pytest\\selector-c...selector_contract_host.c:127: record.reason_id == reason\nsource_selector_contract: 6 checks, 1 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_source_selector_contract_host.py:40: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_source_selector_contract_host.py::test_source_selector_contract[start_order-2]
+1 failed, 48 passed in 14.05s
