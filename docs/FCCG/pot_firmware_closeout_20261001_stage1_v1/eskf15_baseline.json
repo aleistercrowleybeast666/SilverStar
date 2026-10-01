@@ -1,0 +1,84 @@
+{
+  "policy": "baseline only; no ESKF optimization performed",
+  "source_base_commit": "ff3550867dea6d54ac23a65d4906c2316d93fc06",
+  "source_snapshot": "result.json:source_sha256 + source_snapshot.diff",
+  "configurations": {
+    "kf6": {
+      "elf": ".work\\FirmwareCloseout_ff35508_stage1_v1\\after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+      "elf_sha256": "76e55fb406dce2edd436160801b44fab9a6ad4e3a0f1e7badfa00143d70fce09",
+      "symbols": {
+        "s_estimator_stack": {
+          "address": "10004400",
+          "bytes": 4096,
+          "type": "b"
+        },
+        "s_estimator": {
+          "address": "10009740",
+          "bytes": 10944,
+          "type": "b"
+        }
+      },
+      "stack_budget": ".work\\FirmwareCloseout_ff35508_stage1_v1\\after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "stack_budget_sha256": "31fe94e906cd4785017658ec210bb624b8a812e426ab1c059d62332200e9d719"
+    },
+    "eskf15": {
+      "elf": ".work\\FirmwareCloseout_ff35508_stage1_v1\\eskf15_baseline\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+      "elf_sha256": "6cc578db81dff3bb96cc7d2ac5d2ebedd8a784bb087332747f0392e456ae227f",
+      "symbols": {
+        "s_window": {
+          "address": "10009580",
+          "bytes": 184,
+          "type": "b"
+        },
+        "s_state": {
+          "address": "20016ed0",
+          "bytes": 992,
+          "type": "b"
+        },
+        "s_work": {
+          "address": "1000d898",
+          "bytes": 3980,
+          "type": "b"
+        },
+        "s_estimator_stack": {
+          "address": "10004400",
+          "bytes": 4096,
+          "type": "b"
+        },
+        "s_estimator": {
+          "address": "10006a00",
+          "bytes": 10232,
+          "type": "b"
+        },
+        "s_body_history": {
+          "address": "20013ed0",
+          "bytes": 12288,
+          "type": "b"
+        },
+        "s_history": {
+          "address": "10009638",
+          "bytes": 16992,
+          "type": "b"
+        }
+      },
+      "stack_budget": ".work\\FirmwareCloseout_ff35508_stage1_v1\\eskf15_baseline\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "stack_budget_sha256": "7e03ecd9990bf49eb45c697f5260b5d4ea352530acfa9b5a3fa9cd287a8f0b8f"
+    }
+  },
+  "eskf_algorithm_files": {
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc\\navigation_eskf.h": "0876d3fcc944b0aa191619e8aa8bbd7c61c79913818add00214a3126064352de",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc\\navigation_eskf_config.h": "abe273052b39e568da226da747683bfc779a3dba6d4c6955edb2efd1406ef9ff",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc\\navigation_eskf_replay.h": "80c2c8d00a496e3c85f260c771dae89b8ca1ec8690dcb8e08d4977fba6fb89a2",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c": "76d1772227859ecc06c03b21e9127c0cbbf402bbd824beeb569099eb0fcf25ea",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_backend.c": "dd80c2b6f811a73ba13c1bf6e9d718fcd7fba2b01076f5cd15b8b57bbaf0c1a9",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_replay.c": "086e9d3112380015a404f478f89e03cc09890bdfc97baea33746815aea056631"
+  },
+  "proposed_workspace_bytes": {
+    "before": 3980,
+    "after_proposed": 3140,
+    "savings_proposed": 840,
+    "verified_implementation": false
+  },
+  "initialization_alias_contract": "Production backend supplies s_work.f as covariance input; any reuse must preserve this input until an independent candidate copy is made. Not yet implemented.",
+  "algorithm_identical_to_baseline_commit": true
+}

@@ -1,0 +1,321 @@
+diff --git a/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c b/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
+index 78cfe0e..a534b23 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
++++ b/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
+@@ -1776,20 +1776,21 @@ IMUState IMU_SaveConfig(uint8_t instance)
+ {
+     IMUState state;
+ 
+-    (void)PlatformUart_RxStop(Jy901bResource_UartGet(instance));
++    if (PlatformUart_RxStop(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
++    {
++        return IMU_ReceiveResume(instance, IMU_UART_RX_ERROR);
++    }
+ 
+     state = IMU_SendConfigFrame(instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
+     if (state != IMU_OK)
+     {
+-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-        return state;
++        return IMU_ReceiveResume(instance, state);
+     }
+     PlatformTime_DelayMs(IMU_CFG_UNLOCK_DELAY_MS);
+ 
+     state = IMU_SendConfigFrame(instance, IMU_REG_SAVE, 0x0000U);
+     PlatformTime_DelayMs(IMU_CFG_SAVE_DELAY_MS);
+-    (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-    return state;
++    return IMU_ReceiveResume(instance, state);
+ }
+ 
+ IMUState IMU_ReadBaudrate(uint8_t instance, uint16_t *value)
+diff --git a/apps/FCCG/plugins/builtin/silverstar_mcu_family_stm32f4/payload/Platform/STM32F4/Src/platform_uart_stm32f4.c b/apps/FCCG/plugins/builtin/silverstar_mcu_family_stm32f4/payload/Platform/STM32F4/Src/platform_uart_stm32f4.c
+index 273c9b4..8630994 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_mcu_family_stm32f4/payload/Platform/STM32F4/Src/platform_uart_stm32f4.c
++++ b/apps/FCCG/plugins/builtin/silverstar_mcu_family_stm32f4/payload/Platform/STM32F4/Src/platform_uart_stm32f4.c
+@@ -417,19 +417,18 @@ PlatformResult PlatformUart_RxStop(PlatformUartId id)
+     return PlatformUart_ResultMap(result);
+ }
+ 
+-PlatformResult PlatformUart_RxRestart(PlatformUartId id)
++static PlatformResult PlatformUart_ReceiveRestart(PlatformUartContext *context)
+ {
+-    PlatformUartContext *context = PlatformUart_ContextGet(id);
+     PlatformCriticalState state;
+     PlatformResult result;
+ 
+-    if (context == NULL) { return PLATFORM_INVALID_ARGUMENT; }
+-    (void)HAL_UART_AbortReceive(context->handle);
++    result = PlatformUart_ResultMap(HAL_UART_AbortReceive(context->handle));
+     state = PlatformCritical_Enter();
+     PlatformUart_DiscontinuityRecord(context);
+     context->diagnostics.rx_restart_count++;
+     PlatformCritical_Exit(state);
+-    result = PlatformUart_RxStart(context);
++    /* Never start another DMA transfer after an unconfirmed receive stop. */
++    if (result == PLATFORM_OK) { result = PlatformUart_RxStart(context); }
+     if (result != PLATFORM_OK)
+     {
+         state = PlatformCritical_Enter();
+@@ -439,10 +438,45 @@ PlatformResult PlatformUart_RxRestart(PlatformUartId id)
+     return result;
+ }
+ 
++PlatformResult PlatformUart_RxRestart(PlatformUartId id)
++{
++    PlatformUartContext *context = PlatformUart_ContextGet(id);
++    if (context == NULL) { return PLATFORM_INVALID_ARGUMENT; }
++    return PlatformUart_ReceiveRestart(context);
++}
++
++static void PlatformUart_TransportErrorRecord(PlatformUartContext *context)
++{
++    PlatformCriticalState state = PlatformCritical_Enter();
++    context->diagnostics.transport_error_count++;
++    PlatformCritical_Exit(state);
++}
++
++static PlatformResult PlatformUart_BaudRestore(
++    PlatformUartContext *context, PlatformUartId id, uint32_t baudrate)
++{
++    /* Receive is already inactive. Recovery is bounded, and a failed HAL
++     * lifecycle step must not be followed by a DMA start. */
++    if (HAL_UART_DeInit(context->handle) != HAL_OK)
++    {
++        PlatformUart_TransportErrorRecord(context);
++        return PLATFORM_IO_ERROR;
++    }
++    context->handle->Init.BaudRate = baudrate;
++    if (HAL_UART_Init(context->handle) != HAL_OK)
++    {
++        PlatformUart_TransportErrorRecord(context);
++        return PLATFORM_IO_ERROR;
++    }
++    return PlatformUart_RxRestart(id);
++}
++
+ PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
+ {
+     PlatformUartContext *context = PlatformUart_ContextGet(id);
+     uint32_t previous_baudrate;
++    PlatformResult result;
++    PlatformResult restored;
+ 
+     if ((context == NULL) || (baudrate == 0U))
+     {
+@@ -451,16 +485,24 @@ PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
+     SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
+                              SILVERSTAR_ASSERT_MODULE_PLATFORM);
+     previous_baudrate = context->handle->Init.BaudRate;
+-    (void)HAL_UART_AbortReceive(context->handle);
+-    (void)HAL_UART_DeInit(context->handle);
++    result = PlatformUart_RxStop(id);
++    if (result != PLATFORM_OK)
++    {
++        restored = PlatformUart_RxRestart(id);
++        return (restored == PLATFORM_OK) ? result : restored;
++    }
++    if (HAL_UART_DeInit(context->handle) != HAL_OK)
++    {
++        PlatformUart_TransportErrorRecord(context);
++        restored = PlatformUart_BaudRestore(context, id, previous_baudrate);
++        return (restored == PLATFORM_OK) ? PLATFORM_IO_ERROR : restored;
++    }
+     context->handle->Init.BaudRate = baudrate;
+     if (HAL_UART_Init(context->handle) != HAL_OK)
+     {
+-        (void)HAL_UART_DeInit(context->handle);
+-        context->handle->Init.BaudRate = previous_baudrate;
+-        (void)HAL_UART_Init(context->handle);
+-        (void)PlatformUart_RxRestart(id);
+-        return PLATFORM_IO_ERROR;
++        PlatformUart_TransportErrorRecord(context);
++        restored = PlatformUart_BaudRestore(context, id, previous_baudrate);
++        return (restored == PLATFORM_OK) ? PLATFORM_IO_ERROR : restored;
+     }
+     __HAL_UART_CLEAR_OREFLAG(context->handle);
+     __HAL_UART_FLUSH_DRREGISTER(context->handle);
+@@ -634,15 +676,11 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *handle)
+     { context->diagnostics.uart_parity_error_count++; }
+     if ((handle->ErrorCode & HAL_UART_ERROR_DMA) != 0U)
+     { context->diagnostics.dma_error_count++; }
+-    PlatformUart_DiscontinuityRecord(context);
+-    context->diagnostics.rx_restart_count++;
+     PlatformCritical_Exit(state);
+-    (void)HAL_UART_AbortReceive(handle);
+-    result = PlatformUart_RxStart(context);
++    result = PlatformUart_ReceiveRestart(context);
+     if (result != PLATFORM_OK)
+     {
+-        state = PlatformCritical_Enter();
+-        context->diagnostics.rx_restart_failure_count++;
+-        PlatformCritical_Exit(state);
++        /* ReceiveRestart records the failure and keeps rx_active clear. */
++        return;
+     }
+ }
+diff --git a/apps/FCCG/src/silverstar_fccg/project/quality_results.py b/apps/FCCG/src/silverstar_fccg/project/quality_results.py
+index 2ea480e..fefca30 100644
+--- a/apps/FCCG/src/silverstar_fccg/project/quality_results.py
++++ b/apps/FCCG/src/silverstar_fccg/project/quality_results.py
+@@ -19,6 +19,18 @@ class QualityResultRecord:
+     duration: float
+     summary: str
+ 
++    @property
++    def manual_acceptance_pending(self) -> bool:
++        # These records contain automatic checks, not signed contract review.
++        return self.task == "power10_check"
++
++
++def QualitySummary_WithContractReview(task: str, summary: str) -> str:
++    value = summary.strip()
++    if task != "power10_check" or "POWER10_CONTRACT_REVIEW|" in value:
++        return value
++    return "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending; " + value
++
+ 
+ def QualityResults_Load(project_root: Path) -> tuple[QualityResultRecord, ...]:
+     policy = WorkspacePolicy(project_root)
+@@ -51,10 +63,11 @@ def QualityResults_Load(project_root: Path) -> tuple[QualityResultRecord, ...]:
+         records.append(
+             QualityResultRecord(
+                 task=task,
+-                result=value["result"],
++                result=("failed" if "POWER10_CONTRACT_REVIEW|FAIL|" in value["summary"]
++                        else value["result"]),
+                 timestamp=value["timestamp"],
+                 duration=float(value["duration"]),
+-                summary=value["summary"],
++                summary=QualitySummary_WithContractReview(task, value["summary"]),
+             )
+         )
+     return tuple(records)
+@@ -72,10 +85,11 @@ def QualityResult_Save(
+     records = {record.task: record for record in QualityResults_Load(project_root)}
+     record = QualityResultRecord(
+         task=task,
+-        result="passed" if succeeded else "failed",
++        result=("passed" if succeeded and "POWER10_CONTRACT_REVIEW|FAIL|" not in summary
++                else "failed"),
+         timestamp=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+         duration=max(0.0, float(duration)),
+-        summary=summary.strip(),
++        summary=QualitySummary_WithContractReview(task, summary),
+     )
+     records[task] = record
+     document = {
+diff --git a/apps/FCCG/tests/fixtures/jy901b_boundary_host.c b/apps/FCCG/tests/fixtures/jy901b_boundary_host.c
+index a5a7b98..9531cf5 100644
+--- a/apps/FCCG/tests/fixtures/jy901b_boundary_host.c
++++ b/apps/FCCG/tests/fixtures/jy901b_boundary_host.c
+@@ -188,12 +188,31 @@ static void Test_Receive(const char *scenario)
+     if (s_stop_fail != 0U) { TEST_CHECK(s_write_calls == 0U && s_baud_calls == 0U); }
+ }
+ 
++static void Test_Save(const char *scenario)
++{
++    IMUState expected = IMU_OK;
++    uint32_t writes = 2U;
++    Test_Setup();
++    if (strstr(scenario, "stop_fail") != NULL)
++    { s_stop_fail = 1U; expected = IMU_UART_RX_ERROR; writes = 0U; }
++    if (strstr(scenario, "unlock_fail") != NULL)
++    { s_write_fail_at = 1U; expected = IMU_UART_TX_ERROR; writes = 1U; }
++    if (strstr(scenario, "save_fail") != NULL)
++    { s_write_fail_at = 2U; expected = IMU_UART_TX_ERROR; }
++    if (strstr(scenario, "restart_fail") != NULL)
++    { s_restart_fail = 1U; expected = IMU_UART_RX_ERROR; }
++    TEST_CHECK(IMU_SaveConfig(0U) == expected);
++    TEST_CHECK(s_write_calls == writes);
++    TEST_CHECK(s_restart_calls == 1U);
++}
++
+ int main(int argc, char **argv)
+ {
+     if (argc != 3) { return 2; }
+     if (strcmp(argv[1], "time") == 0) { Test_Time(argv[2]); }
+     else if (strcmp(argv[1], "readback") == 0) { Test_Readback(argv[2]); }
+     else if (strcmp(argv[1], "receive") == 0) { Test_Receive(argv[2]); }
++    else if (strcmp(argv[1], "save") == 0) { Test_Save(argv[2]); }
+     else { return 2; }
+     return Test_Finish("jy901b_boundary");
+ }
+diff --git a/apps/FCCG/tests/test_estimator_build_matrix.py b/apps/FCCG/tests/test_estimator_build_matrix.py
+index 96eb422..da25fe7 100644
+--- a/apps/FCCG/tests/test_estimator_build_matrix.py
++++ b/apps/FCCG/tests/test_estimator_build_matrix.py
+@@ -77,6 +77,7 @@ def test_estimator_release_debug_build_and_quality_matrix(
+         "architecture-check", "power10-check",
+     )
+     assert "architecture check passed:" in quality
+-    assert "Power of Ten check passed:" in quality
++    assert "Power of Ten project text checks passed:" in quality
++    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in quality
+     host = _Make_Run(make, project, "host", "CONFIG=Release", "host-tests")
+     assert "All SilverStar host tests passed." in host
+diff --git a/apps/FCCG/tests/test_jy901b_boundary_host.py b/apps/FCCG/tests/test_jy901b_boundary_host.py
+index 5ff4cf8..271d9a2 100644
+--- a/apps/FCCG/tests/test_jy901b_boundary_host.py
++++ b/apps/FCCG/tests/test_jy901b_boundary_host.py
+@@ -1,5 +1,6 @@
+ """Real JY901B driver: clock, output readback and UART recovery contracts."""
+ import shutil
++import os
+ import subprocess
+ from pathlib import Path
+ 
+@@ -18,7 +19,8 @@ def jy_boundary_executable(tmp_path_factory):
+     fixture = core / "Tests/Host/Fixtures/MultiInstance"
+     exe = tmp_path_factory.mktemp("jy-boundary") / "boundary.exe"
+     command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+-    for path in [fixture / "Inc", builtin / "silverstar_platform_api/payload/Platform/Inc",
++    source = Path(os.environ.get("SILVERSTAR_JY_TEST_SOURCE", str(jy / "Src")))
++    for path in [source, fixture / "Inc", builtin / "silverstar_platform_api/payload/Platform/Inc",
+                  core / "System/Inc", core / "Interfaces/Inc", core / "Common/Inc",
+                  core / "Tests/Host", jy / "Inc", jy / "Src", jy / "Adapter/Inc"]:
+         command += ["-I", str(path)]
+@@ -37,6 +39,8 @@ def jy_boundary_executable(tmp_path_factory):
+                               'missing_quat', 'complete', 'complete_extra', 'already_complete']),
+     *(('receive', s) for s in ['normal', 'stop_fail', 'restart_fail', 'tx_fail',
+                              'tx_fail_restart_fail', 'baud_normal', 'baud_stop_fail', 'baud_restart_fail']),
++    *(('save', s) for s in ['normal', 'stop_fail', 'restart_fail', 'unlock_fail',
++                          'unlock_fail_restart_fail', 'save_fail', 'save_fail_restart_fail']),
+ ])
+ def test_jy901b_boundary(jy_boundary_executable, group, scenario):
+     result = subprocess.run([str(jy_boundary_executable), group, scenario],
+diff --git a/apps/FCCG/tests/test_project_lifecycle.py b/apps/FCCG/tests/test_project_lifecycle.py
+index 670e952..fa1e972 100644
+--- a/apps/FCCG/tests/test_project_lifecycle.py
++++ b/apps/FCCG/tests/test_project_lifecycle.py
+@@ -468,6 +468,7 @@ def test_power_of_ten_violation_fixture_fails(
+         "static int PowerTenFixture_Run(void)\n"
+         "{\n"
+         "    int value = 0;\n"
++        "    (void)malloc(4);\n"
+         f"{body}\n"
+         "    return value;\n"
+         "}\n",
+@@ -505,7 +506,11 @@ def test_power_of_ten_violation_fixture_fails(
+     )
+     output = completed.stdout + completed.stderr
+     assert completed.returncode != 0
+-    assert "runtime assertions" in output
++    # Density is a recommendation under the authorized policy; allocation
++    # remains an unchanged hard violation in this deliberately invalid fixture.
++    assert "dynamic allocation violation" in output
++    assert "POWER10_RULE5_RECOMMENDATION|" in output
++    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in output
+ 
+ 
+ def test_repeated_apply_preserves_managed_mtimes_and_build_dependencies(
+@@ -584,7 +589,8 @@ def test_power_of_ten_estimator_conditional_is_scoped(
+     output = completed.stdout + completed.stderr
+     if allowed:
+         assert completed.returncode == 0, output
+-        assert "Power of Ten check passed:" in output
++        assert "Power of Ten project text checks passed:" in output
++        assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in output
+     else:
+         assert completed.returncode != 0
+         assert "conditional compilation violation" in output

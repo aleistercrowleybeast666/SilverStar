@@ -468,6 +468,7 @@ def test_power_of_ten_violation_fixture_fails(
         "static int PowerTenFixture_Run(void)\n"
         "{\n"
         "    int value = 0;\n"
+        "    (void)malloc(4);\n"
         f"{body}\n"
         "    return value;\n"
         "}\n",
@@ -505,7 +506,11 @@ def test_power_of_ten_violation_fixture_fails(
     )
     output = completed.stdout + completed.stderr
     assert completed.returncode != 0
-    assert "runtime assertions" in output
+    # Density is a recommendation under the authorized policy; allocation
+    # remains an unchanged hard violation in this deliberately invalid fixture.
+    assert "dynamic allocation violation" in output
+    assert "POWER10_RULE5_RECOMMENDATION|" in output
+    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in output
 
 
 def test_repeated_apply_preserves_managed_mtimes_and_build_dependencies(
@@ -584,7 +589,8 @@ def test_power_of_ten_estimator_conditional_is_scoped(
     output = completed.stdout + completed.stderr
     if allowed:
         assert completed.returncode == 0, output
-        assert "Power of Ten check passed:" in output
+        assert "Power of Ten project text checks passed:" in output
+        assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in output
     else:
         assert completed.returncode != 0
         assert "conditional compilation violation" in output

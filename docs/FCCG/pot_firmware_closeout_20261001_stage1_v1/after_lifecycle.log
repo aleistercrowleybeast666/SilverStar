@@ -1,0 +1,75 @@
+..........F.....                                                         [100%]
+================================== FAILURES ===================================
+__________________ test_power_of_ten_violation_fixture_fails __________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_lifecycle_after/test_power_of_ten_violation_fi0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_power_of_ten_violation_fixture_fails(
+        tmp_path: Path, workspace_root: Path
+    ) -> None:
+        fixture_root = tmp_path / "power10-violation"
+        tools_root = fixture_root / "Tools"
+        app_root = fixture_root / "APP"
+        tools_root.mkdir(parents=True)
+        app_root.mkdir()
+        script = tools_root / "check_power_of_ten.ps1"
+        shutil.copy2(
+            workspace_root
+            / "plugins"
+            / "builtin"
+            / "silverstar_core_0_1_0"
+            / "payload"
+            / "Tools"
+            / "check_power_of_ten.ps1",
+            script,
+        )
+        body = "\n".join(f"    value += {index};" for index in range(24))
+        (app_root / "power10_violation.c").write_text(
+            "static int PowerTenFixture_Run(void)\n"
+            "{\n"
+            "    int value = 0;\n"
+            f"{body}\n"
+            "    return value;\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        (fixture_root / "Makefile").write_text(
+            "FIRST_PARTY_C_SOURCES := APP/power10_violation.c\n"
+            "FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror "
+            "-Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 "
+            "-Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes "
+            "-Wmissing-prototypes -Wswitch-enum -Wvla\n"
+            "power10-check:\n\t@echo check\n",
+            encoding="utf-8",
+        )
+        (fixture_root / "STM32F407XX_FLASH.ld").write_text(
+            "_Min_Heap_Size = 0x0;\n",
+            encoding="utf-8",
+        )
+    
+        completed = subprocess.run(
+            [
+                "powershell",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(script),
+            ],
+            cwd=fixture_root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        output = completed.stdout + completed.stderr
+>       assert completed.returncode != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\Silver...ical-contract review NOT PROVEN; manual acceptance pending.\nFCCG_PROGRESS|POWER10|DONE|3|3|build_policy\n', stderr='').returncode
+
+apps\FCCG\tests\test_project_lifecycle.py:507: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_project_lifecycle.py::test_power_of_ten_violation_fixture_fails
+1 failed, 15 passed in 228.39s (0:03:48)

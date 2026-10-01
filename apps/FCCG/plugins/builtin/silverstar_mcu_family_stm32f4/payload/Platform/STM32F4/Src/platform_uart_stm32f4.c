@@ -417,19 +417,18 @@ PlatformResult PlatformUart_RxStop(PlatformUartId id)
     return PlatformUart_ResultMap(result);
 }
 
-PlatformResult PlatformUart_RxRestart(PlatformUartId id)
+static PlatformResult PlatformUart_ReceiveRestart(PlatformUartContext *context)
 {
-    PlatformUartContext *context = PlatformUart_ContextGet(id);
     PlatformCriticalState state;
     PlatformResult result;
 
-    if (context == NULL) { return PLATFORM_INVALID_ARGUMENT; }
-    (void)HAL_UART_AbortReceive(context->handle);
+    result = PlatformUart_ResultMap(HAL_UART_AbortReceive(context->handle));
     state = PlatformCritical_Enter();
     PlatformUart_DiscontinuityRecord(context);
     context->diagnostics.rx_restart_count++;
     PlatformCritical_Exit(state);
-    result = PlatformUart_RxStart(context);
+    /* Never start another DMA transfer after an unconfirmed receive stop. */
+    if (result == PLATFORM_OK) { result = PlatformUart_RxStart(context); }
     if (result != PLATFORM_OK)
     {
         state = PlatformCritical_Enter();
@@ -439,10 +438,45 @@ PlatformResult PlatformUart_RxRestart(PlatformUartId id)
     return result;
 }
 
+PlatformResult PlatformUart_RxRestart(PlatformUartId id)
+{
+    PlatformUartContext *context = PlatformUart_ContextGet(id);
+    if (context == NULL) { return PLATFORM_INVALID_ARGUMENT; }
+    return PlatformUart_ReceiveRestart(context);
+}
+
+static void PlatformUart_TransportErrorRecord(PlatformUartContext *context)
+{
+    PlatformCriticalState state = PlatformCritical_Enter();
+    context->diagnostics.transport_error_count++;
+    PlatformCritical_Exit(state);
+}
+
+static PlatformResult PlatformUart_BaudRestore(
+    PlatformUartContext *context, PlatformUartId id, uint32_t baudrate)
+{
+    /* Receive is already inactive. Recovery is bounded, and a failed HAL
+     * lifecycle step must not be followed by a DMA start. */
+    if (HAL_UART_DeInit(context->handle) != HAL_OK)
+    {
+        PlatformUart_TransportErrorRecord(context);
+        return PLATFORM_IO_ERROR;
+    }
+    context->handle->Init.BaudRate = baudrate;
+    if (HAL_UART_Init(context->handle) != HAL_OK)
+    {
+        PlatformUart_TransportErrorRecord(context);
+        return PLATFORM_IO_ERROR;
+    }
+    return PlatformUart_RxRestart(id);
+}
+
 PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
 {
     PlatformUartContext *context = PlatformUart_ContextGet(id);
     uint32_t previous_baudrate;
+    PlatformResult result;
+    PlatformResult restored;
 
     if ((context == NULL) || (baudrate == 0U))
     {
@@ -451,16 +485,24 @@ PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
     SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
                              SILVERSTAR_ASSERT_MODULE_PLATFORM);
     previous_baudrate = context->handle->Init.BaudRate;
-    (void)HAL_UART_AbortReceive(context->handle);
-    (void)HAL_UART_DeInit(context->handle);
+    result = PlatformUart_RxStop(id);
+    if (result != PLATFORM_OK)
+    {
+        restored = PlatformUart_RxRestart(id);
+        return (restored == PLATFORM_OK) ? result : restored;
+    }
+    if (HAL_UART_DeInit(context->handle) != HAL_OK)
+    {
+        PlatformUart_TransportErrorRecord(context);
+        restored = PlatformUart_BaudRestore(context, id, previous_baudrate);
+        return (restored == PLATFORM_OK) ? PLATFORM_IO_ERROR : restored;
+    }
     context->handle->Init.BaudRate = baudrate;
     if (HAL_UART_Init(context->handle) != HAL_OK)
     {
-        (void)HAL_UART_DeInit(context->handle);
-        context->handle->Init.BaudRate = previous_baudrate;
-        (void)HAL_UART_Init(context->handle);
-        (void)PlatformUart_RxRestart(id);
-        return PLATFORM_IO_ERROR;
+        PlatformUart_TransportErrorRecord(context);
+        restored = PlatformUart_BaudRestore(context, id, previous_baudrate);
+        return (restored == PLATFORM_OK) ? PLATFORM_IO_ERROR : restored;
     }
     __HAL_UART_CLEAR_OREFLAG(context->handle);
     __HAL_UART_FLUSH_DRREGISTER(context->handle);
@@ -634,15 +676,11 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *handle)
     { context->diagnostics.uart_parity_error_count++; }
     if ((handle->ErrorCode & HAL_UART_ERROR_DMA) != 0U)
     { context->diagnostics.dma_error_count++; }
-    PlatformUart_DiscontinuityRecord(context);
-    context->diagnostics.rx_restart_count++;
     PlatformCritical_Exit(state);
-    (void)HAL_UART_AbortReceive(handle);
-    result = PlatformUart_RxStart(context);
+    result = PlatformUart_ReceiveRestart(context);
     if (result != PLATFORM_OK)
     {
-        state = PlatformCritical_Enter();
-        context->diagnostics.rx_restart_failure_count++;
-        PlatformCritical_Exit(state);
+        /* ReceiveRestart records the failure and keeps rx_active clear. */
+        return;
     }
 }

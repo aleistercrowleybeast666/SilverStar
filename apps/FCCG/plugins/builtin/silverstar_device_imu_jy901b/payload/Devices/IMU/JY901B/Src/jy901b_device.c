@@ -1776,20 +1776,21 @@ IMUState IMU_SaveConfig(uint8_t instance)
 {
     IMUState state;
 
-    (void)PlatformUart_RxStop(Jy901bResource_UartGet(instance));
+    if (PlatformUart_RxStop(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
+    {
+        return IMU_ReceiveResume(instance, IMU_UART_RX_ERROR);
+    }
 
     state = IMU_SendConfigFrame(instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
     if (state != IMU_OK)
     {
-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-        return state;
+        return IMU_ReceiveResume(instance, state);
     }
     PlatformTime_DelayMs(IMU_CFG_UNLOCK_DELAY_MS);
 
     state = IMU_SendConfigFrame(instance, IMU_REG_SAVE, 0x0000U);
     PlatformTime_DelayMs(IMU_CFG_SAVE_DELAY_MS);
-    (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-    return state;
+    return IMU_ReceiveResume(instance, state);
 }
 
 IMUState IMU_ReadBaudrate(uint8_t instance, uint16_t *value)

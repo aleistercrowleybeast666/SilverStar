@@ -1,5 +1,6 @@
 """Real JY901B driver: clock, output readback and UART recovery contracts."""
 import shutil
+import os
 import subprocess
 from pathlib import Path
 
@@ -18,7 +19,8 @@ def jy_boundary_executable(tmp_path_factory):
     fixture = core / "Tests/Host/Fixtures/MultiInstance"
     exe = tmp_path_factory.mktemp("jy-boundary") / "boundary.exe"
     command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
-    for path in [fixture / "Inc", builtin / "silverstar_platform_api/payload/Platform/Inc",
+    source = Path(os.environ.get("SILVERSTAR_JY_TEST_SOURCE", str(jy / "Src")))
+    for path in [source, fixture / "Inc", builtin / "silverstar_platform_api/payload/Platform/Inc",
                  core / "System/Inc", core / "Interfaces/Inc", core / "Common/Inc",
                  core / "Tests/Host", jy / "Inc", jy / "Src", jy / "Adapter/Inc"]:
         command += ["-I", str(path)]
@@ -37,6 +39,8 @@ def jy_boundary_executable(tmp_path_factory):
                               'missing_quat', 'complete', 'complete_extra', 'already_complete']),
     *(('receive', s) for s in ['normal', 'stop_fail', 'restart_fail', 'tx_fail',
                              'tx_fail_restart_fail', 'baud_normal', 'baud_stop_fail', 'baud_restart_fail']),
+    *(('save', s) for s in ['normal', 'stop_fail', 'restart_fail', 'unlock_fail',
+                          'unlock_fail_restart_fail', 'save_fail', 'save_fail_restart_fail']),
 ])
 def test_jy901b_boundary(jy_boundary_executable, group, scenario):
     result = subprocess.run([str(jy_boundary_executable), group, scenario],

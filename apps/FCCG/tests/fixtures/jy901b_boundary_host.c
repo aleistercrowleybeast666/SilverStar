@@ -188,12 +188,31 @@ static void Test_Receive(const char *scenario)
     if (s_stop_fail != 0U) { TEST_CHECK(s_write_calls == 0U && s_baud_calls == 0U); }
 }
 
+static void Test_Save(const char *scenario)
+{
+    IMUState expected = IMU_OK;
+    uint32_t writes = 2U;
+    Test_Setup();
+    if (strstr(scenario, "stop_fail") != NULL)
+    { s_stop_fail = 1U; expected = IMU_UART_RX_ERROR; writes = 0U; }
+    if (strstr(scenario, "unlock_fail") != NULL)
+    { s_write_fail_at = 1U; expected = IMU_UART_TX_ERROR; writes = 1U; }
+    if (strstr(scenario, "save_fail") != NULL)
+    { s_write_fail_at = 2U; expected = IMU_UART_TX_ERROR; }
+    if (strstr(scenario, "restart_fail") != NULL)
+    { s_restart_fail = 1U; expected = IMU_UART_RX_ERROR; }
+    TEST_CHECK(IMU_SaveConfig(0U) == expected);
+    TEST_CHECK(s_write_calls == writes);
+    TEST_CHECK(s_restart_calls == 1U);
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 3) { return 2; }
     if (strcmp(argv[1], "time") == 0) { Test_Time(argv[2]); }
     else if (strcmp(argv[1], "readback") == 0) { Test_Readback(argv[2]); }
     else if (strcmp(argv[1], "receive") == 0) { Test_Receive(argv[2]); }
+    else if (strcmp(argv[1], "save") == 0) { Test_Save(argv[2]); }
     else { return 2; }
     return Test_Finish("jy901b_boundary");
 }

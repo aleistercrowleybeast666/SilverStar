@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+_____________ ERROR collecting tests/test_current_prompt_round.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\FCCG\tests\test_current_prompt_round.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\tests\test_current_prompt_round.py:23: in <module>
+    from tools import clean_all
+E   ImportError: cannot import name 'clean_all' from 'tools' (unknown location)
+=========================== short test summary info ===========================
+ERROR apps\FCCG\tests\test_current_prompt_round.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.08s

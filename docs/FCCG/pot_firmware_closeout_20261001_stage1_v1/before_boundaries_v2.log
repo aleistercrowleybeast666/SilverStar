@@ -1,0 +1,261 @@
+.......................FF.F.F.FF.FF.FFF.F                                [100%]
+================================== FAILURES ===================================
+____________________ test_jy901b_boundary[save-stop_fail] _____________________
+
+jy_boundary_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/jy-boundary0/boundary.exe')
+group = 'save', scenario = 'stop_fail'
+
+    @pytest.mark.parametrize("group,scenario", [
+        *(('time', s) for s in ['normal', 'cross_ms', 'no_frame', 'timeout', 'wrap_to_zero', 'wrap_elapsed']),
+        *(('readback', s) for s in ['only_quat', 'missing_acc', 'missing_gyro', 'missing_pressure',
+                                  'missing_quat', 'complete', 'complete_extra', 'already_complete']),
+        *(('receive', s) for s in ['normal', 'stop_fail', 'restart_fail', 'tx_fail',
+                                 'tx_fail_restart_fail', 'baud_normal', 'baud_stop_fail', 'baud_restart_fail']),
+        *(('save', s) for s in ['normal', 'stop_fail', 'restart_fail', 'unlock_fail',
+                              'unlock_fail_restart_fail', 'save_fail', 'save_fail_restart_fail']),
+    ])
+    def test_jy901b_boundary(jy_boundary_executable, group, scenario):
+        result = subprocess.run([str(jy_boundary_executable), group, scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:204: IMU_SaveConfig(0U) == expected
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:205: s_write_calls == writes
+E         jy901b_boundary: 5 checks, 2 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\jy-boundary...ts\\fixtures\\jy901b_boundary_host.c:205: s_write_calls == writes\njy901b_boundary: 5 checks, 2 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_jy901b_boundary_host.py:48: AssertionError
+___________________ test_jy901b_boundary[save-restart_fail] ___________________
+
+jy_boundary_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/jy-boundary0/boundary.exe')
+group = 'save', scenario = 'restart_fail'
+
+    @pytest.mark.parametrize("group,scenario", [
+        *(('time', s) for s in ['normal', 'cross_ms', 'no_frame', 'timeout', 'wrap_to_zero', 'wrap_elapsed']),
+        *(('readback', s) for s in ['only_quat', 'missing_acc', 'missing_gyro', 'missing_pressure',
+                                  'missing_quat', 'complete', 'complete_extra', 'already_complete']),
+        *(('receive', s) for s in ['normal', 'stop_fail', 'restart_fail', 'tx_fail',
+                                 'tx_fail_restart_fail', 'baud_normal', 'baud_stop_fail', 'baud_restart_fail']),
+        *(('save', s) for s in ['normal', 'stop_fail', 'restart_fail', 'unlock_fail',
+                              'unlock_fail_restart_fail', 'save_fail', 'save_fail_restart_fail']),
+    ])
+    def test_jy901b_boundary(jy_boundary_executable, group, scenario):
+        result = subprocess.run([str(jy_boundary_executable), group, scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:204: IMU_SaveConfig(0U) == expected
+E         jy901b_boundary: 5 checks, 1 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\jy-boundary...tures\\jy901b_boundary_host.c:204: IMU_SaveConfig(0U) == expected\njy901b_boundary: 5 checks, 1 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_jy901b_boundary_host.py:48: AssertionError
+_____________ test_jy901b_boundary[save-unlock_fail_restart_fail] _____________
+
+jy_boundary_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/jy-boundary0/boundary.exe')
+group = 'save', scenario = 'unlock_fail_restart_fail'
+
+    @pytest.mark.parametrize("group,scenario", [
+        *(('time', s) for s in ['normal', 'cross_ms', 'no_frame', 'timeout', 'wrap_to_zero', 'wrap_elapsed']),
+        *(('readback', s) for s in ['only_quat', 'missing_acc', 'missing_gyro', 'missing_pressure',
+                                  'missing_quat', 'complete', 'complete_extra', 'already_complete']),
+        *(('receive', s) for s in ['normal', 'stop_fail', 'restart_fail', 'tx_fail',
+                                 'tx_fail_restart_fail', 'baud_normal', 'baud_stop_fail', 'baud_restart_fail']),
+        *(('save', s) for s in ['normal', 'stop_fail', 'restart_fail', 'unlock_fail',
+                              'unlock_fail_restart_fail', 'save_fail', 'save_fail_restart_fail']),
+    ])
+    def test_jy901b_boundary(jy_boundary_executable, group, scenario):
+        result = subprocess.run([str(jy_boundary_executable), group, scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:204: IMU_SaveConfig(0U) == expected
+E         jy901b_boundary: 5 checks, 1 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\jy-boundary...tures\\jy901b_boundary_host.c:204: IMU_SaveConfig(0U) == expected\njy901b_boundary: 5 checks, 1 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_jy901b_boundary_host.py:48: AssertionError
+______________ test_jy901b_boundary[save-save_fail_restart_fail] ______________
+
+jy_boundary_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/jy-boundary0/boundary.exe')
+group = 'save', scenario = 'save_fail_restart_fail'
+
+    @pytest.mark.parametrize("group,scenario", [
+        *(('time', s) for s in ['normal', 'cross_ms', 'no_frame', 'timeout', 'wrap_to_zero', 'wrap_elapsed']),
+        *(('readback', s) for s in ['only_quat', 'missing_acc', 'missing_gyro', 'missing_pressure',
+                                  'missing_quat', 'complete', 'complete_extra', 'already_complete']),
+        *(('receive', s) for s in ['normal', 'stop_fail', 'restart_fail', 'tx_fail',
+                                 'tx_fail_restart_fail', 'baud_normal', 'baud_stop_fail', 'baud_restart_fail']),
+        *(('save', s) for s in ['normal', 'stop_fail', 'restart_fail', 'unlock_fail',
+                              'unlock_fail_restart_fail', 'save_fail', 'save_fail_restart_fail']),
+    ])
+    def test_jy901b_boundary(jy_boundary_executable, group, scenario):
+        result = subprocess.run([str(jy_boundary_executable), group, scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:204: IMU_SaveConfig(0U) == expected
+E         jy901b_boundary: 5 checks, 1 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\jy-boundary...tures\\jy901b_boundary_host.c:204: IMU_SaveConfig(0U) == expected\njy901b_boundary: 5 checks, 1 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_jy901b_boundary_host.py:48: AssertionError
+_______________________ test_uart_recovery[abort_fail] ________________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'abort_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: result == ((strcmp(argv[1], "normal") == 0) ? PLATFORM_OK : PLATFORM_IO_ERROR), file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 71
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove...LATFORM_IO_ERROR), file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 71\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+_______________________ test_uart_recovery[deinit_fail] _______________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'deinit_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: result == ((strcmp(argv[1], "normal") == 0) ? PLATFORM_OK : PLATFORM_IO_ERROR), file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 71
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove...LATFORM_IO_ERROR), file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 71\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+__________________ test_uart_recovery[init_fail_deinit_fail] __________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'init_fail_deinit_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: diagnostics.rx_active == active, file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 73
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove..._active == active, file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 73\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+_________________ test_uart_recovery[init_fail_restore_fail] __________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'init_fail_restore_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: diagnostics.rx_active == active, file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 73
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove..._active == active, file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 73\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+___________________ test_uart_recovery[restart_abort_fail] ____________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'restart_abort_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: result == ((strcmp(argv[1], "normal") == 0) ? PLATFORM_OK : PLATFORM_IO_ERROR), file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 71
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove...LATFORM_IO_ERROR), file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 71\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+____________________ test_uart_recovery[second_abort_fail] ____________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'second_abort_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: result == ((strcmp(argv[1], "normal") == 0) ? PLATFORM_OK : PLATFORM_IO_ERROR), file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 71
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove...LATFORM_IO_ERROR), file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 71\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+_____________________ test_uart_recovery[all_deinit_fail] _____________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'all_deinit_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: result == ((strcmp(argv[1], "normal") == 0) ? PLATFORM_OK : PLATFORM_IO_ERROR), file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 71
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove...LATFORM_IO_ERROR), file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 71\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+___________________ test_uart_recovery[callback_abort_fail] ___________________
+
+uart_recovery_executable = WindowsPath('D:/python_software/SilverStar/.work/FirmwareCloseout_ff35508_stage1_before_v2/uart-recovery0/recovery.exe')
+scenario = 'callback_abort_fail'
+
+    @pytest.mark.parametrize("scenario", ["normal", "abort_fail", "deinit_fail", "init_fail",
+        "init_fail_deinit_fail", "init_fail_restore_fail", "init_fail_receive_fail",
+        "restart_abort_fail", "second_abort_fail", "all_deinit_fail", "receive_fail", "callback_abort_fail"])
+    def test_uart_recovery(uart_recovery_executable, scenario):
+        result = subprocess.run([str(uart_recovery_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: diagnostics.rx_active == 0U && diagnostics.rx_restart_failure_count == 1U, file D:\python_software\SilverStar\apps\FCCG\tests\fixtures\uart_recovery_host.c, line 65
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\FirmwareCloseout_ff35508_stage1_before_v2\\uart-recove...ilure_count == 1U, file D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\uart_recovery_host.c, line 65\n').returncode
+
+apps\FCCG\tests\test_uart_recovery_host.py:39: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_jy901b_boundary_host.py::test_jy901b_boundary[save-stop_fail]
+FAILED apps\FCCG\tests\test_jy901b_boundary_host.py::test_jy901b_boundary[save-restart_fail]
+FAILED apps\FCCG\tests\test_jy901b_boundary_host.py::test_jy901b_boundary[save-unlock_fail_restart_fail]
+FAILED apps\FCCG\tests\test_jy901b_boundary_host.py::test_jy901b_boundary[save-save_fail_restart_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[abort_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[deinit_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[init_fail_deinit_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[init_fail_restore_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[restart_abort_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[second_abort_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[all_deinit_fail]
+FAILED apps\FCCG\tests\test_uart_recovery_host.py::test_uart_recovery[callback_abort_fail]
+12 failed, 29 passed in 6.33s

@@ -77,6 +77,7 @@ def test_estimator_release_debug_build_and_quality_matrix(
         "architecture-check", "power10-check",
     )
     assert "architecture check passed:" in quality
-    assert "Power of Ten check passed:" in quality
+    assert "Power of Ten project text checks passed:" in quality
+    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending" in quality
     host = _Make_Run(make, project, "host", "CONFIG=Release", "host-tests")
     assert "All SilverStar host tests passed." in host
