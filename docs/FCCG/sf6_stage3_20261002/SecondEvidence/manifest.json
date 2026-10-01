@@ -1,0 +1,111 @@
+{
+  "utc": "2026-10-01T20:59:29.893142+00:00",
+  "source_commit": "47038350acfec0a64cae0f20c1136265dd2cc437",
+  "status_at_archive": "?? docs/FCCG/sf6_stage3_20261002/SecondEvidence/\n",
+  "source_hashes": {
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/plugin.json": "5b47c424d04d6f547c42f887b3b7c550ee74ba16accd7aaa6402f96a9f289189",
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Tests/Host/test_navigation_sf6.c": "78abf08cdf93eaa9c70ffef99ac2b436987b0b23e2eaff4db614a8c69dca4d25",
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Tests/Host/test_sf6_backend.c": "d44a8fd19e22b73487a4add4834b99c7d7916a363e6f7b3530c5a661f595a37f",
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Inc/navigation_sf6.h": "43f1315af978c862d368827aeb569322c0978ce685ca4ab1ae77727955911a09",
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6.c": "e7be2566574cc294f58d4e78fa4ae5ffee0291e4921cc701c71d86bc8fb5897a",
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c": "c8d7b16fda2fb5216d9ba82e7b39962a6e217556e5e22c5cae04049365b531eb"
+  },
+  "tools": {
+    "python": {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "Python 3.14.0\n",
+      "stderr": ""
+    },
+    "host_gcc": {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    "arm_gcc": {
+      "command": [
+        "arm-none-eabi-gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    "make": {
+      "command": [
+        "mingw32-make",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "GNU Make 4.4.1\nBuilt for x86_64-w64-mingw32\nCopyright (C) 1988-2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "stderr": ""
+    }
+  },
+  "files": {
+    "backend_export_compile.log": "6a831a3e6810157b5523af761266f6cb5f8fd593e4a81606fc29412edd2768ad",
+    "backend_export_results.json": "1bc259853daf40d1b584948664d10d88288242b5ed00ad006ee7d6cd5bd893a3",
+    "backend_export_run.log": "b300af55c5fbc6937555f126d4f2028808e37601a939725df49679ed1c73ffb5",
+    "backend_export_v2_compile.log": "6a831a3e6810157b5523af761266f6cb5f8fd593e4a81606fc29412edd2768ad",
+    "backend_export_v2_driver.py": "cc64c2bb543be29235fbaf9522a8d0e6b87d556146944956bb18aa700c66d571",
+    "backend_export_v2_results.json": "90a4acf62c49ee88a0f296ef4a70269776070e2bf59d14af94b9aad0bd522f93",
+    "backend_export_v2_run.log": "faa4bd3a260c67e935dadda5d32793605b9680ea393c498d9d86dbd97e4c5ad0",
+    "backend_probe.py": "853ce7483a5684d0c87356ab529c7622eeaa44ad101df2baf95386d86abfb703",
+    "backend_probe_compile.log": "6a831a3e6810157b5523af761266f6cb5f8fd593e4a81606fc29412edd2768ad",
+    "backend_probe_results.json": "89b7cec3879e2776de70dfa739129abe7563dbadc99d03a3f51796984cd041c1",
+    "backend_probe_run.log": "a29d6b24bb441c7c750ff1d51119f4c9ecb4d36f1979fc70560b8ef9808f896d",
+    "baseline548b89f_history.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline548b89f_history_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline548b89f_normal.log": "6de1145d8046fa5c05758dd8c347c93f1a5ba1220cde850a52f6da4c959b5e1d",
+    "checkpoint_review.py": "ede8a6997306a4d0e3a69d0f0958531c44d21ed787f546e8c2b0e91c7d0fddd5",
+    "current_history.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "current_history_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "current_normal.log": "6de1145d8046fa5c05758dd8c347c93f1a5ba1220cde850a52f6da4c959b5e1d",
+    "eskf15_v6_analyzer.log": "eb44220573aa4869b936f82696b259e24327d6bd7693e6b1c5fb58da17890354",
+    "eskf15_v6_architecture.log": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+    "eskf15_v6_arm.log": "797b064bd28c04ad0a319a9efb6a8c59cab70869958ca67f4351dfcc0f552cde",
+    "eskf15_v6_host.log": "ff9b79e038bff58d236f65978f498ccae411a2287e6caf5bf7581e17776da148",
+    "eskf15_v6_power10.log": "1c09dce76e3d069dc3d45848840dc1da50674ca7ea456078059c3abb063db312",
+    "eskf15_v6_resources.log": "7344ec75dd5b86a5cfa9f6b556f0794cdbd47a3ad0d8134231d9ebb17396ba95",
+    "flp_sf6_final.log": "6369e0123a64dc49a41b103d77aaf870a3a826fd65457278bde0c8ea2441ab4f",
+    "flp_sf6_v2.log": "4899bde2cf0e91590bd9d0f052a83ec4c3520428f3c51ac41d231319d55d11fa",
+    "generate_v6.py": "837b468ab9f2cb5a7fce88a9da6c0f9d73316b383f47fbe98e9d4e5f21372f51",
+    "generation_v6.json": "37db92dcf45bf64a41531c47c06468b24985af96cf6317c7f7685e9a5529ace3",
+    "gshc_sf6_final.log": "8ce6f6975ae64256dd75402959101d241989a5563f54b6e9b3577dbca79283f5",
+    "history_fault_proof.json": "b8869d85aedea624aaa1ab68e4dbcc2bcfa7129eefa7e223f2ffabed9ac2b238",
+    "KF6_SS_0_5_TEST_4.ssdecoder": "5a257db6a6dc1c0256b3e0e4bb487bf628ba86889fe92691319e24b15c2e197c",
+    "kf6_v6_analyzer.log": "eff33c5e76ff4ff8ad7c6ba64cafcb3360d5d422fb320e31bd10fafb0edfd29b",
+    "kf6_v6_architecture.log": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+    "kf6_v6_arm.log": "f8dad0c6893999534da8f6b3ee2d416008bbfaa584c62554aa46dbe6407e8709",
+    "kf6_v6_host.log": "dcbdc1ff9d10836098d257d1f32d3a4d7b6bbc32625451d708465023bb20c617",
+    "kf6_v6_power10.log": "d50a68dded62cc1535f7c4fb0db98ebcc9b6539e00f4408e3379931ff8c3d5be",
+    "kf6_v6_resources.log": "c104c3cb5dc8bc2734e590a25d8d44584bb48482d2fda50fb98bacb6651050ca",
+    "matrix_v6_progress.log": "346a0157db22c34689d56dbf4851de70c8c108785b1d25c4bfa8d4c0c0338f31",
+    "matrix_v6_results.json": "b7e2ab3a2a9c8e8c8a781279aec4fc1ec995df90cb07132785ea30f9e00114c5",
+    "navigation_sf6_548b89f.c": "e47b7b1d35c5b3e1c26ab27933e784eaef5af3a647c2c1888495e614cc38263f",
+    "pureins_v6_analyzer.log": "577dc03cc6bb2829495afb707163fdad036a5681e9393836424b15eeb8ca86cf",
+    "pureins_v6_architecture.log": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+    "pureins_v6_arm.log": "62d835e9cde869ef889085805e0ad83a15bf911383e9249ceddc63e8f5c5ceb2",
+    "pureins_v6_host.log": "6e98589d6addd51f216ccac37d6fe863b2a97e359224fcc1a854ce4456ac6b92",
+    "pureins_v6_power10.log": "c102f31c0fae142db6e87583c5958055c35f3a2adf7c7b0fa568809d2ccddb9e",
+    "pureins_v6_resources.log": "d821f917f16ca270c2242aec6c36967dfc356fad9543e79276eb76536c21724b",
+    "pytest_fccg_v2.log": "12f857a16da1030739f66c937ad1917c7c1e8cfe955be62843e71c03072cd6a1",
+    "run_matrix_v6.py": "d41c6b32417e46a9e3cd77671f61d1403f4b841258e006dc80f5dd5cb957be37",
+    "SF6_ACTUAL_BACKEND_v1.BIN": "75e58a5924f94deeeadd7b9d607710d85d6d8f969c1f63eb0cb2f3558c78a8ae",
+    "SF6_ACTUAL_BACKEND_v2.BIN": "4802af0a1b414383f30eec244691dea5374b3bbe480e8c2e4a14fd585d192336",
+    "SF6_SS_0_5_TEST_4.ssdecoder": "f4c3e8203002a5f63fa7000aeb986115578098c30a3a65aab2dcc646e0651deb",
+    "sf6_v6_analyzer.log": "2973841b260b66e05bc759f56ec1fb202f02baa5d9eb56d1a0b3f90eff12c6d6",
+    "sf6_v6_architecture.log": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+    "sf6_v6_arm.log": "993645c4e9e32a8d255d7597be261d97475f866ad15f7752fd42fe767d2caf83",
+    "sf6_v6_host.log": "60ef03a215508edb8e010b2cd5df8ed4926308b19b272b70ac079e342f1a5ddd",
+    "sf6_v6_power10.log": "7b183e9c46ffac90aa982ceeaf9d3427051b7086cd92ccda443ab15aaf5acfb0",
+    "sf6_v6_resources.log": "bd89ebf41e38284f9955b217203d185d26068819102ef9c23719dca002557cde"
+  },
+  "scope": "Intermediate SF6 software checkpoint. v6 failed one Host compile; exact FLP fixture and English GUI tests also fail. No hardware action or completed acceptance."
+}

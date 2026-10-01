@@ -1,0 +1,64 @@
+F..........................................                              [100%]
+================================== FAILURES ===================================
+_________ test_actual_sf6_backend_exact_decoder_and_recorded_sources __________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/SF6_20261001_v1/flp_sf6_final/test_actual_sf6_backend_exact_0')
+
+    @pytest.mark.skipif(not os.environ.get("SILVERSTAR_SF6_ACTUAL_ROOT"), reason="requires explicitly generated actual SF6 C fixture")
+    def test_actual_sf6_backend_exact_decoder_and_recorded_sources(tmp_path):
+        root = Path(os.environ["SILVERSTAR_SF6_ACTUAL_ROOT"])
+        log = root / "SF6_ACTUAL_BACKEND_v1.BIN"
+        packages = tuple((root / "SF6_v6").glob("*.ssdecoder"))
+        assert len(packages) == 1
+        package = packages[0]
+        before = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in (log, package)}
+        coordinator = LogOpenCoordinator(builtin_registry(), cache=DecoderProfileCache(tmp_path / "cache"))
+>       opened = coordinator.Open(LogOpenRequest(log_path=log, decoder_package_path=package))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FLP\tests\test_sf6_recorded.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\src\silverstar_flp\log_open.py:321: in Open
+    return self._OpenWithSourcePackage(
+apps\FLP\src\silverstar_flp\log_open.py:352: in _OpenWithSourcePackage
+    return self._ParseAndAdapt(
+apps\FLP\src\silverstar_flp\log_open.py:406: in _ParseAndAdapt
+    dataset = SilverStarSslog0SemanticAdapter(package).Apply(dataset)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\decoder_profiles\semantic_adapter.py:1029: in Apply
+    calibration = _CalibrationSnapshot_Get(with_events, self.package)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\decoder_profiles\semantic_adapter.py:794: in _CalibrationSnapshot_Get
+    boundary, boundary_kind = _CalibrationBoundary_Get(dataset)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dataset = FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/SF6_20261001_v1/SF6_ACTUAL_BACKEND_v1.BIN')..., logger_overflow_event_count=0, sequence_gaps=(), mission_record_continuity='unknown', structural_integrity='normal'))
+
+    def _CalibrationBoundary_Get(dataset: FlightDataset) -> tuple[int, str]:
+        mission_starts = [
+            record.timestamp_us
+            for record in dataset.Records_Get("EVENT")
+            if int(record.payload.get("event_id", 0)) == 0x03
+        ]
+        if mission_starts:
+            return min(mission_starts), "mission_start"
+        initial_states = dataset.Records_Get("INITIAL_STATE")
+        if initial_states:
+            return min(record.timestamp_us for record in initial_states), "initial_state"
+        eskf_initial = dataset.Records_Get("ESKF15_INITIAL_STATE")
+        if eskf_initial:
+            return min(record.timestamp_us for record in eskf_initial), "eskf15_initial_state"
+        corrected = dataset.Records_Get("IMU_CORRECTED")
+        if corrected:
+            return min(
+                int(record.payload.get("sample_timestamp_us", record.timestamp_us))
+                for record in corrected
+            ), "first_corrected_imu"
+>       raise DecoderProfileError("calibration_selection_boundary_missing")
+E       silverstar_flp.decoder_profiles.errors.DecoderProfileError: calibration_selection_boundary_missing
+
+apps\FLP\src\silverstar_flp\decoder_profiles\semantic_adapter.py:787: DecoderProfileError
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_sf6_recorded.py::test_actual_sf6_backend_exact_decoder_and_recorded_sources
+1 failed, 42 passed in 19.49s

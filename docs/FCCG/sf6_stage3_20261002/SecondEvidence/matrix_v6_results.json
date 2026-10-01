@@ -1,0 +1,290 @@
+[
+  {
+    "name": "sf6_v6_arm",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 103.32244739999987,
+    "log_sha256": "993645c4e9e32a8d255d7597be261d97475f866ad15f7752fd42fe767d2caf83"
+  },
+  {
+    "name": "kf6_v6_arm",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\KF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 103.6903284,
+    "log_sha256": "f8dad0c6893999534da8f6b3ee2d416008bbfaa584c62554aa46dbe6407e8709"
+  },
+  {
+    "name": "sf6_v6_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 15.940026500000386,
+    "log_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+  },
+  {
+    "name": "kf6_v6_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\KF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 15.951048299999457,
+    "log_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+  },
+  {
+    "name": "sf6_v6_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 20.459654499998578,
+    "log_sha256": "7b183e9c46ffac90aa982ceeaf9d3427051b7086cd92ccda443ab15aaf5acfb0"
+  },
+  {
+    "name": "kf6_v6_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\KF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 21.573308000000907,
+    "log_sha256": "d50a68dded62cc1535f7c4fb0db98ebcc9b6539e00f4408e3379931ff8c3d5be"
+  },
+  {
+    "name": "sf6_v6_host",
+    "command": [
+      "mingw32-make",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v6\\Flight_Controller",
+    "exit_code": 2,
+    "seconds": 218.79687730000114,
+    "log_sha256": "60ef03a215508edb8e010b2cd5df8ed4926308b19b272b70ac079e342f1a5ddd"
+  },
+  {
+    "name": "sf6_v6_analyzer",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 73.57762999999977,
+    "log_sha256": "2973841b260b66e05bc759f56ec1fb202f02baa5d9eb56d1a0b3f90eff12c6d6"
+  },
+  {
+    "name": "sf6_v6_resources",
+    "command": [
+      "mingw32-make",
+      "CONFIG=Release",
+      "memory-report",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 6.129768900000272,
+    "log_sha256": "bd89ebf41e38284f9955b217203d185d26068819102ef9c23719dca002557cde"
+  },
+  {
+    "name": "pureins_v6_arm",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\PureINS_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 52.62611000000106,
+    "log_sha256": "62d835e9cde869ef889085805e0ad83a15bf911383e9249ceddc63e8f5c5ceb2"
+  },
+  {
+    "name": "pureins_v6_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\PureINS_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 15.444292000000132,
+    "log_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+  },
+  {
+    "name": "kf6_v6_host",
+    "command": [
+      "mingw32-make",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\KF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 378.3843969999998,
+    "log_sha256": "dcbdc1ff9d10836098d257d1f32d3a4d7b6bbc32625451d708465023bb20c617"
+  },
+  {
+    "name": "pureins_v6_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\PureINS_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 41.278379100000166,
+    "log_sha256": "c102f31c0fae142db6e87583c5958055c35f3a2adf7c7b0fa568809d2ccddb9e"
+  },
+  {
+    "name": "kf6_v6_analyzer",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\KF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 126.94672319999881,
+    "log_sha256": "eff33c5e76ff4ff8ad7c6ba64cafcb3360d5d422fb320e31bd10fafb0edfd29b"
+  },
+  {
+    "name": "kf6_v6_resources",
+    "command": [
+      "mingw32-make",
+      "CONFIG=Release",
+      "memory-report",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\KF6_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 11.835746599999766,
+    "log_sha256": "c104c3cb5dc8bc2734e590a25d8d44584bb48482d2fda50fb98bacb6651050ca"
+  },
+  {
+    "name": "eskf15_v6_arm",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\ESKF15_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 132.05824290000055,
+    "log_sha256": "797b064bd28c04ad0a319a9efb6a8c59cab70869958ca67f4351dfcc0f552cde"
+  },
+  {
+    "name": "eskf15_v6_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\ESKF15_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 33.97843660000035,
+    "log_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+  },
+  {
+    "name": "eskf15_v6_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\ESKF15_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 34.989213899998504,
+    "log_sha256": "1c09dce76e3d069dc3d45848840dc1da50674ca7ea456078059c3abb063db312"
+  },
+  {
+    "name": "pureins_v6_host",
+    "command": [
+      "mingw32-make",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\PureINS_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 648.5794735,
+    "log_sha256": "6e98589d6addd51f216ccac37d6fe863b2a97e359224fcc1a854ce4456ac6b92"
+  },
+  {
+    "name": "pureins_v6_analyzer",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\PureINS_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 142.25809219999974,
+    "log_sha256": "577dc03cc6bb2829495afb707163fdad036a5681e9393836424b15eeb8ca86cf"
+  },
+  {
+    "name": "pureins_v6_resources",
+    "command": [
+      "mingw32-make",
+      "CONFIG=Release",
+      "memory-report",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\PureINS_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 12.620638599999438,
+    "log_sha256": "d821f917f16ca270c2242aec6c36967dfc356fad9543e79276eb76536c21724b"
+  },
+  {
+    "name": "eskf15_v6_host",
+    "command": [
+      "mingw32-make",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\ESKF15_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 641.9264856999998,
+    "log_sha256": "ff9b79e038bff58d236f65978f498ccae411a2287e6caf5bf7581e17776da148"
+  },
+  {
+    "name": "eskf15_v6_analyzer",
+    "command": [
+      "mingw32-make",
+      "-j6",
+      "CONFIG=Release",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\ESKF15_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 109.56581740000001,
+    "log_sha256": "eb44220573aa4869b936f82696b259e24327d6bd7693e6b1c5fb58da17890354"
+  },
+  {
+    "name": "eskf15_v6_resources",
+    "command": [
+      "mingw32-make",
+      "CONFIG=Release",
+      "memory-report",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\ESKF15_v6\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 9.890268999999535,
+    "log_sha256": "7344ec75dd5b86a5cfa9f6b556f0794cdbd47a3ad0d8134231d9ebb17396ba95"
+  }
+]

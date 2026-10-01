@@ -1,0 +1,49 @@
+BEGIN sf6_v6_arm
+BEGIN kf6_v6_arm
+END sf6_v6_arm 0
+BEGIN sf6_v6_architecture
+END kf6_v6_arm 0
+BEGIN kf6_v6_architecture
+END sf6_v6_architecture 0
+BEGIN sf6_v6_power10
+END kf6_v6_architecture 0
+BEGIN kf6_v6_power10
+END sf6_v6_power10 0
+BEGIN sf6_v6_host
+END kf6_v6_power10 0
+BEGIN kf6_v6_host
+END sf6_v6_host 2
+BEGIN sf6_v6_analyzer
+END sf6_v6_analyzer 0
+BEGIN sf6_v6_resources
+END sf6_v6_resources 0
+BEGIN pureins_v6_arm
+END pureins_v6_arm 0
+BEGIN pureins_v6_architecture
+END pureins_v6_architecture 0
+BEGIN pureins_v6_power10
+END kf6_v6_host 0
+BEGIN kf6_v6_analyzer
+END pureins_v6_power10 0
+BEGIN pureins_v6_host
+END kf6_v6_analyzer 0
+BEGIN kf6_v6_resources
+END kf6_v6_resources 0
+BEGIN eskf15_v6_arm
+END eskf15_v6_arm 0
+BEGIN eskf15_v6_architecture
+END eskf15_v6_architecture 0
+BEGIN eskf15_v6_power10
+END eskf15_v6_power10 0
+BEGIN eskf15_v6_host
+END pureins_v6_host 0
+BEGIN pureins_v6_analyzer
+END pureins_v6_analyzer 0
+BEGIN pureins_v6_resources
+END pureins_v6_resources 0
+END eskf15_v6_host 0
+BEGIN eskf15_v6_analyzer
+END eskf15_v6_analyzer 0
+BEGIN eskf15_v6_resources
+END eskf15_v6_resources 0
+COMPLETE

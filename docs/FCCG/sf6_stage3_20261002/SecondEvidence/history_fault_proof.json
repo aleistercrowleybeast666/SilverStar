@@ -1,0 +1,58 @@
+[
+  {
+    "name": "baseline548b89f",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wconversion",
+      "-Wsign-conversion",
+      "-pedantic",
+      "-O2",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Algorithm\\Estimator\\SF6\\Inc",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\navigation_sf6_548b89f.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Tests\\Host\\test_navigation_sf6.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\baseline548b89f_history_fault.exe"
+    ],
+    "compile_exit": 0,
+    "source_sha256": "e47b7b1d35c5b3e1c26ab27933e784eaef5af3a647c2c1888495e614cc38263f",
+    "normal_exit": 0,
+    "history_exit": 3,
+    "executable_sha256": "ff7e380dcebedd3de8e4f29b2fe80bab5a9b0bb557e3f095bf85b5597925e262"
+  },
+  {
+    "name": "current",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wconversion",
+      "-Wsign-conversion",
+      "-pedantic",
+      "-O2",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Algorithm\\Estimator\\SF6\\Inc",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Algorithm\\Estimator\\SF6\\Src\\navigation_sf6.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Tests\\Host\\test_navigation_sf6.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\current_history_fault.exe"
+    ],
+    "compile_exit": 0,
+    "source_sha256": "e7be2566574cc294f58d4e78fa4ae5ffee0291e4921cc701c71d86bc8fb5897a",
+    "normal_exit": 0,
+    "history_exit": 3221225501,
+    "executable_sha256": "b515077a741436d84f96dca5a6f535a8185f8131c18c1a43002d1e47745279b3"
+  }
+]
