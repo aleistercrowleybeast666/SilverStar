@@ -1,0 +1,34 @@
+[
+  {
+    "theme": "light",
+    "title": "SilverStar 系统配置与生成",
+    "version": "v0.1.1",
+    "gain_count": 6,
+    "ground_status": "地面站：READY",
+    "flight_mcu": "STM32F407VET6",
+    "ground_mcu": "STM32F103C8T6",
+    "font_ids": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "disabled_status": "地面站 Target 未启用；启用后可生成 Ground。"
+  },
+  {
+    "theme": "dark",
+    "title": "SilverStar 系统配置与生成",
+    "version": "v0.1.1",
+    "gain_count": 6,
+    "ground_status": "地面站：READY",
+    "flight_mcu": "STM32F407VET6",
+    "ground_mcu": "STM32F103C8T6",
+    "font_ids": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "disabled_status": "地面站 Target 未启用；启用后可生成 Ground。"
+  }
+]

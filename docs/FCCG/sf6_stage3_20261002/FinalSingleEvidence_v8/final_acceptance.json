@@ -1,0 +1,68 @@
+{
+  "firmware_source_commit": "170f1cb55daedf8e8d308a7bc845b2fa5b79d102",
+  "gui_fixture_commit": "112db65005a549dffa207421869754e17185a346",
+  "frozen_packages": [
+    {
+      "name": "KF6",
+      "directory": "D:\\python_software\\SilverStar\\.work\\SoftwareCandidates_20261002_Single_v1\\KF6_Delay10",
+      "zip": "D:\\python_software\\SilverStar\\.work\\SoftwareCandidates_20261002_Single_v1\\KF6_Delay10.zip",
+      "zip_bytes": 4754267,
+      "zip_sha256": "ca0d945e5cbc65750c77f5b63621d0431c6782147bafc184db837e15b8e8a9f2",
+      "firmware_sha256": {
+        "SilverStar_0_1_1.bin": "59c7f6f39a7f0751805889ea17aaedd3df0fb520166da7a2415052148eb19601",
+        "SilverStar_0_1_1.elf": "7c5f80ccfa9d85778f051052d048179d8b8f162c98ef539bb885e25f522d37e3",
+        "SilverStar_0_1_1.hex": "548e93122d127742e9c089e6ce188dfcb270c9224a21adf9658338fceb71d313",
+        "SilverStar_0_1_1.map": "bf0f5e27f92c7385c183ae3dc9e442d95f589471a56067f35563ea6126987d34"
+      },
+      "source_files": 609
+    },
+    {
+      "name": "SF6",
+      "directory": "D:\\python_software\\SilverStar\\.work\\SoftwareCandidates_20261002_Single_v1\\SF6_Delay10",
+      "zip": "D:\\python_software\\SilverStar\\.work\\SoftwareCandidates_20261002_Single_v1\\SF6_Delay10.zip",
+      "zip_bytes": 4611504,
+      "zip_sha256": "fc088fdc17678020b4a53091f436965bc58e1c76bad804f7c23c4e0d89262dee",
+      "firmware_sha256": {
+        "SilverStar_0_1_1.bin": "4cd53f00b172a542fdf65e3c3721ff448635c983bce21a008d6bb7cb0bec239f",
+        "SilverStar_0_1_1.elf": "3e9885f9b5d5a5f6903cefc1dbff1094869e0a9d6b59be62d57e16765066bb32",
+        "SilverStar_0_1_1.hex": "5621e087a2762eda4c9fc9205adbccd9064f9cacde1ee3789f47600482d5952e",
+        "SilverStar_0_1_1.map": "8691eec5291a3e2e3ab6b114ea376b6885086ee5ab3e38eb869e841501bd2970"
+      },
+      "source_files": 608
+    }
+  ],
+  "firmware_matrix": {
+    "executed": 24,
+    "passed": 24,
+    "scope": "four algorithms: ARM artifact/link, architecture, emitted power10, Host, real ARM -fanalyzer, memory/stack report"
+  },
+  "application_tests": {
+    "GSHC": {
+      "passed": 455,
+      "subtests": 3
+    },
+    "FLP": {
+      "passed": 496,
+      "skipped": 28
+    },
+    "FCCG": {
+      "passed": 19,
+      "scope": "GUI smoke and release 0.1.1 retry; earlier focused 39-case batch had 38 pass and one stale identity failure, not an executed full 39-pass retry"
+    }
+  },
+  "delay10_generated_config_native_checks_per_candidate": 10556,
+  "hardware_validation": "NOT PERFORMED; no serial, probe, programming, reset or GPIO actions",
+  "critical_contract_manual_acceptance": "NOT PROVEN",
+  "whole_firmware_stack_timing_navigation_accuracy": "NOT PROVEN",
+  "barometer_actual_source_and_epoch": "NOT PROVEN; source 255 UNKNOWN retained; no cold backup integration",
+  "SF6_context_bytes": 18592,
+  "SF6_context_increase_bytes": 10256,
+  "SF6_gains": "six gains 0.2, engineering defaults not tuned",
+  "replay": "chronological time/group replay, bounded 256 history / 256 observations, 600ms window; previous completed IMU boundary quantization <=20ms; no fractional interpolation",
+  "capacity": "121 nodes / 185 observations at conservative admitted rates; capacity/expiry/future ordinary refusal and recovery tested",
+  "excluded": [
+    "unaccepted Baro branch",
+    "auto-memory layout",
+    "Ground multi-radio"
+  ]
+}

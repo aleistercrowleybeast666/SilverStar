@@ -1,0 +1,58 @@
+.....................F.................                                  [100%]
+================================== FAILURES ===================================
+____________ test_main_window_shell_navigation_theme_and_language _____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/FinalV8_pytest/test_main_window_shell_navigat0')
+qapp = <PySide6.QtWidgets.QApplication(0x1d7f457b800) at 0x000001D7F678AEC0>
+
+    def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            assert window.windowTitle() == PRODUCT_NAME
+            assert window.version_label.text() == f"v{__version__}"
+            assert window.pages.count() == 7
+            assert window.navigation_list.count() == 7
+            assert not hasattr(window, "project_page")
+            assert not hasattr(window, "plugins_page")
+            assert [
+                window.navigation_list.item(index).text()
+                for index in range(window.navigation_list.count())
+            ] == ["飞控设备", "飞行配置", "导航配置", "遥测配置", "飞控硬件", "地面站硬件", "构建与检测"]
+            assert not hasattr(window.build_page, "configuration_combo")
+            assert set(window.build_page.action_buttons) == {
+                "flight_build", "flight_clean", "flight_open_vscode",
+                "flight_open_folder", "flight_artifact_check",
+                "ground_build", "ground_clean", "ground_open_vscode",
+                "ground_open_folder", "ground_artifact_check",
+                "open_firmware_output",
+                "host_tests",
+                "architecture_check",
+                "power10_check",
+                "static_analysis",
+                "artifact_check",
+                "tool_install_guide",
+            }
+            assert not window.build_page.action_buttons["flight_open_vscode"].isEnabled()
+            assert not window.build_page.action_buttons["ground_open_folder"].isEnabled()
+            assert not window.build_page.action_buttons[
+                "open_firmware_output"
+            ].isEnabled()
+            assert "build_release" not in window.build_page.action_buttons
+            assert "flash" not in window.build_page.action_buttons
+            assert window.save_as_action.shortcut().toString() == "Ctrl+Shift+S"
+            assert window.plugin_manager_dialog.panel.plugin_table.rowCount() == len(window._component_views)
+            for index in range(window.pages.count()):
+                window.navigation_list.setCurrentRow(index)
+                assert window.pages.currentIndex() == index
+    
+            window.Language_Apply("en_US")
+>           assert window.title_label.text() == "SilverStar System Configuration & Generation (SCG)"
+E           AssertionError: assert 'SilverStar SCG' == 'SilverStar S...eration (SCG)'
+E             
+E             - SilverStar System Configuration & Generation (SCG)
+E             + SilverStar SCG
+
+apps\FCCG\tests\test_gui_smoke.py:280: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_gui_smoke.py::test_main_window_shell_navigation_theme_and_language
+1 failed, 38 passed in 330.00s (0:05:30)

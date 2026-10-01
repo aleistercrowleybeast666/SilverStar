@@ -1,0 +1,35 @@
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 47%]
+........................................................................ [ 63%]
+........................................................................ [ 79%]
+..................................................................... [ 94%]
+...........F..............                                               [100%]
+================================== FAILURES ===================================
+____ UiWorkflowTests.test_header_brand_credit_version_and_localized_labels ____
+
+self = <test_ui_workflow.UiWorkflowTests testMethod=test_header_brand_credit_version_and_localized_labels>
+
+    def test_header_brand_credit_version_and_localized_labels(self) -> None:
+        self.assertEqual(self.window.windowTitle(), "SilverStar GSHC")
+        self.assertEqual(self.window.header_bar.objectName(), "headerBar")
+        self.assertEqual(self.window.header_title.text(), "SilverStar地面站上位机")
+        self.assertEqual(self.window.lbl_language.text(), "语言")
+        self.assertEqual(self.window.lbl_theme.text(), "主题")
+        self.assertEqual(self.window.header_credit.text(), "辰星引力开发")
+>       self.assertEqual(
+            self.window.header_version.text(),
+            "SilverStar GSHC 0.1.0",
+        )
+E       AssertionError: 'SilverStar GSHC 0.1.1' != 'SilverStar GSHC 0.1.0'
+E       - SilverStar GSHC 0.1.1
+E       ?                     ^
+E       + SilverStar GSHC 0.1.0
+E       ?                     ^
+
+apps\GSHC\tests\test_ui_workflow.py:121: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+=========================== short test summary info ===========================
+FAILED apps/GSHC/tests/test_ui_workflow.py::UiWorkflowTests::test_header_brand_credit_version_and_localized_labels
+1 failed, 454 passed, 3 subtests passed in 905.29s (0:15:05)

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "PureINS",
+    "FLASH": {
+      "used": 284740,
+      "remaining": 239548,
+      "capacity": 524288
+    },
+    "main SRAM": {
+      "used": 83000,
+      "remaining": 48072,
+      "capacity": 131072
+    },
+    "CCMRAM": {
+      "used": 44016,
+      "remaining": 21520,
+      "capacity": 65536
+    }
+  },
+  {
+    "name": "KF6",
+    "FLASH": {
+      "used": 317124,
+      "remaining": 207164,
+      "capacity": 524288
+    },
+    "main SRAM": {
+      "used": 102328,
+      "remaining": 28744,
+      "capacity": 131072
+    },
+    "CCMRAM": {
+      "used": 55432,
+      "remaining": 10104,
+      "capacity": 65536
+    }
+  },
+  {
+    "name": "ESKF15",
+    "FLASH": {
+      "used": 303276,
+      "remaining": 221012,
+      "capacity": 524288
+    },
+    "main SRAM": {
+      "used": 100928,
+      "remaining": 30144,
+      "capacity": 131072
+    },
+    "CCMRAM": {
+      "used": 63456,
+      "remaining": 2080,
+      "capacity": 65536
+    }
+  },
+  {
+    "name": "SF6",
+    "FLASH": {
+      "used": 291428,
+      "remaining": 232860,
+      "capacity": 524288
+    },
+    "main SRAM": {
+      "used": 101704,
+      "remaining": 29368,
+      "capacity": 131072
+    },
+    "CCMRAM": {
+      "used": 44016,
+      "remaining": 21520,
+      "capacity": 65536
+    }
+  }
+]

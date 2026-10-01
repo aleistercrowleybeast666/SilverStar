@@ -1,0 +1,54 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile SilverStar_F407 -Config Release 
+FCCG_PROGRESS|ARTIFACT|PLAN|8
+FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|DONE|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|BEGIN|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|DONE|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|BEGIN|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap
+SilverStar memory report:
+  FLASH     used=284572 remaining=239716 capacity=524288
+  main SRAM used=83000 remaining=48072 capacity=131072
+  CCMRAM    used=44016 remaining=21520 capacity=65536
+  heap      reserved=0 runtime_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap
+FCCG_PROGRESS|ARTIFACT|BEGIN|8|8|summary
+  largest static objects:
+    s_logger_storage                 bytes= 16000 address=0x200081E0 main SRAM
+    s_estimator                      bytes= 10232 address=0x10006D70 CCMRAM
+    s_estimator_logger_storage       bytes=  9600 address=0x20005C40 main SRAM
+    s_hal_contexts                   bytes=  8190 address=0x2000FEBC main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10001000 CCMRAM
+    s_io_baselines                   bytes=  4864 address=0x100098F0 CCMRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000470 main SRAM
+    s_estimator_stack                bytes=  4096 address=0x10004400 CCMRAM
+    s_flight_stack                   bytes=  4096 address=0x10003400 CCMRAM
+    s_telemetry_stack                bytes=  4096 address=0x10000000 CCMRAM
+SilverStar artifact check passed: target=SilverStar_F407 config=Release elf_bytes=3028744 bin_bytes=284576 heap_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|8|8|summary
+python Tools/check_task_stacks.py --config Release --prefix "arm-none-eabi-"
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Device: configured=2560 estimate=2128 margin=432
+INS: configured=3072 estimate=1776 margin=1296
+Estimator: configured=4096 estimate=828 margin=3268
+Flight: configured=4096 estimate=3600 margin=496
+Logger: configured=3072 estimate=2104 margin=968
+Serial: configured=6144 estimate=4176 margin=1968
+Telemetry: configured=4096 estimate=2080 margin=2016
+Idle: configured=512 estimate=256 margin=256
+{
+  "indicator_in_production_init": true,
+  "alignment_start_deferred": true,
+  "flight_processes_alignment": true,
+  "communication_does_not_process_alignment": true,
+  "all_enabled_tasks_budgeted": true
+}
+FCCG_PROGRESS|STACK_REPORT|DONE|1|1|ELF and stack budget

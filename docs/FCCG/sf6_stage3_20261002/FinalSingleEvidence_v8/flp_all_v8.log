@@ -1,0 +1,61 @@
+............................................................s........... [ 13%]
+........................................................................ [ 27%]
+.................sssssssssss..s........................................s [ 41%]
+sssss..................F...........s.................................... [ 54%]
+.........................................s.............................. [ 68%]
+........................................................................ [ 82%]
+...........................sssssss...................................... [ 96%]
+....................                                                     [100%]
+================================== FAILURES ===================================
+___________ test_five_page_gui_and_top_bar_accept_a_parsed_dataset ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/SF6_20261001_v1/FLP_FinalV8_temp/test_five_page_gui_and_top_bar0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021190E74320>
+
+    def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
+        tmp_path: Path,
+        monkeypatch,
+    ) -> None:
+        application = QApplication.instance() or QApplication([])
+        dataset = _DisplayDataset_Parse(
+            AnalysisFlight_Build(tmp_path / "SYNTHETIC_gui_source.BIN")
+        )
+        window = MainWindow(builtin_registry())
+        window._Dataset_Set(dataset)
+        _ProjectIdentity_Set(window, dataset.source_path, tmp_path)
+        window.show()
+        application.processEvents()
+        assert window.pages.count() == 5
+        assert window.windowTitle() == PRODUCT_NAME
+        assert window.title_label.text() == "SilverStar 飞行日志解析器"
+>       assert window.version_label.text() == f"v{__version__}" == "v0.1.0"
+E       AssertionError: assert 'v0.1.1' == 'v0.1.0'
+E         
+E         - v0.1.0
+E         ?      ^
+E         + v0.1.1
+E         ?      ^
+
+apps\FLP\tests\test_gui_smoke.py:85: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+=========================== short test summary info ===========================
+SKIPPED [1] apps\FLP\tests\test_current_log_manual.py:37: set SILVERSTAR_CURRENT_LOG_ROOT for the hash-locked SS0000 log
+SKIPPED [1] apps\FLP\tests\test_eskf15_c_parity.py:22: actual FCCG C source must be explicitly provided
+SKIPPED [2] apps\FLP\tests\test_eskf15_golden.py:29: explicit actual FCCG source and generated ESKF project required
+SKIPPED [4] apps\FLP\tests\test_eskf15_native_parity.py:175: actual FCCG source must be explicitly selected
+SKIPPED [1] apps\FLP\tests\test_eskf15_native_parity.py:225: actual FCCG source must be explicitly selected
+SKIPPED [2] apps\FLP\tests\test_eskf15_native_parity.py:349: actual FCCG source must be explicitly selected
+SKIPPED [1] apps\FLP\tests\test_eskf15_native_parity.py:431: actual FCCG source must be explicitly selected
+SKIPPED [1] apps\FLP\tests\test_eskf15_records.py:68: requires explicitly selected current FCCG protocol source
+SKIPPED [6] apps\FLP\tests\test_generated_aggregation_pair.py:18: Explicit real generated decoder fixture required; no substitute package
+SKIPPED [1] apps\FLP\tests\test_joint_c_golden.py:26: explicit FCCG generated project and C golden required
+SKIPPED [1] apps\FLP\tests\test_navigation_integrity_parity.py:20: set SILVERSTAR_FCCG_ROOT and provide host GCC for joint gate
+SKIPPED [1] apps\FLP\tests\test_ss0007_manual.py:36: set SILVERSTAR_SS0007_PATH for the real-log validation gate
+SKIPPED [1] apps\FLP\tests\test_ss0007_manual.py:100: set SILVERSTAR_SS0007_PATH for the real-log validation gate
+SKIPPED [1] apps\FLP\tests\test_ss0007_manual.py:154: set SILVERSTAR_SS0007_PATH for the real-log validation gate
+SKIPPED [1] apps\FLP\tests\test_ss0014_manual.py:48: set SILVERSTAR_SS0014_ROOT to the matching SS0014 task root
+SKIPPED [3] apps\FLP\tests\test_ss_test_0_manual.py:36: set SILVERSTAR_SS_TEST_0_ROOT for the real FCCG Golden-log validation gate
+FAILED apps\FLP\tests\test_gui_smoke.py::test_five_page_gui_and_top_bar_accept_a_parsed_dataset
+1 failed, 495 passed, 28 skipped in 619.18s (0:10:19)
