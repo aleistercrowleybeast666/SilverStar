@@ -320,6 +320,14 @@ def _Makefile_Render(
 CC := {toolchain_prefix}gcc
 OBJCOPY := {toolchain_prefix}objcopy
 SIZE := {toolchain_prefix}size
+PYTHON ?= python
+HOST_CC ?= gcc
+ANALYZE ?= 0
+BUILD_DIR := build
+ifeq ($(ANALYZE),1)
+BUILD_DIR := build/analysis
+ANALYZER_FLAGS := -fanalyzer
+endif
 C_SOURCES := {source_lines}
 ASM_SOURCES := {asm_lines}
 FIRST_PARTY_C_SOURCES := $(filter Common/% Devices/% Generated/% Ground/% Platform/%,$(C_SOURCES))
@@ -328,15 +336,15 @@ CLASSIFIED_C_SOURCES := $(FIRST_PARTY_C_SOURCES) $(VENDOR_C_SOURCES)
 ifneq ($(words $(C_SOURCES)),$(words $(CLASSIFIED_C_SOURCES)))
 $(error Ground compiler policy does not classify every C source)
 endif
-OBJECTS := $(patsubst %.c,build/%.o,$(C_SOURCES)) $(patsubst %.s,build/%.o,$(ASM_SOURCES))
+OBJECTS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_SOURCES)) $(patsubst %.s,$(BUILD_DIR)/%.o,$(ASM_SOURCES))
 FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror \\
   -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 \\
   -Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes \\
-  -Wmissing-prototypes -Wswitch-enum -Wvla
+  -Wmissing-prototypes -Wswitch-enum -Wvla $(ANALYZER_FLAGS)
 VENDOR_WARNINGS := -Wall -Werror=implicit-function-declaration \\
   -Werror=incompatible-pointer-types -Werror=return-type
 CFLAGS := -std=c11 -Os -ffunction-sections -fdata-sections -fstack-usage -Wvla -Werror=vla {flags} {include_flags} {define_flags}
-LDFLAGS := {flags} -Wl,--gc-sections,-Map=build/ground.map -T{linker} -specs=nano.specs -lc -lm -lnosys
+LDFLAGS := {flags} -Wl,--gc-sections,-Map=$(BUILD_DIR)/ground.map -T{linker} -specs=nano.specs -lc -lm -lnosys
 
 ifeq ($(OS),Windows_NT)
 MKDIR_P = if not exist "$(dir $@)" mkdir "$(dir $@)"
@@ -344,25 +352,39 @@ else
 MKDIR_P = mkdir -p "$(dir $@)"
 endif
 
-all: build/ground.elf build/ground.bin build/ground.size
+all: $(BUILD_DIR)/ground.elf $(BUILD_DIR)/ground.bin $(BUILD_DIR)/ground.size
+
+.PHONY: all architecture-check host-tests artifact-check power10-check static-analysis
+
+static-analysis:
+\t$(MAKE) ANALYZE=1 all
+
+architecture-check:
+\t$(PYTHON) Tools/check_ground.py architecture
+
+host-tests:
+\t$(PYTHON) Tools/check_ground.py host --host-cc "$(HOST_CC)"
+
+artifact-check: all
+\t$(PYTHON) Tools/check_ground.py artifact --prefix "{toolchain_prefix}"
 
 power10-check:
 \tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1 -TargetKind Ground
 
-build/ground.elf: $(OBJECTS)
+$(BUILD_DIR)/ground.elf: $(OBJECTS)
 \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
-build/ground.bin: build/ground.elf
+$(BUILD_DIR)/ground.bin: $(BUILD_DIR)/ground.elf
 \t$(OBJCOPY) -O binary $< $@
 
-build/ground.size: build/ground.elf
+$(BUILD_DIR)/ground.size: $(BUILD_DIR)/ground.elf
 \t$(SIZE) $< > $@
 
-build/%.o: %.c
+$(BUILD_DIR)/%.o: %.c
 \t@$(MKDIR_P)
 \t$(CC) $(CFLAGS) $(if $(filter $<,$(FIRST_PARTY_C_SOURCES)),$(FIRST_PARTY_WARNINGS),$(VENDOR_WARNINGS)) -MMD -MP -c $< -o $@
 
-build/%.o: %.s
+$(BUILD_DIR)/%.o: %.s
 \t@$(MKDIR_P)
 \t$(CC) $(CFLAGS) -x assembler-with-cpp -c $< -o $@
 
@@ -449,7 +471,8 @@ def GroundFiles_Render(
         main_path,
     ]))
     includes = tuple(dict.fromkeys([
-        *base_graph.include_dirs,
+        *(path for path in base_graph.include_dirs
+          if "/Adapter/" not in path and not path.startswith(("FATFS/", "Middlewares/Third_Party/FatFs/"))),
         "Generated/Inc", "Common/Inc", "Interfaces/Inc", "Platform/Inc",
     ]))
     defines = tuple(dict.fromkeys([

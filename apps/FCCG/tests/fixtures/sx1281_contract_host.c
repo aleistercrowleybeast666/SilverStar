@@ -78,6 +78,9 @@ static void Test_ReinitializationFailure(void)
     TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
     TEST_CHECK(Lora_TxEnqueue(0U, &data, 1U) == LORA_TX_ENQUEUE_OK);
     Lora_Process(0U);
+    TEST_CHECK(s_send_count == 0U);
+    s_tick_ms += 120U;
+    Lora_Process(0U);
     TEST_CHECK(s_send_count == 1U);
 }
 
