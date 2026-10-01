@@ -1,0 +1,1231 @@
+EEEEEEEEEEEEEEEEEEEE..........................                           [100%]
+=================================== ERRORS ====================================
+______ ERROR at setup of test_navigation_queue_contract[nav_get_atomic] _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_____ ERROR at setup of test_navigation_queue_contract[nav_before_epoch] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+____ ERROR at setup of test_navigation_queue_contract[nav_time_regression] ____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_____ ERROR at setup of test_navigation_queue_contract[nav_physical_bool] _____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_____ ERROR at setup of test_navigation_queue_contract[nav_attempt_bool] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+____ ERROR at setup of test_navigation_queue_contract[nav_effective_bool] _____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_______ ERROR at setup of test_navigation_queue_contract[nav_soft_bool] _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_________ ERROR at setup of test_navigation_queue_contract[nav_state] _________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+________ ERROR at setup of test_navigation_queue_contract[nav_quality] ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_____ ERROR at setup of test_navigation_queue_contract[nav_success_flag] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_____ ERROR at setup of test_navigation_queue_contract[nav_receive_flag] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+______ ERROR at setup of test_navigation_queue_contract[nav_model_flag] _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+______ ERROR at setup of test_navigation_queue_contract[nav_fault_mask] _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+________ ERROR at setup of test_navigation_queue_contract[nav_normal] _________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_____ ERROR at setup of test_navigation_queue_contract[queue_head_index] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_____ ERROR at setup of test_navigation_queue_contract[queue_tail_index] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+______ ERROR at setup of test_navigation_queue_contract[queue_capacity] _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+____ ERROR at setup of test_navigation_queue_contract[queue_push_distance] ____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+____ ERROR at setup of test_navigation_queue_contract[queue_pop_distance] _____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+_______ ERROR at setup of test_navigation_queue_contract[queue_normal] ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _trace=<pluggy._tracing.Tag...2C0>, _basetemp=WindowsPath('D:/python_software/SilverStar/.work/navqf1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def navigation_queue_contract_executable(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        if gcc is None:
+            pytest.skip("Host GCC unavailable")
+        root = Path(__file__).resolve().parents[1]
+        core = root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        includes = [
+            core / "Common/Inc", core / "Common/Src", core / "Interfaces/Inc",
+            core / "System/Inc", core / "System/Src",
+            root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
+        ]
+        executable = tmp_path_factory.mktemp("nav-queue-contract") / "contract.exe"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        for directory in includes:
+            command.extend(["-I", str(directory)])
+        command.extend([str(root / "tests/fixtures/navigation_queue_contract_host.c"), "-o", str(executable)])
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:22:
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_DegradedGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:146:13: error: unused variable 'model_mismatch' [-Werror=unused-variable]
+E           146 |     uint8_t model_mismatch;
+E               |             ^~~~~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:26: error: unused variable 'imu_quality' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |                          ^~~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:145:14: error: unused variable 'imu_faults' [-Werror=unused-variable]
+E           145 |     uint32_t imu_faults, imu_quality;
+E               |              ^~~~~~~~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:144:27: error: unused variable 'lock' [-Werror=unused-variable]
+E           144 |     PlatformCriticalState lock;
+E               |                           ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c: In function 'SystemNavigationHealth_OverallGet':
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: error: 'lock' undeclared (first use in this function)
+E           190 |     lock = PlatformCritical_Enter();
+E               |     ^~~~
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:190:5: note: each undeclared identifier is reported only once for each function it appears in
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:5: error: 'model_mismatch' undeclared (first use in this function); did you mean 's_model_mismatch'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |     ^~~~~~~~~~~~~~
+E               |     s_model_mismatch
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:40: error: 'imu_faults' undeclared (first use in this function); did you mean 's_imu_faults'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                        ^~~~~~~~~~
+E               |                                        s_imu_faults
+E         D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\System\Src/system_navigation_health.c:191:67: error: 'imu_quality' undeclared (first use in this function); did you mean 's_imu_quality'?
+E           191 |     model_mismatch = s_model_mismatch; imu_faults = s_imu_faults; imu_quality = s_imu_quality;
+E               |                                                                   ^~~~~~~~~~~
+E               |                                                                   s_imu_quality
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedanti...                                                       s_imu_quality\ncc1.exe: all warnings being treated as errors\n").returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:28: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_get_atomic]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_before_epoch]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_time_regression]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_physical_bool]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_attempt_bool]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_effective_bool]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_soft_bool]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_state]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_quality]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_success_flag]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_receive_flag]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_model_flag]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_fault_mask]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_normal]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_head_index]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_tail_index]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_capacity]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_push_distance]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_pop_distance]
+ERROR apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_normal]
+26 passed, 1 warning, 20 errors in 2.90s

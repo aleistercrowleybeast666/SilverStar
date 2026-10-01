@@ -1,0 +1,446 @@
+FFFFFFFFFFFFF.FFFFF.                                                     [100%]
+================================== FAILURES ===================================
+_______________ test_navigation_queue_contract[nav_get_atomic] ________________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_get_atomic'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:49: memcmp(&output, &sentinel, sizeof(output)) == 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_get_a...\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:49: memcmp(&output, &sentinel, sizeof(output)) == 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+______________ test_navigation_queue_contract[nav_before_epoch] _______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_before_epoch'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:57: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_BAD_STATE
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_befor...s\\fixtures\\navigation_queue_contract_host.c:57: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_BAD_STATE\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_____________ test_navigation_queue_contract[nav_time_regression] _____________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_time_regression'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:63: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_BAD_STATE
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_time_...s\\fixtures\\navigation_queue_contract_host.c:63: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_BAD_STATE\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+______________ test_navigation_queue_contract[nav_physical_bool] ______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_physical_bool'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_physi...ures\\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+______________ test_navigation_queue_contract[nav_attempt_bool] _______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_attempt_bool'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_attem...ures\\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_____________ test_navigation_queue_contract[nav_effective_bool] ______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_effective_bool'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_effec...ures\\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+________________ test_navigation_queue_contract[nav_soft_bool] ________________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_soft_bool'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_soft_...ures\\navigation_queue_contract_host.c:73: SystemNavigationHealth_Observe(0U, &e) == SYSTEM_DEVICE_INVALID_ARGUMENT\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+__________________ test_navigation_queue_contract[nav_state] __________________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_state'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_state...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_________________ test_navigation_queue_contract[nav_quality] _________________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_quality'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_quali...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+______________ test_navigation_queue_contract[nav_success_flag] _______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_success_flag'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_succe...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+______________ test_navigation_queue_contract[nav_receive_flag] _______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_receive_flag'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_recei...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_______________ test_navigation_queue_contract[nav_model_flag] ________________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_model_flag'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_model...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_______________ test_navigation_queue_contract[nav_fault_mask] ________________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'nav_fault_mask'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'nav_fault...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+______________ test_navigation_queue_contract[queue_head_index] _______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'queue_head_index'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'queue_hea...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+______________ test_navigation_queue_contract[queue_tail_index] _______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'queue_tail_index'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'queue_tai...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_______________ test_navigation_queue_contract[queue_capacity] ________________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'queue_capacity'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'queue_cap...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_____________ test_navigation_queue_contract[queue_push_distance] _____________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'queue_push_distance'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'queue_pus...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+_____________ test_navigation_queue_contract[queue_pop_distance] ______________
+
+navigation_queue_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/navqb0/nav-queue-contract0/contract.exe')
+scenario = 'queue_pop_distance'
+
+    @pytest.mark.parametrize("scenario", [
+        "nav_get_atomic", "nav_before_epoch", "nav_time_regression",
+        "nav_physical_bool", "nav_attempt_bool", "nav_effective_bool", "nav_soft_bool",
+        "nav_state", "nav_quality", "nav_success_flag", "nav_receive_flag",
+        "nav_model_flag", "nav_fault_mask", "nav_normal",
+        "queue_head_index", "queue_tail_index", "queue_capacity",
+        "queue_push_distance", "queue_pop_distance", "queue_normal",
+    ])
+    def test_navigation_queue_contract(navigation_queue_contract_executable, scenario):
+        result = subprocess.run([str(navigation_queue_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:\python_software\SilverStar\apps\FCCG\tests\fixtures\navigation_queue_contract_host.c:181: 0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\navqb0\\nav-queue-contract0\\contract.exe', 'queue_pop...t='', stderr='D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\navigation_queue_contract_host.c:181: 0\n').returncode
+
+apps\FCCG\tests\test_navigation_queue_contract_host.py:43: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\apps\FCCG\.work\pytest-cache\v\cache\nodeids: [WinError 183] 褰撴枃浠跺凡瀛樺湪鏃讹紝鏃犳硶鍒涘缓璇ユ枃浠躲€? 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\apps\FCCG\.work\pytest-cache\v\cache\lastfailed: [WinError 183] 褰撴枃浠跺凡瀛樺湪鏃讹紝鏃犳硶鍒涘缓璇ユ枃浠躲€? 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_get_atomic]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_before_epoch]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_time_regression]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_physical_bool]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_attempt_bool]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_effective_bool]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_soft_bool]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_state]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_quality]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_success_flag]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_receive_flag]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_model_flag]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[nav_fault_mask]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_head_index]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_tail_index]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_capacity]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_push_distance]
+FAILED apps\FCCG\tests\test_navigation_queue_contract_host.py::test_navigation_queue_contract[queue_pop_distance]
+18 failed, 2 passed, 2 warnings in 1.91s

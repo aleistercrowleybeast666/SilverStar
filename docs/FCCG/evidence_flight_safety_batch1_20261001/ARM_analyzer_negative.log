@@ -1,0 +1,16 @@
+D:\python_software\SilverStar\.work\day_flight1_final\analyzer\double_free.c: In function 'Test_Analyzer':
+D:\python_software\SilverStar\.work\day_flight1_final\analyzer\double_free.c:2:72: error: double-'free' of 'p' [CWE-415] [-Werror=analyzer-double-free]
+    2 | void Test_Analyzer(int flag) { void *p=malloc(4); if(flag!=0) free(p); free(p); }
+      |                                                                        ^~~~~~~
+  'Test_Analyzer': events 1-5
+    |
+    |    2 | void Test_Analyzer(int flag) { void *p=malloc(4); if(flag!=0) free(p); free(p); }
+    |      |                                        ^~~~~~~~~    ~         ~~~~~~~  ~~~~~~~
+    |      |                                        |            |         |        |
+    |      |                                        |            |         |        (5) second 'free' here; first 'free' was at (4)
+    |      |                                        |            |         (3) ...to here
+    |      |                                        |            |         (4) first 'free' here
+    |      |                                        |            (2) following 'true' branch (when 'flag != 0')...
+    |      |                                        (1) allocated here
+    |
+cc1.exe: some warnings being treated as errors

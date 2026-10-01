@@ -1,0 +1,49 @@
+BEGIN ground_arm
+DONE ground_arm 0
+BEGIN ground_power10
+DONE ground_power10 0
+BEGIN analyzer_negative
+DONE analyzer_negative 1
+BEGIN ground_analyze_0
+DONE ground_analyze_0 0
+BEGIN ground_analyze_1
+DONE ground_analyze_1 0
+BEGIN ground_analyze_2
+DONE ground_analyze_2 0
+BEGIN ground_analyze_3
+DONE ground_analyze_3 0
+BEGIN ground_analyze_4
+DONE ground_analyze_4 0
+BEGIN ground_analyze_5
+DONE ground_analyze_5 0
+BEGIN ground_analyze_6
+DONE ground_analyze_6 0
+BEGIN ground_analyze_7
+DONE ground_analyze_7 0
+BEGIN ground_analyze_8
+DONE ground_analyze_8 0
+BEGIN ground_analyze_9
+DONE ground_analyze_9 0
+BEGIN ground_analyze_10
+DONE ground_analyze_10 0
+BEGIN ground_analyze_11
+DONE ground_analyze_11 0
+BEGIN ground_analyze_12
+DONE ground_analyze_12 0
+BEGIN ground_analyze_13
+DONE ground_analyze_13 0
+BEGIN flight_arm
+DONE flight_arm 0
+BEGIN flight_static
+DONE flight_static 0
+BEGIN flight_host
+DONE flight_host 2
+BEGIN flight_power10
+DONE flight_power10 2
+BEGIN flight_stack
+DONE flight_stack 0
+BEGIN flight_architecture
+DONE flight_architecture 0
+BEGIN flight_artifact
+DONE flight_artifact 0
+COMPLETE 95abac8c06535e144e0e91f3dfafaaf02a4bd782 D:\python_software\SilverStar\.work\FlightSafety_95abac8\ExistingHardware

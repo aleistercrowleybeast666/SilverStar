@@ -1,0 +1,7 @@
+BEGIN flight_host
+DONE flight_host 0
+BEGIN flight_power10
+DONE flight_power10 2
+BEGIN ground_power10
+DONE ground_power10 0
+COMPLETE 5920139a8daf7bd4812043a11606df7b42450af4 D:\python_software\SilverStar\.work\FlightSafety_5920139\ExistingHardware

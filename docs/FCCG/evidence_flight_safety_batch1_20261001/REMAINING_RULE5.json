@@ -1,0 +1,1109 @@
+{
+  "firmware_commit": "95abac8c06535e144e0e91f3dfafaaf02a4bd782",
+  "host_fixture_and_agents_commit": "5920139a8daf7bd4812043a11606df7b42450af4",
+  "flight_remaining": 180,
+  "ground_remaining": 0,
+  "counts_by_file": {
+    "APP\\Src\\estimator_task.c": 1,
+    "APP\\Src\\flight_task.c": 6,
+    "APP\\Src\\ins_task.c": 4,
+    "APP\\Src\\logger_bus.c": 4,
+    "Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_system_adapter.c": 5,
+    "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c": 45,
+    "Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_imu_adapter.c": 3,
+    "Devices\\IMU\\JY901B\\Src\\jy901b_device.c": 11,
+    "Modules\\Src\\telemetry_service.c": 21,
+    "System\\Alignment\\Src\\system_alignment.c": 12,
+    "System\\Calibration\\Src\\system_calibration.c": 8,
+    "System\\Indicator\\Src\\system_indicator.c": 2,
+    "System\\Src\\system_capabilities.c": 2,
+    "System\\Src\\system_console.c": 27,
+    "System\\Src\\system_health.c": 2,
+    "System\\Src\\system_sensor_status.c": 3,
+    "System\\Src\\system_source_selector.c": 9,
+    "System\\Src\\system_startup.c": 15
+  },
+  "functions": [
+    {
+      "file": "APP\\Src\\estimator_task.c",
+      "line": "3160",
+      "function": "Estimator_HealthEventsPublish",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "APP\\Src\\flight_task.c",
+      "line": "588",
+      "function": "FlightTask_FlightRecoveryEventsProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\flight_task.c",
+      "line": "884",
+      "function": "FlightTask_MissionSnapshotIdentityWrite",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "APP\\Src\\flight_task.c",
+      "line": "913",
+      "function": "FlightTask_MagCalibrationIdentityWrite",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "APP\\Src\\flight_task.c",
+      "line": "957",
+      "function": "FlightTask_WriteStartRecords",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\flight_task.c",
+      "line": "1016",
+      "function": "FlightTask_RuntimeInitialize",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\flight_task.c",
+      "line": "1105",
+      "function": "AppTask_Flight",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\ins_task.c",
+      "line": "91",
+      "function": "InsTask_DiagnosticsPublish",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\ins_task.c",
+      "line": "857",
+      "function": "AppTask_Ins",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\ins_task.c",
+      "line": "1008",
+      "function": "InsTask_InitializeMission",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\ins_task.c",
+      "line": "1137",
+      "function": "InsTask_AlignmentReset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\logger_bus.c",
+      "line": "376",
+      "function": "LoggerBus_DeviceDescriptorsPush",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\logger_bus.c",
+      "line": "417",
+      "function": "LoggerBus_AlgorithmDescriptorsPush",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\logger_bus.c",
+      "line": "455",
+      "function": "LoggerBus_StreamDescriptorsPush",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "APP\\Src\\logger_bus.c",
+      "line": "546",
+      "function": "LoggerBus_MissionConfigPush",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_system_adapter.c",
+      "line": "164",
+      "function": "NeoM9nGnssAdapter_Init",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_system_adapter.c",
+      "line": "235",
+      "function": "NeoM9nGnssAdapter_StartupProcess",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_system_adapter.c",
+      "line": "274",
+      "function": "NeoM9nGnssAdapter_Process",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_system_adapter.c",
+      "line": "591",
+      "function": "NeoM9nGnssAdapter_ConfigReadResultMap",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_system_adapter.c",
+      "line": "1186",
+      "function": "NeoM9nGnssAdapter_RuntimeTransactionCancel",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "371",
+      "function": "Gnss_UbxFrameEnqueue",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "461",
+      "function": "Gnss_DiscontinuityHandle",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "526",
+      "function": "Gnss_FinishNmea",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "575",
+      "function": "Gnss_ParseNmeaByte",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "750",
+      "function": "Gnss_PersistFromLayers",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "882",
+      "function": "Gnss_ValgetSignalStore",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "923",
+      "function": "Gnss_ValgetStore",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1015",
+      "function": "Gnss_GetDetected",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1046",
+      "function": "Gnss_WaitAck",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1092",
+      "function": "Gnss_WaitValget",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1176",
+      "function": "Gnss_ValgetAsyncPoll",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1401",
+      "function": "Gnss_ParseNavPvt",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1484",
+      "function": "Gnss_ParseNavSat",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1587",
+      "function": "Gnss_ParseMonRf",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1627",
+      "function": "Gnss_ParseAck",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1673",
+      "function": "Gnss_ValgetHeaderValidate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1763",
+      "function": "Gnss_ParseValget",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1791",
+      "function": "Gnss_UpdateStatus",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1825",
+      "function": "Gnss_ChecksumErrorHandle",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "1990",
+      "function": "GnssNeoM9n_Identify",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2023",
+      "function": "GnssNeoM9n_ProbeStart",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2202",
+      "function": "Gnss_ParsedFrameDispatch",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2254",
+      "function": "Gnss_ParseByte",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2302",
+      "function": "GnssNeoM9n_ApplyDefaultConfig",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2369",
+      "function": "Gnss_TransactionStateResetLocked",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2454",
+      "function": "GnssNeoM9n_Process",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2729",
+      "function": "GnssNeoM9n_ReadHardwareConfig",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2784",
+      "function": "Gnss_ConfigAsyncNextGroup",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2812",
+      "function": "Gnss_ConfigAsyncKeyFinish",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "2859",
+      "function": "GnssNeoM9n_ConfigReadAsyncStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3029",
+      "function": "GnssNeoM9n_ConfigReadAsyncPoll",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3081",
+      "function": "GnssNeoM9n_ConfigReadAsyncCancel",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3111",
+      "function": "GnssNeoM9n_ItemReadStart",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3221",
+      "function": "GnssNeoM9n_ItemWritePoll",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3302",
+      "function": "GnssNeoM9n_SatelliteDiagnosticsAsyncStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3424",
+      "function": "GnssNeoM9n_RfDiagnosticsAsyncStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3537",
+      "function": "GnssNeoM9n_SendUbx",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3584",
+      "function": "GnssNeoM9n_ConfigOutputProtocol",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3666",
+      "function": "GnssNeoM9n_ConfigNavRate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3708",
+      "function": "GnssNeoM9n_ConfigUartBaudrate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3774",
+      "function": "GnssNeoM9n_ConfigDynamicModel",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3804",
+      "function": "GnssNeoM9n_ConfigSignals",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3865",
+      "function": "GnssNeoM9n_ConfigSignalsGpsBdsGal",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3904",
+      "function": "GnssNeoM9n_WaitForNewNavPvt",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "line": "3981",
+      "function": "GnssNeoM9n_ConfigPreset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_imu_adapter.c",
+      "line": "212",
+      "function": "Jy901bAdapter_SharedInit",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_imu_adapter.c",
+      "line": "282",
+      "function": "Jy901bAdapter_StartupProcess",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_imu_adapter.c",
+      "line": "317",
+      "function": "Jy901bAdapter_SharedProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "110",
+      "function": "Jy901bImu_SampleQueue",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "201",
+      "function": "IMU_OnFrameDecoded",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "449",
+      "function": "IMU_WriteRegister",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1091",
+      "function": "IMU_StateToString",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1226",
+      "function": "IMU_ApplyDefaultConfig",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1286",
+      "function": "IMU_Poll",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1431",
+      "function": "IMU_ConfigCacheSetField",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1503",
+      "function": "IMU_SetBaudrate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1584",
+      "function": "IMU_SetInstallationOrientation",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1646",
+      "function": "IMU_EnsureAlgorithm6Axis",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+      "line": "1723",
+      "function": "IMU_EnsureQuaternionOutput",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "297",
+      "function": "TelemetryService_StatusQueueAt",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "334",
+      "function": "TelemetryService_AckQueue",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "359",
+      "function": "TelemetryService_DeviceResultMap",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "388",
+      "function": "TelemetryService_StartResultMap",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "482",
+      "function": "TelemetryService_StartResponseProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "770",
+      "function": "TelemetryService_ReceiveProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "820",
+      "function": "TelemetryService_GnssStateProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "895",
+      "function": "TelemetryService_AlignmentSnapshotSchedule",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "922",
+      "function": "TelemetryService_AlignmentStateProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "975",
+      "function": "TelemetryService_CalibrationStateProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1031",
+      "function": "TelemetryService_FlightRecoveryStateProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1156",
+      "function": "TelemetryService_StatusSend",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1209",
+      "function": "TelemetryService_SensorSnapshotSend",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1260",
+      "function": "TelemetryService_SensorSnapshotTerminalSend",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1286",
+      "function": "TelemetryService_CapabilitySend",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1333",
+      "function": "TelemetryService_PreflightStatusSend",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1416",
+      "function": "TelemetryService_PreflightStateSend",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1562",
+      "function": "TelemetryService_NavigationGnssMetric",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1782",
+      "function": "TelemetryService_StreamSend",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1829",
+      "function": "TelemetryService_Init",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "Modules\\Src\\telemetry_service.c",
+      "line": "1886",
+      "function": "TelemetryService_Process",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "438",
+      "function": "SystemAlignment_CapabilityDetect",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "471",
+      "function": "SystemAlignment_MasksValidate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "532",
+      "function": "SystemAlignment_StatusReset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "608",
+      "function": "SystemAlignment_Init",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "638",
+      "function": "SystemAlignment_CalibrationUnavailableReset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "774",
+      "function": "SystemAlignment_Process",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "969",
+      "function": "SystemAlignment_Start",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "1028",
+      "function": "SystemAlignment_Stop",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "1055",
+      "function": "SystemAlignment_Reset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "1090",
+      "function": "SystemAlignment_CalibrationInvalidate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "1130",
+      "function": "SystemAlignment_PrepareMission",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Alignment\\Src\\system_alignment.c",
+      "line": "1174",
+      "function": "SystemAlignment_OriginsFreeze",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "174",
+      "function": "SystemCalibration_StatusReset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "286",
+      "function": "SystemCalibration_VarianceValid",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "321",
+      "function": "SystemCalibration_WindowComplete",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "421",
+      "function": "SystemCalibration_SixFaceCorrectionApply",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "702",
+      "function": "SystemCalibration_Start",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "762",
+      "function": "SystemCalibration_FaceCollect",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "817",
+      "function": "SystemCalibration_Stop",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Calibration\\Src\\system_calibration.c",
+      "line": "846",
+      "function": "SystemCalibration_Reset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Indicator\\Src\\system_indicator.c",
+      "line": "277",
+      "function": "SystemIndicator_ModeSet",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Indicator\\Src\\system_indicator.c",
+      "line": "299",
+      "function": "SystemIndicator_Notify",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_capabilities.c",
+      "line": "72",
+      "function": "SystemCapabilities_SensorHealthMaskGet",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_capabilities.c",
+      "line": "109",
+      "function": "SystemCapabilities_ServiceHealthMaskGet",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "367",
+      "function": "SystemConsole_DeviceClassGet",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "398",
+      "function": "SystemConsole_DeviceErrorText",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "482",
+      "function": "SystemConsole_GnssTransactionDetailText",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "1339",
+      "function": "SystemConsole_IoBaselineCapture",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "1507",
+      "function": "SystemConsole_IoExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "1557",
+      "function": "SystemConsole_SystemFlightExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "1698",
+      "function": "SystemConsole_SystemStackExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "1791",
+      "function": "SystemConsole_SystemReadyExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "2338",
+      "function": "SystemConsole_GnssConfigReadExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "2382",
+      "function": "SystemConsole_GnssNavSatExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "2425",
+      "function": "SystemConsole_GnssMonRfExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "2798",
+      "function": "SystemConsole_GnssSampleDetailExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3007",
+      "function": "SystemConsole_BarometerUpdateStateText",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3052",
+      "function": "SystemConsole_EstimatorBarometerExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3131",
+      "function": "SystemConsole_EstimatorStatusExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3162",
+      "function": "SystemConsole_EstimatorGnssUpdateStateText",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3187",
+      "function": "SystemConsole_EstimatorGnssSkipReasonText",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3318",
+      "function": "SystemConsole_EstimatorGnssExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3357",
+      "function": "SystemConsole_KfStatusExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3392",
+      "function": "SystemConsole_InsStatusExecute",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3623",
+      "function": "SystemConsole_MagStreamAsyncProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3791",
+      "function": "SystemConsole_AlignmentAsyncProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3887",
+      "function": "SystemConsole_FlightRecoveryAsyncProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "3920",
+      "function": "SystemConsole_Init",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "4488",
+      "function": "SystemConsole_MagCalStatusExecute",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "4559",
+      "function": "SystemConsole_ExecuteLine",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_console.c",
+      "line": "4670",
+      "function": "SystemConsole_Process",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_health.c",
+      "line": "30",
+      "function": "SystemHealth_OutputSafe",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_health.c",
+      "line": "162",
+      "function": "SystemHealth_Process",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_sensor_status.c",
+      "line": "140",
+      "function": "SystemSensorStatus_DescriptorsRefresh",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_sensor_status.c",
+      "line": "532",
+      "function": "SystemSensorStatus_SummaryFlagsGet",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_sensor_status.c",
+      "line": "561",
+      "function": "SystemSensorStatus_SnapshotCapture",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "489",
+      "function": "SystemImu_Init",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "537",
+      "function": "SystemImu_Start",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "784",
+      "function": "SystemSourceSelector_GnssSwitchEvaluate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "848",
+      "function": "SystemGnss_Init",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "901",
+      "function": "SystemGnss_Start",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "1249",
+      "function": "SystemSourceSelector_TelemetryNextStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "1280",
+      "function": "SystemSourceSelector_TelemetryHealthProcess",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "1348",
+      "function": "SystemTelemetry_Init",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_source_selector.c",
+      "line": "1403",
+      "function": "SystemTelemetry_Start",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "87",
+      "function": "SystemStartup_ReportReset",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "173",
+      "function": "SystemStartup_OutputStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "211",
+      "function": "SystemStartup_ConsoleStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "244",
+      "function": "SystemStartup_JyLogicalStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "306",
+      "function": "SystemStartup_JyLogicalConfig",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "363",
+      "function": "SystemStartup_ImuConfig",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "492",
+      "function": "SystemStartup_GnssStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "519",
+      "function": "SystemStartup_OtherAdaptersStart",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "609",
+      "function": "SystemStartup_SensorCommunicationEvaluate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "649",
+      "function": "SystemStartup_ServiceCommunicationEvaluate",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "734",
+      "function": "SystemStartup_ReportFinalize",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "761",
+      "function": "SystemStartup_ReportPrint",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "870",
+      "function": "SystemStartup_Run",
+      "runtime_assertions": "0"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "915",
+      "function": "SystemStartup_WaitConfigTick",
+      "runtime_assertions": "1"
+    },
+    {
+      "file": "System\\Src\\system_startup.c",
+      "line": "964",
+      "function": "SystemStartup_ProcessDevices",
+      "runtime_assertions": "1"
+    }
+  ],
+  "classification": "Original unchanged project gate FAIL; coverage deficits, not 180 demonstrated runtime failures; no exception or threshold changed"
+}
