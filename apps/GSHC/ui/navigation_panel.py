@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QGridLayout,
     QGroupBox,
+    QHBoxLayout,
     QLabel,
     QLayout,
     QPushButton,
@@ -36,6 +37,9 @@ class NavigationPanel(QGroupBox):
         self.summary = QLabel()
         self.summary.setWordWrap(True)
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(8, 18, 8, 6)
+        layout.setAlignment(Qt.AlignTop)
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         layout.addWidget(self.summary)
         self.steps: dict[str, QLabel] = {}
         if preflight:
@@ -50,7 +54,11 @@ class NavigationPanel(QGroupBox):
             self.toggle = QPushButton()
             self.toggle.setCheckable(True)
             self.toggle.setMinimumHeight(30)
-            layout.addWidget(self.toggle)
+            layout.removeWidget(self.summary)
+            summary_row = QHBoxLayout()
+            summary_row.addWidget(self.summary, 1)
+            summary_row.addWidget(self.toggle)
+            layout.addLayout(summary_row)
             self.details = QScrollArea()
             self.details.setWidgetResizable(True)
             self.details.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

@@ -1,0 +1,13 @@
+{
+  "version": "0.1.1",
+  "matching_generated_files": [
+    "Flight_Controller/Generated/project_semantics.json",
+    "Ground_Station/Generated/ground_target_metadata.json"
+  ],
+  "decoder_sha256": "83a3b750a5940eb3571518b2bd201d49097a1cbd460df27883f5ea008026e2ce",
+  "decoder_json_members": [
+    "manifest.json",
+    "project_semantics.json",
+    "record_catalog.json"
+  ]
+}

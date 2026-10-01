@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import zipfile
 from pathlib import Path
@@ -37,6 +38,7 @@ class BoardPluginExporter:
         name: str,
         version: str | None = None,
         target_role: str = "flight",
+        namespace_payload: bool = False,
     ) -> Path:
         if target_role not in {"flight", "ground"}:
             raise BoardPluginExportError("Board target role must be flight or ground")
@@ -59,9 +61,20 @@ class BoardPluginExporter:
             model,
             component_id=component_id,
             name=name.strip(),
-            version=version or model.identity.firmware_version,
+            version=version or "0.1.0",
             target_role=target_role,
         )
+        payload_root = "HardwareGenerated/STM32CubeMX"
+        if namespace_payload:
+            # Keep Windows paths short; the full ID remains in the manifest.
+            payload_root = "PCB/" + hashlib.sha256(component_id.encode("ascii")).hexdigest()[:16]
+            manifest["payload"]["roots"] = [payload_root]
+            manifest["board"]["hardware_root"] = payload_root
+            for key in ("sources", "asm_sources", "include_dirs"):
+                manifest["build"][key] = [value.replace("HardwareGenerated/STM32CubeMX", payload_root, 1)
+                                          for value in manifest["build"][key]]
+            manifest["build"]["linker_script"] = manifest["build"]["linker_script"].replace(
+                "HardwareGenerated/STM32CubeMX", payload_root, 1)
         stage = self.output_policy.StagingDirectory_Create("board-export-")
         staged_archive = stage / output.name
         try:
@@ -101,7 +114,7 @@ class BoardPluginExporter:
                     relative = source.relative_to(snapshot).as_posix()
                     archive.write(
                         source,
-                        f"payload/HardwareGenerated/STM32CubeMX/{relative}",
+                        f"payload/{payload_root}/{relative}",
                     )
                     if relative == hardware.ioc_file:
                         archive.write(source, f"hardware/{source.name}")

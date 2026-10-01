@@ -1042,6 +1042,8 @@ class FccgService:
     ) -> PluginManifest:
         if target_role not in {"flight", "ground"}:
             raise ValueError("Board target role must be flight or ground")
+        if component_id in {item.component_id for item in self.catalog.All_Get()}:
+            raise ValueError("PCB component id is already installed: " + component_id)
         hardware = (model.hardware if target_role == "flight"
                     else model.ground_target.hardware)
         mcu_id = model.mcu if target_role == "flight" else model.ground_target.mcu
@@ -1060,16 +1062,20 @@ class FccgService:
         archive = self.board_exporter.Plugin_Export(
             model, snapshot,
             self.workspace_root / ".work" / "board_exports"
+            / ("Flight_Controller" if target_role == "flight" else "Ground_Station")
             / f"{component_id}.ssplugin",
             component_id=component_id, name=name, target_role=target_role,
+            namespace_payload=True,
         )
-        return self.installer.Install(archive)
+        return self.installer.Install(archive, target_role=target_role)
 
     def BoardCompatibilities_Get(
         self, model: ProjectModel, *, language: str = "zh_CN"
     ) -> tuple[BoardCompatibilityView, ...]:
         views: list[BoardCompatibilityView] = []
         for board in self.catalog.Type_Get("board"):
+            if board.metadata.get("target_role") == "ground_station" or board.component_class == "ground_station_board":
+                continue
             result = BoardCompatibility_Resolve(model, self.catalog, board.component_id)
             missing = ", ".join(
                 f"{kind} ×{count}" for kind, count in result.missing

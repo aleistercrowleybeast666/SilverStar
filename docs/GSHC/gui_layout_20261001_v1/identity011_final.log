@@ -1,0 +1,5 @@
+ERROR: not found: D:\python_software\SilverStar\tests\integration\test_monorepo_baseline.py::test_versions_and_root_launcher_compatibility
+(no match in any of [<Module test_monorepo_baseline.py>])
+
+
+no tests ran in 0.05s

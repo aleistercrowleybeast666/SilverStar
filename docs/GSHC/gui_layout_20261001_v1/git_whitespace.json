@@ -1,0 +1,23 @@
+{
+  "git_whitespace_all": {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "exit_code": 2
+  },
+  "git_whitespace_source": {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      ".",
+      ":(exclude)docs/GSHC/gui_layout_20261001_v1/*.log"
+    ],
+    "exit_code": 0
+  }
+}

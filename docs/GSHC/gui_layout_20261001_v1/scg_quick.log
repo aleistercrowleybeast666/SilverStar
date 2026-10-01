@@ -1,0 +1,114 @@
+FF.......F                                                               [100%]
+================================== FAILURES ===================================
+____________ test_alignment_group_contains_mode_draft_and_actions _____________
+
+qapp = <PySide6.QtWidgets.QApplication(0x236115669f0) at 0x0000023613912EC0>
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_011/scg_quick/test_alignment_group_contains_0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_alignment_group_contains_mode_draft_and_actions(qapp, tmp_path, workspace_root):
+>       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_release_011_gui.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\ui\main_window.py:256: in __init__
+    self._Project_Refresh()
+src\silverstar_fccg\ui\main_window.py:736: in _Project_Refresh
+    self._Project_Display(self._ProjectDisplayState_Build(self._model))
+src\silverstar_fccg\ui\main_window.py:802: in _Project_Display
+    self.algorithm_parameters_page.AlignmentConfiguration_Set(
+src\silverstar_fccg\ui\pages\algorithm_parameters.py:114: in AlignmentConfiguration_Set
+    self.alignment_editor.Configuration_Set(
+src\silverstar_fccg\ui\pages\navigation_alignment.py:95: in Configuration_Set
+    self._Vector_Rebuild()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <[RuntimeError('Internal C++ object (AlignmentConfigurationEditor) already deleted.') raised in repr()] AlignmentConfigurationEditor object at 0x23615a4ef80>
+
+    def _Vector_Rebuild(self) -> None:
+        self._row_revision += 1
+>       while self._vector_layout.count():
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: Internal C++ object (PySide6.QtWidgets.QVBoxLayout) already deleted.
+
+src\silverstar_fccg\ui\pages\navigation_alignment.py:188: RuntimeError
+________ test_ground_existing_selection_cancel_commit_and_common_page _________
+
+qapp = <PySide6.QtWidgets.QApplication(0x236115669f0) at 0x0000023613912EC0>
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_011/scg_quick/test_ground_existing_selection0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_ground_existing_selection_cancel_commit_and_common_page(qapp, tmp_path, workspace_root):
+>       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_release_011_gui.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\ui\main_window.py:256: in __init__
+    self._Project_Refresh()
+src\silverstar_fccg\ui\main_window.py:736: in _Project_Refresh
+    self._Project_Display(self._ProjectDisplayState_Build(self._model))
+src\silverstar_fccg\ui\main_window.py:802: in _Project_Display
+    self.algorithm_parameters_page.AlignmentConfiguration_Set(
+src\silverstar_fccg\ui\pages\algorithm_parameters.py:114: in AlignmentConfiguration_Set
+    self.alignment_editor.Configuration_Set(
+src\silverstar_fccg\ui\pages\navigation_alignment.py:95: in Configuration_Set
+    self._Vector_Rebuild()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <[RuntimeError('Internal C++ object (AlignmentConfigurationEditor) already deleted.') raised in repr()] AlignmentConfigurationEditor object at 0x2361e1f0fc0>
+
+    def _Vector_Rebuild(self) -> None:
+        self._row_revision += 1
+>       while self._vector_layout.count():
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: Internal C++ object (PySide6.QtWidgets.QVBoxLayout) already deleted.
+
+src\silverstar_fccg\ui\pages\navigation_alignment.py:188: RuntimeError
+____ test_gui_legacy_open_cancel_failure_copy_and_reopen_are_transactional ____
+
+qapp = <PySide6.QtWidgets.QApplication(0x236115669f0) at 0x0000023613912EC0>
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_011/scg_quick/test_gui_legacy_open_cancel_fa0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023613709940>
+
+    def test_gui_legacy_open_cancel_failure_copy_and_reopen_are_transactional(qapp,tmp_path,workspace_root,monkeypatch):
+        service = FccgService(workspace_root)
+        original = _Legacy_Create(service)
+        original_root = tmp_path/'original'
+        service.ProjectRoot_Save(original,original_root,create_new=True)
+        (original_root/'Log/old.BIN').write_bytes(b'immutable log')
+        (original_root/'old.ssdecoder').write_bytes(b'unchanged original package')
+        originals = {p:hashlib.sha256(p.read_bytes()).hexdigest() for p in original_root.rglob('*') if p.is_file()}
+>       window = MainWindow(SettingsStore(tmp_path/'migration.ini'),service=service)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_release_migration.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\ui\main_window.py:256: in __init__
+    self._Project_Refresh()
+src\silverstar_fccg\ui\main_window.py:736: in _Project_Refresh
+    self._Project_Display(self._ProjectDisplayState_Build(self._model))
+src\silverstar_fccg\ui\main_window.py:802: in _Project_Display
+    self.algorithm_parameters_page.AlignmentConfiguration_Set(
+src\silverstar_fccg\ui\pages\algorithm_parameters.py:114: in AlignmentConfiguration_Set
+    self.alignment_editor.Configuration_Set(
+src\silverstar_fccg\ui\pages\navigation_alignment.py:95: in Configuration_Set
+    self._Vector_Rebuild()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <[RuntimeError('Internal C++ object (AlignmentConfigurationEditor) already deleted.') raised in repr()] AlignmentConfigurationEditor object at 0x23613adeb40>
+
+    def _Vector_Rebuild(self) -> None:
+        self._row_revision += 1
+>       while self._vector_layout.count():
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: Internal C++ object (PySide6.QtWidgets.QVBoxLayout) already deleted.
+
+src\silverstar_fccg\ui\pages\navigation_alignment.py:188: RuntimeError
+=========================== short test summary info ===========================
+FAILED tests/test_release_011_gui.py::test_alignment_group_contains_mode_draft_and_actions
+FAILED tests/test_release_011_gui.py::test_ground_existing_selection_cancel_commit_and_common_page
+FAILED tests/test_release_migration.py::test_gui_legacy_open_cancel_failure_copy_and_reopen_are_transactional
+3 failed, 7 passed in 18.16s

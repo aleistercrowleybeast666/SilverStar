@@ -269,10 +269,9 @@ class GroundTargetPage(BoardHardwarePage):
         self.build_summary = QLabel("—")
         self.build_summary.setWordWrap(True)
         build_form.addRow(build_label, self.build_summary)
-        self.root_layout.addWidget(self.Group_Create("group.ground_build", build_form))
+        self.build_group = self.Group_Create("group.ground_build", build_form)
         self.status = QLabel()
         self.status.setWordWrap(True)
-        self.root_layout.addWidget(self.status)
         self.root_layout.addStretch(1)
 
     def Configuration_Set(self, ground, boards, radios, requirements, issues) -> None:
@@ -355,8 +354,10 @@ class GroundTargetPage(BoardHardwarePage):
         self.assignments = {name: self.resource_table.cellWidget(row, 3) for row, (name, _kind) in enumerate(required)}
         # Ground generation checks the fixed radio/PC contracts; preparation
         # operations requiring flight task ownership do not apply to Ground.
-        for button in (self.prepare_button, self.manual_validation_button, self.auto_button):
+        for button in (self.manual_validation_button, self.auto_button):
             button.setEnabled(False)
+        self.prepare_button.setEnabled(bool(boards))
+        self.prepare_button.setToolTip("" if boards else self._translator.Text_Get("board.no_provider"))
         self.i2c_pullup_group.setVisible(False)
         self.status.setText(
             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)

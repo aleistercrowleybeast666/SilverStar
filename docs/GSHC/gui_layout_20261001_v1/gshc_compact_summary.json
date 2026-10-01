@@ -1,0 +1,23 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/test_release_layout.py",
+    "--basetemp=.work/gui_011/gshc_compact_summary",
+    "-o",
+    "cache_dir=.work/gui_011/cache",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\apps\\GSHC",
+  "exit_code": 1,
+  "utc": "2026-10-01T12:13:36.455752+00:00",
+  "seconds": 15.277805699995952,
+  "head": "e02cca1c1c4de134c700e5a913dd3d2c563d9f6f",
+  "log_sha256": "a4213ef25bfe6e6b5c28493ca915f0011af2d960ff658015bc44c28e804ffe0e",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_011_KF6_e02cca1_v1"
+  }
+}

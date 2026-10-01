@@ -1,0 +1,19 @@
+F....                                                                    [100%]
+================================== FAILURES ===================================
+____ test_version_has_one_runtime_authority_and_dynamic_packaging_metadata ____
+
+    def test_version_has_one_runtime_authority_and_dynamic_packaging_metadata() -> None:
+        root = Path(__file__).resolve().parents[1]
+        payload = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+>       assert PRODUCT_NAME == "SilverStar_FLP"
+E       AssertionError: assert 'SilverStar FLP' == 'SilverStar_FLP'
+E         
+E         - SilverStar_FLP
+E         ?           ^
+E         + SilverStar FLP
+E         ?           ^
+
+tests\test_version.py:14: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_version.py::test_version_has_one_runtime_authority_and_dynamic_packaging_metadata
+1 failed, 4 passed, 3 deselected in 1.97s

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    ".work/gshc_layout_capture.py",
+    "compact",
+    "1536x816",
+    "zh_CN"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "exit_code": 0,
+  "utc": "2026-10-01T12:13:30.301720+00:00",
+  "seconds": 5.794558599998709,
+  "head": "e02cca1c1c4de134c700e5a913dd3d2c563d9f6f",
+  "log_sha256": "5b71eea70608cee063300195a3e354b54d691b83479a9c30ad3b615489cc3a3c",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_011_KF6_e02cca1_v1"
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "source_sha256": "e1e8821f4843897f8cd2e28821d81e36f6de669e7d8a32dabaab76f470cbe47f",
+  "requested_size": [
+    1280,
+    720
+  ],
+  "qt_scale": "1",
+  "device_pixel_ratio": 1.25,
+  "pages": {
+    "preflight": {
+      "groups": [
+        {
+          "title": "系统",
+          "geometry": [
+            439,
+            164,
+            236,
+            256
+          ],
+          "visible": true
+        },
+        {
+          "title": "校准",
+          "geometry": [
+            683,
+            164,
+            236,
+            256
+          ],
+          "visible": true
+        },
+        {
+          "title": "初对准",
+          "geometry": [
+            927,
+            164,
+            327,
+            256
+          ],
+          "visible": true
+        },
+        {
+          "title": "惯性 / 姿态（PREFLIGHT_STATE）",
+          "geometry": [
+            439,
+            428,
+            538,
+            142
+          ],
+          "visible": true
+        },
+        {
+          "title": "GNSS",
+          "geometry": [
+            985,
+            428,
+            269,
+            142
+          ],
+          "visible": true
+        },
+        {
+          "title": "预飞任务操作",
+          "geometry": [
+            439,
+            578,
+            815,
+            116
+          ],
+          "visible": true
+        },
+        {
+          "title": "事件历史（最近 200 条；JSONL 保留全部）",
+          "geometry": [
+            439,
+            702,
+            815,
+            230
+          ],
+          "visible": true
+        },
+        {
+          "title": "导航准备（机载实时状态）",
+          "geometry": [
+            439,
+            940,
+            815,
+            120
+          ],
+          "visible": true
+        }
+      ],
+      "labels": {
+        "lbl_pf_system_ready": {
+          "geometry": [
+            543,
+            228,
+            72,
+            31
+          ],
+          "visible": true,
+          "text": "是"
+        },
+        "lbl_pf_selftest": {
+          "geometry": [
+            543,
+            265,
+            72,
+            30
+          ],
+          "visible": true,
+          "text": "通过"
+        },
+        "lbl_cal_ready": {
+          "geometry": [
+            747,
+            236,
+            162,
+            16
+          ],
+          "visible": true,
+          "text": "是"
+        },
+        "lbl_align_ready": {
+          "geometry": [
+            1003,
+            238,
+            241,
+            40
+          ],
+          "visible": true,
+          "text": "是"
+        },
+        "lbl_pf_accel": {
+          "geometry": [
+            571,
+            456,
+            396,
+            16
+          ],
+          "visible": true,
+          "text": "—"
+        },
+        "lbl_pf_gyro": {
+          "geometry": [
+            571,
+            478,
+            396,
+            16
+          ],
+          "visible": true,
+          "text": "—"
+        },
+        "lbl_pf_gnss_usable": {
+          "geometry": [
+            1049,
+            492,
+            195,
+            30
+          ],
+          "visible": true,
+          "text": "否"
+        },
+        "btn_start": {
+          "geometry": [
+            1038,
+            606,
+            190,
+            34
+          ],
+          "visible": true,
+          "text": "开始任务"
+        },
+        "event_list": {
+          "geometry": [
+            449,
+            730,
+            795,
+            192
+          ],
+          "visible": true,
+          "text": ""
+        }
+      },
+      "window_size": [
+        1280,
+        720
+      ],
+      "scrollbar_maximum": 354
+    },
+    "flight": {
+      "groups": [
+        {
+          "title": "重要状态",
+          "geometry": [
+            439,
+            164,
+            161,
+            200
+          ],
+          "visible": true
+        },
+        {
+          "title": "当前数据",
+          "geometry": [
+            606,
+            164,
+            321,
+            200
+          ],
+          "visible": true
+        },
+        {
+          "title": "火箭当前状态",
+          "geometry": [
+            933,
+            164,
+            321,
+            200
+          ],
+          "visible": true
+        },
+        {
+          "title": "实时导航健康",
+          "geometry": [
+            439,
+            370,
+            815,
+            74
+          ],
+          "visible": true
+        },
+        {
+          "title": "实时曲线（最近 10 秒）",
+          "geometry": [
+            439,
+            420,
+            827,
+            286
+          ],
+          "visible": true
+        }
+      ],
+      "labels": {
+        "lbl_flight_lifecycle": {
+          "geometry": [
+            539,
+            192,
+            51,
+            16
+          ],
+          "visible": true,
+          "text": "—"
+        },
+        "lbl_packet_loss": {
+          "geometry": [
+            539,
+            280,
+            51,
+            30
+          ],
+          "visible": true,
+          "text": "0 / 0 (0.00%)"
+        },
+        "lbl_flight_accel": {
+          "geometry": [
+            684,
+            192,
+            233,
+            22
+          ],
+          "visible": true,
+          "text": "—"
+        },
+        "lbl_flight_vel": {
+          "geometry": [
+            684,
+            304,
+            233,
+            22
+          ],
+          "visible": true,
+          "text": "—"
+        },
+        "lbl_flight_pos": {
+          "geometry": [
+            684,
+            332,
+            233,
+            22
+          ],
+          "visible": true,
+          "text": "—"
+        },
+        "lbl_mission_parachute": {
+          "geometry": [
+            1022,
+            318,
+            222,
+            36
+          ],
+          "visible": true,
+          "text": "未收到降落伞展开事件"
+        }
+      },
+      "window_size": [
+        1280,
+        720
+      ],
+      "scrollbar_maximum": null
+    }
+  }
+}

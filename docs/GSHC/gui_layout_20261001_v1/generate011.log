@@ -1,0 +1,9 @@
+{
+  "output": "D:\\python_software\\SilverStar\\.work\\SCG_011_KF6_e02cca1_v1",
+  "targets": [
+    "Flight_Controller",
+    "Ground_Station"
+  ],
+  "seconds": 10.358643100000336,
+  "file_count": 156
+}

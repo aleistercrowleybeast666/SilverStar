@@ -523,6 +523,8 @@ def _Hardware_Validate(
         )
     if model.hardware.mode == "board_plugin":
         board = catalog.Component_Get(model.board)
+        if board.metadata.get("target_role") == "ground_station" or board.component_class == "ground_station_board":
+            issues.append(ValidationIssue("error", "BOARD_TARGET_ROLE_MISMATCH", "A Ground Station PCB cannot be selected for Flight Controller"))
         if board.board is None:
             issues.append(
                 ValidationIssue("error", "board_manifest", "Board metadata is missing")

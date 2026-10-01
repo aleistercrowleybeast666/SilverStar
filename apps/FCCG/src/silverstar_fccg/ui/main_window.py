@@ -269,7 +269,8 @@ class MainWindow(QMainWindow):
         header_layout.setContentsMargins(14, 6, 14, 6)
         self.title_label = QLabel()
         self.title_label.setObjectName("headerTitle")
-        self.title_label.setWordWrap(True)
+        self.title_label.setWordWrap(False)
+        self.title_label.setStyleSheet("font-size: 16px;")
         self.version_label = QLabel(f"v{__version__}")
         self.version_label.setObjectName("headerVersion")
         self.credit_label = QLabel()
@@ -342,6 +343,12 @@ class MainWindow(QMainWindow):
             self.ground_target_page.root_layout.removeWidget(group)
             self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
         self.build_page = BuildPage(self._translator)
+        self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, self.ground_target_page.status)
+        self.build_page.root_layout.insertWidget(2, self.ground_target_page.build_group)
+        for page, owner in ((self.board_hardware_page, self.flight_configuration_page),
+                            (self.ground_target_page, self.air_link_page)):
+            page.root_layout.removeWidget(page.advanced_section)
+            owner.root_layout.insertWidget(owner.root_layout.count() - 1, page.advanced_section)
         # Keep the existing editors and signal ownership while placing each
         # configuration group on the page that owns it in the user workflow.
         for group in (
@@ -499,6 +506,7 @@ class MainWindow(QMainWindow):
         )
         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
+        self.ground_target_page.prepareRequested.connect(self._GroundExistingHardware_Request)
         self.ground_target_page.importRequested.connect(self._GroundCubeMxImport_Request)
         self.ground_target_page.saveInstanceRequested.connect(
             lambda: self._BoardInstanceSave_Request("ground")
@@ -1552,7 +1560,9 @@ class MainWindow(QMainWindow):
             (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
             for manifest in self._service.catalog.Type_Get("board")
             if manifest.board is not None
-            and manifest.metadata.get("target_role") == "ground_station"
+            and (manifest.metadata.get("target_role") == "ground_station" or manifest.component_class == "ground_station_board")
+            and any(identity in {item.component_id for item in self._service.catalog.Type_Get("mcu")}
+                    for identity in manifest.board.compatible_mcus)
             and (manifest.board.verified or manifest.source == "installed")
         )
         selected = model.ground_target.radio_plugin
@@ -1669,6 +1679,9 @@ class MainWindow(QMainWindow):
         )
 
         board = self._service.catalog.Component_Get(board_id)
+        if board.metadata.get("target_role") != "ground_station" and board.component_class != "ground_station_board":
+            self._Error_Show("PCB target mismatch: select a Ground Station board")
+            return
         inventory = BoardHardwareInventory_Get(board)
         if board.board is None or inventory is None:
             self._Error_Show("Ground board has no CubeMX hardware inventory")
@@ -1714,6 +1727,22 @@ class MainWindow(QMainWindow):
                 candidate.ground_target, resource_assignments=assignments
             )
         self._ProjectConfiguration_Change(change)
+
+    def _GroundExistingHardware_Request(self) -> None:
+        combo = self.ground_target_page.board_combo
+        selected = str(combo.currentData() or "")
+        if selected == "__custom__" or not selected:
+            choices = tuple((combo.itemText(index), combo.itemData(index)) for index in range(combo.count())
+                            if combo.itemData(index) != "__custom__" and combo.model().item(index).isEnabled())
+            if not choices:
+                self._Error_Show(self._translator.Text_Get("board.no_provider"))
+                return
+            name, accepted = QInputDialog.getItem(self, self._translator.Text_Get("hardware.existing"),
+                self._translator.Text_Get("field.board_name"), [item[0] for item in choices], 0, False)
+            if not accepted:
+                return
+            selected = next(identity for title, identity in choices if title == name)
+        self._GroundBoard_Change(selected)
 
     def _GroundCubeMxImport_Request(self, directory: bool) -> None:
         if directory:
@@ -3029,7 +3058,7 @@ class MainWindow(QMainWindow):
                 (target_root / "build").rglob("*.elf")
             )
             self.build_page.BuildLog_Append(
-                f"{directory_name}: {'artifact found' if found else 'no ELF artifact'}"
+                f"{directory_name}: {'ELF present' if found else 'no ELF artifact'}; integrity NOT CHECKED"
             )
             return
         if operation not in {"build", "clean"}:

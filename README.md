@@ -1,6 +1,6 @@
 # SilverStar
 
-**SilverStar Rocket Avionics & Ground Suite** · pre-release version **0.1.0**.
+**SilverStar Rocket Avionics & Ground Suite** · pre-release version **0.1.1**.
 
 This repository contains three applications:
 
@@ -20,4 +20,4 @@ Round 5 has a [frozen software reference](docs/field/FIELD_TEST_REFERENCE.md), [
 
 Original SilverStar first-party source is offered under the [Apache License 2.0](LICENSE). Bundled vendor code and Python dependencies retain their own terms; see the [source license audit](docs/architecture/SOURCE_LICENSE_AUDIT.md).
 
-No public 0.1.0 release has been made.
+No public 0.1.1 release has been made.

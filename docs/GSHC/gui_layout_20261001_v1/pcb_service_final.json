@@ -1,0 +1,23 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/test_release_011_gui.py",
+    "--basetemp=.work/gui_011/pcb_service_final",
+    "-o",
+    "cache_dir=.work/gui_011/cache",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\apps\\FCCG",
+  "exit_code": 0,
+  "utc": "2026-10-01T12:15:31.693130+00:00",
+  "seconds": 19.345313800004078,
+  "head": "e02cca1c1c4de134c700e5a913dd3d2c563d9f6f",
+  "log_sha256": "80d8a6faea035c877c4367d2ef94f9069d3f14b1b08b86252ee1572571e1cd32",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_011_KF6_e02cca1_v1"
+  }
+}

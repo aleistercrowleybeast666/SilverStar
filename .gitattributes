@@ -12,3 +12,6 @@ docs/FCCG/evidence_final_20261001/** -text
 docs/FCCG/evidence_ground_safety_20261001/** -text
 docs/FCCG/evidence_flight_safety_batch1_20261001/** -text
 docs/FCCG/pot_inventory_20261001/** -text
+
+# Native GUI logs, screenshots and source snapshots retain their recorded bytes.
+docs/GSHC/gui_layout_20261001_v1/** -text

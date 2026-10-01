@@ -1,4 +1,4 @@
-# SCG 0.1.0 deferred features
+# SCG 0.1.1 deferred features
 
 2026-10-01 GUI closeout policy; this document does not qualify firmware for hardware or flight use.
 

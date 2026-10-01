@@ -1,0 +1,23 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/integration/test_monorepo_baseline.py::test_one_release_version_and_independent_freertos_version",
+    "--basetemp=.work/gui_011/identity_corrected",
+    "-o",
+    "cache_dir=.work/gui_011/cache",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "exit_code": 0,
+  "utc": "2026-10-01T12:02:16.599301+00:00",
+  "seconds": 6.618765999999596,
+  "head": "e02cca1c1c4de134c700e5a913dd3d2c563d9f6f",
+  "log_sha256": "069cf8f6b9f4ccee7e523f82bc4ac80daa041aa5f3577344412c035ca8c073e2",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_011_KF6_e02cca1_v1"
+  }
+}

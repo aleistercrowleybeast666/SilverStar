@@ -1,0 +1,20 @@
+[
+  {
+    "language": "zh_CN",
+    "title": "SilverStar 系统配置与生成",
+    "size": [
+      1280,
+      720
+    ],
+    "dpr": 1.25
+  },
+  {
+    "language": "en_US",
+    "title": "SilverStar System Configuration & Generation",
+    "size": [
+      1280,
+      720
+    ],
+    "dpr": 1.25
+  }
+]

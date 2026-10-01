@@ -1,0 +1,313 @@
+{
+  "source_sha256": "4adb17b97b16dc578bfbddab1758d4a87ba075aae66c8355b3c77ce5a46f241a",
+  "requested_size": [
+    1280,
+    720
+  ],
+  "qt_scale": "1",
+  "device_pixel_ratio": 1.25,
+  "pages": {
+    "preflight": {
+      "groups": [
+        {
+          "title": "System",
+          "geometry": [
+            439,
+            145,
+            209,
+            287
+          ],
+          "visible": true
+        },
+        {
+          "title": "Calibration",
+          "geometry": [
+            656,
+            145,
+            201,
+            287
+          ],
+          "visible": true
+        },
+        {
+          "title": "Alignment",
+          "geometry": [
+            865,
+            145,
+            409,
+            287
+          ],
+          "visible": true
+        },
+        {
+          "title": "Inertial / Attitude (PREFLIGHT_STATE)",
+          "geometry": [
+            439,
+            440,
+            551,
+            174
+          ],
+          "visible": true
+        },
+        {
+          "title": "GNSS",
+          "geometry": [
+            998,
+            440,
+            276,
+            174
+          ],
+          "visible": true
+        },
+        {
+          "title": "Preflight Mission Controls",
+          "geometry": [
+            439,
+            622,
+            835,
+            131
+          ],
+          "visible": true
+        },
+        {
+          "title": "Event History (latest 200; JSONL keeps all)",
+          "geometry": [
+            439,
+            761,
+            835,
+            230
+          ],
+          "visible": true
+        },
+        {
+          "title": "Navigation Preparation (Live On-board State)",
+          "geometry": [
+            439,
+            999,
+            835,
+            126
+          ],
+          "visible": true
+        }
+      ],
+      "labels": {
+        "lbl_pf_system_ready": {
+          "geometry": [
+            513,
+            213,
+            60,
+            34
+          ],
+          "visible": true,
+          "text": "Yes"
+        },
+        "lbl_pf_selftest": {
+          "geometry": [
+            513,
+            253,
+            60,
+            35
+          ],
+          "visible": true,
+          "text": "Pass"
+        },
+        "lbl_cal_ready": {
+          "geometry": [
+            770,
+            217,
+            77,
+            16
+          ],
+          "visible": true,
+          "text": "Yes"
+        },
+        "lbl_align_ready": {
+          "geometry": [
+            999,
+            227,
+            265,
+            48
+          ],
+          "visible": true,
+          "text": "Yes"
+        },
+        "lbl_pf_accel": {
+          "geometry": [
+            574,
+            468,
+            406,
+            32
+          ],
+          "visible": true,
+          "text": "X:0.1250  Y:-0.3750  Z:9.8070"
+        },
+        "lbl_pf_gyro": {
+          "geometry": [
+            574,
+            506,
+            406,
+            32
+          ],
+          "visible": true,
+          "text": "X:0.0120  Y:-0.0250  Z:0.0010"
+        },
+        "lbl_pf_gnss_usable": {
+          "geometry": [
+            1103,
+            512,
+            161,
+            38
+          ],
+          "visible": true,
+          "text": "No"
+        },
+        "btn_start": {
+          "geometry": [
+            1053,
+            650,
+            195,
+            34
+          ],
+          "visible": true,
+          "text": "Start Mission"
+        },
+        "event_list": {
+          "geometry": [
+            449,
+            789,
+            815,
+            192
+          ],
+          "visible": true,
+          "text": ""
+        }
+      },
+      "window_size": [
+        1280,
+        720
+      ],
+      "scrollbar_maximum": 419
+    },
+    "flight": {
+      "groups": [
+        {
+          "title": "Important Status",
+          "geometry": [
+            439,
+            145,
+            161,
+            216
+          ],
+          "visible": true
+        },
+        {
+          "title": "Current Data",
+          "geometry": [
+            606,
+            145,
+            321,
+            216
+          ],
+          "visible": true
+        },
+        {
+          "title": "Mission State",
+          "geometry": [
+            933,
+            145,
+            321,
+            216
+          ],
+          "visible": true
+        },
+        {
+          "title": "Live Navigation Health",
+          "geometry": [
+            439,
+            367,
+            815,
+            80
+          ],
+          "visible": true
+        },
+        {
+          "title": "Live Plots (latest 10 seconds)",
+          "geometry": [
+            439,
+            460,
+            827,
+            246
+          ],
+          "visible": true
+        }
+      ],
+      "labels": {
+        "lbl_flight_lifecycle": {
+          "geometry": [
+            543,
+            173,
+            47,
+            16
+          ],
+          "visible": true,
+          "text": "—"
+        },
+        "lbl_packet_loss": {
+          "geometry": [
+            543,
+            261,
+            47,
+            30
+          ],
+          "visible": true,
+          "text": "0 / 0 (0.00%)"
+        },
+        "lbl_flight_accel": {
+          "geometry": [
+            723,
+            173,
+            194,
+            19
+          ],
+          "visible": true,
+          "text": "X:0.1250  Y:-0.3750  Z:9.8070"
+        },
+        "lbl_flight_vel": {
+          "geometry": [
+            723,
+            285,
+            194,
+            30
+          ],
+          "visible": true,
+          "text": "E:12.3450  N:-6.7890  U:20.0120"
+        },
+        "lbl_flight_pos": {
+          "geometry": [
+            723,
+            321,
+            194,
+            30
+          ],
+          "visible": true,
+          "text": "E:123.4560  N:-234.5670  U:1200.0120"
+        },
+        "lbl_mission_parachute": {
+          "geometry": [
+            1046,
+            311,
+            198,
+            40
+          ],
+          "visible": true,
+          "text": "No parachute deployment event received"
+        }
+      },
+      "window_size": [
+        1280,
+        720
+      ],
+      "scrollbar_maximum": null
+    }
+  }
+}

@@ -648,6 +648,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
 
     def __init__(self, translator: Translator, *, target: str = "flight") -> None:
         page = "page.ground" if target == "ground" else "page.board_hardware"
+        self.target_role = target
         super().__init__(translator, page, page + ".description")
         selection_form = QFormLayout()
         self.board_label = QLabel()
@@ -955,7 +956,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         )
         if hardware_mode == "unselected":
             self.provider_notice.setText(
-                self._translator.Text_Get("board.selection_pending")
+                self._translator.Text_Get("board.ground_selection_pending" if self.target_role == "ground" else "board.selection_pending")
             )
         elif not custom_available:
             self.provider_notice.setText(
@@ -1291,8 +1292,10 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         )
         self.root_layout.addWidget(self.mission_strategy_group)
         self.strategy_form = QFormLayout()
+        strategy_layout = QVBoxLayout()
+        strategy_layout.addLayout(self.strategy_form)
         self.strategy_group = self.Group_Create(
-            "group.strategy_selection", self.strategy_form
+            "group.strategy_selection", strategy_layout
         )
         self.root_layout.addWidget(self.strategy_group)
         self.ins_strategy_form = QFormLayout()

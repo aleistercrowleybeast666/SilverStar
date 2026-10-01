@@ -159,6 +159,15 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
         return ()
     ground = model.ground_target
     issues = list(AirLinkIssues_Get(model, catalog))
+    if ground.board:
+        try:
+            board = catalog.Component_Get(ground.board)
+        except ValueError:
+            issues.append(AirLinkIssue("GROUND_BOARD_UNKNOWN", "Selected Ground PCB is unavailable"))
+        else:
+            role = board.metadata.get("target_role")
+            if role != "ground_station" and board.component_class != "ground_station_board":
+                issues.append(AirLinkIssue("BOARD_TARGET_ROLE_MISMATCH", "Ground requires a Ground Station PCB"))
     if ground.hardware.mode == "unselected" or not ground.mcu:
         issues.append(AirLinkIssue("GROUND_HARDWARE_UNBOUND", "Ground hardware is not selected"))
     elif ground.hardware.mode == "custom" and not any(

@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\core\workspace.py", line 89, in Path_Resolve
+    relative = resolved.relative_to(self.root)
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 495, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: 'D:\\python_software\\SilverStar\\.work\\gui_011\\capture\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\release011_capture.py", line 14, in <module>
+    window=MainWindow(SettingsStore(settings),service=FccgService(root/'apps/FCCG'))
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\ui\main_window.py", line 204, in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\core\path_preferences.py", line 23, in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\core\workspace.py", line 91, in Path_Resolve
+    raise WorkspacePolicyError(
+        f"Path escapes authorized workspace: {resolved}"
+    ) from error
+silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\gui_011\capture\path_preferences.json

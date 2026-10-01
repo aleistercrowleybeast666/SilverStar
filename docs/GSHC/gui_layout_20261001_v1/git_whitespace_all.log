@@ -1,0 +1,740 @@
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:239: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:240: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:241: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:242: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:336: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:337: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:338: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:339: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:432: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:433: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:434: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:435: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:436: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:530: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:531: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:532: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:533: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:629: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:630: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:631: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:632: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:726: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:727: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:728: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:729: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:822: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:823: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:824: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:825: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:826: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:922: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:923: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:924: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:925: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1019: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1020: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1021: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1022: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1115: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1116: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1117: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1118: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1119: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1213: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1214: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1215: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1216: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1308: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1309: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1310: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1311: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1402: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1403: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1404: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1405: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_compact_summary.log:1406: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:95: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:96: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:97: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:98: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:192: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:193: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:194: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:195: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:288: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:289: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:290: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:291: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:292: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:386: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:387: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:388: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:389: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:485: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:486: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:487: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:488: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:582: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:583: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:584: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:585: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:678: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:679: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:680: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:681: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:682: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:778: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:779: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:780: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:781: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:875: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:876: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:877: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:878: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:971: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:972: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:973: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:974: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_data_layout.log:975: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:95: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:96: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:97: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:98: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:192: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:193: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:194: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:195: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:288: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:289: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:290: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:291: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:292: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:386: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:387: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:388: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:389: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:485: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:486: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:487: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:488: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:582: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:583: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:584: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:585: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:678: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:679: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:680: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:681: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:682: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:778: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:779: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:780: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:781: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:875: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:876: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:877: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:878: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:971: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:972: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:973: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:974: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_final.log:975: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:239: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:240: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:241: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:242: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:336: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:337: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:338: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:339: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:432: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:433: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:434: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:435: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:436: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:530: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:531: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:532: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:533: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:629: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:630: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:631: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:632: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:726: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:727: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:728: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:729: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:822: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:823: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:824: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:825: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:826: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:922: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:923: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:924: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:925: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1019: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1020: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1021: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1022: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1115: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1116: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1117: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1118: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1119: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1213: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1214: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1215: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1216: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1308: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1309: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1310: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1311: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1402: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1403: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1404: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1405: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_final_geometry.log:1406: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:95: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:96: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:97: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:98: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:192: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:193: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:194: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:195: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:288: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:289: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:290: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:291: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:292: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:386: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:387: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:388: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:389: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:485: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:486: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:487: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:488: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:582: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:583: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:584: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:585: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:678: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:679: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:680: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:681: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:682: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:778: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:779: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:780: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:781: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:875: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:876: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:877: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:878: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:971: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:972: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:973: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:974: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:975: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1069: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1070: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1071: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1072: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1164: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1165: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1166: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1167: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1258: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1259: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1260: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1261: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1262: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1354: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1355: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1356: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1357: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1451: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1452: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1453: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1454: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1546: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1547: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1548: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1549: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1640: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1641: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1642: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1643: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1644: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1738: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1739: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1740: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1741: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1833: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1834: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1835: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1836: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1927: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1928: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1929: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1930: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:1931: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2025: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2026: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2027: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2028: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2120: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2121: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2122: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2123: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2214: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2215: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2216: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2217: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2218: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2310: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2311: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2312: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2313: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2407: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2408: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2409: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2410: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2502: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2503: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2504: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2505: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2596: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2597: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2598: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2599: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_layout.log:2600: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:445: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:446: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:447: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:448: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:542: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:543: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:544: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:545: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:638: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:639: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:640: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:641: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:642: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:736: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:737: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:738: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:739: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:835: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:836: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:837: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:838: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:932: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:933: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:934: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:935: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1028: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1029: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1030: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1031: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1032: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1128: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1129: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1130: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1131: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1225: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1226: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1227: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1228: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1321: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1322: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1323: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1324: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1325: space before tab in indent.
++  	result = -1
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1420: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1421: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1422: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1423: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1516: space before tab in indent.
++  	err = 1282,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1517: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1518: space before tab in indent.
++  	baseOperation = glUseProgram,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1519: space before tab in indent.
++  	cArguments = (3,)
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1611: space before tab in indent.
++  	err = 1281,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1612: space before tab in indent.
++  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1613: space before tab in indent.
++  	baseOperation = glGetAttribLocation,
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1614: space before tab in indent.
++  	cArguments = (15, b'a_position\x00'),
+docs/GSHC/gui_layout_20261001_v1/gshc_summary_visible.log:1615: space before tab in indent.
++  	result = -1

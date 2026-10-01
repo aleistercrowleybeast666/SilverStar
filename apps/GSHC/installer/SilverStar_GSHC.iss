@@ -1,6 +1,11 @@
 #define MyAppName "SilverStar_GSHC"
 #define MyAppInternalName "SilverStar_GSHC"
-#define MyAppVersion "0.1.0"
+#define ProductVersionFile FileOpen(AddBackslash(SourcePath) + "..\..\..\VERSION")
+#if !ProductVersionFile
+  #error Root VERSION is required
+#endif
+#define MyAppVersion Trim(FileRead(ProductVersionFile))
+#expr FileClose(ProductVersionFile)
 #define MyAppExeName "SilverStar_GSHC.exe"
 
 [Setup]

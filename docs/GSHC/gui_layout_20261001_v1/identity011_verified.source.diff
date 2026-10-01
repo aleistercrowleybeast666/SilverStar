@@ -1,0 +1,741 @@
+diff --git a/.gitattributes b/.gitattributes
+index 2b411c8..8a14402 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -12,3 +12,6 @@ docs/FCCG/evidence_final_20261001/** -text
+ docs/FCCG/evidence_ground_safety_20261001/** -text
+ docs/FCCG/evidence_flight_safety_batch1_20261001/** -text
+ docs/FCCG/pot_inventory_20261001/** -text
++
++# Native GUI logs, screenshots and source snapshots retain their recorded bytes.
++docs/GSHC/gui_layout_20261001_v1/** -text
+diff --git a/README.md b/README.md
+index 8ef1750..fe074d5 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,6 @@
+ # SilverStar
+ 
+-**SilverStar Rocket Avionics & Ground Suite** · pre-release version **0.1.0**.
++**SilverStar Rocket Avionics & Ground Suite** · pre-release version **0.1.1**.
+ 
+ This repository contains three applications:
+ 
+@@ -20,4 +20,4 @@ Round 5 has a [frozen software reference](docs/field/FIELD_TEST_REFERENCE.md), [
+ 
+ Original SilverStar first-party source is offered under the [Apache License 2.0](LICENSE). Bundled vendor code and Python dependencies retain their own terms; see the [source license audit](docs/architecture/SOURCE_LICENSE_AUDIT.md).
+ 
+-No public 0.1.0 release has been made.
++No public 0.1.1 release has been made.
+diff --git a/VERSION b/VERSION
+index 6e8bf73..17e51c3 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.1.0
++0.1.1
+diff --git a/apps/FCCG/src/silverstar_fccg/app/service.py b/apps/FCCG/src/silverstar_fccg/app/service.py
+index 4581931..83d6d7f 100644
+--- a/apps/FCCG/src/silverstar_fccg/app/service.py
++++ b/apps/FCCG/src/silverstar_fccg/app/service.py
+@@ -1042,6 +1042,8 @@ class FccgService:
+     ) -> PluginManifest:
+         if target_role not in {"flight", "ground"}:
+             raise ValueError("Board target role must be flight or ground")
++        if component_id in {item.component_id for item in self.catalog.All_Get()}:
++            raise ValueError("PCB component id is already installed: " + component_id)
+         hardware = (model.hardware if target_role == "flight"
+                     else model.ground_target.hardware)
+         mcu_id = model.mcu if target_role == "flight" else model.ground_target.mcu
+@@ -1060,16 +1062,20 @@ class FccgService:
+         archive = self.board_exporter.Plugin_Export(
+             model, snapshot,
+             self.workspace_root / ".work" / "board_exports"
++            / ("Flight_Controller" if target_role == "flight" else "Ground_Station")
+             / f"{component_id}.ssplugin",
+             component_id=component_id, name=name, target_role=target_role,
++            namespace_payload=True,
+         )
+-        return self.installer.Install(archive)
++        return self.installer.Install(archive, target_role=target_role)
+ 
+     def BoardCompatibilities_Get(
+         self, model: ProjectModel, *, language: str = "zh_CN"
+     ) -> tuple[BoardCompatibilityView, ...]:
+         views: list[BoardCompatibilityView] = []
+         for board in self.catalog.Type_Get("board"):
++            if board.metadata.get("target_role") == "ground_station" or board.component_class == "ground_station_board":
++                continue
+             result = BoardCompatibility_Resolve(model, self.catalog, board.component_id)
+             missing = ", ".join(
+                 f"{kind} ×{count}" for kind, count in result.missing
+diff --git a/apps/FCCG/src/silverstar_fccg/app/version.py b/apps/FCCG/src/silverstar_fccg/app/version.py
+index f7b22eb..81ca094 100644
+--- a/apps/FCCG/src/silverstar_fccg/app/version.py
++++ b/apps/FCCG/src/silverstar_fccg/app/version.py
+@@ -16,9 +16,8 @@ SILVERSTAR_PLATFORM_VERSION_MINOR = _VERSION_PARTS[1]
+ SILVERSTAR_PLATFORM_VERSION_PATCH = _VERSION_PARTS[2]
+ SILVERSTAR_PLATFORM_ID_SUFFIX = SILVERSTAR_PLATFORM_VERSION.replace(".", "_")
+ SILVERSTAR_BUILD_ID = f"SilverStar_{SILVERSTAR_PLATFORM_ID_SUFFIX}"
+-SILVERSTAR_CORE_COMPONENT_ID = (
+-    f"silverstar.core.{SILVERSTAR_PLATFORM_ID_SUFFIX}"
+-)
++# The installed core plugin has its own schema/payload version.
++SILVERSTAR_CORE_COMPONENT_ID = "silverstar.core.0_1_0"
+ SILVERSTAR_CORE_PACKAGE_SLUG = SILVERSTAR_CORE_COMPONENT_ID.replace(".", "_")
+ SILVERSTAR_LOG_BUILD_TAG = (
+     "SILV"
+diff --git a/apps/FCCG/src/silverstar_fccg/hardware/board_plugin.py b/apps/FCCG/src/silverstar_fccg/hardware/board_plugin.py
+index 5ceb2c1..82005dd 100644
+--- a/apps/FCCG/src/silverstar_fccg/hardware/board_plugin.py
++++ b/apps/FCCG/src/silverstar_fccg/hardware/board_plugin.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ import json
++import hashlib
+ import re
+ import zipfile
+ from pathlib import Path
+@@ -37,6 +38,7 @@ class BoardPluginExporter:
+         name: str,
+         version: str | None = None,
+         target_role: str = "flight",
++        namespace_payload: bool = False,
+     ) -> Path:
+         if target_role not in {"flight", "ground"}:
+             raise BoardPluginExportError("Board target role must be flight or ground")
+@@ -59,9 +61,20 @@ class BoardPluginExporter:
+             model,
+             component_id=component_id,
+             name=name.strip(),
+-            version=version or model.identity.firmware_version,
++            version=version or "0.1.0",
+             target_role=target_role,
+         )
++        payload_root = "HardwareGenerated/STM32CubeMX"
++        if namespace_payload:
++            # Keep Windows paths short; the full ID remains in the manifest.
++            payload_root = "PCB/" + hashlib.sha256(component_id.encode("ascii")).hexdigest()[:16]
++            manifest["payload"]["roots"] = [payload_root]
++            manifest["board"]["hardware_root"] = payload_root
++            for key in ("sources", "asm_sources", "include_dirs"):
++                manifest["build"][key] = [value.replace("HardwareGenerated/STM32CubeMX", payload_root, 1)
++                                          for value in manifest["build"][key]]
++            manifest["build"]["linker_script"] = manifest["build"]["linker_script"].replace(
++                "HardwareGenerated/STM32CubeMX", payload_root, 1)
+         stage = self.output_policy.StagingDirectory_Create("board-export-")
+         staged_archive = stage / output.name
+         try:
+@@ -101,7 +114,7 @@ class BoardPluginExporter:
+                     relative = source.relative_to(snapshot).as_posix()
+                     archive.write(
+                         source,
+-                        f"payload/HardwareGenerated/STM32CubeMX/{relative}",
++                        f"payload/{payload_root}/{relative}",
+                     )
+                     if relative == hardware.ioc_file:
+                         archive.write(source, f"hardware/{source.name}")
+diff --git a/apps/FCCG/src/silverstar_fccg/i18n/en_US.json b/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
+index 6ceb58b..461a564 100644
+--- a/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
++++ b/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
+@@ -2,7 +2,7 @@
+   "device.interface_profile": "Interface / Operating profile",
+   "protocol.selection_unavailable": "Selected protocol unavailable: {component} / {profile}",
+   "app.credit": "By CXYL",
+-  "app.title": "SilverStar System Configuration & Generation (SCG)",
++  "app.title": "SilverStar System Configuration & Generation",
+   "about.text": "SilverStar System Configuration & Generation (SCG)\nVersion v{version}\n\nGraphical Flight and Ground target configuration, declarative component plugins, project assembly, and build/toolchain front end.",
+   "action.about": "About",
+   "action.add_component": "Add Component",
+@@ -294,7 +294,7 @@
+   "action.target_clean": "Clean",
+   "action.generate_flight_project": "Generate / Update Flight Project",
+   "action.generate_ground_project": "Generate / Update Ground Project",
+-  "action.target_artifact_check": "Inspect Artifacts",
++  "action.target_artifact_check": "Inspect ELF",
+   "target.status.not_configured": "Not configured",
+   "target.status.not_generated": "Not generated",
+   "target.status.generated": "Generated",
+@@ -331,7 +331,7 @@
+   "group.board_selection": "Board Selection",
+   "group.detected_platform": "Detected MCU and Platform",
+   "group.advanced_resources": "Advanced Resource Mapping",
+-  "group.strategy_selection": "Alignment, INS and Estimation",
++  "group.strategy_selection": "Initial Alignment",
+   "group.mode_selection": "Calibration",
+   "group.logging": "Logging",
+   "group.indicators": "Indicators",
+@@ -666,12 +666,12 @@
+   "protocol.unavailable.hardware": "Unavailable: the current hardware has no connection resource for this transport Device.",
+   "mode.parameter_range": "Valid range: {minimum} to {maximum} {unit}",
+   "build.section.verification": "Firmware Build",
+-  "build.section.quality": "Quality Checks",
++  "build.section.quality": "Flight Controller Quality Checks",
+   "build.section.toolchain": "Toolchain",
+   "build.section.firmware_environment": "Firmware Build Environment",
+   "build.section.host_environment": "Host Test Environment",
+   "build.help.verification": "Build Firmware in FCCG runs a Release build and produces ELF, BIN, HEX, and MAP files. Clean removes current build outputs. Neither operation flashes hardware.",
+-  "build.help.quality": "Host Tests do not build STM32 firmware; Architecture Check validates dependencies and the source graph; Power of Ten is a project-specific automated check; Static Analysis uses Arm GNU GCC -fanalyzer; Firmware Artifact Check validates final files and memory properties.",
++  "build.help.quality": "These checks apply only to the generated Flight Controller. Ground is not checked automatically; ungenerated and unchecked targets are not passes. Inspect ELF above checks file presence only; the Flight artifact check below validates linked artifacts.",
+   "column.tool_purpose": "Purpose",
+   "column.detection_result": "Detection Result",
+   "tool.purpose.compiler": "Builds and links STM32 firmware, creates BIN/HEX, reports size, and runs -fanalyzer; objcopy and size are derived from the same directory.",
+@@ -902,5 +902,6 @@
+   "release.legacy_notice": "This legacy project contains deferred magnetic or multiple-vector selections. Settings remain unchanged and generation is blocked. Create an explicit KF6 + gravity/known-direction copy on the Devices page. Original project, logs and decoder stay intact.",
+   "release.migrate_confirm": "Create a separate release copy? It removes magnetic selections and their resource/source bindings, selects KF6 and the fixed gravity + known-direction pair, and clears the old decoder identity so generation produces a new matching package. Original file bytes and every loaded setting are backed up under Compatibility. Existing known direction is retained; if absent, +X / 90 degrees is used and must be checked against physical placement. Old logs and decoder remain at their original location and continue to require their original package; no automatic move occurs.",
+   "release.migrate_destination": "Select a new empty folder for the release copy",
+-  "release.migrated": "Release copy saved to {path}. Compatibility contains original bytes, all loaded settings and the migration receipt. Original logs/decoder are untouched. Review the known direction on this page, then generate new firmware and its matching decoder."
++  "release.migrated": "Release copy saved to {path}. Compatibility contains original bytes, all loaded settings and the migration receipt. Original logs/decoder are untouched. Review the known direction on this page, then generate new firmware and its matching decoder.",
++  "board.ground_selection_pending": "Configure ground-station communication first; select a ground-station board or import custom STM32 hardware before saving or building."
+ }
+diff --git a/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json b/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
+index 24df6f0..b77e414 100644
+--- a/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
++++ b/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
+@@ -2,7 +2,7 @@
+   "device.interface_profile": "接口 / 运行配置",
+   "protocol.selection_unavailable": "已选协议不可用：{component} / {profile}",
+   "app.credit": "辰星引力开发",
+-  "app.title": "SilverStar 系统配置与生成（SCG）",
++  "app.title": "SilverStar 系统配置与生成",
+   "about.text": "SilverStar 系统配置与生成（SCG）\n版本 v{version}\n\n图形化配置飞控和地面站目标、声明式组件插件、工程组装及构建工具。",
+   "action.about": "关于",
+   "action.add_component": "添加组件",
+@@ -295,7 +295,7 @@
+   "action.target_clean": "清理",
+   "action.generate_flight_project": "生成 / 更新飞控工程",
+   "action.generate_ground_project": "生成 / 更新地面站工程",
+-  "action.target_artifact_check": "产物检查",
++  "action.target_artifact_check": "查看 ELF",
+   "target.status.not_configured": "未配置",
+   "target.status.not_generated": "未生成",
+   "target.status.generated": "已生成",
+@@ -331,7 +331,7 @@
+   "group.board_selection": "板卡选择",
+   "group.detected_platform": "检测到的 MCU 与 Platform",
+   "group.advanced_resources": "高级资源配置",
+-  "group.strategy_selection": "初始对准、惯性导航与融合估计",
++  "group.strategy_selection": "初始对准",
+   "group.mode_selection": "校准",
+   "group.logging": "日志",
+   "group.indicators": "指示灯",
+@@ -666,12 +666,12 @@
+   "protocol.unavailable.hardware": "不可用：当前硬件没有满足该传输设备的连接资源。",
+   "mode.parameter_range": "合法范围：{minimum} 至 {maximum} {unit}",
+   "build.section.verification": "固件构建",
+-  "build.section.quality": "质量检查",
++  "build.section.quality": "飞控质量检查",
+   "build.section.toolchain": "工具链",
+   "build.section.firmware_environment": "固件构建环境",
+   "build.section.host_environment": "主机测试环境",
+   "build.help.verification": "在FCCG中构建固件会执行Release构建并生成ELF、BIN、HEX和MAP；清理只删除当前工程构建产物，二者都不会烧录。",
+-  "build.help.quality": "主机测试不生成STM32固件；架构检查验证依赖与源码图；Power of Ten是项目专用自动检查；静态分析使用Arm GNU GCC -fanalyzer；固件产物检查验证最终文件与内存属性。",
++  "build.help.quality": "下列检查仅针对已生成的飞控目标。不会自动检查地面站；未生成、未检查不计为通过。上方“查看 ELF”只确认文件存在，完整链接检查使用下方飞控产物检查。",
+   "column.tool_purpose": "用途",
+   "column.detection_result": "检测结果",
+   "tool.purpose.compiler": "编译并链接STM32固件、生成BIN/HEX、统计尺寸并运行-fanalyzer；objcopy和size从同一目录推导。",
+@@ -902,5 +902,6 @@
+   "release.legacy_notice": "旧工程包含首发延期的磁力计或多矢量配置。原设置保持不变，生成已阻止。可在设备页显式创建 KF6 + 重力/已知方向兼容副本；原工程、日志和 decoder 不会被改写。",
+   "release.migrate_confirm": "确认创建独立兼容副本？副本将移除磁力计选择及其资源/来源绑定，选择 KF6 与固定重力 + 已知方向双矢量，并清除旧 decoder 身份，生成新的匹配包。原文件与当前全部设置将备份到副本的 Compatibility 文件夹。保留已有已知方向；缺失时使用 +X / 90°，必须按实际摆放复核。旧日志和 decoder 留在原处，仍按原包解析，不自动搬移。",
+   "release.migrate_destination": "选择新的空文件夹保存兼容副本",
+-  "release.migrated": "兼容副本已保存到 {path}。原始文件、全部旧设置与迁移记录位于 Compatibility；原日志/decoder 未更改。请在当前对准页复核已知方向，再生成新的固件与匹配 decoder。"
++  "release.migrated": "兼容副本已保存到 {path}。原始文件、全部旧设置与迁移记录位于 Compatibility；原日志/decoder 未更改。请在当前对准页复核已知方向，再生成新的固件与匹配 decoder。",
++  "board.ground_selection_pending": "可以先完成地面站通信配置；保存或构建前必须选择地面站板卡或导入自定义 STM32 硬件。"
+ }
+diff --git a/apps/FCCG/src/silverstar_fccg/plugins/installer.py b/apps/FCCG/src/silverstar_fccg/plugins/installer.py
+index 0c3b9b1..763b6b4 100644
+--- a/apps/FCCG/src/silverstar_fccg/plugins/installer.py
++++ b/apps/FCCG/src/silverstar_fccg/plugins/installer.py
+@@ -35,6 +35,7 @@ class PluginInstaller:
+         self,
+         archive_path: Path,
+         progress_callback: Callable[[int, int, str, bool], None] | None = None,
++        *, target_role: str | None = None,
+     ) -> PluginManifest:
+         phases = ("validate", "copy", "register", "refresh_catalog")
+ 
+@@ -100,8 +101,15 @@ class PluginInstaller:
+                         f"Plugin payload conflicts with {component.component_id}: "
+                         + ", ".join(conflicts[:8])
+                     )
++            destination_root = self.installed_root
++            if target_role is not None:
++                role = {"flight": "flight_controller", "ground": "ground_station"}.get(target_role)
++                if manifest.component_type != "board" or role is None or manifest.metadata.get("target_role") != role:
++                    raise PluginInstallError("PCB target role does not match the declared board metadata")
++                folder = "Flight_Controller" if target_role == "flight" else "Ground_Station"
++                destination_root = destination_root / "PCB" / folder
+             destination = self.policy.Path_Resolve(
+-                self.installed_root / manifest.component_id / manifest.version,
++                destination_root / manifest.component_id / manifest.version,
+                 allow_root=False,
+             )
+             if destination.exists():
+diff --git a/apps/FCCG/src/silverstar_fccg/project/air_link.py b/apps/FCCG/src/silverstar_fccg/project/air_link.py
+index cc201c2..fa50987 100644
+--- a/apps/FCCG/src/silverstar_fccg/project/air_link.py
++++ b/apps/FCCG/src/silverstar_fccg/project/air_link.py
+@@ -159,6 +159,15 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
+         return ()
+     ground = model.ground_target
+     issues = list(AirLinkIssues_Get(model, catalog))
++    if ground.board:
++        try:
++            board = catalog.Component_Get(ground.board)
++        except ValueError:
++            issues.append(AirLinkIssue("GROUND_BOARD_UNKNOWN", "Selected Ground PCB is unavailable"))
++        else:
++            role = board.metadata.get("target_role")
++            if role != "ground_station" and board.component_class != "ground_station_board":
++                issues.append(AirLinkIssue("BOARD_TARGET_ROLE_MISMATCH", "Ground requires a Ground Station PCB"))
+     if ground.hardware.mode == "unselected" or not ground.mcu:
+         issues.append(AirLinkIssue("GROUND_HARDWARE_UNBOUND", "Ground hardware is not selected"))
+     elif ground.hardware.mode == "custom" and not any(
+diff --git a/apps/FCCG/src/silverstar_fccg/project/validation.py b/apps/FCCG/src/silverstar_fccg/project/validation.py
+index 419f41c..72957c2 100644
+--- a/apps/FCCG/src/silverstar_fccg/project/validation.py
++++ b/apps/FCCG/src/silverstar_fccg/project/validation.py
+@@ -523,6 +523,8 @@ def _Hardware_Validate(
+         )
+     if model.hardware.mode == "board_plugin":
+         board = catalog.Component_Get(model.board)
++        if board.metadata.get("target_role") == "ground_station" or board.component_class == "ground_station_board":
++            issues.append(ValidationIssue("error", "BOARD_TARGET_ROLE_MISMATCH", "A Ground Station PCB cannot be selected for Flight Controller"))
+         if board.board is None:
+             issues.append(
+                 ValidationIssue("error", "board_manifest", "Board metadata is missing")
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/main_window.py b/apps/FCCG/src/silverstar_fccg/ui/main_window.py
+index 8bda776..d877f4d 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/main_window.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/main_window.py
+@@ -269,7 +269,8 @@ class MainWindow(QMainWindow):
+         header_layout.setContentsMargins(14, 6, 14, 6)
+         self.title_label = QLabel()
+         self.title_label.setObjectName("headerTitle")
+-        self.title_label.setWordWrap(True)
++        self.title_label.setWordWrap(False)
++        self.title_label.setStyleSheet("font-size: 16px;")
+         self.version_label = QLabel(f"v{__version__}")
+         self.version_label.setObjectName("headerVersion")
+         self.credit_label = QLabel()
+@@ -342,6 +343,12 @@ class MainWindow(QMainWindow):
+             self.ground_target_page.root_layout.removeWidget(group)
+             self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
+         self.build_page = BuildPage(self._translator)
++        self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, self.ground_target_page.status)
++        self.build_page.root_layout.insertWidget(2, self.ground_target_page.build_group)
++        for page, owner in ((self.board_hardware_page, self.flight_configuration_page),
++                            (self.ground_target_page, self.air_link_page)):
++            page.root_layout.removeWidget(page.advanced_section)
++            owner.root_layout.insertWidget(owner.root_layout.count() - 1, page.advanced_section)
+         # Keep the existing editors and signal ownership while placing each
+         # configuration group on the page that owns it in the user workflow.
+         for group in (
+@@ -499,6 +506,7 @@ class MainWindow(QMainWindow):
+         )
+         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
+         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
++        self.ground_target_page.prepareRequested.connect(self._GroundExistingHardware_Request)
+         self.ground_target_page.importRequested.connect(self._GroundCubeMxImport_Request)
+         self.ground_target_page.saveInstanceRequested.connect(
+             lambda: self._BoardInstanceSave_Request("ground")
+@@ -1552,7 +1560,9 @@ class MainWindow(QMainWindow):
+             (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
+             for manifest in self._service.catalog.Type_Get("board")
+             if manifest.board is not None
+-            and manifest.metadata.get("target_role") == "ground_station"
++            and (manifest.metadata.get("target_role") == "ground_station" or manifest.component_class == "ground_station_board")
++            and any(identity in {item.component_id for item in self._service.catalog.Type_Get("mcu")}
++                    for identity in manifest.board.compatible_mcus)
+             and (manifest.board.verified or manifest.source == "installed")
+         )
+         selected = model.ground_target.radio_plugin
+@@ -1669,6 +1679,9 @@ class MainWindow(QMainWindow):
+         )
+ 
+         board = self._service.catalog.Component_Get(board_id)
++        if board.metadata.get("target_role") != "ground_station" and board.component_class != "ground_station_board":
++            self._Error_Show("PCB target mismatch: select a Ground Station board")
++            return
+         inventory = BoardHardwareInventory_Get(board)
+         if board.board is None or inventory is None:
+             self._Error_Show("Ground board has no CubeMX hardware inventory")
+@@ -1715,6 +1728,22 @@ class MainWindow(QMainWindow):
+             )
+         self._ProjectConfiguration_Change(change)
+ 
++    def _GroundExistingHardware_Request(self) -> None:
++        combo = self.ground_target_page.board_combo
++        selected = str(combo.currentData() or "")
++        if selected == "__custom__" or not selected:
++            choices = tuple((combo.itemText(index), combo.itemData(index)) for index in range(combo.count())
++                            if combo.itemData(index) != "__custom__" and combo.model().item(index).isEnabled())
++            if not choices:
++                self._Error_Show(self._translator.Text_Get("board.no_provider"))
++                return
++            name, accepted = QInputDialog.getItem(self, self._translator.Text_Get("hardware.existing"),
++                self._translator.Text_Get("field.board_name"), [item[0] for item in choices], 0, False)
++            if not accepted:
++                return
++            selected = next(identity for title, identity in choices if title == name)
++        self._GroundBoard_Change(selected)
++
+     def _GroundCubeMxImport_Request(self, directory: bool) -> None:
+         if directory:
+             selected = QFileDialog.getExistingDirectory(
+@@ -3029,7 +3058,7 @@ class MainWindow(QMainWindow):
+                 (target_root / "build").rglob("*.elf")
+             )
+             self.build_page.BuildLog_Append(
+-                f"{directory_name}: {'artifact found' if found else 'no ELF artifact'}"
++                f"{directory_name}: {'ELF present' if found else 'no ELF artifact'}; integrity NOT CHECKED"
+             )
+             return
+         if operation not in {"build", "clean"}:
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py b/apps/FCCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py
+index a6a9d8d..8def2bf 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py
+@@ -78,6 +78,8 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
+     ) -> None:
+         self.sources_layout.addWidget(sources)
+         self.calibration_layout.addWidget(calibration)
++        self.alignment_layout.removeWidget(self.alignment_editor)
++        alignment.layout().addWidget(self.alignment_editor)
+         self.alignment_layout.addWidget(alignment)
+         self.ins_layout.insertWidget(0, ins)
+         self.estimator_layout.addWidget(estimator)
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/components.py b/apps/FCCG/src/silverstar_fccg/ui/pages/components.py
+index 8231e6b..51aa0af 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/components.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/components.py
+@@ -648,6 +648,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
+ 
+     def __init__(self, translator: Translator, *, target: str = "flight") -> None:
+         page = "page.ground" if target == "ground" else "page.board_hardware"
++        self.target_role = target
+         super().__init__(translator, page, page + ".description")
+         selection_form = QFormLayout()
+         self.board_label = QLabel()
+@@ -955,7 +956,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
+         )
+         if hardware_mode == "unselected":
+             self.provider_notice.setText(
+-                self._translator.Text_Get("board.selection_pending")
++                self._translator.Text_Get("board.ground_selection_pending" if self.target_role == "ground" else "board.selection_pending")
+             )
+         elif not custom_available:
+             self.provider_notice.setText(
+@@ -1291,8 +1292,10 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
+         )
+         self.root_layout.addWidget(self.mission_strategy_group)
+         self.strategy_form = QFormLayout()
++        strategy_layout = QVBoxLayout()
++        strategy_layout.addLayout(self.strategy_form)
+         self.strategy_group = self.Group_Create(
+-            "group.strategy_selection", self.strategy_form
++            "group.strategy_selection", strategy_layout
+         )
+         self.root_layout.addWidget(self.strategy_group)
+         self.ins_strategy_form = QFormLayout()
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py b/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py
+index ed3638c..912d8bb 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py
+@@ -269,10 +269,9 @@ class GroundTargetPage(BoardHardwarePage):
+         self.build_summary = QLabel("—")
+         self.build_summary.setWordWrap(True)
+         build_form.addRow(build_label, self.build_summary)
+-        self.root_layout.addWidget(self.Group_Create("group.ground_build", build_form))
++        self.build_group = self.Group_Create("group.ground_build", build_form)
+         self.status = QLabel()
+         self.status.setWordWrap(True)
+-        self.root_layout.addWidget(self.status)
+         self.root_layout.addStretch(1)
+ 
+     def Configuration_Set(self, ground, boards, radios, requirements, issues) -> None:
+@@ -355,8 +354,10 @@ class GroundTargetPage(BoardHardwarePage):
+         self.assignments = {name: self.resource_table.cellWidget(row, 3) for row, (name, _kind) in enumerate(required)}
+         # Ground generation checks the fixed radio/PC contracts; preparation
+         # operations requiring flight task ownership do not apply to Ground.
+-        for button in (self.prepare_button, self.manual_validation_button, self.auto_button):
++        for button in (self.manual_validation_button, self.auto_button):
+             button.setEnabled(False)
++        self.prepare_button.setEnabled(bool(boards))
++        self.prepare_button.setToolTip("" if boards else self._translator.Text_Get("board.no_provider"))
+         self.i2c_pullup_group.setVisible(False)
+         self.status.setText(
+             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
+diff --git a/apps/FLP/tests/test_version.py b/apps/FLP/tests/test_version.py
+index 2fa620a..60d0d68 100644
+--- a/apps/FLP/tests/test_version.py
++++ b/apps/FLP/tests/test_version.py
+@@ -11,8 +11,8 @@ from silverstar_flp.version import __version__ as compatibility_version
+ def test_version_has_one_runtime_authority_and_dynamic_packaging_metadata() -> None:
+     root = Path(__file__).resolve().parents[1]
+     payload = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+-    assert PRODUCT_NAME == "SilverStar_FLP"
+-    assert __version__ == compatibility_version == package_version == "0.1.0"
++    assert PRODUCT_NAME == "SilverStar FLP"
++    assert __version__ == compatibility_version == package_version == (root.parents[1] / "VERSION").read_text(encoding="utf-8").strip()
+     assert "version" not in payload["project"]
+     assert "version" in payload["project"]["dynamic"]
+     assert payload["tool"]["setuptools"]["dynamic"]["version"]["attr"] == (
+diff --git a/apps/GSHC/SilverStar_GSHC.spec b/apps/GSHC/SilverStar_GSHC.spec
+index 065cbb5..42e5963 100644
+--- a/apps/GSHC/SilverStar_GSHC.spec
++++ b/apps/GSHC/SilverStar_GSHC.spec
+@@ -1,4 +1,8 @@
+ # -*- mode: python ; coding: utf-8 -*-
++import runpy
++from pathlib import Path
++
++product_resource = runpy.run_path(str(Path(SPECPATH) / "packaging/product_version.py"))["ProductVersionResource_Create"]()
+ datas = []
+ binaries = []
+ hiddenimports = [
+@@ -28,7 +32,7 @@ exe = EXE(
+     [],
+     exclude_binaries=True,
+     name="SilverStar_GSHC",
+-    version="packaging/version_info.txt",
++    version=product_resource,
+     debug=False,
+     bootloader_ignore_signals=False,
+     strip=False,
+diff --git a/apps/GSHC/installer/SilverStar_GSHC.iss b/apps/GSHC/installer/SilverStar_GSHC.iss
+index a77ba7d..e35d914 100644
+--- a/apps/GSHC/installer/SilverStar_GSHC.iss
++++ b/apps/GSHC/installer/SilverStar_GSHC.iss
+@@ -1,6 +1,11 @@
+ #define MyAppName "SilverStar_GSHC"
+ #define MyAppInternalName "SilverStar_GSHC"
+-#define MyAppVersion "0.1.0"
++#define ProductVersionFile FileOpen(AddBackslash(SourcePath) + "..\..\..\VERSION")
++#if !ProductVersionFile
++  #error Root VERSION is required
++#endif
++#define MyAppVersion Trim(FileRead(ProductVersionFile))
++#expr FileClose(ProductVersionFile)
+ #define MyAppExeName "SilverStar_GSHC.exe"
+ 
+ [Setup]
+diff --git a/apps/GSHC/packaging/version_info.txt b/apps/GSHC/packaging/version_info.txt
+index cb708f5..458d590 100644
+--- a/apps/GSHC/packaging/version_info.txt
++++ b/apps/GSHC/packaging/version_info.txt
+@@ -1,7 +1,7 @@
+ VSVersionInfo(
+   ffi=FixedFileInfo(
+-    filevers=(0, 1, 0, 0),
+-    prodvers=(0, 1, 0, 0),
++    filevers=@PRODUCT_VERSION_TUPLE@,
++    prodvers=@PRODUCT_VERSION_TUPLE@,
+     mask=0x3f,
+     flags=0x0,
+     OS=0x40004,
+@@ -17,11 +17,11 @@ VSVersionInfo(
+           [
+             StringStruct("CompanyName", "SilverStar"),
+             StringStruct("FileDescription", "SilverStar_GSHC"),
+-            StringStruct("FileVersion", "0.1.0"),
++            StringStruct("FileVersion", "@PRODUCT_VERSION@"),
+             StringStruct("InternalName", "SilverStar_GSHC"),
+             StringStruct("OriginalFilename", "SilverStar_GSHC.exe"),
+             StringStruct("ProductName", "SilverStar_GSHC"),
+-            StringStruct("ProductVersion", "0.1.0"),
++            StringStruct("ProductVersion", "@PRODUCT_VERSION@"),
+           ],
+         )
+       ]
+diff --git a/apps/GSHC/ui/main_window.py b/apps/GSHC/ui/main_window.py
+index 3ad1678..89ed747 100644
+--- a/apps/GSHC/ui/main_window.py
++++ b/apps/GSHC/ui/main_window.py
+@@ -1501,7 +1501,7 @@ class MainWindow(QMainWindow):
+         self.header_connection = QLabel()
+         self.header_connection.setObjectName("headerSection")
+         self._bind_text(self.header_connection, "group.connection")
+-        status_layout = QHBoxLayout()
++        status_layout = identity_layout
+         status_layout.setSpacing(8)
+         status_layout.addWidget(self.header_connection)
+ 
+@@ -1536,8 +1536,6 @@ class MainWindow(QMainWindow):
+         status_layout.addWidget(self.conn_label, 1)
+         connection_layout.addStretch(1)
+         root_layout.addLayout(connection_layout)
+-        root_layout.addLayout(status_layout)
+-        identity_layout.addStretch(1)
+ 
+         self.header_version = QLabel()
+         self.header_version.setObjectName("headerVersion")
+@@ -1585,14 +1583,21 @@ class MainWindow(QMainWindow):
+         root.setSpacing(8)
+ 
+         self.navigation_preparation_panel = NavigationPanel(self.i18n, preflight=True)
+-        root.addWidget(self.navigation_preparation_panel)
+-        root.addWidget(self._build_preflight_system_panel())
+-        root.addWidget(self._build_calibration_panel())
+-        root.addWidget(self._build_alignment_panel())
+-        root.addWidget(self._build_preflight_sensor_panel())
+-        root.addWidget(self._build_preflight_gnss_panel())
++        # Preserve the monitoring rows from the pre-navigation GSHC layout.
++        summary_row = QHBoxLayout()
++        summary_row.addWidget(self._build_preflight_system_panel(), 1)
++        summary_row.addWidget(self._build_calibration_panel(), 1)
++        summary_row.addWidget(self._build_alignment_panel(), 1)
++        root.addLayout(summary_row)
++        detail_row = QHBoxLayout()
++        detail_row.addWidget(self._build_preflight_sensor_panel(), 2)
++        detail_row.addWidget(self._build_preflight_gnss_panel(), 1)
++        root.addLayout(detail_row)
+         root.addWidget(self._build_preflight_command_panel())
+         root.addWidget(self._build_event_panel(), 1)
++        # Supplemental preparation diagnostics must not displace the original
++        # status, commands and event monitoring rows.
++        root.addWidget(self.navigation_preparation_panel)
+         return TouchScroll_Wrap(page)
+ 
+     def _build_preflight_system_panel(self) -> QWidget:
+@@ -1809,15 +1814,18 @@ class MainWindow(QMainWindow):
+         status_content = QWidget()
+         status_layout = QVBoxLayout(status_content)
+         status_layout.setContentsMargins(0, 0, 0, 0)
++        status_layout.setAlignment(Qt.AlignTop)
++        top = QHBoxLayout()
++        top.addWidget(self._build_flight_status_panel(), 1)
++        top.addWidget(self._build_flight_data_panel(), 2)
++        top.addWidget(self._build_mission_state_panel(), 2)
++        status_layout.addLayout(top)
+         self.navigation_health_panel = NavigationPanel(self.i18n, preflight=False)
+         status_layout.addWidget(self.navigation_health_panel)
+-        status_layout.addWidget(self._build_flight_status_panel())
+-        status_layout.addWidget(self._build_flight_data_panel())
+-        status_layout.addWidget(self._build_mission_state_panel())
+         self.flight_status_scroll = TouchScroll_Wrap(status_content)
+-        root.addWidget(self.flight_status_scroll, 1)
++        root.addWidget(self.flight_status_scroll, 3)
+         # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
+-        root.addWidget(self._build_plot_panel(), 1)
++        root.addWidget(self._build_plot_panel(), 2)
+         return page
+ 
+     def _build_flight_status_panel(self) -> QWidget:
+@@ -2186,7 +2194,7 @@ class MainWindow(QMainWindow):
+ 
+     def _ConnectionStatus_Display(self) -> None:
+         text = self._connection_status_text
+-        width = max(160, self.width() - self.header_connection.sizeHint().width() - 48)
++        width = max(1, self.conn_label.contentsRect().width())
+         metrics = self.conn_label.fontMetrics()
+         if metrics.horizontalAdvance(text) <= width:
+             displayed = text
+@@ -3111,10 +3119,10 @@ class MainWindow(QMainWindow):
+         self.curves = {}
+         self.plot_widgets = {}
+         self.plot_title_keys = {}
+-        for title_key, key, axis in titles:
+-            row, column = axis, 0 if key == "vel" else 1
++        for index, (title_key, key, axis) in enumerate(titles):
++            row, column = divmod(index, 3)
+             plot_widget = pg.PlotWidget(title=self.i18n.tr(title_key))
+-            plot_widget.setMinimumSize(240, 130)
++            plot_widget.setMinimumSize(200, 100)
+             plot_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+             plot_widget.showGrid(x=True, y=True, alpha=0.3)
+             plot_widget.setLabel("bottom", self.i18n.tr("plot.mission_time"))
+diff --git a/apps/GSHC/ui/navigation_panel.py b/apps/GSHC/ui/navigation_panel.py
+index f23ef6e..ce34374 100644
+--- a/apps/GSHC/ui/navigation_panel.py
++++ b/apps/GSHC/ui/navigation_panel.py
+@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
+     QComboBox,
+     QGridLayout,
+     QGroupBox,
++    QHBoxLayout,
+     QLabel,
+     QLayout,
+     QPushButton,
+@@ -36,6 +37,9 @@ class NavigationPanel(QGroupBox):
+         self.summary = QLabel()
+         self.summary.setWordWrap(True)
+         layout = QVBoxLayout(self)
++        layout.setContentsMargins(8, 18, 8, 6)
++        layout.setAlignment(Qt.AlignTop)
++        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+         layout.addWidget(self.summary)
+         self.steps: dict[str, QLabel] = {}
+         if preflight:
+@@ -50,7 +54,11 @@ class NavigationPanel(QGroupBox):
+             self.toggle = QPushButton()
+             self.toggle.setCheckable(True)
+             self.toggle.setMinimumHeight(30)
+-            layout.addWidget(self.toggle)
++            layout.removeWidget(self.summary)
++            summary_row = QHBoxLayout()
++            summary_row.addWidget(self.summary, 1)
++            summary_row.addWidget(self.toggle)
++            layout.addLayout(summary_row)
+             self.details = QScrollArea()
+             self.details.setWidgetResizable(True)
+             self.details.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+diff --git a/docs/FCCG/ARCHITECTURE.md b/docs/FCCG/ARCHITECTURE.md
+index 54d9630..cd4814d 100644
+--- a/docs/FCCG/ARCHITECTURE.md
++++ b/docs/FCCG/ARCHITECTURE.md
+@@ -1,6 +1,6 @@
+ # SilverStar_FCCG Architecture
+ 
+-The current 0.1.0 pre-release project format is 14. The following “Algorithm actual parameters” paragraph describes a historical format-12 stage; the current UI uses Navigation Configuration and separate Flight and Ground targets.
++The current 0.1.1 pre-release project format is 14. The following “Algorithm actual parameters” paragraph describes a historical format-12 stage; the current UI uses Navigation Configuration and separate Flight and Ground targets.
+ 
+ ## Algorithm actual parameters / 算法实际参数
+ 
+diff --git a/docs/FCCG/RELEASE_DEFERRED_FEATURES.md b/docs/FCCG/RELEASE_DEFERRED_FEATURES.md
+index 28c6c70..e55d508 100644
+--- a/docs/FCCG/RELEASE_DEFERRED_FEATURES.md
++++ b/docs/FCCG/RELEASE_DEFERRED_FEATURES.md
+@@ -1,4 +1,4 @@
+-# SCG 0.1.0 deferred features
++# SCG 0.1.1 deferred features
+ 
+ 2026-10-01 GUI closeout policy; this document does not qualify firmware for hardware or flight use.
+ 
+diff --git a/tests/integration/test_monorepo_baseline.py b/tests/integration/test_monorepo_baseline.py
+index 93de224..bf091a2 100644
+--- a/tests/integration/test_monorepo_baseline.py
++++ b/tests/integration/test_monorepo_baseline.py
+@@ -23,7 +23,7 @@ def _Python_Run(code: str, *paths: Path) -> str:
+ 
+ 
+ def test_one_release_version_and_independent_freertos_version() -> None:
+-    assert VERSION == "0.1.0"
++    assert VERSION == "0.1.1"
+     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+     assert package["project"]["dynamic"] == ["version"]
+     assert package["tool"]["setuptools"]["dynamic"]["version"]["attr"] == "silverstar_version.__version__"
+@@ -34,14 +34,17 @@ def test_one_release_version_and_independent_freertos_version() -> None:
+     assert manifests
+     for path in manifests:
+         manifest = json.loads(path.read_text(encoding="utf-8"))
+-        expected = "11.3.0" if manifest["id"] == "silverstar.os.freertos_11_3_0" else VERSION
++        # Plugin identities remain independent of the product patch release.
++        expected = "11.3.0" if manifest["id"] == "silverstar.os.freertos_11_3_0" else "0.1.0"
+         assert manifest["version"] == expected, path
+     core = ROOT / "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/plugin.json"
+     assert json.loads(core.read_text(encoding="utf-8"))["id"] == "silverstar.core.0_1_0"
+-    gshc_version_info = (ROOT / "apps/GSHC/packaging/version_info.txt").read_text(encoding="utf-8")
++    gshc_version_info = _Python_Run(
++        "import runpy; f=runpy.run_path('apps/GSHC/packaging/product_version.py')['ProductVersionResource_Create']; print(f())")
+     gshc_installer = (ROOT / "apps/GSHC/installer/SilverStar_GSHC.iss").read_text(encoding="utf-8")
+-    assert f'StringStruct("ProductVersion", "{VERSION}")' in gshc_version_info
+-    assert f'#define MyAppVersion "{VERSION}"' in gshc_installer
++    assert f"StringStruct('ProductVersion', '{VERSION}')" in gshc_version_info
++    assert '#define MyAppVersion Trim(FileRead(ProductVersionFile))' in gshc_installer
++    assert 'VERSION' in gshc_installer
+ 
+ 
+ def test_one_navigation_contract_for_all_consumers() -> None:

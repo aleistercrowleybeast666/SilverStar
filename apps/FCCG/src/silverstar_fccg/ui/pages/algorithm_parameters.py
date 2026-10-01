@@ -78,6 +78,8 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
     ) -> None:
         self.sources_layout.addWidget(sources)
         self.calibration_layout.addWidget(calibration)
+        self.alignment_layout.removeWidget(self.alignment_editor)
+        alignment.layout().addWidget(self.alignment_editor)
         self.alignment_layout.addWidget(alignment)
         self.ins_layout.insertWidget(0, ins)
         self.estimator_layout.addWidget(estimator)

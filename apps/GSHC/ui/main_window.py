@@ -1501,7 +1501,7 @@ class MainWindow(QMainWindow):
         self.header_connection = QLabel()
         self.header_connection.setObjectName("headerSection")
         self._bind_text(self.header_connection, "group.connection")
-        status_layout = QHBoxLayout()
+        status_layout = identity_layout
         status_layout.setSpacing(8)
         status_layout.addWidget(self.header_connection)
 
@@ -1536,8 +1536,6 @@ class MainWindow(QMainWindow):
         status_layout.addWidget(self.conn_label, 1)
         connection_layout.addStretch(1)
         root_layout.addLayout(connection_layout)
-        root_layout.addLayout(status_layout)
-        identity_layout.addStretch(1)
 
         self.header_version = QLabel()
         self.header_version.setObjectName("headerVersion")
@@ -1585,14 +1583,21 @@ class MainWindow(QMainWindow):
         root.setSpacing(8)
 
         self.navigation_preparation_panel = NavigationPanel(self.i18n, preflight=True)
-        root.addWidget(self.navigation_preparation_panel)
-        root.addWidget(self._build_preflight_system_panel())
-        root.addWidget(self._build_calibration_panel())
-        root.addWidget(self._build_alignment_panel())
-        root.addWidget(self._build_preflight_sensor_panel())
-        root.addWidget(self._build_preflight_gnss_panel())
+        # Preserve the monitoring rows from the pre-navigation GSHC layout.
+        summary_row = QHBoxLayout()
+        summary_row.addWidget(self._build_preflight_system_panel(), 1)
+        summary_row.addWidget(self._build_calibration_panel(), 1)
+        summary_row.addWidget(self._build_alignment_panel(), 1)
+        root.addLayout(summary_row)
+        detail_row = QHBoxLayout()
+        detail_row.addWidget(self._build_preflight_sensor_panel(), 2)
+        detail_row.addWidget(self._build_preflight_gnss_panel(), 1)
+        root.addLayout(detail_row)
         root.addWidget(self._build_preflight_command_panel())
         root.addWidget(self._build_event_panel(), 1)
+        # Supplemental preparation diagnostics must not displace the original
+        # status, commands and event monitoring rows.
+        root.addWidget(self.navigation_preparation_panel)
         return TouchScroll_Wrap(page)
 
     def _build_preflight_system_panel(self) -> QWidget:
@@ -1809,15 +1814,18 @@ class MainWindow(QMainWindow):
         status_content = QWidget()
         status_layout = QVBoxLayout(status_content)
         status_layout.setContentsMargins(0, 0, 0, 0)
+        status_layout.setAlignment(Qt.AlignTop)
+        top = QHBoxLayout()
+        top.addWidget(self._build_flight_status_panel(), 1)
+        top.addWidget(self._build_flight_data_panel(), 2)
+        top.addWidget(self._build_mission_state_panel(), 2)
+        status_layout.addLayout(top)
         self.navigation_health_panel = NavigationPanel(self.i18n, preflight=False)
         status_layout.addWidget(self.navigation_health_panel)
-        status_layout.addWidget(self._build_flight_status_panel())
-        status_layout.addWidget(self._build_flight_data_panel())
-        status_layout.addWidget(self._build_mission_state_panel())
         self.flight_status_scroll = TouchScroll_Wrap(status_content)
-        root.addWidget(self.flight_status_scroll, 1)
+        root.addWidget(self.flight_status_scroll, 3)
         # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
-        root.addWidget(self._build_plot_panel(), 1)
+        root.addWidget(self._build_plot_panel(), 2)
         return page
 
     def _build_flight_status_panel(self) -> QWidget:
@@ -2186,7 +2194,7 @@ class MainWindow(QMainWindow):
 
     def _ConnectionStatus_Display(self) -> None:
         text = self._connection_status_text
-        width = max(160, self.width() - self.header_connection.sizeHint().width() - 48)
+        width = max(1, self.conn_label.contentsRect().width())
         metrics = self.conn_label.fontMetrics()
         if metrics.horizontalAdvance(text) <= width:
             displayed = text
@@ -3111,10 +3119,10 @@ class MainWindow(QMainWindow):
         self.curves = {}
         self.plot_widgets = {}
         self.plot_title_keys = {}
-        for title_key, key, axis in titles:
-            row, column = axis, 0 if key == "vel" else 1
+        for index, (title_key, key, axis) in enumerate(titles):
+            row, column = divmod(index, 3)
             plot_widget = pg.PlotWidget(title=self.i18n.tr(title_key))
-            plot_widget.setMinimumSize(240, 130)
+            plot_widget.setMinimumSize(200, 100)
             plot_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             plot_widget.showGrid(x=True, y=True, alpha=0.3)
             plot_widget.setLabel("bottom", self.i18n.tr("plot.mission_time"))

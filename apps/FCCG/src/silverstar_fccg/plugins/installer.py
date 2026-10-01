@@ -35,6 +35,7 @@ class PluginInstaller:
         self,
         archive_path: Path,
         progress_callback: Callable[[int, int, str, bool], None] | None = None,
+        *, target_role: str | None = None,
     ) -> PluginManifest:
         phases = ("validate", "copy", "register", "refresh_catalog")
 
@@ -100,8 +101,15 @@ class PluginInstaller:
                         f"Plugin payload conflicts with {component.component_id}: "
                         + ", ".join(conflicts[:8])
                     )
+            destination_root = self.installed_root
+            if target_role is not None:
+                role = {"flight": "flight_controller", "ground": "ground_station"}.get(target_role)
+                if manifest.component_type != "board" or role is None or manifest.metadata.get("target_role") != role:
+                    raise PluginInstallError("PCB target role does not match the declared board metadata")
+                folder = "Flight_Controller" if target_role == "flight" else "Ground_Station"
+                destination_root = destination_root / "PCB" / folder
             destination = self.policy.Path_Resolve(
-                self.installed_root / manifest.component_id / manifest.version,
+                destination_root / manifest.component_id / manifest.version,
                 allow_root=False,
             )
             if destination.exists():

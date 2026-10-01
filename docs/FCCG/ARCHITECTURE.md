@@ -1,6 +1,6 @@
 # SilverStar_FCCG Architecture
 
-The current 0.1.0 pre-release project format is 14. The following “Algorithm actual parameters” paragraph describes a historical format-12 stage; the current UI uses Navigation Configuration and separate Flight and Ground targets.
+The current 0.1.1 pre-release project format is 14. The following “Algorithm actual parameters” paragraph describes a historical format-12 stage; the current UI uses Navigation Configuration and separate Flight and Ground targets.
 
 ## Algorithm actual parameters / 算法实际参数
 

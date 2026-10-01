@@ -23,7 +23,7 @@ def _Python_Run(code: str, *paths: Path) -> str:
 
 
 def test_one_release_version_and_independent_freertos_version() -> None:
-    assert VERSION == "0.1.0"
+    assert VERSION == "0.1.1"
     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert package["project"]["dynamic"] == ["version"]
     assert package["tool"]["setuptools"]["dynamic"]["version"]["attr"] == "silverstar_version.__version__"
@@ -34,14 +34,17 @@ def test_one_release_version_and_independent_freertos_version() -> None:
     assert manifests
     for path in manifests:
         manifest = json.loads(path.read_text(encoding="utf-8"))
-        expected = "11.3.0" if manifest["id"] == "silverstar.os.freertos_11_3_0" else VERSION
+        # Plugin identities remain independent of the product patch release.
+        expected = "11.3.0" if manifest["id"] == "silverstar.os.freertos_11_3_0" else "0.1.0"
         assert manifest["version"] == expected, path
     core = ROOT / "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/plugin.json"
     assert json.loads(core.read_text(encoding="utf-8"))["id"] == "silverstar.core.0_1_0"
-    gshc_version_info = (ROOT / "apps/GSHC/packaging/version_info.txt").read_text(encoding="utf-8")
+    gshc_version_info = _Python_Run(
+        "import runpy; f=runpy.run_path('apps/GSHC/packaging/product_version.py')['ProductVersionResource_Create']; print(f())")
     gshc_installer = (ROOT / "apps/GSHC/installer/SilverStar_GSHC.iss").read_text(encoding="utf-8")
-    assert f'StringStruct("ProductVersion", "{VERSION}")' in gshc_version_info
-    assert f'#define MyAppVersion "{VERSION}"' in gshc_installer
+    assert f"StringStruct('ProductVersion', '{VERSION}')" in gshc_version_info
+    assert '#define MyAppVersion Trim(FileRead(ProductVersionFile))' in gshc_installer
+    assert 'VERSION' in gshc_installer
 
 
 def test_one_navigation_contract_for_all_consumers() -> None:
