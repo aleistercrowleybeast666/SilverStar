@@ -1,0 +1,10 @@
+{
+  "path": "D:\\python_software\\SilverStar\\.work\\PoT171_Review_20261001_v8.zip",
+  "bytes": 936611,
+  "sha256": "84dd225d602b624c67c3e600fd8d8b83a78fbcc16c416d784dbbb2eea51f24a7",
+  "findings": 171,
+  "c_files": 17,
+  "headers": 161,
+  "source_commit": "b03ef35e10098fdf440154ee27730ab214a57188",
+  "manifest_sha256": "79649be7caeb58ea85881913567f18831cf5d5b9faee4259b37d37e6cec78511"
+}

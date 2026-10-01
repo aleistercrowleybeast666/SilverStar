@@ -44,6 +44,21 @@ AGENTS 已完整核对并保留其他仓库指导。[作者详细 Rule 5](https:
 
 ## 验证记录
 
+| 验证 | 最终结果 |
+|---|---|
+| 相同最终 Host 契约夹具的修复前基线 | 32 失败、6 正常通过；每例完整日志保留 |
+| 最终相关 pytest（selector、启动 FSM、JY901B、M9N、原 checker 路径） | 51/51 通过，未 skip |
+| 生成完整 Host suite | 72/72 通过 |
+| F407 / F103 fresh ARM 编译和链接 | 两者 exit 0 |
+| F407 `static-analysis` | `-fanalyzer -c` 实际编译/链接，exit 0；非 syntax-only |
+| F103 first-party 分源分析 | 14 个实际 `-fanalyzer -c` 编译均 exit 0 |
+| 分析器负向 canary | double-free 返回 1，包含 `analyzer-double-free` 诊断，符合预期 |
+| architecture / artifact / stack-report | 各 exit 0，仅证明工具记录的范围 |
+
+命令与完整日志在 result.json、verification_final.json。同目录保存了运行及计数脚本；脚本故意拒绝复用已有输出目录，复跑应选新的明确版本目录，不覆盖旧证据。
+
 完整执行结果以 result.json 和每项完整日志为准。初始 pytest 共用 `.work/pytest` 被权限错误阻挡，之后改用全新 basetemp；该初始执行没有完整保存日志，只保留会话记录，不能计为通过。早期 `gnss_order` 负例未先制造主源失联，健康路径提前返回；夹具已改为失联后检验损坏候选索引。后续 `start_order-2` 命中了更早的 active/order 一致性检查，其失败日志保留，最终将一致性和候选索引分别覆盖，保持 fault、无非法 port 调用及无成功发布的安全期望。
 
 验证最终结果和尚存阻塞见 [verification_final.json](verification_final.json)。最新发布决定仅追加到[本地延期记录](已实现但仍有问题、暂不发布内容.md)，保留此前候选评估；本批不实施 GUI、隐藏或算法扩展。完成当前批次后冻结源码，并按明确传输授权导出限定审查资料至用户自己的 Library，供父任务亲自逐函数审阅，不扩大断言修改。
+
+限定 ZIP 已保存至 Library，身份见 [library_review_receipt.json](library_review_receipt.json)，ZIP 路径/哈希及源码版本见 [review_export.json](review_export.json)。当前配置所需 161 个头文件由实际 ARM `-MM` 依赖闭包得到，排除未启用的 HAL/RTOS 变体；与 17 个对应完整 C 文件、171 个完整函数体及原 checker 一同提供，不包含用户日志或二进制。原 checker 在字符串续行后的行号存在偏移，包内同时提供原诊断 `line` 和真实 `actual_line/end_line`，不改门禁计数。Windows Python 不支持 `os.setxattr`，官方本地身份 helper 返回 1，故未声称写入了本地扩展属性；Library 保存本身成功，精确身份另存于本地 receipt。

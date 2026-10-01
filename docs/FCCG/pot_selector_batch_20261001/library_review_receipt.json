@@ -1,0 +1,12 @@
+{
+  "status": "succeeded",
+  "library_file_id": "libfile_96ea2eb7150081918982d2b4d2172790",
+  "file_id": "file_00000000aa0881fdbda4e8a41a7cf29c",
+  "file_name": "PoT171_Review_20261001_v8.zip",
+  "path": "/PoT171_Review_20261001_v8.zip",
+  "local_path": "D:\\python_software\\SilverStar\\.work\\PoT171_Review_20261001_v8.zip",
+  "helper": {
+    "exit_code": 1,
+    "limitation": "Windows Python lacks os.setxattr; Library creation succeeded, local xattrs were not applied. Exact identity is preserved in this receipt and local create_result.json."
+  }
+}
