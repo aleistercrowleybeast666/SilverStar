@@ -28,6 +28,10 @@ See [gate scope and RX/cache policy](../GROUND_SOFTWARE_GATES.md).
 
 `manifest.json` records commands, working directories, exact exits, complete log
 hashes, generated input hashes, source commit and GSHC runtime source hashes.
+This directory disables Git newline conversion so archived byte hashes survive
+checkout. Scripts are review copies; reproduction uses their recorded original
+locations/working directories and fresh output directories, not in-place execution
+inside this evidence directory.
 The final `run_v6_gates.py` run executed all 21 recorded steps with exit zero:
 three tool-version calls, six Flight stages, and six stages for each of two
 Ground projects. No subset was substituted for that full run.
