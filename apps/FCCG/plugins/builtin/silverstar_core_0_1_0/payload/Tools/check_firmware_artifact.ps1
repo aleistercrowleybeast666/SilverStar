@@ -121,6 +121,7 @@ Assert-ArtifactCondition -Condition ($null -ne $objdumpCommand) `
     -Message 'arm-none-eabi-objdump is unavailable.'
 
 $symbols = @{}
+$uartDmaSymbolCounts = @{}
 if (($null -ne $nmCommand) -and
     (Test-Path -LiteralPath $elfPath -PathType Leaf)) {
     $nmOutput = @(& $nmCommand.Source -S --defined-only --radix=x `
@@ -131,6 +132,10 @@ if (($null -ne $nmCommand) -and
         if ($line.ToString() -match `
             '^\s*(?<address>[0-9A-Fa-f]+)\s+(?<size>[0-9A-Fa-f]+)\s+(?<type>\S)\s+(?<name>.+?)\s*$') {
             $name = $Matches['name']
+            if ([regex]::IsMatch($name, '^s_uart[1-6]_(?:rx_dma|tx_ring|tx_priority_ring)$')) {
+                if (-not $uartDmaSymbolCounts.ContainsKey($name)) { $uartDmaSymbolCounts[$name] = 0 }
+                $uartDmaSymbolCounts[$name]++
+            }
             if (-not $symbols.ContainsKey($name)) {
                 $symbols[$name] = [pscustomobject]@{
                     Address = ConvertFrom-HexValue -Value $Matches['address']
@@ -360,6 +365,10 @@ else {
         -Message 'Disabled logging must not allocate the log aggregation buffer.'
 }
 foreach ($name in $requiredDmaSymbols) {
+    if ($uartDmaSymbolCounts.ContainsKey($name)) {
+        Assert-ArtifactCondition -Condition ($uartDmaSymbolCounts[$name] -eq 1) `
+            -Message ('UART DMA symbol is ambiguous: ' + $name)
+    }
     Assert-SymbolRange -Symbols $symbols -Name $name -Start $mainSramStart `
         -Length $mainSramLength -MemoryName 'DMA-accessible main SRAM'
 }

@@ -95,7 +95,9 @@ for name in sys.argv[1:] or ("ESKF15", "KF6", "SF6", "PureINS"):
     identity_path.write_text(json.dumps(identity, indent=2) + "\n", encoding="utf-8")
     source_manifest = {str(path.relative_to(target)): digest(path) for path in target.rglob("*") if path.is_file()}
     (EVIDENCE / (name + "_source_sha256.json")).write_text(json.dumps(source_manifest, indent=2) + "\n", encoding="utf-8")
-    old_decision = next((original / "build").rglob("decision.json"))
+    # A finished matrix contains both Release and StaticAnalysis decisions.
+    # Select the intended artifact explicitly; filesystem order is not scope.
+    old_decision = original / "build/FCCG/SilverStar_F407/Release/auto/memory_layout/decision.json"
     decision = json.loads(old_decision.read_text())
     command = decision["attempts"][decision["selected"]]["command"]
     objects = [value for value in command if value.endswith(".o")]
