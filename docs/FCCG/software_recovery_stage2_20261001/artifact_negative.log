@@ -1,0 +1,1 @@
+[{"fault": "binary", "expected_rejection": "BIN does not match linked ELF"}, {"fault": "map", "expected_rejection": "declared object absent from link map: build/Ground/Core/Src/ground_bridge.o"}, {"fault": "machine", "expected_rejection": "ELF is not ARM"}, {"fault": "stale", "expected_rejection": "ELF older than source: Ground/Core/Src/ground_bridge.c"}]

@@ -1,0 +1,29 @@
+......F...................................                               [100%]
+================================== FAILURES ===================================
+___________ test_radio_contract_faults_and_normal_operation[reinit] ___________
+
+radio_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/SoftwareFreeze_20261001_v1/fccg_gates_pytest/sx1281-contract0/contract.exe')
+scenario = 'reinit'
+
+    @pytest.mark.parametrize("scenario", [
+        "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
+        "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
+        "control_state", "control_active_init", "flags", "packet_type", "rx_error",
+        "radio_state",
+        "rx_count", "rx_sequence", "rx_done_flag", "force_packet_type", "try_busy",
+        "raw_busy", "irq_busy", "diag_uninitialized",
+    ])
+    def test_radio_contract_faults_and_normal_operation(radio_contract_executable, scenario):
+        result = subprocess.run([str(radio_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:81: s_send_count == 1U
+E         reinit: 13 checks, 1 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\fccg_gates_pytest\\sx1281-...pps\\FCCG\\tests\\fixtures\\sx1281_contract_host.c:81: s_send_count == 1U\nreinit: 13 checks, 1 failures\n', stderr='').returncode
+
+tests\test_sx1281_contract_host.py:48: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sx1281_contract_host.py::test_radio_contract_faults_and_normal_operation[reinit]
+1 failed, 41 passed in 55.59s

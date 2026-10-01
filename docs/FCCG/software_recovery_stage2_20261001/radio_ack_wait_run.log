@@ -1,0 +1,2 @@
+Mock ACK admitted behind seven telemetry packets: 1380 ms to TX start; injected completion, no RF deadline proof
+continuous_load_ack_wait: 76 checks, 0 failures

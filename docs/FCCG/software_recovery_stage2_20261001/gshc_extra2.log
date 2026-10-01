@@ -1,0 +1,140 @@
+..E.....                                                                 [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_boot_and_selftest_event_translation_matches_wire_meaning _
+
+path = '\\\\?\\D:\\python_software\\SilverStar\\.work\\pytest', dir_fd = None
+onexc = functools.partial(<function on_rm_rf_error at 0x000001D7434CFED0>, start_path=WindowsPath('//?/D:/python_software/SilverStar/.work/pytest'))
+
+    def _rmtree_unsafe(path, dir_fd, onexc):
+        if dir_fd is not None:
+            raise NotImplementedError("dir_fd unavailable on this platform")
+        try:
+            st = os.lstat(path)
+        except OSError as err:
+            onexc(os.lstat, path, err)
+            return
+        try:
+            if _rmtree_islink(st):
+                # symlinks to directories are forbidden, see bug #1669
+                raise OSError("Cannot call rmtree on a symbolic link")
+        except OSError as err:
+            onexc(os.path.islink, path, err)
+            # can't continue even if onexc hook returns
+            return
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+>           os.rmdir(path)
+E           PermissionError: [WinError 5] 拒绝访问。: '\\\\?\\D:\\python_software\\SilverStar\\.work\\pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\shutil.py:707: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+item = <Function test_boot_and_selftest_event_translation_matches_wire_meaning>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\shutil.py:852: in rmtree
+    _rmtree_impl(path, dir_fd, onexc)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\D:\\python_software\\SilverStar\\.work\\pytest', dir_fd = None
+onexc = functools.partial(<function on_rm_rf_error at 0x000001D7434CFED0>, start_path=WindowsPath('//?/D:/python_software/SilverStar/.work/pytest'))
+
+    def _rmtree_unsafe(path, dir_fd, onexc):
+        if dir_fd is not None:
+            raise NotImplementedError("dir_fd unavailable on this platform")
+        try:
+            st = os.lstat(path)
+        except OSError as err:
+            onexc(os.lstat, path, err)
+            return
+        try:
+            if _rmtree_islink(st):
+                # symlinks to directories are forbidden, see bug #1669
+                raise OSError("Cannot call rmtree on a symbolic link")
+        except OSError as err:
+            onexc(os.path.islink, path, err)
+            # can't continue even if onexc hook returns
+            return
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+            os.rmdir(path)
+        except FileNotFoundError:
+            pass
+        except OSError as err:
+>           onexc(os.rmdir, path, err)
+E           PermissionError: [WinError 5] 拒绝访问。: '\\\\?\\D:\\python_software\\SilverStar\\.work\\pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\shutil.py:711: PermissionError
+============================== warnings summary ===============================
+apps/GSHC/tests/test_reconnect_recovery.py::test_boot_and_selftest_event_translation_matches_wire_meaning
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\pathlib.py:102: PytestWarning: (rm_rf) unknown function <built-in function scandir> when removing \\?\D:\python_software\SilverStar\.work\pytest:
+  <class 'PermissionError'>: [WinError 5] 拒绝访问。: '\\\\?\\D:\\python_software\\SilverStar\\.work\\pytest'
+    warnings.warn(
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\.work\pytest-cache\v\cache\nodeids: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\.work\pytest-cache\v\cache\lastfailed: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR apps/GSHC/tests/test_reconnect_recovery.py::test_boot_and_selftest_event_translation_matches_wire_meaning
+7 passed, 3 warnings, 1 error in 3.40s

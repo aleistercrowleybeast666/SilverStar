@@ -1,0 +1,23 @@
+[
+  {
+    "line": 34,
+    "record": {
+      "ts": 1790873125.3204503,
+      "host_rx_monotonic_ns": 138334098673000,
+      "host_processed_monotonic_ns": 138334099203900,
+      "processing_lag_ms": 0.5309,
+      "dir": "RX",
+      "layer": "AIR_PARSED",
+      "rssi_dbm": -45,
+      "snr_db": 10.0,
+      "kind": "STATUS",
+      "seq": 0,
+      "status_id": 2,
+      "status_name": "SELFTEST_COMPLETE",
+      "time_ms": 4208,
+      "arg0": 0,
+      "arg1": 0,
+      "host_monotonic_ns": 138334099350700
+    }
+  }
+]

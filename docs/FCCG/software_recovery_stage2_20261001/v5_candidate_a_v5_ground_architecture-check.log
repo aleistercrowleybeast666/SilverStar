@@ -1,0 +1,3 @@
+python Tools/check_ground.py architecture
+PASS Ground declared source graph (38 sources), ownership and startup
+Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN

@@ -1,0 +1,4 @@
+D:\python_software\SilverStar\.work\SoftwareFreeze_20261001_v1\radio_ack_wait.c:8:10: fatal error: sx1281_device.c: No such file or directory
+    8 | #include "sx1281_device.c"
+      |          ^~~~~~~~~~~~~~~~~
+compilation terminated.

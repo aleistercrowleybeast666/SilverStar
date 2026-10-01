@@ -1,0 +1,36 @@
+..F.....                                                                 [100%]
+================================== FAILURES ===================================
+________ test_boot_and_selftest_event_translation_matches_wire_meaning ________
+
+    def test_boot_and_selftest_event_translation_matches_wire_meaning():
+        from app import format_air_status_message
+        from services.i18n import I18n
+        for language in ('zh_CN', 'en_US'):
+>           translator = I18n(language)
+                         ^^^^^^^^^^^^^^
+
+apps\GSHC\tests\test_reconnect_recovery.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <services.i18n.I18n object at 0x00000247C3483B10>, settings = 'zh_CN'
+
+    def __init__(self, settings: QSettings | None = None) -> None:
+        self.settings = settings or QSettings(
+            self.SETTINGS_ORGANIZATION,
+            self.SETTINGS_APPLICATION,
+        )
+>       raw = str(self.settings.value(self.SETTINGS_LANGUAGE_KEY, Language.ZH_CN.value))
+                  ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'str' object has no attribute 'value'
+
+apps\GSHC\services\i18n.py:1094: AttributeError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps/GSHC/tests/test_reconnect_recovery.py::test_boot_and_selftest_event_translation_matches_wire_meaning
+1 failed, 7 passed, 1 warning in 3.46s

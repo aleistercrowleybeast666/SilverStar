@@ -1,0 +1,43 @@
+BEGIN version_gcc
+END version_gcc 0
+BEGIN version_arm-none-eabi-gcc
+END version_arm-none-eabi-gcc 0
+BEGIN version_mingw32-make
+END version_mingw32-make 0
+BEGIN flight_host-tests
+BEGIN candidate_a_v6_ground_arm
+END candidate_a_v6_ground_arm 0
+BEGIN candidate_a_v6_ground_architecture-check
+END candidate_a_v6_ground_architecture-check 0
+BEGIN candidate_a_v6_ground_power10-check
+END candidate_a_v6_ground_power10-check 0
+BEGIN candidate_a_v6_ground_host-tests
+END candidate_a_v6_ground_host-tests 0
+BEGIN candidate_a_v6_ground_artifact-check
+END candidate_a_v6_ground_artifact-check 0
+BEGIN candidate_a_v6_ground_static-analysis
+END candidate_a_v6_ground_static-analysis 0
+BEGIN candidate_b_v6_ground_arm
+END candidate_b_v6_ground_arm 0
+BEGIN candidate_b_v6_ground_architecture-check
+END candidate_b_v6_ground_architecture-check 0
+BEGIN candidate_b_v6_ground_power10-check
+END candidate_b_v6_ground_power10-check 0
+BEGIN candidate_b_v6_ground_host-tests
+END candidate_b_v6_ground_host-tests 0
+BEGIN candidate_b_v6_ground_artifact-check
+END candidate_b_v6_ground_artifact-check 0
+BEGIN candidate_b_v6_ground_static-analysis
+END candidate_b_v6_ground_static-analysis 0
+END flight_host-tests 0
+BEGIN flight_architecture-check
+END flight_architecture-check 0
+BEGIN flight_power10-check
+END flight_power10-check 0
+BEGIN flight_arm
+END flight_arm 0
+BEGIN flight_static_analysis
+END flight_static_analysis 0
+BEGIN flight_stack
+END flight_stack 0
+COMPLETE

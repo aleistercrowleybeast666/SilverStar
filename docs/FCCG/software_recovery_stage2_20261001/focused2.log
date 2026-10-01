@@ -1,0 +1,26 @@
+telemetry pre 1 FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_telemetry.c:2115: frame != NULL && frame->data[4] == AIR_ACK_RESULT_BAD_PARAM
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_telemetry.c:2120: s_alignment_start_count == 2U
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_telemetry.c:2122: frame != NULL && frame->data[4] != AIR_ACK_RESULT_OK
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_telemetry.c:2128: s_calibration_start_count == 2U
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_telemetry.c:2132: s_calibration_start_count == 3U
+telemetry: 1015 checks, 5 failures
+
+sx1281_device pre 1 tar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:317: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:309: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:317: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:309: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:317: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:309: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:317: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:309: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:317: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:309: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:317: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:309: s_host_send_count == before
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_core_0_1_0\payload\Tests\Host\test_sx1281_device.c:317: s_host_send_count == before
+sx1281_device: 638 checks, 201 failures
+
+telemetry post 0 telemetry: 1015 checks, 0 failures
+
+sx1281_device post 0 sx1281_device: 638 checks, 0 failures
+

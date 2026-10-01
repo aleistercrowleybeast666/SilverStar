@@ -1,0 +1,302 @@
+PASS Ground declared source graph (38 sources), ownership and startup
+Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN
+COMMAND ["arm-none-eabi-readelf", "-h", "D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\ground_artifact_negative\\build\\ground.elf"]
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x8005031
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          47248 (bytes into file)
+  Flags:                             0x5000200, Version5 EABI, soft-float ABI
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         4
+  Size of section headers:           40 (bytes)
+  Number of section headers:         19
+  Section header string table index: 18
+COMMAND ["arm-none-eabi-nm", "-g", "D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\ground_artifact_negative\\build\\ground.elf"]
+0800011c T __adddf3
+080008ac T __aeabi_d2uiz
+0800011c T __aeabi_dadd
+080006dc T __aeabi_ddiv
+08000488 T __aeabi_dmul
+08000110 T __aeabi_drsub
+08000118 T __aeabi_dsub
+080003d8 T __aeabi_f2d
+080003b4 T __aeabi_i2d
+0800042c T __aeabi_l2d
+08000394 T __aeabi_ui2d
+0800041c T __aeabi_ul2d
+20003334 B __bss_end__
+20000010 B __bss_start__
+080006dc T __divdf3
+08005588 N __exidx_end
+08005588 N __exidx_start
+080003d8 T __extendsfdf2
+080008ac T __fixunsdfsi
+0800042c T __floatdidf
+080003b4 T __floatsidf
+0800041c T __floatundidf
+08000394 T __floatunsidf
+0800508c T __libc_init_array
+08000488 T __muldf3
+08000118 T __subdf3
+2000000c D __TMC_END__
+20003334 B _ebss
+2000000c D _edata
+20005000 R _estack
+08005108 T _etext
+080050fc T _fini
+080050f0 T _init
+00000000 A _Min_Heap_Size
+00000400 A _Min_Stack_Size
+20000010 B _sbss
+20000000 D _sdata
+08005590 A _sidata
+08005078 W ADC1_2_IRQHandler
+08005204 R AHBPrescTable
+080051fc R APBPrescTable
+08002e7e T BusFault_Handler
+08005078 W CAN1_RX1_IRQHandler
+08005078 W CAN1_SCE_IRQHandler
+08002e84 T DebugMon_Handler
+08005078 T Default_Handler
+08005078 W DMA1_Channel1_IRQHandler
+08005078 W DMA1_Channel2_IRQHandler
+08005078 W DMA1_Channel3_IRQHandler
+08002e94 T DMA1_Channel4_IRQHandler
+08002ea0 T DMA1_Channel5_IRQHandler
+08005078 W DMA1_Channel6_IRQHandler
+08005078 W DMA1_Channel7_IRQHandler
+20003338 B end
+08002d74 T Error_Handler
+08002e8c T EXTI0_IRQHandler
+08005078 W EXTI1_IRQHandler
+08005078 W EXTI15_10_IRQHandler
+08005078 W EXTI2_IRQHandler
+08005078 W EXTI3_IRQHandler
+08005078 W EXTI4_IRQHandler
+08005078 W EXTI9_5_IRQHandler
+08005078 W FLASH_IRQHandler
+08000000 R g_pfnVectors
+0800417c T GpioRead
+080042ac T GpioWaitLow
+08004170 T GpioWrite
+08000b90 T GroundBridge_Init
+08000c08 T GroundBridge_Process
+08000e44 T GroundRadio_Init
+08000e64 T GroundRadio_Process
+08000e82 T GroundRadio_RxDequeue
+08000ea0 T GroundRadio_StatsGet
+08000e6a T GroundRadio_TxEnqueue
+080010e0 T GspMin_BuildAckFrame
+08001154 T GspMin_BuildAirRxFrame
+08001060 T GspMin_BuildFrame
+08001104 T GspMin_BuildGsStatusFrame
+08000ef8 T GspMinParser_GetCrcErrorCount
+08000ee0 T GspMinParser_Init
+08000f00 T GspMinParser_InputByte
+080012c0 W HAL_Delay
+08001b58 T HAL_DMA_Abort
+08001b98 T HAL_DMA_Abort_IT
+08001d4c T HAL_DMA_GetError
+08001a80 T HAL_DMA_Init
+08001c24 T HAL_DMA_IRQHandler
+08001ae0 T HAL_DMA_Start_IT
+080012b4 W HAL_GetTick
+08002b6e T HAL_GPIO_EXTI_Callback
+08001a68 T HAL_GPIO_EXTI_IRQHandler
+080018a8 T HAL_GPIO_Init
+08001a50 T HAL_GPIO_ReadPin
+08001a5c T HAL_GPIO_WritePin
+0800129c W HAL_IncTick
+08001278 T HAL_Init
+08001230 W HAL_InitTick
+08002e34 T HAL_MspInit
+08001368 T HAL_NVIC_EnableIRQ
+08001308 T HAL_NVIC_SetPriority
+080012e4 T HAL_NVIC_SetPriorityGrouping
+08001730 T HAL_RCC_ClockConfig
+08001868 T HAL_RCC_GetPCLK1Freq
+08001888 T HAL_RCC_GetPCLK2Freq
+080016e4 T HAL_RCC_GetSysClockFreq
+080013ac T HAL_RCC_OscConfig
+08002638 T HAL_SPI_Init
+08002dc0 T HAL_SPI_MspInit
+080026e8 T HAL_SPI_Transmit
+08002848 T HAL_SPI_TransmitReceive
+08001384 T HAL_SYSTICK_Config
+08001ef4 T HAL_UART_AbortReceive
+08004f24 T HAL_UART_ErrorCallback
+08001e20 T HAL_UART_Init
+080021c4 T HAL_UART_IRQHandler
+08002ef4 T HAL_UART_MspInit
+08001fea W HAL_UART_RxCpltCallback
+08001fec W HAL_UART_RxHalfCpltCallback
+08001e80 T HAL_UART_Transmit_DMA
+08004f0c T HAL_UART_TxCpltCallback
+08001fde W HAL_UART_TxHalfCpltCallback
+080024f0 T HAL_UARTEx_ReceiveToIdle_DMA
+08004e48 T HAL_UARTEx_RxEventCallback
+08002e7a T HardFault_Handler
+20000a14 B hdma_usart1_rx
+200009d0 B hdma_usart1_tx
+20000978 B hspi1
+20000a58 B huart1
+08005078 W I2C1_ER_IRQHandler
+08005078 W I2C1_EV_IRQHandler
+08005078 W I2C2_ER_IRQHandler
+08005078 W I2C2_EV_IRQHandler
+08003200 T Lora_ApplyDefaultConfig
+08004090 T Lora_GetStats
+08003298 T Lora_Init
+08003590 T Lora_Process
+08003f70 T Lora_RxDequeue
+080033f4 T Lora_StartRx
+080034b4 T Lora_TxEnqueue
+08002d46 T main
+080050d4 T memcpy
+08002e7c T MemManage_Handler
+0800507a T memset
+08002b9c T MX_DMA_Init
+08002bdc T MX_GPIO_Init
+08002d78 T MX_SPI1_Init
+08002ebc T MX_USART1_UART_Init
+08002e78 T NMI_Handler
+08004e08 T PcByteStream_Init
+08004f44 T PcByteStream_Read
+08004fb0 T PcByteStream_Write
+08002e86 T PendSV_Handler
+08001220 T PlatformCritical_Enter
+08001228 T PlatformCritical_Exit
+08002b40 T PlatformGpio_IrqConsume
+08002b1c T PlatformGpio_Read
+08002afc T PlatformGpio_Write
+08002a74 T PlatformSpi_Transfer
+08002a40 T PlatformSpi_Write
+08004d9c T PlatformStm32f1Resource_GpioGet
+08004d88 T PlatformStm32f1Resource_SpiHandleGet
+08002b98 T PlatformTime_DelayMs
+08002b94 T PlatformTime_Ms
+08004d6c T ProjectSx1281Resources_Get
+080011c4 T ProtocolCrc16_CcittFalse
+08005078 W PVD_IRQHandler
+08005078 W RCC_IRQHandler
+08005030 W Reset_Handler
+08005078 W RTC_Alarm_IRQHandler
+08005078 W RTC_IRQHandler
+08004d08 T SilverStarAssert_Check
+08004cd8 T SilverStarAssert_Fail
+08004d1e T SilverStarAssert_ObjectCheck
+08005078 W SPI1_IRQHandler
+08005078 W SPI2_IRQHandler
+08004198 T SpiIn
+08004210 T SpiInOut
+08002e82 T SVC_Handler
+080048b2 T SX1280ClearIrqStatus
+08004358 T SX1280GetFirmwareVersion
+08004898 T SX1280GetIrqStatus
+08004668 T SX1280GetPacketStatus
+080043f0 T SX1280GetPacketType
+080048ec T SX1280GetPayload
+08004848 T SX1280GetRssiInst
+08004600 T SX1280GetRxBufferStatus
+08004378 T SX1280GetStatus
+08004a3c T SX1280HalInit
+08004c4c T SX1280HalReadBuffer
+08004aac T SX1280HalReadCommand
+08004bcc T SX1280HalReadRegister
+08004b38 T SX1280HalReadRegisters
+08004a02 T SX1280HalReset
+080049ec T SX1280HalWaitOnBusy
+08004be8 T SX1280HalWriteBuffer
+08004a40 T SX1280HalWriteCommand
+08004354 T SX1280Init
+08004984 T SX1280SendPayload
+0800445c T SX1280SetBufferBaseAddresses
+0800486a T SX1280SetDioIrqParams
+08004478 T SX1280SetModulationParams
+08004518 T SX1280SetPacketParams
+080043c8 T SX1280SetPacketType
+080048e2 T SX1280SetPayload
+0800491c T SX1280SetRangingRole
+080048ca T SX1280SetRegulatorMode
+08004400 T SX1280SetRfFrequency
+0800499c T SX1280SetRx
+08004398 T SX1280SetStandby
+08004934 T SX1280SetTx
+08004440 T SX1280SetTxParams
+08004140 T Sx1281Bus_BusyGet
+08004158 T Sx1281Bus_Dio1Get
+080040fc T Sx1281Bus_Init
+08004110 T Sx1281Bus_NssGet
+08004128 T Sx1281Bus_ResetGet
+0800433c T Sx1281Bus_StatusGet
+08002ce8 T SystemClock_Config
+20000008 D SystemCoreClock
+08002eb8 T SystemInit
+08002e88 T SysTick_Handler
+08005078 W TAMPER_IRQHandler
+08005078 W TIM1_BRK_IRQHandler
+08005078 W TIM1_CC_IRQHandler
+08005078 W TIM1_TRG_COM_IRQHandler
+08005078 W TIM1_UP_IRQHandler
+08005078 W TIM2_IRQHandler
+08005078 W TIM3_IRQHandler
+08005078 W TIM4_IRQHandler
+08002458 T UART_Start_Receive_DMA
+08002e80 T UsageFault_Handler
+08002eac T USART1_IRQHandler
+08005078 W USART2_IRQHandler
+08005078 W USART3_IRQHandler
+08005078 W USB_HP_CAN1_TX_IRQHandler
+08005078 W USB_LP_CAN1_RX0_IRQHandler
+08005078 W USBWakeUp_IRQHandler
+200001f4 B uwTick
+20000000 D uwTickFreq
+20000004 D uwTickPrio
+08005078 W WWDG_IRQHandler
+COMMAND ["arm-none-eabi-objdump", "-h", "D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\ground_artifact_negative\\build\\ground.elf"]
+
+D:\python_software\SilverStar\.work\SoftwareFreeze_20261001_v1\ground_artifact_negative\build\ground.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   0000010c  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         00004ff8  08000110  08000110  00001110  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000480  08005108  08005108  00006108  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08005588  08005588  0000700c  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000000  08005588  08005588  0000700c  2**0
+                  CONTENTS, READONLY
+  5 .preinit_array 00000000  08005588  08005588  0000700c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08005588  08005588  00006588  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  0800558c  0800558c  0000658c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000000c  20000000  08005590  00007000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          00003324  20000010  0800559c  00007010  2**3
+                  ALLOC
+ 10 ._user_heap_stack 00000404  20003334  0800559c  00007334  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  0000700c  2**0
+                  CONTENTS, READONLY
+ 12 .comment      00000046  00000000  00000000  00007035  2**0
+                  CONTENTS, READONLY
+ 13 .debug_frame  00000194  00000000  00000000  0000707c  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_line_str 000000ca  00000000  00000000  00007210  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+EXPECTED REJECTION: declared object absent from link map: build/Ground/Core/Src/ground_bridge.o

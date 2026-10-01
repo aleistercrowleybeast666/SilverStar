@@ -1,0 +1,160 @@
+.......FF...F.....                                                       [100%]
+================================== FAILURES ===================================
+______ test_ground_source_graph_excludes_flight_tasks_and_is_repeatable _______
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001A60882C980>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/pytest/test_ground_source_graph_exclu0')
+
+    def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
+        builtin_catalog, workspace_root: Path, tmp_path: Path,
+    ) -> None:
+        model = _GroundBoardProject_Get(builtin_catalog)
+        files = GroundFiles_Render(model, builtin_catalog, WorkspacePolicy(workspace_root))
+        assert files == GroundFiles_Render(
+            model, builtin_catalog, WorkspacePolicy(workspace_root)
+        )
+        graph = json.loads(files["Generated/ground_source_graph.json"])
+        assert len(graph["sources"]) == len(set(graph["sources"]))
+        assert not any(source.startswith("FATFS/") for source in graph["sources"])
+        assert not any("Telemetry/SX1281/Adapter/" in source for source in graph["sources"])
+        main = files["Core/Src/main.c"]
+        assert b"GroundBridge_Process" in main
+        assert b"AppTasks_Init" not in main
+        assert b"SystemStartup_Run" not in main
+        assert b"MX_FATFS_Init" not in main
+        assert b"air_link_config.h" in files["Devices/Telemetry/SX1281/Inc/sx1281_config.h"]
+        flight = TargetGeneration_Apply(
+            model, builtin_catalog, WorkspacePolicy(workspace_root),
+            tmp_path / "flight_only", TargetScope.FLIGHT,
+        )
+        assert flight.targets == ("Flight_Controller",)
+        assert (flight.project_root / "Ground_Station").is_dir()
+        assert not (flight.project_root / "Ground_Station" / "Makefile").exists()
+        flight_sources = (
+            flight.project_root / "Flight_Controller/Generated/project_sources.mk"
+        ).read_text()
+        assert "SILVERSTAR_AIR_LINK_ENABLED=1" in flight_sources
+        flight_only_model = deepcopy(model)
+        flight_only_model.ground_target = replace(flight_only_model.ground_target, enabled=False)
+        disabled = TargetGeneration_Apply(
+            flight_only_model, builtin_catalog, WorkspacePolicy(workspace_root),
+            tmp_path / "ground_disabled", TargetScope.FLIGHT,
+        )
+        assert disabled.targets == ("Flight_Controller",)
+        assert (disabled.project_root / "Ground_Station").is_dir()
+        assert not (disabled.project_root / "Ground_Station" / "Makefile").exists()
+        both = TargetGeneration_Apply(
+            model, builtin_catalog, WorkspacePolicy(workspace_root),
+            tmp_path / "both", TargetScope.ALL,
+        )
+        assert both.targets == ("Flight_Controller", "Ground_Station")
+        assert (both.project_root / "SilverStar.ssproject").is_file()
+        assert (both.project_root / "Log").is_dir()
+        assert (both.project_root / "Flight_Controller/Flight_Controller.code-workspace").is_file()
+        assert not (both.project_root / "FlightController").exists()
+        assert not (both.project_root / "GroundStation").exists()
+        decoder = both.project_root / f"{model.identity.name}.ssdecoder"
+        assert decoder.is_file()
+        assert json.loads((both.project_root / "SilverStar.ssproject").read_text())[
+            "log_decoder_profile"
+        ]["relative_path"] == decoder.name
+        metadata = json.loads(
+            (both.project_root / "Ground_Station/Generated/ground_target_metadata.json").read_text()
+        )
+>       assert metadata["silverstar_version"] == "0.1.0"
+E       AssertionError: assert '0.1.1' == '0.1.0'
+E         
+E         - 0.1.0
+E         ?     ^
+E         + 0.1.1
+E         ?     ^
+
+tests\test_round2_targets.py:337: AssertionError
+____________ test_alignment_group_contains_mode_draft_and_actions _____________
+
+qapp = <PySide6.QtWidgets.QApplication(0x1a60485fb40) at 0x000001A6068FC380>
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/pytest/test_alignment_group_contains_0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_alignment_group_contains_mode_draft_and_actions(qapp, tmp_path, workspace_root):
+        window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+        window.navigation_list.setCurrentRow(2)
+        window.show()
+        qapp.processEvents()
+        group = window.flight_configuration_page.strategy_group
+        editor = window.algorithm_parameters_page.alignment_editor
+        assert group.isAncestorOf(editor)
+        assert group.isAncestorOf(editor.confirm_button)
+        combo = window.flight_configuration_page.strategy_combos['alignment']
+        assert combo.mapTo(group, QPoint()).y() < editor.mapTo(group, QPoint()).y()
+        original = deepcopy(window._model.alignment)
+        combo.setCurrentIndex(combo.findData('silverstar.algorithm.alignment.external_attitude_source'))
+        editor.cancel_button.click()
+        assert window._model.alignment == original
+        for language in ('zh_CN', 'en_US'):
+            window.Language_Apply(language)
+            window.resize(1280, 720)
+            qapp.processEvents()
+            assert not window.title_label.wordWrap()
+            assert '(SCG)' not in window.title_label.text()
+>           assert window.title_label.width() >= window.title_label.fontMetrics().horizontalAdvance(window.title_label.text())
+E           assert 269 >= 704
+E            +  where 269 = <built-in method width of PySide6.QtWidgets.QLabel object at 0x000001A608DB5F00>()
+E            +    where <built-in method width of PySide6.QtWidgets.QLabel object at 0x000001A608DB5F00> = <PySide6.QtWidgets.QLabel(0x1a6030da120, name="headerTitle") at 0x000001A608DB5F00>.width
+E            +      where <PySide6.QtWidgets.QLabel(0x1a6030da120, name="headerTitle") at 0x000001A608DB5F00> = <silverstar_fccg.ui.main_window.MainWindow(0x1a6077f1ab0) at 0x000001A608928B00>.title_label
+E            +  and   704 = <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000001A60B937440>('SilverStar System Configuration & Generation')
+E            +    where <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000001A60B937440> = <PySide6.QtGui.QFontMetrics object at 0x000001A60B937440>.horizontalAdvance
+E            +      where <PySide6.QtGui.QFontMetrics object at 0x000001A60B937440> = <built-in method fontMetrics of PySide6.QtWidgets.QLabel object at 0x000001A608DB5F00>()
+E            +        where <built-in method fontMetrics of PySide6.QtWidgets.QLabel object at 0x000001A608DB5F00> = <PySide6.QtWidgets.QLabel(0x1a6030da120, name="headerTitle") at 0x000001A608DB5F00>.fontMetrics
+E            +          where <PySide6.QtWidgets.QLabel(0x1a6030da120, name="headerTitle") at 0x000001A608DB5F00> = <silverstar_fccg.ui.main_window.MainWindow(0x1a6077f1ab0) at 0x000001A608928B00>.title_label
+E            +    and   'SilverStar System Configuration & Generation' = <built-in method text of PySide6.QtWidgets.QLabel object at 0x000001A608DB5F00>()
+E            +      where <built-in method text of PySide6.QtWidgets.QLabel object at 0x000001A608DB5F00> = <PySide6.QtWidgets.QLabel(0x1a6030da120, name="headerTitle") at 0x000001A608DB5F00>.text
+E            +        where <PySide6.QtWidgets.QLabel(0x1a6030da120, name="headerTitle") at 0x000001A608DB5F00> = <silverstar_fccg.ui.main_window.MainWindow(0x1a6077f1ab0) at 0x000001A608928B00>.title_label
+
+tests\test_release_011_gui.py:43: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+_______________________ test_docs_relative_links_exist ________________________
+
+    def test_docs_relative_links_exist():
+        missing = []
+        for path in sorted(DOCS.rglob("*.md")):
+            if path.name in {"VALIDATION.md", "CHANGELOG.md"} or "history" in path.parts:
+                continue
+            for destination in _Markdown_Destinations(path.read_text(encoding="utf-8")):
+                url = urlsplit(destination)
+                if url.scheme or url.netloc or not url.path:
+                    continue
+                target = path.parent / unquote(url.path)
+                if not target.exists():
+                    missing.append(f"{path.relative_to(DOCS)} -> {destination}")
+>       assert not missing, "\n".join(missing)
+E       AssertionError: evidence_flight_safety_batch1_20261001\AGENTS_SNAPSHOT.md -> docs/FCCG/ARCHITECTURE.md
+E         evidence_flight_safety_batch1_20261001\AGENTS_SNAPSHOT.md -> docs/FCCG/platform/details/RUNTIME_SAFETY.md
+E         evidence_flight_safety_batch1_20261001\AGENTS_SNAPSHOT.md -> docs/GSHC/AIR_PROTOCOL.md
+E         evidence_flight_safety_batch1_20261001\AGENTS_SNAPSHOT.md -> docs/GSHC/UPPER_COMPUTER_ARCHITECTURE.md
+E         evidence_flight_safety_batch1_20261001\AGENTS_SNAPSHOT.md -> docs/FLP/Architecture.md
+E         evidence_flight_safety_batch1_20261001\AGENTS_SNAPSHOT.md -> docs/FLP/Decoder_Profile_Package.md
+E         evidence_flight_safety_batch1_20261001\AGENTS_SNAPSHOT.md -> docs/FCCG/platform/details/CODING_STANDARD.md
+E         evidence_flight_safety_batch1_20261001\REPORT_SNAPSHOT.md -> evidence_flight_safety_batch1_20261001/INDEX.json
+E         evidence_flight_safety_batch1_20261001\REPORT_SNAPSHOT.md -> evidence_flight_safety_batch1_20261001/REMAINING_RULE5.json
+E       assert not ['evidence_flight_safety_batch1_20261001\\AGENTS_SNAPSHOT.md -> docs/FCCG/ARCHITECTURE.md', 'evidence_flight_safety_ba...itecture.md', 'evidence_flight_safety_batch1_20261001\\AGENTS_SNAPSHOT.md -> docs/FLP/Decoder_Profile_Package.md', ...]
+
+tests\test_documentation.py:38: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\apps\FCCG\.work\pytest-cache\v\cache\nodeids: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\apps\FCCG\.work\pytest-cache\v\cache\lastfailed: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_round2_targets.py::test_ground_source_graph_excludes_flight_tasks_and_is_repeatable
+FAILED tests/test_release_011_gui.py::test_alignment_group_contains_mode_draft_and_actions
+FAILED tests/test_documentation.py::test_docs_relative_links_exist - Assertio...
+3 failed, 15 passed, 2 warnings in 50.99s

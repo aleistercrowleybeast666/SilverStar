@@ -1,0 +1,36 @@
+[
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\candidate_a_v5",
+    "scope": "flight",
+    "targets": [
+      "Flight_Controller"
+    ],
+    "files": 0
+  },
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\candidate_a_v5",
+    "scope": "all",
+    "targets": [
+      "Flight_Controller",
+      "Ground_Station"
+    ],
+    "files": 162
+  },
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\candidate_b_v5",
+    "scope": "ground",
+    "targets": [
+      "Ground_Station"
+    ],
+    "files": 162
+  },
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareFreeze_20261001_v1\\candidate_b_v5",
+    "scope": "all",
+    "targets": [
+      "Flight_Controller",
+      "Ground_Station"
+    ],
+    "files": 162
+  }
+]
