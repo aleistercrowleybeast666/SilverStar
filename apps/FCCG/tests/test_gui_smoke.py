@@ -277,7 +277,9 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
             assert window.pages.currentIndex() == index
 
         window.Language_Apply("en_US")
-        assert window.title_label.text() == "SilverStar System Configuration & Generation (SCG)"
+        # The 0.1.1 header is deliberately compact in both languages; the full
+        # product expansion remains in About, without widening the header.
+        assert window.title_label.text() == "SilverStar SCG"
         assert [
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
