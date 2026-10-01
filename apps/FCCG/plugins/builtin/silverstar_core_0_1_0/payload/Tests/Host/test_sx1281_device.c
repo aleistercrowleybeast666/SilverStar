@@ -179,6 +179,7 @@ uint8_t PlatformGpio_IrqConsume(PlatformGpioId id)
     return pending;
 }
 
+#ifndef TEST_SX1281_PORTS_ONLY
 #define Lora_Init() Lora_Init(0U)
 #define Lora_StartRx() Lora_StartRx(0U)
 #define Lora_Process() Lora_Process(0U)
@@ -281,3 +282,4 @@ int main(void)
     Test_OwnerControlTransaction();
     return Test_Finish("sx1281_device");
 }
+#endif /* TEST_SX1281_PORTS_ONLY */

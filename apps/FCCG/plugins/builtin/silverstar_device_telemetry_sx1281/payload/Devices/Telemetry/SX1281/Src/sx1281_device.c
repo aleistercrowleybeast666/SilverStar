@@ -85,6 +85,10 @@ static Sx1281Context s_contexts[PROJECT_SX1281_INSTANCE_COUNT];
 _Static_assert(PROJECT_SX1281_INSTANCE_COUNT <=
                PROJECT_SX1281_INSTANCE_COUNT_MAX,
                "SX1281 context count exceeds generated resource bound");
+_Static_assert((LORA_TX_QUEUE_DEPTH > 0U) && (LORA_TX_QUEUE_DEPTH <= UINT8_MAX),
+               "TX queue counters must represent the configured capacity");
+_Static_assert((LORA_RX_QUEUE_DEPTH > 0U) && (LORA_RX_QUEUE_DEPTH <= UINT8_MAX),
+               "RX queue counters must represent the configured capacity");
 
 #define s_tx_done_flag        (s_contexts[instance].tx_done_flag)
 #define s_rx_done_flag        (s_contexts[instance].rx_done_flag)
@@ -143,6 +147,53 @@ static PlatformCriticalState Lora_IrqLock(void)
 static void Lora_IrqUnlock(PlatformCriticalState state)
 {
     PlatformCritical_Exit(state);
+}
+
+/* Caller holds the IRQ lock: indices/count are one coherent ring snapshot. */
+static void Lora_TxQueueAssert(uint8_t instance)
+{
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((s_tx_head < LORA_TX_QUEUE_DEPTH) &&
+        (s_tx_tail < LORA_TX_QUEUE_DEPTH),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_tx_count <= LORA_TX_QUEUE_DEPTH,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT(s_tx_head == (((uint32_t)s_tx_tail + s_tx_count) % LORA_TX_QUEUE_DEPTH),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+}
+
+/* Caller holds the IRQ lock: indices/count are one coherent ring snapshot. */
+static void Lora_RxQueueAssert(uint8_t instance)
+{
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((s_rx_head < LORA_RX_QUEUE_DEPTH) &&
+        (s_rx_tail < LORA_RX_QUEUE_DEPTH),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_rx_count <= LORA_RX_QUEUE_DEPTH,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT(s_rx_head == (((uint32_t)s_rx_tail + s_rx_count) % LORA_RX_QUEUE_DEPTH),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+}
+
+/* Non-idle owner transactions carry an operation, nonzero ID and deadline. */
+static void Lora_ControlAssert(uint8_t instance)
+{
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((uint32_t)s_control_transaction.state <= LoraControlStateComplete,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if (s_control_transaction.state == LoraControlStateIdle) { return; }
+    SILVERSTAR_ASSERT((s_control_transaction.operation == LORA_CONTROL_IRQ_CLEAR) ||
+        (s_control_transaction.operation == LORA_CONTROL_FORCE_RX_CONTINUOUS),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(s_control_transaction.transaction_id != 0U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    SILVERSTAR_ASSERT(s_control_transaction.timeout_ms != 0U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+    SILVERSTAR_ASSERT(s_control_transaction.auto_release <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
 }
 
 static void Lora_SetRadioState(uint8_t instance, LoraRadioState state)
@@ -234,6 +285,10 @@ static void Lora_DiagTimeoutRecord(uint8_t instance, uint16_t raw_irq,
 
 static void Lora_DiagRecordIrq(uint8_t instance, uint16_t raw_irq)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((uint32_t)s_stats.radio_state <= LORA_RADIO_STATE_BUSY,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     uint32_t primask;
     uint32_t tick_ms;
     uint8_t is_tx_irq = 0U;
@@ -244,8 +299,6 @@ static void Lora_DiagRecordIrq(uint8_t instance, uint16_t raw_irq)
         return;
     }
 
-    SILVERSTAR_ASSERT_OBJECT(&s_diag, LoraDiagSnapshot,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
 
     tick_ms = PlatformTime_Ms();
     primask = Lora_IrqLock();
@@ -330,35 +383,16 @@ static void Lora_LoadDefaultConfig(uint8_t instance)
 
 static void Lora_ClearRuntimeState(uint8_t instance)
 {
-    SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    s_tx_done_flag = 0U;
-    s_rx_done_flag = 0U;
-    s_tx_timeout_flag = 0U;
-    s_rx_timeout_flag = 0U;
-    s_rx_error_flag = 0U;
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    uint32_t primask = Lora_IrqLock();
+
+    /* Reset the owned context together, including READY and future fields.
+     * Default modulation/packet configuration is loaded after this reset. */
+    memset(&s_contexts[instance], 0, sizeof(s_contexts[instance]));
     s_rx_error_code = IRQ_HEADER_ERROR_CODE;
-
-    s_tx_busy = 0U;
-    s_radio_in_rx = 0U;
-
-    s_tx_head = 0U;
-    s_tx_tail = 0U;
-    s_tx_count = 0U;
-
-    s_rx_head = 0U;
-    s_rx_tail = 0U;
-    s_rx_count = 0U;
-
-    memset(&s_stats, 0, sizeof(s_stats));
-    memset(&s_diag, 0, sizeof(s_diag));
-    memset(&s_chip_status, 0, sizeof(s_chip_status));
-    memset(&s_control_transaction, 0, sizeof(s_control_transaction));
-    s_diag_last_refresh_ms = 0U;
-    s_cached_busy_gpio = 0U;
-    s_cached_dio1_gpio = 0U;
-    s_diag_counted_raw_irq = 0U;
-    Lora_SetRadioState(instance, LORA_RADIO_STATE_NOT_INIT);
+    s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
+    Lora_IrqUnlock(primask);
 }
 
 static uint8_t Lora_TxQueuePush(uint8_t instance, const uint8_t *data, uint8_t len)
@@ -374,6 +408,7 @@ static uint8_t Lora_TxQueuePush(uint8_t instance, const uint8_t *data, uint8_t l
         SILVERSTAR_ASSERT_MODULE_DEVICE);
 
     primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance);
 
     if (s_tx_count >= LORA_TX_QUEUE_DEPTH)
     {
@@ -408,6 +443,7 @@ static uint8_t Lora_TxQueuePushFront(uint8_t instance, const uint8_t *data, uint
         SILVERSTAR_ASSERT_MODULE_DEVICE);
 
     primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance);
 
     if (s_tx_count >= LORA_TX_QUEUE_DEPTH)
     {
@@ -445,12 +481,17 @@ static uint8_t Lora_TxQueuePop(uint8_t instance, LoraTxPacket *pkt)
         SILVERSTAR_ASSERT_MODULE_DEVICE);
 
     primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance);
 
     if (s_tx_count == 0)
     {
         Lora_IrqUnlock(primask);
         return 0U;
     }
+
+    SILVERSTAR_ASSERT((s_tx_queue[s_tx_tail].len > 0U) &&
+        (s_tx_queue[s_tx_tail].len <= LORA_MAX_PAYLOAD_LEN),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
 
     *pkt = s_tx_queue[s_tx_tail];
 
@@ -478,6 +519,7 @@ static uint8_t Lora_RxQueuePush(uint8_t instance, const uint8_t *data, uint8_t l
         SILVERSTAR_ASSERT_MODULE_DEVICE);
 
     primask = Lora_IrqLock();
+    Lora_RxQueueAssert(instance);
 
     if (s_rx_count >= LORA_RX_QUEUE_DEPTH)
     {
@@ -514,12 +556,17 @@ static uint8_t Lora_RxQueuePop(uint8_t instance, LoraRxPacket *pkt)
         SILVERSTAR_ASSERT_MODULE_DEVICE);
 
     primask = Lora_IrqLock();
+    Lora_RxQueueAssert(instance);
 
     if (s_rx_count == 0)
     {
         Lora_IrqUnlock(primask);
         return 0U;
     }
+
+    SILVERSTAR_ASSERT((s_rx_queue[s_rx_tail].len > 0U) &&
+        (s_rx_queue[s_rx_tail].len <= LORA_MAX_PAYLOAD_LEN),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
 
     *pkt = s_rx_queue[s_rx_tail];
 
@@ -536,10 +583,12 @@ static uint8_t Lora_RxQueuePop(uint8_t instance, LoraRxPacket *pkt)
 
 static void Lora_TryStartNextTx(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((s_inited <= 1U) && (s_tx_busy <= 1U),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     LoraTxPacket pkt;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
     if ((s_inited == 0) || (s_tx_busy != 0))
     {
         return;
@@ -566,6 +615,8 @@ static void Lora_TryStartNextTx(uint8_t instance)
 
 LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     Sx1281BusStatus before;
     Sx1281BusStatus after;
 
@@ -584,14 +635,16 @@ LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance)
 
 LoraInitResult Lora_Init(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_control_transaction.state != LoraControlStateActive,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     RadioStatus_t radio_status;
     Sx1281BusStatus bus_status;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_chip_status, LoraChipStatus,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
     Sx1281Bus_Init(instance);
-    Lora_LoadDefaultConfig(instance);
     Lora_ClearRuntimeState(instance);
+    Lora_LoadDefaultConfig(instance);
 
     SX1280Init(instance);
     SX1280SetRegulatorMode(instance, USE_LDO);
@@ -627,12 +680,15 @@ LoraInitResult Lora_Init(uint8_t instance)
 
 void Lora_StartRx(uint8_t instance)
 {
-    SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if (s_inited == 0)
     {
         return;
     }
+
+    SILVERSTAR_ASSERT(s_pkt_params.PacketType == PACKET_TYPE_LORA,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
 
     s_pkt_params.Params.LoRa.PayloadLength = LORA_MAX_PAYLOAD_LEN;
     SX1280SetPacketParams(instance, &s_pkt_params);
@@ -653,6 +709,8 @@ void Lora_StartRx(uint8_t instance)
 
 LoraTxEnqueueResult Lora_TxEnqueue(uint8_t instance, const uint8_t *data, uint8_t len)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if (s_inited == 0)
     {
         return LORA_TX_ENQUEUE_NOT_INIT;
@@ -674,6 +732,8 @@ LoraTxEnqueueResult Lora_TxEnqueue(uint8_t instance, const uint8_t *data, uint8_
 
 LoraTxEnqueueResult Lora_TxEnqueuePriority(uint8_t instance, const uint8_t *data, uint8_t len)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if (s_inited == 0)
     {
         return LORA_TX_ENQUEUE_NOT_INIT;
@@ -695,8 +755,10 @@ LoraTxEnqueueResult Lora_TxEnqueuePriority(uint8_t instance, const uint8_t *data
 
 static void Lora_IrqProcess(uint8_t instance, uint16_t raw_irq)
 {
-    SILVERSTAR_ASSERT_OBJECT(&s_diag, LoraDiagSnapshot,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_tx_busy <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((raw_irq & IRQ_TX_DONE) != 0U)
     {
         Lora_OnTxDone(instance);
@@ -739,11 +801,13 @@ static void Lora_IrqProcess(uint8_t instance, uint16_t raw_irq)
 
 static void Lora_RawIrqProcess(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_tx_busy <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     uint16_t raw_irq = 0U;
     uint32_t primask;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_diag, LoraDiagSnapshot,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
     if ((PlatformGpio_IrqConsume(Sx1281Bus_Dio1Get(instance)) != 0U) ||
         (s_tx_busy != 0U))
     {
@@ -767,6 +831,10 @@ static void Lora_RawIrqProcess(uint8_t instance)
 
 static void Lora_DiagnosticsRefresh(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_inited == 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     RadioStatus_t radio_status;
     uint8_t busy_gpio = 0U;
     uint8_t dio1_gpio = 0U;
@@ -774,8 +842,6 @@ static void Lora_DiagnosticsRefresh(uint8_t instance)
     int16_t rssi_inst;
     uint32_t primask;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_chip_status, LoraChipStatus,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
     if ((PlatformTime_Ms() - s_diag_last_refresh_ms) <
         LORA_DIAG_REFRESH_PERIOD_MS)
     {
@@ -819,12 +885,14 @@ static void Lora_TxCompletionProcess(uint8_t instance)
 
 static void Lora_RxCompletionProcess(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_rx_done_flag <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     uint8_t size = 0U;
     int8_t rssi;
     int8_t snr;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
     if (s_rx_done_flag == 0U)
     {
         return;
@@ -832,6 +900,8 @@ static void Lora_RxCompletionProcess(uint8_t instance)
     s_rx_done_flag = 0U;
     if (SX1280GetPayload(instance, s_rx_tmp_buf, &size, LORA_MAX_PAYLOAD_LEN) == 0)
     {
+        SILVERSTAR_ASSERT(size <= LORA_MAX_PAYLOAD_LEN,
+            SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
         SX1280GetPacketStatus(instance, &s_pkt_status);
         rssi = s_pkt_status.Params.LoRa.RssiPkt;
         snr = s_pkt_status.Params.LoRa.SnrPkt;
@@ -854,8 +924,14 @@ static void Lora_RxCompletionProcess(uint8_t instance)
 
 static void Lora_RxErrorProcess(uint8_t instance)
 {
-    SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((s_rx_timeout_flag <= 1U) && (s_rx_error_flag <= 1U),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT((s_rx_error_flag == 0U) ||
+        (s_rx_error_code == IRQ_CRC_ERROR_CODE) ||
+        (s_rx_error_code == IRQ_HEADER_ERROR_CODE),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     if (s_rx_timeout_flag != 0U)
     {
         s_rx_timeout_flag = 0U;
@@ -876,13 +952,15 @@ static void Lora_RxErrorProcess(uint8_t instance)
 
 void Lora_Process(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_inited <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_inited == 0)
     {
         return;
     }
 
-    SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
     Lora_ControlProcess(instance);
     Lora_RawIrqProcess(instance);
     Lora_DiagnosticsRefresh(instance);
@@ -901,6 +979,8 @@ void Lora_Process(uint8_t instance)
 
 LoraRxDequeueResult Lora_RxDequeue(uint8_t instance, uint8_t *data, uint8_t *len, int8_t *rssi, int8_t *snr)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     LoraRxPacket pkt;
 
     if ((data == 0) || (len == 0))
@@ -934,6 +1014,8 @@ LoraRxDequeueResult Lora_RxDequeue(uint8_t instance, uint8_t *data, uint8_t *len
 
 void Lora_GetStats(uint8_t instance, LoraStats *stats)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;
 
     if (stats == 0)
@@ -948,6 +1030,8 @@ void Lora_GetStats(uint8_t instance, LoraStats *stats)
 
 void Lora_GetDebugSnapshot(uint8_t instance, LoraDebugSnapshot *snapshot)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;
 
     if (snapshot == 0)
@@ -967,6 +1051,8 @@ void Lora_GetDebugSnapshot(uint8_t instance, LoraDebugSnapshot *snapshot)
 
 void Lora_GetDiagSnapshot(uint8_t instance, LoraDiagSnapshot *snapshot)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;
 
     if (snapshot == 0)
@@ -1003,14 +1089,17 @@ LoraDiagResult Lora_IrqClear(uint8_t instance, uint16_t *raw_before)
 
 static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
     if (s_inited == 0U)
     {
         return LORA_DIAG_RESULT_NOT_INIT;
     }
+
+    SILVERSTAR_ASSERT(s_pkt_params.PacketType == PACKET_TYPE_LORA,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
 
     SX1280SetStandby(instance, STDBY_RC);
     SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
@@ -1042,6 +1131,8 @@ static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
 
 void Lora_ClearStats(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     LoraRadioState state;
     uint32_t primask;
 
@@ -1054,6 +1145,8 @@ void Lora_ClearStats(uint8_t instance)
 
 LoraBusyState Lora_IsBusy(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint8_t busy;
     uint32_t primask;
 
@@ -1071,6 +1164,8 @@ LoraBusyState Lora_IsBusy(uint8_t instance)
 
 LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;
 
     SILVERSTAR_ASSERT_OBJECT(&s_stats, LoraStats,
@@ -1117,6 +1212,8 @@ static LoraControlSubmitResult Lora_ControlSubmitInternal(uint8_t instance,
     uint8_t auto_release,
     uint32_t *transaction_id)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;
     uint32_t now_ms;
 
@@ -1131,6 +1228,7 @@ static LoraControlSubmitResult Lora_ControlSubmitInternal(uint8_t instance,
     if (s_inited == 0U) { return LORA_CONTROL_SUBMIT_NOT_INIT; }
     now_ms = PlatformTime_Ms();
     primask = Lora_IrqLock();
+    Lora_ControlAssert(instance);
     if (((s_control_transaction.state == LoraControlStateSubmitted) ||
          (s_control_transaction.state == LoraControlStateComplete)) &&
         ((now_ms - s_control_transaction.submitted_ms) >=
@@ -1163,6 +1261,8 @@ static LoraControlSubmitResult Lora_ControlSubmitInternal(uint8_t instance,
 LoraControlGetResult Lora_ControlResultGet(uint8_t instance, uint32_t transaction_id,
                                            LoraControlResult *result)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;
 
     if ((transaction_id == 0U) || (result == 0))
@@ -1172,6 +1272,7 @@ LoraControlGetResult Lora_ControlResultGet(uint8_t instance, uint32_t transactio
     SILVERSTAR_ASSERT_OBJECT(result, LoraControlResult,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     primask = Lora_IrqLock();
+    Lora_ControlAssert(instance);
     if ((s_control_transaction.state == LoraControlStateIdle) ||
         (s_control_transaction.transaction_id != transaction_id))
     {
@@ -1200,18 +1301,29 @@ LoraControlGetResult Lora_ControlResultGet(uint8_t instance, uint32_t transactio
 
 static void Lora_ControlProcess(uint8_t instance)
 {
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     LoraControlOperation operation;
     LoraControlResult result;
     uint32_t primask;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_control_transaction,
-        LoraControlTransaction, SILVERSTAR_ASSERT_MODULE_DEVICE);
     primask = Lora_IrqLock();
+    SILVERSTAR_ASSERT((uint32_t)s_control_transaction.state <= LoraControlStateComplete,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     if (s_control_transaction.state != LoraControlStateSubmitted)
     {
         Lora_IrqUnlock(primask);
         return;
     }
+    SILVERSTAR_ASSERT((s_control_transaction.operation == LORA_CONTROL_IRQ_CLEAR) ||
+        (s_control_transaction.operation == LORA_CONTROL_FORCE_RX_CONTINUOUS),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(s_control_transaction.transaction_id != 0U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    SILVERSTAR_ASSERT(s_control_transaction.timeout_ms != 0U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+    SILVERSTAR_ASSERT(s_control_transaction.auto_release <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((PlatformTime_Ms() - s_control_transaction.submitted_ms) >=
         s_control_transaction.timeout_ms)
     {

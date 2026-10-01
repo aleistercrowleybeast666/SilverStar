@@ -4,6 +4,14 @@
 #include <stdint.h>
 #include "sx1281_config.h"
 
+/* instance is a generated context index, not an untrusted radio field. Every
+ * public entry fail-stops before indexing on an invalid instance. Ordinary
+ * packet/transaction input errors retain their existing result enums; corrupt
+ * stored queue/control metadata faults before copy or radio dispatch.
+ * Init/Process/StartRx are owner-context operations: do not reinitialize from
+ * another context while Process executes a control transaction. RxDequeue's
+ * output data buffer must have room for LORA_MAX_PAYLOAD_LEN bytes. */
+
 typedef enum
 {
     LORA_RADIO_STATE_NOT_INIT = 0U,
