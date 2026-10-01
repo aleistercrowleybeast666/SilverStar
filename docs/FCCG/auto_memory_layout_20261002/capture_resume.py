@@ -3,6 +3,7 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -14,7 +15,7 @@ sys.path.insert(0, str(ROOT / "apps/FCCG/src"))
 from silverstar_fccg.project.build_audit import BuildAudit_Run
 
 DOC = Path(__file__).parent
-OUT = DOC / "checkpoint_resume"
+OUT = DOC / os.environ.get("SILVERSTAR_CAPTURE_NAME", "checkpoint_resume")
 OUT.mkdir(exist_ok=False)
 (OUT / ".gitattributes").write_text("* -text\n")
 live = json.loads((DOC / "evidence_v6/results.json").read_text())
@@ -77,7 +78,7 @@ with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as packed:
             packed.writestr(name + "/" + layout + "/" + label + ".txt", result.stdout)
         for path in build.rglob("*.su"):
             # Do not accidentally include the auto subtree when auditing legacy.
-            if layout == "legacy" and "auto" in path.relative_to(build).parts:
+            if layout == "legacy" and any(part in ("auto", "eskf_window_sram") for part in path.relative_to(build).parts):
                 continue
             relative = path.relative_to(build).as_posix()
             details["stack_files_sha256"][relative] = digest(path)
