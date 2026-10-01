@@ -313,8 +313,8 @@
     {
       "file": "FINAL_MORNING_LOCATION.json",
       "source": ".work/final_morning_copy.json",
-      "source_commit": "b3f53a76432b464020199605501a82d589b6988a",
-      "sha256": "ff51e11ab69a345f92ae7b217148362864f8076467832e8e45638a072b094376",
+      "source_commit": "Doc-only aggregation clarification after ce0801f; product/test source remains b3f53a7",
+      "sha256": "850b7e12b2e2a65d6bbb4b5e64c3e1f6d9b34508a543359b01f4e91e7592789a",
       "bytes": 432
     },
     {
@@ -531,5 +531,18 @@
   ],
   "quota": "last trusted user82%17:20UTC; dynamic unknown",
   "hardware": "NOT TESTED; no flashing/START/actuator connection",
-  "early_windows_av": "unexplained; subsequent bounded native regression not reproduced"
+  "early_windows_av": "unexplained; subsequent bounded native regression not reproduced",
+  "documentation_correction": {
+    "timestamp_utc": "2026-10-01T00:06:23.338878+00:00",
+    "before_commit": "ce0801fc4aa29c936aef97289e16b69468748f8b",
+    "scope": "Morning/report copies and the location receipt/hash only; no product, firmware, decoder or test-result change; full suites not rerun",
+    "documents": [
+      "D:\\python_software\\SilverStar\\晨报_20261001.md",
+      "D:\\python_software\\SilverStar\\docs\\FCCG\\NIGHT_MORNING_20261001.md",
+      "D:\\python_software\\SilverStar\\docs\\FCCG\\NIGHT_FINAL_HANDOFF_20261001.md",
+      "D:\\stm32_project\\SS_0_5_TEST_4_versions\\FinalCandidate_ddb73bb_20261001\\晨报_b3f53a7_20261001.md"
+    ],
+    "meaning": "Final candidates use aggregation2 and their recorded-configuration recomputation tests passed. Valid aggregation1 logs can load/view but cannot use recomputers requiring two subsamples. Recorded N/A came from synthetic fixture lacking navigation snapshots; field and pointwise parity not tested.",
+    "index_hash_update": "Reports themselves were not hash-indexed; updated FINAL_MORNING_LOCATION.json plus its indexed hash. Test evidence hashes/results preserved."
+  }
 }

@@ -1,8 +1,10 @@
 # SilverStar 夜间修复最终交接
 
-更新于2026-09-30 23:10 UTC。已完成工作和未结束验证分别记录，不宣称全绿。
+完整回归已结束；本次仅澄清聚合配置与回放证据边界，不重新执行测试，不宣称全绿。
 
-22:27发现的真实FLP阻塞已修复：最初生产加载拒绝`mechanization_aggregation`，失败日志`.work/p51_decoder_identity_driver.log`保留。最终可信契约仅允许int32/1或2/samples/value，区分固件配置与回放调参，旧包不补写默认值；文件头/SYSTEM_CONFIG/INERTIAL_INCREMENT必须与新声明一致。未知字段、错误类型/值、错误身份继续拒绝。当前PureINS/KF6双采样回放对合法单采样明确不可用；ESKF15不得把单采样corrected-IMU静默配成双采样，独立身体输入仍遵守其精确记录契约。
+22:27发现的真实FLP阻塞已修复：最初生产加载拒绝`mechanization_aggregation`，失败日志`.work/p51_decoder_identity_driver.log`保留。最终可信契约仅允许int32/1或2/samples/value，区分固件配置与回放调参，旧包不补写默认值；文件头/SYSTEM_CONFIG/INERTIAL_INCREMENT必须与新声明一致。未知字段、错误类型/值、错误身份继续拒绝。**最终ExistingHardware/ImportedHardware候选均为聚合2，真实生成decoder与同身份合成日志的按记录配置重算测试通过并输出有限。** 聚合1的合法同身份日志可加载查看，但不支持当前要求2子样本的PureINS/KF6重算器；ESKF15不得把单采样corrected-IMU静默配成双采样，独立身体输入仍遵守其精确记录契约。限制针对聚合1，不是聚合2不可重算。
+
+Recorded查看与重算分别判断：新导入默认分析源为“飞控记录”，不会自动启动离线复算。两份候选均启用ESTIMATOR和PURE_INS导航记录（40000µs周期），实际日志包含有效记录时，Recorded路径可显示固件位置/速度/姿态并优先使用KF6，不要求运行重算器。原生真实decoder配对fixture未包含这些导航快照，因此截图Recorded N/A不代表真实候选不能看轨迹。该fixture仅证明加载、缓存往返及按记录配置重算有有限输出，不证明与候选固件记录逐点一致；“离线插件默认配置”也是单独模式，不能当作实录参数。既有C数值/联合对照不替代板上步行实录、轨迹完整性或真值验收；这些仍未测。本次澄清仅改文档和晨报副本，数学源码、固件、decoder及已记录完整测试结果不变。
 
 ## 明早使用的候选
 
