@@ -118,7 +118,7 @@ static void Backend_OutcomePublish(const NavigationSf6Measurement *measurement,
     evidence.effective_update = (uint8_t)(accepted && Backend_EffectiveGain(group));
     /* Health uses admission/age only. Statistics are unavailable on the wire. */
     evidence.nis = 0.0f; evidence.variance_scale = 1.0f;
-    evidence.reason = (uint8_t)(16U + result);
+    evidence.reason = (uint8_t)(accepted ? 0U : 16U + (uint32_t)result);
     if (SystemNavigationHealth_Observe(group, &evidence) != SYSTEM_DEVICE_OK)
     { output->health_flags |= ESTIMATOR_HEALTH_GNSS_MEASUREMENT_INVALID; }
     if (group < 2U)
@@ -290,6 +290,8 @@ SystemDeviceResult SystemNavigationBackend_Predict(
     if (input == NULL || output == NULL || !isfinite(input->dt_s) ||
         input->dt_s <= 0.0f || input->dt_s > NAV_SF6_MAX_DT_S)
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT(s_active <= 1U && s_started <= 1U,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (!s_active || NavigationSf6_SnapshotGet(&s_context, &previous) != NAV_SF6_OK)
     { return SYSTEM_DEVICE_NOT_READY; }
     duration = (uint64_t)llroundf(input->dt_s * 1000000.0f);
@@ -298,6 +300,8 @@ SystemDeviceResult SystemNavigationBackend_Predict(
     { return SYSTEM_DEVICE_VERIFY_FAILED; }
     Ins_TransformDeltaVelocityToNavigation(s_q_nb, input->delta_velocity_b_sculling_corrected,
         input->dt_s, SYSTEM_INS_GRAVITY_MPS2, delta_velocity);
+    for (axis = 0U; axis < 3U; axis++)
+    { if (!isfinite(delta_velocity[axis])) { return SYSTEM_DEVICE_INVALID_ARGUMENT; } }
     if (!s_started)
     {
         if (NavigationSf6_Initialize(&s_context, s_gain, previous.state,

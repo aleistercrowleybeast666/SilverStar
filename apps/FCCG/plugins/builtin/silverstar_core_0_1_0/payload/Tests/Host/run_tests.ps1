@@ -1131,6 +1131,28 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
         "-I$repoRoot\Algorithm\Estimator\ESKF15\Inc"
     ) -Sources $backendSources
 }
+if ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
+    $sf6BackendSources = @($loggerSources | Where-Object {
+        $_ -notmatch '(test_logger|diagnostic_log)\.c$'
+    }) + @(
+        "$repoRoot\Tests\Host\test_sf6_backend.c",
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6.c",
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6_backend.c",
+        "$repoRoot\Algorithm\Common\Src\geodesy_local.c",
+        "$repoRoot\Algorithm\Common\Src\attitude_frame.c",
+        "$repoRoot\Algorithm\INS\Coning2Sculling2\Src\ins_mechanization.c",
+        "$repoRoot\APP\Src\estimator_bus.c",
+        "$repoRoot\System\Src\system_navigation_health.c",
+        "$repoRoot\System\Src\system_gnss_quality.c",
+        "$repoRoot\System\Src\system_barometer.c",
+        "$repoRoot\System\Src\system_time.c"
+    )
+    Invoke-HostTest -Name 'sf6_backend_actual' -ExtraCompilerArgs @(
+        '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U',
+        '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_SF6'
+    ) -Sources $sf6BackendSources
+}
 Invoke-HostTest -Name 'logger_estimator_noise_overrides' `
     -ExtraCompilerArgs ($estimatorNoiseOverrideArgs + $estimatorLoggerArgs) `
     -Sources $loggerSources

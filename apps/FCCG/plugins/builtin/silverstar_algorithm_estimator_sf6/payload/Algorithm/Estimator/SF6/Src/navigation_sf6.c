@@ -132,7 +132,13 @@ static uint16_t NavigationSf6_BoundaryFind(const NavigationSf6Context *context,
     NavigationSf6_ContextValidate(context);
     for (offset = 0U; offset < context->count; offset++)
     {
-        if (context->history[NavigationSf6_Index(context, offset)].timestamp_us > measurement_us)
+        uint64_t timestamp = context->history[NavigationSf6_Index(context, offset)].timestamp_us;
+        if (offset != 0U)
+        {
+            SILVERSTAR_ASSERT(timestamp > context->history[NavigationSf6_Index(context, (uint16_t)(offset - 1U))].timestamp_us,
+                SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+        }
+        if (timestamp > measurement_us)
         { break; }
         boundary = offset;
     }
@@ -173,6 +179,8 @@ static uint8_t NavigationSf6_CorrectionBuild(const NavigationSf6Context *context
         SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     for (axis = 0U; axis < count; axis++)
     {
+        SILVERSTAR_ASSERT(isfinite(sample->state[first + axis]),
+            SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_FLOAT_NOT_FINITE);
         correction[first + axis] = context->gain[first + axis] == 0.0f ? 0.0f : context->gain[first + axis] *
             (measurement->observation[axis] - sample->state[first + axis]);
         if (!isfinite(correction[first + axis])) { return 0U; }
@@ -184,12 +192,15 @@ static NavigationSf6Sample NavigationSf6_Corrected(const NavigationSf6Sample *sa
     uint64_t boundary_us, const float correction[6])
 {
     NavigationSf6Sample next = *sample;
-    float dt_s = (float)(sample->timestamp_us - boundary_us) * 1.0e-6f;
+    float dt_s;
     uint8_t axis;
     SILVERSTAR_ASSERT(sample->timestamp_us >= boundary_us,
         SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    dt_s = (float)(sample->timestamp_us - boundary_us) * 1.0e-6f;
     for (axis = 0U; axis < 3U; axis++)
     {
+        SILVERSTAR_ASSERT(isfinite(sample->state[axis]) && isfinite(sample->state[3U + axis]),
+            SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_FLOAT_NOT_FINITE);
         next.state[axis] += correction[axis];
         next.state[3U + axis] += correction[3U + axis] + correction[axis] * dt_s;
     }

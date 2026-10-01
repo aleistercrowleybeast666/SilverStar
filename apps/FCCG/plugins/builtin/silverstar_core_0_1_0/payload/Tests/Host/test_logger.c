@@ -101,7 +101,13 @@ static void Test_RecordMetadata(void)
     uint16_t index;
 
     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
-    TEST_CHECK(SSLOG_RECORD_COUNT == 38U);
+    TEST_CHECK(SSLOG_RECORD_COUNT == 40U);
+    TEST_CHECK(FLIGHT_LOG_RECORD_SF6_STATE == 0x2BU);
+    TEST_CHECK(FLIGHT_LOG_RECORD_SF6_MEASUREMENT == 0x2CU);
+    metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_STATE);
+    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 72U);
+    metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_MEASUREMENT);
+    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 56U);
     TEST_CHECK(FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE == 0x28U);
     TEST_CHECK(FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY == 0x29U);
     TEST_CHECK(FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY == 0x2AU);

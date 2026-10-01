@@ -106,8 +106,57 @@ static void Test_BoundsAndOutage(void)
     TEST_CHECK(NavigationSf6_SnapshotGet(&s_context, &s_snapshot) == NAV_SF6_NOT_READY);
 }
 
-int main(void)
+static void Test_NumericAtomicity(void)
 {
+    const float velocity[3] = {FLT_MAX, 0.0f, 0.0f};
+    const float dv[3] = {FLT_MAX, 0.0f, 0.0f};
+    float gain[6] = {1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
+    NavigationSf6Sample before;
+    NavigationSf6Measurement measurement = {0};
+    uint64_t boundary = UINT64_MAX;
+    TEST_CHECK(NavigationSf6_Initialize(&s_context, gain, velocity, 1000000ULL) == NAV_SF6_OK);
+    TEST_CHECK(NavigationSf6_SnapshotGet(&s_context, &before) == NAV_SF6_OK);
+    TEST_CHECK(NavigationSf6_Predict(&s_context, 1001000ULL, dv, 0.001f) == NAV_SF6_NUMERIC_ERROR);
+    TEST_CHECK(NavigationSf6_SnapshotGet(&s_context, &s_snapshot) == NAV_SF6_OK);
+    TEST_CHECK(memcmp(&before, &s_snapshot, sizeof(before)) == 0);
+    measurement.receive_us = 1000000ULL; measurement.measurement_us = 1000000ULL;
+    measurement.group = 2U; measurement.observation[0] = -FLT_MAX;
+    TEST_CHECK(NavigationSf6_Update(&s_context, &measurement, &boundary) == NAV_SF6_NUMERIC_ERROR);
+    TEST_CHECK(NavigationSf6_SnapshotGet(&s_context, &s_snapshot) == NAV_SF6_OK);
+    TEST_CHECK(memcmp(&before, &s_snapshot, sizeof(before)) == 0 && boundary == UINT64_MAX);
+    TEST_CHECK(s_context.seen[2] == 0U);
+    gain[0] = 0.0f;
+    TEST_CHECK(NavigationSf6_Initialize(&s_context, gain, velocity, 1000000ULL) == NAV_SF6_OK);
+    TEST_CHECK(NavigationSf6_Update(&s_context, &measurement, &boundary) == NAV_SF6_OK);
+    TEST_CHECK(NavigationSf6_SnapshotGet(&s_context, &s_snapshot) == NAV_SF6_OK);
+    TEST_CHECK(s_snapshot.state[0] == FLT_MAX);
+}
+
+int main(int argc, char **argv)
+{
+    if (argc == 2)
+    {
+        const float gain[6] = {0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f};
+        if (NavigationSf6_Initialize(&s_context, gain, s_zero, 1000000ULL) != NAV_SF6_OK) { return 2; }
+        if (strcmp(argv[1], "capacity") == 0) { s_context.first = NAV_SF6_HISTORY_CAPACITY; }
+        else if (strcmp(argv[1], "state") == 0) { s_context.history[0].state[0] = NAN; }
+        else if (strcmp(argv[1], "gain") == 0) { s_context.gain[0] = 1.01f; }
+        else if (strcmp(argv[1], "history") == 0)
+        {
+            NavigationSf6Measurement measurement = {0};
+            uint64_t boundary;
+            if (NavigationSf6_Predict(&s_context, 1001000ULL, s_zero, 0.001f) != NAV_SF6_OK) { return 2; }
+            s_context.history[0].state[0] = NAN;
+            measurement.group = 2U; measurement.measurement_us = 1000000ULL;
+            measurement.receive_us = 1001000ULL;
+            (void)NavigationSf6_Update(&s_context, &measurement, &boundary);
+            return 3; /* Corrupt historical state must fail-stop too. */
+        }
+        else { return 2; }
+        (void)NavigationSf6_SnapshotGet(&s_context, &s_snapshot);
+        return 3; /* The actual assertion trap must terminate this Host process. */
+    }
     Test_GainEndpoints(); Test_DelayAndIndependentGroups(); Test_BoundsAndOutage();
+    Test_NumericAtomicity();
     return Test_Finish("navigation_sf6");
 }

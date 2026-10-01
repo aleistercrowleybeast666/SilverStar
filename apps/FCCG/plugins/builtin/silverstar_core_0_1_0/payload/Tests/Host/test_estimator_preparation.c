@@ -196,7 +196,12 @@ int main(void)
     {
         uint8_t axis;
         for (axis = 0U; axis < 6U; axis++)
-        { TEST_CHECK(initial.covariance_diagonal[axis] > 0.0f && isfinite(initial.covariance_diagonal[axis])); }
+        {
+            if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
+            { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
+            else
+            { TEST_CHECK(initial.covariance_diagonal[axis] > 0.0f && isfinite(initial.covariance_diagonal[axis])); }
+        }
     }
     TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U && initial.predict_count == 0U);

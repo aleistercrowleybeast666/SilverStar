@@ -62,6 +62,26 @@ def test_navigation_subscribe_golden():
     assert wire.hex() == "30310e3412564e0100"
 
 
+@pytest.mark.parametrize("algorithm,allowed", [(0, True), (1, True), (2, True), (3, True), (4, False), (255, False)])
+def test_declared_sf6_preserves_preparation_and_capability_start_gates(algorithm, allowed):
+    controller = make_controller()
+    configure_ready(controller)
+    controller.Navigation_Subscribe()
+    nav = controller.state.navigation
+    controller.Navigation_HandleMessage(AirNavigationCapabilityMessage(
+        5, nav.requested_session, 1, 1, algorithm, 31))
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        6, nav.session, 1, 127, 127, 0))
+    assert controller.state.start_ready() is allowed
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        7, nav.session, 1, 127, 15, 17))
+    assert not controller.state.start_ready()
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        8, nav.session, 1, 127, 127, 0))
+    controller.state.capability = None
+    assert not controller.state.start_ready()
+
+
 @pytest.mark.parametrize("wire", [b"\x15" * 8, b"\x16" * 10, bytes.fromhex("172400000700090c00")])
 def test_bad_navigation_length_or_zero_session_rejected(wire):
     with pytest.raises(ValueError):
