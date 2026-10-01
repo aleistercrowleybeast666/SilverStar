@@ -1,0 +1,10 @@
+from pathlib import Path
+import subprocess,json,time,hashlib
+out=Path("docs/FCCG/eskf_workspace_20261001_stage2_v1");project=Path(".work/EskfWorkspace_42d4203_stage2_v1/eskf15_after/Flight_Controller").resolve();make="D:/msys64/ucrt64/bin/mingw32-make.exe";results=[]
+checks=[("final_eskf15_power10",[make,"CONFIG=Release","power10-check"]),("final_eskf15_arm",[make,"-j2","CONFIG=Release","GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin","all"]),("final_eskf15_artifact",[make,"CONFIG=Release","GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin","artifact-check"]),("final_eskf15_stack",[make,"CONFIG=Release","GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin","stack-report"]),("final_eskf15_static",[make,"-j2","CONFIG=Release","GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin","static-analysis"])]
+for name,command in checks:
+ print("BEGIN",name,flush=True);p=out/(name+".log");start=time.monotonic()
+ with p.open("wb") as f:r=subprocess.run(command,cwd=project,stdout=f,stderr=subprocess.STDOUT)
+ results.append({"name":name,"command":command,"cwd":str(project),"exit_code":r.returncode,"seconds":time.monotonic()-start,"log":str(p),"sha256":hashlib.sha256(p.read_bytes()).hexdigest()});(out/"final_comment_checks.json").write_text(json.dumps(results,indent=2),encoding="utf-8");print("DONE",name,r.returncode,flush=True)
+ if r.returncode:raise SystemExit(r.returncode)
+print("COMPLETE",flush=True)

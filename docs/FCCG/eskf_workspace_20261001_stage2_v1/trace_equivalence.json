@@ -1,0 +1,166 @@
+{
+  "baseline_commit": "42d4203b0158184e4a8609a1a971a788f335cfb0",
+  "records": [
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0_aliases.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0_aliases.trace",
+      "bytes": 8796,
+      "before_sha256": "db519eb47b706131021219c403c1cc06d76f578bc296de7f6637fc1ccc9b34c5",
+      "after_sha256": "db519eb47b706131021219c403c1cc06d76f578bc296de7f6637fc1ccc9b34c5",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_aliases.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O0_aliases.trace",
+      "final_after_sha256": "db519eb47b706131021219c403c1cc06d76f578bc296de7f6637fc1ccc9b34c5"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0_concurrent.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0_concurrent.trace",
+      "bytes": 4380,
+      "before_sha256": "d8f897b344b020b30f914a792f5d5f4b9add9f62954beae68cf4c8d1fee9fe11",
+      "after_sha256": "d8f897b344b020b30f914a792f5d5f4b9add9f62954beae68cf4c8d1fee9fe11",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_concurrent.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O0_concurrent.trace",
+      "final_after_sha256": "d8f897b344b020b30f914a792f5d5f4b9add9f62954beae68cf4c8d1fee9fe11"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0_faults.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0_faults.trace",
+      "bytes": 35658,
+      "before_sha256": "820e34cbf38782b566690c9b556061c383df8b47c395fa5666406f70b6081fde",
+      "after_sha256": "820e34cbf38782b566690c9b556061c383df8b47c395fa5666406f70b6081fde",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_faults.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O0_faults.trace",
+      "final_after_sha256": "820e34cbf38782b566690c9b556061c383df8b47c395fa5666406f70b6081fde"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0_motion.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0_motion.trace",
+      "bytes": 1585242,
+      "before_sha256": "fd93d1e3bfd80b9b877a113e3f264e5bb33f15ef6502f5af83da3b19b2b53b3d",
+      "after_sha256": "fd93d1e3bfd80b9b877a113e3f264e5bb33f15ef6502f5af83da3b19b2b53b3d",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_motion.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O0_motion.trace",
+      "final_after_sha256": "fd93d1e3bfd80b9b877a113e3f264e5bb33f15ef6502f5af83da3b19b2b53b3d"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0_outage.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0_outage.trace",
+      "bytes": 1584702,
+      "before_sha256": "e9e56552745379d19a078fb39e1eabad6f35681ccce1bd0eeed32ea977e50710",
+      "after_sha256": "e9e56552745379d19a078fb39e1eabad6f35681ccce1bd0eeed32ea977e50710",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_outage.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O0_outage.trace",
+      "final_after_sha256": "e9e56552745379d19a078fb39e1eabad6f35681ccce1bd0eeed32ea977e50710"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0_rotation.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0_rotation.trace",
+      "bytes": 1585242,
+      "before_sha256": "4a809807169cab0a778017a1d52c6b417358d6ecb2fb6a297fafaae81d1f89bf",
+      "after_sha256": "4a809807169cab0a778017a1d52c6b417358d6ecb2fb6a297fafaae81d1f89bf",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_rotation.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O0_rotation.trace",
+      "final_after_sha256": "4a809807169cab0a778017a1d52c6b417358d6ecb2fb6a297fafaae81d1f89bf"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0_stationary.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0_stationary.trace",
+      "bytes": 1585242,
+      "before_sha256": "06176e7f08dde4460d5b7e000b96c8e16988fb1f82124f762278037a28dd5139",
+      "after_sha256": "06176e7f08dde4460d5b7e000b96c8e16988fb1f82124f762278037a28dd5139",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_stationary.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O0_stationary.trace",
+      "final_after_sha256": "06176e7f08dde4460d5b7e000b96c8e16988fb1f82124f762278037a28dd5139"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2_aliases.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2_aliases.trace",
+      "bytes": 8796,
+      "before_sha256": "db519eb47b706131021219c403c1cc06d76f578bc296de7f6637fc1ccc9b34c5",
+      "after_sha256": "db519eb47b706131021219c403c1cc06d76f578bc296de7f6637fc1ccc9b34c5",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_aliases.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O2_aliases.trace",
+      "final_after_sha256": "db519eb47b706131021219c403c1cc06d76f578bc296de7f6637fc1ccc9b34c5"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2_concurrent.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2_concurrent.trace",
+      "bytes": 4380,
+      "before_sha256": "d8f897b344b020b30f914a792f5d5f4b9add9f62954beae68cf4c8d1fee9fe11",
+      "after_sha256": "d8f897b344b020b30f914a792f5d5f4b9add9f62954beae68cf4c8d1fee9fe11",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_concurrent.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O2_concurrent.trace",
+      "final_after_sha256": "d8f897b344b020b30f914a792f5d5f4b9add9f62954beae68cf4c8d1fee9fe11"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2_faults.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2_faults.trace",
+      "bytes": 35658,
+      "before_sha256": "820e34cbf38782b566690c9b556061c383df8b47c395fa5666406f70b6081fde",
+      "after_sha256": "820e34cbf38782b566690c9b556061c383df8b47c395fa5666406f70b6081fde",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_faults.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O2_faults.trace",
+      "final_after_sha256": "820e34cbf38782b566690c9b556061c383df8b47c395fa5666406f70b6081fde"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2_motion.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2_motion.trace",
+      "bytes": 1585242,
+      "before_sha256": "fd93d1e3bfd80b9b877a113e3f264e5bb33f15ef6502f5af83da3b19b2b53b3d",
+      "after_sha256": "fd93d1e3bfd80b9b877a113e3f264e5bb33f15ef6502f5af83da3b19b2b53b3d",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_motion.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O2_motion.trace",
+      "final_after_sha256": "fd93d1e3bfd80b9b877a113e3f264e5bb33f15ef6502f5af83da3b19b2b53b3d"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2_outage.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2_outage.trace",
+      "bytes": 1584702,
+      "before_sha256": "e9e56552745379d19a078fb39e1eabad6f35681ccce1bd0eeed32ea977e50710",
+      "after_sha256": "e9e56552745379d19a078fb39e1eabad6f35681ccce1bd0eeed32ea977e50710",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_outage.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O2_outage.trace",
+      "final_after_sha256": "e9e56552745379d19a078fb39e1eabad6f35681ccce1bd0eeed32ea977e50710"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2_rotation.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2_rotation.trace",
+      "bytes": 1585242,
+      "before_sha256": "4a809807169cab0a778017a1d52c6b417358d6ecb2fb6a297fafaae81d1f89bf",
+      "after_sha256": "4a809807169cab0a778017a1d52c6b417358d6ecb2fb6a297fafaae81d1f89bf",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_rotation.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O2_rotation.trace",
+      "final_after_sha256": "4a809807169cab0a778017a1d52c6b417358d6ecb2fb6a297fafaae81d1f89bf"
+    },
+    {
+      "before": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2_stationary.trace",
+      "after": ".work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2_stationary.trace",
+      "bytes": 1585242,
+      "before_sha256": "06176e7f08dde4460d5b7e000b96c8e16988fb1f82124f762278037a28dd5139",
+      "after_sha256": "06176e7f08dde4460d5b7e000b96c8e16988fb1f82124f762278037a28dd5139",
+      "byte_equal": true,
+      "saved_trace": "traces/after-O0_stationary.trace",
+      "final_after": ".work\\EskfWorkspace_42d4203_stage2_trace_final\\eskf-equivalence0\\after-O2_stationary.trace",
+      "final_after_sha256": "06176e7f08dde4460d5b7e000b96c8e16988fb1f82124f762278037a28dd5139"
+    }
+  ],
+  "distinct_complete_traces": 7,
+  "limitations": [
+    "Synthetic host data, no hardware qualification",
+    "Exact equality is between old/new at each identical GCC optimization; not host-to-ARM bitwise proof",
+    "Separate-instance host threads do not prove shared-instance lifecycle ownership"
+  ],
+  "final_header_trace_equal": true
+}

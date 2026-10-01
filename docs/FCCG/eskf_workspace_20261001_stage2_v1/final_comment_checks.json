@@ -1,0 +1,73 @@
+[
+  {
+    "name": "final_eskf15_power10",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "CONFIG=Release",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 15.73909069999354,
+    "log": "docs\\FCCG\\eskf_workspace_20261001_stage2_v1\\final_eskf15_power10.log",
+    "sha256": "596a3e0fd47309ec04419af9b4350caeae3e058ba20f667002d554d1d76721eb"
+  },
+  {
+    "name": "final_eskf15_arm",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 4.733870199997909,
+    "log": "docs\\FCCG\\eskf_workspace_20261001_stage2_v1\\final_eskf15_arm.log",
+    "sha256": "db041d50158460ad7859d4293bf9cc2d816899ab60cf1c9c9dc6fab28ef10eab"
+  },
+  {
+    "name": "final_eskf15_artifact",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "CONFIG=Release",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 3.2232994999940274,
+    "log": "docs\\FCCG\\eskf_workspace_20261001_stage2_v1\\final_eskf15_artifact.log",
+    "sha256": "6231a495e8e8fa0e76416f9e31826ac213ee13a95332b4c63644e8186c046720"
+  },
+  {
+    "name": "final_eskf15_stack",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "CONFIG=Release",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 3.3786955999967176,
+    "log": "docs\\FCCG\\eskf_workspace_20261001_stage2_v1\\final_eskf15_stack.log",
+    "sha256": "39a41ad32e7597c9a6fa1227f4351e15ecd84daef161a71a8e6e6e8e2bcdb4e2"
+  },
+  {
+    "name": "final_eskf15_static",
+    "command": [
+      "D:/msys64/ucrt64/bin/mingw32-make.exe",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller",
+    "exit_code": 0,
+    "seconds": 8.192697699996643,
+    "log": "docs\\FCCG\\eskf_workspace_20261001_stage2_v1\\final_eskf15_static.log",
+    "sha256": "c00bed2e167cb86fe8b3ed2d98ba9d2e6a90b3903544898739a7ad7c0565eee3"
+  }
+]

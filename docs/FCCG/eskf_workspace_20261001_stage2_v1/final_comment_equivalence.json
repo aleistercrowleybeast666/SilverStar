@@ -1,0 +1,23 @@
+{
+  "reason": "Correct shared-pair lifecycle ownership requirement; remove exclusive-task claim and clarify CPU scratch versus DMA buffers",
+  "command": [
+    "D:/msys64/ucrt64/bin/gcc.exe",
+    "-E",
+    "-P",
+    "-std=c11",
+    "-ID:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller\\Common\\Inc",
+    "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c"
+  ],
+  "exit_codes": [
+    0,
+    0
+  ],
+  "before_header_sha256": "5fc88d755c98774c6ea8bf86390392e7a1879d151a2f55c60ab36adc2a125c03",
+  "after_header_sha256": "d476faf0a3edd784e5bb732ed75a44f163f0504e05d6ef3130b176f9478aa2f6",
+  "preprocessed_before_sha256": "0d77df5dee249037d085eb6c562b474df945280d36b625723bc0800ab08fd6d2",
+  "preprocessed_after_sha256": "0d77df5dee249037d085eb6c562b474df945280d36b625723bc0800ab08fd6d2",
+  "preprocessed_byte_equal": true,
+  "body_source_unchanged": true,
+  "same_comment_line_count": true
+}

@@ -1,0 +1,7715 @@
+{
+  "kf6": {
+    "elf": ".work\\EskfWorkspace_42d4203_stage2_v1\\after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+    "elf_sha256": "d50b56fa2bf9857b27f66ae76f49cec750937cef080486f21d49a21757acc6bc",
+    "symbols": [
+      {
+        "name": "last_usable.4",
+        "bytes": 1,
+        "address": "0x20002428",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "retSD",
+        "bytes": 1,
+        "address": "0x200128f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accepting_records",
+        "bytes": 1,
+        "address": "0x2000a3c1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_cache_next",
+        "bytes": 1,
+        "address": "0x2000a241",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_head",
+        "bytes": 1,
+        "address": "0x2000a275",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_tail",
+        "bytes": 1,
+        "address": "0x2000a274",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_action_active",
+        "bytes": 1,
+        "address": "0x20009ce8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_action_active",
+        "bytes": 1,
+        "address": "0x20009931",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_active_bank",
+        "bytes": 1,
+        "address": "0x20000406",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_final_ready",
+        "bytes": 1,
+        "address": "0x20009084",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_invalid_sample_seen",
+        "bytes": 1,
+        "address": "0x20009086",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_source",
+        "bytes": 1,
+        "address": "0x20009087",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_state",
+        "bytes": 1,
+        "address": "0x2000a238",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_state_known",
+        "bytes": 1,
+        "address": "0x20007c34",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_status_known",
+        "bytes": 1,
+        "address": "0x2000a239",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_ready",
+        "bytes": 1,
+        "address": "0x2000951a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_source_available",
+        "bytes": 1,
+        "address": "0x20009085",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_status",
+        "bytes": 1,
+        "address": "0x20009519",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_barometer_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x200094a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_mode",
+        "bytes": 1,
+        "address": "0x2000a224",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_ready",
+        "bytes": 1,
+        "address": "0x20009083",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_state",
+        "bytes": 1,
+        "address": "0x2000a225",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_status_known",
+        "bytes": 1,
+        "address": "0x2000a226",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_send_pending",
+        "bytes": 1,
+        "address": "0x2000a210",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_sent",
+        "bytes": 1,
+        "address": "0x2000a211",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_sequence",
+        "bytes": 1,
+        "address": "0x2000a212",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_state",
+        "bytes": 1,
+        "address": "0x2000a20c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capture_active",
+        "bytes": 1,
+        "address": "0x2000954a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_collecting",
+        "bytes": 1,
+        "address": "0x20009933",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_collector_state",
+        "bytes": 1,
+        "address": "0x20009ced",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_command_policy",
+        "bytes": 1,
+        "address": "0x2000a20f",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_compute_pending",
+        "bytes": 1,
+        "address": "0x20009cea",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_alignment_state",
+        "bytes": 1,
+        "address": "0x20017978",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_descriptor_count",
+        "bytes": 1,
+        "address": "0x2000954b",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_gnss_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20009302",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_profile_frozen",
+        "bytes": 1,
+        "address": "0x20009518",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_status_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20009303",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_fault_event_written",
+        "bytes": 1,
+        "address": "0x20007c58",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_file_open",
+        "bytes": 1,
+        "address": "0x200166a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_finalization_state",
+        "bytes": 1,
+        "address": "0x2000a3c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_frozen",
+        "bytes": 1,
+        "address": "0x20010a10",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_frozen",
+        "bytes": 1,
+        "address": "0x20009932",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_position_usable",
+        "bytes": 1,
+        "address": "0x2000a23b",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_state_known",
+        "bytes": 1,
+        "address": "0x2000a23c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x200166aa",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x200177c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20017449",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20009934",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20009cec",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20016651",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x200177c1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000a3c4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20002698",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000a120",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20007c74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20010a11",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2001210c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_input_fault_latched",
+        "bytes": 1,
+        "address": "0x20009080",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20009300",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_kf_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20009301",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_valid",
+        "bytes": 1,
+        "address": "0x200176a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_valid",
+        "bytes": 1,
+        "address": "0x20017550",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_valid",
+        "bytes": 1,
+        "address": "0x20017688",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_valid",
+        "bytes": 1,
+        "address": "0x20017674",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_latest_sample_valid",
+        "bytes": 1,
+        "address": "0x20009ce9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_lifecycle_state",
+        "bytes": 1,
+        "address": "0x2001753c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_locked",
+        "bytes": 1,
+        "address": "0x2000a23d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logged_alignment_state",
+        "bytes": 1,
+        "address": "0x20007c35",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_load_complete",
+        "bytes": 1,
+        "address": "0x2001737c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_load_instance",
+        "bytes": 1,
+        "address": "0x2001737d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_enabled",
+        "bytes": 1,
+        "address": "0x20017835",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_instance",
+        "bytes": 1,
+        "address": "0x20017834",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_manifest_ready",
+        "bytes": 1,
+        "address": "0x20016652",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_attitude_frozen",
+        "bytes": 1,
+        "address": "0x20009082",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_running",
+        "bytes": 1,
+        "address": "0x20009081",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_started",
+        "bytes": 1,
+        "address": "0x20009919",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_stopped",
+        "bytes": 1,
+        "address": "0x20009918",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_model_mismatch",
+        "bytes": 1,
+        "address": "0x2000a17d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mounted",
+        "bytes": 1,
+        "address": "0x200166a9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_detail_index",
+        "bytes": 1,
+        "address": "0x2000a198",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_health_index",
+        "bytes": 1,
+        "address": "0x2000a1b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_preparation_pending",
+        "bytes": 1,
+        "address": "0x2000a1b9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_profile_frozen",
+        "bytes": 1,
+        "address": "0x20009548",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_estimator_queue",
+        "bytes": 1,
+        "address": "0x2000a3c3",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_origin_collection_busy",
+        "bytes": 1,
+        "address": "0x200030a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_event_count",
+        "bytes": 1,
+        "address": "0x2000a122",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_event_flush_active",
+        "bytes": 1,
+        "address": "0x2000a121",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_source",
+        "bytes": 1,
+        "address": "0x2000a22c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_source_known",
+        "bytes": 1,
+        "address": "0x2000a22d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_known",
+        "bytes": 1,
+        "address": "0x2000a20d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_send_pending",
+        "bytes": 1,
+        "address": "0x2000a20e",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pressure_valid",
+        "bytes": 1,
+        "address": "0x20002658",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_queue_drain_run",
+        "bytes": 1,
+        "address": "0x2000a3c2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_head",
+        "bytes": 1,
+        "address": "0x200174b5",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_tail",
+        "bytes": 1,
+        "address": "0x200174b4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_head",
+        "bytes": 1,
+        "address": "0x200174b3",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_tail",
+        "bytes": 1,
+        "address": "0x200174b2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_runtime_owner_active_contexts",
+        "bytes": 1,
+        "address": "0x20013db8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sampling_active",
+        "bytes": 1,
+        "address": "0x20009ceb",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_busy",
+        "bytes": 1,
+        "address": "0x20012666",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_poisoned",
+        "bytes": 1,
+        "address": "0x20012665",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_status",
+        "bytes": 1,
+        "address": "0x200003fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_transfer_active",
+        "bytes": 1,
+        "address": "0x20012664",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_selftest_event_sent",
+        "bytes": 1,
+        "address": "0x2000a23a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_active",
+        "bytes": 1,
+        "address": "0x2000a233",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_id",
+        "bytes": 1,
+        "address": "0x2000a230",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_index",
+        "bytes": 1,
+        "address": "0x2000a232",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_terminal_pending",
+        "bytes": 1,
+        "address": "0x2000a22f",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_terminal_state",
+        "bytes": 1,
+        "address": "0x2000a22e",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_total",
+        "bytes": 1,
+        "address": "0x2000a231",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_cmd_sequence",
+        "bytes": 1,
+        "address": "0x2000a23e",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_request_pending",
+        "bytes": 1,
+        "address": "0x200174b1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_request_pending",
+        "bytes": 1,
+        "address": "0x2000a23f",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_transaction_active",
+        "bytes": 1,
+        "address": "0x200174b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_started",
+        "bytes": 1,
+        "address": "0x20016650",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_started",
+        "bytes": 1,
+        "address": "0x20017448",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_startup_phase",
+        "bytes": 1,
+        "address": "0x20009620",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_head",
+        "bytes": 1,
+        "address": "0x2000a2c1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_tail",
+        "bytes": 1,
+        "address": "0x2000a2c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_system_profile_frozen",
+        "bytes": 1,
+        "address": "0x20009549",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_time_source_ready",
+        "bytes": 1,
+        "address": "0x20009930",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tx_sequence",
+        "bytes": 1,
+        "address": "0x2000a240",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "state_known.5",
+        "bytes": 1,
+        "address": "0x20002429",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "ucMaxSysCallPriority",
+        "bytes": 1,
+        "address": "0x20012a54",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTickFreq",
+        "bytes": 1,
+        "address": "0x20000078",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "Fsid",
+        "bytes": 2,
+        "address": "0x20010f60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_generation",
+        "bytes": 2,
+        "address": "0x20000404",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_head",
+        "bytes": 2,
+        "address": "0x20007c78",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_head",
+        "bytes": 2,
+        "address": "0x2000269c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_line_length",
+        "bytes": 2,
+        "address": "0x200185a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_generation",
+        "bytes": 2,
+        "address": "0x2000a1c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_session",
+        "bytes": 2,
+        "address": "0x2000a1c2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue_storage",
+        "bytes": 2,
+        "address": "0x2001266c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tail",
+        "bytes": 2,
+        "address": "0x20007c76",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tail",
+        "bytes": 2,
+        "address": "0x2000269a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 3,
+        "address": "0x20014620",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "_impure_ptr",
+        "bytes": 4,
+        "address": "0x20000420",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "FatFs",
+        "bytes": 4,
+        "address": "0x20010f64",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_rf_sequence.2",
+        "bytes": 4,
+        "address": "0x20002420",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_satellite_sequence.3",
+        "bytes": 4,
+        "address": "0x20002424",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_sequence.6",
+        "bytes": 4,
+        "address": "0x2000242c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_sequence.7",
+        "bytes": 4,
+        "address": "0x20002430",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxCurrentTCB",
+        "bytes": 4,
+        "address": "0x20012a4c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxDelayedTaskList",
+        "bytes": 4,
+        "address": "0x20012980",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxOverflowDelayedTaskList",
+        "bytes": 4,
+        "address": "0x2001297c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_active_mission_id",
+        "bytes": 4,
+        "address": "0x20016f24",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_start_sequence",
+        "bytes": 4,
+        "address": "0x20007c38",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x2000a21c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x20007c3c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x20007c40",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x2000a220",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_start_sequence",
+        "bytes": 4,
+        "address": "0x20007c48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_state_sequence",
+        "bytes": 4,
+        "address": "0x20007c44",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_commit_sequence",
+        "bytes": 4,
+        "address": "0x20016f20",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_alignment_completion_sequence",
+        "bytes": 4,
+        "address": "0x2001798c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_completion_sequence",
+        "bytes": 4,
+        "address": "0x20017994",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x20017990",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x20017998",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_deploy_event_sequence",
+        "bytes": 4,
+        "address": "0x20017984",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_discontinuity_sequence",
+        "bytes": 4,
+        "address": "0x2001799c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_flight_action_sequence",
+        "bytes": 4,
+        "address": "0x20017988",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_impact_event_sequence",
+        "bytes": 4,
+        "address": "0x20017980",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_landing_event_sequence",
+        "bytes": 4,
+        "address": "0x2001797c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_start_request_id",
+        "bytes": 4,
+        "address": "0x200179a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_detail_log_sequence",
+        "bytes": 4,
+        "address": "0x20007c2c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_event_sequence",
+        "bytes": 4,
+        "address": "0x2000a218",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_log_sequence",
+        "bytes": 4,
+        "address": "0x20007c30",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_fault_reason_mask",
+        "bytes": 4,
+        "address": "0x20017538",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_impact_log_sequence",
+        "bytes": 4,
+        "address": "0x20007c28",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu_faults",
+        "bytes": 4,
+        "address": "0x2000a184",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu_quality",
+        "bytes": 4,
+        "address": "0x2000a180",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_increment_sequence",
+        "bytes": 4,
+        "address": "0x20009088",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_integrity_log_failures",
+        "bytes": 4,
+        "address": "0x200030a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_imu_count",
+        "bytes": 4,
+        "address": "0x2001754c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_accel_norm",
+        "bytes": 4,
+        "address": "0x20017544",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_gravity_error",
+        "bytes": 4,
+        "address": "0x20017540",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_gyro_norm",
+        "bytes": 4,
+        "address": "0x20017548",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_diagnostic_log_sequence",
+        "bytes": 4,
+        "address": "0x20007c20",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_event_sequence",
+        "bytes": 4,
+        "address": "0x2000a214",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_log_sequence",
+        "bytes": 4,
+        "address": "0x20007c24",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_sequence",
+        "bytes": 4,
+        "address": "0x200176a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_device_sequence",
+        "bytes": 4,
+        "address": "0x20007c70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_sequence",
+        "bytes": 4,
+        "address": "0x20017554",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_sequence",
+        "bytes": 4,
+        "address": "0x2001768c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_sequence",
+        "bytes": 4,
+        "address": "0x20017678",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_tick_ms",
+        "bytes": 4,
+        "address": "0x20012108",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_next_request_id",
+        "bytes": 4,
+        "address": "0x20009e88",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_last_sequence",
+        "bytes": 4,
+        "address": "0x20017830",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_id",
+        "bytes": 4,
+        "address": "0x20016654",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_native_previous_tow_ms",
+        "bytes": 4,
+        "address": "0x200030ac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_generation_base",
+        "bytes": 4,
+        "address": "0x2000a1bc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_alignment_sequence",
+        "bytes": 4,
+        "address": "0x2000a228",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_replay_epoch",
+        "bytes": 4,
+        "address": "0x200030a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue",
+        "bytes": 4,
+        "address": "0x20012668",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_sequence",
+        "bytes": 4,
+        "address": "0x2000a234",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x2001744c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SDPath",
+        "bytes": 4,
+        "address": "0x200128ec",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SystemCoreClock",
+        "bytes": 4,
+        "address": "0x200003f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "ulMaxPRIGROUPValue",
+        "bytes": 4,
+        "address": "0x20012a50",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTick",
+        "bytes": 4,
+        "address": "0x20010ed8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTickPrio",
+        "bytes": 4,
+        "address": "0x2000007c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxCriticalNesting",
+        "bytes": 4,
+        "address": "0x20000400",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxCurrentNumberOfTasks",
+        "bytes": 4,
+        "address": "0x20012964",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxSchedulerSuspended",
+        "bytes": 4,
+        "address": "0x20012940",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxTaskNumber",
+        "bytes": 4,
+        "address": "0x20012948",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxTopReadyPriority",
+        "bytes": 4,
+        "address": "0x2001295c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xNextTaskUnblockTime",
+        "bytes": 4,
+        "address": "0x20012944",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xNumOfOverflows",
+        "bytes": 4,
+        "address": "0x2001294c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xPendedTicks",
+        "bytes": 4,
+        "address": "0x20012954",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xSchedulerRunning",
+        "bytes": 4,
+        "address": "0x20012958",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xTickCount",
+        "bytes": 4,
+        "address": "0x20012960",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xYieldPendings",
+        "bytes": 4,
+        "address": "0x20012950",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_previous_state",
+        "bytes": 5,
+        "address": "0x2000a178",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_health_log_us.0",
+        "bytes": 8,
+        "address": "0x20002410",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_epoch_us",
+        "bytes": 8,
+        "address": "0x2000a188",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_finalization_deadline_us",
+        "bytes": 8,
+        "address": "0x2000a3b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_baro_covered_us",
+        "bytes": 8,
+        "address": "0x200175f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_last_imu_us",
+        "bytes": 8,
+        "address": "0x20017560",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_start_us",
+        "bytes": 8,
+        "address": "0x20017568",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_attempt_us",
+        "bytes": 8,
+        "address": "0x20017440",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_timestamp_us",
+        "bytes": 8,
+        "address": "0x200176a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_timestamp_us",
+        "bytes": 8,
+        "address": "0x20017558",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_timestamp_us",
+        "bytes": 8,
+        "address": "0x20017690",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_timestamp_us",
+        "bytes": 8,
+        "address": "0x20017680",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_monotonic_us",
+        "bytes": 8,
+        "address": "0x200120f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_sample_us",
+        "bytes": 8,
+        "address": "0x20009cf0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_next_us",
+        "bytes": 8,
+        "address": "0x20017828",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_start_us",
+        "bytes": 8,
+        "address": "0x20009928",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_stop_us",
+        "bytes": 8,
+        "address": "0x20009920",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_native_week_us",
+        "bytes": 8,
+        "address": "0x200030b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_capability_us",
+        "bytes": 8,
+        "address": "0x2000a1e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_detail_us",
+        "bytes": 8,
+        "address": "0x2000a1a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_health_us",
+        "bytes": 8,
+        "address": "0x2000a1a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_preparation_us",
+        "bytes": 8,
+        "address": "0x2000a1b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_preflight_state_us",
+        "bytes": 8,
+        "address": "0x2000a1d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_preflight_status_us",
+        "bytes": 8,
+        "address": "0x2000a1d8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_stream_us",
+        "bytes": 8,
+        "address": "0x2000a1c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_phase_started_us",
+        "bytes": 8,
+        "address": "0x20009618",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_observed",
+        "bytes": 8,
+        "address": "0x2000a1e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preparation",
+        "bytes": 8,
+        "address": "0x20000070",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_recovery_enter_timestamp_us",
+        "bytes": 8,
+        "address": "0x20017698",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot_info",
+        "bytes": 8,
+        "address": "0x2000954c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_state_start_us",
+        "bytes": 8,
+        "address": "0x20009cf8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tick_epoch_ms",
+        "bytes": 8,
+        "address": "0x20012100",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "stats_log_state.1",
+        "bytes": 8,
+        "address": "0x20002418",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "telemetry_log_state.0",
+        "bytes": 8,
+        "address": "0x2000a190",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "disk",
+        "bytes": 12,
+        "address": "0x20010f68",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accel_square_sum",
+        "bytes": 12,
+        "address": "0x20009d24",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accel_sum",
+        "bytes": 12,
+        "address": "0x20009d3c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 12,
+        "address": "0x200130e4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 12,
+        "address": "0x200130c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gyro_square_sum",
+        "bytes": 12,
+        "address": "0x20009d18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gyro_sum",
+        "bytes": 12,
+        "address": "0x20009d30",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_accel_mean",
+        "bytes": 12,
+        "address": "0x20009d0c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_gyro_mean",
+        "bytes": 12,
+        "address": "0x20009d00",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostic_sequence",
+        "bytes": 12,
+        "address": "0x20007c4c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_bus_status",
+        "bytes": 16,
+        "address": "0x20014528",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capabilities",
+        "bytes": 16,
+        "address": "0x200092f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 16,
+        "address": "0x200130d4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss",
+        "bytes": 16,
+        "address": "0x2000a154",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_events",
+        "bytes": 16,
+        "address": "0x2000a124",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_stats",
+        "bytes": 16,
+        "address": "0x20002648",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_timebase",
+        "bytes": 16,
+        "address": "0x20012110",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu",
+        "bytes": 17,
+        "address": "0x2000a164",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_stats",
+        "bytes": 20,
+        "address": "0x20007c5c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xDelayedTaskList1",
+        "bytes": 20,
+        "address": "0x20012998",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xDelayedTaskList2",
+        "bytes": 20,
+        "address": "0x20012984",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xPendingReadyList",
+        "bytes": 20,
+        "address": "0x20012968",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_config",
+        "bytes": 24,
+        "address": "0x20000408",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_status_diagnostics",
+        "bytes": 24,
+        "address": "0x20009490",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_diagnostics",
+        "bytes": 24,
+        "address": "0x20009308",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_utc_mapping",
+        "bytes": 24,
+        "address": "0x20009900",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deployment_context",
+        "bytes": 28,
+        "address": "0x20017658",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 28,
+        "address": "0x2000a1f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_logger_queue",
+        "bytes": 28,
+        "address": "0x2000c970",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger_queue",
+        "bytes": 28,
+        "address": "0x20010810",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_telemetry",
+        "bytes": 28,
+        "address": "0x2000a138",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "Files",
+        "bytes": 32,
+        "address": "0x20010f40",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_context",
+        "bytes": 32,
+        "address": "0x20017638",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_queue",
+        "bytes": 32,
+        "address": "0x20017518",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 36,
+        "address": "0x2000a3c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x20009520",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x20016628",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x200173e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_cache",
+        "bytes": 48,
+        "address": "0x2000a244",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_kf_diagnostics",
+        "bytes": 48,
+        "address": "0x20009320",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sample",
+        "bytes": 48,
+        "address": "0x20017410",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pressure",
+        "bytes": 56,
+        "address": "0x20002660",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_candidate_window",
+        "bytes": 64,
+        "address": "0x20017570",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_trigger_window",
+        "bytes": 64,
+        "address": "0x200175b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capture_working",
+        "bytes": 64,
+        "address": "0x20009554",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_descriptors",
+        "bytes": 64,
+        "address": "0x200095d4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_indicator",
+        "bytes": 64,
+        "address": "0x2000a0e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_imu_window",
+        "bytes": 64,
+        "address": "0x200175f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 64,
+        "address": "0x20009594",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hadc1",
+        "bytes": 72,
+        "address": "0x200124d8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "htim1",
+        "bytes": 72,
+        "address": "0x20012438",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart1",
+        "bytes": 72,
+        "address": "0x200123f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart2",
+        "bytes": 72,
+        "address": "0x200123a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart3",
+        "bytes": 72,
+        "address": "0x20012360",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_queue",
+        "bytes": 72,
+        "address": "0x2000a278",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_strategy",
+        "bytes": 72,
+        "address": "0x1000c200",
+        "region": "CCM"
+      },
+      {
+        "name": "s_assert_fault",
+        "bytes": 72,
+        "address": "0x200092a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue_control",
+        "bytes": 72,
+        "address": "0x20012670",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "_impure_data",
+        "bytes": 76,
+        "address": "0x20000424",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_device_task_control",
+        "bytes": 76,
+        "address": "0x200025fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_task_control",
+        "bytes": 76,
+        "address": "0x20002564",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_flight_task_control",
+        "bytes": 76,
+        "address": "0x20002518",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_idle_task_control",
+        "bytes": 76,
+        "address": "0x200128f4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_task_control",
+        "bytes": 76,
+        "address": "0x200025b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger_task_control",
+        "bytes": 76,
+        "address": "0x200024cc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_serial_task_control",
+        "bytes": 76,
+        "address": "0x20002480",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_telemetry_task_control",
+        "bytes": 76,
+        "address": "0x20002434",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 80,
+        "address": "0x20016658",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_latest_sample",
+        "bytes": 80,
+        "address": "0x20009d48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_output",
+        "bytes": 80,
+        "address": "0x200090e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_published_output",
+        "bytes": 80,
+        "address": "0x20009090",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_config_async_contexts",
+        "bytes": 84,
+        "address": "0x200130f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_packet",
+        "bytes": 84,
+        "address": "0x20017328",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hspi1",
+        "bytes": 88,
+        "address": "0x20012480",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude",
+        "bytes": 88,
+        "address": "0x20009198",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_sdio_rx",
+        "bytes": 96,
+        "address": "0x20012580",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_sdio_tx",
+        "bytes": 96,
+        "address": "0x20012520",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart1_rx",
+        "bytes": 96,
+        "address": "0x20012300",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart1_tx",
+        "bytes": 96,
+        "address": "0x200122a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart2_rx",
+        "bytes": 96,
+        "address": "0x20012240",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart2_tx",
+        "bytes": 96,
+        "address": "0x200121e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart3_rx",
+        "bytes": 96,
+        "address": "0x20012180",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart3_tx",
+        "bytes": 96,
+        "address": "0x20012120",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_channels",
+        "bytes": 96,
+        "address": "0x200177c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_guard",
+        "bytes": 96,
+        "address": "0x20009938",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger",
+        "bytes": 96,
+        "address": "0x200109b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_queue",
+        "bytes": 96,
+        "address": "0x200174b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostics",
+        "bytes": 96,
+        "address": "0x20017450",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "LfnBuf",
+        "bytes": 98,
+        "address": "0x20010edc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_snapshot",
+        "bytes": 104,
+        "address": "0x20009130",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_barometer_diagnostics",
+        "bytes": 104,
+        "address": "0x200094b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 104,
+        "address": "0x20010948",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sink",
+        "bytes": 104,
+        "address": "0x20017380",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_native_log",
+        "bytes": 112,
+        "address": "0x2000a348",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tasks",
+        "bytes": 112,
+        "address": "0x20000000",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_queue",
+        "bytes": 128,
+        "address": "0x2000a2c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart1_rx_dma",
+        "bytes": 128,
+        "address": "0x20002170",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart2_rx_dma",
+        "bytes": 128,
+        "address": "0x200020f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_rx_dma",
+        "bytes": 128,
+        "address": "0x20002070",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hsd",
+        "bytes": 132,
+        "address": "0x200125e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_recovery_previous",
+        "bytes": 152,
+        "address": "0x10006a00",
+        "region": "CCM"
+      },
+      {
+        "name": "pxReadyTasksLists",
+        "bytes": 160,
+        "address": "0x200129ac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 160,
+        "address": "0x20013dc0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_integrity",
+        "bytes": 184,
+        "address": "0x10006e08",
+        "region": "CCM"
+      },
+      {
+        "name": "s_navigation_input",
+        "bytes": 184,
+        "address": "0x200091f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_line",
+        "bytes": 192,
+        "address": "0x200185a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_runtime_transactions",
+        "bytes": 200,
+        "address": "0x20013cf0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 208,
+        "address": "0x20012ff8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_transport_contexts",
+        "bytes": 232,
+        "address": "0x20014538",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 240,
+        "address": "0x20009d98",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 272,
+        "address": "0x200176b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_record_buffer",
+        "bytes": 284,
+        "address": "0x2001082c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "__sf",
+        "bytes": 312,
+        "address": "0x20018668",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_async_event",
+        "bytes": 320,
+        "address": "0x20017838",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_gnss_diagnostics",
+        "bytes": 320,
+        "address": "0x20009350",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_groups",
+        "bytes": 320,
+        "address": "0x1000c248",
+        "region": "CCM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 336,
+        "address": "0x20012ea8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 368,
+        "address": "0x20013e60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_published_snapshot",
+        "bytes": 440,
+        "address": "0x10006a98",
+        "region": "CCM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 440,
+        "address": "0x10006c50",
+        "region": "CCM"
+      },
+      {
+        "name": "s_idle_task_stack",
+        "bytes": 512,
+        "address": "0x1000c388",
+        "region": "CCM"
+      },
+      {
+        "name": "s_latest_payload",
+        "bytes": 512,
+        "address": "0x20016b0c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_data",
+        "bytes": 512,
+        "address": "0x20016f28",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_payload",
+        "bytes": 512,
+        "address": "0x20017128",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_scratch",
+        "bytes": 512,
+        "address": "0x200021f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart1_rx_ring",
+        "bytes": 512,
+        "address": "0x20011774",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_record",
+        "bytes": 530,
+        "address": "0x20016d0c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_file",
+        "bytes": 560,
+        "address": "0x200168dc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_object_file",
+        "bytes": 560,
+        "address": "0x200166ac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SDFatFS",
+        "bytes": 564,
+        "address": "0x200126b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration",
+        "bytes": 592,
+        "address": "0x20009e8c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_startup_report",
+        "bytes": 728,
+        "address": "0x20009628",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 848,
+        "address": "0x20009998",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart",
+        "bytes": 888,
+        "address": "0x20000080",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart2_rx_ring",
+        "bytes": 1024,
+        "address": "0x20011374",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_rx_ring",
+        "bytes": 1024,
+        "address": "0x20010f74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_tx_priority_ring",
+        "bytes": 1024,
+        "address": "0x20001470",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 1104,
+        "address": "0x20012a58",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_streams",
+        "bytes": 1216,
+        "address": "0x20010a18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 1368,
+        "address": "0x20013fd0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gpio",
+        "bytes": 1920,
+        "address": "0x20011974",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_tx_ring",
+        "bytes": 2048,
+        "address": "0x20001870",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_device_stack",
+        "bytes": 2560,
+        "address": "0x10006000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_queue",
+        "bytes": 2560,
+        "address": "0x200026a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 2984,
+        "address": "0x20013148",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_stack",
+        "bytes": 3072,
+        "address": "0x10005400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_stack",
+        "bytes": 3072,
+        "address": "0x10002800",
+        "region": "CCM"
+      },
+      {
+        "name": "s_response",
+        "bytes": 3072,
+        "address": "0x200179a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_aggregate_buffer",
+        "bytes": 4096,
+        "address": "0x20000470",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_stack",
+        "bytes": 4096,
+        "address": "0x10004400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_flight_stack",
+        "bytes": 4096,
+        "address": "0x10003400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_telemetry_stack",
+        "bytes": 4096,
+        "address": "0x10000000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_io_baselines",
+        "bytes": 4864,
+        "address": "0x1000c588",
+        "region": "CCM"
+      },
+      {
+        "name": "s_queue",
+        "bytes": 5120,
+        "address": "0x20007c80",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_serial_stack",
+        "bytes": 6144,
+        "address": "0x10001000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_hal_contexts",
+        "bytes": 8190,
+        "address": "0x20014624",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_logger_storage",
+        "bytes": 9600,
+        "address": "0x2000a3f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_replay_storage",
+        "bytes": 10368,
+        "address": "0x10006ec0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_estimator",
+        "bytes": 10944,
+        "address": "0x10009740",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_storage",
+        "bytes": 16000,
+        "address": "0x2000c990",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_replay",
+        "bytes": 19304,
+        "address": "0x200030b8",
+        "region": "main_SRAM"
+      }
+    ],
+    "commands": [
+      [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-nm.exe",
+        "-S",
+        "--size-sort",
+        ".work\\EskfWorkspace_42d4203_stage2_v1\\after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ],
+      [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objdump.exe",
+        "-h",
+        ".work\\EskfWorkspace_42d4203_stage2_v1\\after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ]
+    ],
+    "cpu_fast_objects": [
+      {
+        "name": "s_alignment_strategy",
+        "bytes": 72,
+        "address": "0x1000c200",
+        "region": "CCM"
+      },
+      {
+        "name": "s_gnss_recovery_previous",
+        "bytes": 152,
+        "address": "0x10006a00",
+        "region": "CCM"
+      },
+      {
+        "name": "s_integrity",
+        "bytes": 184,
+        "address": "0x10006e08",
+        "region": "CCM"
+      },
+      {
+        "name": "s_groups",
+        "bytes": 320,
+        "address": "0x1000c248",
+        "region": "CCM"
+      },
+      {
+        "name": "s_published_snapshot",
+        "bytes": 440,
+        "address": "0x10006a98",
+        "region": "CCM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 440,
+        "address": "0x10006c50",
+        "region": "CCM"
+      },
+      {
+        "name": "s_idle_task_stack",
+        "bytes": 512,
+        "address": "0x1000c388",
+        "region": "CCM"
+      },
+      {
+        "name": "s_device_stack",
+        "bytes": 2560,
+        "address": "0x10006000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_ins_stack",
+        "bytes": 3072,
+        "address": "0x10005400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_stack",
+        "bytes": 3072,
+        "address": "0x10002800",
+        "region": "CCM"
+      },
+      {
+        "name": "s_estimator_stack",
+        "bytes": 4096,
+        "address": "0x10004400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_flight_stack",
+        "bytes": 4096,
+        "address": "0x10003400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_telemetry_stack",
+        "bytes": 4096,
+        "address": "0x10000000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_io_baselines",
+        "bytes": 4864,
+        "address": "0x1000c588",
+        "region": "CCM"
+      },
+      {
+        "name": "s_serial_stack",
+        "bytes": 6144,
+        "address": "0x10001000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_replay_storage",
+        "bytes": 10368,
+        "address": "0x10006ec0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_estimator",
+        "bytes": 10944,
+        "address": "0x10009740",
+        "region": "CCM"
+      }
+    ]
+  },
+  "eskf15": {
+    "elf": ".work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+    "elf_sha256": "e007ef6b8461e57e7f5d34c8342249aae8526c59a59e0eadec91cb62e08642aa",
+    "symbols": [
+      {
+        "name": "last_usable.4",
+        "bytes": 1,
+        "address": "0x20002428",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "retSD",
+        "bytes": 1,
+        "address": "0x2000ef18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accepting_records",
+        "bytes": 1,
+        "address": "0x200069e9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_cache_next",
+        "bytes": 1,
+        "address": "0x20006869",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_head",
+        "bytes": 1,
+        "address": "0x2000689d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_tail",
+        "bytes": 1,
+        "address": "0x2000689c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_action_active",
+        "bytes": 1,
+        "address": "0x20006310",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_action_active",
+        "bytes": 1,
+        "address": "0x20005f59",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_active",
+        "bytes": 1,
+        "address": "0x20013e5a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_active_bank",
+        "bytes": 1,
+        "address": "0x20000406",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_final_ready",
+        "bytes": 1,
+        "address": "0x200056b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_invalid_sample_seen",
+        "bytes": 1,
+        "address": "0x200056b2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_source",
+        "bytes": 1,
+        "address": "0x200056b3",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_state",
+        "bytes": 1,
+        "address": "0x20006860",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_state_known",
+        "bytes": 1,
+        "address": "0x2000422c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_status_known",
+        "bytes": 1,
+        "address": "0x20006861",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_ready",
+        "bytes": 1,
+        "address": "0x20005b42",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_source_available",
+        "bytes": 1,
+        "address": "0x200056b1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_status",
+        "bytes": 1,
+        "address": "0x20005b41",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_seen",
+        "bytes": 1,
+        "address": "0x20013e5b",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_barometer_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20005ad0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_mode",
+        "bytes": 1,
+        "address": "0x2000684c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_ready",
+        "bytes": 1,
+        "address": "0x200056af",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_state",
+        "bytes": 1,
+        "address": "0x2000684d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_status_known",
+        "bytes": 1,
+        "address": "0x2000684e",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_send_pending",
+        "bytes": 1,
+        "address": "0x20006838",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_sent",
+        "bytes": 1,
+        "address": "0x20006839",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_sequence",
+        "bytes": 1,
+        "address": "0x2000683a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_state",
+        "bytes": 1,
+        "address": "0x20006834",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capture_active",
+        "bytes": 1,
+        "address": "0x20005b72",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_collecting",
+        "bytes": 1,
+        "address": "0x20005f5b",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_collector_state",
+        "bytes": 1,
+        "address": "0x20006315",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_command_policy",
+        "bytes": 1,
+        "address": "0x20006837",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_compute_pending",
+        "bytes": 1,
+        "address": "0x20006312",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_alignment_state",
+        "bytes": 1,
+        "address": "0x20017400",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_descriptor_count",
+        "bytes": 1,
+        "address": "0x20005b73",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_gnss_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x2000592a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_profile_frozen",
+        "bytes": 1,
+        "address": "0x20005b40",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_status_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x2000592b",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_fault_event_written",
+        "bytes": 1,
+        "address": "0x20004250",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_file_open",
+        "bytes": 1,
+        "address": "0x20012cd0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_finalization_state",
+        "bytes": 1,
+        "address": "0x200069e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_frozen",
+        "bytes": 1,
+        "address": "0x20005f5a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_frozen",
+        "bytes": 1,
+        "address": "0x2000d038",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_position_usable",
+        "bytes": 1,
+        "address": "0x20006863",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_seen",
+        "bytes": 1,
+        "address": "0x20013e5c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_source",
+        "bytes": 1,
+        "address": "0x20013e58",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_state_known",
+        "bytes": 1,
+        "address": "0x20006864",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000426c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20005f5c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000d039",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20013de8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20013de9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x200069ec",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000e734",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20012cd2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20002698",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20006314",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20013a71",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20012c79",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20006748",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_input_fault_latched",
+        "bytes": 1,
+        "address": "0x200056ac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20005928",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_kf_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20005929",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_valid",
+        "bytes": 1,
+        "address": "0x20013cc8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_valid",
+        "bytes": 1,
+        "address": "0x20013b78",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_valid",
+        "bytes": 1,
+        "address": "0x20013cb0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_valid",
+        "bytes": 1,
+        "address": "0x20013c9c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_latest_sample_valid",
+        "bytes": 1,
+        "address": "0x20006311",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_lifecycle_state",
+        "bytes": 1,
+        "address": "0x20013b64",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_locked",
+        "bytes": 1,
+        "address": "0x20006865",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logged_alignment_state",
+        "bytes": 1,
+        "address": "0x2000422d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_load_complete",
+        "bytes": 1,
+        "address": "0x200139a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_load_instance",
+        "bytes": 1,
+        "address": "0x200139a5",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_enabled",
+        "bytes": 1,
+        "address": "0x200172bd",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_instance",
+        "bytes": 1,
+        "address": "0x200172bc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_manifest_ready",
+        "bytes": 1,
+        "address": "0x20012c7a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_attitude_frozen",
+        "bytes": 1,
+        "address": "0x200056ae",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_running",
+        "bytes": 1,
+        "address": "0x200056ad",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_started",
+        "bytes": 1,
+        "address": "0x20005f41",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_stopped",
+        "bytes": 1,
+        "address": "0x20005f40",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_model_mismatch",
+        "bytes": 1,
+        "address": "0x200067a5",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mounted",
+        "bytes": 1,
+        "address": "0x20012cd1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_detail_index",
+        "bytes": 1,
+        "address": "0x200067c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_health_index",
+        "bytes": 1,
+        "address": "0x200067e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_preparation_pending",
+        "bytes": 1,
+        "address": "0x200067e1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_profile_frozen",
+        "bytes": 1,
+        "address": "0x20005b70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_estimator_queue",
+        "bytes": 1,
+        "address": "0x200069eb",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_origin_collection_busy",
+        "bytes": 1,
+        "address": "0x20003ea0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_event_count",
+        "bytes": 1,
+        "address": "0x2000674a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_event_flush_active",
+        "bytes": 1,
+        "address": "0x20006749",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_source",
+        "bytes": 1,
+        "address": "0x20006854",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_source_known",
+        "bytes": 1,
+        "address": "0x20006855",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_known",
+        "bytes": 1,
+        "address": "0x20006835",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_send_pending",
+        "bytes": 1,
+        "address": "0x20006836",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pressure_valid",
+        "bytes": 1,
+        "address": "0x20002658",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_queue_drain_run",
+        "bytes": 1,
+        "address": "0x200069ea",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_head",
+        "bytes": 1,
+        "address": "0x20013add",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_tail",
+        "bytes": 1,
+        "address": "0x20013adc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_head",
+        "bytes": 1,
+        "address": "0x20013adb",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_tail",
+        "bytes": 1,
+        "address": "0x20013ada",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_runtime_owner_active_contexts",
+        "bytes": 1,
+        "address": "0x200103e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sampling_active",
+        "bytes": 1,
+        "address": "0x20006313",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_busy",
+        "bytes": 1,
+        "address": "0x2000ec8e",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_poisoned",
+        "bytes": 1,
+        "address": "0x2000ec8d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_status",
+        "bytes": 1,
+        "address": "0x200003fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_transfer_active",
+        "bytes": 1,
+        "address": "0x2000ec8c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_selftest_event_sent",
+        "bytes": 1,
+        "address": "0x20006862",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_active",
+        "bytes": 1,
+        "address": "0x2000685b",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_id",
+        "bytes": 1,
+        "address": "0x20006858",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_index",
+        "bytes": 1,
+        "address": "0x2000685a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_terminal_pending",
+        "bytes": 1,
+        "address": "0x20006857",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_terminal_state",
+        "bytes": 1,
+        "address": "0x20006856",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_total",
+        "bytes": 1,
+        "address": "0x20006859",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_cmd_sequence",
+        "bytes": 1,
+        "address": "0x20006866",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_request_pending",
+        "bytes": 1,
+        "address": "0x20013ad9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_request_pending",
+        "bytes": 1,
+        "address": "0x20006867",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_transaction_active",
+        "bytes": 1,
+        "address": "0x20013ad8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_started",
+        "bytes": 1,
+        "address": "0x20012c78",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_started",
+        "bytes": 1,
+        "address": "0x20013e59",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_started",
+        "bytes": 1,
+        "address": "0x20013a70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_startup_phase",
+        "bytes": 1,
+        "address": "0x20005c48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_head",
+        "bytes": 1,
+        "address": "0x200068e9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_tail",
+        "bytes": 1,
+        "address": "0x200068e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_system_profile_frozen",
+        "bytes": 1,
+        "address": "0x20005b71",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_time_source_ready",
+        "bytes": 1,
+        "address": "0x20005f58",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tx_sequence",
+        "bytes": 1,
+        "address": "0x20006868",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "state_known.5",
+        "bytes": 1,
+        "address": "0x20002429",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "ucMaxSysCallPriority",
+        "bytes": 1,
+        "address": "0x2000f07c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTickFreq",
+        "bytes": 1,
+        "address": "0x20000078",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "Fsid",
+        "bytes": 2,
+        "address": "0x2000d588",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_generation",
+        "bytes": 2,
+        "address": "0x20000404",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_head",
+        "bytes": 2,
+        "address": "0x20004270",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_head",
+        "bytes": 2,
+        "address": "0x2000269c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_line_length",
+        "bytes": 2,
+        "address": "0x2001802c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_generation",
+        "bytes": 2,
+        "address": "0x200067e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_session",
+        "bytes": 2,
+        "address": "0x200067ea",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue_storage",
+        "bytes": 2,
+        "address": "0x2000ec94",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tail",
+        "bytes": 2,
+        "address": "0x2000269a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tail",
+        "bytes": 2,
+        "address": "0x2000426e",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 3,
+        "address": "0x20010c48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "_impure_ptr",
+        "bytes": 4,
+        "address": "0x20000420",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "FatFs",
+        "bytes": 4,
+        "address": "0x2000d58c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_rf_sequence.2",
+        "bytes": 4,
+        "address": "0x20002420",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_satellite_sequence.3",
+        "bytes": 4,
+        "address": "0x20002424",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_sequence.6",
+        "bytes": 4,
+        "address": "0x2000242c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_sequence.7",
+        "bytes": 4,
+        "address": "0x20002430",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxCurrentTCB",
+        "bytes": 4,
+        "address": "0x2000f074",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxDelayedTaskList",
+        "bytes": 4,
+        "address": "0x2000efa8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxOverflowDelayedTaskList",
+        "bytes": 4,
+        "address": "0x2000efa4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_active_mission_id",
+        "bytes": 4,
+        "address": "0x2001354c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_start_sequence",
+        "bytes": 4,
+        "address": "0x20004230",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_origin",
+        "bytes": 4,
+        "address": "0x20013e84",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_sequence",
+        "bytes": 4,
+        "address": "0x20013e7c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x20006844",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x20004234",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x20006848",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x20004238",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_generation",
+        "bytes": 4,
+        "address": "0x20013e50",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_start_sequence",
+        "bytes": 4,
+        "address": "0x20004240",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_state_sequence",
+        "bytes": 4,
+        "address": "0x2000423c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_commit_sequence",
+        "bytes": 4,
+        "address": "0x20013548",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_alignment_completion_sequence",
+        "bytes": 4,
+        "address": "0x20017414",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_completion_sequence",
+        "bytes": 4,
+        "address": "0x2001741c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x20017418",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x20017420",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_deploy_event_sequence",
+        "bytes": 4,
+        "address": "0x2001740c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_discontinuity_sequence",
+        "bytes": 4,
+        "address": "0x20017424",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_flight_action_sequence",
+        "bytes": 4,
+        "address": "0x20017410",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_impact_event_sequence",
+        "bytes": 4,
+        "address": "0x20017408",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_landing_event_sequence",
+        "bytes": 4,
+        "address": "0x20017404",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_start_request_id",
+        "bytes": 4,
+        "address": "0x20017428",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_detail_log_sequence",
+        "bytes": 4,
+        "address": "0x20004224",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_event_sequence",
+        "bytes": 4,
+        "address": "0x20006840",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_log_sequence",
+        "bytes": 4,
+        "address": "0x20004228",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_eskf_quality_flags",
+        "bytes": 4,
+        "address": "0x20005678",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_fault_reason_mask",
+        "bytes": 4,
+        "address": "0x20013b60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_sequence",
+        "bytes": 4,
+        "address": "0x20013e80",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_impact_log_sequence",
+        "bytes": 4,
+        "address": "0x20004220",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu_faults",
+        "bytes": 4,
+        "address": "0x200067ac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu_quality",
+        "bytes": 4,
+        "address": "0x200067a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu_quality_flags",
+        "bytes": 4,
+        "address": "0x20013e54",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_increment_sequence",
+        "bytes": 4,
+        "address": "0x200056b4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_imu_count",
+        "bytes": 4,
+        "address": "0x20013b74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_accel_norm",
+        "bytes": 4,
+        "address": "0x20013b6c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_gravity_error",
+        "bytes": 4,
+        "address": "0x20013b68",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_gyro_norm",
+        "bytes": 4,
+        "address": "0x20013b70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_diagnostic_log_sequence",
+        "bytes": 4,
+        "address": "0x20004218",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_event_sequence",
+        "bytes": 4,
+        "address": "0x2000683c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_log_sequence",
+        "bytes": 4,
+        "address": "0x2000421c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_sequence",
+        "bytes": 4,
+        "address": "0x20013ccc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_device_sequence",
+        "bytes": 4,
+        "address": "0x20004268",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_sequence",
+        "bytes": 4,
+        "address": "0x20013b7c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_sequence",
+        "bytes": 4,
+        "address": "0x20013cb4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_sequence",
+        "bytes": 4,
+        "address": "0x20013ca0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_tick_ms",
+        "bytes": 4,
+        "address": "0x2000e730",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_log_failures",
+        "bytes": 4,
+        "address": "0x20013e70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_next_request_id",
+        "bytes": 4,
+        "address": "0x200064b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_last_sequence",
+        "bytes": 4,
+        "address": "0x200172b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_id",
+        "bytes": 4,
+        "address": "0x20012c7c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_native_tow_ms",
+        "bytes": 4,
+        "address": "0x20013e60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_generation_base",
+        "bytes": 4,
+        "address": "0x200067e4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_operation",
+        "bytes": 4,
+        "address": "0x20013e78",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_alignment_sequence",
+        "bytes": 4,
+        "address": "0x20006850",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue",
+        "bytes": 4,
+        "address": "0x2000ec90",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_sequence",
+        "bytes": 4,
+        "address": "0x2000685c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot_id",
+        "bytes": 4,
+        "address": "0x20013e74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x20013a74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SDPath",
+        "bytes": 4,
+        "address": "0x2000ef14",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SystemCoreClock",
+        "bytes": 4,
+        "address": "0x200003f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "ulMaxPRIGROUPValue",
+        "bytes": 4,
+        "address": "0x2000f078",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTick",
+        "bytes": 4,
+        "address": "0x2000d500",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTickPrio",
+        "bytes": 4,
+        "address": "0x2000007c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxCriticalNesting",
+        "bytes": 4,
+        "address": "0x20000400",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxCurrentNumberOfTasks",
+        "bytes": 4,
+        "address": "0x2000ef8c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxSchedulerSuspended",
+        "bytes": 4,
+        "address": "0x2000ef68",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxTaskNumber",
+        "bytes": 4,
+        "address": "0x2000ef70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxTopReadyPriority",
+        "bytes": 4,
+        "address": "0x2000ef84",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xNextTaskUnblockTime",
+        "bytes": 4,
+        "address": "0x2000ef6c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xNumOfOverflows",
+        "bytes": 4,
+        "address": "0x2000ef74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xPendedTicks",
+        "bytes": 4,
+        "address": "0x2000ef7c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xSchedulerRunning",
+        "bytes": 4,
+        "address": "0x2000ef80",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xTickCount",
+        "bytes": 4,
+        "address": "0x2000ef88",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xYieldPendings",
+        "bytes": 4,
+        "address": "0x2000ef78",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_previous_state",
+        "bytes": 5,
+        "address": "0x200067a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_health_log_us.0",
+        "bytes": 8,
+        "address": "0x20002410",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_epoch_us",
+        "bytes": 8,
+        "address": "0x200067b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_finalization_deadline_us",
+        "bytes": 8,
+        "address": "0x200069e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_baro_covered_us",
+        "bytes": 8,
+        "address": "0x20013c18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_last_imu_us",
+        "bytes": 8,
+        "address": "0x20013b88",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_start_us",
+        "bytes": 8,
+        "address": "0x20013b90",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_attempt_us",
+        "bytes": 8,
+        "address": "0x20013a68",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_timestamp_us",
+        "bytes": 8,
+        "address": "0x20013cd0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_timestamp_us",
+        "bytes": 8,
+        "address": "0x20013b80",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_timestamp_us",
+        "bytes": 8,
+        "address": "0x20013cb8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_timestamp_us",
+        "bytes": 8,
+        "address": "0x20013ca8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_monotonic_us",
+        "bytes": 8,
+        "address": "0x2000e720",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_sample_us",
+        "bytes": 8,
+        "address": "0x20006318",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_next_us",
+        "bytes": 8,
+        "address": "0x200172b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_start_us",
+        "bytes": 8,
+        "address": "0x20005f50",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_stop_us",
+        "bytes": 8,
+        "address": "0x20005f48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_native_week_us",
+        "bytes": 8,
+        "address": "0x20013e68",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_capability_us",
+        "bytes": 8,
+        "address": "0x20006808",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_detail_us",
+        "bytes": 8,
+        "address": "0x200067c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_health_us",
+        "bytes": 8,
+        "address": "0x200067d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_preparation_us",
+        "bytes": 8,
+        "address": "0x200067d8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_preflight_state_us",
+        "bytes": 8,
+        "address": "0x200067f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_preflight_status_us",
+        "bytes": 8,
+        "address": "0x20006800",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_stream_us",
+        "bytes": 8,
+        "address": "0x200067f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_phase_started_us",
+        "bytes": 8,
+        "address": "0x20005c40",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_observed",
+        "bytes": 8,
+        "address": "0x20006810",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preparation",
+        "bytes": 8,
+        "address": "0x20000070",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_recovery_enter_timestamp_us",
+        "bytes": 8,
+        "address": "0x20013cc0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot_info",
+        "bytes": 8,
+        "address": "0x20005b74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_state_start_us",
+        "bytes": 8,
+        "address": "0x20006320",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tick_epoch_ms",
+        "bytes": 8,
+        "address": "0x2000e728",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "stats_log_state.1",
+        "bytes": 8,
+        "address": "0x20002418",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "telemetry_log_state.0",
+        "bytes": 8,
+        "address": "0x200067b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "disk",
+        "bytes": 12,
+        "address": "0x2000d590",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accel_square_sum",
+        "bytes": 12,
+        "address": "0x2000634c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accel_sum",
+        "bytes": 12,
+        "address": "0x20006364",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 12,
+        "address": "0x2000f70c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 12,
+        "address": "0x2000f6f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gyro_square_sum",
+        "bytes": 12,
+        "address": "0x20006340",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gyro_sum",
+        "bytes": 12,
+        "address": "0x20006358",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_accel_mean",
+        "bytes": 12,
+        "address": "0x20006334",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_gyro_mean",
+        "bytes": 12,
+        "address": "0x20006328",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostic_sequence",
+        "bytes": 12,
+        "address": "0x20004244",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_bus_status",
+        "bytes": 16,
+        "address": "0x20010b50",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capabilities",
+        "bytes": 16,
+        "address": "0x20005918",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 16,
+        "address": "0x2000f6fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss",
+        "bytes": 16,
+        "address": "0x2000677c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_events",
+        "bytes": 16,
+        "address": "0x2000674c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_stats",
+        "bytes": 16,
+        "address": "0x20002648",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_timebase",
+        "bytes": 16,
+        "address": "0x2000e738",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu",
+        "bytes": 17,
+        "address": "0x2000678c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_stats",
+        "bytes": 20,
+        "address": "0x20004254",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xDelayedTaskList1",
+        "bytes": 20,
+        "address": "0x2000efc0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xDelayedTaskList2",
+        "bytes": 20,
+        "address": "0x2000efac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xPendingReadyList",
+        "bytes": 20,
+        "address": "0x2000ef90",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_config",
+        "bytes": 24,
+        "address": "0x20000408",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_eskf_accel_pair",
+        "bytes": 24,
+        "address": "0x2000567c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_eskf_gyro_pair",
+        "bytes": 24,
+        "address": "0x20005694",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_status_diagnostics",
+        "bytes": 24,
+        "address": "0x20005ab8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_diagnostics",
+        "bytes": 24,
+        "address": "0x20005930",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_utc_mapping",
+        "bytes": 24,
+        "address": "0x20005f28",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deployment_context",
+        "bytes": 28,
+        "address": "0x20013c80",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 28,
+        "address": "0x20006818",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_logger_queue",
+        "bytes": 28,
+        "address": "0x20008f98",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger_queue",
+        "bytes": 28,
+        "address": "0x2000ce38",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_telemetry",
+        "bytes": 28,
+        "address": "0x20006760",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "Files",
+        "bytes": 32,
+        "address": "0x2000d568",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_context",
+        "bytes": 32,
+        "address": "0x20013c60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_queue",
+        "bytes": 32,
+        "address": "0x20013b40",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 36,
+        "address": "0x200069f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x20012c50",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x20013a10",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x20005b48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_cache",
+        "bytes": 48,
+        "address": "0x2000686c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_kf_diagnostics",
+        "bytes": 48,
+        "address": "0x20005948",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sample",
+        "bytes": 48,
+        "address": "0x20013a38",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pressure",
+        "bytes": 56,
+        "address": "0x20002660",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_candidate_window",
+        "bytes": 64,
+        "address": "0x20013b98",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_trigger_window",
+        "bytes": 64,
+        "address": "0x20013bd8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capture_working",
+        "bytes": 64,
+        "address": "0x20005b7c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_descriptors",
+        "bytes": 64,
+        "address": "0x20005bfc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_indicator",
+        "bytes": 64,
+        "address": "0x20006708",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_imu_window",
+        "bytes": 64,
+        "address": "0x20013c20",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 64,
+        "address": "0x20005bbc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hadc1",
+        "bytes": 72,
+        "address": "0x2000eb00",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "htim1",
+        "bytes": 72,
+        "address": "0x2000ea60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart1",
+        "bytes": 72,
+        "address": "0x2000ea18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart2",
+        "bytes": 72,
+        "address": "0x2000e9d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart3",
+        "bytes": 72,
+        "address": "0x2000e988",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_queue",
+        "bytes": 72,
+        "address": "0x200068a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_strategy",
+        "bytes": 72,
+        "address": "0x100091f8",
+        "region": "CCM"
+      },
+      {
+        "name": "s_assert_fault",
+        "bytes": 72,
+        "address": "0x200058d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_frame",
+        "bytes": 72,
+        "address": "0x20013e88",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue_control",
+        "bytes": 72,
+        "address": "0x2000ec98",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "_impure_data",
+        "bytes": 76,
+        "address": "0x20000424",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_device_task_control",
+        "bytes": 76,
+        "address": "0x200025fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_task_control",
+        "bytes": 76,
+        "address": "0x20002564",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_flight_task_control",
+        "bytes": 76,
+        "address": "0x20002518",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_idle_task_control",
+        "bytes": 76,
+        "address": "0x2000ef1c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_task_control",
+        "bytes": 76,
+        "address": "0x200025b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger_task_control",
+        "bytes": 76,
+        "address": "0x200024cc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_serial_task_control",
+        "bytes": 76,
+        "address": "0x20002480",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_telemetry_task_control",
+        "bytes": 76,
+        "address": "0x20002434",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 80,
+        "address": "0x20012c80",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_latest_sample",
+        "bytes": 80,
+        "address": "0x20006370",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_output",
+        "bytes": 80,
+        "address": "0x20005708",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_published_output",
+        "bytes": 80,
+        "address": "0x200056b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_config_async_contexts",
+        "bytes": 84,
+        "address": "0x2000f718",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_packet",
+        "bytes": 84,
+        "address": "0x20013950",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hspi1",
+        "bytes": 88,
+        "address": "0x2000eaa8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude",
+        "bytes": 88,
+        "address": "0x200057c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_sdio_rx",
+        "bytes": 96,
+        "address": "0x2000eba8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_sdio_tx",
+        "bytes": 96,
+        "address": "0x2000eb48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart1_rx",
+        "bytes": 96,
+        "address": "0x2000e928",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart1_tx",
+        "bytes": 96,
+        "address": "0x2000e8c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart2_rx",
+        "bytes": 96,
+        "address": "0x2000e868",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart2_tx",
+        "bytes": 96,
+        "address": "0x2000e808",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart3_rx",
+        "bytes": 96,
+        "address": "0x2000e7a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart3_tx",
+        "bytes": 96,
+        "address": "0x2000e748",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_channels",
+        "bytes": 96,
+        "address": "0x20013df0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_guard",
+        "bytes": 96,
+        "address": "0x20005f60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger",
+        "bytes": 96,
+        "address": "0x2000cfd8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_queue",
+        "bytes": 96,
+        "address": "0x20013ae0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostics",
+        "bytes": 96,
+        "address": "0x20013a78",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "LfnBuf",
+        "bytes": 98,
+        "address": "0x2000d504",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_snapshot",
+        "bytes": 104,
+        "address": "0x20005758",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_barometer_diagnostics",
+        "bytes": 104,
+        "address": "0x20005ad8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 104,
+        "address": "0x2000cf70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sink",
+        "bytes": 104,
+        "address": "0x200139a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_native_log",
+        "bytes": 112,
+        "address": "0x20006970",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tasks",
+        "bytes": 112,
+        "address": "0x20000000",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_queue",
+        "bytes": 128,
+        "address": "0x200068f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart1_rx_dma",
+        "bytes": 128,
+        "address": "0x20002170",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart2_rx_dma",
+        "bytes": 128,
+        "address": "0x200020f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_rx_dma",
+        "bytes": 128,
+        "address": "0x20002070",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hsd",
+        "bytes": 132,
+        "address": "0x2000ec08",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxReadyTasksLists",
+        "bytes": 160,
+        "address": "0x2000efd4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 160,
+        "address": "0x200103e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_input",
+        "bytes": 184,
+        "address": "0x20005818",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_window",
+        "bytes": 184,
+        "address": "0x10009580",
+        "region": "CCM"
+      },
+      {
+        "name": "s_line",
+        "bytes": 192,
+        "address": "0x20018030",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_runtime_transactions",
+        "bytes": 200,
+        "address": "0x20010318",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 208,
+        "address": "0x2000f620",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_transport_contexts",
+        "bytes": 232,
+        "address": "0x20010b60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 240,
+        "address": "0x200063c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 272,
+        "address": "0x20013cd8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_record_buffer",
+        "bytes": 284,
+        "address": "0x2000ce54",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "__sf",
+        "bytes": 312,
+        "address": "0x200180f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_async_event",
+        "bytes": 320,
+        "address": "0x200172c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_gnss_diagnostics",
+        "bytes": 320,
+        "address": "0x20005978",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_groups",
+        "bytes": 320,
+        "address": "0x10009240",
+        "region": "CCM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 336,
+        "address": "0x2000f4d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 368,
+        "address": "0x20010488",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_published_snapshot",
+        "bytes": 440,
+        "address": "0x20003ea8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 440,
+        "address": "0x20004060",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_idle_task_stack",
+        "bytes": 512,
+        "address": "0x10009380",
+        "region": "CCM"
+      },
+      {
+        "name": "s_latest_payload",
+        "bytes": 512,
+        "address": "0x20013134",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_data",
+        "bytes": 512,
+        "address": "0x20013550",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_payload",
+        "bytes": 512,
+        "address": "0x20013750",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_scratch",
+        "bytes": 512,
+        "address": "0x200021f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart1_rx_ring",
+        "bytes": 512,
+        "address": "0x2000dd9c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_record",
+        "bytes": 530,
+        "address": "0x20013334",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_file",
+        "bytes": 560,
+        "address": "0x20012f04",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_object_file",
+        "bytes": 560,
+        "address": "0x20012cd4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SDFatFS",
+        "bytes": 564,
+        "address": "0x2000ece0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration",
+        "bytes": 592,
+        "address": "0x200064b4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_startup_report",
+        "bytes": 728,
+        "address": "0x20005c50",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 848,
+        "address": "0x20005fc0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart",
+        "bytes": 888,
+        "address": "0x20000080",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_state",
+        "bytes": 992,
+        "address": "0x20016ed0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart2_rx_ring",
+        "bytes": 1024,
+        "address": "0x2000d99c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_rx_ring",
+        "bytes": 1024,
+        "address": "0x2000d59c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_tx_priority_ring",
+        "bytes": 1024,
+        "address": "0x20001470",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 1104,
+        "address": "0x2000f080",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_streams",
+        "bytes": 1216,
+        "address": "0x2000d040",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 1368,
+        "address": "0x200105f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gpio",
+        "bytes": 1920,
+        "address": "0x2000df9c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_tx_ring",
+        "bytes": 2048,
+        "address": "0x20001870",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_device_stack",
+        "bytes": 2560,
+        "address": "0x10006000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 2984,
+        "address": "0x2000f770",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_stack",
+        "bytes": 3072,
+        "address": "0x10005400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_stack",
+        "bytes": 3072,
+        "address": "0x10002800",
+        "region": "CCM"
+      },
+      {
+        "name": "s_response",
+        "bytes": 3072,
+        "address": "0x2001742c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_work",
+        "bytes": 3140,
+        "address": "0x1000d898",
+        "region": "CCM"
+      },
+      {
+        "name": "s_aggregate_buffer",
+        "bytes": 4096,
+        "address": "0x20000470",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_stack",
+        "bytes": 4096,
+        "address": "0x10004400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_flight_stack",
+        "bytes": 4096,
+        "address": "0x10003400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_telemetry_stack",
+        "bytes": 4096,
+        "address": "0x10000000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_io_baselines",
+        "bytes": 4864,
+        "address": "0x1000e4e0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_queue",
+        "bytes": 5120,
+        "address": "0x20004278",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_queue",
+        "bytes": 6144,
+        "address": "0x200026a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_serial_stack",
+        "bytes": 6144,
+        "address": "0x10001000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_hal_contexts",
+        "bytes": 8190,
+        "address": "0x20010c4c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_logger_storage",
+        "bytes": 9600,
+        "address": "0x20006a18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator",
+        "bytes": 10232,
+        "address": "0x10006a00",
+        "region": "CCM"
+      },
+      {
+        "name": "s_body_history",
+        "bytes": 12288,
+        "address": "0x20013ed0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger_storage",
+        "bytes": 16000,
+        "address": "0x20008fb8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_history",
+        "bytes": 16992,
+        "address": "0x10009638",
+        "region": "CCM"
+      }
+    ],
+    "commands": [
+      [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-nm.exe",
+        "-S",
+        "--size-sort",
+        ".work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ],
+      [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objdump.exe",
+        "-h",
+        ".work\\EskfWorkspace_42d4203_stage2_v1\\eskf15_after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ]
+    ],
+    "cpu_fast_objects": [
+      {
+        "name": "s_alignment_strategy",
+        "bytes": 72,
+        "address": "0x100091f8",
+        "region": "CCM"
+      },
+      {
+        "name": "s_window",
+        "bytes": 184,
+        "address": "0x10009580",
+        "region": "CCM"
+      },
+      {
+        "name": "s_groups",
+        "bytes": 320,
+        "address": "0x10009240",
+        "region": "CCM"
+      },
+      {
+        "name": "s_idle_task_stack",
+        "bytes": 512,
+        "address": "0x10009380",
+        "region": "CCM"
+      },
+      {
+        "name": "s_device_stack",
+        "bytes": 2560,
+        "address": "0x10006000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_ins_stack",
+        "bytes": 3072,
+        "address": "0x10005400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_stack",
+        "bytes": 3072,
+        "address": "0x10002800",
+        "region": "CCM"
+      },
+      {
+        "name": "s_work",
+        "bytes": 3140,
+        "address": "0x1000d898",
+        "region": "CCM"
+      },
+      {
+        "name": "s_estimator_stack",
+        "bytes": 4096,
+        "address": "0x10004400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_flight_stack",
+        "bytes": 4096,
+        "address": "0x10003400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_telemetry_stack",
+        "bytes": 4096,
+        "address": "0x10000000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_io_baselines",
+        "bytes": 4864,
+        "address": "0x1000e4e0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_serial_stack",
+        "bytes": 6144,
+        "address": "0x10001000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_estimator",
+        "bytes": 10232,
+        "address": "0x10006a00",
+        "region": "CCM"
+      },
+      {
+        "name": "s_history",
+        "bytes": 16992,
+        "address": "0x10009638",
+        "region": "CCM"
+      }
+    ]
+  },
+  "pure_ins": {
+    "elf": ".work\\EskfWorkspace_42d4203_stage2_v1\\pure_ins\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf",
+    "elf_sha256": "22418a4b55370c3a71155cdd3c361f90501167cf949451b8cde04f568228758d",
+    "symbols": [
+      {
+        "name": "last_usable.4",
+        "bytes": 1,
+        "address": "0x20002428",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "retSD",
+        "bytes": 1,
+        "address": "0x2000dd70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accepting_records",
+        "bytes": 1,
+        "address": "0x20005841",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_cache_next",
+        "bytes": 1,
+        "address": "0x200056c1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_head",
+        "bytes": 1,
+        "address": "0x200056f5",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_tail",
+        "bytes": 1,
+        "address": "0x200056f4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_action_active",
+        "bytes": 1,
+        "address": "0x20005168",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_action_active",
+        "bytes": 1,
+        "address": "0x20004db1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_active_bank",
+        "bytes": 1,
+        "address": "0x20000406",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_final_ready",
+        "bytes": 1,
+        "address": "0x20004504",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_invalid_sample_seen",
+        "bytes": 1,
+        "address": "0x20004506",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_source",
+        "bytes": 1,
+        "address": "0x20004507",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_state",
+        "bytes": 1,
+        "address": "0x200056b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_state_known",
+        "bytes": 1,
+        "address": "0x200030b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_status_known",
+        "bytes": 1,
+        "address": "0x200056b9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_ready",
+        "bytes": 1,
+        "address": "0x2000499a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_source_available",
+        "bytes": 1,
+        "address": "0x20004505",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_attitude_status",
+        "bytes": 1,
+        "address": "0x20004999",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_barometer_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20004928",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_mode",
+        "bytes": 1,
+        "address": "0x200056a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_ready",
+        "bytes": 1,
+        "address": "0x20004503",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_state",
+        "bytes": 1,
+        "address": "0x200056a5",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_status_known",
+        "bytes": 1,
+        "address": "0x200056a6",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_send_pending",
+        "bytes": 1,
+        "address": "0x20005690",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_sent",
+        "bytes": 1,
+        "address": "0x20005691",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_sequence",
+        "bytes": 1,
+        "address": "0x20005692",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capability_state",
+        "bytes": 1,
+        "address": "0x2000568c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capture_active",
+        "bytes": 1,
+        "address": "0x200049ca",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_collecting",
+        "bytes": 1,
+        "address": "0x20004db3",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_collector_state",
+        "bytes": 1,
+        "address": "0x2000516d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_command_policy",
+        "bytes": 1,
+        "address": "0x2000568f",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_compute_pending",
+        "bytes": 1,
+        "address": "0x2000516a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_alignment_state",
+        "bytes": 1,
+        "address": "0x20012df8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_descriptor_count",
+        "bytes": 1,
+        "address": "0x200049cb",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_gnss_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20004782",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_profile_frozen",
+        "bytes": 1,
+        "address": "0x20004998",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_status_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20004783",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_fault_event_written",
+        "bytes": 1,
+        "address": "0x200030dc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_file_open",
+        "bytes": 1,
+        "address": "0x20011b28",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_finalization_state",
+        "bytes": 1,
+        "address": "0x20005840",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_frozen",
+        "bytes": 1,
+        "address": "0x2000be90",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_frozen",
+        "bytes": 1,
+        "address": "0x20004db2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_position_usable",
+        "bytes": 1,
+        "address": "0x200056bb",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss_state_known",
+        "bytes": 1,
+        "address": "0x200056bc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20011ad1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20012c41",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20011b2a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20004db4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x200055a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20012c40",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000be91",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x200030f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000d58c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20002698",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x200128c9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x20005844",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_initialized",
+        "bytes": 1,
+        "address": "0x2000516c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_input_fault_latched",
+        "bytes": 1,
+        "address": "0x20004500",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20004780",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_kf_diagnostics_valid",
+        "bytes": 1,
+        "address": "0x20004781",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_valid",
+        "bytes": 1,
+        "address": "0x20012b20",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_valid",
+        "bytes": 1,
+        "address": "0x200129d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_valid",
+        "bytes": 1,
+        "address": "0x20012b08",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_valid",
+        "bytes": 1,
+        "address": "0x20012af4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_latest_sample_valid",
+        "bytes": 1,
+        "address": "0x20005169",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_lifecycle_state",
+        "bytes": 1,
+        "address": "0x200129bc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_locked",
+        "bytes": 1,
+        "address": "0x200056bd",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logged_alignment_state",
+        "bytes": 1,
+        "address": "0x200030b9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_load_complete",
+        "bytes": 1,
+        "address": "0x200127fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_load_instance",
+        "bytes": 1,
+        "address": "0x200127fd",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_enabled",
+        "bytes": 1,
+        "address": "0x20012cb5",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_instance",
+        "bytes": 1,
+        "address": "0x20012cb4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_manifest_ready",
+        "bytes": 1,
+        "address": "0x20011ad2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_attitude_frozen",
+        "bytes": 1,
+        "address": "0x20004502",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_running",
+        "bytes": 1,
+        "address": "0x20004501",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_started",
+        "bytes": 1,
+        "address": "0x20004d99",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_stopped",
+        "bytes": 1,
+        "address": "0x20004d98",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_model_mismatch",
+        "bytes": 1,
+        "address": "0x200055fd",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mounted",
+        "bytes": 1,
+        "address": "0x20011b29",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_detail_index",
+        "bytes": 1,
+        "address": "0x20005618",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_health_index",
+        "bytes": 1,
+        "address": "0x20005638",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_preparation_pending",
+        "bytes": 1,
+        "address": "0x20005639",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_profile_frozen",
+        "bytes": 1,
+        "address": "0x200049c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_estimator_queue",
+        "bytes": 1,
+        "address": "0x20005843",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_origin_collection_busy",
+        "bytes": 1,
+        "address": "0x200030a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_event_count",
+        "bytes": 1,
+        "address": "0x200055a2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_event_flush_active",
+        "bytes": 1,
+        "address": "0x200055a1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_source",
+        "bytes": 1,
+        "address": "0x200056ac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_source_known",
+        "bytes": 1,
+        "address": "0x200056ad",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_known",
+        "bytes": 1,
+        "address": "0x2000568d",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_send_pending",
+        "bytes": 1,
+        "address": "0x2000568e",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pressure_valid",
+        "bytes": 1,
+        "address": "0x20002658",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_queue_drain_run",
+        "bytes": 1,
+        "address": "0x20005842",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_head",
+        "bytes": 1,
+        "address": "0x20012935",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_tail",
+        "bytes": 1,
+        "address": "0x20012934",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_head",
+        "bytes": 1,
+        "address": "0x20012933",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_tail",
+        "bytes": 1,
+        "address": "0x20012932",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_runtime_owner_active_contexts",
+        "bytes": 1,
+        "address": "0x2000f238",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sampling_active",
+        "bytes": 1,
+        "address": "0x2000516b",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_busy",
+        "bytes": 1,
+        "address": "0x2000dae6",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_poisoned",
+        "bytes": 1,
+        "address": "0x2000dae5",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_status",
+        "bytes": 1,
+        "address": "0x200003fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_transfer_active",
+        "bytes": 1,
+        "address": "0x2000dae4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_selftest_event_sent",
+        "bytes": 1,
+        "address": "0x200056ba",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_active",
+        "bytes": 1,
+        "address": "0x200056b3",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_id",
+        "bytes": 1,
+        "address": "0x200056b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_index",
+        "bytes": 1,
+        "address": "0x200056b2",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_terminal_pending",
+        "bytes": 1,
+        "address": "0x200056af",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_terminal_state",
+        "bytes": 1,
+        "address": "0x200056ae",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_total",
+        "bytes": 1,
+        "address": "0x200056b1",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_cmd_sequence",
+        "bytes": 1,
+        "address": "0x200056be",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_request_pending",
+        "bytes": 1,
+        "address": "0x200056bf",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_request_pending",
+        "bytes": 1,
+        "address": "0x20012931",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_transaction_active",
+        "bytes": 1,
+        "address": "0x20012930",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_started",
+        "bytes": 1,
+        "address": "0x20011ad0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_started",
+        "bytes": 1,
+        "address": "0x200128c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_startup_phase",
+        "bytes": 1,
+        "address": "0x20004aa0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_head",
+        "bytes": 1,
+        "address": "0x20005741",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_tail",
+        "bytes": 1,
+        "address": "0x20005740",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_system_profile_frozen",
+        "bytes": 1,
+        "address": "0x200049c9",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_time_source_ready",
+        "bytes": 1,
+        "address": "0x20004db0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tx_sequence",
+        "bytes": 1,
+        "address": "0x200056c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "state_known.5",
+        "bytes": 1,
+        "address": "0x20002429",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "ucMaxSysCallPriority",
+        "bytes": 1,
+        "address": "0x2000ded4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTickFreq",
+        "bytes": 1,
+        "address": "0x20000078",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "Fsid",
+        "bytes": 2,
+        "address": "0x2000c3e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_generation",
+        "bytes": 2,
+        "address": "0x20000404",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_head",
+        "bytes": 2,
+        "address": "0x200030fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_head",
+        "bytes": 2,
+        "address": "0x2000269c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_line_length",
+        "bytes": 2,
+        "address": "0x20013a24",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_generation",
+        "bytes": 2,
+        "address": "0x20005640",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_session",
+        "bytes": 2,
+        "address": "0x20005642",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue_storage",
+        "bytes": 2,
+        "address": "0x2000daec",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tail",
+        "bytes": 2,
+        "address": "0x2000269a",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tail",
+        "bytes": 2,
+        "address": "0x200030fa",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 3,
+        "address": "0x2000faa0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "_impure_ptr",
+        "bytes": 4,
+        "address": "0x20000420",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "FatFs",
+        "bytes": 4,
+        "address": "0x2000c3e4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_rf_sequence.2",
+        "bytes": 4,
+        "address": "0x20002420",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_satellite_sequence.3",
+        "bytes": 4,
+        "address": "0x20002424",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_sequence.6",
+        "bytes": 4,
+        "address": "0x2000242c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_sequence.7",
+        "bytes": 4,
+        "address": "0x20002430",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxCurrentTCB",
+        "bytes": 4,
+        "address": "0x2000decc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxDelayedTaskList",
+        "bytes": 4,
+        "address": "0x2000de00",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxOverflowDelayedTaskList",
+        "bytes": 4,
+        "address": "0x2000ddfc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_active_mission_id",
+        "bytes": 4,
+        "address": "0x200123a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_start_sequence",
+        "bytes": 4,
+        "address": "0x200030bc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x200030c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x2000569c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x200056a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x200030c4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_start_sequence",
+        "bytes": 4,
+        "address": "0x200030cc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_calibration_state_sequence",
+        "bytes": 4,
+        "address": "0x200030c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_commit_sequence",
+        "bytes": 4,
+        "address": "0x200123a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_alignment_completion_sequence",
+        "bytes": 4,
+        "address": "0x20012e0c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_completion_sequence",
+        "bytes": 4,
+        "address": "0x20012e14",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x20012e10",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_calibration_face_event_sequence",
+        "bytes": 4,
+        "address": "0x20012e18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_deploy_event_sequence",
+        "bytes": 4,
+        "address": "0x20012e04",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_discontinuity_sequence",
+        "bytes": 4,
+        "address": "0x20012e1c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_flight_action_sequence",
+        "bytes": 4,
+        "address": "0x20012e08",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_impact_event_sequence",
+        "bytes": 4,
+        "address": "0x20012e00",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_landing_event_sequence",
+        "bytes": 4,
+        "address": "0x20012dfc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_console_start_request_id",
+        "bytes": 4,
+        "address": "0x20012e20",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_detail_log_sequence",
+        "bytes": 4,
+        "address": "0x200030b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_event_sequence",
+        "bytes": 4,
+        "address": "0x20005698",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deploy_log_sequence",
+        "bytes": 4,
+        "address": "0x200030b4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_fault_reason_mask",
+        "bytes": 4,
+        "address": "0x200129b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_impact_log_sequence",
+        "bytes": 4,
+        "address": "0x200030ac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu_faults",
+        "bytes": 4,
+        "address": "0x20005604",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu_quality",
+        "bytes": 4,
+        "address": "0x20005600",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_increment_sequence",
+        "bytes": 4,
+        "address": "0x20004508",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_imu_count",
+        "bytes": 4,
+        "address": "0x200129cc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_accel_norm",
+        "bytes": 4,
+        "address": "0x200129c4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_gravity_error",
+        "bytes": 4,
+        "address": "0x200129c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_max_gyro_norm",
+        "bytes": 4,
+        "address": "0x200129c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_diagnostic_log_sequence",
+        "bytes": 4,
+        "address": "0x200030a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_event_sequence",
+        "bytes": 4,
+        "address": "0x20005694",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_log_sequence",
+        "bytes": 4,
+        "address": "0x200030a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_sequence",
+        "bytes": 4,
+        "address": "0x20012b24",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_device_sequence",
+        "bytes": 4,
+        "address": "0x200030f4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_sequence",
+        "bytes": 4,
+        "address": "0x200129d4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_sequence",
+        "bytes": 4,
+        "address": "0x20012b0c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_sequence",
+        "bytes": 4,
+        "address": "0x20012af8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_tick_ms",
+        "bytes": 4,
+        "address": "0x2000d588",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_next_request_id",
+        "bytes": 4,
+        "address": "0x20005308",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_last_sequence",
+        "bytes": 4,
+        "address": "0x20012cb0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_id",
+        "bytes": 4,
+        "address": "0x20011ad4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_generation_base",
+        "bytes": 4,
+        "address": "0x2000563c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude_alignment_sequence",
+        "bytes": 4,
+        "address": "0x200056a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue",
+        "bytes": 4,
+        "address": "0x2000dae8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sensor_snapshot_sequence",
+        "bytes": 4,
+        "address": "0x200056b4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostic_sequence",
+        "bytes": 4,
+        "address": "0x200128cc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SDPath",
+        "bytes": 4,
+        "address": "0x2000dd6c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SystemCoreClock",
+        "bytes": 4,
+        "address": "0x200003f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "ulMaxPRIGROUPValue",
+        "bytes": 4,
+        "address": "0x2000ded0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTick",
+        "bytes": 4,
+        "address": "0x2000c358",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uwTickPrio",
+        "bytes": 4,
+        "address": "0x2000007c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxCriticalNesting",
+        "bytes": 4,
+        "address": "0x20000400",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxCurrentNumberOfTasks",
+        "bytes": 4,
+        "address": "0x2000dde4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxSchedulerSuspended",
+        "bytes": 4,
+        "address": "0x2000ddc0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxTaskNumber",
+        "bytes": 4,
+        "address": "0x2000ddc8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "uxTopReadyPriority",
+        "bytes": 4,
+        "address": "0x2000dddc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xNextTaskUnblockTime",
+        "bytes": 4,
+        "address": "0x2000ddc4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xNumOfOverflows",
+        "bytes": 4,
+        "address": "0x2000ddcc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xPendedTicks",
+        "bytes": 4,
+        "address": "0x2000ddd4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xSchedulerRunning",
+        "bytes": 4,
+        "address": "0x2000ddd8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xTickCount",
+        "bytes": 4,
+        "address": "0x2000dde0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xYieldPendings",
+        "bytes": 4,
+        "address": "0x2000ddd0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_previous_state",
+        "bytes": 5,
+        "address": "0x200055f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "last_health_log_us.0",
+        "bytes": 8,
+        "address": "0x20002410",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_epoch_us",
+        "bytes": 8,
+        "address": "0x20005608",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_finalization_deadline_us",
+        "bytes": 8,
+        "address": "0x20005838",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_baro_covered_us",
+        "bytes": 8,
+        "address": "0x20012a70",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_last_imu_us",
+        "bytes": 8,
+        "address": "0x200129e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_candidate_start_us",
+        "bytes": 8,
+        "address": "0x200129e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_attempt_us",
+        "bytes": 8,
+        "address": "0x200128c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_deploy_estimator_timestamp_us",
+        "bytes": 8,
+        "address": "0x20012b28",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_baro_timestamp_us",
+        "bytes": 8,
+        "address": "0x200129d8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_inertial_timestamp_us",
+        "bytes": 8,
+        "address": "0x20012b10",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_landing_ins_timestamp_us",
+        "bytes": 8,
+        "address": "0x20012b00",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_monotonic_us",
+        "bytes": 8,
+        "address": "0x2000d578",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_last_sample_us",
+        "bytes": 8,
+        "address": "0x20005170",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_stream_next_us",
+        "bytes": 8,
+        "address": "0x20012ca8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_start_us",
+        "bytes": 8,
+        "address": "0x20004da8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mission_stop_us",
+        "bytes": 8,
+        "address": "0x20004da0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_capability_us",
+        "bytes": 8,
+        "address": "0x20005660",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_detail_us",
+        "bytes": 8,
+        "address": "0x20005620",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_health_us",
+        "bytes": 8,
+        "address": "0x20005628",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_navigation_preparation_us",
+        "bytes": 8,
+        "address": "0x20005630",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_preflight_state_us",
+        "bytes": 8,
+        "address": "0x20005650",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_preflight_status_us",
+        "bytes": 8,
+        "address": "0x20005658",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_next_stream_us",
+        "bytes": 8,
+        "address": "0x20005648",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_phase_started_us",
+        "bytes": 8,
+        "address": "0x20004a98",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_status_observed",
+        "bytes": 8,
+        "address": "0x20005668",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preparation",
+        "bytes": 8,
+        "address": "0x20000070",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_recovery_enter_timestamp_us",
+        "bytes": 8,
+        "address": "0x20012b18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot_info",
+        "bytes": 8,
+        "address": "0x200049cc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_state_start_us",
+        "bytes": 8,
+        "address": "0x20005178",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tick_epoch_ms",
+        "bytes": 8,
+        "address": "0x2000d580",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "stats_log_state.1",
+        "bytes": 8,
+        "address": "0x20002418",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "telemetry_log_state.0",
+        "bytes": 8,
+        "address": "0x20005610",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "disk",
+        "bytes": 12,
+        "address": "0x2000c3e8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accel_square_sum",
+        "bytes": 12,
+        "address": "0x200051a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_accel_sum",
+        "bytes": 12,
+        "address": "0x200051bc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 12,
+        "address": "0x2000e548",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 12,
+        "address": "0x2000e564",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gyro_square_sum",
+        "bytes": 12,
+        "address": "0x20005198",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gyro_sum",
+        "bytes": 12,
+        "address": "0x200051b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_accel_mean",
+        "bytes": 12,
+        "address": "0x2000518c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_gyro_mean",
+        "bytes": 12,
+        "address": "0x20005180",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostic_sequence",
+        "bytes": 12,
+        "address": "0x200030d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_bus_status",
+        "bytes": 16,
+        "address": "0x2000f9a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capabilities",
+        "bytes": 16,
+        "address": "0x20004770",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_configs",
+        "bytes": 16,
+        "address": "0x2000e554",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gnss",
+        "bytes": 16,
+        "address": "0x200055d4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pending_events",
+        "bytes": 16,
+        "address": "0x200055a4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_stats",
+        "bytes": 16,
+        "address": "0x20002648",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_timebase",
+        "bytes": 16,
+        "address": "0x2000d590",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_imu",
+        "bytes": 17,
+        "address": "0x200055e4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_stats",
+        "bytes": 20,
+        "address": "0x200030e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xDelayedTaskList1",
+        "bytes": 20,
+        "address": "0x2000de18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xDelayedTaskList2",
+        "bytes": 20,
+        "address": "0x2000de04",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "xPendingReadyList",
+        "bytes": 20,
+        "address": "0x2000dde8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_effective_config",
+        "bytes": 24,
+        "address": "0x20000408",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_status_diagnostics",
+        "bytes": 24,
+        "address": "0x20004910",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_diagnostics",
+        "bytes": 24,
+        "address": "0x20004788",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_utc_mapping",
+        "bytes": 24,
+        "address": "0x20004d80",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_deployment_context",
+        "bytes": 28,
+        "address": "0x20012ad8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 28,
+        "address": "0x20005670",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_logger_queue",
+        "bytes": 28,
+        "address": "0x20007df0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger_queue",
+        "bytes": 28,
+        "address": "0x2000bc90",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_telemetry",
+        "bytes": 28,
+        "address": "0x200055b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "Files",
+        "bytes": 32,
+        "address": "0x2000c3c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_context",
+        "bytes": 32,
+        "address": "0x20012ab8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_request_queue",
+        "bytes": 32,
+        "address": "0x20012998",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 36,
+        "address": "0x20005848",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x200049a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x20012868",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 40,
+        "address": "0x20011aa8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_cache",
+        "bytes": 48,
+        "address": "0x200056c4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_kf_diagnostics",
+        "bytes": 48,
+        "address": "0x200047a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sample",
+        "bytes": 48,
+        "address": "0x20012890",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_pressure",
+        "bytes": 56,
+        "address": "0x20002660",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_candidate_window",
+        "bytes": 64,
+        "address": "0x200129f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_baro_trigger_window",
+        "bytes": 64,
+        "address": "0x20012a30",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_capture_working",
+        "bytes": 64,
+        "address": "0x200049d4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_descriptors",
+        "bytes": 64,
+        "address": "0x20004a54",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_indicator",
+        "bytes": 64,
+        "address": "0x20005560",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_landing_imu_window",
+        "bytes": 64,
+        "address": "0x20012a78",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 64,
+        "address": "0x20004a14",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hadc1",
+        "bytes": 72,
+        "address": "0x2000d958",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "htim1",
+        "bytes": 72,
+        "address": "0x2000d8b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart1",
+        "bytes": 72,
+        "address": "0x2000d870",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart2",
+        "bytes": 72,
+        "address": "0x2000d828",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "huart3",
+        "bytes": 72,
+        "address": "0x2000d7e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ack_queue",
+        "bytes": 72,
+        "address": "0x200056f8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_strategy",
+        "bytes": 72,
+        "address": "0x10009568",
+        "region": "CCM"
+      },
+      {
+        "name": "s_assert_fault",
+        "bytes": 72,
+        "address": "0x20004728",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_queue_control",
+        "bytes": 72,
+        "address": "0x2000daf0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "_impure_data",
+        "bytes": 76,
+        "address": "0x20000424",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_device_task_control",
+        "bytes": 76,
+        "address": "0x200025fc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_task_control",
+        "bytes": 76,
+        "address": "0x20002564",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_flight_task_control",
+        "bytes": 76,
+        "address": "0x20002518",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_idle_task_control",
+        "bytes": 76,
+        "address": "0x2000dd74",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_task_control",
+        "bytes": 76,
+        "address": "0x200025b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger_task_control",
+        "bytes": 76,
+        "address": "0x200024cc",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_serial_task_control",
+        "bytes": 76,
+        "address": "0x20002480",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_telemetry_task_control",
+        "bytes": 76,
+        "address": "0x20002434",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_health",
+        "bytes": 80,
+        "address": "0x20011ad8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_latest_sample",
+        "bytes": 80,
+        "address": "0x200051c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_output",
+        "bytes": 80,
+        "address": "0x20004560",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_published_output",
+        "bytes": 80,
+        "address": "0x20004510",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_config_async_contexts",
+        "bytes": 84,
+        "address": "0x2000e570",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration_packet",
+        "bytes": 84,
+        "address": "0x200127a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hspi1",
+        "bytes": 88,
+        "address": "0x2000d900",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_preflight_attitude",
+        "bytes": 88,
+        "address": "0x20004618",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_sdio_rx",
+        "bytes": 96,
+        "address": "0x2000da00",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_sdio_tx",
+        "bytes": 96,
+        "address": "0x2000d9a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart1_rx",
+        "bytes": 96,
+        "address": "0x2000d780",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart1_tx",
+        "bytes": 96,
+        "address": "0x2000d720",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart2_rx",
+        "bytes": 96,
+        "address": "0x2000d6c0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart2_tx",
+        "bytes": 96,
+        "address": "0x2000d660",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart3_rx",
+        "bytes": 96,
+        "address": "0x2000d600",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hdma_usart3_tx",
+        "bytes": 96,
+        "address": "0x2000d5a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_channels",
+        "bytes": 96,
+        "address": "0x20012c48",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_guard",
+        "bytes": 96,
+        "address": "0x20004db8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_logger",
+        "bytes": 96,
+        "address": "0x2000be30",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_response_queue",
+        "bytes": 96,
+        "address": "0x20012938",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_start_diagnostics",
+        "bytes": 96,
+        "address": "0x200128d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "LfnBuf",
+        "bytes": 98,
+        "address": "0x2000c35c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_alignment_snapshot",
+        "bytes": 104,
+        "address": "0x200045b0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_barometer_diagnostics",
+        "bytes": 104,
+        "address": "0x20004930",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_diagnostics",
+        "bytes": 104,
+        "address": "0x2000bdc8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sink",
+        "bytes": 104,
+        "address": "0x20012800",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_native_log",
+        "bytes": 112,
+        "address": "0x200057c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_tasks",
+        "bytes": 112,
+        "address": "0x20000000",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status_queue",
+        "bytes": 128,
+        "address": "0x20005748",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart1_rx_dma",
+        "bytes": 128,
+        "address": "0x20002170",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart2_rx_dma",
+        "bytes": 128,
+        "address": "0x200020f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_rx_dma",
+        "bytes": 128,
+        "address": "0x20002070",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "hsd",
+        "bytes": 132,
+        "address": "0x2000da60",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "pxReadyTasksLists",
+        "bytes": 160,
+        "address": "0x2000de2c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 160,
+        "address": "0x2000f240",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_navigation_input",
+        "bytes": 184,
+        "address": "0x20004670",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_line",
+        "bytes": 192,
+        "address": "0x20013a28",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_runtime_transactions",
+        "bytes": 200,
+        "address": "0x2000f170",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 208,
+        "address": "0x2000e478",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_transport_contexts",
+        "bytes": 232,
+        "address": "0x2000f9b8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 240,
+        "address": "0x20005218",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 272,
+        "address": "0x20012b30",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_record_buffer",
+        "bytes": 284,
+        "address": "0x2000bcac",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "__sf",
+        "bytes": 312,
+        "address": "0x20013ae8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_async_event",
+        "bytes": 320,
+        "address": "0x20012cb8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_gnss_diagnostics",
+        "bytes": 320,
+        "address": "0x200047d0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_groups",
+        "bytes": 320,
+        "address": "0x100095b0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 336,
+        "address": "0x2000e328",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 368,
+        "address": "0x2000f2e0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_published_snapshot",
+        "bytes": 440,
+        "address": "0x10006a00",
+        "region": "CCM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 440,
+        "address": "0x10006bb8",
+        "region": "CCM"
+      },
+      {
+        "name": "s_idle_task_stack",
+        "bytes": 512,
+        "address": "0x100096f0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_latest_payload",
+        "bytes": 512,
+        "address": "0x20011f8c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_data",
+        "bytes": 512,
+        "address": "0x200123a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_payload",
+        "bytes": 512,
+        "address": "0x200125a8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_sd_scratch",
+        "bytes": 512,
+        "address": "0x200021f0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart1_rx_ring",
+        "bytes": 512,
+        "address": "0x2000cbf4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_record",
+        "bytes": 530,
+        "address": "0x2001218c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_file",
+        "bytes": 560,
+        "address": "0x20011d5c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_object_file",
+        "bytes": 560,
+        "address": "0x20011b2c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "SDFatFS",
+        "bytes": 564,
+        "address": "0x2000db38",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_mag_calibration",
+        "bytes": 592,
+        "address": "0x2000530c",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_startup_report",
+        "bytes": 728,
+        "address": "0x20004aa8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_status",
+        "bytes": 848,
+        "address": "0x20004e18",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart",
+        "bytes": 888,
+        "address": "0x20000080",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart2_rx_ring",
+        "bytes": 1024,
+        "address": "0x2000c7f4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_rx_ring",
+        "bytes": 1024,
+        "address": "0x2000c3f4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_tx_priority_ring",
+        "bytes": 1024,
+        "address": "0x20001470",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 1104,
+        "address": "0x2000ded8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_streams",
+        "bytes": 1216,
+        "address": "0x2000be98",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 1368,
+        "address": "0x2000f450",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_gpio",
+        "bytes": 1920,
+        "address": "0x2000cdf4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_uart3_tx_ring",
+        "bytes": 2048,
+        "address": "0x20001870",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_device_stack",
+        "bytes": 2560,
+        "address": "0x10006000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_queue",
+        "bytes": 2560,
+        "address": "0x200026a0",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_contexts",
+        "bytes": 2984,
+        "address": "0x2000e5c8",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_ins_stack",
+        "bytes": 3072,
+        "address": "0x10005400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_stack",
+        "bytes": 3072,
+        "address": "0x10002800",
+        "region": "CCM"
+      },
+      {
+        "name": "s_response",
+        "bytes": 3072,
+        "address": "0x20012e24",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_aggregate_buffer",
+        "bytes": 4096,
+        "address": "0x20000470",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_stack",
+        "bytes": 4096,
+        "address": "0x10004400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_flight_stack",
+        "bytes": 4096,
+        "address": "0x10003400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_telemetry_stack",
+        "bytes": 4096,
+        "address": "0x10000000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_io_baselines",
+        "bytes": 4864,
+        "address": "0x100098f0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_queue",
+        "bytes": 5120,
+        "address": "0x20003100",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_serial_stack",
+        "bytes": 6144,
+        "address": "0x10001000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_hal_contexts",
+        "bytes": 8190,
+        "address": "0x2000faa4",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator_logger_storage",
+        "bytes": 9600,
+        "address": "0x20005870",
+        "region": "main_SRAM"
+      },
+      {
+        "name": "s_estimator",
+        "bytes": 10232,
+        "address": "0x10006d70",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_storage",
+        "bytes": 16000,
+        "address": "0x20007e10",
+        "region": "main_SRAM"
+      }
+    ],
+    "commands": [
+      [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-nm.exe",
+        "-S",
+        "--size-sort",
+        ".work\\EskfWorkspace_42d4203_stage2_v1\\pure_ins\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ],
+      [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objdump.exe",
+        "-h",
+        ".work\\EskfWorkspace_42d4203_stage2_v1\\pure_ins\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.elf"
+      ]
+    ],
+    "cpu_fast_objects": [
+      {
+        "name": "s_alignment_strategy",
+        "bytes": 72,
+        "address": "0x10009568",
+        "region": "CCM"
+      },
+      {
+        "name": "s_groups",
+        "bytes": 320,
+        "address": "0x100095b0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_published_snapshot",
+        "bytes": 440,
+        "address": "0x10006a00",
+        "region": "CCM"
+      },
+      {
+        "name": "s_snapshot",
+        "bytes": 440,
+        "address": "0x10006bb8",
+        "region": "CCM"
+      },
+      {
+        "name": "s_idle_task_stack",
+        "bytes": 512,
+        "address": "0x100096f0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_device_stack",
+        "bytes": 2560,
+        "address": "0x10006000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_ins_stack",
+        "bytes": 3072,
+        "address": "0x10005400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_logger_stack",
+        "bytes": 3072,
+        "address": "0x10002800",
+        "region": "CCM"
+      },
+      {
+        "name": "s_estimator_stack",
+        "bytes": 4096,
+        "address": "0x10004400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_flight_stack",
+        "bytes": 4096,
+        "address": "0x10003400",
+        "region": "CCM"
+      },
+      {
+        "name": "s_telemetry_stack",
+        "bytes": 4096,
+        "address": "0x10000000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_io_baselines",
+        "bytes": 4864,
+        "address": "0x100098f0",
+        "region": "CCM"
+      },
+      {
+        "name": "s_serial_stack",
+        "bytes": 6144,
+        "address": "0x10001000",
+        "region": "CCM"
+      },
+      {
+        "name": "s_estimator",
+        "bytes": 10232,
+        "address": "0x10006d70",
+        "region": "CCM"
+      }
+    ]
+  }
+}

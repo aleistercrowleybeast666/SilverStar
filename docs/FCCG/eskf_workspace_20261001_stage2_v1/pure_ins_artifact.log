@@ -1,0 +1,35 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile SilverStar_F407 -Config Release
+FCCG_PROGRESS|ARTIFACT|PLAN|8
+FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|DONE|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|BEGIN|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|DONE|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|BEGIN|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap
+SilverStar memory report:
+  FLASH     used=283772 remaining=240516 capacity=524288
+  main SRAM used=81952 remaining=49120 capacity=131072
+  CCMRAM    used=44016 remaining=21520 capacity=65536
+  heap      reserved=0 runtime_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap
+FCCG_PROGRESS|ARTIFACT|BEGIN|8|8|summary
+  largest static objects:
+    s_logger_storage                 bytes= 16000 address=0x20007E10 main SRAM
+    s_estimator                      bytes= 10232 address=0x10006D70 CCMRAM
+    s_estimator_logger_storage       bytes=  9600 address=0x20005870 main SRAM
+    s_hal_contexts                   bytes=  8190 address=0x2000FAA4 main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10001000 CCMRAM
+    s_queue                          bytes=  5120 address=0x20003100 main SRAM
+    s_io_baselines                   bytes=  4864 address=0x100098F0 CCMRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000470 main SRAM
+    s_estimator_stack                bytes=  4096 address=0x10004400 CCMRAM
+    s_flight_stack                   bytes=  4096 address=0x10003400 CCMRAM
+SilverStar artifact check passed: target=SilverStar_F407 config=Release elf_bytes=3031404 bin_bytes=283776 heap_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|8|8|summary

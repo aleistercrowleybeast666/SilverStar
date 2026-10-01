@@ -1,0 +1,98 @@
+[
+  {
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-ID:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\baseline\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\baseline\\Src\\navigation_eskf.c",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\baseline\\Src\\navigation_eskf_replay.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\eskf_workspace_trace.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O0.exe"
+    ],
+    "exit_code": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_replay.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\eskf_workspace_trace.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O0.exe"
+    ],
+    "exit_code": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-ID:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\baseline\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\baseline\\Src\\navigation_eskf.c",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\baseline\\Src\\navigation_eskf_replay.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\eskf_workspace_trace.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\before-O2.exe"
+    ],
+    "exit_code": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_replay.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\eskf_workspace_trace.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\EskfWorkspace_42d4203_stage2_trace\\eskf-equivalence0\\after-O2.exe"
+    ],
+    "exit_code": 0,
+    "output": ""
+  }
+]

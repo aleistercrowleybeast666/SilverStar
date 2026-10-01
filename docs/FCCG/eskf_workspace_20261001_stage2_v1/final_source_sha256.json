@@ -1,0 +1,23 @@
+{
+  "base_commit": "42d4203b0158184e4a8609a1a971a788f335cfb0",
+  "source_sha256": {
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc\\navigation_eskf.h": "d476faf0a3edd784e5bb732ed75a44f163f0504e05d6ef3130b176f9478aa2f6",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c": "45c6fe1d32825512f10624a60c9556e86e0dd93472c0d195b1946b5f026ee262",
+    "apps\\FCCG\\tests\\fixtures\\eskf_workspace_trace.c": "c8b8245a5163aff624a4f30706f1cf072523c6e86aabf75aa033869edcdadf8d",
+    "apps\\FCCG\\tests\\test_eskf_workspace_equivalence.py": "79b6fc35123a1232a0cc37db83a42bcd80a306b5f7b34e200c701b1bc2e0dfb4"
+  },
+  "timestamp_utc": "2026-10-01T09:43:56.387581+00:00",
+  "staged_git_blob_sha256": {
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc\\navigation_eskf.h": "d476faf0a3edd784e5bb732ed75a44f163f0504e05d6ef3130b176f9478aa2f6",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c": "3c69203a15b94206ec51e3a80d640f773efc4ebc9e95190a00fd9fa3a7d69b31",
+    "apps\\FCCG\\tests\\fixtures\\eskf_workspace_trace.c": "c8b8245a5163aff624a4f30706f1cf072523c6e86aabf75aa033869edcdadf8d",
+    "apps\\FCCG\\tests\\test_eskf_workspace_equivalence.py": "79b6fc35123a1232a0cc37db83a42bcd80a306b5f7b34e200c701b1bc2e0dfb4"
+  },
+  "raw_snapshots": {
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Inc\\navigation_eskf.h": "source_raw/navigation_eskf.h.txt",
+    "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c": "source_raw/navigation_eskf.c.txt",
+    "apps\\FCCG\\tests\\fixtures\\eskf_workspace_trace.c": "source_raw/eskf_workspace_trace.c.txt",
+    "apps\\FCCG\\tests\\test_eskf_workspace_equivalence.py": "source_raw/test_eskf_workspace_equivalence.py.txt"
+  },
+  "line_endings": "Compiled working files preserved byte-for-byte in source_raw; Git normalizes CRLF to LF. Staged blobs equal raw bytes after CRLF-to-LF only."
+}

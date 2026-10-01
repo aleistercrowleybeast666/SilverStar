@@ -1,0 +1,6 @@
+{
+  "collector_failure": "Read-only metadata collector attempted to locate gcc.exe command text; actual Make output uses gcc, causing StopIteration exit 1. Corrected collector succeeded. No validation command failed or output was overwritten.",
+  "validation_failures": 0,
+  "unavailable": "No hardware qualification, MCU WCET, whole firmware original PoT or full scheduler ownership proof",
+  "staging_audit": "Initial strict raw-vs-index comparison detected Git CRLF normalization in source. Preserved raw snapshots, recorded both hashes, proved only line-ending normalization; evidence files already matched exactly."
+}

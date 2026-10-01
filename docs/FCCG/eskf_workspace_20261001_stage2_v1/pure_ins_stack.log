@@ -1,0 +1,19 @@
+python Tools/check_task_stacks.py --config Release --prefix "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Device: configured=2560 estimate=2128 margin=432
+INS: configured=3072 estimate=1776 margin=1296
+Estimator: configured=4096 estimate=828 margin=3268
+Flight: configured=4096 estimate=3600 margin=496
+Logger: configured=3072 estimate=2104 margin=968
+Serial: configured=6144 estimate=4176 margin=1968
+Telemetry: configured=4096 estimate=2080 margin=2016
+Idle: configured=512 estimate=256 margin=256
+{
+  "indicator_in_production_init": true,
+  "alignment_start_deferred": true,
+  "flight_processes_alignment": true,
+  "communication_does_not_process_alignment": true,
+  "all_enabled_tasks_budgeted": true
+}
+FCCG_PROGRESS|STACK_REPORT|DONE|1|1|ELF and stack budget
