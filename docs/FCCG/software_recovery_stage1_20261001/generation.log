@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\SoftwareRecovery_20261001_v1\generate.py", line 27, in <module>
+    assert reopened.Dictionary_Get()==model.Dictionary_Get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

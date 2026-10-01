@@ -1,0 +1,101 @@
+.................F..F..F.....F........................                   [100%]
+================================== FAILURES ===================================
+________ test_two_targets_have_independent_hardware_and_serialization _________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002C364DC3620>
+
+    def test_two_targets_have_independent_hardware_and_serialization(builtin_catalog) -> None:
+        model = _GroundBoardProject_Get(builtin_catalog)
+>       assert not GroundTargetIssues_Get(model, builtin_catalog)
+E       AssertionError: assert not (AirLinkIssue(code='BOARD_TARGET_ROLE_MISMATCH', message='Ground requires a Ground Station PCB'),)
+E        +  where (AirLinkIssue(code='BOARD_TARGET_ROLE_MISMATCH', message='Ground requires a Ground Station PCB'),) = GroundTargetIssues_Get(ProjectModel(identity=ProjectIdentity(name='Round2Targets', firmware_version='0.1.1', build_target='SilverStar_0_1_1')...'project_log_decoder_profile', 'project_sources'], component_provenance={}, reference_provenance={}, format_version=14), <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002C364DC3620>)
+
+tests\test_round2_targets.py:87: AssertionError
+________ test_ground_pc_interface_requires_uart_or_usb_cdc_capability _________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002C364DC3620>
+
+    def test_ground_pc_interface_requires_uart_or_usb_cdc_capability(builtin_catalog) -> None:
+        model = _GroundBoardProject_Get(builtin_catalog)
+>       assert not GroundTargetIssues_Get(model, builtin_catalog)
+E       AssertionError: assert not (AirLinkIssue(code='BOARD_TARGET_ROLE_MISMATCH', message='Ground requires a Ground Station PCB'),)
+E        +  where (AirLinkIssue(code='BOARD_TARGET_ROLE_MISMATCH', message='Ground requires a Ground Station PCB'),) = GroundTargetIssues_Get(ProjectModel(identity=ProjectIdentity(name='Round2Targets', firmware_version='0.1.1', build_target='SilverStar_0_1_1')...'project_log_decoder_profile', 'project_sources'], component_provenance={}, reference_provenance={}, format_version=14), <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002C364DC3620>)
+
+tests\test_round2_targets.py:187: AssertionError
+______ test_ground_source_graph_excludes_flight_tasks_and_is_repeatable _______
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002C364DC3620>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/SoftwareRecovery_pytest/test_ground_source_graph_exclu0')
+
+    def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
+        builtin_catalog, workspace_root: Path, tmp_path: Path,
+    ) -> None:
+        model = _GroundBoardProject_Get(builtin_catalog)
+>       files = GroundFiles_Render(model, builtin_catalog, WorkspacePolicy(workspace_root))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_round2_targets.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='Round2Targets', firmware_version='0.1.1', build_target='SilverStar_0_1_1')...'project_log_decoder_profile', 'project_sources'], component_provenance={}, reference_provenance={}, format_version=14)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002C364DC3620>
+internal_policy = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+
+    def GroundFiles_Render(
+        model: ProjectModel, catalog: PluginCatalog, internal_policy: WorkspacePolicy,
+    ) -> dict[str, bytes]:
+        issues = GroundTargetIssues_Get(model, catalog)
+        if issues:
+>           raise ValueError("; ".join(f"{issue.code}: {issue.message}" for issue in issues))
+E           ValueError: BOARD_TARGET_ROLE_MISMATCH: Ground requires a Ground Station PCB
+
+src\silverstar_fccg\generator\multi_target.py:378: ValueError
+____________ test_alignment_group_contains_mode_draft_and_actions _____________
+
+qapp = <PySide6.QtWidgets.QApplication(0x2c361f07010) at 0x000002C36455C380>
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/SoftwareRecovery_pytest/test_alignment_group_contains_0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_alignment_group_contains_mode_draft_and_actions(qapp, tmp_path, workspace_root):
+        window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+        window.navigation_list.setCurrentRow(2)
+        window.show()
+        qapp.processEvents()
+        group = window.flight_configuration_page.strategy_group
+        editor = window.algorithm_parameters_page.alignment_editor
+        assert group.isAncestorOf(editor)
+        assert group.isAncestorOf(editor.confirm_button)
+        combo = window.flight_configuration_page.strategy_combos['alignment']
+        assert combo.mapTo(group, QPoint()).y() < editor.mapTo(group, QPoint()).y()
+        original = deepcopy(window._model.alignment)
+        combo.setCurrentIndex(combo.findData('silverstar.algorithm.alignment.external_attitude_source'))
+        editor.cancel_button.click()
+        assert window._model.alignment == original
+        for language in ('zh_CN', 'en_US'):
+            window.Language_Apply(language)
+            window.resize(1280, 720)
+            qapp.processEvents()
+            assert not window.title_label.wordWrap()
+            assert '(SCG)' not in window.title_label.text()
+>           assert window.title_label.width() >= window.title_label.fontMetrics().horizontalAdvance(window.title_label.text())
+E           assert 269 >= 704
+E            +  where 269 = <built-in method width of PySide6.QtWidgets.QLabel object at 0x000002C366067980>()
+E            +    where <built-in method width of PySide6.QtWidgets.QLabel object at 0x000002C366067980> = <PySide6.QtWidgets.QLabel(0x2c3653c44d0, name="headerTitle") at 0x000002C366067980>.width
+E            +      where <PySide6.QtWidgets.QLabel(0x2c3653c44d0, name="headerTitle") at 0x000002C366067980> = <silverstar_fccg.ui.main_window.MainWindow(0x2c3653c6180) at 0x000002C3665BAD00>.title_label
+E            +  and   704 = <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000002C36ABD8C80>('SilverStar System Configuration & Generation')
+E            +    where <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000002C36ABD8C80> = <PySide6.QtGui.QFontMetrics object at 0x000002C36ABD8C80>.horizontalAdvance
+E            +      where <PySide6.QtGui.QFontMetrics object at 0x000002C36ABD8C80> = <built-in method fontMetrics of PySide6.QtWidgets.QLabel object at 0x000002C366067980>()
+E            +        where <built-in method fontMetrics of PySide6.QtWidgets.QLabel object at 0x000002C366067980> = <PySide6.QtWidgets.QLabel(0x2c3653c44d0, name="headerTitle") at 0x000002C366067980>.fontMetrics
+E            +          where <PySide6.QtWidgets.QLabel(0x2c3653c44d0, name="headerTitle") at 0x000002C366067980> = <silverstar_fccg.ui.main_window.MainWindow(0x2c3653c6180) at 0x000002C3665BAD00>.title_label
+E            +    and   'SilverStar System Configuration & Generation' = <built-in method text of PySide6.QtWidgets.QLabel object at 0x000002C366067980>()
+E            +      where <built-in method text of PySide6.QtWidgets.QLabel object at 0x000002C366067980> = <PySide6.QtWidgets.QLabel(0x2c3653c44d0, name="headerTitle") at 0x000002C366067980>.text
+E            +        where <PySide6.QtWidgets.QLabel(0x2c3653c44d0, name="headerTitle") at 0x000002C366067980> = <silverstar_fccg.ui.main_window.MainWindow(0x2c3653c6180) at 0x000002C3665BAD00>.title_label
+
+tests\test_release_011_gui.py:43: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_round2_targets.py::test_two_targets_have_independent_hardware_and_serialization
+FAILED tests/test_round2_targets.py::test_ground_pc_interface_requires_uart_or_usb_cdc_capability
+FAILED tests/test_round2_targets.py::test_ground_source_graph_excludes_flight_tasks_and_is_repeatable
+FAILED tests/test_release_011_gui.py::test_alignment_group_contains_mode_draft_and_actions
+4 failed, 50 passed in 120.16s (0:02:00)

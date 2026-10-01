@@ -1,0 +1,40 @@
+# Software recovery stage 1, 2026-10-01
+
+First software checkpoint on `fix/software-reconnect-ground-20261001`, based on experimental `24f29c5` (retaining verified A and model-only B). Main and TEST_4 were not modified. No serial, probe, reset, programming, protection/Option Bytes, push, merge, tag or publication operation was performed. Existing A version-aware 0.1.1 artifact gates were retained.
+
+## Changes for review
+
+- `project/configuration.py::_GroundBoard_Reconcile` restores the selected Ground board's actual IOC inventory and `connections.json` provisions, resolves the real MCU, fills missing fixed telemetry roles, and selects PC UART only when exactly one actual 8N1 UART matches the requested baud rate. It does not guess pins or overwrite an explicit wrong selection. Custom IOC mode remains manual.
+- `project/air_link.py::GroundTargetIssues_Get` rejects radio role swaps on fixed PCBs; `MainWindow::_Targets_Refresh` and `GroundTargetPage::Configuration_Set` render those roles as fixed and keep disabled Ground generation disabled after parent-page refresh. The Ground enable and CRC checkboxes use the existing light/dark indicator style. Existing layout, version, algorithm order and magnetometer hiding were preserved.
+- `Controller::_complete_capability_ack` requires a validated Capability and a pending acknowledgment. `FlightSession_Restart` cancels commands, replaces stale readiness/mission state, rebinds the GUI and negotiates again. BOOT and confirmed rollback of **boot-relative PREFLIGHT_STATE** support restart recovery; mission-relative FLIGHT_STATE is excluded. One rollback temporarily blocks commands and cancels business retries. No START, unlock or alignment operation is replayed.
+- `TelemetryService_CapabilitySend`, `CapabilityCommand` and `Process` retain the 9-byte AIR M0 wire format, continue existing 1 Hz preflight Capability discovery after ACK, accept the current Capability/profile ACK idempotently and preserve ACK/snapshot/STATUS priority. PREFLIGHT_STATUS precedes the post-handshake periodic Capability; START still disables preflight discovery.
+- `TelemetryService_AlignmentCommand` maps NOT_READY to existing CALIBRATION_REQUIRED only when calibration is currently not ready; a currently ready calibration maps to existing SYSTEM_NOT_READY. It does **not** distinguish the exact selector/action/backend failure, which remains unresolved. Business return types and safety gates are unchanged.
+- SELFTEST_COMPLETE displays pass/fail; only `arg0 == 1` counts as passed. Events do not fabricate system readiness. Snapshots retain authority and block reasons.
+
+## Evidence and scope
+
+All command lines, working directories, exit codes, tool versions, log hashes, source commit and generated input/artifact hashes are in `manifest.json`, `gate_results_v4.json` and `host_rerun.json`. The `.work/SoftwareRecovery_20261001_v1/` candidates are synthetic validation projects; use only the explicitly versioned **v4** binaries for this final source. v2/v3 results and failures are retained separately, not attributed to v4.
+
+Two new v4 projects exercise save/reopen, Flight-only, Ground-only, combined generation and regeneration preservation on real F407/F103 board plugins. Existing custom IOC regressions verify explicit source-generation requirements and mapping boundaries. This is not full acceptance of every custom CubeMX project.
+
+Python results: initial five regressions failed before fixes (one GUI setup failure was corrected to respect WorkspacePolicy); the corrected snapshot/restart cases independently reproduce the original defects. 235 targeted calibration/handshake cases passed before subsequent small refinements; final core GSHC run passed 81 plus 3 subtests, final PING/ALIGN/selftest refinement passed 40 plus 3 subtests, and final targeted FCCG run passed 24. These are separately executed subsets, not a stitched full-suite pass.
+
+An expanded FCCG run had 50 passes and four failures. The same four failures reproduce with the experimental baseline Python sources: three old tests use a Flight PCB as Ground, contradicting current target-role enforcement; the English header width test fails at 1280 pixels. No tests or safety gates were weakened. Documentation checks had 37 passes and two failures: existing evidence-snapshot relative links and an obsolete hard-coded platform 0.1.0 expectation. The first docs command also had an import-path collection error; the corrected command is preserved.
+
+The v3 firmware completed a full generated Host run (72 executables, 4,393,820 checks, zero failures), architecture, emitted PoT, ARM artifact/link, actual ARM GCC `-fanalyzer` compile/link and emitted stack report. This v3 evidence predates the final alignment-error mapping and is not v4 acceptance. The initial v4 Host run found a fixture/real `SystemCalibration_IsReady` duplicate definition; the existing fixture renaming mechanism was extended and the full Host suite rerun. See the **actual final** rerun exit code and count in `host_rerun.json` and `v4b_flight_host-tests.log`.
+
+Both F103 Ground candidates actually compile and link and pass their emitted `power10-check`. Their emitted Makefiles contain no `architecture-check`, `host-tests` or `artifact-check` targets: all six attempted missing-target checks fail, remain blockers and are not called PASS. Ground link also emits the pre-existing newlib `_read`/`_write` stub warnings. Ground framing/queue/UART host coverage comes from the recorded Python/C regression subset, not an absent generated Host target.
+
+PoT text success explicitly retains **critical-contract review NOT PROVEN**. No density assertions, allowlists, thresholds or checker rules were changed. An emitted stack report does not prove every indirect/vendor path, dynamic frame, main/MSP or ISR nesting bound; whole-firmware stack safety, WCET, flight accuracy and hardware qualification remain NOT PROVEN.
+
+`checkbox_qa.png` verifies unchecked borders and checked ticks for both themes using actual offscreen Qt widgets. This runtime lacks its offscreen Chinese font directory; the captured labels contain missing-glyph boxes and transparent-widget backing differs from a native complete window. It is checkbox-paint evidence, not full desktop visual acceptance.
+
+## Real-log findings and remaining work
+
+`real_log_readonly.json` records the original 6.3 MB JSONL absolute path, SHA-256, original line numbers and selected records. The last ALIGN_START seq 3 receives AIR ACK result 11 while snapshots show NONE/READY/calibration_ready=true; this is a real pre-fix erroneous attribution, not that transaction timing out. The parent's confirmed PING seq 4 has four GSP accepts and no AIR ACK, then times out. A GSP accept does not prove radio transmission or FC command execution. The reconnect fix does not establish that all command timeouts are repaired.
+
+Hardware follow-up should correlate existing `TelemetryService_DiagnosticsGet`, Ground bridge/PC byte-stream diagnostics, SX1281 RX/TX results and queue counters; then inspect `SystemSourceSelector_ImuSelectAndLock`, `SystemAlignment_ActionBegin`, `SystemAlignmentBackend_Reset`, startup/health and `SystemCalibration_IsReady`. Record exact matched ELF/Flash before variable inspection. No hardware commands are included in this checkpoint.
+
+AIR M0 lacks a controller boot nonce. Identical delayed packets following 8-bit sequence reuse cannot be proved distinct from current packets using the wire format alone. The timestamp rollback detector is a conservative recovery heuristic; a repeated identical BOOT signature may rely on subsequent rollback detection. Snapshot-before-Capability, reconnect, duplicate/superseded ACK and sequence wrap tests cover recorded software cases, not arbitrary adversarial packet age.
+
+SF6, cold-standby barometers, automatic memory layout, multiple telemetry radios and the expanded GUI acceptance request belong to the next rounds. User TEST_0–TEST_4 logs and baseline firmware remain immutable inputs.

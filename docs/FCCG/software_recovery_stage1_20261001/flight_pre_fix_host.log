@@ -1,0 +1,104 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tests/Host/run_tests.ps1 -HostCompiler "gcc"
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+record_catalog_sha256=68c230a2da816f79acdb818b1ad188cbc59f63ceb97dc620c9ba9b6e5ae8d680
+project_semantics_sha256=a27e76d28e120dec980a4c00dd62df02f2460617778823b17c541b481e02d60b
+generation_profile_sha256=a18012ddd37d5fb1af4caf3caed493d7fe359f458a55b58f12ce81f17d379200
+SSLOG Record Catalog validation passed: records=38 payloads=38
+FCCG_PROGRESS|HOST_TEST|PLAN|72
+FCCG_PROGRESS|HOST_COMPILE_PASS|PLAN|7
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|PLAN|17
+Skipped host test attitude_alignment: unselected component sources
+Skipped host test alignment_strategy_gravity_known_yaw: unselected component sources
+Skipped host test alignment_strategy_gravity_mag_triad: unselected component sources
+Skipped host test alignment_strategy_hardware_quat6_known_yaw: unselected component sources
+Skipped host test alignment_strategy_hardware_quat9: unselected component sources
+Skipped host test board_power_service: unselected component sources
+Skipped host test board_mission_action_service: unselected component sources
+FCCG_PROGRESS|HOST_TEST|BEGIN|1|72|interfaces
+interfaces: 11 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|1|72|interfaces
+FCCG_PROGRESS|HOST_TEST|BEGIN|2|72|common_format
+common_format: 13 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|2|72|common_format
+FCCG_PROGRESS|HOST_TEST|BEGIN|3|72|system_time
+system_time: 49 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|3|72|system_time
+FCCG_PROGRESS|HOST_TEST|BEGIN|4|72|profiles_kf6
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|4|72|profiles_kf6
+FCCG_PROGRESS|HOST_TEST|BEGIN|5|72|profiles_estimator_noise_overrides
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|5|72|profiles_estimator_noise_overrides
+FCCG_PROGRESS|HOST_TEST|BEGIN|6|72|profiles_pure_ins
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|6|72|profiles_pure_ins
+FCCG_PROGRESS|HOST_TEST|BEGIN|7|72|system_alignment
+system_alignment: 297 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|7|72|system_alignment
+FCCG_PROGRESS|HOST_TEST|BEGIN|8|72|system_alignment_pure_ins
+system_alignment: 296 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|8|72|system_alignment_pure_ins
+FCCG_PROGRESS|HOST_TEST|BEGIN|9|72|system_inertial
+system_inertial: 27 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|9|72|system_inertial
+FCCG_PROGRESS|HOST_TEST|BEGIN|10|72|imu_sample_bus
+imu_sample_bus: 15 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|10|72|imu_sample_bus
+FCCG_PROGRESS|HOST_TEST|BEGIN|11|72|system_indicator
+system_indicator: 34 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|11|72|system_indicator
+FCCG_PROGRESS|HOST_TEST|BEGIN|12|72|system_calibration_default
+system_calibration: 410 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|12|72|system_calibration_default
+FCCG_PROGRESS|HOST_TEST|BEGIN|13|72|system_calibration_system_axis_direction_x_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|13|72|system_calibration_system_axis_direction_x_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|14|72|system_calibration_system_axis_direction_x_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|14|72|system_calibration_system_axis_direction_x_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|15|72|system_calibration_system_axis_direction_y_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|15|72|system_calibration_system_axis_direction_y_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|16|72|system_calibration_system_axis_direction_y_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|16|72|system_calibration_system_axis_direction_y_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|17|72|system_calibration_system_axis_direction_z_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|17|72|system_calibration_system_axis_direction_z_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|18|72|system_calibration_system_axis_direction_z_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|18|72|system_calibration_system_axis_direction_z_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|19|72|runtime_commands
+runtime_commands: 34 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|19|72|runtime_commands
+FCCG_PROGRESS|HOST_TEST|BEGIN|20|72|runtime_startup
+runtime_startup: 52 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|20|72|runtime_startup
+FCCG_PROGRESS|HOST_TEST|BEGIN|21|72|fault_hook
+fault_hook: 40 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|21|72|fault_hook
+FCCG_PROGRESS|HOST_TEST|BEGIN|22|72|calibration_build_gate_0
+calibration_build_gate: 29 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|22|72|calibration_build_gate_0
+FCCG_PROGRESS|HOST_TEST|BEGIN|23|72|telemetry_build_mask_0
+FAIL D:\python_software\SilverStar\.work\SoftwareRecovery_20261001_v1\candidate_a_v2\Flight_Controller\Tests\Host\test_telemetry.c:968: Test_TypeCount(AIR_TYPE_CAPABILITY) == 3U
+FAIL D:\python_software\SilverStar\.work\SoftwareRecovery_20261001_v1\candidate_a_v2\Flight_Controller\Tests\Host\test_telemetry.c:974: Test_LastTypeGet(AIR_TYPE_ACK)->data[4] == AIR_ACK_RESULT_OK
+FAIL D:\python_software\SilverStar\.work\SoftwareRecovery_20261001_v1\candidate_a_v2\Flight_Controller\Tests\Host\test_telemetry.c:980: diagnostics.capability_tx_count == 3U
+telemetry: 979 checks, 3 failures
+Host test failed: telemetry_build_mask_0
+所在位置 D:\python_software\SilverStar\.work\SoftwareRecovery_20261001_v1\candidate_a_v2\Flight_Controller\Tests\Host\run_t
+ests.ps1:287 字符: 9
++         throw "Host test failed: $Name"
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Host test failed: telemetry_build_mask_0:String) [], RuntimeException
+    + FullyQualifiedErrorId : Host test failed: telemetry_build_mask_0
+ 
+mingw32-make: *** [Makefile:208: host-tests] Error 1

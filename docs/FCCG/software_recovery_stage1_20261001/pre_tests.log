@@ -1,0 +1,159 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+______ test_saved_board_without_resources_recovers_declarative_defaults _______
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020C61EDACF0>
+
+    def test_saved_board_without_resources_recovers_declarative_defaults(builtin_catalog):
+        model = ReferenceProject_Create('Recovery', catalog=builtin_catalog)
+        model.ground_target = replace(model.ground_target, enabled=True,
+            board='silverstar.board.ground_station_0_5',
+            mcu='silverstar.mcu.stm32f103c8t6',
+            radio_plugin='silverstar.device.telemetry.sx1281', module_variant='e28_2g4m12sx',
+            pc_interface='uart', hardware=HardwareConfiguration(mode='board_plugin'))
+        result = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+>       assert result.ground_target.hardware.resources
+E       AssertionError: assert ()
+E        +  where () = HardwareConfiguration(mode='board_plugin', source_kind='unselected', provider='', snapshot_id='', ioc_file='', mcu='',...), defines=(), linker_script='', source_digest='', source_label='', risk_acknowledged=False, assignment_fingerprint='').resources
+E        +    where HardwareConfiguration(mode='board_plugin', source_kind='unselected', provider='', snapshot_id='', ioc_file='', mcu='',...), defines=(), linker_script='', source_digest='', source_label='', risk_acknowledged=False, assignment_fingerprint='') = GroundTargetConfiguration(enabled=True, mcu='silverstar.mcu.stm32f103c8t6', board='silverstar.board.ground_station_0_5... gcc_path='', flash_command='', eide_mode='native', tool_paths={}), radio_instances=(), active_radio_instance='radio0').hardware
+E        +      where GroundTargetConfiguration(enabled=True, mcu='silverstar.mcu.stm32f103c8t6', board='silverstar.board.ground_station_0_5... gcc_path='', flash_command='', eide_mode='native', tool_paths={}), radio_instances=(), active_radio_instance='radio0') = ProjectModel(identity=ProjectIdentity(name='Recovery', firmware_version='0.1.1', build_target='SilverStar_0_1_1'), cor...'project_log_decoder_profile', 'project_sources'], component_provenance={}, reference_provenance={}, format_version=14).ground_target
+
+apps\FCCG\tests\test_ground_board_recovery.py:20: AssertionError
+___________ test_ground_selection_defaults_and_checkbox_visibility ____________
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/SoftwareRecovery_20261001_v1/pre_pytest/test_ground_selection_defaults0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/SoftwareRecovery_20261001_v1/pre_pytest/test_ground_selection_defaults0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\SoftwareRecovery_20261001_v1\\pre_pytest\\test_ground_selection_defaults0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+qapp = <PySide6.QtWidgets.QApplication(0x20c5e364230) at 0x0000020C7945D2C0>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/SoftwareRecovery_20261001_v1/pre_pytest/test_ground_selection_defaults0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_ground_selection_defaults_and_checkbox_visibility(qapp, tmp_path, workspace_root):
+>       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_ground_board_recovery.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/SoftwareRecovery_20261001_v1/pre_pytest/test_ground_selection_defaults0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\SoftwareRecovery_20261001_v1\pre_pytest\test_ground_selection_defaults0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError
+_____ test_snapshot_before_capability_does_not_complete_unknown_handshake _____
+
+    def test_snapshot_before_capability_does_not_complete_unknown_handshake():
+        c = make_controller()
+        c._handle_preflight_status(preflight_status(capability_acked=True))
+>       assert not c.state.capability_acked
+E       AssertionError: assert not True
+E        +  where True = FlightControllerState(session_generation=1, connected=True, connection_text='test', connection_message=UiMessage(key='...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0).capability_acked
+E        +    where FlightControllerState(session_generation=1, connected=True, connection_text='test', connection_message=UiMessage(key='...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0) = <app.Controller(0x20c612fcba0) at 0x0000020C7B270100>.state
+
+apps\GSHC\tests\test_reconnect_recovery.py:12: AssertionError
+_________ test_boot_cancels_commands_and_rehandshakes_without_replay __________
+
+    def test_boot_cancels_commands_and_rehandshakes_without_replay():
+        c = make_controller()
+        c._handle_capability(capability(250))
+        c._handle_ack_message(AirAckMessage(1, c.pending_capability_ack.command_seq, 5, 0, 1000))
+        c.state.system_ready = True
+        c.state.start_unlocked = True
+        add_pending(c, int(AirCmdId.START_MISSION), 19)
+        c._handle_status_message(AirStatusMessage(0, int(AirStatusId.BOOT), 0, 0, 0), None)
+>       assert not c.state.capability_acked
+E       AssertionError: assert not True
+E        +  where True = FlightControllerState(session_generation=1, connected=True, connection_text='test', connection_message=UiMessage(key='...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0).capability_acked
+E        +    where FlightControllerState(session_generation=1, connected=True, connection_text='test', connection_message=UiMessage(key='...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0) = <app.Controller(0x20c612fd5a0) at 0x0000020C7ABDC040>.state
+
+apps\GSHC\tests\test_reconnect_recovery.py:30: AssertionError
+____ test_disconnect_new_state_recovers_and_sequence_wrap_ignores_old_ack _____
+
+    def test_disconnect_new_state_recovers_and_sequence_wrap_ignores_old_ack():
+        c = make_controller()
+        c._handle_capability(capability(254))
+        old_seq = c.pending_capability_ack.command_seq
+        c.state = FlightControllerState(session_generation=2, connected=True)
+        c._clear_capability_ack('disconnect')
+        c.air_seq = 255
+        c._handle_preflight_status(preflight_status(capability_acked=True))
+>       assert not c.state.capability_acked
+E       AssertionError: assert not True
+E        +  where True = FlightControllerState(session_generation=2, connected=True, connection_text='未连接', connection_message=UiMessage(key='c...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0).capability_acked
+E        +    where FlightControllerState(session_generation=2, connected=True, connection_text='未连接', connection_message=UiMessage(key='c...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0) = <app.Controller(0x20c612fcc90) at 0x0000020C7AC2AD40>.state
+
+apps\GSHC\tests\test_reconnect_recovery.py:56: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\.work\pytest-cache\v\cache\nodeids: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path D:\python_software\SilverStar\.work\pytest-cache\v\cache\lastfailed: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\python_software\\SilverStar\\.work\\pytest-cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps/FCCG/tests/test_ground_board_recovery.py::test_saved_board_without_resources_recovers_declarative_defaults
+FAILED apps/FCCG/tests/test_ground_board_recovery.py::test_ground_selection_defaults_and_checkbox_visibility
+FAILED apps/GSHC/tests/test_reconnect_recovery.py::test_snapshot_before_capability_does_not_complete_unknown_handshake
+FAILED apps/GSHC/tests/test_reconnect_recovery.py::test_boot_cancels_commands_and_rehandshakes_without_replay
+FAILED apps/GSHC/tests/test_reconnect_recovery.py::test_disconnect_new_state_recovers_and_sequence_wrap_ignores_old_ack
+5 failed, 2 warnings in 8.36s

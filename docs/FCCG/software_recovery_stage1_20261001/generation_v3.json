@@ -1,0 +1,36 @@
+[
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareRecovery_20261001_v1\\candidate_a_v3",
+    "scope": "flight",
+    "targets": [
+      "Flight_Controller"
+    ],
+    "files": 0
+  },
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareRecovery_20261001_v1\\candidate_a_v3",
+    "scope": "all",
+    "targets": [
+      "Flight_Controller",
+      "Ground_Station"
+    ],
+    "files": 156
+  },
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareRecovery_20261001_v1\\candidate_b_v3",
+    "scope": "ground",
+    "targets": [
+      "Ground_Station"
+    ],
+    "files": 156
+  },
+  {
+    "project": "D:\\python_software\\SilverStar\\.work\\SoftwareRecovery_20261001_v1\\candidate_b_v3",
+    "scope": "all",
+    "targets": [
+      "Flight_Controller",
+      "Ground_Station"
+    ],
+    "files": 156
+  }
+]

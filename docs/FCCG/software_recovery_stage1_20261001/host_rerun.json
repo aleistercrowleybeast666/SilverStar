@@ -1,0 +1,10 @@
+{
+  "command": [
+    "mingw32-make",
+    "host-tests"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\SoftwareRecovery_20261001_v1\\candidate_a_v4\\Flight_Controller",
+  "exit_code": 0,
+  "seconds": 265.2597212999999,
+  "log_sha256": "ebe8a43ce9432f029bb7823f7df9d53d6b8b2365ecdc37cbc8b823e58310a660"
+}

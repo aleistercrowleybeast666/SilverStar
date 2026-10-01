@@ -1,0 +1,58 @@
+.................................FF....                                  [100%]
+================================== FAILURES ===================================
+_______________________ test_docs_relative_links_exist ________________________
+
+    def test_docs_relative_links_exist():
+        missing = []
+        for path in sorted(DOCS.rglob("*.md")):
+            if path.name in {"VALIDATION.md", "CHANGELOG.md"} or "history" in path.parts:
+                continue
+            for destination in _Markdown_Destinations(path.read_text(encoding="utf-8")):
+                url = urlsplit(destination)
+                if url.scheme or url.netloc or not url.path:
+                    continue
+                target = path.parent / unquote(url.path)
+                if not target.exists():
+>                   missing.append(f"{path.relative_to(ROOT)} -> {destination}")
+                                      ^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_documentation.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/docs/FCCG/evidence_flight_safety_batch1_20261001/AGENTS_SNAPSHOT.md')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\docs\\FCCG\\evidence_flight_safety_batch1_20261001\\AGENTS_SNAPSHOT.md' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+______________ test_current_docs_release_and_calibration_claims _______________
+
+    def test_current_docs_release_and_calibration_claims():
+>       assert SILVERSTAR_PLATFORM_VERSION == "0.1.0"
+E       AssertionError: assert '0.1.1' == '0.1.0'
+E         
+E         - 0.1.0
+E         ?     ^
+E         + 0.1.1
+E         ?     ^
+
+apps\FCCG\tests\test_documentation.py:42: AssertionError
+=========================== short test summary info ===========================
+FAILED apps/FCCG/tests/test_documentation.py::test_docs_relative_links_exist
+FAILED apps/FCCG/tests/test_documentation.py::test_current_docs_release_and_calibration_claims
+2 failed, 37 passed in 1.88s

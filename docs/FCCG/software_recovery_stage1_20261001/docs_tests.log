@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+___________ ERROR collecting apps/FCCG/tests/test_documentation.py ____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\FCCG\tests\test_documentation.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\tests\test_documentation.py:11: in <module>
+    from tools.import_reference_components import _PackageDocumentation_Annotate
+E   ModuleNotFoundError: No module named 'tools.import_reference_components'
+=========================== short test summary info ===========================
+ERROR apps/FCCG/tests/test_documentation.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.83s
