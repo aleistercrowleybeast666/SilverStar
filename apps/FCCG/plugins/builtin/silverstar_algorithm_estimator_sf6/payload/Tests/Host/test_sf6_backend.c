@@ -43,15 +43,24 @@ SystemDeviceResult SystemLogSink_SessionEnd(void)
 #endif
 
 static SystemGnssSample s_gnss;
+static uint8_t s_gnss_available = 1U;
+static uint8_t s_gnss_source_available = 1U;
+static uint8_t s_active_gnss_source = 2U;
 static uint32_t s_measurements;
 static uint32_t s_states;
 static uint32_t s_invalid;
 static uint32_t s_sequence;
 
 SystemDeviceResult SystemGnss_LatestSampleGet(SystemGnssSample *sample)
-{ *sample = s_gnss; return SYSTEM_DEVICE_OK; }
+{
+    if (!s_gnss_available) { return SYSTEM_DEVICE_NOT_READY; }
+    *sample = s_gnss; return SYSTEM_DEVICE_OK;
+}
 SystemDeviceResult SystemSourceSelector_GnssActiveInstanceGet(uint8_t *instance)
-{ *instance = 2U; return SYSTEM_DEVICE_OK; }
+{
+    if (!s_gnss_source_available) { return SYSTEM_DEVICE_NOT_READY; }
+    *instance = s_active_gnss_source; return SYSTEM_DEVICE_OK;
+}
 
 static void Test_RecordsDrain(void)
 {
@@ -115,6 +124,79 @@ static void Test_GnssPrepare(void)
     for (uint8_t axis = 0U; axis < 3U; axis++) { s_gnss.velocity_variance_m2ps2[axis] = 0.04f; }
 }
 
+static void Test_MissingReferencesAndSources(const float q[4])
+{
+    EstimatorOutputSnapshot output = {0};
+    EstimatorPressureSnapshot pressure = {0};
+    SystemInertialIncrement input = {0};
+    Test_GnssPrepare();
+    s_gnss.position_usable = 0U;
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 0.0f, 0U, 78U, 1U) == SYSTEM_DEVICE_NOT_READY);
+    TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_NOT_READY);
+    s_gnss.position_usable = 1U; s_gnss_source_available = 0U;
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 0.0f, 0U, 78U, 1U) == SYSTEM_DEVICE_NOT_READY);
+    s_gnss_source_available = 1U;
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 0.0f, 2U, 78U, 1U) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, INFINITY, 1U, 78U, 1U) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f, 0U, 78U, 1U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_OK && output.baro_origin_valid == 0U);
+    TEST_CHECK(EstimatorBus_Init() == ESTIMATOR_BUS_RESULT_OK);
+    pressure.receive_timestamp_us = 20004000ULL; pressure.timestamp_us = pressure.receive_timestamp_us;
+    pressure.altitude_m = 10.5f; pressure.valid = 1U; pressure.healthy = 1U;
+    pressure.supported_fields = SYSTEM_BARO_FIELD_ALTITUDE; pressure.valid_fields = SYSTEM_BARO_VALID_ALTITUDE;
+    pressure.sequence = 7U; pressure.measurement_timestamp_trusted = 1U;
+    TEST_CHECK(EstimatorBus_PressurePublish(&pressure) == ESTIMATOR_BUS_RESULT_OK);
+    s_gnss_available = 0U; input.dt_s = 0.004f;
+    input.delta_velocity_b_sculling_corrected[2] = SYSTEM_INS_GRAVITY_MPS2 * input.dt_s;
+    input.timestamp_us = pressure.receive_timestamp_us; HostPlatformMock_TimeSetUs(input.timestamp_us);
+    TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(output.baro_origin_valid == 0U && output.baro_update_count == 0U);
+    TEST_CHECK((output.health_flags & ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE) != 0U);
+    Test_RecordsDrain();
+    TEST_CHECK(EstimatorBus_Init() == ESTIMATOR_BUS_RESULT_OK);
+    for (uint32_t step = 1U; step <= 501U; step++)
+    {
+        input.timestamp_us += 4000ULL; HostPlatformMock_TimeSetUs(input.timestamp_us);
+        TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(isfinite(output.position_enu_m[2]) && output.gnss_position_update_count == 0U && output.baro_update_count == 0U);
+        Test_RecordsDrain();
+    }
+    TEST_CHECK((output.health_flags & ESTIMATOR_HEALTH_FUSION_TIMEOUT) != 0U);
+    s_gnss_available = 1U; s_active_gnss_source = 3U;
+    input.timestamp_us += 4000ULL; HostPlatformMock_TimeSetUs(input.timestamp_us);
+    TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK((output.health_flags & ESTIMATOR_HEALTH_GNSS_MEASUREMENT_INVALID) != 0U && output.gnss_position_update_count == 0U);
+    Test_RecordsDrain(); s_active_gnss_source = 2U;
+    SystemNavigationBackend_Reset();
+}
+
+static void Test_CompatibleHeightReferences(const float q[4])
+{
+    EstimatorOutputSnapshot output = {0};
+    EstimatorPressureSnapshot pressure = {0};
+    SystemInertialIncrement input = {0};
+    TEST_CHECK(EstimatorBus_Init() == ESTIMATOR_BUS_RESULT_OK);
+    Test_GnssPrepare(); s_gnss.ellipsoid_height_mm = 123450;
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f, 1U, 79U, 1U) == SYSTEM_DEVICE_OK);
+    s_gnss.ellipsoid_height_mm += 500; s_gnss.sequence++;
+    input.dt_s = 0.004f; input.timestamp_us = 30004000ULL;
+    input.delta_velocity_b_sculling_corrected[2] = SYSTEM_INS_GRAVITY_MPS2 * input.dt_s;
+    s_gnss.sample_timestamp_us = input.timestamp_us; s_gnss.receive_timestamp_us = input.timestamp_us;
+    pressure.timestamp_us = input.timestamp_us; pressure.receive_timestamp_us = input.timestamp_us;
+    pressure.sequence = 1U; pressure.altitude_m = 10.5f; pressure.valid = 1U; pressure.healthy = 1U;
+    pressure.measurement_timestamp_trusted = 1U;
+    pressure.supported_fields = SYSTEM_BARO_FIELD_ALTITUDE; pressure.valid_fields = SYSTEM_BARO_VALID_ALTITUDE;
+    TEST_CHECK(EstimatorBus_PressurePublish(&pressure) == ESTIMATOR_BUS_RESULT_OK);
+    HostPlatformMock_TimeSetUs(input.timestamp_us);
+    TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK_NEAR(output.gnss_position_enu_m[2], 0.5f, 1.0e-4f);
+    TEST_CHECK_NEAR(output.baro_relative_altitude_m, 0.5f, 1.0e-6f);
+    TEST_CHECK_NEAR(output.position_enu_m[2], 0.18f, 1.0e-4f);
+    TEST_CHECK_NEAR(output.velocity_enu_mps[2], 0.0f, 1.0e-6f);
+    TEST_CHECK(output.baro_origin_valid == 1U && output.gnss_position_update_count == 2U && output.baro_update_count == 1U);
+    Test_RecordsDrain(); SystemNavigationBackend_Reset();
+}
+
 int main(int argc, char **argv)
 {
     const float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
@@ -148,10 +230,19 @@ int main(int argc, char **argv)
 #endif
     TEST_CHECK(LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_OK);
     Test_GnssPrepare();
-    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f, 77U, 1U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f, 1U, 77U, 1U) == SYSTEM_DEVICE_OK);
     /* A production session records mission start. Keep the exact decoder's
      * calibration-selection boundary contract in the exported Host fixture. */
-    TEST_CHECK(LoggerBus_EventPush(10000000ULL, (FlightLogEventId)0x03U, 0U, 0U) ==
+    FlightLogCalibrationResultRecord calibration = {0};
+    calibration.source_id = FLIGHT_LOG_PRIMARY_INERTIAL_SOURCE_ID;
+    calibration.virtual_imu_id = FLIGHT_LOG_PRIMARY_VIRTUAL_IMU_ID;
+    calibration.mode = 0U; calibration.state = 4U; calibration.ready = 1U;
+    /* Declared NONE calibration: identity correction, no claimed sensor run.
+     * Same fields as FlightTask_CalibrationResultWrite for NONE/READY. */
+    for (uint8_t axis = 0U; axis < 3U; axis++)
+    { calibration.accel_scale[axis] = 1.0f; calibration.gyro_scale[axis] = 1.0f; }
+    TEST_CHECK(LoggerBus_CalibrationResultPush(9999000ULL, &calibration) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_EventPush(10000000ULL, FLIGHT_LOG_EVENT_MISSION_START, 0U, 0U) ==
         LOGGER_BUS_RESULT_OK);
     TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_OK);
     for (uint8_t axis = 0U; axis < 6U; axis++) { TEST_CHECK(isnan(output.covariance_diagonal[axis])); }
@@ -207,5 +298,6 @@ int main(int argc, char **argv)
     SystemNavigationBackend_Reset();
     TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_NOT_READY);
     TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_NOT_READY);
+    Test_MissingReferencesAndSources(q); Test_CompatibleHeightReferences(q);
     return Test_Finish("sf6_backend_actual");
 }

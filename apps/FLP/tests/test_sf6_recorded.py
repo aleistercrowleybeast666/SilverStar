@@ -18,8 +18,8 @@ from silverstar_flp.plugins.registry import builtin_registry
 @pytest.mark.skipif(not os.environ.get("SILVERSTAR_SF6_ACTUAL_ROOT"), reason="requires explicitly generated actual SF6 C fixture")
 def test_actual_sf6_backend_exact_decoder_and_recorded_sources(tmp_path):
     root = Path(os.environ["SILVERSTAR_SF6_ACTUAL_ROOT"])
-    log = root / "SF6_ACTUAL_BACKEND_v2.BIN"
-    packages = tuple((root / "SF6_v6").glob("*.ssdecoder"))
+    log = root / os.environ.get("SILVERSTAR_SF6_LOG", "SF6_ACTUAL_BACKEND_v3.BIN")
+    packages = tuple((root / os.environ.get("SILVERSTAR_SF6_PROJECT", "SF6_Probe_v1")).glob("*.ssdecoder"))
     assert len(packages) == 1
     package = packages[0]
     before = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in (log, package)}
@@ -30,6 +30,11 @@ def test_actual_sf6_backend_exact_decoder_and_recorded_sources(tmp_path):
     measurements = dataset.Records_Get("SF6_MEASUREMENT")
     assert len(states) == 1000 and len(measurements) == 104
     assert len(dataset.Records_Get("DECODER_PROFILE_DESCRIPTOR")) == 1
+    calibration = dataset.Records_Get("CALIBRATION_RESULT")
+    assert len(calibration) == 1
+    assert calibration[0].payload["mode"] == 0 and calibration[0].payload["ready"] == 1
+    assert tuple(calibration[0].payload["accel_scale"]) == (1.0, 1.0, 1.0)
+    assert tuple(calibration[0].payload["gyro_scale"]) == (1.0, 1.0, 1.0)
     assert all(record.payload["algorithm_id"] == 3 for record in states)
     assert all(tuple(record.payload["gain"]) == pytest.approx((0.2,) * 6) for record in states)
     assert not dataset.Records_Get("ESTIMATOR")

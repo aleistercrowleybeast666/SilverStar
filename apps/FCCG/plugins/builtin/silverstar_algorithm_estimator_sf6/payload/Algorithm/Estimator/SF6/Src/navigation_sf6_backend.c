@@ -18,11 +18,22 @@
 #include <math.h>
 #include <string.h>
 
+/* One logical barometer is active. Conservatively cover both the integrated
+ * IMU packet rate and the independent barometer configured output rate.
+ * These are configuration bounds, not measured MCU timing guarantees. */
+#define NAV_SF6_BARO_BOUND_HZ ((SYSTEM_IMU_OUTPUT_RATE_HZ > SYSTEM_BAROMETER_OUTPUT_RATE_HZ) ? SYSTEM_IMU_OUTPUT_RATE_HZ : SYSTEM_BAROMETER_OUTPUT_RATE_HZ)
+_Static_assert(4ULL * ((NAV_SF6_HISTORY_US * SYSTEM_GNSS_NAVIGATION_RATE_HZ + 999999ULL) / 1000000ULL + 1ULL) +
+    ((NAV_SF6_HISTORY_US * NAV_SF6_BARO_BOUND_HZ + 999999ULL) / 1000000ULL + 1ULL) <= NAV_SF6_EVENT_CAPACITY,
+    "SF6 observation capacity cannot retain configured GNSS groups and barometer rate for 600ms");
+_Static_assert((NAV_SF6_HISTORY_US * SYSTEM_IMU_OUTPUT_RATE_HZ + 999999ULL) / 1000000ULL + 1ULL <= NAV_SF6_HISTORY_CAPACITY,
+    "SF6 prediction capacity cannot retain configured IMU rate for 600ms");
+
 /* CPU-only, single EstimatorTask owner. No KF/ESKF workspace or callback table. */
 static NavigationSf6Context s_context;
 static GeoLocalFrame s_frame;
 static float s_q_nb[4];
 static float s_baro_origin;
+static uint8_t s_baro_origin_valid;
 static uint8_t s_active;
 static uint8_t s_started;
 static uint8_t s_gnss_source;
@@ -41,17 +52,18 @@ void SystemNavigationBackend_Reset(void)
     memset(&s_frame, 0, sizeof(s_frame));
     memset(s_q_nb, 0, sizeof(s_q_nb));
     s_active = 0U; s_started = 0U; s_gnss_seen = 0U; s_baro_seen = 0U;
+    s_baro_origin_valid = 0U;
 }
 
 SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     const SystemGnssSample *origin, float barometer_origin_m,
-    uint32_t generation, uint8_t activate)
+    uint8_t barometer_origin_valid, uint32_t generation, uint8_t activate)
 {
     float velocity[3] = {0.0f};
     float quaternion[4];
     uint8_t axis;
     (void)generation; /* SF6 has no covariance generation or bias-state reset. */
-    if (q_nb == NULL || origin == NULL || activate > 1U ||
+    if (q_nb == NULL || origin == NULL || activate > 1U || barometer_origin_valid > 1U ||
         !isfinite(barometer_origin_m)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     SystemNavigationBackend_Reset();
     memcpy(quaternion, q_nb, sizeof(quaternion));
@@ -69,7 +81,7 @@ SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     if (NavigationSf6_Initialize(&s_context, s_gain, velocity, 0U) != NAV_SF6_OK)
     { return SYSTEM_DEVICE_VERIFY_FAILED; }
     memcpy(s_q_nb, quaternion, sizeof(s_q_nb));
-    s_baro_origin = barometer_origin_m; s_active = activate;
+    s_baro_origin = barometer_origin_m; s_baro_origin_valid = barometer_origin_valid; s_active = activate;
     SystemNavigationHealth_Reset(0U);
     return SYSTEM_DEVICE_OK;
 }
@@ -113,7 +125,10 @@ static void Backend_OutcomePublish(const NavigationSf6Measurement *measurement,
     evidence.receive_us = measurement->receive_us;
     evidence.measurement_us = measurement->measurement_us;
     evidence.evaluation_us = output->timestamp_us;
-    evidence.sequence = measurement->sequence; evidence.source = s_gnss_source;
+    evidence.sequence = measurement->sequence;
+    /* The legacy pressure bus has no endpoint identity. UNKNOWN is explicit;
+     * the Baro integration must carry the actual producing endpoint here. */
+    evidence.source = group == 4U ? UINT8_MAX : s_gnss_source;
     evidence.physically_valid = physical; evidence.attempted = physical;
     evidence.effective_update = (uint8_t)(accepted && Backend_EffectiveGain(group));
     /* Health uses admission/age only. Statistics are unavailable on the wire. */
@@ -198,8 +213,14 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
     SystemGnssSample sample;
     float position[3];
     uint8_t group, source;
-    if (SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK ||
-        source != s_gnss_source || SystemGnss_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK ||
+    if (SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK) { return; }
+    if (source != s_gnss_source)
+    {
+        /* A different GNSS reference is not supported until mission reinit. */
+        output->health_flags |= ESTIMATOR_HEALTH_GNSS_MEASUREMENT_INVALID;
+        return;
+    }
+    if (SystemGnss_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK ||
         sample.receive_timestamp_us > output->timestamp_us ||
         (s_gnss_seen && sample.sequence == s_gnss_sequence)) { return; }
     s_gnss_seen = 1U; s_gnss_sequence = sample.sequence;
@@ -231,7 +252,7 @@ static void Backend_BarometerUpdate(EstimatorOutputSnapshot *output)
     s_baro_seen = 1U; s_baro_sequence = pressure.sequence;
     sample.pressure_pa = pressure.pressure_pa; sample.altitude_m = pressure.altitude_m;
     sample.supported_fields = pressure.supported_fields; sample.valid_fields = pressure.valid_fields;
-    physical = (uint8_t)(pressure.valid == 1U && pressure.healthy == 1U &&
+    physical = (uint8_t)(s_baro_origin_valid && pressure.valid == 1U && pressure.healthy == 1U &&
         output->timestamp_us - pressure.receive_timestamp_us <= SYSTEM_ESTIMATOR_MEASUREMENT_MAX_AGE_US &&
         SystemBarometer_AltitudeResolve(&sample, &altitude) == SYSTEM_DEVICE_OK);
     measurement.group = 4U; measurement.sequence = pressure.sequence;
@@ -259,7 +280,8 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
     memcpy(output->position_enu_m, &snapshot.state[3], 3U * sizeof(float));
     memcpy(output->q_nb, s_q_nb, sizeof(s_q_nb));
     output->initialized = 1U; output->mission_running = s_active;
-    output->gnss_origin_valid = s_frame.valid; output->baro_origin_valid = 1U;
+    output->gnss_origin_valid = s_frame.valid; output->baro_origin_valid = s_baro_origin_valid;
+    if (!s_baro_origin_valid) { output->health_flags |= ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE; }
     for (axis = 0U; axis < 6U; axis++)
     {
         uint8_t column;

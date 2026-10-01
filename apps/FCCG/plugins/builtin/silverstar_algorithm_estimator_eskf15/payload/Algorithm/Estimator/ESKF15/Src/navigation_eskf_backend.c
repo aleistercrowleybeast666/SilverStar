@@ -97,8 +97,9 @@ void SystemNavigationBackend_Reset(void)
 
 SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     const SystemGnssSample *origin, float barometer_origin_m,
-    uint32_t generation, uint8_t activate)
+    uint8_t barometer_origin_valid, uint32_t generation, uint8_t activate)
 {
+    (void)barometer_origin_valid; /* ESKF behavior is unchanged by the SF6 reference contract. */
     float nominal[16] = {0.0f};
     uint32_t axis;
     uint8_t source;

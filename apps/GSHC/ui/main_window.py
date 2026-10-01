@@ -1698,7 +1698,9 @@ class MainWindow(QMainWindow):
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred
         )
         layout.addLayout(grid)
-        actions = QHBoxLayout()
+        # Four translated actions can exceed the narrow alignment card. Keep
+        # full labels and the original monitoring row; stack the long actions.
+        actions = QGridLayout()
         self.btn_align_start = QPushButton()
         self.btn_align_stop = QPushButton()
         self.btn_align_reset = QPushButton()
@@ -1714,7 +1716,10 @@ class MainWindow(QMainWindow):
             self.btn_sensor_details,
         ):
             button.setStyleSheet(self._cmd_button_style)
-            actions.addWidget(button)
+        actions.addWidget(self.btn_align_start, 0, 0, 1, 2)
+        actions.addWidget(self.btn_align_stop, 1, 0)
+        actions.addWidget(self.btn_align_reset, 1, 1)
+        actions.addWidget(self.btn_sensor_details, 2, 0, 1, 2)
         layout.addLayout(actions)
         self.btn_align_start.clicked.connect(lambda: self.on_align_start and self.on_align_start())
         self.btn_align_stop.clicked.connect(lambda: self.on_align_stop and self.on_align_stop())

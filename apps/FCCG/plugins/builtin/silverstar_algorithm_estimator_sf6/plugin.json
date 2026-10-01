@@ -79,19 +79,24 @@
     "source_origins": {
       "default": "silverstar_sf6"
     },
-    "delay_contract": {
-      "history_capacity": 256,
-      "window_us": 600000,
-      "alignment": "previous_completed_prediction_boundary",
-      "maximum_boundary_error_us": 20000
+      "delay_contract": {
+        "history_capacity": 256,
+        "event_capacity": 256,
+        "window_us": 600000,
+        "alignment": "previous_completed_prediction_boundary",
+        "maximum_boundary_error_us": 20000,
+        "observation_replay": "measurement_timestamp_then_ascending_group",
+        "publication": "validate_complete_replay_before_commit",
+        "capacity": "configured_gnss_four_groups_plus_max_imu_barometer_rate_with_closed_window_margin"
     },
     "gain_defaults": "Initial engineering defaults; not bench-tuned and not an optimality claim.",
     "qualified_timing_profiles": [
       "cortex_m4f_hardfp"
     ],
-    "replay_contract": {
-      "window_ms": 600,
-      "history_capacity": 256
+      "replay_contract": {
+        "window_ms": 600,
+        "history_capacity": 256,
+        "event_capacity": 256
     }
   },
   "selection": {

@@ -3536,7 +3536,7 @@ static SystemDeviceResult Estimator_BackendInitialize(uint8_t activate)
     SILVERSTAR_ASSERT(activate <= 1U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     SystemDeviceResult backend_result = SystemNavigationBackend_Initialize(
         s_estimator.q_nb, &s_estimator.frozen_gnss, s_estimator.frozen_baro_altitude_m,
-        s_preparation.generation, activate);
+        s_estimator.baro_origin_valid, s_preparation.generation, activate);
     s_estimator.initialized = (uint8_t)(backend_result == SYSTEM_DEVICE_OK);
     s_estimator.mission_running = (uint8_t)(s_estimator.initialized && activate);
     (void)memset(&s_snapshot, 0, sizeof(s_snapshot));

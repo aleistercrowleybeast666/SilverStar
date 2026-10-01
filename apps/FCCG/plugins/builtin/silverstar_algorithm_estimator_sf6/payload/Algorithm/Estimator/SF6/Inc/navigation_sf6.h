@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define NAV_SF6_HISTORY_CAPACITY 256U
+#define NAV_SF6_EVENT_CAPACITY 256U
 #define NAV_SF6_HISTORY_US 600000ULL
 #define NAV_SF6_MAX_DT_S 0.02f
 #define NAV_SF6_GROUP_COUNT 5U
@@ -15,7 +16,8 @@ typedef enum
     NAV_SF6_NOT_READY,
     NAV_SF6_STALE,
     NAV_SF6_DUPLICATE,
-    NAV_SF6_NUMERIC_ERROR
+    NAV_SF6_NUMERIC_ERROR,
+    NAV_SF6_FULL
 } NavigationSf6Result;
 
 /* State order and gain order are vE, vN, vU, pE, pN, pU. No covariance. */
@@ -23,17 +25,29 @@ typedef struct
 {
     uint64_t timestamp_us;
     float state[6];
+    float delta_velocity[3]; /* Increment leading to this boundary. */
+    float dt_s; /* Preserve the admitted integration interval during replay. */
 } NavigationSf6Sample;
 
 typedef struct
 {
+    uint64_t measurement_us;
+    float observation[2];
+    uint8_t group;
+} NavigationSf6Event;
+
+typedef struct
+{
     NavigationSf6Sample history[NAV_SF6_HISTORY_CAPACITY];
+    NavigationSf6Event events[NAV_SF6_EVENT_CAPACITY];
+    float base_state[6]; /* Before observations at the oldest boundary. */
     float gain[6];
     uint64_t last_measurement_us[NAV_SF6_GROUP_COUNT];
     uint64_t last_receive_us[NAV_SF6_GROUP_COUNT];
     uint32_t last_sequence[NAV_SF6_GROUP_COUNT];
     uint16_t first;
     uint16_t count;
+    uint16_t event_count;
     uint8_t seen[NAV_SF6_GROUP_COUNT];
     uint8_t initialized;
 } NavigationSf6Context;
