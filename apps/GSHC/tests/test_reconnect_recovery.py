@@ -66,6 +66,14 @@ def test_framed_align_ack_is_transaction_acceptance_and_selftest_snapshot_wins()
             c._handle_air_message(event.air_message, event)
     receive(bytes((0x12, 250, 0, 1, 1, 15, 16, 0xD0, 7)))
     receive(struct.pack('<BBBBBI', 0x40, 251, c.pending_capability_ack.command_seq, 5, 0, 1000))
+    c.send_ping()
+    ping = c._find_pending_air_cmd(int(AirCmdId.PING))
+    assert ping is not None
+    from protocol.gsp_min import GspAck
+    c._handle_gsp_ack(GspAck(int(GspType.AIR_TX), 0, 0))
+    assert c._find_pending_air_cmd(int(AirCmdId.PING)) is ping
+    receive(struct.pack('<BBBBBI', 0x40, 252, ping.seq, ping.cmd_id, 0, 1100))
+    assert c._find_pending_air_cmd(int(AirCmdId.PING)) is None
     c._handle_preflight_status(preflight_status(capability_acked=True, calibration_ready=True))
     c.send_align_start()
     pending = c._find_pending_air_cmd(int(AirCmdId.ALIGN_START))
@@ -84,6 +92,18 @@ def test_framed_align_ack_is_transaction_acceptance_and_selftest_snapshot_wins()
     assert not c.state.selftest_passed
     assert not c.state.system_ready
     assert c.state.capability is not None
+    c._handle_status_message(replace(event, arg0=2), None)
+    assert not c.state.selftest_passed
+    c._handle_preflight_status(preflight_status(capability_acked=True, calibration_ready=True))
+    c.send_align_start()
+    timed_out = c._find_pending_air_cmd(int(AirCmdId.ALIGN_START))
+    timed_out.max_retries = 0
+    timed_out.last_send_monotonic = -1000
+    c._check_air_cmd_timeouts()
+    assert not c.pending_air_cmds
+    assert not c.state.alignment.ready
+    assert not c.state.system_ready
+    assert any(record.get('kind') == 'ACK_TIMEOUT' for record in c.logger.records)
 
 
 def test_boot_cancels_commands_and_rehandshakes_without_replay():

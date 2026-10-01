@@ -2365,7 +2365,7 @@ class Controller(QObject):
                 self.FlightSession_Restart("BOOT")
                 self.state.lifecycle_state = int(AirLifecycleState.BOOT)
         elif status_id == int(AirStatusId.SELFTEST_COMPLETE):
-            self.state.selftest_passed = bool(message.arg0)
+            self.state.selftest_passed = message.arg0 == 1
         elif status_id == int(AirStatusId.MISSION_START):
             self._mark_mission_started("mission_start_status", message.time_ms)
             self._update_mission_presentation(
