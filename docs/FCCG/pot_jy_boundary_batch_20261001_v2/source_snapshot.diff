@@ -1,0 +1,131 @@
+diff --git a/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c b/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
+index cae9bc1..78cfe0e 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
++++ b/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
+@@ -446,27 +446,37 @@ static PlatformResult IMU_ConfigFrameEnqueue(uint8_t instance,
+         frame, sizeof(frame), PLATFORM_UART_TX_PRIORITY);
+ }
+ 
++static IMUState IMU_ReceiveResume(uint8_t instance, IMUState state)
++{
++    if (PlatformUart_RxRestart(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
++    {
++        return IMU_UART_RX_ERROR;
++    }
++    return state;
++}
++
+ static IMUState IMU_WriteRegister(uint8_t instance, uint8_t reg, uint16_t value, uint8_t save)
+ {
+     IMUState state;
+ 
+     SILVERSTAR_ASSERT_OBJECT(&s_config_cache, IMUConfig,
+         SILVERSTAR_ASSERT_MODULE_DEVICE);
+-    (void)PlatformUart_RxStop(Jy901bResource_UartGet(instance));
++    if (PlatformUart_RxStop(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
++    {
++        return IMU_ReceiveResume(instance, IMU_UART_RX_ERROR);
++    }
+ 
+     state = IMU_SendConfigFrame(instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
+     if (state != IMU_OK)
+     {
+-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-        return state;
++        return IMU_ReceiveResume(instance, state);
+     }
+     PlatformTime_DelayMs(IMU_CFG_UNLOCK_DELAY_MS);
+ 
+     state = IMU_SendConfigFrame(instance, reg, value);
+     if (state != IMU_OK)
+     {
+-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-        return state;
++        return IMU_ReceiveResume(instance, state);
+     }
+     PlatformTime_DelayMs(IMU_CFG_WRITE_DELAY_MS);
+ 
+@@ -475,14 +485,12 @@ static IMUState IMU_WriteRegister(uint8_t instance, uint8_t reg, uint16_t value,
+         state = IMU_SendConfigFrame(instance, IMU_REG_SAVE, 0x0000U);
+         if (state != IMU_OK)
+         {
+-            (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-            return state;
++            return IMU_ReceiveResume(instance, state);
+         }
+         PlatformTime_DelayMs(IMU_CFG_SAVE_DELAY_MS);
+     }
+ 
+-    (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-    return IMU_OK;
++    return IMU_ReceiveResume(instance, IMU_OK);
+ }
+ 
+ static uint8_t IMU_ReadResponseChecksumValid(const uint8_t *frame)
+@@ -1289,7 +1297,7 @@ void IMU_Poll(uint8_t instance)
+     PlatformUartDiagnostics port_diagnostics;
+     uint16_t readLen;
+     uint16_t i;
+-    uint32_t now = PlatformTime_Ms();
++    uint32_t now;
+     uint32_t chunk;
+ 
+     SILVERSTAR_ASSERT_OBJECT(&s_imu, IMUData,
+@@ -1330,7 +1338,9 @@ void IMU_Poll(uint8_t instance)
+         s_processLimitCount++;
+     }
+ 
+-    if ((s_imu.LastUpdateTickMs == 0U) ||
++    /* Decoding may publish a timestamp newer than the poll entry tick. */
++    now = PlatformTime_Ms();
++    if ((s_imu.ValidMask == 0U) ||
+         ((now - s_imu.LastUpdateTickMs) > IMU_ONLINE_TIMEOUT_MS))
+     {
+         s_imu.Online = 0U;
+@@ -1356,7 +1366,7 @@ uint8_t IMU_IsOnline(uint8_t instance)
+ {
+     uint32_t now = PlatformTime_Ms();
+ 
+-    if ((s_imu.LastUpdateTickMs == 0U) ||
++    if ((s_imu.ValidMask == 0U) ||
+         ((now - s_imu.LastUpdateTickMs) > IMU_ONLINE_TIMEOUT_MS))
+     {
+         return 0U;
+@@ -1514,21 +1524,22 @@ IMUState IMU_SetBaudrate(uint8_t instance, IMUBaudrate baudrate)
+         return state;
+     }
+ 
+-    (void)PlatformUart_RxStop(Jy901bResource_UartGet(instance));
++    if (PlatformUart_RxStop(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
++    {
++        return IMU_ReceiveResume(instance, IMU_UART_RX_ERROR);
++    }
+ 
+     state = IMU_SendConfigFrame(instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
+     if (state != IMU_OK)
+     {
+-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-        return state;
++        return IMU_ReceiveResume(instance, state);
+     }
+     PlatformTime_DelayMs(IMU_CFG_UNLOCK_DELAY_MS);
+ 
+     state = IMU_SendConfigFrame(instance, IMU_REG_BAUD, baud_value);
+     if (state != IMU_OK)
+     {
+-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
+-        return state;
++        return IMU_ReceiveResume(instance, state);
+     }
+     PlatformTime_DelayMs(IMU_CFG_BAUD_SWITCH_DELAY_MS);
+ 
+@@ -1757,7 +1768,8 @@ IMUState IMU_EnsureQuaternionOutput(uint8_t instance)
+     }
+ 
+     IMU_ConfigCacheSetField(instance, IMU_CONFIG_VALID_RETURN_CONTENT, rsw);
+-    return ((rsw & FC_IMU_RETURN_CONTENT_QUAT_MASK) != 0U) ? IMU_OK : IMU_RESP_INVALID;
++    return (((rsw & FC_IMU_RETURN_CONTENT_DEFAULT) == FC_IMU_RETURN_CONTENT_DEFAULT) &&
++            ((rsw & FC_IMU_RETURN_CONTENT_QUAT_MASK) != 0U)) ? IMU_OK : IMU_RESP_INVALID;
+ }
+ 
+ IMUState IMU_SaveConfig(uint8_t instance)

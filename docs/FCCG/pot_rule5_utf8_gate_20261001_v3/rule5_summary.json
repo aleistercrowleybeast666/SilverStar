@@ -1,0 +1,20 @@
+{
+  "flight": {
+    "target": "Flight",
+    "files": "108",
+    "functions": "2605",
+    "eligible_assertions": "1591",
+    "average": "0.610749",
+    "semantic_validity": "NOT PROVEN: syntactic candidates, not certified useful assertion count",
+    "gate": "FAIL: mean below 2"
+  },
+  "ground": {
+    "target": "Ground",
+    "files": "15",
+    "functions": "148",
+    "eligible_assertions": "106",
+    "average": "0.716216",
+    "semantic_validity": "NOT PROVEN: syntactic candidates, not certified useful assertion count",
+    "gate": "FAIL: mean below 2"
+  }
+}

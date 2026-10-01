@@ -1,0 +1,94 @@
+{
+  "head": "9065ae0d91356077b8bd11a5249649f3f2f03e99",
+  "dirty_before_checks": " M apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c\n?? apps/FCCG/tests/fixtures/jy901b_boundary_host.c\n?? apps/FCCG/tests/test_jy901b_boundary_host.py\n",
+  "source_sha256": {
+    "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Src\\jy901b_device.c": "a3536eeb23114db8ab6a4eb2df6495a29eac4a213701a12d20a6a7b0d860aed7",
+    "apps\\FCCG\\tests\\test_jy901b_boundary_host.py": "281e2d1bc394fc01f966a1f03c6ca3073b1f63f94bfccfab2d96a03f156934ab",
+    "apps\\FCCG\\tests\\fixtures\\jy901b_boundary_host.c": "bc2073ee40ce9d3dab8d167b11d0dcba78515bacb8dc66e95096f502538deed6"
+  },
+  "timestamp_utc": "2026-10-01T06:27:41.811702+00:00",
+  "results": [
+    {
+      "name": "baseline_flight_power10",
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "CONFIG=Release",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\JyBoundarySafety_9065ae0_20261001_v1\\baseline\\Flight_Controller",
+      "exit_code": 2,
+      "seconds": 12.079232899995986,
+      "log": "docs\\FCCG\\pot_jy_boundary_batch_20261001\\baseline_flight_power10.log",
+      "sha256": "29c9346053ab2880206a9cdaaea981ecf8c6546a71d13d087fe962c3a08a479b"
+    },
+    {
+      "name": "baseline_ground_power10",
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\JyBoundarySafety_9065ae0_20261001_v1\\baseline\\Ground_Station",
+      "exit_code": 0,
+      "seconds": 1.7009756999905221,
+      "log": "docs\\FCCG\\pot_jy_boundary_batch_20261001\\baseline_ground_power10.log",
+      "sha256": "b4fadf72480e94faf4cf39cc94583a0f72ccdf1d5baf56d667a79251bfc82a68"
+    },
+    {
+      "name": "baseline_boundary_compile",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\JyBoundarySafety_9065ae0_20261001_v1\\baseline\\Flight_Controller\\Devices\\IMU\\JY901B\\Src",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Inc",
+        "-I",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\host_platform_mock.c",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\multi_instance_resources.c",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+        "D:\\python_software\\SilverStar\\apps\\FCCG\\tests\\fixtures\\jy901b_boundary_host.c",
+        "-lm",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\JyBoundarySafety_9065ae0_20261001_v1\\baseline_boundary.exe"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "exit_code": 1,
+      "seconds": 0.6624384000024293,
+      "log": "docs\\FCCG\\pot_jy_boundary_batch_20261001\\baseline_boundary_compile.log",
+      "sha256": "32834a7323d5a588ad31e2714cb8bf2dfa2ef4cd48a797fb665beb6f097f8459"
+    }
+  ],
+  "limitations": [
+    "Synthetic host fixtures are not hardware validation",
+    "Flight strict PoT remains FAIL",
+    "Task/library/MSP/ISR stack bounds require separate proof"
+  ],
+  "tools": {
+    "arm": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "host": "gcc (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "make": "GNU Make 4.4.1\nBuilt for x86_64-w64-mingw32\nCopyright (C) 1988-2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+    "python": "Python 3.14.0\n"
+  },
+  "input_configuration": "D:\\python_software\\SilverStar\\.work\\SelectorSafety_70ce20d_20261001_v1\\after\\SilverStar.ssproject",
+  "input_configuration_sha256": "b819099f75eaf596f87679adf324d7afbb609c33ece34edd9850ec92b5a98313",
+  "baseline_configuration_sha256": "b819099f75eaf596f87679adf324d7afbb609c33ece34edd9850ec92b5a98313",
+  "baseline_checker_sha256": "c27933af86ad51e7fbf6d2a945cfe90da1b2727e2e0622d535a3bb31aae71ec7"
+}

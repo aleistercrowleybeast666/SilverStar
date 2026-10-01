@@ -1,0 +1,24 @@
+{
+  "flight": {
+    "target": "Flight",
+    "files": "108",
+    "functions": "2605",
+    "eligible_assertions": "1591",
+    "average": "0.610749",
+    "zero_assertion_functions": 1670,
+    "sparse_over20_nonblocking": 499,
+    "gate": "FAIL: mean below 2",
+    "semantic_validity": "NOT PROVEN for all candidates; candidate counts are not certified useful assertion totals"
+  },
+  "ground": {
+    "target": "Ground",
+    "files": "15",
+    "functions": "148",
+    "eligible_assertions": "106",
+    "average": "0.716216",
+    "zero_assertion_functions": 95,
+    "sparse_over20_nonblocking": 4,
+    "gate": "FAIL: mean below 2",
+    "semantic_validity": "NOT PROVEN for all candidates; candidate counts are not certified useful assertion totals"
+  }
+}

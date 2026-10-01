@@ -1,0 +1,22 @@
+{
+  "flight": {
+    "target": "Flight",
+    "files": "108",
+    "functions": "2605",
+    "eligible_assertions": "1591",
+    "average": "0.610749",
+    "sparse_over20_nonblocking": 499,
+    "zero_assertion_functions": 1670,
+    "assertion_sum_verified": 1591
+  },
+  "ground": {
+    "target": "Ground",
+    "files": "15",
+    "functions": "148",
+    "eligible_assertions": "106",
+    "average": "0.716216",
+    "sparse_over20_nonblocking": 4,
+    "zero_assertion_functions": 95,
+    "assertion_sum_verified": 106
+  }
+}

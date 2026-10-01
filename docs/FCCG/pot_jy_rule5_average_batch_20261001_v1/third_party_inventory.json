@@ -1,0 +1,190 @@
+{
+  "Flight_Controller": {
+    "map_file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_0.map",
+    "map_sha256": "bf0b33496a6c8bc551d79ff05d9807018b4656a9b7628ef2b02e09674c09feab",
+    "library_names": [
+      "libc.a",
+      "libc_nano.a",
+      "libgcc.a",
+      "libm.a",
+      "libnosys.a"
+    ],
+    "version_sources": [
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal.c",
+        "sha256": "97e715cda2a34bd564b59ce4ba9b16bd29651f8f229161105aaec666d76ea91a",
+        "version_markers": [
+          "#define __STM32F4xx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */",
+          "#define __STM32F4xx_HAL_VERSION_SUB1   (0x08U) /*!< [23:16] sub1 version */",
+          "#define __STM32F4xx_HAL_VERSION_SUB2   (0x05U) /*!< [15:8]  sub2 version */",
+          "#define __STM32F4xx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */",
+          "#define __STM32F4xx_HAL_VERSION         ((__STM32F4xx_HAL_VERSION_MAIN << 24U)\\"
+        ]
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm0.h",
+        "sha256": "ac13cb645f108666a0e57c93467872660d6bc860a839f840dc870b7a5863b4bf",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm0plus.h",
+        "sha256": "a09fa9c6b8b21d1920bce15b98aa56182b027e9278cca0b154812bac2aea3cfa",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm1.h",
+        "sha256": "944bf0c4f940eef30a632cd99d5dcfe8270e8a8431eb98c0f081bcf4f61f728e",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm23.h",
+        "sha256": "77822e9738885394ec52fca6f617452b823a0b55e2664ee225e65576cf0e8f2d",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm3.h",
+        "sha256": "c9937781259a8897adf514445441c68570087d6a72a558d8a4afe75cdb62dbd2",
+        "version_markers": [
+          "#define __CM3_CMSIS_VERSION_MAIN  (__CM_CMSIS_VERSION_MAIN)              /*!< \\deprecated [31:16] CMSIS HAL main version */",
+          "#define __CM3_CMSIS_VERSION_SUB   (__CM_CMSIS_VERSION_SUB)               /*!< \\deprecated [15:0]  CMSIS HAL sub version */",
+          "#define __CM3_CMSIS_VERSION       ((__CM3_CMSIS_VERSION_MAIN << 16U) | \\"
+        ]
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm33.h",
+        "sha256": "225c47c36230edaa314f1e7a45b38279f6ab4d58faeb132226db35f7007d58aa",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm35p.h",
+        "sha256": "206b427589981b78169c1d9b73e898e4e8de4efbd76fd0c2df7df81d645b9fa2",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm4.h",
+        "sha256": "f5b63d52dd1557b15ca414cb59c264f595a7b5669db2a5878dffe22f4caedc8c",
+        "version_markers": [
+          "#define __CM4_CMSIS_VERSION_MAIN  (__CM_CMSIS_VERSION_MAIN)              /*!< \\deprecated [31:16] CMSIS HAL main version */",
+          "#define __CM4_CMSIS_VERSION_SUB   (__CM_CMSIS_VERSION_SUB)               /*!< \\deprecated [15:0]  CMSIS HAL sub version */",
+          "#define __CM4_CMSIS_VERSION       ((__CM4_CMSIS_VERSION_MAIN << 16U) | \\"
+        ]
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm55.h",
+        "sha256": "5707f716cf03f7e80151108ae94601fcfdf362dd2d830876040213318f6dee3a",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm7.h",
+        "sha256": "e974d0a91752487d0154457cd422c37667328e9ddb7ba4fa2fed479a63577f63",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Drivers\\CMSIS\\Include\\core_cm85.h",
+        "sha256": "75bc123889f0f5ca33c4d16b6cbdd580a3572663c899fadb2c8e28f6a5e6fead",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\ThirdParty\\FreeRTOS-Kernel\\include\\task.h",
+        "sha256": "1461d6d125676a9bff0842dd97460cd72b3c7fd0a1db64b39e634b99e947e6b1",
+        "version_markers": [
+          "#define tskKERNEL_VERSION_NUMBER                      \"V11.3.0\"",
+          "#define tskKERNEL_VERSION_MAJOR                       11",
+          "#define tskKERNEL_VERSION_MINOR                       3",
+          "#define tskKERNEL_VERSION_BUILD                       0"
+        ]
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Tests\\Host\\task.h",
+        "sha256": "db5f25612249f808909b0f3adfacabab4425e84bdab474d188a28a77ae8069ba",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Tests\\Host\\storage_integrity\\task.h",
+        "sha256": "122aa80bac134cde0aa357f3b60df1dc374e77c7fae833eff70390ae23978f52",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src\\ff.h",
+        "sha256": "644ecaf33339fc46ff447386f001c0199c54213ec14ea78b0ab77bba2184841d",
+        "version_markers": [
+          "#define _FATFS\t68300\t/* Revision ID */"
+        ]
+      }
+    ],
+    "controlled_exceptions": "HAL/CMSIS/RTOS/FatFs/runtime libraries excluded from first-party project gate, not certified against original ten rules; callbacks and unresolved library frames affect call graph, timing and stack proofs"
+  },
+  "Ground_Station": {
+    "map_file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\build\\ground.map",
+    "map_sha256": "cea18b1757ff68d93531fd3d4779974298e949936bcf3da5fc4e9806575e449b",
+    "library_names": [
+      "libc.a",
+      "libc_nano.a",
+      "libgcc.a",
+      "libm.a",
+      "libnosys.a"
+    ],
+    "version_sources": [
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal.c",
+        "sha256": "6650fcfa559dca126b91c6c0f576e3dec25ddb26811c55e294cbcc01888a85ec",
+        "version_markers": [
+          "#define __STM32F1xx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */",
+          "#define __STM32F1xx_HAL_VERSION_SUB1   (0x01U) /*!< [23:16] sub1 version */",
+          "#define __STM32F1xx_HAL_VERSION_SUB2   (0x0AU) /*!< [15:8]  sub2 version */",
+          "#define __STM32F1xx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */",
+          "#define __STM32F1xx_HAL_VERSION         ((__STM32F1xx_HAL_VERSION_MAIN << 24)\\"
+        ]
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm0.h",
+        "sha256": "1beaa04c859225f75142d055e9c5dacfc9ac1d88c82934177f745b9c5f3f4094",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm0plus.h",
+        "sha256": "c953256e1c1b1cd6accbbfca5d47c09a9b0534f3147b125e17e59c0ae6c30ed7",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm1.h",
+        "sha256": "460281028a261740cd5ec86840bed01c480d70ba5b54a0f9938d4cefadfd486b",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm23.h",
+        "sha256": "6303efec943ca0f9eccdab8fc39200d6f95dc943d4051198e0d49f24395028a5",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm3.h",
+        "sha256": "368296087a925cf78133d27e0854d748605441915e0f4fece93f2f97eea68adb",
+        "version_markers": [
+          "#define __CM3_CMSIS_VERSION_MAIN  (__CM_CMSIS_VERSION_MAIN)              /*!< \\deprecated [31:16] CMSIS HAL main version */",
+          "#define __CM3_CMSIS_VERSION_SUB   (__CM_CMSIS_VERSION_SUB)               /*!< \\deprecated [15:0]  CMSIS HAL sub version */",
+          "#define __CM3_CMSIS_VERSION       ((__CM3_CMSIS_VERSION_MAIN << 16U) | \\"
+        ]
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm33.h",
+        "sha256": "7f1b6a76b119e1e1680f756da897929f63d98133442c5115678af60adf20f1a8",
+        "version_markers": []
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm4.h",
+        "sha256": "738dff259c25e68ed2529baf425315d8dae1af5dac6c11b66bfdef82e78e86c9",
+        "version_markers": [
+          "#define __CM4_CMSIS_VERSION_MAIN  (__CM_CMSIS_VERSION_MAIN)              /*!< \\deprecated [31:16] CMSIS HAL main version */",
+          "#define __CM4_CMSIS_VERSION_SUB   (__CM_CMSIS_VERSION_SUB)               /*!< \\deprecated [15:0]  CMSIS HAL sub version */",
+          "#define __CM4_CMSIS_VERSION       ((__CM4_CMSIS_VERSION_MAIN << 16U) | \\"
+        ]
+      },
+      {
+        "file": ".work\\JyRule5Average_9065ae0_20261001_v1\\after\\Ground_Station\\Drivers\\CMSIS\\Include\\core_cm7.h",
+        "sha256": "6b75e3bef1eb81e0d3e2c311ad26fcdbac4cde2cd3462a62b81a23f6aec0e55f",
+        "version_markers": []
+      }
+    ],
+    "controlled_exceptions": "HAL/CMSIS/RTOS/FatFs/runtime libraries excluded from first-party project gate, not certified against original ten rules; callbacks and unresolved library frames affect call graph, timing and stack proofs"
+  }
+}

@@ -78,7 +78,7 @@ Power of Ten在0.0.12中是第一方安全关键运行时C代码的强制标准�
 | 2 | 所有有限循环具有静态迭代上界；deadline只能提供提前退出。 |
 | 3 | 全静态内存；禁止allocator、`heap_*.c`、`sysmem.c`，linker heap为0。 |
 | 4 | 规范化函数长度不超过60行。 |
-| 5 | 超过20行的函数至少两个有意义的release-on运行时断言；断言表达式无副作用。 |
+| 5 | 按用户2026-10-01 06:31 UTC修订，Flight/Ground各自声明扫描范围内，平均每函数至少两个有意义的release-on运行时断言；包含短函数和零断言函数，表达式无副作用。长函数少于两条仅为非阻断诊断。 |
 | 6 | 最小作用域；模块状态为`static`并通过窄接口访问。 |
 | 7 | 检查有意义的返回值和参数；有意忽略必须显式`(void)`。 |
 | 8 | 第一方`.c`避免条件编译；配置用普通常量分支，不兼容性用`_Static_assert`。 |
@@ -99,3 +99,5 @@ mingw32-make static-analysis
 ## 10. 内存放置规则
 
 第一方Component使用`PLATFORM_CPU_FAST_BSS`等vendor-neutral语义，具体section由Target定义。F407的CCMRAM只允许CPU-only确定性对象和任务栈；DMA buffer、HAL/DMA handle、Logger聚合buffer、SDIO/FatFs DMA对象和第三方radio DMA候选必须位于DMA可达主SRAM。任何新增placement都要通过map/ELF artifact检查，不能只凭attribute源码判断。
+
+Rule 5计数不得包含恒真/恒假条件、同函数内重复条件、固定局部/静态对象地址或已类型化指针的自然对齐。自动工具只给出语法候选计数上界，语义有效性需审查；报告文件/函数分母、候选断言分子及限制。2026-10-01此前N=2/M=20记录保留为历史，不据此称当前有171个错误。其他九条及第三方受控例外不变；第一方工具通过不代表整固件、任务栈、MSP中断嵌套或硬件验证通过。

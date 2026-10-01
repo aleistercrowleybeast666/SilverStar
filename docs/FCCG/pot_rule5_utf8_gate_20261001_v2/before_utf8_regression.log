@@ -1,0 +1,29 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_utf8_real_jy_source_has_identical_lf_crlf_coverage ___________
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/.work/Rule5Average_20261001_utf8_before/test_utf8_real_jy_source_has_i0')
+
+    def test_utf8_real_jy_source_has_identical_lf_crlf_coverage(checker_fixture: Path) -> None:
+        source = Path(__file__).resolve().parents[1] / (
+            "plugins/builtin/silverstar_device_imu_jy901b/payload/"
+            "Devices/IMU/JY901B/Src/jy901b_device.c"
+        )
+        data = source.read_bytes().replace(b"\r\n", b"\n")
+        rows = []
+        for contents in (data, data.replace(b"\n", b"\r\n")):
+            (checker_fixture / "APP/fixture.c").write_bytes(contents)
+            result = _Checker_Run(checker_fixture)
+            assert result.returncode == 1  # Real driver has insufficient average.
+            rows.append([line for line in result.stdout.splitlines()
+                         if line.startswith("POWER10_RULE5_FUNCTION|")])
+>       assert rows[0] == rows[1]
+E       AssertionError: assert ['POWER10_RUL...mLE|7|0', ...] == ['POWER10_RUL...mLE|7|0', ...]
+E         
+E         Right contains 46 more items, first extra item: 'POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|1280|IMU_Init|12|0'
+E         Use -v to get more diff
+
+apps\FCCG\tests\test_power_of_ten_checker_paths.py:267: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_power_of_ten_checker_paths.py::test_utf8_real_jy_source_has_identical_lf_crlf_coverage
+1 failed, 44 deselected in 3.16s

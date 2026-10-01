@@ -1,0 +1,31 @@
+{
+  "executed_runner": ".work/jy_rule5_average_batch_20261001_v1_run.py",
+  "published_runner_change": "only repository root resolution for docs location",
+  "baseline_native_eol_matches_commit_after_newline_normalization": true,
+  "baseline_commit": "9065ae0d91356077b8bd11a5249649f3f2f03e99",
+  "unexpected_failed_stages": [],
+  "expected_nonzero_stages": [
+    "baseline_flight_power10",
+    "baseline_boundary_time_cross_ms",
+    "baseline_boundary_time_wrap_to_zero",
+    "baseline_boundary_readback_only_quat",
+    "baseline_boundary_readback_missing_acc",
+    "baseline_boundary_readback_missing_gyro",
+    "baseline_boundary_readback_missing_pressure",
+    "baseline_boundary_receive_stop_fail",
+    "baseline_boundary_receive_restart_fail",
+    "baseline_boundary_receive_tx_fail_restart_fail",
+    "baseline_boundary_receive_baud_stop_fail",
+    "after_flight_power10",
+    "after_ground_power10",
+    "analyzer_negative"
+  ],
+  "ground_linker_warnings": [
+    "newlib _close not implemented",
+    "newlib _lseek not implemented",
+    "newlib _read not implemented",
+    "newlib _write not implemented"
+  ],
+  "strict_whole_firmware_rule10": "FAIL due to Ground linker warnings; first-party compiler checks pass only in recorded scope",
+  "no_skips": true
+}

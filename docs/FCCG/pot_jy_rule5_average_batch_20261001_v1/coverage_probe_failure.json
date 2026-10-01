@@ -1,0 +1,8 @@
+{
+  "matching_function_rows": false,
+  "lf_functions": 50,
+  "crlf_functions": 96,
+  "probe_exit_code": 1,
+  "cause": "PowerShell 5.1 Get-Content default codepage decoded UTF-8 C source differently; explicit UTF8 diagnostic recognizes 96 functions from LF source",
+  "status": "fix pending in owning checker; v1 density provisional"
+}

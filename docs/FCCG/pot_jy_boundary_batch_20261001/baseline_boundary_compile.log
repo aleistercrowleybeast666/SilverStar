@@ -1,0 +1,4 @@
+D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:8:10: fatal error: system_user_config.h: No such file or directory
+    8 | #include "system_user_config.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.

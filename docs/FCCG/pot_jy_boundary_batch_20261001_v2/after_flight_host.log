@@ -1,0 +1,965 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tests/Host/run_tests.ps1 -HostCompiler "D:/msys64/ucrt64/bin/gcc.exe"
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+record_catalog_sha256=68c230a2da816f79acdb818b1ad188cbc59f63ceb97dc620c9ba9b6e5ae8d680
+project_semantics_sha256=f5d55d019e761ce87f408826d5f40804835ba2397dd010388fd0bace0e579119
+generation_profile_sha256=385f58668aae2847d3cf619e6c3324b22a4014d036193b5c9c1a95c757eef31c
+SSLOG Record Catalog validation passed: records=38 payloads=38
+FCCG_PROGRESS|HOST_TEST|PLAN|72
+FCCG_PROGRESS|HOST_COMPILE_PASS|PLAN|8
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|PLAN|16
+Skipped host test attitude_alignment: unselected component sources
+Skipped host test alignment_strategy_gravity_known_yaw: unselected component sources
+Skipped host test alignment_strategy_gravity_mag_triad: unselected component sources
+Skipped host test alignment_strategy_hardware_quat6_known_yaw: unselected component sources
+Skipped host test alignment_strategy_hardware_quat9: unselected component sources
+Skipped host test board_power_service: unselected component sources
+Skipped host test board_mission_action_service: unselected component sources
+FCCG_PROGRESS|HOST_TEST|BEGIN|1|72|interfaces
+interfaces: 11 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|1|72|interfaces
+FCCG_PROGRESS|HOST_TEST|BEGIN|2|72|common_format
+common_format: 13 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|2|72|common_format
+FCCG_PROGRESS|HOST_TEST|BEGIN|3|72|system_time
+system_time: 49 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|3|72|system_time
+FCCG_PROGRESS|HOST_TEST|BEGIN|4|72|profiles_kf6
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|4|72|profiles_kf6
+FCCG_PROGRESS|HOST_TEST|BEGIN|5|72|profiles_estimator_noise_overrides
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|5|72|profiles_estimator_noise_overrides
+FCCG_PROGRESS|HOST_TEST|BEGIN|6|72|profiles_pure_ins
+profiles: 35 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|6|72|profiles_pure_ins
+FCCG_PROGRESS|HOST_TEST|BEGIN|7|72|system_alignment
+system_alignment: 297 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|7|72|system_alignment
+FCCG_PROGRESS|HOST_TEST|BEGIN|8|72|system_alignment_pure_ins
+system_alignment: 296 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|8|72|system_alignment_pure_ins
+FCCG_PROGRESS|HOST_TEST|BEGIN|9|72|system_inertial
+system_inertial: 27 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|9|72|system_inertial
+FCCG_PROGRESS|HOST_TEST|BEGIN|10|72|imu_sample_bus
+imu_sample_bus: 15 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|10|72|imu_sample_bus
+FCCG_PROGRESS|HOST_TEST|BEGIN|11|72|system_indicator
+system_indicator: 34 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|11|72|system_indicator
+FCCG_PROGRESS|HOST_TEST|BEGIN|12|72|system_calibration_default
+system_calibration: 410 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|12|72|system_calibration_default
+FCCG_PROGRESS|HOST_TEST|BEGIN|13|72|system_calibration_system_axis_direction_x_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|13|72|system_calibration_system_axis_direction_x_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|14|72|system_calibration_system_axis_direction_x_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|14|72|system_calibration_system_axis_direction_x_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|15|72|system_calibration_system_axis_direction_y_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|15|72|system_calibration_system_axis_direction_y_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|16|72|system_calibration_system_axis_direction_y_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|16|72|system_calibration_system_axis_direction_y_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|17|72|system_calibration_system_axis_direction_z_positive
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|17|72|system_calibration_system_axis_direction_z_positive
+FCCG_PROGRESS|HOST_TEST|BEGIN|18|72|system_calibration_system_axis_direction_z_negative
+system_calibration: 409 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|18|72|system_calibration_system_axis_direction_z_negative
+FCCG_PROGRESS|HOST_TEST|BEGIN|19|72|runtime_commands
+runtime_commands: 34 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|19|72|runtime_commands
+FCCG_PROGRESS|HOST_TEST|BEGIN|20|72|runtime_startup
+runtime_startup: 52 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|20|72|runtime_startup
+FCCG_PROGRESS|HOST_TEST|BEGIN|21|72|fault_hook
+fault_hook: 40 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|21|72|fault_hook
+FCCG_PROGRESS|HOST_TEST|BEGIN|22|72|calibration_build_gate_0
+calibration_build_gate: 29 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|22|72|calibration_build_gate_0
+FCCG_PROGRESS|HOST_TEST|BEGIN|23|72|telemetry_build_mask_0
+telemetry: 979 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|23|72|telemetry_build_mask_0
+FCCG_PROGRESS|HOST_TEST|BEGIN|24|72|calibration_build_gate_2
+calibration_build_gate: 20 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|24|72|calibration_build_gate_2
+FCCG_PROGRESS|HOST_TEST|BEGIN|25|72|telemetry_build_mask_2
+telemetry: 979 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|25|72|telemetry_build_mask_2
+FCCG_PROGRESS|HOST_TEST|BEGIN|26|72|calibration_build_gate_4
+calibration_build_gate: 20 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|26|72|calibration_build_gate_4
+FCCG_PROGRESS|HOST_TEST|BEGIN|27|72|telemetry_build_mask_4
+telemetry: 979 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|27|72|telemetry_build_mask_4
+FCCG_PROGRESS|HOST_TEST|BEGIN|28|72|calibration_build_gate_6
+calibration_build_gate: 17 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|28|72|calibration_build_gate_6
+FCCG_PROGRESS|HOST_TEST|BEGIN|29|72|telemetry_build_mask_6
+telemetry: 979 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|29|72|telemetry_build_mask_6
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|1|8|capability_jy901b_gravity_known_yaw
+Expected host compile success passed: capability_jy901b_gravity_known_yaw
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|1|8|capability_jy901b_gravity_known_yaw
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|1|16|capability_missing_imu_noise
+FCCG_EXPECTED_REJECTION|capability_missing_imu_noise
+FCCG_DETAIL|Expected compile rejection: capability_missing_imu_noise
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:49:1: error: static assertion failed: "Selected IMU needs estimator noise recommendations or all E/N/U overrides"
+FCCG_DETAIL|   49 | _Static_assert(
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|1|16|capability_missing_imu_noise
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|2|16|capability_missing_gnss_noise
+FCCG_EXPECTED_REJECTION|capability_missing_gnss_noise
+FCCG_DETAIL|Expected compile rejection: capability_missing_gnss_noise
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:57:1: error: static assertion failed: "Selected GNSS needs estimator floor recommendations or all floor overrides"
+FCCG_DETAIL|   57 | _Static_assert(
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|2|16|capability_missing_gnss_noise
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|3|16|capability_missing_baro_noise
+FCCG_EXPECTED_REJECTION|capability_missing_baro_noise
+FCCG_DETAIL|Expected compile rejection: capability_missing_baro_noise
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:64:1: error: static assertion failed: "Selected Barometer needs an estimator noise recommendation or override"
+FCCG_DETAIL|   64 | _Static_assert(
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|3|16|capability_missing_baro_noise
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|2|8|capability_noise_overrides
+Expected host compile success passed: capability_noise_overrides
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|2|8|capability_noise_overrides
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|4|16|capability_jy901b_gravity_mag_rejected
+FCCG_EXPECTED_REJECTION|capability_jy901b_gravity_mag_rejected
+FCCG_DETAIL|Expected compile rejection: capability_jy901b_gravity_mag_rejected
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:77:1: error: static assertion failed: "TRIAD requires an enabled, absolute-vector-qualified magnetometer"
+FCCG_DETAIL|   77 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|4|16|capability_jy901b_gravity_mag_rejected
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|3|8|capability_future_triad
+Expected host compile success passed: capability_future_triad
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|3|8|capability_future_triad
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|4|8|capability_jy901b_hw_quat_6axis_preflight
+Expected host compile success passed: capability_jy901b_hw_quat_6axis_preflight
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|4|8|capability_jy901b_hw_quat_6axis_preflight
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|5|8|capability_jy901b_hw_quat_9axis_preflight
+Expected host compile success passed: capability_jy901b_hw_quat_9axis_preflight
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|5|8|capability_jy901b_hw_quat_9axis_preflight
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|5|16|capability_hw_quat_6axis_preflight_unqualified
+FCCG_EXPECTED_REJECTION|capability_hw_quat_6axis_preflight_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_hw_quat_6axis_preflight_unqualified
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:101:1: error: static assertion failed: "HW 6-axis alignment requires a qualified preflight source"
+FCCG_DETAIL|  101 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|5|16|capability_hw_quat_6axis_preflight_unqualified
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|6|16|capability_hw_quat_9axis_preflight_unqualified
+FCCG_EXPECTED_REJECTION|capability_hw_quat_9axis_preflight_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_hw_quat_9axis_preflight_unqualified
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:108:1: error: static assertion failed: "HW 9-axis alignment requires a qualified preflight source"
+FCCG_DETAIL|  108 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|6|16|capability_hw_quat_9axis_preflight_unqualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|6|8|capability_jy901b_stillness_landing
+Expected host compile success passed: capability_jy901b_stillness_landing
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|6|8|capability_jy901b_stillness_landing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|7|16|capability_impact_unqualified
+FCCG_EXPECTED_REJECTION|capability_impact_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_impact_unqualified
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:145:1: error: static assertion failed: "Impact landing requires stillness- and impact-qualified IMU data"
+FCCG_DETAIL|  145 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|7|16|capability_impact_unqualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|7|8|capability_future_impact_qualified
+Expected host compile success passed: capability_future_impact_qualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|7|8|capability_future_impact_qualified
+FCCG_PROGRESS|HOST_COMPILE_PASS|BEGIN|8|8|capability_jy901b_baro_imu_window_landing
+Expected host compile success passed: capability_jy901b_baro_imu_window_landing
+FCCG_PROGRESS|HOST_COMPILE_PASS|DONE|8|8|capability_jy901b_baro_imu_window_landing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|8|16|capability_stillness_unqualified
+FCCG_EXPECTED_REJECTION|capability_stillness_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_stillness_unqualified
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:138:1: error: static assertion failed: "Stillness landing requires a stillness-qualified IMU"
+FCCG_DETAIL|  138 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|8|16|capability_stillness_unqualified
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|9|16|capability_baro_imu_stillness_unqualified
+FCCG_EXPECTED_REJECTION|capability_baro_imu_stillness_unqualified
+FCCG_DETAIL|Expected compile rejection: capability_baro_imu_stillness_unqualified
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:154:1: error: static assertion failed: "Baro/IMU landing requires qualified IMU and direct altitude"
+FCCG_DETAIL|  154 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|9|16|capability_baro_imu_stillness_unqualified
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|10|16|capability_deploy_without_action
+FCCG_EXPECTED_REJECTION|capability_deploy_without_action
+FCCG_DETAIL|Expected compile rejection: capability_deploy_without_action
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:181:1: error: static assertion failed: "The current flight profile requires a START action"
+FCCG_DETAIL|  181 | _Static_assert((SYSTEM_USER_MISSION_ACTION_ENABLE != 0U) &&
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:184:1: error: static assertion failed: "Automatic deploy requires a parachute-deploy Mission Action"
+FCCG_DETAIL|  184 | _Static_assert((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|10|16|capability_deploy_without_action
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|11|16|capability_required_baro_missing
+FCCG_EXPECTED_REJECTION|capability_required_baro_missing
+FCCG_DETAIL|Expected compile rejection: capability_required_baro_missing
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:125:1: error: static assertion failed: "Required Barometer origin needs a qualified altitude source"
+FCCG_DETAIL|  125 | _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:154:1: error: static assertion failed: "Baro/IMU landing requires qualified IMU and direct altitude"
+FCCG_DETAIL|  154 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|11|16|capability_required_baro_missing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|12|16|capability_required_gnss_missing
+FCCG_EXPECTED_REJECTION|capability_required_gnss_missing
+FCCG_DETAIL|Expected compile rejection: capability_required_gnss_missing
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:132:1: error: static assertion failed: "Required GNSS origin needs a selected position source"
+FCCG_DETAIL|  132 | _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|12|16|capability_required_gnss_missing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|13|16|capability_stillness_without_gyro
+FCCG_EXPECTED_REJECTION|capability_stillness_without_gyro
+FCCG_DETAIL|Expected compile rejection: capability_stillness_without_gyro
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:70:1: error: static assertion failed: "Gravity Known Yaw requires qualified accel/gyro software alignment"
+FCCG_DETAIL|   70 | _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:138:1: error: static assertion failed: "Stillness landing requires a stillness-qualified IMU"
+FCCG_DETAIL|  138 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:165:1: error: static assertion failed: "TILT deploy requires selected gyro software propagation"
+FCCG_DETAIL|  165 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|13|16|capability_stillness_without_gyro
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|14|16|capability_tilt_without_propagation
+FCCG_EXPECTED_REJECTION|capability_tilt_without_propagation
+FCCG_DETAIL|Expected compile rejection: capability_tilt_without_propagation
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:165:1: error: static assertion failed: "TILT deploy requires selected gyro software propagation"
+FCCG_DETAIL|  165 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|14|16|capability_tilt_without_propagation
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|15|16|capability_delay_without_time
+FCCG_EXPECTED_REJECTION|capability_delay_without_time
+FCCG_DETAIL|Expected compile rejection: capability_delay_without_time
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_config.h:308,
+FCCG_DETAIL|                 from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_build_capability_contract.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:176:1: error: static assertion failed: "DELAY deploy requires mission monotonic time"
+FCCG_DETAIL|  176 | _Static_assert(((SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK &
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|15|16|capability_delay_without_time
+FCCG_PROGRESS|HOST_TEST|BEGIN|30|72|navigation_kf_replay
+nominal_200hz_baro_delay_steps=0 max_steps=151 event_hwm=168
+nominal_200hz_baro_delay_steps=20 max_steps=131 event_hwm=148
+nominal_200hz_baro_delay_steps=110 max_steps=171 event_hwm=58
+history_bytes=29672 max_steps=87 event_hwm=42
+navigation_kf_replay: 33531 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|30|72|navigation_kf_replay
+FCCG_PROGRESS|HOST_TEST|BEGIN|31|72|air_kf
+air_kf: 706 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|31|72|air_kf
+FCCG_PROGRESS|HOST_TEST|BEGIN|32|72|jy901b_device
+jy901b_device: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|32|72|jy901b_device
+FCCG_PROGRESS|HOST_TEST|BEGIN|33|72|jy901b_adapter
+jy901b_adapter: 28 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|33|72|jy901b_adapter
+FCCG_PROGRESS|HOST_TEST|BEGIN|34|72|neo_m9n_device
+neo_m9n_device: 986 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|34|72|neo_m9n_device
+FCCG_PROGRESS|HOST_TEST|BEGIN|35|72|neo_m9n_adapter
+neo_m9n_adapter: 15 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|35|72|neo_m9n_adapter
+FCCG_PROGRESS|HOST_TEST|BEGIN|36|72|sx1281_device
+sx1281_device: 27 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|36|72|sx1281_device
+FCCG_PROGRESS|HOST_TEST|BEGIN|37|72|jy901b_multi_instance
+jy901b_multi_instance: 27 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|37|72|jy901b_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|38|72|neo_m9n_multi_instance
+neo_m9n_multi_instance: 29 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|38|72|neo_m9n_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|39|72|sx1280_hal_multi_instance
+sx1280_hal_multi_instance: 21 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|39|72|sx1280_hal_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|40|72|sx1281_multi_instance
+sx1281_multi_instance: 28 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|40|72|sx1281_multi_instance
+FCCG_PROGRESS|HOST_TEST|BEGIN|41|72|source_selector
+source_selector: 235 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|41|72|source_selector
+FCCG_PROGRESS|HOST_TEST|BEGIN|42|72|sensor_quality
+sensor_quality: 12070 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|42|72|sensor_quality
+FCCG_PROGRESS|HOST_TEST|BEGIN|43|72|estimator_barometer_pending
+estimator_barometer_pending: 13 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|43|72|estimator_barometer_pending
+FCCG_PROGRESS|HOST_TEST|BEGIN|44|72|navigation_quality_supervisor
+window_context_bytes=184; two windows; no sample history
+navigation_quality_supervisor: 1853 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|44|72|navigation_quality_supervisor
+FCCG_PROGRESS|HOST_TEST|BEGIN|45|72|sensor_status
+sensor_status: 78 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|45|72|sensor_status
+FCCG_PROGRESS|HOST_TEST|BEGIN|46|72|device_native_log
+device_native_log: 21 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|46|72|device_native_log
+FCCG_PROGRESS|HOST_TEST|BEGIN|47|72|lifecycle
+lifecycle: 89 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|47|72|lifecycle
+FCCG_PROGRESS|HOST_TEST|BEGIN|48|72|flight_recovery_apogee
+flight_recovery: 10627 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|48|72|flight_recovery_apogee
+FCCG_PROGRESS|HOST_TEST|BEGIN|49|72|flight_recovery_apogee_immediate
+flight_recovery: 10600 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|49|72|flight_recovery_apogee_immediate
+FCCG_PROGRESS|HOST_TEST|BEGIN|50|72|flight_recovery_tilt
+flight_recovery: 10640 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|50|72|flight_recovery_tilt
+FCCG_PROGRESS|HOST_TEST|BEGIN|51|72|flight_recovery_tilt_immediate
+flight_recovery: 10612 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|51|72|flight_recovery_tilt_immediate
+FCCG_PROGRESS|HOST_TEST|BEGIN|52|72|flight_recovery_apogee_or_tilt
+flight_recovery: 10631 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|52|72|flight_recovery_apogee_or_tilt
+FCCG_PROGRESS|HOST_TEST|BEGIN|53|72|flight_recovery_apogee_or_delay
+flight_recovery: 10557 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|53|72|flight_recovery_apogee_or_delay
+FCCG_PROGRESS|HOST_TEST|BEGIN|54|72|flight_recovery_tilt_or_delay
+flight_recovery: 10557 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|54|72|flight_recovery_tilt_or_delay
+FCCG_PROGRESS|HOST_TEST|BEGIN|55|72|flight_recovery_delay
+flight_recovery: 10556 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|55|72|flight_recovery_delay
+FCCG_PROGRESS|HOST_TEST|BEGIN|56|72|flight_recovery_all_triggers
+flight_recovery: 10550 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|56|72|flight_recovery_all_triggers
+FCCG_PROGRESS|HOST_TEST|BEGIN|57|72|flight_recovery_none_landing
+flight_recovery: 10572 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|57|72|flight_recovery_none_landing
+FCCG_PROGRESS|HOST_TEST|BEGIN|58|72|flight_recovery_impact_landing
+flight_recovery: 10588 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|58|72|flight_recovery_impact_landing
+FCCG_PROGRESS|HOST_TEST|BEGIN|59|72|flight_recovery_baro_imu_landing
+flight_recovery: 11207 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|59|72|flight_recovery_baro_imu_landing
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|BEGIN|16|16|impact_capability_guard
+FCCG_EXPECTED_REJECTION|impact_capability_guard
+FCCG_DETAIL|Expected compile rejection: impact_capability_guard
+FCCG_DETAIL|Compiler: D:\msys64\ucrt64\bin\gcc.exe
+FCCG_DETAIL|Target: x86_64-w64-mingw32
+FCCG_DETAIL|In file included from D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\test_flight_config_compile.c:1:
+FCCG_DETAIL|D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\System\User/system_user_capability_validation.h:145:1: error: static assertion failed: "Impact landing requires stillness- and impact-qualified IMU data"
+FCCG_DETAIL|  145 | _Static_assert((SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE == 0U) ||
+FCCG_DETAIL|      | ^~~~~~~~~~~~~~
+FCCG_PROGRESS|HOST_EXPECTED_FAILURE|DONE|16|16|impact_capability_guard
+FCCG_PROGRESS|HOST_TEST|BEGIN|60|72|lifecycle_logging
+lifecycle_logging: 206 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|60|72|lifecycle_logging
+FCCG_PROGRESS|HOST_TEST|BEGIN|61|72|system_startup
+system_startup: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|61|72|system_startup
+FCCG_PROGRESS|HOST_TEST|BEGIN|62|72|system_startup_write_verify
+system_startup: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|62|72|system_startup_write_verify
+FCCG_PROGRESS|HOST_TEST|BEGIN|63|72|system_startup_async_no_explicit_verify
+system_startup: 70 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|63|72|system_startup_async_no_explicit_verify
+FCCG_PROGRESS|HOST_TEST|BEGIN|64|72|system_startup_no_writes
+system_startup: 65 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|64|72|system_startup_no_writes
+FCCG_PROGRESS|HOST_TEST|BEGIN|65|72|health
+health: 16 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|65|72|health
+FCCG_PROGRESS|HOST_TEST|BEGIN|66|72|console
+console: 464 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|66|72|console
+FCCG_PROGRESS|HOST_TEST|BEGIN|67|72|telemetry
+telemetry: 979 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|67|72|telemetry
+FCCG_PROGRESS|HOST_TEST|BEGIN|68|72|estimator_preparation_actual
+estimator_preparation_actual: 288 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|68|72|estimator_preparation_actual
+FCCG_PROGRESS|HOST_TEST|BEGIN|69|72|logger
+logger: 2102847 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|69|72|logger
+FCCG_PROGRESS|HOST_TEST|BEGIN|70|72|logger_streaming_actual
+logger_streaming_actual: 533 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|70|72|logger_streaming_actual
+FCCG_PROGRESS|HOST_TEST|BEGIN|71|72|logger_estimator_noise_overrides
+logger: 2102847 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|71|72|logger_estimator_noise_overrides
+FCCG_PROGRESS|HOST_TEST|BEGIN|72|72|golden_sample
+golden_sample: 1 checks, 0 failures
+FCCG_PROGRESS|HOST_TEST|DONE|72|72|golden_sample
+Alignment periodic runtime stack audit passed.
+FCCG_PROGRESS|STORAGE_INTEGRITY|PLAN|4
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|1|4|compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|1|4|compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|2|4|byte-integrity
+BYTE_WRITE_COMPLETE unaligned_dma=0
+BYTE_INTEGRITY bytes=1668166 writes=10000 unaligned_dma=0
+SSLOG_MIX records=40000 bytes=3596803 transactions=29263
+{
+  "file_bytes": 3596803,
+  "header_crc_ok": true,
+  "records": 40000,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "IMU_CORRECTED": 3334,
+    "GNSS_NATIVE": 3334,
+    "BARO_NATIVE": 3334,
+    "ALIGNMENT_RESULT": 3334,
+    "ALIGNMENT_EVIDENCE": 3333,
+    "MISSION_SNAPSHOT_IDENTITY": 3333,
+    "MAG_CALIBRATION_IDENTITY": 3333,
+    "CALIBRATION_RESULT": 3333,
+    "MISSION_CONFIG": 3333,
+    "INITIAL_STATE": 3333,
+    "EVENT": 3333,
+    "STATS": 3333
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": null,
+  "passed": true,
+  "strict_end_offset": 3596803,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+DISK_FAILURE mode=timeout-write bounded_ticks=31764 no_reuse=1
+DISK_FAILURE mode=timeout-read bounded_ticks=31764 no_reuse=1
+DISK_FAILURE mode=wrong-write bounded_ticks=1768 no_reuse=1
+DISK_FAILURE mode=wrong-read bounded_ticks=1768 no_reuse=1
+DISK_FAILURE mode=start-write bounded_ticks=1765 no_reuse=1
+DISK_FAILURE mode=start-read bounded_ticks=1765 no_reuse=1
+DISK_FAILURE mode=sync-timeout bounded_ticks=31765 no_reuse=1
+TARGET_BENCH_HOST result=0
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|2|4|byte-integrity
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|3|4|logger-compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|3|4|logger-compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|4|4|logger-integrity
+PERSISTENT_OBJECTS generation=1 fallback=1 lfn=1
+LOGGER_QUEUE_OBSERVED normal=55/80 estimator=2/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=39935 drops=0 hwm=55/2 max_write_us=90000 max_sync_us=26000 max_iteration_us=1028260
+LOGGER_RATE pre_steps=1000 pre_us=9991100 post_steps=39000 post_us=77998500 pre_accepted=934
+LOGGER_BOOTSTRAP suppressed=123 ready_us=3040060 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=38009 steps=0/0
+{
+  "file_bytes": 3995846,
+  "header_crc_ok": true,
+  "records": 39987,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 54,
+    "ALIGNMENT_RESULT": 1,
+    "CALIBRATION_RESULT": 1,
+    "MISSION_CONFIG": 2,
+    "INITIAL_STATE": 1,
+    "STATS": 41,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 38,
+    "BARO_NATIVE": 7718,
+    "MAG_NATIVE": 7680,
+    "IMU_CORRECTED": 15431,
+    "GNSS_NATIVE": 7717,
+    "ESTIMATOR": 1285
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 3995846,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+LOGGER_QUEUE_OBSERVED normal=80/80 estimator=2/48 drops=445 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=445 final_drops=445 last_drop_frame=1027
+LOGGER_STORAGE accepted=39991 drops=445 hwm=80/2 max_write_us=90000 max_sync_us=26000 max_iteration_us=1028260
+LOGGER_RATE pre_steps=1000 pre_us=9991100 post_steps=39000 post_us=78002020 pre_accepted=934
+LOGGER_BOOTSTRAP suppressed=123 ready_us=3040060 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=445 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=37882 steps=0/0
+{
+  "file_bytes": 3997010,
+  "header_crc_ok": true,
+  "records": 40043,
+  "integrity_ok": true,
+  "sequence_gap_records": 445,
+  "sequence_gap_count": 1,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 445,
+  "record_counts": {
+    "EVENT": 132,
+    "ALIGNMENT_RESULT": 1,
+    "CALIBRATION_RESULT": 1,
+    "MISSION_CONFIG": 2,
+    "INITIAL_STATE": 1,
+    "STATS": 40,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 38,
+    "BARO_NATIVE": 7714,
+    "MAG_NATIVE": 7676,
+    "IMU_CORRECTED": 15421,
+    "GNSS_NATIVE": 7713,
+    "ESTIMATOR": 1286
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 3997010,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": false,
+  "queue_drop_accounted": true
+}
+LOGGER_QUEUE_OBSERVED normal=80/80 estimator=2/48 drops=569 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=569 final_drops=569 last_drop_frame=1023
+LOGGER_STORAGE accepted=40065 drops=569 hwm=80/2 max_write_us=90000 max_sync_us=26000 max_iteration_us=1028260
+LOGGER_RATE pre_steps=1000 pre_us=9991200 post_steps=39000 post_us=77998680 pre_accepted=1005
+LOGGER_BOOTSTRAP suppressed=126 ready_us=3072920 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=569 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=38003 steps=0/0
+{
+  "file_bytes": 3999619,
+  "header_crc_ok": true,
+  "records": 40117,
+  "integrity_ok": true,
+  "sequence_gap_records": 569,
+  "sequence_gap_count": 2,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 569,
+  "record_counts": {
+    "EVENT": 211,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 38,
+    "IMU_CORRECTED": 15422,
+    "GNSS_NATIVE": 7713,
+    "BARO_NATIVE": 7713,
+    "MAG_NATIVE": 7676,
+    "ESTIMATOR": 1286,
+    "MISSION_CONFIG": 1,
+    "STATS": 39
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 3999619,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": false,
+  "queue_drop_accounted": true
+}
+LOGGER_QUEUE_OBSERVED normal=72/80 estimator=38/48 drops=0 producer_failures=0 jitter_count=246
+LOGGER_SAME_EPOCH_PEAK normal=7 estimator=5 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=157891 drops=0 hwm=72/38 max_write_us=130000 max_sync_us=108000 max_iteration_us=370120
+LOGGER_RATE pre_steps=1200 pre_us=5710100 post_steps=38800 post_us=193996580 pre_accepted=111
+LOGGER_BOOTSTRAP suppressed=41 ready_us=1403940 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=246 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=16899 steps=40000/40000
+{
+  "file_bytes": 14765103,
+  "header_crc_ok": true,
+  "records": 157943,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 54,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 76,
+    "POWER": 1992,
+    "ALIGNMENT_RESULT": 1,
+    "ESTIMATOR_STEP": 19400,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR": 4850,
+    "BARO_MEASUREMENT": 19400,
+    "GNSS_MEASUREMENT": 4850,
+    "GNSS_RECOVERY": 4850,
+    "INITIAL_STATE": 1,
+    "BARO_NATIVE": 38800,
+    "GNSS_NATIVE": 4850,
+    "IMU_CORRECTED": 38800,
+    "INERTIAL_INCREMENT": 19400,
+    "TELEMETRY_DIAG": 194,
+    "STATS": 194,
+    "HEALTH": 194
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 14765103,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=152 result=2 frame=1203 normal=80 estimator=0 time=6602200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=154 result=2 frame=1203 normal=80 estimator=0 time=6602200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=160 result=2 frame=1203 normal=80 estimator=0 time=6602200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=152 result=2 frame=1204 normal=80 estimator=2 time=6608200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=154 result=2 frame=1204 normal=80 estimator=2 time=6608200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=141 result=2 frame=1205 normal=80 estimator=2 time=6612200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=152 result=2 frame=1205 normal=80 estimator=2 time=6612200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=154 result=2 frame=1205 normal=80 estimator=2 time=6612200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=160 result=2 frame=1205 normal=80 estimator=2 time=6612200
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=152 result=2 frame=1206 normal=80 estimator=4 time=6618280
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=154 result=2 frame=1206 normal=80 estimator=4 time=6618280
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=152 result=2 frame=1207 normal=80 estimator=4 time=6622280
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=154 result=2 frame=1207 normal=80 estimator=4 time=6622280
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\JyBoundarySafety_9065ae0_20261001_v2\after\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=160 result=2 frame=1207 normal=80 estimator=4 time=6622280
+LOGGER_QUEUE_OBSERVED normal=80/80 estimator=38/48 drops=438 producer_failures=14 jitter_count=242
+LOGGER_SAME_EPOCH_PEAK normal=7 estimator=5 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=438 final_drops=438 last_drop_frame=1207
+LOGGER_STORAGE accepted=157954 drops=438 hwm=80/38 max_write_us=130000 max_sync_us=108000 max_iteration_us=370120
+LOGGER_RATE pre_steps=1200 pre_us=5710100 post_steps=38800 post_us=193996740 pre_accepted=111
+LOGGER_BOOTSTRAP suppressed=41 ready_us=1403940 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=242 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=438 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=16844 steps=40000/40000
+{
+  "file_bytes": 14767063,
+  "header_crc_ok": true,
+  "records": 158006,
+  "integrity_ok": true,
+  "sequence_gap_records": 438,
+  "sequence_gap_count": 1,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 438,
+  "record_counts": {
+    "EVENT": 130,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 76,
+    "POWER": 1992,
+    "ALIGNMENT_RESULT": 1,
+    "ESTIMATOR_STEP": 19400,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR": 4850,
+    "BARO_MEASUREMENT": 19400,
+    "GNSS_MEASUREMENT": 4850,
+    "GNSS_RECOVERY": 4850,
+    "INITIAL_STATE": 1,
+    "BARO_NATIVE": 38795,
+    "GNSS_NATIVE": 4850,
+    "IMU_CORRECTED": 38795,
+    "INERTIAL_INCREMENT": 19397,
+    "TELEMETRY_DIAG": 194,
+    "STATS": 194,
+    "HEALTH": 194
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 14767063,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": false,
+  "queue_drop_accounted": true
+}
+SPARSE_PREFLIGHT pre_s=30 samples=5100 start_us=30593200 landing_us=50592000 final_us=51637980 native=0 corrected=0
+LOGGER_QUEUE_OBSERVED normal=66/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=6869 drops=0 hwm=66/5 max_write_us=30000 max_sync_us=8000 max_iteration_us=336260
+LOGGER_RATE pre_steps=1000 pre_us=30001180 post_steps=39000 post_us=20990540 pre_accepted=147
+LOGGER_BOOTSTRAP suppressed=2 ready_us=995860 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=11736 steps=5100/5100
+{
+  "file_bytes": 721523,
+  "header_crc_ok": true,
+  "records": 6921,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 51,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 76,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 50,
+    "HEALTH": 50,
+    "ESTIMATOR": 500,
+    "MISSION_CONFIG": 1,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "GNSS_MEASUREMENT": 250,
+    "INITIAL_STATE": 1,
+    "GNSS_NATIVE": 250,
+    "BARO_NATIVE": 500,
+    "IMU_CORRECTED": 2000,
+    "INERTIAL_INCREMENT": 1000,
+    "PURE_INS": 500
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 721523,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+SPARSE_PREFLIGHT pre_s=120 samples=14100 start_us=120592760 landing_us=140592000 final_us=141637500 native=0 corrected=0
+LOGGER_QUEUE_OBSERVED normal=66/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=7139 drops=0 hwm=66/5 max_write_us=26000 max_sync_us=8000 max_iteration_us=336260
+LOGGER_RATE pre_steps=1000 pre_us=120000740 post_steps=39000 post_us=20990500 pre_accepted=417
+LOGGER_BOOTSTRAP suppressed=2 ready_us=995860 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=9134 steps=14100/14100
+{
+  "file_bytes": 738443,
+  "header_crc_ok": true,
+  "records": 7191,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 141,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 76,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 140,
+    "HEALTH": 140,
+    "ESTIMATOR": 500,
+    "MISSION_CONFIG": 1,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "GNSS_MEASUREMENT": 250,
+    "INITIAL_STATE": 1,
+    "GNSS_NATIVE": 250,
+    "BARO_NATIVE": 500,
+    "IMU_CORRECTED": 2000,
+    "INERTIAL_INCREMENT": 1000,
+    "PURE_INS": 500
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 738443,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+SPARSE_PREFLIGHT pre_s=30 samples=5100 start_us=30593340 landing_us=50592000 final_us=51655900 native=1 corrected=1
+LOGGER_QUEUE_OBSERVED normal=66/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=11074 drops=0 hwm=66/5 max_write_us=30000 max_sync_us=8000 max_iteration_us=336260
+LOGGER_RATE pre_steps=1000 pre_us=30001320 post_steps=39000 post_us=20990240 pre_accepted=4214
+LOGGER_BOOTSTRAP suppressed=60 ready_us=995860 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=13967 steps=5100/5100
+{
+  "file_bytes": 1105315,
+  "header_crc_ok": true,
+  "records": 11126,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 51,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 76,
+    "IMU_CORRECTED": 5059,
+    "BARO_NATIVE": 1264,
+    "GNSS_NATIVE": 632,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 50,
+    "HEALTH": 50,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR": 500,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "GNSS_MEASUREMENT": 250,
+    "INITIAL_STATE": 1,
+    "INERTIAL_INCREMENT": 1000,
+    "PURE_INS": 500
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 1105315,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+SPARSE_PREFLIGHT pre_s=120 samples=14100 start_us=120593100 landing_us=140592000 final_us=141655740 native=1 corrected=1
+LOGGER_QUEUE_OBSERVED normal=66/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=23719 drops=0 hwm=66/5 max_write_us=30000 max_sync_us=8000 max_iteration_us=336260
+LOGGER_RATE pre_steps=1000 pre_us=120001080 post_steps=39000 post_us=20990320 pre_accepted=16859
+LOGGER_BOOTSTRAP suppressed=60 ready_us=995860 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=14954 steps=14100/14100
+{
+  "file_bytes": 2251735,
+  "header_crc_ok": true,
+  "records": 23771,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 141,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 76,
+    "IMU_CORRECTED": 14059,
+    "BARO_NATIVE": 3514,
+    "GNSS_NATIVE": 1757,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 140,
+    "HEALTH": 140,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR": 500,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "GNSS_MEASUREMENT": 250,
+    "INITIAL_STATE": 1,
+    "INERTIAL_INCREMENT": 1000,
+    "PURE_INS": 500
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2251735,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|4|4|logger-integrity
+SilverStar host summary: executables=72 checks=4393820 failures=0 compile_pass_cases=8 expected_compile_failures=16
+All SilverStar host tests passed.

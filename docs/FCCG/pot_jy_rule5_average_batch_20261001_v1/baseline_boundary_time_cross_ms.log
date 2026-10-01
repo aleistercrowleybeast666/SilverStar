@@ -1,0 +1,2 @@
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:122: IMU_GetData(0U)->Online == 1U
+jy901b_boundary: 6 checks, 1 failures

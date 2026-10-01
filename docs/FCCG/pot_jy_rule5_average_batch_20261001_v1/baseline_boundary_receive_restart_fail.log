@@ -1,0 +1,2 @@
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:184: IMU_SetOutputRate(0U, OutputRate_200Hz) == expected
+jy901b_boundary: 6 checks, 1 failures

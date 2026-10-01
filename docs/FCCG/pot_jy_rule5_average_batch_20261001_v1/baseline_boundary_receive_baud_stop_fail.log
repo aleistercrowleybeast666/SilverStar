@@ -1,0 +1,3 @@
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:183: IMU_SetBaudrate(0U, Baudrate_115200) == expected
+FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\jy901b_boundary_host.c:188: s_write_calls == 0U && s_baud_calls == 0U
+jy901b_boundary: 7 checks, 2 failures
