@@ -14,6 +14,7 @@
 #define SystemAlignment_Stop Fixture_SystemAlignment_Stop
 #define SystemAlignment_Reset Fixture_SystemAlignment_Reset
 #define SystemCalibration_StatusGet Fixture_SystemCalibration_StatusGet
+#define SystemCalibration_IsReady Fixture_SystemCalibration_IsReady
 #define SystemCalibration_ImuCorrectionGet Fixture_SystemCalibration_ImuCorrectionGet
 #define SystemCalibration_Start Fixture_SystemCalibration_Start
 #define SystemCalibration_FaceCollect Fixture_SystemCalibration_FaceCollect
@@ -30,6 +31,7 @@
 #undef SystemAlignment_Stop
 #undef SystemAlignment_Reset
 #undef SystemCalibration_StatusGet
+#undef SystemCalibration_IsReady
 #undef SystemCalibration_ImuCorrectionGet
 #undef SystemCalibration_Start
 #undef SystemCalibration_FaceCollect
