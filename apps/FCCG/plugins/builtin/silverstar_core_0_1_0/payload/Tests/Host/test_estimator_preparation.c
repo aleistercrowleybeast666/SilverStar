@@ -192,7 +192,15 @@ int main(void)
     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
     TEST_CHECK(initial.initialized == 1U && initial.mission_running == 0U && initial.predict_count == 0U);
     TEST_CHECK(fabsf(initial.q_nb[0] - 1.0f) < 0.00001f);
-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
+    {
+        uint8_t axis;
+        /* SF6's committed contract has gains, not a covariance estimate;
+         * its backend explicitly publishes NAN for these unavailable fields. */
+        for (axis = 0U; axis < 6U; axis++)
+        { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
+    }
+    else if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
     {
         uint8_t axis;
         for (axis = 0U; axis < 6U; axis++)

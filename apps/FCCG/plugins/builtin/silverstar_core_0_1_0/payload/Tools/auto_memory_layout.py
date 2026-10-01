@@ -15,6 +15,7 @@ import re
 import subprocess
 import importlib.util
 import sys
+import traceback
 
 
 def AuditModule_Get():
@@ -208,7 +209,7 @@ def LinkedGroups_Check(objdump: str, elf: Path, groups: dict, assignment: dict, 
         info.update(address=address, region=region, output_section=section, zero_bounds=bounds)
 
 
-def Layout_Link(args: argparse.Namespace) -> None:
+def LayoutCandidates_Link(args: argparse.Namespace) -> None:
     output = Path(args.output)
     directory = output.parent / "memory_layout"
     directory.mkdir(parents=True, exist_ok=True)
@@ -273,6 +274,23 @@ def Layout_Link(args: argparse.Namespace) -> None:
         print(f"MEMORY_LAYOUT: region={name} occupied={usage[name]} spare={remaining} capacity={capacity} margin={color}", flush=True)
         if color != "green":
             print(f"WARNING: {name} margin <=20%; aim for green. Spare bytes are not a stack/timing proof.", flush=True)
+
+
+def Layout_Link(args: argparse.Namespace) -> None:
+    """Publish no successful artifact when any link/audit/report step fails."""
+    try:
+        LayoutCandidates_Link(args)
+    except BaseException:
+        output = Path(args.output)
+        directory = output.parent / "memory_layout"
+        failure = traceback.format_exc()
+        output.unlink(missing_ok=True)
+        (directory / "decision.json").unlink(missing_ok=True)
+        # Keep all candidate linker scripts/logs, and record late audit or
+        # report-write failures even when GNU ld itself returned success.
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / "failure.log").write_text(failure, encoding="utf-8")
+        raise
 
 
 def Main_Run() -> int:

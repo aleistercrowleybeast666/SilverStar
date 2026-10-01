@@ -22,6 +22,7 @@ from silverstar_fccg.project.build_audit import BuildAudit_Run
 
 DOC = Path(__file__).parent
 VERSION = os.environ.get("SILVERSTAR_LINK_VERSION", "v2")
+BASE_VERSION = os.environ.get("SILVERSTAR_BASE_VERSION", "v1")
 EVIDENCE = DOC / ("evidence_" + VERSION)
 EVIDENCE.mkdir(exist_ok=True)
 os.environ["PATH"] = "D:/Arm GNU Toolchain/14.3 rel1/bin;D:/msys64/ucrt64/bin;" + str(Path(sys.executable).parent) + ";" + os.environ["PATH"]
@@ -29,7 +30,7 @@ PLUGINS = ROOT / "apps/FCCG/plugins/builtin"
 TOOL_ROOT = PLUGINS / "silverstar_core_0_1_0/payload/Tools"
 current_tool = TOOL_ROOT / "auto_memory_layout.py"
 manifest = {"utc": datetime.now(timezone.utc).isoformat(), "base_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-            "scope": "fresh current-adapter relink of exact v1 objects; full compilation evidence is v1", "results": []}
+            "scope": "fresh current-adapter relink of exact " + BASE_VERSION + " objects; full compilation evidence is " + BASE_VERSION, "results": []}
 if (EVIDENCE / "results.json").exists():
     manifest = json.loads((EVIDENCE / "results.json").read_text())
 
@@ -56,7 +57,7 @@ def run(name, directory, command):
 for name in sys.argv[1:] or ("ESKF15", "KF6", "SF6", "PureINS"):
     if name in manifest:
         continue
-    original = ROOT / ".work/AutoMemoryCandidates_v1" / name / "Flight_Controller"
+    original = ROOT / (".work/AutoMemoryCandidates_" + BASE_VERSION) / name / "Flight_Controller"
     if not tuple((original / "build/FCCG/SilverStar_F407/Release/auto").glob("*.elf")):
         print("SKIP incomplete v1 auto link: " + name, flush=True)
         continue
@@ -82,8 +83,16 @@ for name in sys.argv[1:] or ("ESKF15", "KF6", "SF6", "PureINS"):
     model = ProjectModel_Load(original / "SilverStar.ssproject")
     (target / "Makefile").write_text(_Makefile_Render(model), encoding="utf-8")
     shutil.copy2(ROOT / "apps/FCCG/src/silverstar_fccg/project/build_audit.py", target / "Generated/memory_audit.py")
-    for relative in ("auto_memory_layout.py", "check_firmware_artifact.ps1", "check_architecture.ps1"):
+    for relative in ("auto_memory_layout.py", "check_firmware_artifact.ps1", "check_architecture.ps1", "check_task_stacks.py"):
         shutil.copy2(TOOL_ROOT / relative, target / "Tools" / relative)
+    # Review correction is Host-only; ARM source/headers/startup/linker remain
+    # exact v6 inputs. Update its owning provenance in this new candidate only.
+    host_relative = "Tests/Host/test_estimator_preparation.c"
+    shutil.copy2(PLUGINS / "silverstar_core_0_1_0/payload" / host_relative, target / host_relative)
+    identity_path = target / "SilverStar.ssproject"
+    identity = json.loads(identity_path.read_text())
+    identity["component_provenance"]["silverstar.core.0_1_0"]["files"][host_relative] = digest(target / host_relative)
+    identity_path.write_text(json.dumps(identity, indent=2) + "\n", encoding="utf-8")
     source_manifest = {str(path.relative_to(target)): digest(path) for path in target.rglob("*") if path.is_file()}
     (EVIDENCE / (name + "_source_sha256.json")).write_text(json.dumps(source_manifest, indent=2) + "\n", encoding="utf-8")
     old_decision = next((original / "build").rglob("decision.json"))
@@ -113,6 +122,9 @@ for name in sys.argv[1:] or ("ESKF15", "KF6", "SF6", "PureINS"):
         "-Config", "Release", "-MemoryLayout", "auto"])
     run(name + "_current_architecture", target, ["D:/msys64/ucrt64/bin/mingw32-make.exe", "architecture-check"])
     run(name + "_current_power10", target, ["D:/msys64/ucrt64/bin/mingw32-make.exe", "power10-check"])
+    run(name + "_current_stack", target, [sys.executable, "Tools/check_task_stacks.py", "--config", "Release", "--memory-layout", "auto"])
+    if BASE_VERSION != "v1" and name == "SF6":
+        run(name + "_corrected_host", target, ["D:/msys64/ucrt64/bin/mingw32-make.exe", "host-tests"])
     audit = BuildAudit_Run(target / elf, (target / elf).with_suffix(".map"), target / "STM32F407XX_FLASH.ld",
         (target / elf).parent, json.loads((PLUGINS / "silverstar_mcu_stm32f407vet6/plugin.json").read_text())["metadata"])
     manifest[name] = {"runtime_owner_sha256": runtime, "existing_resource_audit": audit.__dict__ if hasattr(audit, "__dict__") else str(audit),

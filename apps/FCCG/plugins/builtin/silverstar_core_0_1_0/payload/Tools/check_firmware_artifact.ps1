@@ -346,9 +346,13 @@ $requiredDmaSymbols = @(
 )
 # Preserved pre-UART-hotfix payloads remain supported; every linked TX ring
 # from the additive async UART implementation is audited when present.
-foreach ($name in @('s_uart1_tx_ring', 's_uart1_tx_priority_ring',
-                    's_uart2_tx_ring', 's_uart2_tx_priority_ring')) {
-    if ($symbols.ContainsKey($name)) { $requiredDmaSymbols += $name }
+foreach ($uartNumber in 1..6) {
+    foreach ($suffix in @('rx_dma', 'tx_ring', 'tx_priority_ring')) {
+        $name = 's_uart{0}_{1}' -f $uartNumber, $suffix
+        if ($symbols.ContainsKey($name) -and ($requiredDmaSymbols -notcontains $name)) {
+            $requiredDmaSymbols += $name
+        }
+    }
 }
 if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
 else {

@@ -96,13 +96,13 @@ int main(void) { return s_work[0] + s_history[0] + s_eskf_window[0] +
     return root, cc, objdump, owner, startup, script, source, base
 
 
-def link_fixture(fixture, *, name="auto", script=None):
+def link_fixture(fixture, *, name="auto", script=None, link_function=None):
     root, cc, objdump, owner, startup, default_script, _, _ = fixture
     output = root / name / "test.elf"
     args = type("Args", (), dict(linker=str(script or default_script), output=str(output), compiler=cc,
                                objdump=objdump, project=str(root), command=[str(owner), str(startup), "-mcpu=cortex-m4", "-mthumb", "-nostdlib",
                                                         "-Wl,-Map=" + str(output.with_suffix(".map"))]))()
-    auto.Layout_Link(args)
+    (link_function or auto.Layout_Link)(args)
     return output, json.loads((output.parent / "memory_layout/decision.json").read_text())
 
 
@@ -197,6 +197,60 @@ def test_alternate_linker_cannot_inherit_selected_mcu_physical_capacity(arm_fixt
     alternate.write_bytes(arm_fixture[5].read_bytes())
     with pytest.raises(ValueError, match="Actual linker lacks selected-MCU source proof"):
         link_fixture(arm_fixture, name="alternate", script=alternate)
+
+
+@pytest.mark.parametrize("fault", ["wrong_bank", "zero_bounds", "usage", "decision_write"])
+def test_late_link_failure_removes_unaccepted_elf_and_success_report(arm_fixture, monkeypatch, fault):
+    root = arm_fixture[0]
+    render = auto.Script_Render
+    if fault == "wrong_bank":
+        # Every real candidate links, but its claimed assignment disagrees
+        # with actual symbol placement. The real linked-symbol audit rejects.
+        monkeypatch.setattr(auto, "Script_Render", lambda text, assignment, regions:
+                            render(text, {name: "RAM" for name in assignment}, regions))
+    elif fault == "zero_bounds":
+        monkeypatch.setattr(auto, "Script_Render", lambda text, assignment, regions:
+                            render(text, assignment, regions).replace("_ebss = .;", "_ebss = _sbss;"))
+    elif fault == "usage":
+        read = auto.Usage_Read
+        count = 0
+        def fail_final_usage(*args):
+            nonlocal count
+            count += 1
+            # LinkedGroups_Check is invoked only for the final real link.
+            if final_checked:
+                raise ValueError("injected final usage failure")
+            return read(*args)
+        final_checked = False
+        check = auto.LinkedGroups_Check
+        def mark_final(*args):
+            nonlocal final_checked
+            check(*args)
+            final_checked = True
+        monkeypatch.setattr(auto, "Usage_Read", fail_final_usage)
+        monkeypatch.setattr(auto, "LinkedGroups_Check", mark_final)
+    else:
+        write = Path.write_text
+        def fail_decision(path, *args, **kwargs):
+            result = write(path, *args, **kwargs)
+            if path.name == "decision.json":
+                raise OSError("injected decision-write failure after linked report")
+            return result
+        monkeypatch.setattr(Path, "write_text", fail_decision)
+    # The unchanged candidate body reproduces the reviewed pre-fix leak.
+    with pytest.raises((ValueError, OSError)):
+        link_fixture(arm_fixture, name="pre_" + fault, link_function=auto.LayoutCandidates_Link)
+    assert (root / ("pre_" + fault) / "test.elf").is_file()
+    if fault == "usage":
+        final_checked = False
+    # The public transaction applies the same fault and leaves no success.
+    with pytest.raises((ValueError, OSError)):
+        link_fixture(arm_fixture, name="post_" + fault)
+    output = root / ("post_" + fault)
+    assert not (output / "test.elf").exists()
+    assert not (output / "memory_layout/decision.json").exists()
+    assert (output / "memory_layout/failure.log").is_file()
+    assert tuple((output / "memory_layout").glob("candidate_*.log"))
 
 
 @pytest.mark.parametrize("component,relative", [
