@@ -46,6 +46,29 @@ static const float s_gain[6] = {
     SYSTEM_SF6_GAIN_PE, SYSTEM_SF6_GAIN_PN, SYSTEM_SF6_GAIN_PU
 };
 
+static void Backend_LifecycleValidate(void)
+{
+    SILVERSTAR_ASSERT(s_active <= 1U && s_started <= 1U && s_baro_origin_valid <= 1U,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(!s_baro_origin_valid || isfinite(s_baro_origin),
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_FLOAT_NOT_FINITE);
+}
+
+static void Backend_AttitudeValidate(void)
+{
+    float norm_squared = 0.0f;
+    for (uint8_t axis = 0U; axis < 4U; axis++)
+    {
+        SILVERSTAR_ASSERT(isfinite(s_q_nb[axis]),
+            SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_FLOAT_NOT_FINITE);
+        norm_squared += s_q_nb[axis] * s_q_nb[axis];
+    }
+    /* Initialize and every admitted propagation normalize this stored rotation.
+     * A 1e-3 squared-norm margin covers float rounding, not arbitrary rotations. */
+    SILVERSTAR_ASSERT(norm_squared >= 0.999f && norm_squared <= 1.001f,
+        SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+}
+
 void SystemNavigationBackend_Reset(void)
 {
     NavigationSf6_Reset(&s_context);
@@ -273,8 +296,10 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
     NavigationSf6Sample snapshot;
     uint8_t axis;
     if (output == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    Backend_LifecycleValidate();
     if (NavigationSf6_SnapshotGet(&s_context, &snapshot) != NAV_SF6_OK)
     { return SYSTEM_DEVICE_NOT_READY; }
+    Backend_AttitudeValidate();
     output->timestamp_us = snapshot.timestamp_us;
     memcpy(output->velocity_enu_mps, snapshot.state, 3U * sizeof(float));
     memcpy(output->position_enu_m, &snapshot.state[3], 3U * sizeof(float));
@@ -312,10 +337,10 @@ SystemDeviceResult SystemNavigationBackend_Predict(
     if (input == NULL || output == NULL || !isfinite(input->dt_s) ||
         input->dt_s <= 0.0f || input->dt_s > NAV_SF6_MAX_DT_S)
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    SILVERSTAR_ASSERT(s_active <= 1U && s_started <= 1U,
-        SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    Backend_LifecycleValidate();
     if (!s_active || NavigationSf6_SnapshotGet(&s_context, &previous) != NAV_SF6_OK)
     { return SYSTEM_DEVICE_NOT_READY; }
+    Backend_AttitudeValidate();
     duration = (uint64_t)llroundf(input->dt_s * 1000000.0f);
     if (duration == 0U || input->timestamp_us < duration) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (!Attitude_PropagateQuaternionBodyIncrement(s_q_nb, input->delta_theta_b_corrected, quaternion))
