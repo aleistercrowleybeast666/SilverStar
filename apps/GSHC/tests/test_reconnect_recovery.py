@@ -18,6 +18,42 @@ def test_snapshot_before_capability_does_not_complete_unknown_handshake():
     assert c.state.capability_acked
 
 
+def test_two_advancing_stale_samples_conservatively_cancel_without_start_replay():
+    c = make_controller()
+    c._handle_capability(capability())
+    c._handle_preflight_status(preflight_status(capability_acked=True))
+    add_pending(c, int(AirCmdId.START_MISSION))
+    c.FlightTime_Observe(100000)
+    sent = len(c.worker.sent)
+    c.FlightTime_Observe(1000)
+    assert not c.pending_air_cmds
+    c.FlightTime_Observe(1200)
+    assert c.state.capability is None
+    assert not c.state.air_command_link_allowed()
+    assert len(c.worker.sent) == sent
+    c._handle_capability(capability(20))
+    assert len(c.worker.sent) == sent + 1
+    assert not c.pending_air_cmds
+
+
+def test_boot_and_selftest_event_translation_matches_wire_meaning(tmp_path):
+    from app import format_air_status_message
+    from services.i18n import I18n, Language
+    from PySide6.QtCore import QSettings
+    for language in ('zh_CN', 'en_US'):
+        translator = I18n(QSettings(str(tmp_path / 'event-language.ini'), QSettings.Format.IniFormat))
+        translator.language = Language(language)
+        boot = AirStatusMessage(1, int(AirStatusId.BOOT), 0, 0, 0)
+        text = format_air_status_message(boot, translator)
+        assert '系统就绪' not in text
+        assert 'System Ready' not in text
+        failed = replace(boot, status_id=int(AirStatusId.SELFTEST_COMPLETE), arg0=0)
+        passed = replace(failed, arg0=1)
+        assert translator.tr('event.selftest.failed') in format_air_status_message(failed, translator)
+        assert translator.tr('event.selftest.passed') in format_air_status_message(passed, translator)
+        assert AirStatusId.SELFTEST_OK == AirStatusId.SELFTEST_COMPLETE
+
+
 def test_time_rollback_requires_two_samples_and_u32_wrap_is_not_reboot():
     c = make_controller()
     c._handle_capability(capability())
