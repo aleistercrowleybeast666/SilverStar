@@ -1,0 +1,13 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1 -TargetKind Ground
+FCCG_PROGRESS|POWER10|PLAN|17
+FCCG_PROGRESS|POWER10|BEGIN|1|17|Common\Src\silverstar_assert.c
+Get-FileHash : 无法将“Get-FileHash”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。请检查名称的拼写，如果包括路径，请确
+保路径正确，然后再试一次。
+所在位置 D:\python_software\SilverStar\.work\SCG_Closeout_2175d95_v1\Ground_Station\Tools\check_power_of_ten.ps1:505 字
+符: 10
++         (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256). ...
++          ~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Get-FileHash:String) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+mingw32-make: *** [Makefile:68: power10-check] Error 1

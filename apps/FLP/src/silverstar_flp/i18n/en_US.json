@@ -866,5 +866,6 @@
   "replay.quality_policy": "What-if quality policy",
   "replay.quality_recorded": "Use recorded policy revision",
   "replay.quality_revision": "New policy revision {revision} (approximate)",
-  "replay.parameter_retired": "Legacy value; inactive in revision 3"
+  "replay.parameter_retired": "Legacy value; inactive in revision 3",
+  "project.analysis_unsaved": "unsaved analysis session"
 }

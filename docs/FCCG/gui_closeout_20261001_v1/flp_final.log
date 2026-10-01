@@ -1,0 +1,165 @@
+.F..........F...                                                         [100%]
+================================== FAILURES ===================================
+___________ test_five_page_gui_and_top_bar_accept_a_parsed_dataset ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FLP/.work/gui_closeout_v1/flp_final/test_five_page_gui_and_top_bar0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A8BDDAC050>
+
+    def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
+        tmp_path: Path,
+        monkeypatch,
+    ) -> None:
+        application = QApplication.instance() or QApplication([])
+        dataset = _DisplayDataset_Parse(
+            AnalysisFlight_Build(tmp_path / "SYNTHETIC_gui_source.BIN")
+        )
+        window = MainWindow(builtin_registry())
+        window._Dataset_Set(dataset)
+        _ProjectIdentity_Set(window, dataset.source_path, tmp_path)
+        window.show()
+        application.processEvents()
+        assert window.pages.count() == 5
+        assert window.windowTitle() == PRODUCT_NAME
+        assert window.title_label.text() == "SilverStar 飞行日志解析器"
+        assert window.version_label.text() == f"v{__version__}" == "v0.1.0"
+        assert window.credit_label.text() == "辰星引力开发"
+        assert window.project_name_label.text() == "未保存工程"
+        assert window.project_name_label.toolTip() == ""
+        assert dataset.source_path.name not in window.windowTitle()
+        assert not hasattr(window, "timeline_frame")
+        assert not hasattr(window, "timeline_slider")
+        assert not hasattr(window, "attitude_page")
+        assert not hasattr(window, "navigation_page")
+        assert window.flight_page.tabs.count() == 6
+        assert window.state_estimation_page.tabs.count() == 6
+        for row, visible in enumerate((False, False, True, True, False)):
+            window.navigation_list.setCurrentRow(row)
+            application.processEvents()
+            assert window.time_range.isVisible() is visible
+        assert window.explorer_page._time_range is None
+        window.navigation_list.setCurrentRow(0)
+        assert window.explorer_page.tabs.count() == 3
+        assert (
+            window.overview_page.calibration_group.geometry().top()
+            == window.overview_page.alignment_group.geometry().top()
+        )
+        assert (
+            window.overview_page.timeline_group.geometry().top()
+            >= window.overview_page.calibration_group.geometry().bottom()
+        )
+        overview_buttons = window.overview_page.findChildren(QPushButton)
+        assert all(button.text() not in ("查看详情", "Details") for button in overview_buttons)
+        assert window.overview_page.calibration_group.property("statusLevel") == "success"
+        assert window.overview_page.alignment_group.property("statusLevel") == "success"
+        assert window.overview_page.quality_card.property("statusLevel") == "success"
+        assert window.explorer_page.channel_list.count() == len(dataset.series)
+        assert window.explorer_page.diagnostics_table.rowCount() == len(dataset.diagnostics.diagnostics)
+        record_headers = [
+            window.explorer_page.record_table.horizontalHeaderItem(column).text()
+            for column in range(window.explorer_page.record_table.columnCount())
+        ]
+        assert "file_offset" in record_headers
+        assert window.pages.indexOf(window.export_dialog) == -1
+        assert window.import_dialog.isModal()
+        assert window.export_dialog.isModal()
+        assert window.export_action.isEnabled()
+        assert not hasattr(window, "export_button")
+        assert not hasattr(window, "import_button")
+        assert window.findChildren(QToolBar) == []
+        assert [action.menu() for action in window.menuBar().actions()] == [
+            window.file_menu,
+            window.plugins_menu,
+            window.help_menu,
+        ]
+        header_layout = window.title_label.parentWidget().layout()
+        identity_row = header_layout.itemAt(0).layout()
+        project_row = header_layout.itemAt(1).layout()
+        assert [
+            identity_row.indexOf(widget)
+            for widget in (
+                window.title_label,
+                window.version_label,
+                window.credit_label,
+                window.language_label,
+                window.language_combo,
+                window.theme_label,
+                window.theme_combo,
+            )
+        ] == [0, 1, 2, 4, 5, 6, 7]
+        assert [project_row.indexOf(widget) for widget in (
+            window.project_caption_label, window.project_name_label,
+        )] == [0, 1]
+        assert [action for action in window.file_menu.actions() if not action.isSeparator()] == [
+                window.new_project_action,
+                window.open_project_action,
+                window.open_silverstar_project_action,
+                window.save_project_action,
+            window.save_project_as_action,
+            window.default_root_action,
+            window.import_action,
+            window.export_action,
+            window.exit_action,
+        ]
+        shortcuts = {
+            action.shortcut().toString()
+            for action in window.file_menu.actions()
+            if not action.shortcut().isEmpty()
+        }
+        assert shortcuts == {"Ctrl+N", "Ctrl+O", "Ctrl+S", "Ctrl+Shift+S", "Ctrl+E"}
+        assert len(shortcuts) == 5
+        assert window.plugins_menu.actions() == [
+            window.manage_plugins_action,
+            window.install_plugin_action,
+            window.refresh_plugins_action,
+        ]
+        assert window.help_menu.actions() == [window.about_action]
+        window._PluginManager_Show()
+        application.processEvents()
+        plugin_cells = {
+            window.plugin_manager_dialog.table.item(row, column).text()
+            for row in range(window.plugin_manager_dialog.table.rowCount())
+            for column in range(window.plugin_manager_dialog.table.columnCount())
+        }
+        assert any("Pure INS" in cell for cell in plugin_cells)
+        assert any("KF_6" in cell for cell in plugin_cells)
+        assert any("SSLOG0" in cell for cell in plugin_cells)
+        window.plugin_manager_dialog.reject()
+        window._About_Show()
+        application.processEvents()
+        assert window.about_dialog.isVisible()
+        assert window.about_dialog.product_label.text() == "SilverStar 飞行日志解析器"
+        assert window.about_dialog.version_label.text() == "版本 0.1.0"
+        assert "离线算法复算" in window.about_dialog.description_label.text()
+>       assert window.about_dialog.windowTitle() == "SilverStar_FLP"
+E       AssertionError: assert 'SilverStar FLP' == 'SilverStar_FLP'
+E         
+E         - SilverStar_FLP
+E         ?           ^
+E         + SilverStar FLP
+E         ?           ^
+
+tests\test_gui_smoke.py:194: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: "Unable to open monitor interface to \\\\.\\DISPLAY1:" "Unknown error 0xe0000225."
+___________ test_root_and_analysis_session_identity_survives_resize ___________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FLP/.work/gui_closeout_v1/flp_final/test_root_and_analysis_session0')
+
+    def test_root_and_analysis_session_identity_survives_resize(tmp_path):
+        app = QApplication.instance() or QApplication([])
+        window = MainWindow(builtin_registry())
+        root = tmp_path / "已保存的工程_α"
+        window._silverstar_project_root = root
+        window._ProjectHeader_Refresh()
+        assert root.name in window.project_name_label.toolTip()
+>       assert "未保存分析会话" in window.project_name_label.toolTip()
+E       assert '未保存分析会话' in '已保存的工程_α / 分析会话未保存\nD:\\python_software\\SilverStar\\apps\\FLP\\.work\\gui_closeout_v1\\flp_final\\test_root_and_analysis_session0\\已保存的工程_α'
+E        +  where '已保存的工程_α / 分析会话未保存\nD:\\python_software\\SilverStar\\apps\\FLP\\.work\\gui_closeout_v1\\flp_final\\test_root_and_analysis_session0\\已保存的工程_α' = <built-in method toolTip of PySide6.QtWidgets.QLabel object at 0x000002A89AB2A640>()
+E        +    where <built-in method toolTip of PySide6.QtWidgets.QLabel object at 0x000002A89AB2A640> = <PySide6.QtWidgets.QLabel(0x2a903e53f90, name="headerProject") at 0x000002A89AB2A640>.toolTip
+E        +      where <PySide6.QtWidgets.QLabel(0x2a903e53f90, name="headerProject") at 0x000002A89AB2A640> = <silverstar_flp.ui.main_window.MainWindow(0x2a903e47bd0) at 0x000002A89AA05080>.project_name_label
+
+tests\test_gui_release_identity.py:42: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gui_smoke.py::test_five_page_gui_and_top_bar_accept_a_parsed_dataset
+FAILED tests/test_gui_release_identity.py::test_root_and_analysis_session_identity_survives_resize
+2 failed, 14 passed, 3 deselected in 79.77s (0:01:19)

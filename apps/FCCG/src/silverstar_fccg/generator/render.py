@@ -849,6 +849,10 @@ def _FlightConfigHeader_Render(
 
 {rows}
 
+#if (SYSTEM_USER_MAGNETOMETER_ENABLE != 0U)
+#error "Magnetometer selection is deferred in the first SCG release"
+#endif
+
 #if ((SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U) && \
      (SYSTEM_USER_TELEMETRY_ENABLE == 0U))
 #error "Telemetry Protocol requires a selected telemetry transport Device"
@@ -2241,6 +2245,10 @@ def _DeviceDescriptorEntries_Get(
                         f"Component {component_id} device descriptor is invalid"
                     )
                 entry = dict(raw_entry)
+                # The first release retains implementations and schema, but
+                # exposes no magnetic endpoint, calibration or storage target.
+                if entry.get("class") == "SYSTEM_DEVICE_CLASS_MAGNETOMETER":
+                    continue
                 entry["_component_id"] = component_id
                 entry["_source_instance_id"] = source_instance_id
                 entry["_source_instance_index"] = source_instance_index

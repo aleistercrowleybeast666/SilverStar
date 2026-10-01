@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.view_models import ToolchainToolView
-from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode
+from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode, ArtifactMemoryMarginLevel_Get
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.widgets import (
     CollapsibleSection,
@@ -321,14 +321,17 @@ class BuildPage(ScrollableLocalizedPage):
         artifact = by_task.get("artifact_check")
         regions = ArtifactMemorySummary_Decode(str(getattr(artifact, "summary", "")))
         if regions:
-            text = "\n".join(self._translator.Text_Get(
+            levels = [ArtifactMemoryMarginLevel_Get(remaining, capacity) for _, remaining, capacity in regions]
+            colors = {"error": "#d32f2f", "warning": "#a66b00", "success": "#22863a"}
+            text = "<br>".join('<span style="color:' + colors[level] + '">' + self._translator.Text_Get(
                 "memory.region", name=name, used=f"{used:,}", capacity=f"{capacity:,}",
-                remaining=f"{remaining:,}") for name, (used, remaining, capacity)
-                in zip(("Flash", "SRAM", "CCMRAM"), regions))
+                remaining=f"{remaining:,}") + f" ({remaining / capacity * 100:.2f}%)</span>"
+                for name, (used, remaining, capacity), level in zip(("Flash", "SRAM", "CCMRAM"), regions, levels))
             narrow = regions[2][1] < 4096
-            text += "\n" + self._translator.Text_Get("memory.ccm_narrow" if narrow else "memory.static_only")
+            text += "<br>" + self._translator.Text_Get("memory.ccm_narrow" if narrow else "memory.static_only")
+            text += "<br>" + self._translator.Text_Get("memory.keep_green")
             self.memory_margin_value.setText(text)
-            self.memory_margin_value.setProperty("statusLevel", "warning" if narrow else "info")
+            self.memory_margin_value.setProperty("statusLevel", "error" if "error" in levels else "warning" if "warning" in levels else "success")
             self.memory_margin_value.setToolTip(str(getattr(artifact, "timestamp", "")))
         else:
             self.memory_margin_value.setText(self._translator.Text_Get("memory.not_checked"))
@@ -346,6 +349,8 @@ class BuildPage(ScrollableLocalizedPage):
                     "quality.result.passed" if passed else "quality.result.failed"
                 )
                 summary = str(getattr(record, "summary", "")).strip()
+                if task == "power10_check":
+                    summary = self._translator.Text_Get("power10.review_pending")
                 if ArtifactMemorySummary_Decode(summary):
                     summary = self._translator.Text_Get(
                         "quality.summary.artifact_validated" if passed else "quality.summary.completed")
@@ -371,7 +376,7 @@ class BuildPage(ScrollableLocalizedPage):
                 label.setText(
                     " · ".join(value for value in (status, summary) if value)
                 )
-                label.setProperty("statusLevel", "success" if passed else "error")
+                label.setProperty("statusLevel", "info" if passed and task == "power10_check" else "success" if passed else "error")
                 label.setToolTip(
                     self._translator.Text_Get(
                         "quality.result.tooltip",

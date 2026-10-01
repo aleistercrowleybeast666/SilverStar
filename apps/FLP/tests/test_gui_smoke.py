@@ -191,7 +191,7 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
     assert window.about_dialog.product_label.text() == "SilverStar 飞行日志解析器"
     assert window.about_dialog.version_label.text() == "版本 0.1.0"
     assert "离线算法复算" in window.about_dialog.description_label.text()
-    assert window.about_dialog.windowTitle() == "SilverStar_FLP"
+    assert window.about_dialog.windowTitle() == "SilverStar FLP"
     window.about_dialog.reject()
     saved_as_path = tmp_path / "SYNTHETIC_gui_project_copy.ssflp"
     monkeypatch.setattr(

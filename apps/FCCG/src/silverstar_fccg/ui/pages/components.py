@@ -207,17 +207,18 @@ class DevicesPage(ScrollableLocalizedPage):
             if component.options.get("device_selection_style") == "instance"
             and not component.options.get("internal", False)
             and component.component_class != "console"
+            and component.component_class != "magnetometer"
         )
         instance_classes = sorted(
             {component.component_class for component in instance_components},
-            key=lambda component_class: min(
+            key=lambda component_class: (0 if component_class == "imu" else 1 if component_class == "gnss" else 2, min(
                 (
                     int(component.options.get("device_group_order", 100))
                     for component in instance_components
                     if component.component_class == component_class
                 ),
                 default=100,
-            ),
+            )),
         )
         group_forms = {
             "primary_devices": self.primary_form,
@@ -578,6 +579,8 @@ class DevicesPage(ScrollableLocalizedPage):
         return component.name if title == key else title
 
     def _DeviceInstanceTitle_Get(self, component: ComponentView, index: int) -> str:
+        if component.component_class == "telemetry":
+            return self._translator.Text_Get("device.class.telemetry")
         key = f"device.instance.{component.component_class}"
         title = self._translator.Text_Get(key, index=index)
         if title == key:
@@ -597,17 +600,20 @@ class DevicesPage(ScrollableLocalizedPage):
             self._CapabilityTitle_Get(capability)
             for capability in instance.provides
             if Capability_UserSelectable_Is(capability)
+            and not capability.startswith("magnetometer.")
             and CapabilityKind_Get(capability) == CapabilityKind.RAW_DATA
         )
         qualified_capabilities = ", ".join(
             self._CapabilityTitle_Get(capability)
             for capability in instance.provides
             if Capability_UserSelectable_Is(capability)
+            and not capability.startswith("magnetometer.")
             and CapabilityKind_Get(capability) == CapabilityKind.QUALIFIED
         )
         unqualified_capabilities = ", ".join(
             self._CapabilityTitle_Get(capability)
             for capability in instance.unqualified
+            if not capability.startswith("magnetometer.")
         )
         return self._translator.Text_Get(
             "device.provides_summary_typed",
@@ -640,10 +646,9 @@ class BoardHardwarePage(ScrollableLocalizedPage):
     manualValidationRequested = Signal()
     i2cExternalPullupChanged = Signal(str, bool)
 
-    def __init__(self, translator: Translator) -> None:
-        super().__init__(
-            translator, "page.board_hardware", "page.board_hardware.description"
-        )
+    def __init__(self, translator: Translator, *, target: str = "flight") -> None:
+        page = "page.ground" if target == "ground" else "page.board_hardware"
+        super().__init__(translator, page, page + ".description")
         selection_form = QFormLayout()
         self.board_label = QLabel()
         self.Text_Register(self.board_label, "hardware.existing")
@@ -688,7 +693,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         )
         self.generate_button = QPushButton()
         self.generate_button.setObjectName("primaryButton")
-        self.Text_Register(self.generate_button, "action.generate_flight_project")
+        self.Text_Register(self.generate_button, "action.generate_ground_project" if target == "ground" else "action.generate_flight_project")
         self.generate_button.clicked.connect(
             lambda _checked=False: self.generateRequested.emit()
         )
@@ -1780,7 +1785,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
     def Capabilities_Set(
         self, capabilities: Iterable[CapabilityUsageView]
     ) -> None:
-        self._capabilities = tuple(capabilities)
+        self._capabilities = tuple(item for item in capabilities
+                                   if not item.capability.startswith("magnetometer."))
         self.capability_table.blockSignals(True)
         self.capability_table.setRowCount(len(self._capabilities))
         for row, capability in enumerate(self._capabilities):

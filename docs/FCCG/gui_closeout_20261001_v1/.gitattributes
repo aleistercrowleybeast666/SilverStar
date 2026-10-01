@@ -1,0 +1,7 @@
+# Exact evidence bytes must survive checkouts; raw tool whitespace is evidence.
+*.log binary
+*.diff binary
+*.json -text
+*.csv -text
+*.ssproject -text
+*.png binary

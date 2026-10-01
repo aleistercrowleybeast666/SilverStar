@@ -1,0 +1,23 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/test_gui_workflow_20260930.py",
+    "-x",
+    "-q",
+    "--basetemp=D:/python_software/SilverStar/.work/gui_closeout_v1/single_gui",
+    "-o",
+    "cache_dir=D:/python_software/SilverStar/.work/gui_closeout_v1/single_cache"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\apps\\FCCG",
+  "exit_code": 1,
+  "utc": "2026-10-01T10:12:55.430622+00:00",
+  "seconds": 5.173264500001096,
+  "head": "2175d95f20dbecde96f67fd902ed54d873e39755",
+  "log_sha256": "08df3a41f57595924b5a7be37aa689f711407d6a103b623c55240f30644b0ba6",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools"
+  }
+}

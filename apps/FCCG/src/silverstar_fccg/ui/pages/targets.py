@@ -10,6 +10,8 @@ from PySide6.QtWidgets import (
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox, EnterCommittedSpinBox
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
+from silverstar_fccg.ui.pages.components import BoardHardwarePage
+from silverstar_fccg.core.view_models import BoardCompatibilityView, ResourceRequirementView, PlatformMatchView
 
 
 class AirLinkPage(ScrollableLocalizedPage):
@@ -188,7 +190,7 @@ class AirLinkPage(ScrollableLocalizedPage):
             widget.setEnabled(enabled and bool(powers))
 
 
-class GroundTargetPage(ScrollableLocalizedPage):
+class GroundTargetPage(BoardHardwarePage):
     enabledChanged = Signal(bool)
     configurationChanged = Signal(str, object)
     assignmentChanged = Signal(str, str)
@@ -197,40 +199,21 @@ class GroundTargetPage(ScrollableLocalizedPage):
     generateRequested = Signal()
 
     def __init__(self, translator: Translator) -> None:
-        super().__init__(translator, "page.ground", "page.ground.description")
+        super().__init__(translator, target="ground")
         self.enabled = QCheckBox()
         self.Text_Register(self.enabled, "field.ground_enabled")
         self.enabled.toggled.connect(self.enabledChanged.emit)
         self.root_layout.addWidget(self.enabled)
-        hardware_form = QFormLayout()
-        self.hardware_summary = QLabel("—")
-        self.hardware_summary.setWordWrap(True)
-        label = QLabel()
-        self.Text_Register(label, "field.ground_hardware")
-        hardware_form.addRow(label, self.hardware_summary)
-        board_label = QLabel()
-        self.Text_Register(board_label, "hardware.existing")
-        self.board = QComboBox()
-        self.board.currentIndexChanged.connect(
-            lambda: self.configurationChanged.emit("board", self.board.currentData())
-        )
-        hardware_form.addRow(board_label, self.board)
-        self.root_layout.addWidget(self.Group_Create("group.ground_hardware", hardware_form))
-        import_row = QHBoxLayout()
-        self.import_ioc = QPushButton()
-        self.Text_Register(self.import_ioc, "action.import_cubemx_ioc")
-        self.import_ioc.clicked.connect(lambda: self.importRequested.emit(False))
-        self.import_directory = QPushButton()
-        self.Text_Register(self.import_directory, "action.import_cubemx_directory")
-        self.import_directory.clicked.connect(lambda: self.importRequested.emit(True))
-        self.save_instance = QPushButton()
-        self.Text_Register(self.save_instance, "action.save_hardware")
-        self.save_instance.clicked.connect(self.saveInstanceRequested.emit)
-        import_row.addWidget(self.import_ioc)
-        import_row.addWidget(self.import_directory)
-        import_row.addWidget(self.save_instance)
-        import_row.addStretch(1)
-        self.root_layout.addLayout(import_row)
+        self.board = self.board_combo
+        self.hardware_summary = self.platform_values["part"]
+        self.import_ioc = self.import_ioc_button
+        self.import_directory = self.import_directory_button
+        self.save_instance = self.export_button
+        self.boardChanged.connect(lambda value: self.configurationChanged.emit("board", value))
+        self.customSelected.connect(lambda: self.configurationChanged.emit("board", ""))
+        self.importIocRequested.connect(lambda: self.importRequested.emit(False))
+        self.importDirectoryRequested.connect(lambda: self.importRequested.emit(True))
+        self.exportRequested.connect(self.saveInstanceRequested.emit)
         radio_form = QFormLayout()
         label = QLabel()
         self.Text_Register(label, "field.ground_radio")
@@ -252,9 +235,6 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.radio_selection_group = self.Group_Create(
             "group.ground_radio", radio_form
         )
-        self.root_layout.addWidget(self.Group_Create(
-            "group.ground_radio_resources", self.assignment_form
-        ))
         pc_form = QFormLayout()
         label = QLabel()
         self.Text_Register(label, "field.ground_pc_interface")
@@ -290,13 +270,6 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.build_summary.setWordWrap(True)
         build_form.addRow(build_label, self.build_summary)
         self.root_layout.addWidget(self.Group_Create("group.ground_build", build_form))
-        self.generate_button = QPushButton()
-        self.Text_Register(self.generate_button, "action.generate_ground_project")
-        self.generate_button.setObjectName("primaryButton")
-        self.generate_button.clicked.connect(
-            lambda _checked=False: self.generateRequested.emit()
-        )
-        self.root_layout.addWidget(self.generate_button)
         self.status = QLabel()
         self.status.setWordWrap(True)
         self.root_layout.addWidget(self.status)
@@ -316,11 +289,16 @@ class GroundTargetPage(ScrollableLocalizedPage):
         self.hardware_summary.setText(
             f"{ground.hardware.mcu or '—'} · {ground.hardware.source_label or ground.hardware.mode}"
         )
-        self.board.clear()
-        self.board.addItem(self._translator.Text_Get("board.custom_hardware"), "")
-        for title, identity in boards:
-            self.board.addItem(title, identity)
-        self.board.setCurrentIndex(max(0, self.board.findData(ground.board)))
+        self.Boards_Set((BoardCompatibilityView(identity, title, True) for title, identity in boards),
+            ground.board, custom_available=True, custom_selected=ground.hardware.mode == "custom",
+            custom_ready=bool(ground.hardware.build_sources), prepared=not issues,
+            hardware_mode=ground.hardware.mode, assignment_confirmed=not issues)
+        self.Platform_Set(PlatformMatchView(hardware_source=ground.hardware.source_kind,
+            detected_part=ground.hardware.mcu or str(ground.hardware.inventory.get("mcu_part", "")),
+            detected_family=str(ground.hardware.inventory.get("mcu_family", "")),
+            detected_package=str(ground.hardware.inventory.get("package", "")),
+            detected_core=str(ground.hardware.inventory.get("core", "")),
+            cubemx_version=ground.hardware.cubemx_version, firmware_package=ground.hardware.firmware_package))
         self.radio.clear()
         self.radio.addItem("—", "")
         for title, identity, available, reason in radios:
@@ -369,36 +347,17 @@ class GroundTargetPage(ScrollableLocalizedPage):
                        self.pc_resource, self.baudrate):
             widget.blockSignals(False)
         required = tuple(requirements.get("resources", ()))
-        signature = (
-            required,
-            tuple((resource.resource_id, resource.kind)
-                  for resource in ground.hardware.resources),
-        )
-        if signature != self._assignment_signature:
-            for combo in self.assignments.values():
-                combo.blockSignals(True)
-            while self.assignment_form.rowCount():
-                self.assignment_form.removeRow(0)
-            self.assignments.clear()
-            for name, kind in required:
-                combo = QComboBox()
-                combo.addItem("—", "")
-                for resource in ground.hardware.resources:
-                    if resource.kind == kind:
-                        combo.addItem(resource.resource_id, resource.resource_id)
-                combo.currentIndexChanged.connect(
-                    lambda _index, requirement=name, selected=combo:
-                    self.assignmentChanged.emit(requirement, selected.currentData() or "")
-                )
-                self.assignment_form.addRow(f"{name} ({kind})", combo)
-                self.assignments[name] = combo
-            self._assignment_signature = signature
-        for name, combo in self.assignments.items():
-            combo.blockSignals(True)
-            combo.setCurrentIndex(max(
-                0, combo.findData(ground.resource_assignments.get(f"radio0:{name}", ""))
-            ))
-            combo.blockSignals(False)
+        resource_views = tuple(ResourceRequirementView(kind=kind, name=name, key=name,
+            assignment=ground.resource_assignments.get(f"radio0:{name}", ""),
+            candidates=tuple(item.resource_id for item in ground.hardware.resources if item.kind == kind))
+            for name, kind in required)
+        self.Resources_Set(resource_views, not issues, hardware_selected=ground.hardware.mode != "unselected")
+        self.assignments = {name: self.resource_table.cellWidget(row, 3) for row, (name, _kind) in enumerate(required)}
+        # Ground generation checks the fixed radio/PC contracts; preparation
+        # operations requiring flight task ownership do not apply to Ground.
+        for button in (self.prepare_button, self.manual_validation_button, self.auto_button):
+            button.setEnabled(False)
+        self.i2c_pullup_group.setVisible(False)
         self.status.setText(
             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
             if issues else self._translator.Text_Get("status.ground_ready")

@@ -1,0 +1,24 @@
+...........F
+================================== FAILURES ===================================
+________ test_ground_page_excludes_flight_board_and_owns_uart_binding _________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_shared_retry/test_ground_page_excludes_flig0')
+qapp = <PySide6.QtWidgets.QApplication(0x1b9007de580) at 0x000001B902D48880>
+
+    def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path, qapp) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            page = window.ground_target_page
+            page.enabled.setChecked(True)
+            assert page.board.findData("silverstar.board.silverstar_0_5") == -1
+>           assert page.board.currentData() == ""
+E           AssertionError: assert None == ''
+E            +  where None = <built-in method currentData of StandardComboBox object at 0x000001B90D6202C0>()
+E            +    where <built-in method currentData of StandardComboBox object at 0x000001B90D6202C0> = <silverstar_fccg.ui.widgets.StandardComboBox(0x1b9092a3870) at 0x000001B90D6202C0>.currentData
+E            +      where <silverstar_fccg.ui.widgets.StandardComboBox(0x1b9092a3870) at 0x000001B90D6202C0> = <silverstar_fccg.ui.pages.targets.GroundTargetPage(0x1b903574970) at 0x000001B90D620AC0>.board
+
+tests\test_gui_smoke.py:313: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gui_smoke.py::test_ground_page_excludes_flight_board_and_owns_uart_binding
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 11 passed in 34.19s

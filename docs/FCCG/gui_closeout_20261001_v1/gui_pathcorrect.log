@@ -1,0 +1,961 @@
+.EEEEEEEEEEEEEEEEEEEEEEEEEEEEE.......                                    [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_device_titles_use_display_names_and_fallback_for_extensions[zh_CN] _
+
+item = <Function test_device_titles_use_display_names_and_fallback_for_extensions[zh_CN]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_device_titles_use_display_names_and_fallback_for_extensions[en_US] _
+
+item = <Function test_device_titles_use_display_names_and_fallback_for_extensions[en_US]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_ground_pc_settings_are_on_configuration_and_hardware_actions_remain _
+
+item = <Function test_ground_pc_settings_are_on_configuration_and_hardware_actions_remain>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_create_root_preserves_same_named_input_and_existing_descriptor _
+
+item = <Function test_create_root_preserves_same_named_input_and_existing_descriptor>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_build_log_and_internal_build_actions_are_advanced_only _
+
+item = <Function test_build_log_and_internal_build_actions_are_advanced_only>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_actuators_are_optional_and_parachute_removal_clears_modes _
+
+item = <Function test_actuators_are_optional_and_parachute_removal_clears_modes>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_vscode_workspace_launcher_prefers_code_cmd_and_opens_new_window _
+
+item = <Function test_vscode_workspace_launcher_prefers_code_cmd_and_opens_new_window>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+___ ERROR at setup of test_vscode_workspace_open_failure_shows_exact_reason ___
+
+item = <Function test_vscode_workspace_open_failure_shows_exact_reason>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_vscode_workspace_launcher_reports_missing_installation_and_association _
+
+item = <Function test_vscode_workspace_launcher_reports_missing_installation_and_association>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+___ ERROR at setup of test_main_window_shell_navigation_theme_and_language ____
+
+item = <Function test_main_window_shell_navigation_theme_and_language>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_ground_page_excludes_flight_board_and_owns_uart_binding _
+
+item = <Function test_ground_page_excludes_flight_board_and_owns_uart_binding>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_new_project_wizard_is_one_step_and_requires_identity _
+
+item = <Function test_new_project_wizard_is_one_step_and_requires_identity>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_devices_page_is_physical_and_capabilities_are_on_flight_page _
+
+item = <Function test_devices_page_is_physical_and_capabilities_are_on_flight_page>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_device_interface_profile_selector_updates_one_chip_instance _
+
+item = <Function test_device_interface_profile_selector_updates_one_chip_instance>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_official_repeated_device_rows_add_to_limit_and_remove_atomically _
+
+item = <Function test_official_repeated_device_rows_add_to_limit_and_remove_atomically>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_pending_custom_hardware_keeps_sd_tf_storage_selectable _
+
+item = <Function test_pending_custom_hardware_keeps_sd_tf_storage_selectable>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+______ ERROR at setup of test_background_worker_updates_shared_progress _______
+
+item = <Function test_background_worker_updates_shared_progress>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_target_build_controls_and_quality_actions_use_shared_worker _
+
+item = <Function test_target_build_controls_and_quality_actions_use_shared_worker>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_hardware_prepare_plans_off_ui_thread_and_completes_safely _
+
+item = <Function test_hardware_prepare_plans_off_ui_thread_and_completes_safely>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_power10_record_keeps_manual_acceptance_pending[True] _
+
+item = <Function test_power10_record_keeps_manual_acceptance_pending[True]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_power10_record_keeps_manual_acceptance_pending[False] _
+
+item = <Function test_power10_record_keeps_manual_acceptance_pending[False]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_legacy_power10_success_does_not_imply_manual_acceptance _
+
+item = <Function test_legacy_power10_success_does_not_imply_manual_acceptance>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_power10_critical_failure_is_not_replaced_by_pending_review[True] _
+
+item = <Function test_power10_critical_failure_is_not_replaced_by_pending_review[True]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_power10_critical_failure_is_not_replaced_by_pending_review[False] _
+
+item = <Function test_power10_critical_failure_is_not_replaced_by_pending_review[False]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_validation_build_uses_release_without_project_state __
+
+item = <Function test_validation_build_uses_release_without_project_state>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_host_tests_override_inherited_compiler_and_windows_make_shell _
+
+item = <Function test_host_tests_override_inherited_compiler_and_windows_make_shell>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_dry_run_plans_incremental_steps_and_streams_live_progress _
+
+item = <Function test_dry_run_plans_incremental_steps_and_streams_live_progress>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_generic_progress_advances_only_on_done_and_failure_stays_partial _
+
+item = <Function test_generic_progress_advances_only_on_done_and_failure_stays_partial>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_clean_all_make_progress_is_determinate_and_failure_stays_partial _
+
+item = <Function test_clean_all_make_progress_is_determinate_and_failure_stays_partial>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_pathcorrect')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\gui_pathcorrect'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR tests/test_gui_workflow_20260930.py::test_device_titles_use_display_names_and_fallback_for_extensions[zh_CN]
+ERROR tests/test_gui_workflow_20260930.py::test_device_titles_use_display_names_and_fallback_for_extensions[en_US]
+ERROR tests/test_gui_workflow_20260930.py::test_ground_pc_settings_are_on_configuration_and_hardware_actions_remain
+ERROR tests/test_gui_workflow_20260930.py::test_create_root_preserves_same_named_input_and_existing_descriptor
+ERROR tests/test_gui_smoke.py::test_build_log_and_internal_build_actions_are_advanced_only
+ERROR tests/test_gui_smoke.py::test_actuators_are_optional_and_parachute_removal_clears_modes
+ERROR tests/test_gui_smoke.py::test_vscode_workspace_launcher_prefers_code_cmd_and_opens_new_window
+ERROR tests/test_gui_smoke.py::test_vscode_workspace_open_failure_shows_exact_reason
+ERROR tests/test_gui_smoke.py::test_vscode_workspace_launcher_reports_missing_installation_and_association
+ERROR tests/test_gui_smoke.py::test_main_window_shell_navigation_theme_and_language
+ERROR tests/test_gui_smoke.py::test_ground_page_excludes_flight_board_and_owns_uart_binding
+ERROR tests/test_gui_smoke.py::test_new_project_wizard_is_one_step_and_requires_identity
+ERROR tests/test_gui_smoke.py::test_devices_page_is_physical_and_capabilities_are_on_flight_page
+ERROR tests/test_gui_smoke.py::test_device_interface_profile_selector_updates_one_chip_instance
+ERROR tests/test_gui_smoke.py::test_official_repeated_device_rows_add_to_limit_and_remove_atomically
+ERROR tests/test_gui_smoke.py::test_pending_custom_hardware_keeps_sd_tf_storage_selectable
+ERROR tests/test_gui_smoke.py::test_background_worker_updates_shared_progress
+ERROR tests/test_gui_smoke.py::test_target_build_controls_and_quality_actions_use_shared_worker
+ERROR tests/test_gui_smoke.py::test_hardware_prepare_plans_off_ui_thread_and_completes_safely
+ERROR tests/test_quality_manual_acceptance.py::test_power10_record_keeps_manual_acceptance_pending[True]
+ERROR tests/test_quality_manual_acceptance.py::test_power10_record_keeps_manual_acceptance_pending[False]
+ERROR tests/test_quality_manual_acceptance.py::test_legacy_power10_success_does_not_imply_manual_acceptance
+ERROR tests/test_quality_manual_acceptance.py::test_power10_critical_failure_is_not_replaced_by_pending_review[True]
+ERROR tests/test_quality_manual_acceptance.py::test_power10_critical_failure_is_not_replaced_by_pending_review[False]
+ERROR tests/test_build_progress.py::test_validation_build_uses_release_without_project_state
+ERROR tests/test_build_progress.py::test_host_tests_override_inherited_compiler_and_windows_make_shell
+ERROR tests/test_build_progress.py::test_dry_run_plans_incremental_steps_and_streams_live_progress
+ERROR tests/test_build_progress.py::test_generic_progress_advances_only_on_done_and_failure_stays_partial
+ERROR tests/test_build_progress.py::test_clean_all_make_progress_is_determinate_and_failure_stays_partial
+8 passed, 29 errors in 4.97s

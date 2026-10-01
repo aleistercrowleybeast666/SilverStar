@@ -1,0 +1,19 @@
+...........................................F....                         [100%]
+================================== FAILURES ===================================
+________________ test_translation_catalogs_have_matching_keys _________________
+
+    def test_translation_catalogs_have_matching_keys() -> None:
+        root = Path("src/silverstar_fccg/i18n")
+        zh = json.loads((root / "zh_CN.json").read_text(encoding="utf-8"))
+        en = json.loads((root / "en_US.json").read_text(encoding="utf-8"))
+>       assert set(zh) == set(en)
+E       AssertionError: assert {'about.text'...e_check', ...} == {'about.text'...e_check', ...}
+E         
+E         Extra items in the left set:
+E         'field.module_variant'
+E         Use -v to get more diff
+
+tests\test_i18n.py:41: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_i18n.py::test_translation_catalogs_have_matching_keys - Ass...
+1 failed, 47 passed in 156.90s (0:02:36)

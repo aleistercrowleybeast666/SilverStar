@@ -1,0 +1,13 @@
+FCCG_PROGRESS|POWER10|PLAN|3
+FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+POWER10_SOURCE|APP\fixture.c|6146007cda1d0cc0babd0ae915f212056170b6f00fa6495760f599d2b91b80a8
+FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|4|0
+POWER10_FUNCTION_SCOPE|Flight|APP\fixture.c|1|4|Fixture
+POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=0|average=0.000000|informational|policy=fprime_inspired_c|semantic_review=required
+POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+Power of Ten check FAILED (1 failures).
+- Entire current target has zero eligible runtime assertion candidates; first-release protection failed.

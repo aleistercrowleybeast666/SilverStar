@@ -1,0 +1,1480 @@
+diff --git a/README.md b/README.md
+index 0e9f5f4..8ef1750 100644
+--- a/README.md
++++ b/README.md
+@@ -6,11 +6,11 @@ This repository contains three applications:
+ 
+ | Application | Purpose | Start from repository root |
+ | --- | --- | --- |
+-| FCCG | Flight and Ground target configuration and code generation | `python FCCG.py` |
++| SCG | System Configuration & Generation（系统配置与生成） | `python SCG.py` |
+ | GSHC | Ground Station Host Computer | `python GSHC.py` |
+ | FLP | Flight Log Processor | `python FLP.py` |
+ 
+-Use one Python 3.11+ environment: run `tools/setup_venv.ps1`, then use `.venv/Scripts/python.exe` for all three launchers. The root `VERSION` is the product release authority. AIR M0, SSLOG 0.0, `.ssdecoder` 1.2, project semantics, navigation revision, FreeRTOS, board, MCU and vendor versions remain independent.
++Use one Python 3.11+ environment: run `tools/setup_venv.ps1`, then use `.venv/Scripts/python.exe` for all three launchers. SCG retains `FCCG.py`, `silverstar-fccg`, the `apps/FCCG` implementation path and existing project schemas for compatibility; new installations also expose `silverstar-scg`. The root `VERSION` is the product release authority. AIR M0, SSLOG 0.0, `.ssdecoder` 1.2, project semantics, navigation revision, FreeRTOS, board, MCU and vendor versions remain independent.
+ 
+ FCCG keeps Flight Controller configuration and adds an optional Ground Station target. Both targets consume one [AIR Link](docs/architecture/AIR_LINK.md); Ground bridges opaque AIR packets to GSP over UART or USB CDC. See the [target model](docs/architecture/TARGET_MODEL.md), [Ground firmware boundary](docs/architecture/GROUND_STATION.md), [Device variants](docs/architecture/DEVICE_VARIANTS.md), and [documentation index](docs/README.md). Runtime and generated work belongs below ignored .work/ or an explicitly selected external user project.
+ 
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1
+index 4c7083b..4adc6a2 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1
+@@ -662,7 +662,9 @@ Invoke-ExpectedCompileFailure -Name 'capability_jy901b_gravity_mag_rejected' `
+         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
+         '-DJY901B_MAGNETOMETER_ADAPTER_ENABLE=1U'
+     ) -Source $capabilitySource
+-Invoke-ExpectedCompileSuccess -Name 'capability_future_triad' `
++# First release rejects even a fully qualified magnetic provider. Restore this
++# future-feature success case only with the documented December release policy.
++Invoke-ExpectedCompileFailure -Name 'capability_first_release_triad_deferred' `
+     -ExtraCompilerArgs @(
+         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD',
+         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1 b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1
+index 515d88b..3fb7ef0 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1
+@@ -489,7 +489,8 @@ foreach ($file in $files) {
+     # PowerShell 5.1 otherwise uses the local Windows code page, which can
+     # consume punctuation in UTF-8 C text and silently reduce scan coverage.
+     try {
+-        $rawText = $utf8Decoder.GetString([System.IO.File]::ReadAllBytes($file.FullName))
++        $sourceBytes = [System.IO.File]::ReadAllBytes($file.FullName)
++        $rawText = $utf8Decoder.GetString($sourceBytes)
+         if (($rawText.Length -ne 0) -and ($rawText[0] -eq [char]0xFEFF)) {
+             $rawText = $rawText.Substring(1)
+         }
+@@ -501,6 +502,15 @@ foreach ($file in $files) {
+     $sanitized = Get-CSourceWithoutCommentsOrLiterals -Text $rawText
+     $lines = @($sanitized -split "`r?`n")
+     $relative = $file.FullName.Substring($repoRoot.Length + 1)
++    # Hash the exact bytes scanned; do not depend on optional PowerShell cmdlets.
++    $sourceHasher = [System.Security.Cryptography.SHA256]::Create()
++    try {
++        $sourceDigest = [System.BitConverter]::ToString(
++            $sourceHasher.ComputeHash($sourceBytes)).Replace('-', '').ToLowerInvariant()
++    } finally {
++        $sourceHasher.Dispose()
++    }
++    Write-Output (('POWER10_SOURCE|{0}|{1}') -f $relative, $sourceDigest)
+ 
+     foreach ($rule in $patternRules) {
+         $diagnostics = Get-PatternDiagnostics -File $file -Lines $lines `
+@@ -586,6 +596,8 @@ Write-Output (('POWER10_RULE5|{0}|files={1}|functions={2}|eligible_assertions={3
+     $TargetKind, $files.Count, $allFunctions.Count, $assertionTotal, $density)
+ Add-PowerTenCheck -Condition ($allFunctions.Count -ne 0) `
+     -Message 'First-party function scan is empty; source coverage is not established.'
++Add-PowerTenCheck -Condition ($assertionTotal -gt 0) `
++    -Message 'Entire current target has zero eligible runtime assertion candidates; first-release protection failed.'
+ Write-Output 'POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending'
+ Write-Output "FCCG_PROGRESS|POWER10|DONE|$progressCurrent|$progressTotal|function_rules"
+ 
+diff --git a/apps/FCCG/pyproject.toml b/apps/FCCG/pyproject.toml
+index f00a8bb..d268f0d 100644
+--- a/apps/FCCG/pyproject.toml
++++ b/apps/FCCG/pyproject.toml
+@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
+ [project]
+ name = "silverstar-fccg"
+ dynamic = ["version"]
+-description = "SilverStar flight-controller project configurator and code generator"
++description = "SilverStar System Configuration & Generation"
+ readme = "README.md"
+ requires-python = ">=3.11"
+ dependencies = ["PySide6>=6.8", "PyYAML>=6.0,<7"]
+@@ -14,6 +14,7 @@ dependencies = ["PySide6>=6.8", "PyYAML>=6.0,<7"]
+ dev = ["pytest>=8.3"]
+ 
+ [project.scripts]
++silverstar-scg = "silverstar_fccg.app.application:main"
+ silverstar-fccg = "silverstar_fccg.app.application:main"
+ 
+ [tool.setuptools.packages.find]
+diff --git a/apps/FCCG/src/silverstar_fccg/app/version.py b/apps/FCCG/src/silverstar_fccg/app/version.py
+index 495421c..f7b22eb 100644
+--- a/apps/FCCG/src/silverstar_fccg/app/version.py
++++ b/apps/FCCG/src/silverstar_fccg/app/version.py
+@@ -2,7 +2,7 @@
+ 
+ from pathlib import Path
+ 
+-PRODUCT_NAME = "SilverStar_FCCG"
++PRODUCT_NAME = "SilverStar SCG"
+ SILVERSTAR_PLATFORM_VERSION = (Path(__file__).resolve().parents[5] / "VERSION").read_text(encoding="ascii").strip()
+ 
+ _VERSION_PARTS = tuple(
+diff --git a/apps/FCCG/src/silverstar_fccg/generator/render.py b/apps/FCCG/src/silverstar_fccg/generator/render.py
+index 4cbacc4..3c1144e 100644
+--- a/apps/FCCG/src/silverstar_fccg/generator/render.py
++++ b/apps/FCCG/src/silverstar_fccg/generator/render.py
+@@ -849,6 +849,10 @@ def _FlightConfigHeader_Render(
+ 
+ {rows}
+ 
++#if (SYSTEM_USER_MAGNETOMETER_ENABLE != 0U)
++#error "Magnetometer selection is deferred in the first SCG release"
++#endif
++
+ #if ((SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U) && \
+      (SYSTEM_USER_TELEMETRY_ENABLE == 0U))
+ #error "Telemetry Protocol requires a selected telemetry transport Device"
+@@ -2241,6 +2245,10 @@ def _DeviceDescriptorEntries_Get(
+                         f"Component {component_id} device descriptor is invalid"
+                     )
+                 entry = dict(raw_entry)
++                # The first release retains implementations and schema, but
++                # exposes no magnetic endpoint, calibration or storage target.
++                if entry.get("class") == "SYSTEM_DEVICE_CLASS_MAGNETOMETER":
++                    continue
+                 entry["_component_id"] = component_id
+                 entry["_source_instance_id"] = source_instance_id
+                 entry["_source_instance_index"] = source_instance_index
+diff --git a/apps/FCCG/src/silverstar_fccg/i18n/en_US.json b/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
+index 7dde200..6ceb58b 100644
+--- a/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
++++ b/apps/FCCG/src/silverstar_fccg/i18n/en_US.json
+@@ -2,8 +2,8 @@
+   "device.interface_profile": "Interface / Operating profile",
+   "protocol.selection_unavailable": "Selected protocol unavailable: {component} / {profile}",
+   "app.credit": "By CXYL",
+-  "app.title": "SilverStar Flight & Ground Code Generator",
+-  "about.text": "SilverStar Flight & Ground Code Generator\nVersion v{version}\n\nGraphical Flight and Ground target configuration, declarative component plugins, project assembly, and build/toolchain front end.",
++  "app.title": "SilverStar System Configuration & Generation (SCG)",
++  "about.text": "SilverStar System Configuration & Generation (SCG)\nVersion v{version}\n\nGraphical Flight and Ground target configuration, declarative component plugins, project assembly, and build/toolchain front end.",
+   "action.about": "About",
+   "action.add_component": "Add Component",
+   "action.architecture_check": "Architecture Check",
+@@ -13,7 +13,7 @@
+   "action.build": "Build",
+   "action.cancel": "Cancel",
+   "action.cancel_task": "Cancel Task",
+-  "action.clean": "Clean FCCG Build Outputs",
++  "action.clean": "Clean SCG Build Outputs",
+   "action.clean_all": "Clean All Build Outputs",
+   "action.complete_manual_assignment_check": "Complete Manual Assignment & Check",
+   "action.detect_toolchain": "Detect Toolchain",
+@@ -335,7 +335,7 @@
+   "group.mode_selection": "Calibration",
+   "group.logging": "Logging",
+   "group.indicators": "Indicators",
+-  "group.advanced_build": "Advanced: Build and Validate in FCCG",
++  "group.advanced_build": "Checks",
+   "device.resources_next_step": "Device plugins declare requirements only. Map UART, SPI, GPIO, and other resources on the next Hardware Connection page.",
+   "device.class.imu": "IMU",
+   "device.class.gnss": "GNSS",
+@@ -499,7 +499,7 @@
+   "error.save_as_symlink": "Save As refuses symbolic links in project source: {path}",
+   "error.device_instance_limit": "No additional {device} instance identifier is available.",
+   "device.plugin_instance_limit": "This model allows at most {count} instance(s)",
+-  "device.instance_order_failover_note": "Instance order is the default backup order; the primary source follows the current Canonical Source / Source Override.",
++  "device.instance_order_failover_note": "Instance order defines backup priority. Current IMU selection is pre-alignment only; GNSS uses online warm backups and barometers do not switch automatically. Long-fault cold backup is unfinished. Use the single-source default KF6 configuration for the first test.",
+   "group.primary_devices": "Primary Sensors",
+   "group.other_sensors": "Other Sensors",
+   "group.actuators": "Actuators",
+@@ -518,7 +518,7 @@
+   "device.required_tooltip": "Required by the current flight configuration and cannot be removed.",
+   "device.instance.imu": "IMU {index}",
+   "device.instance.gnss": "GNSS {index}",
+-  "device.instance.telemetry": "Telemetry {index}",
++  "device.instance.telemetry": "Telemetry",
+   "device.instance.console": "Maintenance Console",
+   "device.instance.barometer": "Barometer {index}",
+   "device.instance.magnetometer": "Magnetometer {index}",
+@@ -853,7 +853,7 @@
+   "group.air_link": "Radio Link",
+   "group.ground_hardware": "Ground Hardware",
+   "field.ground_board": "Ground Board",
+-  "group.ground_radio": "Ground Radio",
++  "group.ground_radio": "Ground station radio module",
+   "group.ground_pc": "PC Interface",
+   "group.ground_build": "Development environment and build",
+   "field.air_frequency": "Frequency",
+@@ -872,7 +872,7 @@
+   "field.air_crc": "Radio CRC",
+   "field.ground_enabled": "Enable Ground Station target",
+   "field.ground_hardware": "Hardware source",
+-  "field.ground_radio": "Radio device",
++  "field.ground_radio": "Ground station radio module",
+   "field.ground_module": "Module variant",
+   "field.ground_pc_interface": "PC Interface",
+   "field.ground_pc_resource": "UART resource",
+@@ -890,5 +890,17 @@
+   "memory.region": "{name}: {used} / {capacity} bytes; {remaining} bytes remaining",
+   "memory.not_checked": "Run Firmware Artifact Check to obtain linked memory usage. Runtime margin has not been measured.",
+   "memory.static_only": "Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.",
+-  "memory.ccm_narrow": "CCMRAM has less than 4 KiB remaining. Extension margin is narrow; this is not evidence of a safe runtime margin. Repeat linking and target measurements after changes."
++  "memory.ccm_narrow": "CCMRAM has less than 4 KiB remaining. Extension margin is narrow; this is not evidence of a safe runtime margin. Repeat linking and target measurements after changes.",
++  "alignment.release_vectors": "Select release vector pair",
++  "alignment.legacy_deferred": "Legacy alignment is preserved. Magnetic and multiple vectors are deferred. Explicitly select gravity + known direction, review parameters and confirm before generation.",
++  "power10.export": "Export review findings",
++  "power10.review_pending": "F Prime-inspired project text checks passed; assertion recommendations are nonblocking. Critical contracts NOT_PROVEN; manual acceptance pending. This does not establish FIELD READY or NASA certification.",
++  "power10.report_stale": "The review report is stale or incomplete. Rerun checks for the current configuration and sources before export.",
++  "power10.export_failed": "Unable to save the review findings.",
++  "memory.keep_green": "Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
++  "release.migrate": "Preserve legacy settings and create release copy",
++  "release.legacy_notice": "This legacy project contains deferred magnetic or multiple-vector selections. Settings remain unchanged and generation is blocked. Create an explicit KF6 + gravity/known-direction copy on the Devices page. Original project, logs and decoder stay intact.",
++  "release.migrate_confirm": "Create a separate release copy? It removes magnetic selections and their resource/source bindings, selects KF6 and the fixed gravity + known-direction pair, and clears the old decoder identity so generation produces a new matching package. Original file bytes and every loaded setting are backed up under Compatibility. Existing known direction is retained; if absent, +X / 90 degrees is used and must be checked against physical placement. Old logs and decoder remain at their original location and continue to require their original package; no automatic move occurs.",
++  "release.migrate_destination": "Select a new empty folder for the release copy",
++  "release.migrated": "Release copy saved to {path}. Compatibility contains original bytes, all loaded settings and the migration receipt. Original logs/decoder are untouched. Review the known direction on this page, then generate new firmware and its matching decoder."
+ }
+diff --git a/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json b/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
+index 59a4134..bf348e4 100644
+--- a/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
++++ b/apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json
+@@ -2,8 +2,8 @@
+   "device.interface_profile": "接口 / 运行配置",
+   "protocol.selection_unavailable": "已选协议不可用：{component} / {profile}",
+   "app.credit": "辰星引力开发",
+-  "app.title": "SilverStar 飞控与地面站代码生成器",
+-  "about.text": "SilverStar 飞控与地面站代码生成器\n版本 v{version}\n\n图形化飞控与地面站 Target 配置、声明式组件插件管理、工程装配与构建工具链前端。",
++  "app.title": "SilverStar 系统配置与生成（SCG）",
++  "about.text": "SilverStar 系统配置与生成（SCG）\n版本 v{version}\n\n图形化配置飞控和地面站目标、声明式组件插件、工程组装及构建工具。",
+   "action.about": "关于",
+   "action.add_component": "添加组件",
+   "action.architecture_check": "架构检查",
+@@ -13,7 +13,7 @@
+   "action.build": "构建",
+   "action.cancel": "取消",
+   "action.cancel_task": "取消任务",
+-  "action.clean": "清理 FCCG 构建产物",
++  "action.clean": "清理 SCG 构建输出",
+   "action.clean_all": "清理所有构建产物",
+   "action.complete_manual_assignment_check": "完成手动分配并检查",
+   "action.detect_toolchain": "检测工具链",
+@@ -335,7 +335,7 @@
+   "group.mode_selection": "校准",
+   "group.logging": "日志",
+   "group.indicators": "指示灯",
+-  "group.advanced_build": "高级：在FCCG中构建与验证",
++  "group.advanced_build": "检测",
+   "device.resources_next_step": "设备插件只声明所需资源；UART、SPI、GPIO 等具体映射在下一页“硬件连接”中完成。",
+   "device.class.imu": "IMU",
+   "device.class.gnss": "GNSS",
+@@ -499,7 +499,7 @@
+   "error.save_as_symlink": "工程源码中含符号链接，无法安全另存：{path}",
+   "error.device_instance_limit": "无法为{device}分配更多实例编号。",
+   "device.plugin_instance_limit": "该型号最多允许 {count} 个实例",
+-  "device.instance_order_failover_note": "实例顺序作为默认备用顺序；主源由当前 Canonical Source / Source Override 决定。",
++  "device.instance_order_failover_note": "实例顺序为备用顺序。当前 IMU 仅对准前选择，GNSS 为在线热备，气压计尚无自动切换；长期故障冷备尚未实现。首测使用单默认 KF6 配置。",
+   "group.primary_devices": "主要传感器",
+   "group.other_sensors": "其他传感器",
+   "group.actuators": "执行器",
+@@ -518,7 +518,7 @@
+   "device.required_tooltip": "当前飞行配置必需，不能取消。",
+   "device.instance.imu": "IMU {index}",
+   "device.instance.gnss": "GNSS {index}",
+-  "device.instance.telemetry": "遥测 {index}",
++  "device.instance.telemetry": "遥测",
+   "device.instance.console": "维护控制台",
+   "device.instance.barometer": "气压计 {index}",
+   "device.instance.magnetometer": "磁力计 {index}",
+@@ -853,7 +853,7 @@
+   "group.air_link": "无线链路",
+   "group.ground_hardware": "地面站硬件",
+   "field.ground_board": "地面站板卡",
+-  "group.ground_radio": "地面站无线",
++  "group.ground_radio": "地面站无线模块",
+   "group.ground_pc": "PC 接口",
+   "group.ground_build": "开发环境与构建",
+   "field.air_frequency": "工作频率",
+@@ -872,7 +872,7 @@
+   "field.air_crc": "无线 CRC",
+   "field.ground_enabled": "启用地面站 Target",
+   "field.ground_hardware": "硬件来源",
+-  "field.ground_radio": "无线设备",
++  "field.ground_radio": "地面站无线模块",
+   "field.ground_module": "模块 Variant",
+   "field.ground_pc_interface": "PC 接口",
+   "field.ground_pc_resource": "UART 资源",
+@@ -890,5 +890,18 @@
+   "memory.region": "{name}：{used} / {capacity} 字节；剩余 {remaining} 字节",
+   "memory.not_checked": "运行固件产物检查以获取链接占用；运行时余量尚未测量。",
+   "memory.static_only": "以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。",
+-  "memory.ccm_narrow": "CCMRAM 剩余不足 4 KiB，扩展余量很小，不能视为运行安全余量足够；修改后须重新链接并进行实机测量。"
++  "memory.ccm_narrow": "CCMRAM 剩余不足 4 KiB，扩展余量很小，不能视为运行安全余量足够；修改后须重新链接并进行实机测量。",
++  "alignment.release_vectors": "选择首发双矢量",
++  "alignment.legacy_deferred": "旧对准配置保留；磁场和多矢量首发延期。请显式选择重力＋已知方向，检查参数后确认，生成前不会静默迁移。",
++  "power10.export": "导出审查清单",
++  "power10.review_pending": "F Prime-inspired 项目文本检测通过；函数无断言等为非阻断审查提示。关键契约 NOT_PROVEN，人工验收待完成；不代表 FIELD READY 或 NASA 认证。",
++  "power10.report_stale": "审查报告已过期或不完整。请针对当前配置和源码重新运行检测后导出。",
++  "power10.export_failed": "审查清单保存失败。",
++  "memory.keep_green": "建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
++  "release.migrate": "保留旧设置并创建首发兼容副本",
++  "release.legacy_notice": "旧工程包含首发延期的磁力计或多矢量配置。原设置保持不变，生成已阻止。可在设备页显式创建 KF6 + 重力/已知方向兼容副本；原工程、日志和 decoder 不会被改写。",
++  "release.migrate_confirm": "确认创建独立兼容副本？副本将移除磁力计选择及其资源/来源绑定，选择 KF6 与固定重力 + 已知方向双矢量，并清除旧 decoder 身份，生成新的匹配包。原文件与当前全部设置将备份到副本的 Compatibility 文件夹。保留已有已知方向；缺失时使用 +X / 90°，必须按实际摆放复核。旧日志和 decoder 留在原处，仍按原包解析，不自动搬移。",
++  "release.migrate_destination": "选择新的空文件夹保存兼容副本",
++  "release.migrated": "兼容副本已保存到 {path}。原始文件、全部旧设置与迁移记录位于 Compatibility；原日志/decoder 未更改。请在当前对准页复核已知方向，再生成新的固件与匹配 decoder。",
++  "field.module_variant": "模块型号"
+ }
+diff --git a/apps/FCCG/src/silverstar_fccg/project/artifact_memory.py b/apps/FCCG/src/silverstar_fccg/project/artifact_memory.py
+index b375464..f145b92 100644
+--- a/apps/FCCG/src/silverstar_fccg/project/artifact_memory.py
++++ b/apps/FCCG/src/silverstar_fccg/project/artifact_memory.py
+@@ -3,6 +3,12 @@ from __future__ import annotations
+ import re
+ 
+ 
++def ArtifactMemoryMarginLevel_Get(remaining: int, capacity: int) -> str:
++    if capacity <= 0 or remaining < 0 or remaining > capacity:
++        raise ValueError("Invalid memory region")
++    return "error" if remaining * 100 < capacity * 10 else "warning" if remaining * 100 <= capacity * 20 else "success"
++
++
+ def ArtifactMemorySummary_Encode(output: str) -> str:
+     values = []
+     for name in ("FLASH", "main SRAM", "CCMRAM"):
+diff --git a/apps/FCCG/src/silverstar_fccg/project/validation.py b/apps/FCCG/src/silverstar_fccg/project/validation.py
+index ca1a857..419f41c 100644
+--- a/apps/FCCG/src/silverstar_fccg/project/validation.py
++++ b/apps/FCCG/src/silverstar_fccg/project/validation.py
+@@ -1094,6 +1094,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
+         )
+     )
+     issues.extend(AlignmentConfigurationIssues_Get(model, catalog))
++    from silverstar_fccg.project.release_policy import ReleaseCompatibilityIssues_Get
++    issues.extend(ValidationIssue("error", "RELEASE_FEATURE_DEFERRED", message)
++                  for message in ReleaseCompatibilityIssues_Get(model))
+     if model.strategies.get("ins"):
+         from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
+ 
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/main_window.py b/apps/FCCG/src/silverstar_fccg/ui/main_window.py
+index 1784c7f..8bda776 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/main_window.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/main_window.py
+@@ -111,8 +111,15 @@ from silverstar_fccg.project.model import (
+ )
+ from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
+ from silverstar_fccg.project.quality_results import QualityResultRecord
++from silverstar_fccg.project.power10_report import (
++    Power10Report_Create, Power10Report_Save, Power10Report_Load,
++    Power10Report_Current_Is, Power10Report_Csv, Power10TextPassed_Is,
++)
+ from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
+ from silverstar_fccg.project.resources import ResourceAssignments_Resolve
++from silverstar_fccg.project.release_policy import (
++    ReleaseCompatibilityIssues_Get, ReleaseMigrationModel_Create, ReleaseMigrationCopy_Save,
++)
+ from silverstar_fccg.project.validation import (
+     AlignmentConfigurationIssues_Get,
+     Project_EditValidate,
+@@ -177,7 +184,6 @@ class MainWindow(QMainWindow):
+         "page.flight_configuration",
+         "page.navigation_configuration",
+         "page.telemetry_configuration",
+-        "page.ground_configuration",
+         "page.board_hardware",
+         "page.ground",
+         "page.build",
+@@ -213,6 +219,7 @@ class MainWindow(QMainWindow):
+         self._component_views: tuple[ComponentView, ...] = ()
+         self._model: ProjectModel = self._service.ProjectDraft_Create("SilverStar")
+         self._project_root: Path | None = None
++        self._legacy_source_bytes: bytes | None = None
+         self._generation_plan: GenerationPlan | None = None
+         self._displaying_model = False
+         self._project_state = ProjectLifecycleState.DRAFT
+@@ -316,6 +323,9 @@ class MainWindow(QMainWindow):
+ 
+         self.pages = QStackedWidget()
+         self.devices_page = DevicesPage(self._translator)
++        self.legacy_migration_button = QPushButton()
++        self.legacy_migration_button.clicked.connect(self._ReleaseMigration_Request)
++        self.devices_page.root_layout.insertWidget(0, self.legacy_migration_button)
+         self.flight_configuration_page = FlightConfigurationPage(self._translator)
+         self.algorithm_parameters_page = NavigationConfigurationPage(self._translator)
+         self.algorithm_parameters_page.parameterChanged.connect(self._AlgorithmParameter_Change)
+@@ -327,14 +337,10 @@ class MainWindow(QMainWindow):
+         self.board_hardware_page = BoardHardwarePage(self._translator)
+         self.air_link_page = AirLinkPage(self._translator)
+         self.ground_target_page = GroundTargetPage(self._translator)
+-        self.ground_configuration_page = ScrollableLocalizedPage(
+-            self._translator, "page.ground_configuration",
+-            "page.ground_configuration.description",
+-        )
++        self.ground_configuration_page = self.air_link_page
+         for group in (self.ground_target_page.enabled, self.ground_target_page.pc_group):
+             self.ground_target_page.root_layout.removeWidget(group)
+-            self.ground_configuration_page.root_layout.addWidget(group)
+-        self.ground_configuration_page.root_layout.addStretch(1)
++            self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
+         self.build_page = BuildPage(self._translator)
+         # Keep the existing editors and signal ownership while placing each
+         # configuration group on the page that owns it in the user workflow.
+@@ -368,7 +374,6 @@ class MainWindow(QMainWindow):
+             self.flight_configuration_page,
+             self.algorithm_parameters_page,
+             self.air_link_page,
+-            self.ground_configuration_page,
+             self.board_hardware_page,
+             self.ground_target_page,
+             self.build_page,
+@@ -385,6 +390,9 @@ class MainWindow(QMainWindow):
+         self.cancel_button = QPushButton()
+         self.cancel_button.clicked.connect(self._Task_Cancel)
+         self.cancel_button.setVisible(False)
++        self.power10_export_button = QPushButton()
++        self.power10_export_button.setEnabled(False)
++        self.power10_export_button.clicked.connect(self._Power10Report_Export)
+         self.progress_bar = QProgressBar()
+         self.progress_bar.setRange(0, 1000)
+         self.progress_bar.setFixedWidth(250)
+@@ -392,6 +400,7 @@ class MainWindow(QMainWindow):
+         status.addWidget(self.status_label, 1)
+         status.addPermanentWidget(self.cancel_button)
+         status.addPermanentWidget(self.progress_bar)
++        status.addPermanentWidget(self.power10_export_button)
+         self.setStatusBar(status)
+         self.navigation_list.setCurrentRow(0)
+ 
+@@ -815,6 +824,9 @@ class MainWindow(QMainWindow):
+                 display.firmware_artifact_name,
+             )
+             self.build_page.QualityResults_Set(display.quality_results)
++            self.power10_export_button.setEnabled(
++                self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
++            self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
+             self._BoardPage_Refresh(display)
+             self._TargetPages_Refresh(display.model)
+             self._HeaderProject_Refresh(display.model)
+@@ -2304,6 +2316,7 @@ class MainWindow(QMainWindow):
+         self.algorithm_parameters_page.alignment_editor.Draft_Discard()
+         self._model = model
+         self._project_root = project_root
++        self._legacy_source_bytes = None
+         self._generation_plan = None
+         self._project_state = ProjectLifecycleState.DRAFT
+         self._Project_Refresh()
+@@ -2323,15 +2336,19 @@ class MainWindow(QMainWindow):
+ 
+     def _Project_Open(self, path: Path) -> None:
+         try:
++            descriptor = path / "SilverStar.ssproject" if path.is_dir() else path
++            source_bytes = descriptor.read_bytes()
+             loaded = self._service.Project_Open(path)
+-            configuration = self._service.ProjectConfiguration_Reconcile(loaded)
+-            reconciled = configuration.model
++            # Keep legacy navigation until the user deliberately creates a copy.
++            reconciled = (loaded if ReleaseCompatibilityIssues_Get(loaded) else
++                          self._service.ProjectConfiguration_Reconcile(loaded).model)
+             changed_during_open = (
+                 loaded.Dictionary_Get() != reconciled.Dictionary_Get()
+             )
+             self._pending_strategy_changes.clear()
+             self.algorithm_parameters_page.alignment_editor.Draft_Discard()
+             self._model = reconciled
++            self._legacy_source_bytes = source_bytes
+             self._project_root = (
+                 path.resolve() if path.is_dir() else path.resolve().parent
+             )
+@@ -2354,6 +2371,45 @@ class MainWindow(QMainWindow):
+             )
+         )
+ 
++        if ReleaseCompatibilityIssues_Get(self._model):
++            self._MessageBox_Exec(QMessageBox.Icon.Warning,
++                self._translator.Text_Get("release.migrate"),
++                self._translator.Text_Get("release.legacy_notice"),
++                details="\n".join(ReleaseCompatibilityIssues_Get(self._model)))
++
++    def _ReleaseMigration_Request(self) -> None:
++        if self._active_worker is not None or not ReleaseCompatibilityIssues_Get(self._model):
++            return
++        answer = self._MessageBox_Exec(QMessageBox.Icon.Warning,
++            self._translator.Text_Get("release.migrate"),
++            self._translator.Text_Get("release.migrate_confirm"),
++            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
++            QMessageBox.StandardButton.Cancel)
++        if answer != QMessageBox.StandardButton.Yes:
++            return
++        selected = QFileDialog.getExistingDirectory(self,
++            self._translator.Text_Get("release.migrate_destination"),
++            str(self._path_preferences.DefaultProjectRoot_EffectiveGet()))
++        if not selected:
++            return
++        try:
++            candidate = ReleaseMigrationModel_Create(self._model)
++            candidate = self._service.ProjectConfiguration_Reconcile(candidate).model
++            ReleaseMigrationCopy_Save(self._model, candidate, Path(selected), self._legacy_source_bytes,
++                                      self._project_root)
++        except Exception as error:
++            self._Error_Show(error)
++            return
++        self._pending_strategy_changes.clear()
++        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
++        self._model = candidate
++        self._legacy_source_bytes = None
++        self._Project_SaveAs_Complete(Path(selected).resolve())
++        self.navigation_list.setCurrentRow(2)
++        self._MessageBox_Exec(QMessageBox.Icon.Information,
++            self._translator.Text_Get("release.migrate"),
++            self._translator.Text_Get("release.migrated", path=str(Path(selected).resolve())))
++
+     def _AlignmentDraft_SelectorRestore(self, strategy: str) -> None:
+         combo = self.flight_configuration_page.strategy_combos.get("alignment")
+         if combo is None:
+@@ -3345,10 +3401,20 @@ class MainWindow(QMainWindow):
+     def _Build_Complete(self, result: BuildResult) -> None:
+         command_text = " ".join(result.command)
+         raw_output = result.output.rstrip()
++        passed = result.succeeded
++        if result.action == BuildAction.POWER10_CHECK:
++            passed = Power10TextPassed_Is(result.output, result.return_code)
++            if self._project_root is not None:
++                try:
++                    root = self._project_root / FLIGHT_DIRECTORY
++                    Power10Report_Save(root, Power10Report_Create(root, self._model, result.output, result.return_code))
++                    self.power10_export_button.setEnabled(True)
++                except (OSError, ValueError) as error:
++                    self.build_page.BuildLog_Append(str(error))
+         if raw_output and not result.live_streamed:
+             self.build_page.BuildLog_Append(raw_output)
+         self.build_page.BuildLog_Append(f"> {command_text}")
+-        key = "status.build_succeeded" if result.succeeded else "status.build_failed"
++        key = "status.build_succeeded" if passed else "status.build_failed"
+         self.status_label.setText(
+             self._translator.Text_Get(
+                 key,
+@@ -3359,15 +3425,15 @@ class MainWindow(QMainWindow):
+         )
+         self._project_state = (
+             ProjectLifecycleState.READY
+-            if result.succeeded
++            if passed
+             else ProjectLifecycleState.ERROR
+         )
+         self._QualityResult_Record(
+             result.action,
+-            result.succeeded,
++            passed,
+             self._QualitySummary_Get(result),
+         )
+-        if not result.succeeded:
++        if not passed:
+             self.build_page.advanced_section.toggle_button.setChecked(True)
+             self._Error_Show(
+                 self._translator.Text_Get(
+@@ -3377,8 +3443,30 @@ class MainWindow(QMainWindow):
+             )
+         else:
+             self._Project_Refresh()
++            if result.action == BuildAction.POWER10_CHECK:
++                self._MessageBox_Exec(QMessageBox.Icon.Information,
++                    self._translator.Text_Get("action.power10_check"),
++                    self._translator.Text_Get("power10.review_pending"), details=raw_output)
+         self._active_build_action = None
+ 
++    def _Power10Report_Export(self) -> None:
++        if self._project_root is None:
++            return
++        root = self._project_root / FLIGHT_DIRECTORY
++        report = Power10Report_Load(root)
++        if not Power10Report_Current_Is(root, self._model, report):
++            self._Error_Show(self._translator.Text_Get("power10.report_stale"))
++            return
++        destination, _ = QFileDialog.getSaveFileName(self,
++            self._translator.Text_Get("power10.export"), str(self._project_root / "Power10-review.csv"), "CSV (*.csv)")
++        if not destination:
++            return
++        try:
++            path = Path(destination)
++            WorkspacePolicy(path.parent).Text_AtomicWrite(path.name, "\ufeff" + Power10Report_Csv(report))
++        except (OSError, ValueError) as error:
++            self._Error_Show(self._translator.Text_Get("power10.export_failed"), str(error))
++
+     def _BuildLine_Append(self, line: str) -> None:
+         if line.startswith("FCCG_DETAIL|"):
+             self.build_page.BuildDetailLog_Append(line.split("|", 1)[1])
+@@ -3484,6 +3572,10 @@ class MainWindow(QMainWindow):
+ 
+     @staticmethod
+     def _QualitySummary_Get(result: BuildResult) -> str:
++        if result.action == BuildAction.POWER10_CHECK:
++            return "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending; " + (
++                "text_checks_passed" if Power10TextPassed_Is(result.output, result.return_code)
++                else "text_checks_failed")
+         if result.action == BuildAction.ARTIFACT_CHECK:
+             memory = ArtifactMemorySummary_Encode(result.output)
+             if memory:
+@@ -3766,6 +3858,8 @@ class MainWindow(QMainWindow):
+ 
+     def Language_Apply(self, language: str) -> None:
+         self._translator.Language_Set(language)
++        self.legacy_migration_button.setText(self._translator.Text_Get("release.migrate"))
++        self.power10_export_button.setText(self._translator.Text_Get("power10.export"))
+         self.title_label.setText(self._translator.Text_Get("app.title"))
+         self.credit_label.setText(self._translator.Text_Get("app.credit"))
+         self.current_project_label.setText(
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/build.py b/apps/FCCG/src/silverstar_fccg/ui/pages/build.py
+index 37307b5..179d415 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/build.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/build.py
+@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
+ from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
+ from silverstar_fccg.core.i18n import Translator
+ from silverstar_fccg.core.view_models import ToolchainToolView
+-from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode
++from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode, ArtifactMemoryMarginLevel_Get
+ from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
+ from silverstar_fccg.ui.widgets import (
+     CollapsibleSection,
+@@ -321,14 +321,17 @@ class BuildPage(ScrollableLocalizedPage):
+         artifact = by_task.get("artifact_check")
+         regions = ArtifactMemorySummary_Decode(str(getattr(artifact, "summary", "")))
+         if regions:
+-            text = "\n".join(self._translator.Text_Get(
++            levels = [ArtifactMemoryMarginLevel_Get(remaining, capacity) for _, remaining, capacity in regions]
++            colors = {"error": "#d32f2f", "warning": "#a66b00", "success": "#22863a"}
++            text = "<br>".join('<span style="color:' + colors[level] + '">' + self._translator.Text_Get(
+                 "memory.region", name=name, used=f"{used:,}", capacity=f"{capacity:,}",
+-                remaining=f"{remaining:,}") for name, (used, remaining, capacity)
+-                in zip(("Flash", "SRAM", "CCMRAM"), regions))
++                remaining=f"{remaining:,}") + f" ({remaining / capacity * 100:.2f}%)</span>"
++                for name, (used, remaining, capacity), level in zip(("Flash", "SRAM", "CCMRAM"), regions, levels))
+             narrow = regions[2][1] < 4096
+-            text += "\n" + self._translator.Text_Get("memory.ccm_narrow" if narrow else "memory.static_only")
++            text += "<br>" + self._translator.Text_Get("memory.ccm_narrow" if narrow else "memory.static_only")
++            text += "<br>" + self._translator.Text_Get("memory.keep_green")
+             self.memory_margin_value.setText(text)
+-            self.memory_margin_value.setProperty("statusLevel", "warning" if narrow else "info")
++            self.memory_margin_value.setProperty("statusLevel", "error" if "error" in levels else "warning" if "warning" in levels else "success")
+             self.memory_margin_value.setToolTip(str(getattr(artifact, "timestamp", "")))
+         else:
+             self.memory_margin_value.setText(self._translator.Text_Get("memory.not_checked"))
+@@ -346,6 +349,8 @@ class BuildPage(ScrollableLocalizedPage):
+                     "quality.result.passed" if passed else "quality.result.failed"
+                 )
+                 summary = str(getattr(record, "summary", "")).strip()
++                if task == "power10_check":
++                    summary = self._translator.Text_Get("power10.review_pending")
+                 if ArtifactMemorySummary_Decode(summary):
+                     summary = self._translator.Text_Get(
+                         "quality.summary.artifact_validated" if passed else "quality.summary.completed")
+@@ -371,7 +376,7 @@ class BuildPage(ScrollableLocalizedPage):
+                 label.setText(
+                     " · ".join(value for value in (status, summary) if value)
+                 )
+-                label.setProperty("statusLevel", "success" if passed else "error")
++                label.setProperty("statusLevel", "info" if passed and task == "power10_check" else "success" if passed else "error")
+                 label.setToolTip(
+                     self._translator.Text_Get(
+                         "quality.result.tooltip",
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/components.py b/apps/FCCG/src/silverstar_fccg/ui/pages/components.py
+index 16a7d86..8231e6b 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/components.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/components.py
+@@ -207,17 +207,18 @@ class DevicesPage(ScrollableLocalizedPage):
+             if component.options.get("device_selection_style") == "instance"
+             and not component.options.get("internal", False)
+             and component.component_class != "console"
++            and component.component_class != "magnetometer"
+         )
+         instance_classes = sorted(
+             {component.component_class for component in instance_components},
+-            key=lambda component_class: min(
++            key=lambda component_class: (0 if component_class == "imu" else 1 if component_class == "gnss" else 2, min(
+                 (
+                     int(component.options.get("device_group_order", 100))
+                     for component in instance_components
+                     if component.component_class == component_class
+                 ),
+                 default=100,
+-            ),
++            )),
+         )
+         group_forms = {
+             "primary_devices": self.primary_form,
+@@ -578,6 +579,8 @@ class DevicesPage(ScrollableLocalizedPage):
+         return component.name if title == key else title
+ 
+     def _DeviceInstanceTitle_Get(self, component: ComponentView, index: int) -> str:
++        if component.component_class == "telemetry":
++            return self._translator.Text_Get("device.class.telemetry")
+         key = f"device.instance.{component.component_class}"
+         title = self._translator.Text_Get(key, index=index)
+         if title == key:
+@@ -597,17 +600,20 @@ class DevicesPage(ScrollableLocalizedPage):
+             self._CapabilityTitle_Get(capability)
+             for capability in instance.provides
+             if Capability_UserSelectable_Is(capability)
++            and not capability.startswith("magnetometer.")
+             and CapabilityKind_Get(capability) == CapabilityKind.RAW_DATA
+         )
+         qualified_capabilities = ", ".join(
+             self._CapabilityTitle_Get(capability)
+             for capability in instance.provides
+             if Capability_UserSelectable_Is(capability)
++            and not capability.startswith("magnetometer.")
+             and CapabilityKind_Get(capability) == CapabilityKind.QUALIFIED
+         )
+         unqualified_capabilities = ", ".join(
+             self._CapabilityTitle_Get(capability)
+             for capability in instance.unqualified
++            if not capability.startswith("magnetometer.")
+         )
+         return self._translator.Text_Get(
+             "device.provides_summary_typed",
+@@ -640,10 +646,9 @@ class BoardHardwarePage(ScrollableLocalizedPage):
+     manualValidationRequested = Signal()
+     i2cExternalPullupChanged = Signal(str, bool)
+ 
+-    def __init__(self, translator: Translator) -> None:
+-        super().__init__(
+-            translator, "page.board_hardware", "page.board_hardware.description"
+-        )
++    def __init__(self, translator: Translator, *, target: str = "flight") -> None:
++        page = "page.ground" if target == "ground" else "page.board_hardware"
++        super().__init__(translator, page, page + ".description")
+         selection_form = QFormLayout()
+         self.board_label = QLabel()
+         self.Text_Register(self.board_label, "hardware.existing")
+@@ -688,7 +693,7 @@ class BoardHardwarePage(ScrollableLocalizedPage):
+         )
+         self.generate_button = QPushButton()
+         self.generate_button.setObjectName("primaryButton")
+-        self.Text_Register(self.generate_button, "action.generate_flight_project")
++        self.Text_Register(self.generate_button, "action.generate_ground_project" if target == "ground" else "action.generate_flight_project")
+         self.generate_button.clicked.connect(
+             lambda _checked=False: self.generateRequested.emit()
+         )
+@@ -1780,7 +1785,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
+     def Capabilities_Set(
+         self, capabilities: Iterable[CapabilityUsageView]
+     ) -> None:
+-        self._capabilities = tuple(capabilities)
++        self._capabilities = tuple(item for item in capabilities
++                                   if not item.capability.startswith("magnetometer."))
+         self.capability_table.blockSignals(True)
+         self.capability_table.setRowCount(len(self._capabilities))
+         for row, capability in enumerate(self._capabilities):
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/navigation_alignment.py b/apps/FCCG/src/silverstar_fccg/ui/pages/navigation_alignment.py
+index bf7d08e..118b56b 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/navigation_alignment.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/navigation_alignment.py
+@@ -55,6 +55,9 @@ class AlignmentConfigurationEditor(QWidget):
+         self._notice = QLabel()
+         self._notice.setWordWrap(True)
+         action_layout.addWidget(self._notice, 1)
++        self.release_vectors_button = QPushButton(translator.Text_Get("alignment.release_vectors"))
++        self.release_vectors_button.clicked.connect(self._ReleaseVectors_Select)
++        action_layout.addWidget(self.release_vectors_button)
+         self.confirm_button = QPushButton(translator.Text_Get("alignment.confirm"))
+         self.cancel_button = QPushButton(translator.Text_Get("alignment.cancel"))
+         self.confirm_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+@@ -97,6 +100,10 @@ class AlignmentConfigurationEditor(QWidget):
+                                   if configuration.external_known_azimuth_deg is not None else 90.0))
+         self._Strategy_Display()
+         self._notice.clear()
++        legacy = tuple(item.kind for item in configuration.constraints) != ("gravity", "reference_direction")
++        self.release_vectors_button.setVisible(legacy)
++        if legacy:
++            self._notice.setText(self._translator.Text_Get("alignment.legacy_deferred"))
+ 
+     def DraftStrategy_Set(self, strategy: str) -> None:
+         if strategy == self._draft_strategy:
+@@ -121,6 +128,7 @@ class AlignmentConfigurationEditor(QWidget):
+         self._translator = translator
+         self.confirm_button.setText(translator.Text_Get("alignment.confirm"))
+         self.cancel_button.setText(translator.Text_Get("alignment.cancel"))
++        self.release_vectors_button.setText(translator.Text_Get("alignment.release_vectors"))
+         self._authority.setText(translator.Text_Get("alignment.yaw_authoritative"))
+         self._external_form.labelForField(self._source).setText(
+             translator.Text_Get("alignment.external_source"))
+@@ -188,11 +196,11 @@ class AlignmentConfigurationEditor(QWidget):
+             kind = QComboBox()
+             for value, key in (
+                 ("gravity", "alignment.gravity"),
+-                ("magnetic_field", "alignment.magnetic"),
+                 ("reference_direction", "alignment.reference"),
+             ):
+                 kind.addItem(self._translator.Text_Get(key), value)
+             kind.setCurrentIndex(kind.findData(constraint.kind))
++            kind.setEnabled(False)
+             kind.currentIndexChanged.connect(
+                 lambda _value, position=index: self._RowKind_Change(position))
+             form.addRow(self._translator.Text_Get("alignment.constraint_type"), kind)
+@@ -204,28 +212,25 @@ class AlignmentConfigurationEditor(QWidget):
+                 axis.addItem(value, value)
+             axis.setCurrentIndex(axis.findData(constraint.body_axis))
+             azimuth = self._Number_Create(constraint.nav_azimuth_deg)
+-            if constraint.kind == "magnetic_field":
+-                form.addRow(self._translator.Text_Get("alignment.declination"), declination)
+             if constraint.kind == "reference_direction":
+                 form.addRow(self._translator.Text_Get("alignment.body_axis"), axis)
+                 form.addRow(self._translator.Text_Get("alignment.azimuth"), azimuth)
+             error = QLabel()
+             error.setWordWrap(True)
+             form.addRow(error)
+-            remove = QPushButton(self._translator.Text_Get("alignment.remove_constraint"))
+-            remove.setEnabled(len(self._constraints) > 2)
+-            remove.clicked.connect(lambda _checked=False, position=index: self._Row_Remove(position))
+-            form.addRow(remove)
+             for editor in (weight, declination, azimuth):
+                 editor.textEdited.connect(self._Draft_MarkDirty)
+             axis.currentIndexChanged.connect(self._Draft_MarkDirty)
+             self._rows.append({"kind": kind, "weight": weight, "declination": declination,
+                                "axis": axis, "azimuth": azimuth, "error": error})
+             self._vector_layout.addWidget(row)
+-        add = QPushButton(self._translator.Text_Get("alignment.add_constraint"))
+-        add.setEnabled(len(self._constraints) < ALIGNMENT_MAX_CONSTRAINTS)
+-        add.clicked.connect(self._Row_Add)
+-        self._vector_layout.addWidget(add)
++        # First release has a fixed pair; retain row editing methods for restoration.
++
++    def _ReleaseVectors_Select(self) -> None:
++        # Explicit draft migration; confirmation still owns publication.
++        self._constraints = [AlignmentConstraint("gravity"), AlignmentConstraint("reference_direction")]
++        self._Vector_Rebuild()
++        self._Draft_MarkDirty()
+ 
+     @staticmethod
+     def _Number_Read(editor: QLineEdit, low: float, high: float) -> float:
+@@ -322,6 +327,8 @@ class AlignmentConfigurationEditor(QWidget):
+                     item.plugin == "silverstar.device.imu.jy901b" for item in self._sources):
+                     raise ValueError("Select an available JY901B attitude source")
+             if self._draft_strategy.endswith("vector_constraints"):
++                if tuple(item.kind for item in constraints) != ("gravity", "reference_direction"):
++                    raise ValueError(self._translator.Text_Get("alignment.legacy_deferred"))
+                 references = [(item.body_axis, item.nav_azimuth_deg) for item in constraints
+                               if item.kind == "reference_direction"]
+                 if len(set(references)) != len(references):
+diff --git a/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py b/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py
+index be71be3..ed3638c 100644
+--- a/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py
++++ b/apps/FCCG/src/silverstar_fccg/ui/pages/targets.py
+@@ -10,6 +10,8 @@ from PySide6.QtWidgets import (
+ from silverstar_fccg.core.i18n import Translator
+ from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox, EnterCommittedSpinBox
+ from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
++from silverstar_fccg.ui.pages.components import BoardHardwarePage
++from silverstar_fccg.core.view_models import BoardCompatibilityView, ResourceRequirementView, PlatformMatchView
+ 
+ 
+ class AirLinkPage(ScrollableLocalizedPage):
+@@ -188,7 +190,7 @@ class AirLinkPage(ScrollableLocalizedPage):
+             widget.setEnabled(enabled and bool(powers))
+ 
+ 
+-class GroundTargetPage(ScrollableLocalizedPage):
++class GroundTargetPage(BoardHardwarePage):
+     enabledChanged = Signal(bool)
+     configurationChanged = Signal(str, object)
+     assignmentChanged = Signal(str, str)
+@@ -197,40 +199,21 @@ class GroundTargetPage(ScrollableLocalizedPage):
+     generateRequested = Signal()
+ 
+     def __init__(self, translator: Translator) -> None:
+-        super().__init__(translator, "page.ground", "page.ground.description")
++        super().__init__(translator, target="ground")
+         self.enabled = QCheckBox()
+         self.Text_Register(self.enabled, "field.ground_enabled")
+         self.enabled.toggled.connect(self.enabledChanged.emit)
+         self.root_layout.addWidget(self.enabled)
+-        hardware_form = QFormLayout()
+-        self.hardware_summary = QLabel("—")
+-        self.hardware_summary.setWordWrap(True)
+-        label = QLabel()
+-        self.Text_Register(label, "field.ground_hardware")
+-        hardware_form.addRow(label, self.hardware_summary)
+-        board_label = QLabel()
+-        self.Text_Register(board_label, "hardware.existing")
+-        self.board = QComboBox()
+-        self.board.currentIndexChanged.connect(
+-            lambda: self.configurationChanged.emit("board", self.board.currentData())
+-        )
+-        hardware_form.addRow(board_label, self.board)
+-        self.root_layout.addWidget(self.Group_Create("group.ground_hardware", hardware_form))
+-        import_row = QHBoxLayout()
+-        self.import_ioc = QPushButton()
+-        self.Text_Register(self.import_ioc, "action.import_cubemx_ioc")
+-        self.import_ioc.clicked.connect(lambda: self.importRequested.emit(False))
+-        self.import_directory = QPushButton()
+-        self.Text_Register(self.import_directory, "action.import_cubemx_directory")
+-        self.import_directory.clicked.connect(lambda: self.importRequested.emit(True))
+-        self.save_instance = QPushButton()
+-        self.Text_Register(self.save_instance, "action.save_hardware")
+-        self.save_instance.clicked.connect(self.saveInstanceRequested.emit)
+-        import_row.addWidget(self.import_ioc)
+-        import_row.addWidget(self.import_directory)
+-        import_row.addWidget(self.save_instance)
+-        import_row.addStretch(1)
+-        self.root_layout.addLayout(import_row)
++        self.board = self.board_combo
++        self.hardware_summary = self.platform_values["part"]
++        self.import_ioc = self.import_ioc_button
++        self.import_directory = self.import_directory_button
++        self.save_instance = self.export_button
++        self.boardChanged.connect(lambda value: self.configurationChanged.emit("board", value))
++        self.customSelected.connect(lambda: self.configurationChanged.emit("board", ""))
++        self.importIocRequested.connect(lambda: self.importRequested.emit(False))
++        self.importDirectoryRequested.connect(lambda: self.importRequested.emit(True))
++        self.exportRequested.connect(self.saveInstanceRequested.emit)
+         radio_form = QFormLayout()
+         label = QLabel()
+         self.Text_Register(label, "field.ground_radio")
+@@ -252,9 +235,6 @@ class GroundTargetPage(ScrollableLocalizedPage):
+         self.radio_selection_group = self.Group_Create(
+             "group.ground_radio", radio_form
+         )
+-        self.root_layout.addWidget(self.Group_Create(
+-            "group.ground_radio_resources", self.assignment_form
+-        ))
+         pc_form = QFormLayout()
+         label = QLabel()
+         self.Text_Register(label, "field.ground_pc_interface")
+@@ -290,13 +270,6 @@ class GroundTargetPage(ScrollableLocalizedPage):
+         self.build_summary.setWordWrap(True)
+         build_form.addRow(build_label, self.build_summary)
+         self.root_layout.addWidget(self.Group_Create("group.ground_build", build_form))
+-        self.generate_button = QPushButton()
+-        self.Text_Register(self.generate_button, "action.generate_ground_project")
+-        self.generate_button.setObjectName("primaryButton")
+-        self.generate_button.clicked.connect(
+-            lambda _checked=False: self.generateRequested.emit()
+-        )
+-        self.root_layout.addWidget(self.generate_button)
+         self.status = QLabel()
+         self.status.setWordWrap(True)
+         self.root_layout.addWidget(self.status)
+@@ -316,11 +289,16 @@ class GroundTargetPage(ScrollableLocalizedPage):
+         self.hardware_summary.setText(
+             f"{ground.hardware.mcu or '—'} · {ground.hardware.source_label or ground.hardware.mode}"
+         )
+-        self.board.clear()
+-        self.board.addItem(self._translator.Text_Get("board.custom_hardware"), "")
+-        for title, identity in boards:
+-            self.board.addItem(title, identity)
+-        self.board.setCurrentIndex(max(0, self.board.findData(ground.board)))
++        self.Boards_Set((BoardCompatibilityView(identity, title, True) for title, identity in boards),
++            ground.board, custom_available=True, custom_selected=ground.hardware.mode == "custom",
++            custom_ready=bool(ground.hardware.build_sources), prepared=not issues,
++            hardware_mode=ground.hardware.mode, assignment_confirmed=not issues)
++        self.Platform_Set(PlatformMatchView(hardware_source=ground.hardware.source_kind,
++            detected_part=ground.hardware.mcu or str(ground.hardware.inventory.get("mcu_part", "")),
++            detected_family=str(ground.hardware.inventory.get("mcu_family", "")),
++            detected_package=str(ground.hardware.inventory.get("package", "")),
++            detected_core=str(ground.hardware.inventory.get("core", "")),
++            cubemx_version=ground.hardware.cubemx_version, firmware_package=ground.hardware.firmware_package))
+         self.radio.clear()
+         self.radio.addItem("—", "")
+         for title, identity, available, reason in radios:
+@@ -369,36 +347,17 @@ class GroundTargetPage(ScrollableLocalizedPage):
+                        self.pc_resource, self.baudrate):
+             widget.blockSignals(False)
+         required = tuple(requirements.get("resources", ()))
+-        signature = (
+-            required,
+-            tuple((resource.resource_id, resource.kind)
+-                  for resource in ground.hardware.resources),
+-        )
+-        if signature != self._assignment_signature:
+-            for combo in self.assignments.values():
+-                combo.blockSignals(True)
+-            while self.assignment_form.rowCount():
+-                self.assignment_form.removeRow(0)
+-            self.assignments.clear()
+-            for name, kind in required:
+-                combo = QComboBox()
+-                combo.addItem("—", "")
+-                for resource in ground.hardware.resources:
+-                    if resource.kind == kind:
+-                        combo.addItem(resource.resource_id, resource.resource_id)
+-                combo.currentIndexChanged.connect(
+-                    lambda _index, requirement=name, selected=combo:
+-                    self.assignmentChanged.emit(requirement, selected.currentData() or "")
+-                )
+-                self.assignment_form.addRow(f"{name} ({kind})", combo)
+-                self.assignments[name] = combo
+-            self._assignment_signature = signature
+-        for name, combo in self.assignments.items():
+-            combo.blockSignals(True)
+-            combo.setCurrentIndex(max(
+-                0, combo.findData(ground.resource_assignments.get(f"radio0:{name}", ""))
+-            ))
+-            combo.blockSignals(False)
++        resource_views = tuple(ResourceRequirementView(kind=kind, name=name, key=name,
++            assignment=ground.resource_assignments.get(f"radio0:{name}", ""),
++            candidates=tuple(item.resource_id for item in ground.hardware.resources if item.kind == kind))
++            for name, kind in required)
++        self.Resources_Set(resource_views, not issues, hardware_selected=ground.hardware.mode != "unselected")
++        self.assignments = {name: self.resource_table.cellWidget(row, 3) for row, (name, _kind) in enumerate(required)}
++        # Ground generation checks the fixed radio/PC contracts; preparation
++        # operations requiring flight task ownership do not apply to Ground.
++        for button in (self.prepare_button, self.manual_validation_button, self.auto_button):
++            button.setEnabled(False)
++        self.i2c_pullup_group.setVisible(False)
+         self.status.setText(
+             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
+             if issues else self._translator.Text_Get("status.ground_ready")
+diff --git a/apps/FCCG/tests/test_artifact_memory_gui.py b/apps/FCCG/tests/test_artifact_memory_gui.py
+index f67f619..4b90796 100644
+--- a/apps/FCCG/tests/test_artifact_memory_gui.py
++++ b/apps/FCCG/tests/test_artifact_memory_gui.py
+@@ -24,7 +24,7 @@ def test_actual_resource_occupancy_keeps_narrow_margin_warning_and_retranslates(
+     page.QualityResults_Set((record,))
+     text = page.memory_margin_value.text()
+     assert "64,296" in text and "1,240" in text and "65,536" in text
+-    assert page.memory_margin_value.property("statusLevel") == "warning"
++    assert page.memory_margin_value.property("statusLevel") == "error"
+     assert translator.Text_Get("memory.ccm_narrow") in text
+     assert page.memory_margin_value.isVisible()
+     other = Translator("zh_CN" if language == "en_US" else "en_US")
+diff --git a/apps/FCCG/tests/test_gui_smoke.py b/apps/FCCG/tests/test_gui_smoke.py
+index 7833fe7..31d1a15 100644
+--- a/apps/FCCG/tests/test_gui_smoke.py
++++ b/apps/FCCG/tests/test_gui_smoke.py
+@@ -241,14 +241,14 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
+     try:
+         assert window.windowTitle() == PRODUCT_NAME
+         assert window.version_label.text() == f"v{__version__}"
+-        assert window.pages.count() == 8
+-        assert window.navigation_list.count() == 8
++        assert window.pages.count() == 7
++        assert window.navigation_list.count() == 7
+         assert not hasattr(window, "project_page")
+         assert not hasattr(window, "plugins_page")
+         assert [
+             window.navigation_list.item(index).text()
+             for index in range(window.navigation_list.count())
+-        ] == ["飞控设备", "飞行配置", "导航配置", "遥测配置", "地面站配置", "飞控硬件", "地面站硬件", "构建与检测"]
++        ] == ["飞控设备", "飞行配置", "导航配置", "遥测配置", "飞控硬件", "地面站硬件", "构建与检测"]
+         assert not hasattr(window.build_page, "configuration_combo")
+         assert set(window.build_page.action_buttons) == {
+             "flight_build", "flight_clean", "flight_open_vscode",
+@@ -277,7 +277,7 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
+             assert window.pages.currentIndex() == index
+ 
+         window.Language_Apply("en_US")
+-        assert window.title_label.text() == "SilverStar Flight & Ground Code Generator"
++        assert window.title_label.text() == "SilverStar System Configuration & Generation (SCG)"
+         assert [
+             window.navigation_list.item(index).text()
+             for index in range(window.navigation_list.count())
+@@ -286,7 +286,6 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
+                 "Flight Configuration",
+                 "Navigation Configuration",
+                 "Telemetry Configuration",
+-                "Ground Station Configuration",
+                 "Flight Hardware",
+                 "Ground Station Hardware",
+                 "Build & Validation",
+@@ -311,7 +310,7 @@ def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path,
+         page = window.ground_target_page
+         page.enabled.setChecked(True)
+         assert page.board.findData("silverstar.board.silverstar_0_5") == -1
+-        assert page.board.currentData() == ""
++        assert page.board.currentData() is None  # Shared hardware page's unselected state.
+         page.radio.setCurrentIndex(
+             page.radio.findData("silverstar.device.telemetry.sx1281")
+         )
+@@ -400,14 +399,13 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+             "imu0",
+             "gnss0",
+             "barometer0",
+-            "magnetometer0",
+             "telemetry0",
+         }
+         telemetry_label = window.devices_page.telemetry_form.labelForField(
+             window.devices_page.device_combos["telemetry0"]
+         )
+         assert isinstance(telemetry_label, QLabel)
+-        assert telemetry_label.text() == "遥测 0"
++        assert telemetry_label.text() == "遥测"
+         assert "silverstar.device.console.uart" not in (
+             window.devices_page.device_checks
+         )
+@@ -500,10 +498,10 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+         assert jy901b_summary is not None
+         assert "加速度" in jy901b_summary.text()
+         assert "不具备用途资格" in jy901b_summary.text()
+-        assert "磁场绝对矢量资格" in jy901b_summary.text()
++        assert "磁场" not in jy901b_summary.text()
+ 
+         capability_table = window.flight_configuration_page.capability_table
+-        assert capability_table.rowCount() == 20
++        assert capability_table.rowCount() > 0
+         assert all(
+             capability_table.cellWidget(row, 3) is None
+             for row in range(capability_table.rowCount())
+@@ -517,7 +515,7 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+             for row in range(capability_table.rowCount())
+         }
+         assert statuses["imu.acceleration"] == "使用"
+-        assert statuses["magnetometer.field"] == "未使用"
++        assert not any(key.startswith("magnetometer.") for key in statuses)
+         assert statuses["attitude.external"] == "未使用"
+         assert kinds["imu.acceleration"] == "原始数据"
+         assert kinds["imu.software_alignment_qualified"] == "合格能力"
+diff --git a/apps/FCCG/tests/test_power_of_ten_checker_paths.py b/apps/FCCG/tests/test_power_of_ten_checker_paths.py
+index d074496..bf5f205 100644
+--- a/apps/FCCG/tests/test_power_of_ten_checker_paths.py
++++ b/apps/FCCG/tests/test_power_of_ten_checker_paths.py
+@@ -59,6 +59,22 @@ def _PowerShell_Run(root: Path, expression: str) -> subprocess.CompletedProcess[
+     )
+ 
+ 
++def test_entire_target_zero_runtime_candidates_blocks_acceptance(checker_fixture: Path) -> None:
++    (checker_fixture / "APP/fixture.c").write_text(
++        "int Fixture(int value)\n{\n    return value;\n}\n", encoding="utf-8")
++    shell = shutil.which("powershell") or shutil.which("pwsh")
++    assert shell is not None
++    # Match the generated Make/GUI interface. Dot sourcing returns from the
++    # included script on exit and allows the surrounding probe to finish at 0.
++    result = subprocess.run(
++        [shell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
++         str(checker_fixture / "Tools/check_power_of_ten.ps1")],
++        cwd=checker_fixture, capture_output=True, text=True,
++        encoding="utf-8", errors="replace", check=False)
++    assert result.returncode != 0
++    assert "Entire current target has zero eligible runtime assertion candidates" in result.stdout
++
++
+ @pytest.mark.parametrize("separator", ("/", "\\"))
+ def test_authorized_paths_match_both_separators(
+     checker_fixture: Path, separator: str,
+@@ -387,6 +403,9 @@ def test_fprime_inspired_recommendation_boundary_and_pending_review(
+     checker_fixture: Path, code_lines: int, reported: bool,
+ ) -> None:
+     source = "void Review(int value)\n{\n" + " value += 1;\n" * (code_lines - 3) + "}\n"
++    # This test isolates the per-function recommendation. A separate real
++    # boundary in this target keeps it outside the all-zero hard protection.
++    source += "void Boundary(int capacity)\n{\n SILVERSTAR_ASSERT(capacity > 0, M, R);\n}\n"
+     (checker_fixture / "APP/fixture.c").write_text(source, encoding="utf-8")
+     result = _Checker_Run(checker_fixture)
+     assert result.returncode == 0, result.stdout + result.stderr
+diff --git a/apps/FLP/src/silverstar_flp/app/version.py b/apps/FLP/src/silverstar_flp/app/version.py
+index 1bb7c73..542b878 100644
+--- a/apps/FLP/src/silverstar_flp/app/version.py
++++ b/apps/FLP/src/silverstar_flp/app/version.py
+@@ -2,7 +2,7 @@
+ 
+ from pathlib import Path
+ 
+-PRODUCT_NAME = "SilverStar_FLP"
++PRODUCT_NAME = "SilverStar FLP"
+ __version__ = (Path(__file__).resolve().parents[5] / "VERSION").read_text(encoding="ascii").strip()
+ 
+ __all__ = ["PRODUCT_NAME", "__version__"]
+diff --git a/apps/FLP/src/silverstar_flp/i18n/en_US.json b/apps/FLP/src/silverstar_flp/i18n/en_US.json
+index 4c4c1b9..c903f2c 100644
+--- a/apps/FLP/src/silverstar_flp/i18n/en_US.json
++++ b/apps/FLP/src/silverstar_flp/i18n/en_US.json
+@@ -866,5 +866,6 @@
+   "replay.quality_policy": "What-if quality policy",
+   "replay.quality_recorded": "Use recorded policy revision",
+   "replay.quality_revision": "New policy revision {revision} (approximate)",
+-  "replay.parameter_retired": "Legacy value; inactive in revision 3"
++  "replay.parameter_retired": "Legacy value; inactive in revision 3",
++  "project.analysis_unsaved": "unsaved analysis session"
+ }
+diff --git a/apps/FLP/src/silverstar_flp/i18n/zh_CN.json b/apps/FLP/src/silverstar_flp/i18n/zh_CN.json
+index a8d4036..cdab8ad 100644
+--- a/apps/FLP/src/silverstar_flp/i18n/zh_CN.json
++++ b/apps/FLP/src/silverstar_flp/i18n/zh_CN.json
+@@ -866,5 +866,6 @@
+   "replay.quality_policy": "What-if质量策略",
+   "replay.quality_recorded": "沿用记录的策略revision",
+   "replay.quality_revision": "新策略 revision {revision}（近似试算）",
+-  "replay.parameter_retired": "旧配置值；revision 3 已退役"
++  "replay.parameter_retired": "旧配置值；revision 3 已退役",
++  "project.analysis_unsaved": "分析会话未保存"
+ }
+diff --git a/apps/FLP/src/silverstar_flp/ui/main_window.py b/apps/FLP/src/silverstar_flp/ui/main_window.py
+index f34abe6..1fee83b 100644
+--- a/apps/FLP/src/silverstar_flp/ui/main_window.py
++++ b/apps/FLP/src/silverstar_flp/ui/main_window.py
+@@ -526,13 +526,6 @@ class MainWindow(QMainWindow):
+             self.import_dialog.open()
+ 
+     def LogPair_Open(self, log_path: Path, decoder_path: Path) -> None:
+-        if self._silverstar_project_root is not None:
+-            root = self._silverstar_project_root
+-            if not (
+-                decoder_path.resolve().parent == root
+-                and log_path.resolve().is_relative_to((root / "Log").resolve())
+-            ):
+-                self._silverstar_project_root = None
+         self.Log_Open(
+             log_path,
+             decoder_path=decoder_path,
+@@ -548,6 +541,11 @@ class MainWindow(QMainWindow):
+         source_mode: LogOpenSourceMode = LogOpenSourceMode.MANUAL,
+         project: ProjectDocument | None = None,
+     ) -> None:
++        if self._active_worker is not None:
++            self._Error_Show("another_background_task_is_running")
++            return
++        if project is None and not self._ProjectChanges_Confirm():
++            return
+         source_path = Path(path)
+         target_project = project or self._Project_ForImport()
+         mark_dirty_on_success = project is None and self._pending_new_project_path is None
+@@ -566,6 +564,7 @@ class MainWindow(QMainWindow):
+                 result,
+                 target_project,
+                 mark_dirty=mark_dirty_on_success,
++                silverstar_root=self._SilverStarRootForPair_Get(source_path, decoder_path),
+             ),
+             self._LogOpen_Error,
+         )
+@@ -606,6 +605,9 @@ class MainWindow(QMainWindow):
+         return result
+ 
+     def _Project_Open(self, path: Path) -> None:
++        if self._active_worker is not None:
++            self._Error_Show("another_background_task_is_running")
++            return
+         try:
+             project = Project_Load(Path(path))
+             if project.decoder_profile is None:
+@@ -636,7 +638,8 @@ class MainWindow(QMainWindow):
+         worker = FunctionWorker(lambda context: self._ProjectLogOpen_Run(project, request, context))
+         self._Task_Start(
+             worker,
+-            lambda result: self._LogOpenResult_Set(result, project, mark_dirty=False),
++            lambda result: self._LogOpenResult_Set(result, project, mark_dirty=False,
++                silverstar_root=self._SilverStarRootForPair_Get(log_path, decoder_source_path)),
+             lambda message: self._Error_Show(message),
+         )
+ 
+@@ -662,14 +665,28 @@ class MainWindow(QMainWindow):
+             self.SilverStarProjectRoot_Open(Path(selected))
+ 
+     def SilverStarProjectRoot_Open(self, path: Path) -> None:
++        if self._active_worker is not None:
++            self._Error_Show("another_background_task_is_running")
++            return
++        if not self._ProjectChanges_Confirm():
++            return
+         root = Path(path).resolve()
+         if not (root / "SilverStar.ssproject").is_file() or not (root / "Log").is_dir():
+             self._Error_Show("silverstar_project_root_invalid")
+             return
+-        self._silverstar_project_root = root
+         self.import_dialog.Folder_Set(root)
+         self._FolderSearch_Start(root)
+ 
++    @staticmethod
++    def _SilverStarRootForPair_Get(log_path: Path, decoder_path: Path | None) -> Path | None:
++        if decoder_path is None:
++            return None
++        root = Path(decoder_path).resolve().parent
++        if ((root / "SilverStar.ssproject").is_file() and (root / "Log").is_dir()
++                and Path(log_path).resolve().is_relative_to(root / "Log")):
++            return root
++        return None
++
+     def _FolderSearch_Set(self, discovery: object) -> None:
+         self.import_dialog.PairDiscovery_Set(discovery)
+         self.import_dialog.show()
+@@ -702,6 +719,7 @@ class MainWindow(QMainWindow):
+         project: ProjectDocument,
+         *,
+         mark_dirty: bool = False,
++        silverstar_root: Path | None = None,
+     ) -> None:
+         try:
+             for configuration in project.replay_configurations.values():
+@@ -734,6 +752,8 @@ class MainWindow(QMainWindow):
+                 return
+             self._pending_new_project_path = None
+         self._project = project
++        self._silverstar_project_root = silverstar_root or self._SilverStarRootForPair_Get(
++            result.dataset.source_path, result.source_package_path)
+         self._log_open_result = result
+         self._suspend_dirty = True
+         try:
+@@ -947,6 +967,7 @@ class MainWindow(QMainWindow):
+         self.import_action.setEnabled(False)
+         self.export_action.setEnabled(False)
+         self.open_project_action.setEnabled(False)
++        self.open_silverstar_project_action.setEnabled(False)
+         self.save_project_action.setEnabled(False)
+         self.save_project_as_action.setEnabled(False)
+         self.new_project_action.setEnabled(False)
+@@ -970,6 +991,7 @@ class MainWindow(QMainWindow):
+         self.import_action.setEnabled(True)
+         self.export_action.setEnabled(self._dataset is not None)
+         self.open_project_action.setEnabled(True)
++        self.open_silverstar_project_action.setEnabled(True)
+         self.save_project_action.setEnabled(True)
+         self.save_project_as_action.setEnabled(True)
+         self.new_project_action.setEnabled(True)
+@@ -1019,6 +1041,9 @@ class MainWindow(QMainWindow):
+         self._Project_Open(Path(selected))
+ 
+     def _Project_New(self) -> None:
++        if self._active_worker is not None:
++            self._Error_Show("another_background_task_is_running")
++            return
+         if not self._ProjectChanges_Confirm():
+             return
+         directory = self._path_preferences.DefaultProjectRoot_EffectiveGet()
+@@ -1135,14 +1160,31 @@ class MainWindow(QMainWindow):
+ 
+     def _Project_SetDirty(self, dirty: bool) -> None:
+         self._project_dirty = dirty
++        self._ProjectHeader_Refresh()
+ 
+     def _ProjectHeader_Refresh(self) -> None:
+         path = self._project.project_path
+         full_name = path.stem if path is not None else self._translator.Text_Get("project.unsaved")
++        if self._silverstar_project_root is not None:
++            session = path.stem if path is not None else self._translator.Text_Get("project.analysis_unsaved")
++            full_name = self._silverstar_project_root.name + " / " + session
++        if self._project_dirty:
++            full_name += " *"
+         self.project_name_label.setText(self.project_name_label.fontMetrics().elidedText(
+-            full_name, Qt.TextElideMode.ElideRight, 595,
++            full_name, Qt.TextElideMode.ElideRight, max(1, self.project_name_label.width() - 5),
+         ))
+-        self.project_name_label.setToolTip(str(path.resolve()) if path is not None else "")
++        if self._silverstar_project_root is not None:
++            tooltip = "\n".join(value for value in (
++                full_name, str(self._silverstar_project_root),
++                str(path.resolve()) if path is not None else "") if value)
++        else:
++            tooltip = str(path.resolve()) if path is not None else ""
++        self.project_name_label.setToolTip(tooltip)
++
++    def resizeEvent(self, event) -> None:
++        super().resizeEvent(event)
++        if hasattr(self, "project_name_label"):
++            self._ProjectHeader_Refresh()
+ 
+     def _ProjectChanges_Confirm(self) -> bool:
+         if not self._project_dirty:
+diff --git a/apps/FLP/tests/test_gui_smoke.py b/apps/FLP/tests/test_gui_smoke.py
+index 7dbe4bd..3bbe010 100644
+--- a/apps/FLP/tests/test_gui_smoke.py
++++ b/apps/FLP/tests/test_gui_smoke.py
+@@ -191,7 +191,7 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
+     assert window.about_dialog.product_label.text() == "SilverStar 飞行日志解析器"
+     assert window.about_dialog.version_label.text() == "版本 0.1.0"
+     assert "离线算法复算" in window.about_dialog.description_label.text()
+-    assert window.about_dialog.windowTitle() == "SilverStar_FLP"
++    assert window.about_dialog.windowTitle() == "SilverStar FLP"
+     window.about_dialog.reject()
+     saved_as_path = tmp_path / "SYNTHETIC_gui_project_copy.ssflp"
+     monkeypatch.setattr(
+diff --git a/apps/GSHC/config.py b/apps/GSHC/config.py
+index 92d34a0..4ab6343 100644
+--- a/apps/GSHC/config.py
++++ b/apps/GSHC/config.py
+@@ -9,7 +9,7 @@ APP_NAME = "SilverStar_GSHC"
+ APP_EN_NAME = "SilverStar_GSHC"
+ APP_ORGANIZATION = "SilverStar"
+ APP_VERSION = (Path(__file__).resolve().parents[2] / "VERSION").read_text(encoding="ascii").strip()
+-APP_WINDOW_TITLE = "SilverStar_GSHC"
++APP_WINDOW_TITLE = "SilverStar GSHC"
+ APP_ZH_DISPLAY_NAME = "SilverStar地面站上位机"
+ APP_EN_DISPLAY_NAME = "SilverStar Ground Station Host Computer"
+ APP_UI_VERSION_TEXT = f"{APP_WINDOW_TITLE} {APP_VERSION}"
+diff --git a/apps/GSHC/tests/test_ui_workflow.py b/apps/GSHC/tests/test_ui_workflow.py
+index bbba41e..9605d70 100644
+--- a/apps/GSHC/tests/test_ui_workflow.py
++++ b/apps/GSHC/tests/test_ui_workflow.py
+@@ -95,9 +95,10 @@ class UiWorkflowTests(unittest.TestCase):
+         self.window.close()
+         self.temporary_directory.cleanup()
+ 
+-    def test_four_pages_are_always_manually_selectable(self) -> None:
++    def test_three_release_pages_are_always_manually_selectable(self) -> None:
+         labels = [self.window.pages.tabText(index) for index in range(self.window.pages.count())]
+-        self.assertEqual(labels, ["预飞行", "飞行", "后期处理", "磁力计校准"])
++        self.assertEqual(labels, ["预飞行", "飞行", "后期处理"])
++        self.assertFalse(hasattr(self.window, "magnetometer_calibration_page"))
+         self.assertEqual(self.window.pages.objectName(), "pageTabs")
+         self.assertEqual(self.window.pages.tabBar().objectName(), "pageNavigation")
+         self.assertTrue(self.window.pages.tabBar().expanding())
+@@ -106,13 +107,12 @@ class UiWorkflowTests(unittest.TestCase):
+             self.window.preflight_page,
+             self.window.flight_page,
+             self.window.post_process_page,
+-            self.window.magnetometer_calibration_page,
+         ):
+             self.window.pages.setCurrentWidget(page)
+             self.assertIs(self.window.pages.currentWidget(), page)
+ 
+     def test_header_brand_credit_version_and_localized_labels(self) -> None:
+-        self.assertEqual(self.window.windowTitle(), "SilverStar_GSHC")
++        self.assertEqual(self.window.windowTitle(), "SilverStar GSHC")
+         self.assertEqual(self.window.header_bar.objectName(), "headerBar")
+         self.assertEqual(self.window.header_title.text(), "SilverStar地面站上位机")
+         self.assertEqual(self.window.lbl_language.text(), "语言")
+@@ -120,7 +120,7 @@ class UiWorkflowTests(unittest.TestCase):
+         self.assertEqual(self.window.header_credit.text(), "辰星引力开发")
+         self.assertEqual(
+             self.window.header_version.text(),
+-            "SilverStar_GSHC 0.1.0",
++            "SilverStar GSHC 0.1.0",
+         )
+         header_layout = self.window.header_identity_layout
+         self.assertLess(
+@@ -140,7 +140,7 @@ class UiWorkflowTests(unittest.TestCase):
+         self.window.language_combo.setCurrentIndex(english_index)
+         self.application.processEvents()
+ 
+-        self.assertEqual(self.window.windowTitle(), "SilverStar_GSHC")
++        self.assertEqual(self.window.windowTitle(), "SilverStar GSHC")
+         self.assertEqual(
+             self.window.header_title.text(),
+             "SilverStar Ground Station Host Computer",
+@@ -150,7 +150,7 @@ class UiWorkflowTests(unittest.TestCase):
+         self.assertEqual(self.window.header_credit.text(), "by CXYL")
+         self.assertEqual(
+             self.window.header_version.text(),
+-            "SilverStar_GSHC 0.1.0",
++            "SilverStar GSHC 0.1.0",
+         )
+ 
+     def test_post_process_uses_inline_progress_and_cancel_controls(self) -> None:
+diff --git a/apps/GSHC/ui/main_window.py b/apps/GSHC/ui/main_window.py
+index 772671f..3ad1678 100644
+--- a/apps/GSHC/ui/main_window.py
++++ b/apps/GSHC/ui/main_window.py
+@@ -75,7 +75,6 @@ from services.state_model import (
+     HandshakeState,
+     MissionPhase,
+ )
+-from ui.magnetometer_calibration_page import MagnetometerCalibrationPage
+ from ui.navigation_panel import NavigationPanel
+ from ui.port_combo import PortComboBox
+ from ui.theme import ThemeColors, apply_application_theme, theme_colors
+@@ -1371,11 +1370,6 @@ class MainWindow(QMainWindow):
+         self.pages.setTabText(
+             self.pages.indexOf(self.post_process_page), self.i18n.tr("page.post_process")
+         )
+-        self.pages.setTabText(
+-            self.pages.indexOf(self.magnetometer_calibration_page),
+-            self.i18n.tr("page.magnetometer_calibration"),
+-        )
+-        self.magnetometer_calibration_page.retranslate_ui()
+         language_index = self.language_combo.findData(self.i18n.language.value)
+         if language_index >= 0 and language_index != self.language_combo.currentIndex():
+             blocked = self.language_combo.blockSignals(True)
+@@ -1456,11 +1450,9 @@ class MainWindow(QMainWindow):
+         self.preflight_page = self._build_preflight_page()
+         self.flight_page = self._build_flight_page()
+         self.post_process_page = self._build_post_process_page()
+-        self.magnetometer_calibration_page = MagnetometerCalibrationPage(self.i18n, self)
+         self.pages.addTab(self.preflight_page, "")
+         self.pages.addTab(self.flight_page, "")
+         self.pages.addTab(self.post_process_page, "")
+-        self.pages.addTab(self.magnetometer_calibration_page, "")
+         splitter.addWidget(self.pages)
+         splitter.setSizes([420, 1340])
+         splitter.setStretchFactor(0, 0)
+@@ -3152,12 +3144,6 @@ class MainWindow(QMainWindow):
+             return None
+         return w / norm, x / norm, y / norm, z / norm
+ 
+-    def closeEvent(self, event) -> None:
+-        if not self.magnetometer_calibration_page.close_session():
+-            event.ignore()
+-            return
+-        super().closeEvent(event)
+-
+     def _apply_quat_to_mesh(self, quat: tuple[float, float, float, float]) -> None:
+         normalized = self._normalize_quat(quat)
+         if normalized is None or not np.all(np.isfinite(normalized)):

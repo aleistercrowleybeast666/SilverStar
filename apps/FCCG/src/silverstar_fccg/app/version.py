@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-PRODUCT_NAME = "SilverStar_FCCG"
+PRODUCT_NAME = "SilverStar SCG"
 SILVERSTAR_PLATFORM_VERSION = (Path(__file__).resolve().parents[5] / "VERSION").read_text(encoding="ascii").strip()
 
 _VERSION_PARTS = tuple(

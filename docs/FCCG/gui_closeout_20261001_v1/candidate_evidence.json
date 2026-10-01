@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    ".work/gui_closeout_candidate_evidence.py"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "exit_code": 0,
+  "utc": "2026-10-01T11:26:12.719387+00:00",
+  "seconds": 3.7247962999972515,
+  "head": "2175d95f20dbecde96f67fd902ed54d873e39755",
+  "log_sha256": "c0d7002bacc11562afd1628aa06ef449a0993bb70b797aedf30797c13a6f22aa",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_Closeout_2175d95_v4"
+  }
+}

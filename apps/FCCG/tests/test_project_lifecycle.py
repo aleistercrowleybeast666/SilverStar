@@ -564,8 +564,12 @@ def test_power_of_ten_estimator_conditional_is_scoped(
         f"#if ({condition})\n"
         "static int Fixture_Value(void) { return 1; }\n"
         "#else\n"
-        "static int Fixture_Value(void) { return 0; }\n"
-        "#endif\n",
+            "static int Fixture_Value(void) { return 0; }\n"
+            "#endif\n"
+            # Keep this rule-8 scope fixture independent of the newly authorized
+            # entire-target zero-candidate guard; the conditional expectations stay.
+            "static void Boundary(unsigned capacity)\n{\n"
+            "    SILVERSTAR_ASSERT(capacity > 0U, MODULE, REASON);\n}\n",
         encoding="utf-8",
     )
     (root / "Makefile").write_text(

@@ -1,0 +1,26 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/test_hardware_and_variants.py",
+    "tests/test_round2_targets.py",
+    "tests/test_verified_board_fixed_resource_mapping.py",
+    "tests/test_project_lifecycle.py",
+    "--basetemp=.work/gui_closeout_v1/hardware_regressions",
+    "-o",
+    "cache_dir=.work/gui_closeout_v1/cache",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\apps\\FCCG",
+  "exit_code": 1,
+  "utc": "2026-10-01T11:08:54.692927+00:00",
+  "seconds": 311.59582649999356,
+  "head": "2175d95f20dbecde96f67fd902ed54d873e39755",
+  "log_sha256": "ae0d795e2e3a25325fcddbd5b2eed240aeb5b472a85becd2682c85ce1ddae89f",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_Closeout_2175d95_v2"
+  }
+}

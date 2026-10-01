@@ -1,0 +1,48 @@
+..........F..F.......................                                    [100%]
+================================== FAILURES ===================================
+____________ test_main_window_shell_navigation_theme_and_language _____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_fixedpaths/test_main_window_shell_navigat0')
+qapp = <PySide6.QtWidgets.QApplication(0x2bc56068a00) at 0x000002BC59D5DCC0>
+
+    def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            assert window.windowTitle() == PRODUCT_NAME
+            assert window.version_label.text() == f"v{__version__}"
+>           assert window.pages.count() == 8
+E           assert 7 == 8
+E            +  where 7 = <built-in method count of PySide6.QtWidgets.QStackedWidget object at 0x000002BC6280B400>()
+E            +    where <built-in method count of PySide6.QtWidgets.QStackedWidget object at 0x000002BC6280B400> = <PySide6.QtWidgets.QStackedWidget(0x2bc59c10230) at 0x000002BC6280B400>.count
+E            +      where <PySide6.QtWidgets.QStackedWidget(0x2bc59c10230) at 0x000002BC6280B400> = <silverstar_fccg.ui.main_window.MainWindow(0x2bc59c119d0) at 0x000002BC5A6E7D80>.pages
+
+tests\test_gui_smoke.py:244: AssertionError
+______ test_devices_page_is_physical_and_capabilities_are_on_flight_page ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_fixedpaths/test_devices_page_is_physical_0')
+qapp = <PySide6.QtWidgets.QApplication(0x2bc56068a00) at 0x000002BC59D5DCC0>
+
+    def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+        tmp_path: Path, qapp
+    ) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            qapp.processEvents()
+>           assert set(window.devices_page.device_combos) == {
+                "imu0",
+                "gnss0",
+                "barometer0",
+                "magnetometer0",
+                "telemetry0",
+            }
+E           AssertionError: assert {'barometer0'... 'telemetry0'} == {'barometer0'... 'telemetry0'}
+E             
+E             Extra items in the right set:
+E             'magnetometer0'
+E             Use -v to get more diff
+
+tests\test_gui_smoke.py:399: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gui_smoke.py::test_main_window_shell_navigation_theme_and_language
+FAILED tests/test_gui_smoke.py::test_devices_page_is_physical_and_capabilities_are_on_flight_page
+2 failed, 35 passed in 79.14s (0:01:19)

@@ -1,0 +1,125 @@
+.............F......................                                     [100%]
+================================== FAILURES ===================================
+______ test_devices_page_is_physical_and_capabilities_are_on_flight_page ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_shared_final/test_devices_page_is_physical_0')
+qapp = <PySide6.QtWidgets.QApplication(0x1f151adcb20) at 0x000001F1557BC2C0>
+
+    def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+        tmp_path: Path, qapp
+    ) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            qapp.processEvents()
+            assert set(window.devices_page.device_combos) == {
+                "imu0",
+                "gnss0",
+                "barometer0",
+                "telemetry0",
+            }
+            telemetry_label = window.devices_page.telemetry_form.labelForField(
+                window.devices_page.device_combos["telemetry0"]
+            )
+            assert isinstance(telemetry_label, QLabel)
+            assert telemetry_label.text() == "遥测"
+            assert "silverstar.device.console.uart" not in (
+                window.devices_page.device_checks
+            )
+            assert not hasattr(window.devices_page, "mcu_combo")
+            assert set(window.board_hardware_page.platform_values) == {
+                "source",
+                "part",
+                "family",
+                "package",
+                "core",
+                "cubemx",
+                "firmware_package",
+                "source_policy",
+                "timebase",
+                "storage",
+                "i2c",
+                "pwm",
+                "can",
+                "plugin",
+                "reason",
+                "verification",
+                "provenance",
+            }
+            assert not hasattr(window.devices_page, "capability_table")
+            assert not hasattr(window.devices_page, "capability_source_combos")
+            assert window._model.hardware.mode == "custom"
+            assert window._model.hardware.provider == (
+                "silverstar.hardware_provider.stm32_cubemx"
+            )
+            assert window.board_hardware_page.board_combo.currentIndex() == 0
+            assert window.board_hardware_page.board_combo.currentData() == "__custom__"
+            assert window.board_hardware_page.board_combo.findData("__unselected__") == -1
+            board_labels = {
+                window.board_hardware_page.board_combo.itemText(index)
+                for index in range(window.board_hardware_page.board_combo.count())
+            }
+            assert "SS0.5（已验证）" in board_labels
+            assert all("SilverStar 0.5" not in label for label in board_labels)
+            assert not window.board_hardware_page.preparation_widget.isVisible()
+            assert not window.board_hardware_page.prepare_button.isVisible()
+            assert window.devices_page.other_group.isVisible()
+            assert not window.devices_page.other_empty_label.isVisible()
+            assert window.devices_page.device_checks[
+                "silverstar.device.sensor.input_voltage"
+            ].isChecked()
+            assert window.devices_page.actuator_group.isVisible()
+            for actuator_id in (
+                "silverstar.device.actuator.launch_ignition",
+                "silverstar.device.actuator.parachute_pyro",
+            ):
+                actuator = window.devices_page.device_checks[actuator_id]
+                assert isinstance(actuator, StandardCheckBox)
+                assert not isinstance(actuator, LockedCheckBox)
+            assert not hasattr(window.devices_page, "requirement_table")
+            assert set(window.devices_page.add_buttons) == {
+                "imu",
+                "gnss",
+                "telemetry",
+            }
+            assert all(
+                button.isEnabled()
+                for button in window.devices_page.add_buttons.values()
+            )
+            assert "maintenance0" in {
+                instance.instance_id for instance in window._model.device_instances
+            }
+            assert any(
+                resource.key.startswith("maintenance0:")
+                for resource in window.board_hardware_page._resources
+            )
+            assert set(window.flight_configuration_page.protocol_combos) == {
+                "telemetry",
+                "maintenance",
+                "logging",
+            }
+            assert window.flight_configuration_page.protocol_combos[
+                "maintenance"
+            ].currentText() == "串口维护协议 0.0"
+            assert all(
+                combo.count() == 2
+                for combo in window.flight_configuration_page.protocol_combos.values()
+            )
+            source = (Path(__file__).resolve().parents[1] /
+                      "src/silverstar_fccg/ui/pages/components.py").read_text(encoding="utf-8")
+            assert "JY901B" not in source
+            assert "BMI088" not in source
+            jy901b_summary = window.devices_page.findChild(
+                QLabel, "deviceCapabilitySummary_imu0"
+            )
+            assert jy901b_summary is not None
+            assert "加速度" in jy901b_summary.text()
+            assert "不具备用途资格" in jy901b_summary.text()
+>           assert "磁场绝对矢量资格" in jy901b_summary.text()
+E           assert '磁场绝对矢量资格' in '原始数据：加速度, 角速度, 外部姿态, 气压高度\n合格能力：外部姿态六轴静态预飞对准资格, 外部姿态九轴静态预飞对准资格, 外部姿态起飞前回退资格, IMU软件初始对准资格, IMU软件传播资格, IMU静止着陆资格, 气压计着陆窗口资格, 气压计初对准原点资格\n不具备用途资格：权威六轴外部姿态资格, 权威九轴外部姿态资格, IMU着陆冲击检测资格'
+E            +  where '原始数据：加速度, 角速度, 外部姿态, 气压高度\n合格能力：外部姿态六轴静态预飞对准资格, 外部姿态九轴静态预飞对准资格, 外部姿态起飞前回退资格, IMU软件初始对准资格, IMU软件传播资格, IMU静止着陆资格, 气压计着陆窗口资格, 气压计初对准原点资格\n不具备用途资格：权威六轴外部姿态资格, 权威九轴外部姿态资格, IMU着陆冲击检测资格' = <built-in method text of PySide6.QtWidgets.QLabel object at 0x000001F155A63E40>()
+E            +    where <built-in method text of PySide6.QtWidgets.QLabel object at 0x000001F155A63E40> = <PySide6.QtWidgets.QLabel(0x1f15a4aa3e0, name="deviceCapabilitySummary_imu0") at 0x000001F155A63E40>.text
+
+tests\test_gui_smoke.py:501: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gui_smoke.py::test_devices_page_is_physical_and_capabilities_are_on_flight_page
+1 failed, 35 passed in 105.52s (0:01:45)

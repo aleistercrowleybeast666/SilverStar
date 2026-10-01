@@ -1,0 +1,158 @@
+....................................FF..                                 [100%]
+================================== FAILURES ===================================
+_ test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-True] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/hardware_regressions/test_power_of_ten_estimator_co0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+relative = 'APP/Src/estimator_task.c'
+condition = 'SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U', allowed = True
+
+    @pytest.mark.parametrize(
+        ("relative", "condition", "allowed"),
+        [
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", True),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U", True),
+            ("APP/Src/other.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", False),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 1U", False),
+        ],
+    )
+    def test_power_of_ten_estimator_conditional_is_scoped(
+        tmp_path: Path, workspace_root: Path, relative: str,
+        condition: str, allowed: bool
+    ) -> None:
+        root = tmp_path / "estimator-conditional"
+        script = root / "Tools/check_power_of_ten.ps1"
+        script.parent.mkdir(parents=True)
+        shutil.copy2(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tools"
+            / "check_power_of_ten.ps1", script
+        )
+        source = root / relative
+        source.parent.mkdir(parents=True)
+        source.write_text(
+            f"#if ({condition})\n"
+            "static int Fixture_Value(void) { return 1; }\n"
+            "#else\n"
+            "static int Fixture_Value(void) { return 0; }\n"
+            "#endif\n",
+            encoding="utf-8",
+        )
+        (root / "Makefile").write_text(
+            f"FIRST_PARTY_C_SOURCES := {relative}\n"
+            "FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror "
+            "-Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 "
+            "-Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes "
+            "-Wmissing-prototypes -Wswitch-enum -Wvla\n"
+            "power10-check:\n\t@echo check\n",
+            encoding="utf-8",
+        )
+        (root / "STM32F407XX_FLASH.ld").write_text(
+            "_Min_Heap_Size = 0x0;\n", encoding="utf-8"
+        )
+        completed = subprocess.run(
+            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+             str(script)],
+            cwd=root, capture_output=True, text=True, encoding="utf-8",
+            errors="replace", check=False,
+        )
+        output = completed.stdout + completed.stderr
+        if allowed:
+>           assert completed.returncode == 0, output
+E           AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E             FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\Src\estimator_task.c
+E             POWER10_SOURCE|APP\Src\estimator_task.c|bf33e1b38f0deeb52d181dc89f674f099ac124995890ac29faf44a190980b600
+E             FCCG_PROGRESS|POWER10|DONE|1|3|APP\Src\estimator_task.c
+E             FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|2|Fixture_Value|1|0
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|4|Fixture_Value|1|0
+E             POWER10_RULE5|Flight|files=1|functions=2|eligible_assertions=0|average=0.000000|informational|policy=fprime_inspired_c|semantic_review=required
+E             POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+E             FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E             FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E             Power of Ten check FAILED (1 failures).
+E             - Entire current target has zero eligible runtime assertion candidates; first-release protection failed.
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\Silver...- Entire current target has zero eligible runtime assertion candidates; first-release protection failed.\n', stderr='').returncode
+
+tests\test_project_lifecycle.py:591: AssertionError
+_ test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U-True] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/hardware_regressions/test_power_of_ten_estimator_co1')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+relative = 'APP/Src/estimator_task.c'
+condition = 'SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U', allowed = True
+
+    @pytest.mark.parametrize(
+        ("relative", "condition", "allowed"),
+        [
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", True),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U", True),
+            ("APP/Src/other.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", False),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 1U", False),
+        ],
+    )
+    def test_power_of_ten_estimator_conditional_is_scoped(
+        tmp_path: Path, workspace_root: Path, relative: str,
+        condition: str, allowed: bool
+    ) -> None:
+        root = tmp_path / "estimator-conditional"
+        script = root / "Tools/check_power_of_ten.ps1"
+        script.parent.mkdir(parents=True)
+        shutil.copy2(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tools"
+            / "check_power_of_ten.ps1", script
+        )
+        source = root / relative
+        source.parent.mkdir(parents=True)
+        source.write_text(
+            f"#if ({condition})\n"
+            "static int Fixture_Value(void) { return 1; }\n"
+            "#else\n"
+            "static int Fixture_Value(void) { return 0; }\n"
+            "#endif\n",
+            encoding="utf-8",
+        )
+        (root / "Makefile").write_text(
+            f"FIRST_PARTY_C_SOURCES := {relative}\n"
+            "FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror "
+            "-Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 "
+            "-Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes "
+            "-Wmissing-prototypes -Wswitch-enum -Wvla\n"
+            "power10-check:\n\t@echo check\n",
+            encoding="utf-8",
+        )
+        (root / "STM32F407XX_FLASH.ld").write_text(
+            "_Min_Heap_Size = 0x0;\n", encoding="utf-8"
+        )
+        completed = subprocess.run(
+            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+             str(script)],
+            cwd=root, capture_output=True, text=True, encoding="utf-8",
+            errors="replace", check=False,
+        )
+        output = completed.stdout + completed.stderr
+        if allowed:
+>           assert completed.returncode == 0, output
+E           AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E             FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\Src\estimator_task.c
+E             POWER10_SOURCE|APP\Src\estimator_task.c|361a06178032e703202ddbf3cf53eb3b89ca33f6932f430854e9a6599e2f89a0
+E             FCCG_PROGRESS|POWER10|DONE|1|3|APP\Src\estimator_task.c
+E             FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|2|Fixture_Value|1|0
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|4|Fixture_Value|1|0
+E             POWER10_RULE5|Flight|files=1|functions=2|eligible_assertions=0|average=0.000000|informational|policy=fprime_inspired_c|semantic_review=required
+E             POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+E             FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E             FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E             Power of Ten check FAILED (1 failures).
+E             - Entire current target has zero eligible runtime assertion candidates; first-release protection failed.
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\Silver...- Entire current target has zero eligible runtime assertion candidates; first-release protection failed.\n', stderr='').returncode
+
+tests\test_project_lifecycle.py:591: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-True]
+FAILED tests/test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U-True]
+2 failed, 38 passed in 309.66s (0:05:09)

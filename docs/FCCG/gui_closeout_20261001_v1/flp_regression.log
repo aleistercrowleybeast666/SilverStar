@@ -1,0 +1,38 @@
+.F.........ssssss                                                        [100%]
+================================== FAILURES ===================================
+___________ test_five_page_gui_and_top_bar_accept_a_parsed_dataset ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FLP/.work/gui_closeout_v1/flp_regression/test_five_page_gui_and_top_bar0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DFDEC43A80>
+
+    def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
+        tmp_path: Path,
+        monkeypatch,
+    ) -> None:
+        application = QApplication.instance() or QApplication([])
+        dataset = _DisplayDataset_Parse(
+            AnalysisFlight_Build(tmp_path / "SYNTHETIC_gui_source.BIN")
+        )
+        window = MainWindow(builtin_registry())
+        window._Dataset_Set(dataset)
+        _ProjectIdentity_Set(window, dataset.source_path, tmp_path)
+        window.show()
+        application.processEvents()
+        assert window.pages.count() == 5
+        assert window.windowTitle() == PRODUCT_NAME
+        assert window.title_label.text() == "SilverStar 飞行日志解析器"
+        assert window.version_label.text() == f"v{__version__}" == "v0.1.0"
+        assert window.credit_label.text() == "辰星引力开发"
+        assert window.project_name_label.text() == "未保存工程"
+>       assert window.project_name_label.toolTip() == ""
+E       AssertionError: assert '未保存工程' == ''
+E         
+E         + 未保存工程
+
+tests\test_gui_smoke.py:88: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: "Unable to open monitor interface to \\\\.\\DISPLAY1:" "Unknown error 0xe0000225."
+=========================== short test summary info ===========================
+SKIPPED [6] tests\test_generated_aggregation_pair.py:18: Explicit real generated decoder fixture required; no substitute package
+FAILED tests/test_gui_smoke.py::test_five_page_gui_and_top_bar_accept_a_parsed_dataset
+1 failed, 10 passed, 6 skipped in 110.81s (0:01:50)

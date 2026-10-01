@@ -662,7 +662,9 @@ Invoke-ExpectedCompileFailure -Name 'capability_jy901b_gravity_mag_rejected' `
         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
         '-DJY901B_MAGNETOMETER_ADAPTER_ENABLE=1U'
     ) -Source $capabilitySource
-Invoke-ExpectedCompileSuccess -Name 'capability_future_triad' `
+# First release rejects even a fully qualified magnetic provider. Restore this
+# future-feature success case only with the documented December release policy.
+Invoke-ExpectedCompileFailure -Name 'capability_first_release_triad_deferred' `
     -ExtraCompilerArgs @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD',
         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',

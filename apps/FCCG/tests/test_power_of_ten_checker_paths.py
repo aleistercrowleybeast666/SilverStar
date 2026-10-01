@@ -59,6 +59,22 @@ def _PowerShell_Run(root: Path, expression: str) -> subprocess.CompletedProcess[
     )
 
 
+def test_entire_target_zero_runtime_candidates_blocks_acceptance(checker_fixture: Path) -> None:
+    (checker_fixture / "APP/fixture.c").write_text(
+        "int Fixture(int value)\n{\n    return value;\n}\n", encoding="utf-8")
+    shell = shutil.which("powershell") or shutil.which("pwsh")
+    assert shell is not None
+    # Match the generated Make/GUI interface. Dot sourcing returns from the
+    # included script on exit and allows the surrounding probe to finish at 0.
+    result = subprocess.run(
+        [shell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+         str(checker_fixture / "Tools/check_power_of_ten.ps1")],
+        cwd=checker_fixture, capture_output=True, text=True,
+        encoding="utf-8", errors="replace", check=False)
+    assert result.returncode != 0
+    assert "Entire current target has zero eligible runtime assertion candidates" in result.stdout
+
+
 @pytest.mark.parametrize("separator", ("/", "\\"))
 def test_authorized_paths_match_both_separators(
     checker_fixture: Path, separator: str,
@@ -387,6 +403,9 @@ def test_fprime_inspired_recommendation_boundary_and_pending_review(
     checker_fixture: Path, code_lines: int, reported: bool,
 ) -> None:
     source = "void Review(int value)\n{\n" + " value += 1;\n" * (code_lines - 3) + "}\n"
+    # This test isolates the per-function recommendation. A separate real
+    # boundary in this target keeps it outside the all-zero hard protection.
+    source += "void Boundary(int capacity)\n{\n SILVERSTAR_ASSERT(capacity > 0, M, R);\n}\n"
     (checker_fixture / "APP/fixture.c").write_text(source, encoding="utf-8")
     result = _Checker_Run(checker_fixture)
     assert result.returncode == 0, result.stdout + result.stderr

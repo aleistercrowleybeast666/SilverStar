@@ -1,0 +1,34 @@
+.F
+================================== FAILURES ===================================
+___ test_device_titles_use_display_names_and_fallback_for_extensions[zh_CN] ___
+
+qapp = <PySide6.QtWidgets.QApplication(0x1e46ed3c610) at 0x000001E47136D400>
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_hardware_shared/test_device_titles_use_display0')
+language = 'zh_CN'
+
+    @pytest.mark.parametrize("language", ["zh_CN", "en_US"])
+    def test_device_titles_use_display_names_and_fallback_for_extensions(qapp, tmp_path, language):
+>       window = MainWindow(SettingsStore(tmp_path / "names.ini"), language=language)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_gui_workflow_20260930.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\ui\main_window.py:245: in __init__
+    self._Ui_Build()
+src\silverstar_fccg\ui\main_window.py:332: in _Ui_Build
+    self.ground_target_page = GroundTargetPage(self._translator)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <[RuntimeError("'__init__' method of object's base class (GroundTargetPage) not called.") raised in repr()] GroundTargetPage object at 0x1e473030a40>
+translator = <silverstar_fccg.core.i18n.Translator object at 0x000001E471A99E80>
+
+    def __init__(self, translator: Translator) -> None:
+>       super().__init__(translator, target="ground")
+E       TypeError: BoardHardwarePage.__init__() got an unexpected keyword argument 'target'
+
+src\silverstar_fccg\ui\pages\targets.py:202: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_gui_workflow_20260930.py::test_device_titles_use_display_names_and_fallback_for_extensions[zh_CN]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 1 passed in 3.60s

@@ -1094,6 +1094,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         )
     )
     issues.extend(AlignmentConfigurationIssues_Get(model, catalog))
+    from silverstar_fccg.project.release_policy import ReleaseCompatibilityIssues_Get
+    issues.extend(ValidationIssue("error", "RELEASE_FEATURE_DEFERRED", message)
+                  for message in ReleaseCompatibilityIssues_Get(model))
     if model.strategies.get("ins"):
         from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
 

@@ -3,6 +3,12 @@ from __future__ import annotations
 import re
 
 
+def ArtifactMemoryMarginLevel_Get(remaining: int, capacity: int) -> str:
+    if capacity <= 0 or remaining < 0 or remaining > capacity:
+        raise ValueError("Invalid memory region")
+    return "error" if remaining * 100 < capacity * 10 else "warning" if remaining * 100 <= capacity * 20 else "success"
+
+
 def ArtifactMemorySummary_Encode(output: str) -> str:
     values = []
     for name in ("FLASH", "main SRAM", "CCMRAM"):

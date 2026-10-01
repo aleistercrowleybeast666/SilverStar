@@ -55,6 +55,9 @@ class AlignmentConfigurationEditor(QWidget):
         self._notice = QLabel()
         self._notice.setWordWrap(True)
         action_layout.addWidget(self._notice, 1)
+        self.release_vectors_button = QPushButton(translator.Text_Get("alignment.release_vectors"))
+        self.release_vectors_button.clicked.connect(self._ReleaseVectors_Select)
+        action_layout.addWidget(self.release_vectors_button)
         self.confirm_button = QPushButton(translator.Text_Get("alignment.confirm"))
         self.cancel_button = QPushButton(translator.Text_Get("alignment.cancel"))
         self.confirm_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
@@ -97,6 +100,10 @@ class AlignmentConfigurationEditor(QWidget):
                                   if configuration.external_known_azimuth_deg is not None else 90.0))
         self._Strategy_Display()
         self._notice.clear()
+        legacy = tuple(item.kind for item in configuration.constraints) != ("gravity", "reference_direction")
+        self.release_vectors_button.setVisible(legacy)
+        if legacy:
+            self._notice.setText(self._translator.Text_Get("alignment.legacy_deferred"))
 
     def DraftStrategy_Set(self, strategy: str) -> None:
         if strategy == self._draft_strategy:
@@ -121,6 +128,7 @@ class AlignmentConfigurationEditor(QWidget):
         self._translator = translator
         self.confirm_button.setText(translator.Text_Get("alignment.confirm"))
         self.cancel_button.setText(translator.Text_Get("alignment.cancel"))
+        self.release_vectors_button.setText(translator.Text_Get("alignment.release_vectors"))
         self._authority.setText(translator.Text_Get("alignment.yaw_authoritative"))
         self._external_form.labelForField(self._source).setText(
             translator.Text_Get("alignment.external_source"))
@@ -188,11 +196,11 @@ class AlignmentConfigurationEditor(QWidget):
             kind = QComboBox()
             for value, key in (
                 ("gravity", "alignment.gravity"),
-                ("magnetic_field", "alignment.magnetic"),
                 ("reference_direction", "alignment.reference"),
             ):
                 kind.addItem(self._translator.Text_Get(key), value)
             kind.setCurrentIndex(kind.findData(constraint.kind))
+            kind.setEnabled(False)
             kind.currentIndexChanged.connect(
                 lambda _value, position=index: self._RowKind_Change(position))
             form.addRow(self._translator.Text_Get("alignment.constraint_type"), kind)
@@ -204,28 +212,25 @@ class AlignmentConfigurationEditor(QWidget):
                 axis.addItem(value, value)
             axis.setCurrentIndex(axis.findData(constraint.body_axis))
             azimuth = self._Number_Create(constraint.nav_azimuth_deg)
-            if constraint.kind == "magnetic_field":
-                form.addRow(self._translator.Text_Get("alignment.declination"), declination)
             if constraint.kind == "reference_direction":
                 form.addRow(self._translator.Text_Get("alignment.body_axis"), axis)
                 form.addRow(self._translator.Text_Get("alignment.azimuth"), azimuth)
             error = QLabel()
             error.setWordWrap(True)
             form.addRow(error)
-            remove = QPushButton(self._translator.Text_Get("alignment.remove_constraint"))
-            remove.setEnabled(len(self._constraints) > 2)
-            remove.clicked.connect(lambda _checked=False, position=index: self._Row_Remove(position))
-            form.addRow(remove)
             for editor in (weight, declination, azimuth):
                 editor.textEdited.connect(self._Draft_MarkDirty)
             axis.currentIndexChanged.connect(self._Draft_MarkDirty)
             self._rows.append({"kind": kind, "weight": weight, "declination": declination,
                                "axis": axis, "azimuth": azimuth, "error": error})
             self._vector_layout.addWidget(row)
-        add = QPushButton(self._translator.Text_Get("alignment.add_constraint"))
-        add.setEnabled(len(self._constraints) < ALIGNMENT_MAX_CONSTRAINTS)
-        add.clicked.connect(self._Row_Add)
-        self._vector_layout.addWidget(add)
+        # First release has a fixed pair; retain row editing methods for restoration.
+
+    def _ReleaseVectors_Select(self) -> None:
+        # Explicit draft migration; confirmation still owns publication.
+        self._constraints = [AlignmentConstraint("gravity"), AlignmentConstraint("reference_direction")]
+        self._Vector_Rebuild()
+        self._Draft_MarkDirty()
 
     @staticmethod
     def _Number_Read(editor: QLineEdit, low: float, high: float) -> float:
@@ -322,6 +327,8 @@ class AlignmentConfigurationEditor(QWidget):
                     item.plugin == "silverstar.device.imu.jy901b" for item in self._sources):
                     raise ValueError("Select an available JY901B attitude source")
             if self._draft_strategy.endswith("vector_constraints"):
+                if tuple(item.kind for item in constraints) != ("gravity", "reference_direction"):
+                    raise ValueError(self._translator.Text_Get("alignment.legacy_deferred"))
                 references = [(item.body_axis, item.nav_azimuth_deg) for item in constraints
                               if item.kind == "reference_direction"]
                 if len(set(references)) != len(references):

@@ -1,0 +1,46 @@
+...........F..............                                               [100%]
+================================== FAILURES ===================================
+____ UiWorkflowTests.test_header_brand_credit_version_and_localized_labels ____
+
+self = <test_ui_workflow.UiWorkflowTests testMethod=test_header_brand_credit_version_and_localized_labels>
+
+    def test_header_brand_credit_version_and_localized_labels(self) -> None:
+        self.assertEqual(self.window.windowTitle(), "SilverStar GSHC")
+        self.assertEqual(self.window.header_bar.objectName(), "headerBar")
+        self.assertEqual(self.window.header_title.text(), "SilverStar地面站上位机")
+        self.assertEqual(self.window.lbl_language.text(), "语言")
+        self.assertEqual(self.window.lbl_theme.text(), "主题")
+        self.assertEqual(self.window.header_credit.text(), "辰星引力开发")
+        self.assertEqual(
+            self.window.header_version.text(),
+            "SilverStar GSHC 0.1.0",
+        )
+        header_layout = self.window.header_identity_layout
+        self.assertLess(
+            header_layout.indexOf(self.window.header_version),
+            header_layout.indexOf(self.window.header_credit),
+        )
+        self.assertLess(
+            header_layout.indexOf(self.window.header_credit),
+            header_layout.indexOf(self.window.lbl_language),
+        )
+        self.assertLess(
+            header_layout.indexOf(self.window.language_combo),
+            header_layout.indexOf(self.window.lbl_theme),
+        )
+    
+        english_index = self.window.language_combo.findData(Language.EN_US.value)
+        self.window.language_combo.setCurrentIndex(english_index)
+        self.application.processEvents()
+    
+>       self.assertEqual(self.window.windowTitle(), "SilverStar_GSHC")
+E       AssertionError: 'SilverStar GSHC' != 'SilverStar_GSHC'
+E       - SilverStar GSHC
+E       ?           ^
+E       + SilverStar_GSHC
+E       ?           ^
+
+tests\test_ui_workflow.py:143: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_ui_workflow.py::UiWorkflowTests::test_header_brand_credit_version_and_localized_labels
+1 failed, 25 passed in 129.58s (0:02:09)

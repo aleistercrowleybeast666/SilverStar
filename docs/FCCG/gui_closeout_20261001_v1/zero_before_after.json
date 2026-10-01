@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\zero_evidence_baseline\\Tools\\check_power_of_ten.ps1"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\zero_evidence_baseline",
+    "exit_code": 0,
+    "checker_sha256": "bc1d14cea4ad15b6a97b076965e38c38b2344e5eddabd29b28d7a2402bc4832d",
+    "fixture_sha256": "6146007cda1d0cc0babd0ae915f212056170b6f00fa6495760f599d2b91b80a8",
+    "log_sha256": "9f85aba7ef5b4579109b9f95fef95362d7165f57fea0e3248878b813d8e10b90"
+  },
+  "current": {
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\zero_evidence_current\\Tools\\check_power_of_ten.ps1"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\gui_closeout_v1\\zero_evidence_current",
+    "exit_code": 1,
+    "checker_sha256": "9a2b3b3068088c8905772b7940b5aca5ac2265722adf645d5c3960759ff56f2d",
+    "fixture_sha256": "6146007cda1d0cc0babd0ae915f212056170b6f00fa6495760f599d2b91b80a8",
+    "log_sha256": "1610864060dc5c1cf8e3cda7159e054a3913939d1fc3d73bf64812ed0a4142e0"
+  }
+}

@@ -1,0 +1,16 @@
+# Ordered cold-backup gap, 2026-10-01
+
+This is a source review of the existing implementation, not a completed firmware fix or hardware qualification. The single-source KF6 logging candidate does not depend on multi-instance failover. This batch preserves the firmware task's SaveConfig/UART/IMU fixes, estimator models and memory optimization.
+
+Paths below are relative to `apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/`.
+
+| Source | Actual behavior | Required work still missing |
+| --- | --- | --- |
+| `System/Src/system_source_selector.c`, IMU initialization/start/process around 489–640; selection around 374–432 and next sample around 693 | Initializes/starts/processes all configured IMUs. Freshness selection precedes alignment and then locks the source; alignment invokes selection in `System/Src/system_alignment.c` around 988. | Ordered, debounced long-fault runtime transition; standby lifecycle; bounded activation/settling; new valid sample requirement; calibration and queue epoch/source identity handling. |
+| Same selector, GNSS switch evaluation around 792–847; initialization/start/process around 863–1037 | All configured GNSS instances are initialized, started and polled. Selection moves forward to an already started, online instance. | This is warm online selection, without the requested cold activation, long-fault debounce, startup retry/stability contract or guaranteed fresh usable data before publication. |
+| Same selector, companion active around 321–326; passive lifecycle around 1650–1767; barometer facade around 1769–1885 | Configured primary barometer remains active. Generic passive lifecycle visits configured instances. | No runtime primary-failure replacement state machine. Device-task barometer publication keeps a sequence without a source identity, so a transition also needs stale-source and equal-sequence handling. |
+| `Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c` (owned by the sibling `silverstar_device_imu_jy901b/payload` plugin), shared initialization/start/snapshot operations | JY901B barometer uses the physical IMU UART and shared snapshot. Its own Process is a no-op and Stop does not stop the shared IMU owner. | Shared physical processing cannot be stopped independently while the IMU remains active. Any cold-backup claim must state this exception and preserve shared ownership. |
+
+An on-demand GNSS transition must reuse the NEO-M9N adapter's bounded asynchronous startup and serial-owner transaction machinery. A GUI ordering edit alone cannot implement this safely. No new sensor plugin, second navigation state, lower estimator rate/precision/state count, runtime callback registry or new stack-proof tool was introduced.
+
+The continuation needs a separately versioned generated validation project, pre-fix failures and post-fix cases for persistent faults, delayed initialization, settling, invalid samples, repeated switching and stale queued data. It also needs fresh Host/PoT/static analyzer/ARM checks and explicit shared-hardware limitations. Hardware observations, full task/ISR stack bounds and MCU timing remain unavailable. Until then, multiple configured sensors are not accepted as the requested cold backup.

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    ".work/gui_closeout_native_capture.py"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "exit_code": 0,
+  "utc": "2026-10-01T11:03:54.488052+00:00",
+  "seconds": 9.234792299990659,
+  "head": "2175d95f20dbecde96f67fd902ed54d873e39755",
+  "log_sha256": "5778eb39534f9679addde44161bd10cbb663f1ac3e681c13f9e1828da74f50ac",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_Closeout_2175d95_v2"
+  }
+}

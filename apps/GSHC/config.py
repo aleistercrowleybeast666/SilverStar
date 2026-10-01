@@ -9,7 +9,7 @@ APP_NAME = "SilverStar_GSHC"
 APP_EN_NAME = "SilverStar_GSHC"
 APP_ORGANIZATION = "SilverStar"
 APP_VERSION = (Path(__file__).resolve().parents[2] / "VERSION").read_text(encoding="ascii").strip()
-APP_WINDOW_TITLE = "SilverStar_GSHC"
+APP_WINDOW_TITLE = "SilverStar GSHC"
 APP_ZH_DISPLAY_NAME = "SilverStar地面站上位机"
 APP_EN_DISPLAY_NAME = "SilverStar Ground Station Host Computer"
 APP_UI_VERSION_TEXT = f"{APP_WINDOW_TITLE} {APP_VERSION}"

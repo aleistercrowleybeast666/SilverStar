@@ -1,0 +1,18 @@
+..........................F                                              [100%]
+================================== FAILURES ===================================
+________ test_entire_target_zero_runtime_candidates_blocks_acceptance _________
+
+checker_fixture = WindowsPath('D:/python_software/SilverStar/apps/FCCG/.work/gui_closeout_v1/gui_qa_final/test_entire_target_zero_runtim0')
+
+    def test_entire_target_zero_runtime_candidates_blocks_acceptance(checker_fixture: Path) -> None:
+        (checker_fixture / "APP/fixture.c").write_text(
+            "int Fixture(int value)\n{\n    return value;\n}\n", encoding="utf-8")
+        result = _PowerShell_Run(checker_fixture, "$true")
+>       assert result.returncode != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE', '-NoProfile', '-ExecutionPoli...- Entire current target has zero eligible runtime assertion candidates; first-release protection failed.\n', stderr='').returncode
+
+tests\test_power_of_ten_checker_paths.py:66: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_power_of_ten_checker_paths.py::test_entire_target_zero_runtime_candidates_blocks_acceptance
+1 failed, 26 passed in 68.10s (0:01:08)

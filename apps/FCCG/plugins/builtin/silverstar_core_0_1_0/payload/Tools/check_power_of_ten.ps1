@@ -489,7 +489,8 @@ foreach ($file in $files) {
     # PowerShell 5.1 otherwise uses the local Windows code page, which can
     # consume punctuation in UTF-8 C text and silently reduce scan coverage.
     try {
-        $rawText = $utf8Decoder.GetString([System.IO.File]::ReadAllBytes($file.FullName))
+        $sourceBytes = [System.IO.File]::ReadAllBytes($file.FullName)
+        $rawText = $utf8Decoder.GetString($sourceBytes)
         if (($rawText.Length -ne 0) -and ($rawText[0] -eq [char]0xFEFF)) {
             $rawText = $rawText.Substring(1)
         }
@@ -501,6 +502,15 @@ foreach ($file in $files) {
     $sanitized = Get-CSourceWithoutCommentsOrLiterals -Text $rawText
     $lines = @($sanitized -split "`r?`n")
     $relative = $file.FullName.Substring($repoRoot.Length + 1)
+    # Hash the exact bytes scanned; do not depend on optional PowerShell cmdlets.
+    $sourceHasher = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $sourceDigest = [System.BitConverter]::ToString(
+            $sourceHasher.ComputeHash($sourceBytes)).Replace('-', '').ToLowerInvariant()
+    } finally {
+        $sourceHasher.Dispose()
+    }
+    Write-Output (('POWER10_SOURCE|{0}|{1}') -f $relative, $sourceDigest)
 
     foreach ($rule in $patternRules) {
         $diagnostics = Get-PatternDiagnostics -File $file -Lines $lines `
@@ -552,6 +562,8 @@ foreach ($function in $allFunctions) {
     Write-Output (('POWER10_RULE5_FUNCTION|{0}|{1}|{2}|{3}|{4}|{5}') -f
         $TargetKind, $function.File, $function.StartLine, $function.Name,
         $function.CodeLines, $function.AssertionCount)
+    Write-Output (('POWER10_FUNCTION_SCOPE|{0}|{1}|{2}|{3}|{4}') -f
+        $TargetKind, $function.File, $function.StartLine, $function.EndLine, $function.Name)
     Add-PowerTenCheck -Condition ($function.CodeLines -le 60) -Message (
         '{0}:{1}: function {2} has {3} non-comment code lines (maximum 60)' -f
         $function.File, $function.StartLine, $function.Name,
@@ -586,6 +598,8 @@ Write-Output (('POWER10_RULE5|{0}|files={1}|functions={2}|eligible_assertions={3
     $TargetKind, $files.Count, $allFunctions.Count, $assertionTotal, $density)
 Add-PowerTenCheck -Condition ($allFunctions.Count -ne 0) `
     -Message 'First-party function scan is empty; source coverage is not established.'
+Add-PowerTenCheck -Condition ($assertionTotal -gt 0) `
+    -Message 'Entire current target has zero eligible runtime assertion candidates; first-release protection failed.'
 Write-Output 'POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending'
 Write-Output "FCCG_PROGRESS|POWER10|DONE|$progressCurrent|$progressTotal|function_rules"
 

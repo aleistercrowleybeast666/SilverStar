@@ -24,7 +24,7 @@ def test_actual_resource_occupancy_keeps_narrow_margin_warning_and_retranslates(
     page.QualityResults_Set((record,))
     text = page.memory_margin_value.text()
     assert "64,296" in text and "1,240" in text and "65,536" in text
-    assert page.memory_margin_value.property("statusLevel") == "warning"
+    assert page.memory_margin_value.property("statusLevel") == "error"
     assert translator.Text_Get("memory.ccm_narrow") in text
     assert page.memory_margin_value.isVisible()
     other = Translator("zh_CN" if language == "en_US" else "en_US")

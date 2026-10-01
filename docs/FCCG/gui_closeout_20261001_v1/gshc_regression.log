@@ -1,0 +1,1665 @@
+..................................................................... [ 58%]
+.................FF..............................                        [100%]
+================================== FAILURES ===================================
+_______ UiWorkflowTests.test_four_pages_are_always_manually_selectable ________
+
+self = <test_ui_workflow.UiWorkflowTests testMethod=test_four_pages_are_always_manually_selectable>
+
+    def test_four_pages_are_always_manually_selectable(self) -> None:
+        labels = [self.window.pages.tabText(index) for index in range(self.window.pages.count())]
+>       self.assertEqual(labels, ["预飞行", "飞行", "后期处理", "磁力计校准"])
+E       AssertionError: Lists differ: ['预飞行', '飞行', '后期处理'] != ['预飞行', '飞行', '后期处理', '磁力计校准']
+E       
+E       Second list contains 1 additional elements.
+E       First extra element 3:
+E       '磁力计校准'
+E       
+E       - ['预飞行', '飞行', '后期处理']
+E       + ['预飞行', '飞行', '后期处理', '磁力计校准']
+E       ?                     +++++++++
+
+tests\test_ui_workflow.py:100: AssertionError
+____ UiWorkflowTests.test_header_brand_credit_version_and_localized_labels ____
+
+self = <test_ui_workflow.UiWorkflowTests testMethod=test_header_brand_credit_version_and_localized_labels>
+
+    def test_header_brand_credit_version_and_localized_labels(self) -> None:
+>       self.assertEqual(self.window.windowTitle(), "SilverStar_GSHC")
+E       AssertionError: 'SilverStar GSHC' != 'SilverStar_GSHC'
+E       - SilverStar GSHC
+E       ?           ^
+E       + SilverStar_GSHC
+E       ?           ^
+
+tests\test_ui_workflow.py:115: AssertionError
+============================== warnings summary ===============================
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 33, in test_port_text_fits_and_reaches_serial_unchanged
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 33, in test_port_text_fits_and_reaches_serial_unchanged
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 33, in test_port_text_fits_and_reaches_serial_unchanged
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLMeshItem.py", line 253, in paint
+      if (loc := GL.glGetAttribLocation(program, "a_position")) != -1:
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+    File "src/latebind.pyx", line 52, in OpenGL_accelerate.latebind.Curry.__call__
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\VERSION\GL_2_0.py", line 480, in glGetAttribLocation
+      return baseOperation(program, name)
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glGetAttribLocation,
+  	cArguments = (15, b'a_position\x00'),
+  	result = -1
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 33, in test_port_text_fits_and_reaches_serial_unchanged
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 34, in test_port_text_fits_and_reaches_serial_unchanged
+      application.processEvents()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 34, in test_port_text_fits_and_reaches_serial_unchanged
+      application.processEvents()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 34, in test_port_text_fits_and_reaches_serial_unchanged
+      application.processEvents()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLMeshItem.py", line 253, in paint
+      if (loc := GL.glGetAttribLocation(program, "a_position")) != -1:
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+    File "src/latebind.pyx", line 52, in OpenGL_accelerate.latebind.Curry.__call__
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\VERSION\GL_2_0.py", line 480, in glGetAttribLocation
+      return baseOperation(program, name)
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glGetAttribLocation,
+  	cArguments = (15, b'a_position\x00'),
+  	result = -1
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 40, in test_port_text_fits_and_reaches_serial_unchanged
+      window.resize(1280, 800)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 40, in test_port_text_fits_and_reaches_serial_unchanged
+      window.resize(1280, 800)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py: 10 warnings
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 40, in test_port_text_fits_and_reaches_serial_unchanged
+      window.resize(1280, 800)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLMeshItem.py", line 253, in paint
+      if (loc := GL.glGetAttribLocation(program, "a_position")) != -1:
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+    File "src/latebind.pyx", line 52, in OpenGL_accelerate.latebind.Curry.__call__
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\VERSION\GL_2_0.py", line 480, in glGetAttribLocation
+      return baseOperation(program, name)
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glGetAttribLocation,
+  	cArguments = (15, b'a_position\x00'),
+  	result = -1
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py::test_long_connection_status_reflows_without_changing_port
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 108, in test_long_connection_status_reflows_without_changing_port
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py::test_long_connection_status_reflows_without_changing_port
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 108, in test_long_connection_status_reflows_without_changing_port
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py::test_long_connection_status_reflows_without_changing_port
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 108, in test_long_connection_status_reflows_without_changing_port
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLMeshItem.py", line 253, in paint
+      if (loc := GL.glGetAttribLocation(program, "a_position")) != -1:
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+    File "src/latebind.pyx", line 52, in OpenGL_accelerate.latebind.Curry.__call__
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\VERSION\GL_2_0.py", line 480, in glGetAttribLocation
+      return baseOperation(program, name)
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glGetAttribLocation,
+  	cArguments = (15, b'a_position\x00'),
+  	result = -1
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py::test_long_connection_status_reflows_without_changing_port
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 108, in test_long_connection_status_reflows_without_changing_port
+      window.show()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py::test_long_connection_status_reflows_without_changing_port
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 109, in test_long_connection_status_reflows_without_changing_port
+      application.processEvents()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py::test_long_connection_status_reflows_without_changing_port
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 109, in test_long_connection_status_reflows_without_changing_port
+      application.processEvents()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLLinePlotItem.py", line 202, in paint
+      with program:
+           ^^^^^^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\shaders.py", line 94, in __enter__
+      glUseProgram( self )
+      ~~~~~~~~~~~~^^^^^^^^
+    File "src/latebind.pyx", line 40, in OpenGL_accelerate.latebind.LateBind.__call__
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1282,
+  	description = b'\xce\xde\xd0\xa7\xb2\xd9\xd7\xf7',
+  	baseOperation = glUseProgram,
+  	cArguments = (3,)
+  )
+    debug.printExc()
+
+apps/GSHC/tests/test_port_gui.py::test_long_connection_status_reflows_without_changing_port
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py:256: RuntimeWarning: 
+  Traceback (most recent call last):
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+      raise SystemExit(_console_main())
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+      code = _main(prog=_get_prog_name(sys.argv))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+      ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+      return wrap_session(config, _main)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+      session.exitstatus = doit(config, session) or 0
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384, in _main
+      config.hook.pytest_runtestloop(session=session)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+      item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+      runtestprotocol(item, nextitem=nextitem)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+      reports.append(call_and_report(item, "call", log))
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249, in call_and_report
+      call = CallInfo.from_call(
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361, in from_call
+      result: TResult | None = func()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250, in <lambda>
+      lambda: runtest_hook(item=item, **kwds),
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184, in pytest_runtest_call
+      item.runtest()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707, in runtest
+      self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+      return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+      return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+      res = hook_impl.function(*args)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167, in pytest_pyfunc_call
+      result = testfunction(**testargs)
+    File "D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py", line 109, in test_long_connection_status_reflows_without_changing_port
+      application.processEvents()
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 217, in paintGL
+      self.paint(region=region, viewport=region)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 229, in paint
+      self.drawItemTree(useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 261, in drawItemTree
+      self.drawItemTree(i, useItemNames=useItemNames)
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 256, in drawItemTree
+      debug.printExc()
+    --- exception caught here ---
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\GLViewWidget.py", line 253, in drawItemTree
+      i.paint()
+      ~~~~~~~^^
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pyqtgraph\opengl\items\GLMeshItem.py", line 253, in paint
+      if (loc := GL.glGetAttribLocation(program, "a_position")) != -1:
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+    File "src/latebind.pyx", line 52, in OpenGL_accelerate.latebind.Curry.__call__
+    File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\OpenGL\GL\VERSION\GL_2_0.py", line 480, in glGetAttribLocation
+      return baseOperation(program, name)
+    File "src/errorchecker.pyx", line 59, in OpenGL_accelerate.errorchecker._ErrorChecker.glCheckError
+  OpenGL.error.GLError: GLError(
+  	err = 1281,
+  	description = b'\xce\xde\xd0\xa7\xd6\xb5',
+  	baseOperation = glGetAttribLocation,
+  	cArguments = (15, b'a_position\x00'),
+  	result = -1
+  )
+    debug.printExc()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests\test_ui_workflow.py::UiWorkflowTests::test_four_pages_are_always_manually_selectable
+FAILED tests\test_ui_workflow.py::UiWorkflowTests::test_header_brand_credit_version_and_localized_labels
+2 failed, 116 passed, 107 warnings, 3 subtests passed in 332.31s (0:05:32)

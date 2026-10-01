@@ -111,8 +111,15 @@ from silverstar_fccg.project.model import (
 )
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
 from silverstar_fccg.project.quality_results import QualityResultRecord
+from silverstar_fccg.project.power10_report import (
+    Power10Report_Create, Power10Report_Save, Power10Report_Load,
+    Power10Report_Current_Is, Power10Report_Csv, Power10TextPassed_Is,
+)
 from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+from silverstar_fccg.project.release_policy import (
+    ReleaseCompatibilityIssues_Get, ReleaseMigrationModel_Create, ReleaseMigrationCopy_Save,
+)
 from silverstar_fccg.project.validation import (
     AlignmentConfigurationIssues_Get,
     Project_EditValidate,
@@ -177,7 +184,6 @@ class MainWindow(QMainWindow):
         "page.flight_configuration",
         "page.navigation_configuration",
         "page.telemetry_configuration",
-        "page.ground_configuration",
         "page.board_hardware",
         "page.ground",
         "page.build",
@@ -213,6 +219,7 @@ class MainWindow(QMainWindow):
         self._component_views: tuple[ComponentView, ...] = ()
         self._model: ProjectModel = self._service.ProjectDraft_Create("SilverStar")
         self._project_root: Path | None = None
+        self._legacy_source_bytes: bytes | None = None
         self._generation_plan: GenerationPlan | None = None
         self._displaying_model = False
         self._project_state = ProjectLifecycleState.DRAFT
@@ -316,6 +323,9 @@ class MainWindow(QMainWindow):
 
         self.pages = QStackedWidget()
         self.devices_page = DevicesPage(self._translator)
+        self.legacy_migration_button = QPushButton()
+        self.legacy_migration_button.clicked.connect(self._ReleaseMigration_Request)
+        self.devices_page.root_layout.insertWidget(0, self.legacy_migration_button)
         self.flight_configuration_page = FlightConfigurationPage(self._translator)
         self.algorithm_parameters_page = NavigationConfigurationPage(self._translator)
         self.algorithm_parameters_page.parameterChanged.connect(self._AlgorithmParameter_Change)
@@ -327,14 +337,10 @@ class MainWindow(QMainWindow):
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
-        self.ground_configuration_page = ScrollableLocalizedPage(
-            self._translator, "page.ground_configuration",
-            "page.ground_configuration.description",
-        )
+        self.ground_configuration_page = self.air_link_page
         for group in (self.ground_target_page.enabled, self.ground_target_page.pc_group):
             self.ground_target_page.root_layout.removeWidget(group)
-            self.ground_configuration_page.root_layout.addWidget(group)
-        self.ground_configuration_page.root_layout.addStretch(1)
+            self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
         self.build_page = BuildPage(self._translator)
         # Keep the existing editors and signal ownership while placing each
         # configuration group on the page that owns it in the user workflow.
@@ -368,7 +374,6 @@ class MainWindow(QMainWindow):
             self.flight_configuration_page,
             self.algorithm_parameters_page,
             self.air_link_page,
-            self.ground_configuration_page,
             self.board_hardware_page,
             self.ground_target_page,
             self.build_page,
@@ -385,6 +390,9 @@ class MainWindow(QMainWindow):
         self.cancel_button = QPushButton()
         self.cancel_button.clicked.connect(self._Task_Cancel)
         self.cancel_button.setVisible(False)
+        self.power10_export_button = QPushButton()
+        self.power10_export_button.setEnabled(False)
+        self.power10_export_button.clicked.connect(self._Power10Report_Export)
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 1000)
         self.progress_bar.setFixedWidth(250)
@@ -392,6 +400,7 @@ class MainWindow(QMainWindow):
         status.addWidget(self.status_label, 1)
         status.addPermanentWidget(self.cancel_button)
         status.addPermanentWidget(self.progress_bar)
+        status.addPermanentWidget(self.power10_export_button)
         self.setStatusBar(status)
         self.navigation_list.setCurrentRow(0)
 
@@ -815,6 +824,9 @@ class MainWindow(QMainWindow):
                 display.firmware_artifact_name,
             )
             self.build_page.QualityResults_Set(display.quality_results)
+            self.power10_export_button.setEnabled(
+                self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
+            self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
             self._BoardPage_Refresh(display)
             self._TargetPages_Refresh(display.model)
             self._HeaderProject_Refresh(display.model)
@@ -2304,6 +2316,7 @@ class MainWindow(QMainWindow):
         self.algorithm_parameters_page.alignment_editor.Draft_Discard()
         self._model = model
         self._project_root = project_root
+        self._legacy_source_bytes = None
         self._generation_plan = None
         self._project_state = ProjectLifecycleState.DRAFT
         self._Project_Refresh()
@@ -2323,15 +2336,19 @@ class MainWindow(QMainWindow):
 
     def _Project_Open(self, path: Path) -> None:
         try:
+            descriptor = path / "SilverStar.ssproject" if path.is_dir() else path
+            source_bytes = descriptor.read_bytes()
             loaded = self._service.Project_Open(path)
-            configuration = self._service.ProjectConfiguration_Reconcile(loaded)
-            reconciled = configuration.model
+            # Keep legacy navigation until the user deliberately creates a copy.
+            reconciled = (loaded if ReleaseCompatibilityIssues_Get(loaded) else
+                          self._service.ProjectConfiguration_Reconcile(loaded).model)
             changed_during_open = (
                 loaded.Dictionary_Get() != reconciled.Dictionary_Get()
             )
             self._pending_strategy_changes.clear()
             self.algorithm_parameters_page.alignment_editor.Draft_Discard()
             self._model = reconciled
+            self._legacy_source_bytes = source_bytes
             self._project_root = (
                 path.resolve() if path.is_dir() else path.resolve().parent
             )
@@ -2353,6 +2370,45 @@ class MainWindow(QMainWindow):
                 "status.project_opened", name=self._model.identity.name
             )
         )
+
+        if ReleaseCompatibilityIssues_Get(self._model):
+            self._MessageBox_Exec(QMessageBox.Icon.Warning,
+                self._translator.Text_Get("release.migrate"),
+                self._translator.Text_Get("release.legacy_notice"),
+                details="\n".join(ReleaseCompatibilityIssues_Get(self._model)))
+
+    def _ReleaseMigration_Request(self) -> None:
+        if self._active_worker is not None or not ReleaseCompatibilityIssues_Get(self._model):
+            return
+        answer = self._MessageBox_Exec(QMessageBox.Icon.Warning,
+            self._translator.Text_Get("release.migrate"),
+            self._translator.Text_Get("release.migrate_confirm"),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel)
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        selected = QFileDialog.getExistingDirectory(self,
+            self._translator.Text_Get("release.migrate_destination"),
+            str(self._path_preferences.DefaultProjectRoot_EffectiveGet()))
+        if not selected:
+            return
+        try:
+            candidate = ReleaseMigrationModel_Create(self._model)
+            candidate = self._service.ProjectConfiguration_Reconcile(candidate).model
+            ReleaseMigrationCopy_Save(self._model, candidate, Path(selected), self._legacy_source_bytes,
+                                      self._project_root)
+        except Exception as error:
+            self._Error_Show(error)
+            return
+        self._pending_strategy_changes.clear()
+        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
+        self._model = candidate
+        self._legacy_source_bytes = None
+        self._Project_SaveAs_Complete(Path(selected).resolve())
+        self.navigation_list.setCurrentRow(2)
+        self._MessageBox_Exec(QMessageBox.Icon.Information,
+            self._translator.Text_Get("release.migrate"),
+            self._translator.Text_Get("release.migrated", path=str(Path(selected).resolve())))
 
     def _AlignmentDraft_SelectorRestore(self, strategy: str) -> None:
         combo = self.flight_configuration_page.strategy_combos.get("alignment")
@@ -3345,10 +3401,20 @@ class MainWindow(QMainWindow):
     def _Build_Complete(self, result: BuildResult) -> None:
         command_text = " ".join(result.command)
         raw_output = result.output.rstrip()
+        passed = result.succeeded
+        if result.action == BuildAction.POWER10_CHECK:
+            passed = Power10TextPassed_Is(result.output, result.return_code)
+            if self._project_root is not None:
+                try:
+                    root = self._project_root / FLIGHT_DIRECTORY
+                    Power10Report_Save(root, Power10Report_Create(root, self._model, result.output, result.return_code))
+                    self.power10_export_button.setEnabled(True)
+                except (OSError, ValueError) as error:
+                    self.build_page.BuildLog_Append(str(error))
         if raw_output and not result.live_streamed:
             self.build_page.BuildLog_Append(raw_output)
         self.build_page.BuildLog_Append(f"> {command_text}")
-        key = "status.build_succeeded" if result.succeeded else "status.build_failed"
+        key = "status.build_succeeded" if passed else "status.build_failed"
         self.status_label.setText(
             self._translator.Text_Get(
                 key,
@@ -3359,15 +3425,15 @@ class MainWindow(QMainWindow):
         )
         self._project_state = (
             ProjectLifecycleState.READY
-            if result.succeeded
+            if passed
             else ProjectLifecycleState.ERROR
         )
         self._QualityResult_Record(
             result.action,
-            result.succeeded,
+            passed,
             self._QualitySummary_Get(result),
         )
-        if not result.succeeded:
+        if not passed:
             self.build_page.advanced_section.toggle_button.setChecked(True)
             self._Error_Show(
                 self._translator.Text_Get(
@@ -3377,7 +3443,29 @@ class MainWindow(QMainWindow):
             )
         else:
             self._Project_Refresh()
+            if result.action == BuildAction.POWER10_CHECK:
+                self._MessageBox_Exec(QMessageBox.Icon.Information,
+                    self._translator.Text_Get("action.power10_check"),
+                    self._translator.Text_Get("power10.review_pending"), details=raw_output)
         self._active_build_action = None
+
+    def _Power10Report_Export(self) -> None:
+        if self._project_root is None:
+            return
+        root = self._project_root / FLIGHT_DIRECTORY
+        report = Power10Report_Load(root)
+        if not Power10Report_Current_Is(root, self._model, report):
+            self._Error_Show(self._translator.Text_Get("power10.report_stale"))
+            return
+        destination, _ = QFileDialog.getSaveFileName(self,
+            self._translator.Text_Get("power10.export"), str(self._project_root / "Power10-review.csv"), "CSV (*.csv)")
+        if not destination:
+            return
+        try:
+            path = Path(destination)
+            WorkspacePolicy(path.parent).Text_AtomicWrite(path.name, "\ufeff" + Power10Report_Csv(report))
+        except (OSError, ValueError) as error:
+            self._Error_Show(self._translator.Text_Get("power10.export_failed"), str(error))
 
     def _BuildLine_Append(self, line: str) -> None:
         if line.startswith("FCCG_DETAIL|"):
@@ -3484,6 +3572,10 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def _QualitySummary_Get(result: BuildResult) -> str:
+        if result.action == BuildAction.POWER10_CHECK:
+            return "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending; " + (
+                "text_checks_passed" if Power10TextPassed_Is(result.output, result.return_code)
+                else "text_checks_failed")
         if result.action == BuildAction.ARTIFACT_CHECK:
             memory = ArtifactMemorySummary_Encode(result.output)
             if memory:
@@ -3766,6 +3858,8 @@ class MainWindow(QMainWindow):
 
     def Language_Apply(self, language: str) -> None:
         self._translator.Language_Set(language)
+        self.legacy_migration_button.setText(self._translator.Text_Get("release.migrate"))
+        self.power10_export_button.setText(self._translator.Text_Get("power10.export"))
         self.title_label.setText(self._translator.Text_Get("app.title"))
         self.credit_label.setText(self._translator.Text_Get("app.credit"))
         self.current_project_label.setText(

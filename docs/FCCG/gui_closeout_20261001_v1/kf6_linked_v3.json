@@ -1,0 +1,21 @@
+{
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "CONFIG=Release",
+    "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+    "architecture-check",
+    "artifact-check",
+    "stack-report"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\SCG_Closeout_2175d95_v3\\Flight_Controller",
+  "exit_code": 0,
+  "utc": "2026-10-01T11:02:11.997564+00:00",
+  "seconds": 17.054081599999336,
+  "head": "2175d95f20dbecde96f67fd902ed54d873e39755",
+  "log_sha256": "8244f14b02ea86eec06d6b1c2e9b952cb3aced97447038f8e5efcc08742635e2",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools",
+    "SILVERSTAR_GENERATED_DECODER_EXISTING": "D:\\python_software\\SilverStar\\.work\\SCG_Closeout_2175d95_v2"
+  }
+}

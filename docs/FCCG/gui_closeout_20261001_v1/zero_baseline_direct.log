@@ -1,0 +1,11 @@
+FCCG_PROGRESS|POWER10|PLAN|3
+FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\fixture.c
+FCCG_PROGRESS|POWER10|DONE|1|3|APP\fixture.c
+FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+POWER10_RULE5_FUNCTION|Flight|APP\fixture.c|1|Fixture|4|0
+POWER10_RULE5|Flight|files=1|functions=1|eligible_assertions=0|average=0.000000|informational|policy=fprime_inspired_c|semantic_review=required
+POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+Power of Ten project text checks passed: 30 checks, 1 first-party C files, 1 functions; 0 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending.
+FCCG_PROGRESS|POWER10|DONE|3|3|build_policy

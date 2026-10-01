@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "-j2",
+    "CONFIG=Release",
+    "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+    "all"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\SCG_Closeout_2175d95_v2\\Ground_Station",
+  "exit_code": 0,
+  "utc": "2026-10-01T10:34:58.900711+00:00",
+  "seconds": 15.025153999988106,
+  "head": "2175d95f20dbecde96f67fd902ed54d873e39755",
+  "log_sha256": "074dda8972df09cb5e1958360efd345e4c04cbd5497ce2b431e25284aa7f324c",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools"
+  }
+}

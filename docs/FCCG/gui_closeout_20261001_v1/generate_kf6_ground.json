@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+    ".work/gui_closeout_generate.py"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "exit_code": 0,
+  "utc": "2026-10-01T10:23:28.361176+00:00",
+  "seconds": 12.786181099989335,
+  "head": "2175d95f20dbecde96f67fd902ed54d873e39755",
+  "log_sha256": "39a7f707962ae99d1a29ff0386975e07cb7e18003f81cc8b2027f088a7471d73",
+  "environment": {
+    "QT_QPA_PLATFORM": "windows",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\apps\\FCCG;D:\\python_software\\SilverStar\\apps\\FCCG\\tools"
+  }
+}
