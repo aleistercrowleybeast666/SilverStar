@@ -9,3 +9,4 @@ apps/FCCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol
 
 # Acceptance hashes describe exact evidence bytes, independent of checkout EOL settings.
 docs/FCCG/evidence_final_20261001/** -text
+docs/FCCG/evidence_ground_safety_20261001/** -text

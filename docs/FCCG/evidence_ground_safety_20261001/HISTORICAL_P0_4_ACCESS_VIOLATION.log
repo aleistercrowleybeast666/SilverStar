@@ -1,0 +1,85 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: .work\pytest-cache
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FCCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 43 items
+
+tests/test_gui_workflow_20260930.py::test_new_project_defaults_are_ready_for_log_and_deployment_selection PASSED [  2%]
+tests/test_gui_workflow_20260930.py::test_device_titles_use_display_names_and_fallback_for_extensions[zh_CN] PASSED [  4%]
+tests/test_gui_workflow_20260930.py::test_device_titles_use_display_names_and_fallback_for_extensions[en_US] PASSED [  6%]
+tests/test_gui_workflow_20260930.py::test_ground_pc_settings_are_on_configuration_and_hardware_actions_remain PASSED [  9%]
+tests/test_gui_workflow_20260930.py::test_create_root_preserves_same_named_input_and_existing_descriptor PASSED [ 11%]
+tests/test_gui_qa_repair.py::test_alignment_native_popup_round_trips_in_separate_qt_process[offscreen] PASSED [ 13%]
+tests/test_gui_qa_repair.py::test_alignment_native_popup_round_trips_in_separate_qt_process[windows] PASSED [ 16%]
+tests/test_gui_qa_repair.py::test_radio_invalid_selection_remains_visible_and_backend_rejects PASSED [ 18%]
+tests/test_gui_qa_repair.py::test_busy_generation_is_idempotent_and_estimator_order_is_stable PASSED [ 20%]
+tests/test_gui_qa_repair.py::test_close_waits_for_worker_and_does_not_dispatch_cancelled_result PASSED [ 23%]
+tests/test_gui_qa_repair.py::test_visible_generate_double_click_while_busy_is_ignored PASSED [ 25%]
+tests/test_gui_qa_repair.py::test_alignment_confirm_is_atomic_and_save_reopen_uses_committed_snapshot PASSED [ 27%]
+tests/test_gui_qa_repair.py::test_windows_first_show_has_final_page_and_style_state PASSED [ 30%]
+tests/test_gui_qa_repair.py::test_native_windows_first_paint_and_non_alignment_popup PASSED [ 32%]
+tests/test_gui_qa_repair.py::test_root_launcher_windows_first_paint PASSED [ 34%]
+Timeout (0:00:45)!
+Thread 0x00003250 (most recent call first):
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py"Windows fatal exception: access violation
+
+Thread 0x00003250 (most recent call first):
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776 in open
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 792 in read_text
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\project\resources.py", line 188 in _BoardGeneratedIdentifiers_Get
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\project\resources.py", line 254 in BoardResourceProvisions_Get
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\project\resources.py", line 1299 in ResourceRequirementOptions_Get
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\project\protocols.py", line 241 in _ProviderHardwareAvailable_Is
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\project\protocols.py", line 406 in <genexpr>
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\project\protocols.py", line 403 in ProtocolResolution_Resolve
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\generator\render.py", line 1573 in LogDecoderProfile_Render
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\generator\render.py", line 279 in GeneratedFiles_Render
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\generator\assembler.py", line 373 in _DesiredFiles_Get
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\generator\assembler.py", line 113 in Plan
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\generator\assembler.py", line 95 in Plan
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\app\service.py", line 492 in GenerationPlan_Create
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\ui\main_window.py", line 2810 in <lambda>
+  File "D:\python_software\SilverStar\apps\FCCG\src\silverstar_fccg\ui\workers.py", line 38 in run
+
+Thread 0x00005cb0 (most recent call first):
+  File "D:\python_software\SilverStar\apps\FCCG\tests\test_gui_qa_repair.py", line 448 in wait_for
+  File "D:\python_software\SilverStar\apps\FCCG\tests\test_gui_qa_repair.py", line 462 in test_gui_generates_f407_and_f103
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167 in pytest_pyfunc_call
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707 in runtest
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184 in pytest_runtest_call
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250 in <lambda>
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361 in from_call
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249 in call_and_report
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139 in runtestprotocol
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118 in pytest_runtest_protocol
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408 in pytest_runtestloop
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384 in _main
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330 in wrap_session
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377 in pytest_cmdline_main
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229 in _main
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 253 in _console_main
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest\__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+tests/test_gui_qa_repair.py::test_gui_generates_f407_and_f103 

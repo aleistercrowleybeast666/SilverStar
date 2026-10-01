@@ -1,0 +1,114 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+___________ test_radio_contract_faults_and_normal_operation[reinit] ___________
+
+radio_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/day_ground_baseline3/sx1281-contract0/contract.exe')
+scenario = 'reinit'
+
+    @pytest.mark.parametrize("scenario", [
+        "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
+        "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
+        "control_state", "control_active_init", "flags", "packet_type", "rx_error",
+        "radio_state",
+    ])
+    def test_radio_contract_faults_and_normal_operation(radio_contract_executable, scenario):
+        result = subprocess.run([str(radio_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:56: snapshot.initialized == 0U
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:58: Lora_TxEnqueue(0U, &data, 1U) == LORA_TX_ENQUEUE_NOT_INIT
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:60: s_send_count == 0U
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:66: s_send_count == 1U
+E         reinit: 10 checks, 4 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\day_ground_baseline3\\sx1281-contract0\\contract.exe',...pps\\FCCG\\tests\\fixtures\\sx1281_contract_host.c:66: s_send_count == 1U\nreinit: 10 checks, 4 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_sx1281_contract_host.py:46: AssertionError
+__________ test_radio_contract_faults_and_normal_operation[tx_head] ___________
+
+radio_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/day_ground_baseline3/sx1281-contract0/contract.exe')
+scenario = 'tx_head'
+
+    @pytest.mark.parametrize("scenario", [
+        "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
+        "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
+        "control_state", "control_active_init", "flags", "packet_type", "rx_error",
+        "radio_state",
+    ])
+    def test_radio_contract_faults_and_normal_operation(radio_contract_executable, scenario):
+        result = subprocess.run([str(radio_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:166: 0
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:168: SilverStarAssert_FaultRecordGet(&fault) == 1U
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:169: fault.module_id == SILVERSTAR_ASSERT_MODULE_DEVICE
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:170: fault.reason_id == reason
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:171: fault.line != 0U
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:174: memcmp(&before, &s_contexts[0], sizeof(before)) == 0
+E         tx_head: 11 checks, 6 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\day_ground_baseline3\\sx1281-contract0\\contract.exe',...ontract_host.c:174: memcmp(&before, &s_contexts[0], sizeof(before)) == 0\ntx_head: 11 checks, 6 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_sx1281_contract_host.py:46: AssertionError
+__________ test_radio_contract_faults_and_normal_operation[rx_tail] ___________
+
+radio_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/day_ground_baseline3/sx1281-contract0/contract.exe')
+scenario = 'rx_tail'
+
+    @pytest.mark.parametrize("scenario", [
+        "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
+        "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
+        "control_state", "control_active_init", "flags", "packet_type", "rx_error",
+        "radio_state",
+    ])
+    def test_radio_contract_faults_and_normal_operation(radio_contract_executable, scenario):
+        result = subprocess.run([str(radio_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:166: 0
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:168: SilverStarAssert_FaultRecordGet(&fault) == 1U
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:169: fault.module_id == SILVERSTAR_ASSERT_MODULE_DEVICE
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:170: fault.reason_id == reason
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:171: fault.line != 0U
+E         rx_tail: 11 checks, 5 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\day_ground_baseline3\\sx1281-contract0\\contract.exe',...pps\\FCCG\\tests\\fixtures\\sx1281_contract_host.c:171: fault.line != 0U\nrx_tail: 11 checks, 5 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_sx1281_contract_host.py:46: AssertionError
+_________ test_radio_contract_faults_and_normal_operation[control_op] _________
+
+radio_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/day_ground_baseline3/sx1281-contract0/contract.exe')
+scenario = 'control_op'
+
+    @pytest.mark.parametrize("scenario", [
+        "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
+        "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
+        "control_state", "control_active_init", "flags", "packet_type", "rx_error",
+        "radio_state",
+    ])
+    def test_radio_contract_faults_and_normal_operation(radio_contract_executable, scenario):
+        result = subprocess.run([str(radio_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:166: 0
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:168: SilverStarAssert_FaultRecordGet(&fault) == 1U
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:169: fault.module_id == SILVERSTAR_ASSERT_MODULE_DEVICE
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:170: fault.reason_id == reason
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:171: fault.line != 0U
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:173: s_set_rx_count == rx_before
+E         FAIL D:\python_software\SilverStar\apps\FCCG\tests\fixtures\sx1281_contract_host.c:174: memcmp(&before, &s_contexts[0], sizeof(before)) == 0
+E         control_op: 12 checks, 7 failures
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\day_ground_baseline3\\sx1281-contract0\\contract.exe',...ract_host.c:174: memcmp(&before, &s_contexts[0], sizeof(before)) == 0\ncontrol_op: 12 checks, 7 failures\n', stderr='').returncode
+
+apps\FCCG\tests\test_sx1281_contract_host.py:46: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_sx1281_contract_host.py::test_radio_contract_faults_and_normal_operation[reinit]
+FAILED apps\FCCG\tests\test_sx1281_contract_host.py::test_radio_contract_faults_and_normal_operation[tx_head]
+FAILED apps\FCCG\tests\test_sx1281_contract_host.py::test_radio_contract_faults_and_normal_operation[rx_tail]
+FAILED apps\FCCG\tests\test_sx1281_contract_host.py::test_radio_contract_faults_and_normal_operation[control_op]
+4 failed, 14 deselected in 2.46s

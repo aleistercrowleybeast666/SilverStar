@@ -1,0 +1,24 @@
+{
+  "timestamp_utc": "2026-10-01T04:02:02.633747+00:00",
+  "source": "user recollection via parent, not a dump",
+  "recalled_popup": "instruction referenced memory, memory could not be written; target low address ending near0x00...0B0; instruction address unknown",
+  "exact_write_target": null,
+  "instruction_address": null,
+  "exception_code": null,
+  "native_module": null,
+  "native_offset": null,
+  "saved_specific_log": "D:\\python_software\\SilverStar\\apps\\FCCG\\.work\\night_20260930\\pytest_p0_4.log",
+  "saved_log_matches": [
+    "Windows fatal exception: access violation",
+    "planning worker resource scan Python stack"
+  ],
+  "saved_log_absent": [
+    "0xB0/0x00000000000000B0",
+    "0xc0000005",
+    "Qt6Core.dll",
+    "Qt6Gui.dll"
+  ],
+  "historical_event_query": "Existing narrow-time Application event query found no matching record; no broad new system/user crash scan",
+  "known_process_scope": "6980/launcher22116 and12872/launcher25008 were explicit task terminations with -1; not natural crash exit evidence",
+  "root_cause": "UNEXPLAINED; not equated to the old sender removeRow SIGSEGV; subsequent non-reproduction is not a fix"
+}

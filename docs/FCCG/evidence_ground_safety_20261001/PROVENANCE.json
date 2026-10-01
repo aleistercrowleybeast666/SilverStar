@@ -1,0 +1,31 @@
+{
+  "source_commit": "0e1e5e735914829d32a2f2de2264805f79a432e1",
+  "source_files": [
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_sx1281_device.c",
+      "sha256": "168cf72490aa94f12a76b92427d281ae4517337b6e6609854f1abdb500efca0b"
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Inc/sx1281_device.h",
+      "sha256": "629756811568de5f42717f5d1f1225c49c8ef390c472eb05dafa1f67e1323c86"
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c",
+      "sha256": "6ce36e2cd8f95379b4e6236cd9ec1c98a37ae94691cc6b76ab48cccea39ac665"
+    },
+    {
+      "path": "apps/FCCG/tests/fixtures/sx1281_contract_host.c",
+      "sha256": "6c15451708a654aff0f83911a00b3f16d4b7dbb5cd648c98a376df5cc8312c4b"
+    },
+    {
+      "path": "apps/FCCG/tests/test_sx1281_contract_host.py",
+      "sha256": "51871d9d24b0f0b47f6e016757bb0a576c76f932aa2355a149a9e2da48d8c553"
+    }
+  ],
+  "existing_decoder_same_bytes": true,
+  "quota": "Latest trusted user77%02:40UTC; dynamic unknown",
+  "models": "parent-confirmed gpt-6.1-sol/high creation parameters; no UI model reading, no additional models",
+  "hardware": "NOT RUN; Host stubs and real ARM compile/link only",
+  "source_protocol_and_math_change": false,
+  "ground_static_scope": "Initial syntax-only log is not analyzer PASS; actual14 product source objects and detected double-free canary are separately logged"
+}

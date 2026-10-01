@@ -1,0 +1,221 @@
+{
+  "timestamp_utc": "2026-10-01T03:52:12.154418+00:00",
+  "source_commit": "0e1e5e735914829d32a2f2de2264805f79a432e1",
+  "scope": "Ground batch1 original checker13->0; Flight194->181 stillFAIL; 30 selected pytest PASS;72 complete Host executables;2 fresh ARM builds; not full software or hardware acceptance",
+  "entries": [
+    {
+      "file": "ground_arm.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_arm.log",
+      "bytes": 36495,
+      "sha256": "074dda8972df09cb5e1958360efd345e4c04cbd5497ce2b431e25284aa7f324c"
+    },
+    {
+      "file": "ground_power10.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_power10.log",
+      "bytes": 2607,
+      "sha256": "b4fadf72480e94faf4cf39cc94583a0f72ccdf1d5baf56d667a79251bfc82a68"
+    },
+    {
+      "file": "ground_static.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_static.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "flight_arm.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\flight_arm.log",
+      "bytes": 437145,
+      "sha256": "4b33876d8219569eb8fbd93c09351b7e50d6b0b4ee9f34f565611196cd7535e1"
+    },
+    {
+      "file": "flight_host.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\flight_host.log",
+      "bytes": 56368,
+      "sha256": "cac3809fcb9318ad1ea781952ce76ae13a40fedf4083a76dd35639c1c3a1596a"
+    },
+    {
+      "file": "flight_host.interrupted_0329.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\flight_host.interrupted_0329.log",
+      "bytes": 26788,
+      "sha256": "268b2793cd704466a678869076f83cf5948494ccd1b53b740f1b0eae8cfa41ad"
+    },
+    {
+      "file": "flight_power10.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\flight_power10.log",
+      "bytes": 44053,
+      "sha256": "7dd8c69a6cc295bab9fb57d3c73324d3f60039005e430d3c22e9fd3ac2921ce6"
+    },
+    {
+      "file": "flight_stack.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\flight_stack.log",
+      "bytes": 880,
+      "sha256": "330916b405e3decfb38a6e61b247847ded72a345a8d69d09fa307f45d6dc7425"
+    },
+    {
+      "file": "flight_architecture.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\flight_architecture.log",
+      "bytes": 1154,
+      "sha256": "bf907f9d87edd79cd8c5718b2d7b978ab25a3d6e5c48a29d1c355f4d5a560965"
+    },
+    {
+      "file": "flight_artifact.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\flight_artifact.log",
+      "bytes": 1995,
+      "sha256": "76a4888e224399411b74dd40ad5bf74b62bacf1a87b4a8c41c3d467ab06dffb7"
+    },
+    {
+      "file": "analyzer_negative.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\analyzer_negative.log",
+      "bytes": 1315,
+      "sha256": "134472ea417ade2dafc956aa198acd415a3d2ea4ac45993b9a9a398f140cea0b"
+    },
+    {
+      "file": "ground_analyze_0.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_1.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_10.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_10.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_11.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_11.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_12.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_12.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_13.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_13.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_2.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_3.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_4.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_4.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_5.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_5.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_6.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_6.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_7.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_7.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_8.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_8.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ground_analyze_9.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\ground_analyze_9.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "BUILD_MANIFEST.json",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final\\result.json",
+      "bytes": 45273,
+      "sha256": "41c22cc22a2840d5651ad8eeb96a5aec0aa3b0613172487d7cdbdcfe45dd7728"
+    },
+    {
+      "file": "BASELINE_FOUR_FAILURES.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_baseline3.log",
+      "bytes": 8840,
+      "sha256": "0bc26aaffb1ab66e633f9b26eba57a20ec035ce55b7fb2be2d4de5693d25f875"
+    },
+    {
+      "file": "FINAL_30_TESTS.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final_tests2.log",
+      "bytes": 101,
+      "sha256": "41399d853144b5d66954b8817bbbd5a37602b14e811d94768ff7efb7974676a7"
+    },
+    {
+      "file": "FINAL_30_TESTS.exit.txt",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_final_tests2.exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "file": "RESUME_COMPLETION.log",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_resume_driver.log",
+      "bytes": 1110,
+      "sha256": "5c4d431c247ff8c66b3c7962b7130e6efd05c3644d1d108fb2556d48c7481825"
+    },
+    {
+      "file": "FLIGHT_STACK_BUDGET.json",
+      "source": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\GroundSafety_0e1e5e7_20261001\\ExistingHardware\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "bytes": 14758,
+      "sha256": "9b0161190503c8288f5bc060f0d96adf9077f97a9a8a0824a78efb67e594f23b"
+    },
+    {
+      "file": "GROUND_RADIO_FRAMES.su",
+      "source": "D:\\stm32_project\\SS_0_5_TEST_4_versions\\GroundSafety_0e1e5e7_20261001\\ExistingHardware\\Ground_Station\\build\\Devices\\Telemetry\\SX1281\\Src\\sx1281_device.su",
+      "bytes": 2134,
+      "sha256": "6301d27cf713b83b9120a109657fc9b6e0ed25cfdd766aa138a3638bd2ab6404"
+    },
+    {
+      "file": "UPDATE_COORDINATION.json",
+      "source": "D:\\python_software\\SilverStar\\.work\\day_ground_pause.json",
+      "bytes": 4599,
+      "sha256": "567ee7af3c0388b0a78a66a63b839c9c31097af292b3e73757c2658f36414a33"
+    },
+    {
+      "file": "PROVENANCE.json",
+      "bytes": 1578,
+      "sha256": "7117bf7a4c9b6485fe1c4367d13523c2191e54bf664cfcf2867a793f37824b77"
+    },
+    {
+      "file": "HISTORICAL_P0_4_ACCESS_VIOLATION.log",
+      "bytes": 8606,
+      "sha256": "5e9f2ace12650692a2c169acc2ff033ceac7eb91da3be0b7a2a54ac5e654e8c2"
+    },
+    {
+      "file": "USER_WINDOWS_AV_CLUE.json",
+      "bytes": 1182,
+      "sha256": "3ca5c527ab0b908f4a17a5123827cac646b03675737b9badddf1457afa308986"
+    }
+  ],
+  "preservation": "Raw-byte Git attribute applies; old night evidence untouched"
+}
