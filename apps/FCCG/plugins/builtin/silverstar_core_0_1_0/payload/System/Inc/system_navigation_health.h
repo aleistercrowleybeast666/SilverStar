@@ -68,8 +68,13 @@ void SystemNavigationHealth_Reset(uint64_t epoch_us);
 void SystemNavigationHealth_EpochSet(uint64_t epoch_us);
 void SystemNavigationHealth_ImuQualityRecord(uint32_t quality_flags);
 uint8_t SystemNavigationHealth_ChangesGet(uint64_t evaluation_us);
+/* Fusion evaluations cannot precede the epoch or an earlier successful
+ * evaluation; physical/receive timestamps may predate the epoch (delayed GNSS).
+ * An ordinary rejected evidence update leaves group state unchanged. */
 SystemDeviceResult SystemNavigationHealth_Observe(uint8_t group,
     const SystemNavigationFusionEvidence *evidence);
+/* On an ordinary error, snapshot is unchanged. Latched faults still produce an
+ * INVALID snapshot even when the evaluation time predates the epoch. */
 SystemDeviceResult SystemNavigationHealth_GroupGet(uint8_t group,
     uint64_t evaluation_us, SystemNavigationGroupHealth *snapshot);
 uint8_t SystemNavigationHealth_DegradedGet(uint64_t evaluation_us);

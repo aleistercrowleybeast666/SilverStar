@@ -28,6 +28,12 @@ typedef enum
     COMMON_SPSC_QUEUE_RESULT_BAD_PARAM
 } CommonSpscQueueResult;
 
+/* The caller owns at least capacity * item_size storage bytes. The storage,
+ * capacity and item size remain immutable until an exclusive reinitialization.
+ * Exactly one producer owns head/head_index; one consumer owns tail/tail_index.
+ * Reset is exclusive. Count is a bounded advisory snapshot, not a reservation.
+ * Target ports must provide ordered, atomic 16-bit sequence accesses; this
+ * volatile/fence implementation is not a portable multi-threaded C queue. */
 CommonSpscQueueResult CommonSpscQueue_Init(CommonSpscQueue *queue,
                                             void *storage,
                                             uint16_t capacity,
