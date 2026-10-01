@@ -21,9 +21,10 @@ import silverstar_fccg
 
 assert Path(silverstar_fccg.__file__).is_relative_to(ROOT)
 MODE = sys.argv[1] if len(sys.argv) > 1 else "matrix"
-EVIDENCE = Path(__file__).parent / ("evidence_gates_v1" if MODE == "gates" else "evidence_v1")
+VERSION = os.environ.get("SILVERSTAR_RUN_VERSION", "v1")
+EVIDENCE = Path(__file__).parent / (("evidence_gates_" if MODE == "gates" else "evidence_") + VERSION)
 EVIDENCE.mkdir(exist_ok=True)
-PROJECTS = ROOT / ".work/AutoMemoryCandidates_v1"
+PROJECTS = ROOT / (".work/AutoMemoryCandidates_" + VERSION)
 MAKE = "D:/msys64/ucrt64/bin/mingw32-make.exe"
 os.environ["PATH"] = "D:/Arm GNU Toolchain/14.3 rel1/bin;D:/msys64/ucrt64/bin;" + str(Path(sys.executable).parent) + ";" + os.environ["PATH"]
 os.environ["PYTHONPATH"] = str(ROOT / "apps/FCCG/src")
@@ -33,7 +34,7 @@ manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else 
     "utc": datetime.now(timezone.utc).isoformat(), "import_path": silverstar_fccg.__file__, "stages": [], "projects": {},
 }
 if MODE == "gates" and not manifest["projects"]:
-    manifest["projects"] = json.loads((Path(__file__).parent / "evidence_v1/results.json").read_text())["projects"]
+    manifest["projects"] = json.loads((Path(__file__).parent / ("evidence_" + VERSION + "/results.json")).read_text())["projects"]
 
 
 def save():
@@ -83,27 +84,28 @@ def generate():
 generate()
 snapshot = subprocess.check_output(["git", "diff", "--binary"], cwd=ROOT)
 (EVIDENCE / "source_delta.patch").write_bytes(snapshot)
-tracked = subprocess.check_output(["git", "diff", "--name-only"], cwd=ROOT, text=True).splitlines()
+tracked = subprocess.check_output(["git", "ls-files", "apps/FCCG"], cwd=ROOT, text=True).splitlines()
 tracked += subprocess.check_output(["git", "ls-files", "--others", "--exclude-standard", "apps/FCCG"], cwd=ROOT, text=True).splitlines()
 manifest["source_sha256"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in tracked}
 save()
 mode = MODE
-if mode == "matrix":
+if mode in ("matrix", "final"):
     for name in ("ESKF15", "KF6", "SF6", "PureINS"):
         directory = Path(manifest["projects"][name]["directory"])
         for layout in ("legacy", "auto"):
             run(name + "_arm_" + layout, directory, [MAKE, "-j2", "CONFIG=Release", "MEMORY_LAYOUT=" + layout,
                                                       "PYTHON=" + sys.executable.replace("\\", "/"), "artifact-check"])
-elif mode == "gates":
+if mode in ("gates", "final"):
     for name in ("ESKF15", "KF6", "SF6", "PureINS"):
         directory = Path(manifest["projects"][name]["directory"])
         for gate in ("architecture-check", "power10-check", "host-tests"):
             run(name + "_" + gate, directory, [MAKE, "CONFIG=Release", gate])
-    directory = Path(manifest["projects"]["ESKF15"]["directory"])
-    run("ESKF15_static_analysis", directory, [MAKE, "-j2", "CONFIG=Release", "MEMORY_LAYOUT=auto",
-                                                "PYTHON=" + sys.executable.replace("\\", "/"), "static-analysis"])
-else:
-    raise SystemExit("expected matrix or gates")
+        run(name + "_static_analysis", directory, [MAKE, "-j2", "CONFIG=Release", "MEMORY_LAYOUT=auto",
+                                                      "PYTHON=" + sys.executable.replace("\\", "/"), "static-analysis"], timeout=2400)
+        run(name + "_stack_report", directory, [MAKE, "CONFIG=Release", "MEMORY_LAYOUT=auto",
+                                                   "PYTHON=" + sys.executable.replace("\\", "/"), "stack-report"])
+if mode not in ("matrix", "gates", "final"):
+    raise SystemExit("expected matrix, gates or final")
 manifest["artifact_sha256"] = {str(path.relative_to(PROJECTS)): hashlib.sha256(path.read_bytes()).hexdigest()
     for path in PROJECTS.rglob("*") if path.is_file() and path.suffix in (".elf", ".map", ".hex", ".bin", ".ssdecoder", ".ssproject", ".su")}
 manifest["source_unchanged_after"] = all(hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest

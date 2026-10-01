@@ -413,6 +413,11 @@ $expectedGeneratedFiles = @(
     'Generated\project_sources.mk',
     'Generated\module.mk'
 ) | Sort-Object
+if (Test-Path -LiteralPath (Join-Path $repoRoot 'Generated\memory_audit.py') -PathType Leaf) {
+    # Exact shared resource parser emitted by current FCCG. Old projects may
+    # omit it; the auto Make dependency requires it when auto is selected.
+    $expectedGeneratedFiles = @($expectedGeneratedFiles + 'Generated\memory_audit.py' | Sort-Object)
+}
 if (-not $loggingEnabled) {
     $disabledGeneratedFiles = @(
         'Generated\Inc\project_log_config.h', 'Generated\Inc\project_log_decoder_profile.h',
@@ -1315,7 +1320,7 @@ if ($script:failures.Count -ne 0) {
 Write-Output ("SilverStar architecture check passed: checks={0} failures=0" -f `
     $script:checkCount)
 if ($loggingEnabled) {
-    Write-Output 'SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.'
+    Write-Output 'SSLOG codecs are ordinary endian-aware protocol source; only explicit auto linking requires Python.'
     Write-Output 'Record Catalog, decoder profile, and static instance facade contracts are valid.'
 }
 else {

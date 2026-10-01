@@ -24,7 +24,9 @@ def AuditModule_Get():
         spec = importlib.util.spec_from_file_location("silverstar_memory_audit", generated)
         module = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = module
-        spec.loader.exec_module(module)
+        # The generated directory is an audited source inventory. Loading the
+        # shared parser must not create an unowned __pycache__ there.
+        exec(compile(generated.read_bytes(), str(generated), "exec"), module.__dict__)
         return module
     # Repository tests import the tool directly, before project generation.
     # Standalone generated projects cannot silently invent a replacement audit.
@@ -132,12 +134,15 @@ def SourceOwners_Check(project: Path, groups: dict) -> None:
     # Include the algorithm kernels/helpers and core interfaces called by the
     # private owners. A user-modified callee could otherwise start using DMA.
     for component, entry in provenance.items():
-        if component != "silverstar.core.0_1_0" and not component.startswith("silverstar.algorithm."):
+        if (component not in ("silverstar.core.0_1_0", "silverstar.platform.api") and
+                not component.startswith(("silverstar.algorithm.", "silverstar.mcu."))):
             continue
         for relative, expected in entry.get("files", {}).items():
-            if Path(relative).suffix.lower() not in (".c", ".h"):
+            if Path(relative).suffix.lower() not in (".c", ".h", ".s", ".ld"):
                 continue
-            source = project / relative
+            source = (project / relative).resolve()
+            if not source.is_relative_to(project.resolve()):
+                raise ValueError(f"CPU-only source proof path escapes project: {relative}")
             if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != expected:
                 raise ValueError(f"CPU-only source proof does not cover preserved/edited helper {relative}; use audited fresh payload or legacy")
     for group, info in groups.items():

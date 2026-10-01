@@ -184,6 +184,38 @@ def test_preserved_user_source_cannot_inherit_cpu_only_proof(arm_fixture):
         link_fixture(arm_fixture, name="edited_source")
 
 
+@pytest.mark.parametrize("component,relative", [
+    ("silverstar.algorithm.estimator.eskf15", "Algorithm/Estimator/ESKF15/Src/helper.c"),
+    ("silverstar.platform.api", "Platform/Inc/platform_memory.h"),
+    ("silverstar.mcu.stm32f407vet6", "startup_stm32f407xx.s"),
+    ("silverstar.mcu.stm32f407vet6", "STM32F407XX_FLASH.ld"),
+])
+def test_preserved_helper_or_memory_contract_edit_is_rejected(arm_fixture, component, relative):
+    root = arm_fixture[0]
+    helper = root / relative
+    helper.parent.mkdir(parents=True, exist_ok=True)
+    helper.write_text("/* audited fixture helper */\n", encoding="utf-8")
+    path = root / "SilverStar.ssproject"
+    identity = json.loads(path.read_text())
+    identity["component_provenance"].setdefault(component, {"files": {}})["files"][relative] = hashlib.sha256(helper.read_bytes()).hexdigest()
+    path.write_text(json.dumps(identity))
+    auto.SourceOwners_Check(root, {})
+    helper.write_text("/* changed helper may transfer an object to DMA */\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="edited helper"):
+        auto.SourceOwners_Check(root, {})
+
+
+def test_generated_audit_loader_does_not_write_bytecode(tmp_path, monkeypatch):
+    root = tmp_path / "project"
+    generated = root / "Generated/memory_audit.py"
+    generated.parent.mkdir(parents=True)
+    from silverstar_fccg.project import build_audit
+    generated.write_bytes(Path(build_audit.__file__).read_bytes())
+    monkeypatch.setattr(auto, "__file__", str(root / "Tools/auto_memory_layout.py"))
+    assert auto.AuditModule_Get()._LinkerRegions_Parse("RAM (xrw) : ORIGIN = 0x20000000, LENGTH = 128K") == {"RAM": (0x20000000, 131072)}
+    assert not (generated.parent / "__pycache__").exists()
+
+
 def test_f413_alias_cannot_be_counted_as_an_independent_ccm_bank():
     script = """MEMORY {
 RAM (xrw) : ORIGIN = 0x20000000, LENGTH = 320K
