@@ -41,7 +41,7 @@ from silverstar_fccg.project.validation import Project_Validate
 
 def _GroundBoardProject_Get(catalog: PluginCatalog):
     model = ReferenceProject_Create("Round2Targets", catalog=catalog)
-    board = catalog.Component_Get(model.board)
+    board = catalog.Component_Get("silverstar.board.ground_station_0_5")
     inventory = BoardHardwareInventory_Get(board)
     assert board.board is not None and inventory is not None
     resources = tuple(
@@ -49,7 +49,7 @@ def _GroundBoardProject_Get(catalog: PluginCatalog):
         for item in BoardResourceProvisions_Get(board)
     )
     model.ground_target = GroundTargetConfiguration(
-        enabled=True, mcu=model.mcu, board=model.board,
+        enabled=True, mcu="silverstar.mcu.stm32f103c8t6", board=board.component_id,
         hardware=HardwareConfiguration(
             mode="board_plugin", source_kind=board.board.source_kind,
             mcu=inventory.mcu_part, inventory=inventory.Dictionary_Get(),
@@ -334,7 +334,8 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
     metadata = json.loads(
         (both.project_root / "Ground_Station/Generated/ground_target_metadata.json").read_text()
     )
-    assert metadata["silverstar_version"] == "0.1.0"
+    from silverstar_fccg import __version__
+    assert metadata["silverstar_version"] == __version__
     assert metadata["target_role"] == "ground_station"
     assert len(metadata["hardware_fingerprint"]) == 64
     workspace = json.loads(

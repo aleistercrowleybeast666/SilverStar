@@ -2,7 +2,7 @@
   "device.interface_profile": "Interface / Operating profile",
   "protocol.selection_unavailable": "Selected protocol unavailable: {component} / {profile}",
   "app.credit": "By CXYL",
-  "app.title": "SilverStar System Configuration & Generation",
+  "app.title": "SilverStar SCG",
   "about.text": "SilverStar System Configuration & Generation (SCG)\nVersion v{version}\n\nGraphical Flight and Ground target configuration, declarative component plugins, project assembly, and build/toolchain front end.",
   "action.about": "About",
   "action.add_component": "Add Component",
