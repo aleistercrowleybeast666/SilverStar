@@ -21,8 +21,8 @@ def Command_Run(command: list[str], root: Path) -> str:
 
 
 def Architecture_Check(root: Path) -> dict:
-    graph = json.loads((root / 'Generated/ground_source_graph.json').read_text())
-    make = (root / 'Makefile').read_text().replace('\\\n', ' ')
+    graph = json.loads((root / 'Generated/ground_source_graph.json').read_text(encoding='utf-8'))
+    make = (root / 'Makefile').read_text(encoding='utf-8').replace('\\\n', ' ')
     for key, variable in [('sources', 'C_SOURCES'), ('asm_sources', 'ASM_SOURCES')]:
         match = re.search(rf'^{variable} := (.*)$', make, re.M)
         if match is None or match[1].split() != graph[key]:
@@ -44,14 +44,14 @@ def Architecture_Check(root: Path) -> dict:
     mains = [source for source in graph['sources'] if source.endswith('/main.c')]
     if len(mains) != 1:
         raise ValueError('Ground must have exactly one main')
-    main = (root / mains[0]).read_text()
+    main = (root / mains[0]).read_text(encoding='utf-8')
     if 'GroundBridge_Init' not in main or 'GroundBridge_Process' not in main:
         raise ValueError('Ground bridge integration missing')
     if any(name in main for name in ('AppTasks_Init', 'SystemStartup_Run', 'MX_FATFS_Init')):
         raise ValueError('Flight startup in Ground main')
     if '-T' + graph['linker_script'] not in make:
         raise ValueError('linker script differs from graph')
-    metadata = json.loads((root / 'Generated/ground_target_metadata.json').read_text())
+    metadata = json.loads((root / 'Generated/ground_target_metadata.json').read_text(encoding='utf-8'))
     if metadata['target_role'] != 'ground_station':
         raise ValueError('wrong target role')
     print(f'PASS Ground declared source graph ({len(sources)} sources), ownership and startup')
@@ -72,14 +72,14 @@ def Host_Check(root: Path, compiler: str) -> None:
         'Ground/Protocol/Src/protocol_crc16.c', 'Common/Src/silverstar_assert.c')]
     cases = [('bridge_bounds', bridge, tests / 'ground_bridge_bounds.c')]
     adapter = root / 'Generated/Src/pc_byte_stream.c'
-    text = adapter.read_text()
+    text = adapter.read_text(encoding='utf-8')
     if 'HAL_UARTEx_ReceiveToIdle_DMA' in text:
         handle = re.search(r'extern UART_HandleTypeDef (\w+);', text)
         if handle is None:
             raise ValueError('UART DMA handle missing')
-        (build / 'main.h').write_text((tests / 'uart_dma_main.h').read_text())
+        (build / 'main.h').write_text((tests / 'uart_dma_main.h').read_text(encoding='utf-8'), encoding='utf-8')
         harness = build / 'uart_dma.c'
-        harness.write_text((tests / 'uart_dma.c').read_text().replace('huart1', handle[1]))
+        harness.write_text((tests / 'uart_dma.c').read_text(encoding='utf-8').replace('huart1', handle[1]), encoding='utf-8')
         cases.append(('uart_dma', [str(adapter), str(root / 'Common/Src/silverstar_assert.c')], harness))
     elif 'CDC_Transmit_FS' in text:
         shutil.copyfile(tests / 'usb_cdc_if.h', build / 'usbd_cdc_if.h')
@@ -109,7 +109,7 @@ def Artifact_Check(root: Path, prefix: str) -> None:
     if re.search(r'\b(?:pvPortMalloc|vTaskStartScheduler|SystemStartup_Run|malloc|calloc|realloc)$', symbols, re.M):
         raise ValueError('unexpected Flight scheduler or allocation symbol')
     memory = {}
-    linker = (root / graph['linker_script']).read_text()
+    linker = (root / graph['linker_script']).read_text(encoding='utf-8')
     for name, origin, length, unit in re.findall(
             r'(\w+)\s*\([^)]*\)\s*:\s*ORIGIN\s*=\s*(0x[\da-fA-F]+)\s*,\s*LENGTH\s*=\s*(\d+)\s*([KM]?)', linker):
         memory[name] = (int(origin, 16), int(length) * {'': 1, 'K': 1024, 'M': 1048576}[unit])
@@ -129,7 +129,7 @@ def Artifact_Check(root: Path, prefix: str) -> None:
                 raise ValueError('linked section outside declared regions: ' + name)
     if found == 0:
         raise ValueError('no allocated sections parsed')
-    map_text = (root / 'build/ground.map').read_text()
+    map_text = (root / 'build/ground.map').read_text(encoding='utf-8')
     for source in graph['sources'] + graph['asm_sources']:
         object_path = 'build/' + str(Path(source).with_suffix('.o')).replace('\\', '/')
         if object_path not in map_text or not (root / object_path).is_file():
