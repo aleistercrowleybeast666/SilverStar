@@ -1,0 +1,19 @@
+[
+  {
+    "file": "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6.c",
+    "git_blob_id": "63002fe237d8dd75a310690256960907865c56b5",
+    "git_blob_content_sha256": "19dab0b2731b6e5709a451db22ad18a30a4b50e17451c5d65d1d7e1453188838",
+    "git_content_all_crlf_sha256": "3baf73e59e0b7dcc855f15278225114801fe942370f09290a575f8c45db5ecdf",
+    "archived_worktree_raw_sha256": "e7be2566574cc294f58d4e78fa4ae5ffee0291e4921cc701c71d86bc8fb5897a",
+    "crlf_lines": 209,
+    "lf_only_lines": 38,
+    "cr_only": 0,
+    "normalized_to_lf_equals_git_content": true
+  },
+  {
+    "file": "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c",
+    "git_blob_id": "a4cb53f5bce9e734894d6bf611a53edd0786c4fb",
+    "git_blob_content_sha256": "7c99336b7e272e04182db31cda35a5f1257601601aeda610d5c2284e52aa4bcf",
+    "git_content_all_crlf_sha256": "c8d7b16fda2fb5216d9ba82e7b39962a6e217556e5e22c5cae04049365b531eb"
+  }
+]

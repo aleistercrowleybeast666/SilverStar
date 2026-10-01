@@ -1,0 +1,47 @@
+{
+  "arm_version": {
+    "command": [
+      "arm-none-eabi-gcc",
+      "--version"
+    ],
+    "exit_code": 0
+  },
+  "host_version": {
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "--version"
+    ],
+    "exit_code": 0
+  },
+  "sf6_v7_sections": {
+    "command": [
+      "arm-none-eabi-size",
+      "-A",
+      ".work\\SF6_20261001_v1\\SF6_v7\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf"
+    ],
+    "exit_code": 0
+  },
+  "sf6_v7_symbols": {
+    "command": [
+      "arm-none-eabi-nm",
+      "-S",
+      "--size-sort",
+      ".work\\SF6_20261001_v1\\SF6_v7\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf"
+    ],
+    "exit_code": 0
+  },
+  "artifacts": {
+    ".work\\SF6_20261001_v1\\SF6_v7\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf": {
+      "bytes": 3069672,
+      "raw_sha256": "e4b7b8ceefc36d2f0e466d4ffcaee8e7cc76ca3f3ac2c412d26c1f16b0dcdd33"
+    },
+    ".work\\SF6_20261001_v1\\SF6_v7\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin": {
+      "bytes": 291256,
+      "raw_sha256": "a85f9edd2e3e456aa078c2c65fd555f52d9cce2e908eaea99fae5dc53d827287"
+    },
+    ".work\\SF6_20261001_v1\\SF6_v7\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map": {
+      "bytes": 1472092,
+      "raw_sha256": "43dfdde9b57b7d6e420b3c8491a486019d4e81e9ca85d62e9bdd3c00e215f582"
+    }
+  }
+}

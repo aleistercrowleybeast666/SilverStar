@@ -1,0 +1,34 @@
+{
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-pedantic",
+    "-O2",
+    "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+    "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host",
+    "-ID:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Algorithm\\Estimator\\SF6\\Inc",
+    "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+    "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Algorithm\\Estimator\\SF6\\Src\\navigation_sf6.c",
+    "D:\\python_software\\SilverStar\\apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Tests\\Host\\test_navigation_sf6.c",
+    "-lm",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\CrossGroup_PreFix\\sf6.exe"
+  ],
+  "compile_exit": 0,
+  "source_commit": "72333f194aefcb183525e7fc6830cebf470bc41f",
+  "run_exit": 1,
+  "files": {
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "navigation_sf6.c": "e7be2566574cc294f58d4e78fa4ae5ffee0291e4921cc701c71d86bc8fb5897a",
+    "navigation_sf6.h": "43f1315af978c862d368827aeb569322c0978ce685ca4ab1ae77727955911a09",
+    "run.log": "281d178a75ef8b9ad01658898baf2d9116f44533f6e0fd98a605c8a846cf634b",
+    "sf6.exe": "5395238c35860eb48d97679a6104aeab7113b3a71e18076ea88bab5b6b2b49d7",
+    "silverstar_assert.c": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826",
+    "test_navigation_sf6.c": "2e0d073d79cef130eff162d0f14ac76ae1490897f1afb9169781441b4138c459"
+  }
+}

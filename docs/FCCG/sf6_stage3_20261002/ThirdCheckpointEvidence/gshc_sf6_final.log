@@ -1,0 +1,172 @@
+.........................F.F..................................        [100%]
+================================== FAILURES ===================================
+______ test_navigation_live_gui_languages_themes_and_start[light-en_US] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/SF6_20261001_v1/gshc_sf6_final/test_navigation_live_gui_langu1')
+language = <Language.EN_US: 'en_US'>, theme = <Theme.LIGHT: 'light'>
+
+    @pytest.mark.parametrize("language", list(Language))
+    @pytest.mark.parametrize("theme", list(Theme))
+    def test_navigation_live_gui_languages_themes_and_start(tmp_path, language, theme):
+        app = QApplication.instance() or QApplication([])
+        for name in ("msyh.ttc", "segoeui.ttf"):
+            font = Path(os.environ.get("WINDIR", "C:/Windows")) / "Fonts" / name
+            if font.is_file():
+                QFontDatabase.addApplicationFont(str(font))
+        app.setFont(QFont("Microsoft YaHei", 9))
+        i18n = I18n(QSettings(str(tmp_path / "settings.ini"), QSettings.IniFormat))
+        i18n.set_language(language)
+        window = MainWindow(i18n)
+        window.resize(1000, 700)
+        window.gl_view.hide()
+        state = ready_state()
+        state.navigation.algorithm_id = 2
+        state.navigation.group_mask = 31
+        for group in range(5):
+            state.navigation.Navigation_ApplyMetric(42, 1, 10 + group, group, 0x22 if group == 0 else 0x11, time.monotonic_ns())
+            state.navigation.Navigation_ApplyMetric(42, 1, 20 + group, 8 + group, 3, time.monotonic_ns())
+        window.bind_runtime_model(state, EventHistory())
+        window.theme_combo.setCurrentIndex(window.theme_combo.findData(theme.value))
+        window.show()
+        app.processEvents()
+        # Theme construction can exceed the real 2 s freshness budget on CI.
+        # Simulate the next actual on-board update; never extend the production TTL.
+        state.navigation.Navigation_ApplyPreparation(replace(
+            state.navigation.preparation, snapshot=2, received_ns=time.monotonic_ns()))
+        for group in range(5):
+            state.navigation.Navigation_ApplyMetric(42, 1, 30 + group, group, 0x22 if group == 0 else 0x11, time.monotonic_ns())
+            state.navigation.Navigation_ApplyMetric(42, 1, 40 + group, 8 + group, 3, time.monotonic_ns())
+            for metric in range(2, 9):
+                value = 0x0400 if metric == 2 else 10  # R scale is Q8.8: 4.0.
+                state.navigation.Navigation_ApplyMetric(42, 1, 50 + metric, metric * 8 + group, value, time.monotonic_ns())
+        for metric, value in {0: 4, 1: 125, 2: 250, 3: 50, 4: 1, 5: 0xF03, 6: 6,
+                              7: 0, 8: 5, 9: 2000, 10: 7, 11: 17, 12: 5, 13: 12,
+                              14: 0, 15: 0, 16: 1600}.items():
+            state.navigation.Navigation_ApplyMetric(42, 1, 60 + metric, metric * 8 + 7, value, time.monotonic_ns())
+        window.render_state()
+        assert window.btn_start.isEnabled()
+        assert "ESKF_15" in window.navigation_preparation_panel.summary.text()
+        assert len(window.navigation_preparation_panel.steps) == 9
+        window.navigation_health_panel.toggle.setChecked(True)
+        assert window.navigation_health_panel.group.count() == 5
+        assert i18n.tr("navigation.result.2") in window.navigation_health_panel.health.text()
+        assert i18n.tr("navigation.imu_flag.1") in window.navigation_health_panel.unavailable.text()
+        assert "1.25/2.50" in window.navigation_health_panel.unavailable.text()
+        assert "4.00" in window.navigation_health_panel.health.text()
+        window.render_timer.stop()
+        root = Path(__file__).resolve().parents[1] / ".work" / (
+            "gui-fit-hidpi" if os.environ.get("QT_SCALE_FACTOR") == "2" else "gui-fit"
+        )
+        root.mkdir(parents=True, exist_ok=True)
+        # resize() alone does not prove the layout accepted the requested geometry.
+        window.resize(1000, 700)
+        app.processEvents()
+        assert window.size() == QSize(1000, 700)
+        captures = []
+        for page_name, page in (("preflight", window.preflight_page), ("flight", window.flight_page)):
+            window.pages.setCurrentWidget(page)
+            app.processEvents()
+            assert window.size() == QSize(1000, 700)
+            if page_name == "preflight":
+>               assert page.widget().width() <= page.viewport().width()
+E               assert 856 <= 638
+E                +  where 856 = <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23DCD33C0>()
+E                +    where <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23DCD33C0> = <PySide6.QtWidgets.QWidget(0x1a23ef24430) at 0x000001A23DCD33C0>.width
+E                +      where <PySide6.QtWidgets.QWidget(0x1a23ef24430) at 0x000001A23DCD33C0> = <built-in method widget of PySide6.QtWidgets.QScrollArea object at 0x000001A23F05FC40>()
+E                +        where <built-in method widget of PySide6.QtWidgets.QScrollArea object at 0x000001A23F05FC40> = <PySide6.QtWidgets.QScrollArea(0x1a23e5e5360) at 0x000001A23F05FC40>.widget
+E                +  and   638 = <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23F053180>()
+E                +    where <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23F053180> = <PySide6.QtWidgets.QWidget(0x1a24160d2b0, name="qt_scrollarea_viewport") at 0x000001A23F053180>.width
+E                +      where <PySide6.QtWidgets.QWidget(0x1a24160d2b0, name="qt_scrollarea_viewport") at 0x000001A23F053180> = <built-in method viewport of PySide6.QtWidgets.QScrollArea object at 0x000001A23F05FC40>()
+E                +        where <built-in method viewport of PySide6.QtWidgets.QScrollArea object at 0x000001A23F05FC40> = <PySide6.QtWidgets.QScrollArea(0x1a23e5e5360) at 0x000001A23F05FC40>.viewport
+
+apps\GSHC\tests\test_navigation_gui.py:85: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: This plugin does not support propagateSizeHints()
+_______ test_navigation_live_gui_languages_themes_and_start[dark-en_US] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/SF6_20261001_v1/gshc_sf6_final/test_navigation_live_gui_langu3')
+language = <Language.EN_US: 'en_US'>, theme = <Theme.DARK: 'dark'>
+
+    @pytest.mark.parametrize("language", list(Language))
+    @pytest.mark.parametrize("theme", list(Theme))
+    def test_navigation_live_gui_languages_themes_and_start(tmp_path, language, theme):
+        app = QApplication.instance() or QApplication([])
+        for name in ("msyh.ttc", "segoeui.ttf"):
+            font = Path(os.environ.get("WINDIR", "C:/Windows")) / "Fonts" / name
+            if font.is_file():
+                QFontDatabase.addApplicationFont(str(font))
+        app.setFont(QFont("Microsoft YaHei", 9))
+        i18n = I18n(QSettings(str(tmp_path / "settings.ini"), QSettings.IniFormat))
+        i18n.set_language(language)
+        window = MainWindow(i18n)
+        window.resize(1000, 700)
+        window.gl_view.hide()
+        state = ready_state()
+        state.navigation.algorithm_id = 2
+        state.navigation.group_mask = 31
+        for group in range(5):
+            state.navigation.Navigation_ApplyMetric(42, 1, 10 + group, group, 0x22 if group == 0 else 0x11, time.monotonic_ns())
+            state.navigation.Navigation_ApplyMetric(42, 1, 20 + group, 8 + group, 3, time.monotonic_ns())
+        window.bind_runtime_model(state, EventHistory())
+        window.theme_combo.setCurrentIndex(window.theme_combo.findData(theme.value))
+        window.show()
+        app.processEvents()
+        # Theme construction can exceed the real 2 s freshness budget on CI.
+        # Simulate the next actual on-board update; never extend the production TTL.
+        state.navigation.Navigation_ApplyPreparation(replace(
+            state.navigation.preparation, snapshot=2, received_ns=time.monotonic_ns()))
+        for group in range(5):
+            state.navigation.Navigation_ApplyMetric(42, 1, 30 + group, group, 0x22 if group == 0 else 0x11, time.monotonic_ns())
+            state.navigation.Navigation_ApplyMetric(42, 1, 40 + group, 8 + group, 3, time.monotonic_ns())
+            for metric in range(2, 9):
+                value = 0x0400 if metric == 2 else 10  # R scale is Q8.8: 4.0.
+                state.navigation.Navigation_ApplyMetric(42, 1, 50 + metric, metric * 8 + group, value, time.monotonic_ns())
+        for metric, value in {0: 4, 1: 125, 2: 250, 3: 50, 4: 1, 5: 0xF03, 6: 6,
+                              7: 0, 8: 5, 9: 2000, 10: 7, 11: 17, 12: 5, 13: 12,
+                              14: 0, 15: 0, 16: 1600}.items():
+            state.navigation.Navigation_ApplyMetric(42, 1, 60 + metric, metric * 8 + 7, value, time.monotonic_ns())
+        window.render_state()
+        assert window.btn_start.isEnabled()
+        assert "ESKF_15" in window.navigation_preparation_panel.summary.text()
+        assert len(window.navigation_preparation_panel.steps) == 9
+        window.navigation_health_panel.toggle.setChecked(True)
+        assert window.navigation_health_panel.group.count() == 5
+        assert i18n.tr("navigation.result.2") in window.navigation_health_panel.health.text()
+        assert i18n.tr("navigation.imu_flag.1") in window.navigation_health_panel.unavailable.text()
+        assert "1.25/2.50" in window.navigation_health_panel.unavailable.text()
+        assert "4.00" in window.navigation_health_panel.health.text()
+        window.render_timer.stop()
+        root = Path(__file__).resolve().parents[1] / ".work" / (
+            "gui-fit-hidpi" if os.environ.get("QT_SCALE_FACTOR") == "2" else "gui-fit"
+        )
+        root.mkdir(parents=True, exist_ok=True)
+        # resize() alone does not prove the layout accepted the requested geometry.
+        window.resize(1000, 700)
+        app.processEvents()
+        assert window.size() == QSize(1000, 700)
+        captures = []
+        for page_name, page in (("preflight", window.preflight_page), ("flight", window.flight_page)):
+            window.pages.setCurrentWidget(page)
+            app.processEvents()
+            assert window.size() == QSize(1000, 700)
+            if page_name == "preflight":
+>               assert page.widget().width() <= page.viewport().width()
+E               assert 856 <= 638
+E                +  where 856 = <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23F13B3C0>()
+E                +    where <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23F13B3C0> = <PySide6.QtWidgets.QWidget(0x1a23e93f090) at 0x000001A23F13B3C0>.width
+E                +      where <PySide6.QtWidgets.QWidget(0x1a23e93f090) at 0x000001A23F13B3C0> = <built-in method widget of PySide6.QtWidgets.QScrollArea object at 0x000001A2437CD4C0>()
+E                +        where <built-in method widget of PySide6.QtWidgets.QScrollArea object at 0x000001A2437CD4C0> = <PySide6.QtWidgets.QScrollArea(0x1a241a03400) at 0x000001A2437CD4C0>.widget
+E                +  and   638 = <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23F0FB140>()
+E                +    where <built-in method width of PySide6.QtWidgets.QWidget object at 0x000001A23F0FB140> = <PySide6.QtWidgets.QWidget(0x1a23ec097e0, name="qt_scrollarea_viewport") at 0x000001A23F0FB140>.width
+E                +      where <PySide6.QtWidgets.QWidget(0x1a23ec097e0, name="qt_scrollarea_viewport") at 0x000001A23F0FB140> = <built-in method viewport of PySide6.QtWidgets.QScrollArea object at 0x000001A2437CD4C0>()
+E                +        where <built-in method viewport of PySide6.QtWidgets.QScrollArea object at 0x000001A2437CD4C0> = <PySide6.QtWidgets.QScrollArea(0x1a241a03400) at 0x000001A2437CD4C0>.viewport
+
+apps\GSHC\tests\test_navigation_gui.py:85: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: This plugin does not support propagateSizeHints()
+=========================== short test summary info ===========================
+FAILED apps/GSHC/tests/test_navigation_gui.py::test_navigation_live_gui_languages_themes_and_start[light-en_US]
+FAILED apps/GSHC/tests/test_navigation_gui.py::test_navigation_live_gui_languages_themes_and_start[dark-en_US]
+2 failed, 60 passed, 3 subtests passed in 26.53s

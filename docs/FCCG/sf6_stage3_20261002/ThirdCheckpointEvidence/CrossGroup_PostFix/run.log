@@ -1,0 +1,3 @@
+cross_group scenario=0 pU=6.5 chronological_oracle=6.5 error=0
+cross_group scenario=1 pU=4.125 chronological_oracle=4.125 error=0
+navigation_sf6: 1224 checks, 0 failures

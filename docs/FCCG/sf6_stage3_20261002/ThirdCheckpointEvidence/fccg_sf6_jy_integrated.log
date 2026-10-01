@@ -1,0 +1,85 @@
+.......F...                                                              [100%]
+================================== FAILURES ===================================
+__________________ test_sf6_gui_order_gains_edit_save_reopen __________________
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sf6_gui_order_gains_edit_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sf6_gui_order_gains_edit_0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_sf6_gui_order_gains_edit_0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sf6_gui_order_gains_edit_0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+qapp = <PySide6.QtWidgets.QApplication(0x1e14f7dc450) at 0x000001E15255C300>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E153331BA0>
+
+    def test_sf6_gui_order_gains_edit_save_reopen(tmp_path, workspace_root, qapp, monkeypatch):
+        monkeypatch.setenv("QT_QPA_PLATFORM", "offscreen")
+>       window = MainWindow(SettingsStore(tmp_path / "sf6.ini"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_sf6.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sf6_gui_order_gains_edit_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_sf6_gui_order_gains_edit_0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_sf6.py::test_sf6_gui_order_gains_edit_save_reopen
+1 failed, 10 passed in 50.66s

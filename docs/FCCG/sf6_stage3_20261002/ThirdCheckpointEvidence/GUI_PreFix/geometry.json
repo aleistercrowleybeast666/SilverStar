@@ -1,0 +1,5262 @@
+[
+  {
+    "language": "zh_CN",
+    "theme": "light",
+    "viewport": 638,
+    "content": {
+      "type": "QWidget",
+      "geometry": [
+        0,
+        0,
+        638,
+        948
+      ],
+      "minhint": [
+        615,
+        778
+      ],
+      "children": [
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            6,
+            142,
+            290
+          ],
+          "minhint": [
+            126,
+            184
+          ],
+          "title": "系统",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                53,
+                31
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "生命周期",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                28,
+                13,
+                31
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                65,
+                53,
+                31
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "系统就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                65,
+                13,
+                31
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                102,
+                53,
+                32
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "自检",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                102,
+                13,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "通过",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                140,
+                53,
+                48
+              ],
+              "minhint": [
+                20,
+                16
+              ],
+              "text": "飞控 AIR 链路",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                140,
+                13,
+                48
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "已连接",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                194,
+                53,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "解锁状态",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                194,
+                13,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "已解锁",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                248,
+                53,
+                32
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "START 阻止原因",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                248,
+                13,
+                32
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "成功",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                88,
+                146,
+                44,
+                36
+              ],
+              "minhint": [
+                44,
+                36
+              ],
+              "text": "详情",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            156,
+            6,
+            141,
+            290
+          ],
+          "minhint": [
+            134,
+            242
+          ],
+          "title": "校准",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "模式",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                28,
+                67,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "六面校准",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                50,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "状态",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                50,
+                67,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                72,
+                67,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                94,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "当前面",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                94,
+                67,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                48,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "六面进度",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                116,
+                67,
+                48
+              ],
+              "minhint": [
+                25,
+                16
+              ],
+              "text": "X+✓ X-✓ Y+✓ Y-✓ Z+✓ Z-✓",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                170,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "当前提示",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                170,
+                67,
+                16
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                121,
+                48
+              ],
+              "minhint": [
+                24,
+                16
+              ],
+              "text": "本工程支持的采样校准：单面校准 / 六面校准",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                66,
+                34
+              ],
+              "minhint": [
+                66,
+                34
+              ],
+              "text": "重新校准",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                82,
+                246,
+                42,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "重置",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            305,
+            6,
+            327,
+            290
+          ],
+          "minhint": [
+            327,
+            160
+          ],
+          "title": "初对准",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                60,
+                49
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "状态",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                28,
+                241,
+                49
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                83,
+                60,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                83,
+                241,
+                48
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                137,
+                60,
+                49
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "传感器快照",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                137,
+                241,
+                49
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "尚无快照",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                60,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "对准提示",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                192,
+                241,
+                48
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                90,
+                34
+              ],
+              "minhint": [
+                90,
+                34
+              ],
+              "text": "开始导航准备",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                106,
+                246,
+                42,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "停止",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                154,
+                246,
+                42,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "重置",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                202,
+                246,
+                115,
+                34
+              ],
+              "minhint": [
+                115,
+                34
+              ],
+              "text": "传感器状态 / 详情",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            304,
+            412,
+            142
+          ],
+          "minhint": [
+            194,
+            142
+          ],
+          "title": "惯性 / 姿态（PREFLIGHT_STATE）",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                117,
+                16
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "加速度 XYZ（m/s²）",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                28,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                50,
+                117,
+                16
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "角速度 XYZ（rad/s）",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                50,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                117,
+                16
+              ],
+              "minhint": [
+                27,
+                16
+              ],
+              "text": "四元数 raw/Q15",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                72,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                94,
+                117,
+                16
+              ],
+              "minhint": [
+                35,
+                16
+              ],
+              "text": "四元数 WXYZ",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                94,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                117,
+                16
+              ],
+              "minhint": [
+                44,
+                16
+              ],
+              "text": "欧拉角 RPY（rad）",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                116,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            426,
+            304,
+            206,
+            142
+          ],
+          "minhint": [
+            57,
+            98
+          ],
+          "title": "GNSS",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                48,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "设备存在",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                28,
+                132,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                56,
+                48,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "定位可用",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                56,
+                132,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "否",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                84,
+                186,
+                48
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "AIR Profile 0 不传输卫星数、HAcc/VAcc 或经纬度；本上位机不显示协议未提供的数据。",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            454,
+            626,
+            116
+          ],
+          "minhint": [
+            454,
+            116
+          ],
+          "title": "预飞任务操作",
+          "children": [
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                66,
+                34
+              ],
+              "text": "连通测试",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                159,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "锁定",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                308,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "解锁",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                457,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                66,
+                34
+              ],
+              "text": "开始任务",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                68,
+                606,
+                16
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "可以 START",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                90,
+                80,
+                16
+              ],
+              "minhint": [
+                80,
+                16
+              ],
+              "text": "最近命令",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                96,
+                90,
+                520,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            578,
+            626,
+            230
+          ],
+          "minhint": [
+            245,
+            108
+          ],
+          "title": "事件历史（最近 200 条；JSONL 保留全部）",
+          "children": [
+            {
+              "type": "QListWidget",
+              "geometry": [
+                10,
+                28,
+                606,
+                192
+              ],
+              "minhint": [
+                68,
+                68
+              ],
+              "children": [
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    1,
+                    1,
+                    604,
+                    190
+                  ],
+                  "minhint": [
+                    -1,
+                    -1
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    52,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    14,
+                    52
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "NavigationPanel",
+          "geometry": [
+            6,
+            816,
+            626,
+            126
+          ],
+          "minhint": [
+            150,
+            126
+          ],
+          "title": "导航准备（机载实时状态）",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                37,
+                608,
+                16
+              ],
+              "minhint": [
+                20,
+                16
+              ],
+              "text": "SF6 · 导航前置就绪 · 会话 42 / 准备代次 1",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                59,
+                199,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "1 链路握手 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                214,
+                59,
+                198,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "2 设备与配置读回 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                418,
+                59,
+                199,
+                16
+              ],
+              "minhint": [
+                25,
+                16
+              ],
+              "text": "3 IMU 校准 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                81,
+                199,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "4 姿态初对准 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                214,
+                81,
+                198,
+                16
+              ],
+              "minhint": [
+                33,
+                16
+              ],
+              "text": "5 GNSS 定位解 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                418,
+                81,
+                199,
+                16
+              ],
+              "minhint": [
+                33,
+                16
+              ],
+              "text": "6 GNSS 原点 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                103,
+                199,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "7 气压基准 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                214,
+                103,
+                198,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "8 导航算法初始化 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                418,
+                103,
+                199,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "9 START 许可 · 已就绪",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "language": "zh_CN",
+    "theme": "dark",
+    "viewport": 638,
+    "content": {
+      "type": "QWidget",
+      "geometry": [
+        0,
+        0,
+        638,
+        948
+      ],
+      "minhint": [
+        615,
+        776
+      ],
+      "children": [
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            6,
+            142,
+            290
+          ],
+          "minhint": [
+            126,
+            184
+          ],
+          "title": "系统",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                53,
+                31
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "生命周期",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                28,
+                13,
+                31
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                65,
+                53,
+                31
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "系统就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                65,
+                13,
+                31
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                102,
+                53,
+                32
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "自检",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                102,
+                13,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "通过",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                140,
+                53,
+                48
+              ],
+              "minhint": [
+                20,
+                16
+              ],
+              "text": "飞控 AIR 链路",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                140,
+                13,
+                48
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "已连接",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                194,
+                53,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "解锁状态",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                194,
+                13,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "已解锁",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                248,
+                53,
+                32
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "START 阻止原因",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                69,
+                248,
+                13,
+                32
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "成功",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                88,
+                146,
+                44,
+                36
+              ],
+              "minhint": [
+                44,
+                36
+              ],
+              "text": "详情",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            156,
+            6,
+            141,
+            290
+          ],
+          "minhint": [
+            134,
+            242
+          ],
+          "title": "校准",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "模式",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                28,
+                67,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "六面校准",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                50,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "状态",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                50,
+                67,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                72,
+                67,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                94,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "当前面",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                94,
+                67,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                48,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "六面进度",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                116,
+                67,
+                48
+              ],
+              "minhint": [
+                25,
+                16
+              ],
+              "text": "X+✓ X-✓ Y+✓ Y-✓ Z+✓ Z-✓",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                170,
+                48,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "当前提示",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                170,
+                67,
+                16
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                121,
+                48
+              ],
+              "minhint": [
+                24,
+                16
+              ],
+              "text": "本工程支持的采样校准：单面校准 / 六面校准",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                66,
+                34
+              ],
+              "minhint": [
+                66,
+                34
+              ],
+              "text": "重新校准",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                82,
+                246,
+                42,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "重置",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            305,
+            6,
+            327,
+            290
+          ],
+          "minhint": [
+            327,
+            160
+          ],
+          "title": "初对准",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                60,
+                49
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "状态",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                28,
+                241,
+                49
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                83,
+                60,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                83,
+                241,
+                48
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                137,
+                60,
+                49
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "传感器快照",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                137,
+                241,
+                49
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "尚无快照",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                60,
+                48
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "对准提示",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                76,
+                192,
+                241,
+                48
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                90,
+                34
+              ],
+              "minhint": [
+                90,
+                34
+              ],
+              "text": "开始导航准备",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                106,
+                246,
+                42,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "停止",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                154,
+                246,
+                42,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "重置",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                202,
+                246,
+                115,
+                34
+              ],
+              "minhint": [
+                115,
+                34
+              ],
+              "text": "传感器状态 / 详情",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            304,
+            412,
+            142
+          ],
+          "minhint": [
+            194,
+            142
+          ],
+          "title": "惯性 / 姿态（PREFLIGHT_STATE）",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                117,
+                16
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "加速度 XYZ（m/s²）",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                28,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                50,
+                117,
+                16
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "角速度 XYZ（rad/s）",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                50,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                117,
+                16
+              ],
+              "minhint": [
+                27,
+                16
+              ],
+              "text": "四元数 raw/Q15",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                72,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                94,
+                117,
+                16
+              ],
+              "minhint": [
+                35,
+                16
+              ],
+              "text": "四元数 WXYZ",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                94,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                117,
+                16
+              ],
+              "minhint": [
+                44,
+                16
+              ],
+              "text": "欧拉角 RPY（rad）",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                133,
+                116,
+                269,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            426,
+            304,
+            206,
+            142
+          ],
+          "minhint": [
+            57,
+            98
+          ],
+          "title": "GNSS",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                48,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "设备存在",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                28,
+                132,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "是",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                56,
+                48,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "定位可用",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                64,
+                56,
+                132,
+                22
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "否",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                84,
+                186,
+                48
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "AIR Profile 0 不传输卫星数、HAcc/VAcc 或经纬度；本上位机不显示协议未提供的数据。",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            454,
+            626,
+            116
+          ],
+          "minhint": [
+            454,
+            116
+          ],
+          "title": "预飞任务操作",
+          "children": [
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                66,
+                34
+              ],
+              "text": "连通测试",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                159,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "锁定",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                308,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                42,
+                34
+              ],
+              "text": "解锁",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                457,
+                28,
+                143,
+                34
+              ],
+              "minhint": [
+                66,
+                34
+              ],
+              "text": "开始任务",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                68,
+                606,
+                16
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "可以 START",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                90,
+                80,
+                16
+              ],
+              "minhint": [
+                80,
+                16
+              ],
+              "text": "最近命令",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                96,
+                90,
+                520,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            578,
+            626,
+            230
+          ],
+          "minhint": [
+            245,
+            106
+          ],
+          "title": "事件历史（最近 200 条；JSONL 保留全部）",
+          "children": [
+            {
+              "type": "QListWidget",
+              "geometry": [
+                10,
+                28,
+                606,
+                192
+              ],
+              "minhint": [
+                68,
+                68
+              ],
+              "children": [
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    1,
+                    1,
+                    604,
+                    190
+                  ],
+                  "minhint": [
+                    -1,
+                    -1
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    52,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    14,
+                    52
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "NavigationPanel",
+          "geometry": [
+            6,
+            816,
+            626,
+            126
+          ],
+          "minhint": [
+            150,
+            126
+          ],
+          "title": "导航准备（机载实时状态）",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                37,
+                608,
+                16
+              ],
+              "minhint": [
+                20,
+                16
+              ],
+              "text": "SF6 · 导航前置就绪 · 会话 42 / 准备代次 1",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                59,
+                199,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "1 链路握手 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                214,
+                59,
+                198,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "2 设备与配置读回 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                418,
+                59,
+                199,
+                16
+              ],
+              "minhint": [
+                25,
+                16
+              ],
+              "text": "3 IMU 校准 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                81,
+                199,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "4 姿态初对准 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                214,
+                81,
+                198,
+                16
+              ],
+              "minhint": [
+                33,
+                16
+              ],
+              "text": "5 GNSS 定位解 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                418,
+                81,
+                199,
+                16
+              ],
+              "minhint": [
+                33,
+                16
+              ],
+              "text": "6 GNSS 原点 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                103,
+                199,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "7 气压基准 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                214,
+                103,
+                198,
+                16
+              ],
+              "minhint": [
+                12,
+                16
+              ],
+              "text": "8 导航算法初始化 · 已就绪",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                418,
+                103,
+                199,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "9 START 许可 · 已就绪",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "language": "en_US",
+    "theme": "light",
+    "viewport": 638,
+    "content": {
+      "type": "QWidget",
+      "geometry": [
+        0,
+        0,
+        856,
+        996
+      ],
+      "minhint": [
+        856,
+        776
+      ],
+      "children": [
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            6,
+            211,
+            290
+          ],
+          "minhint": [
+            211,
+            184
+          ],
+          "title": "System",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                58,
+                35
+              ],
+              "minhint": [
+                48,
+                16
+              ],
+              "text": "Lifecycle",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                28,
+                62,
+                35
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                69,
+                58,
+                35
+              ],
+              "minhint": [
+                41,
+                16
+              ],
+              "text": "System Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                69,
+                62,
+                35
+              ],
+              "minhint": [
+                19,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                110,
+                58,
+                34
+              ],
+              "minhint": [
+                26,
+                16
+              ],
+              "text": "Self-test",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                110,
+                62,
+                34
+              ],
+              "minhint": [
+                27,
+                16
+              ],
+              "text": "Pass",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                150,
+                58,
+                48
+              ],
+              "minhint": [
+                58,
+                16
+              ],
+              "text": "Flight Controller AIR",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                150,
+                62,
+                48
+              ],
+              "minhint": [
+                62,
+                16
+              ],
+              "text": "Connected",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                204,
+                58,
+                35
+              ],
+              "minhint": [
+                40,
+                16
+              ],
+              "text": "Unlock State",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                204,
+                62,
+                35
+              ],
+              "minhint": [
+                55,
+                16
+              ],
+              "text": "Unlocked",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                245,
+                58,
+                35
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "START Block",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                245,
+                62,
+                35
+              ],
+              "minhint": [
+                18,
+                16
+              ],
+              "text": "OK",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                142,
+                156,
+                59,
+                36
+              ],
+              "minhint": [
+                59,
+                36
+              ],
+              "text": "Details",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            225,
+            6,
+            203,
+            290
+          ],
+          "minhint": [
+            203,
+            242
+          ],
+          "title": "Calibration",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                101,
+                16
+              ],
+              "minhint": [
+                35,
+                16
+              ],
+              "text": "Mode",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                28,
+                76,
+                16
+              ],
+              "minhint": [
+                24,
+                16
+              ],
+              "text": "Six-face",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                50,
+                101,
+                16
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "State",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                50,
+                76,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                101,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                72,
+                76,
+                16
+              ],
+              "minhint": [
+                19,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                94,
+                101,
+                16
+              ],
+              "minhint": [
+                43,
+                16
+              ],
+              "text": "Current Face",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                94,
+                76,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                101,
+                48
+              ],
+              "minhint": [
+                52,
+                16
+              ],
+              "text": "Six-face Progress",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                116,
+                76,
+                48
+              ],
+              "minhint": [
+                25,
+                16
+              ],
+              "text": "X+✓ X-✓ Y+✓ Y-✓ Z+✓ Z-✓",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                170,
+                101,
+                16
+              ],
+              "minhint": [
+                43,
+                16
+              ],
+              "text": "Current Issue",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                170,
+                76,
+                16
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                183,
+                48
+              ],
+              "minhint": [
+                61,
+                16
+              ],
+              "text": "Sampling calibration supported by this build: One-face / Six-face",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                126,
+                34
+              ],
+              "minhint": [
+                126,
+                34
+              ],
+              "text": "Restart Calibration",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                142,
+                246,
+                51,
+                34
+              ],
+              "minhint": [
+                51,
+                34
+              ],
+              "text": "Reset",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            436,
+            6,
+            414,
+            290
+          ],
+          "minhint": [
+            414,
+            160
+          ],
+          "title": "Alignment",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                116,
+                49
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "State",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                28,
+                272,
+                49
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                83,
+                116,
+                48
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                83,
+                272,
+                48
+              ],
+              "minhint": [
+                19,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                137,
+                116,
+                49
+              ],
+              "minhint": [
+                55,
+                16
+              ],
+              "text": "Sensor Snapshot",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                137,
+                272,
+                49
+              ],
+              "minhint": [
+                55,
+                16
+              ],
+              "text": "No snapshot",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                116,
+                48
+              ],
+              "minhint": [
+                58,
+                16
+              ],
+              "text": "Alignment Guidance",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                192,
+                272,
+                48
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                131,
+                34
+              ],
+              "minhint": [
+                131,
+                34
+              ],
+              "text": "Prepare Navigation",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                147,
+                246,
+                45,
+                34
+              ],
+              "minhint": [
+                45,
+                34
+              ],
+              "text": "Stop",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                198,
+                246,
+                51,
+                34
+              ],
+              "minhint": [
+                51,
+                34
+              ],
+              "text": "Reset",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                255,
+                246,
+                149,
+                34
+              ],
+              "minhint": [
+                149,
+                34
+              ],
+              "text": "Sensor Status / Details",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            304,
+            557,
+            174
+          ],
+          "minhint": [
+            219,
+            142
+          ],
+          "title": "Inertial / Attitude (PREFLIGHT_STATE)",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                119,
+                32
+              ],
+              "minhint": [
+                71,
+                16
+              ],
+              "text": "Acceleration XYZ (m/s²)",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                28,
+                412,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                66,
+                119,
+                32
+              ],
+              "minhint": [
+                45,
+                16
+              ],
+              "text": "Angular Rate XYZ (rad/s)",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                66,
+                412,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                104,
+                119,
+                16
+              ],
+              "minhint": [
+                65,
+                16
+              ],
+              "text": "Quaternion raw/Q15",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                104,
+                412,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                126,
+                119,
+                16
+              ],
+              "minhint": [
+                65,
+                16
+              ],
+              "text": "Quaternion WXYZ",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                126,
+                412,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                148,
+                119,
+                16
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "Euler RPY (rad)",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                148,
+                412,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            571,
+            304,
+            279,
+            174
+          ],
+          "minhint": [
+            92,
+            98
+          ],
+          "title": "GNSS",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                90,
+                38
+              ],
+              "minhint": [
+                44,
+                16
+              ],
+              "text": "Device Present",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                106,
+                28,
+                163,
+                38
+              ],
+              "minhint": [
+                18,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                90,
+                38
+              ],
+              "minhint": [
+                46,
+                16
+              ],
+              "text": "Position Usable",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                106,
+                72,
+                163,
+                38
+              ],
+              "minhint": [
+                18,
+                16
+              ],
+              "text": "No",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                259,
+                48
+              ],
+              "minhint": [
+                72,
+                16
+              ],
+              "text": "AIR Profile 0 does not carry satellite count, HAcc/VAcc, or coordinates; this application does not invent unavailable data.",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            486,
+            844,
+            132
+          ],
+          "minhint": [
+            454,
+            116
+          ],
+          "title": "Preflight Mission Controls",
+          "children": [
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                28,
+                198,
+                34
+              ],
+              "minhint": [
+                43,
+                34
+              ],
+              "text": "Ping",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                214,
+                28,
+                197,
+                34
+              ],
+              "minhint": [
+                45,
+                34
+              ],
+              "text": "Lock",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                417,
+                28,
+                198,
+                34
+              ],
+              "minhint": [
+                58,
+                34
+              ],
+              "text": "Unlock",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                621,
+                28,
+                197,
+                34
+              ],
+              "minhint": [
+                94,
+                34
+              ],
+              "text": "Start Mission",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                68,
+                824,
+                16
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "Ready to START",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                90,
+                80,
+                32
+              ],
+              "minhint": [
+                80,
+                16
+              ],
+              "text": "Last Command",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                96,
+                90,
+                738,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            626,
+            844,
+            230
+          ],
+          "minhint": [
+            251,
+            106
+          ],
+          "title": "Event History (latest 200; JSONL keeps all)",
+          "children": [
+            {
+              "type": "QListWidget",
+              "geometry": [
+                10,
+                28,
+                824,
+                192
+              ],
+              "minhint": [
+                68,
+                68
+              ],
+              "children": [
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    1,
+                    1,
+                    822,
+                    190
+                  ],
+                  "minhint": [
+                    -1,
+                    -1
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    52,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    14,
+                    52
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "NavigationPanel",
+          "geometry": [
+            6,
+            864,
+            844,
+            126
+          ],
+          "minhint": [
+            270,
+            126
+          ],
+          "title": "Navigation Preparation (Live On-board State)",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                37,
+                826,
+                16
+              ],
+              "minhint": [
+                75,
+                16
+              ],
+              "text": "SF6 · Navigation Prerequisites Ready · Session 42 / Generation 1",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                59,
+                271,
+                16
+              ],
+              "minhint": [
+                65,
+                16
+              ],
+              "text": "1 Link Handshake · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                286,
+                59,
+                272,
+                16
+              ],
+              "minhint": [
+                79,
+                16
+              ],
+              "text": "2 Devices / Configuration Readback · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                564,
+                59,
+                271,
+                16
+              ],
+              "minhint": [
+                63,
+                16
+              ],
+              "text": "3 IMU Calibration · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                81,
+                271,
+                16
+              ],
+              "minhint": [
+                58,
+                16
+              ],
+              "text": "4 Attitude Alignment · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                286,
+                81,
+                272,
+                16
+              ],
+              "minhint": [
+                47,
+                16
+              ],
+              "text": "5 GNSS Solution · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                564,
+                81,
+                271,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "6 GNSS Origin · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                103,
+                271,
+                16
+              ],
+              "minhint": [
+                62,
+                16
+              ],
+              "text": "7 Barometer Reference · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                286,
+                103,
+                272,
+                16
+              ],
+              "minhint": [
+                69,
+                16
+              ],
+              "text": "8 Estimator Initialization · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                564,
+                103,
+                271,
+                16
+              ],
+              "minhint": [
+                63,
+                16
+              ],
+              "text": "9 START Permission · Ready",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "language": "en_US",
+    "theme": "dark",
+    "viewport": 638,
+    "content": {
+      "type": "QWidget",
+      "geometry": [
+        0,
+        0,
+        856,
+        996
+      ],
+      "minhint": [
+        856,
+        776
+      ],
+      "children": [
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            6,
+            211,
+            290
+          ],
+          "minhint": [
+            211,
+            184
+          ],
+          "title": "System",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                58,
+                35
+              ],
+              "minhint": [
+                48,
+                16
+              ],
+              "text": "Lifecycle",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                28,
+                62,
+                35
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                69,
+                58,
+                35
+              ],
+              "minhint": [
+                41,
+                16
+              ],
+              "text": "System Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                69,
+                62,
+                35
+              ],
+              "minhint": [
+                19,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                110,
+                58,
+                34
+              ],
+              "minhint": [
+                26,
+                16
+              ],
+              "text": "Self-test",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                110,
+                62,
+                34
+              ],
+              "minhint": [
+                27,
+                16
+              ],
+              "text": "Pass",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                150,
+                58,
+                48
+              ],
+              "minhint": [
+                58,
+                16
+              ],
+              "text": "Flight Controller AIR",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                150,
+                62,
+                48
+              ],
+              "minhint": [
+                62,
+                16
+              ],
+              "text": "Connected",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                204,
+                58,
+                35
+              ],
+              "minhint": [
+                40,
+                16
+              ],
+              "text": "Unlock State",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                204,
+                62,
+                35
+              ],
+              "minhint": [
+                55,
+                16
+              ],
+              "text": "Unlocked",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                245,
+                58,
+                35
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "START Block",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                74,
+                245,
+                62,
+                35
+              ],
+              "minhint": [
+                18,
+                16
+              ],
+              "text": "OK",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                142,
+                156,
+                59,
+                36
+              ],
+              "minhint": [
+                59,
+                36
+              ],
+              "text": "Details",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            225,
+            6,
+            203,
+            290
+          ],
+          "minhint": [
+            203,
+            242
+          ],
+          "title": "Calibration",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                101,
+                16
+              ],
+              "minhint": [
+                35,
+                16
+              ],
+              "text": "Mode",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                28,
+                76,
+                16
+              ],
+              "minhint": [
+                24,
+                16
+              ],
+              "text": "Six-face",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                50,
+                101,
+                16
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "State",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                50,
+                76,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                101,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                72,
+                76,
+                16
+              ],
+              "minhint": [
+                19,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                94,
+                101,
+                16
+              ],
+              "minhint": [
+                43,
+                16
+              ],
+              "text": "Current Face",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                94,
+                76,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                101,
+                48
+              ],
+              "minhint": [
+                52,
+                16
+              ],
+              "text": "Six-face Progress",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                116,
+                76,
+                48
+              ],
+              "minhint": [
+                25,
+                16
+              ],
+              "text": "X+✓ X-✓ Y+✓ Y-✓ Z+✓ Z-✓",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                170,
+                101,
+                16
+              ],
+              "minhint": [
+                43,
+                16
+              ],
+              "text": "Current Issue",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                117,
+                170,
+                76,
+                16
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                183,
+                48
+              ],
+              "minhint": [
+                61,
+                16
+              ],
+              "text": "Sampling calibration supported by this build: One-face / Six-face",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                126,
+                34
+              ],
+              "minhint": [
+                126,
+                34
+              ],
+              "text": "Restart Calibration",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                142,
+                246,
+                51,
+                34
+              ],
+              "minhint": [
+                51,
+                34
+              ],
+              "text": "Reset",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            436,
+            6,
+            414,
+            290
+          ],
+          "minhint": [
+            414,
+            160
+          ],
+          "title": "Alignment",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                116,
+                49
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "State",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                28,
+                272,
+                49
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                83,
+                116,
+                48
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                83,
+                272,
+                48
+              ],
+              "minhint": [
+                19,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                137,
+                116,
+                49
+              ],
+              "minhint": [
+                55,
+                16
+              ],
+              "text": "Sensor Snapshot",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                137,
+                272,
+                49
+              ],
+              "minhint": [
+                55,
+                16
+              ],
+              "text": "No snapshot",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                192,
+                116,
+                48
+              ],
+              "minhint": [
+                58,
+                16
+              ],
+              "text": "Alignment Guidance",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                132,
+                192,
+                272,
+                48
+              ],
+              "minhint": [
+                14,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                246,
+                131,
+                34
+              ],
+              "minhint": [
+                131,
+                34
+              ],
+              "text": "Prepare Navigation",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                147,
+                246,
+                45,
+                34
+              ],
+              "minhint": [
+                45,
+                34
+              ],
+              "text": "Stop",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                198,
+                246,
+                51,
+                34
+              ],
+              "minhint": [
+                51,
+                34
+              ],
+              "text": "Reset",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                255,
+                246,
+                149,
+                34
+              ],
+              "minhint": [
+                149,
+                34
+              ],
+              "text": "Sensor Status / Details",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            304,
+            557,
+            174
+          ],
+          "minhint": [
+            219,
+            142
+          ],
+          "title": "Inertial / Attitude (PREFLIGHT_STATE)",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                119,
+                32
+              ],
+              "minhint": [
+                71,
+                16
+              ],
+              "text": "Acceleration XYZ (m/s²)",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                28,
+                412,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                66,
+                119,
+                32
+              ],
+              "minhint": [
+                45,
+                16
+              ],
+              "text": "Angular Rate XYZ (rad/s)",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                66,
+                412,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                104,
+                119,
+                16
+              ],
+              "minhint": [
+                65,
+                16
+              ],
+              "text": "Quaternion raw/Q15",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                104,
+                412,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                126,
+                119,
+                16
+              ],
+              "minhint": [
+                65,
+                16
+              ],
+              "text": "Quaternion WXYZ",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                126,
+                412,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                148,
+                119,
+                16
+              ],
+              "minhint": [
+                29,
+                16
+              ],
+              "text": "Euler RPY (rad)",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                135,
+                148,
+                412,
+                16
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            571,
+            304,
+            279,
+            174
+          ],
+          "minhint": [
+            92,
+            98
+          ],
+          "title": "GNSS",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                28,
+                90,
+                38
+              ],
+              "minhint": [
+                44,
+                16
+              ],
+              "text": "Device Present",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                106,
+                28,
+                163,
+                38
+              ],
+              "minhint": [
+                18,
+                16
+              ],
+              "text": "Yes",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                72,
+                90,
+                38
+              ],
+              "minhint": [
+                46,
+                16
+              ],
+              "text": "Position Usable",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                106,
+                72,
+                163,
+                38
+              ],
+              "minhint": [
+                18,
+                16
+              ],
+              "text": "No",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                116,
+                259,
+                48
+              ],
+              "minhint": [
+                72,
+                16
+              ],
+              "text": "AIR Profile 0 does not carry satellite count, HAcc/VAcc, or coordinates; this application does not invent unavailable data.",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            486,
+            844,
+            132
+          ],
+          "minhint": [
+            454,
+            116
+          ],
+          "title": "Preflight Mission Controls",
+          "children": [
+            {
+              "type": "QPushButton",
+              "geometry": [
+                10,
+                28,
+                198,
+                34
+              ],
+              "minhint": [
+                43,
+                34
+              ],
+              "text": "Ping",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                214,
+                28,
+                197,
+                34
+              ],
+              "minhint": [
+                45,
+                34
+              ],
+              "text": "Lock",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                417,
+                28,
+                198,
+                34
+              ],
+              "minhint": [
+                58,
+                34
+              ],
+              "text": "Unlock",
+              "children": []
+            },
+            {
+              "type": "QPushButton",
+              "geometry": [
+                621,
+                28,
+                197,
+                34
+              ],
+              "minhint": [
+                94,
+                34
+              ],
+              "text": "Start Mission",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                68,
+                824,
+                16
+              ],
+              "minhint": [
+                38,
+                16
+              ],
+              "text": "Ready to START",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                10,
+                90,
+                80,
+                32
+              ],
+              "minhint": [
+                80,
+                16
+              ],
+              "text": "Last Command",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                96,
+                90,
+                738,
+                32
+              ],
+              "minhint": [
+                13,
+                16
+              ],
+              "text": "—",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "QGroupBox",
+          "geometry": [
+            6,
+            626,
+            844,
+            230
+          ],
+          "minhint": [
+            251,
+            106
+          ],
+          "title": "Event History (latest 200; JSONL keeps all)",
+          "children": [
+            {
+              "type": "QListWidget",
+              "geometry": [
+                10,
+                28,
+                824,
+                192
+              ],
+              "minhint": [
+                68,
+                68
+              ],
+              "children": [
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    1,
+                    1,
+                    822,
+                    190
+                  ],
+                  "minhint": [
+                    -1,
+                    -1
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    52,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "QWidget",
+                  "geometry": [
+                    0,
+                    0,
+                    100,
+                    30
+                  ],
+                  "minhint": [
+                    14,
+                    52
+                  ],
+                  "children": [
+                    {
+                      "type": "QScrollBar",
+                      "geometry": [
+                        0,
+                        0,
+                        100,
+                        30
+                      ],
+                      "minhint": [
+                        -1,
+                        -1
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "NavigationPanel",
+          "geometry": [
+            6,
+            864,
+            844,
+            126
+          ],
+          "minhint": [
+            270,
+            126
+          ],
+          "title": "Navigation Preparation (Live On-board State)",
+          "children": [
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                37,
+                826,
+                16
+              ],
+              "minhint": [
+                75,
+                16
+              ],
+              "text": "SF6 · Navigation Prerequisites Ready · Session 42 / Generation 1",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                59,
+                271,
+                16
+              ],
+              "minhint": [
+                65,
+                16
+              ],
+              "text": "1 Link Handshake · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                286,
+                59,
+                272,
+                16
+              ],
+              "minhint": [
+                79,
+                16
+              ],
+              "text": "2 Devices / Configuration Readback · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                564,
+                59,
+                271,
+                16
+              ],
+              "minhint": [
+                63,
+                16
+              ],
+              "text": "3 IMU Calibration · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                81,
+                271,
+                16
+              ],
+              "minhint": [
+                58,
+                16
+              ],
+              "text": "4 Attitude Alignment · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                286,
+                81,
+                272,
+                16
+              ],
+              "minhint": [
+                47,
+                16
+              ],
+              "text": "5 GNSS Solution · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                564,
+                81,
+                271,
+                16
+              ],
+              "minhint": [
+                37,
+                16
+              ],
+              "text": "6 GNSS Origin · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                9,
+                103,
+                271,
+                16
+              ],
+              "minhint": [
+                62,
+                16
+              ],
+              "text": "7 Barometer Reference · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                286,
+                103,
+                272,
+                16
+              ],
+              "minhint": [
+                69,
+                16
+              ],
+              "text": "8 Estimator Initialization · Ready",
+              "children": []
+            },
+            {
+              "type": "QLabel",
+              "geometry": [
+                564,
+                103,
+                271,
+                16
+              ],
+              "minhint": [
+                63,
+                16
+              ],
+              "text": "9 START Permission · Ready",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,24 @@
+E                                                                        [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_actual_sf6_backend_exact_decoder_and_recorded_sources _
+
+item = <Function test_actual_sf6_backend_exact_decoder_and_recorded_sources>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] 拒绝访问。: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+=========================== short test summary info ===========================
+ERROR apps\FLP\tests\test_sf6_recorded.py::test_actual_sf6_backend_exact_decoder_and_recorded_sources
+1 error in 1.44s

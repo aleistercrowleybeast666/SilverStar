@@ -1,0 +1,30 @@
+.work\SF6_20261001_v1\SF6_v7\Flight_Controller\build\FCCG\SilverStar_F407\Release\SilverStar_0_1_1.elf  :
+section                size        addr
+.isr_vector             392   134217728
+.text                263036   134218120
+.rodata               26672   134481160
+.ARM.extab                0   134507832
+.ARM                      8   134507832
+.preinit_array            0   134507840
+.init_array               4   134507840
+.fini_array               4   134507844
+.data                  1136   536870912
+.ccmram_data              0   268435456
+.ccmram_bss           44016   268435456
+.dma_bss               8904   536872048
+.bss                  90640   536880952
+._user_heap_stack      1024   536971592
+.ARM.attributes          48           0
+.comment                 70           0
+.debug_info         1124905           0
+.debug_abbrev         98248           0
+.debug_loclists      496088           0
+.debug_aranges        19264           0
+.debug_rnglists       66114           0
+.debug_line          562393           0
+.debug_str           198955           0
+.debug_frame          72072           0
+.debug_line_str         572           0
+Total               3074565
+
+

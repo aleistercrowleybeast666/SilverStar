@@ -1,0 +1,5 @@
+cross_group scenario=0 pU=9 chronological_oracle=6.5 error=2.5
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_algorithm_estimator_sf6\payload\Tests\Host\test_navigation_sf6.c:160: fabsf((s_snapshot.state[5]) - (expected)) <= (1.0e-6f)
+cross_group scenario=1 pU=4.25 chronological_oracle=4.125 error=0.125
+FAIL D:\python_software\SilverStar\apps\FCCG\plugins\builtin\silverstar_algorithm_estimator_sf6\payload\Tests\Host\test_navigation_sf6.c:160: fabsf((s_snapshot.state[5]) - (expected)) <= (1.0e-6f)
+navigation_sf6: 1224 checks, 2 failures

@@ -1,0 +1,12 @@
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_device_startup.h:88:} SystemDeviceStartupConfig;
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_device_startup.h:102:    SystemDeviceStartupConfig config;
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_device_startup.h:106:    SystemDeviceStartup *startup, const SystemDeviceStartupConfig *config);
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_device_startup.c:35:    SystemDeviceStartup *startup, const SystemDeviceStartupConfig *config)
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_device_startup.c:59:    SILVERSTAR_ASSERT_OBJECT(config, SystemDeviceStartupConfig,
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_device_startup_fsm.c:87:    SystemDeviceStartupConfig config;
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_device_startup_fsm.c:127:    SystemDeviceStartupConfig config;
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_device_startup_fsm.c:185:    SystemDeviceStartupConfig config;
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_device_startup_fsm.c:218:    SystemDeviceStartupConfig config;
+apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_device_startup_fsm.c:246:    SystemDeviceStartupConfig config;
+apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c:384:    SystemDeviceStartupConfig config;
+apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c:316:    SystemDeviceStartupConfig config;
