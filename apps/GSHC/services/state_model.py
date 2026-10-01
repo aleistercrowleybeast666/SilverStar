@@ -464,6 +464,7 @@ class FlightControllerState:
     handshake: HandshakeDiagnostics = field(default_factory=HandshakeDiagnostics)
     profile_supported: bool | None = None
     capability_error: str = ""
+    controller_restart_suspected: bool = False
     lifecycle_state: int | None = None
     system_ready: bool = False
     selftest_passed: bool = False
@@ -539,7 +540,8 @@ class FlightControllerState:
         return enum_name(AirAckResult, self.start_block_reason)
 
     def air_command_link_allowed(self) -> bool:
-        if not self.connected or not self.capability_acked or self.capability is None:
+        if (not self.connected or not self.capability_acked or self.capability is None
+                or self.controller_restart_suspected):
             return False
         if not self.capability.profile_supported:
             return False

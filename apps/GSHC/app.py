@@ -133,6 +133,8 @@ def format_air_status_message(msg: AirStatusMessage, i18n: I18n | None = None) -
             status_text += f" {enum_name(AirCalibrationDiagnosticReason, msg.arg1)} face={msg.arg0}"
         elif msg.status_id == int(AirStatusId.ALIGNMENT):
             status_text += f" {enum_name(AirAlignmentState, msg.arg0)}"
+        if msg.status_id == int(AirStatusId.SELFTEST_COMPLETE):
+            status_text += f" mission_capable={msg.arg0}"
         return f"{status_text} @ {msg.time_ms} ms"
 
     translator = i18n
@@ -165,6 +167,9 @@ def format_air_status_message(msg: AirStatusMessage, i18n: I18n | None = None) -
         status_text += " " + translator.enum(
             "alignment_state", enum_name(AirAlignmentState, msg.arg0)
         )
+    if msg.status_id == int(AirStatusId.SELFTEST_COMPLETE):
+        status_text += " " + translator.tr(
+            "event.selftest.passed" if msg.arg0 == 1 else "event.selftest.failed")
     return f"{status_text} @ {msg.time_ms} ms"
 
 
@@ -1067,6 +1072,9 @@ class Controller(QObject):
         return self._state_generation
 
     def _replace_state(self, *, connected: bool, connection_text: str) -> None:
+        self._last_boot_signature = None
+        self._controller_time_ms = None
+        self._controller_rollback_ms = None
         self.state = FlightControllerState(
             session_generation=self._next_state_generation(),
             connected=connected,
@@ -1604,6 +1612,10 @@ class Controller(QObject):
         )
 
     def _complete_capability_ack(self, source: str) -> None:
+        capability = self.state.capability
+        if (capability is None or not capability.profile_supported
+                or self.state.capability_error or self.pending_capability_ack is None):
+            return
         self.pending_capability_ack = None
         diagnostics = self.state.handshake
         diagnostics.handshake_state = HandshakeState.ACKED
@@ -2070,6 +2082,44 @@ class Controller(QObject):
                                                         message.selector, message.value, received_ns)
         self._log({"dir": "LOCAL", "layer": "NAVIGATION", "kind": type(message).__name__, "result": result.value})
 
+    def FlightSession_Restart(self, reason: str) -> None:
+        """Cancel transactions; a new FC session must negotiate before commands."""
+        previous = self.state
+        cancelled_count = len(self.pending_air_cmds)
+        self._clear_capability_ack(reason)
+        self.pending_air_cmds.clear()
+        self.state = FlightControllerState(
+            session_generation=previous.session_generation + 1,
+            connected=previous.connected, connection_text=previous.connection_text,
+            connection_message=previous.connection_message,
+        )
+        self._state_generation = max(getattr(self, "_state_generation", 0),
+                                     self.state.session_generation)
+        self._controller_time_ms = None
+        self._controller_rollback_ms = None
+        self._clear_mission_packet_stats()
+        window = getattr(self, "window", None)
+        if window is not None:
+            window.bind_runtime_model(self.state, self.events, select_preflight=True)
+        self._log({"dir": "LOCAL", "layer": "HANDSHAKE", "kind": "FLIGHT_SESSION_RESTART",
+                   "reason": reason, "generation": self.state.session_generation,
+                   "cancelled_command_count": cancelled_count})
+
+    def FlightTime_Observe(self, time_ms: int) -> None:
+        previous = getattr(self, "_controller_time_ms", None)
+        if previous is not None and time_ms < previous and previous - time_ms < 0x80000000:
+            candidate = getattr(self, "_controller_rollback_ms", None)
+            if candidate is not None and candidate < time_ms:
+                self.FlightSession_Restart("CONTROLLER_TIME_ROLLBACK")
+            else:
+                self._controller_rollback_ms = time_ms
+                self.state.controller_restart_suspected = True
+                self._clear_pending_air_cmds("CONTROLLER_TIME_UNCERTAIN")
+                return
+        self._controller_time_ms = time_ms
+        self._controller_rollback_ms = None
+        self.state.controller_restart_suspected = False
+
     def _handle_capability(
         self,
         message: AirCapabilityMessage,
@@ -2217,6 +2267,9 @@ class Controller(QObject):
         *,
         source: str,
     ) -> None:
+        # FLIGHT_STATE is mission-relative; PREFLIGHT_STATE is boot-relative.
+        if source == "PREFLIGHT_STATE":
+            self.FlightTime_Observe(message.time_ms)
         # The controller's accepted Capability is authoritative. A queued,
         # stale Capability may have changed parser-side conversion context,
         # but must never change the live controller session after ACK.
@@ -2306,8 +2359,11 @@ class Controller(QObject):
 
         status_id = message.status_id
         if status_id == int(AirStatusId.BOOT):
-            self.state.navigation = NavigationState()
-            self.state.lifecycle_state = int(AirLifecycleState.BOOT)
+            signature = (message.seq, message.time_ms)
+            if getattr(self, "_last_boot_signature", None) != signature:
+                self._last_boot_signature = signature
+                self.FlightSession_Restart("BOOT")
+                self.state.lifecycle_state = int(AirLifecycleState.BOOT)
         elif status_id == int(AirStatusId.SELFTEST_COMPLETE):
             self.state.selftest_passed = bool(message.arg0)
         elif status_id == int(AirStatusId.MISSION_START):
