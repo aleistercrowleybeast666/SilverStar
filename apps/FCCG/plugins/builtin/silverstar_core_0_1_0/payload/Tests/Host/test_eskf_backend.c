@@ -170,7 +170,7 @@ int main(int argc, char **argv)
     s_gnss.fix_type = 3U; s_gnss.fix_ok = 1U; s_gnss.speed_accuracy_mps = 0.2f;
     s_gnss.satellite_count = 8U; s_gnss.measurement_timestamp_trusted = 1U;
     for (group = 0U; group < 3U; group++) { s_gnss.velocity_variance_m2ps2[group] = 0.04f; }
-    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f, 77U, 1U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f, 1U, 77U, 1U) == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_OK);
     TEST_CHECK(output.predict_count == 0U && output.update_sequence == 0U);
     TEST_CHECK(fabsf(output.q_nb[0] - 1.0f) < 0.00001f);

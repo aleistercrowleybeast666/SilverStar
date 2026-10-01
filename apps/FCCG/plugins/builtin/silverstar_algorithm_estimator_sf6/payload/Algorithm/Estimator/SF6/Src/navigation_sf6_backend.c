@@ -214,20 +214,22 @@ static void Backend_GnssGroupApply(const SystemGnssSample *sample,
     const float position[3], uint8_t group, EstimatorOutputSnapshot *output)
 {
     NavigationSf6Measurement measurement = {0};
-    uint8_t axis, first = (group & 1U) ? 2U : 0U;
-    uint8_t count = (group & 1U) ? 1U : 2U;
-    uint8_t physical = (uint8_t)((sample->valid_group_mask & (1U << group)) != 0U);
-    uint32_t delay = group < 2U ? SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS :
-        SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS;
+    uint8_t first, physical;
+    uint32_t delay;
     SILVERSTAR_ASSERT(group < 4U,
         SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    first = (group & 1U) ? 2U : 0U;
+    physical = (uint8_t)((sample->valid_group_mask & (1U << group)) != 0U);
+    delay = group < 2U ? SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS :
+        SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS;
     measurement.group = group; measurement.receive_us = sample->receive_timestamp_us;
     measurement.sequence = sample->sequence;
     if (SystemTime_MeasurementTimestampResolve(sample->receive_timestamp_us,
         sample->sample_timestamp_us, sample->measurement_timestamp_trusted, delay,
         &measurement.measurement_us) != SYSTEM_MEASUREMENT_TIME_OK) { physical = 0U; }
-    for (axis = 0U; axis < count; axis++)
-    { measurement.observation[axis] = group < 2U ? position[first + axis] : sample->velocity_enu_mps[first + axis]; }
+    measurement.observation[0] = group < 2U ? position[first] : sample->velocity_enu_mps[first];
+    if (first == 0U)
+    { measurement.observation[1] = group < 2U ? position[1] : sample->velocity_enu_mps[1]; }
     Backend_MeasurementApply(&measurement, physical, sample->sample_timestamp_us, output);
 }
 
