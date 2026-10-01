@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "created_utc": "2026-10-01T04:51:29.952243+00:00",
+    "scope": "Flight original unmodified project PoT checker; no tests or checks restarted for inventory",
+    "baseline_firmware_commit": "0e1e5e735914829d32a2f2de2264805f79a432e1",
+    "current_firmware_commit": "95abac8c06535e144e0e91f3dfafaaf02a4bd782",
+    "current_generated_host_test_commit": "5920139a8daf7bd4812043a11606df7b42450af4",
+    "before_inventory_head": "f9312ee15878d9e017976fc46af17fcc9fe2c8bc",
+    "baseline_exit_code": 2,
+    "current_exit_code": 2,
+    "ground_current_exit_code": 0,
+    "ground_current_failures": 0,
+    "limits": "Missing assertion coverage is not proof of a runtime bug. Counts are original textual gate diagnostics, not a semantic proof. No whitelist or threshold changes. Original ten-rule compliance remains unproven outside recorded gate scope."
+  },
+  "summary": {
+    "baseline_failures": 181,
+    "current_failures": 180,
+    "fixed_functions": 1,
+    "new_failures": 0,
+    "rules": {
+      "Rule5": 180
+    },
+    "current_zero_assertion_functions": 162,
+    "current_one_assertion_functions": 18,
+    "arithmetic_shortfall_not_an_insertion_target": 342,
+    "by_subsystem": {
+      "APP": 15,
+      "Devices": 64,
+      "Modules": 21,
+      "System": 80
+    },
+    "by_file": {
+      "APP/Src/estimator_task.c": 1,
+      "APP/Src/flight_task.c": 6,
+      "APP/Src/ins_task.c": 4,
+      "APP/Src/logger_bus.c": 4,
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c": 5,
+      "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c": 45,
+      "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c": 3,
+      "Devices/IMU/JY901B/Src/jy901b_device.c": 11,
+      "Modules/Src/telemetry_service.c": 21,
+      "System/Alignment/Src/system_alignment.c": 12,
+      "System/Calibration/Src/system_calibration.c": 8,
+      "System/Indicator/Src/system_indicator.c": 2,
+      "System/Src/system_capabilities.c": 2,
+      "System/Src/system_console.c": 27,
+      "System/Src/system_health.c": 2,
+      "System/Src/system_sensor_status.c": 3,
+      "System/Src/system_source_selector.c": 9,
+      "System/Src/system_startup.c": 15
+    }
+  },
+  "files": [
+    {
+      "file": "baseline_181.csv",
+      "bytes": 92633,
+      "sha256": "2f6620c042067d7279cc60602109d5ded4bf640b19772bd7b55d348810da240f"
+    },
+    {
+      "file": "baseline_181.log",
+      "bytes": 44053,
+      "sha256": "7dd8c69a6cc295bab9fb57d3c73324d3f60039005e430d3c22e9fd3ac2921ce6"
+    },
+    {
+      "file": "comparison_181.csv",
+      "bytes": 62931,
+      "sha256": "2a288b7018db16a1ce25ea66eb0f3d2af52ca15be5673a37ea1e6a46c6a66196"
+    },
+    {
+      "file": "current_180.csv",
+      "bytes": 92078,
+      "sha256": "ebcfd9ae2e30055a3fda1d9296d3e1bf5629f436ca5de20277c116d42f18540b"
+    },
+    {
+      "file": "current_180.log",
+      "bytes": 43896,
+      "sha256": "33d76da65d3086310414226a4a1dd9cbe1dd54f7d73083491748fa2695a33a26"
+    },
+    {
+      "file": "inventory.json",
+      "bytes": 462972,
+      "sha256": "1ea0c8d325b7e778c1f44a479c4350a7146c330019bac30d92673a1980aa6193"
+    },
+    {
+      "file": "问题清单_180项.md",
+      "bytes": 34636,
+      "sha256": "a13a28907f4d72b0d4153c2456b2204a91d335e1c4f25a30428b869c0188d5b1"
+    }
+  ]
+}
