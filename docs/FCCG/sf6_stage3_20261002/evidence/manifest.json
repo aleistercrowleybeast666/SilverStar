@@ -1,0 +1,55 @@
+{
+  "checkpoint": "548b89fdbc438bc2232bcbdde588d89c724cbdad",
+  "uart_integration": "d1f766f4ae016b82119822d5b557c225c42aebd2",
+  "evidence_scope": "Partial first progress, failures retained, no final acceptance",
+  "files": [
+    {
+      "path": "core_compile.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\core_compile.log",
+      "exit_code": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "core_run.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\core_run.log",
+      "exit_code": 0,
+      "sha256": "97c6ccab01e3af0c421ad56c7d25afca580ec03986e0eaa22a0bb612090f7436"
+    },
+    {
+      "path": "generation_v4.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\generation_v4.log",
+      "exit_code": 0,
+      "sha256": "4a1d55e102847e903ccda3418012cbb4a18855e0aa15fe26ca6e6196b78690b8"
+    },
+    {
+      "path": "KF6_v1_arm_kf6_v1.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\KF6_v1\\arm_kf6_v1.log",
+      "exit_code": 0,
+      "sha256": "05c0fa66926f99a67b65bcb705ca937468825cea418073e2ee302c979cefbbf4"
+    },
+    {
+      "path": "ESKF15_v1_arm_eskf15_v1.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\ESKF15_v1\\arm_eskf15_v1.log",
+      "exit_code": 0,
+      "sha256": "89eb82dbc9fc4aaa4462a9f3710aad2ef320c29b3057f138ce4ab60bc71c6891"
+    },
+    {
+      "path": "SF6_v3_arm_sf6_v3.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v3\\arm_sf6_v3.log",
+      "exit_code": 0,
+      "sha256": "3443bd0ace250c0cb750ef7487958f03088aa4c315f8150562b4563f26f0335b"
+    },
+    {
+      "path": "SF6_v3_host_sf6_v3.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v3\\host_sf6_v3.log",
+      "exit_code": 1,
+      "sha256": "625fd66888986afbdd16e888e0baf83843fa98fd756fe6c01e8b8faad84bdac4"
+    },
+    {
+      "path": "SF6_v3_quality_sf6_v3.log",
+      "source_path": "D:\\python_software\\SilverStar\\.work\\SF6_20261001_v1\\SF6_v3\\quality_sf6_v3.log",
+      "exit_code": 1,
+      "sha256": "1f18353906e7ace9625cc6d942433e60f21dab5a47e3e1f2122c8ff1c9773e37"
+    }
+  ]
+}

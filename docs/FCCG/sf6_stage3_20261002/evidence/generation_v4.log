@@ -1,0 +1,5 @@
+real configuration {'alignment': 'silverstar.algorithm.alignment.vector_constraints', 'estimator': None, 'ins': 'silverstar.algorithm.ins.coning2_sculling2', 'landing': 'silverstar.flight_logic.landing.baro_imu_window_strategy'}
+generated PureINS
+generated KF6
+generated ESKF15
+generated SF6

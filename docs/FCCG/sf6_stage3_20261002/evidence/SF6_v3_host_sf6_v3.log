@@ -1,0 +1,18 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tests/Host/run_tests.ps1 -HostCompiler "gcc"
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+python.exe : SSLOG Record Catalog validation failed: SF6_STATE: producer mode is missing
+鎵€鍦ㄤ綅缃?D:\python_software\SilverStar\.work\SF6_20261001_v1\SF6_v3\Flight_Controller\Tests\Host\run_tests.ps1:193 瀛楃: 26
++     $validatorOutput = @(& $pythonCommand.Path $validator 2>&1)
++                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (SSLOG Record Ca...mode is missing:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+mingw32-make: *** [Makefile:208: host-tests] Error 1

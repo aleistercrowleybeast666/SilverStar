@@ -38,3 +38,9 @@ These earlier links **do not certify the current complete checkpoint**: later co
 5. A separate UART1/2 async-transmit hotfix is owned by the parent; it has not been integrated. No `platform_uart` or hardware generator patch was edited here.
 
 After the final four-algorithm gates, create fresh KF6/SF6 bench configurations with a recorded 10-second Delay change, preserve no-actuator bench restrictions, record hashes/commands/source revision, freeze them separately and return. Do not start barometer cold backup or automatic memory-layout work in this slice.
+
+## Parent hotfix integrated after this first checkpoint
+
+Reviewed and cherry-picked the parent-owned UART-only commit `9827463d5e3d964c63946d5ff63225d6dabbb375` without conflicts as `d1f766f` on the same independent branch. Its frozen candidate was untouched. Fresh four-algorithm `_v5` generation/matrix was launched from the combined source, with complete individual logs and exit records in `.work/SF6_20261001_v1/matrix_v5_results.json`; results are pending at this report boundary. Earlier resource figures exclude the UART delta and are preliminary only.
+
+Complete first-boundary logs are archived in `evidence/manifest.json` (SHA256 `5c9513efd5f1e18c6b7ed7a21445e1ebb016d926c28f786f064803e80b7048d8`). This manifest deliberately includes failed Host/PoT runs and identifies the earlier source scopes.
