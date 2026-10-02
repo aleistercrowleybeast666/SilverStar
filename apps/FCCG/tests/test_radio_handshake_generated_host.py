@@ -49,7 +49,7 @@ def radio_handshake_executable(tmp_path_factory):
 @pytest.mark.parametrize("scenario", [
     "ack_backlog", "cap_queued", "queue_boundaries", "ack_full", "rx_fairness",
     "token_wrap", "cap_sequence_wrap", "cap_clock_wrap", "cap_reconnect_cache",
-    "cap_tx_timeout", "mixed_tokens", "cap_long_expiry", "cap_pending_long_expiry",
+    "spi_fault_health", "cap_tx_timeout", "mixed_tokens", "cap_long_expiry", "cap_pending_long_expiry",
 ])
 def test_generated_radio_handshake(radio_handshake_executable, scenario):
     executable, project = radio_handshake_executable

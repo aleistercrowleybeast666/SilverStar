@@ -19,8 +19,28 @@
 #undef s_tx_count
 #define TEST_SX1281_PORTS_ONLY 1
 #define SX1280SendPayload Test_PreviousRadioSend
+#define SX1280GetStatus Test_PreviousRadioStatus
+#define Sx1281Bus_StatusGet Test_PreviousRadioBusStatus
+#define Sx1281Bus_Init Test_PreviousRadioBusInit
 #include "test_sx1281_device.c"
 #undef SX1280SendPayload
+#undef SX1280GetStatus
+#undef Sx1281Bus_StatusGet
+#undef Sx1281Bus_Init
+static uint8_t s_radio_bus_failure;
+static Sx1281BusStatus s_radio_bus_status;
+void Sx1281Bus_Init(uint8_t instance)
+{ (void)instance; memset(&s_radio_bus_status, 0, sizeof(s_radio_bus_status)); }
+void Sx1281Bus_StatusGet(uint8_t instance, Sx1281BusStatus *status)
+{ (void)instance; *status = s_radio_bus_status; }
+RadioStatus_t SX1280GetStatus(uint8_t instance)
+{
+    (void)instance; RadioStatus_t status; status.Value = 0x40U;
+    if (s_radio_bus_failure != 0U)
+    { s_radio_bus_status.spi_error_count++; s_radio_bus_status.last_result = SX1281_BUS_SPI_ERROR; }
+    else { s_radio_bus_status.last_result = SX1281_BUS_OK; }
+    return status;
+}
 void SX1280SendPayload(uint8_t instance, uint8_t *data, uint8_t length, TickTime_t timeout);
 #include "sx1281_device.c"
 #undef s_tx_count
@@ -67,7 +87,7 @@ static void Radio_Command(uint8_t seq, uint8_t command, uint8_t param0, uint8_t 
 }
 static void Radio_Init(void)
 {
-    Test_Reset(); Radio_Clock(0U);
+    Test_Reset(); s_radio_bus_failure = 0U; Radio_Clock(0U);
     TEST_CHECK(Sx1281TelemetryInstance_Init(0U) == SYSTEM_DEVICE_OK);
     TEST_CHECK(Sx1281TelemetryInstance_Start(0U) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_contexts[0].mod_params.Params.LoRa.SpreadingFactor == LORA_SF10);
@@ -402,12 +422,37 @@ static void Test_CapReconnectAndCache(void)
     TEST_CHECK(s_capability_tx.ack_advertised_us == 494000ULL);
 }
 #endif
+#ifdef SYSTEM_TELEMETRY_TX_CONTROL_SUPPORTED
+static void Test_SpiFaultHealth(void)
+{
+    Radio_Init(); Radio_CapStart(42U, 0U); s_radio_bus_failure = 1U;
+    for (uint32_t ms = 1U; ms <= 300U; ms++)
+    { Radio_Clock(ms); SystemTelemetry_Process(); TelemetryService_CapabilityTxPoll(); }
+    SystemTelemetryHealth health;
+    TEST_CHECK(Sx1281TelemetryInstance_HealthGet(0U, &health) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(health.healthy == 0U && health.online == 0U);
+    TEST_CHECK(health.initialized == 0U && health.started == 0U);
+    TEST_CHECK(s_contexts[0].inited == 0U && s_contexts[0].chip_status.verified == 0U);
+    TEST_CHECK(s_over_air_count == 0U);
+    uint64_t sent_us = 0U;
+    TEST_CHECK(TelemetryService_CapabilityAdvertised(42U, &sent_us) == 0U);
+    TEST_CHECK(Sx1281TelemetryInstance_Start(0U) == SYSTEM_DEVICE_NOT_READY);
+    s_radio_bus_failure = 0U; Radio_Clock(400U); SystemTelemetry_Process();
+    TEST_CHECK(s_contexts[0].inited == 0U && s_over_air_count == 0U);
+    TEST_CHECK(Sx1281TelemetryInstance_Init(0U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Sx1281TelemetryInstance_Start(0U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Sx1281TelemetryInstance_HealthGet(0U, &health) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(health.initialized != 0U && health.started != 0U && health.healthy != 0U);
+}
+#endif
+
 int main(int argc, char **argv)
 {
     if (argc != 2) { return 2; }
     if (strcmp(argv[1], "ack_backlog") == 0) { Test_AckBacklog(); }
     else if (strcmp(argv[1], "cap_queued") == 0) { Test_CapabilityQueuedSupersedes(); }
 #ifdef SYSTEM_TELEMETRY_TX_CONTROL_SUPPORTED
+    else if (strcmp(argv[1], "spi_fault_health") == 0) { Test_SpiFaultHealth(); }
     else if (strcmp(argv[1], "queue_boundaries") == 0) { Test_QueueBoundaries(); }
     else if (strcmp(argv[1], "ack_full") == 0) { Test_AckFullRetry(); }
     else if (strcmp(argv[1], "rx_fairness") == 0) { Test_RxContinuousFairness(); }

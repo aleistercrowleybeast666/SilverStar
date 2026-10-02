@@ -144,6 +144,10 @@ static SystemDeviceResult Sx1281Transport_Start(uint8_t instance)
         (after.spi_timeout_count != before.spi_timeout_count) ||
         (after.busy_timeout_count != before.busy_timeout_count))
     {
+        primask = Sx1281Transport_IrqLock(instance);
+        s_initialized = 0U; s_health.initialized = 0U; s_health.healthy = 0U;
+        s_health.online = 0U;
+        Sx1281Transport_IrqUnlock(instance, primask);
         return ((after.busy_timeout_count != before.busy_timeout_count) ||
                 (after.spi_timeout_count != before.spi_timeout_count)) ?
             SYSTEM_DEVICE_TIMEOUT : SYSTEM_DEVICE_IO_ERROR;
@@ -331,6 +335,12 @@ static void Sx1281Transport_Process(uint8_t instance)
          previous_bus_status.busy_timeout_count));
     primask = Sx1281Transport_IrqLock(instance);
     Sx1281Transport_IoDiagnosticsUpdate(instance, &stats, &bus_status);
+    if (stats.radio_state == LORA_RADIO_STATE_NOT_INIT)
+    {
+        s_started = 0U; s_initialized = 0U;
+        health.started = 0U; health.initialized = 0U;
+        health.online = 0U; health.healthy = 0U;
+    }
     s_health = health;
     s_previous_stats = stats;
     s_previous_bus_status = bus_status;

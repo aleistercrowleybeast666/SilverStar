@@ -237,6 +237,27 @@ static void Lora_SetRadioState(uint8_t instance, LoraRadioState state)
     Lora_IrqUnlock(primask);
 }
 
+/* SDK reads return buffers through void HAL operations. Reject plausible stale
+ * bytes whenever any operation reported SPI/busy failure, even if a later
+ * operation overwrote last_result with OK. Snapshots are owner-task coherent. */
+static uint8_t Lora_BusReadSucceeded(uint8_t instance, Sx1281BusStatus before)
+{
+    Sx1281BusStatus after;
+    Sx1281Bus_StatusGet(instance, &after);
+    uint8_t good = (uint8_t)((after.last_result == SX1281_BUS_OK) &&
+        (after.spi_error_count == before.spi_error_count) &&
+        (after.spi_timeout_count == before.spi_timeout_count) &&
+        (after.busy_timeout_count == before.busy_timeout_count));
+    if (good == 0U)
+    {
+        uint32_t primask = Lora_IrqLock();
+        s_chip_status.verified = 0U;
+        s_stats.radio_state = LORA_RADIO_STATE_BUSY;
+        Lora_IrqUnlock(primask);
+    }
+    return good;
+}
+
 static void Lora_LastRxRecord(uint8_t instance, uint8_t len, int8_t rssi, int8_t snr)
 {
     uint32_t primask;
@@ -710,6 +731,66 @@ static uint8_t Lora_TxTurnAvailable(uint8_t instance)
 /* First detection owns the immutable deadline. Late/repeated indications
  * cannot prolong a lost-completion/noise hold. Expiry discards the stale RX
  * in the ordinary timeout path, before any queued payload is transmitted. */
+/* Ordinary persistent I/O failure: fail bounded queued work, invalidate the
+ * cached chip/READY state, and require explicit owner reinitialization.
+ * No successful receipt is manufactured and no further radio command runs. */
+static void Lora_RadioFault(uint8_t instance, uint8_t failed_tx)
+{
+    uint32_t primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance); Lora_RxQueueAssert(instance); Lora_ControlAssert(instance);
+    if (failed_tx != 0U) { s_stats.tx_timeout++; }
+    for (uint32_t index = 0U; index < (LORA_TX_QUEUE_DEPTH + 1U); index++)
+    {
+        uint32_t id = s_contexts[instance].active_tx_id;
+        if (index < LORA_TX_QUEUE_DEPTH)
+        {
+            uint8_t slot = (uint8_t)((s_tx_tail + index) % LORA_TX_QUEUE_DEPTH);
+            id = index < s_tx_count ? s_contexts[instance].tx_ids[slot] : 0U;
+            s_contexts[instance].tx_ids[slot] = 0U;
+        }
+        if (id != 0U)
+        {
+            s_contexts[instance].completed_tx_id = id;
+            s_contexts[instance].completed_tx_ms = PlatformTime_Ms();
+            s_contexts[instance].completed_tx_result = LoraTxQueryResult_TimedOut;
+        }
+    }
+    s_stats.tx_dropped += s_tx_count; s_stats.rx_dropped += s_rx_count; s_stats.rx_error++;
+    s_tx_head = 0U; s_tx_tail = 0U; s_tx_count = 0U;
+    s_tx_control_count = 0U; s_tx_control_burst = 0U;
+    s_rx_head = 0U; s_rx_tail = 0U; s_rx_count = 0U;
+    s_contexts[instance].active_tx_id = 0U;
+    s_contexts[instance].rx_packet_active = 0U; s_contexts[instance].rx_window_active = 0U;
+    s_tx_busy = 0U; s_radio_in_rx = 0U; s_inited = 0U; s_chip_status.verified = 0U;
+    s_tx_done_flag = 0U; s_tx_timeout_flag = 0U; s_rx_done_flag = 0U;
+    s_rx_timeout_flag = 0U; s_rx_error_flag = 0U;
+    if ((s_control_transaction.state == LoraControlStateSubmitted) ||
+        (s_control_transaction.state == LoraControlStateActive))
+    {
+        s_control_transaction.result.transaction_id = s_control_transaction.transaction_id;
+        s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+        s_control_transaction.result.raw_irq_before = 0U;
+        s_control_transaction.state = s_control_transaction.auto_release != 0U ?
+            LoraControlStateIdle : LoraControlStateComplete;
+    }
+    s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
+    Lora_IrqUnlock(primask);
+}
+
+static uint8_t Lora_RadioRecover(uint8_t instance, uint8_t failed_tx)
+{
+    Sx1281BusStatus before;
+    Sx1281Bus_StatusGet(instance, &before);
+    SX1280SetStandby(instance, STDBY_RC);
+    SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
+    RadioStatus_t status = SX1280GetStatus(instance);
+    if ((Lora_BusReadSucceeded(instance, before) != 0U) &&
+        ((status.Fields.ChipMode == 2U) || (status.Fields.ChipMode == 3U)))
+    { s_radio_in_rx = 0U; s_contexts[instance].rx_packet_active = 0U; return 1U; }
+    Lora_RadioFault(instance, failed_tx);
+    return 0U;
+}
+
 static uint8_t Lora_RxPacketHeld(uint8_t instance)
 {
     SILVERSTAR_ASSERT(s_contexts[instance].rx_packet_active <= 1U,
@@ -718,12 +799,8 @@ static uint8_t Lora_RxPacketHeld(uint8_t instance)
     uint32_t bound = Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS;
     if ((uint32_t)(PlatformTime_Ms() - s_contexts[instance].rx_packet_started_ms) < bound)
     { return 1U; }
-    SX1280SetStandby(instance, STDBY_RC);
-    SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
-    s_contexts[instance].rx_packet_active = 0U;
-    s_radio_in_rx = 0U;
     Lora_StatsIncrement(&s_stats.rx_timeout);
-    return 0U;
+    return (uint8_t)(Lora_RadioRecover(instance, 0U) == 0U);
 }
 
 /* Hardware timed RX protects the pre-detection gap too. Only a completed
@@ -731,18 +808,17 @@ static uint8_t Lora_RxPacketHeld(uint8_t instance)
 static uint8_t Lora_RxIdleForTx(uint8_t instance)
 {
     if (s_radio_in_rx == 0U) { return 1U; }
+    Sx1281BusStatus before;
+    Sx1281Bus_StatusGet(instance, &before);
     RadioStatus_t status = SX1280GetStatus(instance);
-    if ((status.Fields.ChipMode == 2U) || (status.Fields.ChipMode == 3U))
+    if ((Lora_BusReadSucceeded(instance, before) != 0U) &&
+        ((status.Fields.ChipMode == 2U) || (status.Fields.ChipMode == 3U)))
     { s_radio_in_rx = 0U; return 1U; }
     uint32_t bound = Lora_RxListenMs(instance) +
         Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS;
     if ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) < bound) { return 0U; }
-    SX1280SetStandby(instance, STDBY_RC);
-    SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
-    s_radio_in_rx = 0U;
-    s_contexts[instance].rx_packet_active = 0U;
     Lora_StatsIncrement(&s_stats.rx_timeout);
-    return 1U;
+    return Lora_RadioRecover(instance, 0U);
 }
 
 static void Lora_TryStartNextTx(uint8_t instance)
@@ -763,6 +839,8 @@ static void Lora_TryStartNextTx(uint8_t instance)
         return;
     }
 
+    Sx1281BusStatus before;
+    Sx1281Bus_StatusGet(instance, &before);
     s_pkt_params.Params.LoRa.PayloadLength = pkt.len;
     SX1280SetPacketParams(instance, &s_pkt_params);
     Lora_DiagSetDioIrqParams(instance, LORA_TX_IRQ_MASK, LORA_TX_IRQ_MASK, IRQ_RADIO_NONE, IRQ_RADIO_NONE);
@@ -771,6 +849,8 @@ static void Lora_TryStartNextTx(uint8_t instance)
                       (TickTime_t){ LORA_TX_TIMEOUT_STEP,
                                     LORA_TX_TIMEOUT_COUNT });
     Lora_DiagRecordSetTx(instance);
+    if (Lora_BusReadSucceeded(instance, before) == 0U)
+    { Lora_RadioFault(instance, 1U); return; }
 
     s_tx_busy = 1U;
     s_radio_in_rx = 0U;
@@ -794,6 +874,8 @@ LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance)
     SX1280SetTxParams(instance, LORA_TX_OUTPUT_POWER_DBM, RADIO_RAMP_02_US);
     Sx1281Bus_StatusGet(instance, &after);
     return ((after.spi_error_count != before.spi_error_count) ||
+            (after.spi_timeout_count != before.spi_timeout_count) ||
+            (after.last_result != SX1281_BUS_OK) ||
             (after.busy_timeout_count != before.busy_timeout_count)) ?
         LORA_CONFIG_PORT_ERROR : LORA_CONFIG_OK;
 }
@@ -838,6 +920,8 @@ LoraInitResult Lora_Init(uint8_t instance)
     s_chip_status.status_value = radio_status.Value;
     Sx1281Bus_StatusGet(instance, &bus_status);
     if ((bus_status.spi_error_count != 0U) ||
+        (bus_status.spi_timeout_count != 0U) ||
+        (bus_status.last_result != SX1281_BUS_OK) ||
         (bus_status.busy_timeout_count != 0U))
     {
         return LORA_INIT_PORT_ERROR;
@@ -869,6 +953,8 @@ void Lora_StartRx(uint8_t instance)
     SILVERSTAR_ASSERT(s_pkt_params.PacketType == PACKET_TYPE_LORA,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
 
+    Sx1281BusStatus before;
+    Sx1281Bus_StatusGet(instance, &before);
     uint32_t now = PlatformTime_Ms();
     if (s_contexts[instance].rx_window_active == 0U)
     { s_rx_started_ms = now; s_contexts[instance].rx_window_active = 1U; }
@@ -886,6 +972,8 @@ void Lora_StartRx(uint8_t instance)
      * packet before RX_DONE. Software must observe RX completion or idle. */
     SX1280SetRx(instance, (TickTime_t){RADIO_TICK_SIZE_1000_US, (uint16_t)remaining});
     Lora_DiagRecordSetRx(instance);
+    if (Lora_BusReadSucceeded(instance, before) == 0U)
+    { Lora_RadioFault(instance, 0U); return; }
 
     s_radio_in_rx = 1U;
     if (s_tx_busy != 0)
@@ -1053,11 +1141,14 @@ static void Lora_RawIrqProcess(uint8_t instance)
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     uint16_t raw_irq = 0U;
     uint32_t primask;
+    Sx1281BusStatus before;
 
     if ((PlatformGpio_IrqConsume(Sx1281Bus_Dio1Get(instance)) != 0U) ||
         (s_tx_busy != 0U) || (s_radio_in_rx != 0U))
     {
+        Sx1281Bus_StatusGet(instance, &before);
         raw_irq = SX1280GetIrqStatus(instance);
+        if (Lora_BusReadSucceeded(instance, before) == 0U) { raw_irq = 0U; }
     }
     primask = Lora_IrqLock();
     s_diag.raw_irq = raw_irq;
@@ -1087,24 +1178,27 @@ static void Lora_DiagnosticsRefresh(uint8_t instance)
     uint8_t packet_runtime;
     int16_t rssi_inst;
     uint32_t primask;
+    Sx1281BusStatus before;
 
     if ((PlatformTime_Ms() - s_diag_last_refresh_ms) <
         LORA_DIAG_REFRESH_PERIOD_MS)
     {
         return;
     }
+    Sx1281Bus_StatusGet(instance, &before);
     radio_status = SX1280GetStatus(instance);
     packet_runtime = (uint8_t)SX1280GetPacketType(instance);
     rssi_inst = (int16_t)SX1280GetRssiInst(instance);
     (void)PlatformGpio_Read(Sx1281Bus_BusyGet(instance), &busy_gpio);
     (void)PlatformGpio_Read(Sx1281Bus_Dio1Get(instance), &dio1_gpio);
+    uint8_t reads_good = Lora_BusReadSucceeded(instance, before);
     primask = Lora_IrqLock();
     s_chip_status.status_value = radio_status.Value;
-    s_chip_status.verified = (uint8_t)((radio_status.Value != 0x00U) &&
+    s_chip_status.verified = (uint8_t)((reads_good != 0U) && (radio_status.Value != 0x00U) &&
                                       (radio_status.Value != 0xFFU));
     s_diag.packet_runtime = packet_runtime;
     s_diag.rssi_inst = rssi_inst;
-    s_diag.rssi_inst_valid = 1U;
+    s_diag.rssi_inst_valid = reads_good;
     s_cached_busy_gpio = busy_gpio;
     s_cached_dio1_gpio = dio1_gpio;
     s_diag_last_refresh_ms = PlatformTime_Ms();
@@ -1162,11 +1256,15 @@ static void Lora_RxCompletionProcess(uint8_t instance)
         return;
     }
     s_rx_done_flag = 0U;
-    if (SX1280GetPayload(instance, s_rx_tmp_buf, &size, LORA_MAX_PAYLOAD_LEN) == 0)
+    Sx1281BusStatus before;
+    Sx1281Bus_StatusGet(instance, &before);
+    uint8_t payload_result = SX1280GetPayload(instance, s_rx_tmp_buf, &size, LORA_MAX_PAYLOAD_LEN);
+    SX1280GetPacketStatus(instance, &s_pkt_status);
+    uint8_t reads_good = Lora_BusReadSucceeded(instance, before);
+    if ((payload_result == 0U) && (reads_good != 0U))
     {
         SILVERSTAR_ASSERT(size <= LORA_MAX_PAYLOAD_LEN,
             SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
-        SX1280GetPacketStatus(instance, &s_pkt_status);
         if (s_contexts[instance].schedule_role == LoraScheduleRole_Ground)
         {
             s_rx_started_ms = PlatformTime_Ms();
@@ -1188,7 +1286,7 @@ static void Lora_RxCompletionProcess(uint8_t instance)
     {
         Lora_StatsIncrement(&s_stats.rx_dropped);
     }
-    Lora_SetRadioState(instance, LORA_RADIO_STATE_READY);
+    if (reads_good != 0U) { Lora_SetRadioState(instance, LORA_RADIO_STATE_READY); }
 }
 
 static void Lora_RxErrorProcess(uint8_t instance)
@@ -1240,9 +1338,8 @@ void Lora_Process(uint8_t instance)
     {
         /* Timeout step is fixed at1ms; recover a lost completion IRQ without
          * publishing a successful tracked receipt. */
-        SX1280SetStandby(instance, STDBY_RC);
-        SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
-        Lora_OnTxTimeout(instance);
+        if (Lora_RadioRecover(instance, 1U) == 0U) { return; }
+        s_tx_timeout_flag = 1U;
     }
     Lora_DiagnosticsRefresh(instance);
     Lora_TxCompletionProcess(instance);
@@ -1251,9 +1348,15 @@ void Lora_Process(uint8_t instance)
     if (s_tx_busy == 0)
     {
         if (Lora_RxPacketHeld(instance) != 0U) { return; }
+        uint32_t rx_bound = Lora_RxListenMs(instance) +
+            Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS;
+        if ((s_radio_in_rx != 0U) &&
+            ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) >= rx_bound) &&
+            (Lora_RxIdleForTx(instance) == 0U)) { return; }
         if ((s_tx_count != 0U) && (Lora_TxTurnAvailable(instance) != 0U) &&
             (Lora_RxIdleForTx(instance) != 0U))
         { Lora_TryStartNextTx(instance); return; }
+        if (s_inited == 0U) { return; }
         if (s_radio_in_rx == 0)
         {
             /* Peer just finished its packet and grants Ground the channel.

@@ -12,6 +12,7 @@
 #define SX1280GetIrqStatus Previous_Irq
 #define SX1280ClearIrqStatus Previous_Clear
 #define SX1280GetPayload Previous_Payload
+#define Sx1281Bus_StatusGet Previous_BusStatus
 #include "test_sx1281_device.c"
 #undef SX1280SendPayload
 #undef SX1280SetRx
@@ -20,6 +21,7 @@
 #undef SX1280GetIrqStatus
 #undef SX1280ClearIrqStatus
 #undef SX1280GetPayload
+#undef Sx1281Bus_StatusGet
 void SX1280SendPayload(uint8_t instance, uint8_t *data, uint8_t length, TickTime_t timeout);
 void SX1280SetRx(uint8_t instance, TickTime_t timeout);
 void SX1280SetStandby(uint8_t instance, RadioStandbyModes_t mode);
@@ -27,6 +29,7 @@ RadioStatus_t SX1280GetStatus(uint8_t instance);
 uint16_t SX1280GetIrqStatus(uint8_t instance);
 void SX1280ClearIrqStatus(uint8_t instance, uint16_t irq);
 uint8_t SX1280GetPayload(uint8_t instance, uint8_t *data, uint8_t *length, uint8_t maximum);
+void Sx1281Bus_StatusGet(uint8_t instance, Sx1281BusStatus *status);
 #include "sx1281_device.c"
 #undef s_tx_count
 #undef s_rx_count
@@ -49,6 +52,22 @@ static uint64_t s_ms;
 static uint32_t s_clock_base;
 static unsigned int s_command_received, s_ack_received, s_enqueue_errors;
 static uint8_t s_trace;
+static Sx1281BusStatus s_bus[2];
+static uint8_t s_status_failure, s_irq_failure, s_send_failure, s_rx_setup_failure, s_payload_failure;
+static uint8_t s_command_failure;
+static uint64_t s_failure_end;
+static uint8_t s_owner_period[2], s_owner_phase[2], s_clock_quantum[2];
+
+static void Physical_BusFailure(void)
+{
+    Sx1281BusStatus *bus = &s_bus[s_endpoint];
+    uint8_t failure = s_status_failure != 0U ? s_status_failure : s_command_failure;
+    if (failure == 2U) { bus->spi_timeout_count++; bus->last_result = SX1281_BUS_SPI_TIMEOUT; }
+    else if (failure == 3U) { bus->busy_timeout_count++; bus->last_result = SX1281_BUS_BUSY_TIMEOUT; }
+    else { bus->spi_error_count++; bus->last_result = SX1281_BUS_SPI_ERROR; }
+}
+void Sx1281Bus_StatusGet(uint8_t instance, Sx1281BusStatus *status)
+{ (void)instance; *status = s_bus[s_endpoint]; }
 
 /* Independent datasheet calculation for the frozen SF10/BW812500/CR4/5 PHY. */
 static uint32_t Physical_Airtime(uint8_t length)
@@ -104,6 +123,7 @@ void SX1280SetStandby(uint8_t instance, RadioStandbyModes_t mode)
 void SX1280SetRx(uint8_t instance, TickTime_t timeout)
 {
     (void)instance;
+    if ((s_endpoint == 0U) && (s_rx_setup_failure != 0U)) { Physical_BusFailure(); return; }
     PhysicalRadio *radio = &s_hw[s_endpoint];
     TEST_CHECK(radio->receiving == 0U);
     radio->rx_mode = 1U; radio->detected = 0U;
@@ -117,24 +137,35 @@ void SX1280SetRx(uint8_t instance, TickTime_t timeout)
 RadioStatus_t SX1280GetStatus(uint8_t instance)
 {
     (void)instance; RadioStatus_t status;
+    if ((s_endpoint == 0U) && (s_status_failure != 0U) && (s_ms >= 122U) && (s_ms < s_failure_end))
+    { Physical_BusFailure(); status.Value = 0x40U; return status; } /* stale plausible standby */
+    s_bus[s_endpoint].last_result = SX1281_BUS_OK;
     status.Value = s_hw[s_endpoint].tx_mode != 0U ? 0xC0U :
         (s_hw[s_endpoint].rx_mode != 0U ? 0xA0U : 0x40U);
     return status;
 }
 uint16_t SX1280GetIrqStatus(uint8_t instance)
-{ (void)instance; return s_hw[s_endpoint].irq; }
+{
+    (void)instance;
+    if ((s_endpoint == 0U) && (s_irq_failure != 0U) && (s_ms >= 100U) && (s_ms < 149U))
+    { Physical_BusFailure(); return IRQ_RX_DONE; } /* stale plausible completion */
+    s_bus[s_endpoint].last_result = SX1281_BUS_OK;
+    return s_hw[s_endpoint].irq;
+}
 void SX1280ClearIrqStatus(uint8_t instance, uint16_t irq)
 { (void)instance; s_hw[s_endpoint].irq &= (uint16_t)~irq; }
 uint8_t SX1280GetPayload(uint8_t instance, uint8_t *data, uint8_t *length, uint8_t maximum)
 {
     (void)instance; PhysicalRadio *radio = &s_hw[s_endpoint];
     if ((radio->valid == 0U) || (radio->length > maximum)) { return 1U; }
+    if ((s_endpoint == 0U) && (s_payload_failure != 0U)) { Physical_BusFailure(); }
     memcpy(data, radio->payload, radio->length); *length = radio->length;
     radio->received++; return 0U;
 }
 void SX1280SendPayload(uint8_t instance, uint8_t *data, uint8_t length, TickTime_t timeout)
 {
     (void)instance; (void)timeout;
+    if ((s_endpoint == 0U) && (s_send_failure != 0U)) { Physical_BusFailure(); return; }
     PhysicalRadio *radio = &s_hw[s_endpoint];
     if (s_trace != 0U) { printf("SEND ms=%llu endpoint=%u len=%u type=%02x peer_tx=%u ownrx=%u\n",
         (unsigned long long)s_ms, s_endpoint, length, data[0], s_hw[1U-s_endpoint].tx_mode, radio->receiving); }
@@ -151,6 +182,10 @@ void SX1280SendPayload(uint8_t instance, uint8_t *data, uint8_t length, TickTime
 static void Duplex_Init(uint32_t clock_base, uint8_t with_flight)
 {
     memset(s_hw, 0, sizeof(s_hw)); s_ms = 0U; s_clock_base = clock_base;
+    memset(s_bus, 0, sizeof(s_bus)); s_status_failure = 0U; s_irq_failure = 0U; s_failure_end = 0U;
+    s_send_failure = 0U; s_rx_setup_failure = 0U; s_payload_failure = 0U; s_command_failure = 0U;
+    for (unsigned int endpoint = 0U; endpoint < 2U; endpoint++)
+    { s_owner_period[endpoint] = 1U; s_owner_phase[endpoint] = 0U; s_clock_quantum[endpoint] = 1U; }
     s_tick_ms = clock_base; s_command_received = 0U; s_ack_received = 0U; s_enqueue_errors = 0U;
     s_endpoint = 1U; TEST_CHECK(GroundRadio_Init() == GROUND_RADIO_OK);
     if (with_flight != 0U)
@@ -166,8 +201,9 @@ static void Duplex_Step(uint64_t ms, uint8_t flight, uint8_t refill)
 {
     s_ms = ms; s_tick_ms = s_clock_base + (uint32_t)ms;
     Physical_Events();
-    if (flight != 0U)
+    if ((flight != 0U) && ((ms % s_owner_period[0]) == s_owner_phase[0]))
     {
+        s_tick_ms = s_clock_base + (uint32_t)(ms / s_clock_quantum[0] * s_clock_quantum[0]);
         s_endpoint = 0U; Lora_Process(0U);
         uint8_t data[64], length = 0U;
         if (Lora_RxDequeue(0U, data, &length, NULL, NULL) == LORA_RX_DEQUEUE_OK)
@@ -180,6 +216,8 @@ static void Duplex_Step(uint64_t ms, uint8_t flight, uint8_t refill)
         }
         if (refill != 0U) { Duplex_QueueFlight(); }
     }
+    if ((ms % s_owner_period[1]) != s_owner_phase[1]) { return; }
+    s_tick_ms = s_clock_base + (uint32_t)(ms / s_clock_quantum[1] * s_clock_quantum[1]);
     s_endpoint = 1U; GroundRadio_Process();
     uint8_t data[64], length = 0U;
     if (Ground_Lora_RxDequeue(0U, data, &length, NULL, NULL) == LORA_RX_DEQUEUE_OK)
@@ -361,9 +399,126 @@ static void Test_NoiseAndLostTx(void)
     s_hw[0].suppress = IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT;
     for (unsigned int ms = 0U; ms < 2200U; ms++) { Duplex_Step(ms, 1U, 0U); }
     TEST_CHECK(s_hw[0].sent >= 2U); TEST_CHECK(s_contexts[0].stats.tx_timeout >= 2U);
+    TEST_CHECK(s_contexts[0].diag.tx_timeout_count == 0U); /* Software watchdog is not a physical IRQ. */
     TEST_CHECK(Lora_TxResultGet(0U, id, &age) == LoraTxQueryResult_TimedOut);
     printf("NOISE repeated indications cannot renew hold; lostTX IRQ recovers as timeout\n");
 }
+static void Test_SpiReadFailures(void)
+{
+    for (uint8_t failure = 1U; failure <= 3U; failure++)
+    {
+        for (uint8_t persistent = 0U; persistent < 2U; persistent++)
+        {
+            Duplex_Init(0U, 1U);
+            uint8_t tracked[9] = {0x40U, 1U}, command[9] = {0x20U, 9U}; uint32_t id, age;
+            s_endpoint = 0U; TEST_CHECK(Lora_TxEnqueueTracked(0U, tracked, sizeof(tracked), &id) == LORA_TX_ENQUEUE_OK);
+            s_hw[0].suppress = IRQ_RADIO_ALL;
+            s_status_failure = failure; s_failure_end = persistent != 0U ? 500U : 123U;
+            for (unsigned int ms = 0U; ms < 500U; ms++)
+            {
+                s_ms = ms;
+                if (ms == 100U) { Physical_Receive(0U, command, sizeof(command), ms, ms + 49U); }
+                Duplex_Step(ms, 1U, 0U);
+                if (ms < 149U) { TEST_CHECK(s_hw[0].sent == 0U); }
+            }
+            TEST_CHECK(s_hw[0].software_abort == 0U);
+            if (persistent != 0U)
+            {
+                TEST_CHECK(s_hw[0].sent == 0U);
+                TEST_CHECK(s_contexts[0].inited == 0U && s_contexts[0].chip_status.verified == 0U);
+                TEST_CHECK(s_contexts[0].stats.radio_state == LORA_RADIO_STATE_NOT_INIT);
+                TEST_CHECK(s_contexts[0].tx_count == 0U);
+                TEST_CHECK(Lora_TxResultGet(0U, id, &age) == LoraTxQueryResult_TimedOut);
+                s_status_failure = 0U;
+                for (unsigned int ms = 500U; ms < 600U; ms++) { Duplex_Step(ms, 1U, 0U); }
+                TEST_CHECK(s_hw[0].sent == 0U); /* No silent restart after a latched fault. */
+            }
+            else { TEST_CHECK(s_hw[0].sent == 1U); TEST_CHECK(s_hw[0].tx_start >= 149U); }
+        }
+    }
+    Duplex_Init(0U, 1U); Duplex_QueueFlight(); s_irq_failure = 1U;
+    uint8_t command[9] = {0x20U, 9U};
+    for (unsigned int ms = 0U; ms < 500U; ms++)
+    {
+        s_ms = ms;
+        if (ms == 100U) { Physical_Receive(0U, command, sizeof(command), ms, ms + 49U); }
+        Duplex_Step(ms, 1U, 0U);
+        if (ms < 149U) { TEST_CHECK(s_command_received == 0U); }
+    }
+    TEST_CHECK(s_hw[0].software_abort == 0U); TEST_CHECK(s_command_received == 1U);
+    printf("SPI_FAULTS stale standby and RX_DONE rejected; transient resumes safely, persistent latches offline with failed receipt\n");
+}
+static void Test_SpiCommandFailures(void)
+{
+    for (uint8_t failure = 1U; failure <= 3U; failure++)
+    {
+        for (uint8_t operation = 0U; operation < 2U; operation++)
+        {
+            Duplex_Init(0U, 1U); uint8_t data[9] = {0x40U}; uint32_t id, age;
+            s_endpoint = 0U;
+            TEST_CHECK(Lora_TxEnqueueTracked(0U, data, sizeof(data), &id) == LORA_TX_ENQUEUE_OK);
+            s_command_failure = failure; /* Select the injected bus result type. */
+            if (operation == 0U) { s_send_failure = 1U; }
+            else { s_rx_setup_failure = 1U; Lora_StartRx(0U); }
+            s_status_failure = 0U; /* Mode reads remain truthful and successful. */
+            for (unsigned int ms = 0U; ms < 500U; ms++) { Duplex_Step(ms, 1U, 0U); }
+            TEST_CHECK(s_hw[0].sent == 0U); TEST_CHECK(s_contexts[0].inited == 0U);
+            TEST_CHECK(s_contexts[0].stats.tx_ok == 0U);
+            TEST_CHECK(failure == 1U ? s_bus[0].spi_error_count != 0U :
+                failure == 2U ? s_bus[0].spi_timeout_count != 0U : s_bus[0].busy_timeout_count != 0U);
+            TEST_CHECK(Lora_TxResultGet(0U, id, &age) == LoraTxQueryResult_TimedOut);
+        }
+    }
+    Duplex_Init(0U, 1U); s_payload_failure = 1U;
+    uint8_t command[9] = {0x20U};
+    for (unsigned int ms = 0U; ms < 200U; ms++)
+    {
+        s_ms = ms;
+        if (ms == 100U) { Physical_Receive(0U, command, sizeof(command), ms, ms + 49U); }
+        Duplex_Step(ms, 1U, 0U);
+    }
+    TEST_CHECK(s_command_received == 0U); TEST_CHECK(s_contexts[0].stats.rx_dropped == 1U);
+    Duplex_Init(0U, 1U); s_status_failure = 1U; s_failure_end = 500U;
+    s_hw[0].suppress = IRQ_RADIO_ALL;
+    for (unsigned int ms = 0U; ms < 500U; ms++) { Duplex_Step(ms, 1U, 0U); }
+    TEST_CHECK(s_contexts[0].inited == 0U); /* Fault bound also applies without queued TX. */
+    printf("SPI_COMMANDS failed send/RX setup never reports success; bad payload discarded; no-queue mode fault bounded\n");
+}
+
+static void Test_OwnerJitter(void)
+{
+    unsigned int cases = 0U, worst = 0U;
+    for (uint8_t period = 1U; period <= 4U; period++)
+    {
+        for (uint8_t quantum = 1U; quantum <= 4U; quantum++)
+        {
+            /* Bound modeled owner delay + clock rounding within4ms. This is
+             * an assumption under test, not evidence of STM32 WCET. */
+            if ((period + quantum - 1U) > 4U) { continue; }
+            for (uint8_t phase = 0U; phase < period; phase++)
+            {
+                Duplex_Init(UINT32_MAX - 100U, 1U); Duplex_QueueFlight(); Duplex_QueueFlight();
+                s_owner_period[0] = period; s_owner_period[1] = period;
+                s_owner_phase[0] = phase; s_owner_phase[1] = (uint8_t)((phase + 1U) % period);
+                s_clock_quantum[0] = quantum; s_clock_quantum[1] = quantum;
+                uint8_t command[64] = {0x20U, 1U}; unsigned int done = 0U;
+                for (unsigned int ms = 0U; ms < 3000U; ms++)
+                {
+                    if ((ms % 800U) == 0U)
+                    { s_endpoint = 1U; TEST_CHECK(GroundRadio_TxEnqueue(command, sizeof(command)) == GROUND_RADIO_OK); }
+                    Duplex_Step(ms, 1U, 1U);
+                    if (s_ack_received != 0U) { done = ms; break; }
+                }
+                TEST_CHECK(s_ack_received != 0U); TEST_CHECK(s_enqueue_errors == 0U);
+                TEST_CHECK(s_hw[0].software_abort == 0U && s_hw[1].software_abort == 0U);
+                TEST_CHECK(s_hw[0].collisions == 0U && s_hw[1].collisions == 0U);
+                if (done > worst) { worst = done; } cases++;
+            }
+        }
+    }
+    printf("OWNER_DELAY cases%u combined delay/rounding<=4ms worst_ack_ms=%u; assumption, not target WCET\n", cases, worst);
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2) { return 2; }
@@ -375,6 +530,9 @@ int main(int argc, char **argv)
     else if (strcmp(argv[1], "startup_full_stream") == 0) { Test_StartupAndFullStream(); }
     else if (strcmp(argv[1], "rx_errors") == 0) { Test_RxErrors(); }
     else if (strcmp(argv[1], "airtime_profiles") == 0) { Test_AirtimeProfiles(); }
+    else if (strcmp(argv[1], "spi_command_failures") == 0) { Test_SpiCommandFailures(); }
+    else if (strcmp(argv[1], "owner_jitter") == 0) { Test_OwnerJitter(); }
+    else if (strcmp(argv[1], "spi_read_failures") == 0) { Test_SpiReadFailures(); }
     else { return 2; }
     return Test_Finish(argv[1]);
 }

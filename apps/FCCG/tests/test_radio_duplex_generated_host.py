@@ -79,7 +79,7 @@ def radio_duplex_executable(tmp_path_factory):
 
 
 @pytest.mark.parametrize("scenario", ["phase_scan", "boundary", "queue_no_peer", "noise_lost_tx",
-                                     "startup_full_stream", "rx_errors", "airtime_profiles"])
+                                     "startup_full_stream", "rx_errors", "airtime_profiles", "spi_read_failures", "spi_command_failures", "owner_jitter"])
 def test_generated_duplex_radio(radio_duplex_executable, scenario):
     executable, build = radio_duplex_executable
     result = subprocess.run([str(executable), scenario], cwd=build, capture_output=True,
