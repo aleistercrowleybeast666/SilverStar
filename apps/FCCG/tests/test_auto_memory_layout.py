@@ -16,6 +16,8 @@ from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
 from silverstar_fccg.ui.pages.build import BuildPage
 from silverstar_fccg.core.i18n import Translator
+from silverstar_fccg.generator.render import _Eide_Render, _Makefile_Render
+from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 
 
 PLUGINS = Path(__file__).resolve().parents[1] / "plugins/builtin"
@@ -37,6 +39,23 @@ def test_old_configuration_defaults_to_legacy_and_auto_round_trip():
     old["build"]["memory_layout"] = "dma"
     with pytest.raises(ValueError, match="memory_layout"):
         ProjectModel_Parse(old)
+
+
+@pytest.mark.parametrize("layout,define", [
+    ("legacy", None),
+    ("auto", "SILVERSTAR_MEMORY_LAYOUT_AUTO=1"),
+    ("eskf_window_sram", "SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1"),
+])
+def test_saved_layout_eide_defines_match_make_without_polluting_source_graph(layout, define, builtin_catalog):
+    model = ReferenceProject_Create("SavedLayout")
+    model.build = replace(model.build, memory_layout=layout)
+    graph = SourceGraph_Resolve(model, builtin_catalog)
+    environment = builtin_catalog.Component_Get(model.development_environment)
+    eide = _Eide_Render(model, graph, environment)
+    assert f"MEMORY_LAYOUT ?= {layout}" in _Makefile_Render(model)
+    assert not any(value.startswith("SILVERSTAR_MEMORY_LAYOUT_") for value in graph.defines)
+    for candidate in ("SILVERSTAR_MEMORY_LAYOUT_AUTO=1", "SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1"):
+        assert eide.count("        - " + candidate + "\n") == (2 if candidate == define else 0)
 
 
 def test_gui_selection_is_explicit_and_runner_carries_it(qapp, tmp_path):
