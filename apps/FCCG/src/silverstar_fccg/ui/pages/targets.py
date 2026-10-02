@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QPalette
+from silverstar_fccg.ui.widgets import StandardComboBox
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QHBoxLayout, QLabel,
     QPushButton, QSpinBox,
@@ -219,14 +220,14 @@ class GroundTargetPage(BoardHardwarePage):
         radio_form = QFormLayout()
         label = QLabel()
         self.Text_Register(label, "field.ground_radio")
-        self.radio = QComboBox()
+        self.radio = StandardComboBox()
         self.radio.currentIndexChanged.connect(
             lambda: self.configurationChanged.emit("radio_plugin", self.radio.currentData())
         )
         radio_form.addRow(label, self.radio)
         label = QLabel()
         self.Text_Register(label, "field.ground_module")
-        self.module = QComboBox()
+        self.module = StandardComboBox()
         self.module.currentIndexChanged.connect(
             lambda: self.configurationChanged.emit("module_variant", self.module.currentData())
         )
@@ -240,7 +241,7 @@ class GroundTargetPage(BoardHardwarePage):
         pc_form = QFormLayout()
         label = QLabel()
         self.Text_Register(label, "field.ground_pc_interface")
-        self.pc_interface = QComboBox()
+        self.pc_interface = StandardComboBox()
         self.pc_interface.addItem("—", "")
         self.pc_interface.addItem("UART Serial", "uart")
         self.pc_interface.addItem("USB CDC Virtual Serial", "usb_cdc")
@@ -250,11 +251,14 @@ class GroundTargetPage(BoardHardwarePage):
         pc_form.addRow(label, self.pc_interface)
         label = QLabel()
         self.Text_Register(label, "field.ground_pc_resource")
-        self.pc_resource = QComboBox()
+        self.pc_resource = StandardComboBox()
         self.pc_resource.currentIndexChanged.connect(
             lambda: self.configurationChanged.emit("pc_resource", self.pc_resource.currentData())
         )
         pc_form.addRow(label, self.pc_resource)
+        self.pc_resource_notice = QLabel()
+        self.pc_resource_notice.setWordWrap(True)
+        pc_form.addRow(self.pc_resource_notice)
         label = QLabel()
         self.Text_Register(label, "field.ground_baud")
         self.baudrate = EnterCommittedSpinBox()
@@ -335,10 +339,25 @@ class GroundTargetPage(BoardHardwarePage):
         self.baudrate.setEnabled(uart_selected)
         self.pc_resource.clear()
         self.pc_resource.addItem("—", "")
-        for resource in ground.hardware.resources:
-            if resource.kind == "uart":
-                self.pc_resource.addItem(resource.resource_id, resource.resource_id)
+        uarts = tuple(resource for resource in ground.hardware.resources if resource.kind == "uart")
+        for resource in uarts:
+            physical = resource.metadata.get("physical_resource", resource.resource_id)
+            self.pc_resource.addItem(f"{physical} · {resource.resource_id}", resource.resource_id)
+        missing = bool(ground.pc_resource) and self.pc_resource.findData(ground.pc_resource) < 0
+        if missing:
+            self.pc_resource.addItem(
+                self._translator.Text_Get("ground.uart_unavailable", resource=ground.pc_resource),
+                ground.pc_resource,
+            )
+            self.pc_resource.model().item(self.pc_resource.count() - 1).setEnabled(False)
         self.pc_resource.setCurrentIndex(max(0, self.pc_resource.findData(ground.pc_resource)))
+        reason = ("ground.uart_select_hardware" if not ground.hardware.inventory else
+                  "ground.uart_none" if not uarts else
+                  "ground.uart_missing_binding" if missing else "")
+        self.pc_resource_notice.setVisible(ground.pc_interface == "uart" and bool(reason))
+        self.pc_resource_notice.setText(self._translator.Text_Get(reason) if reason else "")
+        self.pc_resource.setToolTip(self.pc_resource_notice.text())
+        self.pc_resource.setEnabled(uart_selected and bool(uarts))
         self.baudrate.CommittedValue_Set(ground.baudrate)
         self.build_summary.setText(
             f"{ground.build.make_command} · "
@@ -371,3 +390,7 @@ class GroundTargetPage(BoardHardwarePage):
         self.generate_button.setToolTip(self._translator.Text_Get(
             "status.ground_ready" if ground.enabled else "status.ground_disabled"))
         self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected")
+        self.save_instance.setEnabled(
+            ground.hardware.mode == "custom" and bool(ground.hardware.snapshot_id)
+            and bool(ground.hardware.build_sources)
+        )

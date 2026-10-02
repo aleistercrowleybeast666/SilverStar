@@ -1685,10 +1685,14 @@ class MainWindow(QMainWindow):
         def change(candidate: ProjectModel) -> None:
             ground = candidate.ground_target
             updates = {field: value}
-            if field == "radio_plugin":
-                updates["module_variant"] = ""
+            if field == "radio_plugin" and value != ground.radio_plugin:
+                radio = self._service.catalog.Component_Get(str(value)) if value else None
+                modules = radio.radio.modules if radio is not None and radio.radio is not None else {}
+                # Flight also adopts the only declared module. Multiple choices
+                # remain explicit; shared AIR settings and power are preserved.
+                updates["module_variant"] = next(iter(modules)) if len(modules) == 1 else ""
                 updates["resource_assignments"] = {}
-            if field == "pc_interface":
+            if field == "pc_interface" and value != ground.pc_interface:
                 updates["pc_resource"] = ""
             candidate.ground_target = replace(ground, **updates)
         self._ProjectConfiguration_Change(change)
@@ -1699,8 +1703,10 @@ class MainWindow(QMainWindow):
                 lambda candidate: setattr(
                     candidate, "ground_target", replace(
                         candidate.ground_target, board="", mcu="",
-                        hardware=HardwareConfiguration(), resource_assignments={},
-                        pc_resource="",
+                        hardware=HardwareConfiguration(
+                            mode="custom", source_kind="manual_import",
+                            provider="silverstar.hardware_provider.stm32_cubemx",
+                        ), resource_assignments={}, pc_resource="",
                     )
                 )
             )

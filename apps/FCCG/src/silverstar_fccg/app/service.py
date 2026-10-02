@@ -4,7 +4,7 @@ import json
 import os
 from collections.abc import Callable
 from copy import deepcopy
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, fields, replace
 from pathlib import Path
 
 from silverstar_fccg.app.source_export import (
@@ -142,6 +142,13 @@ class FccgService:
             else HardwareConfiguration()
         )
         model.resource_assignments = {}
+        model.build = replace(model.build, memory_layout="auto")
+        model.ground_target = replace(
+            model.ground_target,
+            hardware=HardwareConfiguration(
+                mode="custom", source_kind="manual_import", provider=provider,
+            ) if provider else HardwareConfiguration(),
+        )
         return self.ProjectConfiguration_Reconcile(model).model
 
     def Project_Open(self, path: Path) -> ProjectModel:
