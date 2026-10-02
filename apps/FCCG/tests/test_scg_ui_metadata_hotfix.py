@@ -220,3 +220,23 @@ def test_ground_eide_tool_prefix_matches_make_override(workspace_root, prefix):
     document = yaml.safe_load(files[".eide/eide.yml"].decode("utf8"))
     for target in document["targets"].values():
         assert target["toolchainConfigMap"]["GCC"]["options"]["global"]["toolPrefix"] == expected
+
+
+def test_algorithm_parameter_region_collapses_without_changing_values(window):
+    window._model = _GroundF103Model_Get(window._service.catalog)
+    window._Project_Refresh()
+    page = window.algorithm_parameters_page
+    section = page.parameters_section
+    before = json.dumps(window._model.Dictionary_Get(), sort_keys=True)
+    assert not section.Expanded_Is()
+    assert section.body.isHidden()
+    section.toggle_button.click()
+    assert section.Expanded_Is()
+    assert not section.body.isHidden()
+    window.Language_Apply("en_US")
+    assert section.Expanded_Is()
+    assert section.toggle_button.text() == window._translator.Text_Get("navigation.parameters")
+    assert section.toggle_button.objectName() == "collapsibleHeader"
+    section.toggle_button.click()
+    assert section.body.isHidden()
+    assert json.dumps(window._model.Dictionary_Get(), sort_keys=True) == before
