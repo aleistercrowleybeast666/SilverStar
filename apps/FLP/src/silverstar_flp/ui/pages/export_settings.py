@@ -86,6 +86,7 @@ class ImportDialog(QDialog):
 
         self.candidate_label = QLabel()
         self.candidate_combo = StandardComboBox()
+        self.folder_path_edit.textChanged.connect(self.candidate_combo.clear)
         form.addRow(self.candidate_label, self.candidate_combo)
         layout.addWidget(self.source_group)
 
@@ -174,17 +175,29 @@ class ImportDialog(QDialog):
     def PairDiscovery_Set(self, discovery: object) -> None:
         self.candidate_combo.clear()
         pairs = tuple(getattr(discovery, "pairs", ()))
+        selected = Path(getattr(discovery, "selected_path", self.folder_path_edit.text()))
+        display_root = selected.parent if selected.is_file() else selected
         for pair in pairs:
+            try:
+                log_label = pair.log_path.resolve().relative_to(display_root.resolve()).as_posix()
+            except ValueError:
+                log_label = str(pair.log_path)
             label = (
-                f"{pair.log_path.name}  +  {pair.decoder_package_path.name}  "
+                f"{log_label}  +  {pair.decoder_package_path.name}  "
                 f"[{pair.project_name} / {pair.firmware_version}]"
             )
             self.candidate_combo.addItem(label, pair)
+            self.candidate_combo.setItemData(
+                self.candidate_combo.count() - 1,
+                f"{pair.log_path}\n{pair.decoder_package_path}",
+                Qt.ItemDataRole.ToolTipRole,
+            )
         diagnostics = tuple(getattr(discovery, "diagnostics", ()))
         if len(pairs) == 1:
             self.candidate_combo.setCurrentIndex(0)
             self.result_label.setText(self._translator.Text_Get("import.exact_pair_found"))
         elif pairs:
+            self.candidate_combo.setCurrentIndex(-1)
             self.result_label.setText(self._translator.Text_Get("import.select_exact_pair"))
         else:
             detail = "\n".join(diagnostics)
@@ -480,7 +493,17 @@ class ExportDialog(QDialog):
         self._result_manifest = None
         self._ManifestPath_Set(None)
         self._FailureDetails_Clear()
-        self.result_label.setText(message)
+        code, separator, details = message.partition(":")
+        key = f"error.code.{code.strip()}"
+        translated = self._translator.Text_Get(key)
+        self.result_label.setToolTip(details.strip() if code.strip() == "export_directory_not_empty" else "")
+        if code.strip() == "export_directory_not_empty":
+            self.result_label.setText(translated)
+            return
+        self.result_label.setText(
+            translated + (f"\n{details.strip()}" if separator and details.strip() else "")
+            if translated != key else message
+        )
 
     def Result_Clear(self) -> None:
         self._result_manifest = None
@@ -529,6 +552,10 @@ class ExportDialog(QDialog):
                     *(f"- {failure.localized_name}" for failure in manifest.failures),
                 )
             )
+        if any(failure.exception_message.startswith("channel_unavailable:")
+               for failure in manifest.failures):
+            lines.append(self._translator.Text_Get("export.missing_recorded_channels"))
+        self.result_label.setToolTip("")
         self.result_label.setText("\n".join(lines))
         details = []
         for failure in manifest.failures:

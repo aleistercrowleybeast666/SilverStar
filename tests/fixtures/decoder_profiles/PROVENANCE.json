@@ -1,0 +1,71 @@
+[
+  {
+    "mission": "000011",
+    "fixture_path": "tests/fixtures/decoder_profiles/SS_ImuStartupRepair_Final_20261002.ssdecoder",
+    "bytes": 142835,
+    "package_sha256": "8b44038e6bccb0d0c11374726d80563f8e15767b6e371d2d071a7300b1b39dd4",
+    "generation_profile_sha256": "6ffa7e1682311759ec7f35ddf2683194da3761b0f2e2772c7f6ea561f0e8dc60",
+    "record_catalog_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+    "project_semantics_sha256": "e96cf3b2c6dd679cda0903f9f156580398916dd859167af5007469c87e319b80",
+    "exact_descriptor": {
+      "package_schema_major": 1,
+      "package_schema_minor": 2,
+      "container_format_major": 0,
+      "container_format_minor": 0,
+      "record_catalog_hash_128": "7af595f2376c22dc57cd63a34340d685",
+      "project_semantics_hash_128": "e96cf3b2c6dd679cda0903f9f1565803",
+      "generation_profile_hash_128": "6ffa7e1682311759ec7f35ddf2683194"
+    },
+    "firmware_commit_as_declared_by_package": "cc0b377ded690556d037a412a55f87fe334c42d0",
+    "acceptance_source_commit": "959ea69f4c907e2561aa867f3623ce184c463ec9",
+    "source_label": "SS_ImuStartupRepair_Final_20261002.ssdecoder (preserved acceptance copy)",
+    "already_tracked_same_hash": false,
+    "audit": "Five declarative text entries only; embedded checksums and Descriptor hashes verified; no raw measurement log or firmware binary; no credential/path/email pattern findings."
+  },
+  {
+    "mission": "000012",
+    "fixture_path": "tests/fixtures/decoder_profiles/SS_M0FlightStateRepair_20261002.ssdecoder",
+    "bytes": 142829,
+    "package_sha256": "5bd43059f69f62cce851e5a57d5363292958ee5dc1f5acb5408de42a6d294a60",
+    "generation_profile_sha256": "eea0325367e502d1aa24dd5bae6440b3b449340f74a81e83e1f45307e876d54d",
+    "record_catalog_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+    "project_semantics_sha256": "664ab2ad866ccd0cac413f5551fe3570f44ef38f2fe38920e9f973bb4a279d20",
+    "exact_descriptor": {
+      "package_schema_major": 1,
+      "package_schema_minor": 2,
+      "container_format_major": 0,
+      "container_format_minor": 0,
+      "record_catalog_hash_128": "7af595f2376c22dc57cd63a34340d685",
+      "project_semantics_hash_128": "664ab2ad866ccd0cac413f5551fe3570",
+      "generation_profile_hash_128": "eea0325367e502d1aa24dd5bae6440b3"
+    },
+    "firmware_commit_as_declared_by_package": "cc0b377ded690556d037a412a55f87fe334c42d0",
+    "acceptance_source_commit": "959ea69f4c907e2561aa867f3623ce184c463ec9",
+    "source_label": "SS_M0FlightStateRepair_20261002.ssdecoder (preserved acceptance copy)",
+    "already_tracked_same_hash": false,
+    "audit": "Five declarative text entries only; embedded checksums and Descriptor hashes verified; no raw measurement log or firmware binary; no credential/path/email pattern findings."
+  },
+  {
+    "mission": "000015",
+    "fixture_path": "tests/fixtures/decoder_profiles/SS_0_5_TEST_5.ssdecoder",
+    "bytes": 143777,
+    "package_sha256": "9ef490e1e2937a7fe6aefe81058f2f20fefd9f1938f907543dbaa11cc2af0f1a",
+    "generation_profile_sha256": "c35e401c8fb4a2ce43818e689706a45c9dd238474f38c1f72fd148e3e257c708",
+    "record_catalog_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+    "project_semantics_sha256": "ddfa9bc02ef6241bfbb3e5199e06d91c2da5352112b769cb312f6e03b3fc722c",
+    "exact_descriptor": {
+      "package_schema_major": 1,
+      "package_schema_minor": 2,
+      "container_format_major": 0,
+      "container_format_minor": 0,
+      "record_catalog_hash_128": "7af595f2376c22dc57cd63a34340d685",
+      "project_semantics_hash_128": "ddfa9bc02ef6241bfbb3e5199e06d91c",
+      "generation_profile_hash_128": "c35e401c8fb4a2ce43818e689706a45c"
+    },
+    "firmware_commit_as_declared_by_package": "cc0b377ded690556d037a412a55f87fe334c42d0",
+    "acceptance_source_commit": "959ea69f4c907e2561aa867f3623ce184c463ec9",
+    "source_label": "SS_0_5_TEST_5.ssdecoder (preserved acceptance copy)",
+    "already_tracked_same_hash": false,
+    "audit": "Five declarative text entries only; embedded checksums and Descriptor hashes verified; no raw measurement log or firmware binary; no credential/path/email pattern findings."
+  }
+]

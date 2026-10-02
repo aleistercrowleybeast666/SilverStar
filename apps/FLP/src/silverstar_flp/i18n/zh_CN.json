@@ -867,5 +867,8 @@
   "replay.quality_recorded": "沿用记录的策略revision",
   "replay.quality_revision": "新策略 revision {revision}（近似试算）",
   "replay.parameter_retired": "旧配置值；revision 3 已退役",
-  "project.analysis_unsaved": "分析会话未保存"
+  "project.analysis_unsaved": "分析会话未保存",
+  "import.startup_fragment": "这份日志尚无可用于分析的任务起点或惯性数据，属于启动或任务前片段，暂不能选定任务校准状态。请保留日志和快照，并选择包含任务数据的 flight.sslog。",
+  "error.code.export_directory_not_empty": "所选导出文件夹已有文件。为保护已有结果，请选择一个新的空文件夹后重试。",
+  "export.missing_recorded_channels": "所选数据源缺少部分请求的记录通道，相关导出项已列为失败。已导出的文件仍有效，缺失通道名保留在错误详情中。"
 }
