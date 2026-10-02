@@ -11,7 +11,7 @@
 #define MS5611_FIXED_RATE_HZ 20U
 #define MS5611_STALE_US 200000ULL
 
-static Ms5611BusResult Ms5611Adapter_CommandWrite(void *bus,
+Ms5611BusResult Ms5611Bus_Write(void *bus,
     uint8_t command)
 {
     Ms5611Adapter *adapter = (Ms5611Adapter *)bus;
@@ -20,10 +20,13 @@ static Ms5611BusResult Ms5611Adapter_CommandWrite(void *bus,
     if (adapter == NULL) { return Ms5611BusError; }
     if (adapter->interface == Ms5611InterfaceI2c)
     {
+        if (SYSTEM_BUILD_MS5611_I2C_ENABLED == 0U) { return Ms5611BusError; }
         result = PlatformI2c_Write(adapter->i2c, adapter->address_7bit,
             &command, 1U, MS5611_BUS_TIMEOUT_MS);
         return result == PLATFORM_OK ? Ms5611BusOk : Ms5611BusError;
     }
+    if ((adapter->interface != Ms5611InterfaceSpi) ||
+        (SYSTEM_BUILD_MS5611_SPI_ENABLED == 0U)) { return Ms5611BusError; }
     if (PlatformGpio_Write(adapter->cs, 0U) != PLATFORM_OK)
     { return Ms5611BusError; }
     result = PlatformSpi_Write(adapter->spi, &command, 1U,
@@ -33,7 +36,7 @@ static Ms5611BusResult Ms5611Adapter_CommandWrite(void *bus,
         Ms5611BusOk : Ms5611BusError;
 }
 
-static Ms5611BusResult Ms5611Adapter_CommandRead(void *bus,
+Ms5611BusResult Ms5611Bus_Read(void *bus,
     uint8_t command, uint8_t *bytes, uint8_t length)
 {
     Ms5611Adapter *adapter = (Ms5611Adapter *)bus;
@@ -46,12 +49,15 @@ static Ms5611BusResult Ms5611Adapter_CommandRead(void *bus,
     { return Ms5611BusError; }
     if (adapter->interface == Ms5611InterfaceI2c)
     {
+        if (SYSTEM_BUILD_MS5611_I2C_ENABLED == 0U) { return Ms5611BusError; }
         result = PlatformI2c_MemoryRead(adapter->i2c,
             adapter->address_7bit, command,
             PLATFORM_I2C_MEMORY_ADDRESS_8_BIT, bytes, length,
             MS5611_BUS_TIMEOUT_MS);
         return result == PLATFORM_OK ? Ms5611BusOk : Ms5611BusError;
     }
+    if ((adapter->interface != Ms5611InterfaceSpi) ||
+        (SYSTEM_BUILD_MS5611_SPI_ENABLED == 0U)) { return Ms5611BusError; }
     if (PlatformGpio_Write(adapter->cs, 0U) != PLATFORM_OK)
     { return Ms5611BusError; }
     tx[0] = command;
@@ -69,8 +75,6 @@ static SystemDeviceResult Ms5611Adapter_Init(Ms5611Adapter *adapter)
     Ms5611Port port;
     if (adapter == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     port.bus = adapter;
-    port.write = Ms5611Adapter_CommandWrite;
-    port.read = Ms5611Adapter_CommandRead;
     Ms5611_Init(&adapter->core, &port);
     adapter->health.initialized = 1U;
     return SYSTEM_DEVICE_OK;
@@ -79,7 +83,7 @@ static SystemDeviceResult Ms5611Adapter_Init(Ms5611Adapter *adapter)
 SystemDeviceResult Ms5611Adapter_InitI2c(Ms5611Adapter *adapter,
     PlatformI2cId i2c, uint16_t address_7bit)
 {
-    if ((adapter == NULL) || (i2c >= PLATFORM_I2C_COUNT) ||
+    if ((SYSTEM_BUILD_MS5611_I2C_ENABLED == 0U) || (adapter == NULL) || (i2c >= PLATFORM_I2C_COUNT) ||
         ((address_7bit != 0x76U) && (address_7bit != 0x77U)))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     (void)memset(adapter, 0, sizeof(*adapter));
@@ -92,7 +96,7 @@ SystemDeviceResult Ms5611Adapter_InitI2c(Ms5611Adapter *adapter,
 SystemDeviceResult Ms5611Adapter_InitSpi(Ms5611Adapter *adapter,
     PlatformSpiId spi, PlatformGpioId cs)
 {
-    if ((adapter == NULL) || (spi >= PLATFORM_SPI_COUNT) ||
+    if ((SYSTEM_BUILD_MS5611_SPI_ENABLED == 0U) || (adapter == NULL) || (spi >= PLATFORM_SPI_COUNT) ||
         (cs >= PLATFORM_GPIO_COUNT))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     (void)memset(adapter, 0, sizeof(*adapter));

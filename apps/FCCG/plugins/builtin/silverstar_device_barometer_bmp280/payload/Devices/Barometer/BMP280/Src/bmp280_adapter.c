@@ -11,7 +11,7 @@
 #define BMP280_FIXED_RATE_HZ 20U
 #define BMP280_STALE_US 200000ULL
 
-static Bmp280BusResult Bmp280Adapter_Read(void *bus,
+Bmp280BusResult Bmp280Bus_Read(void *bus,
     uint8_t register_address, uint8_t *bytes, uint8_t length)
 {
     Bmp280Adapter *adapter = (Bmp280Adapter *)bus;
@@ -24,12 +24,15 @@ static Bmp280BusResult Bmp280Adapter_Read(void *bus,
     { return Bmp280BusError; }
     if (adapter->interface == Bmp280InterfaceI2c)
     {
+        if (SYSTEM_BUILD_BMP280_I2C_ENABLED == 0U) { return Bmp280BusError; }
         result = PlatformI2c_MemoryRead(adapter->i2c,
             adapter->address_7bit, register_address,
             PLATFORM_I2C_MEMORY_ADDRESS_8_BIT, bytes, length,
             BMP280_BUS_TIMEOUT_MS);
         return result == PLATFORM_OK ? Bmp280BusOk : Bmp280BusError;
     }
+    if ((adapter->interface != Bmp280InterfaceSpi) ||
+        (SYSTEM_BUILD_BMP280_SPI_ENABLED == 0U)) { return Bmp280BusError; }
     if (PlatformGpio_Write(adapter->cs, 0U) != PLATFORM_OK)
     { return Bmp280BusError; }
     tx[0] = register_address | 0x80U;
@@ -42,7 +45,7 @@ static Bmp280BusResult Bmp280Adapter_Read(void *bus,
     return Bmp280BusOk;
 }
 
-static Bmp280BusResult Bmp280Adapter_Write(void *bus,
+Bmp280BusResult Bmp280Bus_Write(void *bus,
     uint8_t register_address, uint8_t value)
 {
     Bmp280Adapter *adapter = (Bmp280Adapter *)bus;
@@ -53,12 +56,15 @@ static Bmp280BusResult Bmp280Adapter_Write(void *bus,
     if (adapter == NULL) { return Bmp280BusError; }
     if (adapter->interface == Bmp280InterfaceI2c)
     {
+        if (SYSTEM_BUILD_BMP280_I2C_ENABLED == 0U) { return Bmp280BusError; }
         result = PlatformI2c_MemoryWrite(adapter->i2c,
             adapter->address_7bit, register_address,
             PLATFORM_I2C_MEMORY_ADDRESS_8_BIT, &value, 1U,
             BMP280_BUS_TIMEOUT_MS);
         return result == PLATFORM_OK ? Bmp280BusOk : Bmp280BusError;
     }
+    if ((adapter->interface != Bmp280InterfaceSpi) ||
+        (SYSTEM_BUILD_BMP280_SPI_ENABLED == 0U)) { return Bmp280BusError; }
     if (PlatformGpio_Write(adapter->cs, 0U) != PLATFORM_OK)
     { return Bmp280BusError; }
     tx[0] = register_address & 0x7FU;
@@ -75,8 +81,6 @@ static SystemDeviceResult Bmp280Adapter_Init(Bmp280Adapter *adapter)
     Bmp280Port port;
     if (adapter == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     port.bus = adapter;
-    port.read = Bmp280Adapter_Read;
-    port.write = Bmp280Adapter_Write;
     Bmp280_Init(&adapter->core, &port);
     adapter->health.initialized = 1U;
     return SYSTEM_DEVICE_OK;
@@ -85,7 +89,7 @@ static SystemDeviceResult Bmp280Adapter_Init(Bmp280Adapter *adapter)
 SystemDeviceResult Bmp280Adapter_InitI2c(Bmp280Adapter *adapter,
     PlatformI2cId i2c, uint16_t address_7bit)
 {
-    if ((adapter == NULL) || (i2c >= PLATFORM_I2C_COUNT) ||
+    if ((SYSTEM_BUILD_BMP280_I2C_ENABLED == 0U) || (adapter == NULL) || (i2c >= PLATFORM_I2C_COUNT) ||
         ((address_7bit != 0x76U) && (address_7bit != 0x77U)))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     (void)memset(adapter, 0, sizeof(*adapter));
@@ -98,7 +102,7 @@ SystemDeviceResult Bmp280Adapter_InitI2c(Bmp280Adapter *adapter,
 SystemDeviceResult Bmp280Adapter_InitSpi(Bmp280Adapter *adapter,
     PlatformSpiId spi, PlatformGpioId cs)
 {
-    if ((adapter == NULL) || (spi >= PLATFORM_SPI_COUNT) ||
+    if ((SYSTEM_BUILD_BMP280_SPI_ENABLED == 0U) || (adapter == NULL) || (spi >= PLATFORM_SPI_COUNT) ||
         (cs >= PLATFORM_GPIO_COUNT))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     (void)memset(adapter, 0, sizeof(*adapter));

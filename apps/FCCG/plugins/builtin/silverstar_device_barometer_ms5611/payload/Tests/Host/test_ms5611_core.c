@@ -14,7 +14,7 @@ typedef struct
     uint32_t pressure_start_count;
 } TestMs5611Bus;
 
-static Ms5611BusResult TestMs5611_Write(void *bus, uint8_t command)
+Ms5611BusResult Ms5611Bus_Write(void *bus, uint8_t command)
 {
     TestMs5611Bus *mock = (TestMs5611Bus *)bus;
     if (mock == NULL) { return Ms5611BusError; }
@@ -26,7 +26,7 @@ static Ms5611BusResult TestMs5611_Write(void *bus, uint8_t command)
     return Ms5611BusError;
 }
 
-static Ms5611BusResult TestMs5611_Read(void *bus, uint8_t command,
+Ms5611BusResult Ms5611Bus_Read(void *bus, uint8_t command,
     uint8_t *bytes, uint8_t length)
 {
     TestMs5611Bus *mock = (TestMs5611Bus *)bus;
@@ -70,8 +70,6 @@ static void TestMs5611_OfficialVectorAndBoundedCycle(void)
     uint64_t time_us;
     TestMs5611_Seed(&bus);
     port.bus = &bus;
-    port.write = TestMs5611_Write;
-    port.read = TestMs5611_Read;
     Ms5611_Init(&context, &port);
     for (time_us = 0U; time_us < 100000U; time_us += 1000U)
     {
@@ -101,8 +99,6 @@ static void TestMs5611_CrcAndTimeout(void)
     TestMs5611_Seed(&bus);
     bus.prom[1] ^= 1U;
     port.bus = &bus;
-    port.write = TestMs5611_Write;
-    port.read = TestMs5611_Read;
     Ms5611_Init(&context, &port);
     for (time_us = 0U; time_us < 30000U; time_us += 1000U)
     {

@@ -57,7 +57,8 @@ SystemDeviceResult ProjectMs5611SpiResources_Get(uint8_t, ProjectMs5611SpiResour
     ]
     flags = [
         _Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror",
-        "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wvla",
+        "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wvla", "-fanalyzer",
+        "-DSYSTEM_BUILD_MS5611_I2C_ENABLED=1U", "-DSYSTEM_BUILD_MS5611_SPI_ENABLED=1U",
     ]
     flags += ["-I" + str(path) for path in includes]
     source = PAYLOAD / "Devices/Barometer/MS5611/Src"
@@ -70,9 +71,10 @@ SystemDeviceResult ProjectMs5611SpiResources_Get(uint8_t, ProjectMs5611SpiResour
         _Command_Run(flags + [str(path) for path in sources] + ["-lm", "-o", str(binary)],
                      tmp_path, f"compile_{name}")
         _Command_Run([str(binary)], tmp_path, f"run_{name}")
-    _Command_Run(flags + ["-c", str(source / "ms5611_instance.c"),
-                          "-o", str(tmp_path / "ms5611_instance.o")],
-                 tmp_path, "compile_instance")
+    for transport in ("i2c", "spi"):
+        _Command_Run(flags + ["-c", str(source / f"ms5611_{transport}_instance.c"),
+                             "-o", str(tmp_path / f"ms5611_{transport}_instance.o")],
+                     tmp_path, f"compile_{transport}_instance")
 
 
 def test_ms5611_one_physical_plugin_two_bus_variants(builtin_catalog) -> None:
@@ -87,7 +89,7 @@ def test_ms5611_one_physical_plugin_two_bus_variants(builtin_catalog) -> None:
             "PROJECT_PHYSICAL_DEVICE_ID_MS5611"
         )
         assert sum(source.endswith("ms5611_core.c") for source in resolved.build.sources) == 1
-    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.0"
+    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.1"
 
 
 def test_ms5611_i2c_generated_resource_and_dispatch(builtin_catalog) -> None:

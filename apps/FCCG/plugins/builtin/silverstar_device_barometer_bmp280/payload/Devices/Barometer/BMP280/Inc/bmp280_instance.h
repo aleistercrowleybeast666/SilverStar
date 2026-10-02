@@ -3,30 +3,31 @@
 
 #include "system_barometer_if.h"
 
-#define BMP280_INSTANCE_DECLARATIONS(prefix) \
-SystemDeviceResult prefix ## _Init(uint8_t instance); \
-SystemDeviceResult prefix ## _Start(uint8_t instance); \
-SystemDeviceResult prefix ## _Stop(uint8_t instance); \
-SystemDeviceResult prefix ## _Process(uint8_t instance); \
-SystemDeviceResult prefix ## _InfoGet(uint8_t instance, SystemDeviceInfo *info); \
-SystemDeviceResult prefix ## _CapabilitiesGet(uint8_t instance, uint32_t *mask); \
-SystemDeviceResult prefix ## _HealthGet(uint8_t instance, SystemDeviceHealth *health); \
-SystemDeviceResult prefix ## _LatestSampleGet(uint8_t instance, \
-    SystemBarometerSample *sample); \
-SystemDeviceResult prefix ## _SelfTestRun(uint8_t instance, \
-    SystemDeviceSelfTestResult *result); \
-SystemDeviceResult prefix ## _ConfigApply(uint8_t instance, \
-    const SystemBarometerConfig *config, SystemDeviceConfigReport *report); \
-SystemDeviceResult prefix ## _ConfigVerify(uint8_t instance, \
-    const SystemBarometerConfig *config, SystemDeviceConfigReport *report); \
-SystemDeviceResult prefix ## _EffectiveConfigGet(uint8_t instance, \
-    SystemBarometerConfig *config); \
-SystemDeviceResult prefix ## _NoiseCharacteristicsGet(uint8_t instance, \
-    SystemBarometerNoiseCharacteristics *noise);
-
-BMP280_INSTANCE_DECLARATIONS(Bmp280I2cBarometerInstance)
-BMP280_INSTANCE_DECLARATIONS(Bmp280SpiBarometerInstance)
-
-#undef BMP280_INSTANCE_DECLARATIONS
+SystemDeviceResult Bmp280I2cBarometerInstance_Init(uint8_t instance);
+SystemDeviceResult Bmp280I2cBarometerInstance_Start(uint8_t instance);
+SystemDeviceResult Bmp280I2cBarometerInstance_Stop(uint8_t instance);
+SystemDeviceResult Bmp280I2cBarometerInstance_Process(uint8_t instance);
+SystemDeviceResult Bmp280I2cBarometerInstance_InfoGet(uint8_t instance, SystemDeviceInfo *info);
+SystemDeviceResult Bmp280I2cBarometerInstance_CapabilitiesGet(uint8_t instance, uint32_t *mask);
+SystemDeviceResult Bmp280I2cBarometerInstance_HealthGet(uint8_t instance, SystemDeviceHealth *health);
+SystemDeviceResult Bmp280I2cBarometerInstance_LatestSampleGet(uint8_t instance, SystemBarometerSample *sample);
+SystemDeviceResult Bmp280I2cBarometerInstance_SelfTestRun(uint8_t instance, SystemDeviceSelfTestResult *result);
+SystemDeviceResult Bmp280I2cBarometerInstance_ConfigApply(uint8_t instance, const SystemBarometerConfig *config, SystemDeviceConfigReport *report);
+SystemDeviceResult Bmp280I2cBarometerInstance_ConfigVerify(uint8_t instance, const SystemBarometerConfig *config, SystemDeviceConfigReport *report);
+SystemDeviceResult Bmp280I2cBarometerInstance_EffectiveConfigGet(uint8_t instance, SystemBarometerConfig *config);
+SystemDeviceResult Bmp280I2cBarometerInstance_NoiseCharacteristicsGet(uint8_t instance, SystemBarometerNoiseCharacteristics *noise);
+SystemDeviceResult Bmp280SpiBarometerInstance_Init(uint8_t instance);
+SystemDeviceResult Bmp280SpiBarometerInstance_Start(uint8_t instance);
+SystemDeviceResult Bmp280SpiBarometerInstance_Stop(uint8_t instance);
+SystemDeviceResult Bmp280SpiBarometerInstance_Process(uint8_t instance);
+SystemDeviceResult Bmp280SpiBarometerInstance_InfoGet(uint8_t instance, SystemDeviceInfo *info);
+SystemDeviceResult Bmp280SpiBarometerInstance_CapabilitiesGet(uint8_t instance, uint32_t *mask);
+SystemDeviceResult Bmp280SpiBarometerInstance_HealthGet(uint8_t instance, SystemDeviceHealth *health);
+SystemDeviceResult Bmp280SpiBarometerInstance_LatestSampleGet(uint8_t instance, SystemBarometerSample *sample);
+SystemDeviceResult Bmp280SpiBarometerInstance_SelfTestRun(uint8_t instance, SystemDeviceSelfTestResult *result);
+SystemDeviceResult Bmp280SpiBarometerInstance_ConfigApply(uint8_t instance, const SystemBarometerConfig *config, SystemDeviceConfigReport *report);
+SystemDeviceResult Bmp280SpiBarometerInstance_ConfigVerify(uint8_t instance, const SystemBarometerConfig *config, SystemDeviceConfigReport *report);
+SystemDeviceResult Bmp280SpiBarometerInstance_EffectiveConfigGet(uint8_t instance, SystemBarometerConfig *config);
+SystemDeviceResult Bmp280SpiBarometerInstance_NoiseCharacteristicsGet(uint8_t instance, SystemBarometerNoiseCharacteristics *noise);
 
 #endif /* __BMP280_INSTANCE_H */

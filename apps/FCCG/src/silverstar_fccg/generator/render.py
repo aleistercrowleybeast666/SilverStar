@@ -738,6 +738,34 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
+    definitions.append(("SYSTEM_BUILD_BAROMETER_COLD_ENABLED", "1U" if sum(
+        entry["class"] == "SYSTEM_DEVICE_CLASS_BAROMETER"
+        for entry in _DeviceDescriptorEntries_Get(model, catalog)
+    ) > 1 else "0U"))
+    # Instance-selected flags retain inactive transports as compile-time zero.
+    # They describe existing declarative variants, never new hardware resources.
+    instance_symbols: set[str] = set()
+    active_instance_symbols: set[str] = set()
+    for manifest in catalog.Type_Get("device"):
+        symbols = manifest.metadata.get("instance_feature_symbols", [])
+        if not isinstance(symbols, list) or not all(
+            isinstance(symbol, str) and re.fullmatch(r"[A-Z][A-Z0-9_]*", symbol)
+            for symbol in symbols
+        ):
+            raise ValueError("Device instance feature symbols are invalid")
+        instance_symbols.update(symbols)
+    for instance in model.device_instances:
+        manifest = catalog.InstanceComponent_Get(instance)
+        symbols = manifest.metadata.get("active_instance_feature_symbols", [])
+        if not isinstance(symbols, list) or not all(
+            isinstance(symbol, str) and symbol in instance_symbols for symbol in symbols
+        ):
+            raise ValueError("Active instance feature symbols are undeclared")
+        active_instance_symbols.update(symbols)
+    definitions.extend(
+        (symbol, "1U" if symbol in active_instance_symbols else "0U")
+        for symbol in sorted(instance_symbols)
+    )
     definitions.extend(_AlignmentDefinitions_Get(model))
     telemetry_tag = b"\0" * 8
     telemetry_selection = model.protocols.get("telemetry")

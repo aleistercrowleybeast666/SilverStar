@@ -12,7 +12,7 @@ typedef struct
     uint32_t forced_writes;
 } TestBmp280Bus;
 
-static Bmp280BusResult TestBmp280_Read(void *bus, uint8_t address,
+Bmp280BusResult Bmp280Bus_Read(void *bus, uint8_t address,
     uint8_t *bytes, uint8_t length)
 {
     TestBmp280Bus *mock = bus;
@@ -22,7 +22,7 @@ static Bmp280BusResult TestBmp280_Read(void *bus, uint8_t address,
     return Bmp280BusOk;
 }
 
-static Bmp280BusResult TestBmp280_Write(void *bus, uint8_t address,
+Bmp280BusResult Bmp280Bus_Write(void *bus, uint8_t address,
     uint8_t value)
 {
     TestBmp280Bus *mock = bus;
@@ -69,8 +69,6 @@ static void TestBmp280_CompensationVector(void)
     Bmp280Port port;
     TestBmp280_BusSeed(&bus);
     port.bus = &bus;
-    port.read = TestBmp280_Read;
-    port.write = TestBmp280_Write;
     Bmp280_Init(&context, &port);
     assert(Bmp280_Step(&context, 1000U) == Bmp280StepPending);
     assert(Bmp280_Step(&context, 2000U) == Bmp280StepPending);
@@ -97,8 +95,6 @@ static void TestBmp280_BadIdentityAndTimeout(void)
     Bmp280Port port;
     TestBmp280_BusSeed(&bus);
     port.bus = &bus;
-    port.read = TestBmp280_Read;
-    port.write = TestBmp280_Write;
     bus.registers[0xD0U] = 0U;
     Bmp280_Init(&context, &port);
     assert(Bmp280_Step(&context, 1000U) == Bmp280StepNotPresent);

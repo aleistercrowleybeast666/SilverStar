@@ -837,8 +837,17 @@ Invoke-HostTest -Name 'source_selector' -ExtraCompilerArgs @(
     '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections'
 ) -Sources @(
     "$repoRoot\Tests\Host\test_source_selector.c",
-    "$repoRoot\System\Src\system_source_selector.c"
+    "$repoRoot\System\Src\system_source_selector.c",
+    "$repoRoot\System\Src\system_barometer_cold.c"
 )
+if ((Get-Content -LiteralPath "$repoRoot\Generated\Inc\project_flight_config.h" -Raw) -match
+    '(?m)^#define\s+SYSTEM_BUILD_BAROMETER_COLD_ENABLED\s+1U\s*$') {
+    Invoke-HostTest -Name 'barometer_cold' -Sources @(
+        "$repoRoot\Tests\Host\test_barometer_cold.c",
+        "$repoRoot\System\Src\system_barometer_cold.c",
+        "$repoRoot\System\Src\system_barometer.c"
+    )
+}
 Invoke-HostTest -Name 'board_power_service' -Sources @(
     "$repoRoot\Tests\Host\test_board_power_service.c",
     $hostPlatformMock,

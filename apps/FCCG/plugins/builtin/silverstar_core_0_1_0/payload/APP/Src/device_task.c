@@ -53,6 +53,12 @@ static void DeviceTask_PublishBarometer(void)
     snapshot.variance_m2 = sample.altitude_variance_m2;
     snapshot.supported_fields = sample.supported_fields;
     snapshot.valid_fields = sample.valid_fields;
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U)
+    {
+        /* Raw pressure/height remain unchanged; the navigation/landing altitude
+         * is derived on the same pressure datum for every selected source. */
+        snapshot.valid_fields &= ~(uint32_t)SYSTEM_BARO_FIELD_ALTITUDE;
+    }
     if (((snapshot.valid_fields & SYSTEM_BARO_FIELD_ALTITUDE) == 0U) &&
         ((snapshot.valid_fields & SYSTEM_BARO_FIELD_PRESSURE) != 0U) &&
         (SystemBarometer_AltitudeResolve(&sample, &snapshot.altitude_m) ==
