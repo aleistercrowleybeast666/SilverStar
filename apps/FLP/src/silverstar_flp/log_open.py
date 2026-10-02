@@ -172,30 +172,37 @@ class LogOpenCoordinator:
             diagnostics.append("decoder_discovery_log_missing")
         if not discovery.decoder_package_paths:
             diagnostics.append("decoder_discovery_package_missing")
+        display_root = discovery.selected_path
+        if display_root.is_file():
+            display_root = display_root.parent
         for log_path in log_paths:
+            try:
+                log_label = log_path.relative_to(display_root.resolve()).as_posix()
+            except ValueError:
+                log_label = str(log_path)
             result = matcher.Match(
                 log_path,
                 discovery.decoder_package_paths,
             )
             if not result.descriptor_found:
                 diagnostics.append(
-                    f"{log_path.name}:decoder_profile_descriptor_missing"
+                    f"{log_label}:decoder_profile_descriptor_missing"
                 )
             for package_path, error in sorted(
                 result.errors.items(),
                 key=lambda item: str(item[0]).casefold(),
             ):
                 diagnostics.append(
-                    f"{log_path.name}:{package_path.name}:{error}"
+                    f"{log_label}:{package_path.name}:{error}"
                 )
             if len(result.matches) > 1:
                 diagnostics.append(
-                    f"{log_path.name}:decoder_profile_match_ambiguous"
+                    f"{log_label}:decoder_profile_match_ambiguous"
                 )
                 continue
             if len(result.matches) != 1:
                 diagnostics.append(
-                    f"{log_path.name}:decoder_profile_exact_match_missing"
+                    f"{log_label}:decoder_profile_exact_match_missing"
                 )
                 continue
             match = result.matches[0]

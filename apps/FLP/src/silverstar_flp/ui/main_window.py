@@ -493,8 +493,12 @@ class MainWindow(QMainWindow):
         auto_find: bool = False,
     ) -> None:
         source_path = Path(path)
-        if source_path.is_dir() and (source_path / "SilverStar.ssproject").is_file():
-            self.SilverStarProjectRoot_Open(source_path)
+        if source_path.is_dir():
+            if (source_path / "SilverStar.ssproject").is_file():
+                self.SilverStarProjectRoot_Open(source_path)
+            else:
+                self.import_dialog.Folder_Set(source_path)
+                self._FolderSearch_Start(source_path)
             return
         suffix = source_path.suffix.casefold()
         if suffix == ".ssflp":
@@ -638,6 +642,9 @@ class MainWindow(QMainWindow):
         )
 
     def _FolderSearch_Start(self, folder_path: Path) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
         selected_path = Path(folder_path)
         self.status_label.setText(self._translator.Text_Get("status.searching_pairs"))
         worker = FunctionWorker(
@@ -1084,6 +1091,14 @@ class MainWindow(QMainWindow):
 
     def _LogOpen_Error(self, message: str) -> None:
         self._pending_new_project_path = None
+        if message.partition(":")[0].strip() == "calibration_selection_boundary_missing":
+            self.status_label.setText(self._translator.Text_Get("import.startup_fragment"))
+            QMessageBox.information(
+                self,
+                self._translator.Text_Get("dialog.import.title"),
+                self._translator.Text_Get("import.startup_fragment"),
+            )
+            return
         self._Error_Show(message)
 
     def _Project_Save(self) -> None:
@@ -1298,6 +1313,8 @@ class MainWindow(QMainWindow):
         if not urls or any(not url.isLocalFile() for url in urls):
             return None
         paths = tuple(Path(url.toLocalFile()) for url in urls)
+        if len(paths) == 1 and paths[0].is_dir():
+            return paths
         project_paths = tuple(path for path in paths if path.suffix.casefold() == ".ssflp")
         log_paths = tuple(path for path in paths if path.suffix.casefold() in (".bin", ".sslog"))
         decoder_paths = tuple(path for path in paths if path.suffix.casefold() == ".ssdecoder")
@@ -1320,6 +1337,10 @@ class MainWindow(QMainWindow):
         if paths is None:
             self._Error_Show("drop_selection_invalid")
             event.ignore()
+            return
+        if len(paths) == 1 and paths[0].is_dir():
+            self.Path_Open(paths[0])
+            event.acceptProposedAction()
             return
         project_paths = tuple(path for path in paths if path.suffix.casefold() == ".ssflp")
         if project_paths:

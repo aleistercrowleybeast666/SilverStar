@@ -1197,6 +1197,8 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         if not snapshots:
             raise ValueError("replay_no_valid_kf6_output")
         warnings = list(availability.warnings)
+        if source_diagnostics.get("gnss_integrity", {}).get("gnss_available") is False:
+            warnings.append("gnss_unavailable")
         fidelity = availability.fidelity
         if quality_revision == 3:
             fidelity = ReplayFidelity.APPROXIMATE
@@ -1477,6 +1479,11 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
             from silverstar_flp.analysis.navigation_revision3 import QualitySchedule_Apply
 
             return QualitySchedule_Apply(dataset, schedule, parameters)
+        from silverstar_flp.analysis.gnss_replay_availability import GnssUnavailableSchedule_Get
+
+        unavailable = GnssUnavailableSchedule_Get(dataset, schedule, revision)
+        if unavailable is not None:
+            return unavailable
         selected = GnssIntegrityStream_Build(dataset, parameters, consumed_only=True)
         recorded_parameters = self.recorded_parameters(dataset)
         baseline = recorded_parameters or self.OfflineParameters_Get()

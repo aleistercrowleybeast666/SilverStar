@@ -8,8 +8,8 @@ from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 import pytest
-from PySide6.QtCore import QEventLoop, QPoint, Qt, QTimer
-from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox, QPushButton, QToolBar
+from PySide6.QtCore import QEventLoop, QPoint, QRect, Qt, QTimer
+from PySide6.QtWidgets import QApplication, QFileDialog, QHBoxLayout, QMessageBox, QPushButton, QToolBar
 
 from silverstar_flp.app.application import _RuntimeDiagnostics_Log
 from silverstar_flp.app.version import PRODUCT_NAME, __version__
@@ -132,24 +132,22 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
         window.plugins_menu,
         window.help_menu,
     ]
-    header_layout = window.title_label.parentWidget().layout()
-    identity_row = header_layout.itemAt(0).layout()
-    project_row = header_layout.itemAt(1).layout()
-    assert [
-        identity_row.indexOf(widget)
-        for widget in (
-            window.title_label,
-            window.version_label,
-            window.credit_label,
-            window.language_label,
-            window.language_combo,
-            window.theme_label,
-            window.theme_combo,
-        )
-    ] == [0, 1, 2, 4, 5, 6, 7]
-    assert [project_row.indexOf(widget) for widget in (
-        window.project_caption_label, window.project_name_label,
-    )] == [0, 1]
+    header = window.title_label.parentWidget()
+    header_layout = header.layout()
+    assert isinstance(header_layout, QHBoxLayout)
+    header_widgets = (
+        window.title_label,
+        window.version_label,
+        window.credit_label,
+        window.project_caption_label,
+        window.project_name_label,
+        window.language_label,
+        window.language_combo,
+        window.theme_label,
+        window.theme_combo,
+    )
+    assert header_layout.count() == len(header_widgets)
+    assert [header_layout.indexOf(widget) for widget in header_widgets] == list(range(9))
     assert [action for action in window.file_menu.actions() if not action.isSeparator()] == [
             window.new_project_action,
             window.open_project_action,
@@ -297,6 +295,30 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
     application.processEvents()
     assert window.replay_page.scroll_area.verticalScrollBar().maximum() > 0
     assert window.overview_page.scroll_area.widgetResizable()
+
+    long_name = "中文外场Flight-" * 18
+    window._project.project_path = tmp_path / (long_name + ".ssflp")
+    for language in ("zh_CN", "en_US"):
+        window.Language_Apply(language)
+        for dirty in (False, True):
+            window._Project_SetDirty(dirty)
+            for width in (1000, 1280, 1480):
+                window.resize(width, 720)
+                application.processEvents()
+                assert window.width() == width
+                rectangles = [QRect(widget.mapTo(header, QPoint()), widget.size())
+                              for widget in header_widgets]
+                assert all(header.rect().contains(rect) for rect in rectangles)
+                assert max(rect.center().y() for rect in rectangles) - min(
+                    rect.center().y() for rect in rectangles) <= 2
+                for index, rect in enumerate(rectangles):
+                    assert all(not rect.intersects(other) for other in rectangles[index + 1:])
+                label = window.project_name_label
+                text = label.text()
+                assert text.endswith(" *") is dirty
+                assert text.removesuffix(" *").endswith("…")
+                assert label.fontMetrics().horizontalAdvance(text) <= label.contentsRect().width()
+                assert long_name in label.toolTip()
     window._Project_SetDirty(False)
     window.close()
 

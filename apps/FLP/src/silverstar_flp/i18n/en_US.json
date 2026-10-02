@@ -867,5 +867,8 @@
   "replay.quality_recorded": "Use recorded policy revision",
   "replay.quality_revision": "New policy revision {revision} (approximate)",
   "replay.parameter_retired": "Legacy value; inactive in revision 3",
-  "project.analysis_unsaved": "unsaved analysis session"
+  "project.analysis_unsaved": "unsaved analysis session",
+  "import.startup_fragment": "This log has no mission boundary or inertial data usable for analysis. It is a startup or pre-mission fragment, so a mission calibration state cannot yet be selected. Keep the log and snapshots, and select a flight.sslog containing mission data.",
+  "error.code.export_directory_not_empty": "The selected export folder already contains files. To protect existing results, select a new empty folder and try again.",
+  "export.missing_recorded_channels": "The selected data source is missing some requested recorded channels, so the related export items are reported as failures. Generated files remain valid; missing channel names are retained in the error details."
 }

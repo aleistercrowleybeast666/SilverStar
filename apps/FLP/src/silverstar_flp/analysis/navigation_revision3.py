@@ -17,6 +17,11 @@ from silverstar_flp.plugins.algorithms.eskf15.plugin import Native_PhysicalMask
 
 
 def QualitySchedule_Apply(dataset, schedule, parameters):
+    from silverstar_flp.analysis.gnss_replay_availability import GnssUnavailableSchedule_Get
+
+    unavailable = GnssUnavailableSchedule_Get(dataset, schedule, 3)
+    if unavailable is not None:
+        return unavailable
     initial = dataset.initial_state.payload
     if not int(initial.get("origin_valid_flags", 0)) & 1:
         raise ValueError("gnss_origin_unavailable")

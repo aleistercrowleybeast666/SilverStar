@@ -1812,13 +1812,15 @@ class MainWindow(QMainWindow):
         status_content = QWidget()
         status_layout = QVBoxLayout(status_content)
         status_layout.setContentsMargins(0, 0, 0, 0)
-        status_layout.setAlignment(Qt.AlignTop)
         top = QHBoxLayout()
         top.addWidget(self._build_flight_status_panel(), 1)
         top.addWidget(self._build_flight_data_panel(), 2)
         top.addWidget(self._build_mission_state_panel(), 2)
         status_layout.addLayout(top)
         self.flight_status_scroll = TouchScroll_Wrap(status_content, fit_content=True)
+        self.flight_status_scroll.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum
+        )
         root.addWidget(self.flight_status_scroll)
         # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
         root.addWidget(self._build_plot_panel(), 1)

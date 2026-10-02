@@ -157,36 +157,49 @@ class TaskDirectoryScanner:
         scanned_count = 0
         scanned_bytes = 0
         limit_reached = False
-        directories = [root]
+        pending = [(root, 0)]
         if log_root.is_dir() and not log_root.is_symlink():
-            directories.append(log_root)
-            directories.extend(
-                path for path in sorted(log_root.iterdir())
-                if path.is_dir() and not path.is_symlink()
-            )
-        for directory in directories:
-            for entry in sorted(directory.iterdir()):
-                if entry.is_symlink() or not entry.is_file():
+            pending.insert(0, (log_root, 0))
+        while pending:
+            directory, depth = pending.pop()
+            try:
+                entries = sorted(directory.iterdir(), key=lambda item: item.name.casefold())
+            except OSError:
+                continue
+            for entry in entries:
+                if entry.is_symlink():
                     continue
-                suffix = entry.suffix.casefold()
-                if directory == root and suffix != ".ssdecoder":
-                    continue
-                if directory != root and suffix not in _LOG_SUFFIXES:
+                try:
+                    if entry.is_dir():
+                        if directory != root:
+                            if depth < self.limits.maximum_depth:
+                                pending.append((entry, depth + 1))
+                            else:
+                                limit_reached = True
+                        continue
+                    if not entry.is_file():
+                        continue
+                    suffix = entry.suffix.casefold()
+                    if directory == root and suffix != ".ssdecoder":
+                        continue
+                    if directory != root and suffix not in _LOG_SUFFIXES:
+                        continue
+                    file_size = entry.stat().st_size
+                except OSError:
                     continue
                 scanned_count += 1
-                scanned_bytes += entry.stat().st_size
+                scanned_bytes += file_size
                 if (
                     scanned_count > self.limits.maximum_file_count
                     or scanned_bytes > self.limits.maximum_total_file_bytes
                 ):
                     limit_reached = True
+                    pending.clear()
                     break
                 if suffix == ".ssdecoder":
                     packages.append(entry.resolve())
                 else:
                     logs.append(entry.resolve())
-            if limit_reached:
-                break
         return TaskDirectoryDiscovery(
             selected_path=selected,
             log_paths=tuple(sorted(logs, key=lambda path: str(path).casefold())),
