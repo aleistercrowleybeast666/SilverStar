@@ -61,6 +61,11 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         self.Language_Apply(translator)
 
     def _Section_Create(self, key: str) -> tuple[QWidget, QVBoxLayout]:
+        if key == "navigation.parameters":
+            section = CollapsibleSection(self._translator.Text_Get(key), expanded=False)
+            layout = QVBoxLayout(section.body)
+            self.root_layout.addWidget(section)
+            return section, layout
         # The reparented editors already own their titled group boxes.  A
         # second QGroupBox here produces two identical frames and titles.
         section = QWidget()
@@ -208,6 +213,7 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        self.parameters_section.Title_Set(self._translator.Text_Get("navigation.parameters"))
         for heading in self.findChildren(QLabel):
             key = heading.property("navigationSectionKey")
             if key:
