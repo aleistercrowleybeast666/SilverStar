@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Host",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\counter\\Flight_Controller",
+    "exit": 2,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\counter_evidence\\Host.log",
+    "sha256": "3db68d4337f0e32d10d0fdf02711eced36a1c81ebfb2b0f08cc75648e2692ac7"
+  }
+]

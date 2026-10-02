@@ -1,0 +1,2 @@
+SPI_FAULTS stale standby and RX_DONE rejected; transient resumes safely, persistent latches offline with failed receipt
+spi_read_failures: 1129 checks, 0 failures

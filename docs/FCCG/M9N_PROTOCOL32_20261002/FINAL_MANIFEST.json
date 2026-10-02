@@ -1,0 +1,578 @@
+{
+  "base_commit": "170f1cb55daedf8e8d308a7bc845b2fa5b79d102",
+  "branch": "fix/m9n-protocol32-20261002",
+  "candidate": "apps/FCCG/tests/artifacts/m9_candidate_v4",
+  "source_snapshot": [
+    {
+      "owning": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "generated": "apps/FCCG/tests/artifacts/m9_candidate_v4/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "sha256": "5e78918725447e7e8e2ab9e2b228e6f66434b2383fefca20698786ce06ee9960"
+    },
+    {
+      "owning": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c",
+      "generated": "apps/FCCG/tests/artifacts/m9_candidate_v4/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c",
+      "sha256": "f0a6b751e06e6c78ae36d152f6e18ae5355927e177478de286e8943aa7aa5092"
+    },
+    {
+      "owning": "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n/payload/Devices/GNSS/NEO_M9N/Inc/neo_m9n_device.h",
+      "generated": "apps/FCCG/tests/artifacts/m9_candidate_v4/Devices/GNSS/NEO_M9N/Inc/neo_m9n_device.h",
+      "sha256": "42f2ce3f97f67c2ff1b6bedd8ef101e673fafae54fb308b93224861ed491c3ec"
+    },
+    {
+      "owning": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_neo_m9n_device.c",
+      "generated": "apps/FCCG/tests/artifacts/m9_candidate_v4/Tests/Host/test_neo_m9n_device.c",
+      "sha256": "01a31645dccebb1896ca4dc7fcbc6c330cb71fcabc285cb3b3347fbce3e78b91"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "apps/FCCG/tests/artifacts/m9_candidate_v4/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_1.bin",
+      "bytes": 318840,
+      "sha256": "53f9084394d867af61e018c89bf1e023a4ab946a40b985649d9ec825dd35b1d0"
+    },
+    {
+      "path": "apps/FCCG/tests/artifacts/m9_candidate_v4/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_1.elf",
+      "bytes": 3232020,
+      "sha256": "04cd56673be027fea993448bd6a485138a2ce4816239be092dd6cc5572344cc7"
+    },
+    {
+      "path": "apps/FCCG/tests/artifacts/m9_candidate_v4/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_1.hex",
+      "bytes": 896865,
+      "sha256": "7eee605b84ef612b4a3d56c5e8039cd97a220ab79dd43921ca368106f6080c79"
+    },
+    {
+      "path": "apps/FCCG/tests/artifacts/m9_candidate_v4/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_1.map",
+      "bytes": 1482251,
+      "sha256": "2f0164498ae419d5236edc4bf991612abddbab3d64917603748d280717066489"
+    }
+  ],
+  "final_gates": [
+    {
+      "name": "Release-build",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "all"
+      ],
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\Release-build.log",
+      "sha256": "9cc44e173931697dc642b0655488a855397c86f60d9e6a652700492b58f5aeab"
+    },
+    {
+      "name": "Host",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "host-tests"
+      ],
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\Host.log",
+      "sha256": "d2d40b788986bab57d02f4fcb3f8bd9b379cff50700bd9b2234fea5f0ea84ac2"
+    },
+    {
+      "name": "architecture",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "architecture-check"
+      ],
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\architecture.log",
+      "sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+    },
+    {
+      "name": "power10",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "power10-check"
+      ],
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\power10.log",
+      "sha256": "b94b7ba4d5dd3413704ed272c563827b0542102a2ac6d4fbe55cbfc00f1c5766"
+    },
+    {
+      "name": "analyzer",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "static-analysis"
+      ],
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\analyzer.log",
+      "sha256": "e149ca682251f14f47840b9034942182e23cf0629a80499b9ea48035ecc88da7"
+    },
+    {
+      "name": "artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\artifact.log",
+      "sha256": "141fa0491295996e055ed4ecec1c08950e2d7c9e493fcfc76907396ed964adc1"
+    },
+    {
+      "name": "resources",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "stack-report",
+        "memory-report"
+      ],
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\resources.log",
+      "sha256": "010dc40900f7c5f9ec88814754cedc64aaefb4b80fb7b1ee44ac6927d43dd1e5"
+    },
+    {
+      "name": "Debug-build",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Debug",
+        "all"
+      ],
+      "exit": 2,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\Debug-build.log",
+      "sha256": "dfcce21a7fe4d3fdd5b5c0b350e625f7a963e38cbeadca72472c8af5b95e66b8"
+    },
+    {
+      "name": "Debug-artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Debug",
+        "artifact-check",
+        "stack-report",
+        "memory-report"
+      ],
+      "exit": 2,
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_candidate_evidence_v4\\Debug-artifact.log",
+      "sha256": "094bbc8dead32467f27140e9a66820d8889a0c09b8ecdf36a330b1947da366c0"
+    }
+  ],
+  "baseline_gates": [
+    {
+      "name": "Release",
+      "base": "170f1cb55daedf8e8d308a7bc845b2fa5b79d102",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "all",
+        "artifact-check",
+        "stack-report"
+      ],
+      "exit": 0,
+      "sha256": "8b25f928a68e895fb044e9917adb6b10ff7d917ef285ea66c008ad3028920c02",
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_baseline_arm\\Release.log"
+    },
+    {
+      "name": "Debug",
+      "base": "170f1cb55daedf8e8d308a7bc845b2fa5b79d102",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Debug",
+        "all"
+      ],
+      "exit": 2,
+      "sha256": "366ff1082a2bccf9c3e782e35f8dad34413a88bb6a7c872ab20af288dea38c31",
+      "log": "D:\\python_software\\SilverStar\\.work\\M9nIdentityHotfix_20261002\\.work\\m9_baseline_arm\\Debug.log"
+    }
+  ],
+  "archived_evidence": [
+    {
+      "original": ".work/m9_evidence/baseline32.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence__baseline32.json.gz",
+      "bytes": 2731,
+      "uncompressed_sha256": "433cddfa187527d6f178e43fe8dd1a1c975c44b562525acf05cc95fb5712157b",
+      "archive_sha256": "f33562323f60432ed38d00bd439d99eca39c285dc1841836a8db3e0f287fe7cd"
+    },
+    {
+      "original": ".work/m9_evidence/baseline32_build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence__baseline32_build.log.gz",
+      "bytes": 0,
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": ".work/m9_evidence/baseline32_run.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence__baseline32_run.log.gz",
+      "bytes": 251,
+      "uncompressed_sha256": "e5e1c655d062a24e9921c7a41a3ac322d68e25132b92da14d13d708da3016483",
+      "archive_sha256": "bb7323eb9e8b25b2ec1fe0acb154fa42bd90ff5f50f86ecab4ee9012cb745f94"
+    },
+    {
+      "original": ".work/m9_evidence_official/baseline32.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence_official__baseline32.json.gz",
+      "bytes": 2866,
+      "uncompressed_sha256": "2287e683de4feb38592e6002fb63c888175977ede2a519e654d46ece517b3908",
+      "archive_sha256": "a0031592ea4d4acab0fb1e482ccf058f510dea15c720eab52c080826463deaeb"
+    },
+    {
+      "original": ".work/m9_evidence_official/baseline32_build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence_official__baseline32_build.log.gz",
+      "bytes": 0,
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": ".work/m9_evidence_official/baseline32_run.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence_official__baseline32_run.log.gz",
+      "bytes": 1695,
+      "uncompressed_sha256": "9f5f5cfb8aeb970bbcb8a347c1c918b1c038e2459da30858b86dcdc5cf50ed7a",
+      "archive_sha256": "2255bc5d50e386ee2d092520d3a68d26650f8dfc77bad872f23ea90c3ac6b96e"
+    },
+    {
+      "original": ".work/m9_evidence_real/baseline32.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence_real__baseline32.json.gz",
+      "bytes": 2825,
+      "uncompressed_sha256": "88e929feeba427435aa6333aca64f776dab349f85f23bd5b3e02a87c4e7df237",
+      "archive_sha256": "532278063e4e15a522077eb4303bdad37aaff9398650d8973a45c7b722a10008"
+    },
+    {
+      "original": ".work/m9_evidence_real/baseline32_build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence_real__baseline32_build.log.gz",
+      "bytes": 0,
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": ".work/m9_evidence_real/baseline32_run.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence_real__baseline32_run.log.gz",
+      "bytes": 1627,
+      "uncompressed_sha256": "903cbbc423c520146ca0b678472dd5abae08365f7828436f529d01d39b084db5",
+      "archive_sha256": "dd1236141f8cacf94411838ac3e3a03fc3e4659d820ca077289358b53a956ebe"
+    },
+    {
+      "original": ".work/m9_evidence_real/test_captured_baseline.c",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_evidence_real__test_captured_baseline.c.gz",
+      "bytes": 49610,
+      "uncompressed_sha256": "b210d1047b73409b9113c25cba414850e1ac5ae51bc27dd8536bbe8c0941c765",
+      "archive_sha256": "57b0f752a146518e4697224b026b7689eb672c1f7ebe2a8470019cafec0abc76"
+    },
+    {
+      "original": ".work/m9_fw_conflict_counterexample/baseline32.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_fw_conflict_counterexample__baseline32.json.gz",
+      "bytes": 2936,
+      "uncompressed_sha256": "0ccb4a4d8f7233a89d70b3e409f6beb56f8b0a83b88c1960db18d1ea7747091e",
+      "archive_sha256": "c5b7c496fc0fdac934c238494424824de4994a8bb65c9c15fc3465cda306f82d"
+    },
+    {
+      "original": ".work/m9_fw_conflict_counterexample/baseline32_build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_fw_conflict_counterexample__baseline32_build.log.gz",
+      "bytes": 0,
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": ".work/m9_fw_conflict_counterexample/baseline32_run.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_fw_conflict_counterexample__baseline32_run.log.gz",
+      "bytes": 1933,
+      "uncompressed_sha256": "26566b305dad67c7ec0358428339bd4f902ec4d3ea24ca9437d797838bb9cec2",
+      "archive_sha256": "05efa02b50c8149db35f93ebc197758c8c2a0c2c0154d469ba6e6cfa0b486670"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/analyzer.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__analyzer.log.gz",
+      "bytes": 439987,
+      "uncompressed_sha256": "88a6e2926b15076a0190e27fa17ab73992f4216dafbb430817bf5aa4a38c23f2",
+      "archive_sha256": "f4bba7dedccec73cd9b8eab0b6e3b303f3582dffa1d0b17dead9c0aac1c159c9"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/architecture.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__architecture.log.gz",
+      "bytes": 1154,
+      "uncompressed_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+      "archive_sha256": "8c79562071c88b99f2f4347ddde6b81d74631cfb415b0512e090fc178c870970"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/artifact.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__artifact.log.gz",
+      "bytes": 2065,
+      "uncompressed_sha256": "5452e7c8699cb11b50764359238a171690ae07eb52b18c25b1d039ade67fdbc9",
+      "archive_sha256": "7eb28ac7d52ae1613286b91b1ac3c541d194e2d76f8e3dba864b6c90ace081fa"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/Debug-artifact.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__Debug-artifact.log.gz",
+      "bytes": 15413,
+      "uncompressed_sha256": "18ddf98b626eb581e2c565581a1173a253948fdea4fb52d0b2faab0b5c37bd32",
+      "archive_sha256": "23aa01de85c6c57e9bfe48b7e4e5f8de58efa0d8180bd4f787fc06040012d0bf"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/Debug-build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__Debug-build.log.gz",
+      "bytes": 434714,
+      "uncompressed_sha256": "c41949c3a4d5838f4d061f504783e484c74f6718743b3dd21aadf1cf150d2d1f",
+      "archive_sha256": "1aef326c3c58469adf0066f390962e8fede9766cedb415f13db8c44e6c4bee5d"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/Host.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__Host.log.gz",
+      "bytes": 59127,
+      "uncompressed_sha256": "198a22b78150263ceff2da23ffa11bc063bcaf3b2591e33e45c4bff10e3423c5",
+      "archive_sha256": "509dfa78ac73896b49b028c2f08a329a510780ee0df818c03cce8861715591ff"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/power10.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__power10.log.gz",
+      "bytes": 726179,
+      "uncompressed_sha256": "744c4d81d937ed02adb71445390599a81f9889c7970d254f75da541469828102",
+      "archive_sha256": "66754e0e7c9733b979570bf7030e2a66fcf4a38937678d3daf148e6e13c034ed"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/Release-build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__Release-build.log.gz",
+      "bytes": 431336,
+      "uncompressed_sha256": "216b46829e7c1096b2ac8551864aeceb8b9aa1fc3414e4889f848132f5a815d2",
+      "archive_sha256": "ce4ccd44bc42b041c86f7a921f92d23af52962f74bbaddf5d3abd4550113d00e"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/resources.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__resources.log.gz",
+      "bytes": 2910,
+      "uncompressed_sha256": "7279864ac63bda0cd1588288a3e9a75d93c5092ad563d74b9b29296434b8f736",
+      "archive_sha256": "19085c9c3171919f045b32dd111fae39a8434d8eded4df2bdd7c340aea88502c"
+    },
+    {
+      "original": ".work/m9_candidate_evidence/results.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence__results.json.gz",
+      "bytes": 3899,
+      "uncompressed_sha256": "fbb2612ad9860e74dcc03c805087761e75996a32028496b27635f1cab5f9257b",
+      "archive_sha256": "f01c7509df3fbc1ccb226afd48aceaf0fb567369b68054c0ae4dc7ad098d123c"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/analyzer.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__analyzer.log.gz",
+      "bytes": 439987,
+      "uncompressed_sha256": "f9d4d9f261c56d32bd2203991ac484d2cc9947328fa1b00d9cef0d88cfc3572b",
+      "archive_sha256": "613b21dfedf9e331d7e7cc9807652ec57dcf539372864b5d1c6999ebee134b11"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/architecture.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__architecture.log.gz",
+      "bytes": 1154,
+      "uncompressed_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+      "archive_sha256": "8c79562071c88b99f2f4347ddde6b81d74631cfb415b0512e090fc178c870970"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/artifact.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__artifact.log.gz",
+      "bytes": 1996,
+      "uncompressed_sha256": "7d67a3344987f78670140aefd5fadbfec4dc72518e5029f3ec2f0eeb1ed4cb67",
+      "archive_sha256": "ffe803eef83bf41e7c941f85952e8a7faec8caac5570ca60b4cc00b1dfe65ab4"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/Debug-artifact.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__Debug-artifact.log.gz",
+      "bytes": 15413,
+      "uncompressed_sha256": "11717ae726cf807c6feaf56705d5b6b4e2ada251c0aca81ff2e5a5029390525a",
+      "archive_sha256": "2b5b4a118f86e93a0e31f844339a74a3a907fd3682de15b002818e90016a9fa3"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/Debug-build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__Debug-build.log.gz",
+      "bytes": 434714,
+      "uncompressed_sha256": "5f91bb07b86006d859894d0b42e3569b86204e964417c8a0ecb533dbd636765b",
+      "archive_sha256": "2fedceb3b9ec2063944d73b8acbab53b8988e1f5903ad6e691be73cece4c521a"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/Host.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__Host.log.gz",
+      "bytes": 59127,
+      "uncompressed_sha256": "49364e742c8f6ce08a3dd80f9f653f0fb6f1929c79b74bb9012c784d2bde36ea",
+      "archive_sha256": "b23c8eba768c59c3b77b61eedae42fb9525bdf6b01f080d25da8377e1a129050"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/power10.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__power10.log.gz",
+      "bytes": 726179,
+      "uncompressed_sha256": "80d2dea2757caea570ec04efa36274dbc41898dc78aa170175b9ee886abcb216",
+      "archive_sha256": "b8b0fcdcc5290840675d142fe3b41afedd48612847f87540d23d8f04db9b5c57"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/Release-build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__Release-build.log.gz",
+      "bytes": 431336,
+      "uncompressed_sha256": "ed8ed832c06a8fa71a0a6ef56f426eb172e56ee048261a1a86ca057e9e3fff30",
+      "archive_sha256": "8d1dbc12b23d72ca085a9f87af1905dcf29d7fce8e7524f763144cf33b1dea3a"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/resources.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__resources.log.gz",
+      "bytes": 2841,
+      "uncompressed_sha256": "11af632e41eceb73bbfceba464e301d0f1211347e1488bdeeaeadb011af4a22e",
+      "archive_sha256": "8b2c8543aac5cd268fa774a8ba999e5eb8d4895ca64a8dbce5873dd6ba483e52"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v3/results.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v3__results.json.gz",
+      "bytes": 3926,
+      "uncompressed_sha256": "4b3780513d6c68e0470b3a1d8a189c48f07de659e698a8219c57ff99342cceff",
+      "archive_sha256": "fc0ac49addc55ae7119acdb854439d752ea997eb44da7c907b0daf77070479c4"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/analyzer.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__analyzer.log.gz",
+      "bytes": 439987,
+      "uncompressed_sha256": "e149ca682251f14f47840b9034942182e23cf0629a80499b9ea48035ecc88da7",
+      "archive_sha256": "6f6543ca335903c9da755ed560f2fbbb2ad68872d431e267fa3ab5f8b0e30b54"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/architecture.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__architecture.log.gz",
+      "bytes": 1154,
+      "uncompressed_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+      "archive_sha256": "8c79562071c88b99f2f4347ddde6b81d74631cfb415b0512e090fc178c870970"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/artifact.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__artifact.log.gz",
+      "bytes": 1996,
+      "uncompressed_sha256": "141fa0491295996e055ed4ecec1c08950e2d7c9e493fcfc76907396ed964adc1",
+      "archive_sha256": "a38bbf1c57f2ed38ac0ee4c6332216aaf49a5b611ce0d80c618f417f439968ec"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/Debug-artifact.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__Debug-artifact.log.gz",
+      "bytes": 15413,
+      "uncompressed_sha256": "094bbc8dead32467f27140e9a66820d8889a0c09b8ecdf36a330b1947da366c0",
+      "archive_sha256": "4d70783675ecc8227811faff8244ed7ead44d9308f62e365ff441a27c812a02c"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/Debug-build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__Debug-build.log.gz",
+      "bytes": 434714,
+      "uncompressed_sha256": "dfcce21a7fe4d3fdd5b5c0b350e625f7a963e38cbeadca72472c8af5b95e66b8",
+      "archive_sha256": "baa3c2b987c215889339881011785a7056e8ae298139807d9ce52ae9b96e23f9"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/Host.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__Host.log.gz",
+      "bytes": 59127,
+      "uncompressed_sha256": "d2d40b788986bab57d02f4fcb3f8bd9b379cff50700bd9b2234fea5f0ea84ac2",
+      "archive_sha256": "5b02454de23a5c4f079672bac0cd47f98541c2ba08e7864b77e4b5246194bee6"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/power10.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__power10.log.gz",
+      "bytes": 726179,
+      "uncompressed_sha256": "b94b7ba4d5dd3413704ed272c563827b0542102a2ac6d4fbe55cbfc00f1c5766",
+      "archive_sha256": "175344389b85426c89f2e4342f3bf2000c4474016024b267f150ca55cb503581"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/Release-build.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__Release-build.log.gz",
+      "bytes": 431336,
+      "uncompressed_sha256": "9cc44e173931697dc642b0655488a855397c86f60d9e6a652700492b58f5aeab",
+      "archive_sha256": "e1326680b963dbc6ae0f2fb7ed1207160d30052cdc81121687ceca3634da01ea"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/resources.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__resources.log.gz",
+      "bytes": 2841,
+      "uncompressed_sha256": "010dc40900f7c5f9ec88814754cedc64aaefb4b80fb7b1ee44ac6927d43dd1e5",
+      "archive_sha256": "eaf4ef06c4ee8d574f5fae976ec17aca8492aff191006e0d1b32e3d458a8c59f"
+    },
+    {
+      "original": ".work/m9_candidate_evidence_v4/results.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_candidate_evidence_v4__results.json.gz",
+      "bytes": 3926,
+      "uncompressed_sha256": "777e9c01e41327fd216a3f204b9b1296c2f07bf32537884fd8545218c9a1472a",
+      "archive_sha256": "492c9368551743fa758e69335e7d89ea87626d57b2756e38967443638ee4f689"
+    },
+    {
+      "original": ".work/m9_baseline_arm/Debug.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_baseline_arm__Debug.log.gz",
+      "bytes": 434754,
+      "uncompressed_sha256": "366ff1082a2bccf9c3e782e35f8dad34413a88bb6a7c872ab20af288dea38c31",
+      "archive_sha256": "86e3b1812f1dbe8193ff9ce781e3f18689be339ff5b81e771b3d4c2b6198eb42"
+    },
+    {
+      "original": ".work/m9_baseline_arm/Release.log",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_baseline_arm__Release.log.gz",
+      "bytes": 434177,
+      "uncompressed_sha256": "8b25f928a68e895fb044e9917adb6b10ff7d917ef285ea66c008ad3028920c02",
+      "archive_sha256": "1eb114c0a85d648e6cd98ee743812142422cd2b16428d707b3171f210803958a"
+    },
+    {
+      "original": ".work/m9_baseline_arm/results.json",
+      "archive": "docs/FCCG/M9N_PROTOCOL32_20261002/logs/m9_baseline_arm__results.json.gz",
+      "bytes": 971,
+      "uncompressed_sha256": "bfb50b7e6cd9f6ce8a285d9020c6d020bb2543b872e58a3b41dac6bc1c01007a",
+      "archive_sha256": "2f8e592cc80306bf9fa490196a81a71c9fd1719a3e925e1316f1d8641aca9431"
+    }
+  ],
+  "host": {
+    "executables": 72,
+    "checks": 4400517,
+    "failures": 0,
+    "m9n_checks": 4820,
+    "m9n_failures": 0,
+    "compile_pass_cases": 7,
+    "expected_compile_failures": 17
+  },
+  "resources": {
+    "flash_used": 318828,
+    "main_sram_used": 102368,
+    "reviewed_main_sram_maximum": 102400,
+    "reviewed_main_sram_margin": 32,
+    "physical_main_sram_capacity": 131072,
+    "ccm_used": 55432,
+    "ccm_capacity": 65536,
+    "heap_symbols": 0,
+    "baseline_main_sram_used": 102328,
+    "main_sram_delta": 40,
+    "device_stack_estimate": 2128,
+    "device_stack_configured": 2560,
+    "device_stack_estimated_margin": 432
+  },
+  "limitations": [
+    "Debug KF6 reference link fails on SystemNavigationBackend_* in original base and candidate; no Debug ELF/BIN claimed.",
+    "PoT text check exit0, critical-contract review NOT_PROVEN.",
+    "Reference project configuration, not a claimed drop-in KF6_v8 hardware package.",
+    "Parent core-diff review, RF/Baro integration/resource gates and real board startup remain outstanding.",
+    "Captured frame involved halt; byte/CRC identity evidence only."
+  ],
+  "environment_attempt_failure": {
+    "exit": 1,
+    "stage": "pytest setup before compiler",
+    "reason": "initial cwd .work/pytest parent missing; rerun with worktree-scoped --basetemp passed"
+  },
+  "toolchain": {
+    "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "host_gcc": "MSYS2 GCC 16.1.0",
+    "arm_gcc": "Arm GNU14.3.Rel1 14.3.1 20250623",
+    "make_jobs": 2
+  },
+  "manual_contract_review": "NOT_PROVEN; parent acceptance pending",
+  "late_conflict_counterexample": {
+    "generated_snapshot": "v3 before FW/HW guards",
+    "checks": 4820,
+    "failures": 8,
+    "exit": 1,
+    "log": ".work/m9_fw_conflict_counterexample/baseline32_run.log"
+  }
+}

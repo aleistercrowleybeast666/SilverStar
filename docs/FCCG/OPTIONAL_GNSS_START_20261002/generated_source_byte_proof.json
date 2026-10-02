@@ -1,0 +1,2567 @@
+[
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_common\\payload\\Algorithm\\Alignment\\Common\\Inc\\alignment_strategy_types.h",
+    "generated": "Algorithm/Alignment/Common/Inc/alignment_strategy_types.h",
+    "sha256": "ac3c050ecd1807201182d3f8d4560bcf3dab1f66d568838278f9ec6841404162"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_common\\payload\\Algorithm\\Alignment\\Common\\Inc\\attitude_alignment.h",
+    "generated": "Algorithm/Alignment/Common/Inc/attitude_alignment.h",
+    "sha256": "2aed41ef82c6f8d48a1060bb8c1b638f2b2c189ac7e795537edd9d7ffa053b86"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_common\\payload\\Algorithm\\Alignment\\Common\\Inc\\attitude_preflight.h",
+    "generated": "Algorithm/Alignment/Common/Inc/attitude_preflight.h",
+    "sha256": "1f75f6b5af2f177b6a646da5ef3226398f99d48439060245c964131614c812e1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_common\\payload\\Algorithm\\Alignment\\Common\\Inc\\vector_constraints.h",
+    "generated": "Algorithm/Alignment/Common/Inc/vector_constraints.h",
+    "sha256": "e4f3ddf487f9bd5ecc9cbc5c4c5a91dbd4494c5991ccfd69b7d49effec238c7e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_common\\payload\\Algorithm\\Alignment\\Common\\Src\\attitude_alignment.c",
+    "generated": "Algorithm/Alignment/Common/Src/attitude_alignment.c",
+    "sha256": "bb96c547d0692ec6c0b98bb7904daf4b0357f6469408939d20f52dd8de155611"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_common\\payload\\Algorithm\\Alignment\\Common\\Src\\attitude_preflight.c",
+    "generated": "Algorithm/Alignment/Common/Src/attitude_preflight.c",
+    "sha256": "dfc69b91c2b477b4994ab9c1df6e9c4c252a14fb290a7e3aad9dd5ae22075141"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_common\\payload\\Algorithm\\Alignment\\Common\\Src\\vector_constraints.c",
+    "generated": "Algorithm/Alignment/Common/Src/vector_constraints.c",
+    "sha256": "0ff56aec07fa26d86e63ff5ab63c6d8b0226cca52c520615661a49e512c04bf6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_vector_constraints\\payload\\Algorithm\\Alignment\\VectorConstraints\\Inc\\alignment_strategy_binding.h",
+    "generated": "Algorithm/Alignment/VectorConstraints/Inc/alignment_strategy_binding.h",
+    "sha256": "35d19c935ab8030e3ab8754a7a1895c3aeac5aa6cab36af36719e94ce3987582"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_alignment_vector_constraints\\payload\\Algorithm\\Alignment\\VectorConstraints\\Src\\alignment_strategy_binding.c",
+    "generated": "Algorithm/Alignment/VectorConstraints/Src/alignment_strategy_binding.c",
+    "sha256": "8a8e92633ed4ddfbab165beed1979a3c10ea55ef0656f3d45ff24b845dbc89e1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_calibration\\payload\\Algorithm\\Calibration\\Inc\\imu_six_face_calibration.h",
+    "generated": "Algorithm/Calibration/Inc/imu_six_face_calibration.h",
+    "sha256": "f0ee9a5a0db36300d42942181ee56e0d53c00dae35ecc9ea0d02cec1ad60a004"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_calibration\\payload\\Algorithm\\Calibration\\Src\\imu_six_face_calibration.c",
+    "generated": "Algorithm/Calibration/Src/imu_six_face_calibration.c",
+    "sha256": "17b15033dbaae411531d40fac4f9c211082ba161af935c1882a4bb8125e0b26a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_common\\payload\\Algorithm\\Common\\Inc\\attitude_frame.h",
+    "generated": "Algorithm/Common/Inc/attitude_frame.h",
+    "sha256": "a4bfa5772d2b007966842ad064168c1f091ca11cab5271bf42cad51e6dc3c36a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_common\\payload\\Algorithm\\Common\\Inc\\geodesy_local.h",
+    "generated": "Algorithm/Common/Inc/geodesy_local.h",
+    "sha256": "98396597f81985680dfe0c89b703b1fcfa4f9c282b8ccb28ffd404d45c29163f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_common\\payload\\Algorithm\\Common\\Inc\\navigation_quality.h",
+    "generated": "Algorithm/Common/Inc/navigation_quality.h",
+    "sha256": "4309d20051f84738fb55da1ab7017bfc7f65e383acc402568179c10d2149b464"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_common\\payload\\Algorithm\\Common\\Src\\attitude_frame.c",
+    "generated": "Algorithm/Common/Src/attitude_frame.c",
+    "sha256": "5357a6d087d64c94658c924249b6364bc6aee79ad4301c0b4b4a51e040a17b25"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_common\\payload\\Algorithm\\Common\\Src\\geodesy_local.c",
+    "generated": "Algorithm/Common/Src/geodesy_local.c",
+    "sha256": "8ee67ec55504899cb70defa90fd0f4dbb83ed9ef6b711c2ccb8e0ec62b77f312"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_common\\payload\\Algorithm\\Common\\Src\\navigation_quality.c",
+    "generated": "Algorithm/Common/Src/navigation_quality.c",
+    "sha256": "bc70da484a4e15631b19c6b46f026bebbfc7c3bbb86a63853299ade9f9d3b48d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Inc\\navigation_integrity.h",
+    "generated": "Algorithm/Estimator/KF6/Inc/navigation_integrity.h",
+    "sha256": "d4c271c639f938fa70059db26a1fc385ef175c42d60d27d461ce500e5cbe5d2d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Inc\\navigation_kf.h",
+    "generated": "Algorithm/Estimator/KF6/Inc/navigation_kf.h",
+    "sha256": "a40850af4c4700047aba5979c43f978ae94cd9707d2a73edf35d9165f963cf85"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Inc\\navigation_kf_replay.h",
+    "generated": "Algorithm/Estimator/KF6/Inc/navigation_kf_replay.h",
+    "sha256": "5010cf501d911d7b3e3ad5b37b32bc41c7a0cc94e8606c4f1f1f17e2f2fac2c9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Src\\navigation_integrity.c",
+    "generated": "Algorithm/Estimator/KF6/Src/navigation_integrity.c",
+    "sha256": "ed378348218ff394debbc203f1c598e482d6acbf56014d0286d50d17a8f4ddeb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Src\\navigation_kf.c",
+    "generated": "Algorithm/Estimator/KF6/Src/navigation_kf.c",
+    "sha256": "27279b3b5ed248a3a740c09318b3464778cd6e8e224e60ef1fb60ea2e025e5bb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Src\\navigation_kf_replay.c",
+    "generated": "Algorithm/Estimator/KF6/Src/navigation_kf_replay.c",
+    "sha256": "43b29b914e2da31cd7000407c423d7c35c0d377a94e9319e259e767f37a657eb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_ins_coning2_sculling2\\payload\\Algorithm\\INS\\Coning2Sculling2\\Inc\\ins_mechanization.h",
+    "generated": "Algorithm/INS/Coning2Sculling2/Inc/ins_mechanization.h",
+    "sha256": "adc1e90465641029b1203b3fd746395df3350ebb878092338b1dfae48aac7ace"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_algorithm_ins_coning2_sculling2\\payload\\Algorithm\\INS\\Coning2Sculling2\\Src\\ins_mechanization.c",
+    "generated": "Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c",
+    "sha256": "7dd3b57fc64e9b1cef8499c606430406359083fb2e6f2045f9e2ce036fddc3fb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\App\\fatfs.c",
+    "generated": "FATFS/App/fatfs.c",
+    "sha256": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\App\\fatfs.h",
+    "generated": "FATFS/App/fatfs.h",
+    "sha256": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\Target\\bsp_driver_sd.c",
+    "generated": "FATFS/Target/bsp_driver_sd.c",
+    "sha256": "1b1b6cc4cb035c902adba56f2b2803edd0fdaea96758eac8a8e121313b7d251a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\Target\\bsp_driver_sd.h",
+    "generated": "FATFS/Target/bsp_driver_sd.h",
+    "sha256": "6a9f53e3c9406e770f3277a368cd1e9765ed5461e1d81badc8c85f0ffd6e04f1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\Target\\fatfs_platform.c",
+    "generated": "FATFS/Target/fatfs_platform.c",
+    "sha256": "f969058b6d48636d138a99109c1d2bd53dfcc1da7f888a2ddd3e10e820d06391"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\Target\\fatfs_platform.h",
+    "generated": "FATFS/Target/fatfs_platform.h",
+    "sha256": "85436c2f6d744fd6f57104dc3b57581a5fba97575a5f3ac05609896736baba6a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\Target\\ffconf.h",
+    "generated": "FATFS/Target/ffconf.h",
+    "sha256": "edca1b10ee98433ed3feb623ca2419d3c8e2094440e1722aaa3bbe0eac302401"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\Target\\sd_diskio.c",
+    "generated": "FATFS/Target/sd_diskio.c",
+    "sha256": "d8f7080cc78fa2e578c4feb85cdf8db4afd9ee03fbd14786aad3789829ba13d3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\FATFS\\Target\\sd_diskio.h",
+    "generated": "FATFS/Target/sd_diskio.h",
+    "sha256": "cadc6523f5716b90637907d8e53e15a9f2463b916094264a742b6e6f53d31e6f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\adc.h",
+    "generated": "Core/Inc/adc.h",
+    "sha256": "0ac97025a4065f07b7b65a906bd0c45ea800215434ed43c287c1685507f3f612"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\dma.h",
+    "generated": "Core/Inc/dma.h",
+    "sha256": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\gpio.h",
+    "generated": "Core/Inc/gpio.h",
+    "sha256": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\main.h",
+    "generated": "Core/Inc/main.h",
+    "sha256": "5974fca3d96695de84acce6ff7bbdece9fe2db159b432998a2da43d5131db24a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\sdio.h",
+    "generated": "Core/Inc/sdio.h",
+    "sha256": "0bdaddb21d3b2065647ca83a7de116c7ce666199a9b876feaeba324d761fe1ac"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\spi.h",
+    "generated": "Core/Inc/spi.h",
+    "sha256": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\stm32f4xx_hal_conf.h",
+    "generated": "Core/Inc/stm32f4xx_hal_conf.h",
+    "sha256": "812258028ba4569afd569b8824844ddca53cc856fdcb2f46c71e7b565b695772"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\stm32f4xx_it.h",
+    "generated": "Core/Inc/stm32f4xx_it.h",
+    "sha256": "add260cf6e2e9a885d66da66287a55af935c0fc808bfdcd4a3fd787699788b95"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Inc\\usart.h",
+    "generated": "Core/Inc/usart.h",
+    "sha256": "6295c53f36a77d18300beef8324e37fd3cd769d7f0b37488e6f7bcde75a0cec8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\adc.c",
+    "generated": "Core/Src/adc.c",
+    "sha256": "d97ea825eda51a68af477cb98e354f16579ac3f4643ba3adb681e87c0cc50668"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\dma.c",
+    "generated": "Core/Src/dma.c",
+    "sha256": "07b8188b8a07633bde3acc1bad31b941c281f331828e5868c9d613fa6b40cd1d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\gpio.c",
+    "generated": "Core/Src/gpio.c",
+    "sha256": "11509870a2afdba2f4266b65aa3e8983845eb21304a625716e32c9d2fd92f20c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\main.c",
+    "generated": "Core/Src/main.c",
+    "sha256": "69ba52fbab7aa725e836ea923148624732f14f66b23df7e83e302f23815c2825"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\sdio.c",
+    "generated": "Core/Src/sdio.c",
+    "sha256": "c394155c73bb00b1fc8c1b6b16008e7175c3ece31e0e7a17a1a16f744ee204cd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\spi.c",
+    "generated": "Core/Src/spi.c",
+    "sha256": "cc0d5bf1fdf19c1f4cfc51386dd876c18e2e62d995765c990f2c5ff1f79de181"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\stm32f4xx_hal_msp.c",
+    "generated": "Core/Src/stm32f4xx_hal_msp.c",
+    "sha256": "20068019c1fff792541802d587e12466025b3adc8611e3c8ed1267ab9b160688"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\stm32f4xx_hal_timebase_tim.c",
+    "generated": "Core/Src/stm32f4xx_hal_timebase_tim.c",
+    "sha256": "bfc01b357084f00c3799755d1c3d9ce7536a4072f31f6136fc3bdd431c1880aa"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\stm32f4xx_it.c",
+    "generated": "Core/Src/stm32f4xx_it.c",
+    "sha256": "02014d77cc3836c10d91b06a188aa04609d080a4a9d47e13415a784967ab2700"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\syscalls.c",
+    "generated": "Core/Src/syscalls.c",
+    "sha256": "73a05935e9cc8dd08a05a6a2f1714ccf6ed27166996b7be2130a217fb7a73d03"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\sysmem.c",
+    "generated": "Core/Src/sysmem.c",
+    "sha256": "8a32b49aaf7b34c4d539f32e62521038346e9f8d35e4c5a2fb55eae126b08032"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\system_stm32f4xx.c",
+    "generated": "Core/Src/system_stm32f4xx.c",
+    "sha256": "077c7d9b06d04e9fe3d60ea68f9e228edf98b2f801f80e5349a3ba1465197b00"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_board_silverstar_0_5\\payload\\Core\\Src\\usart.c",
+    "generated": "Core/Src/usart.c",
+    "sha256": "bfacd15cd580a428c12053c6e75acafe165e812626432f81fea4870c9a1be9fb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\FreeRTOS.h",
+    "generated": "Tests/Host/FreeRTOS.h",
+    "sha256": "a94897e70ea6c6a2b84886a000adfc79460b08fc7415d474b989552e12d32b05"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\generate_golden_sample.c",
+    "generated": "Tests/Host/generate_golden_sample.c",
+    "sha256": "fe234cac583db28393c8b40104c72ad5cdb9e393f33d2547a0c5f3466523a566"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\host_platform_mock.c",
+    "generated": "Tests/Host/host_platform_mock.c",
+    "sha256": "3473fc08d4109b0f017133a63dd8a644b70ae081f9d8234c6256baf18c132b6f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\host_platform_mock.h",
+    "generated": "Tests/Host/host_platform_mock.h",
+    "sha256": "62e06b67323c56977a78fd1f69498482acbaa55cffcf790f5bbb977472d5c139"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\optional_start_inputs.h",
+    "generated": "Tests/Host/optional_start_inputs.h",
+    "sha256": "aa315d0d30f2f2c4f7fbcd4b7875abc9b7a4cbad8e3dc450ee67e51cb7a25986"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\optional_start_ins_inputs.c",
+    "generated": "Tests/Host/optional_start_ins_inputs.c",
+    "sha256": "64f3edace371ef1ead90326c6db568a78dc919500ddd31e16fe9cd16035da5bc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\optional_start_mag_inputs.c",
+    "generated": "Tests/Host/optional_start_mag_inputs.c",
+    "sha256": "ec9e0c9cc0652b7113442bac52f27b2fd5e1cb60c65ee4b2a8a41e79ac8e7ccb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\optional_start_storage_inputs.c",
+    "generated": "Tests/Host/optional_start_storage_inputs.c",
+    "sha256": "84d1e7da450dd84f6b53c8850407a24a8a067af9d0cdce7b842531aff12325b0"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\task.h",
+    "generated": "Tests/Host/task.h",
+    "sha256": "db5f25612249f808909b0f3adfacabab4425e84bdab474d188a28a77ae8069ba"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_air_kf.c",
+    "generated": "Tests/Host/test_air_kf.c",
+    "sha256": "e129ba7d241eef27dc9c984a31e73cf2b6478abc1fae29f44b62801d67409801"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_algorithm_parameters.c",
+    "generated": "Tests/Host/test_algorithm_parameters.c",
+    "sha256": "390c664d072cac79027bbfb717e2e49a972b22d0e218ed009dfd234065d7975d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_alignment_strategy.c",
+    "generated": "Tests/Host/test_alignment_strategy.c",
+    "sha256": "4bfe39ebdbd7841f989d87d677c46f64d867028e3276c7ad877260e88be29f99"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_attitude_alignment.c",
+    "generated": "Tests/Host/test_attitude_alignment.c",
+    "sha256": "d2a3fa21c81ef0d48010ad68c48e979be7accbdb5d72457a5ebe8bca881c60bd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_board_mission_action_service.c",
+    "generated": "Tests/Host/test_board_mission_action_service.c",
+    "sha256": "d0619c438df5294e75039d6f8bd3a9f567d481c949591853caf43e883c84817f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_board_power_service.c",
+    "generated": "Tests/Host/test_board_power_service.c",
+    "sha256": "967bf46b74af97a527fe2f03e9428b0cfa95000cac40f4b21cb0b41f11bc3109"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_build_capability_contract.c",
+    "generated": "Tests/Host/test_build_capability_contract.c",
+    "sha256": "53188bc8df1a0d64cf7f1fb5e8413873c51d3dcb7b963dd9208cb4d26950f7a6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_calibration_build_gate.c",
+    "generated": "Tests/Host/test_calibration_build_gate.c",
+    "sha256": "e81862161d4e3c3b321841a251a99fc947baf69f854a411d91331ecd8edbe7e4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_common.h",
+    "generated": "Tests/Host/test_common.h",
+    "sha256": "7a2aaf9a47d09824c6399d662989ae533dcc8441c1502b7327f0dc33b6e32db2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_common_format.c",
+    "generated": "Tests/Host/test_common_format.c",
+    "sha256": "5007965f5709b759fac729a23b6f64639302177238f8aecb8d78c7bfff9a843a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_console.c",
+    "generated": "Tests/Host/test_console.c",
+    "sha256": "47bb6f5e08e0a24d62d6ee8892d307224c8c23c01f0b225ecc37d2176f52f7fb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_device_native_log.c",
+    "generated": "Tests/Host/test_device_native_log.c",
+    "sha256": "b4ee6d7b3a3393498abb1db56315d2f1dcc1822a2d6f4ae5e2d6158f7f1795fc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_device_startup_fsm.c",
+    "generated": "Tests/Host/test_device_startup_fsm.c",
+    "sha256": "f014a0bb6c3e02450b1e4a62a452dd09e40fe15c8c5f981d70de76a6ecbf5db2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_eskf_backend.c",
+    "generated": "Tests/Host/test_eskf_backend.c",
+    "sha256": "1b3051eed47144c5f83028d0923848bbee5148f3bda9b6ae2abf410005fbead2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_estimator_barometer_pending.c",
+    "generated": "Tests/Host/test_estimator_barometer_pending.c",
+    "sha256": "ac09f87d3ad8ea622820c68b620c0603c23649fce301b2afada6404cd726301f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_estimator_preparation.c",
+    "generated": "Tests/Host/test_estimator_preparation.c",
+    "sha256": "a6b340f8f4d802982bec4a0bac0efc9941f492b331961f368d71a9804e147f41"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_fault_hook.c",
+    "generated": "Tests/Host/test_fault_hook.c",
+    "sha256": "8c01d60f276601937aea5722cf1477ecbe376acba2075a7eea16bc773ea3d56b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_flight_config_compile.c",
+    "generated": "Tests/Host/test_flight_config_compile.c",
+    "sha256": "c54bb50232ac12977f4dc25fda46c56f6a0380b6d7171460a170d2767e73c65a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_flight_recovery.c",
+    "generated": "Tests/Host/test_flight_recovery.c",
+    "sha256": "6c40c2ed25355922c505c49aa3c6add07985bff0d863d0a76660a10ebeb7c4b2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_health.c",
+    "generated": "Tests/Host/test_health.c",
+    "sha256": "bf8d9704765b7d95e89c0a4c02c0e65326aebd29214fc0a165434cc93c787e7a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_imu_sample_bus.c",
+    "generated": "Tests/Host/test_imu_sample_bus.c",
+    "sha256": "2b5130005235a2c713e98249fe3fd8518d61462c0c227481a4be87bafad259ad"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_interfaces.c",
+    "generated": "Tests/Host/test_interfaces.c",
+    "sha256": "59bd812f5a7ceb704df60ca638b718c9b6b8cfac6138f5dcdc7ab4242791a7f7"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_jy901b_adapter.c",
+    "generated": "Tests/Host/test_jy901b_adapter.c",
+    "sha256": "358cc5a519de70f92a1d4d5601c03b52f32f09099bcd980d9ff6503a8c1167ed"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_jy901b_device.c",
+    "generated": "Tests/Host/test_jy901b_device.c",
+    "sha256": "5540a225006573629754f636978e3891586a9b72191e1f67fe8c4d339d1f1443"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_jy901b_multi_instance.c",
+    "generated": "Tests/Host/test_jy901b_multi_instance.c",
+    "sha256": "94cc3e05a007e96d6f697acc32ac0d4e496e170ca5c65f5b5c91fe242041c93d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_jy901b_startup.c",
+    "generated": "Tests/Host/test_jy901b_startup.c",
+    "sha256": "5b2f4d597b44d72a6b80bb03d9d0b5c357b0ca9f0d69e873970eb52f270e082e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_kf6_outage.c",
+    "generated": "Tests/Host/test_kf6_outage.c",
+    "sha256": "acd1c21e207990fdb6b2a79c93b43d93f645d7d568917e39d2e1097bffa139f1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_lifecycle.c",
+    "generated": "Tests/Host/test_lifecycle.c",
+    "sha256": "f8bc59f811fc1a0adfacd764e7ab6f326154a0243d2e605d7216d5f371efcb1f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_lifecycle_logging.c",
+    "generated": "Tests/Host/test_lifecycle_logging.c",
+    "sha256": "4cfee15af3f92c95c3d661e9446b8fa4abf4078171d75be6abf2419e0febdb68"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_logger.c",
+    "generated": "Tests/Host/test_logger.c",
+    "sha256": "9efa8fdb5199b5d8efcfbad0f9c3542486cf6bdffd8c5155845392fa9e61c2fc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_logger_streaming.c",
+    "generated": "Tests/Host/test_logger_streaming.c",
+    "sha256": "1104e9b751eb08ea817e5c34318e9431f07f0aed28e26e22827aa776d678446d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_navigation_kf_replay.c",
+    "generated": "Tests/Host/test_navigation_kf_replay.c",
+    "sha256": "1afee50b4e603ad21f020fe348b11dc2c51e3d86096d20f07f178bbd86fb2a3e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_navigation_quality_supervisor.c",
+    "generated": "Tests/Host/test_navigation_quality_supervisor.c",
+    "sha256": "5eb9ac8d3f4915692238b757dd379f74950e23388ceb333a0309559588a20337"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_neo_m9n_adapter.c",
+    "generated": "Tests/Host/test_neo_m9n_adapter.c",
+    "sha256": "e7e1948836f640e85ced6cca53d167417e34ad5317d0c1fd7aa5eb893e62f1e3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_neo_m9n_device.c",
+    "generated": "Tests/Host/test_neo_m9n_device.c",
+    "sha256": "442e9e9b6a4ddffb1a8d2c7c1e5f2d93f36dfc0d16bf7962961e37bd4fc2b022"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_neo_m9n_multi_instance.c",
+    "generated": "Tests/Host/test_neo_m9n_multi_instance.c",
+    "sha256": "8d0481e7c242f5c2a46689b36fd9e6937169121697e14720160d808525d2ff08"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_optional_gnss_start.c",
+    "generated": "Tests/Host/test_optional_gnss_start.c",
+    "sha256": "ac3b9691f1a8205d9d10c73f6a744d3fc32ff201ab05016e60c984bdcdd8e5c8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_profiles.c",
+    "generated": "Tests/Host/test_profiles.c",
+    "sha256": "d23f921ae974f24b5bb2fb399c817391c87b075e2761ada14f773f70d2c4c2bd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_runtime_commands.c",
+    "generated": "Tests/Host/test_runtime_commands.c",
+    "sha256": "dca39c8779388a727519931a463b363cd3c2a2cfcdaeccd8788e09393b280e74"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_runtime_startup.c",
+    "generated": "Tests/Host/test_runtime_startup.c",
+    "sha256": "71eea9701929fa07346c8a84319dc5757b49670fe297ad90de6a18d04a4dc014"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_sensor_quality.c",
+    "generated": "Tests/Host/test_sensor_quality.c",
+    "sha256": "21f1325247e7e88044eebb167826b2aeaf25b05f97d42d2cc15db0aacfcc7bc6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_sensor_status.c",
+    "generated": "Tests/Host/test_sensor_status.c",
+    "sha256": "0a85d7f495de0e6b46302721dc9bb842aabd67568505c2c575a7e07f5bed31b5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_source_selector.c",
+    "generated": "Tests/Host/test_source_selector.c",
+    "sha256": "5a63526a24113b92bf988ba75c6cfbfa82dee40a3a152f4a0cab0c6564c0d054"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_sx1280_hal_multi_instance.c",
+    "generated": "Tests/Host/test_sx1280_hal_multi_instance.c",
+    "sha256": "a97e1a92a3552599428013f28e206d53afe8d7ef7e9f2ee2c6e40405fe4bd315"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_sx1281_device.c",
+    "generated": "Tests/Host/test_sx1281_device.c",
+    "sha256": "85041bf40a4dcdbbf9572f2001f7d1f8443906222dfb9ba22a934d30383a023a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_sx1281_multi_instance.c",
+    "generated": "Tests/Host/test_sx1281_multi_instance.c",
+    "sha256": "800fcd46d1e74988c2330de3a7fd6d4faf9c9259b411453dff30487b055795ff"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_system_alignment.c",
+    "generated": "Tests/Host/test_system_alignment.c",
+    "sha256": "9711692e1483e84580af6e33f1f7171369001dccc050a1cb9b78a55f494d931f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_system_calibration.c",
+    "generated": "Tests/Host/test_system_calibration.c",
+    "sha256": "dd0e9e770a66d4aae8a01316f7d96bc3bb15b428df0852bd8a452cdbd789e6c1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_system_indicator.c",
+    "generated": "Tests/Host/test_system_indicator.c",
+    "sha256": "3d93e36a7b0d36a8c25f1bd648d953e5c7637fee0c641d68737029297ea5ed33"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_system_inertial.c",
+    "generated": "Tests/Host/test_system_inertial.c",
+    "sha256": "6113056a12f1c61e1417c9655c9357d37df286b063c3b13d7d232afdb76823d7"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_system_startup.c",
+    "generated": "Tests/Host/test_system_startup.c",
+    "sha256": "d4301429d39bbd7cceccef5c685961caea365b1cc5cbb455c1bba00013d4c689"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_system_time.c",
+    "generated": "Tests/Host/test_system_time.c",
+    "sha256": "e6b858050b13d321f44b1ed2bf353dbca8a300b78814ba8e797ffbfc6962c458"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_telemetry.c",
+    "generated": "Tests/Host/test_telemetry.c",
+    "sha256": "92afc9f560476d6a720ba5b1ca4bce9266e56dde4671039cb96e467016851132"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_timing_bench.c",
+    "generated": "Tests/Host/test_timing_bench.c",
+    "sha256": "da561c9cbde4bf51972455e10d33a2580c0afbd5adab039df206daf965711b0e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\storage_integrity.c",
+    "generated": "Tests/Target/storage_integrity.c",
+    "sha256": "8ff6db420d626af8e590c1afeacd5be6efa28a30c8f4c5c11c5a578cec59d94b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\storage_integrity.h",
+    "generated": "Tests/Target/storage_integrity.h",
+    "sha256": "870538b0c07ee409908dea7db6450ba6b258f36e8e9822b13b0114bca76dc494"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\timing_bench.c",
+    "generated": "Tests/Target/timing_bench.c",
+    "sha256": "5281e85864c04e96198b27c67922e4f5111ef4e2f992a793eafa7c263579681b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\timing_bench.h",
+    "generated": "Tests/Target/timing_bench.h",
+    "sha256": "dd2bc9663b5a4169e5c7aa650b5c4dbdafddb8372544a5563b7fbb43e6cd6d1f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\timing_bench_example.c",
+    "generated": "Tests/Target/timing_bench_example.c",
+    "sha256": "039ca40aaecaa0c861e0f9178805d7ea1699e8e74d1e125ee84255ba1050737d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\timing_bench_example.h",
+    "generated": "Tests/Target/timing_bench_example.h",
+    "sha256": "ee3b453224926e6a423cf0fd4c92acacf8f183c0ae9eafd800790daaf4c2a41a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\timing_bench_f407.c",
+    "generated": "Tests/Target/timing_bench_f407.c",
+    "sha256": "67448901b2e535a498d5128f79faf89a44dcf8f2bd5b1ea0c9d82450be19e966"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Target\\timing_bench_f407.h",
+    "generated": "Tests/Target/timing_bench_f407.h",
+    "sha256": "a118c008b071c294f99a04129d25662e4ad29437c859ead704c8db437299ae02"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\algorithm_noise_absent.h",
+    "generated": "Tests/Host/Fixtures/algorithm_noise_absent.h",
+    "sha256": "7bc4fe9dc301c52803867f55b6374a30524c3825f4b456bc23ac58b530d1e52a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\multi_instance_project_fixture.c",
+    "generated": "Tests/Host/Fixtures/multi_instance_project_fixture.c",
+    "sha256": "c0dc41247a0c0afbdd020c758a55255e9c0665add2513741a7120ffd683c30cf"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\source_selector_lock_stub.c",
+    "generated": "Tests/Host/Fixtures/source_selector_lock_stub.c",
+    "sha256": "93af8d825807aa68d5b9254e00412b50197da6d98eb1e407e9167127d4b056ad"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\fatfs.h",
+    "generated": "Tests/Host/storage_integrity/fatfs.h",
+    "sha256": "719aa4811cdf8fce1ef844c979bee0cabaa59f216ede10cdee2171f11fc644e2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\FreeRTOS.h",
+    "generated": "Tests/Host/storage_integrity/FreeRTOS.h",
+    "sha256": "48de8309877c8b5140e95463e15605c4ac00000cd54db2e6836292d8e7a8e9e2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\queue.h",
+    "generated": "Tests/Host/storage_integrity/queue.h",
+    "sha256": "627735f1ba831aabbe5eed9a1cb02600068a331b3dd05955c2f409bf3c1aab04"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\sd_diskio.h",
+    "generated": "Tests/Host/storage_integrity/sd_diskio.h",
+    "sha256": "4e10cb4188b0d2d4eb2272ef0d66bf5ce534514067ca054cd156aaa96dfb3f27"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\task.h",
+    "generated": "Tests/Host/storage_integrity/task.h",
+    "sha256": "ba5e2df39c6ca8a4d7b36d578643653ef8bfe9af35e2fed072be2a119ec191b8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\test_eskf_storage.h",
+    "generated": "Tests/Host/storage_integrity/test_eskf_storage.h",
+    "sha256": "7c696f0fedf73b4e4bbcaa369d386a03519d4d34957072608ed2229da3934a52"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\test_logger_storage.c",
+    "generated": "Tests/Host/storage_integrity/test_logger_storage.c",
+    "sha256": "9efbbb6d8ac20f6e93701f491185e88cd84861f60ec0b4cd7507d50a9781ba3f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\test_sparse_preflight.h",
+    "generated": "Tests/Host/storage_integrity/test_sparse_preflight.h",
+    "sha256": "b1809e7283e7e292fba778d604a5e3d717791347239612cf07735991f91d4eda"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\storage_integrity\\test_storage_integrity.c",
+    "generated": "Tests/Host/storage_integrity/test_storage_integrity.c",
+    "sha256": "18bb896211cccf9ad5f51076e8c239f737124eff5c56690ffaca05ed8306de53"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\multi_instance_resources.c",
+    "generated": "Tests/Host/Fixtures/MultiInstance/multi_instance_resources.c",
+    "sha256": "9c57e9fac196c2329ea6a8392fd3c56cba50013df0d93744141f13f8203c45c8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\Inc\\project_resources.h",
+    "generated": "Tests/Host/Fixtures/MultiInstance/Inc/project_resources.h",
+    "sha256": "c7e81f4f935492442c8ab74b2d3678b407cb82c632aec68a305df2099507576b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_barometer.h",
+    "generated": "System/Inc/system_barometer.h",
+    "sha256": "ec7ace9571a9bb9d000946a28f925b704311da47be327d9af978e7a319f48328"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_capabilities.h",
+    "generated": "System/Inc/system_capabilities.h",
+    "sha256": "3d90094722cb6018e9c56e5e6ea4d9986832a9aec542c5395c4566e4704686f4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_configuration_types.h",
+    "generated": "System/Inc/system_configuration_types.h",
+    "sha256": "312f97e3bf5fa8c0c05f20007cfb02f23be3adef62296de1aaf963a27a3748cd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_console.h",
+    "generated": "System/Inc/system_console.h",
+    "sha256": "0b915a04a59c07538f96ac1476a88b905a3891420956ec05696e6bce4fec6d0c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_device_startup.h",
+    "generated": "System/Inc/system_device_startup.h",
+    "sha256": "489635517caafaaa90a2bf79a25204c071046d937c7a0dc5b4f7e10bd3188bdd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_estimator_diagnostics.h",
+    "generated": "System/Inc/system_estimator_diagnostics.h",
+    "sha256": "e57de3adeecb0f381843dc5d973c0e8eb579e5669e42bbebbc4d1d8cced7ef1c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_estimator_profile.h",
+    "generated": "System/Inc/system_estimator_profile.h",
+    "sha256": "00d9fdd2a7a7db558b68a16e62df2389eb4546dfa7890f77a16e0bf3c308363c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_flight_recovery.h",
+    "generated": "System/Inc/system_flight_recovery.h",
+    "sha256": "7e1d3979bde970702778e4671022a0d7a495c3f97fc68e53331620c6ee509b8b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_gnss_quality.h",
+    "generated": "System/Inc/system_gnss_quality.h",
+    "sha256": "55ff337bca32adc58e1990764a32a996850dbe53c29499105a73b2c8c9ffeb6e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_health.h",
+    "generated": "System/Inc/system_health.h",
+    "sha256": "689e03c6703a3e2b1c28d0bb846f39177202de61d2545587b18b623401c29a1a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_lifecycle.h",
+    "generated": "System/Inc/system_lifecycle.h",
+    "sha256": "36c553ec20d8a2605194de4e6790b2f0df528f5fccd9f550dc03999a848cb8fb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_lifecycle_backend.h",
+    "generated": "System/Inc/system_lifecycle_backend.h",
+    "sha256": "1ecdacbe539feab7772ed21056db0f01b72bb788f930cd0b4b0802200629e50e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_log_policy.h",
+    "generated": "System/Inc/system_log_policy.h",
+    "sha256": "6c1e30dd608eca11494d2be081cb20b4b0cd12ec1b585e7408fad1f9f3f72e90"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_navigation_health.h",
+    "generated": "System/Inc/system_navigation_health.h",
+    "sha256": "ef873e0b822365210acf3f7b701bb9984b1985ef858762785c2407481b478a4e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_navigation_profile.h",
+    "generated": "System/Inc/system_navigation_profile.h",
+    "sha256": "71b408db18d1f658a801f87dc2300eb6d61cdb0fc6bd227a0adccfc74132fd15"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_profile.h",
+    "generated": "System/Inc/system_profile.h",
+    "sha256": "7da5560da3360e811bf7715963ece11bca9637377686993ef4483253d7b236b3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_sensor_status.h",
+    "generated": "System/Inc/system_sensor_status.h",
+    "sha256": "73f66e659993756bfd4d9e767665a96e6e675b0431c636270d6ccbcd4e8a83ba"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_source_selector.h",
+    "generated": "System/Inc/system_source_selector.h",
+    "sha256": "0e493744fdbfc357e097174cf4d880a6c076ae7833e6376d3c8340741ee7ba53"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_startup.h",
+    "generated": "System/Inc/system_startup.h",
+    "sha256": "7142ed4b128c3c7d6cd0450e4463a475edd408cce7ed8c2578f22595014d1a7b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_task_stack.h",
+    "generated": "System/Inc/system_task_stack.h",
+    "sha256": "5d21bb0154fb33fe4f024dfc1f6df5baecdab026fd46f0cfffc710390da9ca47"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_time.h",
+    "generated": "System/Inc/system_time.h",
+    "sha256": "da4da29b9df5f5761c884534b0aa6b68aca9133b460602cb7ec59751aa10035d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc\\system_version.h",
+    "generated": "System/Inc/system_version.h",
+    "sha256": "fee48e79cea350e5523a58c3feb430521af6db996577cd4ef533a0d10de20fa8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_barometer.c",
+    "generated": "System/Src/system_barometer.c",
+    "sha256": "e9d64d610d50a336edfe9ea44b757cf4f151fb6382d11e2205a594c94af06823"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_capabilities.c",
+    "generated": "System/Src/system_capabilities.c",
+    "sha256": "2d42170d20f1db61220b58f6683fff558a2b1d6ecc91c13482a13f3e4ef7fa61"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_console.c",
+    "generated": "System/Src/system_console.c",
+    "sha256": "3aeaafbdcdf25172169faf603e6d9d447110ebecd03d58f57ee18325c167784d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_device_startup.c",
+    "generated": "System/Src/system_device_startup.c",
+    "sha256": "09748fe3be2f42c7c4899a7fac1b92009b7675ff49888c6d363b880e6ac4c9d8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_estimator_diagnostics.c",
+    "generated": "System/Src/system_estimator_diagnostics.c",
+    "sha256": "fd7414eacfa0262676011b53d4c47b2effe612d1547a6308fe2e3a7a04eded95"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_estimator_profile.c",
+    "generated": "System/Src/system_estimator_profile.c",
+    "sha256": "d0b7ee65e2de24f139d890a3cd6ed0734272a0f5993464fba6466f4404497edc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_gnss_quality.c",
+    "generated": "System/Src/system_gnss_quality.c",
+    "sha256": "5f5658b29ce16f0f0942b7edfd447a75976714c05a94b9abfc784adb68ea40f3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_health.c",
+    "generated": "System/Src/system_health.c",
+    "sha256": "c2b3c0dec444395267500ad8aecbe0878ffa5257d3a4ed0c364a1a092e9f9ce6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_log_policy.c",
+    "generated": "System/Src/system_log_policy.c",
+    "sha256": "d37555f1cef7abb677f3cd39164db352cb0b5b489fc12e03fe618b1e3359afd1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_navigation_health.c",
+    "generated": "System/Src/system_navigation_health.c",
+    "sha256": "c3d1f41cc81756bbc57a10beae3ba92ed3514c3f6c19cefb638d4ab6d3d49e4d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_navigation_profile.c",
+    "generated": "System/Src/system_navigation_profile.c",
+    "sha256": "ab9af7ef47b29caa09e06e60f44b6ddc559d8fcd4dc0da9a6c8c9502ce6510c6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_profile.c",
+    "generated": "System/Src/system_profile.c",
+    "sha256": "ce9599e83df26606683dd38b84aad999c571582c4ed4929d4e87af3340d5e57b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_sensor_status.c",
+    "generated": "System/Src/system_sensor_status.c",
+    "sha256": "f3b7c2f4bc2f88373854448e0456329fd1557cf4124301aa9f2fe96cc7aef814"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_source_selector.c",
+    "generated": "System/Src/system_source_selector.c",
+    "sha256": "c2e3a4765fb753aad64e862029dda1865c654d10bfb8408ce2b5503abace5012"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_startup.c",
+    "generated": "System/Src/system_startup.c",
+    "sha256": "91b4d0ed66e035d86faf2bfe4fa998cc9b4f80e0223dfda3e539ce1670a69e8a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_time.c",
+    "generated": "System/Src/system_time.c",
+    "sha256": "f46bf020352b9e0278a3d4b664ac08b10705292fe15d4e31214e1ba595c95135"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_alignment_config.h",
+    "generated": "System/User/system_user_alignment_config.h",
+    "sha256": "9076bf114692bb9a40d20b93fcb444742d2c0d9bcf06d655cf4d515326a2a261"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_capability_validation.h",
+    "generated": "System/User/system_user_capability_validation.h",
+    "sha256": "7f65d3d695a60f9b8ff14d5136212623d3e117ece71aae01f79e349ad13d4572"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_config.h",
+    "generated": "System/User/system_user_config.h",
+    "sha256": "1721b147270703b5d170a38ce692f19b2b749f68584b4a4c8b8bd346c81d02a8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_flight_config.h",
+    "generated": "System/User/system_user_flight_config.h",
+    "sha256": "6fe33159ad41d93ce2d31324aa073af9e871c8601e30aa3729ba67479fa57e6d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_inertial_config.c",
+    "generated": "System/User/system_user_inertial_config.c",
+    "sha256": "98b058b4eaeef8cf43b96a0732de57f7403e9f7f7c086d8eb8ed2898caf9bbcd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_inertial_config.h",
+    "generated": "System/User/system_user_inertial_config.h",
+    "sha256": "cfaac1c42b043746b9c3a3a3db3f76fceb94498ad4c8e95f5fef881c26cf7127"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_platform_capabilities.h",
+    "generated": "System/User/system_user_platform_capabilities.h",
+    "sha256": "75b9ae09898c8f70ea5a06a1dd0547929595a023115aa973984993cdff043d77"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\User\\system_user_startup_config.h",
+    "generated": "System/User/system_user_startup_config.h",
+    "sha256": "33b027c58a95befa9444b7fcdceccbbb151e8a8833acd22673fc9dce764fd493"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inertial\\Inc\\system_inertial.h",
+    "generated": "System/Inertial/Inc/system_inertial.h",
+    "sha256": "83f7de9552fc40ef3e8f9ba986dcf57fa6107f56477134f6b0c2c8022bcc9e93"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inertial\\Inc\\system_inertial_source_if.h",
+    "generated": "System/Inertial/Inc/system_inertial_source_if.h",
+    "sha256": "44e81dce7112d396e8fd70d74ca4a6aded030b37ce9d1fbf9c9500b77b599566"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inertial\\Inc\\system_inertial_types.h",
+    "generated": "System/Inertial/Inc/system_inertial_types.h",
+    "sha256": "8df918424340c50325e3e23ad7c42f36918f204b13ebc66282590c6f32204e2b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inertial\\Src\\system_inertial.c",
+    "generated": "System/Inertial/Src/system_inertial.c",
+    "sha256": "85dc5e513373ddff22abac8f1058dc07a6a71b8cf25214efb913a2302217f7e3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Indicator\\Inc\\system_indicator.h",
+    "generated": "System/Indicator/Inc/system_indicator.h",
+    "sha256": "858d4d317c3247b6b41e25d0b7c6bf7f65e2ac54b763a7d9b1b43a24696d0a9b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Indicator\\Src\\system_indicator.c",
+    "generated": "System/Indicator/Src/system_indicator.c",
+    "sha256": "67450eed290f9cfefcb860a20c0159f7636cf50b54ba6d1b3552f9a1db6f7775"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Inc\\system_calibration.h",
+    "generated": "System/Calibration/Inc/system_calibration.h",
+    "sha256": "fdd803cf72ef4aec16ac2b4979917b4f86165921700d8b8586bb1e195fa6ec20"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Inc\\system_mag_calibration.h",
+    "generated": "System/Calibration/Inc/system_mag_calibration.h",
+    "sha256": "298dc74e1677b24b86d2ae27656a7216dbdb784356beb9910dc2650844a5a674"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Src\\system_calibration.c",
+    "generated": "System/Calibration/Src/system_calibration.c",
+    "sha256": "93502d37dd8f68a9dbcaddb3d0c1e9fad7d6fbd19004f4ef8865f9f741b07e59"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Src\\system_calibration_correction.c",
+    "generated": "System/Calibration/Src/system_calibration_correction.c",
+    "sha256": "2a888c51ba2dc3bd76e53875d82d96265132fa750e2825d55ff60e1362cfd9e6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Src\\system_mag_calibration.c",
+    "generated": "System/Calibration/Src/system_mag_calibration.c",
+    "sha256": "bf46c526fba32f53902fbb9f48e160bfa2b7b17d7c2aad4ad1500b3ff4e9a365"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Alignment\\Inc\\system_alignment.h",
+    "generated": "System/Alignment/Inc/system_alignment.h",
+    "sha256": "ea3685e27f8a018892a4e6ba4185abe2ed4b7385e6fb4f68f1ae02120b8aa85c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Alignment\\Inc\\system_alignment_backend.h",
+    "generated": "System/Alignment/Inc/system_alignment_backend.h",
+    "sha256": "f417b935bf392cad54333a9b405383ed8ccb9f0d850af82398146741545e3714"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Alignment\\Src\\system_alignment.c",
+    "generated": "System/Alignment/Src/system_alignment.c",
+    "sha256": "b68a0501482df1359b8c36008b61203d871095a73319195b1005070415886f77"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Alignment\\Src\\system_alignment_source.c",
+    "generated": "System/Alignment/Src/system_alignment_source.c",
+    "sha256": "1d277bf003967c13050ee78573e53968fbd5f469d133cc5dc39e4e7cd6154220"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Modules\\Inc\\telemetry_service.h",
+    "generated": "Modules/Inc/telemetry_service.h",
+    "sha256": "861d7f05456fbc3d3f5c6e5c80a92062840d1a6f01dd94796b805b2501a2feaf"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Modules\\Src\\telemetry_service.c",
+    "generated": "Modules/Src/telemetry_service.c",
+    "sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_barometer_if.h",
+    "generated": "Interfaces/Inc/system_barometer_if.h",
+    "sha256": "63677af97b86628f6004c5390c36297cb7a9550436a4abf0480482e5fc028b4a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_console_if.h",
+    "generated": "Interfaces/Inc/system_console_if.h",
+    "sha256": "4aa0afc7dfb60cdeccbd291b707ea5afb5821fe947c9342e7eae0d67a0beeeb7"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_descriptor_if.h",
+    "generated": "Interfaces/Inc/system_descriptor_if.h",
+    "sha256": "646a1e264d2b72cc3a15b9080fdd709af8b01d2d84f797af918735c56a0f6158"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_device_types.h",
+    "generated": "Interfaces/Inc/system_device_types.h",
+    "sha256": "3d3511dcd927ceaa90caf1a8da6cd6ba0406d7916c60021b61c36bfb67f6ae35"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_gnss_if.h",
+    "generated": "Interfaces/Inc/system_gnss_if.h",
+    "sha256": "2a2a7850643d7cd2e2ea2a4ab8b6213d67e859f7e04bde8f47ec7a8a57ea094f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_hardware_quaternion_if.h",
+    "generated": "Interfaces/Inc/system_hardware_quaternion_if.h",
+    "sha256": "3b5ebb709b49246ec73f74d22ebfce1f8a8a1decdd1474186786e6785ba2061d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_imu_if.h",
+    "generated": "Interfaces/Inc/system_imu_if.h",
+    "sha256": "f33e6049033a55ae3d81892ea720bd91c862626ef1ec1d6c8c6592e439ded2ac"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_indicator_if.h",
+    "generated": "Interfaces/Inc/system_indicator_if.h",
+    "sha256": "8868680d9622ac8455f8b4921287cefe0a2af0af71b22a833a9da9afe61e5ada"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_log_sink_if.h",
+    "generated": "Interfaces/Inc/system_log_sink_if.h",
+    "sha256": "e51266870c298bbd80316152d1847735da842813b3b19d625721b65e9143940a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_magnetometer_if.h",
+    "generated": "Interfaces/Inc/system_magnetometer_if.h",
+    "sha256": "afa2e99d9691b33ef0edf1642ae6b01a733884270229c389687c84da1053222e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_mag_calibration_storage_if.h",
+    "generated": "Interfaces/Inc/system_mag_calibration_storage_if.h",
+    "sha256": "4e96cd259900e6e97fc71da6cea5ef4bd0ace5dc566ddb030d5f4ce8b627261c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_mission_action_if.h",
+    "generated": "Interfaces/Inc/system_mission_action_if.h",
+    "sha256": "5c961600dc46b451a542f2903d4f907efd64f02933cb8af777208598afb2479e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_mission_snapshot_if.h",
+    "generated": "Interfaces/Inc/system_mission_snapshot_if.h",
+    "sha256": "2d1b6a1770f626d845472296034b6ea0d3a1f07cf6a485bc006883937de83969"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_navigation_backend.h",
+    "generated": "Interfaces/Inc/system_navigation_backend.h",
+    "sha256": "4e5a04172dd23f33c9e3614d8bc0e4a84dd8e46b6825cf86be4d406d238db501"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_output_if.h",
+    "generated": "Interfaces/Inc/system_output_if.h",
+    "sha256": "af8390d261d639b4ff5d96adbf55ab7f9a931572067b00d40d5ce8f328daa48d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_power_if.h",
+    "generated": "Interfaces/Inc/system_power_if.h",
+    "sha256": "25bb2336ce0024014703191031cbc21e11fff4ee98b2e6339ef7985d11ad8337"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_project_parameters_if.h",
+    "generated": "Interfaces/Inc/system_project_parameters_if.h",
+    "sha256": "2ebfe539b36e1f43eec6f5ad2fdbee6fea23d9e8a895fdfe4dcd21184cc20a46"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_storage_if.h",
+    "generated": "Interfaces/Inc/system_storage_if.h",
+    "sha256": "7f944b2fb97dc0d1972aca4a1126526da727ed17f27e7a2b5e59a9d69c068025"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_telemetry_transport_if.h",
+    "generated": "Interfaces/Inc/system_telemetry_transport_if.h",
+    "sha256": "33e7f2a7767444aa6e8358a5bea60c5a3b8bfb24a837734ff910f81293976679"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\common_format.h",
+    "generated": "Common/Inc/common_format.h",
+    "sha256": "799a74ba33a50047df861e10383d9a567d9aa37e88ca56a13f2e08e15f0b59f4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\common_ringbuf.h",
+    "generated": "Common/Inc/common_ringbuf.h",
+    "sha256": "30980affd5a852752ed86abb6434dd4dac4cc82f1cd85ea66cc7e2ab9606546d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\common_spsc_queue.h",
+    "generated": "Common/Inc/common_spsc_queue.h",
+    "sha256": "0f59eaf50f39df3ca60bb96ee9120c7034fa40d58febba0ed2f49eede591414e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\debug_log.h",
+    "generated": "Common/Inc/debug_log.h",
+    "sha256": "c2141484eac01d9269d37adb57bcb1870dbac93e6b630d367ac723d275f243b1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\silverstar_assert.h",
+    "generated": "Common/Inc/silverstar_assert.h",
+    "sha256": "6ab611010a13e2bd98aaa59c72e0a2fca47844bb11c47f1bf104e9ffe15dc904"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\silverstar_compiler.h",
+    "generated": "Common/Inc/silverstar_compiler.h",
+    "sha256": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\silverstar_sensor_id.h",
+    "generated": "Common/Inc/silverstar_sensor_id.h",
+    "sha256": "3fbf63ad29915e9dd2849bbc7877e037439250c765986195fe25fba3e8a4c9ae"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\common_format.c",
+    "generated": "Common/Src/common_format.c",
+    "sha256": "f08f1adf348283c56d2fe63615d406092f292f518b395e58f5e49fb057c82a7f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\common_ringbuf.c",
+    "generated": "Common/Src/common_ringbuf.c",
+    "sha256": "cc70a66e2280da847468675cb3317ced36c5b6b3091716299ee10b6fbb4c00b3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\common_spsc_queue.c",
+    "generated": "Common/Src/common_spsc_queue.c",
+    "sha256": "0575b8822a3b60a1cbbeea1faf194159044bad2609da2fee0d7d8afbb47f76bc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\debug_log.c",
+    "generated": "Common/Src/debug_log.c",
+    "sha256": "bf125bb53f7251f0817d2c4e277ec89145046f529168caadd6fa19bc0b81f36f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+    "generated": "Common/Src/silverstar_assert.c",
+    "sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\app_tasks.h",
+    "generated": "APP/Inc/app_tasks.h",
+    "sha256": "170982a854cecc52c4f28f6cacd4e4a55d0705a555a6cb7e3a96a1c13f5b7c96"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\app_task_config.h",
+    "generated": "APP/Inc/app_task_config.h",
+    "sha256": "0054215d62985a11adbee546ca1025a0530cf912a0b0fb17a2f24a285b5de735"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\device_native_log.h",
+    "generated": "APP/Inc/device_native_log.h",
+    "sha256": "c1ff88432e8925454ff9d48b017f514acf34930dae4abed2e22eef1e784aac15"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\diagnostic_log.h",
+    "generated": "APP/Inc/diagnostic_log.h",
+    "sha256": "00aff4c6dfb28498c2b54bddb218f96570ecea2fbecd5665a11fac75caf11820"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\estimator_barometer_pending.h",
+    "generated": "APP/Inc/estimator_barometer_pending.h",
+    "sha256": "37c92ba3cbfb33fa1e49c947ea7c310e1a6f9b462847dda215951007c7274076"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\estimator_bus.h",
+    "generated": "APP/Inc/estimator_bus.h",
+    "sha256": "7f89a0ec55f7b1db8d7b13bde2d86ca269e1a6f4a681588053f09beb72aaba2a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\estimator_task.h",
+    "generated": "APP/Inc/estimator_task.h",
+    "sha256": "9e348cf14c32499b563b96904e155bdeb56906dd5d579fd44c4a227cd30e0b70"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\imu_sample_bus.h",
+    "generated": "APP/Inc/imu_sample_bus.h",
+    "sha256": "a5dbb63d9fd43b2c204adef6152f8d6853320dc2d314fa244507dc67418271d1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\ins_task.h",
+    "generated": "APP/Inc/ins_task.h",
+    "sha256": "814925c25e1e54920e8eab826e8f2bd925cebb496b9e0fbec69f9529a7137466"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\logger_bus.h",
+    "generated": "APP/Inc/logger_bus.h",
+    "sha256": "186cf6b0be96f15a31a973e8b0994c885eea34094594f80d0389a38b53f736d2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\logger_task.h",
+    "generated": "APP/Inc/logger_task.h",
+    "sha256": "ef8bfe2b0ab4f9293c7fac48d11b1706611f27f941dbdf5d5a02d599f2de6f86"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\serial_task.h",
+    "generated": "APP/Inc/serial_task.h",
+    "sha256": "de323d753d25a0672ced06f6451629284905a3819f3e0e42cf568ea76e0b65d6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\app_tasks.c",
+    "generated": "APP/Src/app_tasks.c",
+    "sha256": "322a8ffb6ea22bacbb0585a7f45dab750f678be6aa81df9b945a39f558d5c24d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\device_native_log.c",
+    "generated": "APP/Src/device_native_log.c",
+    "sha256": "412b125bc66626e5f945b8830cfe53f1fcb2711460dd67211723e4e4b48704f3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\device_task.c",
+    "generated": "APP/Src/device_task.c",
+    "sha256": "3b7b1ed2a39ca61e435c2356735cac0e2911825d7d5564e29b905a8c16152b53"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\diagnostic_log.c",
+    "generated": "APP/Src/diagnostic_log.c",
+    "sha256": "960a64c443bdd3b08863302737c1c48df7afc2139ddac7289b498973b433397c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\estimator_barometer_pending.c",
+    "generated": "APP/Src/estimator_barometer_pending.c",
+    "sha256": "f01ef11e2f056db36c1600e26b8c7ffd3f22e93897633319d791310713e88c4b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\estimator_bus.c",
+    "generated": "APP/Src/estimator_bus.c",
+    "sha256": "0367da2761c8c375ed618ec32df667751e52c2dc19061e2fe074a41cbf02c0a6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\estimator_task.c",
+    "generated": "APP/Src/estimator_task.c",
+    "sha256": "fdba2ffa967e090f746717ed703b9008cda121c61fc41da01931e1de5ae417c3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\flight_task.c",
+    "generated": "APP/Src/flight_task.c",
+    "sha256": "3f4d71c9df6115ea033d6b0106a62867b2981849dce771bd0ce4a3cd93a0d93c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\imu_sample_bus.c",
+    "generated": "APP/Src/imu_sample_bus.c",
+    "sha256": "3dcb302a2afed539973cfe279bb92d19714c960344ebe58f5fdd7a93ed1281fb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\ins_task.c",
+    "generated": "APP/Src/ins_task.c",
+    "sha256": "73f24c953a00822b4e3ce79583c9f8f6c1ceccd090388ca947df007aade1c049"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\logger_bus.c",
+    "generated": "APP/Src/logger_bus.c",
+    "sha256": "0fd802539d4c5559c66bd96d6bd95fe92a9d74b0bab6be3385fa97f1b8bd541d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\logger_task.c",
+    "generated": "APP/Src/logger_task.c",
+    "sha256": "b2b4fc8e7359c6cb3c12f15545afeddc3f90040c767d885eefe3119b77592db6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\serial_task.c",
+    "generated": "APP/Src/serial_task.c",
+    "sha256": "9e46c4b2ce4ef153e0673fcf906853422b7360380927d1c2ac7f1bfead7f68b5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\telemetry_task.c",
+    "generated": "APP/Src/telemetry_task.c",
+    "sha256": "9266057ab1732476c6af9578b9c6a219630fc31fc20b2e912e02c7b96e4c97c2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_console_uart\\payload\\Devices\\Console\\UART\\Inc\\console_uart_device.h",
+    "generated": "Devices/Console/UART/Inc/console_uart_device.h",
+    "sha256": "128d8c424071e328abcbcca25c845acafdcc04824f592eca940af748ef7f68f3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_console_uart\\payload\\Devices\\Console\\UART\\Src\\console_uart_device.c",
+    "generated": "Devices/Console/UART/Src/console_uart_device.c",
+    "sha256": "c998a88fdf9c990c209486bf92ec6a07b44e337f8081d1234e986ff5b7f8a91c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_console_uart\\payload\\Devices\\Console\\UART\\Adapter\\Src\\uart_console_adapter.c",
+    "generated": "Devices/Console/UART/Adapter/Src/uart_console_adapter.c",
+    "sha256": "fe11395a4a0d439ff00af51c542e9660aa90ce8356400be6fc87702943a60f06"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Inc\\neo_m9n_build_capabilities.h",
+    "generated": "Devices/GNSS/NEO_M9N/Inc/neo_m9n_build_capabilities.h",
+    "sha256": "32a8d9519e162c9df66d7499dbe1bc7dfecf64cb29892a034e9155bc059d101c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Inc\\neo_m9n_config.h",
+    "generated": "Devices/GNSS/NEO_M9N/Inc/neo_m9n_config.h",
+    "sha256": "21abe62a0ed040ef4296353ca5c3596c2d16141c8dc19deb40fd7bb231b8808e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Inc\\neo_m9n_config_keys.h",
+    "generated": "Devices/GNSS/NEO_M9N/Inc/neo_m9n_config_keys.h",
+    "sha256": "ae1109ff6bedbf3ba0b48397c1cf2f859bc645e37eaed3d67f7227b74add047e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Inc\\neo_m9n_device.h",
+    "generated": "Devices/GNSS/NEO_M9N/Inc/neo_m9n_device.h",
+    "sha256": "b10ed17b11460514e987e201084036449f1c76c6060a3084383ebb2fbbadb21c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+    "generated": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+    "sha256": "4cad77ce750bdbf1e13475dcb062c975c95c26cc7caa2f5c2832d2d4788493ce"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc\\neo_m9n_instance.h",
+    "generated": "Devices/GNSS/NEO_M9N/Adapter/Inc/neo_m9n_instance.h",
+    "sha256": "72ff9da7105cda8d508f7db33df5df5844bf6e3eead4697ce9a304294a16c07d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc\\neo_m9n_startup.h",
+    "generated": "Devices/GNSS/NEO_M9N/Adapter/Inc/neo_m9n_startup.h",
+    "sha256": "14d2e9d01b21c5afd0aeada68df5675090034a85e6a99aae1f53b2c93d28be0b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_startup.c",
+    "generated": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c",
+    "sha256": "18aed0ef895e5a51ffe711ee0342e870231ebbbf322cc41a6cb2f4f12028cb6d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_system_adapter.c",
+    "generated": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+    "sha256": "10782c4c87ab004616e20173ccf477b33377b7453b46a4c384c5fae077624760"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Inc\\jy901b_config.h",
+    "generated": "Devices/IMU/JY901B/Inc/jy901b_config.h",
+    "sha256": "32622a35b064ebae91c5a8726ddb3860cfdd595213318b58108d062f95569a49"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Inc\\jy901b_device.h",
+    "generated": "Devices/IMU/JY901B/Inc/jy901b_device.h",
+    "sha256": "9b8646e82c2217c7b1639f27b2c5a5778511245dae2b4079614377de63a56396"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Inc\\jy901b_imu_build_capabilities.h",
+    "generated": "Devices/IMU/JY901B/Inc/jy901b_imu_build_capabilities.h",
+    "sha256": "392753ff3be6dd45a0096d61272bae406ba7660abda93166577b8117298033a2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Src\\jy901b_device.c",
+    "generated": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "sha256": "b981d3afa7a23a10a9d756d87416abeeabc8858d98a3e509643865388277df06"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_barometer_build_capabilities.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_barometer_build_capabilities.h",
+    "sha256": "f53dabf6ee1557181d7dcd52a42041afc41c713e9ce4613ecc6c15e75d360d7d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_instance.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_instance.h",
+    "sha256": "0605edcd86f1e94cfa523bb2c690647c9338e1e47548be3858685a72c34bf00d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_magnetometer_build_capabilities.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_magnetometer_build_capabilities.h",
+    "sha256": "e2e883385dea4202f6803a8c66ff3101c3d243c69ff159868a2f543157602fdf"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_magnetometer_config.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_magnetometer_config.h",
+    "sha256": "f124399d9771669f2d14a7b6e4e79c33283f5e8029534318a3d9f8b7e5e5a4d1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_quaternion_build_capabilities.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_quaternion_build_capabilities.h",
+    "sha256": "dc32c6f0be9abcd7bb0df010426d824e2c4c2c1ebe1b8cacb5e56c6b71bd3f6d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_sample_quality.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_sample_quality.h",
+    "sha256": "3b7d64f4122d171220f3257efaf248e82f44ce90a5fd2356a73e9a8d7460b37a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_sensor_adapter.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_sensor_adapter.h",
+    "sha256": "3072e399a1ba0ab78f7d221cd2b5958414d6aa4869029a100ebf4072a1a5771d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Inc\\jy901b_startup.h",
+    "generated": "Devices/IMU/JY901B/Adapter/Inc/jy901b_startup.h",
+    "sha256": "26205757d19d7db04f9f1cf627f0bb404ac1d49c62d97ef78b8848ac17fc052a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_barometer_adapter.c",
+    "generated": "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c",
+    "sha256": "56c2aea73945e7f12bbcdf534abe2224b43a60fed7153e30f4260553900d9a9b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_imu_adapter.c",
+    "generated": "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+    "sha256": "c00d995ffd9162addbb2dbed6663650acaccf6cf4cd5344ca1c9dcde11644a87"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_magnetometer_adapter.c",
+    "generated": "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c",
+    "sha256": "b4c050786d15c888ebbde88af2e769c91afe47a3b262d9a25e77a3d1cffac3f8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_quaternion_adapter.c",
+    "generated": "Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c",
+    "sha256": "8b393c697092962945434d4709a39edabfaea9a7faa1dd829c5aef2e70df0a1b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_sample_quality.c",
+    "generated": "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c",
+    "sha256": "7a33fb56808b59ae9ad6a0c659d6f9bbe8d731ab821888ec974cfcd871d5b734"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Adapter\\Src\\jy901b_startup.c",
+    "generated": "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+    "sha256": "30f86dedd176fc25782958a1f69322e696a73c638e392306a43391d080243055"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_sensor_input_voltage\\payload\\Devices\\Power\\InputVoltage\\Inc\\adc_power_config.h",
+    "generated": "Devices/Power/InputVoltage/Inc/adc_power_config.h",
+    "sha256": "d8e67940c269f5527847e646b446b92ca661996e23dc6a14621b18132b7b7776"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_sensor_input_voltage\\payload\\Devices\\Power\\InputVoltage\\Src\\power_service.c",
+    "generated": "Devices/Power/InputVoltage/Src/power_service.c",
+    "sha256": "57a7b5b469c1e9bc05708d7bb7d25300264686bf20e1b5aa70cc236c709ab263"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Inc\\persistent_storage.h",
+    "generated": "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
+    "sha256": "6e3ec015a28fba2e73d8475ef76aef51bffb646ee50b2d112d050c0b5655ce8f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Src\\fatfs_lfn_ascii.c",
+    "generated": "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
+    "sha256": "f6047b4e9adc0d66f2311bf22aa8d0d42807ad1584718ec7804792c001dd219b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Src\\log_sink_service.c",
+    "generated": "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c",
+    "sha256": "8cd7d81f99b66557fb1352bfdaa4fe868704aae52ac66eca27558615cc81f2e7"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Src\\mag_calibration_storage.c",
+    "generated": "Devices/Storage/SdSdioFatFs/Src/mag_calibration_storage.c",
+    "sha256": "2ee9d455ba288e9dd0f6f2eb4876c2b9dba85a9fd3408eb6dca79c91e00372b4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Src\\mission_snapshot.c",
+    "generated": "Devices/Storage/SdSdioFatFs/Src/mission_snapshot.c",
+    "sha256": "68ae571a3614ac82848ff28214619f8dd721ed6289206ec67cfbf3717dcce210"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Src\\persistent_storage.c",
+    "generated": "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+    "sha256": "6fa7fc48d1b407f8fdd77100beeec2879c13f2eadc2bf77ae31be67ce3ef7bda"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Src\\storage_service.c",
+    "generated": "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
+    "sha256": "a951f19a181e5432c407edb2c573897911afa5ef93b1cc0deda0638fb6c3faaa"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\hw.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/hw.h",
+    "sha256": "22b5c167d8aa4e881700849149620ffcd5f29299c1dac5c8ae70a29233aacd6f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\RangingCorrection.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/RangingCorrection.h",
+    "sha256": "74f6fec9eaf91a2111ea8b5e1d5ab0d8a81ca1744b5a596054a10be7df3e8c0f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\sx1280-hal.c",
+    "generated": "Middlewares/Third_Party/SX1280lib/sx1280-hal.c",
+    "sha256": "7ade6a59a7eb9491e62d099b1c61b6342c2b708a1c87d8d0aeddc7112929ff6d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\sx1280-hal.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/sx1280-hal.h",
+    "sha256": "7bef829a1cdce0e4306298e952fe8623a0e37edd6b31ef61d2d2d91754046aa4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\sx1280.c",
+    "generated": "Middlewares/Third_Party/SX1280lib/sx1280.c",
+    "sha256": "cd06494c8d33f2d051217461a36243da08cd3cbf0fa8be227b368d7f44c9871a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\sx1280.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/sx1280.h",
+    "sha256": "ad8ac1dc630c8ad97aecd5c3f1da35995036a46f9e35d4552257081501c8d726"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF10BW0400.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0400.h",
+    "sha256": "5c5f86fe2f3a50a1b4f3365d2d1eaaddd0cb2d84493db029704e0d5397757aab"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF10BW0800.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0800.h",
+    "sha256": "b24c1cf925ed504244cdf44e11d02064c4717868d1f57517fdf7c358aa7feebd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF10BW1600.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW1600.h",
+    "sha256": "31494c5f8e0110a477535790581071ec98f4de17fabd40272e84da109db796b8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF5BW0400.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0400.h",
+    "sha256": "1e015d973f0a02b9a81a7bf0f8088304d25f49c199ca4e291dc36e8005e89068"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF5BW0800.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0800.h",
+    "sha256": "5f01237f6ce5398e44b4b8966cdc3eb64a813d05d1189bf2f96ca10066120ee3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF5BW1600.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW1600.h",
+    "sha256": "9496afc66a957bf4a3bc11b450e37073fafcf314f6ac6c99db052f3c63d9dee0"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF6BW0400.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0400.h",
+    "sha256": "62f2ee4dbd66bd944fc31e6681174b5d4553bb64935bdbd0ee7c40973936cf12"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF6BW0800.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0800.h",
+    "sha256": "b208b46096c56d78bfd895a9512d83959d6d636d5fa483124c3d03fe5b313fab"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF6BW1600.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW1600.h",
+    "sha256": "e4bfc1bac9a2023a7c9e76262998f7ec0092a72ec98860a9a8997e9be8ee8478"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF7BW0400.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0400.h",
+    "sha256": "6c4da0aa939a52e2823cfb130987fd4c6e968e40f31d932678b12845417baa14"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF7BW0800.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0800.h",
+    "sha256": "15c05a8b9645479ec18789dd4254cdbdad19be84443c8f085e50549e8d0b3fd1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF7BW1600.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW1600.h",
+    "sha256": "dadf5e2cbc546435fd40b6a8f75be84a6dcf0570be905d803f6fb1430fad56fb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF8BW0400.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0400.h",
+    "sha256": "074fa8a43cdf9adeababdf658f1ddd94577c62d541e58aafeed0f0c1c798afa8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF8BW0800.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0800.h",
+    "sha256": "819285d0b732d5d6ba2ac01ef9a01b269925cbda422f7c302e8639637a78c1dd"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF8BW1600.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW1600.h",
+    "sha256": "8942988cb9527a19655676f77e2b7f619d6df9c63e8adc07a3567ee25370c779"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF9BW0400.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0400.h",
+    "sha256": "4ec83afa50f6a7d462ee95b21ca8eb4986e6c42e2473db94ed985e5693620b6d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF9BW0800.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0800.h",
+    "sha256": "e9e2fa1138a60ea35fbd271f86ac2894f87a0cd049029ca40b0d9045d3fb745c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrectionSF9BW1600.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW1600.h",
+    "sha256": "3adde20ed4cae32a31e6e9bd68b101d0ab666c2ead4ccb3790f325cff98dc87c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib\\rangingCorrection\\rangingCorrection_defines.h",
+    "generated": "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrection_defines.h",
+    "sha256": "3b0a743e401f5e76d2d1cb8edcfa5654b7a7013288a3865e121cd80fe6403879"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Inc\\sx1281_bus.h",
+    "generated": "Devices/Telemetry/SX1281/Inc/sx1281_bus.h",
+    "sha256": "e66901507eadd150b9ad2138da803c49d265de5701e998f9002629db664cb9c9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Inc\\sx1281_config.h",
+    "generated": "Devices/Telemetry/SX1281/Inc/sx1281_config.h",
+    "sha256": "a7876ffcd2cac9ed7f7c719f0b8fcd1ce39dcdec0dbe8f2bc373293967106d5f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Inc\\sx1281_device.h",
+    "generated": "Devices/Telemetry/SX1281/Inc/sx1281_device.h",
+    "sha256": "f27b0de7d5cc0c6142cdf9cf828c65df3e7e035fabf7afda0c8be665d5f692c0"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Src\\sx1281_bus.c",
+    "generated": "Devices/Telemetry/SX1281/Src/sx1281_bus.c",
+    "sha256": "19179c19c9161c1f7fdf1627185a08995965b483e754937ccc3a0d7197833763"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Src\\sx1281_device.c",
+    "generated": "Devices/Telemetry/SX1281/Src/sx1281_device.c",
+    "sha256": "c38046dd61b5f4b887cf80f1326001074d93c5db42e4ff6eb6751aa1568a0005"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Adapter\\Inc\\sx1281_instance.h",
+    "generated": "Devices/Telemetry/SX1281/Adapter/Inc/sx1281_instance.h",
+    "sha256": "d5c281b763d9a46b6315d57ae6e9fbeedf0ad03caf6d451e01eb078c0aa140bb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Adapter\\Src\\sx1281_telemetry_adapter.c",
+    "generated": "Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.c",
+    "sha256": "1b391bd5310825307811e21764a4c0cc78460c60ab8f53ca7f5f8d9f568f4a9f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_cycle_reference\\payload\\FlightLogic\\FlightCycle\\Src\\silverstar_flight_cycle.c",
+    "generated": "FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c",
+    "sha256": "8e2976b064b3d2eb2cdc5a0165c80499b8d26976d96fa135f53a878a5ea7f47d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_cycle_reference\\payload\\FlightLogic\\FlightCycle\\Src\\silverstar_flight_recovery.c",
+    "generated": "FlightLogic/FlightCycle/Src/silverstar_flight_recovery.c",
+    "sha256": "7e462cb9e8cac1ee5538d9d227781998d8b53d4d50fc2f8b0eed47c33af120d9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_deployment_multi_trigger\\payload\\FlightLogic\\Deployment\\MultiTrigger\\Inc\\flight_deployment.h",
+    "generated": "FlightLogic/Deployment/MultiTrigger/Inc/flight_deployment.h",
+    "sha256": "ea81984ad9138e5bca7b1742be5c97a2e496303512edb87ce90408739116a365"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_deployment_multi_trigger\\payload\\FlightLogic\\Deployment\\MultiTrigger\\Src\\flight_deployment.c",
+    "generated": "FlightLogic/Deployment/MultiTrigger/Src/flight_deployment.c",
+    "sha256": "52430dbd560f4dacf218391e8ec2c9cf09883d7aebfffdd93d018ca390c6898d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_indicator_gpio_status_service\\payload\\FlightLogic\\Indicator\\GpioStatus\\Src\\indicator_service.c",
+    "generated": "FlightLogic/Indicator/GpioStatus/Src/indicator_service.c",
+    "sha256": "9e5c214b361dc69abf18e078dfc9db73b770ff999ccf9aa8a609cdba238c3e95"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_landing_baro_imu_window\\payload\\FlightLogic\\Landing\\BarometerImuWindow\\Inc\\flight_landing.h",
+    "generated": "FlightLogic/Landing/BarometerImuWindow/Inc/flight_landing.h",
+    "sha256": "e6ac1290855307ee9565dc597b4960ec8573d7e2eb2411fddaa28f92b404522c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_landing_baro_imu_window\\payload\\FlightLogic\\Landing\\BarometerImuWindow\\Src\\flight_landing.c",
+    "generated": "FlightLogic/Landing/BarometerImuWindow/Src/flight_landing.c",
+    "sha256": "f0249d68b6214557d0283b920de5c990742e0dac6a781fdd330bd0e4396ce873"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_mission_action_gpio_output_service\\payload\\FlightLogic\\MissionAction\\GpioOutput\\Inc\\mission_action_output_config.h",
+    "generated": "FlightLogic/MissionAction/GpioOutput/Inc/mission_action_output_config.h",
+    "sha256": "042a79c0d1d5cedcc2c19ce824a506929776cd5eeda60ad82d752b4414f4795e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_mission_action_gpio_output_service\\payload\\FlightLogic\\MissionAction\\GpioOutput\\Src\\mission_action_service.c",
+    "generated": "FlightLogic/MissionAction/GpioOutput/Src/mission_action_service.c",
+    "sha256": "10d127b961c3602f68bca6c2e19bed89dc8fa0b840602c410f9d36e1a1a10c2b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_flight_logic_mission_action_gpio_output_service\\payload\\FlightLogic\\MissionAction\\GpioOutput\\Src\\output_service.c",
+    "generated": "FlightLogic/MissionAction/GpioOutput/Src/output_service.c",
+    "sha256": "58f87c96482240ccac52f11153915f8d033f3ba06e2561372b55c69a49fd47ef"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Inc\\platform_stm32f4_resources.h",
+    "generated": "Platform/STM32F4/Inc/platform_stm32f4_resources.h",
+    "sha256": "c3fa0ca4edaa2c56e77c38fc6fe2af2acd065026cc7a23976a5ac10364d8ea6e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_adc_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_adc_stm32f4.c",
+    "sha256": "dac78aecb3a556a8b98af9c73e83cd43c3c99871500a104437e33e9583579227"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_can_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_can_stm32f4.c",
+    "sha256": "54c221b1605189ac01033b9d167e81bfe13b56d3ac2f0ae5f23cfa95fc4ba090"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_critical_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_critical_stm32f4.c",
+    "sha256": "2b6cea5bd4569f6b1e7a054558a9e00587d8600beb11b00e5962324ec19abc34"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_gpio_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_gpio_stm32f4.c",
+    "sha256": "0c5d45774a521daf25bda3126769f19340986f1063c5322f0bb101248fe75138"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_i2c_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_i2c_stm32f4.c",
+    "sha256": "da76830c434f69a9adeddbeaeca78443debbb0555ab355eb3a5aee03259fc1aa"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_memory_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_memory_stm32f4.c",
+    "sha256": "0a339dca6f0c4366e73b216270b52b0bd8503d100231e43e6f087c55047172c2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_pwm_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_pwm_stm32f4.c",
+    "sha256": "3ff50c4cf6b374e0e456d946dfd3dcc262c3605dc1b306a4f24406accb1ba03b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_spi_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_spi_stm32f4.c",
+    "sha256": "e1f74deb88e681bd808a22c35bcd590a6bfe9a7b13081498075f95e877313b5d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_time_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_time_stm32f4.c",
+    "sha256": "a66b7195ce0f903c7f2679a774fc5a63b81e62a2bcf58b036a31618a9cb62932"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_uart_stm32f4.c",
+    "generated": "Platform/STM32F4/Src/platform_uart_stm32f4.c",
+    "sha256": "92ac12cbf737e3acc05237306603e11c5adbc4faec5eca30eafde88775378735"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Middlewares\\Third_Party\\FatFs\\src\\diskio.c",
+    "generated": "Middlewares/Third_Party/FatFs/src/diskio.c",
+    "sha256": "cc80dbfeed02589df9effc6b45b250f521fc1a3db5abe58461b28e99b17900ea"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Middlewares\\Third_Party\\FatFs\\src\\diskio.h",
+    "generated": "Middlewares/Third_Party/FatFs/src/diskio.h",
+    "sha256": "1c30db73df9e5ce75e3e752a4bda0938a1312575168365d678e21bf33e4a311f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Middlewares\\Third_Party\\FatFs\\src\\ff.c",
+    "generated": "Middlewares/Third_Party/FatFs/src/ff.c",
+    "sha256": "511a87724dadd27a358bac32e37e66d6808eeb514eb773734f18878ed731b3dc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Middlewares\\Third_Party\\FatFs\\src\\ff.h",
+    "generated": "Middlewares/Third_Party/FatFs/src/ff.h",
+    "sha256": "644ecaf33339fc46ff447386f001c0199c54213ec14ea78b0ab77bba2184841d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Middlewares\\Third_Party\\FatFs\\src\\ff_gen_drv.c",
+    "generated": "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c",
+    "sha256": "3480734146b7b7cf86f752ad584cfbb6b95cf5be7e25ab8917caa325d4fee46b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Middlewares\\Third_Party\\FatFs\\src\\ff_gen_drv.h",
+    "generated": "Middlewares/Third_Party/FatFs/src/ff_gen_drv.h",
+    "sha256": "8013f8285c86ab73059f531ef9bb7941fe4675e5b72820fe5d7900b36f11f1e3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Middlewares\\Third_Party\\FatFs\\src\\integer.h",
+    "generated": "Middlewares/Third_Party/FatFs/src/integer.h",
+    "sha256": "20304085ec29f6cdd6218f411b134d3c677bd8eb9dd46c694871e0d88c2d2cc4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h",
+    "sha256": "78f46c52267d3bb7a68349fbf02ecd9f6e2e375e3feb80ac0829a870bddcd514"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_adc.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h",
+    "sha256": "5a9cd8e4b06ea0bda4a6f0568cf581a214461ef0fa8f15f39fa8599aa0399ff2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_adc_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h",
+    "sha256": "10d9c6114a3c455342ad6e897a26adc29c03ec1c08165b4d640dc165ae4cfb24"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_cortex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h",
+    "sha256": "9a63853adf125773901e75451eac8431680a4a31f9e0bf53f1f2b6a878215255"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_def.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h",
+    "sha256": "c6f30eaa09b8a72e7f503c757f312745ec10c317d37d568500dccab9587c1a6b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_dma.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h",
+    "sha256": "4dc4d29c8930a5ec06b6f4b13480bed13c238d2674b3afac47e6f71b2ae25b98"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_dma_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h",
+    "sha256": "8aa0a347b502d924077675ad9bb446cf40b3a6dab47cf8a6b5a9f9e21dbfcf20"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_exti.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h",
+    "sha256": "e786fc8c276267ec0650ab0fc5853b2ca63697131947321a4e7e7175554c3b04"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_flash.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h",
+    "sha256": "b0d68b1b3ef9172687986cbaab80e0bad907e08993ef1766eb5599035131a173"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_flash_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h",
+    "sha256": "2b6e01cf00f37574d95f15e25496b814d85b88796f58a47f9f2bef260b6c4fde"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_flash_ramfunc.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h",
+    "sha256": "b37ac28b36e597feca914f63e8046967c092d6b372e1a70ca9ab9fbf37a3bae5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_gpio.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h",
+    "sha256": "5829d91f2e060d30f5798dc71e4fef5d7ffa7d99da21e751ee03d527d664307f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_gpio_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h",
+    "sha256": "5963c4ea366cfd6de3a91792a382de6327d86542a6278592cc2b79e594c8ad91"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_mmc.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_mmc.h",
+    "sha256": "4c763ad7d6be4510db0e4c117804b08bf0901cb2d94617caa40527d52967be1c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_pcd.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h",
+    "sha256": "8693393b3acd5384017f71f118671c2085463dc43ee97d9bd3fc803504b26110"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_pcd_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h",
+    "sha256": "cd936f63a9bb1adc50f0d0576ceb22601c96a6e2aef249496b88d353c72f9347"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_pwr.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h",
+    "sha256": "2a8a5905165b97971b44b5f0768e55ed30f28659d0bdf40dfc3e0eb9b1a34e1e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_pwr_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h",
+    "sha256": "3f0cac843abd6c0ae3ef9a4edc6353b6f96052f8d297bf8a474f23bdd9a1576b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_rcc.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h",
+    "sha256": "5d271e215214b0d83307e4ca3c85a90c3b36d101cd75e26b6f4b3b98a37c59ee"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_rcc_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h",
+    "sha256": "35780221cccec55b0954cd47725c415304eec98a80626589ef15737e650684a9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_sd.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h",
+    "sha256": "769d3ac03acf80b7c7aa2be9d9bb1642b19eea53202f97bfcdd4c35644f1b4b8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_spi.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h",
+    "sha256": "e730add583cea97e8259568f325f3a13147ffe05331120373cacf86acfba6676"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_tim.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h",
+    "sha256": "97477ceb9c7477137b2cd629bcdf3e76f020b4d068b4bda918eb209c776f5311"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_tim_ex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h",
+    "sha256": "caba7038fd35f65d7369e2e2262ccad59b59e7f66729a322966e2824fca902b9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_hal_uart.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h",
+    "sha256": "5d79bf1566c0767f1985fcd106412d6cd4bdecad978aa8a5b2995320191c8040"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_adc.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h",
+    "sha256": "3d52c9dfe3ecd03b1f66003d0c8f20b850b5885b1d365f27de34978517342d9b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_bus.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_bus.h",
+    "sha256": "dd633fe4127649dd610dd9d9841599ed554a145fdde20ae4ea085cfd5210c9e5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_cortex.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_cortex.h",
+    "sha256": "b7c6d00b91d1df94ee68104735ad09e1e19c5dc5d526f1b74025c831353a9815"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_dma.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_dma.h",
+    "sha256": "94f66c2401fc2753a1832fb1dd96f2cfa7ba665879ba4d6b85de5cf8e444a6a3"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_exti.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_exti.h",
+    "sha256": "96329e1fc07ea1d7db3a7970af4d97a5172e29cf9be5e7a45b7a011c960a33b9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_gpio.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_gpio.h",
+    "sha256": "b874a353f6075b18a7b352f8eac77497c32eff162ec0005be4c75346fdff3908"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_pwr.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_pwr.h",
+    "sha256": "187dec9842b95cf7f2a448bbb7a2c1b98ac8c8d0ea69d68cbcd5b05c4eaeb6b9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_rcc.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_rcc.h",
+    "sha256": "e7f35b31956cc376aacf5406aceefd897ae8bc9fc9bbf164411ed30627d2c0ef"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_sdmmc.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h",
+    "sha256": "423b0bcd8e95cb456c9863d1a2185e32ff5783f562a541d9295d2947e1375634"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_spi.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_spi.h",
+    "sha256": "bba617faed14d1331bb68f0102a057bfb72fe4c0ff772c025ffc6ae15f4700ce"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_system.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_system.h",
+    "sha256": "fef5ea5a5bfb7f2c4059fb2c1262d884f0f25b379a3a982ddefd81c50ed5cd89"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_usart.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h",
+    "sha256": "7c20ff842f7840d8d5b177d1283a5cff886e3de9cf0296e188ee196e3259506d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_usb.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h",
+    "sha256": "07b268e91d77d14b1313dd301e59fe98a9d13eb5173413531632649557eb9869"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\stm32f4xx_ll_utils.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_utils.h",
+    "sha256": "650207da540d4d262d0a82c23b0d970c8a83bb1f36a4b2fd65388331475154df"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c",
+    "sha256": "1456812822a1bf149e34f0aeb349cf22effd67b1d848129f53b89474ccf8bb9c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_adc.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c",
+    "sha256": "c0b96aeb571e283f4ed3f737a9d91203fda18c8766396761ceaa7e5d8a4c86e7"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_adc_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c",
+    "sha256": "c96e1886f304e8e23d4e3d60cce5edc2fdb73452dd3ebb5b463a57ece7ea3c40"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_can.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c",
+    "sha256": "70c7993f75bc7c2e5675338d5490dc5c6ad4c0dadbe839976678d311b4373ef6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_cortex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c",
+    "sha256": "18363923c4447c984ddda1ae1d6b3b7cf3ae4ded19933a561874dda3c69e56bc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+    "sha256": "f3da7dc31942b79a88349c7f7dd38f6b586656b47c6fc78c8283925176368763"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c",
+    "sha256": "000253cec2e4c9e0678add30a7b01f854b27f4271cd3124f43023b993eec54ea"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_exti.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c",
+    "sha256": "1150dcd5b4ef4dd5c7c99af54272b7baf1e89054accf6887ef7526d400c24056"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c",
+    "sha256": "6803e334866857361fbab3a1ad6746f4ad6172fb6e325fcb2bd44cbcae67cff2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c",
+    "sha256": "942c5264ade5416b321f5ac78dc8d93656e2fdfb048bee12710aa94a4fc4f06e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ramfunc.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c",
+    "sha256": "d4fbfc99a7f5298bd59080c6a5847169850ac7af3125986b1a9bcf6f058d1c55"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_gpio.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c",
+    "sha256": "72d8f3cb23a396cdbf9183c5cea2a0c00cfa0336def3736652480c4491f38788"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_i2c.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c",
+    "sha256": "d3686886a87d018a6a5f26c9760fc7a80ad2d520b9e856916a983302fc6a3442"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_i2c_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c",
+    "sha256": "6f0863aaf210e9f446f194c34035b59b7de4ad617743e7e94a0f7a4232c96596"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_mmc.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_mmc.c",
+    "sha256": "24ff6f477db6a79ad62d3a5ca371017320f06fe0a411076c91b4af47e51fe704"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pcd.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c",
+    "sha256": "4c06401cba09823697e118722243505de4ebc961d1822e80414555ee0e33121b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pcd_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c",
+    "sha256": "b338f70d036cc1cab081e8d1d7d93fc4d568e402a82b02a91c71ddcda1726cb1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c",
+    "sha256": "89ea9ba1d4d0d40b21a7094935bfb8ce2a9b90df4d742f5d04a51e1d7bbc8d68"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c",
+    "sha256": "fc8a26ad3a0f8359817c1b08c68af50b9f7905a69c44e4599225eaa53a66e856"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c",
+    "sha256": "13811ad463cc7f065e39a98a2c3af00f878f2de6535407fff1b5a97fd569525c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c",
+    "sha256": "51c15df04a3bf41d372c6f1988e6298af7990c473ffa0396820168fc6a19d949"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_sd.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+    "sha256": "cf41c56a1047082a5540e3b635a8ebf9ea48109363799b2f3618cf262cb90ad1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_spi.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+    "sha256": "9625f0a66be05f8de04c46bb33a7f94f8c40feb2d758e61510c35beaf86abfab"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_tim.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c",
+    "sha256": "5d9f7c06f7a06ac797cde196ed6ccfac67fdc034a3eb2770c2df40008e29490a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_tim_ex.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c",
+    "sha256": "b3f85b80eccc5b00f5df119711c5dc8b93f7d297490a951aa600a971d28d6f6e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_uart.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+    "sha256": "94dddd799cf2a02835070558faad3bc04c0b3ce96166e15b2bf7e6575148cb51"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_ll_adc.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c",
+    "sha256": "767fe798f30cb2c8739e2b6f91379c318abb2889cee0d81ebf977807dbdbf5d6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_ll_sdmmc.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c",
+    "sha256": "2152c8761ebf4759a534121a1464de7f6ddeea649a53267939e2e248347156b6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_ll_usb.c",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c",
+    "sha256": "cca3d2883f05e6d3793a7fc5a49a736b145cf9db722ea3be727538aa20927988"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\STM32F4xx_HAL_Driver\\Inc\\Legacy\\stm32_hal_legacy.h",
+    "generated": "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h",
+    "sha256": "c006468890df1e5fd6ab9f378af2f5648607164a80a2851a832e1a098e5cfdff"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cachel1_armv7.h",
+    "generated": "Drivers/CMSIS/Include/cachel1_armv7.h",
+    "sha256": "6cdb5b324f2fd1bb5b2f47298ba6e6777e735d7cad3bb8d942cd36e2c6e65328"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cmsis_armcc.h",
+    "generated": "Drivers/CMSIS/Include/cmsis_armcc.h",
+    "sha256": "d074534d7106cec83474b3b0a897bd2553e1a8895ecbd54f4f4fb25928066eee"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cmsis_armclang.h",
+    "generated": "Drivers/CMSIS/Include/cmsis_armclang.h",
+    "sha256": "11b39b96ddc1125124762b3423a77b90dd40ea5b4582a3513830245046b24311"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cmsis_armclang_ltm.h",
+    "generated": "Drivers/CMSIS/Include/cmsis_armclang_ltm.h",
+    "sha256": "8621969ea669a1b230ff2125a760ef66d575c48cb45e9e457f768909abcbda46"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cmsis_compiler.h",
+    "generated": "Drivers/CMSIS/Include/cmsis_compiler.h",
+    "sha256": "869640702d811c4c63abb52206715c891a93fd03be954df5ad40d378355af3d6"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cmsis_gcc.h",
+    "generated": "Drivers/CMSIS/Include/cmsis_gcc.h",
+    "sha256": "3d4e265d0aa42f888385ccf073666e6ebb5ec9f834760b9da27c474e177f708d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cmsis_iccarm.h",
+    "generated": "Drivers/CMSIS/Include/cmsis_iccarm.h",
+    "sha256": "f28119adbc81fb0e3c957c9aebe8fb423ad93634e76ead3caa2b0818d2e123ae"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\cmsis_version.h",
+    "generated": "Drivers/CMSIS/Include/cmsis_version.h",
+    "sha256": "8cda7ac3ff6f0eb5e83c4fe613dd195151b24da54167f5c3c007e599a03f1edc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_armv81mml.h",
+    "generated": "Drivers/CMSIS/Include/core_armv81mml.h",
+    "sha256": "255663bc446feb00e341d682f7f78ec6f301a5c1802d856bcdd18d7552393dff"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_armv8mbl.h",
+    "generated": "Drivers/CMSIS/Include/core_armv8mbl.h",
+    "sha256": "b5a662723f65a9fe1fbde82b83681daec28aadb78c2dc95e531d6fb6bb396dde"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_armv8mml.h",
+    "generated": "Drivers/CMSIS/Include/core_armv8mml.h",
+    "sha256": "17021c385f47945f2376fbb30f2f2e3fc28bd0f3d97eb857d212c192c54ab3fc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm0.h",
+    "generated": "Drivers/CMSIS/Include/core_cm0.h",
+    "sha256": "5cc53e723ee0e97455233f8dee892940209e2fff66071d66d74bab56c528b199"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm0plus.h",
+    "generated": "Drivers/CMSIS/Include/core_cm0plus.h",
+    "sha256": "a19e24c136145b4c72630d0ab7c83a7aef010f3ba165e34c56a05057a2d9fed5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm1.h",
+    "generated": "Drivers/CMSIS/Include/core_cm1.h",
+    "sha256": "c243c4afb291068fe7078d2911b2f0001e78a4d5466c26728611b06147d65c2b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm23.h",
+    "generated": "Drivers/CMSIS/Include/core_cm23.h",
+    "sha256": "b6fb9bb5faedffe8eec563550e21dc9097c9f64956258b2af51e6d4d88ca4411"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm3.h",
+    "generated": "Drivers/CMSIS/Include/core_cm3.h",
+    "sha256": "0fb7749ea828cad4fded65bbeefc3fd0cff1effbb7c784f7086526fd69e26719"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm33.h",
+    "generated": "Drivers/CMSIS/Include/core_cm33.h",
+    "sha256": "d5c5fc559cbbbc1e495af4ac2ea81959bcadb35aa69ecb1c20d183c3ed9cfeae"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm35p.h",
+    "generated": "Drivers/CMSIS/Include/core_cm35p.h",
+    "sha256": "e52a069ffdacdbf000ffcc6f1766f0dcdfef1bb60f5e8ca0602bcbcfd2b69fa1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm4.h",
+    "generated": "Drivers/CMSIS/Include/core_cm4.h",
+    "sha256": "d59a9e3ed4cf43a3c74a2e48f344d41be2b6363ef9394ea2c551052fe553a6af"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm55.h",
+    "generated": "Drivers/CMSIS/Include/core_cm55.h",
+    "sha256": "bf661f2b792ad123795207bafd405d6b250690c65a28232a92485d6fdbb76d98"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm7.h",
+    "generated": "Drivers/CMSIS/Include/core_cm7.h",
+    "sha256": "a361f5ff7b053831cdbbc068eae9609cd6681414c9a95c26df582d686a2378b8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_cm85.h",
+    "generated": "Drivers/CMSIS/Include/core_cm85.h",
+    "sha256": "062019526b524285bee161459f65ce7c9bf827c2ceabc4101fd150f6d80b37f5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_sc000.h",
+    "generated": "Drivers/CMSIS/Include/core_sc000.h",
+    "sha256": "4ec2d6ff893658c6bb7b1c56e6256087f3a2ed1e662c226e4ba11cfaad28d05d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_sc300.h",
+    "generated": "Drivers/CMSIS/Include/core_sc300.h",
+    "sha256": "4ca0e6f1fec869e4942c70028ce2f3c9ae00a65a69c35f467840af3fc3d03ae5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\core_starmc1.h",
+    "generated": "Drivers/CMSIS/Include/core_starmc1.h",
+    "sha256": "47978dc5bfb51c5edd09178d99c9b9163d500d48181985da4ead5a3c20d9a85b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\mpu_armv7.h",
+    "generated": "Drivers/CMSIS/Include/mpu_armv7.h",
+    "sha256": "de1b5eb9ed566527b66dc06f4ecb6a43ab6800f7dac47e87c9cb42984dca41bb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\mpu_armv8.h",
+    "generated": "Drivers/CMSIS/Include/mpu_armv8.h",
+    "sha256": "467a5ce9d65d9b37fc32e01001ed184500d56576f303713d27b76e68dd67911c"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\pac_armv81.h",
+    "generated": "Drivers/CMSIS/Include/pac_armv81.h",
+    "sha256": "f3497af055e95873809e4a79420e2b08915582466cef2eb4235d8e03faa7c3ab"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\pmu_armv8.h",
+    "generated": "Drivers/CMSIS/Include/pmu_armv8.h",
+    "sha256": "ef9aa2f1c5b03bea488d4b74d33db14acdc6c87e500273d68d75a6d3902a4f62"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Include\\tz_context.h",
+    "generated": "Drivers/CMSIS/Include/tz_context.h",
+    "sha256": "7fcc21fc190f6fd970390e9caaa6a86d72fd10f9edf4efab36f12aecf1a8baa0"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h",
+    "generated": "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h",
+    "sha256": "6578d46e248762f94f7c4413dce9b349d13417363dcc4783b9787718a710228d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f4xx.h",
+    "generated": "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h",
+    "sha256": "fbce462cc1c35dca569d04b95042862ae00590c26286c3aafc8cd4a76fdff6b1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\system_stm32f4xx.h",
+    "generated": "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h",
+    "sha256": "6ba46a957d0c32196d03304b981db5be8c3969d41953a53a364ca861085277d1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_stm32f407vet6\\payload\\Targets\\SilverStar_F407\\Inc\\mission_action_output_build_capabilities.h",
+    "generated": "Targets/SilverStar_F407/Inc/mission_action_output_build_capabilities.h",
+    "sha256": "c24435eee1d7bb8423a0f6fc88848d3a7fbeea396290612ceda5a8af8d076a5d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_stm32f407vet6\\payload\\Targets\\SilverStar_F407\\Inc\\platform_memory_target.h",
+    "generated": "Targets/SilverStar_F407/Inc/platform_memory_target.h",
+    "sha256": "7e08d411aa93d57f1b4e777057cd737b05963717748cd8d5163d9b6505178aa5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_stm32f407vet6\\payload\\Targets\\SilverStar_F407\\Inc\\target_build_capabilities.h",
+    "generated": "Targets/SilverStar_F407/Inc/target_build_capabilities.h",
+    "sha256": "4fbf0a3c4f448409261468b1229d34e9cac80533d9e53d4cd3254ea9d2749208"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_mcu_stm32f407vet6\\payload\\Targets\\SilverStar_F407\\Inc\\target_system_config.h",
+    "generated": "Targets/SilverStar_F407/Inc/target_system_config.h",
+    "sha256": "18cb5f4437dca2d88f7c6a3fe1e71659bc7afab3a3fff6c1c6dd3c0ff29a0a2a"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\list.c",
+    "generated": "ThirdParty/FreeRTOS-Kernel/list.c",
+    "sha256": "729cbade5c3a032a1572d4a94719af0c86aafab795ca2dc69d0f1975438730ca"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\queue.c",
+    "generated": "ThirdParty/FreeRTOS-Kernel/queue.c",
+    "sha256": "12b7f97c1f39bdda91735edc0718f45ef5a369fa1c1bed6e4175ead72456701d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\tasks.c",
+    "generated": "ThirdParty/FreeRTOS-Kernel/tasks.c",
+    "sha256": "c781a9fcd5c8456a6f8a7c0b47bfeb2ea33f998b275a54bbdd4bf348d4735af5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\atomic.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/atomic.h",
+    "sha256": "2d0a3cd04fbfa4ca04e4dc8f417802c2615d441cabe45cd2a39f6224870ff0a2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\croutine.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/croutine.h",
+    "sha256": "35a03797355a7bca500104549fab4d4acb2b086939d27a4b947b0cbc66ca7c80"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\deprecated_definitions.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/deprecated_definitions.h",
+    "sha256": "7f0dcbc6a61aec1f775a566b7307e9e8e924581ee88611d04e2c19420cfdb067"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\event_groups.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/event_groups.h",
+    "sha256": "d6c98bc262f23639193748625728c3036fbc39374022e848e9649c8f838533e0"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\FreeRTOS.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/FreeRTOS.h",
+    "sha256": "1e34335d39150f5c29709377119477c44437519fbbc20dffa6b59844b35ab76f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\list.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/list.h",
+    "sha256": "63b5cf31c558a7e99151d83c75781eaa12e77d6e5b6f7f8000e8125d0c761785"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\message_buffer.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/message_buffer.h",
+    "sha256": "03a2aca7e2108e7c7623a253285cd03dd4e34daea581fd71bebb02b567b16e61"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\mpu_prototypes.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/mpu_prototypes.h",
+    "sha256": "ecd086f5c8307e993617f6ee36f90e569090700a3495b4646b4438a7db0b8d86"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\mpu_syscall_numbers.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/mpu_syscall_numbers.h",
+    "sha256": "a2bd18e4f073cabcbe38b28675c3859f7e2f8f69fb9752e792c4c8d6b1a0bc80"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\mpu_wrappers.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/mpu_wrappers.h",
+    "sha256": "94908af88ea2ac3047b0f7fa69c0fbbdaca70f0f9fc7cca8c36884af8f6bf582"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\newlib-freertos.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/newlib-freertos.h",
+    "sha256": "cbbd99a422ce78d91f2c29447273192bf088c1bd9c3d5ac548dcf5286bded06e"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\picolibc-freertos.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/picolibc-freertos.h",
+    "sha256": "a8b34cf596f95498caddc768d3db6dc16dcc7a12d16771499fbff54e9fbef294"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\portable.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/portable.h",
+    "sha256": "01d1f5dada6b9703feadd65a619a72d9733d95c6de3aeaa183c52374ca1ff8f1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\projdefs.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/projdefs.h",
+    "sha256": "99fe2af841e291b21e60c8cd36f62357ddc1f8c849264b8f050c1d3194f59fd8"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\queue.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/queue.h",
+    "sha256": "a6db434775b9e88f2f7ec0489fc7d50c17e2415c158be7832374de5202bea9c4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\semphr.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/semphr.h",
+    "sha256": "a04715e82cb6899e1780bbf341cfa2c7f7fe68ef81bc2416b77fa23d2ac4ffb2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\StackMacros.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/StackMacros.h",
+    "sha256": "d95a10a836870a4f926ef34c8172e6f2fae2ae16ecfd5f9ec083f181adcee8ea"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\stack_macros.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/stack_macros.h",
+    "sha256": "94665e537208ffd03d6df088de34c42734b0085d2efbd7b71516ae8cd785af03"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\stream_buffer.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/stream_buffer.h",
+    "sha256": "dc24c3241267911b1ae22ff7cc22a77c4ec1258821902568c9bdde44d8471db5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\task.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/task.h",
+    "sha256": "1461d6d125676a9bff0842dd97460cd72b3c7fd0a1db64b39e634b99e947e6b1"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\include\\timers.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/include/timers.h",
+    "sha256": "e84a6b34a3bc061d0174bcb380ba176c1e7967c31f1a3a5670ed1ba11f09fae4"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\portable\\GCC\\ARM_CM4F\\port.c",
+    "generated": "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c",
+    "sha256": "7fd7815cad4ceea4794fc75703aaee051ebdea5be4d8f6317d9593bd1bf763d2"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\ThirdParty\\FreeRTOS-Kernel\\portable\\GCC\\ARM_CM4F\\portmacro.h",
+    "generated": "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/portmacro.h",
+    "sha256": "988c882fab36fff03da1c3512716a3a259c3a69fdc5b5a7c2004b9cb9f9b1846"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\Targets\\SilverStar_F407\\Inc\\freertos_target_config.h",
+    "generated": "Targets/SilverStar_F407/Inc/freertos_target_config.h",
+    "sha256": "2b1de4d3e58a064f012a53a3720860beb12c9a481e6aaee99a27b7fff3c942f9"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\Targets\\SilverStar_F407\\Src\\freertos_target_irq.c",
+    "generated": "Targets/SilverStar_F407/Src/freertos_target_irq.c",
+    "sha256": "c0b43c4e644501589d039a6a2f64350a4e43b251bf0bdfd5b0a6488462906da5"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\OS\\FreeRTOS\\FreeRTOSConfig.h",
+    "generated": "OS/FreeRTOS/FreeRTOSConfig.h",
+    "sha256": "60eec0289944fa1bfe6e605d059656c99fe7f1f1dc428e8e01b91b81a8c17f08"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_os_freertos_11_3_0\\payload\\OS\\FreeRTOS\\freertos_hooks.c",
+    "generated": "OS/FreeRTOS/freertos_hooks.c",
+    "sha256": "28b9bf74a3c555e15d95b83f6e9234543d91743716f2238ab8591b64185facbb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_adc.h",
+    "generated": "Platform/Inc/platform_adc.h",
+    "sha256": "5c55740713e0284cf0833c9988ddfaa657b10476f77de048e4771a0bccfe7d7f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_can.h",
+    "generated": "Platform/Inc/platform_can.h",
+    "sha256": "4126161fc5568c0826923fe742dcfcc25556149bb39920a991613b4f6c910333"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_critical.h",
+    "generated": "Platform/Inc/platform_critical.h",
+    "sha256": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_gpio.h",
+    "generated": "Platform/Inc/platform_gpio.h",
+    "sha256": "63127538ba99d9abaddf798ad1895958bcb1c58f78d9fc33f2a31cc1b5d0b673"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_i2c.h",
+    "generated": "Platform/Inc/platform_i2c.h",
+    "sha256": "4a81446224675ed457a71ce4cf5989ca29640300a221d6b7ecbc1463e62b597b"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_memory.h",
+    "generated": "Platform/Inc/platform_memory.h",
+    "sha256": "59b1c0aabd8e866e123dc45174166139f9ed079b175bd2959abd91e3b4485c97"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_pwm.h",
+    "generated": "Platform/Inc/platform_pwm.h",
+    "sha256": "ad00de15d8c2f98539cb8829065276d7a171e1243418625cac1dafe9d98f018f"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_spi.h",
+    "generated": "Platform/Inc/platform_spi.h",
+    "sha256": "adee7c1976e8b374cc9cf0578e8e8659e12a4ede7178ee667e6be2490c99b108"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_time.h",
+    "generated": "Platform/Inc/platform_time.h",
+    "sha256": "66ecf71030b25eb0993fae7c1176604088dbf78c42fd399c16c4fec8eed4822d"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_types.h",
+    "generated": "Platform/Inc/platform_types.h",
+    "sha256": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_uart.h",
+    "generated": "Platform/Inc/platform_uart.h",
+    "sha256": "48bf21ca17f65c34fbe819e9cc52f2222ba54dde72d36343a46c599c9becd1ee"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_protocol_logging_sslog_0_0\\payload\\Protocol\\SSLOG\\Inc\\sslog_protocol.h",
+    "generated": "Protocol/SSLOG/Inc/sslog_protocol.h",
+    "sha256": "8dd0a42a67fce017ad77c6ca2aec297ccba79ab3c426738e615e5d50f6c26973"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_protocol_logging_sslog_0_0\\payload\\Protocol\\SSLOG\\Inc\\sslog_records.h",
+    "generated": "Protocol/SSLOG/Inc/sslog_records.h",
+    "sha256": "e74478ad2ce7dd065094af774ecc126bac2682f91eb6990ad2ea5863864661e0"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_protocol_logging_sslog_0_0\\payload\\Protocol\\SSLOG\\Src\\sslog_protocol.c",
+    "generated": "Protocol/SSLOG/Src/sslog_protocol.c",
+    "sha256": "b065b6733fe87dea5e220e8eaed4ef61569fff831e3dd3d14f1c218fc6aaa3bc"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_protocol_logging_sslog_0_0\\payload\\Protocol\\SSLOG\\Src\\sslog_records.c",
+    "generated": "Protocol/SSLOG/Src/sslog_records.c",
+    "sha256": "44874b831d6271994096c8070817e24a473cdbc24b5909dd6968ada1062365bb"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_protocol_telemetry_air_m0\\payload\\Protocol\\Inc\\air_protocol.h",
+    "generated": "Protocol/Inc/air_protocol.h",
+    "sha256": "07fe29e0ec78db3359c5b73a78a561ca747a8fd90cc243a213ff35356063a5e0"
+  },
+  {
+    "source": "apps\\FCCG\\plugins\\builtin\\silverstar_protocol_telemetry_air_m0\\payload\\Protocol\\Src\\air_protocol.c",
+    "generated": "Protocol/Src/air_protocol.c",
+    "sha256": "f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4"
+  }
+]

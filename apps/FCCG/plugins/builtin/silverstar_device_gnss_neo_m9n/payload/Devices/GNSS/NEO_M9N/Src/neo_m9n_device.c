@@ -138,6 +138,7 @@ typedef struct
     uint8_t valget_layer;
     uint8_t identity_seen;
     uint8_t identity_verified;
+    GnssNeoM9nIdentityDiagnostics identity_diagnostics;
     GnssProbePhase probe_phase;
     uint32_t probe_phase_started_ms;
     uint32_t probe_nmea_baseline;
@@ -386,6 +387,12 @@ static PlatformResult Gnss_UbxFrameEnqueue(uint8_t instance,
         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nContext,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
+    if ((cls == GNSS_UBX_CFG_CLASS) && (id == GNSS_UBX_CFG_VALSET_ID) &&
+        ((s_contexts[instance].identity_seen != 0U) ||
+         (s_contexts[instance].identity_diagnostics.profile == 3U) ||
+         (s_contexts[instance].probe_phase != GnssProbePhaseComplete)) &&
+        (s_contexts[instance].identity_verified == 0U))
+    { return PLATFORM_NOT_READY; }
     frame[0] = GNSS_UBX_SYNC1;
     frame[1] = GNSS_UBX_SYNC2;
     frame[2] = cls;
@@ -491,6 +498,15 @@ static void Gnss_DiscontinuityHandle(uint8_t instance)
         s_rf_diagnostics.detailed_result =
             GnssNeoM9nTransactionDetailRxDiscontinuity;
         s_rf_diagnostics.sequence++;
+    }
+    if (s_contexts[instance].identity_diagnostics.profile == 3U)
+    {
+        s_contexts[instance].identity_verified = 0U;
+        s_contexts[instance].identity_diagnostics.capability_read_mask = 0U;
+        s_contexts[instance].identity_diagnostics.identity_result =
+            GnssNeoM9nIdentityDiscontinuity;
+        s_contexts[instance].identity_diagnostics.probe_result =
+            GnssNeoM9nIdentityDiscontinuity;
     }
 }
 
@@ -1827,6 +1843,11 @@ static void Gnss_ChecksumErrorHandle(uint8_t instance)
     SILVERSTAR_ASSERT_OBJECT(&s_parser, GnssUbxParser_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     s_status.ubx_checksum_error_count++;
+    if ((s_parser.msg_class == GNSS_UBX_MON_CLASS) && (s_parser.msg_id == 0x04U))
+    {
+        s_contexts[instance].identity_diagnostics.probe_result = GnssNeoM9nIdentityChecksumError;
+        s_contexts[instance].identity_diagnostics.last_rejection = GnssNeoM9nIdentityChecksumError;
+    }
     s_parser_resync_count++;
     if ((s_valget_wait_active != 0U) &&
         (s_parser.msg_class == GNSS_UBX_CFG_CLASS) &&
@@ -1931,6 +1952,11 @@ static void Gnss_ParseLengthMsb(uint8_t instance, uint8_t byte)
     if (s_parser.payload_len > GNSS_UBX_MAX_PAYLOAD_LEN)
     {
         s_status.ubx_checksum_error_count++;
+    if ((s_parser.msg_class == GNSS_UBX_MON_CLASS) && (s_parser.msg_id == 0x04U))
+    {
+        s_contexts[instance].identity_diagnostics.probe_result = GnssNeoM9nIdentityChecksumError;
+        s_contexts[instance].identity_diagnostics.last_rejection = GnssNeoM9nIdentityChecksumError;
+    }
         Gnss_ValgetBadLengthSet(instance);
         Gnss_ParserReset(instance);
     }
@@ -1955,20 +1981,234 @@ static void Gnss_ParsePayloadByte(uint8_t instance, uint8_t byte)
     }
 }
 
+
+#define GNSS_MON_VER_HEADER_LEN 40U
+#define GNSS_MON_VER_FIELD_LEN 30U
+#define GNSS_MON_VER_MAX_FIELDS \
+    ((GNSS_UBX_MAX_PAYLOAD_LEN - GNSS_MON_VER_HEADER_LEN) / \
+     GNSS_MON_VER_FIELD_LEN)
+#define GNSS_IDENTITY_MODEL_SEEN 1U
+#define GNSS_IDENTITY_PROTOCOL_SEEN 2U
+#define GNSS_IDENTITY_FIRMWARE_SEEN 4U
+
+typedef struct
+{
+    uint8_t major;
+    uint8_t minor_min;
+    uint8_t minor_max;
+    uint8_t firmware_required;
+    uint16_t signal_settle_ms;
+} GnssProtocolCapability;
+
+/* Preserve the historical 27.xx boundary for well-formed numeric versions.
+ * 32.01 is SPG 4.04 on NEO-M9N (UBX-21022436 R02 pp.2,16).
+ * All 23 startup keys and VALGET/VALSET are audited in the companion report.
+ * CFG-SIGNAL requires ACK then 0.5s before the next command (pp.226-227). */
+static const GnssProtocolCapability s_protocol_capabilities[] =
+{
+    {27U, 0U, 99U, 0U, 0U},
+    {32U, 1U, 1U, 1U, 500U}
+};
+
+/* Fixed wire strings are needed only while validating one MON-VER.
+ * Persist only bounded reason/profile/version/presence/capability metadata. */
+typedef struct
+{
+    GnssNeoM9nIdentityDiagnostics diagnostics;
+    char software[30];
+    char hardware[10];
+    char model[30];
+    char protocol[30];
+    char firmware[30];
+} GnssMonVerIdentity;
+
+static GnssNeoM9nIdentityResult Gnss_MonVerFieldStore(
+    const uint8_t *field, GnssMonVerIdentity *identity)
+{
+    uint8_t length;
+    uint8_t bit = 0U;
+    char *destination = NULL;
+    if ((field == NULL) || (identity == NULL))
+    { return GnssNeoM9nIdentityBadLength; }
+    for (length = 0U; length < GNSS_MON_VER_FIELD_LEN; length++)
+    { if (field[length] == 0U) { break; } }
+    if (length == GNSS_MON_VER_FIELD_LEN)
+    { return GnssNeoM9nIdentityUnterminatedField; }
+    if ((length >= 4U) && (memcmp(field, "MOD=", 4U) == 0))
+    { destination = identity->model; bit = GNSS_IDENTITY_MODEL_SEEN; }
+    else if ((length >= 8U) && (memcmp(field, "PROTVER=", 8U) == 0))
+    { destination = identity->protocol; bit = GNSS_IDENTITY_PROTOCOL_SEEN; }
+    else if ((length >= 6U) && (memcmp(field, "FWVER=", 6U) == 0))
+    { destination = identity->firmware; bit = GNSS_IDENTITY_FIRMWARE_SEEN; }
+    if (destination == NULL) { return GnssNeoM9nIdentityOk; }
+    if ((identity->diagnostics.fields_seen & bit) != 0U)
+    {
+        if ((memcmp(destination, field, length) != 0) ||
+            (destination[length] != '\0'))
+        { return GnssNeoM9nIdentityDuplicateConflict; }
+        return GnssNeoM9nIdentityOk;
+    }
+    (void)memcpy(destination, field, length);
+    destination[length] = '\0';
+    identity->diagnostics.fields_seen |= bit;
+    return GnssNeoM9nIdentityOk;
+}
+
+static GnssNeoM9nIdentityResult Gnss_ProtocolCapabilityGet(
+    GnssMonVerIdentity *identity)
+{
+    uint8_t index;
+    const char *version;
+    if (identity == NULL) { return GnssNeoM9nIdentityBadLength; }
+    version = identity->protocol;
+    if ((version[8] < '0') || (version[8] > '9') ||
+        (version[9] < '0') || (version[9] > '9') || (version[10] != '.') ||
+        (version[11] < '0') || (version[11] > '9') ||
+        (version[12] < '0') || (version[12] > '9') || (version[13] != '\0'))
+    { return GnssNeoM9nIdentityUnsupportedProtocol; }
+    identity->diagnostics.protocol_major = (uint8_t)((version[8] - '0') * 10 +
+        version[9] - '0');
+    identity->diagnostics.protocol_minor = (uint8_t)((version[11] - '0') * 10 +
+        version[12] - '0');
+    for (index = 0U; index < sizeof(s_protocol_capabilities) /
+        sizeof(s_protocol_capabilities[0]); index++)
+    {
+        const GnssProtocolCapability *capability = &s_protocol_capabilities[index];
+        if ((identity->diagnostics.protocol_major != capability->major) ||
+            (identity->diagnostics.protocol_minor < capability->minor_min) ||
+            (identity->diagnostics.protocol_minor > capability->minor_max)) { continue; }
+        if ((identity->diagnostics.protocol_major == 27U) &&
+            (strcmp(identity->firmware, "FWVER=SPG 4.04") == 0))
+        { return GnssNeoM9nIdentityWrongFirmware; }
+        if (capability->firmware_required != 0U)
+        {
+            if ((identity->diagnostics.fields_seen & GNSS_IDENTITY_FIRMWARE_SEEN) == 0U)
+            { return GnssNeoM9nIdentityMissingFirmware; }
+            if (strcmp(identity->firmware, "FWVER=SPG 4.04") != 0)
+            { return GnssNeoM9nIdentityWrongFirmware; }
+        }
+        identity->diagnostics.signal_settle_ms = capability->signal_settle_ms;
+        return GnssNeoM9nIdentityOk;
+    }
+    return GnssNeoM9nIdentityUnsupportedProtocol;
+}
+
+/* Negative evidence only: M8 CORE 2.x/3.x (UBX-13003221 R28 pp.6-8)
+ * and M10 SPG 5.x (UBX-21035062 R03 sec.1.5) contradict SPG4.04/32.01.
+ * Unknown/empty software stays compatible; EXT CORE is not a M9 whitelist. */
+static uint8_t Gnss_SoftwareExplicitConflict(const char *software)
+{
+    static const char *const prefixes[] = {"ROM CORE 2.", "EXT CORE 2.",
+        "ROM CORE 3.", "EXT CORE 3.", "ROM SPG 5.", "EXT SPG 5."};
+    uint8_t index;
+    if (software == NULL) { return 1U; }
+    for (index = 0U; index < sizeof(prefixes) / sizeof(prefixes[0]); index++)
+    {
+        if (strncmp(software, prefixes[index], strlen(prefixes[index])) == 0)
+        { return 1U; }
+    }
+    return 0U;
+}
+
+static GnssNeoM9nIdentityResult Gnss_MonVerIdentityValidate(
+    GnssMonVerIdentity *identity)
+{
+    GnssNeoM9nIdentityResult result;
+    if (identity == NULL) { return GnssNeoM9nIdentityBadLength; }
+    if ((identity->diagnostics.fields_seen & GNSS_IDENTITY_MODEL_SEEN) != 0U)
+    {
+        if (strcmp(identity->model, "MOD=NEO-M9N") != 0)
+        { return GnssNeoM9nIdentityWrongModel; }
+    }
+    if ((identity->diagnostics.fields_seen & GNSS_IDENTITY_PROTOCOL_SEEN) == 0U)
+    { return GnssNeoM9nIdentityMissingProtocol; }
+    result = Gnss_ProtocolCapabilityGet(identity);
+    if (result != GnssNeoM9nIdentityOk) { return result; }
+    if ((identity->diagnostics.fields_seen & GNSS_IDENTITY_MODEL_SEEN) != 0U)
+    {
+        if ((identity->hardware[0] != '\0') &&
+            (strcmp(identity->hardware, "00190000") != 0))
+        { return GnssNeoM9nIdentityUnsupportedHardware; }
+        if ((identity->diagnostics.protocol_major == 32U) &&
+            (Gnss_SoftwareExplicitConflict(identity->software) != 0U))
+        { return GnssNeoM9nIdentityWrongFirmware; }
+        identity->diagnostics.profile = (identity->diagnostics.protocol_major == 27U) ? 1U : 2U;
+        return GnssNeoM9nIdentityOk;
+    }
+    /* Exact captured M9 ROM SPG4.04 signature, not a claim of NEO-M9N package.
+     * MOD is optional in UBX-21022436 R02 pp.15-16; p.2 includes M9140 ROM.
+     * CFG reads must subsequently prove all 23 required keys before ANY write. */
+    if ((identity->diagnostics.protocol_major != 32U) || (identity->diagnostics.protocol_minor != 1U))
+    { return GnssNeoM9nIdentityMissingModel; }
+    if ((strcmp(identity->software, "ROM CORE 4.04 (d964f4)") != 0) ||
+        (strcmp(identity->hardware, "00190000") != 0))
+    { return GnssNeoM9nIdentityUnsupportedHardware; }
+    identity->diagnostics.profile = 3U;
+    return GnssNeoM9nIdentityCapabilitiesPending;
+}
+
 static void Gnss_MonVerParse(uint8_t instance)
 {
+    GnssMonVerIdentity identity = {0};
+    GnssNeoM9nIdentityResult result = GnssNeoM9nIdentityOk;
     uint16_t offset;
-    uint8_t model = 0U;
-    uint8_t protocol = 0U;
-    SILVERSTAR_ASSERT_OBJECT(&s_parser, GnssUbxParser_t, SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if ((s_parser.payload_len < 40U) || (((s_parser.payload_len - 40U) % 30U) != 0U)) { return; }
-    for (offset = 40U; (offset + 30U) <= s_parser.payload_len; offset = (uint16_t)(offset + 30U))
+    uint8_t index;
+    SILVERSTAR_ASSERT(instance < PROJECT_NEO_M9N_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_parser.payload_len <= GNSS_UBX_MAX_PAYLOAD_LEN,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    identity.diagnostics.sequence = s_contexts[instance].identity_diagnostics.sequence + 1U;
+    identity.diagnostics.last_rejection = s_contexts[instance].identity_diagnostics.last_rejection;
+    identity.diagnostics.baudrate = Gnss_UartBaudrateGet(instance);
+    if ((s_parser.payload_len < GNSS_MON_VER_HEADER_LEN) ||
+        (((s_parser.payload_len - GNSS_MON_VER_HEADER_LEN) %
+            GNSS_MON_VER_FIELD_LEN) != 0U))
+    { result = GnssNeoM9nIdentityBadLength; }
+    else
     {
-        if (memcmp(&s_parser.payload[offset], "MOD=NEO-M9N", 12U) == 0) { model = 1U; }
-        if (memcmp(&s_parser.payload[offset], "PROTVER=27.", 11U) == 0) { protocol = 1U; }
+        (void)memcpy(identity.software, s_parser.payload, sizeof(identity.software));
+        (void)memcpy(identity.hardware, &s_parser.payload[30], sizeof(identity.hardware));
+        if ((memchr(identity.software, 0, sizeof(identity.software)) == NULL) ||
+            (memchr(identity.hardware, 0, sizeof(identity.hardware)) == NULL))
+        { result = GnssNeoM9nIdentityUnterminatedField; }
+        for (index = 0U; (index < GNSS_MON_VER_MAX_FIELDS) &&
+            (result == GnssNeoM9nIdentityOk); index++)
+        {
+            offset = (uint16_t)(GNSS_MON_VER_HEADER_LEN +
+                ((uint16_t)index * GNSS_MON_VER_FIELD_LEN));
+            if ((offset + GNSS_MON_VER_FIELD_LEN) > s_parser.payload_len) { break; }
+            result = Gnss_MonVerFieldStore(&s_parser.payload[offset], &identity);
+            if (result != GnssNeoM9nIdentityOk) { break; }
+        }
+        if (result == GnssNeoM9nIdentityOk)
+        { result = Gnss_MonVerIdentityValidate(&identity); }
     }
+    identity.diagnostics.identity_result = result;
+    identity.diagnostics.probe_result = result;
+    if ((result != GnssNeoM9nIdentityOk) &&
+        (result != GnssNeoM9nIdentityCapabilitiesPending))
+    { identity.diagnostics.last_rejection = result; }
+    s_contexts[instance].identity_diagnostics = identity.diagnostics;
     s_contexts[instance].identity_seen = 1U;
-    s_contexts[instance].identity_verified = (uint8_t)(model & protocol);
+    s_contexts[instance].identity_verified = (uint8_t)(result == GnssNeoM9nIdentityOk);
+}
+
+GnssNeoM9nIdentityResult GnssNeoM9n_IdentityDiagnosticsGet(
+    uint8_t instance, GnssNeoM9nIdentityDiagnostics *out)
+{
+    uint32_t primask;
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) || (out == NULL))
+    { return GnssNeoM9nIdentityBadLength; }
+    primask = Gnss_IrqLock();
+    *out = s_contexts[instance].identity_diagnostics;
+    Gnss_IrqUnlock(primask);
+    return out->probe_result;
+}
+
+static void Gnss_ProbeFailureSet(uint8_t instance, GnssNeoM9nIdentityResult result)
+{
+    s_contexts[instance].identity_diagnostics.probe_result = result;
+    s_contexts[instance].identity_diagnostics.last_rejection = result;
 }
 
 static GnssNeoM9nIdentifyResult Gnss_IdentityPoll(uint8_t instance)
@@ -2038,6 +2278,8 @@ GnssNeoM9nProbeStartResult GnssNeoM9n_ProbeStart(
     Gnss_NmeaReset(instance);
     s_contexts[instance].identity_seen = 0U;
     s_contexts[instance].identity_verified = 0U;
+    s_contexts[instance].identity_diagnostics.probe_result = GnssNeoM9nIdentityNone;
+    s_contexts[instance].identity_diagnostics.capability_read_mask = 0U;
     s_contexts[instance].probe_phase = GnssProbePhasePassive;
     s_contexts[instance].probe_phase_started_ms = PlatformTime_Ms();
     s_contexts[instance].probe_nmea_baseline = s_status.nmea_checksum_ok_count;
@@ -2153,7 +2395,11 @@ static GnssNeoM9nProbePollResult Gnss_ProbeRequestSend(
     {
         result = Gnss_ProbeMonVerSend(instance);
         if (result == PLATFORM_BUSY) { return GnssNeoM9nProbePollResult_Pending; }
-        if (result != PLATFORM_OK) { return GnssNeoM9nProbePollResult_WrongModel; }
+        if (result != PLATFORM_OK)
+        {
+            Gnss_ProbeFailureSet(instance, GnssNeoM9nIdentityIoError);
+            return GnssNeoM9nProbePollResult_WrongModel;
+        }
         s_contexts[instance].probe_phase =
             (phase == GnssProbePhaseMonRequest) ?
                 GnssProbePhaseMonResponse : GnssProbePhaseRescueMonResponse;
@@ -2163,7 +2409,11 @@ static GnssNeoM9nProbePollResult Gnss_ProbeRequestSend(
     {
         result = Gnss_ProbePubxSend(instance);
         if (result == PLATFORM_BUSY) { return GnssNeoM9nProbePollResult_Pending; }
-        if (result != PLATFORM_OK) { return GnssNeoM9nProbePollResult_WrongModel; }
+        if (result != PLATFORM_OK)
+        {
+            Gnss_ProbeFailureSet(instance, GnssNeoM9nIdentityIoError);
+            return GnssNeoM9nProbePollResult_WrongModel;
+        }
         s_contexts[instance].probe_phase = GnssProbePhasePubxSettle;
         s_contexts[instance].probe_phase_started_ms = now_ms;
     }
@@ -2189,12 +2439,17 @@ GnssNeoM9nProbePollResult GnssNeoM9n_ProbePoll(uint8_t instance)
     if (s_contexts[instance].identity_seen != 0U)
     {
         s_contexts[instance].probe_phase = GnssProbePhaseComplete;
-        return (s_contexts[instance].identity_verified != 0U) ?
+        return ((s_contexts[instance].identity_verified != 0U) ||
+            (s_contexts[instance].identity_diagnostics.identity_result ==
+                GnssNeoM9nIdentityCapabilitiesPending)) ?
             GnssNeoM9nProbePollResult_Identified :
             GnssNeoM9nProbePollResult_WrongModel;
     }
     if (Gnss_ProbeTimeoutCheck(instance, now_ms, phase) != 0U)
-    { return GnssNeoM9nProbePollResult_WrongModel; }
+    {
+        s_contexts[instance].identity_diagnostics.probe_result = GnssNeoM9nIdentityTimeout;
+        return GnssNeoM9nProbePollResult_WrongModel;
+    }
     return Gnss_ProbeRequestSend(instance, now_ms,
         s_contexts[instance].probe_phase);
 }
@@ -2375,6 +2630,8 @@ static void Gnss_TransactionStateResetLocked(uint8_t instance)
     s_config_cache_count = 0U;
     s_contexts[instance].identity_seen = 0U;
     s_contexts[instance].identity_verified = 0U;
+    (void)memset(&s_contexts[instance].identity_diagnostics, 0,
+        sizeof(s_contexts[instance].identity_diagnostics));
     s_contexts[instance].probe_phase = GnssProbePhaseComplete;
     s_valget_layer = GNSS_VALGET_LAYER_RAM;
     s_uart_baud_changed = 0U;
@@ -3140,6 +3397,38 @@ GnssNeoM9nItemStartResult GnssNeoM9n_ItemReadStart(
     return GnssNeoM9nItemStartResult_Ok;
 }
 
+static void Gnss_IdentityCapabilityReadStore(uint8_t instance,
+    const GnssNeoM9nConfigItem *item)
+{
+    GnssNeoM9nIdentityDiagnostics *identity = &s_contexts[instance].identity_diagnostics;
+    uint8_t group;
+    uint8_t index;
+    uint8_t bit = 0U;
+    if ((identity->profile != 3U) || (item == NULL) ||
+        ((identity->identity_result != GnssNeoM9nIdentityCapabilitiesPending) &&
+         (identity->identity_result != GnssNeoM9nIdentityOk))) { return; }
+    for (group = 0U; group < sizeof(s_config_read_groups) /
+        sizeof(s_config_read_groups[0]); group++)
+    {
+        const GnssConfigReadGroupDefinition *definition = &s_config_read_groups[group];
+        for (index = 0U; index < definition->key_count; index++)
+        {
+            SILVERSTAR_ASSERT(bit < 23U, SILVERSTAR_ASSERT_MODULE_DEVICE,
+                SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+            if ((item->key == definition->keys[index]) &&
+                (item->value_len == Gnss_ConfigKeyValueLen(item->key)))
+            { identity->capability_read_mask |= 1UL << bit; }
+            bit++;
+        }
+    }
+    if (identity->capability_read_mask == 0x007FFFFFUL)
+    {
+        identity->identity_result = GnssNeoM9nIdentityOk;
+        identity->probe_result = GnssNeoM9nIdentityOk;
+        s_contexts[instance].identity_verified = 1U;
+    }
+}
+
 GnssNeoM9nItemPollResult GnssNeoM9n_ItemReadPoll(
     uint8_t instance, GnssNeoM9nConfigItem *item)
 {
@@ -3175,6 +3464,7 @@ GnssNeoM9nItemPollResult GnssNeoM9n_ItemReadPoll(
         (s_valget_cache[0].key != s_contexts[instance].item_read_key))
     { return GnssNeoM9nItemPollResult_IoError; }
     *item = s_valget_cache[0];
+    Gnss_IdentityCapabilityReadStore(instance, item);
     return GnssNeoM9nItemPollResult_Complete;
 }
 
@@ -3205,6 +3495,11 @@ GnssNeoM9nItemStartResult GnssNeoM9n_ItemWriteStart(
     Gnss_WriteU32Le(&payload[4], item->key);
     for (index = 0U; index < item->value_len; index++)
     { payload[8U + index] = (uint8_t)(item->value >> (8U * index)); }
+    if (((s_contexts[instance].identity_seen != 0U) ||
+         (s_contexts[instance].identity_diagnostics.profile == 3U) ||
+         (s_contexts[instance].probe_phase != GnssProbePhaseComplete)) &&
+        (s_contexts[instance].identity_verified == 0U))
+    { return GnssNeoM9nItemStartResult_NotReady; }
     Gnss_ClearAckWait(instance, GNSS_UBX_CFG_CLASS,
         GNSS_UBX_CFG_VALSET_ID);
     result = Gnss_UbxFrameEnqueue(instance, GNSS_UBX_CFG_CLASS,
@@ -3543,6 +3838,7 @@ int GnssNeoM9n_SendUbx(uint8_t instance, uint8_t cls, uint8_t id, const uint8_t 
     uint16_t frame_len;
     uint16_t i;
 
+    if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) { return -1; }
     SILVERSTAR_ASSERT_OBJECT(&s_parser, GnssUbxParser_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     if (((payload == NULL) && (len != 0U)) || (len > GNSS_UBX_TX_MAX_PAYLOAD_LEN))
@@ -3550,6 +3846,11 @@ int GnssNeoM9n_SendUbx(uint8_t instance, uint8_t cls, uint8_t id, const uint8_t 
         return -1;
     }
 
+    if ((cls == GNSS_UBX_CFG_CLASS) && (id == GNSS_UBX_CFG_VALSET_ID) &&
+        ((s_contexts[instance].identity_seen != 0U) ||
+         (s_contexts[instance].identity_diagnostics.profile == 3U) ||
+         (s_contexts[instance].probe_phase != GnssProbePhaseComplete)) &&
+        (s_contexts[instance].identity_verified == 0U)) { return -1; }
     frame[0] = GNSS_UBX_SYNC1;
     frame[1] = GNSS_UBX_SYNC2;
     frame[2] = cls;

@@ -469,7 +469,6 @@ Invoke-HostTest -Name 'profiles_pure_ins' -ExtraCompilerArgs @(
 Invoke-HostTest -Name 'attitude_alignment' -Sources @(
     "$repoRoot\Tests\Host\test_attitude_alignment.c",
     "$repoRoot\Algorithm\Alignment\Common\Src\attitude_alignment.c",
-    "$repoRoot\Algorithm\Alignment\Common\Src\attitude_preflight.c",
     "$repoRoot\Algorithm\Alignment\GravityKnownYaw\Src\alignment_gravity_known_yaw.c",
     "$repoRoot\Algorithm\Alignment\GravityMagTriad\Src\attitude_triad.c",
     "$repoRoot\Algorithm\Common\Src\attitude_frame.c"
@@ -523,6 +522,10 @@ $alignmentSystemSources = @(
 )
 Invoke-HostTest -Name 'system_alignment' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U'
+) -Sources $alignmentSystemSources
+Invoke-HostTest -Name 'system_alignment_explicit_required_gnss' -ExtraCompilerArgs @(
+    '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
+    '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=7U'
 ) -Sources $alignmentSystemSources
 Invoke-HostTest -Name 'system_alignment_pure_ins' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
@@ -1088,6 +1091,47 @@ elseif ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
 }
 Invoke-HostTest -Name 'estimator_preparation_actual' -ExtraCompilerArgs $preparationArgs `
     -Sources $preparationSources
+
+# Execute actual Alignment -> FreezeOrigins -> lifecycle START -> selected kernel.
+# Only sensor, attitude preparation and storage inputs are Host fixtures.
+$optionalStartSources = @($preparationSources | Where-Object {
+    $_ -notmatch '(test_estimator_preparation|ins_task|system_calibration)\.c$'
+}) + @(
+    "$repoRoot\Tests\Host\test_optional_gnss_start.c",
+    "$repoRoot\Tests\Host\optional_start_ins_inputs.c",
+    "$repoRoot\Tests\Host\optional_start_storage_inputs.c",
+    "$repoRoot\Tests\Host\optional_start_mag_inputs.c",
+    "$repoRoot\APP\Src\flight_task.c", "$repoRoot\APP\Src\imu_sample_bus.c",
+    "$repoRoot\APP\Src\logger_bus.c", "$repoRoot\Common\Src\common_spsc_queue.c",
+    "$repoRoot\System\Alignment\Src\system_alignment.c",
+    "$repoRoot\System\Alignment\Src\system_alignment_source.c",
+    "$repoRoot\System\Calibration\Src\system_calibration.c",
+    "$repoRoot\System\Calibration\Src\system_calibration_correction.c",
+    "$repoRoot\System\Calibration\Src\system_mag_calibration.c",
+    "$repoRoot\Algorithm\Calibration\Src\imu_six_face_calibration.c",
+    "$repoRoot\Common\Src\common_format.c",
+    "$repoRoot\System\Src\system_time.c",
+    "$repoRoot\System\Src\system_health.c", "$repoRoot\System\Src\system_capabilities.c",
+    "$repoRoot\System\Src\system_profile.c", "$repoRoot\System\Src\system_log_policy.c",
+    "$repoRoot\Generated\Src\project_log_config.c",
+    "$repoRoot\FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c"
+) + $sslogSources
+foreach ($alignmentSource in @(Get-Content -LiteralPath $projectSourcesPath)) {
+    if ($alignmentSource -match '^\s+(Algorithm/Alignment/[A-Za-z0-9_/]+\.c)\s*(?:\\)?\s*$') {
+        $optionalStartSources += Join-Path $repoRoot $Matches[1]
+    }
+}
+$optionalStartSources = @($optionalStartSources | Select-Object -Unique)
+$optionalStartArgs = @($preparationArgs | Where-Object { $_ -notmatch 'SILVERSTAR_PROTOCOL_LOGGING_ENABLED|^-flto$' }) + @('-flto=2') + @("-I$repoRoot\Devices\Storage\SdSdioFatFs\Inc")
+foreach ($alignmentDefine in @(Get-Content -LiteralPath $projectSourcesPath |
+    Where-Object { $_ -match '^\s*SYSTEM_ALIGNMENT_BUILD_[A-Z_]+=[A-Z0-9_]+\s*(?:\\)?\s*$' })) {
+    $optionalStartArgs += '-D' + $alignmentDefine.Trim().TrimEnd('\').Trim()
+}
+Invoke-HostTest -Name 'optional_gnss_start_actual' -ExtraCompilerArgs $optionalStartArgs `
+    -Sources $optionalStartSources
+Invoke-HostTest -Name 'optional_gnss_start_explicit_required' `
+    -ExtraCompilerArgs ($optionalStartArgs + @('-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=7U')) `
+    -Sources $optionalStartSources
 
 $loggerSources = @(
     "$repoRoot\Tests\Host\test_logger.c",

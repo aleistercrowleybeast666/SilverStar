@@ -92,14 +92,17 @@ SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     memcpy(quaternion, q_nb, sizeof(quaternion));
     for (axis = 0U; axis < 4U; axis++)
     { if (!isfinite(quaternion[axis])) { return SYSTEM_DEVICE_INVALID_ARGUMENT; } }
-    if (!Attitude_QuaternionNormalize(quaternion) || !origin->position_usable ||
-        SystemSourceSelector_GnssActiveInstanceGet(&s_gnss_source) != SYSTEM_DEVICE_OK ||
-        !GeoLocalFrame_Init(&s_frame, origin->latitude_e7, origin->longitude_e7,
-            origin->ellipsoid_height_mm)) { return SYSTEM_DEVICE_NOT_READY; }
-    for (axis = 0U; axis < 3U; axis++)
+    if (!Attitude_QuaternionNormalize(quaternion)) { return SYSTEM_DEVICE_NOT_READY; }
+    if (origin->position_usable != 0U)
     {
-        if ((origin->velocity_valid_mask & (1U << axis)) != 0U)
-        { velocity[axis] = origin->velocity_enu_mps[axis]; }
+        if (SystemSourceSelector_GnssActiveInstanceGet(&s_gnss_source) != SYSTEM_DEVICE_OK ||
+            !GeoLocalFrame_Init(&s_frame, origin->latitude_e7, origin->longitude_e7,
+                origin->ellipsoid_height_mm)) { return SYSTEM_DEVICE_NOT_READY; }
+        for (axis = 0U; axis < 3U; axis++)
+        {
+            if ((origin->velocity_valid_mask & (1U << axis)) != 0U)
+            { velocity[axis] = origin->velocity_enu_mps[axis]; }
+        }
     }
     if (NavigationSf6_Initialize(&s_context, s_gain, velocity, 0U) != NAV_SF6_OK)
     { return SYSTEM_DEVICE_VERIFY_FAILED; }
@@ -238,6 +241,8 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
     SystemGnssSample sample;
     float position[3];
     uint8_t group, source;
+    /* An absent preflight frame stays absent; never rebase a moving mission. */
+    if (s_frame.valid == 0U) { return; }
     if (SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK) { return; }
     if (source != s_gnss_source)
     {
@@ -308,6 +313,7 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
     memcpy(output->q_nb, s_q_nb, sizeof(s_q_nb));
     output->initialized = 1U; output->mission_running = s_active;
     output->gnss_origin_valid = s_frame.valid; output->baro_origin_valid = s_baro_origin_valid;
+    if (!s_frame.valid) { output->health_flags |= ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE; }
     if (!s_baro_origin_valid) { output->health_flags |= ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE; }
     for (axis = 0U; axis < 6U; axis++)
     {

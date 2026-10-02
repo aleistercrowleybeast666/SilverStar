@@ -332,6 +332,7 @@ foreach ($entry in @(
                 $entry.Protocol, $entry.Stack)
     }
 }
+if ($protocolEnabled.TELEMETRY) { $requiredCcmSymbols += 's_capability_tx' }
 if ($loggingEnabled) { $requiredCcmSymbols += 's_logger_stack' }
 else {
     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_logger_stack')) `

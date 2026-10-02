@@ -157,7 +157,11 @@
         "headers": [
           "sx1281_instance.h"
         ],
-        "pass_instance": true
+        "pass_instance": true,
+        "operations": {
+          "SendControl": "Sx1281TelemetryInstance_SendControl",
+          "TxResultGet": "Sx1281TelemetryInstance_TxResultGet"
+        }
       }
     },
     "instance_resource_binding": {

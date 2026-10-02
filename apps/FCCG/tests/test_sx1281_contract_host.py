@@ -38,9 +38,10 @@ def radio_contract_executable(tmp_path_factory):
     "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
     "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
     "control_state", "control_active_init", "flags", "packet_type", "rx_error",
-    "radio_state",
+    "radio_state", "tx_control_count", "tx_control_burst", "rx_window",
     "rx_count", "rx_sequence", "rx_done_flag", "force_packet_type", "try_busy",
     "raw_busy", "irq_busy", "diag_uninitialized",
+    "air_sf", "air_bw", "air_cr", "air_crc", "air_header", "air_preamble", "rx_hold", "schedule_role",
 ])
 def test_radio_contract_faults_and_normal_operation(radio_contract_executable, scenario):
     result = subprocess.run([str(radio_contract_executable), scenario],

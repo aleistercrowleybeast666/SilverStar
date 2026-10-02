@@ -6,6 +6,7 @@
 #include "neo_m9n_config.h"
 #include "neo_m9n_config_keys.h"
 #include "neo_m9n_device.h"
+#include "platform_memory.h"
 #include "platform_time.h"
 #include "silverstar_assert.h"
 
@@ -29,9 +30,18 @@ typedef struct
     uint8_t reconnect_phase;
     uint32_t reconnect_started_ms;
     uint32_t sample_baseline;
+    uint32_t signal_settle_started_ms;
+    uint16_t signal_settle_ms;
+    uint8_t signal_settle_active;
 } NeoM9nStartupContext;
 
-static NeoM9nStartupContext s_contexts[PROJECT_NEO_M9N_INSTANCE_COUNT];
+/* CPU-only startup state and decoded configuration values. No UART/DMA
+ * backend retains this object: writes build a separate local UBX frame and
+ * PlatformUart_WriteFrameAsync copies it into its DMA-accessible TX ring.
+ * The target owns section/alignment/startup zeroing; targets without a
+ * CPU-fast section and Host retain the platform API ordinary-BSS default. */
+static PLATFORM_CPU_FAST_BSS NeoM9nStartupContext
+    s_contexts[PROJECT_NEO_M9N_INSTANCE_COUNT];
 
 /* The supported UART baud set is finite. The controller deduplicates target
  * and factory baud before walking these remaining declared candidates. */
@@ -247,6 +257,27 @@ static SystemDeviceStartupStepResult NeoM9nStartup_ConfigRead(
     return SystemDeviceStartupStep_Ok;
 }
 
+static uint8_t NeoM9nStartup_SignalSettling(NeoM9nStartupContext *context)
+{
+    if (context->signal_settle_active == 0U) { return 0U; }
+    if ((uint32_t)(PlatformTime_Ms() - context->signal_settle_started_ms) <
+        context->signal_settle_ms) { return 1U; }
+    context->signal_settle_active = 0U;
+    return 0U;
+}
+
+static void NeoM9nStartup_SignalSettleStart(NeoM9nStartupContext *context,
+    uint32_t key)
+{
+    GnssNeoM9nIdentityDiagnostics identity;
+    if ((key & 0x0FFF0000UL) != 0x00310000UL) { return; }
+    if (GnssNeoM9n_IdentityDiagnosticsGet(context->instance, &identity) !=
+        GnssNeoM9nIdentityOk) { return; }
+    context->signal_settle_ms = identity.signal_settle_ms;
+    context->signal_settle_started_ms = PlatformTime_Ms();
+    context->signal_settle_active = (uint8_t)(identity.signal_settle_ms != 0U);
+}
+
 static SystemDeviceStartupStepResult NeoM9nStartup_ConfigApply(
     void *owner, uint32_t difference_mask, uint8_t *reconnect_required)
 {
@@ -264,6 +295,8 @@ static SystemDeviceStartupStepResult NeoM9nStartup_ConfigApply(
         SILVERSTAR_ASSERT_MODULE_DEVICE,
         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
 
+    if (NeoM9nStartup_SignalSettling(context) != 0U)
+    { return SystemDeviceStartupStep_Pending; }
     if (context->apply_index >= NEO_M9N_STARTUP_ITEM_COUNT)
     {
         *reconnect_required = (uint8_t)((difference_mask & 1UL) != 0U);
@@ -297,6 +330,8 @@ static SystemDeviceStartupStepResult NeoM9nStartup_ConfigApply(
           ((poll_result == GnssNeoM9nItemPollResult_Timeout) ||
            (poll_result == GnssNeoM9nItemPollResult_IoError))))
     { return SystemDeviceStartupStep_Failed; }
+    if (poll_result == GnssNeoM9nItemPollResult_Complete)
+    { NeoM9nStartup_SignalSettleStart(context, item.key); }
     context->apply_index++;
     return SystemDeviceStartupStep_Pending;
 }

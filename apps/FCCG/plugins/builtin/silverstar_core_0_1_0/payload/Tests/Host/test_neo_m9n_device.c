@@ -3,6 +3,7 @@
 
 #include "project_resources.h"
 #include "neo_m9n_config.h"
+#include "neo_m9n_config_keys.h"
 #include "neo_m9n_device.h"
 #include "neo_m9n_startup.h"
 #include "platform_critical.h"
@@ -86,7 +87,28 @@ static uint16_t s_layer_measurement_ms[3] = {40U, 40U, 40U};
 static uint32_t s_layer_writes[3];
 static uint8_t s_ignore_config_write;
 static uint8_t s_drop_config_ack;
+static const uint8_t s_captured_monver[168] = {
+    0xB5U, 0x62U, 0x0AU, 0x04U, 0xA0U, 0x00U, 0x52U, 0x4FU, 0x4DU, 0x20U, 0x43U, 0x4FU,
+    0x52U, 0x45U, 0x20U, 0x34U, 0x2EU, 0x30U, 0x34U, 0x20U, 0x28U, 0x64U, 0x39U, 0x36U,
+    0x34U, 0x66U, 0x34U, 0x29U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+    0x30U, 0x30U, 0x31U, 0x39U, 0x30U, 0x30U, 0x30U, 0x30U, 0x00U, 0x00U, 0x46U, 0x57U,
+    0x56U, 0x45U, 0x52U, 0x3DU, 0x53U, 0x50U, 0x47U, 0x20U, 0x34U, 0x2EU, 0x30U, 0x34U,
+    0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+    0x00U, 0x00U, 0x00U, 0x00U, 0x50U, 0x52U, 0x4FU, 0x54U, 0x56U, 0x45U, 0x52U, 0x3DU,
+    0x33U, 0x32U, 0x2EU, 0x30U, 0x31U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+    0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x47U, 0x50U,
+    0x53U, 0x3BU, 0x47U, 0x4CU, 0x4FU, 0x3BU, 0x47U, 0x41U, 0x4CU, 0x3BU, 0x42U, 0x44U,
+    0x53U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+    0x00U, 0x00U, 0x00U, 0x00U, 0x53U, 0x42U, 0x41U, 0x53U, 0x3BU, 0x51U, 0x5AU, 0x53U,
+    0x53U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+    0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x40U, 0x41U,
+};
+static uint8_t s_use_captured;
+static uint32_t s_capability_reject_key;
 static uint8_t s_wrong_model;
+static const char *s_test_protocol = "PROTVER=27.12";
+static uint8_t s_monver_silent;
+static uint32_t s_signal_reset_until;
 static uint8_t s_async_busy_once;
 static uint8_t s_startup_item_mode;
 static uint32_t s_startup_physical_baud;
@@ -465,6 +487,7 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
         s_startup_ubx_enabled = 1U;
         return PLATFORM_OK;
     }
+    if (s_startup_item_mode != 0U) { TEST_CHECK(s_tick_ms >= s_signal_reset_until); }
     payload_length = Test_ReadU16Le(&data[4]);
     if ((s_startup_item_mode != 0U) &&
         (s_uart_baudrate != s_startup_physical_baud))
@@ -487,6 +510,15 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
         {
             return PLATFORM_IO_ERROR;
         }
+        if ((s_capability_reject_key != 0U) &&
+            Test_RequestContainsKey(&data[6], payload_length, s_capability_reject_key))
+        {
+            uint8_t payload[2] = {TEST_CFG_CLASS, TEST_VALGET_ID};
+            uint8_t frame[10];
+            (void)Test_FrameBuild(TEST_ACK_CLASS, TEST_ACK_NAK_ID, payload, sizeof(payload), frame);
+            Test_FrameInject(frame, sizeof(frame), 0U);
+            return PLATFORM_OK;
+        }
         Test_ValgetRespond(&data[6], payload_length);
     }
     else if ((data[2] == TEST_NAV_CLASS) &&
@@ -496,14 +528,24 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
     }
     else if ((data[2] == TEST_MON_CLASS) && (data[3] == 4U))
     {
-        uint8_t version[100] = {0U};
-        uint8_t frame[108];
+        uint8_t version[130] = {0U};
+        uint8_t frame[138];
         uint16_t frame_length;
+        if (s_monver_silent != 0U) { return PLATFORM_OK; }
         if ((s_startup_nmea_only != 0U) && (s_startup_ubx_enabled == 0U))
         { return PLATFORM_OK; }
+        if (s_use_captured != 0U)
+        {
+            uint8_t captured[168];
+            (void)memcpy(captured, s_captured_monver, sizeof(captured));
+            Test_FrameInject(captured, sizeof(captured), 0U);
+            return PLATFORM_OK;
+        }
         (void)memcpy(&version[40], (s_wrong_model != 0U) ? "MOD=NEO-M8N" : "MOD=NEO-M9N", 11U);
-        (void)memcpy(&version[70], "PROTVER=27.12", 12U);
-        frame_length = Test_FrameBuild(TEST_MON_CLASS, 4U, version, 100U, frame);
+        (void)memcpy(&version[70], s_test_protocol, 13U);
+        if (strcmp(s_test_protocol, "PROTVER=32.01") == 0)
+        { (void)memcpy(&version[100], "FWVER=SPG 4.04", sizeof("FWVER=SPG 4.04") - 1U); }
+        frame_length = Test_FrameBuild(TEST_MON_CLASS, 4U, version, sizeof(version), frame);
         Test_FrameInject(frame, frame_length, 0U);
     }
     else if ((data[2] == TEST_CFG_CLASS) && (data[3] == 0x8AU))
@@ -511,12 +553,21 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
         if (s_startup_item_mode != 0U)
         {
             uint32_t key = Test_ReadU32Le(&data[10]);
+            if (s_use_captured != 0U)
+            {
+                GnssNeoM9nIdentityDiagnostics identity;
+                TEST_CHECK(GnssNeoM9n_IdentityDiagnosticsGet(0U, &identity) == GnssNeoM9nIdentityOk);
+                TEST_CHECK(identity.capability_read_mask == 0x007FFFFFUL);
+            }
             uint8_t value_len = Test_KeyValueLength(key);
             uint64_t value = 0U;
             uint8_t index;
             TEST_CHECK(payload_length == (uint16_t)(8U + value_len));
             for (index = 0U; index < value_len; index++)
             { value |= (uint64_t)data[14U + index] << (8U * index); }
+            if (((key & 0x0FFF0000UL) == 0x00310000UL) &&
+                (strcmp(s_test_protocol, "PROTVER=32.01") == 0))
+            { s_signal_reset_until = s_tick_ms + 500U; }
             s_startup_last_write_key = key;
             s_startup_write_count++;
             if (key == 0x40520001UL)
@@ -1233,11 +1284,233 @@ static void Test_NmeaRescue(uint8_t bad_checksum, uint8_t wrong_model,
     s_startup_item_mode = 0U;
 }
 
+
+static void Test_IdentityFrame(const char *model, const char *protocol,
+    const char *firmware, const char *extra, uint8_t mode,
+    GnssNeoM9nIdentityResult expected)
+{
+    uint8_t payload[160] = {0U};
+    uint8_t frame[168];
+    uint16_t length;
+    GnssNeoM9nIdentityDiagnostics diagnostics;
+    s_monver_silent = 1U;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(GnssNeoM9n_ProbeStart(0U, GNSS_DEFAULT_BAUDRATE) ==
+        GnssNeoM9nProbeStartResult_Ok);
+    /* Deliberately reorder firmware/protocol/model, with zero-filled slots. */
+    if (firmware != NULL) { (void)memcpy(&payload[40], firmware, strlen(firmware)); }
+    if (protocol != NULL) { (void)memcpy(&payload[70], protocol, strlen(protocol)); }
+    if (model != NULL) { (void)memcpy(&payload[100], model, strlen(model)); }
+    if (extra != NULL) { (void)memcpy(&payload[130], extra, strlen(extra)); }
+    if (mode == 1U) { (void)memset(&payload[130], 'X', 30U); }
+    if (mode == 4U) { (void)memcpy(&payload[30], "00080000", 8U); }
+    if ((mode >= 5U) && (mode <= 11U))
+    {
+        static const char *software[] = {"ROM CORE 3.01 (107888)",
+            "EXT CORE 3.51 (19dc23)", "ROM SPG 5.10 (10ca7e)",
+            "EXT SPG 5.20 (000000)", "EXT CORE 1.00 (unknown)",
+            "UNKNOWN BUILD", "ROM CORE 4.04 (d964f4)"};
+        (void)memcpy(payload, software[mode - 5U], strlen(software[mode - 5U]));
+        (void)memcpy(&payload[30], "00190000", 8U);
+    }
+    length = Test_FrameBuild(TEST_MON_CLASS, 4U, payload,
+        (mode == 2U) ? 159U : (uint16_t)sizeof(payload), frame);
+    Test_FrameInject(frame, length, (uint8_t)(mode == 3U));
+    TEST_CHECK((GnssNeoM9n_ProbePoll(0U) == GnssNeoM9nProbePollResult_Identified)
+        == (expected == GnssNeoM9nIdentityOk));
+    TEST_CHECK(GnssNeoM9n_IdentityDiagnosticsGet(0U, &diagnostics) == expected);
+    TEST_CHECK(diagnostics.identity_result ==
+        ((mode == 3U) ? GnssNeoM9nIdentityNone : expected));
+    if (expected != GnssNeoM9nIdentityOk)
+    { TEST_CHECK(diagnostics.last_rejection == expected); }
+    if (expected == GnssNeoM9nIdentityOk)
+    { TEST_CHECK(diagnostics.profile ==
+        ((diagnostics.protocol_major == 27U) ? 1U : 2U)); }
+    s_monver_silent = 0U;
+}
+
+static void Test_IdentityBoundary(void)
+{
+    static const char *versions[] = {"PROTVER=27.00", "PROTVER=27.99",
+        "PROTVER=32.01", "PROTVER=32.00", "PROTVER=32.02", "PROTVER=31.01",
+        "PROTVER=26.99", "PROTVER=33.01", "PROTVER=27.1", "PROTVER=27.xx",
+        "PROTVER=32.01X"};
+    uint8_t index;
+    for (index = 0U; index < sizeof(versions) / sizeof(versions[0]); index++)
+    {
+        Test_IdentityFrame("MOD=NEO-M9N", versions[index],
+            index < 2U ? NULL : "FWVER=SPG 4.04",
+            NULL, 0U, index < 3U ? GnssNeoM9nIdentityOk :
+            GnssNeoM9nIdentityUnsupportedProtocol);
+    }
+    /* Explicit software-family conflicts only affect the new 32.01 profile.
+     * Unknown/empty software and legacy 27.xx are not a new whitelist. */
+    for (index = 5U; index <= 11U; index++)
+    {
+        Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+            NULL, index, index <= 8U ? GnssNeoM9nIdentityWrongFirmware :
+            GnssNeoM9nIdentityOk);
+        Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=27.12", NULL,
+            NULL, index, GnssNeoM9nIdentityOk);
+    }
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=27.12", "FWVER=SPG 4.04",
+        NULL, 0U, GnssNeoM9nIdentityWrongFirmware);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=27.12", NULL,
+        NULL, 4U, GnssNeoM9nIdentityUnsupportedHardware);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 4U, GnssNeoM9nIdentityUnsupportedHardware);
+    Test_IdentityFrame(NULL, "PROTVER=32.01", "FWVER=SPG 4.04", NULL, 0U,
+        GnssNeoM9nIdentityUnsupportedHardware);
+    Test_IdentityFrame("MOD=NEO-M9N", NULL, "FWVER=SPG 4.04", NULL, 0U,
+        GnssNeoM9nIdentityMissingProtocol);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", NULL, NULL, 0U,
+        GnssNeoM9nIdentityMissingFirmware);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=27.12", NULL, NULL, 0U,
+        GnssNeoM9nIdentityOk);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.03",
+        NULL, 0U, GnssNeoM9nIdentityWrongFirmware);
+    Test_IdentityFrame("MOD=NEO-M8N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 0U, GnssNeoM9nIdentityWrongModel);
+    Test_IdentityFrame("MOD=NEO-F9P", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 0U, GnssNeoM9nIdentityWrongModel);
+    Test_IdentityFrame("MOD=NEO-M10", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 0U, GnssNeoM9nIdentityWrongModel);
+    Test_IdentityFrame("MOD=NEO-M9N-00B", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 0U, GnssNeoM9nIdentityWrongModel);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        "PROTVER=32.01", 0U, GnssNeoM9nIdentityOk);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        "PROTVER=27.12", 0U, GnssNeoM9nIdentityDuplicateConflict);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        "MOD=NEO-M8N", 0U, GnssNeoM9nIdentityDuplicateConflict);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        "FWVER=SPG 4.03", 0U, GnssNeoM9nIdentityDuplicateConflict);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 1U, GnssNeoM9nIdentityUnterminatedField);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 2U, GnssNeoM9nIdentityBadLength);
+    Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+        NULL, 3U, GnssNeoM9nIdentityChecksumError);
+}
+
+
+static void Test_CapturedIdentity(void)
+{
+    static const uint32_t keys[23] = {
+    GNSS_CFG_UART1_BAUDRATE, /* Apply communication changes last. */
+    GNSS_CFG_UART1INPROT_UBX, GNSS_CFG_UART1INPROT_NMEA,
+    GNSS_CFG_UART1INPROT_RTCM3X, GNSS_CFG_UART1OUTPROT_UBX,
+    GNSS_CFG_UART1OUTPROT_NMEA, GNSS_CFG_MSGOUT_NAV_PVT_UART1,
+    GNSS_CFG_RATE_MEAS, GNSS_CFG_RATE_NAV, GNSS_CFG_RATE_TIMEREF,
+    GNSS_CFG_NAVSPG_DYNMODEL,
+    GNSS_CFG_SIGNAL_GPS_ENA, GNSS_CFG_SIGNAL_GPS_L1CA_ENA,
+    GNSS_CFG_SIGNAL_SBAS_ENA, GNSS_CFG_SIGNAL_SBAS_L1CA_ENA,
+    GNSS_CFG_SIGNAL_GAL_ENA, GNSS_CFG_SIGNAL_GAL_E1_ENA,
+    GNSS_CFG_SIGNAL_BDS_ENA, GNSS_CFG_SIGNAL_BDS_B1_ENA,
+    GNSS_CFG_SIGNAL_QZSS_ENA, GNSS_CFG_SIGNAL_QZSS_L1CA_ENA,
+    GNSS_CFG_SIGNAL_GLO_ENA, GNSS_CFG_SIGNAL_GLO_L1_ENA
+};
+    GnssNeoM9nIdentityDiagnostics diagnostics;
+    GnssNeoM9nConfigItem item = {GNSS_CFG_RATE_NAV, 1U, 2U};
+    uint8_t index;
+    uint8_t frame[168];
+    uint8_t payload[160];
+    s_use_captured = 1U;
+    s_test_protocol = "PROTVER=32.01";
+    s_mode = TEST_RESPONSE_OK;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(GnssNeoM9n_ProbeStart(0U, GNSS_DEFAULT_BAUDRATE) == GnssNeoM9nProbeStartResult_Ok);
+    s_tick_ms += 200U;
+    TEST_CHECK(GnssNeoM9n_ProbePoll(0U) == GnssNeoM9nProbePollResult_Pending);
+    TEST_CHECK(GnssNeoM9n_ProbePoll(0U) == GnssNeoM9nProbePollResult_Identified);
+    TEST_CHECK(GnssNeoM9n_IdentityDiagnosticsGet(0U, &diagnostics) == GnssNeoM9nIdentityCapabilitiesPending);
+    TEST_CHECK(diagnostics.profile == 3U && diagnostics.capability_read_mask == 0U);
+    TEST_CHECK(GnssNeoM9n_ItemWriteStart(0U, &item) == GnssNeoM9nItemStartResult_NotReady);
+    for (index = 0U; index < 23U; index++)
+    {
+        TEST_CHECK(GnssNeoM9n_ItemReadStart(0U, keys[index]) == GnssNeoM9nItemStartResult_Ok);
+        TEST_CHECK(GnssNeoM9n_ItemReadPoll(0U, &item) == GnssNeoM9nItemPollResult_Complete);
+        TEST_CHECK(item.key == keys[index] && item.value_len == Test_KeyValueLength(keys[index]));
+        if (index < 22U)
+        { TEST_CHECK(GnssNeoM9n_ItemWriteStart(0U, &item) == GnssNeoM9nItemStartResult_NotReady); }
+    }
+    TEST_CHECK(GnssNeoM9n_IdentityDiagnosticsGet(0U, &diagnostics) == GnssNeoM9nIdentityOk);
+    TEST_CHECK(diagnostics.capability_read_mask == 0x007FFFFFUL);
+    /* Wrong base SW/HW/FW/protocol are checksummed input, still refused. */
+    s_monver_silent = 1U;
+    for (index = 0U; index < 4U; index++)
+    {
+        static const uint8_t offsets[4] = {9U, 31U, 50U, 82U};
+        TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+        TEST_CHECK(GnssNeoM9n_ProbeStart(0U, GNSS_DEFAULT_BAUDRATE) == GnssNeoM9nProbeStartResult_Ok);
+        (void)memcpy(payload, &s_captured_monver[6], sizeof(payload));
+        payload[offsets[index]] ^= 1U;
+        (void)Test_FrameBuild(TEST_MON_CLASS, 4U, payload, sizeof(payload), frame);
+        Test_FrameInject(frame, sizeof(frame), 0U);
+        TEST_CHECK(GnssNeoM9n_ProbePoll(0U) == GnssNeoM9nProbePollResult_WrongModel);
+        TEST_CHECK(GnssNeoM9n_IdentityDiagnosticsGet(0U, &diagnostics) != GnssNeoM9nIdentityOk);
+        TEST_CHECK(diagnostics.capability_read_mask == 0U);
+        TEST_CHECK(GnssNeoM9n_ItemWriteStart(0U, &item) != GnssNeoM9nItemStartResult_Ok);
+    }
+    s_monver_silent = 0U;
+    s_use_captured = 0U;
+    s_test_protocol = "PROTVER=27.12";
+}
+
+
+static void Test_CapturedCapabilityFailures(void)
+{
+    static const uint32_t keys[23] = {
+    GNSS_CFG_UART1_BAUDRATE, /* Apply communication changes last. */
+    GNSS_CFG_UART1INPROT_UBX, GNSS_CFG_UART1INPROT_NMEA,
+    GNSS_CFG_UART1INPROT_RTCM3X, GNSS_CFG_UART1OUTPROT_UBX,
+    GNSS_CFG_UART1OUTPROT_NMEA, GNSS_CFG_MSGOUT_NAV_PVT_UART1,
+    GNSS_CFG_RATE_MEAS, GNSS_CFG_RATE_NAV, GNSS_CFG_RATE_TIMEREF,
+    GNSS_CFG_NAVSPG_DYNMODEL,
+    GNSS_CFG_SIGNAL_GPS_ENA, GNSS_CFG_SIGNAL_GPS_L1CA_ENA,
+    GNSS_CFG_SIGNAL_SBAS_ENA, GNSS_CFG_SIGNAL_SBAS_L1CA_ENA,
+    GNSS_CFG_SIGNAL_GAL_ENA, GNSS_CFG_SIGNAL_GAL_E1_ENA,
+    GNSS_CFG_SIGNAL_BDS_ENA, GNSS_CFG_SIGNAL_BDS_B1_ENA,
+    GNSS_CFG_SIGNAL_QZSS_ENA, GNSS_CFG_SIGNAL_QZSS_L1CA_ENA,
+    GNSS_CFG_SIGNAL_GLO_ENA, GNSS_CFG_SIGNAL_GLO_L1_ENA
+};
+    GnssNeoM9nIdentityDiagnostics identity;
+    GnssNeoM9nConfigItem item = {GNSS_CFG_RATE_NAV, 1U, 2U};
+    uint8_t failure;
+    uint8_t index;
+    s_use_captured = 1U;
+    s_mode = TEST_RESPONSE_OK;
+    for (failure = 0U; failure < 23U; failure++)
+    {
+        TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+        TEST_CHECK(GnssNeoM9n_ProbeStart(0U, GNSS_DEFAULT_BAUDRATE) == GnssNeoM9nProbeStartResult_Ok);
+        s_tick_ms += 200U;
+        TEST_CHECK(GnssNeoM9n_ProbePoll(0U) == GnssNeoM9nProbePollResult_Pending);
+        TEST_CHECK(GnssNeoM9n_ProbePoll(0U) == GnssNeoM9nProbePollResult_Identified);
+        s_capability_reject_key = keys[failure];
+        for (index = 0U; index < 23U; index++)
+        {
+            TEST_CHECK(GnssNeoM9n_ItemReadStart(0U, keys[index]) == GnssNeoM9nItemStartResult_Ok);
+            TEST_CHECK(GnssNeoM9n_ItemReadPoll(0U, &item) ==
+                (index == failure ? GnssNeoM9nItemPollResult_Nak : GnssNeoM9nItemPollResult_Complete));
+        }
+        TEST_CHECK(GnssNeoM9n_IdentityDiagnosticsGet(0U, &identity) == GnssNeoM9nIdentityCapabilitiesPending);
+        TEST_CHECK(identity.capability_read_mask != 0x007FFFFFUL);
+        TEST_CHECK(GnssNeoM9n_ItemWriteStart(0U, &item) == GnssNeoM9nItemStartResult_NotReady);
+        TEST_CHECK(GnssNeoM9n_SendUbx(0U, TEST_CFG_CLASS, 0x8AU, NULL, 0U) != 0);
+    }
+    s_capability_reject_key = 0U;
+    s_use_captured = 0U;
+}
+
 int main(void)
 {
     (void)memset(&s_uart_diagnostics, 0, sizeof(s_uart_diagnostics));
     s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
     TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    Test_CapturedCapabilityFailures();
+    Test_CapturedIdentity();
+    Test_IdentityBoundary();
     Test_ConfigReadResponses();
     Test_ValgetVersionsAndKeySizes();
     Test_DiagnosticParsers();
@@ -1245,9 +1518,21 @@ int main(void)
     Test_DiscontinuityCompletesTransactions();
     Test_ConfigDiffReadbackPersistence();
     Test_NonblockingProbe();
+    s_test_protocol = "PROTVER=32.01";
+    Test_NonblockingProbe();
+    s_test_protocol = "PROTVER=27.12";
     Test_AsyncConfigReadBackpressure();
     Test_AsyncItemReadWrite();
     Test_AsyncStartup();
+    s_test_protocol = "PROTVER=32.01";
+    Test_AsyncStartup();
+    Test_NmeaRescue(0U, 0U, 0U, 1U);
+    Test_NmeaRescue(0U, 1U, 0U, 0U);
+    s_use_captured = 1U;
+    Test_AsyncStartup();
+    Test_NmeaRescue(0U, 0U, 0U, 1U);
+    s_use_captured = 0U;
+    s_test_protocol = "PROTVER=27.12";
     Test_NmeaRescue(0U, 0U, 0U, 1U);
     Test_NmeaRescue(1U, 0U, 0U, 0U);
     Test_NmeaRescue(0U, 1U, 0U, 0U);

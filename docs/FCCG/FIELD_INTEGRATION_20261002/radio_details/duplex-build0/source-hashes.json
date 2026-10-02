@@ -1,0 +1,9 @@
+{
+  "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\Devices\\Telemetry\\SX1281\\Src\\sx1281_device.c": "b5c1c63604b0c4eb6d6050cf22273b50b12a6d2494c539f822960cc97e1872d0",
+  "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\Ground\\Radio\\Src\\ground_radio_sx1281.c": "469401c0d43e12589f4b19a3411060bbb5167a7b576e03e22bcd16042027163b",
+  "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\apps\\FCCG\\tests\\fixtures\\radio_duplex_host.c": "0ebd4058af1a56e257c99630a5cda33174a64fdc5314e866c8d9f9177e093c52",
+  "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Src\\sx1281_device.c": "b5c1c63604b0c4eb6d6050cf22273b50b12a6d2494c539f822960cc97e1872d0",
+  "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\Generated\\Inc\\air_link_config.h": "f0ccc4b3380f7dab45d259862dceff135a1b798f23b69e1eb592230d10cff1b9",
+  "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\Generated\\Inc\\air_link_config.h": "f0ccc4b3380f7dab45d259862dceff135a1b798f23b69e1eb592230d10cff1b9",
+  "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_radio_pytest\\duplex-build0\\duplex.exe": "7e9887301f2993fa500e4407ce1d7f1f7dd03b024e7fa3808f21f904d041ff5e"
+}

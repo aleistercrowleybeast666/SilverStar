@@ -1,0 +1,615 @@
+{
+  "schema": "silverstar.rf-m9n-integration-evidence/1",
+  "rf_base": "0b98f498f1d2eb27f96bf17d1442c884c9052bb1",
+  "m9_origin": "d3fa28880de65f85cd6cf8f72a21df1485271a3c",
+  "m9_cherry_pick": "fee89edc1af1a2dd1297431ce359ae099f607f90",
+  "source_commit": "b2e61d272b8e6e741606042d7aaaa3b36d622df5",
+  "configuration": "RF fixture unchanged except project.name SS_RfM9n_1; KF6/JY901B/M9N/E28/Delay10",
+  "fixture_sha256": "6348c8b8af1d33352cee7a05b35e786a8c536ec70424fcd80a3d3669d1b313b0",
+  "candidate": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+  "python": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+  "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "gates": [
+    {
+      "name": "Release-build",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "all"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\Release-build.log",
+      "sha256": "ce7e00e4c5b54494fcd39a1e2c5a45a2029f7ac4f75b77143235198083438373"
+    },
+    {
+      "name": "Host",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "host-tests"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\Host.log",
+      "sha256": "b22176532cabc12174f3af79f656630f4738aaa40d7d40409e6b61c482c50317"
+    },
+    {
+      "name": "architecture",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "architecture-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\architecture.log",
+      "sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+    },
+    {
+      "name": "power10",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\power10.log",
+      "sha256": "710cc5fd94e3237efebccc7baa0f3714eabdd1c0f9cbbec3b7455bdffe081bb9"
+    },
+    {
+      "name": "analyzer",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "static-analysis"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\analyzer.log",
+      "sha256": "e9fcf77b9ee34b23f259e06cc773caf9bffa914c53cb287e4d350c8f3dea34c7"
+    },
+    {
+      "name": "artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\artifact.log",
+      "sha256": "3ea7ca4ba00d8cf14e8c6cc174fde98405fa424078ee2da3952d9995889b2a52"
+    },
+    {
+      "name": "resources",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "stack-report",
+        "memory-report"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\resources.log",
+      "sha256": "3111aaf21bbe18675ee783881cbe2976a29f37402de0102c10b8f0d53ab534f9"
+    },
+    {
+      "name": "Debug-build",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Debug",
+        "all"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 2,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\Debug-build.log",
+      "sha256": "bedfe3397e09e05a6fcaa71412cd7422930bc48661e2845240e5710c312549e6"
+    },
+    {
+      "name": "Debug-artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Debug",
+        "artifact-check",
+        "stack-report",
+        "memory-report"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller",
+      "exit": 2,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\Debug-artifact.log",
+      "sha256": "dd19c1052fe0700fd3f421f11043b166c1f14614b85609633630fa8ea327e8f7"
+    },
+    {
+      "name": "Radio-generated-Host",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/FCCG/tests/test_radio_handshake_generated_host.py",
+        "-q"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\Radio-generated-Host.log",
+      "sha256": "172731f5ea48e9af12e0b566c243498b6e2a14389fa2e3f5c082f8ff2148b204"
+    }
+  ],
+  "pre_gates": [
+    {
+      "name": "Release-build",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "all"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_pre\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_pre_evidence\\Release-build.log",
+      "sha256": "5d28e2e4203a3b313804dcd59bed3481a36becf07d58d10cee9945fbd5d7ba9f"
+    },
+    {
+      "name": "artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_pre\\Flight_Controller",
+      "exit": 2,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_pre_evidence\\artifact.log",
+      "sha256": "9af7dbc5c3c55c95993a6e7f8ceb730d8929563d1230965f140e36337ce9de84"
+    },
+    {
+      "name": "resources",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "stack-report",
+        "memory-report"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_pre\\Flight_Controller",
+      "exit": 2,
+      "log": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_pre_evidence\\resources.log",
+      "sha256": "ca15c28ce42081b89e9d1081096e8458b0d37dcfe2dd2a70e1402f72dedf9655"
+    }
+  ],
+  "source_owner_generated": [
+    {
+      "owner": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "generated": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "sha256": "a7b6f553e5b6b1d2a285bdd488a0154b79b84d775a5a85236273a1bec2d26b3f",
+      "bytes_equal": true
+    },
+    {
+      "owner": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Inc\\neo_m9n_device.h",
+      "generated": "Devices/GNSS/NEO_M9N/Inc/neo_m9n_device.h",
+      "sha256": "b10ed17b11460514e987e201084036449f1c76c6060a3084383ebb2fbbadb21c",
+      "bytes_equal": true
+    },
+    {
+      "owner": "apps\\FCCG\\plugins\\builtin\\silverstar_device_gnss_neo_m9n\\payload\\Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_startup.c",
+      "generated": "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c",
+      "sha256": "2d65c18bbb1704e3e92e59332016747acc9f919066afce4f2cf036d81fede75c",
+      "bytes_equal": true
+    },
+    {
+      "owner": "apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\test_neo_m9n_device.c",
+      "generated": "Tests/Host/test_neo_m9n_device.c",
+      "sha256": "7b66d6013cbdf21ddd1179b14aa2dfaa5db12edd610356706f5b96b1ef7a1d25",
+      "bytes_equal": true
+    }
+  ],
+  "rf_base_files_unchanged": [
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_telemetry_transport_if.h",
+      "working_sha256": "33e7f2a7767444aa6e8358a5bea60c5a3b8bfb24a837734ff910f81293976679",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c",
+      "working_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_source_selector.c",
+      "working_sha256": "c2e3a4765fb753aad64e862029dda1865c654d10bfb8408ce2b5503abace5012",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c",
+      "working_sha256": "5a63526a24113b92bf988ba75c6cfbfa82dee40a3a152f4a0cab0c6564c0d054",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_sx1281_device.c",
+      "working_sha256": "85041bf40a4dcdbbf9572f2001f7d1f8443906222dfb9ba22a934d30383a023a",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_telemetry.c",
+      "working_sha256": "92afc9f560476d6a720ba5b1ca4bce9266e56dde4671039cb96e467016851132",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1",
+      "working_sha256": "d184b1c78ebadadd7d8bf27657d28ba94424c8b91b9e0a121aaaac06407d75d1",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/templates/generated/project_device_instances.c",
+      "working_sha256": "32c1eb82c318d8b1471d54b187ac31fc9023fc6eb28b1514bd3b38939f31fd81",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/templates/generated/project_device_instances.h",
+      "working_sha256": "c47051daa8373b3c4fac5e99c829b04aa87a40a68cd2535d51cb4d48a9bff9f2",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Adapter/Inc/sx1281_instance.h",
+      "working_sha256": "d5c281b763d9a46b6315d57ae6e9fbeedf0ad03caf6d451e01eb078c0aa140bb",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.c",
+      "working_sha256": "1b391bd5310825307811e21764a4c0cc78460c60ab8f53ca7f5f8d9f568f4a9f",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Inc/sx1281_config.h",
+      "working_sha256": "a7876ffcd2cac9ed7f7c719f0b8fcd1ce39dcdec0dbe8f2bc373293967106d5f",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Inc/sx1281_device.h",
+      "working_sha256": "f27b0de7d5cc0c6142cdf9cf828c65df3e7e035fabf7afda0c8be665d5f692c0",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c",
+      "working_sha256": "c38046dd61b5f4b887cf80f1326001074d93c5db42e4ff6eb6751aa1568a0005",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/plugin.json",
+      "working_sha256": "65ceac9e0944342e537ed1b1c31621b56c46032d0072e44d842055a7fbd7a47d",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/src/silverstar_fccg/generator/render.py",
+      "working_sha256": "8d6d7397589c4abc98c7887c27975acc16251ed905272a2db247b74b0792bb57",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/tests/fixtures/radio_handshake.ssproject",
+      "working_sha256": "0331267c803050dd08a5671cff864a66201e93c81f9156c6fba65a1d7d7df4bc",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/tests/fixtures/radio_handshake_host.c",
+      "working_sha256": "26de33c28d13c4f3d1a0565fdfae27ee28059ff39d9c0c180de895bfff75071a",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/tests/fixtures/source_selector/project_device_instances.h",
+      "working_sha256": "7dca806556ed90077a7a3cf93481c9fa6a6aa8d507f9755dfa942de6edebef50",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/tests/fixtures/sx1281_contract_host.c",
+      "working_sha256": "18893ffa034f3dac62dd1f216924bd7718d84f9235112d182127ce1939cd1248",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/tests/test_radio_handshake_generated_host.py",
+      "working_sha256": "8c722b49efed34920f285d48871fee5bdf3413c3888dceae48125296f4457df1",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "apps/FCCG/tests/test_sx1281_contract_host.py",
+      "working_sha256": "99d1e9a8e81540bd1aa9ba1ba4c31c5f9a1377401a18f7c48c25fa830315cd98",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "docs/FCCG/validation/RadioHandshakeHotfix_20261002.json",
+      "working_sha256": "6ca548606c29ab1e82b6226d89a8a152e65a268139a1308564f7eb8b5875966a",
+      "unchanged_from_rf_base": true
+    },
+    {
+      "path": "docs/GSHC/AIR_PROTOCOL.md",
+      "working_sha256": "2f424d88f1a38066bde27bce4cb589663642f2ccea2f6d402a1f06d07239090f",
+      "unchanged_from_rf_base": true
+    }
+  ],
+  "logs": {
+    "pre__artifact.log.gz": {
+      "raw_sha256": "9af7dbc5c3c55c95993a6e7f8ceb730d8929563d1230965f140e36337ce9de84",
+      "gzip_sha256": "bf8e52c876585f32e0a27cf28d1f360cd758d688fb443b93cad995893bf787c1",
+      "bytes": 2065
+    },
+    "pre__Release-build.log.gz": {
+      "raw_sha256": "5d28e2e4203a3b313804dcd59bed3481a36becf07d58d10cee9945fbd5d7ba9f",
+      "gzip_sha256": "ec94de1fc907710c7d90f5fa6ef69c946dbe531e80800b67ac3c03bdd3e4a228",
+      "bytes": 431336
+    },
+    "pre__resources.log.gz": {
+      "raw_sha256": "ca15c28ce42081b89e9d1081096e8458b0d37dcfe2dd2a70e1402f72dedf9655",
+      "gzip_sha256": "ad0bb3acbb25225c7b985833a56311c7db7bdeb53944831d7f4779b818348983",
+      "bytes": 2910
+    },
+    "pre__results.json.gz": {
+      "raw_sha256": "f571cb5557ff1d53fbbce0d557a3f27014ab4104ca76a6893b4f45ddaca0821b",
+      "gzip_sha256": "17a69aa91fbc0bd713ae2aab5a9503b5ac8c4e9f2ec50cdf1ea88a52ae6f888e",
+      "bytes": 1643
+    },
+    "final__analyzer.log.gz": {
+      "raw_sha256": "ad9934a19f4c98f324c021e35175c1c55dfab5be8da9206a47095b56adb4d708",
+      "gzip_sha256": "3bad4d08c965b6188002b1b1dc7bf5f0db9ede8c32d26e532e58fee916d9104a",
+      "bytes": 439973
+    },
+    "final__architecture.log.gz": {
+      "raw_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+      "gzip_sha256": "8c79562071c88b99f2f4347ddde6b81d74631cfb415b0512e090fc178c870970",
+      "bytes": 1154
+    },
+    "final__artifact.log.gz": {
+      "raw_sha256": "e9e2ad60a62f5738985be83579a4c32828b10916be8d6bbda400053abdc7028d",
+      "gzip_sha256": "5ab8d9a8737d8c1d5a47afbfef9e559d8688149d8f214983f99e542a23798c0b",
+      "bytes": 1995
+    },
+    "final__Debug-artifact.log.gz": {
+      "raw_sha256": "896bfbd34c79584c21a69979f543cdb389cafefb7d1932bd13ca4d191dba95f9",
+      "gzip_sha256": "75bd8ad0f5e62e514f8f1b46e23581de3addf82a69d61324cc6062cb854bb809",
+      "bytes": 15357
+    },
+    "final__Debug-build.log.gz": {
+      "raw_sha256": "d34286f3bcd5ed383c5839b9de3e564103f8aa65c6b18e237e7316bc7abd6e4e",
+      "gzip_sha256": "d2caea94f1bb4a1620debe01a8901afcafbc39d28b6876bfed1c5570c6bb95cb",
+      "bytes": 434658
+    },
+    "final__Host.log.gz": {
+      "raw_sha256": "233d1e2e1369db351fc57fea8d391427f238a66f1d63a5028f9740cc26663b9a",
+      "gzip_sha256": "5156946ff26b17366213badcc6f7a1ff498e98115d82ba2ccdf92fc57f2bf3b7",
+      "bytes": 57249
+    },
+    "final__power10.log.gz": {
+      "raw_sha256": "1688ee6955ee73a49789e2b2e7b67070b1cc60a37259db1aae6e84207c74a63e",
+      "gzip_sha256": "2b5b2bb38f467a25f6ad32cdda2dc71156bf6b889c80a01565f72749dcd6e64f",
+      "bytes": 730045
+    },
+    "final__Radio-generated-Host.log.gz": {
+      "raw_sha256": "e536160fa6196e4e98aac974bca6d5cfae15081bdb726f48ae181c41e5a54781",
+      "gzip_sha256": "7235a045d5fb758a515f5e633934f1878c73f5b2992e396978efe0ba2d99afd5",
+      "bytes": 101
+    },
+    "final__Release-build.log.gz": {
+      "raw_sha256": "3c573270de048740a3d4b3e1d05618e31e8ea436c27751f80772745b5090185f",
+      "gzip_sha256": "c02fc977169a3a3d28c41f4fe057a1bf92da12337a9a10937817ee4afe8fd64f",
+      "bytes": 431336
+    },
+    "final__resources.log.gz": {
+      "raw_sha256": "bb52c5e8419c4171bb7fefd7cc55716809d6ca7e8c923e9a2d7591e470260a62",
+      "gzip_sha256": "92f7c60da4e67d8b1ec4319207b7ed94fa0deed7886e892331f8488a28f162e2",
+      "bytes": 2840
+    },
+    "final__results.json.gz": {
+      "raw_sha256": "83d2dcc3b4e0e1ce409629b6ecac524c22f3617f11e431499e2e773e9f1589ad",
+      "gzip_sha256": "296b53163098f9411c46eaed3f71dc2ec4f13a967d3d78944d6615a4443b7a39",
+      "bytes": 5527
+    },
+    "final2__analyzer.log.gz": {
+      "raw_sha256": "e9fcf77b9ee34b23f259e06cc773caf9bffa914c53cb287e4d350c8f3dea34c7",
+      "gzip_sha256": "82f20708f0db2f75ccef014a7223f1931ffb260b66032291988eb88dc258b25e",
+      "bytes": 439975
+    },
+    "final2__architecture.log.gz": {
+      "raw_sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad",
+      "gzip_sha256": "8c79562071c88b99f2f4347ddde6b81d74631cfb415b0512e090fc178c870970",
+      "bytes": 1154
+    },
+    "final2__artifact.log.gz": {
+      "raw_sha256": "3ea7ca4ba00d8cf14e8c6cc174fde98405fa424078ee2da3952d9995889b2a52",
+      "gzip_sha256": "b93f77546a3dc2bb8819d5461b1c11474857c1ddfa193d7b30827bca403d63af",
+      "bytes": 1995
+    },
+    "final2__Debug-artifact.log.gz": {
+      "raw_sha256": "dd19c1052fe0700fd3f421f11043b166c1f14614b85609633630fa8ea327e8f7",
+      "gzip_sha256": "d0a0fd3f68ff753334b758a215b3ab66ed0cb4f30e436bb498d2e687d21cd986",
+      "bytes": 15365
+    },
+    "final2__Debug-build.log.gz": {
+      "raw_sha256": "bedfe3397e09e05a6fcaa71412cd7422930bc48661e2845240e5710c312549e6",
+      "gzip_sha256": "2e1dd9a288a12e8eb4912a3b908bd80e2350b634bfeea6b9a295f48ab52ff3e3",
+      "bytes": 434666
+    },
+    "final2__Host.log.gz": {
+      "raw_sha256": "b22176532cabc12174f3af79f656630f4738aaa40d7d40409e6b61c482c50317",
+      "gzip_sha256": "f6a4840005a0c8f2fc7f6ae36979cc43bac648af5b7191d459b4c753b4f31633",
+      "bytes": 57319
+    },
+    "final2__power10.log.gz": {
+      "raw_sha256": "710cc5fd94e3237efebccc7baa0f3714eabdd1c0f9cbbec3b7455bdffe081bb9",
+      "gzip_sha256": "4638e30083603a0c16df11d237485886cbada2a1bca7c8128a91e3f1a5cced6b",
+      "bytes": 730440
+    },
+    "final2__Radio-generated-Host.log.gz": {
+      "raw_sha256": "172731f5ea48e9af12e0b566c243498b6e2a14389fa2e3f5c082f8ff2148b204",
+      "gzip_sha256": "d42c3279cbcf41210935b0e1ac65858be049047b7028b4802c07b97c57423960",
+      "bytes": 101
+    },
+    "final2__Release-build.log.gz": {
+      "raw_sha256": "ce7e00e4c5b54494fcd39a1e2c5a45a2029f7ac4f75b77143235198083438373",
+      "gzip_sha256": "447995a9fd9c9d99dd4ca4abbbcd4e8e18e3afbc2473d9208453fbd295c6158c",
+      "bytes": 431336
+    },
+    "final2__resources.log.gz": {
+      "raw_sha256": "3111aaf21bbe18675ee783881cbe2976a29f37402de0102c10b8f0d53ab534f9",
+      "gzip_sha256": "9db2bc3023c77fb9e47d5ca78089525cf84808ed8fc4a07746820b1260f81efb",
+      "bytes": 2840
+    },
+    "final2__results.json.gz": {
+      "raw_sha256": "eda84550f635d1b6a972e5f537cf47dde5989f0980d699deb75a5d7ed04abfa0",
+      "gzip_sha256": "d985a2c85265b536495a06b08360a3dd27208193ee284525d8d8b601d2f1a3cf",
+      "bytes": 5546
+    },
+    "sw_counter__build.log.gz": {
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    "sw_counter__results.json.gz": {
+      "raw_sha256": "60486191b81f07e5704bc38a87613e4c0777925c50a1c01445242b6ca1afc748",
+      "gzip_sha256": "47d51023ff8f9a11328e3729a71d086f5d2e86ca246235a17d3571685cde8355",
+      "bytes": 2819
+    },
+    "sw_counter__run.log.gz": {
+      "raw_sha256": "b9b9077a822c30fd01bcc6ab4761d48d95f51b9840d63c24ef9b3f5dd207e2d8",
+      "gzip_sha256": "aa83dd3df8c42f65700b2e0f5d867575191dc9ddcc306295f2636ec530764f2f",
+      "bytes": 3570
+    }
+  },
+  "artifacts": {
+    "SilverStar_0_1_1.elf": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+      "bytes": 3250240,
+      "sha256": "f0c0b8dd05bf0d4e10ee44dd1be73a937899abf4247631821f076a6c6514920a"
+    },
+    "SilverStar_0_1_1.bin": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+      "bytes": 321560,
+      "sha256": "0546b5d639946fb38e0f1651cdfbf1b9dd7261e24119146f4285b88dd0d55da2"
+    },
+    "SilverStar_0_1_1.hex": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.hex",
+      "bytes": 904515,
+      "sha256": "badef1275bf564b6669c7de1352be9fa1aee9b244ad3af56c7efea7fcc2d1b0b"
+    },
+    "SilverStar_0_1_1.map": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+      "bytes": 1489346,
+      "sha256": "67506834cdc1cb7af6dd32444f07f5c32d35ace6bb4e3796e24b75cefe71a856"
+    }
+  },
+  "source_firmware_archive": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_final2_evidence\\SS_RfM9n_1_SourceFirmware.zip",
+    "bytes": 4623295,
+    "sha256": "5ab80407be9e861475d51b03051ef002323b74bd473416360f731b363b92f1ab"
+  },
+  "limitations": [
+    "Debug missing existing KF6 SystemNavigationBackend implementation (same baseline); no Debug ELF/BIN",
+    "PoT whole-project critical-contract review NOT_PROVEN; no original PoT/NASA certification",
+    "Static task stack estimates do not prove MSP/ISR nesting/WCET/hardware stack high-water",
+    "RF hardware 2/10 is parent report, not validated here; no hardware access/flash",
+    "No Baro changes included"
+  ],
+  "software_conflict_counterexample": {
+    "source_commit": "a87eab1 (owning test-only dirty snapshot)",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-DPROJECT_RESOURCE_GNSS_UART=PLATFORM_UART_1",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Tests\\Host\\Fixtures\\MultiInstance\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Platform\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\System\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Interfaces\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Common\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Tests\\Host",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Inc",
+      "-I",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\System\\Src\\system_device_startup.c",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Tests\\Host\\Fixtures\\MultiInstance\\multi_instance_resources.c",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Src\\neo_m9n_device.c",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Adapter\\Src\\neo_m9n_startup.c",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter\\Flight_Controller\\Tests\\Host\\test_neo_m9n_device.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\RfM9nIntegration_20261002\\.work\\combo_sw_counter_evidence\\counter.exe"
+    ],
+    "build_exit": 0,
+    "run_exit": 1,
+    "source_sha256": "98377fbada3f6506520001d62bdab2ee54f95c3b09afff875d97661e0b84c926",
+    "test_sha256": "7b66d6013cbdf21ddd1179b14aa2dfaa5db12edd610356706f5b96b1ef7a1d25"
+  },
+  "pre_source_commit": "fee89edc1af1a2dd1297431ce359ae099f607f90",
+  "ccm_source_commit": "a87eab107b1b95521795cb0d3154220f94e5551e",
+  "software_test_commit": "6c74cbcc5899b07954a1145556b8f28ab799eb22",
+  "memory": {
+    "flash": 321548,
+    "main_sram": 102040,
+    "ccm": 55904,
+    "main_sram_budget": 102400,
+    "main_sram_budget_spare": 360,
+    "physical_sram_spare": 29032,
+    "ccm_spare": 9632,
+    "heap": 0,
+    "pre_main_sram": 102424,
+    "pre_ccm": 55520,
+    "placement_bytes": 384,
+    "placement_address": "0x1000C5E0",
+    "alignment": 8,
+    "dma_bss": 8904
+  },
+  "summary": {
+    "host": "executables=72 checks=4400646 failures=0 compile_pass_cases=7 expected_compile_failures=17",
+    "m9": "4918 checks, 0 failures",
+    "pot": "6066 checks, 108 first-party C files, 2640 functions; 749 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending.",
+    "analyzer_compilation_units": 105,
+    "analyzer_warning_lines": 0,
+    "radio_generated_host": "13 passed",
+    "software_conflict_counterexample": "4918 checks, 16 failures; build exit 0, run exit 1"
+  },
+  "tool_versions": {
+    "ARM": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+    "Host": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0",
+    "make": "GNU Make 4.4.1"
+  },
+  "placement_review": {
+    "cpu_only": "SystemDeviceStartup controller/owner callbacks, SystemGnssConfig target, 23 uint64 decoded readback values, indices/flags/timestamps; no raw UART data or HAL/DMA handle",
+    "dma_uses": [],
+    "ownership": "Task-driven startup adapter; controller.owner points into same static context. ISR/DMA does not observe or retain it. UART frames are local and WriteFrameAsync copies via RingBuf_Push before DMA starts on platform TX ring.",
+    "startup_zeroing": "F407 Reset_Handler _sccmram_bss.._eccmram_bss before constructors/main; Init also memset(context,0,sizeof(*context))",
+    "fallback": "Existing vendor-neutral PLATFORM_CPU_FAST_BSS defaults to empty; Host compiles normal BSS without target forced include; non-CCM target uses same default. No new resource policy or linker change.",
+    "stack_sizes": "Unchanged; Device estimate2128/config2560, margin432; Telemetry2136/config4096, margin1960",
+    "map": "CCM_MAP.txt; .ccmram_bss 0x10000000..0x1000DA60; adapter context 0x1000C5E0..0x1000C760",
+    "errata": "Driver comment cites M10 sec.1.5; precise source location is UBX-21035062 R03 sections1.2.1/1.2.2, printed pp10-11. Behavior evidence uses actual version table; comment section number is inaccurate."
+  }
+}

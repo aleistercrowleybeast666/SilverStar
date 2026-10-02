@@ -1,0 +1,372 @@
+{
+  "source_commit": "bb2281b1bcd11334ae47944e62f7005fb55479a2",
+  "optional_base": "f0abb6ada9c899a558f421ec3c3ad3bd7503a264",
+  "RF_production": "2395edad6eff88dd5aa0f48bc4a33eb653bf756b",
+  "RF_test_docs": "86efd3824404db5a802e3248104394c41ffb959a",
+  "branch": "fix/field-integration-20261002",
+  "worktree": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002",
+  "generated": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate",
+  "freeze": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002",
+  "gates": [
+    {
+      "name": "Ground_Station_Release",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "all"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Ground_Station_Release.log",
+      "started_utc": "2026-10-02T07:26:39.595153+00:00",
+      "finished_utc": "2026-10-02T07:26:45.657440+00:00",
+      "sha256": "e8f2e97dd56d108fd593732d20ceb205944dae5f563a94136eecde9f53ac1e18"
+    },
+    {
+      "name": "Ground_Station_Host",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "host-tests"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Ground_Station_Host.log",
+      "started_utc": "2026-10-02T07:26:45.669950+00:00",
+      "finished_utc": "2026-10-02T07:26:48.277782+00:00",
+      "sha256": "f1af8ef42aa549c660d35953471d0c26201e96eeed9443e84391e3f30555a171"
+    },
+    {
+      "name": "Ground_Station_architecture",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "architecture-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Ground_Station_architecture.log",
+      "started_utc": "2026-10-02T07:26:48.288919+00:00",
+      "finished_utc": "2026-10-02T07:26:48.993807+00:00",
+      "sha256": "8ee5b3c36246af7cc9e21e8324c635a743a32c538afccebefc9a52df876e08c8"
+    },
+    {
+      "name": "Ground_Station_PoT",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Ground_Station_PoT.log",
+      "started_utc": "2026-10-02T07:26:49.002444+00:00",
+      "finished_utc": "2026-10-02T07:26:51.101768+00:00",
+      "sha256": "ea72a602997cdf33de2a9ba36617d58ffb58117dd3e9847185c5c13dde5ad55a"
+    },
+    {
+      "name": "Ground_Station_analyzer",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "static-analysis"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Ground_Station_analyzer.log",
+      "started_utc": "2026-10-02T07:26:51.116604+00:00",
+      "finished_utc": "2026-10-02T07:26:57.788777+00:00",
+      "sha256": "e5ea481d3f76a23f23b417159a457dae779f683bc74ead53d8ef957512fe3cd6"
+    },
+    {
+      "name": "Ground_Station_artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "artifact-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Ground_Station_artifact.log",
+      "started_utc": "2026-10-02T07:26:57.800742+00:00",
+      "finished_utc": "2026-10-02T07:26:58.733328+00:00",
+      "sha256": "b9e9f3d7d8fec24f779af637287ade5c17a7637fde97513fc3ba5c9799b47998"
+    },
+    {
+      "name": "Flight_Controller_Release",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "all"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Flight_Controller_Release.log",
+      "started_utc": "2026-10-02T07:26:58.742926+00:00",
+      "finished_utc": "2026-10-02T07:28:18.688266+00:00",
+      "sha256": "f7ed1c5765826bb4a3b46102115db52c60f307657e15af02e85b13c2388de628"
+    },
+    {
+      "name": "Flight_Controller_Host",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "host-tests"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Flight_Controller_Host.log",
+      "started_utc": "2026-10-02T07:28:18.704082+00:00",
+      "finished_utc": "2026-10-02T07:33:34.267024+00:00",
+      "sha256": "c7098860aeb846210c63d2b8a69e5a62b93a2ebe6c234eccd89db0832c5aae52"
+    },
+    {
+      "name": "Flight_Controller_architecture",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "architecture-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Flight_Controller_architecture.log",
+      "started_utc": "2026-10-02T07:33:34.278878+00:00",
+      "finished_utc": "2026-10-02T07:33:47.728629+00:00",
+      "sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+    },
+    {
+      "name": "Flight_Controller_PoT",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Flight_Controller_PoT.log",
+      "started_utc": "2026-10-02T07:33:47.732240+00:00",
+      "finished_utc": "2026-10-02T07:34:06.078654+00:00",
+      "sha256": "481f69bda2829105dbe38f7ce31699fe4547f2d22239b9310d454c8787423504"
+    },
+    {
+      "name": "Flight_Controller_analyzer",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "static-analysis"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Flight_Controller_analyzer.log",
+      "started_utc": "2026-10-02T07:34:06.093521+00:00",
+      "finished_utc": "2026-10-02T07:35:50.610538+00:00",
+      "sha256": "7c6fb29cac65701074510af09020c42c320418ea2c6895355d7cba999e409d55"
+    },
+    {
+      "name": "Flight_Controller_artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "artifact-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Flight_Controller_artifact.log",
+      "started_utc": "2026-10-02T07:35:50.625026+00:00",
+      "finished_utc": "2026-10-02T07:35:54.821618+00:00",
+      "sha256": "30406ed06dca4740263cd23a4780ddf5c71b77f7b98ded10a59df18c78053e20"
+    },
+    {
+      "name": "Flight_Controller_resources",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "PYTHON=D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "stack-report",
+        "memory-report"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\Flight_Controller_resources.log",
+      "started_utc": "2026-10-02T07:35:54.833786+00:00",
+      "finished_utc": "2026-10-02T07:35:58.989802+00:00",
+      "sha256": "00dafd8d663caa5b489d03cb19efb69e5de06c4e4110660d347539dfc9e71f10"
+    },
+    {
+      "name": "paired_radio_tests",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "addopts=",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_radio_pytest",
+        "apps/FCCG/tests/test_radio_handshake_generated_host.py",
+        "apps/FCCG/tests/test_radio_duplex_generated_host.py",
+        "apps/FCCG/tests/test_sx1281_contract_host.py",
+        "apps/FCCG/tests/test_ground_generated_gates.py",
+        "apps/FCCG/tests/test_f103_ground_reference.py",
+        "apps/FCCG/tests/test_ground_bridge_bounds.py"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\paired_radio_tests.log",
+      "started_utc": "2026-10-02T07:35:59.000412+00:00",
+      "finished_utc": "2026-10-02T07:36:24.905440+00:00",
+      "sha256": "6c6ed88633d22e9036b9517edf404d90d97413d8a4b73b8bd462b687d1cdf0b9"
+    },
+    {
+      "name": "GSHC",
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "addopts=",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_gui_pytest",
+        "tests/test_navigation_readiness.py",
+        "tests/test_start_ack_state.py",
+        "tests/test_navigation_gui.py",
+        "tests/test_sensor_snapshot.py",
+        "tests/test_calibration_capability.py"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\apps\\GSHC",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_evidence\\GSHC.log",
+      "started_utc": "2026-10-02T07:36:24.915287+00:00",
+      "finished_utc": "2026-10-02T07:38:06.298797+00:00",
+      "sha256": "4ac4e7d054d31238cbec21b32864d225057d2babac7f4a295a63abcde4c3443d"
+    }
+  ],
+  "analyses": {
+    "Flight_Controller": {
+      "fanalyzer_compiles": 105,
+      "warning_lines": [],
+      "error_lines": []
+    },
+    "Ground_Station": {
+      "fanalyzer_compiles": 14,
+      "warning_lines": [
+        "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+        "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+        "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+        "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+      ],
+      "error_lines": []
+    }
+  },
+  "source_proof_entries": 675,
+  "artifacts": [
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.elf",
+      "bytes": 3263480,
+      "sha256": "6a5f739542fb1392b035957fcdc47b6ddd9f67115866473ec3d0522e591852a4"
+    },
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.bin",
+      "bytes": 324616,
+      "sha256": "686041c335590f41c8ee00f638084e7bac5a0af87a37f7d1a0386c7412d3c715"
+    },
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.hex",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.hex",
+      "bytes": 913110,
+      "sha256": "76a8a5f6d825a33b5ddce9bd3db191447be8e0543afbfe087cab0703f4d4a427"
+    },
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.map",
+      "bytes": 1490412,
+      "sha256": "c0202a1d3487e24b6de89a7a51306603469b2fe5623bb84d68fedad713f72a48"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.elf",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.elf",
+      "bytes": 53304,
+      "sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.bin",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.bin",
+      "bytes": 26000,
+      "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.map",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.map",
+      "bytes": 202750,
+      "sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.size",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.size",
+      "bytes": 108,
+      "sha256": "09e8471673e561a348a47e5008ef6b13d802275a26416062602de48910c0549c"
+    }
+  ],
+  "upstream_rf_evidence_sha256": "b86df613996acf3ebba49b8b2d81874935bbef4c8985ed1b788c51297442cb58",
+  "python": {
+    "path": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "hardware_access": false,
+  "limitations": [
+    "PoT critical contracts NOT_PROVEN",
+    "Ground task/ISR stack and radio timing NOT_PROVEN",
+    "Not a hardware or flight qualification"
+  ]
+}

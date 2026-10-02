@@ -1,0 +1,216 @@
+[
+  {
+    "command": [
+      "mingw32-make",
+      "-j2",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+    "started_utc": "2026-10-02T06:51:47.911955+00:00",
+    "finished_utc": "2026-10-02T06:53:08.881889+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-all.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+    "started_utc": "2026-10-02T06:53:08.882389+00:00",
+    "finished_utc": "2026-10-02T06:53:28.067007+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-power10-check.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+    "started_utc": "2026-10-02T06:53:28.068203+00:00",
+    "finished_utc": "2026-10-02T06:53:44.529581+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-architecture-check.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+    "started_utc": "2026-10-02T06:53:44.530659+00:00",
+    "finished_utc": "2026-10-02T07:00:31.653759+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-host-tests.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-j2",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+    "started_utc": "2026-10-02T07:00:31.654710+00:00",
+    "finished_utc": "2026-10-02T07:02:36.373732+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-static-analysis.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+    "started_utc": "2026-10-02T07:02:36.374895+00:00",
+    "finished_utc": "2026-10-02T07:02:41.556894+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-artifact-check.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+    "started_utc": "2026-10-02T07:02:41.558007+00:00",
+    "finished_utc": "2026-10-02T07:02:46.092038+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-stack-report.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-j2",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station",
+    "started_utc": "2026-10-02T06:51:37.892722+00:00",
+    "finished_utc": "2026-10-02T06:51:45.178687+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-all.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station",
+    "started_utc": "2026-10-02T06:51:45.179289+00:00",
+    "finished_utc": "2026-10-02T06:51:47.627121+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-power10-check.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station",
+    "started_utc": "2026-10-02T06:51:47.628188+00:00",
+    "finished_utc": "2026-10-02T06:51:48.515215+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-architecture-check.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station",
+    "started_utc": "2026-10-02T06:51:48.515862+00:00",
+    "finished_utc": "2026-10-02T06:51:52.050350+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-host-tests.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-j2",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station",
+    "started_utc": "2026-10-02T06:51:52.051289+00:00",
+    "finished_utc": "2026-10-02T06:52:00.408018+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-static-analysis.log"
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station",
+    "started_utc": "2026-10-02T06:52:00.409071+00:00",
+    "finished_utc": "2026-10-02T06:52:01.832582+00:00",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-artifact-check.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "--basetemp=.work/rf2g-owner-delivery-pytest",
+      "apps/FCCG/tests/test_radio_handshake_generated_host.py",
+      "apps/FCCG/tests/test_radio_duplex_generated_host.py",
+      "apps/FCCG/tests/test_sx1281_contract_host.py",
+      "apps/FCCG/tests/test_ground_generated_gates.py",
+      "apps/FCCG/tests/test_f103_ground_reference.py",
+      "apps/FCCG/tests/test_ground_bridge_bounds.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-owner-delivery.log",
+    "scope": "owner73",
+    "environment": {
+      "PYTHONIOENCODING": "utf8",
+      "PYTHONPATH": "apps/FCCG/src",
+      "QT_QPA_PLATFORM": null,
+      "SILVERSTAR_RADIO_GENERATED_PROJECT": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+      "SILVERSTAR_RADIO_GROUND_PROJECT": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station"
+    },
+    "source_snapshot": {
+      "base_commit": "2395edad6eff88dd5aa0f48bc4a33eb653bf756b",
+      "jitter_patch": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-host-jitter-snapshot.patch",
+        "bytes": 4080,
+        "sha256": "3c099a54e6b0d55a574b50e19bc0c7b4744c7d4382ff2f224d69c1ee73238bab"
+      },
+      "source": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\FCCG\\tests\\fixtures\\radio_duplex_host.c",
+        "bytes": 28606,
+        "sha256": "30171b779eba3880beb39a6f292b12d28eaef6798b6e0e6dc03706d2b9f5f629"
+      },
+      "note": "Only Host physical-owner schedule gains varying1/4/2/3ms intervals; no generated target production code changes. Separate evidence/test commit will contain this patch."
+    }
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "--basetemp=.work/rf2g-gshc-pytest",
+      "apps/GSHC/tests/test_start_ack_state.py",
+      "apps/GSHC/tests/test_sensor_snapshot.py",
+      "apps/GSHC/tests/test_calibration_capability.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002",
+    "exit_code": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-gshc.log",
+    "scope": "gshc236+3",
+    "environment": {
+      "PYTHONIOENCODING": "utf8",
+      "PYTHONPATH": "apps/GSHC/src;apps/GSHC",
+      "QT_QPA_PLATFORM": "offscreen",
+      "SILVERSTAR_RADIO_GENERATED_PROJECT": null,
+      "SILVERSTAR_RADIO_GROUND_PROJECT": null
+    }
+  }
+]

@@ -25,6 +25,7 @@
 #include "platform_memory.h"
 #include "silverstar_assert.h"
 #include "system_alignment.h"
+#include "system_user_alignment_config.h"
 #include "system_calibration.h"
 #include "system_barometer.h"
 #include "system_barometer_if.h"
@@ -3307,6 +3308,10 @@ SystemDeviceResult EstimatorTask_FreezeOrigins(void)
         s_estimator.origin_collection_frozen = 0U;
         return SYSTEM_DEVICE_TIMEOUT;
     }
+    /* A fresh START must not reuse a previous preparation's GNSS reference. */
+    (void)memset(&s_estimator.frozen_gnss, 0, sizeof(s_estimator.frozen_gnss));
+    (void)memset(&s_estimator.gnss_frame, 0, sizeof(s_estimator.gnss_frame));
+    s_estimator.gnss_origin_sample_count = 0U;
     s_estimator.gnss_origin_valid = Estimator_GnssOriginFreeze();
     if (Estimator_Kf6Selected() == 0U)
     {
@@ -3329,10 +3334,10 @@ SystemDeviceResult EstimatorTask_FreezeOrigins(void)
         s_snapshot.health_flags |= ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE;
     }
     Estimator_DiagnosticsPublish(0U);
-    /* A selected GNSS estimator must not start with fusion silently disabled.
-       The source collector is unfrozen on failure so the operator can retry. */
-    if ((Estimator_Kf6Selected() != 0U) &&
-        (SYSTEM_ESTIMATOR_GNSS_FUSION_REQUIRES_PREFLIGHT_ORIGIN != 0U) &&
+    /* Only explicit mission requirements block START. Without an optional
+       origin, fusion remains disabled for this mission and health reports it. */
+    if (((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+          SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) != 0U) &&
         (s_estimator.gnss_origin_valid == 0U))
     {
         s_estimator.origin_collection_frozen = 0U;

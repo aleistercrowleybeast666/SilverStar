@@ -356,6 +356,30 @@ SystemDeviceResult SystemTelemetry_Stop(void) { return Mock_TransportStop(); }
 SystemDeviceResult SystemTelemetry_Send(
     const uint8_t *data, uint16_t length)
 { return Mock_TransportSend(data, length); }
+/* This unit fixture completes transmission immediately; the generated-radio
+ * regression separately drives queue, IRQ completion and timeout. */
+static uint32_t s_mock_control_id;
+static uint32_t s_mock_control_completed_ms;
+SystemDeviceResult SystemTelemetry_SendControl(const uint8_t *data,
+    uint16_t length, uint32_t *transaction_id)
+{
+    SystemDeviceResult result = Mock_TransportSend(data, length);
+    if ((result == SYSTEM_DEVICE_OK) && (transaction_id != NULL))
+    {
+        s_mock_control_id++;
+        if (s_mock_control_id == 0U) { s_mock_control_id = 1U; }
+        *transaction_id = s_mock_control_id;
+        s_mock_control_completed_ms = (uint32_t)(s_now_us / 1000ULL);
+    }
+    return result;
+}
+SystemDeviceResult SystemTelemetry_TxResultGet(uint32_t id, uint32_t *age_ms)
+{
+    if ((id == 0U) || (age_ms == NULL)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (id != s_mock_control_id) { return SYSTEM_DEVICE_NOT_PRESENT; }
+    *age_ms = (uint32_t)(s_now_us / 1000ULL) - s_mock_control_completed_ms;
+    return SYSTEM_DEVICE_OK;
+}
 SystemDeviceResult SystemTelemetry_Receive(
     uint8_t *data, uint16_t capacity, uint16_t *length)
 { return Mock_TransportReceive(data, capacity, length); }
@@ -840,6 +864,8 @@ static void Test_Reset(void)
     (void)memset(s_sensor_snapshot, 0, sizeof(s_sensor_snapshot));
     (void)memset(&s_sensor_snapshot_info, 0,
                  sizeof(s_sensor_snapshot_info));
+    s_mock_control_id = 0U;
+    s_mock_control_completed_ms = 0U;
     s_rx_head = 0U;
     s_rx_tail = 0U;
     s_tx_count = 0U;
@@ -910,6 +936,7 @@ static uint8_t Test_InitialCapabilitySend(void)
         SYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK));
     TEST_CHECK(frame->data[6] == AIR_ACCEL_FULL_SCALE_G);
     TEST_CHECK(frame->data[7] == 0xD0U && frame->data[8] == 0x07U);
+    TelemetryService_Process(); /* Observe the completed CAP receipt. */
     return frame->data[1];
 }
 
@@ -963,7 +990,7 @@ static void Test_CapabilityHandshake(void)
                       first_sequence, AIR_PROFILE_COMPACT_V0);
     TelemetryService_Process();
     TEST_CHECK(Test_LastTypeGet(AIR_TYPE_ACK)->data[4] ==
-               AIR_ACK_RESULT_BAD_PARAM);
+               AIR_ACK_RESULT_OK);
     Test_CommandQueue(11U, AIR_CMD_CAPABILITY_ACK, 0U,
                       latest_sequence, 1U);
     TelemetryService_Process();
@@ -985,6 +1012,7 @@ static void Test_CapabilityHandshake(void)
     TEST_CHECK(Test_LastTypeGet(AIR_TYPE_ACK)->data[4] ==
                AIR_ACK_RESULT_OK);
 
+    TelemetryService_Process();
     TelemetryService_DiagnosticsGet(&diagnostics);
     TEST_CHECK(diagnostics.capability_state == TELEMETRY_CAPABILITY_ACKED);
     TEST_CHECK(diagnostics.capability_acked == 1U);
@@ -2108,11 +2136,14 @@ static void Test_AckCacheSessionAndSequenceReuse(void)
     if (frame == NULL) { return; }
     next_capability = frame->data[1];
     TEST_CHECK(next_capability != first_capability);
-    /* Same seq/id and a superseded Capability must be rejected, not replay OK. */
+    /* An older completed CAP still in the window remains valid and idempotent. */
     Test_CommandQueue(255U, AIR_CMD_CAPABILITY_ACK, 0U, first_capability, AIR_PROFILE_COMPACT_V0);
     TelemetryService_Process();
     frame = Test_LastTypeGet(AIR_TYPE_ACK);
-    TEST_CHECK(frame != NULL && frame->data[4] == AIR_ACK_RESULT_BAD_PARAM);
+    TEST_CHECK(frame != NULL && frame->data[4] == AIR_ACK_RESULT_OK);
+    Test_CommandQueue(0U, AIR_CMD_ALIGN_START, AIR_TOKEN_ALIGNMENT, 0U, 0U);
+    TelemetryService_Process();
+    TEST_CHECK(s_alignment_start_count == 1U); /* Old reply preserved the cache. */
     Test_CapabilityAck(255U, next_capability);
     s_alignment_start_result = SYSTEM_DEVICE_NOT_READY;
     Test_CommandQueue(0U, AIR_CMD_ALIGN_START, AIR_TOKEN_ALIGNMENT, 0U, 0U);

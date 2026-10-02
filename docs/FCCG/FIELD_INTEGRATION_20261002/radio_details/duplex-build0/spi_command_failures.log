@@ -1,0 +1,2 @@
+SPI_COMMANDS failed send/RX setup never reports success; bad payload discarded; no-queue mode fault bounded
+spi_command_failures: 86 checks, 0 failures

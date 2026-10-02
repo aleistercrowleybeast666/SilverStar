@@ -152,18 +152,27 @@ static void Test_GnssHealthProducerVariance(void)
 int main(void)
 {
     EstimatorPreparationSnapshot preparation;
-    EstimatorOutputSnapshot initial;
+    EstimatorOutputSnapshot initial = {0};
     uint32_t generation;
     TEST_CHECK(EstimatorBus_Init() == ESTIMATOR_BUS_RESULT_OK);
     TEST_CHECK(EstimatorTask_OriginsReset() == SYSTEM_DEVICE_OK);
     Test_Collect(0U);
+    TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(s_estimator.gnss_origin_valid == 0U);
+    TEST_CHECK(s_estimator.gnss_fusion_enabled == 0U);
+    TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(preparation.initialized == 1U && preparation.last_result == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+    TEST_CHECK(initial.gnss_origin_valid == 0U && initial.baro_origin_valid == 1U);
     if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+    { TEST_CHECK((initial.health_flags & ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE) != 0U); }
+#if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     {
-        TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_NOT_READY);
-        TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_NOT_READY);
-        TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
-        TEST_CHECK(preparation.initialized == 0U && preparation.last_result == SYSTEM_DEVICE_NOT_READY);
+        EstimatorGnssUpdateWork work = {0};
+        TEST_CHECK(Estimator_GnssSamplePrepare(s_test_now, &work) == ESTIMATOR_GNSS_PREPARE_STOP);
     }
+#endif
     TEST_CHECK(EstimatorTask_OriginsReset() == SYSTEM_DEVICE_OK);
     Test_Collect((uint8_t)(SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE));
     s_test_quaternion_ready = 0U;

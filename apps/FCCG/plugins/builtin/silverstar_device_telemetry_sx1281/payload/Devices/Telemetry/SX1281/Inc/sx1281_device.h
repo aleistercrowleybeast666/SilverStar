@@ -31,6 +31,20 @@ typedef enum
 
 typedef enum
 {
+    LoraTxQueryResult_Pending = 0U,
+    LoraTxQueryResult_Complete,
+    LoraTxQueryResult_TimedOut,
+    LoraTxQueryResult_NotFound,
+    LoraTxQueryResult_InvalidArgument
+} LoraTxQueryResult;
+
+LoraTxEnqueueResult Lora_TxEnqueueTracked(uint8_t instance,
+    const uint8_t *data, uint8_t len, uint32_t *transaction_id);
+LoraTxQueryResult Lora_TxResultGet(uint8_t instance,
+    uint32_t transaction_id, uint32_t *age_ms);
+
+typedef enum
+{
     LORA_RX_DEQUEUE_OK = 0U,
     LORA_RX_DEQUEUE_EMPTY,
     LORA_RX_DEQUEUE_BAD_PARAM
@@ -165,6 +179,20 @@ typedef struct
     int16_t rssi_inst;
 } LoraDiagSnapshot;
 
+typedef enum
+{
+    LoraScheduleRole_Flight = 0U,
+    LoraScheduleRole_Ground
+} LoraScheduleRole;
+typedef enum
+{
+    LoraScheduleRoleResult_Ok = 0U,
+    LoraScheduleRoleResult_InvalidArgument,
+    LoraScheduleRoleResult_NotReady
+} LoraScheduleRoleResult;
+/* Bootstrap only, before RX or enqueue. Default is Flight. Ground remains an
+ * opaque eight-frame FIFO and initiates within a received peer's RX grant. */
+LoraScheduleRoleResult Lora_ScheduleRoleSet(uint8_t instance, LoraScheduleRole role);
 LoraInitResult Lora_Init(uint8_t instance);
 /* Bootstrap or Transport-owner context only. */
 LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance);

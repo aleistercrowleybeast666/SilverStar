@@ -1,0 +1,90 @@
+[
+  {
+    "path": "radio_details\\duplex-build0\\airtime_profiles.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\airtime_profiles.log",
+    "sha256": "2298fdb2a51aa293dedc91d92fa76de7952c7c50c988f202428b15c28f8e8bdb"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\boundary.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\boundary.log",
+    "sha256": "64cead23c3d202169ba8da25473b43baf2fe55722c742c7474539835e147f88c"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\compile-record.json",
+    "sha256": "d8063247e5fbf097dc776dc0190906d910e9f279ce162e1b19e45820620dc743"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\noise_lost_tx.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\noise_lost_tx.log",
+    "sha256": "39ecc1c5f73279849208dff5dde158ca88b55b6d927effebfb0d6461ff1ab62f"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\owner_jitter.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\owner_jitter.log",
+    "sha256": "23ca741b5d56a28934f4cc66ea8a33f9735a426d050918f253666df617eba5a4"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\phase_scan.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\phase_scan.log",
+    "sha256": "d93ee8a6d4b0a9d09dd5c2b161cdeed46b4ecf58becdbd2f0422794947b8badb"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\queue_no_peer.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\queue_no_peer.log",
+    "sha256": "25254b21066b38937b916c8cd74d59060c1d235210a437ca7902693148af6959"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\rx_errors.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\rx_errors.log",
+    "sha256": "41a3d91d54c5fa5577d58377208a3a94df4b6172475d1b2d36aff9164efdf50b"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\source-hashes.json",
+    "sha256": "ed4fd7fab9913e22a925ef9e1edbd541c3ddf4395e5f16a58966172b1317a79c"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\spi_command_failures.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\spi_command_failures.log",
+    "sha256": "39b5a4d15f6b0c092de6768a3141805fcc7314666256bee6693a5bfc46712a93"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\spi_read_failures.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\spi_read_failures.log",
+    "sha256": "ef50eebb4234be8b213cb149f02f4482b74d953c5435c1829cc8d0935e4082b4"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\startup_full_stream.exit",
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+  },
+  {
+    "path": "radio_details\\duplex-build0\\startup_full_stream.log",
+    "sha256": "51a2125b0f41549096dbe0bc5297b21b174ff595c0808d73e33d02938284a71c"
+  }
+]
