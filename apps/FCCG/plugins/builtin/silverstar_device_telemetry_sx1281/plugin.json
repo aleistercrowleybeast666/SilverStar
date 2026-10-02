@@ -123,6 +123,7 @@
     ]
   },
   "metadata": {
+    "target_resource_modes": {"ground_station": {"radio_bus": "shared"}},
     "reference": {
       "source_kind": "reference_snapshot",
       "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",

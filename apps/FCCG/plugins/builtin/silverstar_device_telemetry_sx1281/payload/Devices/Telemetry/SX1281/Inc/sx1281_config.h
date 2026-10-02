@@ -114,7 +114,7 @@
 
 #if (LORA_CFG_PREAMBLE_SYMBOLS == 16U) && (LORA_CFG_PREAMBLE_LEN != 0x18U)
 #error "SX1280 LoRa preamble 16 symbols must use encoded value 0x18, not 16U"
-#endif /* __SX1281_CONFIG_H */
+#endif
 
 #define LORA_RX_IRQ_MASK                ( IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_PREAMBLE_DETECTED | IRQ_HEADER_VALID )
 #define LORA_TX_IRQ_MASK                ( IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT )
@@ -123,5 +123,11 @@
 #define LORA_SPI_TIMEOUT_MS             20U
 #define LORA_BUSY_TIMEOUT_MS            100U
 #define LORA_REMOTE_ONLINE_TIMEOUT_MS   3000U
+
+#ifdef AIR_LINK_INSTANCE_TX_POWER_DBM
+#define LORA_INSTANCE_TX_POWER_DBM(instance) AIR_LINK_INSTANCE_TX_POWER_DBM(instance)
+#else
+#define LORA_INSTANCE_TX_POWER_DBM(instance) LORA_TX_OUTPUT_POWER_DBM
+#endif
 
 #endif

@@ -194,6 +194,14 @@ typedef enum
  * opaque eight-frame FIFO and initiates within a received peer's RX grant. */
 LoraScheduleRoleResult Lora_ScheduleRoleSet(uint8_t instance, LoraScheduleRole role);
 LoraInitResult Lora_Init(uint8_t instance);
+typedef enum
+{
+    LoraDeactivateResult_Ok = 0U,
+    LoraDeactivateResult_PortError
+} LoraDeactivateResult;
+/* Owner context only, between Process calls. Discards software state and holds
+ * RESET low. Result reports the mapped GPIO write, not physical wiring proof. */
+LoraDeactivateResult Lora_Deactivate(uint8_t instance);
 /* Bootstrap or Transport-owner context only. */
 LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance);
 void Lora_Process(uint8_t instance);

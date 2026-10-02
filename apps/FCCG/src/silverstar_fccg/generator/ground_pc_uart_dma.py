@@ -12,7 +12,7 @@ def PcUartDma_Render(handle: str) -> str:
 
 
 _SOURCE = r'''#include "pc_byte_stream.h"
-
+#include <stddef.h>
 #include "gsp_min_protocol.h"
 #include "main.h"
 #include "silverstar_assert.h"

@@ -230,11 +230,42 @@ static void Test_Corruption(const char *name)
     TEST_CHECK(len == 99U);
 }
 
+static void Test_Deactivate(void)
+{
+    uint8_t byte = 7U;
+    uint32_t id;
+    uint32_t age;
+    LoraDebugSnapshot snapshot;
+    TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_TxEnqueueTracked(0U, &byte, 1U, &id) == LORA_TX_ENQUEUE_OK);
+    s_dio1_pending = 1U;
+    TEST_CHECK(Lora_Deactivate(0U) == LoraDeactivateResult_Ok);
+    TEST_CHECK(s_gpio_written == Sx1281Bus_ResetGet(0U));
+    TEST_CHECK(s_gpio_written_level == 0U);
+    TEST_CHECK(s_dio1_pending == 0U);
+    Lora_GetDebugSnapshot(0U, &snapshot);
+    TEST_CHECK(snapshot.initialized == 0U && snapshot.tx_queue_count == 0U);
+    TEST_CHECK(snapshot.rx_queue_count == 0U);
+    TEST_CHECK(snapshot.stats.radio_state == LORA_RADIO_STATE_NOT_INIT);
+    TEST_CHECK(Lora_TxResultGet(0U, id, &age) == LoraTxQueryResult_NotFound);
+    s_contexts[0].rx_done_flag = 1U; /* A late old-radio event cannot dispatch. */
+    Lora_Process(0U);
+    TEST_CHECK(s_send_count == 0U);
+    TEST_CHECK(Lora_Init(1U) == LORA_INIT_OK);
+    Lora_GetDebugSnapshot(1U, &snapshot);
+    TEST_CHECK(snapshot.tx_queue_count == 0U); /* No old payload replay. */
+    s_gpio_write_result = PLATFORM_IO_ERROR;
+    TEST_CHECK(Lora_Deactivate(1U) == LoraDeactivateResult_PortError);
+    Lora_GetDebugSnapshot(1U, &snapshot);
+    TEST_CHECK(snapshot.initialized == 0U);
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2) { return 2; }
     if (strcmp(argv[1], "reinit") == 0) { Test_ReinitializationFailure(); }
     else if (strcmp(argv[1], "normal") == 0) { Test_NormalQueuesAndTimeout(); }
+    else if (strcmp(argv[1], "deactivate") == 0) { Test_Deactivate(); }
     else { Test_Corruption(argv[1]); }
     return Test_Finish(argv[1]);
 }

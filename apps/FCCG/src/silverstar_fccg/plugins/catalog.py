@@ -12,6 +12,7 @@ from silverstar_fccg.plugins.manifest import (
     PluginManifestError,
     PluginManifest_Load,
     PluginManifest_VariantResolve,
+    ResourceMode,
 )
 
 
@@ -95,6 +96,32 @@ class PluginCatalog:
                     for capability in variant.provides
                 )),
             )
+        target_role = self.Component_Get(model.core).metadata.get("target_role", "")
+        if target_role:
+            for plugin_id in model.DevicePluginIds_Get():
+                manifest = view._components[plugin_id]
+                modes = manifest.metadata.get("target_resource_modes", {}).get(target_role, {})
+                if modes:
+                    names = {item.name for item in manifest.resource_requirements}
+                    if not set(modes).issubset(names):
+                        raise PluginCatalogError("Unknown target-scoped resource requirement")
+                    resolved = replace(manifest, resource_requirements=tuple(
+                        replace(item, mode=ResourceMode(modes[item.name]))
+                        if item.name in modes else item for item in manifest.resource_requirements
+                    ))
+                    view._components[plugin_id] = resolved
+                    for instance in model.device_instances:
+                        if instance.plugin == plugin_id:
+                            view._instance_components[instance.instance_id] = resolved
+        if target_role == "ground_station" and model.board and model.device_instances:
+            # A verified PCB's one telemetry footprint belongs to the first
+            # configured radio, regardless of which instance owns uplink.
+            board = view._components[model.board]
+            first = model.device_instances[0].instance_id
+            view._components[model.board] = replace(board, resource_roles=tuple(
+                replace(role, key=first + ":" + role.key.removeprefix("telemetry:"))
+                if role.key.startswith("telemetry:") else role for role in board.resource_roles
+            ))
         return view
 
     def Scan(self) -> tuple[PluginManifest, ...]:
