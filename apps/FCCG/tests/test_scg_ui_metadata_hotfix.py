@@ -205,3 +205,18 @@ def test_real_generation_progress_is_monotonic_and_finishes_only_after_descripto
     assert values[-1] == 1
     assert values == sorted(values)
     assert any(0 < value < 1 for value in values)
+
+
+@pytest.mark.parametrize("prefix", ["", "custom-arm-"])
+def test_ground_eide_tool_prefix_matches_make_override(workspace_root, prefix):
+    from silverstar_fccg.generator.multi_target import GroundFiles_Render
+    service = FccgService(workspace_root)
+    model = _GroundF103Model_Get(service.catalog)
+    model.ground_target = replace(model.ground_target,
+        build=replace(model.ground_target.build, toolchain_prefix=prefix))
+    files = GroundFiles_Render(model, service.catalog, service.policy)
+    expected = prefix or "arm-none-eabi-"
+    assert "CC := " + expected + "gcc\n" in files["Makefile"].decode("utf8")
+    document = yaml.safe_load(files[".eide/eide.yml"].decode("utf8"))
+    for target in document["targets"].values():
+        assert target["toolchainConfigMap"]["GCC"]["options"]["global"]["toolPrefix"] == expected
