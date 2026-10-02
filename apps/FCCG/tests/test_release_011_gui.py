@@ -66,6 +66,25 @@ def test_ground_existing_selection_cancel_commit_and_common_page(qapp, tmp_path,
     window.close()
 
 
+def test_localized_navigation_fits_all_labels_and_preserves_selection(qapp, tmp_path, workspace_root):
+    window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+    try:
+        window.resize(1360, 920)
+        window.show()
+        window.navigation_list.setCurrentRow(2)
+        for language in ('en_US', 'zh_CN', 'en_US'):
+            window.Language_Apply(language)
+            qapp.processEvents()
+            assert window.navigation_list.currentRow() == 2
+            for index in range(window.navigation_list.count()):
+                item = window.navigation_list.item(index)
+                assert window.navigation_list.visualItemRect(item).width() >= (
+                    window.navigation_list.fontMetrics().horizontalAdvance(item.text()) + 28
+                )
+    finally:
+        window.close()
+
+
 def test_classified_pcbs_preserve_legacy_and_conflicts(tmp_path, workspace_root):
     root = tmp_path/'中文 PCB'
     root.mkdir()

@@ -4,6 +4,7 @@ from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode
 from silverstar_fccg.project.quality_results import QualityResultRecord
 from silverstar_fccg.ui.main_window import MainWindow
 from silverstar_fccg.ui.pages.build import BuildPage
+from silverstar_fccg.ui.theme import Theme_Apply
 
 import pytest
 
@@ -40,6 +41,28 @@ def test_failed_artifact_retains_usage_without_claiming_verified(qapp):
     assert "verified" not in page.quality_result_labels["artifact_check"].text().lower()
     page.QualityResults_Set(())
     assert "1,240" not in page.memory_margin_value.text()
+
+
+def test_memory_status_repaints_for_dark_theme_without_losing_usage(qapp):
+    page = BuildPage(Translator("en_US"))
+    summary = MainWindow._QualitySummary_Get(BuildResult(BuildAction.ARTIFACT_CHECK, (), 0, OUTPUT))
+    record = QualityResultRecord("artifact_check", "passed", "", 0, summary)
+    try:
+        Theme_Apply(qapp, "light")
+        page.QualityResults_Set((record,))
+        light = page.memory_margin_value.text()
+        Theme_Apply(qapp, "dark")
+        page.QualityResults_Set((record,))
+        dark = page.memory_margin_value.text()
+        assert light != dark
+        assert "1,240" in dark and "64,296" in dark
+        assert page.memory_margin_value.property("statusLevel") == "error"
+        Theme_Apply(qapp, "light")
+        page.QualityResults_Set((record,))
+        assert page.memory_margin_value.text() == light
+    finally:
+        Theme_Apply(qapp, "light")
+        page.close()
 
 
 @pytest.mark.parametrize("output", ("", OUTPUT+OUTPUT, OUTPUT.replace("remaining=1240", "remaining=1200")))

@@ -307,6 +307,7 @@ class MainWindow(QMainWindow):
         sidebar = QFrame()
         sidebar.setObjectName("sidebar")
         sidebar.setFixedWidth(190)
+        self.navigation_sidebar = sidebar
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(0, 8, 0, 8)
         self.navigation_list = QListWidget()
@@ -3934,6 +3935,10 @@ class MainWindow(QMainWindow):
             self.navigation_list.item(index).setText(
                 self._translator.Text_Get(code)
             )
+        self.navigation_sidebar.setFixedWidth(
+            max(190, self.navigation_list.sizeHintForColumn(0)
+                + 2 * self.navigation_list.frameWidth())
+        )
         for page in self._page_widgets:
             page.Language_Apply(self._translator)
         self.plugin_manager_dialog.Language_Apply(self._translator)

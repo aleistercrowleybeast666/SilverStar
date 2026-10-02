@@ -169,9 +169,10 @@ def test_busy_generation_is_idempotent_and_estimator_order_is_stable(
         assert [estimator.itemData(index) for index in range(estimator.count())] == [
             None, "silverstar.algorithm.estimator.kf6",
             "silverstar.algorithm.estimator.eskf15",
+            "silverstar.algorithm.estimator.sf6",
         ]
         assert [estimator.itemText(index) for index in range(estimator.count())] == [
-            "纯惯导", "KF6算法", "ESKF15算法",
+            "纯惯导", "KF6算法", "ESKF15算法", "SF6算法",
         ]
         window._active_worker = object()
         for _ in range(5):

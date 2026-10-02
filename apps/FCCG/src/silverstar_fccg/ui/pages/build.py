@@ -4,6 +4,7 @@ from collections.abc import Iterable
 
 from PySide6.QtCore import QSignalBlocker, Signal
 from PySide6.QtWidgets import (
+    QApplication,
     QFormLayout,
     QComboBox,
     QGridLayout,
@@ -15,6 +16,7 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
+from silverstar_fccg.ui.theme import ThemeTokens_Get
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.view_models import ToolchainToolView
 from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode, ArtifactMemoryMarginLevel_Get
@@ -333,7 +335,10 @@ class BuildPage(ScrollableLocalizedPage):
         regions = ArtifactMemorySummary_Decode(str(getattr(artifact, "summary", "")))
         if regions:
             levels = [ArtifactMemoryMarginLevel_Get(remaining, capacity) for _, remaining, capacity in regions]
-            colors = {"error": "#d32f2f", "warning": "#a66b00", "success": "#22863a"}
+            application = QApplication.instance()
+            theme = application.property("fccgAppliedTheme") if application else "light"
+            tokens = ThemeTokens_Get(theme)
+            colors = {"error": tokens.error, "warning": tokens.warning, "success": tokens.success}
             text = "<br>".join('<span style="color:' + colors[level] + '">' + self._translator.Text_Get(
                 "memory.region", name=name, used=f"{used:,}", capacity=f"{capacity:,}",
                 remaining=f"{remaining:,}") + f" ({remaining / capacity * 100:.2f}%)</span>"
