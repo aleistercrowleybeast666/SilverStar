@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_navigation_readiness.py",
+    "tests/test_start_ack_state.py",
+    "tests/test_navigation_gui.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\OptionalGnssGUI_20261002_1"
+  ],
+  "exit": 1,
+  "sha256": "a1da3adfce09f2a922409bd73b35c56d7273dcb23875e5f9e716801264d6cb86"
+}

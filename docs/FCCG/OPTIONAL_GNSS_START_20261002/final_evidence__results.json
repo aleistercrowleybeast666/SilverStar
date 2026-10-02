@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Release-build",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final_evidence\\Release-build.log",
+    "sha256": "e4bdeff4eb5775b994df976b35ebd70d82e1c8ebb036626d7c897d792f018725"
+  },
+  {
+    "name": "Host",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final\\Flight_Controller",
+    "exit": 2,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final_evidence\\Host.log",
+    "sha256": "dd4668f3c29c177395b8d113c84df7d4d7811b0297cb49e68a36fbb11f4b8b9d"
+  },
+  {
+    "name": "architecture",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final_evidence\\architecture.log",
+    "sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+  },
+  {
+    "name": "power10",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final_evidence\\power10.log",
+    "sha256": "6cf5550fb77c0036ce8f6c1485e70c2debdca4da6925d9fd1c881e312b03a1ce"
+  }
+]

@@ -1,0 +1,175 @@
+{
+  "source_head": "0610150f991ddd21ad04d02aa911e48a72ffd675",
+  "production_commit": "d1c991a813f752b45dcdc8a2145647ab5dbaf55d",
+  "base": "0045515900ef65698e0830e71ec4730e49b21e50",
+  "branch": "fix/optional-gnss-start-20261002",
+  "generated": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+  "copied_source_files": 513,
+  "gates": [
+    {
+      "name": "Release-build",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "all"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\Release-build.log",
+      "sha256": "8cc90f400f8333f6841330c92e8e633ffb33e902f27226f59b108c990b7ec9e8"
+    },
+    {
+      "name": "Host",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "host-tests"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\Host.log",
+      "sha256": "25d0fea8b131ec6316a0345144e67cba898998193bcfae2e55d00c1586b7c120"
+    },
+    {
+      "name": "architecture",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "architecture-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\architecture.log",
+      "sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+    },
+    {
+      "name": "power10",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\power10.log",
+      "sha256": "db068d664acd16d94a0f86fbbe6e52652ae2ab1cdc09a35dc0989d0a658895ea"
+    },
+    {
+      "name": "analyzer",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "static-analysis"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\analyzer.log",
+      "sha256": "2e07acc12ca8e18a5ea717eb4b9eff87db492e5b763607802f3f6d7e53748fb9"
+    },
+    {
+      "name": "artifact",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "artifact-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\artifact.log",
+      "sha256": "26b08acf7afb68f1e935d8b187e22dd2abe76ce576143d08e406d99801dc8372"
+    },
+    {
+      "name": "resources",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "SHELL=cmd.exe",
+        "CONFIG=Release",
+        "stack-report",
+        "memory-report"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\resources.log",
+      "sha256": "1a2baf6da6474aa5ac0caaf3a0c05216f574f9cfa08088e7055404a712129b9e"
+    }
+  ],
+  "gui": {
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "tests/test_navigation_readiness.py",
+      "tests/test_start_ack_state.py",
+      "tests/test_navigation_gui.py",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "C:\\Users\\chdxm\\AppData\\Local\\Temp\\OptionalGnssGUI_20261002_2"
+    ],
+    "exit": 0,
+    "sha256": "eda16d0bddef71fc36a55030b7b2416e1efe6388c307aaa011a79c1ca7e27058"
+  },
+  "artifacts": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+      "bytes": 3250160,
+      "sha256": "a41adda032b40808eef1291223d46ab7516005adf0252078db3de6e660f1e50c"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+      "bytes": 321568,
+      "sha256": "171a04a9b4f26d71244910dafcb16f80d734e631568b327469bc54678e9c9b0c"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.hex",
+      "bytes": 904544,
+      "sha256": "6d772508e7b9411133e47e685a3859a17385122cc549d3b63cb551f4f67474a9"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+      "bytes": 1489266,
+      "sha256": "26666a8ef89818aeba216426f85cd78acd1e3b5330bcec00665474f5c91a454b"
+    }
+  ],
+  "changed_source_paths": [
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c",
+    "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Alignment/Src/system_alignment.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/optional_start_inputs.h",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/optional_start_ins_inputs.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/optional_start_mag_inputs.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/optional_start_storage_inputs.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_estimator_preparation.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_optional_gnss_start.c",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_system_alignment.c",
+    "apps/GSHC/services/state_model.py",
+    "apps/GSHC/tests/test_navigation_gui.py",
+    "apps/GSHC/tests/test_navigation_readiness.py",
+    "apps/GSHC/ui/main_window.py"
+  ],
+  "python_generation_gui": {
+    "path": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "version": "3.14.0"
+  },
+  "python_host_storage": {
+    "path": "D:\\msys64\\ucrt64\\bin\\python.exe",
+    "version": "3.14.5",
+    "resolution": "PATH prefix in optional_gnss_run.py; stdlib storage byte-integrity/decoder scripts"
+  }
+}

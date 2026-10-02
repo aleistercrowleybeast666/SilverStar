@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Release-build",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\Release-build.log",
+    "sha256": "8cc90f400f8333f6841330c92e8e633ffb33e902f27226f59b108c990b7ec9e8"
+  },
+  {
+    "name": "Host",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "host-tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\Host.log",
+    "sha256": "25d0fea8b131ec6316a0345144e67cba898998193bcfae2e55d00c1586b7c120"
+  },
+  {
+    "name": "architecture",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\architecture.log",
+    "sha256": "2670fe8500e064ea4355593ce46cfe1d6ae6433f35fcf5886d013b3aea6becad"
+  },
+  {
+    "name": "power10",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\power10.log",
+    "sha256": "db068d664acd16d94a0f86fbbe6e52652ae2ab1cdc09a35dc0989d0a658895ea"
+  },
+  {
+    "name": "analyzer",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\analyzer.log",
+    "sha256": "2e07acc12ca8e18a5ea717eb4b9eff87db492e5b763607802f3f6d7e53748fb9"
+  },
+  {
+    "name": "artifact",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\artifact.log",
+    "sha256": "26b08acf7afb68f1e935d8b187e22dd2abe76ce576143d08e406d99801dc8372"
+  },
+  {
+    "name": "resources",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-j2",
+      "SHELL=cmd.exe",
+      "CONFIG=Release",
+      "stack-report",
+      "memory-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2\\Flight_Controller",
+    "exit": 0,
+    "log": "D:\\python_software\\SilverStar\\.work\\OptionalGnssStartFix_20261002\\.work\\final2_evidence\\resources.log",
+    "sha256": "1a2baf6da6474aa5ac0caaf3a0c05216f574f9cfa08088e7055404a712129b9e"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_0\\HARDWARE\\APP\\Src\\estimator_task.c",
+    "sha256": "85a1be34a9c34ae2fdf212b807f9e74980920783e23b3bb9144880d61f586e93",
+    "bytes": 114495,
+    "fusion_requires_preflight_origin_macro_references": 1
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_1\\HARDWARE\\APP\\Src\\estimator_task.c",
+    "sha256": "deea581213f9d4a150c210968b52c106b95394f0a1d3fa543536843f983674eb",
+    "bytes": 122949,
+    "fusion_requires_preflight_origin_macro_references": 1
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_2\\HARDWARE\\APP\\Src\\estimator_task.c",
+    "sha256": "18abd4feafe95be39bd333841600935300d96ce801031f6e9882cbd03d7c5ac7",
+    "bytes": 140673,
+    "fusion_requires_preflight_origin_macro_references": 1
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_3\\HARDWARE\\APP\\Src\\estimator_task.c",
+    "sha256": "6e7fbe475f42d2181bd784c4ecd634b54bc8eaa6fee0362881da4d2423054d23",
+    "bytes": 149612,
+    "fusion_requires_preflight_origin_macro_references": 1
+  },
+  {
+    "path": "D:\\stm32_project\\SS_0_5_TEST_4\\Flight_Controller\\APP\\Src\\estimator_task.c",
+    "sha256": "ee97eb5d61c15d435afd8ec2d48b1d88e9c2d74af017619b55cb1fc1b3608448",
+    "bytes": 170179,
+    "fusion_requires_preflight_origin_macro_references": 2
+  }
+]
