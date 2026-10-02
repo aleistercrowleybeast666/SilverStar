@@ -1,4 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
+import runpy
+from pathlib import Path
+
+product_resource = runpy.run_path(str(Path(SPECPATH) / "packaging/product_version.py"))["ProductVersionResource_Create"]()
 datas = []
 binaries = []
 hiddenimports = [
@@ -28,7 +32,7 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name="SilverStar_GSHC",
-    version="packaging/version_info.txt",
+    version=product_resource,
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
