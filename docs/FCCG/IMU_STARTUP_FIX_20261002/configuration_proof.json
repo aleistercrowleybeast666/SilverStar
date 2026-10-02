@@ -1,0 +1,21 @@
+{
+  "actual_input": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller\\SilverStar.ssproject",
+  "actual_sha256": "575d2d2dc5147013664f9328a32c5719bea98495bd4e32f92a97941c247278ec",
+  "candidate_input": "D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\.work\\imu_final_evidence\\Input.ssproject",
+  "candidate_sha256": "c2dcfcc0232a655d8ed03fb36e4bec68c8e3d0e31635422d36dee1c47067141a",
+  "all_fields_except_project_name_equal": true,
+  "deployment": [
+    "Delay"
+  ],
+  "delay": 10.0,
+  "build": {
+    "target_profile": "SilverStar_F407",
+    "make_command": "mingw32-make",
+    "toolchain_prefix": "arm-none-eabi-",
+    "gcc_path": "",
+    "flash_command": "",
+    "eide_mode": "native",
+    "tool_paths": {},
+    "memory_layout": "legacy"
+  }
+}

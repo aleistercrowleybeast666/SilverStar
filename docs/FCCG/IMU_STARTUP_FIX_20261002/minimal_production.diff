@@ -1,0 +1,206 @@
+diff --git a/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c b/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
+index a534b23..3bba760 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
++++ b/apps/FCCG/plugins/builtin/silverstar_device_imu_jy901b/payload/Devices/IMU/JY901B/Src/jy901b_device.c
+@@ -508,68 +508,35 @@ static uint8_t IMU_ReadResponseChecksumValid(const uint8_t *frame)
+ 
+ static uint8_t IMU_ParseReadResponseByte(uint8_t byte, uint8_t *frame, uint8_t *idx)
+ {
+-    if ((frame == NULL) || (idx == NULL))
+-    {
+-        return 0U;
+-    }
+-    SILVERSTAR_ASSERT_OBJECT(frame, uint8_t,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+-    SILVERSTAR_ASSERT_OBJECT(idx, uint8_t,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+-
+-    if (*idx == 0U)
+-    {
+-        if (byte == IMU_FRAME_HEADER)
+-        {
+-            frame[0] = byte;
+-            *idx = 1U;
+-        }
+-        return 0U;
+-    }
+-
+-    if (*idx == 1U)
+-    {
+-        if (byte == IMU_REG_READ_RESPONSE)
+-        {
+-            frame[1] = byte;
+-            *idx = 2U;
+-        }
+-        else if (byte == IMU_FRAME_HEADER)
+-        {
+-            frame[0] = IMU_FRAME_HEADER;
+-            *idx = 1U;
+-        }
+-        else
+-        {
+-            *idx = 0U;
+-        }
+-        return 0U;
+-    }
++    uint8_t next;
+ 
++    if ((frame == NULL) || (idx == NULL)) { return 0U; }
++    SILVERSTAR_ASSERT(*idx < IMU_FRAME_LEN,
++        SILVERSTAR_ASSERT_MODULE_DEVICE,
++        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
++    if ((*idx == 0U) && (byte != IMU_FRAME_HEADER)) { return 0U; }
+     frame[*idx] = byte;
+     (*idx)++;
+-
+-    if (*idx < IMU_FRAME_LEN)
+-    {
+-        return 0U;
+-    }
+-
++    if (*idx < IMU_FRAME_LEN) { return 0U; }
+     if (IMU_ReadResponseChecksumValid(frame) != 0U)
+     {
+         *idx = 0U;
+-        return 1U;
++        /* Consume a whole legal stream frame; never inspect its payload
++         * for a register-response header. Both frame kinds share the CRC. */
++        return (uint8_t)(frame[1] == IMU_REG_READ_RESPONSE);
+     }
+-
+-    if (frame[IMU_FRAME_LEN - 1U] == IMU_FRAME_HEADER)
++    /* A corrupt/truncated candidate may have swallowed the next header.
++     * Retain its earliest bounded suffix, including an incomplete header. */
++    *idx = 0U;
++    for (next = 1U; next < IMU_FRAME_LEN; next++)
+     {
+-        frame[0] = IMU_FRAME_HEADER;
+-        *idx = 1U;
+-    }
+-    else
+-    {
+-        *idx = 0U;
++        if (frame[next] == IMU_FRAME_HEADER)
++        {
++            *idx = (uint8_t)(IMU_FRAME_LEN - next);
++            (void)memmove(frame, &frame[next], *idx);
++            break;
++        }
+     }
+-
+     return 0U;
+ }
+ 
+@@ -608,49 +575,81 @@ Jy901bRegisterReadStartResult IMU_RegisterReadAsyncStart(
+     return Jy901bRegisterReadStartResult_Ok;
+ }
+ 
++static Jy901bRegisterReadPollResult IMU_RegisterReadDrain(
++    uint8_t instance, Jy901bContext *context, uint16_t *value)
++{
++    uint8_t buffer[IMU_TEMP_BUF_LEN];
++    uint16_t remaining;
++    uint16_t capacity;
++    uint16_t read_length;
++    uint16_t index;
++    uint32_t chunk;
++
++    if (PlatformUart_RxCountGet(Jy901bResource_UartGet(instance),
++            &remaining) != PLATFORM_OK)
++    { return Jy901bRegisterReadPollResult_IoError; }
++    /* Snapshot the queue once: newly arriving data cannot extend this poll.
++     * No byte timestamps exist; a poll after the deadline is conservative. */
++    for (chunk = 0U; (chunk < IMU_MAX_READ_CHUNKS_PER_PROCESS) &&
++            (remaining != 0U); chunk++)
++    {
++        if ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >
++                IMU_CONFIG_READ_TIMEOUT_MS)
++        { return Jy901bRegisterReadPollResult_Timeout; }
++        capacity = (remaining < sizeof(buffer)) ? remaining : sizeof(buffer);
++        if (PlatformUart_Read(Jy901bResource_UartGet(instance), buffer,
++                capacity, &read_length) != PLATFORM_OK)
++        { return Jy901bRegisterReadPollResult_IoError; }
++        SILVERSTAR_ASSERT(read_length <= capacity,
++            SILVERSTAR_ASSERT_MODULE_DEVICE,
++            SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
++        if (read_length == 0U) { break; }
++        remaining = (uint16_t)(remaining - read_length);
++        for (index = 0U; index < read_length; index++)
++        {
++            if (IMU_ParseReadResponseByte(buffer[index],
++                    context->register_read_frame,
++                    &context->register_read_index) != 0U)
++            {
++                if ((uint32_t)(PlatformTime_Ms() -
++                        context->register_read_started_ms) >
++                        IMU_CONFIG_READ_TIMEOUT_MS)
++                { return Jy901bRegisterReadPollResult_Timeout; }
++                *value = (uint16_t)(((uint16_t)context->register_read_frame[3] << 8) |
++                                    context->register_read_frame[2]);
++                return Jy901bRegisterReadPollResult_Complete;
++            }
++        }
++    }
++    return Jy901bRegisterReadPollResult_Pending;
++}
++
+ Jy901bRegisterReadPollResult IMU_RegisterReadAsyncPoll(
+     uint8_t instance, uint16_t *value)
+ {
+     Jy901bContext *context;
+-    uint8_t buffer[IMU_TEMP_BUF_LEN];
+-    uint16_t read_length = 0U;
+-    uint16_t index;
++    Jy901bRegisterReadPollResult result;
+ 
+     if ((instance >= PROJECT_JY901B_INSTANCE_COUNT) || (value == NULL))
+     { return Jy901bRegisterReadPollResult_NotReady; }
+     context = &s_contexts[instance];
+-    SILVERSTAR_ASSERT_OBJECT(value, uint16_t,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+-    SILVERSTAR_ASSERT(context->register_read_index <= IMU_FRAME_LEN,
++    SILVERSTAR_ASSERT(context->register_read_index < IMU_FRAME_LEN,
+         SILVERSTAR_ASSERT_MODULE_DEVICE,
+         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+     if (context->register_read_active == 0U)
+     { return Jy901bRegisterReadPollResult_NotReady; }
+-    if (PlatformUart_Read(Jy901bResource_UartGet(instance), buffer,
+-            sizeof(buffer), &read_length) != PLATFORM_OK)
+-    {
+-        context->register_read_active = 0U;
+-        return Jy901bRegisterReadPollResult_IoError;
+-    }
+-    for (index = 0U; index < read_length; index++)
+-    {
+-        if (IMU_ParseReadResponseByte(buffer[index],
+-                context->register_read_frame,
+-                &context->register_read_index) != 0U)
+-        {
+-            *value = (uint16_t)(((uint16_t)context->register_read_frame[3] << 8) |
+-                                context->register_read_frame[2]);
+-            context->register_read_active = 0U;
+-            return Jy901bRegisterReadPollResult_Complete;
+-        }
+-    }
+-    if ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >=
+-        IMU_CONFIG_READ_TIMEOUT_MS)
+-    {
+-        context->register_read_active = 0U;
+-        return Jy901bRegisterReadPollResult_Timeout;
+-    }
+-    return Jy901bRegisterReadPollResult_Pending;
++    if ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >
++            IMU_CONFIG_READ_TIMEOUT_MS)
++    { result = Jy901bRegisterReadPollResult_Timeout; }
++    else
++    { result = IMU_RegisterReadDrain(instance, context, value); }
++    if ((result == Jy901bRegisterReadPollResult_Pending) &&
++        ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >=
++         IMU_CONFIG_READ_TIMEOUT_MS))
++    { result = Jy901bRegisterReadPollResult_Timeout; }
++    if (result != Jy901bRegisterReadPollResult_Pending)
++    { context->register_read_active = 0U; }
++    return result;
+ }
+ 
+ Jy901bRegisterWriteStartResult IMU_RegisterWriteAsyncStart(

@@ -1,0 +1,14 @@
+diff --git "a/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\.work\\imu_trace_review\\original_check_power_of_ten.ps1" "b/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\check_power_of_ten.ps1"
+index a9ba3e2..c7ccae1 100644
+--- "a/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\.work\\imu_trace_review\\original_check_power_of_ten.ps1"
++++ "b/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\apps\\FCCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\check_power_of_ten.ps1"
+@@ -447,6 +447,9 @@ function Test-PowerTenApprovedConditional {
+     return (($Line -match $protocolConditionalPattern) -or
+             (($normalized -eq 'APP/Src/estimator_task.c') -and
+              ($Line -match $estimatorConditionalPattern)) -or
++            (($normalized -in @('Platform/STM32F4/Src/platform_uart_stm32f4.c',
++                                'Devices/IMU/JY901B/Src/jy901b_device.c')) -and
++             ($Line -match '^\s*#\s*if\s+\(PLATFORM_UART_FIRST_READ_TRACE_ENABLE\s*!=\s*0U\)\s*$')) -or
+             ($Line -match '^\s*#\s*(?:else|endif)\b'))
+ }
+ 

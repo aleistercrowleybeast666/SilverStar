@@ -1,0 +1,382 @@
+[
+  {
+    "source": "Devices/Console/UART/Src/console_uart_device.c",
+    "line": 50,
+    "text": "if (PlatformUart_Read(PROJECT_RESOURCE_CONSOLE_UART, data, capacity,"
+  },
+  {
+    "source": "Devices/Console/UART/Src/console_uart_device.c",
+    "line": 62,
+    "text": "(void)PlatformUart_RxCountGet(PROJECT_RESOURCE_CONSOLE_UART, &count);"
+  },
+  {
+    "source": "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+    "line": 656,
+    "text": "if (PlatformUart_Read(NeoM9nResource_UartGet(instance), byte, 1U, &read_length) !="
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c",
+    "line": 186,
+    "text": "state = IMU_ReadOutputRate(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+    "line": 328,
+    "text": "IMU_Poll(instance);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c",
+    "line": 205,
+    "text": "state = IMU_ReadOutputRate(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c",
+    "line": 252,
+    "text": "state = IMU_ReadAlgorithm(instance, &actual_value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+    "line": 75,
+    "text": "IMU_Poll(context->instance);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+    "line": 111,
+    "text": "start_result = IMU_RegisterReadAsyncStart(context->instance, reg);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+    "line": 119,
+    "text": "poll_result = IMU_RegisterReadAsyncPoll(context->instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+    "line": 294,
+    "text": "IMU_Poll(context->instance);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 496,
+    "text": "static uint8_t IMU_ReadResponseChecksumValid(const uint8_t *frame)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 521,
+    "text": "if (IMU_ReadResponseChecksumValid(frame) != 0U)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 543,
+    "text": "Jy901bRegisterReadStartResult IMU_RegisterReadAsyncStart("
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 578,
+    "text": "static Jy901bRegisterReadPollResult IMU_RegisterReadDrain("
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 588,
+    "text": "if (PlatformUart_RxCountGet(Jy901bResource_UartGet(instance),"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 600,
+    "text": "if (PlatformUart_Read(Jy901bResource_UartGet(instance), buffer,"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 627,
+    "text": "Jy901bRegisterReadPollResult IMU_RegisterReadAsyncPoll("
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 645,
+    "text": "{ result = IMU_RegisterReadDrain(instance, context, value); }"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 749,
+    "text": "static IMUState IMU_ReadRegister(uint8_t instance, uint8_t reg, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 793,
+    "text": "if (PlatformUart_Read(Jy901bResource_UartGet(instance), rxBuf, sizeof(rxBuf),"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1249,
+    "text": "result = IMU_ReadCurrentConfig(instance, &actual);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1258,
+    "text": "result = IMU_ReadCurrentConfig(instance, &actual);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1293,
+    "text": "void IMU_Poll(uint8_t instance)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1324,
+    "text": "if (PlatformUart_Read(Jy901bResource_UartGet(instance), tempBuf, sizeof(tempBuf),"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1663,
+    "text": "state = IMU_ReadAlgorithm(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1675,
+    "text": "state = IMU_ReadAlgorithm(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1741,
+    "text": "state = IMU_ReadReturnContent(instance, &rsw);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1763,
+    "text": "state = IMU_ReadReturnContent(instance, &rsw);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1795,
+    "text": "IMUState IMU_ReadBaudrate(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1797,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_BAUD, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1800,
+    "text": "IMUState IMU_ReadOutputRate(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1802,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_RRATE, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1805,
+    "text": "IMUState IMU_ReadBandwidth(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1807,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_BANDWIDTH, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1810,
+    "text": "IMUState IMU_ReadAlgorithm(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1812,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_AXIS6, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1815,
+    "text": "IMUState IMU_ReadInstallationOrientation(uint8_t instance, uint16_t *value, uint32_t timeout_ms)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1832,
+    "text": "state = IMU_ReadRegister(instance, IMU_REG_ORIENT, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1847,
+    "text": "IMUState IMU_ReadGyroRange(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1849,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_GYRORANGE, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1852,
+    "text": "IMUState IMU_ReadAccelRange(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1854,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_ACCRANGE, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1857,
+    "text": "IMUState IMU_ReadFusionFilter(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1859,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_FILTK, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1862,
+    "text": "IMUState IMU_ReadAccelerationFilter(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1864,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_ACCFILT, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1867,
+    "text": "IMUState IMU_ReadReturnContent(uint8_t instance, uint16_t *value)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1869,
+    "text": "return IMU_ReadRegister(instance, IMU_REG_RSW, value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1879,
+    "text": "state = IMU_ReadBaudrate(instance, &config->BaudrateValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1881,
+    "text": "state = IMU_ReadOutputRate(instance, &config->OutputRateValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1883,
+    "text": "state = IMU_ReadBandwidth(instance, &config->BandwidthValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1885,
+    "text": "state = IMU_ReadAlgorithm(instance, &config->AlgorithmValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1887,
+    "text": "state = IMU_ReadInstallationOrientation(instance, &config->OrientationValue,"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1899,
+    "text": "state = IMU_ReadGyroRange(instance, &config->GyroRangeValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1901,
+    "text": "state = IMU_ReadAccelRange(instance, &config->AccelRangeValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1903,
+    "text": "state = IMU_ReadFusionFilter(instance, &config->FusionFilterValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1905,
+    "text": "state = IMU_ReadAccelerationFilter(instance, &config->AccelerationFilterValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1907,
+    "text": "state = IMU_ReadReturnContent(instance, &config->ReturnContentValue);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1911,
+    "text": "IMUState IMU_ReadCurrentConfig(uint8_t instance, IMUConfig *config)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1958,
+    "text": "IMUState IMU_ReadCurrentConfigPartial(uint8_t instance, IMUConfig *config, uint32_t *elapsed_ms)"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1973,
+    "text": "state = IMU_ReadBaudrate(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1976,
+    "text": "state = IMU_ReadOutputRate(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1979,
+    "text": "state = IMU_ReadBandwidth(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1982,
+    "text": "state = IMU_ReadAlgorithm(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1985,
+    "text": "state = IMU_ReadInstallationOrientation(instance, &value, IMU_ORIENT_READ_TIMEOUT_MS);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1988,
+    "text": "state = IMU_ReadGyroRange(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1991,
+    "text": "state = IMU_ReadAccelRange(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1994,
+    "text": "state = IMU_ReadFusionFilter(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 1997,
+    "text": "state = IMU_ReadAccelerationFilter(instance, &value);"
+  },
+  {
+    "source": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "line": 2000,
+    "text": "state = IMU_ReadReturnContent(instance, &value);"
+  },
+  {
+    "source": "Platform/STM32F4/Src/platform_uart_stm32f4.c",
+    "line": 436,
+    "text": "PlatformResult PlatformUart_Read(PlatformUartId id,"
+  },
+  {
+    "source": "Platform/STM32F4/Src/platform_uart_stm32f4.c",
+    "line": 588,
+    "text": "PlatformResult PlatformUart_RxCountGet(PlatformUartId id, uint16_t *count)"
+  },
+  {
+    "source": "System/Src/system_source_selector.c",
+    "line": 1872,
+    "text": "SystemDeviceResult SystemBarometer_ConfigVerify("
+  },
+  {
+    "source": "System/Src/system_source_selector.c",
+    "line": 2018,
+    "text": "SystemDeviceResult SystemMagnetometer_ConfigVerify("
+  },
+  {
+    "source": "System/Src/system_source_selector.c",
+    "line": 2135,
+    "text": "SystemDeviceResult SystemHardwareQuaternion_ConfigVerify("
+  }
+]

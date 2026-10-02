@@ -1,0 +1,69 @@
+diff --git "a/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\.work\\imu_trace_review\\original_jy901b_device.c" "b/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Src\\jy901b_device.c"
+index 3bba760..7dedf80 100644
+--- "a/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\.work\\imu_trace_review\\original_jy901b_device.c"
++++ "b/D:\\python_software\\SilverStar\\.work\\ImuStartupHotfix_20261002\\apps\\FCCG\\plugins\\builtin\\silverstar_device_imu_jy901b\\payload\\Devices\\IMU\\JY901B\\Src\\jy901b_device.c"
+@@ -522,7 +522,7 @@ static uint8_t IMU_ParseReadResponseByte(uint8_t byte, uint8_t *frame, uint8_t *
+     {
+         *idx = 0U;
+         /* Consume a whole legal stream frame; never inspect its payload
+-         * for a register-response header. Both frame kinds share the CRC. */
++         * for a register-response header. Both frame kinds share the checksum. */
+         return (uint8_t)(frame[1] == IMU_REG_READ_RESPONSE);
+     }
+     /* A corrupt/truncated candidate may have swallowed the next header.
+@@ -558,20 +558,40 @@ Jy901bRegisterReadStartResult IMU_RegisterReadAsyncStart(
+     if ((context->register_read_active != 0U) ||
+         (context->register_write_phase != 0U))
+     { return Jy901bRegisterReadStartResult_Busy; }
++#if (PLATFORM_UART_FIRST_READ_TRACE_ENABLE != 0U)
++    PlatformUart_FirstReadTraceBegin(Jy901bResource_UartGet(instance), reg);
++#endif
+     if (PlatformUart_RxFlush(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
+-    { return Jy901bRegisterReadStartResult_IoError; }
++    {
++#if (PLATFORM_UART_FIRST_READ_TRACE_ENABLE != 0U)
++        PlatformUart_FirstReadTraceResult(Jy901bResource_UartGet(instance),
++            1U, Jy901bRegisterReadStartResult_IoError, 1U);
++#endif
++        return Jy901bRegisterReadStartResult_IoError;
++    }
+     {
+         PlatformResult send_result = PlatformUart_WriteFrameAsync(
+             Jy901bResource_UartGet(instance), cmd, sizeof(cmd),
+             PLATFORM_UART_TX_PRIORITY);
+-        if (send_result == PLATFORM_BUSY)
+-        { return Jy901bRegisterReadStartResult_Busy; }
+         if (send_result != PLATFORM_OK)
+-        { return Jy901bRegisterReadStartResult_IoError; }
++        {
++#if (PLATFORM_UART_FIRST_READ_TRACE_ENABLE != 0U)
++            PlatformUart_FirstReadTraceResult(Jy901bResource_UartGet(instance),
++                1U, (send_result == PLATFORM_BUSY) ?
++                Jy901bRegisterReadStartResult_Busy : Jy901bRegisterReadStartResult_IoError,
++                (uint8_t)(send_result != PLATFORM_BUSY));
++#endif
++            return (send_result == PLATFORM_BUSY) ?
++                Jy901bRegisterReadStartResult_Busy : Jy901bRegisterReadStartResult_IoError;
++        }
+     }
+     context->register_read_index = 0U;
+     context->register_read_started_ms = PlatformTime_Ms();
+     context->register_read_active = 1U;
++#if (PLATFORM_UART_FIRST_READ_TRACE_ENABLE != 0U)
++    PlatformUart_FirstReadTraceResult(Jy901bResource_UartGet(instance),
++        1U, Jy901bRegisterReadStartResult_Ok, 0U);
++#endif
+     return Jy901bRegisterReadStartResult_Ok;
+ }
+ 
+@@ -647,6 +667,10 @@ Jy901bRegisterReadPollResult IMU_RegisterReadAsyncPoll(
+         ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >=
+          IMU_CONFIG_READ_TIMEOUT_MS))
+     { result = Jy901bRegisterReadPollResult_Timeout; }
++#if (PLATFORM_UART_FIRST_READ_TRACE_ENABLE != 0U)
++    PlatformUart_FirstReadTraceResult(Jy901bResource_UartGet(instance),
++        2U, (uint8_t)result, (uint8_t)(result != Jy901bRegisterReadPollResult_Pending));
++#endif
+     if (result != Jy901bRegisterReadPollResult_Pending)
+     { context->register_read_active = 0U; }
+     return result;
