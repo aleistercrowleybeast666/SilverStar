@@ -1,0 +1,27 @@
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c: In function 'SX1280SendPayload':
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c:61:62: error: passing argument 1 of 'Lora_PacketAirtimeMs' makes integer from pointer without a cast [-Wint-conversion]
+   61 |     s_simulated_tx_end_ms = s_tick_ms + Lora_PacketAirtimeMs(&s_contexts[instance], length);
+      |                                                              ^~~~~~~~~~~~~~~~~~~~~
+      |                                                              |
+      |                                                              Sx1281Context *
+In file included from D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c:47:
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter\Flight_Controller\Devices\Telemetry\SX1281\Src/sx1281_device.c:655:46: note: expected 'uint8_t' {aka 'unsigned char'} but argument is of type 'Sx1281Context *'
+  655 | static uint32_t Lora_PacketAirtimeMs(uint8_t instance, uint8_t length)
+      |                                      ~~~~~~~~^~~~~~~~
+In file included from D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter\Flight_Controller\Tests\Host/test_telemetry.c:26,
+                 from D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c:13:
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c: In function 'Flight_Run':
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c:154:34: error: 'Sx1281Context' has no member named 'tx_normal_count'; did you mean 'tx_control_count'?
+  154 |         TEST_CHECK(s_contexts[0].tx_normal_count <= 2U);
+      |                                  ^~~~~~~~~~~~~~~
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter\Flight_Controller\Tests\Host/test_common.h:14:15: note: in definition of macro 'TEST_CHECK'
+   14 |         if (!(condition_)) \
+      |               ^~~~~~~~~~
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c: At top level:
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c:120:13: error: 'Radio_Complete' defined but not used [-Werror=unused-function]
+  120 | static void Radio_Complete(uint32_t ms)
+      |             ^~~~~~~~~~~~~~
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host.c:101:13: error: 'Radio_Command' defined but not used [-Werror=unused-function]
+  101 | static void Radio_Command(uint8_t seq, uint8_t command, uint8_t param0, uint8_t param1)
+      |             ^~~~~~~~~~~~~
+cc1.exe: all warnings being treated as errors

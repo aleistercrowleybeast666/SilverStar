@@ -1,0 +1,111 @@
+[
+  {
+    "file": "D:\\stm32_project\\SilverStar_HardwareBaseline_20261001\\FieldIntegration_DualBench_20261002_081145\\IMUStartup_Validated_20261002_121336\\FullFlow\\GSHC_Data\\logs\\fc_session_20261002_195937_789372_01.jsonl",
+    "sha256_before": "3b10e5f5d0c84db518886e0736a81484dbd5ab9f17ae5efd072038388239e0f7",
+    "sha256_after": "3b10e5f5d0c84db518886e0736a81484dbd5ab9f17ae5efd072038388239e0f7",
+    "kinds": {
+      "SESSION_START": 1,
+      "GSP_FRAME": 36,
+      "AIR_RAW": 27,
+      "PREFLIGHT_STATE": 13,
+      "GS_STATUS": 5,
+      "CAPABILITY": 4,
+      "GSP_AIR_TX": 4,
+      "CMD": 4,
+      "CAPABILITY_ACK_TX": 1,
+      "GSP_ACK": 4,
+      "ACK": 4,
+      "CAPABILITY_HANDSHAKE_COMPLETE": 1,
+      "PREFLIGHT_STATUS": 4,
+      "SUBSCRIPTION_ACK": 1,
+      "STALE_OR_DUPLICATE_CAPABILITY_AFTER_ACK": 3,
+      "NAV_CAPABILITY": 1,
+      "AirNavigationCapabilityMessage": 1,
+      "AIR_COMMAND_TRANSACTION_RESOLVED": 2,
+      "NAV_PREPARATION": 1,
+      "AirNavigationPreparationMessage": 1
+    },
+    "raw_types": {
+      "11/26": 13,
+      "12/9": 4,
+      "40/9": 4,
+      "13/9": 4,
+      "15/9": 1,
+      "16/9": 1
+    },
+    "actual_gshc_parser": {
+      "tuple": 27
+    },
+    "raw_gsp_radio_types": {
+      "11/26": 13,
+      "12/9": 4,
+      "40/9": 4,
+      "13/9": 4,
+      "15/9": 1,
+      "16/9": 1
+    },
+    "parse_errors": []
+  },
+  {
+    "file": "D:\\stm32_project\\SilverStar_HardwareBaseline_20261001\\FieldIntegration_DualBench_20261002_081145\\IMUStartup_Validated_20261002_121336\\FullFlow\\GSHC_Data\\logs\\fc_session_20261002_195943_079999_02.jsonl",
+    "sha256_before": "0dbb23bc75eb7c5139907d01b0211e9f2bc5d716f4e0d71eaa15b88f6b4131e8",
+    "sha256_after": "0dbb23bc75eb7c5139907d01b0211e9f2bc5d716f4e0d71eaa15b88f6b4131e8",
+    "kinds": {
+      "SESSION_START": 1,
+      "GSP_FRAME": 164,
+      "AIR_RAW": 132,
+      "PREFLIGHT_STATE": 20,
+      "GS_STATUS": 24,
+      "CAPABILITY": 8,
+      "GSP_AIR_TX": 8,
+      "CMD": 8,
+      "CAPABILITY_ACK_TX": 1,
+      "GSP_ACK": 8,
+      "ACK": 7,
+      "CAPABILITY_HANDSHAKE_COMPLETE": 1,
+      "NAV_CAPABILITY": 13,
+      "AirNavigationCapabilityMessage": 13,
+      "PREFLIGHT_STATUS": 10,
+      "SUBSCRIPTION_ACK": 1,
+      "STALE_OR_DUPLICATE_CAPABILITY_AFTER_ACK": 7,
+      "AIR_COMMAND_TRANSACTION_RESOLVED": 4,
+      "NAV_PREPARATION": 12,
+      "AirNavigationPreparationMessage": 12,
+      "SENSOR_STATUS": 4,
+      "STATUS": 12,
+      "SENSOR_SNAPSHOT_TERMINAL": 1,
+      "START_TRANSACTION_SUBMITTED": 1,
+      "STALE_OR_UNMATCHED_AIR_ACK": 1,
+      "START_TRANSACTION_PROGRESS": 1,
+      "MISSION_PACKET_TRACKING_START": 1,
+      "NAV_HEALTH": 46,
+      "AirNavigationHealthMessage": 46
+    },
+    "raw_types": {
+      "11/26": 20,
+      "12/9": 8,
+      "40/9": 7,
+      "15/9": 13,
+      "13/9": 10,
+      "16/9": 12,
+      "14/9": 4,
+      "20/9": 12,
+      "17/9": 46
+    },
+    "actual_gshc_parser": {
+      "tuple": 132
+    },
+    "raw_gsp_radio_types": {
+      "11/26": 20,
+      "12/9": 8,
+      "40/9": 7,
+      "15/9": 13,
+      "13/9": 10,
+      "16/9": 12,
+      "14/9": 4,
+      "20/9": 12,
+      "17/9": 46
+    },
+    "parse_errors": []
+  }
+]

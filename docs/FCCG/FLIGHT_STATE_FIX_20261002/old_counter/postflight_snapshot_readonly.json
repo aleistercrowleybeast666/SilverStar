@@ -1,0 +1,130 @@
+[
+  {
+    "captured_utc": "2026-10-02T12:04:54.738431+00:00",
+    "snapshot": {
+      "timestamp_us": 170001022,
+      "update_sequence": 1403,
+      "position_enu_m": [
+        -0.46780693531036377,
+        0.48385724425315857,
+        0.07226213067770004
+      ],
+      "velocity_enu_mps": [
+        -0.09815115481615067,
+        0.09917829930782318,
+        0.09320151060819626
+      ],
+      "predict_count": 1402,
+      "baro_update_count": 701,
+      "health_flags": 386,
+      "initialized": 1,
+      "mission_running": 1,
+      "gnss_origin_valid": 0,
+      "baro_origin_valid": 1
+    },
+    "published_snapshot": {
+      "timestamp_us": 170001022,
+      "update_sequence": 1403,
+      "position_enu_m": [
+        -0.46780693531036377,
+        0.48385724425315857,
+        0.07226213067770004
+      ],
+      "velocity_enu_mps": [
+        -0.09815115481615067,
+        0.09917829930782318,
+        0.09320151060819626
+      ],
+      "predict_count": 1402,
+      "baro_update_count": 701,
+      "health_flags": 130,
+      "initialized": 1,
+      "mission_running": 1,
+      "gnss_origin_valid": 0,
+      "baro_origin_valid": 1
+    },
+    "runtime_initialized": 1,
+    "runtime_mission_running": 1,
+    "runtime_output_sequence": 1403,
+    "telemetry_diagnostics": {
+      "status_event_drop_count": 0,
+      "ack_queue_failure_count": 0,
+      "start_response_limit_count": 0,
+      "receive_limit_count": 0,
+      "quantization_saturation_count": 0,
+      "capability_tx_count": 155
+    },
+    "telemetry_capability_state": 0,
+    "telemetry_capability_acked": 0,
+    "EstimatorBus": {
+      "EstimatorBus_prediction_count": 0,
+      "EstimatorBus_prediction_push_count": 1402,
+      "EstimatorBus_prediction_pop_count": 1402,
+      "EstimatorBus_prediction_overflow_count": 0
+    }
+  },
+  {
+    "captured_utc": "2026-10-02T12:04:57.407430+00:00",
+    "snapshot": {
+      "timestamp_us": 170001022,
+      "update_sequence": 1403,
+      "position_enu_m": [
+        -0.46780693531036377,
+        0.48385724425315857,
+        0.07226213067770004
+      ],
+      "velocity_enu_mps": [
+        -0.09815115481615067,
+        0.09917829930782318,
+        0.09320151060819626
+      ],
+      "predict_count": 1402,
+      "baro_update_count": 701,
+      "health_flags": 386,
+      "initialized": 1,
+      "mission_running": 1,
+      "gnss_origin_valid": 0,
+      "baro_origin_valid": 1
+    },
+    "published_snapshot": {
+      "timestamp_us": 170001022,
+      "update_sequence": 1403,
+      "position_enu_m": [
+        -0.46780693531036377,
+        0.48385724425315857,
+        0.07226213067770004
+      ],
+      "velocity_enu_mps": [
+        -0.09815115481615067,
+        0.09917829930782318,
+        0.09320151060819626
+      ],
+      "predict_count": 1402,
+      "baro_update_count": 701,
+      "health_flags": 130,
+      "initialized": 1,
+      "mission_running": 1,
+      "gnss_origin_valid": 0,
+      "baro_origin_valid": 1
+    },
+    "runtime_initialized": 1,
+    "runtime_mission_running": 1,
+    "runtime_output_sequence": 1403,
+    "telemetry_diagnostics": {
+      "status_event_drop_count": 0,
+      "ack_queue_failure_count": 0,
+      "start_response_limit_count": 0,
+      "receive_limit_count": 0,
+      "quantization_saturation_count": 0,
+      "capability_tx_count": 155
+    },
+    "telemetry_capability_state": 0,
+    "telemetry_capability_acked": 0,
+    "EstimatorBus": {
+      "EstimatorBus_prediction_count": 0,
+      "EstimatorBus_prediction_push_count": 1402,
+      "EstimatorBus_prediction_pop_count": 1402,
+      "EstimatorBus_prediction_overflow_count": 0
+    }
+  }
+]

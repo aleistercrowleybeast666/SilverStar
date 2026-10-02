@@ -1,0 +1,90 @@
+[
+  {
+    "file": "Modules/Src/telemetry_service.c",
+    "function": "TelemetryService_Process",
+    "line": 2024,
+    "source_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "function_sha256": "3371dd75dcb2b11aae320fed6b1fc43021218878bfa4ee513ef07ff0c23d932d"
+  },
+  {
+    "file": "Modules/Src/telemetry_service.c",
+    "function": "TelemetryService_StreamSend",
+    "line": 1916,
+    "source_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "function_sha256": "f16181d1ae02ec055a86a197810a52a73920eed6efe88096a12d09b8cfddb8ff"
+  },
+  {
+    "file": "Modules/Src/telemetry_service.c",
+    "function": "TelemetryService_NavigationSend",
+    "line": 1883,
+    "source_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "function_sha256": "088a4fa615e8883f258791a00ea3e8ef1810f7bec9fd750fa268bbec9f3cfef4"
+  },
+  {
+    "file": "Modules/Src/telemetry_service.c",
+    "function": "TelemetryService_NavigationHealthSend",
+    "line": 1845,
+    "source_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "function_sha256": "82953ec9c6262ed8b5e0dc77cf36b108e951173a5eeccf18499a332cd6849b26"
+  },
+  {
+    "file": "Modules/Src/telemetry_service.c",
+    "function": "TelemetryService_NavigationFrameSend",
+    "line": 1664,
+    "source_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "function_sha256": "112ebc7e4ae77ee06ebcb12981fcd66bb6d5f20f29cb2b17b6f064b5ac0285b5"
+  },
+  {
+    "file": "Modules/Src/telemetry_service.c",
+    "function": "TelemetryService_ImuQuantizedGet",
+    "line": 1506,
+    "source_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "function_sha256": "b9504e775062dc23f0d0fb4d09567778d56952f71bd3a4d35e25199a5be14a28"
+  },
+  {
+    "file": "Modules/Src/telemetry_service.c",
+    "function": "TelemetryService_PreflightDisable",
+    "line": 526,
+    "source_sha256": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "function_sha256": "139a3c58c52ae8ce014694704a5bc42a94a2ea2204065a6889c523fe110d4691"
+  },
+  {
+    "file": "Modules/Src/estimator_task.c",
+    "missing": true
+  },
+  {
+    "file": "Protocol/Src/air_protocol.c",
+    "function": "Air_FlightStateBuild",
+    "line": 822,
+    "source_sha256": "f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4",
+    "function_sha256": "38c38f67839c5e59307843bdf1d26257d6edbec8149e7df6935005d2765f9061"
+  },
+  {
+    "file": "Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.c",
+    "function": "Sx1281Transport_Send",
+    "line": 173,
+    "source_sha256": "f8d383c97ca0e372fd17f63b288cd77348fb94676a80c98321c3613ead56a525",
+    "function_sha256": "69de59d696947dac25fed5267737d504b73d3c7083d29d02703c00743f6d6a5a"
+  },
+  {
+    "file": "Devices/Telemetry/SX1281/Src/sx1281_device.c",
+    "function": "Lora_TxQueuePushClass",
+    "line": 491,
+    "source_sha256": "b5c1c63604b0c4eb6d6050cf22273b50b12a6d2494c539f822960cc97e1872d0",
+    "function_sha256": "8072897cc46393802ec6c499143d6f79896602e02ea2c0bfd725927badbadfdd"
+  },
+  {
+    "file": "Devices/Telemetry/SX1281/Src/sx1281_device.c",
+    "function": "Lora_PacketAirtimeMs",
+    "line": 655,
+    "source_sha256": "b5c1c63604b0c4eb6d6050cf22273b50b12a6d2494c539f822960cc97e1872d0",
+    "function_sha256": "0940716ebcc51a63825d5d50db0bdaaca1272324ecd4589022c5d96b7b843721"
+  },
+  {
+    "file": "System/Inertial/Src/system_inertial.c",
+    "function": "SystemInertial_LatestGet",
+    "line": 53,
+    "source_sha256": "85dc5e513373ddff22abac8f1058dc07a6a71b8cf25214efb913a2302217f7e3",
+    "function_sha256": "0bf987933a49c9724748a35d98f03e0f81b9c6bce61b27dd5770f6d92ceea880"
+  }
+]

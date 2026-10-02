@@ -1,0 +1,10 @@
+In file included from D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter\Flight_Controller\Tests\Host/test_telemetry.c:26,
+                 from D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v2.c:13:
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v2.c: In function 'Flight_Run':
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v2.c:144:78: error: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Werror=sign-compare]
+  144 |         TEST_CHECK((s_contexts[0].tx_count - s_contexts[0].tx_control_count) <= 2U);
+      |                                                                              ^~
+D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter\Flight_Controller\Tests\Host/test_common.h:14:15: note: in definition of macro 'TEST_CHECK'
+   14 |         if (!(condition_)) \
+      |               ^~~~~~~~~~
+cc1.exe: all warnings being treated as errors

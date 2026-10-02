@@ -1,0 +1,3 @@
+CONTENDED ms=14005 FLIGHT=0 NAV_HEALTH=58 NAV_CAP=12 NAV_PREP=12 queued=2 stream_deadline=0
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v4.c:161: Flight_Count(AIR_TYPE_FLIGHT_STATE) > 0U
+contended: 28187 checks, 1 failures

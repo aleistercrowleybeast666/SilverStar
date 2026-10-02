@@ -1,0 +1,9 @@
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v3.c:112: LORA_RF_FREQUENCY_HZ == 2395000000UL
+NO_ESTIMATOR FLIGHT=0 NAV=0
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v3.c:179: Flight_Count(AIR_TYPE_NAV_HEALTH) > 0U
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v3.c:105: Sx1281TelemetryInstance_Init(0U) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v3.c:106: Sx1281TelemetryInstance_Start(0U) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v3.c:112: LORA_RF_FREQUENCY_HZ == 2395000000UL
+NO_IMU FLIGHT=0 NAV=0
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v3.c:183: Flight_Count(AIR_TYPE_NAV_HEALTH) > 0U
+unavailable: 6022 checks, 6 failures

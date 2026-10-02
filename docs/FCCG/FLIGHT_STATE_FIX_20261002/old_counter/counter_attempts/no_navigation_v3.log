@@ -1,0 +1,3 @@
+FAIL D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\fs_counter_evidence\flight_state_scheduler_host_v3.c:112: LORA_RF_FREQUENCY_HZ == 2395000000UL
+NO_NAV FLIGHT=7 GNSS_USABLE=0
+no_navigation: 3024 checks, 1 failures
