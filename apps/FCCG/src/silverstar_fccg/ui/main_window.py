@@ -3798,9 +3798,10 @@ class MainWindow(QMainWindow):
         self._last_task_progress = min(999, int(
             max(0.0, min(1.0, progress)) * 1000
         ))
-        self._task_indeterminate = False
-        self.progress_bar.setRange(0, 1000)
-        self.progress_bar.setValue(self._last_task_progress)
+        if not self._task_indeterminate or progress > 0.0:
+            self._task_indeterminate = False
+            self.progress_bar.setRange(0, 1000)
+            self.progress_bar.setValue(self._last_task_progress)
         self.status_label.setText(self._translator.Text_Get(code))
 
     def _Task_Result(self, result: Any) -> None:
@@ -3809,6 +3810,8 @@ class MainWindow(QMainWindow):
     def _Task_Line(self, line: str) -> None:
         progress_event = TaskProgressEvent_Parse(line)
         if progress_event is not None:
+            # A parsed event has a positive total; an isolated 0% report does not.
+            self._task_indeterminate = False
             completed = (0 if progress_event.state == TaskProgressState.PLAN else
                          progress_event.current - 1 if progress_event.state == TaskProgressState.BEGIN else
                          progress_event.current)
