@@ -467,6 +467,13 @@ if (-not $loggingEnabled) {
         $disabledGeneratedFiles -notcontains $_
     })
 }
+# Compare the exact reviewed paths using one separator on every host.
+$expectedGeneratedFiles = @($expectedGeneratedFiles | ForEach-Object {
+    $_.Replace('\', '/')
+} | Sort-Object)
+$generatedFiles = @($generatedFiles | ForEach-Object {
+    $_.Replace('\', '/')
+} | Sort-Object)
 $generatedDifference = @(Compare-Object `
     -ReferenceObject $expectedGeneratedFiles -DifferenceObject $generatedFiles)
 Assert-ArchitectureCondition -Condition ($generatedDifference.Count -eq 0) `
