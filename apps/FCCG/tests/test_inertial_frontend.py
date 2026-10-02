@@ -43,25 +43,32 @@ def test_inertial_frontend_and_selected_navigation(tmp_path, workspace_root):
 #define SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT 2U
 #define SILVERSTAR_PROTOCOL_LOGGING_ENABLED 1U
 #define SILVERSTAR_ASSERT_OBJECT(p,t,m) ((void)(p))
-#define INS_INERTIAL_UPDATE_READY 0
+#define INS_HEALTH_INVALID_SAMPLE 2U
+#define INS_HEALTH_SAMPLE_GAP 1U
+#define INS_HEALTH_INVALID_QUATERNION 4U
+typedef enum { INS_INERTIAL_UPDATE_READY=0, INS_INERTIAL_UPDATE_WAITING,
+               INS_INERTIAL_UPDATE_INVALID } InsInertialUpdateResult;
 typedef struct { uint8_t quality_flags; int value; } InsImuSample;
 typedef int InsAlgorithmSample;
-typedef int InsState;
+typedef struct { int value; uint32_t health_flags; uint64_t timestamp_us; } InsState;
 typedef struct { unsigned int sample_count; } InertialContext;
 static struct { InertialContext inertial; int pure_ins; } s_navigation_input;
 static unsigned int input_count, navigation_count, publication_count, pure_log_count;
 static unsigned int quality_count, body_pair_count;
+static unsigned int rejection_count;
+static void InsTask_InputReject(const InsImuSample *s, uint32_t flags)
+{ (void)s; (void)flags; rejection_count++; }
 static void SystemNavigationHealth_ImuQualityRecord(uint8_t flags)
 { (void)flags; quality_count++; }
 static void InsTask_BodyPairBuild(const int *s) { (void)s; body_pair_count++; }
 static int InsTask_SampleCorrect(const InsImuSample *a, int *b) { *b=a->value; return 1; }
-static int InsInertial_Update(InertialContext *c, const int *s, int *o)
-{ (void)c; input_count++; *o=*s; return 0; }
-static int InsMechanization_Update(int *c, const int *s, int *o)
+static InsInertialUpdateResult InsInertial_Update(InertialContext *c, const int *s, InsState *o)
+{ (void)c; input_count++; o->value=*s; return INS_INERTIAL_UPDATE_READY; }
+static int InsMechanization_Update(int *c, const int *s, InsState *o)
 { (void)c; (void)s; (void)o; navigation_count++; return 1; }
-static void InsTask_InertialOutputsPublish(const InsImuSample *s, const int *o)
+static void InsTask_InertialOutputsPublish(const InsImuSample *s, const InsState *o)
 { (void)s; (void)o; publication_count++; }
-static void InsTask_PureRecordWrite(const InsImuSample *s, const int *o)
+static void InsTask_PureRecordWrite(const InsImuSample *s, const InsState *o)
 { (void)s; (void)o; pure_log_count++; }
 '''
     fixture += body + r'''
@@ -71,7 +78,7 @@ int main(void) {
     sample.quality_flags = 0x02U;
     InsTask_Propagate(&sample);
     return input_count != 1 || publication_count != 1 || navigation_count ||
-        pure_log_count || body_pair_count || quality_count != 2;
+        pure_log_count || body_pair_count || quality_count != 2 || rejection_count != 1;
 }
 '''
     path = output / 'dispatch.c'

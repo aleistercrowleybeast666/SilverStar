@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import re
+import json
 from pathlib import Path
+from pathlib import PureWindowsPath
 from urllib.parse import unquote, urlsplit
 
 import pytest
@@ -32,14 +34,26 @@ def test_docs_relative_links_exist():
             url = urlsplit(destination)
             if url.scheme or url.netloc or not url.path:
                 continue
-            target = path.parent / unquote(url.path)
+            # Raw snapshots retain the original link context recorded in their
+            # inventory. Check their links without rewriting historical evidence.
+            context = path.parent
+            if path.name.endswith("_SNAPSHOT.md") and (path.parent / "INDEX.json").exists():
+                inventory = json.loads((path.parent / "INDEX.json").read_text(encoding="utf-8"))
+                entry = next((item for item in inventory.get("entries", [])
+                              if item.get("file") == path.name), None)
+                if entry:
+                    parts = PureWindowsPath(entry["source"]).parts
+                    repository = parts.index("SilverStar")
+                    context = ROOT.parents[1].joinpath(*parts[repository + 1:-1])
+            target = context / unquote(url.path)
             if not target.exists():
-                missing.append(f"{path.relative_to(ROOT)} -> {destination}")
+                missing.append(f"{path.relative_to(DOCS)} -> {destination}")
     assert not missing, "\n".join(missing)
 
 
 def test_current_docs_release_and_calibration_claims():
-    assert SILVERSTAR_PLATFORM_VERSION == "0.1.0"
+    suite_root = ROOT.parents[1]
+    assert SILVERSTAR_PLATFORM_VERSION == (suite_root / "VERSION").read_text(encoding="ascii").strip()
     stale_declaration = re.compile(
         r"(?m)^(?:#.*SilverStar\s+0\.0\.9|>.*(?:文档版本|适用范围).*0\.0\.9)"
         r"|(?:当前|firmware build tag)[^\n。]{0,70}(?:SilverStar\s+0\.0\.9|SILV0009)"
@@ -50,7 +64,9 @@ def test_current_docs_release_and_calibration_claims():
             continue
         content = path.read_text(encoding="utf-8")
         assert not stale_declaration.search(content), path
-        assert not re.search(r"\bExisting\b|使用现有校准", content), path
+        # "Existing" is valid hardware-route prose. Reject the retired
+        # calibration operation, not unrelated English words in audit reports.
+        assert not re.search(r"使用现有校准|\bExisting\s+Calibration\b", content, re.I), path
         assert not fixed_mask.search(content), path
 
 

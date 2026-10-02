@@ -338,6 +338,7 @@ Jy901bStartupResult Jy901bStartup_Init(
                       SYSTEM_DEVICE_STARTUP_MAX_CANDIDATES,
         SILVERSTAR_ASSERT_MODULE_DEVICE,
         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    config.probe_pass_count = JY901B_BAUD_SCAN_PASS_COUNT;
     config.probe_timeout_ms = JY901B_BAUD_SCAN_DWELL_MS;
     config.stage_timeout_ms = JY901B_STARTUP_STAGE_TIMEOUT_MS;
     config.sample_timeout_ms = JY901B_STARTUP_SAMPLE_TIMEOUT_MS;

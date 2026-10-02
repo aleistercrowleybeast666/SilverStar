@@ -18,6 +18,7 @@ from silverstar_flp.log_open import LogOpenCoordinator, LogOpenRequest
 from silverstar_flp.plugins.algorithms.eskf15.verification import RecordedParity_Verify
 from silverstar_flp.plugins.api.algorithm import ReplayFidelity, ReplayRequest
 from silverstar_flp.plugins.registry import builtin_registry
+from tests.fccg_source_fixture import FccgCommon_RootGet
 
 
 @pytest.mark.parametrize("interleaved", [False, True])
@@ -30,7 +31,7 @@ def test_actual_c_producer_exact_decoder_and_15_state_replay(tmp_path, interleav
     builtin = root / "plugins/builtin"
     core = builtin / "silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15"
     protocol = builtin / "silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG"
-    common = builtin / "silverstar_core_0_0_12/payload/Common"
+    common = FccgCommon_RootGet(root)
     decoder = next(project.glob("*.ssdecoder"))
     captured = tmp_path / decoder.name
     shutil.copy2(decoder, captured)

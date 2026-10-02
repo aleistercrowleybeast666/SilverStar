@@ -312,6 +312,13 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
         if none_defines:
             defines.extend(next(iter(none_defines)))
     if model.hardware.mode == "custom":
+        # CubeMX snapshots retain these files for provenance, while the importer
+        # excludes them from the authoritative Make source graph. EIDE scans
+        # Core/Src and therefore needs the identical explicit exclusions.
+        exclude_sources.extend((
+            "HardwareGenerated/STM32CubeMX/Core/Src/sysmem.c",
+            "HardwareGenerated/STM32CubeMX/Core/Src/freertos.c",
+        ))
         if model.hardware.hal_cmsis_source_policy == "plugin_payload_authoritative":
             imported_paths = (
                 *model.hardware.build_sources,

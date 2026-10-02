@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QGridLayout,
     QGroupBox,
+    QHBoxLayout,
     QLabel,
     QLayout,
     QPushButton,
@@ -36,6 +37,9 @@ class NavigationPanel(QGroupBox):
         self.summary = QLabel()
         self.summary.setWordWrap(True)
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(8, 18, 8, 6)
+        layout.setAlignment(Qt.AlignTop)
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         layout.addWidget(self.summary)
         self.steps: dict[str, QLabel] = {}
         if preflight:
@@ -50,7 +54,11 @@ class NavigationPanel(QGroupBox):
             self.toggle = QPushButton()
             self.toggle.setCheckable(True)
             self.toggle.setMinimumHeight(30)
-            layout.addWidget(self.toggle)
+            layout.removeWidget(self.summary)
+            summary_row = QHBoxLayout()
+            summary_row.addWidget(self.summary, 1)
+            summary_row.addWidget(self.toggle)
+            layout.addLayout(summary_row)
             self.details = QScrollArea()
             self.details.setWidgetResizable(True)
             self.details.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -94,7 +102,7 @@ class NavigationPanel(QGroupBox):
         navigation = state.navigation
         check = navigation.Navigation_StartCheck()
         self.setTitle(tr("navigation.preparation" if self.preflight else "navigation.health"))
-        algorithm = {0: "Pure INS", 1: "KF_6", 2: "ESKF_15"}.get(navigation.algorithm_id, tr("common.unknown"))
+        algorithm = {0: "Pure INS", 1: "KF_6", 2: "ESKF_15", 3: "SF6"}.get(navigation.algorithm_id, tr("common.unknown"))
         self.summary.setText(tr("navigation.summary", algorithm=algorithm, state=tr(f"navigation.{check.value}"),
                                 session=navigation.session if navigation.session is not None else "—",
                                 generation=navigation.generation if navigation.generation is not None else "—"))

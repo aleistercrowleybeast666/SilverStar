@@ -26,6 +26,7 @@ from tests.eskf15_c_bridge import (
     State,
     Workspace,
 )
+from tests.fccg_source_fixture import FccgCommon_RootGet
 
 
 class Event(ct.Structure):
@@ -310,7 +311,7 @@ def native(tmp_path):
     root = Path(selected) / "plugins/builtin"
     core = root / "silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15"
     quality = root / "silverstar_algorithm_common/payload/Algorithm/Common"
-    common = root / "silverstar_core_0_0_12/payload/Common"
+    common = FccgCommon_RootGet(Path(selected))
     dll = tmp_path / "native.dll"
     command = [
         shutil.which("gcc"),

@@ -738,8 +738,38 @@ typedef struct
     uint8_t quality_degraded_mask;
 } FlightLogNavigationQualityRecord;
 
+typedef struct
+{
+    uint32_t snapshot_id;
+    uint8_t algorithm_id;
+    uint8_t algorithm_revision;
+    uint8_t health;
+    uint8_t reserved;
+    float position_enu_m[3];
+    float velocity_enu_mps[3];
+    float q_nb[4];
+    float gain[6];
+} FlightLogSf6StateRecord;
+
+typedef struct
+{
+    uint64_t sample_timestamp_us;
+    uint64_t receive_timestamp_us;
+    uint64_t measurement_timestamp_us;
+    uint64_t evaluation_timestamp_us;
+    uint64_t boundary_timestamp_us;
+    uint32_t sequence;
+    uint8_t group;
+    uint8_t physically_valid;
+    uint8_t result;
+    uint8_t effective_update;
+    float observation[2];
+} FlightLogSf6MeasurementRecord;
+
 typedef union
 {
+    FlightLogSf6StateRecord sf6_state;
+    FlightLogSf6MeasurementRecord sf6_measurement;
     FlightLogNavigationQualityRecord navigation_quality;
     FlightLogEskf15BodyInputRecord eskf15_body_input;
     FlightLogEskf15StateRecord eskf15_state;

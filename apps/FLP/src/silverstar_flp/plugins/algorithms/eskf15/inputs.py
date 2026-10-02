@@ -36,6 +36,10 @@ def BodySteps_Build(dataset, bounds):
                 )
             )
         return steps, failure, True
+    from silverstar_flp.plugins.algorithms.pure_ins.mechanization import Mechanization_ConfigurationGet
+    if Mechanization_ConfigurationGet(dataset)["subsample_count"] != 2:
+        return [], {"timestamp_us": bounds.start_timestamp_us,
+                    "reason": "unsupported_mechanization_aggregation"}, False
     records = [
         r
         for r in dataset.Records_Get("IMU_CORRECTED")

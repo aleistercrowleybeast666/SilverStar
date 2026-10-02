@@ -170,11 +170,7 @@ def configure_ready(controller: Controller) -> None:
     controller.state.system_ready = True
     controller.state.start_unlocked = True
     controller.state.start_block_reason = int(AirAckResult.OK)
-    navigation = controller.state.navigation
-    navigation.Navigation_Request(42)
-    navigation.Navigation_Declare(1, 42, 1)
-    navigation.algorithm_id = 1
-    navigation.Navigation_ApplyPreparation(PreparationSnapshot(42, 1, 1, 127, 127, 0, 0, 1, 7, 7, time.monotonic_ns()))
+
 
 
 def flight_state(time_ms: int = 1000) -> AirFlightStateMessage:

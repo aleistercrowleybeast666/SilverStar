@@ -2951,23 +2951,74 @@
         "period_us": 0
       },
       "fields": [
-        { "name": "alignment_algorithm", "type": "u8" },
-        { "name": "constraint_count", "type": "u8" },
-        { "name": "valid_pair_count", "type": "u8" },
-        { "name": "yaw_authoritative", "type": "u8" },
-        { "name": "imu_source_instance", "type": "u8" },
-        { "name": "magnetometer_instance", "type": "u8" },
-        { "name": "external_source_instance", "type": "u8" },
-        { "name": "failure_reason", "type": "u8" },
-        { "name": "magnetometer_physical_device_id", "type": "u16" },
-        { "name": "flags", "type": "u16" },
-        { "name": "mag_calibration_generation", "type": "u32" },
-        { "name": "mag_calibration_set_hash", "type": "u32" },
-        { "name": "first_timestamp_us", "type": "u64" },
-        { "name": "last_timestamp_us", "type": "u64" },
-        { "name": "minimum_pair_sine", "type": "f32" },
-        { "name": "rms_mismatch_rad", "type": "f32" },
-        { "name": "max_mismatch_rad", "type": "f32" }
+        {
+          "name": "alignment_algorithm",
+          "type": "u8"
+        },
+        {
+          "name": "constraint_count",
+          "type": "u8"
+        },
+        {
+          "name": "valid_pair_count",
+          "type": "u8"
+        },
+        {
+          "name": "yaw_authoritative",
+          "type": "u8"
+        },
+        {
+          "name": "imu_source_instance",
+          "type": "u8"
+        },
+        {
+          "name": "magnetometer_instance",
+          "type": "u8"
+        },
+        {
+          "name": "external_source_instance",
+          "type": "u8"
+        },
+        {
+          "name": "failure_reason",
+          "type": "u8"
+        },
+        {
+          "name": "magnetometer_physical_device_id",
+          "type": "u16"
+        },
+        {
+          "name": "flags",
+          "type": "u16"
+        },
+        {
+          "name": "mag_calibration_generation",
+          "type": "u32"
+        },
+        {
+          "name": "mag_calibration_set_hash",
+          "type": "u32"
+        },
+        {
+          "name": "first_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "last_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "minimum_pair_sine",
+          "type": "f32"
+        },
+        {
+          "name": "rms_mismatch_rad",
+          "type": "f32"
+        },
+        {
+          "name": "max_mismatch_rad",
+          "type": "f32"
+        }
       ]
     },
     {
@@ -2986,14 +3037,38 @@
         "period_us": 0
       },
       "fields": [
-        { "name": "mission_id", "type": "u32" },
-        { "name": "commit_generation", "type": "u32" },
-        { "name": "snapshot_sequence", "type": "u32" },
-        { "name": "imu_calibration_generation", "type": "u32" },
-        { "name": "mag_calibration_set_hash", "type": "u32" },
-        { "name": "base_instance", "type": "u8" },
-        { "name": "ready", "type": "u8" },
-        { "name": "reserved", "type": "u16" }
+        {
+          "name": "mission_id",
+          "type": "u32"
+        },
+        {
+          "name": "commit_generation",
+          "type": "u32"
+        },
+        {
+          "name": "snapshot_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "imu_calibration_generation",
+          "type": "u32"
+        },
+        {
+          "name": "mag_calibration_set_hash",
+          "type": "u32"
+        },
+        {
+          "name": "base_instance",
+          "type": "u8"
+        },
+        {
+          "name": "ready",
+          "type": "u8"
+        },
+        {
+          "name": "reserved",
+          "type": "u16"
+        }
       ]
     },
     {
@@ -3012,14 +3087,159 @@
         "period_us": 0
       },
       "fields": [
-        { "name": "physical_device_id", "type": "u16" },
-        { "name": "instance_id", "type": "u8" },
-        { "name": "active", "type": "u8" },
-        { "name": "saved", "type": "u8" },
-        { "name": "load_error", "type": "u8" },
-        { "name": "reserved", "type": "u16" },
-        { "name": "generation", "type": "u32" },
-        { "name": "calibration_set_hash", "type": "u32" }
+        {
+          "name": "physical_device_id",
+          "type": "u16"
+        },
+        {
+          "name": "instance_id",
+          "type": "u8"
+        },
+        {
+          "name": "active",
+          "type": "u8"
+        },
+        {
+          "name": "saved",
+          "type": "u8"
+        },
+        {
+          "name": "load_error",
+          "type": "u8"
+        },
+        {
+          "name": "reserved",
+          "type": "u16"
+        },
+        {
+          "name": "generation",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_set_hash",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "id": "0x2B",
+      "enum": "FLIGHT_LOG_RECORD_SF6_STATE",
+      "name": "SF6_STATE",
+      "version": 1,
+      "payload_size": 72,
+      "size_macro": "FLIGHT_LOG_SF6_STATE_PAYLOAD_SIZE",
+      "c_type": "FlightLogSf6StateRecord",
+      "member": "sf6_state",
+      "default_stream": {
+        "enabled": true,
+        "policy": "periodic",
+        "decimation": 1,
+        "period_us": 100000
+      },
+      "fields": [
+        {
+          "name": "snapshot_id",
+          "type": "u32"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8"
+        },
+        {
+          "name": "algorithm_revision",
+          "type": "u8"
+        },
+        {
+          "name": "health",
+          "type": "u8"
+        },
+        {
+          "name": "reserved",
+          "type": "u8"
+        },
+        {
+          "name": "position_enu_m",
+          "type": "f32",
+          "count": 3
+        },
+        {
+          "name": "velocity_enu_mps",
+          "type": "f32",
+          "count": 3
+        },
+        {
+          "name": "q_nb",
+          "type": "f32",
+          "count": 4
+        },
+        {
+          "name": "gain",
+          "type": "f32",
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "0x2C",
+      "enum": "FLIGHT_LOG_RECORD_SF6_MEASUREMENT",
+      "name": "SF6_MEASUREMENT",
+      "version": 1,
+      "payload_size": 56,
+      "size_macro": "FLIGHT_LOG_SF6_MEASUREMENT_PAYLOAD_SIZE",
+      "c_type": "FlightLogSf6MeasurementRecord",
+      "member": "sf6_measurement",
+      "default_stream": {
+        "enabled": true,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "sample_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "receive_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "measurement_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "evaluation_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "boundary_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "sequence",
+          "type": "u32"
+        },
+        {
+          "name": "group",
+          "type": "u8"
+        },
+        {
+          "name": "physically_valid",
+          "type": "u8"
+        },
+        {
+          "name": "result",
+          "type": "u8"
+        },
+        {
+          "name": "effective_update",
+          "type": "u8"
+        },
+        {
+          "name": "observation",
+          "type": "f32",
+          "count": 2
+        }
       ]
     }
   ],
@@ -3371,10 +3591,16 @@
           "en_US": "Alignment Source and Quality Evidence"
         },
         "requires": {
-          "strategy_slots": ["alignment"]
+          "strategy_slots": [
+            "alignment"
+          ]
         },
-        "cadence": { "kind": "event" },
-        "producer_components": ["silverstar.core.flight_task"]
+        "cadence": {
+          "kind": "event"
+        },
+        "producer_components": [
+          "silverstar.core.flight_task"
+        ]
       },
       "FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY": {
         "level": "required",
@@ -3383,8 +3609,12 @@
           "zh_CN": "任务快照身份",
           "en_US": "Mission Snapshot Identity"
         },
-        "cadence": { "kind": "one_shot" },
-        "producer_components": ["silverstar.core.flight_task"]
+        "cadence": {
+          "kind": "one_shot"
+        },
+        "producer_components": [
+          "silverstar.core.flight_task"
+        ]
       },
       "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY": {
         "level": "required",
@@ -3394,10 +3624,16 @@
           "en_US": "Magnetometer Calibration Identity"
         },
         "requires": {
-          "recordable_capabilities": ["magnetometer.field"]
+          "recordable_capabilities": [
+            "magnetometer.field"
+          ]
         },
-        "cadence": { "kind": "one_shot" },
-        "producer_components": ["silverstar.core.flight_task"]
+        "cadence": {
+          "kind": "one_shot"
+        },
+        "producer_components": [
+          "silverstar.core.flight_task"
+        ]
       },
       "FLIGHT_LOG_RECORD_MISSION_CONFIG": {
         "level": "required",
@@ -3638,6 +3874,46 @@
           "silverstar.algorithm.estimator.eskf15",
           "silverstar.algorithm.estimator.kf6"
         ]
+      },
+      "FLIGHT_LOG_RECORD_SF6_STATE": {
+        "level": "recommended",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "SF6_STATE",
+          "en_US": "SF6_STATE"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "algorithm_output"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.sf6"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_SF6_MEASUREMENT": {
+        "level": "recommended",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "zh_CN": "SF6_MEASUREMENT",
+          "en_US": "SF6_MEASUREMENT"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "algorithm_output"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.sf6"
+        ]
       }
     }
   },
@@ -3719,6 +3995,23 @@
       "covariance": "15 by 15 symmetric upper triangle row-major, 120 values split into four parts of 30; missing/duplicate/conflicting parts are incomplete.",
       "quality": "NAV_QUALITY revision3; bounded satellite and window variance weighting, no position-bit veto from consistency.",
       "fidelity": "Require complete exact inputs and C numerical validation; unsupported or incomplete evidence is explicit."
+    },
+    "sf6": {
+      "algorithm_id": 3,
+      "name": "SF6",
+      "revision": 1,
+      "gain_order": [
+        "vE",
+        "vN",
+        "vU",
+        "pE",
+        "pN",
+        "pU"
+      ],
+      "confidence": "Unavailable: no covariance, NIS or statistically optimal confidence.",
+      "delay": "Use recorded resolved measurement and boundary timestamps. Previous completed IMU boundary; quantization <=20ms; reject history misses. No second delay subtraction.",
+      "height": "GNSS ellipsoid relative ENU U and barometer relative preflight altitude use the same pU gain, independently once per new observation. GNSS position, GNSS velocity, then barometer; per-observation gain is rate dependent.",
+      "defaults": "Initial engineering defaults, not bench tuned or optimal."
     }
   }
 }

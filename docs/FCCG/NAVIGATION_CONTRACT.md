@@ -8,8 +8,8 @@ acceptance results, hashes and resource margins belong in [VALIDATION](VALIDATIO
 
 ## Identity and ownership
 
-Platform 0.0.12, project format 12 and decoder/project-semantics 1.2 retain their
-identities. New decoders require FLP 0.0.5. Quality policy revision 3 and ESKF revision 1
+Current Core/platform is 0.1.0, project format is 14, and decoder/project-semantics
+schemas remain 1.2. New decoders require FLP 0.1.0. Quality policy revision 3 and ESKF revision 1
 are explicit decoder declarations. Original packages and recordings retain their original
 revision and cannot silently acquire current behavior. Algorithm IDs are Pure INS/None 0,
 KF6 1 and ESKF15 2. Only selected sources enter the generated graph.

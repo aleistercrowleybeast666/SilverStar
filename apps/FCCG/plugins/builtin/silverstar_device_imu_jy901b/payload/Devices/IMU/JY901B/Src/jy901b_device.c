@@ -446,27 +446,37 @@ static PlatformResult IMU_ConfigFrameEnqueue(uint8_t instance,
         frame, sizeof(frame), PLATFORM_UART_TX_PRIORITY);
 }
 
+static IMUState IMU_ReceiveResume(uint8_t instance, IMUState state)
+{
+    if (PlatformUart_RxRestart(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
+    {
+        return IMU_UART_RX_ERROR;
+    }
+    return state;
+}
+
 static IMUState IMU_WriteRegister(uint8_t instance, uint8_t reg, uint16_t value, uint8_t save)
 {
     IMUState state;
 
     SILVERSTAR_ASSERT_OBJECT(&s_config_cache, IMUConfig,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
-    (void)PlatformUart_RxStop(Jy901bResource_UartGet(instance));
+    if (PlatformUart_RxStop(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
+    {
+        return IMU_ReceiveResume(instance, IMU_UART_RX_ERROR);
+    }
 
     state = IMU_SendConfigFrame(instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
     if (state != IMU_OK)
     {
-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-        return state;
+        return IMU_ReceiveResume(instance, state);
     }
     PlatformTime_DelayMs(IMU_CFG_UNLOCK_DELAY_MS);
 
     state = IMU_SendConfigFrame(instance, reg, value);
     if (state != IMU_OK)
     {
-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-        return state;
+        return IMU_ReceiveResume(instance, state);
     }
     PlatformTime_DelayMs(IMU_CFG_WRITE_DELAY_MS);
 
@@ -475,14 +485,12 @@ static IMUState IMU_WriteRegister(uint8_t instance, uint8_t reg, uint16_t value,
         state = IMU_SendConfigFrame(instance, IMU_REG_SAVE, 0x0000U);
         if (state != IMU_OK)
         {
-            (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-            return state;
+            return IMU_ReceiveResume(instance, state);
         }
         PlatformTime_DelayMs(IMU_CFG_SAVE_DELAY_MS);
     }
 
-    (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-    return IMU_OK;
+    return IMU_ReceiveResume(instance, IMU_OK);
 }
 
 static uint8_t IMU_ReadResponseChecksumValid(const uint8_t *frame)
@@ -500,68 +508,35 @@ static uint8_t IMU_ReadResponseChecksumValid(const uint8_t *frame)
 
 static uint8_t IMU_ParseReadResponseByte(uint8_t byte, uint8_t *frame, uint8_t *idx)
 {
-    if ((frame == NULL) || (idx == NULL))
-    {
-        return 0U;
-    }
-    SILVERSTAR_ASSERT_OBJECT(frame, uint8_t,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT_OBJECT(idx, uint8_t,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    uint8_t next;
 
-    if (*idx == 0U)
-    {
-        if (byte == IMU_FRAME_HEADER)
-        {
-            frame[0] = byte;
-            *idx = 1U;
-        }
-        return 0U;
-    }
-
-    if (*idx == 1U)
-    {
-        if (byte == IMU_REG_READ_RESPONSE)
-        {
-            frame[1] = byte;
-            *idx = 2U;
-        }
-        else if (byte == IMU_FRAME_HEADER)
-        {
-            frame[0] = IMU_FRAME_HEADER;
-            *idx = 1U;
-        }
-        else
-        {
-            *idx = 0U;
-        }
-        return 0U;
-    }
-
+    if ((frame == NULL) || (idx == NULL)) { return 0U; }
+    SILVERSTAR_ASSERT(*idx < IMU_FRAME_LEN,
+        SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    if ((*idx == 0U) && (byte != IMU_FRAME_HEADER)) { return 0U; }
     frame[*idx] = byte;
     (*idx)++;
-
-    if (*idx < IMU_FRAME_LEN)
-    {
-        return 0U;
-    }
-
+    if (*idx < IMU_FRAME_LEN) { return 0U; }
     if (IMU_ReadResponseChecksumValid(frame) != 0U)
     {
         *idx = 0U;
-        return 1U;
+        /* Consume a whole legal stream frame; never inspect its payload
+         * for a register-response header. Both frame kinds share the CRC. */
+        return (uint8_t)(frame[1] == IMU_REG_READ_RESPONSE);
     }
-
-    if (frame[IMU_FRAME_LEN - 1U] == IMU_FRAME_HEADER)
+    /* A corrupt/truncated candidate may have swallowed the next header.
+     * Retain its earliest bounded suffix, including an incomplete header. */
+    *idx = 0U;
+    for (next = 1U; next < IMU_FRAME_LEN; next++)
     {
-        frame[0] = IMU_FRAME_HEADER;
-        *idx = 1U;
+        if (frame[next] == IMU_FRAME_HEADER)
+        {
+            *idx = (uint8_t)(IMU_FRAME_LEN - next);
+            (void)memmove(frame, &frame[next], *idx);
+            break;
+        }
     }
-    else
-    {
-        *idx = 0U;
-    }
-
     return 0U;
 }
 
@@ -600,49 +575,81 @@ Jy901bRegisterReadStartResult IMU_RegisterReadAsyncStart(
     return Jy901bRegisterReadStartResult_Ok;
 }
 
+static Jy901bRegisterReadPollResult IMU_RegisterReadDrain(
+    uint8_t instance, Jy901bContext *context, uint16_t *value)
+{
+    uint8_t buffer[IMU_TEMP_BUF_LEN];
+    uint16_t remaining;
+    uint16_t capacity;
+    uint16_t read_length;
+    uint16_t index;
+    uint32_t chunk;
+
+    if (PlatformUart_RxCountGet(Jy901bResource_UartGet(instance),
+            &remaining) != PLATFORM_OK)
+    { return Jy901bRegisterReadPollResult_IoError; }
+    /* Snapshot the queue once: newly arriving data cannot extend this poll.
+     * No byte timestamps exist; a poll after the deadline is conservative. */
+    for (chunk = 0U; (chunk < IMU_MAX_READ_CHUNKS_PER_PROCESS) &&
+            (remaining != 0U); chunk++)
+    {
+        if ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >
+                IMU_CONFIG_READ_TIMEOUT_MS)
+        { return Jy901bRegisterReadPollResult_Timeout; }
+        capacity = (remaining < sizeof(buffer)) ? remaining : sizeof(buffer);
+        if (PlatformUart_Read(Jy901bResource_UartGet(instance), buffer,
+                capacity, &read_length) != PLATFORM_OK)
+        { return Jy901bRegisterReadPollResult_IoError; }
+        SILVERSTAR_ASSERT(read_length <= capacity,
+            SILVERSTAR_ASSERT_MODULE_DEVICE,
+            SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+        if (read_length == 0U) { break; }
+        remaining = (uint16_t)(remaining - read_length);
+        for (index = 0U; index < read_length; index++)
+        {
+            if (IMU_ParseReadResponseByte(buffer[index],
+                    context->register_read_frame,
+                    &context->register_read_index) != 0U)
+            {
+                if ((uint32_t)(PlatformTime_Ms() -
+                        context->register_read_started_ms) >
+                        IMU_CONFIG_READ_TIMEOUT_MS)
+                { return Jy901bRegisterReadPollResult_Timeout; }
+                *value = (uint16_t)(((uint16_t)context->register_read_frame[3] << 8) |
+                                    context->register_read_frame[2]);
+                return Jy901bRegisterReadPollResult_Complete;
+            }
+        }
+    }
+    return Jy901bRegisterReadPollResult_Pending;
+}
+
 Jy901bRegisterReadPollResult IMU_RegisterReadAsyncPoll(
     uint8_t instance, uint16_t *value)
 {
     Jy901bContext *context;
-    uint8_t buffer[IMU_TEMP_BUF_LEN];
-    uint16_t read_length = 0U;
-    uint16_t index;
+    Jy901bRegisterReadPollResult result;
 
     if ((instance >= PROJECT_JY901B_INSTANCE_COUNT) || (value == NULL))
     { return Jy901bRegisterReadPollResult_NotReady; }
     context = &s_contexts[instance];
-    SILVERSTAR_ASSERT_OBJECT(value, uint16_t,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-    SILVERSTAR_ASSERT(context->register_read_index <= IMU_FRAME_LEN,
+    SILVERSTAR_ASSERT(context->register_read_index < IMU_FRAME_LEN,
         SILVERSTAR_ASSERT_MODULE_DEVICE,
         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     if (context->register_read_active == 0U)
     { return Jy901bRegisterReadPollResult_NotReady; }
-    if (PlatformUart_Read(Jy901bResource_UartGet(instance), buffer,
-            sizeof(buffer), &read_length) != PLATFORM_OK)
-    {
-        context->register_read_active = 0U;
-        return Jy901bRegisterReadPollResult_IoError;
-    }
-    for (index = 0U; index < read_length; index++)
-    {
-        if (IMU_ParseReadResponseByte(buffer[index],
-                context->register_read_frame,
-                &context->register_read_index) != 0U)
-        {
-            *value = (uint16_t)(((uint16_t)context->register_read_frame[3] << 8) |
-                                context->register_read_frame[2]);
-            context->register_read_active = 0U;
-            return Jy901bRegisterReadPollResult_Complete;
-        }
-    }
-    if ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >=
-        IMU_CONFIG_READ_TIMEOUT_MS)
-    {
-        context->register_read_active = 0U;
-        return Jy901bRegisterReadPollResult_Timeout;
-    }
-    return Jy901bRegisterReadPollResult_Pending;
+    if ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >
+            IMU_CONFIG_READ_TIMEOUT_MS)
+    { result = Jy901bRegisterReadPollResult_Timeout; }
+    else
+    { result = IMU_RegisterReadDrain(instance, context, value); }
+    if ((result == Jy901bRegisterReadPollResult_Pending) &&
+        ((uint32_t)(PlatformTime_Ms() - context->register_read_started_ms) >=
+         IMU_CONFIG_READ_TIMEOUT_MS))
+    { result = Jy901bRegisterReadPollResult_Timeout; }
+    if (result != Jy901bRegisterReadPollResult_Pending)
+    { context->register_read_active = 0U; }
+    return result;
 }
 
 Jy901bRegisterWriteStartResult IMU_RegisterWriteAsyncStart(
@@ -1289,7 +1296,7 @@ void IMU_Poll(uint8_t instance)
     PlatformUartDiagnostics port_diagnostics;
     uint16_t readLen;
     uint16_t i;
-    uint32_t now = PlatformTime_Ms();
+    uint32_t now;
     uint32_t chunk;
 
     SILVERSTAR_ASSERT_OBJECT(&s_imu, IMUData,
@@ -1330,7 +1337,9 @@ void IMU_Poll(uint8_t instance)
         s_processLimitCount++;
     }
 
-    if ((s_imu.LastUpdateTickMs == 0U) ||
+    /* Decoding may publish a timestamp newer than the poll entry tick. */
+    now = PlatformTime_Ms();
+    if ((s_imu.ValidMask == 0U) ||
         ((now - s_imu.LastUpdateTickMs) > IMU_ONLINE_TIMEOUT_MS))
     {
         s_imu.Online = 0U;
@@ -1356,7 +1365,7 @@ uint8_t IMU_IsOnline(uint8_t instance)
 {
     uint32_t now = PlatformTime_Ms();
 
-    if ((s_imu.LastUpdateTickMs == 0U) ||
+    if ((s_imu.ValidMask == 0U) ||
         ((now - s_imu.LastUpdateTickMs) > IMU_ONLINE_TIMEOUT_MS))
     {
         return 0U;
@@ -1514,21 +1523,22 @@ IMUState IMU_SetBaudrate(uint8_t instance, IMUBaudrate baudrate)
         return state;
     }
 
-    (void)PlatformUart_RxStop(Jy901bResource_UartGet(instance));
+    if (PlatformUart_RxStop(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
+    {
+        return IMU_ReceiveResume(instance, IMU_UART_RX_ERROR);
+    }
 
     state = IMU_SendConfigFrame(instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
     if (state != IMU_OK)
     {
-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-        return state;
+        return IMU_ReceiveResume(instance, state);
     }
     PlatformTime_DelayMs(IMU_CFG_UNLOCK_DELAY_MS);
 
     state = IMU_SendConfigFrame(instance, IMU_REG_BAUD, baud_value);
     if (state != IMU_OK)
     {
-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-        return state;
+        return IMU_ReceiveResume(instance, state);
     }
     PlatformTime_DelayMs(IMU_CFG_BAUD_SWITCH_DELAY_MS);
 
@@ -1757,27 +1767,29 @@ IMUState IMU_EnsureQuaternionOutput(uint8_t instance)
     }
 
     IMU_ConfigCacheSetField(instance, IMU_CONFIG_VALID_RETURN_CONTENT, rsw);
-    return ((rsw & FC_IMU_RETURN_CONTENT_QUAT_MASK) != 0U) ? IMU_OK : IMU_RESP_INVALID;
+    return (((rsw & FC_IMU_RETURN_CONTENT_DEFAULT) == FC_IMU_RETURN_CONTENT_DEFAULT) &&
+            ((rsw & FC_IMU_RETURN_CONTENT_QUAT_MASK) != 0U)) ? IMU_OK : IMU_RESP_INVALID;
 }
 
 IMUState IMU_SaveConfig(uint8_t instance)
 {
     IMUState state;
 
-    (void)PlatformUart_RxStop(Jy901bResource_UartGet(instance));
+    if (PlatformUart_RxStop(Jy901bResource_UartGet(instance)) != PLATFORM_OK)
+    {
+        return IMU_ReceiveResume(instance, IMU_UART_RX_ERROR);
+    }
 
     state = IMU_SendConfigFrame(instance, IMU_REG_KEY, IMU_KEY_UNLOCK);
     if (state != IMU_OK)
     {
-        (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-        return state;
+        return IMU_ReceiveResume(instance, state);
     }
     PlatformTime_DelayMs(IMU_CFG_UNLOCK_DELAY_MS);
 
     state = IMU_SendConfigFrame(instance, IMU_REG_SAVE, 0x0000U);
     PlatformTime_DelayMs(IMU_CFG_SAVE_DELAY_MS);
-    (void)PlatformUart_RxRestart(Jy901bResource_UartGet(instance));
-    return state;
+    return IMU_ReceiveResume(instance, state);
 }
 
 IMUState IMU_ReadBaudrate(uint8_t instance, uint16_t *value)

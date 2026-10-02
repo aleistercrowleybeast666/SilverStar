@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import QSignalBlocker, Signal
 from PySide6.QtWidgets import (
+    QApplication,
     QFormLayout,
+    QComboBox,
     QGridLayout,
     QHBoxLayout,
     QLabel,
@@ -14,8 +16,10 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
+from silverstar_fccg.ui.theme import ThemeTokens_Get
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.view_models import ToolchainToolView
+from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode, ArtifactMemoryMarginLevel_Get
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.widgets import (
     CollapsibleSection,
@@ -25,6 +29,7 @@ from silverstar_fccg.ui.widgets import (
 class BuildPage(ScrollableLocalizedPage):
     detectionRequested = Signal()
     actionRequested = Signal(str)
+    memoryLayoutChanged = Signal(str)
 
     _PRIMARY_ACTIONS: tuple[tuple[str, str], ...] = ()
     _TARGET_ACTIONS = (
@@ -52,6 +57,20 @@ class BuildPage(ScrollableLocalizedPage):
         self.Text_Register(self.environment_label, "field.development_environment")
         self.environment_value = QLabel("VS Code + EIDE")
         summary_form.addRow(self.environment_label, self.environment_value)
+        self.memory_layout_label = QLabel()
+        self.Text_Register(self.memory_layout_label, "field.memory_layout")
+        self.memory_layout_combo = QComboBox()
+        for layout in ("legacy", "auto", "eskf_window_sram"):
+            self.memory_layout_combo.addItem(translator.Text_Get("memory.layout." + layout), layout)
+        self.memory_layout_combo.currentIndexChanged.connect(
+            lambda _: self.memoryLayoutChanged.emit(self.memory_layout_combo.currentData())
+        )
+        summary_form.addRow(self.memory_layout_label, self.memory_layout_combo)
+        self.memory_margin_label = QLabel()
+        self.Text_Register(self.memory_margin_label, "field.linked_memory")
+        self.memory_margin_value = QLabel()
+        self.memory_margin_value.setWordWrap(True)
+        summary_form.addRow(self.memory_margin_label, self.memory_margin_value)
         summary_layout = QVBoxLayout()
         summary_layout.addLayout(summary_form)
         self.root_layout.addWidget(
@@ -312,6 +331,28 @@ class BuildPage(ScrollableLocalizedPage):
             str(getattr(record, "task", "")): record
             for record in self._quality_records
         }
+        artifact = by_task.get("artifact_check")
+        regions = ArtifactMemorySummary_Decode(str(getattr(artifact, "summary", "")))
+        if regions:
+            levels = [ArtifactMemoryMarginLevel_Get(remaining, capacity) for _, remaining, capacity in regions]
+            application = QApplication.instance()
+            theme = application.property("fccgAppliedTheme") if application else "light"
+            tokens = ThemeTokens_Get(theme)
+            colors = {"error": tokens.error, "warning": tokens.warning, "success": tokens.success}
+            text = "<br>".join('<span style="color:' + colors[level] + '">' + self._translator.Text_Get(
+                "memory.region", name=name, used=f"{used:,}", capacity=f"{capacity:,}",
+                remaining=f"{remaining:,}") + f" ({remaining / capacity * 100:.2f}%)</span>"
+                for name, (used, remaining, capacity), level in zip(("Flash", "SRAM", "CCMRAM"), regions, levels))
+            narrow = regions[2][1] < 4096
+            text += "<br>" + self._translator.Text_Get("memory.ccm_narrow" if narrow else "memory.static_only")
+            text += "<br>" + self._translator.Text_Get("memory.keep_green")
+            self.memory_margin_value.setText(text)
+            self.memory_margin_value.setProperty("statusLevel", "error" if "error" in levels else "warning" if "warning" in levels else "success")
+            self.memory_margin_value.setToolTip(str(getattr(artifact, "timestamp", "")))
+        else:
+            self.memory_margin_value.setText(self._translator.Text_Get("memory.not_checked"))
+            self.memory_margin_value.setProperty("statusLevel", "info")
+            self.memory_margin_value.setToolTip("")
         for task, label in self.quality_result_labels.items():
             record = by_task.get(task)
             if record is None:
@@ -324,7 +365,12 @@ class BuildPage(ScrollableLocalizedPage):
                     "quality.result.passed" if passed else "quality.result.failed"
                 )
                 summary = str(getattr(record, "summary", "")).strip()
-                if summary.startswith("checks="):
+                if task == "power10_check":
+                    summary = self._translator.Text_Get("power10.review_pending")
+                if ArtifactMemorySummary_Decode(summary):
+                    summary = self._translator.Text_Get(
+                        "quality.summary.artifact_validated" if passed else "quality.summary.completed")
+                elif summary.startswith("checks="):
                     summary = self._translator.Text_Get(
                         "quality.summary.checks",
                         count=summary.partition("=")[2],
@@ -346,7 +392,7 @@ class BuildPage(ScrollableLocalizedPage):
                 label.setText(
                     " · ".join(value for value in (status, summary) if value)
                 )
-                label.setProperty("statusLevel", "success" if passed else "error")
+                label.setProperty("statusLevel", "info" if passed and task == "power10_check" else "success" if passed else "error")
                 label.setToolTip(
                     self._translator.Text_Get(
                         "quality.result.tooltip",
@@ -390,6 +436,10 @@ class BuildPage(ScrollableLocalizedPage):
         self.target_value.setText(target or "—")
         self.environment_value.setText(environment or "—")
 
+    def MemoryLayout_Set(self, layout: str) -> None:
+        with QSignalBlocker(self.memory_layout_combo):
+            self.memory_layout_combo.setCurrentIndex(self.memory_layout_combo.findData(layout))
+
     def GeneratedProject_Set(self, available: bool) -> None:
         self._target_generated["flight"] = available
         self._TargetActions_Update()
@@ -418,6 +468,8 @@ class BuildPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        for index in range(self.memory_layout_combo.count()):
+            self.memory_layout_combo.setItemText(index, translator.Text_Get("memory.layout." + self.memory_layout_combo.itemData(index)))
         self.advanced_section.Title_Set(translator.Text_Get("group.advanced_build"))
         self.build_detail_section.Title_Set(
             translator.Text_Get("group.build_detail_log")

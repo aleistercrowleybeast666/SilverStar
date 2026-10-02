@@ -19,6 +19,18 @@ class QualityResultRecord:
     duration: float
     summary: str
 
+    @property
+    def manual_acceptance_pending(self) -> bool:
+        # These records contain automatic checks, not signed contract review.
+        return self.task == "power10_check"
+
+
+def QualitySummary_WithContractReview(task: str, summary: str) -> str:
+    value = summary.strip()
+    if task != "power10_check" or "POWER10_CONTRACT_REVIEW|" in value:
+        return value
+    return "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending; " + value
+
 
 def QualityResults_Load(project_root: Path) -> tuple[QualityResultRecord, ...]:
     policy = WorkspacePolicy(project_root)
@@ -51,10 +63,11 @@ def QualityResults_Load(project_root: Path) -> tuple[QualityResultRecord, ...]:
         records.append(
             QualityResultRecord(
                 task=task,
-                result=value["result"],
+                result=("failed" if "POWER10_CONTRACT_REVIEW|FAIL|" in value["summary"]
+                        else value["result"]),
                 timestamp=value["timestamp"],
                 duration=float(value["duration"]),
-                summary=value["summary"],
+                summary=QualitySummary_WithContractReview(task, value["summary"]),
             )
         )
     return tuple(records)
@@ -72,10 +85,11 @@ def QualityResult_Save(
     records = {record.task: record for record in QualityResults_Load(project_root)}
     record = QualityResultRecord(
         task=task,
-        result="passed" if succeeded else "failed",
+        result=("passed" if succeeded and "POWER10_CONTRACT_REVIEW|FAIL|" not in summary
+                else "failed"),
         timestamp=datetime.now(timezone.utc).isoformat(timespec="seconds"),
         duration=max(0.0, float(duration)),
-        summary=summary.strip(),
+        summary=QualitySummary_WithContractReview(task, summary),
     )
     records[task] = record
     document = {

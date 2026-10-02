@@ -70,8 +70,9 @@ typedef struct
     SilverStarAssert_Check((uint8_t)((expression_) != 0), (module_id_), \
                            __FILE__, (uint32_t)__LINE__, (reason_id_))
 
-/* One typed-object contract expands to two runtime assertions: non-null and
- * natural alignment.  The Power of Ten checker deliberately counts both. */
+/* The runtime contract checks non-null and natural alignment. Rule 5 density
+ * credits at most one useful non-null predicate, never natural alignment of an
+ * already typed pointer or the constant address of a local/static object. */
 #define SILVERSTAR_ASSERT_OBJECT(object_, type_, module_id_) \
     SilverStarAssert_ObjectCheck((object_), (uint32_t)_Alignof(type_), \
                                  (module_id_), __FILE__, \

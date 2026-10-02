@@ -33,7 +33,7 @@ RadioStatus_t SX1280GetStatus(uint8_t instance)
     RadioStatus_t status;
 
     (void)instance;
-    status.Value = 0x20U;
+    status.Value = 0x40U; /* Semtech ChipMode2: standby. */
     return status;
 }
 
@@ -218,6 +218,9 @@ static void Test_ContextQueueAndIrqIsolation(void)
     TEST_CHECK(Lora_TxEnqueue(1U, payload1, sizeof(payload1)) ==
                LORA_TX_ENQUEUE_OK);
 
+    Lora_StartRx(0U);
+    Lora_StartRx(1U);
+    s_tick_ms += 122U; /* ceil117.524ms maximum packet plus4ms turn margin. */
     Lora_Process(0U);
     TEST_CHECK(s_radios[0].send_count == 1U);
     TEST_CHECK(s_radios[1].send_count == 0U);
@@ -270,10 +273,57 @@ static void Test_ContextQueueAndIrqIsolation(void)
     TEST_CHECK(memcmp(&stats0, &stats1, sizeof(stats0)) == 0);
 }
 
+static void Test_ReceiveHoldIsolation(void)
+{
+    uint8_t payload[2] = {0x20U, 1U};
+    (void)memset(s_radios, 0, sizeof(s_radios));
+    s_tick_ms = 0U;
+    TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_Init(1U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_TxEnqueue(0U, payload, sizeof(payload)) == LORA_TX_ENQUEUE_OK);
+    TEST_CHECK(Lora_TxEnqueue(1U, payload, sizeof(payload)) == LORA_TX_ENQUEUE_OK);
+    Lora_StartRx(0U); Lora_StartRx(1U);
+    s_tick_ms = 100U; Test_IrqRaise(0U, IRQ_PREAMBLE_DETECTED); Lora_Process(0U);
+    s_tick_ms = 122U; Lora_Process(1U); Lora_Process(0U);
+    TEST_CHECK(s_radios[1].send_count == 1U);
+    TEST_CHECK(s_radios[0].send_count == 0U);
+    s_tick_ms = 200U; Test_IrqRaise(0U, IRQ_HEADER_VALID); Lora_Process(0U);
+    s_tick_ms = 221U; Lora_Process(0U);
+    TEST_CHECK(s_radios[0].send_count == 0U);
+    s_tick_ms = 222U; Lora_Process(0U);
+    TEST_CHECK(s_radios[0].send_count == 1U); /* Header did not renew first100ms deadline. */
+    TEST_CHECK(s_radios[1].send_count == 1U);
+}
+
+static void Test_RoleCapacityIsolation(void)
+{
+    uint8_t payload[2] = {0x20U, 1U};
+    (void)memset(s_radios, 0, sizeof(s_radios));
+    s_tick_ms = 0U;
+    TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_Init(1U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_ScheduleRoleSet(2U, LoraScheduleRole_Ground) == LoraScheduleRoleResult_InvalidArgument);
+    TEST_CHECK(Lora_ScheduleRoleSet(1U, (LoraScheduleRole)2U) == LoraScheduleRoleResult_InvalidArgument);
+    TEST_CHECK(Lora_ScheduleRoleSet(1U, LoraScheduleRole_Ground) == LoraScheduleRoleResult_Ok);
+    for (uint8_t index = 0U; index < 8U; index++)
+    { TEST_CHECK(Lora_TxEnqueue(1U, payload, sizeof(payload)) == LORA_TX_ENQUEUE_OK); }
+    TEST_CHECK(Lora_TxEnqueue(1U, payload, sizeof(payload)) == LORA_TX_ENQUEUE_QUEUE_FULL);
+    TEST_CHECK(Lora_TxEnqueue(0U, payload, sizeof(payload)) == LORA_TX_ENQUEUE_OK);
+    TEST_CHECK(Lora_TxEnqueue(0U, payload, sizeof(payload)) == LORA_TX_ENQUEUE_OK);
+    TEST_CHECK(Lora_TxEnqueue(0U, payload, sizeof(payload)) == LORA_TX_ENQUEUE_QUEUE_FULL);
+    Lora_StartRx(0U); Lora_StartRx(1U);
+    s_tick_ms = 122U; Lora_Process(0U); Lora_Process(1U);
+    TEST_CHECK(s_radios[0].send_count == 1U && s_radios[1].send_count == 0U);
+    s_tick_ms = 244U; Lora_Process(1U);
+    TEST_CHECK(s_radios[1].send_count == 1U);
+}
+
 int main(void)
 {
     _Static_assert(PROJECT_SX1281_INSTANCE_COUNT == TEST_INSTANCE_COUNT,
         "multi-instance SX1281 Host fixture must expose two contexts");
     Test_ContextQueueAndIrqIsolation();
+    Test_ReceiveHoldIsolation();
+    Test_RoleCapacityIsolation();
     return Test_Finish("sx1281_multi_instance");
 }

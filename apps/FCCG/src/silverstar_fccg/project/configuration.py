@@ -23,6 +23,7 @@ from silverstar_fccg.project.model import (
     PROTOCOL_CATEGORIES,
     DeviceInstance,
     HardwareConfiguration,
+    HardwareResource,
     ProjectModel,
     ProtocolSelection,
 )
@@ -32,6 +33,7 @@ from silverstar_fccg.project.protocols import (
 )
 from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get,
+    BoardResourceProvisions_Get,
     ResourceAssignmentResult,
     ResourceAssignments_Resolve,
     ResourceRequirementOptions_Get,
@@ -716,6 +718,63 @@ def _LegacyLandingStrategy_Reconcile(model: ProjectModel) -> None:
         )
 
 
+def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
+    ground = model.ground_target
+    if ground.hardware.mode != "board_plugin" or not ground.board:
+        return
+    board = catalog.Component_Get(ground.board)
+    if board.board is None or (board.metadata.get("target_role") != "ground_station"
+                              and board.component_class != "ground_station_board"):
+        return
+    inventory = BoardHardwareInventory_Get(board)
+    if inventory is None:
+        raise ValueError("Ground board has no CubeMX hardware inventory")
+    provider = catalog.Component_Get(board.board.provider).hardware_provider
+    if provider is None:
+        raise ValueError("Ground board has no hardware provider contract")
+    matched = PlatformMatch_Resolve(DetectedMcuFacts_FromInventory(
+        inventory, vendor=provider.vendor, provider=provider.handler), catalog)
+    resources = tuple(HardwareResource(item.resource_id, item.kind, item.metadata)
+                      for item in BoardResourceProvisions_Get(board))
+    platform = catalog.Component_Get(matched.selected.component_id)
+    hardware = replace(ground.hardware, source_kind=board.board.source_kind,
+                       provider=board.board.provider, ioc_file=board.board.ioc_file,
+                       mcu=inventory.mcu_part,
+                       platform_component=platform.component_id,
+                       platform_version=platform.version,
+                       platform_manifest_sha256=platform.ManifestSha256_Get(),
+                       cubemx_version=inventory.cubemx_version,
+                       firmware_package=inventory.firmware_package,
+                       hal_cmsis_source_policy=(platform.platform.compatibility.source_policy
+                                               if platform.platform is not None else ""),
+                       source_label=board.name,
+                       inventory=inventory.Dictionary_Get(), resources=resources)
+    assignments = dict(ground.resource_assignments)
+    if ground.radio_plugin:
+        radio = catalog.Component_Get(ground.radio_plugin)
+        available = {item.resource_id: item for item in resources}
+        for requirement in radio.resource_requirements:
+            role = next((item for item in board.resource_roles
+                         if item.key == f"telemetry:{requirement.name}"), None)
+            key = f"radio0:{requirement.name}"
+            if role is not None and role.fixed and not assignments.get(key):
+                resource = available.get(role.default)
+                if resource is not None and resource.kind == requirement.kind:
+                    assignments[key] = role.default
+    pc_resource = ground.pc_resource
+    if ground.pc_interface == "uart" and not pc_resource:
+        candidates = [item.resource_id for item in resources if item.kind == "uart"
+                      and item.metadata.get("baud_rate") == ground.baudrate
+                      and item.metadata.get("word_length") == 8
+                      and item.metadata.get("parity") == "none"
+                      and item.metadata.get("stop_bits") == 1.0
+                      and {"tx", "rx"}.issubset(item.metadata.get("pins", {}))]
+        if len(candidates) == 1:
+            pc_resource = candidates[0]
+    model.ground_target = replace(ground, mcu=matched.selected.component_id, hardware=hardware,
+        resource_assignments=assignments, pc_resource=pc_resource)
+
+
 def ProjectConfiguration_Reconcile(
     model: ProjectModel, catalog: PluginCatalog
 ) -> ProjectConfigurationResult:
@@ -723,6 +782,7 @@ def ProjectConfiguration_Reconcile(
     _LegacyLandingStrategy_Reconcile(candidate)
     _RequiredDependencies_Reconcile(candidate, catalog)
     notices = [*_Hardware_Reconcile(candidate, catalog)]
+    _GroundBoard_Reconcile(candidate, catalog)
     notices.extend(_UnavailableOptionalDevices_Reconcile(candidate, catalog))
     notices.extend(_Strategies_Reconcile(candidate, catalog))
     notices.extend(_Modes_Reconcile(candidate, catalog))

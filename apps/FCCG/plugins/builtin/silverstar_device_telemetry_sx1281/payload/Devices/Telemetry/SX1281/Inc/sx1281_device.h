@@ -4,6 +4,14 @@
 #include <stdint.h>
 #include "sx1281_config.h"
 
+/* instance is a generated context index, not an untrusted radio field. Every
+ * public entry fail-stops before indexing on an invalid instance. Ordinary
+ * packet/transaction input errors retain their existing result enums; corrupt
+ * stored queue/control metadata faults before copy or radio dispatch.
+ * Init/Process/StartRx are owner-context operations: do not reinitialize from
+ * another context while Process executes a control transaction. RxDequeue's
+ * output data buffer must have room for LORA_MAX_PAYLOAD_LEN bytes. */
+
 typedef enum
 {
     LORA_RADIO_STATE_NOT_INIT = 0U,
@@ -20,6 +28,20 @@ typedef enum
     LORA_TX_ENQUEUE_BAD_PARAM,
     LORA_TX_ENQUEUE_QUEUE_FULL
 } LoraTxEnqueueResult;
+
+typedef enum
+{
+    LoraTxQueryResult_Pending = 0U,
+    LoraTxQueryResult_Complete,
+    LoraTxQueryResult_TimedOut,
+    LoraTxQueryResult_NotFound,
+    LoraTxQueryResult_InvalidArgument
+} LoraTxQueryResult;
+
+LoraTxEnqueueResult Lora_TxEnqueueTracked(uint8_t instance,
+    const uint8_t *data, uint8_t len, uint32_t *transaction_id);
+LoraTxQueryResult Lora_TxResultGet(uint8_t instance,
+    uint32_t transaction_id, uint32_t *age_ms);
 
 typedef enum
 {
@@ -157,6 +179,20 @@ typedef struct
     int16_t rssi_inst;
 } LoraDiagSnapshot;
 
+typedef enum
+{
+    LoraScheduleRole_Flight = 0U,
+    LoraScheduleRole_Ground
+} LoraScheduleRole;
+typedef enum
+{
+    LoraScheduleRoleResult_Ok = 0U,
+    LoraScheduleRoleResult_InvalidArgument,
+    LoraScheduleRoleResult_NotReady
+} LoraScheduleRoleResult;
+/* Bootstrap only, before RX or enqueue. Default is Flight. Ground remains an
+ * opaque eight-frame FIFO and initiates within a received peer's RX grant. */
+LoraScheduleRoleResult Lora_ScheduleRoleSet(uint8_t instance, LoraScheduleRole role);
 LoraInitResult Lora_Init(uint8_t instance);
 /* Bootstrap or Transport-owner context only. */
 LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance);

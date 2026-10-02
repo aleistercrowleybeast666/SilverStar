@@ -223,6 +223,10 @@ SystemDeviceResult ProjectTelemetryInstance_Start(uint8_t instance_id);
 SystemDeviceResult ProjectTelemetryInstance_Stop(uint8_t instance_id);
 SystemDeviceResult ProjectTelemetryInstance_Send(
     uint8_t instance_id, const uint8_t *data, uint16_t length);
+SystemDeviceResult ProjectTelemetryInstance_SendControl(uint8_t instance_id,
+    const uint8_t *data, uint16_t length, uint32_t *transaction_id);
+SystemDeviceResult ProjectTelemetryInstance_TxResultGet(uint8_t instance_id,
+    uint32_t transaction_id, uint32_t *age_ms);
 SystemDeviceResult ProjectTelemetryInstance_Receive(
     uint8_t instance_id, uint8_t *data, uint16_t capacity,
     uint16_t *length);

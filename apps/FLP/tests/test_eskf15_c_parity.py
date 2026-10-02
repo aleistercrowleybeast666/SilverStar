@@ -16,6 +16,7 @@ from silverstar_flp.plugins.algorithms.eskf15.filter import (
     Rotation_Exp,
 )
 from tests.eskf15_c_bridge import CCore
+from tests.fccg_source_fixture import FccgCommon_RootGet
 
 
 @pytest.mark.skipif(
@@ -29,7 +30,7 @@ def test_actual_c_float32_against_float64_reference(tmp_path):
         / "plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15"
     )
     compiler = shutil.which("gcc")
-    common = root / "plugins/builtin/silverstar_core_0_0_12/payload/Common"
+    common = FccgCommon_RootGet(root)
     assert compiler, "Host GCC required"
     dll = tmp_path / "eskf15.dll"
     build = subprocess.run(

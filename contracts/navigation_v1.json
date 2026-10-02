@@ -10,7 +10,8 @@
   "algorithm_ids": {
     "none": 0,
     "kf6": 1,
-    "eskf15": 2
+    "eskf15": 2,
+    "sf6": 3
   },
   "eskf15": {
     "component_id": "silverstar.algorithm.estimator.eskf15",

@@ -88,7 +88,9 @@ def FirmwareParameters_CheckPlugins(value: Any, *, integrity_revision: int = 0) 
 
     registry = builtin_registry()
     for plugin in registry.algorithms:
-        specs = {p.parameter_id: p for p in plugin.metadata.parameter_schema}
+        tunables = {p.parameter_id for p in plugin.metadata.parameter_schema}
+        specs = {p.parameter_id: p for p in (*plugin.metadata.parameter_schema,
+                                           *plugin.metadata.firmware_only_parameter_schema)}
         for group in value:
             if group["component"] not in plugin.metadata.firmware_component_ids:
                 continue
@@ -118,8 +120,35 @@ def FirmwareParameters_CheckPlugins(value: Any, *, integrity_revision: int = 0) 
                     spec.Value_Validate(item["value"])
                 plugin.metadata.Parameters_Validate(
                     {p["id"]: p["value"] for p in group["parameters"]
-                     if integrity_revision != 0 or not p["id"].startswith("gnss_integrity_")},
+                     if p["id"] in tunables
+                     and (integrity_revision != 0 or not p["id"].startswith("gnss_integrity_"))},
                     complete=False
                 )
             except ValueError as exc:
                 raise DecoderProfileError("firmware_parameter_contract_invalid", str(exc)) from exc
+
+
+def FirmwareMechanizationAggregation_Get(dataset: Any) -> int | None:
+    """Optional additive field in parameter schema1.0; old packages stay unchanged."""
+    context = getattr(dataset, "semantic_context", None)
+    if context is None:
+        return None
+    group = context.FirmwareParameters_Get("silverstar.algorithm.ins.coning2_sculling2")
+    item = group.get("mechanization_aggregation") if group is not None else None
+    return item["value"] if item is not None else None
+
+
+def FirmwareMechanizationRecords_Validate(dataset: Any) -> None:
+    declared = FirmwareMechanizationAggregation_Get(dataset)
+    if declared is None:
+        return  # Legacy packages use their original recorded configuration contract.
+    header = getattr(dataset, "header", {})
+    if "mechanization_subsample_count" in header and header["mechanization_subsample_count"] != declared:
+        raise DecoderProfileError("firmware_mechanization_configuration_mismatch",
+                                  f"header:declared={declared}:recorded={header['mechanization_subsample_count']}")
+    for name, field in (("SYSTEM_CONFIG", "mechanization_subsample_count"),
+                        ("INERTIAL_INCREMENT", "subsample_count")):
+        for record in dataset.Records_Get(name):
+            if field in record.payload and record.payload[field] != declared:
+                raise DecoderProfileError("firmware_mechanization_configuration_mismatch",
+                                          f"{name}:{field}:declared={declared}:recorded={record.payload[field]}")

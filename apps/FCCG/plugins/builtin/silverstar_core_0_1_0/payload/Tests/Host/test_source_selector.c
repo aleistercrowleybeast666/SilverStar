@@ -406,6 +406,21 @@ SystemDeviceResult ProjectTelemetryInstance_Send(
     { s_telemetry_health[instance_id].transmit_timeout_count++; }
     return result;
 }
+SystemDeviceResult ProjectTelemetryInstance_SendControl(uint8_t instance_id,
+    const uint8_t *data, uint16_t length, uint32_t *id)
+{
+    SystemDeviceResult result = ProjectTelemetryInstance_Send(instance_id, data, length);
+    if ((result == SYSTEM_DEVICE_OK) && (id != NULL)) { *id = (uint32_t)instance_id + 1U; }
+    return result;
+}
+SystemDeviceResult ProjectTelemetryInstance_TxResultGet(uint8_t instance_id,
+    uint32_t id, uint32_t *age_ms)
+{
+    if ((id == 0U) || (age_ms == NULL)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (id != (uint32_t)instance_id + 1U) { return SYSTEM_DEVICE_NOT_PRESENT; }
+    *age_ms = 0U;
+    return SYSTEM_DEVICE_OK;
+}
 SystemDeviceResult ProjectTelemetryInstance_Receive(
     uint8_t instance_id, uint8_t *data, uint16_t capacity,
     uint16_t *length)
@@ -578,7 +593,9 @@ static void Test_GnssOneWayLiveness(void)
     SystemGnss_Process();
     TEST_CHECK(Test_ActiveGet(
         SystemSourceSelector_GnssActiveInstanceGet) == 0U);
-    TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_OK);
+    SystemDeviceResult sample_result = SystemGnss_LatestSampleGet(&sample);
+    TEST_CHECK(sample_result == SYSTEM_DEVICE_OK);
+    if (sample_result != SYSTEM_DEVICE_OK) { return; }
     TEST_CHECK(sample.online != 0U && sample.fix_ok == 0U);
     TEST_CHECK(s_event_count == 0U);
 
@@ -782,6 +799,33 @@ static void Test_TelemetryInitFailureSkipsCandidate(void)
     TEST_CHECK(s_telemetry_start_count[2] == 0U);
 }
 
+static void Test_TelemetryControlRouting(void)
+{
+    uint8_t data = 1U;
+    uint32_t id, old_id, age;
+    Test_StateReset();
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_SendControl(&data, 1U, NULL) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(s_telemetry_send_count[0] == 1U);
+    TEST_CHECK(SystemTelemetry_SendControl(&data, 1U, &id) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(id == 1U);
+    TEST_CHECK(SystemTelemetry_TxResultGet(id, &age) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_TxResultGet(0U, &age) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+    TEST_CHECK(SystemTelemetry_TxResultGet(id, NULL) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+    TEST_CHECK(SystemTelemetry_SendControl(NULL, 1U, NULL) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+    old_id = id;
+    SystemTelemetry_Process(); /* Consume successful TX diagnostics before timeout run. */
+    Test_TelemetryAttempt(0U, SYSTEM_DEVICE_TIMEOUT, 10U);
+    TEST_CHECK(SystemTelemetry_SendControl(&data, 1U, &id) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(id == 2U);
+    TEST_CHECK(SystemTelemetry_TxResultGet(old_id, &age) == SYSTEM_DEVICE_NOT_PRESENT);
+    TEST_CHECK(SystemTelemetry_TxResultGet(id, &age) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Stop() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_SendControl(&data, 1U, NULL) == SYSTEM_DEVICE_NOT_READY);
+    TEST_CHECK(SystemTelemetry_TxResultGet(id, &age) == SYSTEM_DEVICE_NOT_READY);
+}
+
 int main(void)
 {
     SystemMagnetometerSample magnetometer;
@@ -800,5 +844,6 @@ int main(void)
     Test_TelemetryThresholdAndReset();
     Test_TelemetryChainAndLastCandidate();
     Test_TelemetryInitFailureSkipsCandidate();
+    Test_TelemetryControlRouting();
     return Test_Finish("source_selector");
 }

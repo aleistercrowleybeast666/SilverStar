@@ -670,6 +670,22 @@ LoggerBusResult LoggerBus_Eskf15BodyInputPush(
         record, sizeof(*record), 1U);
 }
 
+LoggerBusResult LoggerBus_Sf6StatePush(
+    uint64_t timestamp_us, const FlightLogSf6StateRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(
+        FLIGHT_LOG_RECORD_SF6_STATE, timestamp_us, 0U,
+        record, sizeof(*record), 1U);
+}
+
+LoggerBusResult LoggerBus_Sf6MeasurementPush(
+    uint64_t timestamp_us, const FlightLogSf6MeasurementRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(
+        FLIGHT_LOG_RECORD_SF6_MEASUREMENT, timestamp_us, 0U,
+        record, sizeof(*record), 1U);
+}
+
 LoggerBusResult LoggerBus_Eskf15StatePush(
     uint64_t timestamp_us, const FlightLogEskf15StateRecord *record)
 {

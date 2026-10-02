@@ -30,6 +30,7 @@ from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get,
     ResourceAssignments_Resolve,
 )
+from silverstar_fccg.project.storage_binding import StorageBinding_Resolve
 
 
 @dataclass(frozen=True, slots=True)
@@ -522,6 +523,8 @@ def _Hardware_Validate(
         )
     if model.hardware.mode == "board_plugin":
         board = catalog.Component_Get(model.board)
+        if board.metadata.get("target_role") == "ground_station" or board.component_class == "ground_station_board":
+            issues.append(ValidationIssue("error", "BOARD_TARGET_ROLE_MISMATCH", "A Ground Station PCB cannot be selected for Flight Controller"))
         if board.board is None:
             issues.append(
                 ValidationIssue("error", "board_manifest", "Board metadata is missing")
@@ -971,6 +974,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         for error in resource_result.errors:
             issues.append(ValidationIssue("error", "resource", error))
 
+    issues.extend(ValidationIssue("error", issue.code, issue.message)
+                  for issue in StorageBinding_Resolve(model, catalog).issues)
+
     try:
         capability_result = CapabilityResolution_Resolve(model, catalog)
     except ValueError as error:
@@ -1090,6 +1096,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         )
     )
     issues.extend(AlignmentConfigurationIssues_Get(model, catalog))
+    from silverstar_fccg.project.release_policy import ReleaseCompatibilityIssues_Get
+    issues.extend(ValidationIssue("error", "RELEASE_FEATURE_DEFERRED", message)
+                  for message in ReleaseCompatibilityIssues_Get(model))
     if model.strategies.get("ins"):
         from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
 

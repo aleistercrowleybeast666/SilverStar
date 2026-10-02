@@ -74,7 +74,7 @@ from silverstar_flp.ui.plugin_manager import AboutDialog, PluginManagerDialog
 from silverstar_flp.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_flp.ui.time_range import TimeRangeBar
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
-from silverstar_flp.ui.widgets import StandardComboBox
+from silverstar_flp.ui.widgets import StandardComboBox, ProjectHeaderLabel
 from silverstar_flp.ui.workers import FunctionWorker
 
 
@@ -165,20 +165,20 @@ class MainWindow(QMainWindow):
         header = QFrame()
         header.setObjectName("headerBar")
         header.setMinimumHeight(54)
-        header_layout = QVBoxLayout(header)
+        header_layout = QHBoxLayout(header)
         header_layout.setContentsMargins(14, 6, 14, 6)
-        header_layout.setSpacing(2)
+        header_layout.setSpacing(8)
         self.title_label = QLabel()
         self.title_label.setObjectName("headerTitle")
+        self.title_label.setStyleSheet("font-size: 16px;")
         self.version_label = QLabel(f"v{__version__}")
         self.version_label.setObjectName("headerVersion")
         self.credit_label = QLabel()
         self.credit_label.setObjectName("headerCredit")
         self.project_caption_label = QLabel()
         self.project_caption_label.setObjectName("headerControlLabel")
-        self.project_name_label = QLabel()
+        self.project_name_label = ProjectHeaderLabel()
         self.project_name_label.setObjectName("headerProject")
-        self.project_name_label.setMaximumWidth(600)
         self.language_label = QLabel()
         self.language_label.setObjectName("headerControlLabel")
         self.language_combo = StandardComboBox()
@@ -195,22 +195,16 @@ class MainWindow(QMainWindow):
         self.theme_combo.addItem("浅色", "light")
         self.theme_combo.addItem("深色", "dark")
         self.theme_combo.currentIndexChanged.connect(self._Theme_Selected)
-        identity_row = QHBoxLayout()
-        identity_row.setSpacing(8)
+        identity_row = header_layout
         identity_row.addWidget(self.title_label)
         identity_row.addWidget(self.version_label)
         identity_row.addWidget(self.credit_label)
-        identity_row.addStretch(1)
+        identity_row.addWidget(self.project_caption_label)
+        identity_row.addWidget(self.project_name_label, 1)
         identity_row.addWidget(self.language_label)
         identity_row.addWidget(self.language_combo)
         identity_row.addWidget(self.theme_label)
         identity_row.addWidget(self.theme_combo)
-        header_layout.addLayout(identity_row)
-        project_row = QHBoxLayout()
-        project_row.setSpacing(8)
-        project_row.addWidget(self.project_caption_label)
-        project_row.addWidget(self.project_name_label, 1)
-        header_layout.addLayout(project_row)
         root_layout.addWidget(header)
 
         body = QWidget()
@@ -526,13 +520,6 @@ class MainWindow(QMainWindow):
             self.import_dialog.open()
 
     def LogPair_Open(self, log_path: Path, decoder_path: Path) -> None:
-        if self._silverstar_project_root is not None:
-            root = self._silverstar_project_root
-            if not (
-                decoder_path.resolve().parent == root
-                and log_path.resolve().is_relative_to((root / "Log").resolve())
-            ):
-                self._silverstar_project_root = None
         self.Log_Open(
             log_path,
             decoder_path=decoder_path,
@@ -548,6 +535,11 @@ class MainWindow(QMainWindow):
         source_mode: LogOpenSourceMode = LogOpenSourceMode.MANUAL,
         project: ProjectDocument | None = None,
     ) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
+        if project is None and not self._ProjectChanges_Confirm():
+            return
         source_path = Path(path)
         target_project = project or self._Project_ForImport()
         mark_dirty_on_success = project is None and self._pending_new_project_path is None
@@ -566,6 +558,7 @@ class MainWindow(QMainWindow):
                 result,
                 target_project,
                 mark_dirty=mark_dirty_on_success,
+                silverstar_root=self._SilverStarRootForPair_Get(source_path, decoder_path),
             ),
             self._LogOpen_Error,
         )
@@ -606,6 +599,9 @@ class MainWindow(QMainWindow):
         return result
 
     def _Project_Open(self, path: Path) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
         try:
             project = Project_Load(Path(path))
             if project.decoder_profile is None:
@@ -636,7 +632,8 @@ class MainWindow(QMainWindow):
         worker = FunctionWorker(lambda context: self._ProjectLogOpen_Run(project, request, context))
         self._Task_Start(
             worker,
-            lambda result: self._LogOpenResult_Set(result, project, mark_dirty=False),
+            lambda result: self._LogOpenResult_Set(result, project, mark_dirty=False,
+                silverstar_root=self._SilverStarRootForPair_Get(log_path, decoder_source_path)),
             lambda message: self._Error_Show(message),
         )
 
@@ -662,13 +659,27 @@ class MainWindow(QMainWindow):
             self.SilverStarProjectRoot_Open(Path(selected))
 
     def SilverStarProjectRoot_Open(self, path: Path) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
+        if not self._ProjectChanges_Confirm():
+            return
         root = Path(path).resolve()
         if not (root / "SilverStar.ssproject").is_file() or not (root / "Log").is_dir():
             self._Error_Show("silverstar_project_root_invalid")
             return
-        self._silverstar_project_root = root
         self.import_dialog.Folder_Set(root)
         self._FolderSearch_Start(root)
+
+    @staticmethod
+    def _SilverStarRootForPair_Get(log_path: Path, decoder_path: Path | None) -> Path | None:
+        if decoder_path is None:
+            return None
+        root = Path(decoder_path).resolve().parent
+        if ((root / "SilverStar.ssproject").is_file() and (root / "Log").is_dir()
+                and Path(log_path).resolve().is_relative_to(root / "Log")):
+            return root
+        return None
 
     def _FolderSearch_Set(self, discovery: object) -> None:
         self.import_dialog.PairDiscovery_Set(discovery)
@@ -702,6 +713,7 @@ class MainWindow(QMainWindow):
         project: ProjectDocument,
         *,
         mark_dirty: bool = False,
+        silverstar_root: Path | None = None,
     ) -> None:
         try:
             for configuration in project.replay_configurations.values():
@@ -734,6 +746,8 @@ class MainWindow(QMainWindow):
                 return
             self._pending_new_project_path = None
         self._project = project
+        self._silverstar_project_root = silverstar_root or self._SilverStarRootForPair_Get(
+            result.dataset.source_path, result.source_package_path)
         self._log_open_result = result
         self._suspend_dirty = True
         try:
@@ -947,6 +961,7 @@ class MainWindow(QMainWindow):
         self.import_action.setEnabled(False)
         self.export_action.setEnabled(False)
         self.open_project_action.setEnabled(False)
+        self.open_silverstar_project_action.setEnabled(False)
         self.save_project_action.setEnabled(False)
         self.save_project_as_action.setEnabled(False)
         self.new_project_action.setEnabled(False)
@@ -970,6 +985,7 @@ class MainWindow(QMainWindow):
         self.import_action.setEnabled(True)
         self.export_action.setEnabled(self._dataset is not None)
         self.open_project_action.setEnabled(True)
+        self.open_silverstar_project_action.setEnabled(True)
         self.save_project_action.setEnabled(True)
         self.save_project_as_action.setEnabled(True)
         self.new_project_action.setEnabled(True)
@@ -1019,6 +1035,9 @@ class MainWindow(QMainWindow):
         self._Project_Open(Path(selected))
 
     def _Project_New(self) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
         if not self._ProjectChanges_Confirm():
             return
         directory = self._path_preferences.DefaultProjectRoot_EffectiveGet()
@@ -1135,14 +1154,29 @@ class MainWindow(QMainWindow):
 
     def _Project_SetDirty(self, dirty: bool) -> None:
         self._project_dirty = dirty
+        self._ProjectHeader_Refresh()
 
     def _ProjectHeader_Refresh(self) -> None:
         path = self._project.project_path
         full_name = path.stem if path is not None else self._translator.Text_Get("project.unsaved")
-        self.project_name_label.setText(self.project_name_label.fontMetrics().elidedText(
-            full_name, Qt.TextElideMode.ElideRight, 595,
-        ))
-        self.project_name_label.setToolTip(str(path.resolve()) if path is not None else "")
+        if self._silverstar_project_root is not None:
+            session = path.stem if path is not None else self._translator.Text_Get("project.analysis_unsaved")
+            full_name = self._silverstar_project_root.name + " / " + session
+        self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
+        if self._project_dirty:
+            full_name += " *"
+        if self._silverstar_project_root is not None:
+            tooltip = "\n".join(value for value in (
+                full_name, str(self._silverstar_project_root),
+                str(path.resolve()) if path is not None else "") if value)
+        else:
+            tooltip = str(path.resolve()) if path is not None else ""
+        self.project_name_label.setToolTip(tooltip)
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        if hasattr(self, "project_name_label"):
+            self._ProjectHeader_Refresh()
 
     def _ProjectChanges_Confirm(self) -> bool:
         if not self._project_dirty:

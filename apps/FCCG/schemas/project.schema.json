@@ -289,7 +289,8 @@
             {"const": ""}
           ]
         },
-        "make_command": {"type": "string", "minLength": 1},
+          "make_command": {"type": "string", "minLength": 1},
+          "memory_layout": {"enum": ["legacy", "eskf_window_sram", "auto"], "default": "legacy"},
         "toolchain_prefix": {"type": "string", "pattern": "^[A-Za-z0-9_.+-]+$"},
         "gcc_path": {"type": "string"},
         "flash_command": {"type": "string"},

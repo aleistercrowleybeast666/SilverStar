@@ -50,3 +50,7 @@ JSONL记录整个会话；EventHistory和实时曲线是有界GUI缓存。实时
 
 ## 8. Thread safety
 长后处理/模拟/数据迁移在独立worker thread；UI线程只更新状态。所有退出/取消有界，不能遗留运行QThread对象。
+
+## Session recovery update (2026-10-01)
+
+The controller now permits automatic local session invalidation on BOOT or confirmed rollback of boot-relative preflight telemetry time. It rebinds a fresh state model, preserves event history, cancels transactions and negotiates Capability again. It never automatically replays business commands. Unknown Capability cannot be acknowledged by a preflight snapshot. Read AIR_PROTOCOL.md for priority, timestamp-domain and stale-packet limitations. SELFTEST_COMPLETE text includes pass/fail; only the preflight snapshot supplies current system readiness and block reason.

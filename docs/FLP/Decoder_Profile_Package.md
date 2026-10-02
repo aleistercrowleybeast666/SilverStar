@@ -62,6 +62,29 @@ routes fail instead of selecting an arbitrary device.
 
 ## Exact Descriptor matching
 
+The existing `silverstar.algorithm-parameters/1.0` data schema also permits the
+audited INS firmware field `mechanization_aggregation`: int32, unit `samples`,
+representation `value`, and exactly1 or2. It describes real IMU intervals per
+propagation, not a replay tuning value. Trusted algorithm metadata lists it in
+`firmware_only_parameter_schema`; unknown IDs, changed units/representation,
+wrong storage types and out-of-range values remain errors. The package1.2 and
+Descriptor identity formats are unchanged.
+
+Older packages without this optional field are read unchanged and receive no
+invented recorded value. Their existing SYSTEM_CONFIG/header configuration and
+replay fidelity rules still apply. The replay tunable schema identity is unchanged,
+so saved gravity configurations retain compatibility. New packages retain the
+firmware field in semantic metadata and replay audit diagnostics. File header, SYSTEM_CONFIG
+and INERTIAL_INCREMENT aggregation values must match its declaration before
+LogOpenCoordinator publishes a dataset.
+
+Current PureINS/KF6 corrected-IMU replay supports two intervals. A legal one-interval
+firmware package can be opened for recorded-data analysis, but this replay is
+explicitly unavailable. ESKF15 also rejects its two-interval corrected-IMU fallback
+for such a configuration; self-contained ESKF15_BODY_INPUT remains governed by
+its recorded interval/source/calibration identity. No one-interval samples are
+silently paired, and aggregation is not offered as a What-if override.
+
 SSLOG Record `0x1D`, version 0, is a mandatory 64-byte bootstrap Descriptor. Its payload contains:
 
 - package schema major/minor;

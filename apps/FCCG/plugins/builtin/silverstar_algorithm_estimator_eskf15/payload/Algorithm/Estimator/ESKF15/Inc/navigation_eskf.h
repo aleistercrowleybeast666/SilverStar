@@ -82,12 +82,15 @@ typedef struct
     NavigationEskfResult result;
 } NavigationEskfOutcome;
 
-/* Caller owned, CPU-only, single task. Never allocate on a task stack or in DMA RAM. */
+/* Caller owned, CPU-only scratch. Keep off task stacks and DMA buffers.
+ * Concurrent/reentrant calls require separate state AND workspace instances.
+ * Lifecycle and prediction callers must serialize access to a shared pair.
+ * Matrix scratch is invalid after each operation; it is not persistent state. */
 typedef struct
 {
     float f[NAV_ESKF_DIM][NAV_ESKF_DIM];
     float transition[NAV_ESKF_DIM][NAV_ESKF_DIM];
-    float temporary[NAV_ESKF_DIM][NAV_ESKF_DIM];
+    float product_row[NAV_ESKF_DIM];
     float candidate_p[NAV_ESKF_DIM][NAV_ESKF_DIM];
     float candidate_x[16];
     float correction[NAV_ESKF_DIM];

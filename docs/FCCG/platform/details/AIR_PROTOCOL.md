@@ -930,3 +930,11 @@ AIR M0 wire在0.0.12当前契约内冻结；普通物理设备或能力实例扩
 正式发布后，普通硬件扩展不得要求修改 wire format。
 
 只有 application framing、fragmentation、encryption/authentication framing、多节点寻址、重大 telemetry encoding redesign 等级别变化，才考虑未来新的 Profile。
+
+## Preflight reconnect recovery (2026-10-01)
+
+CAPABILITY remains a 9-byte AIR M0 frame. Before START, it continues at the existing 1 Hz period after acknowledgment so a PC reconnect can discover the actual profile and full scales. A CAPABILITY_ACK for the latest successfully sent Capability sequence and current profile is idempotent while preflight; an old sequence or wrong profile is rejected. ACK, sensor snapshot transactions and critical STATUS retain priority; after handshake, PREFLIGHT_STATUS precedes periodic CAPABILITY. START still stops preflight Capability transmission.
+
+GSHC cannot complete a local handshake from an acknowledged snapshot without a validated Capability and a pending acknowledgment transaction. BOOT or two advancing boot-relative PREFLIGHT_STATE timestamps below the previous timestamp starts a fresh local FC session, cancels pending commands and requires negotiation again. A first timestamp rollback temporarily blocks commands and cancels pending command retries; one delayed sample followed by current time restores the existing session. Mission-relative FLIGHT_STATE timestamps are excluded from this boot-time detector. No mission, unlock or alignment command is automatically replayed. Duplicate same-session Capability remains diagnostic only.
+
+AIR M0 has no FC boot nonce; identical delayed packets after 8-bit sequence reuse cannot be conclusively distinguished by the wire format alone. The rollback detector is a conservative recovery heuristic, not a proof of session identity. Hardware recovery and timeout diagnosis remain separate acceptance evidence.

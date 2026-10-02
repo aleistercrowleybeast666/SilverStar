@@ -71,6 +71,10 @@ _EVENT_NAMES = {
 # These are semantic field-role bindings only. Binary offsets and sizes remain
 # exclusively owned by the package record catalog.
 _STABLE_ALIAS_SPECS = (
+    ("sf6.recorded.navigation.position_enu", "SF6_STATE", "position_enu_m", None),
+    ("sf6.recorded.navigation.velocity_enu", "SF6_STATE", "velocity_enu_mps", None),
+    ("sf6.recorded.attitude.q_nb", "SF6_STATE", "q_nb", None),
+    ("sf6.recorded.navigation_health", "SF6_STATE", "health", None),
     ("eskf15.recorded.navigation.position_enu", "ESKF15_STATE", "position_enu_m", None),
     ("eskf15.recorded.navigation.velocity_enu", "ESKF15_STATE", "velocity_enu_mps", None),
     ("eskf15.recorded.attitude.q_nb", "ESKF15_STATE", "q_nb", None),

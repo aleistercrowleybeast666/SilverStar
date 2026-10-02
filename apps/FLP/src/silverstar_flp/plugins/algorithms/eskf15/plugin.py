@@ -198,6 +198,10 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
         ]
         if dataset.Records_Get("ESKF15_BODY_INPUT") and "IMU_CORRECTED" in missing:
             missing.remove("IMU_CORRECTED")
+        if not dataset.Records_Get("ESKF15_BODY_INPUT"):
+            from silverstar_flp.plugins.algorithms.pure_ins.mechanization import Mechanization_ConfigurationGet
+            if Mechanization_ConfigurationGet(dataset)["subsample_count"] != 2:
+                missing.append("mechanization_subsample_count=2")
         if (
             self.FirmwareMember_Is(dataset)
             and dataset.Records_Get("ESKF15_INITIAL_STATE")

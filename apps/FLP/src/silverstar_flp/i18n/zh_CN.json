@@ -866,5 +866,6 @@
   "replay.quality_policy": "What-if质量策略",
   "replay.quality_recorded": "沿用记录的策略revision",
   "replay.quality_revision": "新策略 revision {revision}（近似试算）",
-  "replay.parameter_retired": "旧配置值；revision 3 已退役"
+  "replay.parameter_retired": "旧配置值；revision 3 已退役",
+  "project.analysis_unsaved": "分析会话未保存"
 }

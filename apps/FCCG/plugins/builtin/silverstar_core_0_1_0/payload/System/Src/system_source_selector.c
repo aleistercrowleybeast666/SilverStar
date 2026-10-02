@@ -492,8 +492,6 @@ SystemDeviceResult SystemImu_Init(void)
     uint8_t position;
     uint8_t success_count = 0U;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_imu, SystemSourceSelectorImuState,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM);
     (void)memset(&s_imu, 0, sizeof(s_imu));
     s_imu.active = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
     s_imu.active_position = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
@@ -501,6 +499,7 @@ SystemDeviceResult SystemImu_Init(void)
     s_imu.count = ProjectImuInstance_CountGet();
     if (s_imu.count > PROJECT_IMU_INSTANCE_COUNT_MAX)
     {
+        s_imu.count = 0U;
         return SYSTEM_DEVICE_INTERNAL_ERROR;
     }
     s_imu.count = SystemSourceSelector_OrderBuild(SYSTEM_DEVICE_CLASS_IMU,
@@ -515,7 +514,11 @@ SystemDeviceResult SystemImu_Init(void)
 
         if (position >= s_imu.count) { break; }
         instance_id = s_imu.order[position];
+        SILVERSTAR_ASSERT(instance_id < s_imu.count,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         result = ProjectImuInstance_Init(instance_id);
+        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
         if (SystemSourceSelector_ResultSuccessful(result) != 0U)
         {
             s_imu.initialized[instance_id] = 1U;
@@ -540,8 +543,8 @@ SystemDeviceResult SystemImu_Start(void)
     uint8_t position;
     uint8_t success_count = 0U;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_imu, SystemSourceSelectorImuState,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(s_imu.count <= PROJECT_IMU_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     for (position = 0U;
          position < PROJECT_IMU_INSTANCE_COUNT_MAX;
          position++)
@@ -551,8 +554,13 @@ SystemDeviceResult SystemImu_Start(void)
 
         if (position >= s_imu.count) { break; }
         instance_id = s_imu.order[position];
+        SILVERSTAR_ASSERT(instance_id < s_imu.count,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         if (s_imu.initialized[instance_id] == 0U) { continue; }
+        s_imu.started[instance_id] = 0U;
         result = ProjectImuInstance_Start(instance_id);
+        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
         if (SystemSourceSelector_ResultSuccessful(result) != 0U)
         {
             s_imu.started[instance_id] = 1U;
@@ -786,9 +794,14 @@ static void SystemSourceSelector_GnssSwitchEvaluate(void)
     SystemDeviceHealth health;
     uint8_t position;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_gnss, SystemSourceSelectorGnssState,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(s_gnss.count <= PROJECT_GNSS_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) { return; }
+    SILVERSTAR_ASSERT(s_gnss.active < s_gnss.count,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((s_gnss.active_position < s_gnss.count) &&
+        (s_gnss.order[s_gnss.active_position] == s_gnss.active),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     (void)memset(&health, 0, sizeof(health));
     if ((ProjectGnssInstance_HealthGet(s_gnss.active, &health) ==
          SYSTEM_DEVICE_OK) &&
@@ -807,6 +820,8 @@ static void SystemSourceSelector_GnssSwitchEvaluate(void)
         if (position >= s_gnss.count) { break; }
         if (position <= s_gnss.active_position) { continue; }
         candidate = s_gnss.order[position];
+        SILVERSTAR_ASSERT(candidate < s_gnss.count,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         if ((s_gnss.initialized[candidate] == 0U) ||
             (s_gnss.started[candidate] == 0U))
         {
@@ -851,15 +866,13 @@ SystemDeviceResult SystemGnss_Init(void)
     uint8_t position;
     uint8_t success_count = 0U;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_gnss, SystemSourceSelectorGnssState,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM);
     (void)memset(&s_gnss, 0, sizeof(s_gnss));
     s_gnss.active = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
     s_gnss.active_position = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
     s_gnss.configured_primary = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
     s_gnss.count = ProjectGnssInstance_CountGet();
     if (s_gnss.count > PROJECT_GNSS_INSTANCE_COUNT_MAX)
-    { return SYSTEM_DEVICE_INTERNAL_ERROR; }
+    { s_gnss.count = 0U; return SYSTEM_DEVICE_INTERNAL_ERROR; }
     s_gnss.count = SystemSourceSelector_OrderBuild(SYSTEM_DEVICE_CLASS_GNSS,
         s_gnss.count, PROJECT_GNSS_INSTANCE_COUNT_MAX, s_gnss.order);
     if (s_gnss.count > 0U) { s_gnss.configured_primary = s_gnss.order[0]; }
@@ -872,7 +885,11 @@ SystemDeviceResult SystemGnss_Init(void)
 
         if (position >= s_gnss.count) { break; }
         instance_id = s_gnss.order[position];
+        SILVERSTAR_ASSERT(instance_id < s_gnss.count,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         result = ProjectGnssInstance_Init(instance_id);
+        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
         if (SystemSourceSelector_ResultSuccessful(result) != 0U)
         {
             s_gnss.initialized[instance_id] = 1U;
@@ -903,9 +920,17 @@ SystemDeviceResult SystemGnss_Start(void)
     SystemDeviceResult first_failure = SYSTEM_DEVICE_NOT_READY;
     uint8_t position;
     uint8_t success_count = 0U;
+    uint8_t selected_position = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_gnss, SystemSourceSelectorGnssState,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(s_gnss.count <= PROJECT_GNSS_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT((s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
+        (s_gnss.active < s_gnss.count), SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
+        ((s_gnss.active_position < s_gnss.count) &&
+         (s_gnss.order[s_gnss.active_position] == s_gnss.active)),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     for (position = 0U;
          position < PROJECT_GNSS_INSTANCE_COUNT_MAX;
          position++)
@@ -915,12 +940,20 @@ SystemDeviceResult SystemGnss_Start(void)
 
         if (position >= s_gnss.count) { break; }
         instance_id = s_gnss.order[position];
+        SILVERSTAR_ASSERT(instance_id < s_gnss.count,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         if (s_gnss.initialized[instance_id] == 0U) { continue; }
+        s_gnss.started[instance_id] = 0U;
         result = ProjectGnssInstance_Start(instance_id);
+        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
         if (SystemSourceSelector_ResultSuccessful(result) != 0U)
         {
             s_gnss.started[instance_id] = 1U;
             success_count++;
+            if ((position >= s_gnss.active_position) &&
+                (selected_position == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE))
+            { selected_position = position; }
         }
         else if (first_failure == SYSTEM_DEVICE_NOT_READY)
         {
@@ -928,26 +961,17 @@ SystemDeviceResult SystemGnss_Start(void)
         }
     }
     if ((s_gnss.active != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) &&
-        (s_gnss.started[s_gnss.active] == 0U))
+        (selected_position != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE))
     {
-        for (position = s_gnss.active_position;
-             position < PROJECT_GNSS_INSTANCE_COUNT_MAX;
-             position++)
-        {
-            uint8_t candidate;
+        uint8_t previous = s_gnss.active;
 
-            if (position >= s_gnss.count) { break; }
-            candidate = s_gnss.order[position];
-            if (s_gnss.started[candidate] != 0U)
-            {
-                uint8_t previous = s_gnss.active;
-                s_gnss.active = candidate;
-                s_gnss.active_position = position;
-                SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
-                    previous, candidate,
-                    SYSTEM_SOURCE_CHANGE_REASON_PRESTART_PRIMARY_UNAVAILABLE);
-                break;
-            }
+        s_gnss.active = s_gnss.order[selected_position];
+        s_gnss.active_position = selected_position;
+        if (previous != s_gnss.active)
+        {
+            SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
+                previous, s_gnss.active,
+                SYSTEM_SOURCE_CHANGE_REASON_PRESTART_PRIMARY_UNAVAILABLE);
         }
     }
     return (success_count > 0U) ? SYSTEM_DEVICE_OK : first_failure;
@@ -1250,20 +1274,29 @@ static uint8_t SystemSourceSelector_TelemetryNextStart(void)
 {
     uint8_t position;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_telemetry,
-        SystemSourceSelectorTelemetryState, SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT(s_telemetry.count <= PROJECT_TELEMETRY_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT((s_telemetry.active_position < s_telemetry.count) &&
+        (s_telemetry.order[s_telemetry.active_position] == s_telemetry.active),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     for (position = 0U;
          position < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX;
          position++)
     {
         uint8_t candidate;
+        SystemDeviceResult result;
 
         if (position >= s_telemetry.count) { break; }
         if (position <= s_telemetry.active_position) { continue; }
         candidate = s_telemetry.order[position];
+        SILVERSTAR_ASSERT(candidate < s_telemetry.count,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         if (s_telemetry.initialized[candidate] == 0U) { continue; }
-        if (SystemSourceSelector_ResultSuccessful(
-                ProjectTelemetryInstance_Start(candidate)) == 0U)
+        s_telemetry.started[candidate] = 0U;
+        result = ProjectTelemetryInstance_Start(candidate);
+        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+        if (SystemSourceSelector_ResultSuccessful(result) == 0U)
         {
             continue;
         }
@@ -1283,11 +1316,16 @@ static void SystemSourceSelector_TelemetryHealthProcess(void)
     uint32_t success_delta;
     uint32_t timeout_delta;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_telemetry,
-        SystemSourceSelectorTelemetryState, SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    if ((s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
-        (ProjectTelemetryInstance_HealthGet(
-             s_telemetry.active, &health) != SYSTEM_DEVICE_OK))
+    SILVERSTAR_ASSERT(s_telemetry.count <= PROJECT_TELEMETRY_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    if (s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) { return; }
+    SILVERSTAR_ASSERT(s_telemetry.active < s_telemetry.count,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_telemetry.consecutive_timeout_count <=
+        SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (ProjectTelemetryInstance_HealthGet(
+            s_telemetry.active, &health) != SYSTEM_DEVICE_OK)
     {
         return;
     }
@@ -1351,15 +1389,13 @@ SystemDeviceResult SystemTelemetry_Init(void)
     uint8_t position;
     uint8_t success_count = 0U;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_telemetry,
-        SystemSourceSelectorTelemetryState, SILVERSTAR_ASSERT_MODULE_SYSTEM);
     (void)memset(&s_telemetry, 0, sizeof(s_telemetry));
     s_telemetry.active = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
     s_telemetry.active_position = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
     s_telemetry.configured_primary = SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE;
     s_telemetry.count = ProjectTelemetryInstance_CountGet();
     if (s_telemetry.count > PROJECT_TELEMETRY_INSTANCE_COUNT_MAX)
-    { return SYSTEM_DEVICE_INTERNAL_ERROR; }
+    { s_telemetry.count = 0U; return SYSTEM_DEVICE_INTERNAL_ERROR; }
     s_telemetry.count = SystemSourceSelector_OrderBuild(
         SYSTEM_DEVICE_CLASS_TELEMETRY, s_telemetry.count,
         PROJECT_TELEMETRY_INSTANCE_COUNT_MAX, s_telemetry.order);
@@ -1374,7 +1410,11 @@ SystemDeviceResult SystemTelemetry_Init(void)
 
         if (position >= s_telemetry.count) { break; }
         instance_id = s_telemetry.order[position];
+        SILVERSTAR_ASSERT(instance_id < s_telemetry.count,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         result = ProjectTelemetryInstance_Init(instance_id);
+        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
         if (SystemSourceSelector_ResultSuccessful(result) != 0U)
         {
             s_telemetry.initialized[instance_id] = 1U;
@@ -1403,14 +1443,20 @@ SystemDeviceResult SystemTelemetry_Init(void)
 SystemDeviceResult SystemTelemetry_Start(void)
 {
     uint8_t previous;
+    SystemDeviceResult result;
 
-    SILVERSTAR_ASSERT_OBJECT(&s_telemetry,
-        SystemSourceSelectorTelemetryState, SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    if (s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
+    SILVERSTAR_ASSERT(s_telemetry.count <= PROJECT_TELEMETRY_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    if ((s_telemetry.count == 0U) || (s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE))
     { return SYSTEM_DEVICE_NOT_READY; }
+    SILVERSTAR_ASSERT(s_telemetry.active < s_telemetry.count,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     previous = s_telemetry.active;
-    if (SystemSourceSelector_ResultSuccessful(
-            ProjectTelemetryInstance_Start(s_telemetry.active)) != 0U)
+    s_telemetry.started[previous] = 0U;
+    result = ProjectTelemetryInstance_Start(previous);
+    SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if (SystemSourceSelector_ResultSuccessful(result) != 0U)
     {
         s_telemetry.started[s_telemetry.active] = 1U;
         s_telemetry.consecutive_timeout_count = 0U;
@@ -1447,6 +1493,24 @@ SystemDeviceResult SystemTelemetry_Send(
         (s_telemetry.started[s_telemetry.active] == 0U))
     { return SYSTEM_DEVICE_NOT_READY; }
     return ProjectTelemetryInstance_Send(s_telemetry.active, data, length);
+}
+
+SystemDeviceResult SystemTelemetry_SendControl(
+    const uint8_t *data, uint16_t length, uint32_t *transaction_id)
+{
+    if (transaction_id != NULL) { *transaction_id = 0U; }
+    if ((data == NULL) || (length == 0U)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
+        (s_telemetry.started[s_telemetry.active] == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
+    return ProjectTelemetryInstance_SendControl(s_telemetry.active, data, length, transaction_id);
+}
+
+SystemDeviceResult SystemTelemetry_TxResultGet(uint32_t transaction_id, uint32_t *age_ms)
+{
+    if ((transaction_id == 0U) || (age_ms == NULL)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
+        (s_telemetry.started[s_telemetry.active] == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
+    return ProjectTelemetryInstance_TxResultGet(s_telemetry.active, transaction_id, age_ms);
 }
 
 SystemDeviceResult SystemTelemetry_Receive(

@@ -17,7 +17,7 @@
 /* Statically linked selected backend. No estimator-private type crosses this API. */
 SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     const SystemGnssSample *origin, float barometer_origin_m,
-    uint32_t generation, uint8_t activate);
+    uint8_t barometer_origin_valid, uint32_t generation, uint8_t activate);
 SystemDeviceResult SystemNavigationBackend_Predict(
     const SystemInertialIncrement *input, EstimatorOutputSnapshot *output);
 SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *output);

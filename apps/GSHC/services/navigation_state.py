@@ -211,7 +211,7 @@ class NavigationState:
         return value[0]
 
     def Navigation_StartCheck(self, now_ns: int | None = None) -> NavigationStartResult:
-        if self.protocol_version != 1 or self.algorithm_id not in (0, 1, 2):
+        if self.protocol_version != 1 or self.algorithm_id not in (0, 1, 2, 3):
             return NavigationStartResult.UNSUPPORTED
         value = self.preparation
         if value is None:

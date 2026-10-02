@@ -56,7 +56,6 @@ from protocol.common import (
 )
 from services.data_migration import DataMigrationConflictPolicy
 from services.i18n import I18n, Language
-from services.navigation_state import NavigationStartResult
 from services.preferences import (
     ALL_EXPORT_ITEMS,
     AppPreferences,
@@ -75,8 +74,6 @@ from services.state_model import (
     HandshakeState,
     MissionPhase,
 )
-from ui.magnetometer_calibration_page import MagnetometerCalibrationPage
-from ui.navigation_panel import NavigationPanel
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
@@ -1371,11 +1368,6 @@ class MainWindow(QMainWindow):
         self.pages.setTabText(
             self.pages.indexOf(self.post_process_page), self.i18n.tr("page.post_process")
         )
-        self.pages.setTabText(
-            self.pages.indexOf(self.magnetometer_calibration_page),
-            self.i18n.tr("page.magnetometer_calibration"),
-        )
-        self.magnetometer_calibration_page.retranslate_ui()
         language_index = self.language_combo.findData(self.i18n.language.value)
         if language_index >= 0 and language_index != self.language_combo.currentIndex():
             blocked = self.language_combo.blockSignals(True)
@@ -1456,11 +1448,9 @@ class MainWindow(QMainWindow):
         self.preflight_page = self._build_preflight_page()
         self.flight_page = self._build_flight_page()
         self.post_process_page = self._build_post_process_page()
-        self.magnetometer_calibration_page = MagnetometerCalibrationPage(self.i18n, self)
         self.pages.addTab(self.preflight_page, "")
         self.pages.addTab(self.flight_page, "")
         self.pages.addTab(self.post_process_page, "")
-        self.pages.addTab(self.magnetometer_calibration_page, "")
         splitter.addWidget(self.pages)
         splitter.setSizes([420, 1340])
         splitter.setStretchFactor(0, 0)
@@ -1509,7 +1499,7 @@ class MainWindow(QMainWindow):
         self.header_connection = QLabel()
         self.header_connection.setObjectName("headerSection")
         self._bind_text(self.header_connection, "group.connection")
-        status_layout = QHBoxLayout()
+        status_layout = identity_layout
         status_layout.setSpacing(8)
         status_layout.addWidget(self.header_connection)
 
@@ -1544,8 +1534,6 @@ class MainWindow(QMainWindow):
         status_layout.addWidget(self.conn_label, 1)
         connection_layout.addStretch(1)
         root_layout.addLayout(connection_layout)
-        root_layout.addLayout(status_layout)
-        identity_layout.addStretch(1)
 
         self.header_version = QLabel()
         self.header_version.setObjectName("headerVersion")
@@ -1592,13 +1580,15 @@ class MainWindow(QMainWindow):
         root.setContentsMargins(6, 6, 6, 6)
         root.setSpacing(8)
 
-        self.navigation_preparation_panel = NavigationPanel(self.i18n, preflight=True)
-        root.addWidget(self.navigation_preparation_panel)
-        root.addWidget(self._build_preflight_system_panel())
-        root.addWidget(self._build_calibration_panel())
-        root.addWidget(self._build_alignment_panel())
-        root.addWidget(self._build_preflight_sensor_panel())
-        root.addWidget(self._build_preflight_gnss_panel())
+        summary_row = QHBoxLayout()
+        summary_row.addWidget(self._build_preflight_system_panel(), 1)
+        summary_row.addWidget(self._build_calibration_panel(), 1)
+        summary_row.addWidget(self._build_alignment_panel(), 1)
+        root.addLayout(summary_row)
+        detail_row = QHBoxLayout()
+        detail_row.addWidget(self._build_preflight_sensor_panel(), 2)
+        detail_row.addWidget(self._build_preflight_gnss_panel(), 1)
+        root.addLayout(detail_row)
         root.addWidget(self._build_preflight_command_panel())
         root.addWidget(self._build_event_panel(), 1)
         return TouchScroll_Wrap(page)
@@ -1701,7 +1691,9 @@ class MainWindow(QMainWindow):
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred
         )
         layout.addLayout(grid)
-        actions = QHBoxLayout()
+        # Four translated actions can exceed the narrow alignment card. Keep
+        # full labels and the original monitoring row; stack the long actions.
+        actions = QGridLayout()
         self.btn_align_start = QPushButton()
         self.btn_align_stop = QPushButton()
         self.btn_align_reset = QPushButton()
@@ -1717,7 +1709,10 @@ class MainWindow(QMainWindow):
             self.btn_sensor_details,
         ):
             button.setStyleSheet(self._cmd_button_style)
-            actions.addWidget(button)
+        actions.addWidget(self.btn_align_start, 0, 0, 1, 2)
+        actions.addWidget(self.btn_align_stop, 1, 0)
+        actions.addWidget(self.btn_align_reset, 1, 1)
+        actions.addWidget(self.btn_sensor_details, 2, 0, 1, 2)
         layout.addLayout(actions)
         self.btn_align_start.clicked.connect(lambda: self.on_align_start and self.on_align_start())
         self.btn_align_stop.clicked.connect(lambda: self.on_align_stop and self.on_align_stop())
@@ -1817,13 +1812,14 @@ class MainWindow(QMainWindow):
         status_content = QWidget()
         status_layout = QVBoxLayout(status_content)
         status_layout.setContentsMargins(0, 0, 0, 0)
-        self.navigation_health_panel = NavigationPanel(self.i18n, preflight=False)
-        status_layout.addWidget(self.navigation_health_panel)
-        status_layout.addWidget(self._build_flight_status_panel())
-        status_layout.addWidget(self._build_flight_data_panel())
-        status_layout.addWidget(self._build_mission_state_panel())
-        self.flight_status_scroll = TouchScroll_Wrap(status_content)
-        root.addWidget(self.flight_status_scroll, 1)
+        status_layout.setAlignment(Qt.AlignTop)
+        top = QHBoxLayout()
+        top.addWidget(self._build_flight_status_panel(), 1)
+        top.addWidget(self._build_flight_data_panel(), 2)
+        top.addWidget(self._build_mission_state_panel(), 2)
+        status_layout.addLayout(top)
+        self.flight_status_scroll = TouchScroll_Wrap(status_content, fit_content=True)
+        root.addWidget(self.flight_status_scroll)
         # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
         root.addWidget(self._build_plot_panel(), 1)
         return page
@@ -2194,7 +2190,7 @@ class MainWindow(QMainWindow):
 
     def _ConnectionStatus_Display(self) -> None:
         text = self._connection_status_text
-        width = max(160, self.width() - self.header_connection.sizeHint().width() - 48)
+        width = max(1, self.conn_label.contentsRect().width())
         metrics = self.conn_label.fontMetrics()
         if metrics.horizontalAdvance(text) <= width:
             displayed = text
@@ -2563,8 +2559,6 @@ class MainWindow(QMainWindow):
         self._render_sensor(state)
         self._render_mission_state(state)
         self._render_commands(state)
-        self.navigation_preparation_panel.Navigation_Render(state)
-        self.navigation_health_panel.Navigation_Render(state)
         self._render_events()
         self._render_plots(state)
         self._render_data_tool_buttons()
@@ -2797,9 +2791,6 @@ class MainWindow(QMainWindow):
             reason = self.i18n.tr(
                 "start.cannot", reason=self.i18n.tr("start.block.unlock")
             )
-        elif state.navigation.Navigation_StartCheck() is not NavigationStartResult.ALLOWED:
-            reason = self.i18n.tr("start.cannot", reason=self.i18n.tr(
-                f"navigation.{state.navigation.Navigation_StartCheck().value}"))
         elif state.start_ready():
             reason = self.i18n.tr("start.ready")
             semantic_state = "ready"
@@ -3119,10 +3110,10 @@ class MainWindow(QMainWindow):
         self.curves = {}
         self.plot_widgets = {}
         self.plot_title_keys = {}
-        for title_key, key, axis in titles:
-            row, column = axis, 0 if key == "vel" else 1
+        for index, (title_key, key, axis) in enumerate(titles):
+            row, column = divmod(index, 3)
             plot_widget = pg.PlotWidget(title=self.i18n.tr(title_key))
-            plot_widget.setMinimumSize(240, 130)
+            plot_widget.setMinimumSize(200, 100)
             plot_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             plot_widget.showGrid(x=True, y=True, alpha=0.3)
             plot_widget.setLabel("bottom", self.i18n.tr("plot.mission_time"))
@@ -3151,12 +3142,6 @@ class MainWindow(QMainWindow):
         if norm == 0:
             return None
         return w / norm, x / norm, y / norm, z / norm
-
-    def closeEvent(self, event) -> None:
-        if not self.magnetometer_calibration_page.close_session():
-            event.ignore()
-            return
-        super().closeEvent(event)
 
     def _apply_quat_to_mesh(self, quat: tuple[float, float, float, float]) -> None:
         normalized = self._normalize_quat(quat)

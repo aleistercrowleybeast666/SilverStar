@@ -27,7 +27,8 @@ typedef enum
 {
     SYSTEM_FUSION_NONE = 0,
     SYSTEM_FUSION_KF6,
-    SYSTEM_FUSION_ESKF15
+    SYSTEM_FUSION_ESKF15,
+    SYSTEM_FUSION_SF6
 } SystemFusionAlgorithm;
 
 typedef uint32_t SystemDeployTriggerMask;

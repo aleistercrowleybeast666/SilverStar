@@ -45,15 +45,21 @@ CommonSpscQueueResult CommonSpscQueue_Push(CommonSpscQueue *queue,
     SILVERSTAR_ASSERT_OBJECT(queue, CommonSpscQueue,
                              SILVERSTAR_ASSERT_MODULE_COMMON);
 
+    SILVERSTAR_ASSERT(queue->capacity <= COMMON_SPSC_QUEUE_CAPACITY_MAX,
+        SILVERSTAR_ASSERT_MODULE_COMMON, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    index = queue->head_index;
+    SILVERSTAR_ASSERT(index < queue->capacity,
+        SILVERSTAR_ASSERT_MODULE_COMMON, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     head = queue->head;
     tail = queue->tail;
+    SILVERSTAR_ASSERT((uint16_t)(head - tail) <= queue->capacity,
+        SILVERSTAR_ASSERT_MODULE_COMMON, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
     if ((uint16_t)(head - tail) >= queue->capacity)
     {
         queue->overflow_count++;
         return COMMON_SPSC_QUEUE_RESULT_FULL;
     }
 
-    index = queue->head_index;
     memcpy(&queue->storage[(uint32_t)index * queue->item_size],
            item,
            queue->item_size);
@@ -80,15 +86,21 @@ CommonSpscQueueResult CommonSpscQueue_Pop(CommonSpscQueue *queue,
     SILVERSTAR_ASSERT_OBJECT(queue, CommonSpscQueue,
                              SILVERSTAR_ASSERT_MODULE_COMMON);
 
+    SILVERSTAR_ASSERT(queue->capacity <= COMMON_SPSC_QUEUE_CAPACITY_MAX,
+        SILVERSTAR_ASSERT_MODULE_COMMON, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    index = queue->tail_index;
+    SILVERSTAR_ASSERT(index < queue->capacity,
+        SILVERSTAR_ASSERT_MODULE_COMMON, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     tail = queue->tail;
     head = queue->head;
+    SILVERSTAR_ASSERT((uint16_t)(head - tail) <= queue->capacity,
+        SILVERSTAR_ASSERT_MODULE_COMMON, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
     if (tail == head)
     {
         return COMMON_SPSC_QUEUE_RESULT_EMPTY;
     }
 
     atomic_thread_fence(memory_order_seq_cst);
-    index = queue->tail_index;
     memcpy(item,
            &queue->storage[(uint32_t)index * queue->item_size],
            queue->item_size);

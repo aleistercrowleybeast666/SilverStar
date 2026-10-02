@@ -1,4 +1,5 @@
 #include "platform_uart.h"
+#include "project_resources.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -16,7 +17,6 @@ static uint8_t *PlatformUart_HalTransmitBufferGet(const uint8_t *data)
     return (uint8_t *)(uintptr_t)data;
 }
 
-#define PLATFORM_UART_RX_DMA_SIZE       128U
 #define PLATFORM_UART_TX_DMA_MAX_CHUNK  128U
 
 typedef struct
@@ -42,17 +42,32 @@ typedef struct
     PlatformUartDiagnostics diagnostics;
 } PlatformUartContext;
 
-static PLATFORM_DMA_ACCESSIBLE uint8_t
-    s_uart1_rx_dma[PLATFORM_UART_RX_DMA_SIZE];
-static uint8_t s_uart1_rx_ring[512U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t
-    s_uart2_rx_dma[PLATFORM_UART_RX_DMA_SIZE];
-static uint8_t s_uart2_rx_ring[1024U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t
-    s_uart3_rx_dma[PLATFORM_UART_RX_DMA_SIZE];
-static uint8_t s_uart3_rx_ring[1024U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_ring[2048U];
-static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_priority_ring[1024U];
+/* Sensor queues have 191 usable bytes, covering the 136-byte M9N command.
+ * Generated sizes preserve console capacity and avoid reserving inactive slots. */
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart1_rx_dma[PROJECT_PLATFORM_UART_1_RX_DMA_SIZE];
+static uint8_t s_uart1_rx_ring[PROJECT_PLATFORM_UART_1_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart1_tx_ring[PROJECT_PLATFORM_UART_1_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart1_tx_priority_ring[PROJECT_PLATFORM_UART_1_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart2_rx_dma[PROJECT_PLATFORM_UART_2_RX_DMA_SIZE];
+static uint8_t s_uart2_rx_ring[PROJECT_PLATFORM_UART_2_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart2_tx_ring[PROJECT_PLATFORM_UART_2_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart2_tx_priority_ring[PROJECT_PLATFORM_UART_2_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_rx_dma[PROJECT_PLATFORM_UART_3_RX_DMA_SIZE];
+static uint8_t s_uart3_rx_ring[PROJECT_PLATFORM_UART_3_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_ring[PROJECT_PLATFORM_UART_3_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart3_tx_priority_ring[PROJECT_PLATFORM_UART_3_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart4_rx_dma[PROJECT_PLATFORM_UART_4_RX_DMA_SIZE];
+static uint8_t s_uart4_rx_ring[PROJECT_PLATFORM_UART_4_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart4_tx_ring[PROJECT_PLATFORM_UART_4_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart4_tx_priority_ring[PROJECT_PLATFORM_UART_4_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart5_rx_dma[PROJECT_PLATFORM_UART_5_RX_DMA_SIZE];
+static uint8_t s_uart5_rx_ring[PROJECT_PLATFORM_UART_5_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart5_tx_ring[PROJECT_PLATFORM_UART_5_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart5_tx_priority_ring[PROJECT_PLATFORM_UART_5_TX_PRIORITY_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart6_rx_dma[PROJECT_PLATFORM_UART_6_RX_DMA_SIZE];
+static uint8_t s_uart6_rx_ring[PROJECT_PLATFORM_UART_6_RX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart6_tx_ring[PROJECT_PLATFORM_UART_6_TX_RING_SIZE];
+static PLATFORM_DMA_ACCESSIBLE uint8_t s_uart6_tx_priority_ring[PROJECT_PLATFORM_UART_6_TX_PRIORITY_SIZE];
 
 static PlatformUartContext s_uart[PLATFORM_UART_COUNT] =
 {
@@ -60,13 +75,21 @@ static PlatformUartContext s_uart[PLATFORM_UART_COUNT] =
         .rx_dma_buffer = s_uart1_rx_dma,
         .rx_dma_size = sizeof(s_uart1_rx_dma),
         .rx_ring_memory = s_uart1_rx_ring,
-        .rx_ring_size = sizeof(s_uart1_rx_ring)
+        .rx_ring_size = sizeof(s_uart1_rx_ring),
+        .tx_ring_memory = s_uart1_tx_ring,
+        .tx_ring_size = sizeof(s_uart1_tx_ring),
+        .tx_priority_memory = s_uart1_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart1_tx_priority_ring)
     },
     {
         .rx_dma_buffer = s_uart2_rx_dma,
         .rx_dma_size = sizeof(s_uart2_rx_dma),
         .rx_ring_memory = s_uart2_rx_ring,
-        .rx_ring_size = sizeof(s_uart2_rx_ring)
+        .rx_ring_size = sizeof(s_uart2_rx_ring),
+        .tx_ring_memory = s_uart2_tx_ring,
+        .tx_ring_size = sizeof(s_uart2_tx_ring),
+        .tx_priority_memory = s_uart2_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart2_tx_priority_ring)
     },
     {
         .rx_dma_buffer = s_uart3_rx_dma,
@@ -77,6 +100,36 @@ static PlatformUartContext s_uart[PLATFORM_UART_COUNT] =
         .tx_ring_size = sizeof(s_uart3_tx_ring),
         .tx_priority_memory = s_uart3_tx_priority_ring,
         .tx_priority_size = sizeof(s_uart3_tx_priority_ring)
+    },
+    {
+        .rx_dma_buffer = s_uart4_rx_dma,
+        .rx_dma_size = sizeof(s_uart4_rx_dma),
+        .rx_ring_memory = s_uart4_rx_ring,
+        .rx_ring_size = sizeof(s_uart4_rx_ring),
+        .tx_ring_memory = s_uart4_tx_ring,
+        .tx_ring_size = sizeof(s_uart4_tx_ring),
+        .tx_priority_memory = s_uart4_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart4_tx_priority_ring)
+    },
+    {
+        .rx_dma_buffer = s_uart5_rx_dma,
+        .rx_dma_size = sizeof(s_uart5_rx_dma),
+        .rx_ring_memory = s_uart5_rx_ring,
+        .rx_ring_size = sizeof(s_uart5_rx_ring),
+        .tx_ring_memory = s_uart5_tx_ring,
+        .tx_ring_size = sizeof(s_uart5_tx_ring),
+        .tx_priority_memory = s_uart5_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart5_tx_priority_ring)
+    },
+    {
+        .rx_dma_buffer = s_uart6_rx_dma,
+        .rx_dma_size = sizeof(s_uart6_rx_dma),
+        .rx_ring_memory = s_uart6_rx_ring,
+        .rx_ring_size = sizeof(s_uart6_rx_ring),
+        .tx_ring_memory = s_uart6_tx_ring,
+        .tx_ring_size = sizeof(s_uart6_tx_ring),
+        .tx_priority_memory = s_uart6_tx_priority_ring,
+        .tx_priority_size = sizeof(s_uart6_tx_priority_ring)
     }
 };
 
@@ -179,6 +232,9 @@ static void PlatformUart_RxPush(PlatformUartContext *context,
 static ringbuf_t *PlatformUart_TxRingGet(PlatformUartContext *context,
                                         PlatformUartTxPriority priority)
 {
+    /* HAL_UART_Transmit_DMA dereferences hdmatx; missing CubeMX TX DMA is
+     * an unsupported backend, never an accepted command or a null access. */
+    if (context->handle->hdmatx == NULL) { return NULL; }
     if (priority == PLATFORM_UART_TX_PRIORITY)
     {
         return (context->tx_priority_size >= 2U) ?
@@ -328,6 +384,10 @@ PlatformResult PlatformUart_WriteAsync(PlatformUartId id,
     }
     SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
                              SILVERSTAR_ASSERT_MODULE_PLATFORM);
+    if ((priority != PLATFORM_UART_TX_NORMAL) &&
+        (priority != PLATFORM_UART_TX_PRIORITY))
+    { return PLATFORM_INVALID_ARGUMENT; }
+    if (context->initialized == 0U) { return PLATFORM_NOT_READY; }
     ring = PlatformUart_TxRingGet(context, priority);
     if (ring == NULL) { return PLATFORM_UNSUPPORTED; }
     state = PlatformCritical_Enter();
@@ -353,6 +413,10 @@ PlatformResult PlatformUart_WriteFrameAsync(PlatformUartId id,
     { return PLATFORM_INVALID_ARGUMENT; }
     SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
                             SILVERSTAR_ASSERT_MODULE_PLATFORM);
+    if ((priority != PLATFORM_UART_TX_NORMAL) &&
+        (priority != PLATFORM_UART_TX_PRIORITY))
+    { return PLATFORM_INVALID_ARGUMENT; }
+    if (context->initialized == 0U) { return PLATFORM_NOT_READY; }
     ring = PlatformUart_TxRingGet(context, priority);
     if (ring == NULL) { return PLATFORM_UNSUPPORTED; }
     SILVERSTAR_ASSERT_OBJECT(ring, ringbuf_t,
@@ -417,19 +481,18 @@ PlatformResult PlatformUart_RxStop(PlatformUartId id)
     return PlatformUart_ResultMap(result);
 }
 
-PlatformResult PlatformUart_RxRestart(PlatformUartId id)
+static PlatformResult PlatformUart_ReceiveRestart(PlatformUartContext *context)
 {
-    PlatformUartContext *context = PlatformUart_ContextGet(id);
     PlatformCriticalState state;
     PlatformResult result;
 
-    if (context == NULL) { return PLATFORM_INVALID_ARGUMENT; }
-    (void)HAL_UART_AbortReceive(context->handle);
+    result = PlatformUart_ResultMap(HAL_UART_AbortReceive(context->handle));
     state = PlatformCritical_Enter();
     PlatformUart_DiscontinuityRecord(context);
     context->diagnostics.rx_restart_count++;
     PlatformCritical_Exit(state);
-    result = PlatformUart_RxStart(context);
+    /* Never start another DMA transfer after an unconfirmed receive stop. */
+    if (result == PLATFORM_OK) { result = PlatformUart_RxStart(context); }
     if (result != PLATFORM_OK)
     {
         state = PlatformCritical_Enter();
@@ -439,10 +502,45 @@ PlatformResult PlatformUart_RxRestart(PlatformUartId id)
     return result;
 }
 
+PlatformResult PlatformUart_RxRestart(PlatformUartId id)
+{
+    PlatformUartContext *context = PlatformUart_ContextGet(id);
+    if (context == NULL) { return PLATFORM_INVALID_ARGUMENT; }
+    return PlatformUart_ReceiveRestart(context);
+}
+
+static void PlatformUart_TransportErrorRecord(PlatformUartContext *context)
+{
+    PlatformCriticalState state = PlatformCritical_Enter();
+    context->diagnostics.transport_error_count++;
+    PlatformCritical_Exit(state);
+}
+
+static PlatformResult PlatformUart_BaudRestore(
+    PlatformUartContext *context, PlatformUartId id, uint32_t baudrate)
+{
+    /* Receive is already inactive. Recovery is bounded, and a failed HAL
+     * lifecycle step must not be followed by a DMA start. */
+    if (HAL_UART_DeInit(context->handle) != HAL_OK)
+    {
+        PlatformUart_TransportErrorRecord(context);
+        return PLATFORM_IO_ERROR;
+    }
+    context->handle->Init.BaudRate = baudrate;
+    if (HAL_UART_Init(context->handle) != HAL_OK)
+    {
+        PlatformUart_TransportErrorRecord(context);
+        return PLATFORM_IO_ERROR;
+    }
+    return PlatformUart_RxRestart(id);
+}
+
 PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
 {
     PlatformUartContext *context = PlatformUart_ContextGet(id);
     uint32_t previous_baudrate;
+    PlatformResult result;
+    PlatformResult restored;
 
     if ((context == NULL) || (baudrate == 0U))
     {
@@ -451,16 +549,24 @@ PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
     SILVERSTAR_ASSERT_OBJECT(context, PlatformUartContext,
                              SILVERSTAR_ASSERT_MODULE_PLATFORM);
     previous_baudrate = context->handle->Init.BaudRate;
-    (void)HAL_UART_AbortReceive(context->handle);
-    (void)HAL_UART_DeInit(context->handle);
+    result = PlatformUart_RxStop(id);
+    if (result != PLATFORM_OK)
+    {
+        restored = PlatformUart_RxRestart(id);
+        return (restored == PLATFORM_OK) ? result : restored;
+    }
+    if (HAL_UART_DeInit(context->handle) != HAL_OK)
+    {
+        PlatformUart_TransportErrorRecord(context);
+        restored = PlatformUart_BaudRestore(context, id, previous_baudrate);
+        return (restored == PLATFORM_OK) ? PLATFORM_IO_ERROR : restored;
+    }
     context->handle->Init.BaudRate = baudrate;
     if (HAL_UART_Init(context->handle) != HAL_OK)
     {
-        (void)HAL_UART_DeInit(context->handle);
-        context->handle->Init.BaudRate = previous_baudrate;
-        (void)HAL_UART_Init(context->handle);
-        (void)PlatformUart_RxRestart(id);
-        return PLATFORM_IO_ERROR;
+        PlatformUart_TransportErrorRecord(context);
+        restored = PlatformUart_BaudRestore(context, id, previous_baudrate);
+        return (restored == PLATFORM_OK) ? PLATFORM_IO_ERROR : restored;
     }
     __HAL_UART_CLEAR_OREFLAG(context->handle);
     __HAL_UART_FLUSH_DRREGISTER(context->handle);
@@ -634,15 +740,11 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *handle)
     { context->diagnostics.uart_parity_error_count++; }
     if ((handle->ErrorCode & HAL_UART_ERROR_DMA) != 0U)
     { context->diagnostics.dma_error_count++; }
-    PlatformUart_DiscontinuityRecord(context);
-    context->diagnostics.rx_restart_count++;
     PlatformCritical_Exit(state);
-    (void)HAL_UART_AbortReceive(handle);
-    result = PlatformUart_RxStart(context);
+    result = PlatformUart_ReceiveRestart(context);
     if (result != PLATFORM_OK)
     {
-        state = PlatformCritical_Enter();
-        context->diagnostics.rx_restart_failure_count++;
-        PlatformCritical_Exit(state);
+        /* ReceiveRestart records the failure and keeps rx_active clear. */
+        return;
     }
 }

@@ -47,6 +47,7 @@ $includeArgs = @(
     "-I$repoRoot\Algorithm\Alignment\ExternalAttitude\Inc",
     "-I$repoRoot\Algorithm\INS\Coning2Sculling2\Inc",
     "-I$repoRoot\Algorithm\Estimator\KF6\Inc",
+    "-I$repoRoot\Algorithm\Estimator\SF6\Inc",
     "-I$repoRoot\Common\Inc",
     "-I$repoRoot\Modules\Inc",
     "-I$repoRoot\Protocol\Inc",
@@ -468,7 +469,6 @@ Invoke-HostTest -Name 'profiles_pure_ins' -ExtraCompilerArgs @(
 Invoke-HostTest -Name 'attitude_alignment' -Sources @(
     "$repoRoot\Tests\Host\test_attitude_alignment.c",
     "$repoRoot\Algorithm\Alignment\Common\Src\attitude_alignment.c",
-    "$repoRoot\Algorithm\Alignment\Common\Src\attitude_preflight.c",
     "$repoRoot\Algorithm\Alignment\GravityKnownYaw\Src\alignment_gravity_known_yaw.c",
     "$repoRoot\Algorithm\Alignment\GravityMagTriad\Src\attitude_triad.c",
     "$repoRoot\Algorithm\Common\Src\attitude_frame.c"
@@ -522,6 +522,10 @@ $alignmentSystemSources = @(
 )
 Invoke-HostTest -Name 'system_alignment' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U'
+) -Sources $alignmentSystemSources
+Invoke-HostTest -Name 'system_alignment_explicit_required_gnss' -ExtraCompilerArgs @(
+    '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
+    '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=7U'
 ) -Sources $alignmentSystemSources
 Invoke-HostTest -Name 'system_alignment_pure_ins' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
@@ -662,7 +666,9 @@ Invoke-ExpectedCompileFailure -Name 'capability_jy901b_gravity_mag_rejected' `
         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
         '-DJY901B_MAGNETOMETER_ADAPTER_ENABLE=1U'
     ) -Source $capabilitySource
-Invoke-ExpectedCompileSuccess -Name 'capability_future_triad' `
+# First release rejects even a fully qualified magnetic provider. Restore this
+# future-feature success case only with the documented December release policy.
+Invoke-ExpectedCompileFailure -Name 'capability_first_release_triad_deferred' `
     -ExtraCompilerArgs @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD',
         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
@@ -743,6 +749,11 @@ Invoke-ExpectedCompileFailure -Name 'capability_delay_without_time' `
         '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_DELAY',
         '-DSYSTEM_BUILD_MISSION_MONOTONIC_TIME_AVAILABLE=0U'
     ) -Source $capabilitySource
+
+Invoke-HostTest -Name 'navigation_sf6' -Sources @(
+    "$repoRoot\Tests\Host\test_navigation_sf6.c",
+    "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6.c"
+)
 
 Invoke-HostTest -Name 'navigation_kf_replay' -Sources @(
     "$repoRoot\Tests\Host\test_navigation_kf_replay.c",
@@ -1072,8 +1083,55 @@ elseif ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
         "$repoRoot\System\Calibration\Src\system_calibration.c"
     )
 }
+elseif ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
+    $preparationSources += @(
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6.c",
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6_backend.c"
+    )
+}
 Invoke-HostTest -Name 'estimator_preparation_actual' -ExtraCompilerArgs $preparationArgs `
     -Sources $preparationSources
+
+# Execute actual Alignment -> FreezeOrigins -> lifecycle START -> selected kernel.
+# Only sensor, attitude preparation and storage inputs are Host fixtures.
+$optionalStartSources = @($preparationSources | Where-Object {
+    $_ -notmatch '(test_estimator_preparation|ins_task|system_calibration)\.c$'
+}) + @(
+    "$repoRoot\Tests\Host\test_optional_gnss_start.c",
+    "$repoRoot\Tests\Host\optional_start_ins_inputs.c",
+    "$repoRoot\Tests\Host\optional_start_storage_inputs.c",
+    "$repoRoot\Tests\Host\optional_start_mag_inputs.c",
+    "$repoRoot\APP\Src\flight_task.c", "$repoRoot\APP\Src\imu_sample_bus.c",
+    "$repoRoot\APP\Src\logger_bus.c", "$repoRoot\Common\Src\common_spsc_queue.c",
+    "$repoRoot\System\Alignment\Src\system_alignment.c",
+    "$repoRoot\System\Alignment\Src\system_alignment_source.c",
+    "$repoRoot\System\Calibration\Src\system_calibration.c",
+    "$repoRoot\System\Calibration\Src\system_calibration_correction.c",
+    "$repoRoot\System\Calibration\Src\system_mag_calibration.c",
+    "$repoRoot\Algorithm\Calibration\Src\imu_six_face_calibration.c",
+    "$repoRoot\Common\Src\common_format.c",
+    "$repoRoot\System\Src\system_time.c",
+    "$repoRoot\System\Src\system_health.c", "$repoRoot\System\Src\system_capabilities.c",
+    "$repoRoot\System\Src\system_profile.c", "$repoRoot\System\Src\system_log_policy.c",
+    "$repoRoot\Generated\Src\project_log_config.c",
+    "$repoRoot\FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c"
+) + $sslogSources
+foreach ($alignmentSource in @(Get-Content -LiteralPath $projectSourcesPath)) {
+    if ($alignmentSource -match '^\s+(Algorithm/Alignment/[A-Za-z0-9_/]+\.c)\s*(?:\\)?\s*$') {
+        $optionalStartSources += Join-Path $repoRoot $Matches[1]
+    }
+}
+$optionalStartSources = @($optionalStartSources | Select-Object -Unique)
+$optionalStartArgs = @($preparationArgs | Where-Object { $_ -notmatch 'SILVERSTAR_PROTOCOL_LOGGING_ENABLED|^-flto$' }) + @('-flto=2') + @("-I$repoRoot\Devices\Storage\SdSdioFatFs\Inc")
+foreach ($alignmentDefine in @(Get-Content -LiteralPath $projectSourcesPath |
+    Where-Object { $_ -match '^\s*SYSTEM_ALIGNMENT_BUILD_[A-Z_]+=[A-Z0-9_]+\s*(?:\\)?\s*$' })) {
+    $optionalStartArgs += '-D' + $alignmentDefine.Trim().TrimEnd('\').Trim()
+}
+Invoke-HostTest -Name 'optional_gnss_start_actual' -ExtraCompilerArgs $optionalStartArgs `
+    -Sources $optionalStartSources
+Invoke-HostTest -Name 'optional_gnss_start_explicit_required' `
+    -ExtraCompilerArgs ($optionalStartArgs + @('-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=7U')) `
+    -Sources $optionalStartSources
 
 $loggerSources = @(
     "$repoRoot\Tests\Host\test_logger.c",
@@ -1116,6 +1174,28 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
         '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF15',
         "-I$repoRoot\Algorithm\Estimator\ESKF15\Inc"
     ) -Sources $backendSources
+}
+if ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
+    $sf6BackendSources = @($loggerSources | Where-Object {
+        $_ -notmatch '(test_logger|diagnostic_log)\.c$'
+    }) + @(
+        "$repoRoot\Tests\Host\test_sf6_backend.c",
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6.c",
+        "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6_backend.c",
+        "$repoRoot\Algorithm\Common\Src\geodesy_local.c",
+        "$repoRoot\Algorithm\Common\Src\attitude_frame.c",
+        "$repoRoot\Algorithm\INS\Coning2Sculling2\Src\ins_mechanization.c",
+        "$repoRoot\APP\Src\estimator_bus.c",
+        "$repoRoot\System\Src\system_navigation_health.c",
+        "$repoRoot\System\Src\system_gnss_quality.c",
+        "$repoRoot\System\Src\system_barometer.c",
+        "$repoRoot\System\Src\system_time.c"
+    )
+    Invoke-HostTest -Name 'sf6_backend_actual' -ExtraCompilerArgs @(
+        '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U',
+        '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_SF6'
+    ) -Sources $sf6BackendSources
 }
 Invoke-HostTest -Name 'logger_estimator_noise_overrides' `
     -ExtraCompilerArgs ($estimatorNoiseOverrideArgs + $estimatorLoggerArgs) `

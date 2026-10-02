@@ -18,6 +18,8 @@ static uint32_t s_irq_clear_count;
 static uint32_t s_set_rx_count;
 static uint16_t s_raw_irq;
 static uint8_t s_dio1_pending;
+static uint32_t s_host_send_count;
+static uint8_t s_host_receive_enabled;
 
 void SX1280Init(uint8_t instance) { (void)instance; }
 
@@ -26,7 +28,7 @@ RadioStatus_t SX1280GetStatus(uint8_t instance)
     RadioStatus_t status;
 
     (void)instance;
-    status.Value = 0x20U;
+    status.Value = 0x40U; /* ChipMode2: standby, not the reserved mode1. */
     return status;
 }
 
@@ -103,9 +105,13 @@ uint8_t SX1280GetPayload(
     uint8_t instance, uint8_t *payload, uint8_t *size, uint8_t maximum)
 {
     (void)instance;
-    (void)payload;
-    (void)size;
-    (void)maximum;
+    if ((s_host_receive_enabled != 0U) && (maximum >= 9U))
+    {
+        static const uint8_t command[9] = {0x20U, 255U, 0x02U, 0U, 0U, 0U, 0U, 0U, 0U};
+        (void)memcpy(payload, command, sizeof(command));
+        *size = (uint8_t)sizeof(command);
+        return 0U;
+    }
     return 1U;
 }
 void SX1280GetPacketStatus(uint8_t instance, PacketStatus_t *status)
@@ -120,6 +126,7 @@ void SX1280SendPayload(
     (void)payload;
     (void)size;
     (void)timeout;
+    s_host_send_count++;
 }
 
 void Sx1281Bus_Init(uint8_t instance) { (void)instance; }
@@ -179,6 +186,7 @@ uint8_t PlatformGpio_IrqConsume(PlatformGpioId id)
     return pending;
 }
 
+#ifndef TEST_SX1281_PORTS_ONLY
 #define Lora_Init() Lora_Init(0U)
 #define Lora_StartRx() Lora_StartRx(0U)
 #define Lora_Process() Lora_Process(0U)
@@ -274,10 +282,52 @@ static void Test_OwnerControlTransaction(void)
     TEST_CHECK(s_set_rx_count > set_rx_before);
 }
 
+static void Test_ContinuousTxLoadPreservesRx(void)
+{
+    uint8_t packet[9] = {0x20U};
+    uint8_t output[64];
+    uint8_t length;
+    uint32_t before;
+    uint32_t cycle;
+    s_tick_ms = UINT32_MAX - 60U;
+    TEST_CHECK(Lora_Init() == LORA_INIT_OK);
+    for (cycle = 0U; cycle < LORA_TX_NORMAL_QUEUE_DEPTH; cycle++)
+    { TEST_CHECK(Lora_TxEnqueue(0U, packet, sizeof(packet)) == LORA_TX_ENQUEUE_OK); }
+    Lora_StartRx();
+    before = s_host_send_count;
+    Lora_Process();
+    TEST_CHECK(s_host_send_count == before);
+    s_tick_ms += 122U; /* 64-byte airtime ceil118ms plus4ms turn margin. */
+    Lora_Process();
+    TEST_CHECK(s_host_send_count == before + 1U);
+    s_host_receive_enabled = 1U;
+    for (cycle = 0U; cycle < 100U; cycle++)
+    {
+        before = s_host_send_count;
+        s_raw_irq = IRQ_TX_DONE; s_dio1_pending = 1U;
+        Lora_Process();
+        TEST_CHECK(s_host_send_count == before);
+        TEST_CHECK(Lora_TxEnqueue(0U, packet, sizeof(packet)) == LORA_TX_ENQUEUE_OK);
+        s_tick_ms += 60U;
+        s_raw_irq = IRQ_RX_DONE; s_dio1_pending = 1U;
+        Lora_Process();
+        length = 0U;
+        TEST_CHECK(Lora_RxDequeue(0U, output, &length, NULL, NULL) == LORA_RX_DEQUEUE_OK);
+        TEST_CHECK(length == 9U && output[0] == 0x20U && output[1] == 255U);
+        TEST_CHECK(s_host_send_count == before);
+        s_tick_ms += 120U;
+        Lora_Process();
+        TEST_CHECK(s_host_send_count == before + 1U);
+    }
+    s_host_receive_enabled = 0U;
+}
+
 int main(void)
 {
     Test_CachedDiagnosticsDoNotReadSpi();
     Test_DioEventDrivesDirectIrqProcessing();
     Test_OwnerControlTransaction();
+    Test_ContinuousTxLoadPreservesRx();
     return Test_Finish("sx1281_device");
 }
+#endif /* TEST_SX1281_PORTS_ONLY */

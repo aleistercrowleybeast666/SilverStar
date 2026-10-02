@@ -1,15 +1,22 @@
 param(
     [ValidateSet('Debug', 'Release')]
     [string]$Config = 'Debug',
-    [string]$TargetProfile = 'SilverStar_F407'
+    [string]$TargetProfile = 'SilverStar_F407',
+    [ValidateSet('legacy', 'eskf_window_sram', 'auto')]
+    [string]$MemoryLayout = 'legacy'
 )
 
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-$targetName = 'SilverStar_0_1_0'
+. (Join-Path $PSScriptRoot 'read_firmware_identity.ps1')
+$firmwareIdentity = FirmwareIdentity_Read -ProjectRoot $repoRoot
+$targetName = $firmwareIdentity.build_target
 $buildRoot = Join-Path $repoRoot (Join-Path 'build\FCCG' `
     (Join-Path $TargetProfile $Config))
+if ($MemoryLayout -ne 'legacy') {
+    $buildRoot = Join-Path $buildRoot $MemoryLayout
+}
 $elfPath = Join-Path $buildRoot ($targetName + '.elf')
 $mapPath = Join-Path $buildRoot ($targetName + '.map')
 $linkerPath = Join-Path $repoRoot 'STM32F407XX_FLASH.ld'
@@ -114,6 +121,7 @@ Assert-ArtifactCondition -Condition ($null -ne $objdumpCommand) `
     -Message 'arm-none-eabi-objdump is unavailable.'
 
 $symbols = @{}
+$uartDmaSymbolCounts = @{}
 if (($null -ne $nmCommand) -and
     (Test-Path -LiteralPath $elfPath -PathType Leaf)) {
     $nmOutput = @(& $nmCommand.Source -S --defined-only --radix=x `
@@ -124,6 +132,10 @@ if (($null -ne $nmCommand) -and
         if ($line.ToString() -match `
             '^\s*(?<address>[0-9A-Fa-f]+)\s+(?<size>[0-9A-Fa-f]+)\s+(?<type>\S)\s+(?<name>.+?)\s*$') {
             $name = $Matches['name']
+            if ([regex]::IsMatch($name, '^s_uart[1-6]_(?:rx_dma|tx_ring|tx_priority_ring)$')) {
+                if (-not $uartDmaSymbolCounts.ContainsKey($name)) { $uartDmaSymbolCounts[$name] = 0 }
+                $uartDmaSymbolCounts[$name]++
+            }
             if (-not $symbols.ContainsKey($name)) {
                 $symbols[$name] = [pscustomobject]@{
                     Address = ConvertFrom-HexValue -Value $Matches['address']
@@ -131,6 +143,15 @@ if (($null -ne $nmCommand) -and
                     Type = $Matches['type']
                     Name = $name
                 }
+            }
+        }
+        elseif ($line.ToString() -match
+            '^\s*(?<address>[0-9A-Fa-f]+)\s+(?<type>\S)\s+(?<name>\S+)\s*$') {
+            $symbols[$Matches['name']] = [pscustomobject]@{
+                Address = ConvertFrom-HexValue -Value $Matches['address']
+                Size = [uint64]0
+                Type = $Matches['type']
+                Name = $Matches['name']
             }
         }
     }
@@ -170,6 +191,97 @@ $mainSramStart = [uint64]0x20000000
 $mainSramLength = [uint64](128 * 1024)
 $flashLength = [uint64](512 * 1024)
 
+# The whitelist has one private CPU-only scratch object. Inspect the actual
+# linked address and the startup-cleared bounds, not just requested flags.
+$windowName = 's_eskf_window'
+$backendPath = Join-Path $repoRoot 'Algorithm\Estimator\ESKF15\Src\navigation_eskf_backend.c'
+$sourcesPath = Join-Path $repoRoot 'Generated\project_sources.mk'
+$eskfSelected = (Test-Path -LiteralPath $sourcesPath -PathType Leaf) -and
+    ((Get-Content -Raw -LiteralPath $sourcesPath) -match
+        'Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend\.c')
+$placementAware = (Test-Path -LiteralPath $backendPath -PathType Leaf) -and
+    ((Get-Content -Raw -LiteralPath $backendPath) -match 'PLATFORM_ESKF_WINDOW_BSS')
+if ($MemoryLayout -eq 'eskf_window_sram') {
+    Assert-ArtifactCondition -Condition (($TargetProfile -eq 'SilverStar_F407') -and $eskfSelected) `
+        -Message 'Experimental placement requires SilverStar_F407 and the selected ESKF15 backend.'
+    Assert-ArtifactCondition -Condition $placementAware `
+        -Message 'Preserved ESKF payload does not support experimental placement; use a fresh validation project.'
+}
+
+function ArtifactSha256_Get {
+    param([Parameter(Mandatory = $true)][string]$Path)
+    $algorithm = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $digest = $algorithm.ComputeHash([System.IO.File]::ReadAllBytes($Path))
+        return ([System.BitConverter]::ToString($digest)).Replace('-', '').ToLowerInvariant()
+    }
+    finally { $algorithm.Dispose() }
+}
+$autoDecision = $null
+if ($MemoryLayout -eq 'auto') {
+    $decisionPath = Join-Path $buildRoot 'memory_layout\decision.json'
+    Assert-ArtifactCondition -Condition (Test-Path -LiteralPath $decisionPath -PathType Leaf) `
+        -Message 'Auto memory decision is missing.'
+    if (Test-Path -LiteralPath $decisionPath -PathType Leaf) {
+        $autoDecision = Get-Content -Raw -LiteralPath $decisionPath | ConvertFrom-Json
+        Assert-ArtifactCondition -Condition (($autoDecision.status -eq 'linked') -and
+            ($autoDecision.elf_sha256 -eq (ArtifactSha256_Get -Path $elfPath))) `
+            -Message 'Auto decision does not describe this linked ELF.'
+        foreach ($property in $autoDecision.groups.PSObject.Properties) {
+            $group = $property.Value
+            $start = $mainSramStart; $length = $mainSramLength
+            if ($group.region -eq 'CCMRAM') { $start = $ccmStart; $length = $ccmLength }
+            Assert-SymbolRange -Symbols $symbols -Name $group.symbol -Start $start -Length $length -MemoryName $group.region
+            if ($symbols.ContainsKey($group.symbol)) {
+                $actual = $symbols[$group.symbol]
+                $begin = $group.zero_bounds[0]; $end = $group.zero_bounds[1]
+                Assert-ArtifactCondition -Condition ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) `
+                    -Message 'Auto startup zero bounds are missing.'
+                if ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) {
+                    Assert-ArtifactCondition -Condition (($actual.Address -eq $group.address) -and
+                        ($actual.Size -eq $group.size) -and (($actual.Address % $group.alignment) -eq 0) -and
+                        ($actual.Address -ge $symbols[$begin].Address) -and
+                        (($actual.Address + $actual.Size) -le $symbols[$end].Address)) `
+                        -Message ('Auto symbol size/alignment/zero range differs: ' + $group.symbol)
+                }
+            }
+            Write-Output ('  auto decision object={0} bytes={1} region={2} address=0x{3:X8}' -f `
+                $group.symbol, $group.size, $group.region, [uint64]$group.address)
+        }
+    }
+}
+if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
+    $startName = '_sccmram_bss'
+    $endName = '_eccmram_bss'
+    $memoryStart = $ccmStart
+    $memoryLength = $ccmLength
+    $memoryName = 'CCMRAM'
+    if (($MemoryLayout -eq 'eskf_window_sram') -or
+        (($MemoryLayout -eq 'auto') -and ($null -ne $autoDecision) -and
+         ($autoDecision.assignment.eskf_window -eq 'RAM'))) {
+        $startName = '_sbss'; $endName = '_ebss'
+        $memoryStart = $mainSramStart; $memoryLength = $mainSramLength
+        $memoryName = 'main SRAM'
+    }
+    Assert-SymbolRange -Symbols $symbols -Name $windowName -Start $memoryStart `
+        -Length $memoryLength -MemoryName $memoryName
+    Assert-ArtifactCondition -Condition ($symbols.ContainsKey($startName) -and $symbols.ContainsKey($endName)) `
+        -Message 'Window startup clear bounds are missing.'
+    if ($symbols.ContainsKey($windowName) -and $symbols.ContainsKey($startName) -and $symbols.ContainsKey($endName)) {
+        $window = $symbols[$windowName]
+        Assert-ArtifactCondition `
+            -Condition (($window.Size -gt 0) -and (($window.Address % 8) -eq 0) -and
+                ($window.Address -ge $symbols[$startName].Address) -and
+                (($window.Address + $window.Size) -le $symbols[$endName].Address)) `
+            -Message 'Window must be nonempty, 8-byte aligned, and fully inside startup-cleared BSS.'
+        Write-Output ('  placement layout={0} object={1} address=0x{2:X8} bytes={3} region={4} zero={5}/{6}' -f `
+            $MemoryLayout, $windowName, $window.Address, $window.Size, $memoryName, $startName, $endName)
+    }
+}
+elseif ($eskfSelected) {
+    Write-Output '  placement layout=legacy preserved_payload=unsupported experimental_audit=NOT_PROVEN'
+}
+
 Assert-ArtifactCondition -Condition $sections.ContainsKey('.ccmram_bss') `
     -Message 'ELF section .ccmram_bss is missing.'
 if ($sections.ContainsKey('.ccmram_bss')) {
@@ -183,18 +295,23 @@ if ($sections.ContainsKey('.ccmram_bss')) {
             ('vma=0x{0:X8} size={1}' -f $ccmBss.Vma, $ccmBss.Size))
 }
 
-$loggingEnabled = $true
+$protocolEnabled = @{ LOGGING = $true; MAINTENANCE = $true; TELEMETRY = $true }
 $generatedConfigPath = Join-Path $repoRoot 'Generated\Inc\project_flight_config.h'
 if (Test-Path -LiteralPath $generatedConfigPath -PathType Leaf) {
     $generatedConfig = Get-Content -Raw -LiteralPath $generatedConfigPath
-    $loggingDefinitions = [regex]::Matches($generatedConfig,
-        '(?m)^\s*#define\s+SILVERSTAR_PROTOCOL_LOGGING_ENABLED\s+([01])U?\s*$')
-    Assert-ArtifactCondition -Condition ($loggingDefinitions.Count -eq 1) `
-        -Message 'Generated logging selection must have exactly one literal 0/1 definition.'
-    if ($loggingDefinitions.Count -eq 1) {
-        $loggingEnabled = $loggingDefinitions[0].Groups[1].Value -eq '1'
+    foreach ($protocol in @('LOGGING', 'MAINTENANCE', 'TELEMETRY')) {
+        $definitions = [regex]::Matches($generatedConfig,
+            ('(?m)^\s*#define\s+SILVERSTAR_PROTOCOL_' + $protocol +
+             '_ENABLED\s+([01])U?\s*$'))
+        Assert-ArtifactCondition -Condition ($definitions.Count -eq 1) `
+            -Message "Generated $protocol selection must have exactly one literal 0/1 definition."
+        if ($definitions.Count -eq 1) {
+            $protocolEnabled[$protocol] = $definitions[0].Groups[1].Value -eq '1'
+        }
     }
 }
+else { Add-ArtifactFailure -Message 'Generated protocol selection header is missing.' }
+$loggingEnabled = $protocolEnabled.LOGGING
 $requiredCcmSymbols = @(
     's_estimator',
     's_alignment_strategy',
@@ -202,10 +319,20 @@ $requiredCcmSymbols = @(
     's_ins_stack',
     's_estimator_stack',
     's_flight_stack',
-    's_serial_stack',
-    's_telemetry_stack',
     's_idle_task_stack'
 )
+foreach ($entry in @(
+    @{ Protocol = 'MAINTENANCE'; Stack = 's_serial_stack' },
+    @{ Protocol = 'TELEMETRY'; Stack = 's_telemetry_stack' }
+)) {
+    if ($protocolEnabled[$entry.Protocol]) { $requiredCcmSymbols += $entry.Stack }
+    else {
+        Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey($entry.Stack)) `
+            -Message ("Disabled {0} must not allocate task stack {1}." -f `
+                $entry.Protocol, $entry.Stack)
+    }
+}
+if ($protocolEnabled.TELEMETRY) { $requiredCcmSymbols += 's_capability_tx' }
 if ($loggingEnabled) { $requiredCcmSymbols += 's_logger_stack' }
 else {
     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_logger_stack')) `
@@ -223,12 +350,26 @@ $requiredDmaSymbols = @(
     's_uart3_tx_ring',
     's_uart3_tx_priority_ring'
 )
+# Preserved pre-UART-hotfix payloads remain supported; every linked TX ring
+# from the additive async UART implementation is audited when present.
+foreach ($uartNumber in 1..6) {
+    foreach ($suffix in @('rx_dma', 'tx_ring', 'tx_priority_ring')) {
+        $name = 's_uart{0}_{1}' -f $uartNumber, $suffix
+        if ($symbols.ContainsKey($name) -and ($requiredDmaSymbols -notcontains $name)) {
+            $requiredDmaSymbols += $name
+        }
+    }
+}
 if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
 else {
     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_aggregate_buffer')) `
         -Message 'Disabled logging must not allocate the log aggregation buffer.'
 }
 foreach ($name in $requiredDmaSymbols) {
+    if ($uartDmaSymbolCounts.ContainsKey($name)) {
+        Assert-ArtifactCondition -Condition ($uartDmaSymbolCounts[$name] -eq 1) `
+            -Message ('UART DMA symbol is ambiguous: ' + $name)
+    }
     Assert-SymbolRange -Symbols $symbols -Name $name -Start $mainSramStart `
         -Length $mainSramLength -MemoryName 'DMA-accessible main SRAM'
 }
@@ -274,9 +415,17 @@ Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM'
 Assert-ArtifactCondition -Condition ($ccmUsed -le $ccmLength) `
     -Message "CCMRAM overflow: used=$ccmUsed capacity=$ccmLength"
-Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
-    -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
-        "used=$mainSramUsed maximum=102400")
+if ($MemoryLayout -eq 'auto') {
+    Write-Output ("  historical logging budget used={0} maximum=102400 physical_capacity={1}" -f $mainSramUsed, $mainSramLength)
+    if ($mainSramUsed -gt [uint64](100 * 1024)) {
+        Write-Warning 'Auto layout exceeds the historical 100 KiB main-SRAM regression budget by relocating CPU-only objects. Physical overflow, DMA, stack reservation and startup checks remain blocking; budget spare is not stack margin.'
+    }
+}
+else {
+    Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
+        -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
+            "used=$mainSramUsed maximum=102400")
+}
 
 Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap'

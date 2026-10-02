@@ -6,9 +6,20 @@
   "class": "ground_bridge",
   "version": "0.1.0",
   "description": "Opaque AIR frame bridge between GSP byte stream and packet radio.",
-  "requires": {"components": [], "resources": [], "capabilities": []},
-  "resources": {"provides": [], "roles": [], "conflicts": []},
-  "provides": ["ground.bridge", "ground.gsp"],
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "ground.bridge",
+    "ground.gsp"
+  ],
   "build": {
     "sources": [
       "Ground/Core/Src/ground_bridge.c",
@@ -17,10 +28,19 @@
       "Ground/Protocol/Src/protocol_crc16.c"
     ],
     "asm_sources": [],
-    "include_dirs": ["Ground/Core/Inc", "Ground/Protocol/Inc"],
+    "include_dirs": [
+      "Ground/Core/Inc",
+      "Ground/Protocol/Inc"
+    ],
     "defines": []
   },
-  "payload": {"roots": ["Ground"]},
+  "payload": {
+    "roots": [
+      "Ground",
+      "Tools",
+      "Tests/Host"
+    ]
+  },
   "metadata": {
     "target_role": "ground_station",
     "reference_repository": "aleistercrowleybeast666/GS_SS1",

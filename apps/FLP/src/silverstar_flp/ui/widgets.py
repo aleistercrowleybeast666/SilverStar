@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from PySide6.QtCore import QPoint, Qt
-from PySide6.QtWidgets import QAbstractItemView, QComboBox, QStyle
+from PySide6.QtWidgets import QAbstractItemView, QComboBox, QStyle, QLabel, QSizePolicy
 
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 
@@ -55,3 +55,29 @@ class StandardComboBox(QComboBox):
         else:
             popup_y = max(available.top(), combo_top.y() - popup.height())
         popup.move(popup_x, popup_y)
+
+
+class ProjectHeaderLabel(QLabel):
+    """Elide against the final widget geometry without changing layout hints."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._full_name = ""
+        self._dirty = False
+        self.setMinimumWidth(0)
+        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+
+    def ProjectName_Set(self, name: str, dirty: bool) -> None:
+        self._full_name = name
+        self._dirty = dirty
+        self._Text_Refresh()
+
+    def _Text_Refresh(self) -> None:
+        suffix = " *" if self._dirty else ""
+        metrics = self.fontMetrics()
+        width = max(0, self.contentsRect().width() - metrics.horizontalAdvance(suffix))
+        self.setText(metrics.elidedText(self._full_name, Qt.TextElideMode.ElideRight, width) + suffix)
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self._Text_Refresh()

@@ -151,10 +151,16 @@ NavigationEskfResult NavigationEskf_Initialize(
         (Eskf_Norm(nominal + 10, 3U) > NAV_ESKF_MAX_GYRO_BIAS_RADPS) ||
         (Eskf_Norm(nominal + 13, 3U) > NAV_ESKF_MAX_ACCEL_BIAS_MPS2))
     { return NAV_ESKF_INVALID_INPUT; }
-    if (Eskf_CovarianceValidate(covariance, workspace->temporary) != NAV_ESKF_OK)
+    /* The backend initializes with covariance in workspace->f. Snapshot both
+     * inputs before F becomes Cholesky scratch; scratch aliases stay valid. */
+    memmove(workspace->candidate_x, nominal, sizeof(workspace->candidate_x));
+    memmove(workspace->candidate_p, covariance, sizeof(workspace->candidate_p));
+    if (Eskf_CovarianceValidate(
+            (const float (*)[NAV_ESKF_DIM])workspace->candidate_p,
+            workspace->f) != NAV_ESKF_OK)
     { return NAV_ESKF_NUMERIC_ERROR; }
-    Eskf_StateCommit(state, nominal);
-    memcpy(state->covariance, covariance, sizeof(state->covariance));
+    Eskf_StateCommit(state, workspace->candidate_x);
+    memcpy(state->covariance, workspace->candidate_p, sizeof(state->covariance));
     state->timestamp_us = timestamp_us;
     state->source = source;
     state->generation = generation;
@@ -270,15 +276,14 @@ static void Eskf_Congruence(NavigationEskfWorkspace *work,
         {
             float sum = 0.0f;
             for (k = 0U; k < NAV_ESKF_DIM; k++) { sum += work->transition[i][k] * p[k][j]; }
-            work->temporary[i][j] = sum;
+            work->product_row[j] = sum;
         }
-    }
-    for (i = 0U; i < NAV_ESKF_DIM; i++)
-    {
+        /* P and transition stay unchanged. Consume this row before reusing
+         * it; every dot product retains the original k iteration order. */
         for (j = 0U; j <= i; j++)
         {
             float sum = 0.0f;
-            for (k = 0U; k < NAV_ESKF_DIM; k++) { sum += work->temporary[i][k] * work->transition[j][k]; }
+            for (k = 0U; k < NAV_ESKF_DIM; k++) { sum += work->product_row[k] * work->transition[j][k]; }
             work->candidate_p[i][j] = sum;
             work->candidate_p[j][i] = sum;
         }
@@ -348,7 +353,8 @@ NavigationEskfResult NavigationEskf_Predict(NavigationEskfState *state,
     Eskf_TransitionBuild(work, input->dt_s);
     Eskf_Congruence(work, (const float (*)[NAV_ESKF_DIM])state->covariance);
     Eskf_NoiseAdd(work, config, input->dt_s, (input->quality_flags & 0x05U) ? 4.0f : 1.0f);
-    if (Eskf_CovarianceValidate((const float (*)[NAV_ESKF_DIM])work->candidate_p, work->temporary) != NAV_ESKF_OK)
+    /* Linearization F is dead after NoiseAdd; candidate P is still separate. */
+    if (Eskf_CovarianceValidate((const float (*)[NAV_ESKF_DIM])work->candidate_p, work->f) != NAV_ESKF_OK)
     { return NAV_ESKF_NUMERIC_ERROR; }
     Eskf_StateCommit(state, work->candidate_x);
     memcpy(state->covariance, work->candidate_p, sizeof(state->covariance));
@@ -584,7 +590,8 @@ NavigationEskfResult NavigationEskf_Update(NavigationEskfState *state,
     { outcome->result = NAV_ESKF_NUMERIC_ERROR; return outcome->result; }
     Eskf_JosephBuild(state, work, outcome);
     Eskf_ResetJacobianBuild(work);
-    result = Eskf_CovarianceValidate((const float (*)[NAV_ESKF_DIM])work->candidate_p, work->temporary);
+    /* Reset congruence has consumed the original P copy in F. */
+    result = Eskf_CovarianceValidate((const float (*)[NAV_ESKF_DIM])work->candidate_p, work->f);
     if (result != NAV_ESKF_OK) { outcome->result = result; return result; }
     for (i = 0U; i < 16U; i++)
     { if (!isfinite(work->candidate_x[i])) { outcome->result = NAV_ESKF_NUMERIC_ERROR; return outcome->result; } }

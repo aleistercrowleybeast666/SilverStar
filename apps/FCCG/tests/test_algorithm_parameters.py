@@ -229,7 +229,19 @@ def test_gui_page_edit_reset_dirty_and_readonly_display(tmp_path,qapp,monkeypatc
     window=MainWindow(SettingsStore(tmp_path/'parameters.ini'))
     monkeypatch.setattr(window,'_Error_Show',lambda *args:pytest.fail(str(args)))
     try:
-        assert window.PAGE_CODES.index('page.navigation_configuration')+2 == window.PAGE_CODES.index('page.board_hardware')
+        # The inherited endpoint layout keeps Ground in its dedicated page
+        # after board hardware; parameter editing must preserve that contract.
+        start = window.PAGE_CODES.index('page.navigation_configuration')
+        stop = window.PAGE_CODES.index('page.board_hardware') + 1
+        assert window.PAGE_CODES[start:stop] == (
+            'page.navigation_configuration', 'page.telemetry_configuration',
+            'page.board_hardware',
+        )
+        assert window.PAGE_CODES == (
+            'page.devices', 'page.flight_configuration',
+            'page.navigation_configuration', 'page.telemetry_configuration',
+            'page.board_hardware', 'page.ground', 'page.build',
+        )
         assert window.pages.count()==7
         old=window._model.Dictionary_Get()
         window._Project_Refresh()

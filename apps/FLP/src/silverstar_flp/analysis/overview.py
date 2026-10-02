@@ -507,6 +507,7 @@ def _Deploy_Build(
     altitude_source = "N/A"
     if timestamp_us is not None:
         for source_name, channel_id in (
+            ("SF6", "sf6.recorded.navigation.position_enu"),
             ("KF_6", "kf6.recorded.navigation.position_enu"),
             ("Pure INS", "pure_ins.recorded.navigation.position_enu"),
         ):

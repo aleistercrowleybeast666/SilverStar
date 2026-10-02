@@ -45,6 +45,7 @@ SystemDeviceStartupResult SystemDeviceStartup_Init(
         (config->operations->reconnect == NULL) ||
         (config->operations->config_verify == NULL) ||
         (config->operations->sample_poll == NULL) ||
+        (config->probe_pass_count > SYSTEM_DEVICE_STARTUP_MAX_PROBE_PASSES) ||
         (config->probe_timeout_ms == 0U) ||
         (config->stage_timeout_ms == 0U) ||
         (config->sample_timeout_ms == 0U) ||
@@ -59,6 +60,8 @@ SystemDeviceStartupResult SystemDeviceStartup_Init(
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
     (void)memset(startup, 0, sizeof(*startup));
     startup->config = *config;
+    if (startup->config.probe_pass_count == 0U)
+    { startup->config.probe_pass_count = 1U; }
     result = SystemDeviceStartup_CandidateAdd(startup, &config->target);
     if (result != SystemDeviceStartupResult_Ok) { return result; }
     if (config->persistence == SystemDeviceStartupPersistence_Persistent)
@@ -96,11 +99,19 @@ static void SystemDeviceStartup_ProbeNext(SystemDeviceStartup *startup,
     startup->candidate_index++;
     startup->probe_started = 0U;
     if (startup->candidate_index >= startup->candidate_count)
-    { SystemDeviceStartup_Fail(startup,
-        SystemDeviceStartupFailure_NotPresent, now_ms); }
-    else
-    { SystemDeviceStartup_StateSet(startup,
-        SystemDeviceStartupState_Probing, now_ms); }
+    {
+        startup->probe_pass_index++;
+        if (startup->probe_pass_index >= startup->config.probe_pass_count)
+        {
+            SystemDeviceStartup_Fail(startup,
+                SystemDeviceStartupFailure_NotPresent, now_ms);
+            return;
+        }
+        startup->candidate_index = 0U;
+    }
+    /* Publish no temporary failure between the finite scan passes. */
+    SystemDeviceStartup_StateSet(startup,
+        SystemDeviceStartupState_Probing, now_ms);
 }
 
 static void SystemDeviceStartup_ProbeTick(SystemDeviceStartup *startup,
@@ -114,6 +125,11 @@ static void SystemDeviceStartup_ProbeTick(SystemDeviceStartup *startup,
     SILVERSTAR_ASSERT(startup->candidate_index < startup->candidate_count,
         SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT((startup->config.probe_pass_count <=
+                       SYSTEM_DEVICE_STARTUP_MAX_PROBE_PASSES) &&
+                      (startup->probe_pass_index < startup->config.probe_pass_count),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     operations = startup->config.operations;
 
     if (startup->probe_started == 0U)

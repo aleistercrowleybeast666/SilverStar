@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import json
+import importlib.util
 from pathlib import Path
 
 import pytest
 
-from tools.reference_overlays import check_task_stacks as stacks
+_tool = Path(__file__).resolve().parents[1] / "plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py"
+_spec = importlib.util.spec_from_file_location("check_task_stacks", _tool)
+stacks = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(stacks)
 
 
 def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
@@ -61,6 +65,23 @@ def test_stack_budget_fails_insufficient_margin(tmp_path, monkeypatch):
     report = stacks.StackReport_Build(root, "Release", "unused-")
     assert not report["passes"]
     assert all(not row["passes"] for row in report["tasks"])
+
+
+@pytest.mark.parametrize("layout", ["auto", "eskf_window_sram"])
+def test_stack_budget_reads_selected_layout_elf_and_frames(tmp_path, monkeypatch, layout):
+    root = _ElfFixture_Create(tmp_path, monkeypatch)
+    build = root / "build/FCCG/SilverStar_F407/Release"
+    selected = build / layout
+    selected.mkdir()
+    (build / "test.elf").rename(selected / "test.elf")
+    (build / "test.su").rename(selected / "test.su")
+    (build / "test.elf").write_bytes(b"different legacy ELF")
+    with pytest.raises(ValueError, match="Missing source stack report"):
+        stacks.StackReport_Build(root, "Release", "unused-")
+    report = stacks.StackReport_Build(root, "Release", "unused-", layout)
+    assert report["passes"] and Path(report["elf"]).parent.name == layout
+    import hashlib
+    assert report["elf_sha256"] == hashlib.sha256((selected / "test.elf").read_bytes()).hexdigest()
 
 
 def test_stack_budget_rejects_missing_source_frame_report(tmp_path, monkeypatch):

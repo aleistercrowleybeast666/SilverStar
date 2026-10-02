@@ -2,3 +2,25 @@
 # New root code and integration tests retain Git's normal whitespace checks.
 apps/** whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 docs/** whitespace=-blank-at-eol,-blank-at-eof
+
+# Wire-source provenance is byte-exact, including imported line endings.
+apps/FCCG/plugins/builtin/silverstar_protocol_telemetry_air_m0/payload/Protocol/Src/air_protocol.c -text
+apps/FCCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Src/sslog_protocol.c -text
+
+# Acceptance hashes describe exact evidence bytes, independent of checkout EOL settings.
+docs/FCCG/evidence_final_20261001/** -text
+docs/FCCG/evidence_ground_safety_20261001/** -text
+docs/FCCG/evidence_flight_safety_batch1_20261001/** -text
+docs/FCCG/pot_inventory_20261001/** -text
+
+# Native GUI logs, screenshots and source snapshots retain their recorded bytes.
+docs/GSHC/gui_layout_20261001_v1/** -text
+
+# Local firmware experiment evidence hashes require exact stored bytes.
+docs/FCCG/post_field_memory_20261001_v1/** -text
+docs/FCCG/post_field_ground_radios_20261001_v1/** -text
+
+# SF6 software-checkpoint records retain their original evidence bytes.
+docs/FCCG/sf6_stage3_20261002/SecondEvidence/** -text
+docs/FCCG/sf6_stage3_20261002/ThirdCheckpointEvidence/** -text
+docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8/** -text

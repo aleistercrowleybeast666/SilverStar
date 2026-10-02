@@ -27,6 +27,12 @@ from services.navigation_state import (
 )
 
 
+def archived_navigation_request(controller):
+    """Simulate recorded extension negotiation, without Controller TX activation."""
+    controller.state.navigation.Navigation_Request(42)
+    controller.state.navigation.subscription_seq = 3
+
+
 def navigation_ready(state, *, session=42, generation=1, seq=4, now=None):
     """A complete real protocol fixture, not a local READY override."""
     nav = state.navigation
@@ -62,6 +68,29 @@ def test_navigation_subscribe_golden():
     assert wire.hex() == "30310e3412564e0100"
 
 
+@pytest.mark.parametrize("algorithm,allowed", [(0, True), (1, True), (2, True), (3, True), (4, False), (255, False)])
+def test_declared_sf6_preserves_preparation_and_capability_start_gates(algorithm, allowed):
+    controller = make_controller()
+    configure_ready(controller)
+    archived_navigation_request(controller)
+    nav = controller.state.navigation
+    controller.Navigation_HandleMessage(AirNavigationCapabilityMessage(
+        5, nav.requested_session, 1, 1, algorithm, 31))
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        6, nav.session, 1, 127, 127, 0))
+    assert controller.state.start_ready()  # M0 START admission stays authoritative.
+    assert (nav.Navigation_StartCheck() is NavigationStartResult.ALLOWED) is allowed
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        7, nav.session, 1, 127, 15, 17))
+    assert controller.state.start_ready()  # NAV failure stays visible, without a local START veto.
+    controller.state.start_block_reason = 2  # Existing board M0 rejection still blocks START.
+    assert not controller.state.start_ready()
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        8, nav.session, 1, 127, 127, 0))
+    controller.state.capability = None
+    assert not controller.state.start_ready()
+
+
 @pytest.mark.parametrize("wire", [b"\x15" * 8, b"\x16" * 10, bytes.fromhex("172400000700090c00")])
 def test_bad_navigation_length_or_zero_session_rejected(wire):
     with pytest.raises(ValueError):
@@ -72,8 +101,9 @@ def test_ss0002_prepare_ack_and_alignment_ready_cannot_allow_start():
     controller = make_controller()
     configure_ready(controller)
     controller.state.navigation = NavigationState()
-    assert not controller.state.start_ready()
-    controller.Navigation_Subscribe()
+    assert controller.state.start_ready()  # Missing NAV schema is display-only.
+    controller.state.system_ready = False
+    archived_navigation_request(controller)
     nav = controller.state.navigation
     controller._handle_ack_message(AirAckMessage(4, nav.subscription_seq, 0x0E, 0, 200))
     assert nav.Navigation_StartCheck() is NavigationStartResult.UNSUPPORTED
@@ -84,23 +114,19 @@ def test_ss0002_prepare_ack_and_alignment_ready_cannot_allow_start():
     assert len(controller.worker.sent) == baseline
     assert not controller.state.mission_started
     controller.Navigation_HandleMessage(AirNavigationPreparationMessage(7, nav.session, 1, 127, 127, 0))
+    assert not controller.state.start_ready()  # NAV cannot fabricate a board READY.
+    controller.state.system_ready = True
     assert controller.state.start_ready()
     controller.send_start()
     assert len(controller.worker.sent) == baseline + 1
 
 
-def test_unsupported_subscribe_does_not_break_base_handshake_or_retry():
+def test_release_does_not_offer_navigation_subscription():
     controller = make_controller()
-    controller.state.capability = capability()
-    controller.state.capability_acked = True
-    controller.Navigation_Subscribe()
-    count = len(controller.worker.sent)
-    controller._handle_ack_message(AirAckMessage(4, controller.state.navigation.subscription_seq, 0x0E, 2, 200))
-    controller.Navigation_Subscribe()
-    assert controller.state.capability_acked
-    assert len(controller.worker.sent) == count
-    assert controller.state.navigation.Navigation_StartCheck() is NavigationStartResult.UNSUPPORTED
-
+    configure_ready(controller)
+    assert not hasattr(controller, "Navigation_Subscribe")
+    assert controller.state.start_ready()
+    assert not controller.worker.sent
 
 def test_stale_wrong_session_out_of_order_duplicate_and_generation():
     controller = make_controller()
@@ -133,7 +159,7 @@ def test_health_fields_independent_expiry_unknown_selector_and_seq_wrap():
     assert nav.Navigation_ApplyMetric(42, 2, 1, 0, 0x11, 4_000_000_000) is NavigationApplyResult.WRONG_SESSION
 
 
-def test_start_generic_and_retry_recheck_expiry():
+def test_start_retry_uses_board_admission_not_navigation_display_expiry():
     controller = make_controller()
     configure_ready(controller)
     navigation_ready(controller.state)
@@ -144,7 +170,10 @@ def test_start_generic_and_retry_recheck_expiry():
     nav.preparation = replace(nav.preparation, received_ns=time.monotonic_ns() - 3_000_000_000)
     count = len(controller.worker.sent)
     controller._transmit_pending_air_cmd(pending, is_retry=True)
-    assert len(controller.worker.sent) == count and not controller.pending_air_cmds
+    assert len(controller.worker.sent) == count + 1 and controller.pending_air_cmds
+    controller.state.system_ready = False
+    controller._transmit_pending_air_cmd(pending, is_retry=True)
+    assert not controller.pending_air_cmds
     assert not controller._send_air_cmd(1, 0xA55A3CC3)
 
 
@@ -158,20 +187,19 @@ def test_required_mask_supports_explicit_pure_ins_without_inventing_gnss_origin(
     assert not nav.preparation.ready_mask & 16
 
 
-def test_local_reprepare_old_generation_cannot_restore_ready():
+def test_local_reprepare_still_waits_for_real_board_alignment():
     controller = make_controller()
     configure_ready(controller)
-    navigation_ready(controller.state)
-    old = controller.state.navigation.preparation
     controller.send_align_start()
-    assert controller.state.navigation.Navigation_ApplyPreparation(replace(old, snapshot=5)) is NavigationApplyResult.STALE
-    assert not controller.state.start_ready()
+    assert not controller.state.start_ready()  # The real M0 command is pending.
+    assert controller.state.navigation.preparation is None
 
 
 @pytest.mark.parametrize("cause", ["disconnect", "boot"])
 def test_connection_loss_or_boot_immediately_forgets_ready_and_old_nonce(cause):
     controller = make_controller()
     configure_ready(controller)
+    navigation_ready(controller.state)  # Explicit archived-extension fixture.
     old = controller.state.navigation.preparation
     if cause == "disconnect":
         controller.on_connection_changed(False, "lost")
@@ -209,3 +237,25 @@ def test_sparse_detail_sequence_unwrap_uses_intervening_navigation_frames():
     assert nav.Navigation_ApplyMetric(42, 1, 303 & 255, 7, 5, 303_000_000) is NavigationApplyResult.APPLIED
     assert nav.Navigation_ReadMetric(7, 0, 303_000_000) == 5
     assert nav.Navigation_ApplyMetric(42, 1, 302 & 255, 7, 4, 304_000_000) is NavigationApplyResult.STALE
+
+
+@pytest.mark.parametrize("algorithm", [0, 1, 2, 3])
+def test_optional_gnss_origin_does_not_block_start(algorithm):
+    controller = make_controller()
+    configure_ready(controller)
+    archived_navigation_request(controller)
+    nav = controller.state.navigation
+    controller.Navigation_HandleMessage(AirNavigationCapabilityMessage(
+        5, nav.requested_session, 1, 1, algorithm, 31))
+    # Actual board contract: devices/calibration/attitude/baro/estimator required;
+    # GNSS solution (8) and origin (16) remain absent and optional.
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        6, nav.session, 1, 0x67, 0x67, 0))
+    assert controller.state.start_ready()
+    # Explicit required GNSS keeps the same readiness and wire validation.
+    controller.Navigation_HandleMessage(AirNavigationPreparationMessage(
+        7, nav.session, 1, 0x7F, 0x67, 0))
+    assert nav.Navigation_StartCheck() is NavigationStartResult.INCOMPLETE
+    assert controller.state.start_ready()  # NAV details never override the M0 view.
+    controller.state.alignment.ready = False  # Required GNSS is rejected by board Alignment/M0.
+    assert not controller.state.start_ready()

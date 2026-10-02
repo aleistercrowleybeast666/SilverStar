@@ -46,10 +46,10 @@ typedef struct
 
 /* EstimatorTask is the only runtime owner. No DMA, heap, or replay side effects. */
 static NavigationEskfState s_state; /* CPU main SRAM, never DMA. */
-static PLATFORM_CPU_FAST_BSS NavigationEskfWorkspace s_work;
-static PLATFORM_CPU_FAST_BSS NavigationEskfReplay s_history;
+static PLATFORM_ESKF_WORK_BSS NavigationEskfWorkspace s_work;
+static PLATFORM_ESKF_HISTORY_BSS NavigationEskfReplay s_history;
 static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
-static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_window;
+static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;
 static GeoLocalFrame s_frame;
 static float s_baro_origin;
 static uint32_t s_gnss_sequence;
@@ -90,15 +90,17 @@ void SystemNavigationBackend_Reset(void)
 {
     s_active = 0U; s_started = 0U; s_gnss_seen = 0U; s_baro_seen = 0U;
     s_state.initialized = 0U; s_operation = 0U; s_snapshot_id = 0U;
+    memset(&s_frame, 0, sizeof(s_frame));
     s_native_week_us = 0U; s_native_tow_ms = 0U; s_log_failures = 0U;
     s_imu_quality_flags = 0U;
-    (void)NavigationWindow_Reset(&s_window);
+    (void)NavigationWindow_Reset(&s_eskf_window);
 }
 
 SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     const SystemGnssSample *origin, float barometer_origin_m,
-    uint32_t generation, uint8_t activate)
+    uint8_t barometer_origin_valid, uint32_t generation, uint8_t activate)
 {
+    (void)barometer_origin_valid; /* ESKF behavior is unchanged by the SF6 reference contract. */
     float nominal[16] = {0.0f};
     uint32_t axis;
     uint8_t source;
@@ -110,17 +112,20 @@ SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     if ((NavigationEskf_ConfigValidate(&s_config) != NAV_ESKF_OK) ||
         (NavigationWindow_ConfigValidate(&s_window_config) != NAV_QUALITY_OK))
     { return SYSTEM_DEVICE_VERIFY_FAILED; }
-    if ((origin->position_usable == 0U) ||
-        (SystemSourceSelector_ImuActiveInstanceGet(&source) != SYSTEM_DEVICE_OK) ||
-        (SystemSourceSelector_GnssActiveInstanceGet(&s_gnss_source) != SYSTEM_DEVICE_OK) ||
-        (GeoLocalFrame_Init(&s_frame, origin->latitude_e7, origin->longitude_e7,
-                           origin->ellipsoid_height_mm) == 0U))
+    if (SystemSourceSelector_ImuActiveInstanceGet(&source) != SYSTEM_DEVICE_OK)
     { return SYSTEM_DEVICE_NOT_READY; }
     memcpy(&nominal[6], q_nb, 4U * sizeof(float));
-    for (axis = 0U; axis < 3U; axis++)
+    if (origin->position_usable != 0U)
     {
-        if ((origin->velocity_valid_mask & (1U << axis)) != 0U)
-        { nominal[3U + axis] = origin->velocity_enu_mps[axis]; }
+        if ((SystemSourceSelector_GnssActiveInstanceGet(&s_gnss_source) != SYSTEM_DEVICE_OK) ||
+            (GeoLocalFrame_Init(&s_frame, origin->latitude_e7, origin->longitude_e7,
+                               origin->ellipsoid_height_mm) == 0U))
+        { return SYSTEM_DEVICE_NOT_READY; }
+        for (axis = 0U; axis < 3U; axis++)
+        {
+            if ((origin->velocity_valid_mask & (1U << axis)) != 0U)
+            { nominal[3U + axis] = origin->velocity_enu_mps[axis]; }
+        }
     }
     memset(s_work.f, 0, sizeof(s_work.f));
     for (axis = 0U; axis < NAV_ESKF_DIM; axis++)
@@ -252,8 +257,8 @@ static float Backend_ConsistencyGet(const SystemGnssSample *sample, const float 
     memcpy(window_sample.velocity_en, sample->velocity_enu_mps, sizeof(window_sample.velocity_en));
     window_sample.position_valid = (uint8_t)((sample->valid_group_mask & 1U) != 0U);
     window_sample.velocity_valid = (uint8_t)((sample->valid_group_mask & 4U) != 0U);
-    (void)NavigationWindow_Receive(&s_window, &s_window_config, &window_sample);
-    return NavigationWindow_VarianceScale(&s_window, &s_window_config, window_sample.epoch_us);
+    (void)NavigationWindow_Receive(&s_eskf_window, &s_window_config, &window_sample);
+    return NavigationWindow_VarianceScale(&s_eskf_window, &s_window_config, window_sample.epoch_us);
 }
 
 static void Backend_AngularRateGet(uint64_t epoch_us, float rate[3])
@@ -438,18 +443,18 @@ static void Backend_NavigationQualityLog(const SystemGnssSample *sample, uint64_
     record.quality_degraded_mask = sample->quality_degraded_group_mask;
     record.numsv = sample->satellite_count;
     record.numsv_valid = (uint8_t)((sample->valid_fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U);
-    record.window_start_us = s_window.completed_start_us; record.window_end_us = s_window.completed_us;
-    record.covered_us = s_window.completed_covered_us; record.window_index = s_window.completed_window_index;
-    record.position_epoch_count = s_window.completed_position_epochs;
-    record.velocity_epoch_count = s_window.completed_velocity_epochs;
-    record.evidence_age_us = (record.native_epoch_us >= s_window.completed_us) ?
-        record.native_epoch_us - s_window.completed_us : UINT64_MAX;
-    record.evidence_valid = (uint8_t)(s_window.evidence_valid && (record.native_epoch_us != 0U) &&
+    record.window_start_us = s_eskf_window.completed_start_us; record.window_end_us = s_eskf_window.completed_us;
+    record.covered_us = s_eskf_window.completed_covered_us; record.window_index = s_eskf_window.completed_window_index;
+    record.position_epoch_count = s_eskf_window.completed_position_epochs;
+    record.velocity_epoch_count = s_eskf_window.completed_velocity_epochs;
+    record.evidence_age_us = (record.native_epoch_us >= s_eskf_window.completed_us) ?
+        record.native_epoch_us - s_eskf_window.completed_us : UINT64_MAX;
+    record.evidence_valid = (uint8_t)(s_eskf_window.evidence_valid && (record.native_epoch_us != 0U) &&
         (record.evidence_age_us <= 6000000ULL));
-    record.window_reason = record.evidence_valid ? 1U : (s_window.evidence_valid ? 4U : 0U);
-    record.variance_scale = record.evidence_valid ? s_window.variance_scale : 1.0f;
-    memcpy(record.closure_en_m, s_window.closure_en, sizeof(record.closure_en_m));
-    record.closure_norm_m = s_window.closure_norm_m;
+    record.window_reason = record.evidence_valid ? 1U : (s_eskf_window.evidence_valid ? 4U : 0U);
+    record.variance_scale = record.evidence_valid ? s_eskf_window.variance_scale : 1.0f;
+    memcpy(record.closure_en_m, s_eskf_window.closure_en, sizeof(record.closure_en_m));
+    record.closure_norm_m = s_eskf_window.closure_norm_m;
     for (group = 0U; group < 4U; group++)
     {
         if ((SystemNavigationHealth_GroupGet(group, evaluation_us, &health) == SYSTEM_DEVICE_OK) &&
@@ -476,6 +481,8 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
     uint8_t group, source;
     SILVERSTAR_ASSERT_OBJECT(output, EstimatorOutputSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT(s_state.initialized != 0U, SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    /* A mission without a preflight frame cannot adopt a later moving fix. */
+    if (s_frame.valid == 0U) { return; }
     if ((SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK) ||
         (SystemGnss_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK) ||
         (sample.receive_timestamp_us > s_state.timestamp_us) ||
@@ -484,7 +491,7 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
     if (source != s_gnss_source)
     {
         s_gnss_source = source; s_native_week_us = 0U; s_native_tow_ms = 0U;
-        (void)NavigationWindow_Reset(&s_window);
+        (void)NavigationWindow_Reset(&s_eskf_window);
     }
     s_gnss_seen = 1U; s_gnss_sequence = sample.sequence;
     if (SystemGnssQuality_Evaluate(&sample, s_state.timestamp_us) != SYSTEM_DEVICE_OK)
@@ -550,6 +557,7 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
     output->timestamp_us = s_state.timestamp_us;
     output->initialized = s_state.initialized; output->mission_running = s_active;
     output->gnss_origin_valid = s_frame.valid; output->baro_origin_valid = 1U;
+    if (!s_frame.valid) { output->health_flags |= ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE; }
     memcpy(output->position_enu_m, s_state.position, sizeof(s_state.position));
     memcpy(output->velocity_enu_mps, s_state.velocity, sizeof(s_state.velocity));
     memcpy(output->q_nb, s_state.quaternion, sizeof(s_state.quaternion));

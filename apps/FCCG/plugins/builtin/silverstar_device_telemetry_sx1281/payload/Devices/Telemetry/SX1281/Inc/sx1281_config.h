@@ -16,7 +16,18 @@
 #define LORA_MAX_PAYLOAD_LEN            64U
 
 #define LORA_TX_QUEUE_DEPTH             8U
+#define LORA_TX_NORMAL_QUEUE_DEPTH      2U
+#define LORA_TX_CONTROL_QUEUE_DEPTH     6U
+#define LORA_TX_CONTROL_BURST_MAX       2U
 #define LORA_RX_QUEUE_DEPTH             8U
+
+/* Owner-task scheduling policy: preserve a receive opportunity between TXs.
+ * This interval bounds software starvation; RF airtime/collisions still need
+ * verification for the selected PHY and host retry schedule. */
+#define LORA_RX_DWELL_MS                120U
+/* Four milliseconds: clock quantization plus two owner-loop observations.
+ * Not a hardware WCET claim; selected PHY airtime is computed separately. */
+#define LORA_RX_TURN_MARGIN_MS          4U
 
 #define LORA_PROFILE_RANGE_1K           0
 #define LORA_PROFILE_2K                 1
@@ -105,7 +116,7 @@
 #error "SX1280 LoRa preamble 16 symbols must use encoded value 0x18, not 16U"
 #endif /* __SX1281_CONFIG_H */
 
-#define LORA_RX_IRQ_MASK                ( IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR )
+#define LORA_RX_IRQ_MASK                ( IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_PREAMBLE_DETECTED | IRQ_HEADER_VALID )
 #define LORA_TX_IRQ_MASK                ( IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT )
 
 #define LORA_TX_TIMEOUT_STEP            RADIO_TICK_SIZE_1000_US

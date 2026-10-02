@@ -134,12 +134,19 @@ def test_radio_invalid_selection_remains_visible_and_backend_rejects(qapp, tmp_p
         assert index >= 0 and combo.currentIndex() == index
         assert not combo.model().item(index).isEnabled()
         assert "AIR_LINK_PHY_INCOMPATIBLE" in combo.model().item(index).toolTip()
+        flight = window.devices_page.device_combos[model.air_link.flight_radio_instance]
+        assert flight.currentData() == RADIO
+        assert not flight.model().item(flight.currentIndex()).isEnabled()
+        assert "AIR" in flight.model().item(flight.currentIndex()).toolTip()
         assert any(issue.code == "AIR_LINK_PHY_INCOMPATIBLE"
                    for issue in AirLinkIssues_Get(model, window._service.catalog))
         model.air_link = replace(model.air_link, spreading_factor=10)
         window._Project_Refresh()
         assert combo.currentData() == RADIO
         assert combo.model().item(combo.currentIndex()).isEnabled()
+        flight = window.devices_page.device_combos[model.air_link.flight_radio_instance]
+        assert flight.currentData() == RADIO
+        assert flight.model().item(flight.currentIndex()).isEnabled()
         model.air_link = replace(model.air_link, radio_technology="packet")
         window._Project_Refresh()
         technology = window.air_link_page.fields["radio_technology"]
@@ -162,9 +169,10 @@ def test_busy_generation_is_idempotent_and_estimator_order_is_stable(
         assert [estimator.itemData(index) for index in range(estimator.count())] == [
             None, "silverstar.algorithm.estimator.kf6",
             "silverstar.algorithm.estimator.eskf15",
+            "silverstar.algorithm.estimator.sf6",
         ]
         assert [estimator.itemText(index) for index in range(estimator.count())] == [
-            "纯惯导", "KF6算法", "ESKF15算法",
+            "纯惯导", "KF6算法", "ESKF15算法", "SF6算法",
         ]
         window._active_worker = object()
         for _ in range(5):
@@ -220,7 +228,7 @@ def test_visible_generate_double_click_while_busy_is_ignored(
     release = threading.Event()
     monkeypatch.setattr(window, "_Error_Show", errors.append)
     try:
-        window.navigation_list.setCurrentRow(4)
+        window.navigation_list.setCurrentRow(window.PAGE_CODES.index("page.board_hardware"))
         window.show()
         qapp.processEvents()
 
@@ -308,7 +316,7 @@ def test_windows_first_show_has_final_page_and_style_state(qapp, tmp_path: Path)
         assert not window.isVisible()
         window.show()
         qapp.processEvents()
-        assert probe.snapshots == [(7, True, "SilverStar")]
+        assert probe.snapshots == [(len(window.PAGE_CODES), True, "SilverStar")]
     finally:
         window.close()
         qapp.processEvents()
@@ -346,7 +354,7 @@ QTest.qWait(120)
 app.processEvents()
 assert probe.events and probe.events[0][0] == QEvent.Type.Show, probe.events
 assert any(item[0] == QEvent.Type.Paint for item in probe.events), probe.events
-assert all(item[1] == 7 and item[2] and item[3] > 0 and item[4] > 0
+assert all(item[1] == len(MainWindow.PAGE_CODES) and item[2] and item[3] > 0 and item[4] > 0
            for item in probe.events), probe.events
 print('FIRST_PAINT_OK', probe.events[0], flush=True)
 combo = window.flight_configuration_page.strategy_combos['estimator']
@@ -383,6 +391,8 @@ from pathlib import Path
 from PySide6.QtCore import QEvent, QObject, QTimer
 from PySide6.QtWidgets import QApplication
 from silverstar_fccg.ui.main_window import MainWindow
+import silverstar_fccg.app.application as application_module
+from silverstar_fccg.core.settings import SettingsStore
 class FirstPaint(QObject):
     def __init__(self):
         super().__init__()
@@ -394,6 +404,9 @@ class FirstPaint(QObject):
                 watched.geometry().width(), watched.geometry().height()))
         return False
 repo = Path(sys.argv[1])
+isolated_root = Path(sys.argv[2])
+application_module.SettingsStore = lambda _path: SettingsStore(isolated_root / 'settings.ini')
+application_module._Logging_Configure = lambda _root: isolated_root / 'launcher.log'
 probe = FirstPaint()
 original_show = MainWindow.show
 def observed_show(window):
@@ -409,7 +422,7 @@ except SystemExit as result:
     assert result.code == 0, result.code
 assert probe.events and probe.events[0][0] == QEvent.Type.Show, probe.events
 assert any(item[0] == QEvent.Type.Paint for item in probe.events), probe.events
-assert all(item[1] == 7 and item[2] and item[3] > 0 and item[4] > 0
+assert all(item[1] == len(MainWindow.PAGE_CODES) and item[2] and item[3] > 0 and item[4] > 0
            for item in probe.events), probe.events
 print('ROOT_FIRST_PAINT_OK', probe.events[0], flush=True)
 """
@@ -418,7 +431,7 @@ print('ROOT_FIRST_PAINT_OK', probe.events[0], flush=True)
                        PYTHONPATH=str(ROOT / "src"))
     result = subprocess.run(
         [sys.executable, "-X", "faulthandler", "-c", script,
-         str(ROOT.parents[1])],
+          str(ROOT.parents[1]), str(tmp_path)],
         cwd=ROOT.parents[1], env=environment,
         capture_output=True, text=True, timeout=45,
     )
@@ -445,7 +458,9 @@ def test_gui_generates_f407_and_f103(
                 return
             if errors and window._active_worker is None:
                 raise AssertionError(f"GUI generation failed: {errors}")
-            QTest.qWait(20)
+            # QTest.qWait can retain the GIL on Windows/PySide; explicitly
+            # yield while the Python generation worker scans and hashes files.
+            time.sleep(0.01)
         raise AssertionError(f"GUI generation did not finish: {path}; {errors}")
 
     try:

@@ -17,6 +17,11 @@ GroundRadioResult GroundRadio_Init(void)
     {
         return GROUND_RADIO_ERROR;
     }
+    if (Lora_ScheduleRoleSet(GROUND_RADIO_INSTANCE, LoraScheduleRole_Ground) !=
+        LoraScheduleRoleResult_Ok)
+    {
+        return GROUND_RADIO_ERROR;
+    }
     Lora_StartRx(GROUND_RADIO_INSTANCE);
     return GROUND_RADIO_OK;
 }

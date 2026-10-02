@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define SYSTEM_DEVICE_STARTUP_MAX_CANDIDATES 10U
+#define SYSTEM_DEVICE_STARTUP_MAX_PROBE_PASSES 2U
 
 typedef enum
 {
@@ -77,6 +78,8 @@ typedef struct
     SystemDeviceStartupCandidate factory;
     const SystemDeviceStartupCandidate *supported_candidates;
     uint8_t supported_candidate_count;
+    /* Zero preserves the existing single-pass callers. */
+    uint8_t probe_pass_count;
     uint32_t probe_timeout_ms;
     uint32_t stage_timeout_ms;
     uint32_t sample_timeout_ms;
@@ -91,6 +94,7 @@ typedef struct
     SystemDeviceStartupCandidate candidates[SYSTEM_DEVICE_STARTUP_MAX_CANDIDATES];
     uint8_t candidate_count;
     uint8_t candidate_index;
+    uint8_t probe_pass_index;
     uint8_t probe_started;
     uint8_t reconnect_required;
     uint32_t state_entered_ms;

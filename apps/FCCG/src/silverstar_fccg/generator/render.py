@@ -49,6 +49,7 @@ from silverstar_fccg.project.model import (
     ProjectModel,
 )
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
+from silverstar_fccg.project.storage_binding import StorageBinding_Resolve
 from silverstar_fccg.project.record_catalog import (
     RecordCatalog_Merge,
     RecordCatalogFragment_Load,
@@ -280,6 +281,7 @@ def GeneratedFiles_Render(
     )
     files = {
         "Generated/project_sources.mk": graph.MakeFragment_Render(),
+        "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
         "Generated/module.mk": _GeneratedModule_Render(model),
         "Generated/project_semantics.json": (
             decoder_profile.project_semantics_content
@@ -848,6 +850,10 @@ def _FlightConfigHeader_Render(
 
 {rows}
 
+#if (SYSTEM_USER_MAGNETOMETER_ENABLE != 0U)
+#error "Magnetometer selection is deferred in the first SCG release"
+#endif
+
 #if ((SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U) && \
      (SYSTEM_USER_TELEMETRY_ENABLE == 0U))
 #error "Telemetry Protocol requires a selected telemetry transport Device"
@@ -965,6 +971,7 @@ def _ResourceHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
 
 {instance_declarations}
 
+{_PlatformUartConfigDefines_Render(model, catalog)}
 #endif /* __PROJECT_RESOURCES_H */
 """
 
@@ -1094,38 +1101,11 @@ def _InstanceResourcesSource_Render(
 def _StorageBindingHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
-    storage_instances = tuple(
-        instance
-        for instance in model.device_instances
-        if "service.storage" in catalog.InstanceComponent_Get(instance).provides
-    )
-    if len(storage_instances) != 1:
-        raise ValueError(
-            "Exactly one physical Storage Device must provide service.storage"
-        )
-    result = ResourceAssignments_Resolve(model, catalog)
-    assignment = next(
-        (
-            item
-            for item in result.assignments
-            if item.component_id == storage_instances[0].instance_id
-            and item.requirement.kind == "sdio"
-        ),
-        None,
-    )
-    if assignment is None:
-        raise ValueError("Storage Device has no resolved SDIO resource")
-    fatfs = assignment.provision.metadata.get("fatfs", {})
-    if not isinstance(fatfs, dict) or fatfs.get("errors"):
-        raise ValueError("Storage Device has no valid CubeMX FatFs binding")
-    object_symbol = _CIdentifier_Require(
-        fatfs.get("object_symbol"), "FatFs object symbol"
-    )
-    path_symbol = _CIdentifier_Require(
-        fatfs.get("path_symbol"), "FatFs path symbol"
-    )
-    driver_symbol = _CIdentifier_Require(
-        fatfs.get("driver_symbol"), "FatFs driver symbol"
+    binding = StorageBinding_Resolve(model, catalog)
+    if not binding.valid:
+        raise ValueError("\n".join(f"{issue.code}: {issue.message}" for issue in binding.issues))
+    object_symbol, path_symbol, driver_symbol = (
+        binding.object_symbol, binding.path_symbol, binding.driver_symbol,
     )
     return f"""#ifndef __PROJECT_STORAGE_BINDING_H
 #define __PROJECT_STORAGE_BINDING_H
@@ -1140,6 +1120,43 @@ def _StorageBindingHeader_Render(
 
 #endif /* __PROJECT_STORAGE_BINDING_H */
 """
+
+
+def _PlatformUartConfigDefines_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
+    """Size bounded F4 queues from the same logical bindings as the HAL table."""
+    resolution = ResourceAssignments_Resolve(model, catalog, auto_assign=False)
+    active_ids = {a.provision.resource_id for a in resolution.assignments}
+    collections = (
+        _CustomPlatformResources_Get(model, active_ids)
+        if model.hardware.mode == "custom"
+        else _BoardPlatformResources_Get(catalog.Component_Get(model.board), active_ids)
+    )
+    console_owners = {i.instance_id for i in model.device_instances
+                      if i.plugin == "silverstar.device.console.uart"}
+    console_ids = {a.provision.resource_id for a in resolution.assignments
+                   if a.provision.kind == "uart" and a.component_id in console_owners}
+    slots: dict[int, bool] = {}
+    for fallback, entry in enumerate(collections.get("uarts", [])):
+        index = _PlatformLogicalIndex_Get(entry, fallback)
+        if "logical_index" not in entry and "fixed_logical_index" not in entry:
+            token = str(entry.get("c_id", ""))
+            match = re.fullmatch(r"PLATFORM_UART_([1-6])", token)
+            cast = re.fullmatch(r"\(\(PlatformUartId\)([0-5])U\)", token)
+            if match:
+                index = int(match.group(1)) - 1
+            elif cast:
+                index = int(cast.group(1))
+        if not isinstance(index, int) or isinstance(index, bool) or not 0 <= index < 6:
+            raise ValueError("F4 UART buffer binding exceeds six logical slots")
+        slots[index] = entry.get("id") in console_ids or index == 2
+    lines = ["/* Bounded UART buffers follow the generated HAL logical-slot table. */"]
+    for index in range(6):
+        enabled = index in slots
+        # One-byte inactive sentinels keep ISO C arrays valid without reserving queues.
+        sizes = (128, 512 if index == 0 else 1024, 2048 if slots.get(index) else 192, 1024 if slots.get(index) else 192) if enabled else (1, 1, 1, 1)
+        for kind, size in zip(("RX_DMA", "RX_RING", "TX_RING", "TX_PRIORITY"), sizes):
+            lines.append(f"#define PROJECT_PLATFORM_UART_{index + 1}_{kind}_SIZE {size}U")
+    return "\n".join(lines) + "\n"
 
 
 def _PlatformResources_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
@@ -2267,6 +2284,10 @@ def _DeviceDescriptorEntries_Get(
                         f"Component {component_id} device descriptor is invalid"
                     )
                 entry = dict(raw_entry)
+                # The first release retains implementations and schema, but
+                # exposes no magnetic endpoint, calibration or storage target.
+                if entry.get("class") == "SYSTEM_DEVICE_CLASS_MAGNETOMETER":
+                    continue
                 entry["_component_id"] = component_id
                 entry["_source_instance_id"] = source_instance_id
                 entry["_source_instance_index"] = source_instance_index
@@ -2626,6 +2647,10 @@ def _DeviceInstanceFunctionSwitch_Render(
             for key, value in overrides.items()
         ):
             raise ValueError("Device-instance operation overrides are invalid")
+        if (label == "Telemetry" and operation in ("SendControl", "TxResultGet")
+                and operation not in overrides):
+            cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
+            continue
         symbol = overrides.get(
             operation, f"{binding['function_prefix']}_{operation}"
         )
@@ -2857,6 +2882,16 @@ def _Makefile_Render(model: ProjectModel) -> str:
 
 TARGET_PROFILE ?= {model.build.target_profile}
 CONFIG ?= Release
+MEMORY_LAYOUT ?= {model.build.memory_layout}
+PYTHON ?= python
+
+ifneq ($(MEMORY_LAYOUT),legacy)
+ifneq ($(MEMORY_LAYOUT),eskf_window_sram)
+ifneq ($(MEMORY_LAYOUT),auto)
+$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy, eskf_window_sram or auto)
+endif
+endif
+endif
 
 SUPPORTED_TARGETS := {model.build.target_profile}
 SUPPORTED_CONFIGS := Debug Release
@@ -2874,6 +2909,9 @@ ANALYZE ?= 0
 ifeq ($(ANALYZE),1)
 BUILD_ROOT := build/FCCG/$(TARGET_PROFILE)/StaticAnalysis/$(CONFIG)
 endif
+ifneq ($(MEMORY_LAYOUT),legacy)
+BUILD_ROOT := $(BUILD_ROOT)/$(MEMORY_LAYOUT)
+endif
 LISTING ?= 0
 
 C_SOURCES :=
@@ -2885,6 +2923,22 @@ BUILD_MANIFESTS := Makefile
 
 include Targets/$(TARGET_PROFILE)/target.mk
 include Generated/project_sources.mk
+
+ifeq ($(MEMORY_LAYOUT),eskf_window_sram)
+ifneq ($(TARGET_PROFILE),SilverStar_F407)
+$(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
+endif
+ifeq ($(filter Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c,$(C_SOURCES)),)
+$(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
+endif
+C_DEFS += SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1
+endif
+
+ifeq ($(MEMORY_LAYOUT),auto)
+C_DEFS += SILVERSTAR_MEMORY_LAYOUT_AUTO=1
+BUILD_MANIFESTS += Tools/auto_memory_layout.py
+BUILD_MANIFESTS += Generated/memory_audit.py
+endif
 
 FIRST_PARTY_C_SOURCES := $(filter APP/% Algorithm/% Board/% Common/% Devices/% FlightLogic/% Generated/% Interfaces/% Modules/% OS/FreeRTOS/% Platform/% Protocol/% System/% Targets/%,$(C_SOURCES))
 THIRD_PARTY_C_SOURCES := $(filter ThirdParty/% Middlewares/Third_Party/%,$(C_SOURCES))
@@ -2989,7 +3043,11 @@ $(BUILD_ROOT)/%.o: %.s $(BUILD_MANIFESTS)
 
 $(BUILD_ROOT)/$(TARGET).elf: $(OBJECTS) $(LDSCRIPT)
 \t@echo "FCCG_PROGRESS|LINK_BEGIN|$@"
+ifeq ($(MEMORY_LAYOUT),auto)
+\t$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))
+else
 \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+endif
 \t@echo "FCCG_PROGRESS|LINK_DONE|$@"
 \t@echo "FCCG_PROGRESS|SIZE_BEGIN|$@"
 \t$(SZ) $@
@@ -3029,11 +3087,12 @@ list-sources:
 \t@$(foreach source,$(C_SOURCES),echo $(source) & ) echo Assembly: $(ASM_SOURCES)
 
 list-build-config:
+\t@echo MEMORY_LAYOUT:$(MEMORY_LAYOUT)
 \t@$(foreach include,$(C_INCLUDES),echo INCLUDE:$(include) & ) echo CONFIG-INCLUDES-END
 \t@$(foreach define,$(C_DEFS),echo DEFINE:$(define) & ) echo CONFIG-DEFINES-END
 
 stack-report: all
-\tpython Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"
+\tpython Tools/check_task_stacks.py --config $(CONFIG) --memory-layout $(MEMORY_LAYOUT) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"
 
 HOST_CC ?= gcc
 host-tests:
@@ -3049,7 +3108,7 @@ static-analysis:
 \t$(MAKE) TARGET_PROFILE=$(TARGET_PROFILE) CONFIG=$(CONFIG) ANALYZE=1 all
 
 artifact-check: all
-\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile $(TARGET_PROFILE) -Config $(CONFIG)
+\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile $(TARGET_PROFILE) -Config $(CONFIG) $(if $(filter legacy,$(MEMORY_LAYOUT)),,-MemoryLayout $(MEMORY_LAYOUT))
 
 memory-report: artifact-check
 
@@ -3188,8 +3247,11 @@ def _EideTarget_Render(
     graph: SourceGraph,
     *,
     optimization: str,
+    layout_defines: tuple[str, ...] = (),
 ) -> str:
-    defines = "\n".join(f"        - {value}" for value in graph.defines)
+    defines = "\n".join(
+        f"        - {value}" for value in (*graph.defines, *layout_defines)
+    )
     includes = "\n".join(f"        - {value}" for value in graph.include_dirs)
     exclude_block = (
         "    excludeList:\n"
@@ -3289,9 +3351,19 @@ def _Eide_Render(
         prefix,
         count=1,
     )
-    release = _EideTarget_Render(reference_target, graph, optimization="level-2")
+    # Make applies the selected layout after the common source graph. EIDE's
+    # compiler view must carry the same saved configuration without baking it
+    # into that graph (which would break explicit Make layout overrides).
+    layout_defines = {
+        "legacy": (),
+        "auto": ("SILVERSTAR_MEMORY_LAYOUT_AUTO=1",),
+        "eskf_window_sram": ("SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1",),
+    }[model.build.memory_layout]
+    release = _EideTarget_Render(
+        reference_target, graph, optimization="level-2", layout_defines=layout_defines
+    )
     debug = _EideTarget_Render(
-        reference_target, graph, optimization="level-debug"
+        reference_target, graph, optimization="level-debug", layout_defines=layout_defines
     )
     return (
         "# AUTO-GENERATED BY SILVERSTAR_FCCG.\n"
@@ -3508,7 +3580,20 @@ def _GeneratedReadme_Render(model: ProjectModel) -> str:
     return f"""# {model.identity.name}
 
 This standalone embedded project was assembled by SilverStar_FCCG from declarative source plugins.
-It does not require FCCG or Python to build.
+Legacy and manual layouts build without FCCG or Python. Explicit auto linking requires Python 3.
+
+The saved default memory layout is `{model.build.memory_layout}`. Old configurations without this
+field default to `legacy`; existing manual `eskf_window_sram` behavior is preserved. Select `auto`
+in FCCG's Build page or pass `MEMORY_LAYOUT=auto` to Make. Auto outputs use a separate build
+directory and `memory_layout/decision.json` records every real link candidate and the decision.
+At most 32 deterministic candidates place exact audited CPU-only static BSS groups; DMA buffers,
+initialized data and task stack sizes remain fixed. No heap or runtime object movement is added.
+
+Real physical region overflow remains a link error. Spare below 10% is red, over 20% is green,
+and intermediate spare is yellow; low spare warns without blocking generation. Moving objects
+does not add RAM or prove stack margin. In explicit auto mode the historical 100 KiB main-SRAM
+logging regression budget is advisory; legacy/manual budget checks remain blocking. Current
+dual-region support is F407 only; no-CCM uses ordinary SRAM without inventing another region.
 
 - Default / Release build: `{model.build.make_command} TARGET_PROFILE={model.build.target_profile} CONFIG=Release all`
 - Debug build: `{model.build.make_command} TARGET_PROFILE={model.build.target_profile} CONFIG=Debug all`

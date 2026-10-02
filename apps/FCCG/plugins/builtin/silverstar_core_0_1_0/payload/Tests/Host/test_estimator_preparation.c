@@ -136,7 +136,11 @@ static void Test_GnssHealthProducerVariance(void)
         else
         { event.velocity[axis] = sqrtf(target_nis * (s_estimator.kf.covariance[state_axis][state_axis] + scale)); }
         Estimator_GnssReplayEventApply(&event, &work);
-        TEST_CHECK(SystemNavigationHealth_GroupGet(group, 1010000ULL, &health) == SYSTEM_DEVICE_OK);
+        SystemDeviceResult health_result = SystemNavigationHealth_GroupGet(group, 1010000ULL, &health);
+        TEST_CHECK(health_result == SYSTEM_DEVICE_OK);
+        /* TEST_CHECK records a failure but continues. An error leaves health
+         * untouched, so do not inspect it after recording that failed check. */
+        if (health_result != SYSTEM_DEVICE_OK) { return; }
         TEST_CHECK(health.has_success == 1U && health.last_successful_fusion_us == 1010000ULL);
         TEST_CHECK(health.state == SYSTEM_NAVIGATION_SOFT_WEIGHTED);
         TEST_CHECK_NEAR(health.variance_scale, scale * robust, 0.0001f);
@@ -148,18 +152,27 @@ static void Test_GnssHealthProducerVariance(void)
 int main(void)
 {
     EstimatorPreparationSnapshot preparation;
-    EstimatorOutputSnapshot initial;
+    EstimatorOutputSnapshot initial = {0};
     uint32_t generation;
     TEST_CHECK(EstimatorBus_Init() == ESTIMATOR_BUS_RESULT_OK);
     TEST_CHECK(EstimatorTask_OriginsReset() == SYSTEM_DEVICE_OK);
     Test_Collect(0U);
+    TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(s_estimator.gnss_origin_valid == 0U);
+    TEST_CHECK(s_estimator.gnss_fusion_enabled == 0U);
+    TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(preparation.initialized == 1U && preparation.last_result == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+    TEST_CHECK(initial.gnss_origin_valid == 0U && initial.baro_origin_valid == 1U);
     if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+    { TEST_CHECK((initial.health_flags & ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE) != 0U); }
+#if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     {
-        TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_NOT_READY);
-        TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_NOT_READY);
-        TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
-        TEST_CHECK(preparation.initialized == 0U && preparation.last_result == SYSTEM_DEVICE_NOT_READY);
+        EstimatorGnssUpdateWork work = {0};
+        TEST_CHECK(Estimator_GnssSamplePrepare(s_test_now, &work) == ESTIMATOR_GNSS_PREPARE_STOP);
     }
+#endif
     TEST_CHECK(EstimatorTask_OriginsReset() == SYSTEM_DEVICE_OK);
     Test_Collect((uint8_t)(SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE));
     s_test_quaternion_ready = 0U;
@@ -188,11 +201,24 @@ int main(void)
     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
     TEST_CHECK(initial.initialized == 1U && initial.mission_running == 0U && initial.predict_count == 0U);
     TEST_CHECK(fabsf(initial.q_nb[0] - 1.0f) < 0.00001f);
-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
+    {
+        uint8_t axis;
+        /* SF6's committed contract has gains, not a covariance estimate;
+         * its backend explicitly publishes NAN for these unavailable fields. */
+        for (axis = 0U; axis < 6U; axis++)
+        { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
+    }
+    else if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
     {
         uint8_t axis;
         for (axis = 0U; axis < 6U; axis++)
-        { TEST_CHECK(initial.covariance_diagonal[axis] > 0.0f && isfinite(initial.covariance_diagonal[axis])); }
+        {
+            if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
+            { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
+            else
+            { TEST_CHECK(initial.covariance_diagonal[axis] > 0.0f && isfinite(initial.covariance_diagonal[axis])); }
+        }
     }
     TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U && initial.predict_count == 0U);

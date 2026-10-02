@@ -44,6 +44,7 @@ SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 RELATIVE_FILE_PATTERN = re.compile(r"^[A-Za-z0-9_./+@ -]+$")
 
 PROJECT_FORMAT_VERSION = 14
+PROJECT_GROUND_RADIOS_FORMAT_VERSION = 15
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
     "telemetry": "air.m0",
@@ -107,6 +108,7 @@ class BuildOptions:
     flash_command: str = ""
     eide_mode: str = "native"
     tool_paths: dict[str, str] = field(default_factory=dict)
+    memory_layout: str = "legacy"
 
 
 @dataclass(frozen=True, slots=True)
@@ -192,6 +194,14 @@ class AirLinkConfiguration:
 
 
 @dataclass(frozen=True, slots=True)
+class GroundRadioConfiguration:
+    instance_id: str
+    plugin: str
+    module_variant: str
+    tx_power_dbm: int = 12
+
+
+@dataclass(frozen=True, slots=True)
 class GroundTargetConfiguration:
     enabled: bool = False
     mcu: str = ""
@@ -205,6 +215,27 @@ class GroundTargetConfiguration:
     baudrate: int = 230400
     tx_power_dbm: int = 12
     build: BuildOptions = field(default_factory=BuildOptions)
+    radio_instances: tuple[GroundRadioConfiguration, ...] = ()
+    active_radio_instance: str = "radio0"
+
+
+def GroundRadioConfigurations_Get(ground: GroundTargetConfiguration) -> tuple[GroundRadioConfiguration, ...]:
+    return ground.radio_instances or (GroundRadioConfiguration(
+        "radio0", ground.radio_plugin, ground.module_variant, ground.tx_power_dbm,
+    ),)
+
+
+def GroundRadioSelection_Get(ground: GroundTargetConfiguration) -> GroundRadioConfiguration:
+    for radio in GroundRadioConfigurations_Get(ground):
+        if radio.instance_id == ground.active_radio_instance:
+            return radio
+    raise ProjectModelError("Ground active radio is not configured")
+
+
+def GroundRadioSelection_Apply(ground: GroundTargetConfiguration, instance_id: str) -> GroundTargetConfiguration:
+    radio = GroundRadioSelection_Get(replace(ground, active_radio_instance=instance_id))
+    return replace(ground, active_radio_instance=instance_id, radio_plugin=radio.plugin,
+                   module_variant=radio.module_variant, tx_power_dbm=radio.tx_power_dbm)
 
 
 @dataclass(slots=True)
@@ -308,7 +339,7 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": self.format_version,
+            "format_version": PROJECT_GROUND_RADIOS_FORMAT_VERSION if self.ground_target.radio_instances else self.format_version,
             "project": {
                 "name": self.identity.name,
                 "firmware_version": self.identity.firmware_version,
@@ -413,6 +444,10 @@ class ProjectModel:
                 "baudrate": self.ground_target.baudrate,
                 "tx_power_dbm": self.ground_target.tx_power_dbm,
                 "build": _Build_Dictionary(self.ground_target.build),
+                **({
+                    "radio_instances": [asdict(radio) for radio in self.ground_target.radio_instances],
+                    "active_radio_instance": self.ground_target.active_radio_instance,
+                } if self.ground_target.radio_instances or self.format_version == PROJECT_GROUND_RADIOS_FORMAT_VERSION else {}),
             },
             "resources": dict(sorted(self.resource_assignments.items())),
             "capability_sources": dict(
@@ -449,6 +484,7 @@ class ProjectModel:
                 "flash_command": self.build.flash_command,
                 "eide_mode": self.build.eide_mode,
                 "tool_paths": dict(sorted(self.build.tool_paths.items())),
+                "memory_layout": self.build.memory_layout,
             },
             "generated_glue": list(self.generated_glue),
             "component_provenance": self.component_provenance,
@@ -1459,8 +1495,11 @@ def _Build_Parse(value: Any) -> BuildOptions:
         "eide_mode",
         "tool_paths",
     }
-    if set(data) != expected:
+    if set(data) - {"memory_layout"} != expected:
         raise ProjectModelError("build has missing or unknown fields")
+    memory_layout = data.get("memory_layout", "legacy")
+    if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
+        raise ProjectModelError("build.memory_layout is invalid")
     target_profile = _String_Require(
         data, "target_profile", allow_empty=True
     )
@@ -1503,6 +1542,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
         flash_command=_String_Require(data, "flash_command", allow_empty=True),
         eide_mode=eide_mode,
         tool_paths=dict(tool_paths),
+        memory_layout=memory_layout,
     )
 
 
@@ -1527,12 +1567,14 @@ def _AirLink_Parse(value: Any) -> AirLinkConfiguration:
     return AirLinkConfiguration(**data)
 
 
-def _GroundTarget_Parse(value: Any) -> GroundTargetConfiguration:
+def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) -> GroundTargetConfiguration:
     data = _Object_Require(value, "ground_target")
     expected = {
         "enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant",
         "resources", "pc_interface", "pc_resource", "baudrate", "build",
     }
+    if radio_instances_allowed:
+        expected |= {"radio_instances", "active_radio_instance"}
     if set(data) not in (expected, expected | {"tx_power_dbm"}):
         raise ProjectModelError("ground_target has missing or unknown fields")
     if type(data["enabled"]) is not bool:
@@ -1558,6 +1600,35 @@ def _GroundTarget_Parse(value: Any) -> GroundTargetConfiguration:
         for key, value in resources.items()
     ):
         raise ProjectModelError("ground_target.resources is invalid")
+    radios: tuple[GroundRadioConfiguration, ...] = ()
+    active = "radio0"
+    if radio_instances_allowed:
+        values = data["radio_instances"]
+        if not isinstance(values, list) or not 1 <= len(values) <= 4:
+            raise ProjectModelError("ground_target.radio_instances requires 1..4 instances")
+        parsed = []
+        for item in values:
+            entry = _Object_Require(item, "Ground radio instance")
+            if set(entry) != {"instance_id", "plugin", "module_variant", "tx_power_dbm"}:
+                raise ProjectModelError("Ground radio instance has missing or unknown fields")
+            identity = _String_Require(entry, "instance_id")
+            if not DEVICE_INSTANCE_ID_PATTERN.fullmatch(identity):
+                raise ProjectModelError("Ground radio instance ID is invalid")
+            plugin = _String_Require(entry, "plugin")
+            _ComponentId_Validate(plugin, "Ground radio plugin")
+            module = _String_Require(entry, "module_variant")
+            if not SELECTION_OPTION_PATTERN.fullmatch(module) or type(entry["tx_power_dbm"]) is not int:
+                raise ProjectModelError("Ground radio module or TX power is invalid")
+            parsed.append(GroundRadioConfiguration(identity, plugin, module, entry["tx_power_dbm"]))
+        radios = tuple(parsed)
+        if len({radio.instance_id for radio in radios}) != len(radios):
+            raise ProjectModelError("Ground radio instance IDs must be unique")
+        active = _String_Require(data, "active_radio_instance")
+        selected = next((radio for radio in radios if radio.instance_id == active), None)
+        if selected is None:
+            raise ProjectModelError("Ground active radio is not configured")
+        if (selected.plugin, selected.module_variant, selected.tx_power_dbm) != (data["radio_plugin"], data["module_variant"], tx_power):
+            raise ProjectModelError("Ground active radio snapshot does not match its configured instance")
     return GroundTargetConfiguration(
         enabled=data["enabled"], mcu=data["mcu"], board=data["board"],
         hardware=_Hardware_Parse(data["hardware"], board=data["board"]),
@@ -1566,6 +1637,7 @@ def _GroundTarget_Parse(value: Any) -> GroundTargetConfiguration:
         pc_resource=data["pc_resource"], baudrate=data["baudrate"],
         tx_power_dbm=tx_power,
         build=_Build_Parse(data["build"]),
+        radio_instances=radios, active_radio_instance=active,
     )
 
 
@@ -1702,9 +1774,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") != PROJECT_FORMAT_VERSION:
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION):
         raise ProjectModelError(
-            f"Only project format_version {PROJECT_FORMAT_VERSION} is supported"
+            f"Only project format_version {PROJECT_FORMAT_VERSION} or {PROJECT_GROUND_RADIOS_FORMAT_VERSION} is supported"
         )
     project_data = _Object_Require(root.get("project"), "project")
     if set(project_data) != {"name", "firmware_version", "build_target"}:
@@ -1806,7 +1878,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         generated_glue=generated_glue,
         component_provenance=_Provenance_Parse(root.get("component_provenance")),
         reference_provenance=dict(reference_provenance),
-        format_version=PROJECT_FORMAT_VERSION,
+        format_version=root["format_version"],
     )
 
 

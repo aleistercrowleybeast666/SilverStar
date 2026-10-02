@@ -100,9 +100,6 @@ Ground Station 遇到尚未认识的 sensor ID 时应显示 `Unknown Sensor 0xNN
 | `0x12` | `CAPABILITY` | 9 | START 前且未 ACK，立即一次 + 1 Hz |
 | `0x13` | `PREFLIGHT_STATUS` | 9 | Capability ACK 后至 START |
 | `0x14` | `SENSOR_STATUS` | 9 | Alignment 事务结束时组成一次 snapshot |
-| `0x15` | `NAV_CAPABILITY` | 9 | 协商后的导航 schema / session / generation |
-| `0x16` | `NAV_PREPARATION` | 9 | 原子导航准备 required / ready / reason |
-| `0x17` | `NAV_HEALTH` | 9 | 独立限时的组级导航健康字段 |
 | `0x20` | `STATUS` | 9 | 边沿事件 |
 | `0x30` | `CMD` | 9 | GS→FC |
 | `0x40` | `ACK` | 9 | FC→GS command response |
@@ -182,7 +179,7 @@ DISABLED_FOR_FLIGHT
 
 进入 PREFLIGHT 后立即发送 `CAPABILITY`；未 ACK 时 1 Hz 重发。
 
-`CAPABILITY_ACK.param0` = 最近一次成功发送的 Capability seq。  
+`CAPABILITY_ACK.param0` = 实际完成无线发送且仍在有效窗口内的 Capability seq（最近最多四项，完成后严格小于 4 秒）。  
 `CAPABILITY_ACK.param1` = `AIR_PROFILE_COMPACT_V0 = 0`。
 
 错误 seq/profile → `BAD_PARAM`。  
@@ -724,9 +721,11 @@ Alignment `READY → STALE` 后重新阻止 START，必须显式重新 `ALIGN_ST
 
 AIR START 额外要求 Capability ACKED 与 interlock UNLOCKED。
 
-旧固件曾允许无预飞 GNSS origin 启动。导航 schema 1 的任务策略由 required mask 声明；
-要求 GNSS 的任务必须完成本次 generation 的 GNSS origin 和 navigation ready。
-GSHC 在无法确认新鲜导航准备状态时阻止普通 START，不自动选择无 GNSS 降级启动。
+本次发布以板端 M0 的真实自检、校准、对准、解锁及 system_ready / START block reason
+作为 START 前置条件。GNSS 是否必需由项目和内部对准/估计器配置决定；默认可选 GNSS
+保持可在无 fix / 无 GNSS origin 时运行本地 INS/Baro。GSHC 不要求 NAV 扩展或额外订阅
+才能 START，也不会通过 NAV 显示状态制造 READY。板端 preparation generation 和二次
+前置安全检查保持有效；缺失真实 IMU、对准或系统就绪仍阻止 START。
 
 ---
 
@@ -967,13 +966,34 @@ AIR M0 wire在0.0.10当前契约内冻结；普通物理设备或能力实例扩
 
 只有 application framing、fragmentation、encryption/authentication framing、多节点寻址、重大 telemetry encoding redesign 等级别变化，才考虑未来新的 Profile。
 
-## 41. 导航准备 / 健康扩展 schema 1
+## 41. 导航扩展 schema 1：延期，保留历史记录解码资料
+
+仅用于历史记录解码的固定长度（本次发布不发送）：
+
+| ID | type | bytes | 范围 |
+|---|---|---|---|
+| `0x15` | `NAV_CAPABILITY` | 9 | 历史实验解码，不启用发送 |
+| `0x16` | `NAV_PREPARATION` | 9 | 历史实验解码，不启用发送 |
+| `0x17` | `NAV_HEALTH` | 9 | 历史实验解码，不启用发送 |
+
+
+2026-10-02 本次发布恢复原 M0 八种帧集合：`10/11/12/13/14/20/30/40`。
+飞控不发送 `NAV_CAPABILITY (15)`、`NAV_PREPARATION (16)`、`NAV_HEALTH (17)`；
+基础握手后，`NAV_SUBSCRIBE (0E)` 按不支持的命令返回原有 `BAD_CMD` ACK；
+未握手仍保留 `CAPABILITY_REQUIRED` 门槛。GSHC 不自动订阅、
+不提供实时 NAV 面板，也不把扩展就绪作为 START 依赖。原帧字段、编号、量化、
+ACK / 关键 STATUS / FLIGHT_STATE 调度范围不变。下述格式与周期仅说明历史实验
+记录，解码兼容保留，当前发布不启用这些发送周期。
+
+ESKF_15、SF6、传感器能力、内部估计器健康、preparation generation 安全检查及
+本地日志/诊断仍保留。导航详细诊断不通过 M0 发送。扩展重新发布须另行评估
+实际有限半双工吞吐、控制响应和主流 FLIGHT_STATE 预算。
 
 新增独立 type，不改变旧固定帧、旧保留位、基础 Capability ACK、AIR profile、MTU、
 GSP 封装或任何 CRC。三个新增状态帧都只有 **9 bytes**，每帧可独立解释，无分片重组。
 本节明确修订旧 START 可缺 GNSS origin 的规则，仅对协商后的 schema 1 生效。
 
-基线 Capability 握手成功后，GSHC 每连接发送一次 `NAV_SUBSCRIBE`：
+历史实验在基础 Capability 握手成功后发送一次 `NAV_SUBSCRIBE`；本次发布已取消。
 
 | ID | 命令 | token | param0 | param1 |
 |---|---|---|---|---|
@@ -1047,3 +1067,26 @@ global指标同为10秒独立TTL；GNSS精度/卫星数据在生产端样本超�
 不用旧 alignment sensor snapshot 冒充实时状态。端到端硬件无线链路未验证：
 GSP-MIN文档与Python解析器透明转发，但本仓库没有地面接收板固件，必须实机验证新type
 不会被网关白名单丢弃。旧Golden帧逐字节保持。
+
+## Preflight reconnect recovery (2026-10-01)
+
+CAPABILITY remains a 9-byte AIR M0 frame. Before START, it continues at the existing 1 Hz period after acknowledgment so a PC reconnect can discover the actual profile and full scales. A CAPABILITY_ACK for the current profile and one of the last four RF-completed Capability advertisements, strictly less than 4 seconds old, is idempotent while preflight. Enqueue acceptance is not advertisement completion; a newer queued frame cannot invalidate a completed one. Expired, uncompleted and unknown sequences or a wrong profile are rejected. A completed sequence still live in this window is skipped when selecting the next Capability sequence, including 255-to-0 wrap. An older valid reply does not clear a newer handshake's business ACK cache. The unchanged 8-bit wire field cannot distinguish byte-identical replies from different sessions after sequence reuse; this is not a security nonce. ACK, sensor snapshot transactions and critical STATUS retain priority; after handshake, PREFLIGHT_STATUS precedes periodic CAPABILITY. START still stops preflight Capability transmission.
+
+GSHC cannot complete a local handshake from an acknowledged snapshot without a validated Capability and a pending acknowledgment transaction. BOOT or two advancing boot-relative PREFLIGHT_STATE timestamps below the previous timestamp starts a fresh local FC session, cancels pending commands and requires negotiation again. A first timestamp rollback temporarily blocks commands and cancels pending command retries; one delayed sample followed by current time restores the existing session. Mission-relative FLIGHT_STATE timestamps are excluded from this boot-time detector. No mission, unlock or alignment command is automatically replayed. Duplicate same-session Capability remains diagnostic only.
+
+AIR M0 has no FC boot nonce; identical delayed packets after 8-bit sequence reuse cannot be conclusively distinguished by the wire format alone. The rollback detector is a conservative recovery heuristic, not a proof of session identity. Hardware recovery and timeout diagnosis remain separate acceptance evidence.
+
+
+### 2026-10-02 wireless transport scheduling repair
+
+The Flight SX1281 transport keeps its existing eight static packet slots: six FIFO control slots and two ordinary slots. The protocol owner selects the control operation for ACK, Capability and existing critical status/snapshot traffic; the generic transport does not inspect AIR packet types. A full control lane returns NOT_READY and the service keeps its ACK for bounded later retry. At most two controls precede a queued ordinary packet; ordinary traffic therefore makes progress under continuous controls. A newly empty queue resets this burst budget. Ground keeps its opaque eight-frame FIFO. AIR/GSP bytes, PHY, command state/readiness checks and PC timeouts are unchanged.
+
+The half-duplex follow-up replaces the common fixed-window transmit decision with explicit roles. Flight grants at least120ms or the rounded maximum64-byte airtime plus4ms, whichever is larger. With the unchanged SF10/BW812500Hz/CR4/5/CRC16/preamble16 profile this is122ms. After completing a downlink, Ground stays in standby during the early uplink slot and transmits only when its whole queued frame plus margin fits that grant; late work waits for the next downlink. Ground begins receiving before the slot closes. With no received peer frame, its recovery listen is the Flight grant plus maximum frame airtime plus margin,244ms for this PHY. This is a bounded acquisition/retry policy; cold startup can collide, and it does not guarantee delivery under interference.
+
+Normal reception uses the Semtech finite RX timer, which stops when a packet is detected so reception can finish. The owner polls raw IRQs in RX and TX, including PREAMBLE_DETECTED and HEADER_VALID. The first detection locks a maximum valid packet airtime plus margin deadline; repeated indications never extend it. Completion, CRC/header error and RX timeout release it through ordinary paths. A queued TX requires completed RX, verified standby, or expiry of the fixed lost-IRQ watchdog; TX completion lost beyond the configured hardware timeout plus margin becomes a failed receipt. An explicit maintenance FORCE_RX_CONTINUOUS remains a continuous RX command and is still subject to bounded owner recovery. Clock quantization and owner-loop margin are design allowances, not measured STM32 WCET, proof of oscillator error or hardware IRQ timing.
+
+SPI status, raw IRQ and payload reads are accepted only when the owner's bus-result and error-counter snapshot proves that the operation completed without a new SPI error, SPI timeout or BUSY timeout. A stale standby value cannot authorize TX, and a stale RX_DONE cannot publish a command. Transient failures retain RX protection until completion or the fixed watchdog. At that deadline the owner attempts standby and verifies it; failed recovery clears queued work, records failure receipts, invalidates chip verification and latches NOT_INIT. The Flight adapter also clears initialized/started/online/healthy; recovery requires explicit initialization. Failed TX or RX setup follows the same ordinary offline path. A software TX watchdog does not fabricate a physical timeout IRQ counter. These changes preserve the existing wire, error-result enums and READY requirements.
+
+Ground GSP_ACK_OK confirms enqueue acceptance. It does not confirm Ground TX_DONE, Flight reception, business execution, AIR ACK or READY. Both new endpoints must be installed for the role policy: an actual-driver trace with new Flight and frozen Ground50 still fails the noncollision/ACK expectation. Their wire format remains compatible; that mixed scheduling pair is not accepted as reliable. The prior0b98 full software gates did not establish RF acceptance and its free-running hardware failure is preserved separately.
+
+Capability uses one outstanding transport token, with a four-second pending timeout. Only TX_DONE receipts enter the advertisement window; TX_TIMEOUT, lost receipts or expired pending work do not. The receipt age is wrap-safe transport milliseconds, and the service converts that age to its 64-bit monotonic microsecond clock epoch. Both the advertisement window and pending lifetime use that 64-bit clock; a complete 32-bit millisecond cycle cannot revive an expired advertisement or pending receipt. Internal 32-bit tokens encode an instance byte and a nonzero 24-bit counter; bounded allocation avoids the eight queued and one active tokens when that counter wraps. Reused completed tokens lose their old receipt. Untracked ACK/status completion never overwrites the latest tracked receipt. The API retains only the latest tracked receipt, so another caller must tolerate NOT_PRESENT; the service itself tracks only one Capability at a time. CPU-only Capability metadata uses the existing CPU-fast BSS target mapping; no wireless payload or DMA object moves with it.

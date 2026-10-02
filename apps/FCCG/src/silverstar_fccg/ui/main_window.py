@@ -36,6 +36,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QPlainTextEdit,
     QStackedWidget,
     QStatusBar,
     QVBoxLayout,
@@ -111,7 +112,15 @@ from silverstar_fccg.project.model import (
 )
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
 from silverstar_fccg.project.quality_results import QualityResultRecord
+from silverstar_fccg.project.power10_report import (
+    Power10Report_Create, Power10Report_Save, Power10Report_Load,
+    Power10Report_Current_Is, Power10Report_Csv, Power10TextPassed_Is,
+)
+from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+from silverstar_fccg.project.release_policy import (
+    ReleaseCompatibilityIssues_Get, ReleaseMigrationModel_Create, ReleaseMigrationCopy_Save,
+)
 from silverstar_fccg.project.validation import (
     AlignmentConfigurationIssues_Get,
     Project_EditValidate,
@@ -129,6 +138,7 @@ from silverstar_fccg.ui.pages import (
 from silverstar_fccg.ui.pages.algorithm_parameters import NavigationConfigurationPage
 from silverstar_fccg.ui.pages.build import DefaultTools_Get
 from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage
+from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 from silverstar_fccg.ui.widgets import EngineeringTable, HeaderComboBox
@@ -210,6 +220,7 @@ class MainWindow(QMainWindow):
         self._component_views: tuple[ComponentView, ...] = ()
         self._model: ProjectModel = self._service.ProjectDraft_Create("SilverStar")
         self._project_root: Path | None = None
+        self._legacy_source_bytes: bytes | None = None
         self._generation_plan: GenerationPlan | None = None
         self._displaying_model = False
         self._project_state = ProjectLifecycleState.DRAFT
@@ -259,7 +270,8 @@ class MainWindow(QMainWindow):
         header_layout.setContentsMargins(14, 6, 14, 6)
         self.title_label = QLabel()
         self.title_label.setObjectName("headerTitle")
-        self.title_label.setWordWrap(True)
+        self.title_label.setWordWrap(False)
+        self.title_label.setStyleSheet("font-size: 16px;")
         self.version_label = QLabel(f"v{__version__}")
         self.version_label.setObjectName("headerVersion")
         self.credit_label = QLabel()
@@ -296,6 +308,7 @@ class MainWindow(QMainWindow):
         sidebar = QFrame()
         sidebar.setObjectName("sidebar")
         sidebar.setFixedWidth(190)
+        self.navigation_sidebar = sidebar
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(0, 8, 0, 8)
         self.navigation_list = QListWidget()
@@ -313,6 +326,9 @@ class MainWindow(QMainWindow):
 
         self.pages = QStackedWidget()
         self.devices_page = DevicesPage(self._translator)
+        self.legacy_migration_button = QPushButton()
+        self.legacy_migration_button.clicked.connect(self._ReleaseMigration_Request)
+        self.devices_page.root_layout.insertWidget(0, self.legacy_migration_button)
         self.flight_configuration_page = FlightConfigurationPage(self._translator)
         self.algorithm_parameters_page = NavigationConfigurationPage(self._translator)
         self.algorithm_parameters_page.parameterChanged.connect(self._AlgorithmParameter_Change)
@@ -324,7 +340,17 @@ class MainWindow(QMainWindow):
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
+        self.ground_configuration_page = self.air_link_page
+        for group in (self.ground_target_page.enabled, self.ground_target_page.pc_group):
+            self.ground_target_page.root_layout.removeWidget(group)
+            self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
         self.build_page = BuildPage(self._translator)
+        self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, self.ground_target_page.status)
+        self.build_page.root_layout.insertWidget(2, self.ground_target_page.build_group)
+        for page, owner in ((self.board_hardware_page, self.flight_configuration_page),
+                            (self.ground_target_page, self.air_link_page)):
+            page.root_layout.removeWidget(page.advanced_section)
+            owner.root_layout.insertWidget(owner.root_layout.count() - 1, page.advanced_section)
         # Keep the existing editors and signal ownership while placing each
         # configuration group on the page that owns it in the user workflow.
         for group in (
@@ -373,6 +399,12 @@ class MainWindow(QMainWindow):
         self.cancel_button = QPushButton()
         self.cancel_button.clicked.connect(self._Task_Cancel)
         self.cancel_button.setVisible(False)
+        self.power10_export_button = QPushButton()
+        self.power10_export_button.setEnabled(False)
+        self.power10_export_button.clicked.connect(self._Power10Report_Export)
+        self.system_log_button = QPushButton()
+        self.system_log_button.setObjectName("systemLogButton")
+        self.system_log_button.clicked.connect(self._SystemLog_Show)
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 1000)
         self.progress_bar.setFixedWidth(250)
@@ -380,6 +412,8 @@ class MainWindow(QMainWindow):
         status.addWidget(self.status_label, 1)
         status.addPermanentWidget(self.cancel_button)
         status.addPermanentWidget(self.progress_bar)
+        status.addPermanentWidget(self.power10_export_button)
+        status.addPermanentWidget(self.system_log_button)
         self.setStatusBar(status)
         self.navigation_list.setCurrentRow(0)
 
@@ -478,6 +512,7 @@ class MainWindow(QMainWindow):
         )
         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
+        self.ground_target_page.prepareRequested.connect(self._GroundExistingHardware_Request)
         self.ground_target_page.importRequested.connect(self._GroundCubeMxImport_Request)
         self.ground_target_page.saveInstanceRequested.connect(
             lambda: self._BoardInstanceSave_Request("ground")
@@ -506,6 +541,7 @@ class MainWindow(QMainWindow):
         )
         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
         self.build_page.actionRequested.connect(self._Build_Request)
+        self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
             self._PluginInstall_Dialog
         )
@@ -683,6 +719,8 @@ class MainWindow(QMainWindow):
                 / model.build.target_profile
                 / configuration
             )
+            if model.build.memory_layout != "legacy":
+                directory /= model.build.memory_layout
             if not directory.is_dir() or directory.is_symlink():
                 continue
             for artifact in directory.iterdir():
@@ -769,6 +807,7 @@ class MainWindow(QMainWindow):
             self.build_page.GeneratedProject_Set(
                 display.generated_project
             )
+            self.build_page.MemoryLayout_Set(display.model.build.memory_layout)
             if not self._alignment_commit_in_progress:
                 self.algorithm_parameters_page.AlignmentConfiguration_Set(
                     display.model.alignment,
@@ -803,6 +842,9 @@ class MainWindow(QMainWindow):
                 display.firmware_artifact_name,
             )
             self.build_page.QualityResults_Set(display.quality_results)
+            self.power10_export_button.setEnabled(
+                self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
+            self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
             self._BoardPage_Refresh(display)
             self._TargetPages_Refresh(display.model)
             self._HeaderProject_Refresh(display.model)
@@ -987,6 +1029,13 @@ class MainWindow(QMainWindow):
 
     def _ProjectModel_Sync(self) -> None:
         self._LoggingState_Apply(self._model)
+
+    def _MemoryLayout_Change(self, layout: str) -> None:
+        if layout not in ("legacy", "auto", "eskf_window_sram"):
+            return
+        def mutate(model: ProjectModel) -> None:
+            model.build = replace(model.build, memory_layout=layout)
+        self._ProjectConfiguration_Change(mutate)
 
     def _ProjectConfiguration_Change(
         self,
@@ -1528,12 +1577,22 @@ class MainWindow(QMainWindow):
             (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
             for manifest in self._service.catalog.Type_Get("board")
             if manifest.board is not None
-            and manifest.metadata.get("target_role") == "ground_station"
+            and (manifest.metadata.get("target_role") == "ground_station" or manifest.component_class == "ground_station_board")
+            and any(identity in {item.component_id for item in self._service.catalog.Type_Get("mcu")}
+                    for identity in manifest.board.compatible_mcus)
             and (manifest.board.verified or manifest.source == "installed")
         )
         selected = model.ground_target.radio_plugin
         manifest = self._service.catalog.Component_Get(selected) if selected else None
         requirements = {
+            "fixed_resources": {
+                role.key.removeprefix("telemetry:"): role.default
+                for board in self._service.catalog.Type_Get("board")
+                if board.component_id == model.ground_target.board
+                and model.ground_target.hardware.mode == "board_plugin"
+                for role in board.resource_roles
+                if role.fixed and role.key.startswith("telemetry:")
+            },
             "modules": tuple(
                 (str(item.get("display_name", item.get("model", identity))), identity)
                 for identity, item in (manifest.radio.modules.items()
@@ -1591,6 +1650,13 @@ class MainWindow(QMainWindow):
             model.ground_target, boards, tuple(radios), requirements,
             GroundTargetIssues_Get(model, self._service.catalog),
         )
+        ground = model.ground_target
+        platform = self._service.PlatformMatchView_Get(
+            replace(model, mcu=ground.mcu, board=ground.board,
+                    hardware=ground.hardware), self._translator.language)
+        if ground.hardware.inventory.get("timebase", {}).get("kind") == "systick":
+            platform = replace(platform, timebase_status="SysTick / HAL_IncTick")
+        self.ground_target_page.Platform_Set(platform)
 
     def _AirLink_Change(self, field: str, value: object) -> None:
         self._ProjectConfiguration_Change(
@@ -1619,10 +1685,14 @@ class MainWindow(QMainWindow):
         def change(candidate: ProjectModel) -> None:
             ground = candidate.ground_target
             updates = {field: value}
-            if field == "radio_plugin":
-                updates["module_variant"] = ""
+            if field == "radio_plugin" and value != ground.radio_plugin:
+                radio = self._service.catalog.Component_Get(str(value)) if value else None
+                modules = radio.radio.modules if radio is not None and radio.radio is not None else {}
+                # Flight also adopts the only declared module. Multiple choices
+                # remain explicit; shared AIR settings and power are preserved.
+                updates["module_variant"] = next(iter(modules)) if len(modules) == 1 else ""
                 updates["resource_assignments"] = {}
-            if field == "pc_interface":
+            if field == "pc_interface" and value != ground.pc_interface:
                 updates["pc_resource"] = ""
             candidate.ground_target = replace(ground, **updates)
         self._ProjectConfiguration_Change(change)
@@ -1633,8 +1703,10 @@ class MainWindow(QMainWindow):
                 lambda candidate: setattr(
                     candidate, "ground_target", replace(
                         candidate.ground_target, board="", mcu="",
-                        hardware=HardwareConfiguration(), resource_assignments={},
-                        pc_resource="",
+                        hardware=HardwareConfiguration(
+                            mode="custom", source_kind="manual_import",
+                            provider="silverstar.hardware_provider.stm32_cubemx",
+                        ), resource_assignments={}, pc_resource="",
                     )
                 )
             )
@@ -1645,6 +1717,9 @@ class MainWindow(QMainWindow):
         )
 
         board = self._service.catalog.Component_Get(board_id)
+        if board.metadata.get("target_role") != "ground_station" and board.component_class != "ground_station_board":
+            self._Error_Show("PCB target mismatch: select a Ground Station board")
+            return
         inventory = BoardHardwareInventory_Get(board)
         if board.board is None or inventory is None:
             self._Error_Show("Ground board has no CubeMX hardware inventory")
@@ -1690,6 +1765,22 @@ class MainWindow(QMainWindow):
                 candidate.ground_target, resource_assignments=assignments
             )
         self._ProjectConfiguration_Change(change)
+
+    def _GroundExistingHardware_Request(self) -> None:
+        combo = self.ground_target_page.board_combo
+        selected = str(combo.currentData() or "")
+        if selected == "__custom__" or not selected:
+            choices = tuple((combo.itemText(index), combo.itemData(index)) for index in range(combo.count())
+                            if combo.itemData(index) != "__custom__" and combo.model().item(index).isEnabled())
+            if not choices:
+                self._Error_Show(self._translator.Text_Get("board.no_provider"))
+                return
+            name, accepted = QInputDialog.getItem(self, self._translator.Text_Get("hardware.existing"),
+                self._translator.Text_Get("field.board_name"), [item[0] for item in choices], 0, False)
+            if not accepted:
+                return
+            selected = next(identity for title, identity in choices if title == name)
+        self._GroundBoard_Change(selected)
 
     def _GroundCubeMxImport_Request(self, directory: bool) -> None:
         if directory:
@@ -2186,34 +2277,34 @@ class MainWindow(QMainWindow):
             return
         self._ValidationIssue_Clear()
         code = issue.code
-        page_index = 6
         target: QWidget = self.build_page.tool_status_group
         if code.startswith(("hardware", "board", "resource", "platform", "mcu", "HCLK", "MCU_HCLK")) or code in {
             "protocol_transport",
             "protocol_transport_ambiguous",
             "hal_cmsis_source_policy",
         }:
-            page_index = 4
             target = (
                 self.board_hardware_page.resource_table
                 if code.startswith("resource") or code.startswith("protocol_transport")
                 else self.board_hardware_page.board_combo
             )
         elif code.startswith(("GROUND_", "GROUND", "GROUND_HCLK")):
-            page_index = 5
-            target = self.ground_target_page
+            target = (self.ground_target_page.pc_interface
+                      if code.startswith("GROUND_PC_") else self.ground_target_page)
+        elif code.startswith("STORAGE_"):
+            target = (self.devices_page if code in {
+                "STORAGE_DEVICE_REQUIRED", "STORAGE_DEVICE_AMBIGUOUS",
+                "STORAGE_COMPONENT_UNAVAILABLE",
+            } else self.board_hardware_page.resource_table)
         elif code.startswith(("AIR_LINK", "protocol_telemetry")):
-            page_index = 3
             target = self.air_link_page
         elif code.startswith(("strategy", "capability", "TIMING_PROFILE", "REPLAY", "IMU_RATE")):
-            page_index = 2
             target = (
                 next(iter(self.flight_configuration_page.strategy_combos.values()),
                      self.algorithm_parameters_page)
                 if code.startswith("strategy") else self.algorithm_parameters_page
             )
         elif code.startswith(("mode", "logging", "protocol")):
-            page_index = 1
             if code.startswith("mode"):
                 target = next(
                     (
@@ -2233,14 +2324,17 @@ class MainWindow(QMainWindow):
             else:
                 target = self.flight_configuration_page
         elif code == "algorithm_parameters":
-            page_index = 2
             target = self.algorithm_parameters_page
         elif code.startswith("device"):
-            page_index = 0
             target = next(
                 iter(self.devices_page.device_combos.values()),
                 self.devices_page,
             )
+        # Editors can move between pages without changing their stable IDs.
+        # Find the actual owner instead of retaining obsolete numeric indices.
+        page_index = next((index for index, page in enumerate(self._page_widgets)
+                           if page is target or page.isAncestorOf(target)),
+                          self.PAGE_CODES.index("page.build"))
         self.navigation_list.setCurrentRow(page_index)
         target.setProperty("validationIssue", True)
         target.style().unpolish(target)
@@ -2278,15 +2372,18 @@ class MainWindow(QMainWindow):
         if wizard.exec() != QDialog.DialogCode.Accepted:
             return
         values = wizard.WizardData_Get()
-        self._pending_strategy_changes.clear()
-        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
-        self._model = self._service.ProjectDraft_Create(values["name"])
-        self._project_root = Path(values["output_directory"]).resolve(strict=False)
         try:
-            self._service.ProjectRoot_Save(self._model, self._project_root)
+            model = self._service.ProjectDraft_Create(values["name"])
+            project_root = Path(values["output_directory"]).resolve(strict=False)
+            self._service.ProjectRoot_Save(model, project_root, create_new=True)
         except Exception as error:
             self._Error_Show(error)
             return
+        self._pending_strategy_changes.clear()
+        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
+        self._model = model
+        self._project_root = project_root
+        self._legacy_source_bytes = None
         self._generation_plan = None
         self._project_state = ProjectLifecycleState.DRAFT
         self._Project_Refresh()
@@ -2306,15 +2403,19 @@ class MainWindow(QMainWindow):
 
     def _Project_Open(self, path: Path) -> None:
         try:
+            descriptor = path / "SilverStar.ssproject" if path.is_dir() else path
+            source_bytes = descriptor.read_bytes()
             loaded = self._service.Project_Open(path)
-            configuration = self._service.ProjectConfiguration_Reconcile(loaded)
-            reconciled = configuration.model
+            # Keep legacy navigation until the user deliberately creates a copy.
+            reconciled = (loaded if ReleaseCompatibilityIssues_Get(loaded) else
+                          self._service.ProjectConfiguration_Reconcile(loaded).model)
             changed_during_open = (
                 loaded.Dictionary_Get() != reconciled.Dictionary_Get()
             )
             self._pending_strategy_changes.clear()
             self.algorithm_parameters_page.alignment_editor.Draft_Discard()
             self._model = reconciled
+            self._legacy_source_bytes = source_bytes
             self._project_root = (
                 path.resolve() if path.is_dir() else path.resolve().parent
             )
@@ -2336,6 +2437,45 @@ class MainWindow(QMainWindow):
                 "status.project_opened", name=self._model.identity.name
             )
         )
+
+        if ReleaseCompatibilityIssues_Get(self._model):
+            self._MessageBox_Exec(QMessageBox.Icon.Warning,
+                self._translator.Text_Get("release.migrate"),
+                self._translator.Text_Get("release.legacy_notice"),
+                details="\n".join(ReleaseCompatibilityIssues_Get(self._model)))
+
+    def _ReleaseMigration_Request(self) -> None:
+        if self._active_worker is not None or not ReleaseCompatibilityIssues_Get(self._model):
+            return
+        answer = self._MessageBox_Exec(QMessageBox.Icon.Warning,
+            self._translator.Text_Get("release.migrate"),
+            self._translator.Text_Get("release.migrate_confirm"),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel)
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        selected = QFileDialog.getExistingDirectory(self,
+            self._translator.Text_Get("release.migrate_destination"),
+            str(self._path_preferences.DefaultProjectRoot_EffectiveGet()))
+        if not selected:
+            return
+        try:
+            candidate = ReleaseMigrationModel_Create(self._model)
+            candidate = self._service.ProjectConfiguration_Reconcile(candidate).model
+            ReleaseMigrationCopy_Save(self._model, candidate, Path(selected), self._legacy_source_bytes,
+                                      self._project_root)
+        except Exception as error:
+            self._Error_Show(error)
+            return
+        self._pending_strategy_changes.clear()
+        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
+        self._model = candidate
+        self._legacy_source_bytes = None
+        self._Project_SaveAs_Complete(Path(selected).resolve())
+        self.navigation_list.setCurrentRow(2)
+        self._MessageBox_Exec(QMessageBox.Icon.Information,
+            self._translator.Text_Get("release.migrate"),
+            self._translator.Text_Get("release.migrated", path=str(Path(selected).resolve())))
 
     def _AlignmentDraft_SelectorRestore(self, strategy: str) -> None:
         combo = self.flight_configuration_page.strategy_combos.get("alignment")
@@ -2956,7 +3096,7 @@ class MainWindow(QMainWindow):
                 (target_root / "build").rglob("*.elf")
             )
             self.build_page.BuildLog_Append(
-                f"{directory_name}: {'artifact found' if found else 'no ELF artifact'}"
+                f"{directory_name}: {'ELF present' if found else 'no ELF artifact'}; integrity NOT CHECKED"
             )
             return
         if operation not in {"build", "clean"}:
@@ -2991,6 +3131,8 @@ class MainWindow(QMainWindow):
                     else:
                         release = (target_root / "build/FCCG"
                                    / selected_model.build.target_profile / "Release")
+                        if selected_model.build.memory_layout != "legacy":
+                            release /= selected_model.build.memory_layout
                         artifacts = tuple(release.glob("*.elf"))
                         if len(artifacts) != 1:
                             raise ValueError("Flight build has no unique Release ELF")
@@ -3328,10 +3470,20 @@ class MainWindow(QMainWindow):
     def _Build_Complete(self, result: BuildResult) -> None:
         command_text = " ".join(result.command)
         raw_output = result.output.rstrip()
+        passed = result.succeeded
+        if result.action == BuildAction.POWER10_CHECK:
+            passed = Power10TextPassed_Is(result.output, result.return_code)
+            if self._project_root is not None:
+                try:
+                    root = self._project_root / FLIGHT_DIRECTORY
+                    Power10Report_Save(root, Power10Report_Create(root, self._model, result.output, result.return_code))
+                    self.power10_export_button.setEnabled(True)
+                except (OSError, ValueError) as error:
+                    self.build_page.BuildLog_Append(str(error))
         if raw_output and not result.live_streamed:
             self.build_page.BuildLog_Append(raw_output)
         self.build_page.BuildLog_Append(f"> {command_text}")
-        key = "status.build_succeeded" if result.succeeded else "status.build_failed"
+        key = "status.build_succeeded" if passed else "status.build_failed"
         self.status_label.setText(
             self._translator.Text_Get(
                 key,
@@ -3342,15 +3494,15 @@ class MainWindow(QMainWindow):
         )
         self._project_state = (
             ProjectLifecycleState.READY
-            if result.succeeded
+            if passed
             else ProjectLifecycleState.ERROR
         )
         self._QualityResult_Record(
             result.action,
-            result.succeeded,
+            passed,
             self._QualitySummary_Get(result),
         )
-        if not result.succeeded:
+        if not passed:
             self.build_page.advanced_section.toggle_button.setChecked(True)
             self._Error_Show(
                 self._translator.Text_Get(
@@ -3360,7 +3512,63 @@ class MainWindow(QMainWindow):
             )
         else:
             self._Project_Refresh()
+            if result.action == BuildAction.POWER10_CHECK:
+                self._MessageBox_Exec(QMessageBox.Icon.Information,
+                    self._translator.Text_Get("action.power10_check"),
+                    self._translator.Text_Get("power10.review_pending"), details=raw_output)
         self._active_build_action = None
+
+    def _SystemLog_Show(self) -> None:
+        existing = getattr(self, "_system_log_dialog", None)
+        if existing is not None:
+            existing.show()
+            existing.raise_()
+            return
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self._translator.Text_Get("action.system_log"))
+        dialog.resize(1000, 640)
+        layout = QVBoxLayout(dialog)
+        text = QPlainTextEdit()
+        text.setObjectName("systemLogOutput")
+        text.setReadOnly(True)
+        output = self.build_page.build_log.toPlainText()
+        details = self.build_page.build_detail_log.toPlainText()
+        report = None
+        if self._project_root is not None:
+            root = self._project_root / FLIGHT_DIRECTORY
+            candidate = Power10Report_Load(root)
+            if Power10Report_Current_Is(root, self._model, candidate):
+                report = candidate
+        text.setPlainText("\n\n".join(filter(None, (
+            output, details, Power10Report_Csv(report) if report else ""))))
+        layout.addWidget(text)
+        export = QPushButton(self._translator.Text_Get("power10.export"))
+        export.setObjectName("systemLogExport")
+        export.setEnabled(report is not None)
+        export.clicked.connect(self._Power10Report_Export)
+        layout.addWidget(export)
+        dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+        dialog.destroyed.connect(lambda: setattr(self, "_system_log_dialog", None))
+        self._system_log_dialog = dialog
+        dialog.show()
+
+    def _Power10Report_Export(self) -> None:
+        if self._project_root is None:
+            return
+        root = self._project_root / FLIGHT_DIRECTORY
+        report = Power10Report_Load(root)
+        if not Power10Report_Current_Is(root, self._model, report):
+            self._Error_Show(self._translator.Text_Get("power10.report_stale"))
+            return
+        destination, _ = QFileDialog.getSaveFileName(self,
+            self._translator.Text_Get("power10.export"), str(self._project_root / "Power10-review.csv"), "CSV (*.csv)")
+        if not destination:
+            return
+        try:
+            path = Path(destination)
+            WorkspacePolicy(path.parent).Text_AtomicWrite(path.name, "\ufeff" + Power10Report_Csv(report))
+        except (OSError, ValueError) as error:
+            self._Error_Show(self._translator.Text_Get("power10.export_failed"), str(error))
 
     def _BuildLine_Append(self, line: str) -> None:
         if line.startswith("FCCG_DETAIL|"):
@@ -3467,6 +3675,14 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def _QualitySummary_Get(result: BuildResult) -> str:
+        if result.action == BuildAction.POWER10_CHECK:
+            return "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending; " + (
+                "text_checks_passed" if Power10TextPassed_Is(result.output, result.return_code)
+                else "text_checks_failed")
+        if result.action == BuildAction.ARTIFACT_CHECK:
+            memory = ArtifactMemorySummary_Encode(result.output)
+            if memory:
+                return memory
         if not result.succeeded:
             return f"exit_code={result.return_code}"
         patterns = (
@@ -3745,6 +3961,9 @@ class MainWindow(QMainWindow):
 
     def Language_Apply(self, language: str) -> None:
         self._translator.Language_Set(language)
+        self.legacy_migration_button.setText(self._translator.Text_Get("release.migrate"))
+        self.power10_export_button.setText(self._translator.Text_Get("power10.export"))
+        self.system_log_button.setText(self._translator.Text_Get("action.system_log"))
         self.title_label.setText(self._translator.Text_Get("app.title"))
         self.credit_label.setText(self._translator.Text_Get("app.credit"))
         self.current_project_label.setText(
@@ -3769,6 +3988,10 @@ class MainWindow(QMainWindow):
             self.navigation_list.item(index).setText(
                 self._translator.Text_Get(code)
             )
+        self.navigation_sidebar.setFixedWidth(
+            max(190, self.navigation_list.sizeHintForColumn(0)
+                + 2 * self.navigation_list.frameWidth())
+        )
         for page in self._page_widgets:
             page.Language_Apply(self._translator)
         self.plugin_manager_dialog.Language_Apply(self._translator)

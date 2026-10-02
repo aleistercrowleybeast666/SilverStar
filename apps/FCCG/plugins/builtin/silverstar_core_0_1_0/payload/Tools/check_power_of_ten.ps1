@@ -8,6 +8,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $script:checkCount = 0
 $script:failures = New-Object 'System.Collections.Generic.List[string]'
+$script:assertionRecommendations = 0
 
 $firstPartyPaths = if ($TargetKind -eq 'Ground') {
     @('Common', 'Devices', 'Generated', 'Ground', 'Platform')
@@ -55,7 +56,7 @@ function Get-FirstPartyCFiles {
 }
 
 function Get-CSourceWithoutCommentsOrLiterals {
-    param([Parameter(Mandatory = $true)][string]$Text)
+    param([Parameter(Mandatory = $true)][AllowEmptyString()][AllowNull()][string]$Text)
 
     $builder = New-Object System.Text.StringBuilder
     $state = 'normal'
@@ -93,7 +94,13 @@ function Get-CSourceWithoutCommentsOrLiterals {
             $terminator = if ($state -eq 'string') { '"' } else { "'" }
             if (($character -eq '\') -and (($index + 1) -lt $Text.Length)) {
                 [void]$builder.Append(' ')
-                [void]$builder.Append(' ')
+                # Preserve escaped physical newlines as well as source offsets.
+                # Otherwise LF continuations merge lines and hide functions.
+                if (($next -eq "`n") -or ($next -eq "`r")) {
+                    [void]$builder.Append($next)
+                } else {
+                    [void]$builder.Append(' ')
+                }
                 $index++
             } elseif ($character -eq $terminator) {
                 [void]$builder.Append(' ')
@@ -136,33 +143,192 @@ function Get-BraceDelta {
     return $openCount - $closeCount
 }
 
+function Get-CSourceWithoutDirectives {
+    param([string]$SanitizedText, [string]$RawText)
+
+    $lines = @($SanitizedText -split "`r?`n")
+    $rawLines = @($RawText -split "`r?`n")
+    $continuation = $false
+    for ($index = 0; $index -lt $lines.Count; $index++) {
+        if ($continuation -or ($lines[$index] -match '^\s*#')) {
+            # A physical backslash-newline splices even literal/comment text.
+            # Blank the complete directive, retaining physical line locations.
+            $continuation = $rawLines[$index].EndsWith('\')
+            $lines[$index] = ''
+        }
+    }
+    return ($lines -join "`n")
+}
+
+function Get-AssertionClosingParenthesis {
+    param([string]$Text, [int]$Start)
+
+    $depth = 0
+    for ($index = $Start; $index -lt $Text.Length; $index++) {
+        if ($Text[$index] -eq '(') { $depth++ }
+        if ($Text[$index] -eq ')') {
+            $depth--
+            if ($depth -eq 0) { return $index }
+        }
+    }
+    return -1
+}
+
+function Get-AssertionWithoutOuterParentheses {
+    param([AllowEmptyString()][string]$Text)
+
+    while (($Text.Length -ge 2) -and ($Text[0] -eq '(')) {
+        $end = Get-AssertionClosingParenthesis $Text 0
+        if ($end -ne ($Text.Length - 1)) { break }
+        $Text = $Text.Substring(1, $Text.Length - 2)
+    }
+    return $Text
+}
+
+function Get-AssertionObjectOperand {
+    param([string]$Text)
+
+    $operand = Get-AssertionWithoutOuterParentheses $Text
+    # Recognize a narrow C pointer-cast grammar, not arbitrary expressions.
+    $pointerCast = '^\([A-Za-z_]\w*(?:\*+(?:const|volatile|restrict)?)+\)(.+)$'
+    for ($index = 0; $index -lt $Text.Length; $index++) {
+        $cast = [regex]::Match($operand, $pointerCast)
+        if (-not $cast.Success) { break }
+        $operand = Get-AssertionWithoutOuterParentheses $cast.Groups[1].Value
+    }
+    return $operand
+}
+
+function Get-AssertionWithoutSizeofOperands {
+    param([string]$Text)
+
+    $builder = New-Object System.Text.StringBuilder
+    $start = 0
+    foreach ($match in [regex]::Matches($Text, '\bsizeof\(')) {
+        if ($match.Index -lt $start) { continue }
+        $end = Get-AssertionClosingParenthesis $Text ($match.Index + 6)
+        if ($end -lt 0) { continue }
+        [void]$builder.Append($Text.Substring($start, $match.Index - $start))
+        # Used only to detect predicates consisting solely of constants.
+        [void]$builder.Append('0')
+        $start = $end + 1
+    }
+    [void]$builder.Append($Text.Substring($start))
+    return $builder.ToString()
+}
+
+function Test-AssertionForcedBooleanConstant {
+    param([string]$Text)
+
+    # Only outer logical operators and literal operands are classified.
+    # Do not infer implications, aliases, guard dominance or nested logic.
+    if ($Text -match '[?:]') { return $false }
+    $orTerms = New-Object 'System.Collections.Generic.List[string]'
+    $andTerms = New-Object 'System.Collections.Generic.List[string]'
+    $orStart = 0
+    $andStart = 0
+    $depth = 0
+    for ($index = 0; $index -lt ($Text.Length - 1); $index++) {
+        if (($Text[$index] -eq '(') -or ($Text[$index] -eq '[')) { $depth++ }
+        if (($Text[$index] -eq ')') -or ($Text[$index] -eq ']')) { $depth-- }
+        if ($depth -ne 0) { continue }
+        $operator = $Text.Substring($index, 2)
+        if ($operator -eq '||') {
+            $orTerms.Add($Text.Substring($orStart, $index - $orStart))
+            $orStart = $index + 2
+            $index++
+        } elseif ($operator -eq '&&') {
+            $andTerms.Add($Text.Substring($andStart, $index - $andStart))
+            $andStart = $index + 2
+            $index++
+        }
+    }
+    if ($orTerms.Count -ne 0) {
+        $orTerms.Add($Text.Substring($orStart))
+        foreach ($term in $orTerms) {
+            if ((Get-AssertionWithoutOuterParentheses $term) -match '^(?:1[UuLl]*|true)$') {
+                return $true
+            }
+        }
+    } elseif ($andTerms.Count -ne 0) {
+        $andTerms.Add($Text.Substring($andStart))
+        foreach ($term in $andTerms) {
+            if ((Get-AssertionWithoutOuterParentheses $term) -match '^(?:0[UuLl]*|false)$') {
+                return $true
+            }
+        }
+    }
+    return $false
+}
+
 function Get-MeaningfulAssertionCount {
     param([string]$FunctionText, [string[]]$StaticArrayNames)
-    $count = 0
+    # This is a conservative syntactic eligibility count, not a proof of
+    # semantic usefulness. Unknown predicates still require human review.
+    $predicates = New-Object 'System.Collections.Generic.HashSet[string]'
+    $fixedObjects = @($StaticArrayNames) + @([regex]::Matches($FunctionText,
+        '(?m)^\s*(?:(?:static|const|volatile|unsigned|signed)\s+)*[A-Za-z_]\w*\s+([A-Za-z_]\w*)\s*\[[^\]]+\]\s*(?:[;=])|\b([A-Za-z_]\w*)\s*=\s*&[A-Za-z_]') |
+        ForEach-Object { if ($_.Groups[1].Success) { $_.Groups[1].Value } else { $_.Groups[2].Value } })
     foreach ($match in [regex]::Matches($FunctionText,
-            '\bSILVERSTAR_ASSERT\s*\(\s*([^,\r\n]+)')) {
-        if ($match.Groups[1].Value.Trim() -notmatch '^(?:0|1)(?:U|UL)?$') {
-            $count++
+            '\b(SILVERSTAR_ASSERT(?:_OBJECT)?)\s*\(')) {
+        $start = $match.Index + $match.Length
+        $depth = 0
+        $end = $start
+        for (; $end -lt $FunctionText.Length; $end++) {
+            $c = $FunctionText[$end]
+            if (($c -eq ',') -and ($depth -eq 0)) { break }
+            if ($c -eq '(') { $depth++ }
+            if ($c -eq ')') {
+                if ($depth -eq 0) { break }
+                $depth--
+            }
         }
-    }
-    foreach ($match in [regex]::Matches($FunctionText,
-            '\bSILVERSTAR_ASSERT_OBJECT\s*\(\s*([^,\r\n]+)')) {
-        $object = $match.Groups[1].Value.Trim()
-        if (($object -notmatch '^&') -and
-            ($StaticArrayNames -notcontains $object)) {
-            $count += 2
+        $predicate = Get-AssertionWithoutOuterParentheses (
+            $FunctionText.Substring($start, $end - $start) -replace '\s+', '')
+        if ($match.Groups[1].Value -eq 'SILVERSTAR_ASSERT_OBJECT') {
+            # A runtime pointer can provide one non-null contract. Natural
+            # alignment of an already typed pointer supplies no extra credit.
+            $predicate = Get-AssertionObjectOperand $predicate
+            if (($predicate -match '^&|^(?:NULL|0[UuLl]*)$') -or
+                ($fixedObjects -contains $predicate)) { continue }
+            $predicate = $predicate + '!=NULL'
         }
+        $nullComparison = [regex]::Match($predicate, '^(.+?)(?:!=|==)(?:NULL|0[UuLl]*)$')
+        if (-not $nullComparison.Success) {
+            $nullComparison = [regex]::Match($predicate, '^(?:NULL|0[UuLl]*)(?:!=|==)(.+)$')
+        }
+        if ($nullComparison.Success) {
+            $operand = Get-AssertionObjectOperand $nullComparison.Groups[1].Value
+            if (($operand -match '^&') -or ($fixedObjects -contains $operand)) { continue }
+        }
+        $constantView = Get-AssertionWithoutSizeofOperands $predicate
+        $withoutConstants = $constantView -replace '\b(?:0[xX][0-9a-fA-F]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][+-]?[0-9]+)?[UuLlFf]*\b', ''
+        $withoutConstants = $withoutConstants -replace '[()+!~<>=&|*/% -]', ''
+        if ($withoutConstants.Length -eq 0 -or
+            $predicate -match '^(?:true|false|TRUE|FALSE|NULL)$' -or
+            $predicate -match '^&[A-Za-z_]\w*(?:\[[^\]]+\])?(?:!=|==)NULL$' -or
+            $predicate -match '\+\+|--|(?<![=!<>])=(?!=)|\b_Alignof\b' -or
+            (Test-AssertionForcedBooleanConstant $predicate)) { continue }
+        $simple = $predicate
+        if (@($fixedObjects | Where-Object { $simple -eq ($_ + '!=NULL') -or $simple -eq ($_ + '==NULL') }).Count -ne 0) { continue }
+        if ($simple -match '^([A-Za-z_]\w*(?:(?:->|\.)\w+)*)(?:==|!=|<=|>=|<|>)\1$') { continue }
+        # Only the standard pure numerical classification predicates are
+        # mechanically eligible when the expression contains a function call.
+        $calls = @([regex]::Matches($predicate, '\b([A-Za-z_]\w*)\(') |
+            ForEach-Object { $_.Groups[1].Value })
+        if (@($calls | Where-Object { $_ -notin @('isfinite', 'isnan', 'isinf', 'sizeof') }).Count -ne 0) { continue }
+        [void]$predicates.Add($simple)
     }
-    return $count
+    return $predicates.Count
 }
 
 function Get-CFunctions {
-    param([Parameter(Mandatory = $true)][string]$SanitizedText)
+    param([Parameter(Mandatory = $true)][AllowEmptyString()][string]$SanitizedText)
 
     $lines = @($SanitizedText -split "`r?`n")
     $functions = New-Object 'System.Collections.Generic.List[object]'
     $staticArrayNames = @([regex]::Matches($SanitizedText,
-        '(?m)^\s*static\s+[^;\r\n=]+?\s+([A-Za-z_][A-Za-z0-9_]*)\s*\[[^\]]+\]\s*;') |
+        '(?m)^\s*static\s+[^;\r\n=]+?\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^\]]+\])?\s*(?:;|=)') |
         ForEach-Object { $_.Groups[1].Value })
     $globalDepth = 0
     $candidate = ''
@@ -298,6 +464,7 @@ $progressTotal = $files.Count + 2
 $progressCurrent = 0
 Write-Output "FCCG_PROGRESS|POWER10|PLAN|$progressTotal"
 $allFunctions = @()
+$utf8Decoder = New-Object System.Text.UTF8Encoding($false, $true)
 $patternRules = @(
     @{ Name = 'goto/setjmp/longjmp'; Pattern = '\bgoto\b|\b(?:setjmp|longjmp)\s*\(' },
     @{ Name = 'dynamic allocation'; Pattern = '\b(?:malloc|calloc|realloc|free|pvPortMalloc|vPortFree)\s*\(' },
@@ -319,10 +486,31 @@ foreach ($file in $files) {
     $progressCurrent++
     $progressSubject = $file.FullName.Substring($repoRoot.Length + 1)
     Write-Output "FCCG_PROGRESS|POWER10|BEGIN|$progressCurrent|$progressTotal|$progressSubject"
-    $rawText = Get-Content -Raw -LiteralPath $file.FullName
+    # PowerShell 5.1 otherwise uses the local Windows code page, which can
+    # consume punctuation in UTF-8 C text and silently reduce scan coverage.
+    try {
+        $sourceBytes = [System.IO.File]::ReadAllBytes($file.FullName)
+        $rawText = $utf8Decoder.GetString($sourceBytes)
+        if (($rawText.Length -ne 0) -and ($rawText[0] -eq [char]0xFEFF)) {
+            $rawText = $rawText.Substring(1)
+        }
+    } catch {
+        Add-PowerTenFailure -Message "Source cannot be decoded as UTF-8: $progressSubject"
+        Write-Output "FCCG_PROGRESS|POWER10|DONE|$progressCurrent|$progressTotal|$progressSubject"
+        continue
+    }
     $sanitized = Get-CSourceWithoutCommentsOrLiterals -Text $rawText
     $lines = @($sanitized -split "`r?`n")
     $relative = $file.FullName.Substring($repoRoot.Length + 1)
+    # Hash the exact bytes scanned; do not depend on optional PowerShell cmdlets.
+    $sourceHasher = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $sourceDigest = [System.BitConverter]::ToString(
+            $sourceHasher.ComputeHash($sourceBytes)).Replace('-', '').ToLowerInvariant()
+    } finally {
+        $sourceHasher.Dispose()
+    }
+    Write-Output (('POWER10_SOURCE|{0}|{1}') -f $relative, $sourceDigest)
 
     foreach ($rule in $patternRules) {
         $diagnostics = Get-PatternDiagnostics -File $file -Lines $lines `
@@ -352,10 +540,8 @@ foreach ($file in $files) {
         -Message ("double-pointer violation:`n  " +
             ($doublePointerDiagnostics -join "`n  "))
 
-    $functionLines = @($lines | ForEach-Object {
-        if ($_ -match '^\s*#') { '' } else { $_ }
-    })
-    $functions = @(Get-CFunctions -SanitizedText ($functionLines -join "`n"))
+    $functionText = Get-CSourceWithoutDirectives $sanitized $rawText
+    $functions = @(Get-CFunctions -SanitizedText $functionText)
     foreach ($function in $functions) {
         $allFunctions += [pscustomobject]@{
             File = $relative
@@ -373,16 +559,21 @@ foreach ($file in $files) {
 $progressCurrent++
 Write-Output "FCCG_PROGRESS|POWER10|BEGIN|$progressCurrent|$progressTotal|function_rules"
 foreach ($function in $allFunctions) {
+    Write-Output (('POWER10_RULE5_FUNCTION|{0}|{1}|{2}|{3}|{4}|{5}') -f
+        $TargetKind, $function.File, $function.StartLine, $function.Name,
+        $function.CodeLines, $function.AssertionCount)
+    Write-Output (('POWER10_FUNCTION_SCOPE|{0}|{1}|{2}|{3}|{4}') -f
+        $TargetKind, $function.File, $function.StartLine, $function.EndLine, $function.Name)
     Add-PowerTenCheck -Condition ($function.CodeLines -le 60) -Message (
         '{0}:{1}: function {2} has {3} non-comment code lines (maximum 60)' -f
         $function.File, $function.StartLine, $function.Name,
         $function.CodeLines)
-    if ($function.CodeLines -gt 20) {
-        Add-PowerTenCheck -Condition ($function.AssertionCount -ge 2) `
-            -Message (('{0}:{1}: function {2} has {3} runtime assertions; ' +
-                'functions over 20 lines require at least 2') -f
-                $function.File, $function.StartLine, $function.Name,
-                $function.AssertionCount)
+    # F Prime-inspired C adaptation: a review recommendation, not a density
+    # acceptance gate. Typed status/error paths require manual contract review.
+    if (($function.CodeLines -gt 10) -and ($function.AssertionCount -eq 0)) {
+        $script:assertionRecommendations++
+        Write-Output (('POWER10_RULE5_RECOMMENDATION|{0}|{1}|{2}|{3}|zero_runtime_candidates|nonblocking|manual_review_required') -f
+            $function.File, $function.StartLine, $function.Name, $function.CodeLines)
     }
     $bodyWithoutHeader = $function.Text.Substring(
         [Math]::Min($function.Text.Length,
@@ -400,6 +591,16 @@ foreach ($function in $allFunctions) {
                 $function.File, $function.StartLine, $function.Name)
     }
 }
+$assertionTotal = 0
+foreach ($function in $allFunctions) { $assertionTotal += $function.AssertionCount }
+$density = if ($allFunctions.Count -ne 0) { $assertionTotal / $allFunctions.Count } else { 0.0 }
+Write-Output (('POWER10_RULE5|{0}|files={1}|functions={2}|eligible_assertions={3}|average={4:F6}|informational|policy=fprime_inspired_c|semantic_review=required') -f
+    $TargetKind, $files.Count, $allFunctions.Count, $assertionTotal, $density)
+Add-PowerTenCheck -Condition ($allFunctions.Count -ne 0) `
+    -Message 'First-party function scan is empty; source coverage is not established.'
+Add-PowerTenCheck -Condition ($assertionTotal -gt 0) `
+    -Message 'Entire current target has zero eligible runtime assertion candidates; first-release protection failed.'
+Write-Output 'POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending'
 Write-Output "FCCG_PROGRESS|POWER10|DONE|$progressCurrent|$progressTotal|function_rules"
 
 $progressCurrent++
@@ -452,8 +653,9 @@ if ($script:failures.Count -ne 0) {
     exit 1
 }
 
-$successMessage = ("Power of Ten check passed: {0} checks, {1} " +
-    "first-party C files, {2} functions.") -f $script:checkCount,
-    $files.Count, $allFunctions.Count
+$successMessage = ("Power of Ten project text checks passed: {0} checks, {1} " +
+    "first-party C files, {2} functions; {3} assertion recommendations. " +
+    "Critical-contract review NOT PROVEN; manual acceptance pending.") -f $script:checkCount,
+    $files.Count, $allFunctions.Count, $script:assertionRecommendations
 Write-Host $successMessage -ForegroundColor Green
 Write-Output "FCCG_PROGRESS|POWER10|DONE|$progressCurrent|$progressTotal|build_policy"

@@ -52,6 +52,38 @@ def test_enabled_logging_keeps_complete_codec_gate(workspace_root, tmp_path):
     assert "Record Catalog, decoder profile" in result.stdout
 
 
+@pytest.mark.parametrize("relative", [
+    "Generated/unreviewed_audit.py",
+    "Generated/__pycache__/memory_audit.pyc",
+])
+def test_generated_audit_exception_does_not_hide_other_files(logging_disabled_project, relative):
+    project = logging_disabled_project
+    unexpected = project / relative
+    assert not unexpected.exists()
+    unexpected.parent.mkdir(parents=True, exist_ok=True)
+    unexpected.write_bytes(b"unreviewed fixture")
+    try:
+        result = _Architecture_Run(project, "unexpected_audit_" + unexpected.suffix)
+        assert result.returncode != 0
+        assert "outside the reviewed thin-glue set" in result.stdout
+    finally:
+        unexpected.unlink()
+
+
+def test_exact_auto_link_recipe_does_not_allow_another_python_generator(logging_disabled_project):
+    project = logging_disabled_project
+    makefile = project / "Makefile"
+    original = makefile.read_bytes()
+    try:
+        with makefile.open("a") as stream:
+            stream.write("\nunreviewed-generator:\n\tpython Tools/unreviewed_generator.py\n")
+        result = _Architecture_Run(project, "unexpected_generator")
+        assert result.returncode != 0
+        assert "invokes a generator" in result.stdout
+    finally:
+        makefile.write_bytes(original)
+
+
 @pytest.mark.parametrize("case", [
     "missing", "invalid", "duplicate", "literal_mismatch", "semantics_mismatch",
     "semantics_missing", "selected_source", "decoder_payload", "decoder_package",

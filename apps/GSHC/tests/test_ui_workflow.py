@@ -65,10 +65,6 @@ def ready_state(generation: int = 1) -> FlightControllerState:
     state.selftest_passed = True
     state.start_unlocked = True
     state.start_block_reason = 0
-    state.navigation.Navigation_Request(42)
-    state.navigation.Navigation_Declare(1, 42, 1)
-    state.navigation.algorithm_id = 1
-    state.navigation.Navigation_ApplyPreparation(PreparationSnapshot(42, 1, 1, 127, 127, 0, 0, 1, 7, 7, time.monotonic_ns()))
     return state
 
 
@@ -95,9 +91,10 @@ class UiWorkflowTests(unittest.TestCase):
         self.window.close()
         self.temporary_directory.cleanup()
 
-    def test_four_pages_are_always_manually_selectable(self) -> None:
+    def test_three_release_pages_are_always_manually_selectable(self) -> None:
         labels = [self.window.pages.tabText(index) for index in range(self.window.pages.count())]
-        self.assertEqual(labels, ["预飞行", "飞行", "后期处理", "磁力计校准"])
+        self.assertEqual(labels, ["预飞行", "飞行", "后期处理"])
+        self.assertFalse(hasattr(self.window, "magnetometer_calibration_page"))
         self.assertEqual(self.window.pages.objectName(), "pageTabs")
         self.assertEqual(self.window.pages.tabBar().objectName(), "pageNavigation")
         self.assertTrue(self.window.pages.tabBar().expanding())
@@ -106,13 +103,12 @@ class UiWorkflowTests(unittest.TestCase):
             self.window.preflight_page,
             self.window.flight_page,
             self.window.post_process_page,
-            self.window.magnetometer_calibration_page,
         ):
             self.window.pages.setCurrentWidget(page)
             self.assertIs(self.window.pages.currentWidget(), page)
 
     def test_header_brand_credit_version_and_localized_labels(self) -> None:
-        self.assertEqual(self.window.windowTitle(), "SilverStar_GSHC")
+        self.assertEqual(self.window.windowTitle(), "SilverStar GSHC")
         self.assertEqual(self.window.header_bar.objectName(), "headerBar")
         self.assertEqual(self.window.header_title.text(), "SilverStar地面站上位机")
         self.assertEqual(self.window.lbl_language.text(), "语言")
@@ -120,7 +116,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.assertEqual(self.window.header_credit.text(), "辰星引力开发")
         self.assertEqual(
             self.window.header_version.text(),
-            "SilverStar_GSHC 0.1.0",
+            "SilverStar GSHC 0.1.1",
         )
         header_layout = self.window.header_identity_layout
         self.assertLess(
@@ -140,7 +136,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.window.language_combo.setCurrentIndex(english_index)
         self.application.processEvents()
 
-        self.assertEqual(self.window.windowTitle(), "SilverStar_GSHC")
+        self.assertEqual(self.window.windowTitle(), "SilverStar GSHC")
         self.assertEqual(
             self.window.header_title.text(),
             "SilverStar Ground Station Host Computer",
@@ -150,7 +146,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.assertEqual(self.window.header_credit.text(), "by CXYL")
         self.assertEqual(
             self.window.header_version.text(),
-            "SilverStar_GSHC 0.1.0",
+            "SilverStar GSHC 0.1.1",
         )
 
     def test_post_process_uses_inline_progress_and_cancel_controls(self) -> None:

@@ -60,6 +60,7 @@ static uint8_t s_alignment_final_ready;
 static volatile uint8_t s_calibration_ready;
 static volatile uint8_t s_mission_attitude_frozen;
 static volatile uint8_t s_mission_running;
+static volatile uint8_t s_input_fault_latched;
 
 static PlatformCriticalState InsTask_IrqLock(void)
 {
@@ -120,6 +121,13 @@ static void InsTask_DiagnosticsPublish(void)
     if ((SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE) && (s_mission_running != 0U))
     {
         InsTask_NavigationDiagnosticsApply(&diagnostics);
+    }
+    if ((s_mission_running != 0U) && (s_input_fault_latched != 0U))
+    {
+        diagnostics.quaternion_valid = 0U;
+        diagnostics.velocity_valid = 0U;
+        diagnostics.position_valid = 0U;
+        diagnostics.software_attitude_propagation = 0U;
     }
     SystemInsDiagnostics_Publish(&diagnostics);
 }
@@ -574,7 +582,8 @@ static void InsTask_PureOutputPublish(const InsState *state)
     s_output.dt_s = state->dt_s;
     s_output.health_flags = state->health_flags;
     s_output.alignment_valid = s_mission_attitude_frozen;
-    s_output.ins_valid = state->valid;
+    s_output.ins_valid = (uint8_t)((state->valid != 0U) &&
+                                  (s_input_fault_latched == 0U));
     s_output.mission_running = s_mission_running;
     InsTask_OutputPublish();
 }
@@ -757,11 +766,45 @@ static void InsTask_PureRecordWrite(const InsImuSample *imu_sample,
     record.dt_s = state->dt_s;
     record.health_flags = state->health_flags;
     record.alignment_valid = s_mission_attitude_frozen;
-    record.ins_valid = state->valid;
+    record.ins_valid = (uint8_t)((state->valid != 0U) &&
+                                (s_input_fault_latched == 0U));
     (void)LoggerBus_PureInsPush(state->timestamp_us, imu_sample->valid_mask,
                                 &record);
 }
 #endif
+
+static void InsTask_InputReject(const InsImuSample *sample, uint32_t flags)
+{
+    uint32_t lock;
+    SILVERSTAR_ASSERT_OBJECT(sample, InsImuSample, SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT(s_mission_running != 0U, SILVERSTAR_ASSERT_MODULE_APP,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    lock = InsTask_IrqLock();
+    /* Keep last successful numbers/timestamp, but never advertise stale READY.
+     * A missing interval follows the existing mission health latch policy. */
+    s_input_fault_latched = 1U;
+    s_output.ins_valid = 0U;
+    s_output.health_flags |= flags;
+    InsTask_IrqUnlock(lock);
+    SystemNavigationHealth_ImuQualityRecord(sample->quality_flags |
+        SYSTEM_IMU_QUALITY_TIME_DISCONTINUITY);
+    InsTask_OutputPublish();
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_NONE)
+    {
+        InsState rejected = {0};
+        rejected.timestamp_us = sample->sample_timestamp_us;
+        rejected.update_count = s_output.update_seq;
+        rejected.health_flags = s_output.health_flags;
+        (void)memcpy(rejected.q_nb, s_output.q_nb, sizeof(rejected.q_nb));
+        (void)memcpy(rejected.velocity_n_mps, s_output.velocity_n_mps,
+                     sizeof(rejected.velocity_n_mps));
+        (void)memcpy(rejected.position_n_m, s_output.position_n_m,
+                     sizeof(rejected.position_n_m));
+        InsTask_PureRecordWrite(sample, &rejected);
+    }
+#endif
+}
 
 static void InsTask_Propagate(const InsImuSample *imu_sample)
 {
@@ -772,8 +815,10 @@ static void InsTask_Propagate(const InsImuSample *imu_sample)
     SILVERSTAR_ASSERT_OBJECT(imu_sample, InsImuSample,
         SILVERSTAR_ASSERT_MODULE_APP);
     SystemNavigationHealth_ImuQualityRecord(imu_sample->quality_flags);
-    if ((imu_sample->quality_flags & 0x72U) != 0U) { return; }
-    if (InsTask_SampleCorrect(imu_sample, &algorithm_sample) == 0U) { return; }
+    if ((imu_sample->quality_flags & 0x72U) != 0U)
+    { InsTask_InputReject(imu_sample, INS_HEALTH_INVALID_SAMPLE); return; }
+    if (InsTask_SampleCorrect(imu_sample, &algorithm_sample) == 0U)
+    { InsTask_InputReject(imu_sample, INS_HEALTH_INVALID_SAMPLE); return; }
     if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
     {
         if ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) &&
@@ -782,15 +827,22 @@ static void InsTask_Propagate(const InsImuSample *imu_sample)
         {
             InsTask_BodyPairBuild(&algorithm_sample);
         }
-        if (InsInertial_Update(&s_navigation_input.inertial,
-                &algorithm_sample, &state) != INS_INERTIAL_UPDATE_READY)
+        InsInertialUpdateResult result = InsInertial_Update(
+            &s_navigation_input.inertial, &algorithm_sample, &state);
+        if (result != INS_INERTIAL_UPDATE_READY)
         {
+            if (result == INS_INERTIAL_UPDATE_INVALID)
+            { InsTask_InputReject(imu_sample, state.health_flags); }
             return;
         }
     }
     else if (InsMechanization_Update(&s_navigation_input.pure_ins,
                  &algorithm_sample, &state) == 0U)
     {
+        if ((state.timestamp_us != 0U) &&
+            (state.health_flags & (INS_HEALTH_INVALID_SAMPLE |
+             INS_HEALTH_SAMPLE_GAP | INS_HEALTH_INVALID_QUATERNION)))
+        { InsTask_InputReject(imu_sample, state.health_flags); }
         return;
     }
     InsTask_InertialOutputsPublish(imu_sample, &state);
@@ -813,6 +865,7 @@ void AppTask_Ins(void *argument)
     SILVERSTAR_ASSERT_OBJECT(&s_navigation_input.pure_ins, InsMechanizationContext,
         SILVERSTAR_ASSERT_MODULE_APP);
     InsMechanization_Init(&s_navigation_input.pure_ins, SYSTEM_INS_GRAVITY_MPS2);
+    s_input_fault_latched = 0U;
     AttitudePreflight_Init(&s_preflight_attitude);
     AlignmentStrategy_Init(&s_alignment_strategy);
     (void)memset(&s_alignment_snapshot, 0, sizeof(s_alignment_snapshot));
@@ -974,6 +1027,7 @@ SystemDeviceResult InsTask_InitializeMission(void)
         return SYSTEM_DEVICE_INTERNAL_ERROR;
     }
     s_increment_sequence = 0U;
+    s_input_fault_latched = 0U;
     s_mission_running = 1U;
     s_output.ins_valid = 0U;
     s_output.mission_running = 1U;

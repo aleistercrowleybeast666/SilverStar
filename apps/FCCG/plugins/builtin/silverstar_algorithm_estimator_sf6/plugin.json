@@ -1,0 +1,319 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.estimator.sf6",
+  "name": "SF6 Fixed-Gain Navigation",
+  "type": "algorithm",
+  "class": "estimator",
+  "version": "0.1.0",
+  "description": "Six-state ENU fixed-gain complementary fusion; no covariance or statistical confidence.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.algorithm.common",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": [
+      {
+        "capability": "gnss.position",
+        "purpose": "measurement_update"
+      },
+      {
+        "capability": "gnss.velocity",
+        "purpose": "measurement_update"
+      },
+      {
+        "capability": "barometer.altitude",
+        "purpose": "measurement_update"
+      }
+    ]
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.estimator"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Estimator/SF6/Src/navigation_sf6.c",
+      "Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Estimator/SF6/Inc"
+    ],
+    "defines": [
+      "SYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_SF6",
+      "SYSTEM_BUILD_ESTIMATOR_ENABLED=0U"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Estimator/SF6",
+      "Tests/Host"
+    ]
+  },
+  "metadata": {
+    "arithmetic_requirements": [
+      "fp32"
+    ],
+    "display_names": {
+      "zh_CN": "SF6算法",
+      "en_US": "SF6 Algorithm"
+    },
+    "algorithm_revision": 1,
+    "navigation_contract": "silverstar.navigation/1",
+    "algorithm_descriptors": [
+      {
+        "order": 4,
+        "class": "SYSTEM_ALGORITHM_CLASS_FUSION",
+        "algorithm": "SYSTEM_FUSION_ALGORITHM",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "name_hash": "0x53463631UL"
+      }
+    ],
+    "source_origins": {
+      "default": "silverstar_sf6"
+    },
+      "delay_contract": {
+        "history_capacity": 256,
+        "event_capacity": 256,
+        "window_us": 600000,
+        "alignment": "previous_completed_prediction_boundary",
+        "maximum_boundary_error_us": 20000,
+        "observation_replay": "measurement_timestamp_then_ascending_group",
+        "publication": "validate_complete_replay_before_commit",
+        "capacity": "configured_gnss_four_groups_plus_max_imu_barometer_rate_with_closed_window_margin"
+    },
+    "gain_defaults": "Initial engineering defaults; not bench-tuned and not an optimality claim.",
+    "qualified_timing_profiles": [
+      "cortex_m4f_hardfp"
+    ],
+      "replay_contract": {
+        "window_ms": 600,
+        "history_capacity": 256,
+        "event_capacity": 256
+    }
+  },
+  "selection": {
+    "kind": "strategy",
+    "slot": "estimator",
+    "required": false,
+    "allow_none": true,
+    "ui_order": 30,
+    "none_defines": [
+      "SYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_NONE",
+      "SYSTEM_BUILD_ESTIMATOR_ENABLED=0U"
+    ]
+  },
+  "algorithm_parameters": {
+    "schema_id": "silverstar.algorithm-parameters/1.0",
+    "parameters": [
+      {
+        "id": "gain_ve",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1.0,
+        "precision": 4,
+        "step": 0.01,
+        "group": "basic",
+        "order": 0,
+        "generated_symbol": "SYSTEM_SF6_GAIN_VE",
+        "display_names": {
+          "zh_CN": "vE 固定增益",
+          "en_US": "vE fixed gain"
+        },
+        "description": {
+          "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+          "en_US": "Initial engineering default, not bench-tuned or optimal."
+        }
+      },
+      {
+        "id": "gain_vn",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1.0,
+        "precision": 4,
+        "step": 0.01,
+        "group": "basic",
+        "order": 1,
+        "generated_symbol": "SYSTEM_SF6_GAIN_VN",
+        "display_names": {
+          "zh_CN": "vN 固定增益",
+          "en_US": "vN fixed gain"
+        },
+        "description": {
+          "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+          "en_US": "Initial engineering default, not bench-tuned or optimal."
+        }
+      },
+      {
+        "id": "gain_vu",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1.0,
+        "precision": 4,
+        "step": 0.01,
+        "group": "basic",
+        "order": 2,
+        "generated_symbol": "SYSTEM_SF6_GAIN_VU",
+        "display_names": {
+          "zh_CN": "vU 固定增益",
+          "en_US": "vU fixed gain"
+        },
+        "description": {
+          "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+          "en_US": "Initial engineering default, not bench-tuned or optimal."
+        }
+      },
+      {
+        "id": "gain_pe",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1.0,
+        "precision": 4,
+        "step": 0.01,
+        "group": "basic",
+        "order": 3,
+        "generated_symbol": "SYSTEM_SF6_GAIN_PE",
+        "display_names": {
+          "zh_CN": "pE 固定增益",
+          "en_US": "pE fixed gain"
+        },
+        "description": {
+          "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+          "en_US": "Initial engineering default, not bench-tuned or optimal."
+        }
+      },
+      {
+        "id": "gain_pn",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1.0,
+        "precision": 4,
+        "step": 0.01,
+        "group": "basic",
+        "order": 4,
+        "generated_symbol": "SYSTEM_SF6_GAIN_PN",
+        "display_names": {
+          "zh_CN": "pN 固定增益",
+          "en_US": "pN fixed gain"
+        },
+        "description": {
+          "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+          "en_US": "Initial engineering default, not bench-tuned or optimal."
+        }
+      },
+      {
+        "id": "gain_pu",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1.0,
+        "precision": 4,
+        "step": 0.01,
+        "group": "basic",
+        "order": 5,
+        "generated_symbol": "SYSTEM_SF6_GAIN_PU",
+        "display_names": {
+          "zh_CN": "pU 固定增益",
+          "en_US": "pU fixed gain"
+        },
+        "description": {
+          "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。pU 同时用于 GNSS 高度和气压相对高度。",
+          "en_US": "Initial engineering default, not bench-tuned or optimal.Shared by GNSS height and barometer relative altitude."
+        }
+      },
+      {
+        "id": "gnss_position_measurement_delay_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 550,
+        "precision": 0,
+        "step": 5,
+        "group": "advanced",
+        "order": 6,
+        "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
+        "display_names": {
+          "en_US": "GNSS position measurement delay",
+          "zh_CN": "GNSS 位置量测延迟"
+        },
+        "description": {
+          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+        }
+      },
+      {
+        "id": "gnss_velocity_measurement_delay_ms",
+        "type": "integer",
+        "default": 270,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 550,
+        "precision": 0,
+        "step": 5,
+        "group": "advanced",
+        "order": 7,
+        "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
+        "display_names": {
+          "en_US": "GNSS velocity measurement delay",
+          "zh_CN": "GNSS 速度量测延迟"
+        },
+        "description": {
+          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+        }
+      },
+      {
+        "id": "baro_measurement_delay_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 550,
+        "precision": 0,
+        "step": 5,
+        "group": "advanced",
+        "order": 8,
+        "generated_symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
+        "display_names": {
+          "en_US": "Barometer measurement delay",
+          "zh_CN": "气压高度量测延迟"
+        },
+        "description": {
+          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+        }
+      }
+    ]
+  }
+}

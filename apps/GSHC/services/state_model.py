@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Iterable
 
 from config import MAX_LIVE_POINTS, PLOT_WINDOW_SECONDS, UI_EVENT_HISTORY_LIMIT
-from services.navigation_state import NavigationStartResult, NavigationState
+from services.navigation_state import NavigationState
 from protocol.air import AirCapabilityMessage, AirSensorStatusMessage
 from protocol.common import (
     AirAckResult,
@@ -464,6 +464,7 @@ class FlightControllerState:
     handshake: HandshakeDiagnostics = field(default_factory=HandshakeDiagnostics)
     profile_supported: bool | None = None
     capability_error: str = ""
+    controller_restart_suspected: bool = False
     lifecycle_state: int | None = None
     system_ready: bool = False
     selftest_passed: bool = False
@@ -539,7 +540,8 @@ class FlightControllerState:
         return enum_name(AirAckResult, self.start_block_reason)
 
     def air_command_link_allowed(self) -> bool:
-        if not self.connected or not self.capability_acked or self.capability is None:
+        if (not self.connected or not self.capability_acked or self.capability is None
+                or self.controller_restart_suspected):
             return False
         if not self.capability.profile_supported:
             return False
@@ -606,7 +608,6 @@ class FlightControllerState:
             and self.alignment.ready
             and self.system_ready
             and self.start_unlocked
-            and self.navigation.Navigation_StartCheck() is NavigationStartResult.ALLOWED
         )
 
     def start_ready(self) -> bool:

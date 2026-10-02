@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-PRODUCT_NAME = "SilverStar_FCCG"
+PRODUCT_NAME = "SilverStar SCG"
 SILVERSTAR_PLATFORM_VERSION = (Path(__file__).resolve().parents[5] / "VERSION").read_text(encoding="ascii").strip()
 
 _VERSION_PARTS = tuple(
@@ -16,9 +16,8 @@ SILVERSTAR_PLATFORM_VERSION_MINOR = _VERSION_PARTS[1]
 SILVERSTAR_PLATFORM_VERSION_PATCH = _VERSION_PARTS[2]
 SILVERSTAR_PLATFORM_ID_SUFFIX = SILVERSTAR_PLATFORM_VERSION.replace(".", "_")
 SILVERSTAR_BUILD_ID = f"SilverStar_{SILVERSTAR_PLATFORM_ID_SUFFIX}"
-SILVERSTAR_CORE_COMPONENT_ID = (
-    f"silverstar.core.{SILVERSTAR_PLATFORM_ID_SUFFIX}"
-)
+# The installed core plugin has its own schema/payload version.
+SILVERSTAR_CORE_COMPONENT_ID = "silverstar.core.0_1_0"
 SILVERSTAR_CORE_PACKAGE_SLUG = SILVERSTAR_CORE_COMPONENT_ID.replace(".", "_")
 SILVERSTAR_LOG_BUILD_TAG = (
     "SILV"

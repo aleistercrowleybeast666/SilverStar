@@ -144,6 +144,9 @@ class BuildRunner:
             f"CONFIG={action.Configuration_Get()}",
         )
         overrides: list[str] = []
+        memory_layout = getattr(model.build, "memory_layout", "legacy")
+        if memory_layout != "legacy":
+            overrides.append(f"MEMORY_LAYOUT={memory_layout}")
         compiler_path = tool_paths.get("compiler", model.build.gcc_path)
         if compiler_path:
             overrides.append(

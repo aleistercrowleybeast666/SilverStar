@@ -250,15 +250,53 @@ function Get-ArchitectureLoggingSelection {
     return $enabled
 }
 
+# CubeMX imports own their original Core/FATFS paths under HardwareGenerated.
+# Board scopes remain mandatory for board-plugin projects and remain scanned
+# if a custom project contains a Board directory. Missing/invalid mode fails.
+$projectConfiguration = Get-Content -Raw -Encoding UTF8 -LiteralPath (
+    Join-Path $repoRoot 'SilverStar.ssproject') | ConvertFrom-Json
+$hardwareMode = [string]$projectConfiguration.hardware.mode
+Assert-ArchitectureCondition -Condition ($hardwareMode -in @('board_plugin', 'custom')) `
+    -Message 'Generated project must explicitly select board-plugin or custom hardware.'
+$boardCodePaths = @('Board')
+$cubeCorePath = 'Core'
+$iocPath = 'Flight_Controller0.5.ioc'
+$fatfsConfigurationPath = 'FATFS\Target\ffconf.h'
+$manifestDirectories = @('BuildSystem', 'Targets', 'Platform', 'Devices',
+    'Board', 'FlightLogic', 'Generated')
+if ($hardwareMode -eq 'custom') {
+    $cubeRoot = 'HardwareGenerated\STM32CubeMX'
+    Assert-ArchitectureCondition `
+        -Condition (([string]$projectConfiguration.components.board -eq '') -and
+            ([string]$projectConfiguration.hardware.snapshot_id -cmatch '^[a-f0-9]{64}$') -and
+            (Test-Path -LiteralPath (Join-Path $repoRoot $cubeRoot) -PathType Container)) `
+        -Message 'Custom hardware requires an imported snapshot and no selected Board plugin.'
+    $importedIocName = [string]$projectConfiguration.hardware.ioc_file
+    $validIocName = ($importedIocName -match '^[^\\/:*?"<>|]+\.ioc$') -and
+        ($importedIocName -notin @('.', '..'))
+    Assert-ArchitectureCondition -Condition $validIocName `
+        -Message 'Custom hardware IOC metadata must name one snapshot-local IOC file.'
+    if ($validIocName) {
+        $iocPath = $cubeRoot + '\' + $importedIocName
+    }
+    $cubeCorePath = $cubeRoot + '\Core'
+    $fatfsConfigurationPath = $cubeRoot + '\FATFS\Target\ffconf.h'
+    $manifestDirectories += 'HardwareGenerated'
+    if (-not (Test-Path -LiteralPath (Join-Path $repoRoot 'Board') -PathType Container)) {
+        $boardCodePaths = @()
+        $manifestDirectories = @($manifestDirectories | Where-Object { $_ -ne 'Board' })
+    }
+}
+
 $portableCodePaths = @(
     'System', 'Algorithm', 'Protocol', 'Devices', 'Interfaces', 'Modules',
-    'Common', 'Platform\Inc', 'Board', 'FlightLogic'
-)
+    'Common', 'Platform\Inc', 'FlightLogic'
+) + $boardCodePaths
 $firstPartyRuntimePaths = @(
-    'APP', 'Algorithm', 'Board', 'Common', 'Devices', 'FlightLogic',
+    'APP', 'Algorithm', 'Common', 'Devices', 'FlightLogic',
     'Generated', 'Interfaces', 'Modules', 'OS', 'Platform', 'Protocol',
     'System', 'Targets'
-)
+) + $boardCodePaths
 $systemLayerPaths = @(
     'System', 'Algorithm', 'FlightLogic', 'Protocol', 'Interfaces', 'Modules'
 )
@@ -326,7 +364,7 @@ Assert-NoArchitecturePattern -Name `
 
 Assert-NoArchitecturePattern -Name `
     'CMSIS-RTOS2 or defaultTask remains in first-party application code.' `
-    -Paths @('APP', 'Core', 'OS', 'System', 'Devices', 'Platform') `
+    -Paths @('APP', $cubeCorePath, 'OS', 'System', 'Devices', 'Platform') `
     -Pattern ('(?i)\bcmsis_os2?\b|\bosThread[A-Za-z0-9_]*\b|' +
         '\bosDelay\b|\bosKernel[A-Za-z0-9_]*\b|\bdefaultTask\b|' +
         '\bStartDefaultTask\b')
@@ -343,7 +381,7 @@ Assert-NoArchitecturePattern -Name `
 
 Assert-NoArchitecturePattern -Name `
     'A non-static FreeRTOS object creation API remains in first-party code.' `
-    -Paths @('APP', 'OS', 'Core') `
+    -Paths @('APP', 'OS', $cubeCorePath) `
     -Pattern '\bxTaskCreate\s*\(|\bxQueueCreate\s*\(|\bxSemaphoreCreate(?:Binary|Mutex|Counting)\s*\('
 
 Assert-NoArchitecturePattern -Name `
@@ -376,6 +414,9 @@ $legacyPaths = @(
     'Protocol\SSLOG\generated',
     'Tools\generate_sslog.py'
 )
+if ($hardwareMode -eq 'custom') {
+    $legacyPaths += @(($cubeCorePath + '\Src\freertos.c'), ($cubeCorePath + '\Inc\FreeRTOSConfig.h'))
+}
 foreach ($legacyPath in $legacyPaths) {
     Assert-PathAbsent -RelativePath $legacyPath
 }
@@ -413,6 +454,11 @@ $expectedGeneratedFiles = @(
     'Generated\project_sources.mk',
     'Generated\module.mk'
 ) | Sort-Object
+if (Test-Path -LiteralPath (Join-Path $repoRoot 'Generated\memory_audit.py') -PathType Leaf) {
+    # Exact shared resource parser emitted by current FCCG. Old projects may
+    # omit it; the auto Make dependency requires it when auto is selected.
+    $expectedGeneratedFiles = @($expectedGeneratedFiles + 'Generated\memory_audit.py' | Sort-Object)
+}
 if (-not $loggingEnabled) {
     $disabledGeneratedFiles = @(
         'Generated\Inc\project_log_config.h', 'Generated\Inc\project_log_decoder_profile.h',
@@ -433,12 +479,10 @@ Assert-NoArchitecturePattern -Name `
         '\bInsMechanization_|\bSystemLifecycle_(?:Process|Enter)')
 
 $manifestFiles = @('Makefile') + @(
-    Get-ChildItem -LiteralPath (Join-Path $repoRoot 'BuildSystem'),
-        (Join-Path $repoRoot 'Targets'), (Join-Path $repoRoot 'Platform'),
-        (Join-Path $repoRoot 'Devices'), (Join-Path $repoRoot 'Board'),
-        (Join-Path $repoRoot 'FlightLogic'), (Join-Path $repoRoot 'Generated') `
-        -Recurse -File -Filter '*.mk' |
-        ForEach-Object { $_.FullName.Substring($repoRoot.Length + 1) }
+    foreach ($directory in $manifestDirectories) {
+        Get-ChildItem -LiteralPath (Join-Path $repoRoot $directory) -Recurse -File -Filter '*.mk' |
+            ForEach-Object { $_.FullName.Substring($repoRoot.Length + 1) }
+    }
 )
 Assert-NoArchitecturePattern -Name `
     'Authoritative build manifests use wildcard scanning or object flattening.' `
@@ -452,13 +496,24 @@ Assert-NoArchitecturePattern -Name `
 
 # The standalone stack report reads an already linked ELF. It is not a source
 # generator and no compilation target may depend on it. Permit only its exact
-# recipe; continue rejecting every other Python invocation in build manifests.
+# recipe. The explicitly selected auto adapter links existing objects only;
+# its exact recipe is also allowed, never a source/catalog generator.
 $stackReportBlock = 'stack-report: all' + "`n`t" +
     'python Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
+$layoutStackReportBlock = 'stack-report: all' + "`n`t" +
+    'python Tools/check_task_stacks.py --config $(CONFIG) --memory-layout $(MEMORY_LAYOUT) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
 foreach ($manifestFile in $manifestFiles) {
     $buildContent = (Get-Content -Raw -LiteralPath (Join-Path $repoRoot $manifestFile)).Replace("`r`n", "`n")
     if ($manifestFile -eq 'Makefile') {
         $buildContent = $buildContent.Replace($stackReportBlock, '')
+        $buildContent = $buildContent.Replace($layoutStackReportBlock, '')
+        $autoLinkRecipe = "`t" + '$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))' + "`n"
+        $buildContent = $buildContent.Replace($autoLinkRecipe, '')
+        foreach ($autoMetadata in @('PYTHON ?= python',
+            'BUILD_MANIFESTS += Tools/auto_memory_layout.py',
+            'BUILD_MANIFESTS += Generated/memory_audit.py')) {
+            $buildContent = $buildContent.Replace($autoMetadata + "`n", '')
+        }
         $buildContent = [regex]::Replace($buildContent, '(?m)^\.PHONY:.*$', '')
     }
     Assert-ArchitectureCondition `
@@ -468,14 +523,16 @@ foreach ($manifestFile in $manifestFiles) {
 
 Assert-NoArchitecturePattern -Name `
     'FatFs retains a dynamic allocation hook.' `
-    -Paths @('FATFS\Target\ffconf.h') `
+    -Paths @($fatfsConfigurationPath) `
     -Pattern '(?i)\b(?:pvPortMalloc|vPortFree|ff_malloc|ff_free)\b'
 
 Write-Output 'FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries'
 Write-Output 'FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency'
+. (Join-Path $PSScriptRoot 'read_firmware_identity.ps1')
+$firmwareIdentity = FirmwareIdentity_Read -ProjectRoot $repoRoot
 Assert-FileContainsPattern -RelativePath 'Makefile' `
-    -Pattern 'TARGET\s*:=\s*SilverStar_0_1_0' `
-    -Message 'Authoritative firmware target is not SilverStar_0_1_0.'
+    -Pattern ('(?m)^TARGET\s*:=\s*' + [regex]::Escape($firmwareIdentity.build_target) + '\s*$') `
+    -Message 'Authoritative firmware target does not match the project identity.'
 Assert-FileContainsPattern -RelativePath 'Makefile' `
     -Pattern 'BUILD_ROOT\s*:=\s*build/FCCG/\$\(TARGET_PROFILE\)/\$\(CONFIG\)' `
     -Message 'Build output is not partitioned by target and configuration.'
@@ -562,37 +619,39 @@ Assert-FileContainsPattern -RelativePath '.vscode\tasks.json' `
 Assert-FileContainsPattern -RelativePath 'STM32F407XX_FLASH.ld' `
     -Pattern '_Min_Heap_Size\s*=\s*0x0\s*;' `
     -Message 'The target linker script still reserves a C runtime heap.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'ProjectManager\.HeapSize=0x0' `
     -Message 'CubeMX project metadata does not preserve the zero-heap target.'
 Assert-NoArchitecturePattern -Name `
     'CubeMX project metadata still owns FreeRTOS or a default task.' `
-    -Paths @('Flight_Controller0.5.ioc') -Extensions @('.ioc') `
+    -Paths @($iocPath) -Extensions @('.ioc') `
     -Pattern '(?i)FREERTOS|CMSIS_V2|defaultTask|rtos\.0\.ip'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'NVIC\.TimeBaseIP=TIM1' `
     -Message 'CubeMX no longer assigns the HAL tick to TIM1.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'USART1\.BaudRate=230400' `
     -Message 'CubeMX IMU UART baudrate changed from 230400.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'USART2\.BaudRate=921600' `
     -Message 'CubeMX GNSS UART baudrate changed from 921600.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'USART3\.BaudRate=230400' `
     -Message 'CubeMX console UART baudrate changed from 230400.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'Dma\.USART1_RX\.0\.Mode=DMA_CIRCULAR' `
     -Message 'CubeMX IMU RX DMA is no longer circular.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'Dma\.USART2_RX\.2\.Mode=DMA_CIRCULAR' `
     -Message 'CubeMX GNSS RX DMA is no longer circular.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'Dma\.USART3_RX\.4\.Mode=DMA_CIRCULAR' `
     -Message 'CubeMX console RX DMA is no longer circular.'
 
-$iocContent = Get-Content -Raw -LiteralPath `
-    (Join-Path $repoRoot 'Flight_Controller0.5.ioc')
+$iocContent = ''
+if (Test-Path -LiteralPath (Join-Path $repoRoot $iocPath) -PathType Leaf) {
+    $iocContent = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $iocPath)
+}
 $requiredIocEntries = @(
     @('Mcu.IPNb=11', 'CubeMX peripheral count does not reflect FreeRTOS removal.'),
     @('NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4', 'CubeMX NVIC priority grouping changed.'),
@@ -880,7 +939,7 @@ Assert-FileContainsPattern -RelativePath 'OS\FreeRTOS\freertos_hooks.c' `
 Assert-FileContainsPattern -RelativePath 'Targets\SilverStar_F407\Src\freertos_target_irq.c' `
     -Pattern '\bxPortSysTickHandler\s*\(' `
     -Message 'STM32F407 SysTick is not routed to the native FreeRTOS port.'
-Assert-FileContainsPattern -RelativePath 'Core\Src\stm32f4xx_hal_timebase_tim.c' `
+Assert-FileContainsPattern -RelativePath ($cubeCorePath + '\Src\stm32f4xx_hal_timebase_tim.c') `
     -Pattern '\bTIM1\b' `
     -Message 'HAL tick is no longer kept on TIM1.'
 Assert-FileContainsPattern -RelativePath 'APP\Src\app_tasks.c' `
@@ -1213,7 +1272,9 @@ try {
         '0x27|FLIGHT_LOG_RECORD_NAV_QUALITY|NAV_QUALITY|1|100|FLIGHT_LOG_NAV_QUALITY_PAYLOAD_SIZE|FlightLogNavigationQualityRecord|navigation_quality|native_epoch_us,u64,1;receive_us,u64,1;evaluation_us,u64,1;window_start_us,u64,1;window_end_us,u64,1;evidence_age_us,u64,1;native_sequence,u32,1;source_id,u32,1;calibration_generation,u32,1;covered_us,u32,1;position_epoch_count,u32,1;velocity_epoch_count,u32,1;closure_en_m,f32,2;closure_norm_m,f32,1;variance_scale,f32,1;quality_revision,u8,1;physical_mask,u8,1;admitted_mask,u8,1;accepted_mask,u8,1;nav_output_valid,u8,1;health,u8,1;evidence_valid,u8,1;numsv,u8,1;window_reason,u8,1;numsv_valid,u8,1;window_index,u8,1;quality_degraded_mask,u8,1',
         '0x28|FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE|ALIGNMENT_EVIDENCE|1|48|FLIGHT_LOG_ALIGNMENT_EVIDENCE_PAYLOAD_SIZE|FlightLogAlignmentEvidenceRecord|alignment_evidence|alignment_algorithm,u8,1;constraint_count,u8,1;valid_pair_count,u8,1;yaw_authoritative,u8,1;imu_source_instance,u8,1;magnetometer_instance,u8,1;external_source_instance,u8,1;failure_reason,u8,1;magnetometer_physical_device_id,u16,1;flags,u16,1;mag_calibration_generation,u32,1;mag_calibration_set_hash,u32,1;first_timestamp_us,u64,1;last_timestamp_us,u64,1;minimum_pair_sine,f32,1;rms_mismatch_rad,f32,1;max_mismatch_rad,f32,1',
         '0x29|FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY|MISSION_SNAPSHOT_IDENTITY|1|24|FLIGHT_LOG_MISSION_SNAPSHOT_IDENTITY_PAYLOAD_SIZE|FlightLogMissionSnapshotIdentityRecord|mission_snapshot_identity|mission_id,u32,1;commit_generation,u32,1;snapshot_sequence,u32,1;imu_calibration_generation,u32,1;mag_calibration_set_hash,u32,1;base_instance,u8,1;ready,u8,1;reserved,u16,1',
-        '0x2A|FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY|MAG_CALIBRATION_IDENTITY|1|16|FLIGHT_LOG_MAG_CALIBRATION_IDENTITY_PAYLOAD_SIZE|FlightLogMagCalibrationIdentityRecord|mag_calibration_identity|physical_device_id,u16,1;instance_id,u8,1;active,u8,1;saved,u8,1;load_error,u8,1;reserved,u16,1;generation,u32,1;calibration_set_hash,u32,1'
+        '0x2A|FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY|MAG_CALIBRATION_IDENTITY|1|16|FLIGHT_LOG_MAG_CALIBRATION_IDENTITY_PAYLOAD_SIZE|FlightLogMagCalibrationIdentityRecord|mag_calibration_identity|physical_device_id,u16,1;instance_id,u8,1;active,u8,1;saved,u8,1;load_error,u8,1;reserved,u16,1;generation,u32,1;calibration_set_hash,u32,1',
+        '0x2B|FLIGHT_LOG_RECORD_SF6_STATE|SF6_STATE|1|72|FLIGHT_LOG_SF6_STATE_PAYLOAD_SIZE|FlightLogSf6StateRecord|sf6_state|snapshot_id,u32,1;algorithm_id,u8,1;algorithm_revision,u8,1;health,u8,1;reserved,u8,1;position_enu_m,f32,3;velocity_enu_mps,f32,3;q_nb,f32,4;gain,f32,6',
+        '0x2C|FLIGHT_LOG_RECORD_SF6_MEASUREMENT|SF6_MEASUREMENT|1|56|FLIGHT_LOG_SF6_MEASUREMENT_PAYLOAD_SIZE|FlightLogSf6MeasurementRecord|sf6_measurement|sample_timestamp_us,u64,1;receive_timestamp_us,u64,1;measurement_timestamp_us,u64,1;evaluation_timestamp_us,u64,1;boundary_timestamp_us,u64,1;sequence,u32,1;group,u8,1;physically_valid,u8,1;result,u8,1;effective_update,u8,1;observation,f32,2'
     )
     Assert-ArchitectureCondition -Condition ($sslogRecords.Count -eq $sslogWireIdentities.Count) `
         -Message 'SSLOG Record Catalog must contain exactly the reviewed wire codecs.'
@@ -1303,7 +1364,7 @@ if ($script:failures.Count -ne 0) {
 Write-Output ("SilverStar architecture check passed: checks={0} failures=0" -f `
     $script:checkCount)
 if ($loggingEnabled) {
-    Write-Output 'SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.'
+    Write-Output 'SSLOG codecs are ordinary endian-aware protocol source; only explicit auto linking requires Python.'
     Write-Output 'Record Catalog, decoder profile, and static instance facade contracts are valid.'
 }
 else {
