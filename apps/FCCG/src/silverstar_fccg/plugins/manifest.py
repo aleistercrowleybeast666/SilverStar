@@ -7,7 +7,7 @@ import re
 from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import StrEnum
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from silverstar_fccg.core.errors import FccgError
@@ -507,14 +507,15 @@ class PluginManifest:
                     f"Plugin payload root is a symlink: {root_name}"
                 )
             if root.is_file():
-                files.append(root)
+                if not PayloadCachePath_Is(root.relative_to(self.payload_root)):
+                    files.append(root)
             elif root.is_dir():
                 for path in sorted(root.rglob("*")):
                     if path.is_symlink():
                         raise PluginManifestError(
                             f"Plugin payload contains a symlink: {path}"
                         )
-                    if path.is_file():
+                    if path.is_file() and not PayloadCachePath_Is(path.relative_to(self.payload_root)):
                         files.append(path)
             else:
                 raise PluginManifestError(f"Missing payload root: {root_name}")
@@ -525,6 +526,15 @@ class PluginManifest:
 
     def ManifestSha256_Get(self) -> str:
         return hashlib.sha256(self.manifest_path.read_bytes()).hexdigest()
+
+
+def PayloadCachePath_Is(relative: str | Path) -> bool:
+    """Only Python cache artifacts; unsafe ownership paths are never ignored."""
+    text = str(relative).replace("\\", "/")
+    portable = PurePosixPath(text)
+    if portable.is_absolute() or any(part == ".." or ":" in part for part in portable.parts):
+        return False
+    return "__pycache__" in portable.parts or portable.suffix.casefold() in {".pyc", ".pyo"}
 
 
 def _StringTuple_Get(value: Any, field_name: str) -> tuple[str, ...]:

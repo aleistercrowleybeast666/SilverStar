@@ -353,7 +353,6 @@ class FccgService:
         staging = policy.Path_Resolve(policy.root / ".fccg-save-as-staging")
         policy.Directory_Ensure(staging)
         excluded_directories = {
-            "build",
             "__pycache__",
             ".pytest_cache",
             ".cache",
@@ -370,6 +369,7 @@ class FccgService:
             ".map",
             ".lst",
             ".pyc",
+            ".pyo",
             ".su",
             ".gcda",
             ".gcno",
@@ -388,6 +388,7 @@ class FccgService:
                         relative = source_path.relative_to(source)
                         if (
                             directory_name in excluded_directories
+                            or relative.parts == ("build",)
                             or (
                                 len(relative.parts) > 1
                                 and relative.parts[0] == ".fccg"
@@ -432,13 +433,15 @@ class FccgService:
                 )
                 staged_plan = staged_assembler.Plan(model, staged_project)
                 if not staged_plan.valid:
+                    conflicts = tuple(operation for operation in staged_plan.operations
+                                      if operation.operation == "CONFLICT")
                     raise FccgError(
                         "error.project_validation_failed",
-                        {"count": len(staged_plan.validation.issues)},
-                        "\n".join(
-                            f"[{issue.code}] {issue.message}"
-                            for issue in staged_plan.validation.issues
-                        ),
+                        {"count": len(staged_plan.validation.issues) + len(conflicts)},
+                        "\n".join((
+                            *(f"[{issue.code}] {issue.message}" for issue in staged_plan.validation.issues),
+                            *(f"[CONFLICT] {operation.target}: {operation.detail}" for operation in conflicts),
+                        )),
                     )
                 if staged_plan.dangerous and not confirm_dangerous:
                     raise FccgError(
