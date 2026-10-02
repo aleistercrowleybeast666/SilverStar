@@ -36,6 +36,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QPlainTextEdit,
     QStackedWidget,
     QStatusBar,
     QVBoxLayout,
@@ -401,6 +402,9 @@ class MainWindow(QMainWindow):
         self.power10_export_button = QPushButton()
         self.power10_export_button.setEnabled(False)
         self.power10_export_button.clicked.connect(self._Power10Report_Export)
+        self.system_log_button = QPushButton()
+        self.system_log_button.setObjectName("systemLogButton")
+        self.system_log_button.clicked.connect(self._SystemLog_Show)
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 1000)
         self.progress_bar.setFixedWidth(250)
@@ -409,6 +413,7 @@ class MainWindow(QMainWindow):
         status.addPermanentWidget(self.cancel_button)
         status.addPermanentWidget(self.progress_bar)
         status.addPermanentWidget(self.power10_export_button)
+        status.addPermanentWidget(self.system_log_button)
         self.setStatusBar(status)
         self.navigation_list.setCurrentRow(0)
 
@@ -3507,6 +3512,40 @@ class MainWindow(QMainWindow):
                     self._translator.Text_Get("power10.review_pending"), details=raw_output)
         self._active_build_action = None
 
+    def _SystemLog_Show(self) -> None:
+        existing = getattr(self, "_system_log_dialog", None)
+        if existing is not None:
+            existing.show()
+            existing.raise_()
+            return
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self._translator.Text_Get("action.system_log"))
+        dialog.resize(1000, 640)
+        layout = QVBoxLayout(dialog)
+        text = QPlainTextEdit()
+        text.setObjectName("systemLogOutput")
+        text.setReadOnly(True)
+        output = self.build_page.build_log.toPlainText()
+        details = self.build_page.build_detail_log.toPlainText()
+        report = None
+        if self._project_root is not None:
+            root = self._project_root / FLIGHT_DIRECTORY
+            candidate = Power10Report_Load(root)
+            if Power10Report_Current_Is(root, self._model, candidate):
+                report = candidate
+        text.setPlainText("\n\n".join(filter(None, (
+            output, details, Power10Report_Csv(report) if report else ""))))
+        layout.addWidget(text)
+        export = QPushButton(self._translator.Text_Get("power10.export"))
+        export.setObjectName("systemLogExport")
+        export.setEnabled(report is not None)
+        export.clicked.connect(self._Power10Report_Export)
+        layout.addWidget(export)
+        dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+        dialog.destroyed.connect(lambda: setattr(self, "_system_log_dialog", None))
+        self._system_log_dialog = dialog
+        dialog.show()
+
     def _Power10Report_Export(self) -> None:
         if self._project_root is None:
             return
@@ -3918,6 +3957,7 @@ class MainWindow(QMainWindow):
         self._translator.Language_Set(language)
         self.legacy_migration_button.setText(self._translator.Text_Get("release.migrate"))
         self.power10_export_button.setText(self._translator.Text_Get("power10.export"))
+        self.system_log_button.setText(self._translator.Text_Get("action.system_log"))
         self.title_label.setText(self._translator.Text_Get("app.title"))
         self.credit_label.setText(self._translator.Text_Get("app.credit"))
         self.current_project_label.setText(

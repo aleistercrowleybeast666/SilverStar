@@ -898,6 +898,7 @@
   "alignment.release_vectors": "Select release vector pair",
   "alignment.legacy_deferred": "Legacy alignment is preserved. Magnetic and multiple vectors are deferred. Explicitly select gravity + known direction, review parameters and confirm before generation.",
   "power10.export": "Export review findings",
+  "action.system_log": "System Log",
   "power10.review_pending": "F Prime-inspired project text checks passed; assertion recommendations are nonblocking. Critical contracts NOT_PROVEN; manual acceptance pending. This does not establish FIELD READY or NASA certification.",
   "power10.report_stale": "The review report is stale or incomplete. Rerun checks for the current configuration and sources before export.",
   "power10.export_failed": "Unable to save the review findings.",

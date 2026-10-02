@@ -898,6 +898,7 @@
   "alignment.release_vectors": "选择首发双矢量",
   "alignment.legacy_deferred": "旧对准配置保留；磁场和多矢量首发延期。请显式选择重力＋已知方向，检查参数后确认，生成前不会静默迁移。",
   "power10.export": "导出审查清单",
+  "action.system_log": "系统日志",
   "power10.review_pending": "F Prime-inspired 项目文本检测通过；函数无断言等为非阻断审查提示。关键契约 NOT_PROVEN，人工验收待完成；不代表 FIELD READY 或 NASA 认证。",
   "power10.report_stale": "审查报告已过期或不完整。请针对当前配置和源码重新运行检测后导出。",
   "power10.export_failed": "审查清单保存失败。",
