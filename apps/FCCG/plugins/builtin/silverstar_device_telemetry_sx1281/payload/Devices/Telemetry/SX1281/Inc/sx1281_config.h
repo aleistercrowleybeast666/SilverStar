@@ -16,6 +16,9 @@
 #define LORA_MAX_PAYLOAD_LEN            64U
 
 #define LORA_TX_QUEUE_DEPTH             8U
+#define LORA_TX_NORMAL_QUEUE_DEPTH      2U
+#define LORA_TX_CONTROL_QUEUE_DEPTH     6U
+#define LORA_TX_CONTROL_BURST_MAX       2U
 #define LORA_RX_QUEUE_DEPTH             8U
 
 /* Owner-task scheduling policy: preserve a receive opportunity between TXs.

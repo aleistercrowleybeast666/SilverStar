@@ -13,6 +13,7 @@
 #include "logger_bus.h"
 #endif
 #include "silverstar_assert.h"
+#include "platform_memory.h"
 #include "system_alignment.h"
 #include "system_calibration.h"
 #include "system_gnss_if.h"
@@ -164,7 +165,28 @@ static uint32_t s_calibration_face_event_sequence;
 static uint32_t s_calibration_diagnostic_sequence;
 static uint32_t s_deploy_event_sequence;
 static uint32_t s_landing_event_sequence;
-static uint8_t s_capability_sequence;
+#define TELEMETRY_CAPABILITY_WINDOW_DEPTH 4U
+#define TELEMETRY_CAPABILITY_WINDOW_MS 4000U
+typedef struct
+{
+    uint64_t sent_us;
+    uint8_t sequence;
+} TelemetryCapabilityAdvertisement;
+typedef struct
+{
+    TelemetryCapabilityAdvertisement advertised[TELEMETRY_CAPABILITY_WINDOW_DEPTH];
+    uint64_t pending_since_us;
+    uint64_t ack_advertised_us;
+    uint32_t pending_id;
+    uint8_t pending_sequence;
+    uint8_t count;
+    uint8_t next;
+    uint8_t latest_sequence;
+} TelemetryCapabilityTransaction;
+/* CPU-only timestamps/sequence/token metadata. No radio payload or DMA pointer
+ * is stored here; SendControl writes its token synchronously, before return.
+ * The target supplies placement/alignment/zeroing; other targets use normal BSS. */
+static TelemetryCapabilityTransaction s_capability_tx PLATFORM_CPU_FAST_BSS;
 static uint8_t s_capability_sent;
 static uint8_t s_capability_send_pending;
 static uint8_t s_command_policy;
@@ -566,15 +588,73 @@ static void TelemetryService_StartResponseProcess(void)
     }
 }
 
+static uint8_t TelemetryService_CapabilityAdvertised(uint8_t sequence,
+    uint64_t *sent_us)
+{
+    uint8_t index;
+    uint8_t found = 0U;
+    uint64_t best_age = (uint64_t)TELEMETRY_CAPABILITY_WINDOW_MS * 1000ULL;
+    uint64_t now_us = SystemTime_GetMonotonicUs();
+    SILVERSTAR_ASSERT(s_capability_tx.count <= TELEMETRY_CAPABILITY_WINDOW_DEPTH,
+        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    for (index = 0U; index < TELEMETRY_CAPABILITY_WINDOW_DEPTH; index++)
+    {
+        uint64_t age = now_us - s_capability_tx.advertised[index].sent_us;
+        if ((index < s_capability_tx.count) &&
+            (s_capability_tx.advertised[index].sequence == sequence) && (age < best_age))
+        { *sent_us = s_capability_tx.advertised[index].sent_us; best_age = age; found = 1U; }
+    }
+    return found;
+}
+
+static void TelemetryService_CapabilityTxPoll(void)
+{
+    uint32_t age_ms = 0U;
+    SystemDeviceResult result;
+    uint64_t now_us;
+    if (s_capability_tx.pending_id == 0U) { return; }
+    now_us = SystemTime_GetMonotonicUs();
+    /* Use the 64-bit service clock for lifetime, including a whole 32-bit ms wrap.
+     * The transport receipt age still has its independent wrap-safe clock. */
+    if ((now_us - s_capability_tx.pending_since_us) >=
+        ((uint64_t)TELEMETRY_CAPABILITY_WINDOW_MS * 1000ULL))
+    {
+        s_capability_tx.pending_id = 0U;
+        s_capability_send_pending = 1U;
+        s_next_capability_us = now_us + SYSTEM_TELEMETRY_CAPABILITY_PERIOD_US;
+        return;
+    }
+    result = SystemTelemetry_TxResultGet(s_capability_tx.pending_id, &age_ms);
+    if (result == SYSTEM_DEVICE_BUSY) { return; }
+    if ((result == SYSTEM_DEVICE_OK) && (age_ms < TELEMETRY_CAPABILITY_WINDOW_MS))
+    {
+        SILVERSTAR_ASSERT(s_capability_tx.next < TELEMETRY_CAPABILITY_WINDOW_DEPTH,
+            SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+        SILVERSTAR_ASSERT(s_capability_tx.count <= TELEMETRY_CAPABILITY_WINDOW_DEPTH,
+            SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+        s_capability_tx.advertised[s_capability_tx.next].sequence = s_capability_tx.pending_sequence;
+        s_capability_tx.advertised[s_capability_tx.next].sent_us = now_us - (uint64_t)age_ms * 1000ULL;
+        s_capability_tx.next = (uint8_t)((s_capability_tx.next + 1U) % TELEMETRY_CAPABILITY_WINDOW_DEPTH);
+        if (s_capability_tx.count < TELEMETRY_CAPABILITY_WINDOW_DEPTH) { s_capability_tx.count++; }
+        s_capability_tx.latest_sequence = s_capability_tx.pending_sequence;
+        s_capability_sent = 1U;
+        s_diagnostics.capability_tx_count++;
+    }
+    else
+    { s_capability_send_pending = 1U; s_next_capability_us = now_us + SYSTEM_TELEMETRY_CAPABILITY_PERIOD_US; }
+    s_capability_tx.pending_id = 0U;
+}
+
 static void TelemetryService_CapabilityCommand(
     const AirCmdPayload *command)
 {
+    uint64_t advertised_us = 0U;
     SILVERSTAR_ASSERT_OBJECT(command, AirCmdPayload,
         SILVERSTAR_ASSERT_MODULE_MODULES);
     if ((TelemetryService_IsPreflightState() == 0U) ||
         (s_capability_sent == 0U) ||
-        (command->param0 != s_capability_sequence) ||
-        (command->param1 != AIR_PROFILE_ID_CURRENT))
+        (command->param1 != AIR_PROFILE_ID_CURRENT) ||
+        (TelemetryService_CapabilityAdvertised(command->param0, &advertised_us) == 0U))
     {
         (void)TelemetryService_AckQueue(command,
             (TelemetryService_IsPreflightState() != 0U) ?
@@ -582,13 +662,14 @@ static void TelemetryService_CapabilityCommand(
         return;
     }
     if ((s_capability_ack_known == 0U) ||
-        (s_capability_ack_sequence != command->param0) ||
+        (advertised_us > s_capability_tx.ack_advertised_us) ||
         ((SystemTime_GetMonotonicUs() - s_capability_ack_us) >= 4000000ULL))
     {
         /* A newly validated handshake invalidates prior-session business ACKs.
-         * CAPABILITY_ACK itself always validates the current advertised frame. */
+         * A delayed reply within the sent window cannot invalidate newer ACKs. */
         (void)memset(s_ack_cache, 0, sizeof(s_ack_cache));
         s_capability_ack_sequence = command->param0;
+        s_capability_tx.ack_advertised_us = advertised_us;
         s_capability_ack_us = SystemTime_GetMonotonicUs();
         s_capability_ack_known = 1U;
     }
@@ -1190,8 +1271,8 @@ static void TelemetryService_PreflightStatusStateProcess(void)
 static uint8_t TelemetryService_AckSend(void)
 {
     if (s_ack_tail == s_ack_head) { return 0U; }
-    if (SystemTelemetry_Send(s_ack_queue[s_ack_tail].frame,
-                             AIR_ACK_LEN) != SYSTEM_DEVICE_OK)
+    if (SystemTelemetry_SendControl(s_ack_queue[s_ack_tail].frame,
+                             AIR_ACK_LEN, NULL) != SYSTEM_DEVICE_OK)
     {
         return 1U;
     }
@@ -1237,7 +1318,7 @@ static uint8_t TelemetryService_StatusSend(void)
             s_status_tail = TelemetryService_QueueNext(s_status_tail);
             return 0U;
         }
-        if (SystemTelemetry_Send(frame, length) != SYSTEM_DEVICE_OK) { return 1U; }
+        if (SystemTelemetry_SendControl(frame, length, NULL) != SYSTEM_DEVICE_OK) { return 1U; }
         s_status_tail = TelemetryService_QueueNext(s_status_tail);
         event.repeats_remaining--;
         if (event.repeats_remaining != 0U)
@@ -1292,7 +1373,7 @@ static uint8_t TelemetryService_SensorSnapshotSend(void)
     {
         return 0U;
     }
-    if (SystemTelemetry_Send(frame, length) != SYSTEM_DEVICE_OK) { return 1U; }
+    if (SystemTelemetry_SendControl(frame, length, NULL) != SYSTEM_DEVICE_OK) { return 1U; }
     s_tx_sequence++;
     s_sensor_snapshot_index++;
     if (s_sensor_snapshot_index >= s_sensor_snapshot_total)
@@ -1323,7 +1404,7 @@ static uint8_t TelemetryService_SensorSnapshotTerminalSend(void)
     {
         return 0U;
     }
-    if (SystemTelemetry_Send(frame, length) != SYSTEM_DEVICE_OK) { return 1U; }
+    if (SystemTelemetry_SendControl(frame, length, NULL) != SYSTEM_DEVICE_OK) { return 1U; }
     s_tx_sequence++;
     s_sensor_snapshot_terminal_pending = 0U;
     return 1U;
@@ -1344,6 +1425,7 @@ static uint8_t TelemetryService_CapabilitySend(void)
     {
         return 0U;
     }
+    if (s_capability_tx.pending_id != 0U) { return 0U; }
     now_us = SystemTime_GetMonotonicUs();
     if ((s_capability_send_pending == 0U) &&
         (s_next_capability_us != 0ULL) &&
@@ -1360,19 +1442,24 @@ static uint8_t TelemetryService_CapabilitySend(void)
     capability.accel_full_scale_g = AIR_ACCEL_FULL_SCALE_G;
     capability.gyro_full_scale_dps = AIR_GYRO_FULL_SCALE_DPS;
     sequence = s_tx_sequence;
+    for (uint8_t attempt = 0U; attempt < TELEMETRY_CAPABILITY_WINDOW_DEPTH; attempt++)
+    {
+        uint64_t advertised_us;
+        if (TelemetryService_CapabilityAdvertised(sequence, &advertised_us) == 0U) { break; }
+        sequence++;
+    }
     if (Air_CapabilityBuild(sequence, &capability,
             frame, sizeof(frame), &length) != AIR_BUILD_OK)
     {
         return 0U;
     }
-    if (SystemTelemetry_Send(frame, length) != SYSTEM_DEVICE_OK) { return 1U; }
-    s_tx_sequence++;
-    s_capability_sequence = sequence;
-    s_capability_sent = 1U;
+    if (SystemTelemetry_SendControl(frame, length, &s_capability_tx.pending_id) != SYSTEM_DEVICE_OK) { return 1U; }
+    s_tx_sequence = (uint8_t)(sequence + 1U);
+    s_capability_tx.pending_sequence = sequence;
+    s_capability_tx.pending_since_us = now_us;
     s_capability_send_pending = 0U;
     s_next_capability_us = now_us +
         SYSTEM_TELEMETRY_CAPABILITY_PERIOD_US;
-    s_diagnostics.capability_tx_count++;
     return 1U;
 }
 
@@ -1406,7 +1493,7 @@ static uint8_t TelemetryService_PreflightStatusSend(void)
     {
         return 0U;
     }
-    if (SystemTelemetry_Send(frame, length) != SYSTEM_DEVICE_OK) { return 1U; }
+    if (SystemTelemetry_SendControl(frame, length, NULL) != SYSTEM_DEVICE_OK) { return 1U; }
     s_tx_sequence++;
     s_preflight_status_observed = payload;
     s_preflight_status_known = 1U;
@@ -1919,7 +2006,7 @@ SystemDeviceResult TelemetryService_Init(void)
     s_calibration_diagnostic_sequence = 0U;
     s_deploy_event_sequence = 0U;
     s_landing_event_sequence = 0U;
-    s_capability_sequence = 0U;
+    (void)memset(&s_capability_tx, 0, sizeof(s_capability_tx));
     s_capability_sent = 0U;
     s_capability_send_pending = 1U;
     s_command_policy = SYSTEM_TELEMETRY_COMMAND_POLICY;
@@ -1941,6 +2028,7 @@ void TelemetryService_Process(void)
     SILVERSTAR_ASSERT_OBJECT(&s_diagnostics, TelemetryServiceDiagnostics,
         SILVERSTAR_ASSERT_MODULE_MODULES);
     SystemTelemetry_Process();
+    TelemetryService_CapabilityTxPoll();
     TelemetryService_StartResponseProcess();
     TelemetryService_ReceiveProcess();
 

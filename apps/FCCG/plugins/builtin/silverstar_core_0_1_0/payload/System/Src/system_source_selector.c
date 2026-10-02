@@ -1495,6 +1495,24 @@ SystemDeviceResult SystemTelemetry_Send(
     return ProjectTelemetryInstance_Send(s_telemetry.active, data, length);
 }
 
+SystemDeviceResult SystemTelemetry_SendControl(
+    const uint8_t *data, uint16_t length, uint32_t *transaction_id)
+{
+    if (transaction_id != NULL) { *transaction_id = 0U; }
+    if ((data == NULL) || (length == 0U)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
+        (s_telemetry.started[s_telemetry.active] == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
+    return ProjectTelemetryInstance_SendControl(s_telemetry.active, data, length, transaction_id);
+}
+
+SystemDeviceResult SystemTelemetry_TxResultGet(uint32_t transaction_id, uint32_t *age_ms)
+{
+    if ((transaction_id == 0U) || (age_ms == NULL)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
+        (s_telemetry.started[s_telemetry.active] == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
+    return ProjectTelemetryInstance_TxResultGet(s_telemetry.active, transaction_id, age_ms);
+}
+
 SystemDeviceResult SystemTelemetry_Receive(
     uint8_t *data, uint16_t capacity, uint16_t *length)
 {

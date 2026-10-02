@@ -2646,6 +2646,10 @@ def _DeviceInstanceFunctionSwitch_Render(
             for key, value in overrides.items()
         ):
             raise ValueError("Device-instance operation overrides are invalid")
+        if (label == "Telemetry" and operation in ("SendControl", "TxResultGet")
+                and operation not in overrides):
+            cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
+            continue
         symbol = overrides.get(
             operation, f"{binding['function_prefix']}_{operation}"
         )

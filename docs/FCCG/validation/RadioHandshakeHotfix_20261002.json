@@ -1,0 +1,324 @@
+{
+  "schema": "silverstar.radio-handshake-hotfix-evidence/1",
+  "date_utc": "2026-10-02T04:10:03.814053+00:00",
+  "source_base": "170f1cb55daedf8e8d308a7bc845b2fa5b79d102",
+  "branch": "fix/radio-handshake-latency-20261002",
+  "worktree": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002",
+  "candidate": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+  "configuration": {
+    "original_identity": "SS_0_5_TEST_4",
+    "candidate_identity": "SS_RadioHandshake_1",
+    "runtime_configuration_changes": [
+      "project.name only; derived provenance, manifest and decoder identity regenerated"
+    ],
+    "pre_generation_matches_frozen_C_except": [
+      "Generated/Src/project_metadata.c",
+      "Generated/Src/project_log_decoder_profile.c"
+    ],
+    "test_fixture_note": "Complete functional Flight/Ground/sensor/PHY configuration retained; component_provenance is empty for fresh generation."
+  },
+  "changed_source_file_sha256": {
+    "apps/FCCG/tests/fixtures/radio_handshake.ssproject": "0331267c803050dd08a5671cff864a66201e93c81f9156c6fba65a1d7d7df4bc",
+    "apps/FCCG/tests/fixtures/radio_handshake_host.c": "26de33c28d13c4f3d1a0565fdfae27ee28059ff39d9c0c180de895bfff75071a",
+    "apps/FCCG/tests/test_radio_handshake_generated_host.py": "8c722b49efed34920f285d48871fee5bdf3413c3888dceae48125296f4457df1",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_telemetry_transport_if.h": "33e7f2a7767444aa6e8358a5bea60c5a3b8bfb24a837734ff910f81293976679",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c": "66b751550abafdbe95e116f56755be2da30f3da20421793ec146dedfa23920c4",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_source_selector.c": "c2e3a4765fb753aad64e862029dda1865c654d10bfb8408ce2b5503abace5012",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c": "5a63526a24113b92bf988ba75c6cfbfa82dee40a3a152f4a0cab0c6564c0d054",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_sx1281_device.c": "85041bf40a4dcdbbf9572f2001f7d1f8443906222dfb9ba22a934d30383a023a",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_telemetry.c": "92afc9f560476d6a720ba5b1ca4bce9266e56dde4671039cb96e467016851132",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1": "d184b1c78ebadadd7d8bf27657d28ba94424c8b91b9e0a121aaaac06407d75d1",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/templates/generated/project_device_instances.c": "32c1eb82c318d8b1471d54b187ac31fc9023fc6eb28b1514bd3b38939f31fd81",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/templates/generated/project_device_instances.h": "c47051daa8373b3c4fac5e99c829b04aa87a40a68cd2535d51cb4d48a9bff9f2",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Adapter/Inc/sx1281_instance.h": "d5c281b763d9a46b6315d57ae6e9fbeedf0ad03caf6d451e01eb078c0aa140bb",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.c": "1b391bd5310825307811e21764a4c0cc78460c60ab8f53ca7f5f8d9f568f4a9f",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Inc/sx1281_config.h": "a7876ffcd2cac9ed7f7c719f0b8fcd1ce39dcdec0dbe8f2bc373293967106d5f",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Inc/sx1281_device.h": "f27b0de7d5cc0c6142cdf9cf828c65df3e7e035fabf7afda0c8be665d5f692c0",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c": "c38046dd61b5f4b887cf80f1326001074d93c5db42e4ff6eb6751aa1568a0005",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/plugin.json": "65ceac9e0944342e537ed1b1c31621b56c46032d0072e44d842055a7fbd7a47d",
+    "apps/FCCG/src/silverstar_fccg/generator/render.py": "8d6d7397589c4abc98c7887c27975acc16251ed905272a2db247b74b0792bb57",
+    "apps/FCCG/tests/fixtures/source_selector/project_device_instances.h": "7dca806556ed90077a7a3cf93481c9fa6a6aa8d507f9755dfa942de6edebef50",
+    "apps/FCCG/tests/fixtures/sx1281_contract_host.c": "18893ffa034f3dac62dd1f216924bd7718d84f9235112d182127ce1939cd1248",
+    "apps/FCCG/tests/test_sx1281_contract_host.py": "99d1e9a8e81540bd1aa9ba1ba4c31c5f9a1377401a18f7c48c25fa830315cd98",
+    "docs/GSHC/AIR_PROTOCOL.md": "2f424d88f1a38066bde27bce4cb589663642f2ccea2f6d402a1f06d07239090f"
+  },
+  "generated_source_manifest_sha256": "cb81d1de4f9dcbc86121de4ed02bf2bfbad5353665ff61774365ece18f1be578",
+  "artifacts": {
+    "SilverStar_0_1_1.elf": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+      "bytes": 3239124,
+      "sha256": "49b5d71896fe75fc349bce46cd279ac4e32ef2c9e4a0604d436efd4e68810c58"
+    },
+    "SilverStar_0_1_1.bin": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+      "bytes": 319472,
+      "sha256": "7f8053a9222010b4c2c96bea0617896e42e4310345942ee22246e2520987b875"
+    },
+    "SilverStar_0_1_1.map": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+      "bytes": 1485980,
+      "sha256": "fc05dacf375944cb01f6473bdd9d87d1135c7a1a360dcebe5a3cc87c08dd0fa1"
+    }
+  },
+  "pre_fix": {
+    "strict_compile_exit": 0,
+    "ack_backlog": {
+      "exit": 1,
+      "checks": 18,
+      "failures": 2,
+      "actual_first_types": [
+        "11",
+        "11"
+      ]
+    },
+    "cap_queued": {
+      "exit": 1,
+      "checks": 18,
+      "failures": 1,
+      "advertised_seq": 0,
+      "queued_seq": 1,
+      "actual_handshake": "NOT_ACKED"
+    },
+    "post9_long_expiry": {
+      "exit": 1,
+      "checks": 14,
+      "failures": 1,
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post9-long-expiry-counterexample.log",
+      "harness_snapshot": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\harness-long-expiry-pre.c"
+    }
+  },
+  "gates": {
+    "post10-arm": {
+      "exit": 0,
+      "command": [
+        "mingw32-make",
+        "-j2",
+        "all"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-arm.log",
+      "log_sha256": "44d59e424e2e5a0dfacce46450fc0296e5c485c70f228595da445a04c2d624b3"
+    },
+    "post10-analyzer": {
+      "exit": 0,
+      "command": [
+        "mingw32-make",
+        "-j2",
+        "static-analysis"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-analyzer.log",
+      "log_sha256": "7f46a5dabfa30398da306b45f2222bd3d8736974f6fa9cc1033465a31834ae41",
+      "fanalyzer_compilation_units": 105,
+      "warnings": 0
+    },
+    "post10-power10": {
+      "exit": 0,
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tools/check_power_of_ten.ps1"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-power10.log",
+      "log_sha256": "2ca49c9a4d4c03170a94e0b9aa632cce88366a4e4f35211423f13ba8f7c046e6",
+      "summary": {
+        "checks": 6048,
+        "first_party_files": 108,
+        "functions": 2631,
+        "recommendations": 744,
+        "critical_contract_review": "NOT_PROVEN"
+      }
+    },
+    "post10-architecture": {
+      "exit": 0,
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tools/check_architecture.ps1"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-architecture.log",
+      "log_sha256": "b4392aff7ed19e3068f4abe375a567ef5ebf1a7fa4fa3b6455d92662ee5d89a5",
+      "checks": 334
+    },
+    "post10-host": {
+      "exit": 0,
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tests/Host/run_tests.ps1"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-host.log",
+      "log_sha256": "8c7cebf701d56e4347610e62ae5ab9a3b1ba2b3c56931cde8c7c9653ea7329b6",
+      "summary": {
+        "executables": 72,
+        "checks": 4396714,
+        "failures": 0,
+        "compile_pass_cases": 7,
+        "expected_compile_failures": 17
+      }
+    },
+    "post10-artifact": {
+      "exit": 0,
+      "command": [
+        "mingw32-make",
+        "-j2",
+        "artifact-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-artifact.log",
+      "log_sha256": "48052c61f60ecb50aa41f1ba297ec77aaad488772410f4c310b418b06c04801e"
+    },
+    "post10-stack": {
+      "exit": 0,
+      "command": [
+        "mingw32-make",
+        "-j2",
+        "stack-report"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-stack.log",
+      "log_sha256": "b4e75022477a390f92e69e1371bef93b5f9e2e2c763b23780137aaeb076cf8e2"
+    },
+    "post10-owner-radio-delivery": {
+      "exit": 0,
+      "command": [
+        "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "apps/FCCG/tests/test_radio_handshake_generated_host.py",
+        "apps/FCCG/tests/test_sx1281_contract_host.py",
+        "apps/FCCG/tests/test_source_selector_contract_host.py",
+        "apps/FCCG/tests/test_multi_instance_minimal_failover.py",
+        "-q"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\post10-owner-radio-final.log",
+      "log_sha256": "187fe1fe2aa01c6f3b386ee0af28d07fc955ed113c5ae057013e6a9b727bdd6b",
+      "summary": {
+        "passed": 92,
+        "wireless_scenarios": 13
+      },
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\FCCG",
+        "PYTHONIOENCODING": "utf8",
+        "SILVERSTAR_RADIO_GENERATED_PROJECT": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\post10\\Flight_Controller"
+      }
+    },
+    "gshc-compatibility": {
+      "exit": 0,
+      "command": [
+        "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "apps/GSHC/tests/test_start_ack_state.py",
+        "apps/GSHC/tests/test_sensor_snapshot.py",
+        "apps/GSHC/tests/test_calibration_capability.py",
+        "-q"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002",
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\gshc-compatibility.log",
+      "log_sha256": "09033e9a8a9dc5f6a786faf6a250477408e23212aceb972570bbf7e0f413cf24",
+      "summary": {
+        "passed": 236,
+        "subtests": 3
+      },
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\GSHC\\src;D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\GSHC",
+        "PYTHONIOENCODING": "utf8",
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    },
+    "default-generation-post10": {
+      "command": [
+        "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "apps/FCCG/tests/test_radio_handshake_generated_host.py",
+        "-k",
+        "cap_queued or cap_long_expiry",
+        "-q"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002",
+      "exit": 0,
+      "log": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\default-generation-post10.log",
+      "log_sha256": "d9036569bf5d58a317dadaf27488d277026ff00f9409f31a0051ff9e023c23da",
+      "summary": {
+        "passed": 2,
+        "deselected": 11,
+        "fresh_generation": true
+      },
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\FCCG\\src;D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\FCCG",
+        "PYTHONIOENCODING": "utf8",
+        "SILVERSTAR_RADIO_GENERATED_PROJECT": ""
+      }
+    }
+  },
+  "memory": {
+    "baseline_main_sram_including_msp_reservation": 102328,
+    "candidate_main_sram": 102384,
+    "main_sram_delta": 56,
+    "main_sram_review_budget": 102400,
+    "budget_spare": 16,
+    "baseline_ccm": 55432,
+    "candidate_ccm": 55520,
+    "ccm_delta": 88,
+    "ccm_spare": 10016,
+    "dma_bss_unchanged": 8904,
+    "cap_metadata": {
+      "address": "0x1000C388",
+      "bytes": 88,
+      "alignment": 8,
+      "section": ".ccmram_bss",
+      "startup_zeroed": true,
+      "runtime_init_memset": true,
+      "dma_uses": [],
+      "fallback": "PLATFORM_CPU_FAST_BSS defaults to ordinary BSS in the vendor-neutral header; strict Host compiled this fallback."
+    }
+  },
+  "static_stack": {
+    "scope": "generated conservative linked ELF/.su report; not hardware high-water or complete timing qualification",
+    "telemetry_configured": 4096,
+    "telemetry_estimate": 2136,
+    "telemetry_margin": 1960,
+    "unchanged_stack_sizes": true,
+    "main_msp_and_all_isr_nesting": "NOT_PROVEN by this task-stack report; existing 1024-byte MSP reservation is unchanged."
+  },
+  "review": {
+    "changed_contracts": "Reviewed IRQ-locked coherent queue geometry, bounded control insert/pop moves, FIFO and two-control fairness, length checks before mutation, ordinary full/invalid/timeout paths, transaction collision avoidance and receipt publication, completion-only bounded CAP window and old-reply cache preservation. Exercised the new stored count/burst/RX-window fail-stop checks. Advertisement and pending lifetimes now use 64-bit service time; old completion and pending receipts cannot reappear after a whole 32-bit ms cycle. The previous candidate failed the added real-generated long-expiry regression and is not the delivery candidate.",
+    "whole_project_critical_contracts": "NOT_PROVEN, as emitted by the unchanged PoT template",
+    "whole_firmware_original_power_of_ten": "NOT_CLAIMED",
+    "wcet_and_physical_rx_latency": "NOT_PROVEN",
+    "hardware_actions": [],
+    "wire_ambiguity": "AIR M0 eight-bit values cannot authenticate or distinguish byte-identical old replies after cross-session sequence reuse. Live completed CAP values are not reused within the four-second window.",
+    "tracking_contract": "Tokens are uint32: instance byte plus nonzero 24-bit counter. Separately tested uint32 arithmetic overflow at UINT32_MAX, counter wrap, live-ID collisions, and completed-ID invalidation. Latest tracked receipt only; untracked completions do not overwrite it.",
+    "radio_fairness_bound": "At most two controls precede an already queued normal packet; FIFO within each class. Six controls plus two ordinary packets remain the original eight-slot capacity. In-flight transmission is not preempted; 120ms RX opportunity preserved. This is not an 800ms wall-clock guarantee under a full control lane or faults.",
+    "linked_third_party_inventory": "post10-linked-source-inventory.json: 105 first-party, 9 middleware/third-party, 38 vendor C sources and one startup assembly. Existing vendor/RTOS callbacks and controlled stack-analysis bindings retained; no exceptions enlarged.",
+    "pending_and_advertisement_lifetime": "64-bit monotonic microseconds for strict <4s window and pending age; separate real-generated regression proves a 32-bit transport receipt age alias cannot revive old pending work."
+  },
+  "logs_directory": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence",
+  "failed_trial_logs_retained": "All pre/post trial failures, including post9 whole-clock-wrap counterexample, retained with actual exits. Only post10 is the delivery candidate.",
+  "tools": {
+    "arm-gcc": "14.3.1 20250623 Arm GNU Toolchain 14.3.Rel1",
+    "host-gcc": "MSYS2 16.1.0 Rev5",
+    "make": "4.4.1"
+  },
+  "generated_source_files": 594,
+  "source_firmware_archive": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\SS_RadioHandshake_1_post10_SourceFirmware.zip",
+    "bytes": 4244266,
+    "sha256": "fd2196818dadc521b18902ab6dbc7ab39d4ce602bbc5ada5fc26f6bf9fba43bb"
+  }
+}

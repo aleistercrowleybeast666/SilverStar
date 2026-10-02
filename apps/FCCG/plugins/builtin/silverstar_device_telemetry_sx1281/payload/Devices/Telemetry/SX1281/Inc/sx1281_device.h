@@ -31,6 +31,20 @@ typedef enum
 
 typedef enum
 {
+    LoraTxQueryResult_Pending = 0U,
+    LoraTxQueryResult_Complete,
+    LoraTxQueryResult_TimedOut,
+    LoraTxQueryResult_NotFound,
+    LoraTxQueryResult_InvalidArgument
+} LoraTxQueryResult;
+
+LoraTxEnqueueResult Lora_TxEnqueueTracked(uint8_t instance,
+    const uint8_t *data, uint8_t len, uint32_t *transaction_id);
+LoraTxQueryResult Lora_TxResultGet(uint8_t instance,
+    uint32_t transaction_id, uint32_t *age_ms);
+
+typedef enum
+{
     LORA_RX_DEQUEUE_OK = 0U,
     LORA_RX_DEQUEUE_EMPTY,
     LORA_RX_DEQUEUE_BAD_PARAM

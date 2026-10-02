@@ -98,10 +98,10 @@ static void Test_NormalQueuesAndTimeout(void)
     TEST_CHECK(Lora_Init(1U) == LORA_INIT_OK);
     for (cycle = 0U; cycle < 4U; cycle++)
     {
-        for (index = 0U; index < LORA_TX_QUEUE_DEPTH; index++)
+        for (index = 0U; index < LORA_TX_NORMAL_QUEUE_DEPTH; index++)
         { TEST_CHECK(Lora_TxEnqueue(0U, input, sizeof(input)) == LORA_TX_ENQUEUE_OK); }
         TEST_CHECK(Lora_TxEnqueue(0U, input, 1U) == LORA_TX_ENQUEUE_QUEUE_FULL);
-        for (index = 0U; index < LORA_TX_QUEUE_DEPTH; index++)
+        for (index = 0U; index < LORA_TX_NORMAL_QUEUE_DEPTH; index++)
         {
             TEST_CHECK(Lora_TxQueuePop(0U, &tx) == 1U);
             TEST_CHECK(tx.len == sizeof(input));
@@ -156,6 +156,9 @@ static void Test_Corruption(const char *name)
     TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
     if (strcmp(name, "tx_head") == 0) { s_contexts[0].tx_head = LORA_TX_QUEUE_DEPTH; }
     else if (strcmp(name, "tx_count") == 0) { s_contexts[0].tx_count = LORA_TX_QUEUE_DEPTH + 1U; reason = SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY; }
+    else if (strcmp(name, "tx_control_count") == 0) { s_contexts[0].tx_control_count = 1U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
+    else if (strcmp(name, "tx_control_burst") == 0) { s_contexts[0].tx_control_burst = 3U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
+    else if (strcmp(name, "rx_window") == 0) { s_contexts[0].rx_window_active = 2U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
     else if (strcmp(name, "tx_sequence") == 0) { s_contexts[0].tx_head = 1U; reason = SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT; }
     else if (strcmp(name, "rx_tail") == 0) { s_contexts[0].rx_tail = LORA_RX_QUEUE_DEPTH; }
     else if (strcmp(name, "rx_count") == 0) { s_contexts[0].rx_count = LORA_RX_QUEUE_DEPTH + 1U; reason = SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY; }

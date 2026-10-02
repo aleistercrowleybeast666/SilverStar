@@ -291,7 +291,7 @@ static void Test_ContinuousTxLoadPreservesRx(void)
     uint32_t cycle;
     s_tick_ms = UINT32_MAX - 60U;
     TEST_CHECK(Lora_Init() == LORA_INIT_OK);
-    for (cycle = 0U; cycle < LORA_TX_QUEUE_DEPTH; cycle++)
+    for (cycle = 0U; cycle < LORA_TX_NORMAL_QUEUE_DEPTH; cycle++)
     { TEST_CHECK(Lora_TxEnqueue(0U, packet, sizeof(packet)) == LORA_TX_ENQUEUE_OK); }
     Lora_StartRx();
     before = s_host_send_count;

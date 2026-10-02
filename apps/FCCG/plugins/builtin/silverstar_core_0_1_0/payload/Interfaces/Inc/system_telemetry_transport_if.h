@@ -33,6 +33,15 @@ SystemDeviceResult SystemTelemetry_Init(void);
 SystemDeviceResult SystemTelemetry_Start(void);
 SystemDeviceResult SystemTelemetry_Stop(void);
 SystemDeviceResult SystemTelemetry_Send(const uint8_t *data, uint16_t length);
+#define SYSTEM_TELEMETRY_TX_CONTROL_SUPPORTED 1U
+/* A protocol-independent control lane. NULL ID means untracked; a non-NULL
+ * output tracks RF completion, not enqueue acceptance. The receipt getter
+ * returns BUSY while pending, OK/TIMEOUT on completion and NOT_PRESENT if lost.
+ * Its age uses the transport monotonic clock, independently of caller epoch. */
+SystemDeviceResult SystemTelemetry_SendControl(const uint8_t *data,
+    uint16_t length, uint32_t *transaction_id);
+SystemDeviceResult SystemTelemetry_TxResultGet(uint32_t transaction_id,
+    uint32_t *age_ms);
 SystemDeviceResult SystemTelemetry_Receive(uint8_t *data,
                                            uint16_t capacity,
                                            uint16_t *length);

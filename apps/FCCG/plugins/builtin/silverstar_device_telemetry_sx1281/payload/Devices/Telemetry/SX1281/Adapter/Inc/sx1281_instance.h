@@ -11,6 +11,10 @@ SystemDeviceResult Sx1281TelemetryInstance_Start(uint8_t instance);
 SystemDeviceResult Sx1281TelemetryInstance_Stop(uint8_t instance);
 SystemDeviceResult Sx1281TelemetryInstance_Send(
     uint8_t instance, const uint8_t *data, uint16_t length);
+SystemDeviceResult Sx1281TelemetryInstance_SendControl(uint8_t instance,
+    const uint8_t *data, uint16_t length, uint32_t *transaction_id);
+SystemDeviceResult Sx1281TelemetryInstance_TxResultGet(uint8_t instance,
+    uint32_t transaction_id, uint32_t *age_ms);
 SystemDeviceResult Sx1281TelemetryInstance_Receive(
     uint8_t instance, uint8_t *data, uint16_t capacity, uint16_t *length);
 SystemDeviceResult Sx1281TelemetryInstance_Process(uint8_t instance);

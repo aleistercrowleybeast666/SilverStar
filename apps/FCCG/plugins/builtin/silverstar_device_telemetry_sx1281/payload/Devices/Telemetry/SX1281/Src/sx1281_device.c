@@ -75,12 +75,24 @@ typedef struct
     uint8_t tx_head;
     uint8_t tx_tail;
     uint8_t tx_count;
+    uint8_t tx_control_count;
+    uint8_t tx_control_burst;
+    uint8_t rx_window_active;
+    uint32_t tx_ids[LORA_TX_QUEUE_DEPTH];
+    uint32_t next_tx_id;
+    uint32_t active_tx_id;
+    uint32_t completed_tx_id;
+    uint32_t completed_tx_ms;
+    LoraTxQueryResult completed_tx_result;
     LoraRxPacket rx_queue[LORA_RX_QUEUE_DEPTH];
     uint8_t rx_head;
     uint8_t rx_tail;
     uint8_t rx_count;
 } Sx1281Context;
 
+_Static_assert((LORA_TX_NORMAL_QUEUE_DEPTH + LORA_TX_CONTROL_QUEUE_DEPTH) == LORA_TX_QUEUE_DEPTH,
+    "TX lane capacities must fill the existing bounded queue");
+_Static_assert(LORA_TX_CONTROL_BURST_MAX > 0U, "control fairness burst must be positive");
 static Sx1281Context s_contexts[PROJECT_SX1281_INSTANCE_COUNT];
 
 _Static_assert(PROJECT_SX1281_INSTANCE_COUNT <=
@@ -117,6 +129,8 @@ _Static_assert((LORA_RX_QUEUE_DEPTH > 0U) && (LORA_RX_QUEUE_DEPTH <= UINT8_MAX),
 #define s_tx_head             (s_contexts[instance].tx_head)
 #define s_tx_tail             (s_contexts[instance].tx_tail)
 #define s_tx_count            (s_contexts[instance].tx_count)
+#define s_tx_control_count    (s_contexts[instance].tx_control_count)
+#define s_tx_control_burst    (s_contexts[instance].tx_control_burst)
 #define s_rx_queue            (s_contexts[instance].rx_queue)
 #define s_rx_head             (s_contexts[instance].rx_head)
 #define s_rx_tail             (s_contexts[instance].rx_tail)
@@ -161,6 +175,11 @@ static void Lora_TxQueueAssert(uint8_t instance)
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     SILVERSTAR_ASSERT(s_tx_count <= LORA_TX_QUEUE_DEPTH,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT((s_tx_control_count <= LORA_TX_CONTROL_QUEUE_DEPTH) &&
+        (s_tx_control_count <= s_tx_count) &&
+        (((uint32_t)s_tx_count - (uint32_t)s_tx_control_count) <= LORA_TX_NORMAL_QUEUE_DEPTH) &&
+        (s_tx_control_burst <= LORA_TX_CONTROL_BURST_MAX),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     SILVERSTAR_ASSERT(s_tx_head == (((uint32_t)s_tx_tail + s_tx_count) % LORA_TX_QUEUE_DEPTH),
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
 }
@@ -397,113 +416,126 @@ static void Lora_ClearRuntimeState(uint8_t instance)
     Lora_IrqUnlock(primask);
 }
 
-static uint8_t Lora_TxQueuePush(uint8_t instance, const uint8_t *data, uint8_t len)
+/* Caller owns the IRQ lock. At most two normal packets move; controls keep FIFO. */
+static void Lora_TxQueueInsert(uint8_t instance, const uint8_t *data,
+    uint8_t len, uint8_t control, uint32_t transaction_id)
+{
+    uint8_t position = s_tx_head;
+    uint8_t index;
+    if (control != 0U)
+    {
+        for (index = 0U; index < LORA_TX_NORMAL_QUEUE_DEPTH; index++)
+        {
+            uint8_t normal = (uint8_t)(s_tx_count - s_tx_control_count);
+            if (index < normal)
+            {
+                uint8_t previous = (uint8_t)((position + LORA_TX_QUEUE_DEPTH - 1U) % LORA_TX_QUEUE_DEPTH);
+                s_tx_queue[position] = s_tx_queue[previous];
+                s_contexts[instance].tx_ids[position] = s_contexts[instance].tx_ids[previous];
+                position = previous;
+            }
+        }
+        s_tx_control_count++;
+    }
+    s_tx_queue[position].len = len;
+    (void)memcpy(s_tx_queue[position].data, data, len);
+    s_contexts[instance].tx_ids[position] = transaction_id;
+    s_tx_head = (uint8_t)((s_tx_head + 1U) % LORA_TX_QUEUE_DEPTH);
+    s_tx_count++;
+}
+
+/* Caller owns IRQ lock and has validated queue geometry. */
+static uint8_t Lora_TxIdPending(uint8_t instance, uint32_t id)
+{
+    uint8_t found = (uint8_t)(s_contexts[instance].active_tx_id == id);
+    for (uint8_t index = 0U; index < LORA_TX_QUEUE_DEPTH; index++)
+    {
+        uint8_t slot = (uint8_t)((s_tx_tail + index) % LORA_TX_QUEUE_DEPTH);
+        if ((index < s_tx_count) && (s_contexts[instance].tx_ids[slot] == id)) { found = 1U; }
+    }
+    return found;
+}
+
+static uint8_t Lora_TxQueuePushClass(uint8_t instance, const uint8_t *data,
+    uint8_t len, uint8_t control, uint32_t *transaction_id)
 {
     uint32_t primask;
-
-    if ((data == 0) || (len == 0) || (len > LORA_MAX_PAYLOAD_LEN))
-    {
-        return 0U;
-    }
-
-    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-
+    uint32_t id = 0U;
+    if ((data == NULL) || (len == 0U) || (len > LORA_MAX_PAYLOAD_LEN)) { return 0U; }
     primask = Lora_IrqLock();
     Lora_TxQueueAssert(instance);
-
-    if (s_tx_count >= LORA_TX_QUEUE_DEPTH)
+    if (((control != 0U) && (s_tx_control_count >= LORA_TX_CONTROL_QUEUE_DEPTH)) ||
+        ((control == 0U) && (((uint32_t)s_tx_count - (uint32_t)s_tx_control_count) >= LORA_TX_NORMAL_QUEUE_DEPTH)))
+    { Lora_IrqUnlock(primask); return 0U; }
+    if (transaction_id != NULL)
     {
-        Lora_IrqUnlock(primask);
-        return 0U;
+        /* At most eight queued tokens plus one active token can collide. */
+        for (uint8_t attempt = 0U; attempt < (LORA_TX_QUEUE_DEPTH + 2U); attempt++)
+        {
+            s_contexts[instance].next_tx_id = (s_contexts[instance].next_tx_id + 1U) & 0x00FFFFFFUL;
+            if (s_contexts[instance].next_tx_id == 0U) { s_contexts[instance].next_tx_id = 1U; }
+            id = ((uint32_t)instance << 24U) | s_contexts[instance].next_tx_id;
+            if (Lora_TxIdPending(instance, id) == 0U) { break; }
+        }
+        SILVERSTAR_ASSERT(Lora_TxIdPending(instance, id) == 0U,
+            SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+        if (id == s_contexts[instance].completed_tx_id) { s_contexts[instance].completed_tx_id = 0U; }
     }
-
-    s_tx_queue[s_tx_head].len = len;
-    memcpy(s_tx_queue[s_tx_head].data, data, len);
-
-    s_tx_head++;
-    if (s_tx_head >= LORA_TX_QUEUE_DEPTH)
-    {
-        s_tx_head = 0U;
-    }
-
-    s_tx_count++;
+    Lora_TxQueueInsert(instance, data, len, control, id);
+    if (transaction_id != NULL) { *transaction_id = id; }
     Lora_IrqUnlock(primask);
     return 1U;
 }
+
+static uint8_t Lora_TxQueuePush(uint8_t instance, const uint8_t *data, uint8_t len)
+{ return Lora_TxQueuePushClass(instance, data, len, 0U, NULL); }
 
 static uint8_t Lora_TxQueuePushFront(uint8_t instance, const uint8_t *data, uint8_t len)
-{
-    uint32_t primask;
-
-    if ((data == 0) || (len == 0) || (len > LORA_MAX_PAYLOAD_LEN))
-    {
-        return 0U;
-    }
-
-    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-
-    primask = Lora_IrqLock();
-    Lora_TxQueueAssert(instance);
-
-    if (s_tx_count >= LORA_TX_QUEUE_DEPTH)
-    {
-        Lora_IrqUnlock(primask);
-        return 0U;
-    }
-
-    if (s_tx_tail == 0U)
-    {
-        s_tx_tail = (uint8_t)(LORA_TX_QUEUE_DEPTH - 1U);
-    }
-    else
-    {
-        s_tx_tail--;
-    }
-
-    s_tx_queue[s_tx_tail].len = len;
-    memcpy(s_tx_queue[s_tx_tail].data, data, len);
-    s_tx_count++;
-
-    Lora_IrqUnlock(primask);
-    return 1U;
-}
+{ return Lora_TxQueuePushClass(instance, data, len, 1U, NULL); }
 
 static uint8_t Lora_TxQueuePop(uint8_t instance, LoraTxPacket *pkt)
 {
     uint32_t primask;
-
-    if (pkt == 0)
-    {
-        return 0U;
-    }
-
-    SILVERSTAR_ASSERT_OBJECT(pkt, LoraTxPacket,
-        SILVERSTAR_ASSERT_MODULE_DEVICE);
-
+    uint8_t position;
+    uint8_t index;
+    uint8_t normal;
+    uint8_t normal_selected = 0U;
+    if (pkt == NULL) { return 0U; }
     primask = Lora_IrqLock();
     Lora_TxQueueAssert(instance);
-
-    if (s_tx_count == 0)
+    if (s_tx_count == 0U) { Lora_IrqUnlock(primask); return 0U; }
+    normal = (uint8_t)(s_tx_count - s_tx_control_count);
+    position = s_tx_tail;
+    if ((normal != 0U) && ((s_tx_control_count == 0U) ||
+        (s_tx_control_burst >= LORA_TX_CONTROL_BURST_MAX)))
     {
-        Lora_IrqUnlock(primask);
-        return 0U;
+        position = (uint8_t)((s_tx_tail + s_tx_control_count) % LORA_TX_QUEUE_DEPTH);
+        normal_selected = 1U;
     }
-
-    SILVERSTAR_ASSERT((s_tx_queue[s_tx_tail].len > 0U) &&
-        (s_tx_queue[s_tx_tail].len <= LORA_MAX_PAYLOAD_LEN),
+    SILVERSTAR_ASSERT((s_tx_queue[position].len > 0U) && (s_tx_queue[position].len <= LORA_MAX_PAYLOAD_LEN),
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
-
-    *pkt = s_tx_queue[s_tx_tail];
-
-    s_tx_tail++;
-    if (s_tx_tail >= LORA_TX_QUEUE_DEPTH)
+    if (normal_selected != 0U) { s_tx_control_burst = 0U; }
+    else
+    { s_tx_control_count--; if (s_tx_control_burst < LORA_TX_CONTROL_BURST_MAX) { s_tx_control_burst++; } }
+    *pkt = s_tx_queue[position];
+    s_contexts[instance].active_tx_id = s_contexts[instance].tx_ids[position];
+    if (position == s_tx_tail) { s_tx_tail = (uint8_t)((s_tx_tail + 1U) % LORA_TX_QUEUE_DEPTH); }
+    else
     {
-        s_tx_tail = 0U;
+        for (index = 1U; index < LORA_TX_NORMAL_QUEUE_DEPTH; index++)
+        {
+            if (index < normal)
+            {
+                uint8_t next = (uint8_t)((position + 1U) % LORA_TX_QUEUE_DEPTH);
+                s_tx_queue[position] = s_tx_queue[next];
+                s_contexts[instance].tx_ids[position] = s_contexts[instance].tx_ids[next];
+                position = next;
+            }
+        }
+        s_tx_head = (uint8_t)((s_tx_head + LORA_TX_QUEUE_DEPTH - 1U) % LORA_TX_QUEUE_DEPTH);
     }
-
     s_tx_count--;
+    if (s_tx_count == 0U) { s_tx_control_burst = 0U; }
     Lora_IrqUnlock(primask);
     return 1U;
 }
@@ -612,6 +644,7 @@ static void Lora_TryStartNextTx(uint8_t instance)
 
     s_tx_busy = 1U;
     s_radio_in_rx = 0U;
+    s_contexts[instance].rx_window_active = 0U;
     Lora_SetRadioState(instance, LORA_RADIO_STATE_TX);
 }
 
@@ -699,7 +732,8 @@ void Lora_StartRx(uint8_t instance)
     Lora_DiagRecordSetRx(instance);
 
     s_radio_in_rx = 1U;
-    s_rx_started_ms = PlatformTime_Ms();
+    if (s_contexts[instance].rx_window_active == 0U)
+    { s_rx_started_ms = PlatformTime_Ms(); s_contexts[instance].rx_window_active = 1U; }
     if (s_tx_busy != 0)
     {
         Lora_SetRadioState(instance, LORA_RADIO_STATE_TX);
@@ -754,6 +788,54 @@ LoraTxEnqueueResult Lora_TxEnqueuePriority(uint8_t instance, const uint8_t *data
     }
 
     return LORA_TX_ENQUEUE_OK;
+}
+
+LoraTxEnqueueResult Lora_TxEnqueueTracked(uint8_t instance,
+    const uint8_t *data, uint8_t len, uint32_t *transaction_id)
+{
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    if (transaction_id == NULL) { return LORA_TX_ENQUEUE_BAD_PARAM; }
+    *transaction_id = 0U;
+    if (s_inited == 0U) { return LORA_TX_ENQUEUE_NOT_INIT; }
+    if ((data == NULL) || (len == 0U) || (len > LORA_MAX_PAYLOAD_LEN)) { return LORA_TX_ENQUEUE_BAD_PARAM; }
+    if (Lora_TxQueuePushClass(instance, data, len, 1U, transaction_id) == 0U)
+    { Lora_StatsIncrement(&s_stats.tx_dropped); return LORA_TX_ENQUEUE_QUEUE_FULL; }
+    return LORA_TX_ENQUEUE_OK;
+}
+
+LoraTxQueryResult Lora_TxResultGet(uint8_t instance,
+    uint32_t transaction_id, uint32_t *age_ms)
+{
+    uint8_t index;
+    uint32_t primask;
+    LoraTxQueryResult result = LoraTxQueryResult_NotFound;
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    if ((transaction_id == 0U) || (age_ms == NULL)) { return LoraTxQueryResult_InvalidArgument; }
+    *age_ms = 0U;
+    primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance);
+    if (s_contexts[instance].completed_tx_id == transaction_id)
+    {
+        SILVERSTAR_ASSERT((s_contexts[instance].completed_tx_result == LoraTxQueryResult_Complete) ||
+            (s_contexts[instance].completed_tx_result == LoraTxQueryResult_TimedOut),
+            SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+        result = s_contexts[instance].completed_tx_result;
+        *age_ms = (uint32_t)(PlatformTime_Ms() - s_contexts[instance].completed_tx_ms);
+    }
+    else if (s_contexts[instance].active_tx_id == transaction_id) { result = LoraTxQueryResult_Pending; }
+    else
+    {
+        for (index = 0U; index < LORA_TX_QUEUE_DEPTH; index++)
+        {
+            uint8_t position = (uint8_t)((s_tx_tail + index) % LORA_TX_QUEUE_DEPTH);
+            if ((index < s_tx_count) && (s_contexts[instance].tx_ids[position] == transaction_id))
+            { result = LoraTxQueryResult_Pending; }
+        }
+    }
+    Lora_IrqUnlock(primask);
+    return result;
 }
 
 static void Lora_IrqProcess(uint8_t instance, uint16_t raw_irq)
@@ -868,6 +950,22 @@ static void Lora_DiagnosticsRefresh(uint8_t instance)
     Lora_IrqUnlock(primask);
 }
 
+static void Lora_TxReceiptRecord(uint8_t instance, LoraTxQueryResult result)
+{
+    uint32_t primask;
+    SILVERSTAR_ASSERT((result == LoraTxQueryResult_Complete) || (result == LoraTxQueryResult_TimedOut),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    primask = Lora_IrqLock();
+    if (s_contexts[instance].active_tx_id != 0U)
+    {
+        s_contexts[instance].completed_tx_id = s_contexts[instance].active_tx_id;
+        s_contexts[instance].completed_tx_ms = PlatformTime_Ms();
+        s_contexts[instance].completed_tx_result = result;
+        s_contexts[instance].active_tx_id = 0U;
+    }
+    Lora_IrqUnlock(primask);
+}
+
 static void Lora_TxCompletionProcess(uint8_t instance)
 {
     if (s_tx_done_flag != 0U)
@@ -875,6 +973,7 @@ static void Lora_TxCompletionProcess(uint8_t instance)
         s_tx_done_flag = 0U;
         s_tx_busy = 0U;
         Lora_StatsIncrement(&s_stats.tx_ok);
+        Lora_TxReceiptRecord(instance, LoraTxQueryResult_Complete);
         Lora_SetRadioState(instance, LORA_RADIO_STATE_READY);
     }
     if (s_tx_timeout_flag != 0U)
@@ -882,6 +981,7 @@ static void Lora_TxCompletionProcess(uint8_t instance)
         s_tx_timeout_flag = 0U;
         s_tx_busy = 0U;
         Lora_StatsIncrement(&s_stats.tx_timeout);
+        Lora_TxReceiptRecord(instance, LoraTxQueryResult_TimedOut);
         Lora_SetRadioState(instance, LORA_RADIO_STATE_READY);
     }
 }
@@ -957,7 +1057,7 @@ void Lora_Process(uint8_t instance)
 {
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
-    SILVERSTAR_ASSERT(s_inited <= 1U,
+    SILVERSTAR_ASSERT((s_inited <= 1U) && (s_contexts[instance].rx_window_active <= 1U),
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_inited == 0)
     {
@@ -975,11 +1075,10 @@ void Lora_Process(uint8_t instance)
         if (s_radio_in_rx == 0)
         {
             Lora_StartRx(instance);
-            return;
         }
-        /* RX starts after every completion/timeout, even with a full TX ring.
-         * The owner clock comparison is wrap-safe; ISR callbacks do not write
-         * this timestamp. Queue ordering and existing full-queue errors stay. */
+        /* Restart RX after an RX event without resetting its granted window.
+         * A continuous RX stream therefore cannot defer TX forever. A new
+         * 120-ms receive opportunity follows every transmission. */
         if ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) < LORA_RX_DWELL_MS)
         { return; }
         Lora_TryStartNextTx(instance);

@@ -182,7 +182,7 @@ DISABLED_FOR_FLIGHT
 
 进入 PREFLIGHT 后立即发送 `CAPABILITY`；未 ACK 时 1 Hz 重发。
 
-`CAPABILITY_ACK.param0` = 最近一次成功发送的 Capability seq。  
+`CAPABILITY_ACK.param0` = 实际完成无线发送且仍在有效窗口内的 Capability seq（最近最多四项，完成后严格小于 4 秒）。  
 `CAPABILITY_ACK.param1` = `AIR_PROFILE_COMPACT_V0 = 0`。
 
 错误 seq/profile → `BAD_PARAM`。  
@@ -1050,8 +1050,15 @@ GSP-MIN文档与Python解析器透明转发，但本仓库没有地面接收板�
 
 ## Preflight reconnect recovery (2026-10-01)
 
-CAPABILITY remains a 9-byte AIR M0 frame. Before START, it continues at the existing 1 Hz period after acknowledgment so a PC reconnect can discover the actual profile and full scales. A CAPABILITY_ACK for the latest successfully sent Capability sequence and current profile is idempotent while preflight; an old sequence or wrong profile is rejected. ACK, sensor snapshot transactions and critical STATUS retain priority; after handshake, PREFLIGHT_STATUS precedes periodic CAPABILITY. START still stops preflight Capability transmission.
+CAPABILITY remains a 9-byte AIR M0 frame. Before START, it continues at the existing 1 Hz period after acknowledgment so a PC reconnect can discover the actual profile and full scales. A CAPABILITY_ACK for the current profile and one of the last four RF-completed Capability advertisements, strictly less than 4 seconds old, is idempotent while preflight. Enqueue acceptance is not advertisement completion; a newer queued frame cannot invalidate a completed one. Expired, uncompleted and unknown sequences or a wrong profile are rejected. A completed sequence still live in this window is skipped when selecting the next Capability sequence, including 255-to-0 wrap. An older valid reply does not clear a newer handshake's business ACK cache. The unchanged 8-bit wire field cannot distinguish byte-identical replies from different sessions after sequence reuse; this is not a security nonce. ACK, sensor snapshot transactions and critical STATUS retain priority; after handshake, PREFLIGHT_STATUS precedes periodic CAPABILITY. START still stops preflight Capability transmission.
 
 GSHC cannot complete a local handshake from an acknowledged snapshot without a validated Capability and a pending acknowledgment transaction. BOOT or two advancing boot-relative PREFLIGHT_STATE timestamps below the previous timestamp starts a fresh local FC session, cancels pending commands and requires negotiation again. A first timestamp rollback temporarily blocks commands and cancels pending command retries; one delayed sample followed by current time restores the existing session. Mission-relative FLIGHT_STATE timestamps are excluded from this boot-time detector. No mission, unlock or alignment command is automatically replayed. Duplicate same-session Capability remains diagnostic only.
 
 AIR M0 has no FC boot nonce; identical delayed packets after 8-bit sequence reuse cannot be conclusively distinguished by the wire format alone. The rollback detector is a conservative recovery heuristic, not a proof of session identity. Hardware recovery and timeout diagnosis remain separate acceptance evidence.
+
+
+### 2026-10-02 wireless transport scheduling repair
+
+The SX1281 transport keeps its existing eight static packet slots: six FIFO control slots and two ordinary slots. The protocol owner selects the control operation for ACK, Capability and existing critical status/snapshot traffic; the generic transport does not inspect AIR packet types. A full control lane returns NOT_READY and the service keeps its ACK for bounded later retry. At most two controls precede a queued ordinary packet; ordinary traffic therefore makes progress under continuous controls. A newly empty queue resets this burst budget. An in-flight packet is never preempted. The 120 ms receive opportunity remains in place; RX completions or error IRQ restarts retain its original deadline, so continuous incoming traffic cannot postpone TX indefinitely. These are packet/opportunity bounds, not a measured STM32 WCET or an 800 ms round-trip guarantee under errors or a full control lane. AIR/GSP bytes, PHY, command state/readiness checks and PC timeouts are unchanged.
+
+Capability uses one outstanding transport token, with a four-second pending timeout. Only TX_DONE receipts enter the advertisement window; TX_TIMEOUT, lost receipts or expired pending work do not. The receipt age is wrap-safe transport milliseconds, and the service converts that age to its 64-bit monotonic microsecond clock epoch. Both the advertisement window and pending lifetime use that 64-bit clock; a complete 32-bit millisecond cycle cannot revive an expired advertisement or pending receipt. Internal 32-bit tokens encode an instance byte and a nonzero 24-bit counter; bounded allocation avoids the eight queued and one active tokens when that counter wraps. Reused completed tokens lose their old receipt. Untracked ACK/status completion never overwrites the latest tracked receipt. The API retains only the latest tracked receipt, so another caller must tolerate NOT_PRESENT; the service itself tracks only one Capability at a time. CPU-only Capability metadata uses the existing CPU-fast BSS target mapping; no wireless payload or DMA object moves with it.

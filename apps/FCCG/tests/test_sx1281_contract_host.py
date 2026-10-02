@@ -38,7 +38,7 @@ def radio_contract_executable(tmp_path_factory):
     "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
     "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
     "control_state", "control_active_init", "flags", "packet_type", "rx_error",
-    "radio_state",
+    "radio_state", "tx_control_count", "tx_control_burst", "rx_window",
     "rx_count", "rx_sequence", "rx_done_flag", "force_packet_type", "try_busy",
     "raw_busy", "irq_busy", "diag_uninitialized",
 ])
