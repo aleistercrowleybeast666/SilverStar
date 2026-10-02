@@ -2918,6 +2918,7 @@ class MainWindow(QMainWindow):
                     progress_callback=self._TaskProgressCallback_Get(context, "GENERATE", "status.task_running"),
                 ),
                 generated,
+                indeterminate=False,
             )
 
         if scope == TargetScope.GROUND:
@@ -3742,7 +3743,7 @@ class MainWindow(QMainWindow):
         result_callback: Callable[[Any], None],
         error_callback: Callable[[object], None] | None = None,
         *,
-        indeterminate: bool = False,
+        indeterminate: bool = True,
         line_callback: Callable[[str], None] | None = None,
     ) -> bool:
         if self._active_worker is not None:
@@ -3792,11 +3793,14 @@ class MainWindow(QMainWindow):
         return progress
 
     def _Task_Progress(self, progress: float, code: str) -> None:
-        self._last_task_progress = int(
+        # A completed phase is not a successful task; only _Task_Finish may
+        # show 100%. A real report replaces the initial unknown-duration busy state.
+        self._last_task_progress = min(999, int(
             max(0.0, min(1.0, progress)) * 1000
-        )
-        if not self._task_indeterminate:
-            self.progress_bar.setValue(self._last_task_progress)
+        ))
+        self._task_indeterminate = False
+        self.progress_bar.setRange(0, 1000)
+        self.progress_bar.setValue(self._last_task_progress)
         self.status_label.setText(self._translator.Text_Get(code))
 
     def _Task_Result(self, result: Any) -> None:
@@ -3805,6 +3809,10 @@ class MainWindow(QMainWindow):
     def _Task_Line(self, line: str) -> None:
         progress_event = TaskProgressEvent_Parse(line)
         if progress_event is not None:
+            completed = (0 if progress_event.state == TaskProgressState.PLAN else
+                         progress_event.current - 1 if progress_event.state == TaskProgressState.BEGIN else
+                         progress_event.current)
+            self._Task_Progress(completed / progress_event.total, "status.task_running")
             current = (
                 0
                 if progress_event.state == TaskProgressState.PLAN
