@@ -250,15 +250,53 @@ function Get-ArchitectureLoggingSelection {
     return $enabled
 }
 
+# CubeMX imports own their original Core/FATFS paths under HardwareGenerated.
+# Board scopes remain mandatory for board-plugin projects and remain scanned
+# if a custom project contains a Board directory. Missing/invalid mode fails.
+$projectConfiguration = Get-Content -Raw -Encoding UTF8 -LiteralPath (
+    Join-Path $repoRoot 'SilverStar.ssproject') | ConvertFrom-Json
+$hardwareMode = [string]$projectConfiguration.hardware.mode
+Assert-ArchitectureCondition -Condition ($hardwareMode -in @('board_plugin', 'custom')) `
+    -Message 'Generated project must explicitly select board-plugin or custom hardware.'
+$boardCodePaths = @('Board')
+$cubeCorePath = 'Core'
+$iocPath = 'Flight_Controller0.5.ioc'
+$fatfsConfigurationPath = 'FATFS\Target\ffconf.h'
+$manifestDirectories = @('BuildSystem', 'Targets', 'Platform', 'Devices',
+    'Board', 'FlightLogic', 'Generated')
+if ($hardwareMode -eq 'custom') {
+    $cubeRoot = 'HardwareGenerated\STM32CubeMX'
+    Assert-ArchitectureCondition `
+        -Condition (([string]$projectConfiguration.components.board -eq '') -and
+            ([string]$projectConfiguration.hardware.snapshot_id -cmatch '^[a-f0-9]{64}$') -and
+            (Test-Path -LiteralPath (Join-Path $repoRoot $cubeRoot) -PathType Container)) `
+        -Message 'Custom hardware requires an imported snapshot and no selected Board plugin.'
+    $importedIocName = [string]$projectConfiguration.hardware.ioc_file
+    $validIocName = ($importedIocName -match '^[^\\/:*?"<>|]+\.ioc$') -and
+        ($importedIocName -notin @('.', '..'))
+    Assert-ArchitectureCondition -Condition $validIocName `
+        -Message 'Custom hardware IOC metadata must name one snapshot-local IOC file.'
+    if ($validIocName) {
+        $iocPath = $cubeRoot + '\' + $importedIocName
+    }
+    $cubeCorePath = $cubeRoot + '\Core'
+    $fatfsConfigurationPath = $cubeRoot + '\FATFS\Target\ffconf.h'
+    $manifestDirectories += 'HardwareGenerated'
+    if (-not (Test-Path -LiteralPath (Join-Path $repoRoot 'Board') -PathType Container)) {
+        $boardCodePaths = @()
+        $manifestDirectories = @($manifestDirectories | Where-Object { $_ -ne 'Board' })
+    }
+}
+
 $portableCodePaths = @(
     'System', 'Algorithm', 'Protocol', 'Devices', 'Interfaces', 'Modules',
-    'Common', 'Platform\Inc', 'Board', 'FlightLogic'
-)
+    'Common', 'Platform\Inc', 'FlightLogic'
+) + $boardCodePaths
 $firstPartyRuntimePaths = @(
-    'APP', 'Algorithm', 'Board', 'Common', 'Devices', 'FlightLogic',
+    'APP', 'Algorithm', 'Common', 'Devices', 'FlightLogic',
     'Generated', 'Interfaces', 'Modules', 'OS', 'Platform', 'Protocol',
     'System', 'Targets'
-)
+) + $boardCodePaths
 $systemLayerPaths = @(
     'System', 'Algorithm', 'FlightLogic', 'Protocol', 'Interfaces', 'Modules'
 )
@@ -326,7 +364,7 @@ Assert-NoArchitecturePattern -Name `
 
 Assert-NoArchitecturePattern -Name `
     'CMSIS-RTOS2 or defaultTask remains in first-party application code.' `
-    -Paths @('APP', 'Core', 'OS', 'System', 'Devices', 'Platform') `
+    -Paths @('APP', $cubeCorePath, 'OS', 'System', 'Devices', 'Platform') `
     -Pattern ('(?i)\bcmsis_os2?\b|\bosThread[A-Za-z0-9_]*\b|' +
         '\bosDelay\b|\bosKernel[A-Za-z0-9_]*\b|\bdefaultTask\b|' +
         '\bStartDefaultTask\b')
@@ -343,7 +381,7 @@ Assert-NoArchitecturePattern -Name `
 
 Assert-NoArchitecturePattern -Name `
     'A non-static FreeRTOS object creation API remains in first-party code.' `
-    -Paths @('APP', 'OS', 'Core') `
+    -Paths @('APP', 'OS', $cubeCorePath) `
     -Pattern '\bxTaskCreate\s*\(|\bxQueueCreate\s*\(|\bxSemaphoreCreate(?:Binary|Mutex|Counting)\s*\('
 
 Assert-NoArchitecturePattern -Name `
@@ -376,6 +414,9 @@ $legacyPaths = @(
     'Protocol\SSLOG\generated',
     'Tools\generate_sslog.py'
 )
+if ($hardwareMode -eq 'custom') {
+    $legacyPaths += @(($cubeCorePath + '\Src\freertos.c'), ($cubeCorePath + '\Inc\FreeRTOSConfig.h'))
+}
 foreach ($legacyPath in $legacyPaths) {
     Assert-PathAbsent -RelativePath $legacyPath
 }
@@ -438,12 +479,10 @@ Assert-NoArchitecturePattern -Name `
         '\bInsMechanization_|\bSystemLifecycle_(?:Process|Enter)')
 
 $manifestFiles = @('Makefile') + @(
-    Get-ChildItem -LiteralPath (Join-Path $repoRoot 'BuildSystem'),
-        (Join-Path $repoRoot 'Targets'), (Join-Path $repoRoot 'Platform'),
-        (Join-Path $repoRoot 'Devices'), (Join-Path $repoRoot 'Board'),
-        (Join-Path $repoRoot 'FlightLogic'), (Join-Path $repoRoot 'Generated') `
-        -Recurse -File -Filter '*.mk' |
-        ForEach-Object { $_.FullName.Substring($repoRoot.Length + 1) }
+    foreach ($directory in $manifestDirectories) {
+        Get-ChildItem -LiteralPath (Join-Path $repoRoot $directory) -Recurse -File -Filter '*.mk' |
+            ForEach-Object { $_.FullName.Substring($repoRoot.Length + 1) }
+    }
 )
 Assert-NoArchitecturePattern -Name `
     'Authoritative build manifests use wildcard scanning or object flattening.' `
@@ -484,7 +523,7 @@ foreach ($manifestFile in $manifestFiles) {
 
 Assert-NoArchitecturePattern -Name `
     'FatFs retains a dynamic allocation hook.' `
-    -Paths @('FATFS\Target\ffconf.h') `
+    -Paths @($fatfsConfigurationPath) `
     -Pattern '(?i)\b(?:pvPortMalloc|vPortFree|ff_malloc|ff_free)\b'
 
 Write-Output 'FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries'
@@ -580,37 +619,39 @@ Assert-FileContainsPattern -RelativePath '.vscode\tasks.json' `
 Assert-FileContainsPattern -RelativePath 'STM32F407XX_FLASH.ld' `
     -Pattern '_Min_Heap_Size\s*=\s*0x0\s*;' `
     -Message 'The target linker script still reserves a C runtime heap.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'ProjectManager\.HeapSize=0x0' `
     -Message 'CubeMX project metadata does not preserve the zero-heap target.'
 Assert-NoArchitecturePattern -Name `
     'CubeMX project metadata still owns FreeRTOS or a default task.' `
-    -Paths @('Flight_Controller0.5.ioc') -Extensions @('.ioc') `
+    -Paths @($iocPath) -Extensions @('.ioc') `
     -Pattern '(?i)FREERTOS|CMSIS_V2|defaultTask|rtos\.0\.ip'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'NVIC\.TimeBaseIP=TIM1' `
     -Message 'CubeMX no longer assigns the HAL tick to TIM1.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'USART1\.BaudRate=230400' `
     -Message 'CubeMX IMU UART baudrate changed from 230400.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'USART2\.BaudRate=921600' `
     -Message 'CubeMX GNSS UART baudrate changed from 921600.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'USART3\.BaudRate=230400' `
     -Message 'CubeMX console UART baudrate changed from 230400.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'Dma\.USART1_RX\.0\.Mode=DMA_CIRCULAR' `
     -Message 'CubeMX IMU RX DMA is no longer circular.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'Dma\.USART2_RX\.2\.Mode=DMA_CIRCULAR' `
     -Message 'CubeMX GNSS RX DMA is no longer circular.'
-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
+Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'Dma\.USART3_RX\.4\.Mode=DMA_CIRCULAR' `
     -Message 'CubeMX console RX DMA is no longer circular.'
 
-$iocContent = Get-Content -Raw -LiteralPath `
-    (Join-Path $repoRoot 'Flight_Controller0.5.ioc')
+$iocContent = ''
+if (Test-Path -LiteralPath (Join-Path $repoRoot $iocPath) -PathType Leaf) {
+    $iocContent = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $iocPath)
+}
 $requiredIocEntries = @(
     @('Mcu.IPNb=11', 'CubeMX peripheral count does not reflect FreeRTOS removal.'),
     @('NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4', 'CubeMX NVIC priority grouping changed.'),
@@ -898,7 +939,7 @@ Assert-FileContainsPattern -RelativePath 'OS\FreeRTOS\freertos_hooks.c' `
 Assert-FileContainsPattern -RelativePath 'Targets\SilverStar_F407\Src\freertos_target_irq.c' `
     -Pattern '\bxPortSysTickHandler\s*\(' `
     -Message 'STM32F407 SysTick is not routed to the native FreeRTOS port.'
-Assert-FileContainsPattern -RelativePath 'Core\Src\stm32f4xx_hal_timebase_tim.c' `
+Assert-FileContainsPattern -RelativePath ($cubeCorePath + '\Src\stm32f4xx_hal_timebase_tim.c') `
     -Pattern '\bTIM1\b' `
     -Message 'HAL tick is no longer kept on TIM1.'
 Assert-FileContainsPattern -RelativePath 'APP\Src\app_tasks.c' `
