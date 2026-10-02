@@ -57,6 +57,8 @@ static uint8_t s_status_failure, s_irq_failure, s_send_failure, s_rx_setup_failu
 static uint8_t s_command_failure;
 static uint64_t s_failure_end;
 static uint8_t s_owner_period[2], s_owner_phase[2], s_clock_quantum[2];
+static uint8_t s_owner_jitter, s_owner_jitter_index[2];
+static uint64_t s_owner_next[2];
 
 static void Physical_BusFailure(void)
 {
@@ -186,6 +188,8 @@ static void Duplex_Init(uint32_t clock_base, uint8_t with_flight)
     s_send_failure = 0U; s_rx_setup_failure = 0U; s_payload_failure = 0U; s_command_failure = 0U;
     for (unsigned int endpoint = 0U; endpoint < 2U; endpoint++)
     { s_owner_period[endpoint] = 1U; s_owner_phase[endpoint] = 0U; s_clock_quantum[endpoint] = 1U; }
+    s_owner_jitter = 0U; memset(s_owner_next, 0, sizeof(s_owner_next));
+    memset(s_owner_jitter_index, 0, sizeof(s_owner_jitter_index));
     s_tick_ms = clock_base; s_command_received = 0U; s_ack_received = 0U; s_enqueue_errors = 0U;
     s_endpoint = 1U; TEST_CHECK(GroundRadio_Init() == GROUND_RADIO_OK);
     if (with_flight != 0U)
@@ -197,11 +201,19 @@ static void Duplex_QueueFlight(void)
     s_endpoint = 0U;
     (void)Lora_TxEnqueue(0U, normal, sizeof(normal));
 }
+static uint8_t Duplex_OwnerDue(unsigned int endpoint, uint64_t ms)
+{
+    if (s_owner_jitter == 0U) { return (uint8_t)((ms % s_owner_period[endpoint]) == s_owner_phase[endpoint]); }
+    static const uint8_t gaps[4] = {1U, 4U, 2U, 3U};
+    if (ms < s_owner_next[endpoint]) { return 0U; }
+    s_owner_next[endpoint] = ms + gaps[s_owner_jitter_index[endpoint] % 4U];
+    s_owner_jitter_index[endpoint]++; return 1U;
+}
 static void Duplex_Step(uint64_t ms, uint8_t flight, uint8_t refill)
 {
     s_ms = ms; s_tick_ms = s_clock_base + (uint32_t)ms;
     Physical_Events();
-    if ((flight != 0U) && ((ms % s_owner_period[0]) == s_owner_phase[0]))
+    if ((flight != 0U) && (Duplex_OwnerDue(0U, ms) != 0U))
     {
         s_tick_ms = s_clock_base + (uint32_t)(ms / s_clock_quantum[0] * s_clock_quantum[0]);
         s_endpoint = 0U; Lora_Process(0U);
@@ -216,7 +228,7 @@ static void Duplex_Step(uint64_t ms, uint8_t flight, uint8_t refill)
         }
         if (refill != 0U) { Duplex_QueueFlight(); }
     }
-    if ((ms % s_owner_period[1]) != s_owner_phase[1]) { return; }
+    if (Duplex_OwnerDue(1U, ms) == 0U) { return; }
     s_tick_ms = s_clock_base + (uint32_t)(ms / s_clock_quantum[1] * s_clock_quantum[1]);
     s_endpoint = 1U; GroundRadio_Process();
     uint8_t data[64], length = 0U;
@@ -516,7 +528,24 @@ static void Test_OwnerJitter(void)
             }
         }
     }
-    printf("OWNER_DELAY cases%u combined delay/rounding<=4ms worst_ack_ms=%u; assumption, not target WCET\n", cases, worst);
+    for (uint8_t shift = 0U; shift < 4U; shift++)
+    {
+        Duplex_Init(UINT32_MAX - 100U, 1U); Duplex_QueueFlight(); Duplex_QueueFlight();
+        s_owner_jitter = 1U; s_owner_jitter_index[1] = shift; s_owner_next[1] = shift;
+        uint8_t command[64] = {0x20U, 1U}; unsigned int done = 0U;
+        for (unsigned int ms = 0U; ms < 3000U; ms++)
+        {
+            if ((ms % 800U) == 0U)
+            { s_endpoint = 1U; TEST_CHECK(GroundRadio_TxEnqueue(command, sizeof(command)) == GROUND_RADIO_OK); }
+            Duplex_Step(ms, 1U, 1U);
+            if (s_ack_received != 0U) { done = ms; break; }
+        }
+        TEST_CHECK(s_ack_received != 0U); TEST_CHECK(s_enqueue_errors == 0U);
+        TEST_CHECK(s_hw[0].software_abort == 0U && s_hw[1].software_abort == 0U);
+        TEST_CHECK(s_hw[0].collisions == 0U && s_hw[1].collisions == 0U);
+        if (done > worst) { worst = done; } cases++;
+    }
+    printf("OWNER_DELAY cases%u combined delay/rounding<=4ms plus1/4/2/3ms varying gaps worst_ack_ms=%u; assumption, not target WCET\n", cases, worst);
 }
 
 int main(int argc, char **argv)

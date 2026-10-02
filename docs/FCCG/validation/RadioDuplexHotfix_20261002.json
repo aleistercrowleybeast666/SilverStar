@@ -1,0 +1,288 @@
+{
+  "schema": "silverstar.radio_duplex_hotfix_evidence.v1",
+  "date_utc": "2026-10-02T07:10:25.909744+00:00",
+  "source_commit": "2395edad6eff88dd5aa0f48bc4a33eb653bf756b",
+  "source_base": "0b98f498f1d2eb27f96bf17d1442c884c9052bb1",
+  "required_incremental_commits": [
+    "0826c7b21d42ac85a8e3a26d83b3829bc4d9ecf8",
+    "2395edad6eff88dd5aa0f48bc4a33eb653bf756b"
+  ],
+  "branch": "fix/radio-handshake-latency-20261002",
+  "worktree": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002",
+  "configuration": {
+    "flight_input": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\FCCG\\tests\\fixtures\\radio_handshake.ssproject",
+      "bytes": 77895,
+      "sha256": "0331267c803050dd08a5671cff864a66201e93c81f9156c6fba65a1d7d7df4bc"
+    },
+    "flight_original_identity": "SS_0_5_TEST_4",
+    "flight_candidate_identity": "SS_RadioHandshake_2",
+    "flight_estimator": "KF6, Delay=10; complete sensor configuration retained",
+    "ground_original_input": "D:/python_software/SilverStar/.work/SoftwareFreeze_20261001_v1/candidate_a_v6/SilverStar.ssproject",
+    "ground_working_input": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2-ground-input.ssproject",
+      "bytes": 73909,
+      "sha256": "9c19c7a9ca61529b2557bae824fd1a0c2b7349c0466c54d8f53bad8f55a4f33d"
+    },
+    "ground_candidate_identity": "SS_RadioHandshake_2_Ground",
+    "changes": "Candidate identity and derived provenance only; runtime sensor/PHY/pins/baud/START checks unchanged by RF patch",
+    "hardware_actions": []
+  },
+  "changed_source_sha256": {
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_sx1281_device.c": "abb65043a566db7a1c6e4e0a39d6086b42537e8afa07c5656a4a82fdfc60d3ab",
+    "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_sx1281_multi_instance.c": "802258b04bce81a7f9ff364ded8c5b64d27acd5f6809a20c5f275b1ac71e4888",
+    "apps/FCCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Radio/Src/ground_radio_sx1281.c": "bd3a3a4ba4c096aaf9082755383f5814b4784bcf705daec4c9e5d9249714bee5",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.c": "0fdefdbd62f52a50b3726fb12d48e38c0e378b3eb98753e902a0debff1ff92b0",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Inc/sx1281_config.h": "29915c225e625d337c86ac7de67803e41c4665feb5a5b00002f5fa2a88cef7a3",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Inc/sx1281_device.h": "83ded33c52b592f8742ed85c9d98ea4942893448fe30ff0688886d9c93fa8e26",
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c": "bf85f139219662ffc2462481ae9c3703fd9ddcce7b2f60c945c870b826c6b812",
+    "apps/FCCG/tests/fixtures/radio_duplex_host.c": "05beec4cb9b31f89f58aab5d39d8dc7679a3aff24d589b578da864404f410508",
+    "apps/FCCG/tests/fixtures/radio_handshake_host.c": "a7b3a71f811a28676213d5ca34e24c275ed20ee9b6dd981e9723516d3f1f376a",
+    "apps/FCCG/tests/fixtures/sx1281_contract_host.c": "234a49b8739b84e9eac1b883628da630bb3806e4c97fe06c701e83b64eec693b",
+    "apps/FCCG/tests/test_radio_duplex_generated_host.py": "82ceb03ad9166819d261458d28e3bd5b9f185dfeb92748f4ee75b864225f80cb",
+    "apps/FCCG/tests/test_radio_handshake_generated_host.py": "551a56b4963bf1ed4895d44d9aa40fb694a9a972fef47d58cfb69dc794faedbd",
+    "apps/FCCG/tests/test_sx1281_contract_host.py": "6b0636a80cdc58b3d54e14ef215e83268b8cb34faf44edb1b70aaeaf6ce84ac9"
+  },
+  "generated": {
+    "flight": {
+      "project": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller",
+      "manifest": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-source-manifest.json",
+        "bytes": 69917,
+        "sha256": "ceddef84902f9e2de483e9779f503b8a820a019ec4fa2906d70f7a92a2461ebf"
+      },
+      "file_count": 594
+    },
+    "ground": {
+      "project": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station",
+      "manifest": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-source-manifest.json",
+        "bytes": 19677,
+        "sha256": "089e9a246bea20fc2a0f062ab031ff3141fc097852128f8bde7d1e1028829254"
+      },
+      "file_count": 163
+    }
+  },
+  "artifacts": {
+    "flight": {
+      "elf": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+        "bytes": 3256528,
+        "sha256": "be9b0e71cef2d3b413686e173aec0a1d3248c06e57622a4c9a37f6521b80c065"
+      },
+      "bin": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+        "bytes": 322520,
+        "sha256": "7d13fffc0a6463eddae78b822e54741b84e0fc85621e87ece50d71561ccc4cdb"
+      },
+      "map": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+        "bytes": 1487126,
+        "sha256": "dcc8da83746b5eaeaed9a19dec9cd20aeb46f498c639ecd4535e264161a68ef3"
+      }
+    },
+    "ground": {
+      "elf": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station\\build\\ground.elf",
+        "bytes": 53304,
+        "sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1"
+      },
+      "bin": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station\\build\\ground.bin",
+        "bytes": 26000,
+        "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f"
+      },
+      "map": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g-ground\\Ground_Station\\build\\ground.map",
+        "bytes": 202750,
+        "sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504"
+      }
+    }
+  },
+  "source_firmware_archives": {
+    "flight": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\SS_RadioHandshake_2_rf2g_flight_SourceFirmware.zip",
+      "bytes": 6160331,
+      "sha256": "cee56f8ef10304b42cf088a39a180bbee70823946f91bc54aab6e4c94ade2804"
+    },
+    "ground": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\SS_RadioHandshake_2_rf2g_ground_SourceFirmware.zip",
+      "bytes": 875434,
+      "sha256": "601e61f83b623b333001af7418cbac19b883b1860153a12e0d114fa3bb3565a2"
+    }
+  },
+  "pre_fix": {
+    "rf0b98_physical_timing": "free-running-failure-0b98/timing-witness-results.json: real generated FC/Ground drivers reproduce simultaneous SEND314ms and early RX preemption; three scenarios exit1; full logs retained",
+    "hardware_failure": "free-running-failure-0b98/checkpoint.json: preserved user-origin free-running52send/52GSPACK/fourAIRACK; no new hardware runs performed",
+    "spi0826": "rf2e-spi-pre.log: actual generated0826 driver fails spi_read_failures with259 assertions. rf2e-spi-extra-pre.log: two added health/setup/send/payload fault scenarios fail, with21 spi_command_failures assertions. Exact binaries/source hashes retained in pytest build records.",
+    "earlier_failed_trials": [
+      "rf2b actual TX_DONE skipped mandatory RX window; fixed before0826",
+      "rf2d full Host failed old reserved status-mode1 fixtures; changed to actual legal standby-mode2 without removing assertions",
+      "rf2f-handshake initial new test compilation failed due mistaken GetHealth symbol; corrected to existing HealthGet; all subsequent complete runs passed"
+    ]
+  },
+  "software_gates": {
+    "command_records": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-final-commands.json",
+      "bytes": 9127,
+      "sha256": "96ea6648dbfd2407591bbfa453fc840793d630acafad326c5f5fe4a269955771"
+    },
+    "all_exit_codes": 0,
+    "owner_regressions": "73 passed; actual generated Flight/Ground driver, actual transport/service; ports only stubbed",
+    "gshc_regressions": "236 passed,3subtests passed; START ACK/controller state, sensor snapshots, capability/calibration",
+    "flight_host": "72 executables,4396746 checks,0failures,7compile-pass cases,17expected compile failures;8 unselected component skips retained",
+    "flight_skips": [
+      "Skipped host test attitude_alignment: unselected component sources",
+      "Skipped host test alignment_strategy_gravity_known_yaw: unselected component sources",
+      "Skipped host test alignment_strategy_gravity_mag_triad: unselected component sources",
+      "Skipped host test alignment_strategy_hardware_quat6_known_yaw: unselected component sources",
+      "Skipped host test alignment_strategy_hardware_quat9: unselected component sources",
+      "Skipped host test navigation_sf6: unselected component sources",
+      "Skipped host test board_power_service: unselected component sources",
+      "Skipped host test board_mission_action_service: unselected component sources"
+    ],
+    "flight_architecture": "334checks,0failures; source graph ownership, generated facades and FreeRTOS set",
+    "ground_architecture": "38declared sources,ownership/startup pass",
+    "static_analysis": "Actual ARM object compilation with -fanalyzer:105Flight and14Ground first-party source compilations; not syntax-only",
+    "first_party_compile_warnings": [],
+    "ground_linker_warnings": [
+      "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+      "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+      "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+      "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+    ],
+    "warning_scope": "Ground libnosys/newlib warnings retained, so do not claim warning-free whole firmware",
+    "power10": {
+      "flight": {
+        "checks": 6068,
+        "files": 108,
+        "functions": 2641,
+        "recommendations": 750
+      },
+      "ground": {
+        "checks": 456,
+        "files": 15,
+        "functions": 164,
+        "recommendations": 42
+      },
+      "template_revision": "unchanged versus0b98 generated checker; no new exceptions",
+      "critical_contract_review": "NOT_PROVEN; manual acceptance pending. Assertion candidates and averages are heuristics/informational. No original PoT/NASA certification claim"
+    }
+  },
+  "timing": {
+    "phy": "unchanged2473000000Hz,SF10,BW812500Hz,CR4/5,preamble16,explicit header,CRC16",
+    "airtime_ms_ceil": {
+      "9bytes": 49,
+      "26bytes": 74,
+      "64bytes": 118
+    },
+    "flight_grant_ms": 122,
+    "ground_listen_ms": 244,
+    "post_cases": {
+      "phase_scan": "800PCenqueue phases,zero modeled steady collisions,worstACK367ms",
+      "boundary": "122start phases x4IRQ suppression modes,no software preemption",
+      "startup": "500boot offsets,15modeled initial collisions,all recover,worst955ms afterboot; not an800ms startup guarantee",
+      "full_stream": "eight64-byte commands FIFO/all replies while continuous downlink",
+      "owner_jitter": "OWNER_DELAY cases24 combined delay/rounding<=4ms plus1/4/2/3ms varying gaps worst_ack_ms=376; assumption, not target WCET\nowner_jitter: 372 checks, 0 failures",
+      "airtime_formula": "8192 SF/BW/CR/length combinations match independent Semtech formula,only selected PHY exercised end-to-end",
+      "spi_failure": "SPIerror/SPItimeout/BUSYtimeout,transient/persistent status,staleIRQ,send/setup,payload,no-queue fault and offlinehealth tests"
+    },
+    "margin_ms": 4,
+    "margin_status": "assumption under software test; target scheduling delay, oscillator error and WCET NOT_PROVEN",
+    "slow_phy_limit": "For SF12/BW203125/CR4/8,9-byte airtime893ms,64-byte2667ms,Flightgrant2671ms andGroundlisten5342ms. These exceed PC800ms retries and can exceed unchanged hardwareTX800ms timeout; reliable end-to-end operation of those slow profiles NOT_PROVEN, no PHY/default broadening in this hotfix."
+  },
+  "memory": {
+    "flight_main_sram": 102392,
+    "main_sram_budget": 102400,
+    "budget_spare": 8,
+    "main_sram_hardware_capacity": 131072,
+    "delta_vs0b98": 8,
+    "delta_vs0826": 0,
+    "ccm": 55520,
+    "ccm_delta_vs0b98": 0,
+    "dma_bss": 8904,
+    "dma_delta": 0,
+    "radio_context": {
+      "size_bytes": 1436,
+      "delta_vs0b98": 8,
+      "flight_address": "0x200143e0",
+      "ground_address": "0x20000aa0",
+      "section": ".bss; main SRAM, no DMA object relocated to CCM"
+    },
+    "ground_ram_including_heap_stack": 14192,
+    "ground_sram_capacity": 20480,
+    "ground_spare": 6288,
+    "ground_delta_vs50cc2d3": 56,
+    "ground_stack_reservation": 1024,
+    "spi_followup_delta": 0,
+    "ground_section_sum_without_4byte_data_bss_padding": 14188
+  },
+  "stack": {
+    "report": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\rf2g\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "bytes": 14742,
+      "sha256": "8e11bb2e92d9f7ff2438dceb3b46a6327f6264801e12fcc62b56efb91002c639"
+    },
+    "telemetry_estimate": 2136,
+    "telemetry_configured": 4096,
+    "telemetry_tool_margin": 1960,
+    "actual_all_paths_main_msp_isr_nesting": "NOT_PROVEN. .su and linked call analysis retained; no observed target high-water or hardware margin proof. Ground .su retained; Ground whole MSP/ISR proof NOT_PROVEN."
+  },
+  "wire_audit": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-wire-audit.json",
+    "bytes": 5724,
+    "sha256": "25a51a1aaf96f0e62873754daf3bc2dbf7c202ece21a055a86273bb059275dbe"
+  },
+  "ground_reflash_required": true,
+  "mixed_pair_evidence": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2c-legacy-compatibility.json",
+    "bytes": 21179,
+    "sha256": "6d9634b5c597a074eeb0c80ce155d3159007264502f1111c9eb96cabe0fd1b55"
+  },
+  "review": {
+    "changed_contracts": "Reviewed fixed airtime arithmetic bounds,role-specific finite RX turns,first detection deadline/no renewal,completion-only peer grant,opaque Ground FIFO,Flight priority/fairness,instance isolation,clock wrap. Fault recovery uses owner-only coherent bus snapshots,counter changes+last result,ordinary bounded offline latch,no fake READY or successful receipt,IRQ-locked bounded eight-queue discard and adapter health invalidation. Rejected SPI IRQ/payload data is not published.",
+    "linked_inventory": [
+      {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-flight-linked-source-inventory.json",
+        "bytes": 48345,
+        "sha256": "086b5c4c0eccc6613ad317edee677ca741de09946473436c8b9913fd42e6496c"
+      },
+      {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-ground-linked-source-inventory.json",
+        "bytes": 14839,
+        "sha256": "0f02cefaeefe9a5bcdb227231e1d6cec8ff8cf96ef164c2195217344075ce76b"
+      }
+    ],
+    "no_new_allowlist_exception": true,
+    "manual_whole_project_critical_contracts": "NOT_PROVEN",
+    "whole_program_acyclic_call_graph_and_bounded_stack": "NOT_PROVEN including linked HAL/RTOS/FatFs/SX1280/newlib/math libraries and callbacks",
+    "hardware_rf_irq_dma_wcet_navigation_flight_qualification": "NOT_PROVEN; no hardware actions",
+    "integration": "Parent must combine RF increments with its own M9N/GNSS-admission changes and freshly regenerate/revalidate final paired candidates. This standalone RF image does not contain later parent changes."
+  },
+  "tools": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-tool-versions.json",
+    "bytes": 1113,
+    "sha256": "36bd5e02f1cfb8ae04a463eb768c50d12b11bb1d181d631a32a04b3e39332fa1"
+  },
+  "logs_directory": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence",
+  "source_hash_note": "SHA256 values above are committed Git blobs for tested source2395; owner payload generated bytes match those working files. Documentation/evidence follow-up is separate; no tested code changed.",
+  "host_test_snapshot": {
+    "base_commit": "2395edad6eff88dd5aa0f48bc4a33eb653bf756b",
+    "jitter_patch": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-host-jitter-snapshot.patch",
+      "bytes": 4080,
+      "sha256": "3c099a54e6b0d55a574b50e19bc0c7b4744c7d4382ff2f224d69c1ee73238bab"
+    },
+    "source": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\apps\\FCCG\\tests\\fixtures\\radio_duplex_host.c",
+      "bytes": 28606,
+      "sha256": "30171b779eba3880beb39a6f292b12d28eaef6798b6e0e6dc03706d2b9f5f629"
+    },
+    "note": "Only Host physical-owner schedule gains varying1/4/2/3ms intervals; no generated target production code changes. Separate evidence/test commit will contain this patch."
+  },
+  "core_spi_diff": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RadioHandshakeHotfix_20261002\\.work\\evidence\\rf2g-SPI-CoreDiff.patch",
+    "bytes": 15708,
+    "sha256": "d326362e85e68409995b1461ebc87d97ab030d27a8137eabdc3bdc1267dc8b85"
+  }
+}
