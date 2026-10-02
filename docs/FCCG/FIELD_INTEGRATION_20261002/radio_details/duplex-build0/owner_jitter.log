@@ -1,0 +1,2 @@
+OWNER_DELAY cases24 combined delay/rounding<=4ms plus1/4/2/3ms varying gaps worst_ack_ms=376; assumption, not target WCET
+owner_jitter: 372 checks, 0 failures
