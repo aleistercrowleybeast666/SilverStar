@@ -29,8 +29,7 @@
 #include "system_user_config.h"
 #include "system_user_startup_config.h"
 
-#define SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US 2000000ULL
-#define SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US 120000000ULL
+#include "system_barometer_cold.h"
 
 typedef enum
 {
@@ -911,6 +910,26 @@ const SystemStartupDeviceReport *SystemStartup_GetDeviceReport(
     return &s_startup_report.devices[device_id];
 }
 
+static inline void SystemStartup_BarometerWindowUpdate(uint64_t phase_started_us)
+{
+    SystemDeviceResult result;
+    if ((SYSTEM_BUILD_BAROMETER_COLD_ENABLED == 0U) ||
+        (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_BAROMETER) == 0U))
+    { return; }
+    SILVERSTAR_ASSERT((s_startup_phase == SystemStartupPhase_OtherAdapters) ||
+        (s_startup_phase == SystemStartupPhase_WaitConfig) ||
+        (s_startup_phase == SystemStartupPhase_WaitCommunication),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (s_startup_phase == SystemStartupPhase_OtherAdapters)
+    { result = SystemBarometerCold_StartupWindowBegin(phase_started_us); }
+    else if (s_startup_phase == SystemStartupPhase_WaitConfig)
+    { result = SystemBarometerCold_StartupCommunicationBegin(phase_started_us); }
+    else
+    { result = SystemBarometerCold_StartupWindowEnd(); }
+    if (result != SYSTEM_DEVICE_OK)
+    { DebugLog_Print("STARTUP barometer window phase transition failed"); }
+}
+
 static uint8_t SystemStartup_WaitConfigTick(void)
 {
     uint64_t now_us;
@@ -938,6 +957,7 @@ static uint8_t SystemStartup_WaitConfigTick(void)
             SYSTEM_DEVICE_TIMEOUT; }
     }
     s_phase_started_us = SystemTime_GetMonotonicUs();
+    SystemStartup_BarometerWindowUpdate(s_phase_started_us);
     s_startup_phase = SystemStartupPhase_WaitCommunication;
     return 1U;
 }
@@ -950,6 +970,7 @@ static uint8_t SystemStartup_WaitCommunicationTick(void)
         ((now_us - s_phase_started_us) <
          SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US))
     { return 0U; }
+    SystemStartup_BarometerWindowUpdate(s_phase_started_us);
     SystemStartup_TimeoutMark();
     SystemStartup_ReportFinalize();
     if (SystemLifecycle_EnterPreflight() != SYSTEM_DEVICE_OK)
@@ -995,6 +1016,7 @@ void SystemStartup_ProcessDevices(void)
         case SystemStartupPhase_OtherAdapters:
             SystemStartup_OtherAdaptersStart();
             s_phase_started_us = SystemTime_GetMonotonicUs();
+            SystemStartup_BarometerWindowUpdate(s_phase_started_us);
             s_startup_phase = SystemStartupPhase_WaitConfig;
             return;
         case SystemStartupPhase_WaitConfig:

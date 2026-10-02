@@ -4,7 +4,7 @@
   "name": "BMP280 · I²C",
   "type": "device",
   "class": "barometer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "BMP280 pressure and temperature sensor with bounded forced-mode conversion; HARDWARE_UNVERIFIED.",
   "requires": {
     "components": [{"id": "silverstar.core.0_1_0", "optional": false}],
@@ -23,17 +23,15 @@
   "resources": {"provides": [], "roles": [], "conflicts": []},
   "provides": ["device.barometer", "barometer.pressure", "barometer.altitude"],
   "build": {
-    "sources": [
-      "Devices/Barometer/BMP280/Src/bmp280_core.c",
-      "Devices/Barometer/BMP280/Src/bmp280_adapter.c",
-      "Devices/Barometer/BMP280/Src/bmp280_instance.c"
-    ],
+    "sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c"],
     "asm_sources": [],
     "include_dirs": ["Devices/Barometer/BMP280/Inc"],
     "defines": []
   },
   "payload": {"roots": ["Devices/Barometer/BMP280"]},
   "metadata": {
+    "instance_feature_symbols": ["SYSTEM_BUILD_BMP280_I2C_ENABLED", "SYSTEM_BUILD_BMP280_SPI_ENABLED"],
+    "active_instance_feature_symbols": ["SYSTEM_BUILD_BMP280_I2C_ENABLED"],
     "display_names": {"zh_CN": "BMP280 · I²C", "en_US": "BMP280 · I²C"},
     "device_descriptors": [{
       "order": 3,
@@ -98,11 +96,12 @@
   },
   "transports": [],
   "device_variants": {
-    "i2c": {"interface": "i2c", "profile": "forced_20_hz", "overrides": {}},
+    "i2c": {"interface": "i2c", "profile": "forced_20_hz", "overrides": {"build": {"sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c"]}, "metadata": {"active_instance_feature_symbols": ["SYSTEM_BUILD_BMP280_I2C_ENABLED"]}}},
     "spi": {
       "interface": "spi",
       "profile": "forced_20_hz",
       "overrides": {
+        "build": {"sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Src/bmp280_spi_instance.c"]},
         "name": "BMP280 · SPI",
         "requires": {
           "resources": [
@@ -116,7 +115,7 @@
                 "maximum_clock_hz": 10000000,
                 "dma": false, "irq": false
               }},
-              "mode": "shared"
+              "mode": "exclusive"
             },
             {
               "name": "cs",
@@ -133,6 +132,7 @@
           ]
         },
         "metadata": {
+          "active_instance_feature_symbols": ["SYSTEM_BUILD_BMP280_SPI_ENABLED"],
           "display_names": {"zh_CN": "BMP280 · SPI", "en_US": "BMP280 · SPI"},
           "device_instance_bindings": {
             "SYSTEM_DEVICE_CLASS_BAROMETER": {

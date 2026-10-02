@@ -22,6 +22,7 @@
 #include "test_common.h"
 
 static uint32_t s_created;
+static uint32_t s_serial_created;
 static uint32_t s_gpio_writes;
 static uint32_t s_selector_calls;
 static uint8_t s_gpio_level;
@@ -98,6 +99,7 @@ TaskHandle_t xTaskCreateStatic(TaskFunction_t entry, const char *name,
     /* This can only succeed if production init initialized the indicator. */
     TEST_CHECK(SystemIndicator_ModeSet(SYSTEM_INDICATOR_SYSTEM,
         SYSTEM_INDICATOR_MODE_OFF) == SYSTEM_DEVICE_OK);
+    if (strcmp(name, "Serial") == 0) { s_serial_created++; }
     if (strcmp(name, "Telemetry") == 0) { s_telemetry_handle = control; }
     s_created++;
     return control;
@@ -122,7 +124,11 @@ int main(void)
 
     /* No test-side Calibration/Alignment/Indicator Init or CAL_START. */
     TEST_CHECK(AppTasks_Init() == AppTasksInitResult_Ok);
-    TEST_CHECK(s_created == (6U + (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U ? 1U : 0U)));
+    TEST_CHECK(s_created == (4U +
+        (SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U ? 1U : 0U) +
+        (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U ? 1U : 0U) +
+        (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U ? 1U : 0U)));
+    TEST_CHECK(s_serial_created == (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U ? 1U : 0U));
     TEST_CHECK(s_selector_calls == 0U);
     TEST_CHECK(SystemCalibration_StatusGet(&calibration) == SYSTEM_DEVICE_OK);
     TEST_CHECK(calibration.mode == SYSTEM_CALIBRATION_MODE_NONE);

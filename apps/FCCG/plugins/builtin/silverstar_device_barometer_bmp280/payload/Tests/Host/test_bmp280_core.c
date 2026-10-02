@@ -3,30 +3,34 @@
 #include <assert.h>
 #include <math.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 
 typedef struct
 {
+    uint64_t io_elapsed_us;
     uint8_t registers[256];
     uint32_t config_writes;
     uint32_t forced_writes;
 } TestBmp280Bus;
 
-static Bmp280BusResult TestBmp280_Read(void *bus, uint8_t address,
+Bmp280BusResult Bmp280Bus_Read(void *bus, uint8_t address,
     uint8_t *bytes, uint8_t length)
 {
     TestBmp280Bus *mock = bus;
     if ((mock == NULL) || (bytes == NULL) ||
         ((uint16_t)address + length > 256U)) { return Bmp280BusError; }
+    mock->io_elapsed_us += 2000ULL;
     (void)memcpy(bytes, &mock->registers[address], length);
     return Bmp280BusOk;
 }
 
-static Bmp280BusResult TestBmp280_Write(void *bus, uint8_t address,
+Bmp280BusResult Bmp280Bus_Write(void *bus, uint8_t address,
     uint8_t value)
 {
     TestBmp280Bus *mock = bus;
     if (mock == NULL) { return Bmp280BusError; }
+    mock->io_elapsed_us += 2000ULL;
     mock->registers[address] = value;
     if (address == 0xF5U) { mock->config_writes++; }
     if (address == 0xF4U) { mock->forced_writes++; }
@@ -69,8 +73,6 @@ static void TestBmp280_CompensationVector(void)
     Bmp280Port port;
     TestBmp280_BusSeed(&bus);
     port.bus = &bus;
-    port.read = TestBmp280_Read;
-    port.write = TestBmp280_Write;
     Bmp280_Init(&context, &port);
     assert(Bmp280_Step(&context, 1000U) == Bmp280StepPending);
     assert(Bmp280_Step(&context, 2000U) == Bmp280StepPending);
@@ -97,8 +99,6 @@ static void TestBmp280_BadIdentityAndTimeout(void)
     Bmp280Port port;
     TestBmp280_BusSeed(&bus);
     port.bus = &bus;
-    port.read = TestBmp280_Read;
-    port.write = TestBmp280_Write;
     bus.registers[0xD0U] = 0U;
     Bmp280_Init(&context, &port);
     assert(Bmp280_Step(&context, 1000U) == Bmp280StepNotPresent);
@@ -111,8 +111,34 @@ static void TestBmp280_BadIdentityAndTimeout(void)
     assert(context.error_count == 1U);
 }
 
+static void TestBmp280_FirstSampleActivationBudget(void)
+{
+    TestBmp280Bus bus;
+    Bmp280Context context;
+    Bmp280Port port;
+    Bmp280StepResult result = Bmp280StepPending;
+    uint64_t time_us = 0ULL;
+    TestBmp280_BusSeed(&bus);
+    port.bus = &bus;
+    Bmp280_Init(&context, &port);
+    for (uint8_t step = 0U; step < 64U; step++)
+    {
+        uint64_t before_io = bus.io_elapsed_us;
+        result = Bmp280_Step(&context, time_us);
+        if (result == Bmp280StepSampleReady)
+        { time_us += bus.io_elapsed_us - before_io; break; }
+        assert(result == Bmp280StepPending);
+        /*10ms after each Process plus every actual mocked2ms bus operation. */
+        time_us += 10000ULL + bus.io_elapsed_us - before_io;
+    }
+    assert(result == Bmp280StepSampleReady && time_us < 250000ULL);
+    assert(fabsf(context.sample.pressure_pa - 100653.0F) < 2.0F);
+    (void)printf("bmp280 first sample at %llu us under10ms service/2ms bus\n",
+        (unsigned long long)time_us);
+}
 int main(void)
 {
+    TestBmp280_FirstSampleActivationBudget();
     TestBmp280_CompensationVector();
     TestBmp280_BadIdentityAndTimeout();
     return 0;

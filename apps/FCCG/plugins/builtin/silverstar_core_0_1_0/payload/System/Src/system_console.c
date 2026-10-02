@@ -2867,8 +2867,20 @@ static void SystemConsole_BarometerSampleFreshnessUpdate(
             view->sample.sample_timestamp_us) <=
             SYSTEM_ESTIMATOR_MEASUREMENT_MAX_AGE_US);
     }
-    view->sample_valid = (uint8_t)(SystemBarometer_AltitudeResolve(
-        &view->sample, &view->altitude_m) == SYSTEM_DEVICE_OK);
+    /* Indexed device diagnostics retain native altitude, independent of the
+     * navigation controller's common pressure datum. */
+    if ((SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) &&
+        ((view->supported_fields & view->valid_fields & SYSTEM_BARO_FIELD_ALTITUDE) != 0U) &&
+        isfinite(view->sample.altitude_m))
+    {
+        view->altitude_m = view->sample.altitude_m;
+        view->sample_valid = 1U;
+    }
+    else
+    {
+        view->sample_valid = (uint8_t)(SystemBarometer_AltitudeResolve(
+            &view->sample, &view->altitude_m) == SYSTEM_DEVICE_OK);
+    }
 }
 
 static void SystemConsole_BarometerSampleStateUpdate(

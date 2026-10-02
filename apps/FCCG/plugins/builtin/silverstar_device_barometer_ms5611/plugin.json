@@ -4,7 +4,7 @@
   "name": "MS5611 · I²C",
   "type": "device",
   "class": "barometer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MS5611 pressure and temperature sensor with bounded command conversions; HARDWARE_UNVERIFIED.",
   "requires": {
     "components": [{"id": "silverstar.core.0_1_0", "optional": false}],
@@ -23,17 +23,15 @@
   "resources": {"provides": [], "roles": [], "conflicts": []},
   "provides": ["device.barometer", "barometer.pressure", "barometer.altitude"],
   "build": {
-    "sources": [
-      "Devices/Barometer/MS5611/Src/ms5611_core.c",
-      "Devices/Barometer/MS5611/Src/ms5611_adapter.c",
-      "Devices/Barometer/MS5611/Src/ms5611_instance.c"
-    ],
+    "sources": ["Devices/Barometer/MS5611/Src/ms5611_core.c", "Devices/Barometer/MS5611/Src/ms5611_adapter.c", "Devices/Barometer/MS5611/Src/ms5611_i2c_instance.c"],
     "asm_sources": [],
     "include_dirs": ["Devices/Barometer/MS5611/Inc"],
     "defines": []
   },
   "payload": {"roots": ["Devices/Barometer/MS5611"]},
   "metadata": {
+    "instance_feature_symbols": ["SYSTEM_BUILD_MS5611_I2C_ENABLED", "SYSTEM_BUILD_MS5611_SPI_ENABLED"],
+    "active_instance_feature_symbols": ["SYSTEM_BUILD_MS5611_I2C_ENABLED"],
     "display_names": {"zh_CN": "MS5611 · I²C", "en_US": "MS5611 · I²C"},
     "device_descriptors": [{
       "order": 3,
@@ -98,11 +96,12 @@
   },
   "transports": [],
   "device_variants": {
-    "i2c": {"interface": "i2c", "profile": "osr4096_20_hz", "overrides": {}},
+    "i2c": {"interface": "i2c", "profile": "osr4096_20_hz", "overrides": {"build": {"sources": ["Devices/Barometer/MS5611/Src/ms5611_core.c", "Devices/Barometer/MS5611/Src/ms5611_adapter.c", "Devices/Barometer/MS5611/Src/ms5611_i2c_instance.c"]}, "metadata": {"active_instance_feature_symbols": ["SYSTEM_BUILD_MS5611_I2C_ENABLED"]}}},
     "spi": {
       "interface": "spi",
       "profile": "osr4096_20_hz",
       "overrides": {
+        "build": {"sources": ["Devices/Barometer/MS5611/Src/ms5611_core.c", "Devices/Barometer/MS5611/Src/ms5611_adapter.c", "Devices/Barometer/MS5611/Src/ms5611_spi_instance.c"]},
         "name": "MS5611 · SPI",
         "requires": {
           "resources": [
@@ -116,7 +115,7 @@
                 "maximum_clock_hz": 20000000,
                 "dma": false, "irq": false
               }},
-              "mode": "shared"
+              "mode": "exclusive"
             },
             {
               "name": "cs",
@@ -133,6 +132,7 @@
           ]
         },
         "metadata": {
+          "active_instance_feature_symbols": ["SYSTEM_BUILD_MS5611_SPI_ENABLED"],
           "display_names": {"zh_CN": "MS5611 · SPI", "en_US": "MS5611 · SPI"},
           "device_instance_bindings": {
             "SYSTEM_DEVICE_CLASS_BAROMETER": {

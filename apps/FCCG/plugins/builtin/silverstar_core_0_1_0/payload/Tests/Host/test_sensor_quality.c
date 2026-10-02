@@ -164,7 +164,10 @@ static void Test_BarometerFields(void)
     sample.altitude_m = 123.0f;
     TEST_CHECK(SystemBarometer_AltitudeResolve(&sample, &altitude_m) ==
                SYSTEM_DEVICE_OK);
-    TEST_CHECK_NEAR(altitude_m, 123.0f, 1.0e-6f);
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED == 0U)
+    { TEST_CHECK_NEAR(altitude_m, 123.0f, 1.0e-6f); }
+    else
+    { TEST_CHECK((altitude_m > 980.0f) && (altitude_m < 1000.0f)); }
 
     sample.supported_fields = SYSTEM_BARO_FIELD_PRESSURE;
     sample.valid_fields = SYSTEM_BARO_FIELD_PRESSURE;
@@ -177,9 +180,17 @@ static void Test_BarometerFields(void)
     sample.supported_fields = SYSTEM_BARO_FIELD_ALTITUDE;
     sample.valid_fields = SYSTEM_BARO_FIELD_ALTITUDE;
     sample.altitude_m = 456.0f;
-    TEST_CHECK(SystemBarometer_AltitudeResolve(&sample, &altitude_m) ==
-               SYSTEM_DEVICE_OK);
-    TEST_CHECK_NEAR(altitude_m, 456.0f, 1.0e-6f);
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED == 0U)
+    {
+        TEST_CHECK(SystemBarometer_AltitudeResolve(&sample, &altitude_m) ==
+                   SYSTEM_DEVICE_OK);
+        TEST_CHECK_NEAR(altitude_m, 456.0f, 1.0e-6f);
+    }
+    else
+    {
+        TEST_CHECK(SystemBarometer_AltitudeResolve(&sample, &altitude_m) ==
+                   SYSTEM_DEVICE_NOT_READY);
+    }
 
     sample.supported_fields = 0U;
     sample.valid_fields = 0U;

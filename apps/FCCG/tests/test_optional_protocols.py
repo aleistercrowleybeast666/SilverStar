@@ -224,6 +224,7 @@ def test_maintenance_endpoint_is_declaratively_added_and_removed(
     )
     assert "APP/Src/serial_task.c" not in graph.sources
     assert "System/Src/system_console.c" not in graph.sources
+    assert "System/Src/system_console.c" in graph.exclude_sources
 
     model.protocols["maintenance"] = maintenance_selection
     model = service.ProjectConfiguration_Reconcile(model).model
@@ -240,6 +241,7 @@ def test_maintenance_endpoint_is_declaratively_added_and_removed(
     )
     assert "APP/Src/serial_task.c" in graph.sources
     assert "System/Src/system_console.c" in graph.sources
+    assert "System/Src/system_console.c" not in graph.exclude_sources
 
 
 def test_protocol_availability_supports_ordered_telemetry_transports(

@@ -913,11 +913,30 @@ def _Candidates_Get(
     )
 
 
+def _ResourceConflictOwner_Get(
+    requirement: ResourceRequirement,
+    provision: ResourceProvision,
+    assignments: list[AssignedResource],
+) -> AssignedResource | None:
+    physical = str(provision.metadata.get("physical_resource", ""))
+    for previous in assignments:
+        same_resource = previous.provision.resource_id == provision.resource_id
+        same_physical = bool(physical) and physical == str(
+            previous.provision.metadata.get("physical_resource", "")
+        )
+        if (same_resource or same_physical) and (
+            requirement.mode == ResourceMode.EXCLUSIVE
+            or previous.requirement.mode == ResourceMode.EXCLUSIVE
+        ):
+            return previous
+    return None
+
+
 def _Resource_AutoSelect(
     requirement: ResourceRequirement,
     role: ResourceRole | None,
     provisions: dict[str, ResourceProvision],
-    claimed: dict[str, str],
+    assignments: list[AssignedResource],
 ) -> str:
     candidates = list(_Candidates_Get(requirement, role, provisions))
     if role is not None and role.default:
@@ -930,7 +949,7 @@ def _Resource_AutoSelect(
             or provision.reserved
         ):
             continue
-        if requirement.mode == ResourceMode.EXCLUSIVE and resource_id in claimed:
+        if _ResourceConflictOwner_Get(requirement, provision, assignments) is not None:
             continue
         return resource_id
     return ""
@@ -984,8 +1003,6 @@ def ResourceAssignments_Resolve(
                 metadata=hardware_resource.metadata,
             )
 
-    claimed: dict[str, str] = {}
-    physical_claimed: dict[str, str] = {}
     assignments: list[AssignedResource] = []
     errors: list[str] = []
     for owner_id, plugin_id, manifest in _RequirementOwners_Get(model, catalog):
@@ -1007,7 +1024,7 @@ def ResourceAssignments_Resolve(
             selected = model.resource_assignments.get(key, "")
             if not selected and auto_assign:
                 selected = _Resource_AutoSelect(
-                    requirement, role, provisions, claimed
+                    requirement, role, provisions, assignments
                 )
                 if selected:
                     model.resource_assignments[key] = selected
@@ -1080,29 +1097,20 @@ def ResourceAssignments_Resolve(
                     f"required capabilities: {', '.join(sorted(required_platform_capabilities))}"
                 )
                 continue
-            if requirement.mode == ResourceMode.EXCLUSIVE and selected in claimed:
-                errors.append(
-                    f"Resource conflict: {selected} is assigned to "
-                    f"{claimed[selected]} and {key}"
-                )
+            previous = _ResourceConflictOwner_Get(requirement, provision, assignments)
+            if previous is not None:
+                if previous.provision.resource_id == selected:
+                    errors.append(
+                        f"Resource conflict: {selected} is assigned to "
+                        f"{previous.requirement_key} and {key}"
+                    )
+                else:
+                    physical_resource = str(provision.metadata["physical_resource"])
+                    errors.append(
+                        f"Physical resource conflict: {physical_resource} is assigned to "
+                        f"{previous.requirement_key} and {key}"
+                    )
                 continue
-            physical_resource = str(
-                provision.metadata.get("physical_resource", "")
-            )
-            if (
-                requirement.mode == ResourceMode.EXCLUSIVE
-                and physical_resource
-                and physical_resource in physical_claimed
-            ):
-                errors.append(
-                    f"Physical resource conflict: {physical_resource} is assigned to "
-                    f"{physical_claimed[physical_resource]} and {key}"
-                )
-                continue
-            if requirement.mode == ResourceMode.EXCLUSIVE:
-                claimed[selected] = key
-                if physical_resource:
-                    physical_claimed[physical_resource] = key
             errors.extend(
                 _RequirementConstraintsErrors_Get(
                     key, requirement, provision, model

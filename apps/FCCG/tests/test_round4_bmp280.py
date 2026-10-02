@@ -58,7 +58,8 @@ SystemDeviceResult ProjectBmp280SpiResources_Get(uint8_t, ProjectBmp280SpiResour
         BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
     ]
     flags = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror",
-             "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wvla"]
+             "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wvla", "-fanalyzer",
+             "-DSYSTEM_BUILD_BMP280_I2C_ENABLED=1U", "-DSYSTEM_BUILD_BMP280_SPI_ENABLED=1U"]
     flags += ["-I" + str(path) for path in includes]
     source = PAYLOAD / "Devices/Barometer/BMP280/Src"
     for name, sources in (
@@ -70,9 +71,10 @@ SystemDeviceResult ProjectBmp280SpiResources_Get(uint8_t, ProjectBmp280SpiResour
         _Command_Run(flags + [str(path) for path in sources] + ["-lm", "-o", str(binary)],
                      tmp_path, f"compile_{name}")
         _Command_Run([str(binary)], tmp_path, f"run_{name}")
-    _Command_Run(flags + ["-c", str(source / "bmp280_instance.c"),
-                          "-o", str(tmp_path / "bmp280_instance.o")],
-                 tmp_path, "compile_instance")
+    for transport in ("i2c", "spi"):
+        _Command_Run(flags + ["-c", str(source / f"bmp280_{transport}_instance.c"),
+                             "-o", str(tmp_path / f"bmp280_{transport}_instance.o")],
+                     tmp_path, f"compile_{transport}_instance")
 
 
 def test_bmp280_one_physical_plugin_two_bus_variants(builtin_catalog) -> None:
@@ -87,7 +89,7 @@ def test_bmp280_one_physical_plugin_two_bus_variants(builtin_catalog) -> None:
             "PROJECT_PHYSICAL_DEVICE_ID_BMP280"
         )
         assert sum(source.endswith("bmp280_core.c") for source in resolved.build.sources) == 1
-    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.0"
+    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.1"
 
 
 def test_bmp280_i2c_generated_resource_and_dispatch(builtin_catalog) -> None:
@@ -106,6 +108,8 @@ def test_bmp280_i2c_generated_resource_and_dispatch(builtin_catalog) -> None:
     assert "ProjectBmp280I2cResources_Get" in header
     assert "Bmp280I2cBarometerInstance_Process(0U)" in source
     assert sum(path.endswith("bmp280_core.c") for path in graph.sources) == 1
+    assert "Devices/Barometer/BMP280/Src/bmp280_spi_instance.c" in graph.exclude_sources
+    assert "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c" not in graph.exclude_sources
 
 
 def test_bmp280_spi_generated_resource_and_dispatch(builtin_catalog) -> None:
@@ -125,6 +129,8 @@ def test_bmp280_spi_generated_resource_and_dispatch(builtin_catalog) -> None:
     }
     assert "Bmp280SpiBarometerInstance_Process(0U)" in source
     assert sum(path.endswith("bmp280_core.c") for path in graph.sources) == 1
+    assert "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c" in graph.exclude_sources
+    assert "Devices/Barometer/BMP280/Src/bmp280_spi_instance.c" not in graph.exclude_sources
 
 
 def test_bmp280_mixed_variants_keep_distinct_contexts_and_one_core(
@@ -144,3 +150,5 @@ def test_bmp280_mixed_variants_keep_distinct_contexts_and_one_core(
     assert "case 0U: return Bmp280I2cBarometerInstance_Process(0U);" in source
     assert "case 1U: return Bmp280SpiBarometerInstance_Process(0U);" in source
     assert sum(path.endswith("bmp280_core.c") for path in graph.sources) == 1
+    assert not any(path.endswith(("bmp280_i2c_instance.c", "bmp280_spi_instance.c"))
+                   for path in graph.exclude_sources)

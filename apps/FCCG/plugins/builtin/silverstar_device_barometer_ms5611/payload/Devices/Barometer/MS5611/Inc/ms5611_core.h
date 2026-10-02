@@ -11,17 +11,14 @@ typedef enum
     Ms5611BusError
 } Ms5611BusResult;
 
-typedef Ms5611BusResult (*Ms5611CommandWriteOperation)(void *bus,
-    uint8_t command);
-typedef Ms5611BusResult (*Ms5611CommandReadOperation)(void *bus,
-    uint8_t command, uint8_t *bytes, uint8_t length);
-
+/* Stored bus data; operations have fixed direct call targets. */
 typedef struct
 {
     void *bus;
-    Ms5611CommandWriteOperation write;
-    Ms5611CommandReadOperation read;
 } Ms5611Port;
+
+Ms5611BusResult Ms5611Bus_Read(void *bus, uint8_t command, uint8_t *bytes, uint8_t length);
+Ms5611BusResult Ms5611Bus_Write(void *bus, uint8_t command);
 
 typedef enum
 {

@@ -11,17 +11,14 @@ typedef enum
     Bmp280BusError
 } Bmp280BusResult;
 
-typedef Bmp280BusResult (*Bmp280ReadOperation)(void *bus, uint8_t register_address,
-    uint8_t *bytes, uint8_t length);
-typedef Bmp280BusResult (*Bmp280WriteOperation)(void *bus, uint8_t register_address,
-    uint8_t value);
-
+/* Stored bus data; operations have fixed direct call targets. */
 typedef struct
 {
     void *bus;
-    Bmp280ReadOperation read;
-    Bmp280WriteOperation write;
 } Bmp280Port;
+
+Bmp280BusResult Bmp280Bus_Read(void *bus, uint8_t register_address, uint8_t *bytes, uint8_t length);
+Bmp280BusResult Bmp280Bus_Write(void *bus, uint8_t register_address, uint8_t value);
 
 typedef enum
 {

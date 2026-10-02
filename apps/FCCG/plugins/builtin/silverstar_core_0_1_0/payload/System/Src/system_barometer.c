@@ -19,7 +19,11 @@ SystemDeviceResult SystemBarometer_AltitudeResolve(
     }
     SILVERSTAR_ASSERT_OBJECT(sample, SystemBarometerSample,
                              SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    if (((sample->supported_fields & SYSTEM_BARO_FIELD_ALTITUDE) != 0U) &&
+    /* Multiple sources use one standard pressure datum from the first sample.
+     * Native altitude remains available as raw device data; it cannot silently
+     * replace pressure height after the navigation origin has been frozen. */
+    if ((SYSTEM_BUILD_BAROMETER_COLD_ENABLED == 0U) &&
+        ((sample->supported_fields & SYSTEM_BARO_FIELD_ALTITUDE) != 0U) &&
         ((sample->valid_fields & SYSTEM_BARO_FIELD_ALTITUDE) != 0U) &&
         isfinite(sample->altitude_m))
     {
@@ -30,6 +34,9 @@ SystemDeviceResult SystemBarometer_AltitudeResolve(
         ((sample->valid_fields & SYSTEM_BARO_FIELD_PRESSURE) != 0U) &&
         isfinite(sample->pressure_pa) && (sample->pressure_pa > 0.0f))
     {
+        if ((SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) &&
+            ((sample->pressure_pa < 1000.0f) || (sample->pressure_pa > 120000.0f)))
+        { return SYSTEM_DEVICE_NOT_READY; }
         *altitude_m = SYSTEM_BAROMETER_STANDARD_HEIGHT_M *
             (1.0f - powf(sample->pressure_pa /
                          SYSTEM_BAROMETER_SEA_LEVEL_PRESSURE_PA,
