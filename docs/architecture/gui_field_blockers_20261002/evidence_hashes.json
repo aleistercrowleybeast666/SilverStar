@@ -1,8 +1,11 @@
 {
+  "document_validator_changes.patch": "0d711e58e5ed1e511ca5fae49d6fcff94862f0dd204291596b9de0bda405779f",
   "extended_tests.log": "f75329cc6689c9c696bcb09752a1b888a715f597e302b63b27fbf17d4c0716ee",
+  "extended_tests_r2.log": "31d58ffc67c0952ee928dc441cc75544451aafdbd285c8baa1a9b8efb39cdaae",
   "final_focused_tests.log": "bc4b009f420c1cee5a6fbe7290486c040d9c4a65aaa760031e3af08710e4e58f",
   "functional_changes.patch": "8202bcff2f7b537350a76de430df3e597febac566fba5980cddcb4a274ecbecf",
-  "REPORT.md": "341cc9acfac19592cc2e9513eed5c92d79b95e12e038f189ca37c331dbeccd3c",
+  "PARENT_REVIEW.md": "335a631e5afee47b9bf4f90b52675a160eceff22b5e1be9d73768a34741504ab",
+  "REPORT.md": "6b71be77e6bd52f328b994d2bededef29f8ed82173cf870deae30f91c9e39b42",
   "source_hashes.json": "9b693f198c3c88c5d25d891722d4fd89cacf40c3b0c74140be3efa396454200d",
   "targeted_tests.log": "fc610672bd93ffd406f767b5551c0e354e9fca447c1cfd9c177bd5b853ada0f3",
   "targeted_tests_r2.log": "1c8a7628b7f31402dcdbc2026dd1794cdf4681e27ea3fddd53304beee96b9efa",
@@ -31,7 +34,13 @@
   "final_capture/scg_ground_saved_instance.png": "81f0b90c18dfc9249cb8e6095b0db50c0dc7b0eb5ee8318bc59cc4ed0fa0565a",
   "final_capture/scg_telemetry_selected.png": "40a1dd35b8116c664367b17f1ba7543997e6bafaeeef99b9a19e533ec75dd5ce",
   "final_capture/scg_uart_without_inventory.png": "f6d27aac272f93eb15e76d2d0a9cdb0b4ec49e25cb37e75483a46e2957ca410b",
+  "parent_comparison/flp_long_dirty_1250x875.png": "392cf133e0448b9401c45fc38d4f7e9a5e89cd42fd739e4b74f2d2821a1526b0",
+  "parent_comparison/flp_long_dirty_1920x1020.png": "6c5cd4ecf687821f6e68ea0d4518efbcb6d3e3b4fde628ca34d5eb1c621b4780",
+  "parent_comparison/flp_unsaved_1250x875.png": "6c92940aba05f7645ea0c2134ee065acbb7f2f8a55656a90989e9e4ad78da232",
+  "parent_comparison/flp_unsaved_1920x1020.png": "52efe4abb54ec359ee31f021a9c2545489dd7ff38d9c06191207ac218324c925",
+  "parent_comparison/geometry.json": "64c892368d811363cf52ea0e46c813f15fd4afe30eca679f95e67f05f5494a68",
   "reproduction/capture_gui.py": "cd02ad1e23367a65d263e68bfdc30e06f3919afefe968f47e0ec955fd9b1f5ea",
   "reproduction/capture_import_save.py": "ea16e01e9fc839c3f7542667e417384eb026f035d90435401ddda92923020792",
+  "reproduction/capture_parent_comparison.py": "46dd5d4239d9cf947d70e0a56f6f784129216f5503d5bdc6f7af3f4bfa1e8160",
   "reproduction/generate_build.py": "2be8ac62dfd7c2836481a0927f04e2e98c4f4f22eb3360b69e5b6997311bf8a7"
 }
