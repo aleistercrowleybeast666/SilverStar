@@ -922,5 +922,12 @@
   "field.ground_rx_led_resource": "RX LED GPIO",
   "field.ground_tx_led_active_high": "TX LED active high",
   "field.ground_rx_led_active_high": "RX LED active high",
-  "field.ground_activity_led_pulse_ms": "Activity pulse duration"
+  "field.ground_activity_led_pulse_ms": "Activity pulse duration",
+  "ground.radio_order_note": "Instance order defines priority. The initial radio starts the link; failure switches only forward. Resources belong to each instance.",
+  "ground.initial_radio": "Initial telemetry instance",
+  "ground.add_radio": "Add Ground telemetry instance",
+  "ground.radio_title": "Ground telemetry {id}",
+  "ground.radio_up": "Move up",
+  "ground.radio_down": "Move down",
+  "ground.radio_runtime_pending": "Multiple instances are saved as configuration. Ground generation requires the integrated radio runtime."
 }

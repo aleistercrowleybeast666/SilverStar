@@ -13,6 +13,7 @@ from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox, Enter
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.pages.components import BoardHardwarePage
 from silverstar_fccg.project.ground_activity import GroundActivityLedOutputResources_Get
+from silverstar_fccg.ui.ground_radio_instances import GroundRadioInstancesEditor
 from silverstar_fccg.core.view_models import BoardCompatibilityView, ResourceRequirementView, PlatformMatchView
 
 
@@ -26,6 +27,7 @@ class AirLinkPage(ScrollableLocalizedPage):
         self.fields: dict[str, object] = {}
         self._radio_choices: dict[str, tuple[tuple[str, str], ...]] = {}
         self._radio_technologies: set[str] = set()
+        self._radio_contracts = ()
         for name, key, minimum, maximum in (
             ("spreading_factor", "field.air_sf", 5, 12),
             ("bandwidth_hz", "field.air_bandwidth", 1000, 2000000),
@@ -133,7 +135,24 @@ class AirLinkPage(ScrollableLocalizedPage):
         self.air_link_group.Title_Set(translator.Text_Get("group.air_link"))
 
     def RadioOptions_Set(self, radios: tuple[object, ...]) -> None:
+        self._radio_contracts = tuple(radios)
         self._radio_technologies = {radio.technology for radio in radios}
+
+    def _DeclaredChoices_Get(self, name, link):
+        if name == "radio_technology":
+            original = self._radio_choices[name]
+            known = {identity for _title, identity in original}
+            return (*original, *((identity, identity) for identity in sorted(self._radio_technologies - known)))
+        if name not in {"radio_family", "phy_mode", "coding_rate"}:
+            return self._radio_choices[name]
+        radios = tuple(radio for radio in self._radio_contracts if radio.technology == link.radio_technology)
+        if name == "radio_family":
+            values = {radio.family for radio in radios}
+        else:
+            field = "phy_modes" if name == "phy_mode" else "coding_rates"
+            values = {value for radio in radios if radio.family == link.radio_family for value in getattr(radio, field)}
+        titles = dict((identity, title) for title, identity in self._radio_choices[name])
+        return tuple((titles.get(identity, identity), identity) for identity in sorted(values))
 
     def Configuration_Set(self, link, issues) -> None:
         for name, widget in self.fields.items():
@@ -144,7 +163,7 @@ class AirLinkPage(ScrollableLocalizedPage):
                 widget.CommittedValue_Set(getattr(link, name))
             else:
                 widget.clear()
-                for title, identity in self._radio_choices[name]:
+                for title, identity in self._DeclaredChoices_Get(name, link):
                     widget.addItem(title, identity)
                     item = widget.model().item(widget.count() - 1)
                     if (name == "radio_technology" and
@@ -206,6 +225,7 @@ class GroundTargetPage(BoardHardwarePage):
     importRequested = Signal(bool)
     saveInstanceRequested = Signal()
     generateRequested = Signal()
+    radiosChanged = Signal(object, str)
 
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, target="ground")
@@ -239,6 +259,10 @@ class GroundTargetPage(BoardHardwarePage):
             lambda: self.configurationChanged.emit("module_variant", self.module.currentData())
         )
         radio_form.addRow(label, self.module)
+        self.radio_form = radio_form
+        self.radio_instances_editor = GroundRadioInstancesEditor(translator)
+        self.radio_instances_editor.configurationChanged.connect(self.radiosChanged.emit)
+        radio_form.addRow(self.radio_instances_editor)
         self.assignment_form = QFormLayout()
         self.assignments: dict[str, QComboBox] = {}
         self._assignment_signature: tuple[object, ...] = ()
@@ -374,6 +398,12 @@ class GroundTargetPage(BoardHardwarePage):
                 item.setEnabled(False)
                 item.setToolTip("AIR_LINK_NO_RADIO: selected module variant is unavailable")
         self.module.setCurrentIndex(max(0, self.module.findData(ground.module_variant)))
+        self.radio_form.setRowVisible(self.radio, not ground.radio_instances)
+        self.radio_form.setRowVisible(self.module, not ground.radio_instances)
+        self.radio_instances_editor.Configuration_Set(ground, radios, requirements.get("radio_contracts", {}))
+        if any(issue.code == "GROUND_RADIO_RUNTIME_UNAVAILABLE" for issue in issues):
+            self.radio_instances_editor.note.setText(self.radio_instances_editor.note.text() + "\n" +
+                self._translator.Text_Get("ground.radio_runtime_pending"))
         self.pc_interface.setCurrentIndex(max(0, self.pc_interface.findData(ground.pc_interface)))
         uart_selected = ground.enabled and ground.pc_interface == "uart"
         self.pc_resource.setEnabled(uart_selected)
@@ -441,7 +471,7 @@ class GroundTargetPage(BoardHardwarePage):
         fixed_resources = requirements.get("fixed_resources", {})
         resource_views = tuple(ResourceRequirementView(kind=kind, name=name, key=name,
             fixed=name in fixed_resources,
-            assignment=ground.resource_assignments.get(f"radio0:{name}", ""),
+            assignment=ground.resource_assignments.get(name if ":" in name else f"radio0:{name}", ""),
             candidates=tuple(item.resource_id for item in ground.hardware.resources if item.kind == kind))
             for name, kind in required)
         self.Resources_Set(resource_views, not issues, hardware_selected=ground.hardware.mode != "unselected")
@@ -461,7 +491,9 @@ class GroundTargetPage(BoardHardwarePage):
         self.generate_button.setToolTip(self._translator.Text_Get(
             "status.ground_disabled" if not ground.enabled else
             "status.ground_configuration_required" if issues else "status.ground_ready"))
-        self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected")
+        runtime_pending = any(issue.code in {"GROUND_RADIO_RUNTIME_UNAVAILABLE", "GROUND_LED_RUNTIME_UNAVAILABLE"}
+                              for issue in issues)
+        self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected" and not runtime_pending)
         self.save_instance.setEnabled(
             ground.hardware.mode == "custom" and bool(ground.hardware.snapshot_id)
             and bool(ground.hardware.build_sources)

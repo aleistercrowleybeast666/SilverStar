@@ -38,3 +38,21 @@ def test_telemetry_labels_follow_real_instance_ids_after_deletion(window):
         assert label.text() == page._translator.Text_Get("device.instance.telemetry", index=index)
     page.Configuration_Set(page._components, instances[:-1], page._device_availability)
     assert page.telemetry_form.labelForField(page.device_combos["telemetry2"]).text().endswith("2")
+
+
+def test_wireless_choices_use_installed_radio_contracts(window):
+    contracts = tuple(manifest.radio for manifest in window._service.catalog.Type_Get("device") if manifest.radio is not None)
+    window.air_link_page.RadioOptions_Set(contracts)
+    matching = tuple(radio for radio in contracts if radio.technology == window._model.air_link.radio_technology
+                     and radio.family == window._model.air_link.radio_family)
+    assert matching
+    allowed = {rate for radio in matching for rate in radio.coding_rates}
+    for rate in sorted(allowed):
+        link = replace(window._model.air_link, coding_rate=rate)
+        window.air_link_page.Configuration_Set(link, ())
+        combo = window.air_link_page.fields["coding_rate"]
+        assert combo.currentData() == rate
+        assert combo.model().item(combo.currentIndex()).isEnabled()
+    window.air_link_page.Configuration_Set(replace(window._model.air_link, coding_rate="unsupported"), ())
+    combo = window.air_link_page.fields["coding_rate"]
+    assert combo.currentData() == "unsupported" and not combo.model().item(combo.currentIndex()).isEnabled()

@@ -159,6 +159,10 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
         return ()
     ground = model.ground_target
     issues = list(AirLinkIssues_Get(model, catalog))
+    from silverstar_fccg.project.ground_radios import GroundRadiosRuntimeIssue_Get
+    runtime_issue = GroundRadiosRuntimeIssue_Get(ground, catalog)
+    if runtime_issue is not None:
+        issues.append(runtime_issue)
     board = None
     if ground.board:
         try:
