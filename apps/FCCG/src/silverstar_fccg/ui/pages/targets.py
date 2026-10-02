@@ -251,11 +251,16 @@ class GroundTargetPage(BoardHardwarePage):
         pc_form.addRow(label, self.pc_interface)
         label = QLabel()
         self.Text_Register(label, "field.ground_pc_resource")
+        self.pc_resource_label = label
+        self.pc_form = pc_form
         self.pc_resource = StandardComboBox()
         self.pc_resource.currentIndexChanged.connect(
             lambda: self.configurationChanged.emit("pc_resource", self.pc_resource.currentData())
         )
         pc_form.addRow(label, self.pc_resource)
+        self.pc_resource_source = QLabel()
+        self.pc_resource_source.setWordWrap(True)
+        pc_form.addRow(self.pc_resource_source)
         self.pc_resource_notice = QLabel()
         self.pc_resource_notice.setWordWrap(True)
         pc_form.addRow(self.pc_resource_notice)
@@ -358,6 +363,16 @@ class GroundTargetPage(BoardHardwarePage):
         self.pc_resource_notice.setText(self._translator.Text_Get(reason) if reason else "")
         self.pc_resource.setToolTip(self.pc_resource_notice.text())
         self.pc_resource.setEnabled(uart_selected and bool(uarts))
+        selected_uart = next((item for item in uarts if item.resource_id == ground.pc_resource), None)
+        redundant = len(uarts) <= 1 and (selected_uart is not None or not uarts)
+        self.pc_form.setRowVisible(self.pc_resource, ground.pc_interface == "uart" and not redundant)
+        self.pc_resource_source.setVisible(ground.pc_interface == "uart" and selected_uart is not None)
+        self.pc_resource_source.setText(self._translator.Text_Get(
+            "ground.uart_binding_source",
+            physical=selected_uart.metadata.get("physical_resource", selected_uart.resource_id),
+            resource=selected_uart.resource_id,
+            source=ground.hardware.source_label or ground.board or ground.hardware.source_kind,
+        ) if selected_uart is not None else "")
         self.baudrate.CommittedValue_Set(ground.baudrate)
         self.build_summary.setText(
             f"{ground.build.make_command} · "

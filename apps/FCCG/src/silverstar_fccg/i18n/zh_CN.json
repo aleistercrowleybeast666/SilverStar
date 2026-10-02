@@ -1,4 +1,5 @@
 {
+  "ground.uart_binding_source": "PC 串口：{physical} · {resource}（来自 {source}）",
   "device.interface_profile": "接口 / 运行配置",
   "protocol.selection_unavailable": "已选协议不可用：{component} / {profile}",
   "app.credit": "辰星引力开发",
