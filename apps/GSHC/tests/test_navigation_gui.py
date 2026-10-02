@@ -124,7 +124,10 @@ def test_navigation_live_gui_languages_themes_and_start(tmp_path, language, them
     assert window.navigation_health_panel.grab().save(str(root / f"health_details_{language.value}_{theme.value}.png"))
     state.navigation.Navigation_Invalidate()
     window.render_state()
-    assert not window.btn_start.isEnabled()
+    assert window.btn_start.isEnabled()  # Missing NAV display does not veto board admission.
+    state.system_ready = False
+    window.render_state()
+    assert not window.btn_start.isEnabled()  # The actual M0 business gate remains.
     assert i18n.tr("navigation.WAITING") in window.navigation_preparation_panel.summary.text()
     window.render_timer.stop()
     window.close()

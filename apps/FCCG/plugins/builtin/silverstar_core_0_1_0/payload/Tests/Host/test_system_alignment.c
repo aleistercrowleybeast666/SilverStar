@@ -620,9 +620,7 @@ int main(void)
     TEST_CHECK(status.capability_mask == 0x07U);
     TEST_CHECK(status.unavailable_mask == 0U);
     TEST_CHECK(status.selected_mask == 0x07U);
-    TEST_CHECK(status.required_mask == (0x05U |
-        (((SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U) &&
-          (SYSTEM_ESTIMATOR_GNSS_FUSION_REQUIRES_PREFLIGHT_ORIGIN != 0U)) ? 0x02U : 0U)));
+    TEST_CHECK(status.required_mask == SYSTEM_USER_ALIGNMENT_REQUIRED_MASK);
     TEST_CHECK(SystemAlignment_Start() == SYSTEM_DEVICE_NOT_READY);
 
     TEST_CHECK(SystemCalibration_Start(SYSTEM_CALIBRATION_MODE_NONE) ==
