@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import zipfile
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 DOC = ROOT / "docs/FCCG/auto_memory_layout_20261002"
 OUT = DOC / "final_evidence"
 OUT.mkdir(exist_ok=False)

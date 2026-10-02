@@ -8,7 +8,8 @@ from pathlib import Path
 
 
 def Application_Start(name: str) -> int:
-    application_root = Path(__file__).resolve().parents[1] / "apps" / name
+    implementation = "FCCG" if name == "SCG" else name
+    application_root = Path(__file__).resolve().parents[1] / "apps" / implementation
     sys.path.insert(0, str(application_root))
     try:
         runpy.run_path(str(application_root / "main.py"), run_name="__main__")

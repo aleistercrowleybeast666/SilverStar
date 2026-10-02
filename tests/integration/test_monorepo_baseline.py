@@ -26,8 +26,8 @@ def test_one_release_version_and_independent_freertos_version() -> None:
     assert VERSION == "0.1.1"
     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert package["project"]["dynamic"] == ["version"]
-    assert package["tool"]["setuptools"]["dynamic"]["version"]["attr"] == "silverstar_version.__version__"
-    assert subprocess.check_output([sys.executable, "FCCG.py", "--version"], cwd=ROOT, text=True).strip() == VERSION
+    assert package["tool"]["setuptools"]["dynamic"]["version"]["attr"] == "tools.silverstar_version.__version__"
+    assert subprocess.check_output([sys.executable, "SCG.py", "--version"], cwd=ROOT, text=True).strip() == VERSION
     assert subprocess.check_output([sys.executable, "FLP.py", "--version"], cwd=ROOT, text=True).strip() == VERSION
     assert _Python_Run("from config import APP_VERSION; print(APP_VERSION)", ROOT / "apps/GSHC") == VERSION
     manifests = sorted((ROOT / "apps/FCCG/plugins/builtin").glob("*/plugin.json"))
@@ -66,7 +66,7 @@ def test_one_navigation_contract_for_all_consumers() -> None:
 
 
 def test_root_launchers_create_offscreen_gui_without_old_source() -> None:
-    for name in ("FCCG", "GSHC", "FLP"):
+    for name in ("SCG", "GSHC", "FLP"):
         env = os.environ.copy()
         env["QT_QPA_PLATFORM"] = "offscreen"
         env["SILVERSTAR_GSHC_DATA_ROOT"] = str(ROOT / ".work/gshc-test-data")
@@ -120,3 +120,8 @@ def test_disposable_work_is_ignored_and_no_nested_repositories() -> None:
             assert ".git" not in dirs, current
             assert ".venv" not in dirs, current
             dirs[:] = [name for name in dirs if name not in {".work", "build", "dist"}]
+
+
+def test_root_has_only_public_launchers_and_legacy_scg_still_starts():
+    assert {p.name for p in ROOT.glob("*.py")} == {"SCG.py", "GSHC.py", "FLP.py"}
+    assert subprocess.check_output([sys.executable, "apps/FCCG/FCCG.py", "--version"], cwd=ROOT, text=True).strip() == VERSION

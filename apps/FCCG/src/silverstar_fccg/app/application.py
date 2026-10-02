@@ -23,7 +23,7 @@ def WorkspaceRoot_Get() -> Path:
 
 def _Arguments_Parse(arguments: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="SilverStar Flight Controller Code Generator"
+        description="SilverStar System Configuration & Generation (SCG)"
     )
     parser.add_argument("--lang", choices=("zh_CN", "en_US"))
     parser.add_argument("--theme", choices=("light", "dark"))
