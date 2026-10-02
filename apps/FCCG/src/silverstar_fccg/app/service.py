@@ -144,7 +144,7 @@ class FccgService:
         model.resource_assignments = {}
         model.build = replace(model.build, memory_layout="auto")
         model.ground_target = replace(
-            model.ground_target,
+            model.ground_target, enabled=True,
             hardware=HardwareConfiguration(
                 mode="custom", source_kind="manual_import", provider=provider,
             ) if provider else HardwareConfiguration(),

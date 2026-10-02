@@ -240,3 +240,34 @@ def test_algorithm_parameter_region_collapses_without_changing_values(window):
     section.toggle_button.click()
     assert section.body.isHidden()
     assert json.dumps(window._model.Dictionary_Get(), sort_keys=True) == before
+
+
+def test_new_draft_enables_ground_without_changing_reference_or_existing_projects(workspace_root):
+    from silverstar_fccg.project.model import ProjectModel_Parse
+    service = FccgService(workspace_root)
+    draft = service.ProjectDraft_Create("NewGroundDefault")
+    assert draft.ground_target.enabled
+    assert not draft.ground_target.board and not draft.ground_target.mcu
+    assert not service.ReferenceProject_Create("Reference").ground_target.enabled
+    old = draft.Dictionary_Get()
+    old["ground_target"]["enabled"] = False
+    assert not ProjectModel_Parse(old).ground_target.enabled
+
+
+def test_flight_export_with_empty_enabled_ground_matches_disabled_ground(workspace_root, tmp_path):
+    from silverstar_fccg.project.model import GroundTargetConfiguration
+    service = FccgService(workspace_root)
+    model = service.ReferenceProject_Create("FlightOnly")
+    model.ground_target = GroundTargetConfiguration(enabled=True)
+    enabled_root = tmp_path / "enabled_ground"
+    disabled_root = tmp_path / "disabled_ground"
+    TargetGeneration_Apply(model, service.catalog, service.policy, enabled_root, TargetScope.FLIGHT)
+    assert model.ground_target.enabled
+    assert not (enabled_root / "Ground_Station/Makefile").exists()
+    model.ground_target = replace(model.ground_target, enabled=False)
+    TargetGeneration_Apply(model, service.catalog, service.policy, disabled_root, TargetScope.FLIGHT)
+    def firmware_files(root):
+        return {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in root.rglob("*") if p.is_file() and
+                (p.suffix.lower() in (".c", ".h", ".s", ".ld") or p.name == "Makefile")}
+    assert firmware_files(enabled_root) == firmware_files(disabled_root)
