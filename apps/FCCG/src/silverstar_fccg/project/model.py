@@ -217,6 +217,11 @@ class GroundTargetConfiguration:
     build: BuildOptions = field(default_factory=BuildOptions)
     radio_instances: tuple[GroundRadioConfiguration, ...] = ()
     active_radio_instance: str = "radio0"
+    tx_led_resource: str = ""
+    tx_led_active_high: bool = False
+    rx_led_resource: str = ""
+    rx_led_active_high: bool = False
+    activity_led_pulse_ms: int = 40
 
 
 def GroundRadioConfigurations_Get(ground: GroundTargetConfiguration) -> tuple[GroundRadioConfiguration, ...]:
@@ -444,6 +449,16 @@ class ProjectModel:
                 "baudrate": self.ground_target.baudrate,
                 "tx_power_dbm": self.ground_target.tx_power_dbm,
                 "build": _Build_Dictionary(self.ground_target.build),
+                # Preserve the exact legacy dictionary when LEDs are unused.
+                **({
+                    "tx_led_resource": self.ground_target.tx_led_resource,
+                    "tx_led_active_high": self.ground_target.tx_led_active_high,
+                    "rx_led_resource": self.ground_target.rx_led_resource,
+                    "rx_led_active_high": self.ground_target.rx_led_active_high,
+                    "activity_led_pulse_ms": self.ground_target.activity_led_pulse_ms,
+                } if self.ground_target.tx_led_resource or self.ground_target.rx_led_resource
+                      or self.ground_target.tx_led_active_high or self.ground_target.rx_led_active_high
+                      or self.ground_target.activity_led_pulse_ms != 40 else {}),
                 **({
                     "radio_instances": [asdict(radio) for radio in self.ground_target.radio_instances],
                     "active_radio_instance": self.ground_target.active_radio_instance,
@@ -1575,7 +1590,9 @@ def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) ->
     }
     if radio_instances_allowed:
         expected |= {"radio_instances", "active_radio_instance"}
-    if set(data) not in (expected, expected | {"tx_power_dbm"}):
+    activity_fields = {"tx_led_resource", "tx_led_active_high", "rx_led_resource",
+                       "rx_led_active_high", "activity_led_pulse_ms"}
+    if not expected.issubset(data) or set(data) - (expected | {"tx_power_dbm"} | activity_fields):
         raise ProjectModelError("ground_target has missing or unknown fields")
     if type(data["enabled"]) is not bool:
         raise ProjectModelError("ground_target.enabled must be boolean")
@@ -1593,6 +1610,20 @@ def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) ->
     tx_power = data.get("tx_power_dbm", 12)
     if type(tx_power) is not int:
         raise ProjectModelError("ground_target.tx_power_dbm must be integer")
+    activity = {"tx_led_resource": data.get("tx_led_resource", ""),
+                "tx_led_active_high": data.get("tx_led_active_high", False),
+                "rx_led_resource": data.get("rx_led_resource", ""),
+                "rx_led_active_high": data.get("rx_led_active_high", False),
+                "activity_led_pulse_ms": data.get("activity_led_pulse_ms", 40)}
+    for key in ("tx_led_resource", "rx_led_resource"):
+        value = activity[key]
+        if not isinstance(value, str) or (value and not RESOURCE_ID_PATTERN.fullmatch(value)):
+            raise ProjectModelError(f"ground_target.{key} must be an optional resource ID")
+    for key in ("tx_led_active_high", "rx_led_active_high"):
+        if type(activity[key]) is not bool:
+            raise ProjectModelError(f"ground_target.{key} must be boolean")
+    if type(activity["activity_led_pulse_ms"]) is not int or not 1 <= activity["activity_led_pulse_ms"] <= 200:
+        raise ProjectModelError("ground_target.activity_led_pulse_ms must be 1..200")
     resources = _Object_Require(data["resources"], "ground_target.resources")
     if any(
         not isinstance(key, str) or not RESOURCE_KEY_PATTERN.fullmatch(key)
@@ -1638,6 +1669,7 @@ def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) ->
         tx_power_dbm=tx_power,
         build=_Build_Parse(data["build"]),
         radio_instances=radios, active_radio_instance=active,
+        **activity,
     )
 
 

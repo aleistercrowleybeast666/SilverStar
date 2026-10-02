@@ -916,5 +916,11 @@
   "ground.uart_none": "所选地面站硬件清单中没有 UART。请在 CubeMX 中启用并重新导入，或选择受支持的 PC 接口。",
   "ground.uart_missing_binding": "已保存的 UART 绑定不在当前硬件清单中。生成前请选择可用 UART。",
   "ground.uart_unavailable": "{resource} · 不可用",
-  "status.ground_configuration_required": "需修复地面站配置并通过校验后生成。"
+  "status.ground_configuration_required": "需修复地面站配置并通过校验后生成。",
+  "group.ground_activity_leds": "收发指示灯",
+  "field.ground_tx_led_resource": "发送指示灯 GPIO",
+  "field.ground_rx_led_resource": "接收指示灯 GPIO",
+  "field.ground_tx_led_active_high": "发送指示灯高电平点亮",
+  "field.ground_rx_led_active_high": "接收指示灯高电平点亮",
+  "field.ground_activity_led_pulse_ms": "指示脉冲时长"
 }

@@ -916,5 +916,11 @@
   "ground.uart_none": "The selected Ground hardware inventory contains no UART. Enable UART in CubeMX and import again, or choose a supported PC interface.",
   "ground.uart_missing_binding": "The saved UART binding is absent from this hardware inventory. Select an available UART before generating.",
   "ground.uart_unavailable": "{resource} · unavailable",
-  "status.ground_configuration_required": "Fix Ground configuration and pass validation before generating."
+  "status.ground_configuration_required": "Fix Ground configuration and pass validation before generating.",
+  "group.ground_activity_leds": "Activity LEDs",
+  "field.ground_tx_led_resource": "TX LED GPIO",
+  "field.ground_rx_led_resource": "RX LED GPIO",
+  "field.ground_tx_led_active_high": "TX LED active high",
+  "field.ground_rx_led_active_high": "RX LED active high",
+  "field.ground_activity_led_pulse_ms": "Activity pulse duration"
 }

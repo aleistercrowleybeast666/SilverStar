@@ -312,4 +312,6 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                                 "GROUND_RESOURCE_CONFLICT",
                                 f"{previous} and {key} both use pin {pin}",
                             ))
+    from silverstar_fccg.project.ground_activity import GroundActivityLedIssues_Get
+    issues.extend(GroundActivityLedIssues_Get(ground))
     return tuple(issues)
