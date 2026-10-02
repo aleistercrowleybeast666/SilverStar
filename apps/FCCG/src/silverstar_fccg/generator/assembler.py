@@ -29,6 +29,7 @@ from silverstar_fccg.project.generation_state import (
 )
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 from silverstar_fccg.plugins.catalog import PluginCatalog
+from silverstar_fccg.plugins.manifest import PayloadCachePath_Is
 from silverstar_fccg.project.model import ProjectModel
 from silverstar_fccg.project.validation import ProjectValidationResult, Project_Validate
 
@@ -480,6 +481,15 @@ class ProjectAssembler:
             2,
         ):
             raise ProjectAssemblerError("Unsupported project ownership metadata")
+        components = value.get("components", {})
+        if isinstance(components, dict):
+            for provenance in components.values():
+                if isinstance(provenance, dict) and isinstance(provenance.get("files"), dict):
+                    # Legacy Python caches are not project-owned component source.
+                    provenance["files"] = {
+                        relative: digest for relative, digest in provenance["files"].items()
+                        if not PayloadCachePath_Is(relative)
+                    }
         return value
 
     def _StaleManagedPaths_Get(

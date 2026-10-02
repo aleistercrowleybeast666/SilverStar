@@ -1119,6 +1119,7 @@ SystemDeviceResult ProjectTelemetryInstance_Send(
 SystemDeviceResult ProjectTelemetryInstance_SendControl(uint8_t instance_id,
     const uint8_t *data, uint16_t length, uint32_t *transaction_id)
 {
+    (void)transaction_id; /* The generated instance switch may contain no endpoint. */
     if ((data == NULL) || (length == 0U)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     switch (instance_id)
     {
