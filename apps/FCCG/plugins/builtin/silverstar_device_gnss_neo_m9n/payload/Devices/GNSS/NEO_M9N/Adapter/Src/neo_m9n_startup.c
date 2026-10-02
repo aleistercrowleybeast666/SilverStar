@@ -6,6 +6,7 @@
 #include "neo_m9n_config.h"
 #include "neo_m9n_config_keys.h"
 #include "neo_m9n_device.h"
+#include "platform_memory.h"
 #include "platform_time.h"
 #include "silverstar_assert.h"
 
@@ -34,7 +35,13 @@ typedef struct
     uint8_t signal_settle_active;
 } NeoM9nStartupContext;
 
-static NeoM9nStartupContext s_contexts[PROJECT_NEO_M9N_INSTANCE_COUNT];
+/* CPU-only startup state and decoded configuration values. No UART/DMA
+ * backend retains this object: writes build a separate local UBX frame and
+ * PlatformUart_WriteFrameAsync copies it into its DMA-accessible TX ring.
+ * The target owns section/alignment/startup zeroing; targets without a
+ * CPU-fast section and Host retain the platform API ordinary-BSS default. */
+static PLATFORM_CPU_FAST_BSS NeoM9nStartupContext
+    s_contexts[PROJECT_NEO_M9N_INSTANCE_COUNT];
 
 /* The supported UART baud set is finite. The controller deduplicates target
  * and factory baud before walking these remaining declared candidates. */
