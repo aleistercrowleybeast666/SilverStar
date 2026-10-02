@@ -523,7 +523,7 @@
   "device.required_tooltip": "Required by the current flight configuration and cannot be removed.",
   "device.instance.imu": "IMU {index}",
   "device.instance.gnss": "GNSS {index}",
-  "device.instance.telemetry": "Telemetry",
+  "device.instance.telemetry": "Telemetry {index}",
   "device.instance.console": "Maintenance Console",
   "device.instance.barometer": "Barometer {index}",
   "device.instance.magnetometer": "Magnetometer {index}",

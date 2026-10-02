@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QPalette
-from silverstar_fccg.ui.widgets import StandardComboBox
+from silverstar_fccg.ui.widgets import CollapsibleSection, StandardComboBox
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QHBoxLayout, QLabel,
     QPushButton, QSpinBox,
@@ -120,11 +120,17 @@ class AirLinkPage(ScrollableLocalizedPage):
             lambda checked: self.configurationChanged.emit("crc_enabled", checked)
         )
         form.addRow(crc_label, self.crc)
-        self.root_layout.addWidget(self.Group_Create("group.air_link", form))
+        self.air_link_group = CollapsibleSection(translator.Text_Get("group.air_link"))
+        self.air_link_group.BodyLayout_Set(form)
+        self.root_layout.addWidget(self.air_link_group)
         self.status = QLabel()
         self.status.setWordWrap(True)
         self.root_layout.addWidget(self.status)
         self.root_layout.addStretch(1)
+
+    def Language_Apply(self, translator: Translator) -> None:
+        super().Language_Apply(translator)
+        self.air_link_group.Title_Set(translator.Text_Get("group.air_link"))
 
     def RadioOptions_Set(self, radios: tuple[object, ...]) -> None:
         self._radio_technologies = {radio.technology for radio in radios}

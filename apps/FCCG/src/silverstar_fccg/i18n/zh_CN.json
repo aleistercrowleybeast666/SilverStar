@@ -523,7 +523,7 @@
   "device.required_tooltip": "当前飞行配置必需，不能取消。",
   "device.instance.imu": "IMU {index}",
   "device.instance.gnss": "GNSS {index}",
-  "device.instance.telemetry": "遥测",
+  "device.instance.telemetry": "遥测 {index}",
   "device.instance.console": "维护控制台",
   "device.instance.barometer": "气压计 {index}",
   "device.instance.magnetometer": "磁力计 {index}",
