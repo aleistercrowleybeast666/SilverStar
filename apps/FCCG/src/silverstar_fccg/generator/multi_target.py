@@ -9,7 +9,9 @@ from pathlib import Path
 
 from silverstar_fccg.app.version import __version__
 from silverstar_fccg.core.workspace import WorkspacePolicy
-from silverstar_fccg.generator.assembler import ProjectAssembler
+from silverstar_fccg.generator.assembler import GenerationProgressCallback, ProjectAssembler
+from silverstar_fccg.generator.ground_environment import GroundEnvironmentFiles_Render
+from silverstar_fccg.generator.eide_ownership import EideOwnedFields_Merge, EideOwnedFields_Normalize
 from silverstar_fccg.generator.render import (
     AirLinkHeader_Render,
     _InstanceResourcesSource_Render,
@@ -509,6 +511,7 @@ def GroundFiles_Render(
             },
         }, indent=2, ensure_ascii=False) + "\n"
     ).encode("utf-8")
+    files.update(GroundEnvironmentFiles_Render(ground_model, catalog, base_graph, sources, includes, defines))
     hardware_fingerprint = ground.hardware.snapshot_id or ground.hardware.source_digest
     if ground.hardware.mode == "board_plugin" and not hardware_fingerprint:
         board_reference = catalog.Component_Get(ground.board).metadata.get("reference", {})
@@ -542,6 +545,7 @@ def GroundFiles_Render(
 def TargetGeneration_Apply(
     model: ProjectModel, catalog: PluginCatalog, internal_policy: WorkspacePolicy,
     project_root: Path, scope: TargetScope, *, confirm_dangerous: bool = False,
+    progress_callback: GenerationProgressCallback | None = None,
 ) -> TargetGenerationResult:
     output_policy = WorkspacePolicy(project_root)
     root = output_policy.root
@@ -551,17 +555,35 @@ def TargetGeneration_Apply(
     targets: list[str] = []
     ground_previous_hashes: dict[str, str] = {}
     ground_stale: list[str] = []
+    total = (7 if scope in (TargetScope.FLIGHT, TargetScope.ALL) else 0) + (2 if scope in (TargetScope.GROUND, TargetScope.ALL) else 0) + 1
+    offset = 0
+    def report(current: int, subject: str, done: bool) -> None:
+        if progress_callback is not None:
+            progress_callback(current, total, subject, done)
     if scope in (TargetScope.GROUND, TargetScope.ALL):
         if not model.ground_target.enabled:
             raise ValueError("Ground target is disabled")
+        report(1, "ground_environment", False)
         ground_files = GroundFiles_Render(model, catalog, internal_policy)
         ground_root = output_policy.Path_Resolve(root / GROUND_DIRECTORY, allow_root=False)
         ownership_file = ground_root / GROUND_OWNERSHIP_FILE
+        ownership = {}
         if ownership_file.is_file():
             ownership = json.loads(ownership_file.read_text(encoding="utf-8"))
             if ownership.get("format_version") != 1 or not isinstance(ownership.get("files"), dict):
                 raise ValueError("Ground output ownership metadata is invalid")
             ground_previous_hashes = ownership["files"]
+        eide_path = ground_root / ".eide/eide.yml"
+        if eide_path.is_file():
+            current_eide = eide_path.read_text(encoding="utf8")
+            desired_eide = ground_files[".eide/eide.yml"].decode("utf8")
+            current_fields = EideOwnedFields_Normalize(current_eide)
+            desired_fields = EideOwnedFields_Normalize(desired_eide)
+            previous_fields = ownership.get("eide", {}).get("owned_fields", desired_fields)
+            if current_fields != previous_fields:
+                raise ValueError(f"Ground EIDE build-owned fields have local changes: {eide_path}")
+            ground_files[".eide/eide.yml"] = (eide_path.read_bytes() if current_fields == desired_fields
+                else EideOwnedFields_Merge(current_eide, desired_eide).encode("utf8"))
         for relative, content in ground_files.items():
             destination = output_policy.Path_Resolve(
                 ground_root.joinpath(*relative.split("/")), allow_root=False
@@ -570,7 +592,7 @@ def TargetGeneration_Apply(
                 if not destination.is_file():
                     raise ValueError(f"Ground output is not a file: {destination}")
                 current_hash = hashlib.sha256(destination.read_bytes()).hexdigest()
-                if current_hash != hashlib.sha256(content).hexdigest() and current_hash != ground_previous_hashes.get(relative):
+                if relative != ".eide/eide.yml" and current_hash != hashlib.sha256(content).hexdigest() and current_hash != ground_previous_hashes.get(relative):
                     raise ValueError(f"Ground output has local changes: {destination}")
         for relative, expected_hash in ground_previous_hashes.items():
             if relative in ground_files:
@@ -582,6 +604,8 @@ def TargetGeneration_Apply(
                 if hashlib.sha256(destination.read_bytes()).hexdigest() != expected_hash:
                     raise ValueError(f"Stale Ground output has local changes: {destination}")
                 ground_stale.append(relative)
+        report(1, "ground_environment", True)
+        offset = 1
     if scope in (TargetScope.FLIGHT, TargetScope.ALL):
         flight_root = output_policy.Path_Resolve(root / FLIGHT_DIRECTORY, allow_root=False)
         assembler = ProjectAssembler(internal_policy, catalog, output_policy)
@@ -593,7 +617,9 @@ def TargetGeneration_Apply(
         plan = assembler.Plan(flight_model, flight_root)
         if not plan.valid or (plan.dangerous and not confirm_dangerous):
             raise ValueError("Flight generation plan is invalid or needs user review")
-        assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous)
+        assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+            progress_callback=lambda current, _total, subject, done: report(offset + current, subject, done))
+        offset += 7
         flight_descriptor = ProjectModel_Load(flight_root / PROJECT_FILENAME)
         model.log_decoder_profile = flight_descriptor.log_decoder_profile
         decoder = flight_root / f"{model.identity.name}.ssdecoder"
@@ -604,6 +630,7 @@ def TargetGeneration_Apply(
             root_decoder.unlink()
         targets.append(FLIGHT_DIRECTORY)
     if scope in (TargetScope.GROUND, TargetScope.ALL):
+        report(offset + 1, "ground_files", False)
         for relative in ground_stale:
             output_policy.Path_Resolve(
                 ground_root.joinpath(*relative.split("/")), allow_root=False
@@ -616,6 +643,7 @@ def TargetGeneration_Apply(
             ground_root / GROUND_OWNERSHIP_FILE,
             json.dumps({
                 "format_version": 1,
+                "eide": {"owned_fields": EideOwnedFields_Normalize(ground_files[".eide/eide.yml"].decode("utf8"))},
                 "files": {
                     relative: hashlib.sha256(content).hexdigest()
                     for relative, content in sorted(ground_files.items())
@@ -623,7 +651,11 @@ def TargetGeneration_Apply(
             }, indent=2) + "\n",
         )
         targets.append(GROUND_DIRECTORY)
+        report(offset + 1, "ground_files", True)
+        offset += 1
+    report(total, "project_descriptor", False)
     ProjectRoot_Save(model, root)
+    report(total, "project_descriptor", True)
     hashes = {
         relative: hashlib.sha256(content).hexdigest()
         for relative, content in (ground_files.items() if GROUND_DIRECTORY in targets else ())

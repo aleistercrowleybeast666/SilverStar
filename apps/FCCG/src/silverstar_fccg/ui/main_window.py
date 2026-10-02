@@ -2912,9 +2912,10 @@ class MainWindow(QMainWindow):
 
         def apply(confirm_dangerous: bool) -> None:
             self.Task_Run(
-                lambda _context: TargetGeneration_Apply(
+                lambda context: TargetGeneration_Apply(
                     model, self._service.catalog, self._service.policy,
                     destination, scope, confirm_dangerous=confirm_dangerous,
+                    progress_callback=self._TaskProgressCallback_Get(context, "GENERATE", "status.task_running"),
                 ),
                 generated,
             )
