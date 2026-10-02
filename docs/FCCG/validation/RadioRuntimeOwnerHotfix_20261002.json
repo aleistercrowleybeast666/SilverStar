@@ -1,0 +1,184 @@
+{
+  "schema": "silverstar.radio_runtime_owner_evidence.v1",
+  "date_utc": "2026-10-02T09:55:16.160657+00:00",
+  "source_commit": "bc083159e4d6e1c366bc2332f474b56b7ee2fb36",
+  "base_commit": "407eb7df7db7385691783a829be7ba8105133776",
+  "worktree": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002",
+  "branch": "fix/radio-runtime-fault-20261002",
+  "production_scope": "One startup Process removal only; no driver/adapter/assertion/queue/SPI/timing/GUI/M9N/optional/Auto capability source changes. Tests accompany code commit.",
+  "diff": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\production-minimal.patch",
+    "bytes": 1190,
+    "sha256": "4e3507012f8631f5370ca9592a327df6a0a7d60762f2de859b58dba5dd1a748e"
+  },
+  "root_cause": {
+    "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\root-cause-final.json",
+    "bytes": 4141,
+    "sha256": "ce0e6779965f7c00a43458f5cfd9ca3cd5ac700dda55fe72f0c04b1ac1f87a7c"
+  },
+  "candidate": {
+    "flight": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller",
+    "ground": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post-ground\\Ground_Station",
+    "effective_memory_mode": "legacy, matches frozen artifact paths, saved config and absence ofAuto symbols; see frozen-memory-mode-check.json",
+    "auto_source_capability": "preserved from407eb7; no mode switch or solver change",
+    "identity_mapping": "Frozen complete SS_FieldIntegration_20261002 config cloned with name SS_Field_RadioRuntime_1; derived provenance regenerated, sensor/PHY/pins/baud unchanged.",
+    "config": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller\\SilverStar.ssproject",
+      "bytes": 152280,
+      "sha256": "575d2d2dc5147013664f9328a32c5719bea98495bd4e32f92a97941c247278ec"
+    },
+    "decoder": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller\\SS_Field_RadioRuntime_1.ssdecoder",
+      "bytes": 142813,
+      "sha256": "9afe740ca4410bc85389fa56ead515b8d2cb978ec98641a8e2db7362a0edb75e"
+    },
+    "original_config": {
+      "path": "D:\\stm32_project\\SilverStar_HardwareBaseline_20261001\\FieldIntegration_DualBench_20261002_081145\\Candidate\\Flight_Controller\\SilverStar.ssproject",
+      "bytes": 151923,
+      "sha256": "a8b4df77bdf2f1df281ec7b4b08d51b3acfcd35d83c3fa71bb0e9ab5cc24b314"
+    }
+  },
+  "artifacts": {
+    "flight": {
+      "elf": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+        "bytes": 3263324,
+        "sha256": "822395860acc1e8687bc3cd8fb74f576d667ccdb1b7944aa5334c97d5eadc29e"
+      },
+      "bin": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+        "bytes": 324600,
+        "sha256": "41b9c63bdfebde8cfac325b8bf9823364e91718bc01e6d563ce4a8988aac03f2"
+      },
+      "hex": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.hex",
+        "bytes": 913065,
+        "sha256": "eb88a0befabc7092b59534bd215706d1bfdf57cf105314d132d28f9b71d2eae6"
+      },
+      "map": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+        "bytes": 1490338,
+        "sha256": "2508218a43aeb0c819ea0ba32e4be5712f1184f572d7dd7c44621c3e62db79df"
+      }
+    },
+    "ground": {
+      "elf": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post-ground\\Ground_Station\\build\\ground.elf",
+        "bytes": 53304,
+        "sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1"
+      },
+      "bin": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post-ground\\Ground_Station\\build\\ground.bin",
+        "bytes": 26000,
+        "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f"
+      },
+      "map": {
+        "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\post-ground\\Ground_Station\\build\\ground.map",
+        "bytes": 202750,
+        "sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504"
+      }
+    }
+  },
+  "archives": {
+    "source_firmware": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\SS_Field_RadioRuntime_1_bc083159_SourceFirmware.zip",
+      "bytes": 7802364,
+      "sha256": "9ca3b6849487074ececef5d516d38b401ed9891ee99809225861d8ffddb0157f"
+    }
+  },
+  "source_manifests": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\flight-source-manifest.json",
+      "bytes": 70703,
+      "sha256": "169462189575c5554d6d2ea2c75ae32cb87d4c99fcf98adb8f1d7b3a40b0944c"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\ground-source-manifest.json",
+      "bytes": 19677,
+      "sha256": "f7f53635171c1c503f05ea1a51a6eef04def18cf61a53ffee4e26b61b67d2085"
+    }
+  ],
+  "gates": {
+    "commands": {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\final-commands.json",
+      "bytes": 7452,
+      "sha256": "0501242e4945919406750a239ccf5ec4e8776ba7c46720e562da3ceba8a18892"
+    },
+    "all_exit_codes": 0,
+    "flight_host": "75executables,4402431checks,0failures,7compilepass cases,17expectedcompilefailures",
+    "flight_skips": [
+      "Skipped host test attitude_alignment: unselected component sources",
+      "Skipped host test alignment_strategy_gravity_known_yaw: unselected component sources",
+      "Skipped host test alignment_strategy_gravity_mag_triad: unselected component sources",
+      "Skipped host test alignment_strategy_hardware_quat6_known_yaw: unselected component sources",
+      "Skipped host test alignment_strategy_hardware_quat9: unselected component sources",
+      "Skipped host test navigation_sf6: unselected component sources",
+      "Skipped host test board_power_service: unselected component sources",
+      "Skipped host test board_mission_action_service: unselected component sources"
+    ],
+    "owner": "77passed; exact1173pre-failure,3bus fault types,sole publicProcess caller scan,start publication lifecycle,normal/fault scenarios,explicit recovery and existing driver contracts",
+    "static_analysis": "Actual ARM -fanalyzer object compilations, not syntax-only; normal and analyzer link outputs retained",
+    "first_party_warnings": [],
+    "ground_link_warnings": [
+      "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+      "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+      "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+      "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+    ],
+    "PoT": {
+      "flight": "6086checks,108files,2650functions,755recommendations",
+      "ground": "456checks,15files,164functions,42recommendations",
+      "checker": "unchanged versus base407; candidate retains all other rule thresholds, source coverage and exceptions",
+      "critical_contract_review": "NOT_PROVEN/manual acceptance pending; toolPASS is not original PoT/NASA compliance"
+    }
+  },
+  "owner_and_no_deadlock": {
+    "creation": "AppTasks_TelemetryCreate calls xTaskCreateStatic underSILVERSTAR_PROTOCOL_TELEMETRY_ENABLED; AppTasks_Init requires non-NULL handle. Frozen actual fault-memory snapshot already proves Telemetry TCB exists/current,priority3,Devicepriority7.",
+    "loop": "AppTask_Telemetry calls TelemetryService_Init (returnsOK without hardware initialization) then serviceProcess every1ms evenSELF_TEST. Service is sole generated first-party SystemTelemetry_Process caller, verified by regression.",
+    "bootstrap": "DeviceTask OtherAdapters initializes/starts once, then phase becomesWaitConfig. Adapter Process ignores not-started. Start publishes started only after Lora_StartRx returns. Init prevents duplicate live initialization.",
+    "health": "AdapterInit establishes cachedhealthy/initialized; Start cachedstarted. Startup_ServiceCommunicationEvaluate reads cached HealthGet initialized/started/healthy and does not require radioRX or online. Fixture actualadapter confirms healthy available immediately after explicitInit/Start without a Process round.",
+    "timeout": "WaitCommunication remains2s bounded; WaitConfig retains120s configuration deadline. Startup never waits for an operation requiring its removed radioProcess. Existing startup Host normal/required/optional/delegated-config scenarios pass unchanged.",
+    "fault": "Single owner localRadioFault paths return before diagnostics. Fault retains normal offline/health0/error counters and bounded SDK behavior; genuine invalid state assertions kept intact."
+  },
+  "memory": {
+    "main_sram": 102048,
+    "project_budget": 102400,
+    "budget_spare": 352,
+    "ccm": 55904,
+    "ccm_spare": 9632,
+    "dma_segment": "unchanged owning source and mapping; .dma_bss size verified below in section logs",
+    "spi_state_new_storage": 0,
+    "dma_bss": 8904
+  },
+  "stack": {
+    "telemetry_tool_estimate": 2136,
+    "telemetry_configured": 4096,
+    "tool_margin": 1960,
+    "whole_msp_isr_and_hardware_margin": "NOT_PROVEN; unchanged selected task reservations, linked report and.su retained"
+  },
+  "ground_reflash_required": false,
+  "ground_identity": "Fresh F103 ELF and BIN exact SHA256 equal currently flashed ffb410/919a98; no Ground code change.",
+  "hardware_scope": "Only read/copied immutable existing evidence. No serial/DAP/reset/flash/new hardware readings performed. No TF/power attribution; BUSY physical cause and exact captured interleaving NOT_PROVEN.",
+  "failed_trials": [
+    "pre-owner initial missingSystem/User include compilation failure",
+    "pre-owner2 originalterminal raisesillegalinstruction0xC000001D,3fault cases",
+    "pre-owner-record warn-unused-result compilefailure; corrected by checking assertion-record read result",
+    "pre-owner-final 4expectedfailures; exact1173latchedrecord exits90,2callersscan",
+    "post-owner-full 74pass+3compileerrors from same record-helper mistake,not claimed a full pass",
+    "post-owner-final complete77pass",
+    "unusedauto generation retained after incorrect inference fromCCM task stack placement; noAuto build/gates executed, actual frozenLegacy mode confirmed before delivery"
+  ],
+  "logs": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence",
+  "linked_inventory": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\flight-linked-inventory.json",
+      "bytes": 30565,
+      "sha256": "1ffb6f2eff025b42ec6872948d8d62dcb44a83013af564884589d0d680658617"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\RadioRuntimeFaultHotfix_20261002\\.work\\evidence\\ground-linked-inventory.json",
+      "bytes": 8848,
+      "sha256": "a858d3426a5653248a5863d0390db86e1239537f95c8822094e5d29e09433af1"
+    }
+  ]
+}
