@@ -83,6 +83,14 @@
         }
       },
       {
+        "id": "PLATFORM_GPIO_6",
+        "kind": "gpio_output",
+        "metadata": {
+          "c_id": "PLATFORM_GPIO_6",
+          "header": "platform_gpio.h"
+        }
+      },
+      {
         "id": "PLATFORM_TIME_1",
         "kind": "time",
         "metadata": {

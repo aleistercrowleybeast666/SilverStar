@@ -110,12 +110,15 @@ def test_led_binding_requires_integrated_runtime_capability(model, workspace_roo
     ground = _Output_Add(model)
     assert not GroundActivityLedIssues_Get(ground, catalog)
     ground = replace(ground, tx_led_resource="LED_OUTPUT")
-    assert "GROUND_LED_RUNTIME_UNAVAILABLE" in {
-        issue.code for issue in GroundActivityLedIssues_Get(ground, catalog)}
+    assert not GroundActivityLedIssues_Get(ground, catalog)
     core = catalog.Component_Get("silverstar.core.ground.0_1_0")
-    ready_core = replace(core, metadata={**core.metadata, "ground_activity_leds_ready": True})
-    ready_catalog = SimpleNamespace(Component_Get=lambda identity: ready_core)
-    assert not GroundActivityLedIssues_Get(ground, ready_catalog)
+    assert core.metadata["ground_activity_leds_ready"] is True
+    unavailable_core = replace(core, metadata={key: value for key, value in core.metadata.items()
+                                             if key != "ground_activity_leds_ready"})
+    unavailable_catalog = SimpleNamespace(Component_Get=lambda identity: unavailable_core)
+    assert "GROUND_LED_RUNTIME_UNAVAILABLE" in {
+        issue.code for issue in GroundActivityLedIssues_Get(ground, unavailable_catalog)}
+    ready_catalog = catalog
     # Declaring readiness must not bypass GPIO and polarity validation.
     assert "GROUND_LED_OUTPUT_UNBOUND" in {issue.code for issue in
         GroundActivityLedIssues_Get(replace(ground, tx_led_resource="MISSING"), ready_catalog)}

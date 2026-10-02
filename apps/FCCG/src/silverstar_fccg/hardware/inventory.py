@@ -227,7 +227,7 @@ class HardwareInventory:
                 pin_expression = f"{macro}_Pin"
             else:
                 physical_match = re.fullmatch(
-                    r"P([A-K])(\d+)(?:-[A-Z0-9_]+)?", pin.pin
+                    r"P([A-K])(\d+)(?:-[A-Z0-9_]+)*", pin.pin
                 )
                 if physical_match is None:
                     raise ValueError(
@@ -1181,7 +1181,7 @@ def CubeMxInventory_Parse(
         if not key.endswith(".Signal"):
             continue
         pin = key[: -len(".Signal")]
-        if not re.fullmatch(r"P[A-K][0-9]+(?:-[A-Z0-9_]+)?", pin):
+        if not re.fullmatch(r"P[A-K][0-9]+(?:-[A-Z0-9_]+)*", pin):
             continue
         exti_match = re.search(r"(?:GPXTI|EXTI)(\d+)", signal, re.IGNORECASE)
         mode_value = values.get(

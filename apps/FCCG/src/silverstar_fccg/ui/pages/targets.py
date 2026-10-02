@@ -493,7 +493,9 @@ class GroundTargetPage(BoardHardwarePage):
             "status.ground_configuration_required" if issues else "status.ground_ready"))
         runtime_pending = any(issue.code in {"GROUND_RADIO_RUNTIME_UNAVAILABLE", "GROUND_LED_RUNTIME_UNAVAILABLE"}
                               for issue in issues)
-        self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected" and not runtime_pending)
+        multi_pending = len(ground.radio_instances) > 1 and bool(issues)
+        self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected"
+                                        and not runtime_pending and not multi_pending)
         self.save_instance.setEnabled(
             ground.hardware.mode == "custom" and bool(ground.hardware.snapshot_id)
             and bool(ground.hardware.build_sources)

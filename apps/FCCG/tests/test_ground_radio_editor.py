@@ -45,7 +45,7 @@ def test_ground_editor_order_initial_binding_and_reopen(qapp, window, monkeypatc
     assert ground.resource_assignments == before
     assert ground.active_radio_instance == "radio0"
     assert not window.ground_target_page.generate_button.isEnabled()
-    assert "GROUND_RADIO_RUNTIME_UNAVAILABLE" in {i.code for i in GroundTargetIssues_Get(window._model, window._service.catalog)}
+    assert "GROUND_RADIO_RUNTIME_UNAVAILABLE" not in {i.code for i in GroundTargetIssues_Get(window._model, window._service.catalog)}
     assert set(editor.rows) == {"radio0", "radio1"}
     assert not window.ground_target_page.assignments["radio1:radio_bus"].currentData()
     editor.initial_instance.setCurrentIndex(editor.initial_instance.findData("radio1"))
@@ -89,8 +89,15 @@ def test_ground_runtime_gate_stops_generation_before_payload_writes(builtin_cata
     radio = GroundRadioConfigurations_Get(ground)[0]
     model.ground_target = GroundRadiosConfiguration_Apply(ground,
         (radio, replace(radio, instance_id="radio1")), "radio0")
+    from copy import copy
+    unavailable_catalog = copy(builtin_catalog)
+    unavailable_catalog._components = dict(builtin_catalog._components)
+    core = builtin_catalog.Component_Get("silverstar.core.ground.0_1_0")
+    assert core.metadata["ground_radio_instances_ready"] is True
+    unavailable_catalog._components[core.component_id] = replace(core,
+        metadata={key: value for key,value in core.metadata.items() if key != "ground_radio_instances_ready"})
     with pytest.raises(ValueError, match="Multiple Ground radio instances"):
-        TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(tmp_path), tmp_path, TargetScope.GROUND)
+        TargetGeneration_Apply(model, unavailable_catalog, WorkspacePolicy(tmp_path), tmp_path, TargetScope.GROUND)
     assert not (tmp_path / "Ground_Station/Makefile").exists()
 
 

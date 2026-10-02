@@ -45,6 +45,11 @@
       "physical": "SYSTEM_TIME",
       "fixed": true,
       "purpose": "GS_SS1 validated hardware wiring"
+    },
+    "PLATFORM_GPIO_6": {
+      "physical": "LED",
+      "fixed": true,
+      "purpose": "GS_SS1 PC13 LED GPIO output declared by reference CubeMX IOC and main.h"
     }
   }
 }
