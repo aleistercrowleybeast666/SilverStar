@@ -120,3 +120,29 @@ def test_ground_ioc_import_updates_actual_resources(qapp,workspace_root,tmp_path
     w._Project_Refresh()
     assert p.board.findData(saved.component_id)>=0
     w.close()
+
+
+def test_enabled_ground_without_inventory_does_not_claim_ready(qapp,workspace_root,tmp_path):
+    w=window_create(workspace_root,tmp_path)
+    p=w.ground_target_page
+    w._GroundTarget_Change('enabled',True)
+    assert not w._model.ground_target.hardware.inventory
+    assert GroundTargetIssues_Get(w._model,w._service.catalog)
+    assert p.generate_button.isEnabled()
+    for language in ('zh_CN','en_US'):
+        w.Language_Apply(language)
+        tooltip=p.generate_button.toolTip()
+        assert tooltip==w._translator.Text_Get('status.ground_configuration_required')
+        assert tooltip!='status.ground_configuration_required'
+        assert 'READY' not in tooltip
+    w._GroundBoard_Change('silverstar.board.ground_station_0_5')
+    w._GroundTarget_Change('radio_plugin','silverstar.device.telemetry.sx1281')
+    w._GroundTarget_Change('pc_interface','uart')
+    assert not GroundTargetIssues_Get(w._model,w._service.catalog)
+    for language in ('zh_CN','en_US'):
+        w.Language_Apply(language)
+        assert p.generate_button.toolTip()==w._translator.Text_Get('status.ground_ready')
+    w._GroundTarget_Change('enabled',False)
+    assert not p.generate_button.isEnabled()
+    assert p.generate_button.toolTip()==w._translator.Text_Get('status.ground_disabled')
+    w.close()

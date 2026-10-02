@@ -388,7 +388,8 @@ class GroundTargetPage(BoardHardwarePage):
             if issues else self._translator.Text_Get("status.ground_ready")
         )
         self.generate_button.setToolTip(self._translator.Text_Get(
-            "status.ground_ready" if ground.enabled else "status.ground_disabled"))
+            "status.ground_disabled" if not ground.enabled else
+            "status.ground_configuration_required" if issues else "status.ground_ready"))
         self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected")
         self.save_instance.setEnabled(
             ground.hardware.mode == "custom" and bool(ground.hardware.snapshot_id)

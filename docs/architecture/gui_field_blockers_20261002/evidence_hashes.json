@@ -42,5 +42,8 @@
   "reproduction/capture_gui.py": "cd02ad1e23367a65d263e68bfdc30e06f3919afefe968f47e0ec955fd9b1f5ea",
   "reproduction/capture_import_save.py": "ea16e01e9fc839c3f7542667e417384eb026f035d90435401ddda92923020792",
   "reproduction/capture_parent_comparison.py": "46dd5d4239d9cf947d70e0a56f6f784129216f5503d5bdc6f7af3f4bfa1e8160",
-  "reproduction/generate_build.py": "2be8ac62dfd7c2836481a0927f04e2e98c4f4f22eb3360b69e5b6997311bf8a7"
+  "reproduction/generate_build.py": "2be8ac62dfd7c2836481a0927f04e2e98c4f4f22eb3360b69e5b6997311bf8a7",
+  "tooltip_before.log": "dc18bc32f489c0d2c0b533d27b75a7f2f6c628bd2618f33d24e38981bfb4887e",
+  "tooltip_after.log": "33ffde978322ff1a5e9db1fbde0b99f02819ed4346550c54046b53f5690b0ed7",
+  "TOOLTIP_FOLLOWUP.md": "9e766dfd9d513dac3778b2fac553998eeaae15ff1cfb394f2d749ed35808b693"
 }

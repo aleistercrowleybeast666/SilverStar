@@ -914,5 +914,6 @@
   "ground.uart_select_hardware": "Select existing Ground hardware or import its CubeMX project to list actual UART instances.",
   "ground.uart_none": "The selected Ground hardware inventory contains no UART. Enable UART in CubeMX and import again, or choose a supported PC interface.",
   "ground.uart_missing_binding": "The saved UART binding is absent from this hardware inventory. Select an available UART before generating.",
-  "ground.uart_unavailable": "{resource} · unavailable"
+  "ground.uart_unavailable": "{resource} · unavailable",
+  "status.ground_configuration_required": "Fix Ground configuration and pass validation before generating."
 }

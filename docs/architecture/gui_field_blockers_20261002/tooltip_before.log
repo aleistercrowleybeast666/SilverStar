@@ -1,0 +1,30 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_enabled_ground_without_inventory_does_not_claim_ready __________
+
+qapp = <PySide6.QtWidgets.QApplication(0x1d95f5553b0) at 0x000001D9621CE6C0>
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG/.work/tooltip_before/test_enabled_ground_without_in0')
+
+    def test_enabled_ground_without_inventory_does_not_claim_ready(qapp,workspace_root,tmp_path):
+        w=window_create(workspace_root,tmp_path)
+        p=w.ground_target_page
+        w._GroundTarget_Change('enabled',True)
+        assert not w._model.ground_target.hardware.inventory
+        assert GroundTargetIssues_Get(w._model,w._service.catalog)
+        assert p.generate_button.isEnabled()
+        for language in ('zh_CN','en_US'):
+            w.Language_Apply(language)
+            tooltip=p.generate_button.toolTip()
+>           assert tooltip==w._translator.Text_Get('status.ground_configuration_required')
+E           AssertionError: assert '地面站：READY' == 'status.groun...tion_required'
+E             
+E             - status.ground_configuration_required
+E             + 地面站：READY
+
+apps\FCCG\tests\test_field_blockers.py:135: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: "Unable to open monitor interface to \\\\.\\DISPLAY1:" "Unknown error 0xe0000225."
+=========================== short test summary info ===========================
+FAILED apps\FCCG\tests\test_field_blockers.py::test_enabled_ground_without_inventory_does_not_claim_ready
+1 failed in 4.63s
