@@ -1304,6 +1304,15 @@ static void Test_IdentityFrame(const char *model, const char *protocol,
     if (extra != NULL) { (void)memcpy(&payload[130], extra, strlen(extra)); }
     if (mode == 1U) { (void)memset(&payload[130], 'X', 30U); }
     if (mode == 4U) { (void)memcpy(&payload[30], "00080000", 8U); }
+    if ((mode >= 5U) && (mode <= 11U))
+    {
+        static const char *software[] = {"ROM CORE 3.01 (107888)",
+            "EXT CORE 3.51 (19dc23)", "ROM SPG 5.10 (10ca7e)",
+            "EXT SPG 5.20 (000000)", "EXT CORE 1.00 (unknown)",
+            "UNKNOWN BUILD", "ROM CORE 4.04 (d964f4)"};
+        (void)memcpy(payload, software[mode - 5U], strlen(software[mode - 5U]));
+        (void)memcpy(&payload[30], "00190000", 8U);
+    }
     length = Test_FrameBuild(TEST_MON_CLASS, 4U, payload,
         (mode == 2U) ? 159U : (uint16_t)sizeof(payload), frame);
     Test_FrameInject(frame, length, (uint8_t)(mode == 3U));
@@ -1333,6 +1342,16 @@ static void Test_IdentityBoundary(void)
             index < 2U ? NULL : "FWVER=SPG 4.04",
             NULL, 0U, index < 3U ? GnssNeoM9nIdentityOk :
             GnssNeoM9nIdentityUnsupportedProtocol);
+    }
+    /* Explicit software-family conflicts only affect the new 32.01 profile.
+     * Unknown/empty software and legacy 27.xx are not a new whitelist. */
+    for (index = 5U; index <= 11U; index++)
+    {
+        Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=32.01", "FWVER=SPG 4.04",
+            NULL, index, index <= 8U ? GnssNeoM9nIdentityWrongFirmware :
+            GnssNeoM9nIdentityOk);
+        Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=27.12", NULL,
+            NULL, index, GnssNeoM9nIdentityOk);
     }
     Test_IdentityFrame("MOD=NEO-M9N", "PROTVER=27.12", "FWVER=SPG 4.04",
         NULL, 0U, GnssNeoM9nIdentityWrongFirmware);
