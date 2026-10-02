@@ -1847,7 +1847,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     air_link = _AirLink_Parse(root.get("air_link"))
     if type(root["flight_tx_power_dbm"]) is not int:
         raise ProjectModelError("flight_tx_power_dbm must be integer")
-    ground_target = _GroundTarget_Parse(root.get("ground_target"))
+    ground_target = _GroundTarget_Parse(root.get("ground_target"),
+        radio_instances_allowed=root["format_version"] == PROJECT_GROUND_RADIOS_FORMAT_VERSION)
     resources = _Object_Require(root.get("resources"), "resources")
     if not all(
         isinstance(key, str)

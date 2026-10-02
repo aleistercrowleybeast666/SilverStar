@@ -25,7 +25,7 @@
       },
       "additionalProperties": false
     },
-    "format_version": {"const": 14},
+    "format_version": {"enum": [14, 15]},
     "flight_tx_power_dbm": {"type": "integer"},
     "alignment": {
       "type": "object",
@@ -84,6 +84,13 @@
         "pc_resource": {"type": "string"},
         "baudrate": {"type": "integer", "minimum": 1},
         "tx_power_dbm": {"type": "integer"},
+        "radio_instances": {"type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/groundRadio"}},
+        "active_radio_instance": {"$ref": "#/$defs/instanceId"},
+        "tx_led_resource": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
+        "rx_led_resource": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
+        "tx_led_active_high": {"type": "boolean"},
+        "rx_led_active_high": {"type": "boolean"},
+        "activity_led_pulse_ms": {"type": "integer", "minimum": 1, "maximum": 200},
         "build": {"$ref": "#/properties/build"}
       },
       "additionalProperties": false
@@ -312,7 +319,25 @@
     "reference_provenance": {"type": "object"}
   },
   "additionalProperties": false,
+  "allOf": [{
+    "if": {"properties": {"format_version": {"const": 15}}},
+    "then": {"properties": {"ground_target": {"required": ["radio_instances", "active_radio_instance"]}}},
+    "else": {"properties": {"ground_target": {"not": {"anyOf": [
+      {"required": ["radio_instances"]}, {"required": ["active_radio_instance"]}
+    ]}}}}
+  }],
   "$defs": {
+    "groundRadio": {
+      "type": "object",
+      "required": ["instance_id", "plugin", "module_variant", "tx_power_dbm"],
+      "properties": {
+        "instance_id": {"$ref": "#/$defs/instanceId"},
+        "plugin": {"$ref": "#/$defs/componentId"},
+        "module_variant": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"},
+        "tx_power_dbm": {"type": "integer"}
+      },
+      "additionalProperties": false
+    },
     "componentId": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
     "componentIds": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/componentId"}},
     "instanceId": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
