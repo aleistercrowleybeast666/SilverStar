@@ -1,0 +1,182 @@
+[
+  {
+    "name": "final_ground_existing_arm",
+    "command": [
+      "mingw32-make",
+      "-j4",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\ground_existing\\Ground_Station",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 5.675821699998778,
+    "log_sha256": "e9a5f4a334dad8f52b2b6c6277880c51b14b08bfd9e774de71c4fd80d396ac92"
+  },
+  {
+    "name": "final_ground_existing_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\ground_existing\\Ground_Station",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 1.1077593999980309,
+    "log_sha256": "964bb2d0effb760a1d8ae1831defb13ece1c31311b40d5d88c361c3c7bdd66c6"
+  },
+  {
+    "name": "final_ground_existing_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\ground_existing\\Ground_Station",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 2.7393422999994073,
+    "log_sha256": "4c6b9b758581a6e5c9d70e94f9d4df939a918bad01bdb9e3eee52f992e182dfb"
+  },
+  {
+    "name": "final_flight_existing_arm",
+    "command": [
+      "mingw32-make",
+      "-j4",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_existing\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 71.24511699999857,
+    "log_sha256": "9f7b99261cb39f82611c4bf9e36ab82c316e853199e155d785a7b1566d02c2d0"
+  },
+  {
+    "name": "final_flight_ioc_arm",
+    "command": [
+      "mingw32-make",
+      "-j4",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_ioc\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 71.92721480000182,
+    "log_sha256": "c411f70b96272d5fa28bdf0e7d076c817565c80c12be1b77bbeca7d664c36e4f"
+  },
+  {
+    "name": "final_flight_existing_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_existing\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 18.586787600001117,
+    "log_sha256": "5bc4ebac3292058550e141ff6c5675813040140735923eed135aa02abf35e455"
+  },
+  {
+    "name": "final_flight_ioc_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_ioc\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 16.559836899999937,
+    "log_sha256": "9c8c51342ca5c2ce6dd68e63e7050d0505c11447fa76a04ed5905f250e818143"
+  },
+  {
+    "name": "final_flight_existing_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_existing\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 22.842050800001743,
+    "log_sha256": "0a084f080d37d32cc0754943e5991ca37fee4e14296488be95809f92b75b89e0"
+  },
+  {
+    "name": "final_flight_existing_resources",
+    "command": [
+      "mingw32-make",
+      "CONFIG=Release",
+      "memory-report",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_existing\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 6.128096000000369,
+    "log_sha256": "922ba3ba07b483efdb5012d99455de2bfed8132f955c2a2795291e33add82139"
+  },
+  {
+    "name": "final_flight_ioc_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_ioc\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 23.26526649999869,
+    "log_sha256": "fb2e099b037f40f5a70cfd8aeb793e0d843082b6f75eb3db89d175487d26315c"
+  },
+  {
+    "name": "final_ground_ioc_arm",
+    "command": [
+      "mingw32-make",
+      "-j4",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\ground_ioc\\Ground_Station",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 5.998827899999014,
+    "log_sha256": "5bc7cadf8ba585ed2d0c8fff2101ba952489c1720d338c2d0fd640ea6f200186"
+  },
+  {
+    "name": "final_ground_ioc_architecture",
+    "command": [
+      "mingw32-make",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\ground_ioc\\Ground_Station",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 0.8726826999991317,
+    "log_sha256": "964bb2d0effb760a1d8ae1831defb13ece1c31311b40d5d88c361c3c7bdd66c6"
+  },
+  {
+    "name": "final_flight_ioc_resources",
+    "command": [
+      "mingw32-make",
+      "CONFIG=Release",
+      "memory-report",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\flight_ioc\\Flight_Controller",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 6.269902500000171,
+    "log_sha256": "6e6f301b7f4d34e23f9a65f2029342b99e2999406cfd00110dd5ef1d667b1182"
+  },
+  {
+    "name": "final_ground_ioc_power10",
+    "command": [
+      "mingw32-make",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\GUI_UserFlow_20261002_v1\\Workflow_Final_v1\\ground_ioc\\Ground_Station",
+    "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+    "exit_code": 0,
+    "seconds": 2.4423604999974486,
+    "log_sha256": "44a55d8c8ce0370785e3ce129d3fc3e0cf757ca3efec4ad11ae394a2e3db3bdd"
+  }
+]

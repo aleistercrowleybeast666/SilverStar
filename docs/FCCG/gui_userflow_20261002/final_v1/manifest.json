@@ -1,0 +1,70 @@
+{
+  "utc": "2026-10-02T02:28:51.766199+00:00",
+  "source_commit": "17bc6ce8351773bd036f4f52b93b2e4bf0acde16",
+  "branch": "fix/software-reconnect-ground-20261001",
+  "tools": {
+    "Python": {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "Python 3.14.0\n"
+    },
+    "ARM": {
+      "command": [
+        "arm-none-eabi-gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    "Host": {
+      "command": [
+        "D:/msys64/ucrt64/bin/gcc.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    "Make": {
+      "command": [
+        "mingw32-make",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "GNU Make 4.4.1\nBuilt for x86_64-w64-mingw32\nCopyright (C) 1988-2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"
+    },
+    "Qt": {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-c",
+        "import PySide6; from PySide6.QtCore import qVersion; print(PySide6.__version__, qVersion())"
+      ],
+      "exit_code": 0,
+      "output": "6.10.1 6.10.1\n"
+    },
+    "PowerShell": {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-Command",
+        "$PSVersionTable.PSVersion.ToString()"
+      ],
+      "exit_code": 0,
+      "output": "5.1.26100.9444\n"
+    }
+  },
+  "native_scope": "one actually executed complete 14-command matrix, 4 fresh single-target projects; 2 dual-target generation/preservation-only cases",
+  "manual_critical_contract_review": "NOT_PROVEN",
+  "hardware": "NOT_PERFORMED in this GUI slice",
+  "gui": "offscreen Qt with real event loop; no OS mouse, GL or transport/controller instantiated",
+  "files": {
+    "evidence.zip": "d4a060f5567e944e0e38fca52c0c4c072146028e35f2e023e93e59720695867c",
+    "evidence_final.zip": "114e15fb07fa2b6ee84c204fd53b0f670201dd396aa8906c3c769006cef45a58",
+    "preservation.json": "2a681e548e8010df41512557c1b30d431f1456d7c3966590ab6ccda94fad11b6",
+    "README.md": "96f579bbe9fe2b4c6c75f0cb0697275bc465bbca6526a1c6d6393bfdd9ce9140",
+    "workflow_artifacts_final.json": "4779831dce998c1706906abfb04b44a443eba60adb2905119d86589201cf468f",
+    "workflow_gates_final.json": "4b9f498f1491507c0cc7fffa8b853994fc50affd416085c4d12c91f09ac92b45"
+  }
+}
