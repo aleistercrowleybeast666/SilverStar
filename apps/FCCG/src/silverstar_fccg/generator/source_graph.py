@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.plugins.catalog import PluginCatalog
+from silverstar_fccg.plugins.manifest import PluginManifest_Load, PluginManifest_VariantResolve
 from silverstar_fccg.project.model import ProjectModel
 from silverstar_fccg.project.resources import ResourceAssignments_Resolve
 
@@ -117,6 +118,17 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
     required_provider_sources: list[tuple[str, str]] = []
     available_provider_sources: list[str] = []
     declared_module_provider_sources: list[str] = []
+    declared_variant_sources: set[str] = set()
+    # Optional profile assets can live in dependency payloads that stay copied
+    # (e.g. Core/System). EIDE must exclude the same unselected assets as Make.
+    declared_protocol_sources = {
+        source
+        for manifest in catalog.Type_Get("protocol")
+        if manifest.protocol is not None
+        for profiles in manifest.protocol.profiles.values()
+        for profile in profiles
+        for source in (*profile.codec_sources, *profile.parser_sources)
+    }
     resource_resolution = ResourceAssignments_Resolve(
         model, catalog, auto_assign=False
     )
@@ -128,6 +140,12 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
     for component_id in model.ComponentIds_Get():
         manifest = catalog.Component_Get(component_id)
         build = manifest.build
+        if manifest.component_type == "device":
+            declared = PluginManifest_Load(manifest.manifest_path, source=manifest.source)
+            for variant_id in declared.device_variants:
+                declared_variant_sources.update(
+                    PluginManifest_VariantResolve(declared, variant_id).build.sources
+                )
         profile_sources: set[str] = set()
         profile_includes: set[str] = set()
         profile_defines: set[str] = set()
@@ -411,6 +429,10 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
         "Generated/Src/project_metadata.c",
         "Generated/Src/project_mission_parameters.c",
     ]
+    # EIDE must compile the same selected transport union as Make, even when
+    # inactive variant payloads share the selected device's source directory.
+    exclude_sources.extend(sorted(declared_variant_sources - set(sources)))
+    exclude_sources.extend(sorted(declared_protocol_sources - set(sources)))
     if model.protocols.get("logging") is not None:
         generated_sources.extend(
             (

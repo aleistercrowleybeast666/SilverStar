@@ -7,6 +7,9 @@
 #include "system_device_types.h"
 #include "system_gnss_if.h"
 
+#define SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US 2000000ULL
+#define SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US 120000000ULL
+
 typedef enum
 {
     SYSTEM_STARTUP_DEVICE_OUTPUT = 0,

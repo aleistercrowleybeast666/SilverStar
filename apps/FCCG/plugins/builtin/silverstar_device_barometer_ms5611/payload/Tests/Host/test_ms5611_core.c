@@ -3,10 +3,12 @@
 #include <assert.h>
 #include <math.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 
 typedef struct
 {
+    uint64_t io_elapsed_us;
     uint16_t prom[8];
     uint8_t last_conversion;
     uint32_t reset_count;
@@ -14,10 +16,11 @@ typedef struct
     uint32_t pressure_start_count;
 } TestMs5611Bus;
 
-static Ms5611BusResult TestMs5611_Write(void *bus, uint8_t command)
+Ms5611BusResult Ms5611Bus_Write(void *bus, uint8_t command)
 {
     TestMs5611Bus *mock = (TestMs5611Bus *)bus;
     if (mock == NULL) { return Ms5611BusError; }
+    mock->io_elapsed_us += 2000ULL;
     if (command == 0x1EU) { mock->reset_count++; return Ms5611BusOk; }
     if (command == 0x58U)
     { mock->last_conversion = command; mock->temperature_start_count++; return Ms5611BusOk; }
@@ -26,12 +29,13 @@ static Ms5611BusResult TestMs5611_Write(void *bus, uint8_t command)
     return Ms5611BusError;
 }
 
-static Ms5611BusResult TestMs5611_Read(void *bus, uint8_t command,
+Ms5611BusResult Ms5611Bus_Read(void *bus, uint8_t command,
     uint8_t *bytes, uint8_t length)
 {
     TestMs5611Bus *mock = (TestMs5611Bus *)bus;
     uint32_t raw;
     if ((mock == NULL) || (bytes == NULL)) { return Ms5611BusError; }
+    mock->io_elapsed_us += 2000ULL;
     if ((command >= 0xA0U) && (command <= 0xAEU) &&
         ((command & 1U) == 0U) && (length == 2U))
     {
@@ -70,8 +74,6 @@ static void TestMs5611_OfficialVectorAndBoundedCycle(void)
     uint64_t time_us;
     TestMs5611_Seed(&bus);
     port.bus = &bus;
-    port.write = TestMs5611_Write;
-    port.read = TestMs5611_Read;
     Ms5611_Init(&context, &port);
     for (time_us = 0U; time_us < 100000U; time_us += 1000U)
     {
@@ -101,8 +103,6 @@ static void TestMs5611_CrcAndTimeout(void)
     TestMs5611_Seed(&bus);
     bus.prom[1] ^= 1U;
     port.bus = &bus;
-    port.write = TestMs5611_Write;
-    port.read = TestMs5611_Read;
     Ms5611_Init(&context, &port);
     for (time_us = 0U; time_us < 30000U; time_us += 1000U)
     {
@@ -123,8 +123,34 @@ static void TestMs5611_CrcAndTimeout(void)
     assert(context.state == Ms5611StateFailed);
 }
 
+static void TestMs5611_FirstSampleActivationBudget(void)
+{
+    TestMs5611Bus bus;
+    Ms5611Context context;
+    Ms5611Port port;
+    Ms5611StepResult result = Ms5611StepPending;
+    uint64_t time_us = 0ULL;
+    TestMs5611_Seed(&bus);
+    port.bus = &bus;
+    Ms5611_Init(&context, &port);
+    for (uint8_t step = 0U; step < 64U; step++)
+    {
+        uint64_t before_io = bus.io_elapsed_us;
+        result = Ms5611_Step(&context, time_us);
+        if (result == Ms5611StepSampleReady)
+        { time_us += bus.io_elapsed_us - before_io; break; }
+        assert(result == Ms5611StepPending);
+        /*10ms after each Process plus every actual mocked2ms bus operation. */
+        time_us += 10000ULL + bus.io_elapsed_us - before_io;
+    }
+    assert(result == Ms5611StepSampleReady && time_us < 250000ULL);
+    assert(fabsf(context.sample.pressure_pa - 100009.0F) < 2.0F);
+    (void)printf("ms5611 first sample at %llu us under10ms service/2ms bus\n",
+        (unsigned long long)time_us);
+}
 int main(void)
 {
+    TestMs5611_FirstSampleActivationBudget();
     TestMs5611_OfficialVectorAndBoundedCycle();
     TestMs5611_CrcAndTimeout();
     return 0;

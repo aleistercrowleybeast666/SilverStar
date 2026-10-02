@@ -1233,3 +1233,101 @@ def test_compatibility_facts_persist_and_participate_in_fingerprint(
     before = ProjectGenerationFingerprint_Get(model)
     loaded.hardware = replace(loaded.hardware, firmware_package="STM32Cube FW_F4 V1.28.2")
     assert ProjectGenerationFingerprint_Get(loaded) != before
+
+
+@pytest.mark.parametrize("exclusive_first", [False, True])
+@pytest.mark.parametrize("physical_alias", [False, True])
+@pytest.mark.parametrize("auto_assign", [False, True])
+def test_exclusive_bus_rejects_shared_owner_in_either_order(
+    tmp_path: Path, workspace_root: Path, exclusive_first: bool,
+    physical_alias: bool, auto_assign: bool,
+) -> None:
+    installed = tmp_path / "installed"
+    devices = []
+    for index, exclusive in enumerate((exclusive_first, not exclusive_first)):
+        plugin_id = f"fixture.device.bus{index}"
+        _Device_Write(installed, plugin_id, "spi", {}, [])
+        path = installed / plugin_id / "1.0.0" / "plugin.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["requires"]["resources"][0]["mode"] = (
+            "exclusive" if exclusive else "shared"
+        )
+        path.write_text(json.dumps(data), encoding="utf-8")
+        devices.append(DeviceInstance(f"owner{index}", plugin_id))
+    catalog = _Catalog_Create(workspace_root, installed)
+    model = _CustomModel_Create(catalog, devices)
+    bus = model.hardware.resources[0]
+    bus = replace(bus, resource_id="BUS_A", kind="spi",
+                  metadata={"physical_resource": "SPI1"})
+    resources = (bus, replace(bus, resource_id="BUS_B")) if physical_alias else (bus,)
+    model.hardware = replace(model.hardware, resources=resources)
+    if not auto_assign:
+        model.resource_assignments = {
+            "owner0:bus": "BUS_A",
+            "owner1:bus": "BUS_B" if physical_alias else "BUS_A",
+        }
+    result = ResourceAssignments_Resolve(model, catalog, auto_assign=auto_assign)
+    assert not result.valid
+    if auto_assign:
+        assert any("Unassigned resource requirement: owner1:bus" in e for e in result.errors)
+    else:
+        expected = "Physical resource conflict" if physical_alias else "Resource conflict"
+        assert any(expected in e for e in result.errors)
+
+
+@pytest.mark.parametrize("exclusive_first", [False, True])
+def test_exclusive_bus_auto_selects_distinct_physical_bus(
+    tmp_path: Path, workspace_root: Path, exclusive_first: bool,
+) -> None:
+    installed = tmp_path / "installed"
+    devices = []
+    for index, exclusive in enumerate((exclusive_first, not exclusive_first)):
+        plugin_id = f"fixture.device.bus{index}"
+        _Device_Write(installed, plugin_id, "spi", {}, [])
+        path = installed / plugin_id / "1.0.0" / "plugin.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["requires"]["resources"][0]["mode"] = "exclusive" if exclusive else "shared"
+        path.write_text(json.dumps(data), encoding="utf-8")
+        devices.append(DeviceInstance(f"owner{index}", plugin_id))
+    catalog = _Catalog_Create(workspace_root, installed)
+    model = _CustomModel_Create(catalog, devices)
+    bus = replace(model.hardware.resources[0], resource_id="BUS_A", kind="spi",
+                  metadata={"physical_resource": "SPI1"})
+    model.hardware = replace(model.hardware, resources=(
+        bus, replace(bus, resource_id="BUS_B", metadata={"physical_resource": "SPI2"}),
+    ))
+    assert ResourceAssignments_Resolve(model, catalog, auto_assign=True).valid
+    assert model.resource_assignments == {"owner0:bus": "BUS_A", "owner1:bus": "BUS_B"}
+
+
+def test_shared_spi_owners_remain_allowed_within_one_target(
+    tmp_path: Path, workspace_root: Path,
+) -> None:
+    installed = tmp_path / "installed"
+    _Device_Write(installed, "fixture.device.shared", "spi", {}, [])
+    catalog = _Catalog_Create(workspace_root, installed)
+    model = _CustomModel_Create(catalog, [
+        DeviceInstance("radio0", "fixture.device.shared"),
+        DeviceInstance("radio1", "fixture.device.shared"),
+    ])
+    bus = replace(model.hardware.resources[0], resource_id="BUS_A", kind="spi",
+                  metadata={"physical_resource": "SPI1"})
+    model.hardware = replace(model.hardware, resources=(bus,))
+    model.resource_assignments = {"radio0:bus": "BUS_A", "radio1:bus": "BUS_A"}
+    assert ResourceAssignments_Resolve(model, catalog).valid
+    # Ground resources are not part of this Flight target's owner set.
+    model.ground_target = replace(model.ground_target, enabled=True,
+                                 resource_assignments={"radio0:data": "BUS_A"})
+    assert ResourceAssignments_Resolve(model, catalog).valid
+
+
+@pytest.mark.parametrize("chip", ["bmp280", "ms5611"])
+def test_barometer_spi_declares_exclusive_transaction_bus(
+    builtin_catalog: PluginCatalog, chip: str,
+) -> None:
+    model = _CustomModel_Create(builtin_catalog, [DeviceInstance(
+        "baro0", f"silverstar.device.barometer.{chip}", interface="spi",
+    )])
+    manifest = builtin_catalog.ProjectView_Get(model).Component_Get(model.device_instances[0].plugin)
+    bus = next(r for r in manifest.resource_requirements if r.name == "data")
+    assert bus.mode.value == "exclusive"

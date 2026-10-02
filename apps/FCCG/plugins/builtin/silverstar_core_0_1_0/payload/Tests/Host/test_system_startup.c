@@ -4,6 +4,7 @@
 
 #include "debug_log.h"
 #include "system_barometer_if.h"
+#include "system_barometer_cold.h"
 #include "system_console.h"
 #include "system_console_if.h"
 #include "system_gnss_if.h"
@@ -52,6 +53,7 @@ static uint8_t s_async_config;
 static uint16_t s_async_busy_ticks;
 static uint32_t s_power_process_count;
 static uint32_t s_output_process_count;
+static uint8_t s_baro_window_stage;
 
 static SystemDeviceResult Test_InfoFill(SystemDeviceInfo *info,
                                         const char *device_name,
@@ -329,6 +331,28 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
 const char *SystemBarometer_NameGet(void) { return "Mock Barometer"; }
 SystemDeviceResult SystemBarometer_Init(void) { return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemBarometer_Start(void) { return SYSTEM_DEVICE_OK; }
+#if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U)
+SystemDeviceResult SystemBarometerCold_StartupWindowBegin(uint64_t phase_started_us)
+{
+    TEST_CHECK(phase_started_us == s_now_us);
+    TEST_CHECK(s_baro_window_stage == 0U);
+    s_baro_window_stage = 1U;
+    return SYSTEM_DEVICE_OK;
+}
+SystemDeviceResult SystemBarometerCold_StartupCommunicationBegin(uint64_t phase_started_us)
+{
+    TEST_CHECK(phase_started_us == s_now_us);
+    TEST_CHECK(s_baro_window_stage == 1U);
+    s_baro_window_stage = 2U;
+    return SYSTEM_DEVICE_OK;
+}
+SystemDeviceResult SystemBarometerCold_StartupWindowEnd(void)
+{
+    TEST_CHECK(s_baro_window_stage == 2U);
+    s_baro_window_stage = 3U;
+    return SYSTEM_DEVICE_OK;
+}
+#endif
 SystemDeviceResult SystemBarometer_Process(void)
 { s_baro_process_count++; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemBarometer_InfoGet(SystemDeviceInfo *info)
@@ -405,6 +429,12 @@ static void Test_Reset(void)
         SYSTEM_CAPABILITY_HARDWARE_QUATERNION |
         SYSTEM_CAPABILITY_TELEMETRY | SYSTEM_CAPABILITY_CONSOLE |
         SYSTEM_CAPABILITY_POWER | SYSTEM_CAPABILITY_STORAGE;
+    if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED == 0U)
+    {
+        /* Production profiles never advertise a disabled Console transport. */
+        s_profile.enabled_capabilities &= ~(uint32_t)SYSTEM_CAPABILITY_CONSOLE;
+        s_profile.optional_capabilities &= ~(uint32_t)SYSTEM_CAPABILITY_CONSOLE;
+    }
     s_navigation.alignment_algorithm =
         SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW;
     s_output_init_result = SYSTEM_DEVICE_OK;
@@ -431,6 +461,7 @@ static void Test_Reset(void)
     s_async_busy_ticks = 0U;
     s_power_process_count = 0U;
     s_output_process_count = 0U;
+    s_baro_window_stage = 0U;
 }
 
 static SystemStartupResult Test_StartupComplete(void)
@@ -462,10 +493,14 @@ static void Test_AllEnabledDevicesPass(void)
     report = SystemStartup_GetReport();
     imu = SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_IMU);
     TEST_CHECK(report->completed != 0U);
+    TEST_CHECK(s_baro_window_stage ==
+        (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U ? 3U : 0U));
     TEST_CHECK(report->mission_capable != 0U);
     TEST_CHECK(report->degraded == 0U);
     TEST_CHECK(report->required_failure_mask == 0U);
     TEST_CHECK(report->optional_failure_mask == 0U);
+    TEST_CHECK(report->devices[SYSTEM_STARTUP_DEVICE_CONSOLE].present ==
+        (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U ? 1U : 0U));
     TEST_CHECK(imu != NULL && imu->required != 0U && imu->present != 0U);
     TEST_CHECK(strcmp(imu->device_name, "Mock IMU Adapter") == 0);
     TEST_CHECK(imu->requested_mask == SYSTEM_IMU_CFG_OUTPUT_RATE);

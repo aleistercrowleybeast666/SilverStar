@@ -8,6 +8,7 @@
 #include "project_device_instances.h"
 #include "silverstar_assert.h"
 #include "system_barometer_if.h"
+#include "system_barometer_cold.h"
 #include "system_gnss_if.h"
 #include "system_hardware_quaternion_if.h"
 #include "system_imu_if.h"
@@ -321,6 +322,9 @@ static uint8_t SystemSourceSelector_PrimaryInstanceGet(
 static uint8_t SystemSourceSelector_CompanionActiveGet(
     SystemDeviceClass device_class)
 {
+    if ((SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) &&
+        (device_class == SYSTEM_DEVICE_CLASS_BAROMETER))
+    { return SystemBarometerCold_ActiveGet(); }
     /* Companion capabilities keep their own configured canonical source. */
     return SystemSourceSelector_PrimaryInstanceGet(device_class);
 }
@@ -1796,13 +1800,23 @@ const char *SystemBarometer_NameGet(void)
 }
 
 SystemDeviceResult SystemBarometer_Init(void)
-{ return SystemSourceSelector_PassiveInit(SYSTEM_DEVICE_CLASS_BAROMETER); }
+{
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) { return SystemBarometerCold_Init(); }
+    return SystemSourceSelector_PassiveInit(SYSTEM_DEVICE_CLASS_BAROMETER);
+}
 SystemDeviceResult SystemBarometer_Start(void)
-{ return SystemSourceSelector_PassiveStart(SYSTEM_DEVICE_CLASS_BAROMETER); }
+{
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) { return SystemBarometerCold_Start(); }
+    return SystemSourceSelector_PassiveStart(SYSTEM_DEVICE_CLASS_BAROMETER);
+}
 SystemDeviceResult SystemBarometer_Stop(void)
-{ return SystemSourceSelector_PassiveStop(SYSTEM_DEVICE_CLASS_BAROMETER); }
+{
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) { return SystemBarometerCold_Stop(); }
+    return SystemSourceSelector_PassiveStop(SYSTEM_DEVICE_CLASS_BAROMETER);
+}
 SystemDeviceResult SystemBarometer_Process(void)
 {
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) { return SystemBarometerCold_Process(); }
     SystemSourceSelector_PassiveProcess(SYSTEM_DEVICE_CLASS_BAROMETER);
     return SYSTEM_DEVICE_OK;
 }
@@ -1829,6 +1843,7 @@ SystemDeviceResult SystemBarometer_CapabilitiesGet(uint32_t *mask)
 
 SystemDeviceResult SystemBarometer_HealthGet(SystemDeviceHealth *health)
 {
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) { return SystemBarometerCold_HealthGet(health); }
     uint8_t active = SystemSourceSelector_CompanionActiveGet(
         SYSTEM_DEVICE_CLASS_BAROMETER);
     if (health == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
@@ -1839,6 +1854,7 @@ SystemDeviceResult SystemBarometer_HealthGet(SystemDeviceHealth *health)
 
 SystemDeviceResult SystemBarometer_LatestSampleGet(SystemBarometerSample *sample)
 {
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) { return SystemBarometerCold_SampleGet(sample); }
     uint8_t active = SystemSourceSelector_CompanionActiveGet(
         SYSTEM_DEVICE_CLASS_BAROMETER);
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }

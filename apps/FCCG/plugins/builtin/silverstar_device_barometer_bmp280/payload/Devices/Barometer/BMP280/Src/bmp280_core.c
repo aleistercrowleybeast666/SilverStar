@@ -1,4 +1,5 @@
 #include "bmp280_core.h"
+#include "silverstar_assert.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -83,7 +84,7 @@ void Bmp280_Init(Bmp280Context *context, const Bmp280Port *port)
 {
     if (context == NULL) { return; }
     (void)memset(context, 0, sizeof(*context));
-    if ((port == NULL) || (port->read == NULL) || (port->write == NULL))
+    if ((port == NULL) || (port->bus == NULL))
     { context->state = Bmp280StateFailed; return; }
     context->port = *port;
     context->state = Bmp280StateProbe;
@@ -97,20 +98,13 @@ static Bmp280StepResult Bmp280_Fail(Bmp280Context *context,
     return result;
 }
 
-Bmp280StepResult Bmp280_Step(Bmp280Context *context, uint64_t now_us)
+static Bmp280StepResult Bmp280_ConfigureStep(Bmp280Context *context, uint64_t now_us)
 {
+    (void)now_us; /* This phase performs no conversion wait. */
     uint8_t bytes[24];
-    uint32_t raw_pressure;
-    uint32_t raw_temperature;
-    float pressure;
-    float temperature;
-    Bmp280StepResult result;
-    if (context == NULL) { return Bmp280StepBusError; }
-    if (context->state == Bmp280StateFailed)
-    { return Bmp280StepVerifyFailed; }
     if (context->state == Bmp280StateProbe)
     {
-        if (context->port.read(context->port.bus, BMP280_REGISTER_CHIP_ID,
+        if (Bmp280Bus_Read(context->port.bus, BMP280_REGISTER_CHIP_ID,
                 bytes, 1U) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         if (bytes[0] != BMP280_CHIP_ID)
@@ -119,7 +113,7 @@ Bmp280StepResult Bmp280_Step(Bmp280Context *context, uint64_t now_us)
     }
     else if (context->state == Bmp280StateReadTrim)
     {
-        if (context->port.read(context->port.bus, BMP280_REGISTER_TRIM,
+        if (Bmp280Bus_Read(context->port.bus, BMP280_REGISTER_TRIM,
                 bytes, 24U) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         Bmp280_TrimParse(&context->trim, bytes);
@@ -129,7 +123,7 @@ Bmp280StepResult Bmp280_Step(Bmp280Context *context, uint64_t now_us)
     }
     else if (context->state == Bmp280StateReadConfig)
     {
-        if (context->port.read(context->port.bus, BMP280_REGISTER_CONFIG,
+        if (Bmp280Bus_Read(context->port.bus, BMP280_REGISTER_CONFIG,
                 bytes, 1U) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         context->state = bytes[0] == BMP280_CONFIG_FILTER_4 ?
@@ -137,23 +131,29 @@ Bmp280StepResult Bmp280_Step(Bmp280Context *context, uint64_t now_us)
     }
     else if (context->state == Bmp280StateApplyConfig)
     {
-        if (context->port.write(context->port.bus, BMP280_REGISTER_CONFIG,
+        if (Bmp280Bus_Write(context->port.bus, BMP280_REGISTER_CONFIG,
                 BMP280_CONFIG_FILTER_4) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         context->state = Bmp280StateVerifyConfig;
     }
     else if (context->state == Bmp280StateVerifyConfig)
     {
-        if (context->port.read(context->port.bus, BMP280_REGISTER_CONFIG,
+        if (Bmp280Bus_Read(context->port.bus, BMP280_REGISTER_CONFIG,
                 bytes, 1U) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         if (bytes[0] != BMP280_CONFIG_FILTER_4)
         { return Bmp280_Fail(context, Bmp280StepVerifyFailed); }
         context->state = Bmp280StateStartConversion;
     }
-    else if (context->state == Bmp280StateStartConversion)
+    return Bmp280StepPending;
+}
+
+static Bmp280StepResult Bmp280_ConversionStep(Bmp280Context *context, uint64_t now_us)
+{
+    uint8_t bytes[1];
+    if (context->state == Bmp280StateStartConversion)
     {
-        if (context->port.write(context->port.bus, BMP280_REGISTER_CTRL_MEAS,
+        if (Bmp280Bus_Write(context->port.bus, BMP280_REGISTER_CTRL_MEAS,
                 BMP280_CTRL_TEMP_2_PRESS_16_FORCED) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         context->conversion_started_us = now_us;
@@ -166,15 +166,24 @@ Bmp280StepResult Bmp280_Step(Bmp280Context *context, uint64_t now_us)
         if (elapsed < BMP280_CONVERSION_MIN_US) { return Bmp280StepPending; }
         if (elapsed > BMP280_CONVERSION_TIMEOUT_US)
         { return Bmp280_Fail(context, Bmp280StepConversionTimeout); }
-        if (context->port.read(context->port.bus, BMP280_REGISTER_STATUS,
+        if (Bmp280Bus_Read(context->port.bus, BMP280_REGISTER_STATUS,
                 bytes, 1U) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         if ((bytes[0] & 0x08U) == 0U)
         { context->state = Bmp280StateReadSample; }
     }
-    else if (context->state == Bmp280StateReadSample)
+    return Bmp280StepPending;
+}
+
+static Bmp280StepResult Bmp280_SampleStep(Bmp280Context *context, uint64_t now_us)
+{
+    uint8_t bytes[6];
+    uint32_t raw_pressure, raw_temperature;
+    float pressure, temperature;
+    Bmp280StepResult result;
+    if (context->state == Bmp280StateReadSample)
     {
-        if (context->port.read(context->port.bus, BMP280_REGISTER_PRESS_MSB,
+        if (Bmp280Bus_Read(context->port.bus, BMP280_REGISTER_PRESS_MSB,
                 bytes, 6U) != Bmp280BusOk)
         { return Bmp280_Fail(context, Bmp280StepBusError); }
         raw_pressure = ((uint32_t)bytes[0] << 12U) |
@@ -200,6 +209,22 @@ Bmp280StepResult Bmp280_Step(Bmp280Context *context, uint64_t now_us)
         context->state = Bmp280StateStartConversion;
         return Bmp280StepSampleReady;
     }
-    else { return Bmp280_Fail(context, Bmp280StepVerifyFailed); }
     return Bmp280StepPending;
+}
+
+Bmp280StepResult Bmp280_Step(Bmp280Context *context, uint64_t now_us)
+{
+    if (context == NULL) { return Bmp280StepBusError; }
+    SILVERSTAR_ASSERT((uint32_t)context->state <= (uint32_t)Bmp280StateFailed,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if (context->state == Bmp280StateFailed) { return Bmp280StepVerifyFailed; }
+    SILVERSTAR_ASSERT(context->port.bus != NULL,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (context->state == Bmp280StateProbe || context->state == Bmp280StateReadTrim || context->state == Bmp280StateReadConfig || context->state == Bmp280StateApplyConfig || context->state == Bmp280StateVerifyConfig)
+    { return Bmp280_ConfigureStep(context, now_us); }
+    if (context->state == Bmp280StateStartConversion || context->state == Bmp280StateWaitConversion)
+    { return Bmp280_ConversionStep(context, now_us); }
+    if (context->state == Bmp280StateReadSample)
+    { return Bmp280_SampleStep(context, now_us); }
+    return Bmp280_Fail(context, Bmp280StepVerifyFailed);
 }
