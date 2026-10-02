@@ -1645,6 +1645,13 @@ class MainWindow(QMainWindow):
             model.ground_target, boards, tuple(radios), requirements,
             GroundTargetIssues_Get(model, self._service.catalog),
         )
+        ground = model.ground_target
+        platform = self._service.PlatformMatchView_Get(
+            replace(model, mcu=ground.mcu, board=ground.board,
+                    hardware=ground.hardware), self._translator.language)
+        if ground.hardware.inventory.get("timebase", {}).get("kind") == "systick":
+            platform = replace(platform, timebase_status="SysTick / HAL_IncTick")
+        self.ground_target_page.Platform_Set(platform)
 
     def _AirLink_Change(self, field: str, value: object) -> None:
         self._ProjectConfiguration_Change(

@@ -736,7 +736,18 @@ def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
         inventory, vendor=provider.vendor, provider=provider.handler), catalog)
     resources = tuple(HardwareResource(item.resource_id, item.kind, item.metadata)
                       for item in BoardResourceProvisions_Get(board))
-    hardware = replace(ground.hardware, mcu=inventory.mcu_part,
+    platform = catalog.Component_Get(matched.selected.component_id)
+    hardware = replace(ground.hardware, source_kind=board.board.source_kind,
+                       provider=board.board.provider, ioc_file=board.board.ioc_file,
+                       mcu=inventory.mcu_part,
+                       platform_component=platform.component_id,
+                       platform_version=platform.version,
+                       platform_manifest_sha256=platform.ManifestSha256_Get(),
+                       cubemx_version=inventory.cubemx_version,
+                       firmware_package=inventory.firmware_package,
+                       hal_cmsis_source_policy=(platform.platform.compatibility.source_policy
+                                               if platform.platform is not None else ""),
+                       source_label=board.name,
                        inventory=inventory.Dictionary_Get(), resources=resources)
     assignments = dict(ground.resource_assignments)
     if ground.radio_plugin:

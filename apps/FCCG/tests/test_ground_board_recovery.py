@@ -18,6 +18,9 @@ def test_saved_board_without_resources_recovers_declarative_defaults(builtin_cat
         pc_interface='uart', hardware=HardwareConfiguration(mode='board_plugin'))
     result = ProjectConfiguration_Reconcile(model, builtin_catalog).model
     assert result.ground_target.hardware.resources
+    assert result.ground_target.hardware.source_kind == 'verified_builtin'
+    assert result.ground_target.hardware.cubemx_version == '6.15.0'
+    assert result.ground_target.hardware.firmware_package == 'STM32Cube FW_F1 V1.8.7'
     assert result.ground_target.pc_resource == 'PLATFORM_UART_1'
     assert result.ground_target.resource_assignments['radio0:radio_nss'] == 'PLATFORM_GPIO_0'
     assert not GroundTargetIssues_Get(result, builtin_catalog)
@@ -43,6 +46,10 @@ def test_ground_selection_defaults_and_checkbox_visibility(qapp, tmp_path, works
     window._GroundTarget_Change('module_variant', 'e28_2g4m12sx')
     window._GroundTarget_Change('pc_interface', 'uart')
     assert not GroundTargetIssues_Get(window._model, window._service.catalog)
+    facts = window.ground_target_page.platform_values
+    assert facts['cubemx'].text() == '6.15.0'
+    assert facts['firmware_package'].text() == 'STM32Cube FW_F1 V1.8.7'
+    assert 'silverstar.mcu.stm32f103c8t6' in facts['plugin'].text()
     assert window.ground_target_page.enabled.objectName() == 'standardCheckBox'
     assert window.air_link_page.crc.objectName() == 'standardCheckBox'
     window._GroundTarget_Change('enabled', False)
