@@ -616,12 +616,7 @@ void SystemAlignment_Init(void)
     s_status.capability_mask = SystemAlignment_CapabilityDetect();
     s_status.selected_mask = SYSTEM_USER_ALIGNMENT_SELECTED_MASK;
     s_status.required_mask = SYSTEM_USER_ALIGNMENT_REQUIRED_MASK;
-    /* GNSS-dependent navigation cannot make READY on attitude/barometer alone. */
-    if ((SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE) &&
-        (SYSTEM_ESTIMATOR_GNSS_FUSION_REQUIRES_PREFLIGHT_ORIGIN != 0U))
-    {
-        s_status.required_mask |= SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN;
-    }
+    /* Fusion's origin prerequisite does not promote an optional mission source. */
     s_status.config_result = SystemAlignment_MasksValidate(
         s_status.capability_mask, s_status.selected_mask,
         s_status.required_mask, &s_status.unavailable_mask);

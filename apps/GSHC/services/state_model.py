@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Iterable
 
 from config import MAX_LIVE_POINTS, PLOT_WINDOW_SECONDS, UI_EVENT_HISTORY_LIMIT
-from services.navigation_state import NavigationStartResult, NavigationState
+from services.navigation_state import NavigationState
 from protocol.air import AirCapabilityMessage, AirSensorStatusMessage
 from protocol.common import (
     AirAckResult,
@@ -608,7 +608,6 @@ class FlightControllerState:
             and self.alignment.ready
             and self.system_ready
             and self.start_unlocked
-            and self.navigation.Navigation_StartCheck() is NavigationStartResult.ALLOWED
         )
 
     def start_ready(self) -> bool:

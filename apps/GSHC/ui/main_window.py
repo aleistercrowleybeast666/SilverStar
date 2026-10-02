@@ -56,7 +56,6 @@ from protocol.common import (
 )
 from services.data_migration import DataMigrationConflictPolicy
 from services.i18n import I18n, Language
-from services.navigation_state import NavigationStartResult
 from services.preferences import (
     ALL_EXPORT_ITEMS,
     AppPreferences,
@@ -2802,9 +2801,6 @@ class MainWindow(QMainWindow):
             reason = self.i18n.tr(
                 "start.cannot", reason=self.i18n.tr("start.block.unlock")
             )
-        elif state.navigation.Navigation_StartCheck() is not NavigationStartResult.ALLOWED:
-            reason = self.i18n.tr("start.cannot", reason=self.i18n.tr(
-                f"navigation.{state.navigation.Navigation_StartCheck().value}"))
         elif state.start_ready():
             reason = self.i18n.tr("start.ready")
             semantic_state = "ready"
