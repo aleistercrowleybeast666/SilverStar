@@ -1,0 +1,29 @@
+.......F.........                                                        [100%]
+================================== FAILURES ===================================
+________ test_ground_existing_selection_cancel_commit_and_common_page _________
+
+qapp = <PySide6.QtWidgets.QApplication(0x1726c8e3f20) at 0x000001726EEDA440>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG/.work/field_tests_r3/test_ground_existing_selection0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+
+    def test_ground_existing_selection_cancel_commit_and_common_page(qapp, tmp_path, workspace_root):
+        window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+        page = window.ground_target_page
+        assert page.prepare_button.isEnabled()
+        previous = window._model.Dictionary_Get()
+        with patch.object(QInputDialog, 'getItem', return_value=('', False)):
+            page.prepare_button.click()
+        assert window._model.Dictionary_Get() == previous
+        title = next(page.board_combo.itemText(i) for i in range(page.board_combo.count()) if page.board_combo.itemData(i) != '__custom__')
+        with patch.object(QInputDialog, 'getItem', return_value=(title, True)):
+            page.prepare_button.click()
+>       assert window._model.ground_target.board == 'silverstar.board.ground_station_0_5'
+E       AssertionError: assert 'local.board.ground.field' == 'silverstar.b...d_station_0_5'
+E         
+E         - silverstar.board.ground_station_0_5
+E         + local.board.ground.field
+
+apps\FCCG\tests\test_release_011_gui.py:58: AssertionError
+=========================== short test summary info ===========================
+FAILED apps/FCCG/tests/test_release_011_gui.py::test_ground_existing_selection_cancel_commit_and_common_page
+1 failed, 16 passed in 152.98s (0:02:32)

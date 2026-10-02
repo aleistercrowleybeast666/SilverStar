@@ -1,0 +1,23 @@
+{
+  "code_commit": "08a113d2cce58070dc1f424b316595005e38eb5d",
+  "hashes": {
+    "README.md": "d4022249635eeebffd1489860ebda4411b972ae00a888682abe4d234062b7e43",
+    "SCG.py": "8fa28a6beb4f47c1c2f40acb1dfd632b83090ea8700b0fe662a0682b146d9ff0",
+    "apps/FCCG/FCCG.py": "f3c0dd7901522c136b285dd089849d335aa13bd449fbc00e2da7b3ee6fc6b188",
+    "apps/FCCG/src/silverstar_fccg/app/application.py": "d6a39fe02a925d228b6a9216a460d29fad49d80a73c3e41cbf194727bc98d687",
+    "apps/FCCG/src/silverstar_fccg/app/service.py": "1710ad1038761696a777a7c9629e73cddc2125200016609b05a199e45cfbff2b",
+    "apps/FCCG/src/silverstar_fccg/i18n/en_US.json": "5eefe8df15644c53b734f1ac9cc22d99924e2cdfec47f99fb84ac7d3aea437e9",
+    "apps/FCCG/src/silverstar_fccg/i18n/zh_CN.json": "cf176152a55c8a9f8c5a7fb5747507dd05e77bec7cc5c26c2cab9a0984465021",
+    "apps/FCCG/src/silverstar_fccg/ui/main_window.py": "6eee929ef367b5b20ad4b6e58ca8a8e20869766a59299744b5fa7e19a06b8234",
+    "apps/FCCG/src/silverstar_fccg/ui/pages/targets.py": "e6a1699b5349f5c32aeefbd4cf4f864417beb9b00aafff09f53efdba17f866e1",
+    "apps/FCCG/tests/test_field_blockers.py": "ce9db217a44e715783a84d9de64f7b52937b2f338f30c0e200a3821db6b295df",
+    "apps/FLP/src/silverstar_flp/ui/main_window.py": "5a9c1f6b97f980a101726b1d09abcf53804333867459de731ebc4d1d192c4982",
+    "apps/FLP/src/silverstar_flp/ui/widgets.py": "dcbab7c0d4b1d59afa6fd8a0ebb0a8b63b2f0aee3b994e24111701ba25c14aca",
+    "apps/FLP/tests/test_header_field_blockers.py": "2d0e62e8baacdca6d8120096532299b679bd954b64b9e57592a8b9840fbe3216",
+    "pyproject.toml": "ec44180aee8b0158146d81e6cd7c33f6070f3960ecb7fdaaaa40d0f7d4333047",
+    "tests/integration/test_monorepo_baseline.py": "c2af92e29735bb6afc1a106f810b317699910b8711fd68d8d64e756fff05fd3c",
+    "tools/freeze_memory_final.py": "487d36bca02044bf227f7e29479e9ef62fd815d684ee1637ceefec7fa209304b",
+    "tools/launch.py": "f6b5311b26d96b824c896d560f66df959392067c8d5a38967e9a0f387ca141b6",
+    "tools/silverstar_version.py": "ddab3e062d6b8ce9d767d589bd3eb0d14ba82486f6031de02a7bd7bccc4fd9ed"
+  }
+}

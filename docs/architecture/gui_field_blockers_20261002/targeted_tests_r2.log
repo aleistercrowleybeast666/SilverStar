@@ -1,0 +1,285 @@
+...F..FFF........                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_ground_ioc_import_updates_actual_resources _______________
+
+qapp = <PySide6.QtWidgets.QApplication(0x253a99d0a80) at 0x00000253AC102080>
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_ground_ioc_import_updates0')
+
+    def test_ground_ioc_import_updates_actual_resources(qapp,workspace_root,tmp_path):
+        w=window_create(workspace_root,tmp_path)
+        source=workspace_root/'plugins/builtin/silverstar_board_ground_station_0_5/payload/Ground_Station0.5.ioc'
+>       result=w._service.CubeMxProject_Import(source,w._model,risk_acknowledged=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_field_blockers.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\app\service.py:840: in CubeMxProject_Import
+    result = self.hardware_importer.Project_Import(
+apps\FCCG\src\silverstar_fccg\hardware\cubemx.py:118: in Project_Import
+    self._GeneratedLayout_Validate(root)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG/plugins/builtin/silverstar_board_ground_station_0_5/payload')
+
+    @staticmethod
+    def _GeneratedLayout_Validate(root: Path) -> None:
+        required_directories = (
+            root / "Core" / "Inc",
+            root / "Core" / "Src",
+            root / "Drivers" / "CMSIS",
+        )
+        missing = [path.relative_to(root).as_posix() for path in required_directories if not path.is_dir()]
+        hal_candidates = tuple((root / "Drivers").glob("STM32*xx_HAL_Driver"))
+        if not hal_candidates:
+            missing.append("Drivers/STM32*xx_HAL_Driver")
+        if missing:
+>           raise CubeMxImportError(
+                "CubeMX generated project is incomplete: " + ", ".join(missing)
+            )
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: CubeMX generated project is incomplete: Drivers/CMSIS, Drivers/STM32*xx_HAL_Driver
+
+apps\FCCG\src\silverstar_fccg\hardware\cubemx.py:296: CubeMxImportError
+____________ test_alignment_group_contains_mode_draft_and_actions _____________
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_alignment_group_contains_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_alignment_group_contains_0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests_r2\\test_alignment_group_contains_0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+qapp = <PySide6.QtWidgets.QApplication(0x253a99d0a80) at 0x00000253AC102080>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_alignment_group_contains_0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+
+    def test_alignment_group_contains_mode_draft_and_actions(qapp, tmp_path, workspace_root):
+>       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_release_011_gui.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:205: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_alignment_group_contains_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\GuiFieldBlockers_20261002\.work\field_tests_r2\test_alignment_group_contains_0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError
+________ test_ground_existing_selection_cancel_commit_and_common_page _________
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_ground_existing_selection0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_ground_existing_selection0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests_r2\\test_ground_existing_selection0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+qapp = <PySide6.QtWidgets.QApplication(0x253a99d0a80) at 0x00000253AC102080>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_ground_existing_selection0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+
+    def test_ground_existing_selection_cancel_commit_and_common_page(qapp, tmp_path, workspace_root):
+>       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_release_011_gui.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:205: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_ground_existing_selection0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\GuiFieldBlockers_20261002\.work\field_tests_r2\test_ground_existing_selection0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError
+______ test_localized_navigation_fits_all_labels_and_preserves_selection ______
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_localized_navigation_fits0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_localized_navigation_fits0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests_r2\\test_localized_navigation_fits0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+qapp = <PySide6.QtWidgets.QApplication(0x253a99d0a80) at 0x00000253AC102080>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_localized_navigation_fits0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+
+    def test_localized_navigation_fits_all_labels_and_preserves_selection(qapp, tmp_path, workspace_root):
+>       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_release_011_gui.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:205: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests_r2/test_localized_navigation_fits0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\GuiFieldBlockers_20261002\.work\field_tests_r2\test_localized_navigation_fits0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError
+=========================== short test summary info ===========================
+FAILED apps/FCCG/tests/test_field_blockers.py::test_ground_ioc_import_updates_actual_resources
+FAILED apps/FCCG/tests/test_release_011_gui.py::test_alignment_group_contains_mode_draft_and_actions
+FAILED apps/FCCG/tests/test_release_011_gui.py::test_ground_existing_selection_cancel_commit_and_common_page
+FAILED apps/FCCG/tests/test_release_011_gui.py::test_localized_navigation_fits_all_labels_and_preserves_selection
+4 failed, 13 passed in 76.42s (0:01:16)

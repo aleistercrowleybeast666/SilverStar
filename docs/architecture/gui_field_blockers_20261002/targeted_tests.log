@@ -1,0 +1,734 @@
+FEEE.EEEEEEEEEEEE                                                        [100%]
+=================================== ERRORS ====================================
+_____ ERROR at setup of test_ground_controls_save_reopen_keep_actual_uart _____
+
+item = <Function test_ground_controls_save_reopen_keep_actual_uart>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+__________ ERROR at setup of test_empty_and_stale_uart_are_explained __________
+
+item = <Function test_empty_and_stale_uart_are_explained>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+______ ERROR at setup of test_ground_ioc_import_updates_actual_resources ______
+
+item = <Function test_ground_ioc_import_updates_actual_resources>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+__ ERROR at setup of test_ground_selection_defaults_and_checkbox_visibility ___
+
+item = <Function test_ground_selection_defaults_and_checkbox_visibility>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+___ ERROR at setup of test_alignment_group_contains_mode_draft_and_actions ____
+
+item = <Function test_alignment_group_contains_mode_draft_and_actions>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_ground_existing_selection_cancel_commit_and_common_page _
+
+item = <Function test_ground_existing_selection_cancel_commit_and_common_page>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_localized_navigation_fits_all_labels_and_preserves_selection _
+
+item = <Function test_localized_navigation_fits_all_labels_and_preserves_selection>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+____ ERROR at setup of test_classified_pcbs_preserve_legacy_and_conflicts _____
+
+item = <Function test_classified_pcbs_preserve_legacy_and_conflicts>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_____ ERROR at setup of test_service_save_classifies_archives_and_reload ______
+
+item = <Function test_service_save_classifies_archives_and_reload>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_header_actual_geometry_and_dirty_suffix[light-zh_CN] _
+
+item = <Function test_header_actual_geometry_and_dirty_suffix[light-zh_CN]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_header_actual_geometry_and_dirty_suffix[light-en_US] _
+
+item = <Function test_header_actual_geometry_and_dirty_suffix[light-en_US]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_header_actual_geometry_and_dirty_suffix[dark-zh_CN] __
+
+item = <Function test_header_actual_geometry_and_dirty_suffix[dark-zh_CN]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_header_actual_geometry_and_dirty_suffix[dark-en_US] __
+
+item = <Function test_header_actual_geometry_and_dirty_suffix[dark-en_US]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_cancel_busy_and_failed_import_preserve_published_root _
+
+item = <Function test_cancel_busy_and_failed_import_preserve_published_root>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+__ ERROR at setup of test_root_and_analysis_session_identity_survives_resize __
+
+item = <Function test_root_and_analysis_session_identity_survives_resize>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/.work/field_tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\field_tests'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+================================== FAILURES ===================================
+__________________ test_new_defaults_and_old_memory_policies __________________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/apps/FCCG')
+
+    def test_new_defaults_and_old_memory_policies(workspace_root):
+        service=FccgService(workspace_root)
+        new=service.ProjectDraft_Create('Field')
+        assert new.build.memory_layout == 'auto'
+        assert new.hardware.mode == new.ground_target.hardware.mode == 'custom'
+        assert new.hardware.provider == new.ground_target.hardware.provider
+        for policy in ('legacy','eskf_window_sram','auto'):
+            old=new.Dictionary_Get();old['build']['memory_layout']=policy
+            assert ProjectModel_Parse(old).build.memory_layout == policy
+        old=new.Dictionary_Get();del old['build']['memory_layout']
+        old['ground_target']['hardware']['mode']='unselected'
+>       reopened=ProjectModel_Parse(old)
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_field_blockers.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\project\model.py:1818: in ProjectModel_Parse
+    ground_target = _GroundTarget_Parse(root.get("ground_target"))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\project\model.py:1634: in _GroundTarget_Parse
+    hardware=_Hardware_Parse(data["hardware"], board=data["board"]),
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'mode': 'unselected', 'source_kind': 'manual_import', 'provider': 'silverstar.hardware_provider.stm32_cubemx', 'snapshot_id': '', ...}
+board = ''
+
+    def _Hardware_Parse(value: Any, *, board: str) -> HardwareConfiguration:
+        data = _Object_Require(value, "hardware")
+        expected = {
+            "mode",
+            "source_kind",
+            "provider",
+            "snapshot_id",
+            "ioc_file",
+            "mcu",
+            "cubemx_version",
+            "firmware_package",
+            "hal_cmsis_source_policy",
+            "i2c_external_pullup_confirmations",
+            "capabilities",
+            "inventory",
+            "resources",
+            "build_sources",
+            "asm_sources",
+            "include_dirs",
+            "defines",
+            "linker_script",
+            "source_digest",
+            "source_label",
+            "risk_acknowledged",
+            "assignment_fingerprint",
+        }
+        lock_fields = {
+            "platform_component",
+            "platform_version",
+            "platform_manifest_sha256",
+        }
+        if not expected.issubset(data) or set(data) - expected - lock_fields:
+            raise ProjectModelError("hardware has missing or unknown fields")
+        mode = _String_Require(data, "mode")
+        source_kind = _String_Require(data, "source_kind")
+        provider = _String_Require(data, "provider", allow_empty=True)
+        snapshot_id = _String_Require(data, "snapshot_id", allow_empty=True)
+        ioc_file = _String_Require(data, "ioc_file", allow_empty=True)
+        mcu = _String_Require(data, "mcu", allow_empty=True)
+        platform_component = str(data.get("platform_component", ""))
+        platform_version = str(data.get("platform_version", ""))
+        platform_manifest_sha256 = str(data.get("platform_manifest_sha256", ""))
+        cubemx_version = _String_Require(
+            data, "cubemx_version", allow_empty=True
+        )
+        firmware_package = _String_Require(
+            data, "firmware_package", allow_empty=True
+        )
+        hal_cmsis_source_policy = _String_Require(
+            data, "hal_cmsis_source_policy", allow_empty=True
+        )
+        if hal_cmsis_source_policy not in {
+            "",
+            "plugin_payload_authoritative",
+            "imported_tree_authoritative",
+        }:
+            raise ProjectModelError("hardware.hal_cmsis_source_policy is invalid")
+        raw_pullup_confirmations = _Object_Require(
+            data.get("i2c_external_pullup_confirmations"),
+            "hardware.i2c_external_pullup_confirmations",
+        )
+        pullup_confirmations: dict[str, dict[str, str]] = {}
+        for resource_id, raw_binding in raw_pullup_confirmations.items():
+            if (
+                not isinstance(resource_id, str)
+                or RESOURCE_ID_PATTERN.fullmatch(resource_id) is None
+            ):
+                raise ProjectModelError(
+                    "hardware.i2c_external_pullup_confirmations has an invalid resource id"
+                )
+            binding = _Object_Require(
+                raw_binding,
+                f"hardware.i2c_external_pullup_confirmations.{resource_id}",
+            )
+            if set(binding) != {"source_digest", "snapshot_id"}:
+                raise ProjectModelError(
+                    "I2C external pull-up confirmation must bind source_digest and snapshot_id"
+                )
+            source_binding = _String_Require(binding, "source_digest")
+            snapshot_binding = _String_Require(binding, "snapshot_id")
+            if not SHA256_PATTERN.fullmatch(source_binding) or not SHA256_PATTERN.fullmatch(
+                snapshot_binding
+            ):
+                raise ProjectModelError(
+                    "I2C external pull-up confirmation contains an invalid digest"
+                )
+            pullup_confirmations[resource_id] = {
+                "source_digest": source_binding,
+                "snapshot_id": snapshot_binding,
+            }
+        _ComponentId_Validate(
+            platform_component, "hardware platform_component", allow_empty=True
+        )
+        if platform_version and not FIRMWARE_VERSION_PATTERN.fullmatch(platform_version):
+            raise ProjectModelError("hardware.platform_version is invalid")
+        if platform_manifest_sha256 and not SHA256_PATTERN.fullmatch(
+            platform_manifest_sha256
+        ):
+            raise ProjectModelError("hardware.platform_manifest_sha256 is invalid")
+        if any((platform_component, platform_version, platform_manifest_sha256)) and not all(
+            (platform_component, platform_version, platform_manifest_sha256)
+        ):
+            raise ProjectModelError("hardware Platform lock is incomplete")
+        source_digest = _String_Require(data, "source_digest", allow_empty=True)
+        source_label = _String_Require(data, "source_label", allow_empty=True)
+        assignment_fingerprint = _String_Require(
+            data, "assignment_fingerprint", allow_empty=True
+        )
+        capabilities = tuple(_StringList_Require(data, "capabilities"))
+        inventory = _Object_Require(data.get("inventory"), "hardware inventory")
+        resources_value = data.get("resources")
+        if not isinstance(resources_value, list):
+            raise ProjectModelError("hardware.resources must be an array")
+        resources: list[HardwareResource] = []
+        resource_ids: set[str] = set()
+        for entry_value in resources_value:
+            entry = _Object_Require(entry_value, "hardware resource")
+            if set(entry) != {"id", "kind", "metadata"}:
+                raise ProjectModelError("hardware resource has missing or unknown fields")
+            resource_id = _String_Require(entry, "id")
+            kind = _String_Require(entry, "kind")
+            metadata = _Object_Require(entry.get("metadata"), "hardware resource metadata")
+            if not RESOURCE_ID_PATTERN.fullmatch(resource_id):
+                raise ProjectModelError(f"Invalid hardware resource id: {resource_id!r}")
+            if not COMPONENT_ID_PATTERN.fullmatch(kind):
+                raise ProjectModelError(f"Invalid hardware resource kind: {kind!r}")
+            if resource_id in resource_ids:
+                raise ProjectModelError(f"Duplicate hardware resource: {resource_id}")
+            resource_ids.add(resource_id)
+            resources.append(HardwareResource(resource_id, kind, dict(metadata)))
+        build_sources = tuple(_StringList_Require(data, "build_sources"))
+        asm_sources = tuple(_StringList_Require(data, "asm_sources"))
+        include_dirs = tuple(_StringList_Require(data, "include_dirs"))
+        defines = tuple(_StringList_Require(data, "defines"))
+        linker_script = _String_Require(data, "linker_script", allow_empty=True)
+        for field_name, paths in (
+            ("hardware.build_sources", build_sources),
+            ("hardware.asm_sources", asm_sources),
+            ("hardware.include_dirs", include_dirs),
+        ):
+            for path in paths:
+                if (
+                    not RELATIVE_FILE_PATTERN.fullmatch(path)
+                    or path.startswith("/")
+                    or ".." in Path(path).parts
+                ):
+                    raise ProjectModelError(f"{field_name} contains an invalid path")
+        if linker_script and (
+            not RELATIVE_FILE_PATTERN.fullmatch(linker_script)
+            or linker_script.startswith("/")
+            or ".." in Path(linker_script).parts
+        ):
+            raise ProjectModelError("hardware.linker_script is invalid")
+        if not all(
+            re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:=[A-Za-z0-9_+.,:/()-]+)?", define)
+            for define in defines
+        ):
+            raise ProjectModelError("hardware.defines contains an invalid token")
+        risk_acknowledged = data.get("risk_acknowledged")
+        if not isinstance(risk_acknowledged, bool):
+            raise ProjectModelError("hardware.risk_acknowledged must be boolean")
+        if mode not in HARDWARE_MODES:
+            raise ProjectModelError("hardware.mode is invalid")
+        if source_kind not in BOARD_SOURCE_KINDS:
+            raise ProjectModelError("hardware.source_kind is invalid")
+        _ComponentId_Validate(provider, "hardware provider", allow_empty=True)
+        if snapshot_id and not SHA256_PATTERN.fullmatch(snapshot_id):
+            raise ProjectModelError("hardware.snapshot_id is invalid")
+        if source_digest and not SHA256_PATTERN.fullmatch(source_digest):
+            raise ProjectModelError("hardware.source_digest is invalid")
+        if assignment_fingerprint and not SHA256_PATTERN.fullmatch(
+            assignment_fingerprint
+        ):
+            raise ProjectModelError("hardware.assignment_fingerprint is invalid")
+        if ioc_file and (
+            not RELATIVE_FILE_PATTERN.fullmatch(ioc_file)
+            or ioc_file.startswith("/")
+            or ".." in Path(ioc_file).parts
+        ):
+            raise ProjectModelError("hardware.ioc_file is invalid")
+        if mode == "unselected":
+            if (
+                board
+                or provider
+                or snapshot_id
+                or ioc_file
+                or mcu
+                or source_digest
+                or platform_component
+                or platform_version
+                or platform_manifest_sha256
+                or cubemx_version
+                or firmware_package
+                or hal_cmsis_source_policy
+                or pullup_confirmations
+            ):
+>               raise ProjectModelError("unselected hardware must not contain a selection")
+E               silverstar_fccg.project.model.ProjectModelError: unselected hardware must not contain a selection
+
+apps\FCCG\src\silverstar_fccg\project\model.py:1412: ProjectModelError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: "Unable to open monitor interface to \\\\.\\DISPLAY1:" "Unknown error 0xe0000225."
+=========================== short test summary info ===========================
+ERROR apps/FCCG/tests/test_field_blockers.py::test_ground_controls_save_reopen_keep_actual_uart
+ERROR apps/FCCG/tests/test_field_blockers.py::test_empty_and_stale_uart_are_explained
+ERROR apps/FCCG/tests/test_field_blockers.py::test_ground_ioc_import_updates_actual_resources
+ERROR apps/FCCG/tests/test_ground_board_recovery.py::test_ground_selection_defaults_and_checkbox_visibility
+ERROR apps/FCCG/tests/test_release_011_gui.py::test_alignment_group_contains_mode_draft_and_actions
+ERROR apps/FCCG/tests/test_release_011_gui.py::test_ground_existing_selection_cancel_commit_and_common_page
+ERROR apps/FCCG/tests/test_release_011_gui.py::test_localized_navigation_fits_all_labels_and_preserves_selection
+ERROR apps/FCCG/tests/test_release_011_gui.py::test_classified_pcbs_preserve_legacy_and_conflicts
+ERROR apps/FCCG/tests/test_release_011_gui.py::test_service_save_classifies_archives_and_reload
+ERROR apps/FLP/tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-zh_CN]
+ERROR apps/FLP/tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-en_US]
+ERROR apps/FLP/tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-zh_CN]
+ERROR apps/FLP/tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-en_US]
+ERROR apps/FLP/tests/test_gui_release_identity.py::test_cancel_busy_and_failed_import_preserve_published_root
+ERROR apps/FLP/tests/test_gui_release_identity.py::test_root_and_analysis_session_identity_survives_resize
+FAILED apps/FCCG/tests/test_field_blockers.py::test_new_defaults_and_old_memory_policies
+1 failed, 1 passed, 15 errors in 8.38s

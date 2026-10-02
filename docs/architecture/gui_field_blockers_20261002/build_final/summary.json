@@ -1,0 +1,37 @@
+{
+  "source_commit": "08a113d2cce58070dc1f424b316595005e38eb5d",
+  "errors": [],
+  "memory_layout": "auto",
+  "ground_module": "e28_2g4m12sx",
+  "pc_resource": "PLATFORM_UART_1",
+  "commands": [
+    {
+      "cwd": "D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\FieldBuild_20261002_final\\Flight_Controller",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "all",
+        "CONFIG=Release"
+      ],
+      "exit": 0
+    },
+    {
+      "cwd": "D:\\python_software\\SilverStar\\.work\\GuiFieldBlockers_20261002\\.work\\FieldBuild_20261002_final\\Ground_Station",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "-j2",
+        "all",
+        "CONFIG=Release"
+      ],
+      "exit": 0
+    }
+  ],
+  "generated_targets": [
+    "Flight_Controller",
+    "Ground_Station"
+  ],
+  "artifacts": {
+    "Ground_Station\\build\\ground.elf": "d32e243c41846569306dee805a0b31b4b3c4c71dab6a31c376f35f08feda04a9",
+    "Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf": "8eab16e42654beabf17027205e5a97bf48132bdac1fa5fae41cfe9b229d6e0df"
+  }
+}

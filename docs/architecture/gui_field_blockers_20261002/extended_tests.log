@@ -1,0 +1,30 @@
+.....................................F.                                  [100%]
+================================== FAILURES ===================================
+_____________________ test_current_document_links_resolve _____________________
+
+    def test_current_document_links_resolve() -> None:
+        sources = [ROOT / "README.md", ROOT / "AGENTS.md", *sorted((ROOT / "docs").rglob("*.md"))]
+        for source in sources:
+            if source.name in {"VALIDATION.md", "CHANGELOG.md"} or "history" in source.parts:
+                continue
+            body = source.read_text(encoding="utf-8")
+            body = re.sub(r"(?ms)^ *(`{3,}|~{3,})[^\n]*\n.*?^ *\1 *$", "", body)
+            for target in re.findall(r"!?\[[^\]\n]*\]\(\s*(<[^>]+>|[^\s)]+)", body):
+                url = urlsplit(target.strip("<>"))
+                if url.scheme or url.netloc or not url.path:
+                    continue
+>               assert (source.parent / unquote(url.path)).resolve().exists(), (source, target)
+E               AssertionError: (WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/docs/FCCG/evidence_flight_safety_batch1_20261001/AGENTS_SNAPSHOT.md'), 'docs/FCCG/ARCHITECTURE.md')
+E               assert False
+E                +  where False = exists()
+E                +    where exists = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/docs/FCCG/evidence_flight_safety_batch1_20261001/docs/FCCG/ARCHITECTURE.md').exists
+E                +      where WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/docs/FCCG/evidence_flight_safety_batch1_20261001/docs/FCCG/ARCHITECTURE.md') = resolve()
+E                +        where resolve = (WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/docs/FCCG/evidence_flight_safety_batch1_20261001') / 'docs/FCCG/ARCHITECTURE.md').resolve
+E                +          where WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/docs/FCCG/evidence_flight_safety_batch1_20261001') = WindowsPath('D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002/docs/FCCG/evidence_flight_safety_batch1_20261001/AGENTS_SNAPSHOT.md').parent
+E                +          and   'docs/FCCG/ARCHITECTURE.md' = unquote('docs/FCCG/ARCHITECTURE.md')
+E                +            where 'docs/FCCG/ARCHITECTURE.md' = SplitResult(scheme='', netloc='', path='docs/FCCG/ARCHITECTURE.md', query='', fragment='').path
+
+tests\integration\test_monorepo_baseline.py:111: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_monorepo_baseline.py::test_current_document_links_resolve
+1 failed, 38 passed in 61.88s (0:01:01)

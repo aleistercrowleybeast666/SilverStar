@@ -1,0 +1,322 @@
+{
+  "initial": {
+    "ground_mode": "unselected",
+    "ground_board": "",
+    "flight_mode": "custom",
+    "memory_layout": "legacy"
+  },
+  "selected": {
+    "module": "",
+    "pc_resource": "PLATFORM_UART_1",
+    "pc_options": [
+      [
+        "—",
+        ""
+      ],
+      [
+        "PLATFORM_UART_1",
+        "PLATFORM_UART_1"
+      ]
+    ],
+    "resources": [
+      {
+        "id": "PLATFORM_UART_1",
+        "kind": "uart",
+        "physical": "USART1"
+      },
+      {
+        "id": "PLATFORM_SPI_1",
+        "kind": "spi",
+        "physical": "SPI1"
+      },
+      {
+        "id": "PLATFORM_GPIO_0",
+        "kind": "gpio_output",
+        "physical": "SPI_RADIO_NSS"
+      },
+      {
+        "id": "PLATFORM_GPIO_1",
+        "kind": "gpio_output",
+        "physical": "RADIO_RST"
+      },
+      {
+        "id": "PLATFORM_GPIO_2",
+        "kind": "gpio_input",
+        "physical": "RADIO_BUSY"
+      },
+      {
+        "id": "PLATFORM_GPIO_3",
+        "kind": "gpio_interrupt",
+        "physical": "RADIO_DIO1"
+      },
+      {
+        "id": "PLATFORM_GPIO_4",
+        "kind": "gpio_input",
+        "physical": "RADIO_DIO2"
+      },
+      {
+        "id": "PLATFORM_GPIO_5",
+        "kind": "gpio_input",
+        "physical": "RADIO_DIO3"
+      },
+      {
+        "id": "PLATFORM_TIME_1",
+        "kind": "time",
+        "physical": "SYSTEM_TIME"
+      }
+    ],
+    "status": "AIR_LINK_NO_RADIO: Ground radio module variant is unavailable"
+  },
+  "flp": [
+    {
+      "size": [
+        1480,
+        920
+      ],
+      "fields": {
+        "title_label": {
+          "rect": [
+            14,
+            32,
+            257,
+            34
+          ],
+          "text": "SilverStar 飞行日志解析器",
+          "hint": [
+            257,
+            34
+          ]
+        },
+        "version_label": {
+          "rect": [
+            279,
+            32,
+            51,
+            34
+          ],
+          "text": "v0.1.1",
+          "hint": [
+            51,
+            25
+          ]
+        },
+        "credit_label": {
+          "rect": [
+            338,
+            32,
+            89,
+            34
+          ],
+          "text": "辰星引力开发",
+          "hint": [
+            89,
+            25
+          ]
+        },
+        "project_caption_label": {
+          "rect": [
+            14,
+            68,
+            844,
+            16
+          ],
+          "text": "当前工程",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "project_name_label": {
+          "rect": [
+            866,
+            68,
+            600,
+            16
+          ],
+          "text": "中文外场工程长名称测试_中文外场工程长名称测试_中文外场工程长名称测试_中文外场工程长名称测试_中文…",
+          "hint": [
+            586,
+            16
+          ]
+        },
+        "language_label": {
+          "rect": [
+            1074,
+            32,
+            48,
+            34
+          ],
+          "text": "界面语言",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "language_combo": {
+          "rect": [
+            1130,
+            33,
+            148,
+            31
+          ],
+          "text": "简体中文",
+          "hint": [
+            148,
+            31
+          ]
+        },
+        "theme_label": {
+          "rect": [
+            1286,
+            32,
+            24,
+            34
+          ],
+          "text": "主题",
+          "hint": [
+            24,
+            16
+          ]
+        },
+        "theme_combo": {
+          "rect": [
+            1318,
+            33,
+            148,
+            31
+          ],
+          "text": "浅色",
+          "hint": [
+            148,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "size": [
+        1000,
+        700
+      ],
+      "fields": {
+        "title_label": {
+          "rect": [
+            14,
+            32,
+            257,
+            23
+          ],
+          "text": "SilverStar 飞行日志解析器",
+          "hint": [
+            257,
+            34
+          ]
+        },
+        "version_label": {
+          "rect": [
+            279,
+            32,
+            51,
+            23
+          ],
+          "text": "v0.1.1",
+          "hint": [
+            51,
+            25
+          ]
+        },
+        "credit_label": {
+          "rect": [
+            338,
+            32,
+            89,
+            23
+          ],
+          "text": "辰星引力开发",
+          "hint": [
+            89,
+            25
+          ]
+        },
+        "project_caption_label": {
+          "rect": [
+            14,
+            57,
+            364,
+            16
+          ],
+          "text": "当前工程",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "project_name_label": {
+          "rect": [
+            386,
+            57,
+            600,
+            16
+          ],
+          "text": "中文外场工程长名称测试_中文外场工程长名称测试_中文外场工程长名称测试_中文外场工程长名称测试_中文…",
+          "hint": [
+            586,
+            16
+          ]
+        },
+        "language_label": {
+          "rect": [
+            594,
+            32,
+            48,
+            23
+          ],
+          "text": "界面语言",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "language_combo": {
+          "rect": [
+            650,
+            32,
+            148,
+            31
+          ],
+          "text": "简体中文",
+          "hint": [
+            148,
+            31
+          ]
+        },
+        "theme_label": {
+          "rect": [
+            806,
+            32,
+            24,
+            23
+          ],
+          "text": "主题",
+          "hint": [
+            24,
+            16
+          ]
+        },
+        "theme_combo": {
+          "rect": [
+            838,
+            32,
+            148,
+            31
+          ],
+          "text": "浅色",
+          "hint": [
+            148,
+            31
+          ]
+        }
+      }
+    }
+  ]
+}
