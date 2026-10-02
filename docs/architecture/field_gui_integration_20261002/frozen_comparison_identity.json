@@ -1,0 +1,7 @@
+{
+  "archive": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\SS_FieldIntegration_20261002_SourceFirmware.zip",
+  "sha256": "6ca42eb1884c8d9cc2b282bf0a5bce45cb76d6f6e364f99441fec4b9ea827f5d",
+  "source_commit": "bb2281b1bcd11334ae47944e62f7005fb55479a2",
+  "evidence_commit": "160cebbd103ade8f6e7a7989cbc32bcbd3d5cd41",
+  "comparison": "raw archived Generated sources; no CRLF normalization; excludes build artifacts; includes assembly"
+}

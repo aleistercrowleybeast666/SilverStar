@@ -1,0 +1,311 @@
+..............................................................EEEE... [ 25%]
+........................................................................ [ 51%]
+........................................................................ [ 78%]
+.......................................................EEEEE             [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_navigation_live_gui_languages_themes_and_start[light-zh_CN] _
+
+item = <Function test_navigation_live_gui_languages_themes_and_start[light-zh_CN]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_navigation_live_gui_languages_themes_and_start[light-en_US] _
+
+item = <Function test_navigation_live_gui_languages_themes_and_start[light-en_US]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_navigation_live_gui_languages_themes_and_start[dark-zh_CN] _
+
+item = <Function test_navigation_live_gui_languages_themes_and_start[dark-zh_CN]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_navigation_live_gui_languages_themes_and_start[dark-en_US] _
+
+item = <Function test_navigation_live_gui_languages_themes_and_start[dark-en_US]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_original_monitor_rows_and_six_plots_are_visible[zh_CN-size0] _
+
+item = <Function test_original_monitor_rows_and_six_plots_are_visible[zh_CN-size0]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_original_monitor_rows_and_six_plots_are_visible[zh_CN-size1] _
+
+item = <Function test_original_monitor_rows_and_six_plots_are_visible[zh_CN-size1]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_original_monitor_rows_and_six_plots_are_visible[en_US-size0] _
+
+item = <Function test_original_monitor_rows_and_six_plots_are_visible[en_US-size0]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_original_monitor_rows_and_six_plots_are_visible[en_US-size1] _
+
+item = <Function test_original_monitor_rows_and_six_plots_are_visible[en_US-size1]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_collapsed_navigation_summary_does_not_reserve_blank_chart_space _
+
+item = <Function test_collapsed_navigation_summary_does_not_reserve_blank_chart_space>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+
+..\..\..\..\.venv\Lib\site-packages\pytestqt\plugin.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/FieldGuiIntegration_20261002/apps/GSHC/.work/integration_pytest')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC\\.work\\integration_pytest'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests\test_navigation_gui.py::test_navigation_live_gui_languages_themes_and_start[light-zh_CN]
+ERROR tests\test_navigation_gui.py::test_navigation_live_gui_languages_themes_and_start[light-en_US]
+ERROR tests\test_navigation_gui.py::test_navigation_live_gui_languages_themes_and_start[dark-zh_CN]
+ERROR tests\test_navigation_gui.py::test_navigation_live_gui_languages_themes_and_start[dark-en_US]
+ERROR tests\test_release_layout.py::test_original_monitor_rows_and_six_plots_are_visible[zh_CN-size0]
+ERROR tests\test_release_layout.py::test_original_monitor_rows_and_six_plots_are_visible[zh_CN-size1]
+ERROR tests\test_release_layout.py::test_original_monitor_rows_and_six_plots_are_visible[en_US-size0]
+ERROR tests\test_release_layout.py::test_original_monitor_rows_and_six_plots_are_visible[en_US-size1]
+ERROR tests\test_release_layout.py::test_collapsed_navigation_summary_does_not_reserve_blank_chart_space
+264 passed, 1 warning, 9 errors, 3 subtests passed in 64.80s (0:01:04)

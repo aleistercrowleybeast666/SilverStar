@@ -1,0 +1,9 @@
+{
+  "python": "3.14.0",
+  "arm_gcc": "14.3.1 20250623 / Arm GNU 14.3.Rel1",
+  "host_gcc": "16.1.0 Rev5 MSYS2",
+  "make": "4.4.1",
+  "make_parallel_limit": 2,
+  "QT_QPA_PLATFORM": "windows",
+  "shared_venv": "D:/python_software/SilverStar/.venv (read-only, no installation)"
+}

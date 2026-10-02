@@ -1,0 +1,322 @@
+{
+  "initial": {
+    "ground_mode": "custom",
+    "ground_board": "自定义 STM32 硬件",
+    "flight_mode": "custom",
+    "memory_layout": "auto"
+  },
+  "selected": {
+    "module": "e28_2g4m12sx",
+    "pc_resource": "PLATFORM_UART_1",
+    "pc_options": [
+      [
+        "—",
+        ""
+      ],
+      [
+        "USART1 · PLATFORM_UART_1",
+        "PLATFORM_UART_1"
+      ]
+    ],
+    "resources": [
+      {
+        "id": "PLATFORM_UART_1",
+        "kind": "uart",
+        "physical": "USART1"
+      },
+      {
+        "id": "PLATFORM_SPI_1",
+        "kind": "spi",
+        "physical": "SPI1"
+      },
+      {
+        "id": "PLATFORM_GPIO_0",
+        "kind": "gpio_output",
+        "physical": "SPI_RADIO_NSS"
+      },
+      {
+        "id": "PLATFORM_GPIO_1",
+        "kind": "gpio_output",
+        "physical": "RADIO_RST"
+      },
+      {
+        "id": "PLATFORM_GPIO_2",
+        "kind": "gpio_input",
+        "physical": "RADIO_BUSY"
+      },
+      {
+        "id": "PLATFORM_GPIO_3",
+        "kind": "gpio_interrupt",
+        "physical": "RADIO_DIO1"
+      },
+      {
+        "id": "PLATFORM_GPIO_4",
+        "kind": "gpio_input",
+        "physical": "RADIO_DIO2"
+      },
+      {
+        "id": "PLATFORM_GPIO_5",
+        "kind": "gpio_input",
+        "physical": "RADIO_DIO3"
+      },
+      {
+        "id": "PLATFORM_TIME_1",
+        "kind": "time",
+        "physical": "SYSTEM_TIME"
+      }
+    ],
+    "status": "地面站：READY"
+  },
+  "flp": [
+    {
+      "size": [
+        1480,
+        920
+      ],
+      "fields": {
+        "title_label": {
+          "rect": [
+            14,
+            32,
+            206,
+            41
+          ],
+          "text": "SilverStar 飞行日志解析器",
+          "hint": [
+            206,
+            29
+          ]
+        },
+        "version_label": {
+          "rect": [
+            228,
+            32,
+            51,
+            41
+          ],
+          "text": "v0.1.1",
+          "hint": [
+            51,
+            25
+          ]
+        },
+        "credit_label": {
+          "rect": [
+            287,
+            32,
+            89,
+            41
+          ],
+          "text": "辰星引力开发",
+          "hint": [
+            89,
+            25
+          ]
+        },
+        "project_caption_label": {
+          "rect": [
+            384,
+            32,
+            48,
+            41
+          ],
+          "text": "当前工程",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "project_name_label": {
+          "rect": [
+            440,
+            32,
+            626,
+            41
+          ],
+          "text": "中文外场工程长名称测试_中文外场工程长名称测试_中文外场工程长名称测试_中文外场工程长名称测试_中文外场… *",
+          "hint": [
+            619,
+            16
+          ]
+        },
+        "language_label": {
+          "rect": [
+            1074,
+            32,
+            48,
+            41
+          ],
+          "text": "界面语言",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "language_combo": {
+          "rect": [
+            1130,
+            37,
+            148,
+            31
+          ],
+          "text": "简体中文",
+          "hint": [
+            148,
+            31
+          ]
+        },
+        "theme_label": {
+          "rect": [
+            1286,
+            32,
+            24,
+            41
+          ],
+          "text": "主题",
+          "hint": [
+            24,
+            16
+          ]
+        },
+        "theme_combo": {
+          "rect": [
+            1318,
+            37,
+            148,
+            31
+          ],
+          "text": "浅色",
+          "hint": [
+            148,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "size": [
+        1000,
+        700
+      ],
+      "fields": {
+        "title_label": {
+          "rect": [
+            14,
+            32,
+            206,
+            41
+          ],
+          "text": "SilverStar 飞行日志解析器",
+          "hint": [
+            206,
+            29
+          ]
+        },
+        "version_label": {
+          "rect": [
+            228,
+            32,
+            51,
+            41
+          ],
+          "text": "v0.1.1",
+          "hint": [
+            51,
+            25
+          ]
+        },
+        "credit_label": {
+          "rect": [
+            287,
+            32,
+            89,
+            41
+          ],
+          "text": "辰星引力开发",
+          "hint": [
+            89,
+            25
+          ]
+        },
+        "project_caption_label": {
+          "rect": [
+            384,
+            32,
+            48,
+            41
+          ],
+          "text": "当前工程",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "project_name_label": {
+          "rect": [
+            440,
+            32,
+            146,
+            41
+          ],
+          "text": "中文外场工程长名称测… *",
+          "hint": [
+            141,
+            16
+          ]
+        },
+        "language_label": {
+          "rect": [
+            594,
+            32,
+            48,
+            41
+          ],
+          "text": "界面语言",
+          "hint": [
+            48,
+            16
+          ]
+        },
+        "language_combo": {
+          "rect": [
+            650,
+            37,
+            148,
+            31
+          ],
+          "text": "简体中文",
+          "hint": [
+            148,
+            31
+          ]
+        },
+        "theme_label": {
+          "rect": [
+            806,
+            32,
+            24,
+            41
+          ],
+          "text": "主题",
+          "hint": [
+            24,
+            16
+          ]
+        },
+        "theme_combo": {
+          "rect": [
+            838,
+            37,
+            148,
+            31
+          ],
+          "text": "浅色",
+          "hint": [
+            148,
+            31
+          ]
+        }
+      }
+    }
+  ]
+}

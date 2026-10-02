@@ -1,0 +1,22 @@
+{
+  "entry": "FLP.py",
+  "captured": [
+    {
+      "class": "silverstar_flp.ui.main_window.MainWindow",
+      "title": "SilverStar FLP",
+      "visible": true,
+      "logical_size": [
+        1480,
+        844
+      ],
+      "pixel_size": [
+        1850,
+        1055
+      ],
+      "screenshot": "FLP.png"
+    }
+  ],
+  "serial_open_attempts": [],
+  "settings_isolated": true,
+  "input_method": "actual root runpy and Qt event loop; automatic window grab and close, no native mouse"
+}

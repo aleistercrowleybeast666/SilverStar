@@ -1,0 +1,102 @@
+[
+  {
+    "name": "SCG_regression",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=apps/FCCG/.work/integration_pytest",
+      "apps/FCCG/tests/test_field_blockers.py",
+      "apps/FCCG/tests/test_ground_board_recovery.py",
+      "apps/FCCG/tests/test_release_011_gui.py",
+      "apps/FCCG/tests/test_gui_workflow_20260930.py",
+      "apps/FCCG/tests/test_f103_ground_reference.py",
+      "apps/FCCG/tests/test_ground_pc_uart_dma.py",
+      "apps/FCCG/tests/test_ground_bridge_bounds.py",
+      "apps/FCCG/tests/test_ground_generated_gates.py",
+      "tests/integration/test_monorepo_baseline.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002",
+    "exit": 1,
+    "started": "2026-10-02T07:50:49.057636+00:00",
+    "finished": "2026-10-02T07:51:16.506698+00:00",
+    "log": "SCG_regression.log",
+    "sha256": "f3f2cc085bcda135e31530cb95b91ccc46328e082a1489bd157034a796cb1203"
+  },
+  {
+    "name": "Auto_memory_policy",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=apps/FCCG/.work/integration_memory_pytest",
+      "apps/FCCG/tests/test_auto_memory_layout.py",
+      "-k",
+      "old_configuration or saved_layout_eide or gui_selection or f413_alias or generated_audit_loader"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002",
+    "exit": 1,
+    "started": "2026-10-02T07:51:16.520308+00:00",
+    "finished": "2026-10-02T07:51:24.984246+00:00",
+    "log": "Auto_memory_policy.log",
+    "sha256": "b5b76e057501b7fa76df416fac22aefda977b9450697b52188e1858375cb9d32"
+  },
+  {
+    "name": "FLP_header_regression",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=apps/FLP/.work/integration_pytest",
+      "tests/test_header_field_blockers.py",
+      "tests/test_gui_release_identity.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\FLP",
+    "exit": 1,
+    "started": "2026-10-02T07:51:24.995925+00:00",
+    "finished": "2026-10-02T07:51:29.984583+00:00",
+    "log": "FLP_header_regression.log",
+    "sha256": "e8ec4b7c60ec893a0cfec274b0615dabd1972194c046acf3ba597a1660e2a608"
+  },
+  {
+    "name": "GSHC_optional_start_and_layout",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=.work/integration_pytest",
+      "tests/test_navigation_readiness.py",
+      "tests/test_start_ack_state.py",
+      "tests/test_navigation_gui.py",
+      "tests/test_sensor_snapshot.py",
+      "tests/test_calibration_capability.py",
+      "tests/test_release_layout.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\GSHC",
+    "exit": 1,
+    "started": "2026-10-02T07:51:29.996394+00:00",
+    "finished": "2026-10-02T07:52:37.433337+00:00",
+    "log": "GSHC_optional_start_and_layout.log",
+    "sha256": "24623bfd96939b37061e438171e0cf310b277d7758643ad5a2c80f617d45cc6f"
+  }
+]

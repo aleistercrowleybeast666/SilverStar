@@ -1,0 +1,22 @@
+{
+  "entry": "GSHC.py",
+  "captured": [
+    {
+      "class": "ui.main_window.MainWindow",
+      "title": "SilverStar GSHC",
+      "visible": true,
+      "logical_size": [
+        1539,
+        844
+      ],
+      "pixel_size": [
+        1924,
+        1055
+      ],
+      "screenshot": "GSHC.png"
+    }
+  ],
+  "serial_open_attempts": [],
+  "settings_isolated": true,
+  "input_method": "actual root runpy and Qt event loop; automatic window grab and close, no native mouse"
+}

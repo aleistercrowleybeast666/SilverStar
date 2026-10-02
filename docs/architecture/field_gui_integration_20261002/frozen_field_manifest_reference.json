@@ -1,0 +1,100 @@
+{
+  "source_commit": "bb2281b1bcd11334ae47944e62f7005fb55479a2",
+  "evidence_commit": "160cebbd103ade8f6e7a7989cbc32bcbd3d5cd41",
+  "zip_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\SS_FieldIntegration_20261002_SourceFirmware.zip",
+  "zip_bytes": 32642312,
+  "zip_sha256": "6ca42eb1884c8d9cc2b282bf0a5bce45cb76d6f6e364f99441fec4b9ea827f5d",
+  "archive_entries": 4180,
+  "verified_firmware_entries": [
+    {
+      "entry": "Firmware/Flight_Controller/SilverStar_0_1_1.elf",
+      "sha256": "6a5f739542fb1392b035957fcdc47b6ddd9f67115866473ec3d0522e591852a4"
+    },
+    {
+      "entry": "Firmware/Flight_Controller/SilverStar_0_1_1.bin",
+      "sha256": "686041c335590f41c8ee00f638084e7bac5a0af87a37f7d1a0386c7412d3c715"
+    },
+    {
+      "entry": "Firmware/Flight_Controller/SilverStar_0_1_1.hex",
+      "sha256": "76a8a5f6d825a33b5ddce9bd3db191447be8e0543afbfe087cab0703f4d4a427"
+    },
+    {
+      "entry": "Firmware/Flight_Controller/SilverStar_0_1_1.map",
+      "sha256": "c0202a1d3487e24b6de89a7a51306603469b2fe5623bb84d68fedad713f72a48"
+    },
+    {
+      "entry": "Firmware/Ground_Station/ground.elf",
+      "sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1"
+    },
+    {
+      "entry": "Firmware/Ground_Station/ground.bin",
+      "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f"
+    },
+    {
+      "entry": "Firmware/Ground_Station/ground.map",
+      "sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504"
+    },
+    {
+      "entry": "Firmware/Ground_Station/ground.size",
+      "sha256": "09e8471673e561a348a47e5008ef6b13d802275a26416062602de48910c0549c"
+    }
+  ],
+  "artifacts": [
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.elf",
+      "bytes": 3263480,
+      "sha256": "6a5f739542fb1392b035957fcdc47b6ddd9f67115866473ec3d0522e591852a4"
+    },
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.bin",
+      "bytes": 324616,
+      "sha256": "686041c335590f41c8ee00f638084e7bac5a0af87a37f7d1a0386c7412d3c715"
+    },
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.hex",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.hex",
+      "bytes": 913110,
+      "sha256": "76a8a5f6d825a33b5ddce9bd3db191447be8e0543afbfe087cab0703f4d4a427"
+    },
+    {
+      "target": "Flight_Controller",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Flight_Controller\\SilverStar_0_1_1.map",
+      "bytes": 1490412,
+      "sha256": "c0202a1d3487e24b6de89a7a51306603469b2fe5623bb84d68fedad713f72a48"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.elf",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.elf",
+      "bytes": 53304,
+      "sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.bin",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.bin",
+      "bytes": 26000,
+      "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.map",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.map",
+      "bytes": 202750,
+      "sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504"
+    },
+    {
+      "target": "Ground_Station",
+      "build_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\field_candidate\\Ground_Station\\build\\ground.size",
+      "frozen_path": "D:\\python_software\\SilverStar\\.work\\FieldIntegration_20261002\\.work\\FieldFreeze_20261002\\Ground_Station\\ground.size",
+      "bytes": 108,
+      "sha256": "09e8471673e561a348a47e5008ef6b13d802275a26416062602de48910c0549c"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+[
+  {
+    "configuration": "existing_legacy",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.bin",
+    "bytes": 324616,
+    "sha256": "5ecd3f51301c490c50ed29e68c194d55cbb54149021d1316811039a5467a2632",
+    "frozen_sha256": "686041c335590f41c8ee00f638084e7bac5a0af87a37f7d1a0386c7412d3c715",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "existing_legacy",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf",
+    "bytes": 3263508,
+    "sha256": "9aed875df9135212a08e5fed999a3ed4496b6acf2a2f372eabe80561bb1bffa8",
+    "frozen_sha256": "6a5f739542fb1392b035957fcdc47b6ddd9f67115866473ec3d0522e591852a4",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "existing_legacy",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.hex",
+    "bytes": 913110,
+    "sha256": "d0294009f809d1c46db719aacc3956072629fbaafd9f69718a22ef7d733dea35",
+    "frozen_sha256": "76a8a5f6d825a33b5ddce9bd3db191447be8e0543afbfe087cab0703f4d4a427",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "existing_legacy",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.map",
+    "bytes": 1490412,
+    "sha256": "c7951ccca0bad307eb2d704d54472c2405714c40e1c52ef950ab5bf61ede8102",
+    "frozen_sha256": "c0202a1d3487e24b6de89a7a51306603469b2fe5623bb84d68fedad713f72a48",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "existing_legacy",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Ground_Station\\build\\ground-artifact.bin",
+    "bytes": 26000,
+    "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "frozen_sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "same_bytes_as_frozen": true
+  },
+  {
+    "configuration": "existing_legacy",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Ground_Station\\build\\ground.bin",
+    "bytes": 26000,
+    "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "frozen_sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "same_bytes_as_frozen": true
+  },
+  {
+    "configuration": "existing_legacy",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Ground_Station\\build\\ground.elf",
+    "bytes": 53304,
+    "sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+    "frozen_sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+    "same_bytes_as_frozen": true
+  },
+  {
+    "configuration": "existing_legacy",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy\\Ground_Station\\build\\ground.map",
+    "bytes": 202750,
+    "sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504",
+    "frozen_sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504",
+    "same_bytes_as_frozen": true
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.bin",
+    "bytes": 324440,
+    "sha256": "b290c995c670a54913799d0984d803846e354a43b6e81c4c341e46a221d12ebc",
+    "frozen_sha256": "686041c335590f41c8ee00f638084e7bac5a0af87a37f7d1a0386c7412d3c715",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf",
+    "bytes": 3262880,
+    "sha256": "416e65d63cb1ce3b251bd6e6998131c9b94c3042ac283e51cdb5c319e4f695bc",
+    "frozen_sha256": "6a5f739542fb1392b035957fcdc47b6ddd9f67115866473ec3d0522e591852a4",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.hex",
+    "bytes": 912615,
+    "sha256": "07cdb18949542ec31f3af57c0c0f2f3dd35a83eb56a490224020d95044a4cecd",
+    "frozen_sha256": "76a8a5f6d825a33b5ddce9bd3db191447be8e0543afbfe087cab0703f4d4a427",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Flight_Controller",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.map",
+    "bytes": 1534696,
+    "sha256": "5f14bf79377b0c62600148bcfb0ade1f60bbbecbc054fdbb1bb708349133566c",
+    "frozen_sha256": "c0202a1d3487e24b6de89a7a51306603469b2fe5623bb84d68fedad713f72a48",
+    "same_bytes_as_frozen": false
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground-artifact.bin",
+    "bytes": 26000,
+    "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "frozen_sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "same_bytes_as_frozen": true
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground.bin",
+    "bytes": 26000,
+    "sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "frozen_sha256": "919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f",
+    "same_bytes_as_frozen": true
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground.elf",
+    "bytes": 53304,
+    "sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+    "frozen_sha256": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+    "same_bytes_as_frozen": true
+  },
+  {
+    "configuration": "new_auto",
+    "target": "Ground_Station",
+    "path": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground.map",
+    "bytes": 202750,
+    "sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504",
+    "frozen_sha256": "f29af362ef2a5de1c70c09aa7b41c1e6610f16a49b894455fb3d7c4b5d7a2504",
+    "same_bytes_as_frozen": true
+  }
+]

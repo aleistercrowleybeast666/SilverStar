@@ -1,0 +1,22 @@
+{
+  "entry": "SCG.py",
+  "captured": [
+    {
+      "class": "silverstar_fccg.ui.main_window.MainWindow",
+      "title": "SilverStar SCG",
+      "visible": true,
+      "logical_size": [
+        1460,
+        844
+      ],
+      "pixel_size": [
+        1825,
+        1055
+      ],
+      "screenshot": "SCG.png"
+    }
+  ],
+  "serial_open_attempts": [],
+  "settings_isolated": true,
+  "input_method": "actual root runpy and Qt event loop; automatic window grab and close, no native mouse"
+}

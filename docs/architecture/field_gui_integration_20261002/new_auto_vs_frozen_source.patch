@@ -1,0 +1,1285 @@
+--- frozen/Flight_Controller/APP/Src/estimator_task.c
++++ new_auto/Flight_Controller/APP/Src/estimator_task.c
+@@ -247,7 +247,7 @@
+  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
+ #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+ static NavigationReplayContext s_replay;
+-static PLATFORM_CPU_FAST_BSS NavigationReplayStorage s_replay_storage;
++static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
+ static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
+ static uint64_t s_native_week_us;
+ static uint32_t s_native_previous_tow_ms;
+--- frozen/Flight_Controller/Generated/Inc/project_flight_config.h
++++ new_auto/Flight_Controller/Generated/Inc/project_flight_config.h
+@@ -94,16 +94,16 @@
+ #define SYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK          0U
+ #endif
+ #ifndef SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK
+-#define SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK                (SYSTEM_DEPLOY_TRIGGER_DELAY)
++#define SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK                (SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ | SYSTEM_DEPLOY_TRIGGER_TILT)
+ #endif
+ #ifndef SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS
+ #define SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS            (-2.0f)
+ #endif
+ #ifndef SYSTEM_FLIGHT_TILT_THRESHOLD_DEG
+-#define SYSTEM_FLIGHT_TILT_THRESHOLD_DEG                 90.0f
++#define SYSTEM_FLIGHT_TILT_THRESHOLD_DEG                 45.0f
+ #endif
+ #ifndef SYSTEM_FLIGHT_DEPLOY_DELAY_MS
+-#define SYSTEM_FLIGHT_DEPLOY_DELAY_MS                    10000U
++#define SYSTEM_FLIGHT_DEPLOY_DELAY_MS                    60000U
+ #endif
+ 
+ #if (SYSTEM_USER_MAGNETOMETER_ENABLE != 0U)
+--- frozen/Flight_Controller/Generated/Src/project_capability_routes.c
++++ new_auto/Flight_Controller/Generated/Src/project_capability_routes.c
+@@ -11,10 +11,13 @@
+     {0x9046169AUL, 0x53F482F9UL, 0xB5E0EECEUL, 0xC20B2EB1UL, 0xD5A60C7BUL, 1U},
+     {0x9046169AUL, 0x53F482F9UL, 0xB5E0EECEUL, 0x7C3B5D1AUL, 0x17CE5BE6UL, 1U},
+     {0x013B8714UL, 0x53F482F9UL, 0xB5E0EECEUL, 0x876638F4UL, 0xFCC2B413UL, 1U},
++    {0x013B8714UL, 0x53F482F9UL, 0xB5E0EECEUL, 0xEDFCFF74UL, 0xD5A60C7BUL, 1U},
+     {0x013B8714UL, 0x53F482F9UL, 0xB5E0EECEUL, 0xBDB9A6B8UL, 0xE67A223EUL, 1U},
+     {0x013B8714UL, 0x53F482F9UL, 0xB5E0EECEUL, 0xC20B2EB1UL, 0xD5A60C7BUL, 1U},
+     {0x013B8714UL, 0x53F482F9UL, 0xB5E0EECEUL, 0x7C3B5D1AUL, 0x17CE5BE6UL, 1U},
+     {0x0B39C491UL, 0x6850DEB2UL, 0x86E2795BUL, 0xEDFCFF74UL, 0xD5A60C7BUL, 1U},
++    {0x0B39C491UL, 0x6850DEB2UL, 0x86E2795BUL, 0xEDFCFF74UL, 0xD5A60C7BUL, 1U},
++    {0xDCC77DB0UL, 0x53F482F9UL, 0xB5E0EECEUL, 0xEDFCFF74UL, 0xD5A60C7BUL, 1U},
+     {0xA4723570UL, 0x53F482F9UL, 0xB5E0EECEUL, 0xBDB9A6B8UL, 0xE67A223EUL, 1U},
+     {0xAE144D56UL, 0x42B510E0UL, 0x174809F0UL, 0xF2CC3A3EUL, 0x9CE20C9AUL, 1U},
+     {0x56E07F0AUL, 0x42B510E0UL, 0x174809F0UL, 0xF2CC3A3EUL, 0x9CE20C9AUL, 1U},
+@@ -26,7 +29,7 @@
+ 
+ uint16_t ProjectCapabilityRoute_CountGet(void)
+ {
+-    return 16U;
++    return 19U;
+ }
+ 
+ ProjectCapabilityRouteResult ProjectCapabilityRoute_Get(
+--- frozen/Flight_Controller/Generated/Src/project_log_config.c
++++ new_auto/Flight_Controller/Generated/Src/project_log_config.c
+@@ -10,7 +10,7 @@
+      SSLOG_STREAM_POLICY_EVENT},
+     {FLIGHT_LOG_RECORD_STATS, 1U, 1U, 1000000UL,
+      SSLOG_STREAM_POLICY_PERIODIC},
+-    {FLIGHT_LOG_RECORD_ESTIMATOR, 0U, 1U, 40000UL,
++    {FLIGHT_LOG_RECORD_ESTIMATOR, 1U, 1U, 40000UL,
+      SSLOG_STREAM_POLICY_PERIODIC},
+     {FLIGHT_LOG_RECORD_SYSTEM_CONFIG, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_ONE_SHOT},
+@@ -36,9 +36,9 @@
+      SSLOG_STREAM_POLICY_DECIMATION},
+     {FLIGHT_LOG_RECORD_INERTIAL_INCREMENT, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+-    {FLIGHT_LOG_RECORD_GNSS_MEASUREMENT, 0U, 1U, 0UL,
++    {FLIGHT_LOG_RECORD_GNSS_MEASUREMENT, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+-    {FLIGHT_LOG_RECORD_BARO_MEASUREMENT, 0U, 1U, 0UL,
++    {FLIGHT_LOG_RECORD_BARO_MEASUREMENT, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+     {FLIGHT_LOG_RECORD_IMU_CORRECTED, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+@@ -56,9 +56,9 @@
+      SSLOG_STREAM_POLICY_ONE_SHOT},
+     {FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_ONE_SHOT},
+-    {FLIGHT_LOG_RECORD_ESTIMATOR_STEP, 0U, 1U, 0UL,
++    {FLIGHT_LOG_RECORD_ESTIMATOR_STEP, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+-    {FLIGHT_LOG_RECORD_GNSS_RECOVERY, 0U, 1U, 0UL,
++    {FLIGHT_LOG_RECORD_GNSS_RECOVERY, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+     {FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+@@ -74,7 +74,7 @@
+      SSLOG_STREAM_POLICY_EVERY},
+     {FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT, 0U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+-    {FLIGHT_LOG_RECORD_NAV_QUALITY, 0U, 1U, 0UL,
++    {FLIGHT_LOG_RECORD_NAV_QUALITY, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVERY},
+     {FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE, 1U, 1U, 0UL,
+      SSLOG_STREAM_POLICY_EVENT},
+--- frozen/Flight_Controller/Generated/Src/project_log_decoder_profile.c
++++ new_auto/Flight_Controller/Generated/Src/project_log_decoder_profile.c
+@@ -13,13 +13,13 @@
+ };
+ static const uint8_t s_project_semantics_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0x58U, 0xACU, 0x16U, 0x8BU, 0x4EU, 0x80U, 0x19U, 0x9CU,
+-    0x47U, 0x27U, 0xBEU, 0x46U, 0xABU, 0x25U, 0x5BU, 0x72U
++    0x73U, 0x8EU, 0xCBU, 0x93U, 0x51U, 0x18U, 0x26U, 0x45U,
++    0x8EU, 0x35U, 0x50U, 0x42U, 0xA4U, 0x2CU, 0x79U, 0xE0U
+ };
+ static const uint8_t s_generation_profile_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0x1FU, 0x26U, 0x78U, 0x6AU, 0xE4U, 0xB9U, 0x7AU, 0x99U,
+-    0x93U, 0x18U, 0x01U, 0x1BU, 0x40U, 0x40U, 0x42U, 0xF8U
++    0x30U, 0x53U, 0xFFU, 0xB3U, 0x46U, 0x65U, 0x16U, 0x81U,
++    0x39U, 0x36U, 0x96U, 0xE9U, 0x62U, 0x24U, 0x9EU, 0x76U
+ };
+ 
+ void ProjectLogDecoderProfile_Get(ProjectLogDecoderProfile *profile)
+--- frozen/Flight_Controller/Generated/Src/project_metadata.c
++++ new_auto/Flight_Controller/Generated/Src/project_metadata.c
+@@ -9,7 +9,7 @@
+ #include "system_capabilities.h"
+ #include "system_user_config.h"
+ 
+-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x8900F7D6UL
++#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x9E3FC05CUL
+ 
+ static const SystemDeviceDescriptor s_device_descriptors[] =
+ {
+--- frozen/Flight_Controller/Generated/memory_audit.py
++++ new_auto/Flight_Controller/Generated/memory_audit.py
+@@ -0,0 +1,178 @@
++"""Post-link static authority for exact MCU memory and bounded C stack use."""
++
++from __future__ import annotations
++
++import re
++import subprocess
++from collections.abc import Mapping
++from dataclasses import dataclass
++from pathlib import Path
++
++
++_SECTION = re.compile(
++    r"^\s*\d+\s+(\S+)\s+([0-9a-fA-F]+)\s+"
++    r"([0-9a-fA-F]+)\s+([0-9a-fA-F]+)\s+"
++)
++_MEMORY = re.compile(
++    r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*\([^)]*\)\s*:\s*"
++    r"ORIGIN\s*=\s*(0x[0-9A-Fa-f]+)\s*,\s*"
++    r"LENGTH\s*=\s*([0-9]+)([KkMm]?)\s*$"
++)
++_FORBIDDEN_HEAP = frozenset(("malloc", "calloc", "realloc", "free", "alloca"))
++
++
++@dataclass(frozen=True, slots=True)
++class MemoryRegionAudit:
++    name: str
++    official_bytes: int
++    linker_bytes: int
++    occupied_bytes: int
++
++
++@dataclass(frozen=True, slots=True)
++class BuildAudit:
++    regions: tuple[MemoryRegionAudit, ...]
++    text_bytes: int
++    data_bytes: int
++    bss_bytes: int
++    stack_files: int
++    largest_function_stack_bytes: int
++    errors: tuple[str, ...]
++
++
++def _LinkerRegions_Parse(source: str) -> dict[str, tuple[int, int]]:
++    result: dict[str, tuple[int, int]] = {}
++    for line in source.splitlines():
++        match = _MEMORY.fullmatch(line)
++        if match is None:
++            continue
++        scale = {"": 1, "K": 1024, "M": 1048576}[match.group(4).upper()]
++        result[match.group(1)] = (int(match.group(2), 16), int(match.group(3)) * scale)
++    return result
++
++
++def _Sections_Parse(source: str) -> tuple[tuple[str, int, int, int, bool, bool], ...]:
++    lines = source.splitlines()
++    result: list[tuple[str, int, int, int, bool, bool]] = []
++    for index, line in enumerate(lines[:-1]):
++        match = _SECTION.match(line)
++        if match is None:
++            continue
++        flags = set(lines[index + 1].strip().split(", "))
++        result.append((
++            match.group(1), int(match.group(2), 16),
++            int(match.group(3), 16), int(match.group(4), 16),
++            "ALLOC" in flags, "LOAD" in flags,
++        ))
++    return tuple(result)
++
++
++def _Tool_Run(
++    tool: str, *args: str, environment: Mapping[str, str] | None = None,
++) -> str:
++    result = subprocess.run(
++        [tool, *args], check=True, capture_output=True, text=True,
++        env=environment,
++    )
++    return result.stdout
++
++
++def BuildAudit_Run(
++    elf: Path, map_file: Path, linker: Path, stack_root: Path,
++    exact_metadata: dict, *, toolchain_prefix: str = "arm-none-eabi-",
++    environment: Mapping[str, str] | None = None,
++) -> BuildAudit:
++    errors: list[str] = []
++    if not elf.is_file() or not map_file.is_file() or not linker.is_file():
++        raise ValueError("ELF, MAP and selected linker script are required")
++    declared = exact_metadata.get("memory_regions", ())
++    official = {
++        item["name"]: (item["origin"], item["bytes"])
++        for item in declared if isinstance(item, dict)
++    }
++    if not official:
++        raise ValueError("Exact MCU has no official memory-region contract")
++    linked = _LinkerRegions_Parse(linker.read_text(encoding="utf-8"))
++    if not linked:
++        raise ValueError("Selected linker script has no readable MEMORY regions")
++    occupied = {name: 0 for name in official}
++    for name, (origin, capacity) in linked.items():
++        expected = official.get(name)
++        if expected is None or origin != expected[0] or capacity > expected[1]:
++            errors.append(f"LINKER_MEMORY_EXCEEDS_EXACT_MCU:{name}")
++    for name in official:
++        if name not in linked:
++            errors.append(f"LINKER_MEMORY_REGION_MISSING:{name}")
++    sections = _Sections_Parse(_Tool_Run(
++        toolchain_prefix + "objdump", "-h", str(elf), environment=environment,
++    ))
++    for section_name, size, vma, lma, allocated, loaded in sections:
++        if size == 0 or not allocated:
++            continue
++        found = False
++        for address in (vma, lma) if loaded and lma != vma else (vma,):
++            region_name = next(
++                (name for name, (origin, capacity) in official.items()
++                 if origin <= address < origin + capacity), None,
++            )
++            if region_name is None:
++                errors.append(f"SECTION_OUTSIDE_EXACT_MCU:{section_name}")
++                continue
++            origin, capacity = official[region_name]
++            occupied[region_name] = max(
++                occupied[region_name], address + size - origin,
++            )
++            if occupied[region_name] > capacity:
++                errors.append(f"MEMORY_REGION_OVERFLOW:{region_name}")
++            found = True
++        if not found:
++            errors.append(f"SECTION_UNMAPPED:{section_name}")
++    size_lines = _Tool_Run(
++        toolchain_prefix + "size", str(elf), environment=environment,
++    ).splitlines()
++    if len(size_lines) < 2:
++        raise ValueError("arm-none-eabi-size returned no section totals")
++    totals = size_lines[1].split()
++    text_bytes, data_bytes, bss_bytes = map(int, totals[:3])
++    symbols = _Tool_Run(
++        toolchain_prefix + "nm", str(elf), environment=environment,
++    )
++    for line in symbols.splitlines():
++        name = line.split()[-1] if line.split() else ""
++        if name in _FORBIDDEN_HEAP:
++            errors.append(f"DYNAMIC_ALLOCATION_LINKED:{name}")
++    stack_files = list(stack_root.rglob("*.su"))
++    if not stack_files:
++        errors.append("STACK_USAGE_MISSING")
++    for object_file in stack_root.rglob("*.o"):
++        if (
++            not object_file.name.startswith("startup_")
++            and not object_file.with_suffix(".su").is_file()
++        ):
++            errors.append(f"STACK_USAGE_MISSING:{object_file.name}")
++    largest_stack = 0
++    for path in stack_files:
++        for row in path.read_text(encoding="utf-8", errors="replace").splitlines():
++            fields = row.split("\t")
++            if len(fields) < 3:
++                errors.append(f"STACK_USAGE_UNREADABLE:{path.name}")
++                continue
++            if "dynamic" in fields[2]:
++                errors.append(f"DYNAMIC_STACK_USAGE:{path.name}:{fields[0]}")
++            try:
++                largest_stack = max(largest_stack, int(fields[1]))
++            except ValueError:
++                errors.append(f"STACK_USAGE_UNREADABLE:{path.name}")
++    return BuildAudit(
++        regions=tuple(
++            MemoryRegionAudit(name, capacity, linked.get(name, (0, 0))[1],
++                              occupied[name])
++            for name, (_origin, capacity) in official.items()
++        ),
++        text_bytes=text_bytes,
++        data_bytes=data_bytes,
++        bss_bytes=bss_bytes,
++        stack_files=len(stack_files),
++        largest_function_stack_bytes=largest_stack,
++        errors=tuple(dict.fromkeys(errors)),
++    )
+--- frozen/Flight_Controller/Makefile
++++ new_auto/Flight_Controller/Makefile
+@@ -4,11 +4,14 @@
+ 
+ TARGET_PROFILE ?= SilverStar_F407
+ CONFIG ?= Release
+-MEMORY_LAYOUT ?= legacy
++MEMORY_LAYOUT ?= auto
++PYTHON ?= python
+ 
+ ifneq ($(MEMORY_LAYOUT),legacy)
+ ifneq ($(MEMORY_LAYOUT),eskf_window_sram)
+-$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy or eskf_window_sram)
++ifneq ($(MEMORY_LAYOUT),auto)
++$(error Unsupported MEMORY_LAYOUT '$(MEMORY_LAYOUT)'; expected legacy, eskf_window_sram or auto)
++endif
+ endif
+ endif
+ 
+@@ -51,6 +54,12 @@
+ $(error MEMORY_LAYOUT=eskf_window_sram requires SilverStar_F407 and the ESKF15 backend)
+ endif
+ C_DEFS += SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM=1
++endif
++
++ifeq ($(MEMORY_LAYOUT),auto)
++C_DEFS += SILVERSTAR_MEMORY_LAYOUT_AUTO=1
++BUILD_MANIFESTS += Tools/auto_memory_layout.py
++BUILD_MANIFESTS += Generated/memory_audit.py
+ endif
+ 
+ FIRST_PARTY_C_SOURCES := $(filter APP/% Algorithm/% Board/% Common/% Devices/% FlightLogic/% Generated/% Interfaces/% Modules/% OS/FreeRTOS/% Platform/% Protocol/% System/% Targets/%,$(C_SOURCES))
+@@ -156,7 +165,11 @@
+ 
+ $(BUILD_ROOT)/$(TARGET).elf: $(OBJECTS) $(LDSCRIPT)
+ 	@echo "FCCG_PROGRESS|LINK_BEGIN|$@"
++ifeq ($(MEMORY_LAYOUT),auto)
++	$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))
++else
+ 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
++endif
+ 	@echo "FCCG_PROGRESS|LINK_DONE|$@"
+ 	@echo "FCCG_PROGRESS|SIZE_BEGIN|$@"
+ 	$(SZ) $@
+@@ -201,7 +214,7 @@
+ 	@$(foreach define,$(C_DEFS),echo DEFINE:$(define) & ) echo CONFIG-DEFINES-END
+ 
+ stack-report: all
+-	python Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"
++	python Tools/check_task_stacks.py --config $(CONFIG) --memory-layout $(MEMORY_LAYOUT) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"
+ 
+ HOST_CC ?= gcc
+ host-tests:
+--- frozen/Flight_Controller/Platform/Inc/platform_memory.h
++++ new_auto/Flight_Controller/Platform/Inc/platform_memory.h
+@@ -12,16 +12,43 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* Link-time opt-in only. Each private CPU-only BSS group has a reviewed owner.
++ * Legacy expands to the original placement. No data or DMA section is eligible. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WORK_BSS __attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(8)))
++#define PLATFORM_ESKF_HISTORY_BSS __attribute__((section(".bss.silverstar_auto_eskf_history"), aligned(8)))
++#define PLATFORM_KF_REPLAY_BSS __attribute__((section(".bss.silverstar_auto_kf_replay"), aligned(8)))
++#define PLATFORM_NAV_HEALTH_BSS __attribute__((section(".bss.silverstar_auto_nav_health"), aligned(8)))
++#else
++#error "Auto memory layout requires a supported compiler"
++#endif
++#elif (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
++#define PLATFORM_ESKF_WORK_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_ESKF_HISTORY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_KF_REPLAY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_NAV_HEALTH_BSS PLATFORM_CPU_FAST_BSS
++#else
++#error "Invalid auto memory layout"
++#endif
++
+ /* One audited CPU-only object; the target owns its section and alignment.
+  * An old target header cannot silently accept the experimental layout. */
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+ #ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#define PLATFORM_ESKF_WINDOW_BSS __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#else
+ #if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+ #error "The selected target does not support ESKF consistency window SRAM placement"
+ #endif
+ #define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
+ #endif
+ 
+ #ifndef PLATFORM_DMA_ACCESSIBLE
+--- frozen/Flight_Controller/STM32F407XX_FLASH.ld
++++ new_auto/Flight_Controller/STM32F407XX_FLASH.ld
+@@ -181,6 +181,7 @@
+   {
+     . = ALIGN(8);
+     _sccmram_bss = .;
++    /* SILVERSTAR_AUTO_CCM_BSS */
+     *(.ccmram_bss)
+     *(.ccmram_bss*)
+     . = ALIGN(8);
+@@ -206,6 +207,7 @@
+     /* This is used by the startup in order to initialize the .bss secion */
+     _sbss = .;         /* define a global symbol at bss start */
+     __bss_start__ = _sbss;
++    /* SILVERSTAR_AUTO_RAM_BSS */
+     *(.bss)
+     *(.bss*)
+     *(COMMON)
+--- frozen/Flight_Controller/System/Src/system_navigation_health.c
++++ new_auto/Flight_Controller/System/Src/system_navigation_health.c
+@@ -10,7 +10,7 @@
+ _Static_assert(sizeof(SystemNavigationGroupHealth) == 64U,
+     "Navigation group health must retain its bounded memory footprint");
+ 
+-static PLATFORM_CPU_FAST_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
++static PLATFORM_NAV_HEALTH_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
+ static uint64_t s_epoch_us;
+ static uint32_t s_imu_faults;
+ static uint32_t s_imu_quality;
+--- frozen/Flight_Controller/Targets/SilverStar_F407/Inc/platform_memory_target.h
++++ new_auto/Flight_Controller/Targets/SilverStar_F407/Inc/platform_memory_target.h
+@@ -1,5 +1,9 @@
+ #ifndef __PLATFORM_MEMORY_TARGET_H
+ #define __PLATFORM_MEMORY_TARGET_H
++
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
+ 
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+@@ -24,7 +28,13 @@
+ 
+ /* .bss.* remains inside _sbss/_ebss and uses the unchanged startup clear.
+  * SRAM is a deliberate CCM relief tradeoff, not a timing qualification. */
+-#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
++#error "Auto and manual ESKF window layouts are mutually exclusive"
++#endif
++#define PLATFORM_ESKF_WINDOW_BSS \
++    __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#elif (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
+ #if defined(__GNUC__) || defined(__clang__)
+ #define PLATFORM_ESKF_WINDOW_BSS \
+     __attribute__((section(".bss.silverstar_eskf_window"), aligned(8)))
+--- frozen/Flight_Controller/Tests/Host/test_estimator_preparation.c
++++ new_auto/Flight_Controller/Tests/Host/test_estimator_preparation.c
+@@ -201,7 +201,15 @@
+     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+     TEST_CHECK(initial.initialized == 1U && initial.mission_running == 0U && initial.predict_count == 0U);
+     TEST_CHECK(fabsf(initial.q_nb[0] - 1.0f) < 0.00001f);
+-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
++    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
++    {
++        uint8_t axis;
++        /* SF6's committed contract has gains, not a covariance estimate;
++         * its backend explicitly publishes NAN for these unavailable fields. */
++        for (axis = 0U; axis < 6U; axis++)
++        { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
++    }
++    else if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+     {
+         uint8_t axis;
+         for (axis = 0U; axis < 6U; axis++)
+--- frozen/Flight_Controller/Tests/Host/test_logger.c
++++ new_auto/Flight_Controller/Tests/Host/test_logger.c
+@@ -101,13 +101,25 @@
+     uint16_t index;
+ 
+     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
+-    TEST_CHECK(SSLOG_RECORD_COUNT == 40U);
++    /* The committed SF6 contract adds two records to the prior 38. Check
++     * their wire identity and metadata, rather than only changing a count. */
++    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U));
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_STATE == 0x2BU);
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_MEASUREMENT == 0x2CU);
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_STATE);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 72U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_STATE) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 72U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_STATE") == 0));
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_MEASUREMENT);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 56U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_MEASUREMENT) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 56U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_MEASUREMENT") == 0));
+     TEST_CHECK(FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE == 0x28U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY == 0x29U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY == 0x2AU);
+--- frozen/Flight_Controller/Tools/auto_memory_layout.py
++++ new_auto/Flight_Controller/Tools/auto_memory_layout.py
+@@ -0,0 +1,317 @@
++"""Bounded, deterministic link-time placement of audited CPU-only BSS.
++
++No probe link enlarges physical memory. Every candidate uses the target's actual
++MEMORY declaration, original startup intervals and original stack reservation.
++"""
++from __future__ import annotations
++
++import argparse
++from fractions import Fraction
++import hashlib
++from itertools import product
++import json
++from pathlib import Path
++import re
++import subprocess
++import importlib.util
++import sys
++import traceback
++
++
++def AuditModule_Get():
++    """Generated copy of the existing FCCG resource audit; one parser owner."""
++    generated = Path(__file__).resolve().parents[1] / "Generated/memory_audit.py"
++    if generated.is_file():
++        spec = importlib.util.spec_from_file_location("silverstar_memory_audit", generated)
++        module = importlib.util.module_from_spec(spec)
++        sys.modules[spec.name] = module
++        # The generated directory is an audited source inventory. Loading the
++        # shared parser must not create an unowned __pycache__ there.
++        exec(compile(generated.read_bytes(), str(generated), "exec"), module.__dict__)
++        return module
++    # Repository tests import the tool directly, before project generation.
++    # Standalone generated projects cannot silently invent a replacement audit.
++    from silverstar_fccg.project import build_audit
++    return build_audit
++
++
++PREFIX = ".bss.silverstar_auto_"
++# Exact object suffix, exact private symbol; no general CPU/DMA classification.
++GROUPS = {
++    "eskf_work": ("Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.o", "s_work"),
++    "eskf_history": ("Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.o", "s_history"),
++    "eskf_window": ("Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.o", "s_eskf_window"),
++    "kf_replay": ("APP/Src/estimator_task.o", "s_replay_storage"),
++    "nav_health": ("System/Src/system_navigation_health.o", "s_groups"),
++}
++MAX_CANDIDATES = 32
++
++
++def Tool_Run(command: list[str]) -> str:
++    result = subprocess.run(command, capture_output=True, text=True, timeout=120)
++    if result.returncode:
++        raise ValueError(f"Tool failed ({result.returncode}): {command}\n{result.stdout}{result.stderr}")
++    return result.stdout
++
++
++def Regions_Parse(script: str) -> dict[str, tuple[int, int]]:
++    declared = AuditModule_Get()._LinkerRegions_Parse(script)
++    regions = {name: region for name, region in declared.items() if name in ("RAM", "CCMRAM")}
++    declarations = re.findall(r"^\s*(RAM|CCMRAM)\s*\([^)]*\)\s*:\s*ORIGIN", script, re.MULTILINE)
++    if len(declarations) != len(regions) or any(size <= 0 for _, size in regions.values()):
++        raise ValueError("Invalid, unreadable or repeated physical memory region")
++    if "RAM" not in regions:
++        raise ValueError("Auto requires a literal RAM MEMORY region; unsupported target syntax")
++    if "CCMRAM" in regions:
++        a, b = regions["RAM"], regions["CCMRAM"]
++        if max(a[0], b[0]) < min(a[0] + a[1], b[0] + b[1]):
++            raise ValueError("Overlapping RAM regions")
++        # Only the reviewed F407 independent physical banks are enabled. A
++        # disjoint CPU address range does not prove independent storage (F413).
++        if a[0] != 0x20000000 or a[1] > 128 * 1024 or b[0] != 0x10000000 or b[1] > 64 * 1024:
++            raise ValueError("Unreviewed CCM physical layout or alias; dual-region auto supports F407 only")
++    names = set(re.findall(r"^\s*(\w+)\s*\([^)]*\)\s*:\s*ORIGIN", script, re.MULTILINE))
++    if names - {"RAM", "CCMRAM", "FLASH"}:
++        raise ValueError("Additional regions/aliases require a reviewed physical-memory model")
++    return regions
++
++
++def Groups_Inspect(objdump: str, objects: list[str]) -> dict[str, dict]:
++    groups = {}
++    # Inspect only possible owners plus all other objects for illegal auto tags.
++    for obj in objects:
++        dump = Tool_Run([objdump, "-h", "-t", obj])
++        sections = re.findall(
++            r"^\s*\d+\s+(\S+)\s+([\da-fA-F]+)\s+[\da-fA-F]+\s+[\da-fA-F]+\s+[\da-fA-F]+\s+2\*\*(\d+)\s*\n([^\n]*)",
++            dump, re.MULTILINE,
++        )
++        for section, size_hex, alignment, flags in sections:
++            if not section.startswith(PREFIX):
++                continue
++            group = section[len(PREFIX):]
++            if group not in GROUPS:
++                raise ValueError(f"Unapproved auto section: {section}")
++            owner, symbol = GROUPS[group]
++            normalized = Path(obj).as_posix()
++            if not normalized.endswith("/" + owner) or group in groups:
++                raise ValueError(f"Auto group {group} has a wrong or duplicate owner: {obj}")
++            entries = re.findall(
++                r"^([\da-fA-F]+)\s+l\s+O\s+" + re.escape(section) + r"\s+([\da-fA-F]+)\s+(\S+)\s*$",
++                dump, re.MULTILINE,
++            )
++            size = int(size_hex, 16)
++            if entries != [("00000000", size_hex, symbol)] or size <= 0 or int(alignment) < 3:
++                raise ValueError(f"Auto group {group} must contain exactly its aligned private BSS object")
++            if "CONTENTS" in flags or "ALLOC" not in flags:
++                raise ValueError(f"Auto group {group} is not zero-initialized BSS; data moves are unsupported")
++            groups[group] = {"object": normalized, "symbol": symbol, "size": size, "alignment": 2 ** int(alignment)}
++        for group, (owner, symbol) in GROUPS.items():
++            if Path(obj).as_posix().endswith("/" + owner) and re.search(r"\s+l\s+O\s+\S+\s+[\da-fA-F]+\s+" + symbol + r"\s*$", dump, re.MULTILINE):
++                if group not in groups:
++                    raise ValueError(f"Preserved payload lacks auto marker for {symbol}; use a fresh project")
++    return dict(sorted(groups.items()))
++
++
++def Script_Render(script: str, assignment: dict[str, str], regions: dict) -> str:
++    if "CCMRAM" not in regions:
++        # Generic .bss.* is covered by the target's unchanged normal clear loop.
++        if (any(region != "RAM" for region in assignment.values()) or "*(.bss*)" not in script or
++                re.search(r">\s*CCMRAM\b", script)):
++            raise ValueError("No-CCM target must cover auto BSS with its ordinary .bss wildcard")
++        return script
++    for region, marker in (("CCMRAM", "/* SILVERSTAR_AUTO_CCM_BSS */"),
++                           ("RAM", "/* SILVERSTAR_AUTO_RAM_BSS */")):
++        if script.count(marker) != 1:
++            raise ValueError("Preserved linker lacks audited auto BSS hooks; use a fresh project")
++        entries = "\n    ".join(f"*({PREFIX}{group})" for group, target in sorted(assignment.items()) if target == region)
++        script = script.replace(marker, marker + "\n    " + entries)
++    return script
++
++
++def SourceOwners_Check(project: Path, groups: dict, linker: Path | None = None) -> None:
++    """A preserved user edit cannot inherit a CPU-only proof from a symbol name."""
++    identity = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))
++    provenance = identity.get("component_provenance", {})
++    # Include the algorithm kernels/helpers and core interfaces called by the
++    # private owners. A user-modified callee could otherwise start using DMA.
++    for component, entry in provenance.items():
++        if (component not in ("silverstar.core.0_1_0", "silverstar.platform.api") and
++                not component.startswith(("silverstar.algorithm.", "silverstar.mcu."))):
++            continue
++        for relative, expected in entry.get("files", {}).items():
++            if Path(relative).suffix.lower() not in (".c", ".h", ".s", ".ld"):
++                continue
++            source = (project / relative).resolve()
++            if not source.is_relative_to(project.resolve()):
++                raise ValueError(f"CPU-only source proof path escapes project: {relative}")
++            if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != expected:
++                raise ValueError(f"CPU-only source proof does not cover preserved/edited helper {relative}; use audited fresh payload or legacy")
++    if linker is not None:
++        # Bind the actual linker argument, not only an unused canonical file.
++        # An alternate no-CCM script must not invent capacity for an F407 model.
++        relative = linker.resolve().relative_to(project.resolve()).as_posix()
++        mcu = identity.get("components", {}).get("mcu")
++        expected = provenance.get(mcu, {}).get("files", {}).get(relative)
++        if not mcu or not expected or hashlib.sha256(linker.read_bytes()).hexdigest() != expected:
++            raise ValueError("Actual linker lacks selected-MCU source proof; use audited fresh payload or legacy")
++    for group, info in groups.items():
++        relative = GROUPS[group][0][:-2] + ".c"
++        owner = "silverstar.algorithm.estimator.eskf15" if group.startswith("eskf_") else "silverstar.core.0_1_0"
++        expected = provenance.get(owner, {}).get("files", {}).get(relative)
++        source = project / relative
++        if not expected or not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != expected:
++            raise ValueError(f"CPU-only source proof does not cover preserved/edited {relative}; use audited fresh payload or legacy")
++        info["source_sha256"] = expected
++
++
++def Usage_Read(objdump: str, elf: Path, regions: dict) -> dict[str, int]:
++    dump = Tool_Run([objdump, "-h", str(elf)])
++    usage = {name: 0 for name in regions}
++    for _, size, address, _, allocated, _ in AuditModule_Get()._Sections_Parse(dump):
++        if size == 0 or not allocated:
++            continue
++        for name, (origin, capacity) in regions.items():
++            if origin <= address < origin + capacity:
++                if address + size > origin + capacity:
++                    raise ValueError(f"Linked section exceeds {name}")
++                usage[name] = max(usage[name], address + size - origin)
++    return usage
++
++
++def Score_Get(usage: dict[str, int], regions: dict, assignment: dict) -> tuple:
++    used = [Fraction(usage[name], capacity) for name, (_, capacity) in sorted(regions.items())]
++    # Physical feasibility is provided by GNU ld. Minimize worst utilization,
++    # then spread; ties prefer fewer moves from legacy CCM, then sorted names.
++    return max(used), max(used) - min(used), sum(value == "RAM" for value in assignment.values()), tuple(assignment.items())
++
++
++def LinkedGroups_Check(objdump: str, elf: Path, groups: dict, assignment: dict, regions: dict) -> None:
++    dump = Tool_Run([objdump, "-t", str(elf)])
++    symbols = {}
++    for address, section, size, name in re.findall(
++        r"^([\da-fA-F]+)\s+.*?\s+(\.\S+|\*ABS\*)\s+([\da-fA-F]+)\s+(\S+)\s*$", dump, re.MULTILINE,
++    ):
++        symbols.setdefault(name, []).append((int(address, 16), int(size, 16), section))
++    for group, info in groups.items():
++        entries = symbols.get(info["symbol"], [])
++        if len(entries) != 1:
++            raise ValueError(f"Linked whitelist symbol missing or ambiguous: {info['symbol']}")
++        address, size, section = entries[0]
++        region = assignment[group]
++        start, capacity = regions[region]
++        bounds = ("_sccmram_bss", "_eccmram_bss") if region == "CCMRAM" else ("_sbss", "_ebss")
++        if any(len(symbols.get(bound, [])) != 1 for bound in bounds):
++            raise ValueError(f"Missing startup zero bounds for {group}")
++        if not (size == info["size"] and address % info["alignment"] == 0 and
++                start <= address and address + size <= start + capacity and
++                symbols[bounds[0]][0][0] <= address and address + size <= symbols[bounds[1]][0][0]):
++            raise ValueError(f"Placement, size, alignment or startup zero bounds failed: {group}")
++        info.update(address=address, region=region, output_section=section, zero_bounds=bounds)
++
++
++def LayoutCandidates_Link(args: argparse.Namespace) -> None:
++    output = Path(args.output)
++    directory = output.parent / "memory_layout"
++    directory.mkdir(parents=True, exist_ok=True)
++    report_path = directory / "decision.json"
++    # Never let a failed relink leave a prior successful artifact/report behind.
++    for old in (output, report_path):
++        old.unlink(missing_ok=True)
++    script = Path(args.linker).read_text(encoding="utf-8")
++    regions = Regions_Parse(script)
++    objects = [value for value in args.command if value.endswith(".o")]
++    if not objects or any(value.startswith("-T") or value == "-o" for value in args.command):
++        raise ValueError("Auto requires explicit objects and owns the linker/output options")
++    groups = Groups_Inspect(args.objdump, objects)
++    SourceOwners_Check(Path(getattr(args, "project", ".")), groups, Path(args.linker))
++    names = sorted(groups)
++    choices = ("CCMRAM", "RAM") if "CCMRAM" in regions else ("RAM",)
++    attempts, successful = [], []
++    if len(choices) ** len(names) > MAX_CANDIDATES:
++        raise ValueError("Auto candidate bound exceeded")
++    print(f"MEMORY_LAYOUT:auto groups={len(names)} max_candidates={len(choices) ** len(names)}", flush=True)
++    if "CCMRAM" not in regions:
++        print("MEMORY_LAYOUT: target has no CCM; all CPU-only objects use ordinary SRAM", flush=True)
++    for index, values in enumerate(product(choices, repeat=len(names))):
++        if index >= MAX_CANDIDATES:
++            raise ValueError("Auto candidate bound exceeded")
++        assignment = dict(zip(names, values))
++        candidate = directory / f"candidate_{index:02d}.ld"
++        candidate.write_text(Script_Render(script, assignment, regions), encoding="utf-8")
++        command = [args.compiler, *args.command, "-T" + candidate.as_posix(), "-o", str(output)]
++        result = subprocess.run(command, capture_output=True, text=True, timeout=120)
++        (directory / f"candidate_{index:02d}.log").write_text(result.stdout + result.stderr, encoding="utf-8")
++        record = {"index": index, "assignment": assignment, "exit_code": result.returncode, "command": command}
++        if result.returncode == 0:
++            usage = Usage_Read(args.objdump, output, regions)
++            record["usage"] = usage
++            successful.append((Score_Get(usage, regions, assignment), index, assignment, candidate))
++        attempts.append(record)
++    report = {"version": 1, "policy": "physical-fit/minimax-utilization/spread/legacy-tie", "max_candidates": MAX_CANDIDATES,
++              "regions": regions, "groups": groups, "attempts": attempts,
++              "linker_sha256": hashlib.sha256(Path(args.linker).read_bytes()).hexdigest(),
++              "object_sha256": {obj: hashlib.sha256(Path(obj).read_bytes()).hexdigest() for obj in objects}}
++    if not successful:
++        output.unlink(missing_ok=True)
++        report["status"] = "failed-no-physical-fit"
++        report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
++        raise ValueError(f"No candidate linked within physical RAM; see {directory} (real ld failures retained)")
++    _, index, assignment, candidate = min(successful)
++    # One final real link ensures ELF and map belong to the selected assignment.
++    Tool_Run([args.compiler, *args.command, "-T" + candidate.as_posix(), "-o", str(output)])
++    LinkedGroups_Check(args.objdump, output, groups, assignment, regions)
++    usage = Usage_Read(args.objdump, output, regions)
++    report.update(status="linked", selected=index, assignment=assignment, usage=usage,
++                  elf_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
++                  selected_linker_sha256=hashlib.sha256(candidate.read_bytes()).hexdigest())
++    report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
++    print(f"MEMORY_LAYOUT:auto selected={index} attempts={len(attempts)} decision={report_path}", flush=True)
++    for group, info in groups.items():
++        print(f"MEMORY_LAYOUT: {group} {info['symbol']} bytes={info['size']} address=0x{info['address']:08x} -> {info['region']}", flush=True)
++    for name, (_, capacity) in sorted(regions.items()):
++        remaining = capacity - usage[name]
++        color = "red" if remaining * 100 < capacity * 10 else "yellow" if remaining * 100 <= capacity * 20 else "green"
++        print(f"MEMORY_LAYOUT: region={name} occupied={usage[name]} spare={remaining} capacity={capacity} margin={color}", flush=True)
++        if color != "green":
++            print(f"WARNING: {name} margin <=20%; aim for green. Spare bytes are not a stack/timing proof.", flush=True)
++
++
++def Layout_Link(args: argparse.Namespace) -> None:
++    """Publish no successful artifact when any link/audit/report step fails."""
++    try:
++        LayoutCandidates_Link(args)
++    except BaseException:
++        output = Path(args.output)
++        directory = output.parent / "memory_layout"
++        failure = traceback.format_exc()
++        output.unlink(missing_ok=True)
++        (directory / "decision.json").unlink(missing_ok=True)
++        # Keep all candidate linker scripts/logs, and record late audit or
++        # report-write failures even when GNU ld itself returned success.
++        directory.mkdir(parents=True, exist_ok=True)
++        (directory / "failure.log").write_text(failure, encoding="utf-8")
++        raise
++
++
++def Main_Run() -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--linker", required=True)
++    parser.add_argument("--output", required=True)
++    parser.add_argument("--compiler", required=True)
++    parser.add_argument("--objdump", required=True)
++    parser.add_argument("--project", default=".")
++    parser.add_argument("command", nargs=argparse.REMAINDER)
++    args = parser.parse_args()
++    if args.command[:1] == ["--"]:
++        args.command.pop(0)
++    try:
++        Layout_Link(args)
++    except (ValueError, OSError, ImportError, subprocess.TimeoutExpired) as error:
++        Path(args.output).unlink(missing_ok=True)
++        print(f"MEMORY_LAYOUT:auto FAIL: {error}", flush=True)
++        return 1
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(Main_Run())
+--- frozen/Flight_Controller/Tools/check_architecture.ps1
++++ new_auto/Flight_Controller/Tools/check_architecture.ps1
+@@ -250,15 +250,53 @@
+     return $enabled
+ }
+ 
++# CubeMX imports own their original Core/FATFS paths under HardwareGenerated.
++# Board scopes remain mandatory for board-plugin projects and remain scanned
++# if a custom project contains a Board directory. Missing/invalid mode fails.
++$projectConfiguration = Get-Content -Raw -Encoding UTF8 -LiteralPath (
++    Join-Path $repoRoot 'SilverStar.ssproject') | ConvertFrom-Json
++$hardwareMode = [string]$projectConfiguration.hardware.mode
++Assert-ArchitectureCondition -Condition ($hardwareMode -in @('board_plugin', 'custom')) `
++    -Message 'Generated project must explicitly select board-plugin or custom hardware.'
++$boardCodePaths = @('Board')
++$cubeCorePath = 'Core'
++$iocPath = 'Flight_Controller0.5.ioc'
++$fatfsConfigurationPath = 'FATFS\Target\ffconf.h'
++$manifestDirectories = @('BuildSystem', 'Targets', 'Platform', 'Devices',
++    'Board', 'FlightLogic', 'Generated')
++if ($hardwareMode -eq 'custom') {
++    $cubeRoot = 'HardwareGenerated\STM32CubeMX'
++    Assert-ArchitectureCondition `
++        -Condition (([string]$projectConfiguration.components.board -eq '') -and
++            ([string]$projectConfiguration.hardware.snapshot_id -cmatch '^[a-f0-9]{64}$') -and
++            (Test-Path -LiteralPath (Join-Path $repoRoot $cubeRoot) -PathType Container)) `
++        -Message 'Custom hardware requires an imported snapshot and no selected Board plugin.'
++    $importedIocName = [string]$projectConfiguration.hardware.ioc_file
++    $validIocName = ($importedIocName -match '^[^\\/:*?"<>|]+\.ioc$') -and
++        ($importedIocName -notin @('.', '..'))
++    Assert-ArchitectureCondition -Condition $validIocName `
++        -Message 'Custom hardware IOC metadata must name one snapshot-local IOC file.'
++    if ($validIocName) {
++        $iocPath = $cubeRoot + '\' + $importedIocName
++    }
++    $cubeCorePath = $cubeRoot + '\Core'
++    $fatfsConfigurationPath = $cubeRoot + '\FATFS\Target\ffconf.h'
++    $manifestDirectories += 'HardwareGenerated'
++    if (-not (Test-Path -LiteralPath (Join-Path $repoRoot 'Board') -PathType Container)) {
++        $boardCodePaths = @()
++        $manifestDirectories = @($manifestDirectories | Where-Object { $_ -ne 'Board' })
++    }
++}
++
+ $portableCodePaths = @(
+     'System', 'Algorithm', 'Protocol', 'Devices', 'Interfaces', 'Modules',
+-    'Common', 'Platform\Inc', 'Board', 'FlightLogic'
+-)
++    'Common', 'Platform\Inc', 'FlightLogic'
++) + $boardCodePaths
+ $firstPartyRuntimePaths = @(
+-    'APP', 'Algorithm', 'Board', 'Common', 'Devices', 'FlightLogic',
++    'APP', 'Algorithm', 'Common', 'Devices', 'FlightLogic',
+     'Generated', 'Interfaces', 'Modules', 'OS', 'Platform', 'Protocol',
+     'System', 'Targets'
+-)
++) + $boardCodePaths
+ $systemLayerPaths = @(
+     'System', 'Algorithm', 'FlightLogic', 'Protocol', 'Interfaces', 'Modules'
+ )
+@@ -326,7 +364,7 @@
+ 
+ Assert-NoArchitecturePattern -Name `
+     'CMSIS-RTOS2 or defaultTask remains in first-party application code.' `
+-    -Paths @('APP', 'Core', 'OS', 'System', 'Devices', 'Platform') `
++    -Paths @('APP', $cubeCorePath, 'OS', 'System', 'Devices', 'Platform') `
+     -Pattern ('(?i)\bcmsis_os2?\b|\bosThread[A-Za-z0-9_]*\b|' +
+         '\bosDelay\b|\bosKernel[A-Za-z0-9_]*\b|\bdefaultTask\b|' +
+         '\bStartDefaultTask\b')
+@@ -343,7 +381,7 @@
+ 
+ Assert-NoArchitecturePattern -Name `
+     'A non-static FreeRTOS object creation API remains in first-party code.' `
+-    -Paths @('APP', 'OS', 'Core') `
++    -Paths @('APP', 'OS', $cubeCorePath) `
+     -Pattern '\bxTaskCreate\s*\(|\bxQueueCreate\s*\(|\bxSemaphoreCreate(?:Binary|Mutex|Counting)\s*\('
+ 
+ Assert-NoArchitecturePattern -Name `
+@@ -376,6 +414,9 @@
+     'Protocol\SSLOG\generated',
+     'Tools\generate_sslog.py'
+ )
++if ($hardwareMode -eq 'custom') {
++    $legacyPaths += @(($cubeCorePath + '\Src\freertos.c'), ($cubeCorePath + '\Inc\FreeRTOSConfig.h'))
++}
+ foreach ($legacyPath in $legacyPaths) {
+     Assert-PathAbsent -RelativePath $legacyPath
+ }
+@@ -413,6 +454,11 @@
+     'Generated\project_sources.mk',
+     'Generated\module.mk'
+ ) | Sort-Object
++if (Test-Path -LiteralPath (Join-Path $repoRoot 'Generated\memory_audit.py') -PathType Leaf) {
++    # Exact shared resource parser emitted by current FCCG. Old projects may
++    # omit it; the auto Make dependency requires it when auto is selected.
++    $expectedGeneratedFiles = @($expectedGeneratedFiles + 'Generated\memory_audit.py' | Sort-Object)
++}
+ if (-not $loggingEnabled) {
+     $disabledGeneratedFiles = @(
+         'Generated\Inc\project_log_config.h', 'Generated\Inc\project_log_decoder_profile.h',
+@@ -433,12 +479,10 @@
+         '\bInsMechanization_|\bSystemLifecycle_(?:Process|Enter)')
+ 
+ $manifestFiles = @('Makefile') + @(
+-    Get-ChildItem -LiteralPath (Join-Path $repoRoot 'BuildSystem'),
+-        (Join-Path $repoRoot 'Targets'), (Join-Path $repoRoot 'Platform'),
+-        (Join-Path $repoRoot 'Devices'), (Join-Path $repoRoot 'Board'),
+-        (Join-Path $repoRoot 'FlightLogic'), (Join-Path $repoRoot 'Generated') `
+-        -Recurse -File -Filter '*.mk' |
+-        ForEach-Object { $_.FullName.Substring($repoRoot.Length + 1) }
++    foreach ($directory in $manifestDirectories) {
++        Get-ChildItem -LiteralPath (Join-Path $repoRoot $directory) -Recurse -File -Filter '*.mk' |
++            ForEach-Object { $_.FullName.Substring($repoRoot.Length + 1) }
++    }
+ )
+ Assert-NoArchitecturePattern -Name `
+     'Authoritative build manifests use wildcard scanning or object flattening.' `
+@@ -452,13 +496,24 @@
+ 
+ # The standalone stack report reads an already linked ELF. It is not a source
+ # generator and no compilation target may depend on it. Permit only its exact
+-# recipe; continue rejecting every other Python invocation in build manifests.
++# recipe. The explicitly selected auto adapter links existing objects only;
++# its exact recipe is also allowed, never a source/catalog generator.
+ $stackReportBlock = 'stack-report: all' + "`n`t" +
+     'python Tools/check_task_stacks.py --config $(CONFIG) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
++$layoutStackReportBlock = 'stack-report: all' + "`n`t" +
++    'python Tools/check_task_stacks.py --config $(CONFIG) --memory-layout $(MEMORY_LAYOUT) --prefix "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)"' + "`n"
+ foreach ($manifestFile in $manifestFiles) {
+     $buildContent = (Get-Content -Raw -LiteralPath (Join-Path $repoRoot $manifestFile)).Replace("`r`n", "`n")
+     if ($manifestFile -eq 'Makefile') {
+         $buildContent = $buildContent.Replace($stackReportBlock, '')
++        $buildContent = $buildContent.Replace($layoutStackReportBlock, '')
++        $autoLinkRecipe = "`t" + '$(PYTHON) Tools/auto_memory_layout.py --linker $(LDSCRIPT) --output $@ --compiler $(CC) --objdump "$(if $(GCC_PATH),$(GCC_PATH)/,)$(TOOLCHAIN_PREFIX)objdump" -- $(OBJECTS) $(filter-out -T$(LDSCRIPT),$(LDFLAGS))' + "`n"
++        $buildContent = $buildContent.Replace($autoLinkRecipe, '')
++        foreach ($autoMetadata in @('PYTHON ?= python',
++            'BUILD_MANIFESTS += Tools/auto_memory_layout.py',
++            'BUILD_MANIFESTS += Generated/memory_audit.py')) {
++            $buildContent = $buildContent.Replace($autoMetadata + "`n", '')
++        }
+         $buildContent = [regex]::Replace($buildContent, '(?m)^\.PHONY:.*$', '')
+     }
+     Assert-ArchitectureCondition `
+@@ -468,7 +523,7 @@
+ 
+ Assert-NoArchitecturePattern -Name `
+     'FatFs retains a dynamic allocation hook.' `
+-    -Paths @('FATFS\Target\ffconf.h') `
++    -Paths @($fatfsConfigurationPath) `
+     -Pattern '(?i)\b(?:pvPortMalloc|vPortFree|ff_malloc|ff_free)\b'
+ 
+ Write-Output 'FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries'
+@@ -564,37 +619,39 @@
+ Assert-FileContainsPattern -RelativePath 'STM32F407XX_FLASH.ld' `
+     -Pattern '_Min_Heap_Size\s*=\s*0x0\s*;' `
+     -Message 'The target linker script still reserves a C runtime heap.'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'ProjectManager\.HeapSize=0x0' `
+     -Message 'CubeMX project metadata does not preserve the zero-heap target.'
+ Assert-NoArchitecturePattern -Name `
+     'CubeMX project metadata still owns FreeRTOS or a default task.' `
+-    -Paths @('Flight_Controller0.5.ioc') -Extensions @('.ioc') `
++    -Paths @($iocPath) -Extensions @('.ioc') `
+     -Pattern '(?i)FREERTOS|CMSIS_V2|defaultTask|rtos\.0\.ip'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'NVIC\.TimeBaseIP=TIM1' `
+     -Message 'CubeMX no longer assigns the HAL tick to TIM1.'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'USART1\.BaudRate=230400' `
+     -Message 'CubeMX IMU UART baudrate changed from 230400.'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'USART2\.BaudRate=921600' `
+     -Message 'CubeMX GNSS UART baudrate changed from 921600.'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'USART3\.BaudRate=230400' `
+     -Message 'CubeMX console UART baudrate changed from 230400.'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'Dma\.USART1_RX\.0\.Mode=DMA_CIRCULAR' `
+     -Message 'CubeMX IMU RX DMA is no longer circular.'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'Dma\.USART2_RX\.2\.Mode=DMA_CIRCULAR' `
+     -Message 'CubeMX GNSS RX DMA is no longer circular.'
+-Assert-FileContainsPattern -RelativePath 'Flight_Controller0.5.ioc' `
++Assert-FileContainsPattern -RelativePath $iocPath `
+     -Pattern 'Dma\.USART3_RX\.4\.Mode=DMA_CIRCULAR' `
+     -Message 'CubeMX console RX DMA is no longer circular.'
+ 
+-$iocContent = Get-Content -Raw -LiteralPath `
+-    (Join-Path $repoRoot 'Flight_Controller0.5.ioc')
++$iocContent = ''
++if (Test-Path -LiteralPath (Join-Path $repoRoot $iocPath) -PathType Leaf) {
++    $iocContent = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $iocPath)
++}
+ $requiredIocEntries = @(
+     @('Mcu.IPNb=11', 'CubeMX peripheral count does not reflect FreeRTOS removal.'),
+     @('NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4', 'CubeMX NVIC priority grouping changed.'),
+@@ -882,7 +939,7 @@
+ Assert-FileContainsPattern -RelativePath 'Targets\SilverStar_F407\Src\freertos_target_irq.c' `
+     -Pattern '\bxPortSysTickHandler\s*\(' `
+     -Message 'STM32F407 SysTick is not routed to the native FreeRTOS port.'
+-Assert-FileContainsPattern -RelativePath 'Core\Src\stm32f4xx_hal_timebase_tim.c' `
++Assert-FileContainsPattern -RelativePath ($cubeCorePath + '\Src\stm32f4xx_hal_timebase_tim.c') `
+     -Pattern '\bTIM1\b' `
+     -Message 'HAL tick is no longer kept on TIM1.'
+ Assert-FileContainsPattern -RelativePath 'APP\Src\app_tasks.c' `
+@@ -1307,7 +1364,7 @@
+ Write-Output ("SilverStar architecture check passed: checks={0} failures=0" -f `
+     $script:checkCount)
+ if ($loggingEnabled) {
+-    Write-Output 'SSLOG codecs are ordinary endian-aware protocol source; Make requires no Python.'
++    Write-Output 'SSLOG codecs are ordinary endian-aware protocol source; only explicit auto linking requires Python.'
+     Write-Output 'Record Catalog, decoder profile, and static instance facade contracts are valid.'
+ }
+ else {
+--- frozen/Flight_Controller/Tools/check_firmware_artifact.ps1
++++ new_auto/Flight_Controller/Tools/check_firmware_artifact.ps1
+@@ -2,7 +2,7 @@
+     [ValidateSet('Debug', 'Release')]
+     [string]$Config = 'Debug',
+     [string]$TargetProfile = 'SilverStar_F407',
+-    [ValidateSet('legacy', 'eskf_window_sram')]
++    [ValidateSet('legacy', 'eskf_window_sram', 'auto')]
+     [string]$MemoryLayout = 'legacy'
+ )
+ 
+@@ -121,6 +121,7 @@
+     -Message 'arm-none-eabi-objdump is unavailable.'
+ 
+ $symbols = @{}
++$uartDmaSymbolCounts = @{}
+ if (($null -ne $nmCommand) -and
+     (Test-Path -LiteralPath $elfPath -PathType Leaf)) {
+     $nmOutput = @(& $nmCommand.Source -S --defined-only --radix=x `
+@@ -131,6 +132,10 @@
+         if ($line.ToString() -match `
+             '^\s*(?<address>[0-9A-Fa-f]+)\s+(?<size>[0-9A-Fa-f]+)\s+(?<type>\S)\s+(?<name>.+?)\s*$') {
+             $name = $Matches['name']
++            if ([regex]::IsMatch($name, '^s_uart[1-6]_(?:rx_dma|tx_ring|tx_priority_ring)$')) {
++                if (-not $uartDmaSymbolCounts.ContainsKey($name)) { $uartDmaSymbolCounts[$name] = 0 }
++                $uartDmaSymbolCounts[$name]++
++            }
+             if (-not $symbols.ContainsKey($name)) {
+                 $symbols[$name] = [pscustomobject]@{
+                     Address = ConvertFrom-HexValue -Value $Matches['address']
+@@ -196,11 +201,54 @@
+         'Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend\.c')
+ $placementAware = (Test-Path -LiteralPath $backendPath -PathType Leaf) -and
+     ((Get-Content -Raw -LiteralPath $backendPath) -match 'PLATFORM_ESKF_WINDOW_BSS')
+-if ($MemoryLayout -ne 'legacy') {
++if ($MemoryLayout -eq 'eskf_window_sram') {
+     Assert-ArtifactCondition -Condition (($TargetProfile -eq 'SilverStar_F407') -and $eskfSelected) `
+         -Message 'Experimental placement requires SilverStar_F407 and the selected ESKF15 backend.'
+     Assert-ArtifactCondition -Condition $placementAware `
+         -Message 'Preserved ESKF payload does not support experimental placement; use a fresh validation project.'
++}
++
++function ArtifactSha256_Get {
++    param([Parameter(Mandatory = $true)][string]$Path)
++    $algorithm = [System.Security.Cryptography.SHA256]::Create()
++    try {
++        $digest = $algorithm.ComputeHash([System.IO.File]::ReadAllBytes($Path))
++        return ([System.BitConverter]::ToString($digest)).Replace('-', '').ToLowerInvariant()
++    }
++    finally { $algorithm.Dispose() }
++}
++$autoDecision = $null
++if ($MemoryLayout -eq 'auto') {
++    $decisionPath = Join-Path $buildRoot 'memory_layout\decision.json'
++    Assert-ArtifactCondition -Condition (Test-Path -LiteralPath $decisionPath -PathType Leaf) `
++        -Message 'Auto memory decision is missing.'
++    if (Test-Path -LiteralPath $decisionPath -PathType Leaf) {
++        $autoDecision = Get-Content -Raw -LiteralPath $decisionPath | ConvertFrom-Json
++        Assert-ArtifactCondition -Condition (($autoDecision.status -eq 'linked') -and
++            ($autoDecision.elf_sha256 -eq (ArtifactSha256_Get -Path $elfPath))) `
++            -Message 'Auto decision does not describe this linked ELF.'
++        foreach ($property in $autoDecision.groups.PSObject.Properties) {
++            $group = $property.Value
++            $start = $mainSramStart; $length = $mainSramLength
++            if ($group.region -eq 'CCMRAM') { $start = $ccmStart; $length = $ccmLength }
++            Assert-SymbolRange -Symbols $symbols -Name $group.symbol -Start $start -Length $length -MemoryName $group.region
++            if ($symbols.ContainsKey($group.symbol)) {
++                $actual = $symbols[$group.symbol]
++                $begin = $group.zero_bounds[0]; $end = $group.zero_bounds[1]
++                Assert-ArtifactCondition -Condition ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) `
++                    -Message 'Auto startup zero bounds are missing.'
++                if ($symbols.ContainsKey($begin) -and $symbols.ContainsKey($end)) {
++                    Assert-ArtifactCondition -Condition (($actual.Address -eq $group.address) -and
++                        ($actual.Size -eq $group.size) -and (($actual.Address % $group.alignment) -eq 0) -and
++                        ($actual.Address -ge $symbols[$begin].Address) -and
++                        (($actual.Address + $actual.Size) -le $symbols[$end].Address)) `
++                        -Message ('Auto symbol size/alignment/zero range differs: ' + $group.symbol)
++                }
++            }
++            Write-Output ('  auto decision object={0} bytes={1} region={2} address=0x{3:X8}' -f `
++                $group.symbol, $group.size, $group.region, [uint64]$group.address)
++        }
++    }
+ }
+ if ($eskfSelected -and ($placementAware -or ($MemoryLayout -ne 'legacy'))) {
+     $startName = '_sccmram_bss'
+@@ -208,7 +256,9 @@
+     $memoryStart = $ccmStart
+     $memoryLength = $ccmLength
+     $memoryName = 'CCMRAM'
+-    if ($MemoryLayout -eq 'eskf_window_sram') {
++    if (($MemoryLayout -eq 'eskf_window_sram') -or
++        (($MemoryLayout -eq 'auto') -and ($null -ne $autoDecision) -and
++         ($autoDecision.assignment.eskf_window -eq 'RAM'))) {
+         $startName = '_sbss'; $endName = '_ebss'
+         $memoryStart = $mainSramStart; $memoryLength = $mainSramLength
+         $memoryName = 'main SRAM'
+@@ -300,12 +350,26 @@
+     's_uart3_tx_ring',
+     's_uart3_tx_priority_ring'
+ )
++# Preserved pre-UART-hotfix payloads remain supported; every linked TX ring
++# from the additive async UART implementation is audited when present.
++foreach ($uartNumber in 1..6) {
++    foreach ($suffix in @('rx_dma', 'tx_ring', 'tx_priority_ring')) {
++        $name = 's_uart{0}_{1}' -f $uartNumber, $suffix
++        if ($symbols.ContainsKey($name) -and ($requiredDmaSymbols -notcontains $name)) {
++            $requiredDmaSymbols += $name
++        }
++    }
++}
+ if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
+ else {
+     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_aggregate_buffer')) `
+         -Message 'Disabled logging must not allocate the log aggregation buffer.'
+ }
+ foreach ($name in $requiredDmaSymbols) {
++    if ($uartDmaSymbolCounts.ContainsKey($name)) {
++        Assert-ArtifactCondition -Condition ($uartDmaSymbolCounts[$name] -eq 1) `
++            -Message ('UART DMA symbol is ambiguous: ' + $name)
++    }
+     Assert-SymbolRange -Symbols $symbols -Name $name -Start $mainSramStart `
+         -Length $mainSramLength -MemoryName 'DMA-accessible main SRAM'
+ }
+@@ -351,9 +415,17 @@
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM'
+ Assert-ArtifactCondition -Condition ($ccmUsed -le $ccmLength) `
+     -Message "CCMRAM overflow: used=$ccmUsed capacity=$ccmLength"
+-Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
+-    -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
+-        "used=$mainSramUsed maximum=102400")
++if ($MemoryLayout -eq 'auto') {
++    Write-Output ("  historical logging budget used={0} maximum=102400 physical_capacity={1}" -f $mainSramUsed, $mainSramLength)
++    if ($mainSramUsed -gt [uint64](100 * 1024)) {
++        Write-Warning 'Auto layout exceeds the historical 100 KiB main-SRAM regression budget by relocating CPU-only objects. Physical overflow, DMA, stack reservation and startup checks remain blocking; budget spare is not stack margin.'
++    }
++}
++else {
++    Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
++        -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
++            "used=$mainSramUsed maximum=102400")
++}
+ 
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM'
+ Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap'
+--- frozen/Flight_Controller/Tools/check_task_stacks.py
++++ new_auto/Flight_Controller/Tools/check_task_stacks.py
+@@ -60,9 +60,14 @@
+     return total * width
+ 
+ 
+-def StackReport_Build(root: Path, config: str, prefix: str) -> dict:
++def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
+     target = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf-8"))["build"]["target_profile"]
+-    build = (root / "build/FCCG" / target / config).resolve()
++    if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
++        raise ValueError("Unsupported memory layout")
++    build = root / "build/FCCG" / target / config
++    if memory_layout != "legacy":
++        build = build / memory_layout
++    build = build.resolve()
+     build.relative_to(root.resolve())
+     elfs = list(build.glob("*.elf"))
+     if len(elfs) != 1:
+@@ -244,12 +249,13 @@
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument("--project", type=Path, default=Path(__file__).resolve().parents[1])
+     parser.add_argument("--config", choices=("Release", "Debug"), default="Release")
++    parser.add_argument("--memory-layout", choices=("legacy", "eskf_window_sram", "auto"), default="legacy")
+     parser.add_argument("--prefix", default="arm-none-eabi-")
+     arguments = parser.parse_args()
+     root = arguments.project.resolve(strict=True)
+     print("FCCG_PROGRESS|STACK_REPORT|PLAN|1", flush=True)
+     print("FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget", flush=True)
+-    report = StackReport_Build(root, arguments.config, arguments.prefix)
++    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+     destination = root / Path(report["elf"]).parent / "stack-budget.json"
+     destination.resolve().relative_to(root)
+     destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+--- frozen/Ground_Station/Platform/Inc/platform_memory.h
++++ new_auto/Ground_Station/Platform/Inc/platform_memory.h
+@@ -12,16 +12,43 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* Link-time opt-in only. Each private CPU-only BSS group has a reviewed owner.
++ * Legacy expands to the original placement. No data or DMA section is eligible. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WORK_BSS __attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(8)))
++#define PLATFORM_ESKF_HISTORY_BSS __attribute__((section(".bss.silverstar_auto_eskf_history"), aligned(8)))
++#define PLATFORM_KF_REPLAY_BSS __attribute__((section(".bss.silverstar_auto_kf_replay"), aligned(8)))
++#define PLATFORM_NAV_HEALTH_BSS __attribute__((section(".bss.silverstar_auto_nav_health"), aligned(8)))
++#else
++#error "Auto memory layout requires a supported compiler"
++#endif
++#elif (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
++#define PLATFORM_ESKF_WORK_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_ESKF_HISTORY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_KF_REPLAY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_NAV_HEALTH_BSS PLATFORM_CPU_FAST_BSS
++#else
++#error "Invalid auto memory layout"
++#endif
++
+ /* One audited CPU-only object; the target owns its section and alignment.
+  * An old target header cannot silently accept the experimental layout. */
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+ #ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#define PLATFORM_ESKF_WINDOW_BSS __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#else
+ #if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+ #error "The selected target does not support ESKF consistency window SRAM placement"
+ #endif
+ #define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
+ #endif
+ 
+ #ifndef PLATFORM_DMA_ACCESSIBLE

@@ -1,0 +1,40 @@
+{
+  "source_commit": "50e563e8e73861307d47fe00dd37ba51ee3022a9",
+  "projects": {
+    "existing_legacy": {
+      "memory_layout": "legacy",
+      "save_reopen_equal": true,
+      "ground_target_equal": true,
+      "targets": [
+        "Flight_Controller",
+        "Ground_Station"
+      ],
+      "project_root": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_existing_legacy",
+      "input_sha256": "791db6f507ac9ae76bb474ae5771c7abb10c0c3f72b286908c720ffabda57fb1",
+      "artifacts": {
+        "Ground_Station\\build\\ground.elf": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+        "Ground_Station\\build\\analysis\\ground.elf": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+        "Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_1.elf": "9aed875df9135212a08e5fed999a3ed4496b6acf2a2f372eabe80561bb1bffa8",
+        "Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_1.elf": "6693b65e353e8e43092184075e6acf9170f6174cdd2f2f088f5b7789a8c0f689"
+      }
+    },
+    "new_auto": {
+      "memory_layout": "auto",
+      "save_reopen_equal": true,
+      "targets": [
+        "Flight_Controller",
+        "Ground_Station"
+      ],
+      "project_root": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto",
+      "module": "e28_2g4m12sx",
+      "pc_resource": "PLATFORM_UART_1",
+      "artifacts": {
+        "Ground_Station\\build\\ground.elf": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+        "Ground_Station\\build\\analysis\\ground.elf": "ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1",
+        "Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\auto\\SilverStar_0_1_1.elf": "064fd2591c961fd848fd5bc25b9689df127565573dd36210b302025d357755b1",
+        "Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf": "416e65d63cb1ce3b251bd6e6998131c9b94c3042ac283e51cdb5c319e4f695bc"
+      }
+    }
+  },
+  "gui_errors": []
+}

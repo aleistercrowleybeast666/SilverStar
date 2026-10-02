@@ -1,0 +1,244 @@
+{
+  "existing_legacy": {
+    "Flight_Controller": {
+      "frozen_source_count": 563,
+      "new_source_count": 565,
+      "equal_count": 550,
+      "differences": [
+        {
+          "path": "APP/Src/estimator_task.c",
+          "frozen_sha256": "39461f7ff1e6cff66df8f9b81f0a02d6434652b8175ae2070c46477ecaf11db5",
+          "new_sha256": "897176a1839c7850ba581f79e0950e6a937c0ee902b65d3c4e56efa4fb61571d",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/Src/project_log_decoder_profile.c",
+          "frozen_sha256": "f8ab2c01602c9ac7ca5fde5996e134a751ed6b9d72df8a28d21986830220cb8c",
+          "new_sha256": "c17048d50522ec10b0a14b6698516daa813b3ed9227fb195110de15e004b8f2d",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/Src/project_metadata.c",
+          "frozen_sha256": "5576e03e3092cba88a7ab5bff30fc44fb7c60e9b39319a2daed213b5746fab24",
+          "new_sha256": "61c4faca8fd320e73d575344c1583387ecf86bab804c3589034bd4645e8c3f8d",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/memory_audit.py",
+          "frozen_sha256": null,
+          "new_sha256": "646734e8f268be524e5f888c865af7b63e2ea00de9e6af71dc2839466b13869f",
+          "change": "added"
+        },
+        {
+          "path": "Makefile",
+          "frozen_sha256": "ed7cf35f6a2280950b6cf4df74c8e99ff8183657bfb0a514efcc375b28d14b73",
+          "new_sha256": "be2c8ebcd2906da7dc3878208962b2c727f91c900c91f5e44b2a6f3e32ff7dce",
+          "change": "changed"
+        },
+        {
+          "path": "Platform/Inc/platform_memory.h",
+          "frozen_sha256": "59b1c0aabd8e866e123dc45174166139f9ed079b175bd2959abd91e3b4485c97",
+          "new_sha256": "d60ad568042f904cbc4466d582fbe757570f0875adabd47b018a5eb648bb6b4d",
+          "change": "changed"
+        },
+        {
+          "path": "STM32F407XX_FLASH.ld",
+          "frozen_sha256": "882de64b4b991cd0f768eb8d5a16aa32a09344ef50202250e9fa71fc0ef55bb2",
+          "new_sha256": "0d57b9ad0364475a0562721340b0f537a3770439b2f6ce66a932310ed4178406",
+          "change": "changed"
+        },
+        {
+          "path": "System/Src/system_navigation_health.c",
+          "frozen_sha256": "c3d1f41cc81756bbc57a10beae3ba92ed3514c3f6c19cefb638d4ab6d3d49e4d",
+          "new_sha256": "2099c529470af4f19b4407cd44ef023cb0e64b169d8d59a245aa3d45b60c6c92",
+          "change": "changed"
+        },
+        {
+          "path": "Targets/SilverStar_F407/Inc/platform_memory_target.h",
+          "frozen_sha256": "7e08d411aa93d57f1b4e777057cd737b05963717748cd8d5163d9b6505178aa5",
+          "new_sha256": "8c7a7d6253ce1674f927e4eeaee322e0332f538d39cc5d468d5e7338568c2748",
+          "change": "changed"
+        },
+        {
+          "path": "Tests/Host/test_estimator_preparation.c",
+          "frozen_sha256": "a6b340f8f4d802982bec4a0bac0efc9941f492b331961f368d71a9804e147f41",
+          "new_sha256": "d191258b78a6400593636a311c3517b39b0033c4013e2d0a597a3342a02cdaa3",
+          "change": "changed"
+        },
+        {
+          "path": "Tests/Host/test_logger.c",
+          "frozen_sha256": "9efa8fdb5199b5d8efcfbad0f9c3542486cf6bdffd8c5155845392fa9e61c2fc",
+          "new_sha256": "d174ffbf7aee60a521c3af41c667c93f3e4fab472a2fea0be89e01da6b4f8cd7",
+          "change": "changed"
+        },
+        {
+          "path": "Tools/auto_memory_layout.py",
+          "frozen_sha256": null,
+          "new_sha256": "1461385fa1cbe0e9f827b7510e1be05a6ff23fd330ed57868199dae37d399546",
+          "change": "added"
+        },
+        {
+          "path": "Tools/check_architecture.ps1",
+          "frozen_sha256": "07395d51a651a3d25badb1f6b5ee3e51de7b708c2f2c0019e12fcd8779c596a1",
+          "new_sha256": "9a3e8e2cbb48d2b8565fe0da20b95c2006101dcfe93c94e3ea5cce6db762c16d",
+          "change": "changed"
+        },
+        {
+          "path": "Tools/check_firmware_artifact.ps1",
+          "frozen_sha256": "d184b1c78ebadadd7d8bf27657d28ba94424c8b91b9e0a121aaaac06407d75d1",
+          "new_sha256": "ebc4cc49714598e645d82ef236546f554a637c40f3645eb6c741bd86c7d2b5b2",
+          "change": "changed"
+        },
+        {
+          "path": "Tools/check_task_stacks.py",
+          "frozen_sha256": "642c0e267f8a898f691b900ebf41b6748d3ec8d6916b826e535118b0d1fbb26c",
+          "new_sha256": "53da04933886cff85e12722f4d362da05b7600c2dfab4ae051715ba761330d60",
+          "change": "changed"
+        }
+      ]
+    },
+    "Ground_Station": {
+      "frozen_source_count": 155,
+      "new_source_count": 155,
+      "equal_count": 154,
+      "differences": [
+        {
+          "path": "Platform/Inc/platform_memory.h",
+          "frozen_sha256": "59b1c0aabd8e866e123dc45174166139f9ed079b175bd2959abd91e3b4485c97",
+          "new_sha256": "d60ad568042f904cbc4466d582fbe757570f0875adabd47b018a5eb648bb6b4d",
+          "change": "changed"
+        }
+      ]
+    }
+  },
+  "new_auto": {
+    "Flight_Controller": {
+      "frozen_source_count": 563,
+      "new_source_count": 565,
+      "equal_count": 547,
+      "differences": [
+        {
+          "path": "APP/Src/estimator_task.c",
+          "frozen_sha256": "39461f7ff1e6cff66df8f9b81f0a02d6434652b8175ae2070c46477ecaf11db5",
+          "new_sha256": "897176a1839c7850ba581f79e0950e6a937c0ee902b65d3c4e56efa4fb61571d",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/Inc/project_flight_config.h",
+          "frozen_sha256": "3cba26ff58a9caa8e9713f15769b1467e08e461b494fd8fca8cbc2d8a1724df1",
+          "new_sha256": "3d2788b5f4f6efa6f78d7ffda9d63e3b441b01c90360d888ce5dc0b71881d10b",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/Src/project_capability_routes.c",
+          "frozen_sha256": "3ac6a4b817c2228cf75b782f8ab3737768e2308b174a3cf9e581287872050f3f",
+          "new_sha256": "d7da22dfec3c0d4e3e30af34f47056696be51436d66ea3bfa3d1406cf0422772",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/Src/project_log_config.c",
+          "frozen_sha256": "65dfb48e942b167bff099f638430a971bb98bffbc31ee0db419faafba737a42d",
+          "new_sha256": "d2cdb0220b2cb90db01c5370dd2678efceedc1e2075d41809f2596f789bc6cce",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/Src/project_log_decoder_profile.c",
+          "frozen_sha256": "f8ab2c01602c9ac7ca5fde5996e134a751ed6b9d72df8a28d21986830220cb8c",
+          "new_sha256": "77eb6ddf771538fff8aed128e42f7621db20156dbb4266d46028adfac8394a53",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/Src/project_metadata.c",
+          "frozen_sha256": "5576e03e3092cba88a7ab5bff30fc44fb7c60e9b39319a2daed213b5746fab24",
+          "new_sha256": "bdc93480fd7c8fbc2063c459110e89b3473e35878622fc1c66413a9f3445da16",
+          "change": "changed"
+        },
+        {
+          "path": "Generated/memory_audit.py",
+          "frozen_sha256": null,
+          "new_sha256": "646734e8f268be524e5f888c865af7b63e2ea00de9e6af71dc2839466b13869f",
+          "change": "added"
+        },
+        {
+          "path": "Makefile",
+          "frozen_sha256": "ed7cf35f6a2280950b6cf4df74c8e99ff8183657bfb0a514efcc375b28d14b73",
+          "new_sha256": "9a30c9499087ab7a8a5ef5d4b5045860fea5d7a1db880997bc7f2687be37a4a8",
+          "change": "changed"
+        },
+        {
+          "path": "Platform/Inc/platform_memory.h",
+          "frozen_sha256": "59b1c0aabd8e866e123dc45174166139f9ed079b175bd2959abd91e3b4485c97",
+          "new_sha256": "d60ad568042f904cbc4466d582fbe757570f0875adabd47b018a5eb648bb6b4d",
+          "change": "changed"
+        },
+        {
+          "path": "STM32F407XX_FLASH.ld",
+          "frozen_sha256": "882de64b4b991cd0f768eb8d5a16aa32a09344ef50202250e9fa71fc0ef55bb2",
+          "new_sha256": "0d57b9ad0364475a0562721340b0f537a3770439b2f6ce66a932310ed4178406",
+          "change": "changed"
+        },
+        {
+          "path": "System/Src/system_navigation_health.c",
+          "frozen_sha256": "c3d1f41cc81756bbc57a10beae3ba92ed3514c3f6c19cefb638d4ab6d3d49e4d",
+          "new_sha256": "2099c529470af4f19b4407cd44ef023cb0e64b169d8d59a245aa3d45b60c6c92",
+          "change": "changed"
+        },
+        {
+          "path": "Targets/SilverStar_F407/Inc/platform_memory_target.h",
+          "frozen_sha256": "7e08d411aa93d57f1b4e777057cd737b05963717748cd8d5163d9b6505178aa5",
+          "new_sha256": "8c7a7d6253ce1674f927e4eeaee322e0332f538d39cc5d468d5e7338568c2748",
+          "change": "changed"
+        },
+        {
+          "path": "Tests/Host/test_estimator_preparation.c",
+          "frozen_sha256": "a6b340f8f4d802982bec4a0bac0efc9941f492b331961f368d71a9804e147f41",
+          "new_sha256": "d191258b78a6400593636a311c3517b39b0033c4013e2d0a597a3342a02cdaa3",
+          "change": "changed"
+        },
+        {
+          "path": "Tests/Host/test_logger.c",
+          "frozen_sha256": "9efa8fdb5199b5d8efcfbad0f9c3542486cf6bdffd8c5155845392fa9e61c2fc",
+          "new_sha256": "d174ffbf7aee60a521c3af41c667c93f3e4fab472a2fea0be89e01da6b4f8cd7",
+          "change": "changed"
+        },
+        {
+          "path": "Tools/auto_memory_layout.py",
+          "frozen_sha256": null,
+          "new_sha256": "1461385fa1cbe0e9f827b7510e1be05a6ff23fd330ed57868199dae37d399546",
+          "change": "added"
+        },
+        {
+          "path": "Tools/check_architecture.ps1",
+          "frozen_sha256": "07395d51a651a3d25badb1f6b5ee3e51de7b708c2f2c0019e12fcd8779c596a1",
+          "new_sha256": "9a3e8e2cbb48d2b8565fe0da20b95c2006101dcfe93c94e3ea5cce6db762c16d",
+          "change": "changed"
+        },
+        {
+          "path": "Tools/check_firmware_artifact.ps1",
+          "frozen_sha256": "d184b1c78ebadadd7d8bf27657d28ba94424c8b91b9e0a121aaaac06407d75d1",
+          "new_sha256": "ebc4cc49714598e645d82ef236546f554a637c40f3645eb6c741bd86c7d2b5b2",
+          "change": "changed"
+        },
+        {
+          "path": "Tools/check_task_stacks.py",
+          "frozen_sha256": "642c0e267f8a898f691b900ebf41b6748d3ec8d6916b826e535118b0d1fbb26c",
+          "new_sha256": "53da04933886cff85e12722f4d362da05b7600c2dfab4ae051715ba761330d60",
+          "change": "changed"
+        }
+      ]
+    },
+    "Ground_Station": {
+      "frozen_source_count": 155,
+      "new_source_count": 155,
+      "equal_count": 154,
+      "differences": [
+        {
+          "path": "Platform/Inc/platform_memory.h",
+          "frozen_sha256": "59b1c0aabd8e866e123dc45174166139f9ed079b175bd2959abd91e3b4485c97",
+          "new_sha256": "d60ad568042f904cbc4466d582fbe757570f0875adabd47b018a5eb648bb6b4d",
+          "change": "changed"
+        }
+      ]
+    }
+  }
+}

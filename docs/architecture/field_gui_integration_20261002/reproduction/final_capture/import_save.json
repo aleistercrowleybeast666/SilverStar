@@ -1,0 +1,9 @@
+{
+  "source": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\FCCG\\.work\\qall\\test_ground_ioc_import_updates0\\CubeMX_inputs",
+  "imported_uart": "USART1",
+  "save_enabled_after_import": true,
+  "saved_board": "local.board.ground.pixel",
+  "selected_board": "local.board.ground.pixel",
+  "same_interface_kept_binding": true,
+  "snapshot_id": "28e58524470f23d34796c75ef9711e47be0060986b7ca12472c13fe8211a3c79"
+}

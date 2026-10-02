@@ -1,0 +1,126 @@
+[
+  {
+    "file": "flp_unsaved_1920x1020.png",
+    "logical_size": [
+      1536,
+      816
+    ],
+    "pixel_size": [
+      1920,
+      1020
+    ],
+    "dpr": 1.25,
+    "fields": {
+      "title_label": [
+        14,
+        32,
+        206,
+        41
+      ],
+      "version_label": [
+        228,
+        32,
+        51,
+        41
+      ],
+      "credit_label": [
+        287,
+        32,
+        89,
+        41
+      ],
+      "project_caption_label": [
+        384,
+        32,
+        48,
+        41
+      ],
+      "project_name_label": [
+        440,
+        32,
+        682,
+        41
+      ],
+      "language_combo": [
+        1186,
+        37,
+        148,
+        31
+      ],
+      "theme_combo": [
+        1374,
+        37,
+        148,
+        31
+      ],
+      "navigation_list": [
+        0,
+        88,
+        190,
+        689
+      ]
+    }
+  },
+  {
+    "file": "flp_unsaved_1250x875.png",
+    "logical_size": [
+      1000,
+      700
+    ],
+    "pixel_size": [
+      1250,
+      875
+    ],
+    "dpr": 1.25,
+    "fields": {
+      "title_label": [
+        14,
+        32,
+        206,
+        41
+      ],
+      "version_label": [
+        228,
+        32,
+        51,
+        41
+      ],
+      "credit_label": [
+        287,
+        32,
+        89,
+        41
+      ],
+      "project_caption_label": [
+        384,
+        32,
+        48,
+        41
+      ],
+      "project_name_label": [
+        440,
+        32,
+        146,
+        41
+      ],
+      "language_combo": [
+        650,
+        37,
+        148,
+        31
+      ],
+      "theme_combo": [
+        838,
+        37,
+        148,
+        31
+      ],
+      "navigation_list": [
+        0,
+        88,
+        190,
+        569
+      ]
+    }
+  }
+]

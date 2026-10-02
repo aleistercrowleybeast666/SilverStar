@@ -1,0 +1,29 @@
+[
+  {
+    "name": "SCG_regression",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\apps\\FCCG\\.work\\qall",
+      "apps/FCCG/tests/test_field_blockers.py",
+      "apps/FCCG/tests/test_ground_board_recovery.py",
+      "apps/FCCG/tests/test_release_011_gui.py",
+      "apps/FCCG/tests/test_gui_workflow_20260930.py",
+      "apps/FCCG/tests/test_f103_ground_reference.py",
+      "apps/FCCG/tests/test_ground_pc_uart_dma.py",
+      "apps/FCCG/tests/test_ground_bridge_bounds.py",
+      "apps/FCCG/tests/test_ground_generated_gates.py",
+      "tests/integration/test_monorepo_baseline.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002",
+    "exit": 0,
+    "started": "2026-10-02T08:01:28.818541+00:00",
+    "finished": "2026-10-02T08:02:58.680880+00:00",
+    "log": "SCG_regression.log",
+    "sha256": "76fe39584159f3529f87d4eac8ffb76a7a1a5ee75ea17da83f2ab4ab42a38df2"
+  }
+]

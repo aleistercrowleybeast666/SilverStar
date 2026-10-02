@@ -1,0 +1,31 @@
+2026-10-02 15:52:06,287 INFO root: SilverStar SCG 0.1.1 started; log=D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\apps\FCCG\.fccg\logs\silverstar_fccg.log
+2026-10-02 15:52:06,287 CRITICAL root: Unhandled exception
+Traceback (most recent call last):
+  File "C:\Users\chdxm\Documents\Codex\2026-10-02\task-2\integration_entry_capture.py", line 46, in <module>
+    runpy.run_path(str(repo/(name+'.py')),run_name='__main__')
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\SCG.py", line 5, in <module>
+    raise SystemExit(Application_Start("SCG"))
+                     ~~~~~~~~~~~~~~~~~^^^^^^^
+  File "D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\tools\launch.py", line 15, in Application_Start
+    runpy.run_path(str(application_root / "main.py"), run_name="__main__")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\apps\FCCG\main.py", line 29, in <module>
+    raise SystemExit(Application_Main())
+                     ~~~~~~~~~~~~~~~~^^
+  File "D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\apps\FCCG\main.py", line 25, in Application_Main
+    return int(main(sys.argv[1:]))
+               ~~~~^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\apps\FCCG\src\silverstar_fccg\app\application.py", line 93, in main
+    return int(application.exec())
+               ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\Documents\Codex\2026-10-02\task-2\integration_entry_capture.py", line 42, in application_exec
+    return original_exec(self)
+TypeError: QApplication.exec() takes no arguments (1 given)
+2026-10-02 15:54:20,691 INFO root: SilverStar SCG 0.1.1 started; log=D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\apps\FCCG\.fccg\logs\silverstar_fccg.log

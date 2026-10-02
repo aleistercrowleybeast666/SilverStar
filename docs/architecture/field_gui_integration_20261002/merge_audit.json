@@ -1,0 +1,42 @@
+{
+  "combined_production_commit": "50e563e8e73861307d47fe00dd37ba51ee3022a9",
+  "merge_parents": [
+    "d4aa83aae760dfcbf332890a3c9a4c98bdfaa2ee",
+    "160cebbd103ade8f6e7a7989cbc32bcbd3d5cd41"
+  ],
+  "common_ancestor": "170f1cb55daedf8e8d308a7bc845b2fa5b79d102",
+  "text_conflicts": [],
+  "automatic_merge_files": [
+    "navigation_eskf_backend.c",
+    "estimator_task.c",
+    "test_estimator_preparation.c",
+    "check_firmware_artifact.ps1",
+    "generator/render.py",
+    "GSHC/ui/main_window.py"
+  ],
+  "rf_m9n_ground_payloads_identical_to_frozen_field": {
+    "apps/FCCG/plugins/builtin/silverstar_device_telemetry_sx1281": true,
+    "apps/FCCG/plugins/builtin/silverstar_device_gnss_neo_m9n": true,
+    "apps/FCCG/plugins/builtin/silverstar_core_ground_0_1_0": true
+  },
+  "excluded_branch_tip_is_ancestor": {
+    "feature/barometer-backup-20261002": false,
+    "feature/barometer-integration-20261002": false,
+    "feature/ground-multi-radio-20261002": false
+  },
+  "protected_worktrees": {
+    "D:/python_software/SilverStar": {
+      "head": "5c451551c6f55211c06f38fe33d0f06f3349edb6",
+      "status_short": ""
+    },
+    "D:/python_software/SilverStar/.work/FieldIntegration_20261002": {
+      "head": "160cebbd103ade8f6e7a7989cbc32bcbd3d5cd41",
+      "status_short": ""
+    },
+    "D:/python_software/SilverStar/.work/GuiFieldBlockers_20261002": {
+      "head": "d4aa83aae760dfcbf332890a3c9a4c98bdfaa2ee",
+      "status_short": ""
+    }
+  },
+  "version": "0.1.1"
+}

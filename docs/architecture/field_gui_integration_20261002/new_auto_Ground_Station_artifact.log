@@ -1,0 +1,313 @@
+D:/python_software/SilverStar/.venv/Scripts/python.exe Tools/check_ground.py artifact --prefix "arm-none-eabi-"
+PASS Ground declared source graph (38 sources), ownership and startup
+Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN
+COMMAND ["arm-none-eabi-readelf", "-h", "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground.elf"]
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x8005d29
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          52544 (bytes into file)
+  Flags:                             0x5000200, Version5 EABI, soft-float ABI
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         4
+  Size of section headers:           40 (bytes)
+  Number of section headers:         19
+  Section header string table index: 18
+COMMAND ["arm-none-eabi-nm", "-g", "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground.elf"]
+0800011c T __adddf3
+080008ac T __aeabi_d2uiz
+0800011c T __aeabi_dadd
+080006dc T __aeabi_ddiv
+08000488 T __aeabi_dmul
+08000110 T __aeabi_drsub
+08000118 T __aeabi_dsub
+080003d8 T __aeabi_f2d
+080003b4 T __aeabi_i2d
+0800091c W __aeabi_idiv0
+0800042c T __aeabi_l2d
+0800091c W __aeabi_ldiv0
+08000394 T __aeabi_ui2d
+0800041c T __aeabi_ul2d
+080008ec T __aeabi_uldivmod
+2000336c B __bss_end__
+20000010 B __bss_start__
+080006dc T __divdf3
+0800657c R __exidx_end
+08006574 R __exidx_start
+080003d8 T __extendsfdf2
+080008ac T __fixunsdfsi
+0800042c T __floatdidf
+080003b4 T __floatsidf
+0800041c T __floatundidf
+08000394 T __floatunsidf
+08005d84 T __libc_init_array
+08000488 T __muldf3
+08000118 T __subdf3
+2000000c D __TMC_END__
+08005de8 T __udivmoddi4
+2000336c B _ebss
+2000000c D _edata
+20005000 R _estack
+080060f4 T _etext
+080060e8 T _fini
+080060dc T _init
+00000000 A _Min_Heap_Size
+00000400 A _Min_Stack_Size
+20000010 B _sbss
+20000000 D _sdata
+08006584 A _sidata
+08005d70 W ADC1_2_IRQHandler
+080061f0 R AHBPrescTable
+080061e8 R APBPrescTable
+08002eba T BusFault_Handler
+08005d70 W CAN1_RX1_IRQHandler
+08005d70 W CAN1_SCE_IRQHandler
+08002ec0 T DebugMon_Handler
+08005d70 T Default_Handler
+08005d70 W DMA1_Channel1_IRQHandler
+08005d70 W DMA1_Channel2_IRQHandler
+08005d70 W DMA1_Channel3_IRQHandler
+08002ed0 T DMA1_Channel4_IRQHandler
+08002edc T DMA1_Channel5_IRQHandler
+08005d70 W DMA1_Channel6_IRQHandler
+08005d70 W DMA1_Channel7_IRQHandler
+20003370 B end
+08002db0 T Error_Handler
+08002ec8 T EXTI0_IRQHandler
+08005d70 W EXTI1_IRQHandler
+08005d70 W EXTI15_10_IRQHandler
+08005d70 W EXTI2_IRQHandler
+08005d70 W EXTI3_IRQHandler
+08005d70 W EXTI4_IRQHandler
+08005d70 W EXTI9_5_IRQHandler
+08005d70 W FLASH_IRQHandler
+08000000 R g_pfnVectors
+08004e74 T GpioRead
+08004fa4 T GpioWaitLow
+08004e68 T GpioWrite
+08000bc4 T GroundBridge_Init
+08000c3c T GroundBridge_Process
+08000e78 T GroundRadio_Init
+08000ea2 T GroundRadio_Process
+08000ec0 T GroundRadio_RxDequeue
+08000ede T GroundRadio_StatsGet
+08000ea8 T GroundRadio_TxEnqueue
+0800111c T GspMin_BuildAckFrame
+08001190 T GspMin_BuildAirRxFrame
+0800109c T GspMin_BuildFrame
+08001140 T GspMin_BuildGsStatusFrame
+08000f36 T GspMinParser_GetCrcErrorCount
+08000f1e T GspMinParser_Init
+08000f3c T GspMinParser_InputByte
+080012fc W HAL_Delay
+08001b94 T HAL_DMA_Abort
+08001bd4 T HAL_DMA_Abort_IT
+08001d88 T HAL_DMA_GetError
+08001abc T HAL_DMA_Init
+08001c60 T HAL_DMA_IRQHandler
+08001b1c T HAL_DMA_Start_IT
+080012f0 W HAL_GetTick
+08002baa T HAL_GPIO_EXTI_Callback
+08001aa4 T HAL_GPIO_EXTI_IRQHandler
+080018e4 T HAL_GPIO_Init
+08001a8c T HAL_GPIO_ReadPin
+08001a98 T HAL_GPIO_WritePin
+080012d8 W HAL_IncTick
+080012b4 T HAL_Init
+0800126c W HAL_InitTick
+08002e70 T HAL_MspInit
+080013a4 T HAL_NVIC_EnableIRQ
+08001344 T HAL_NVIC_SetPriority
+08001320 T HAL_NVIC_SetPriorityGrouping
+0800176c T HAL_RCC_ClockConfig
+080018a4 T HAL_RCC_GetPCLK1Freq
+080018c4 T HAL_RCC_GetPCLK2Freq
+08001720 T HAL_RCC_GetSysClockFreq
+080013e8 T HAL_RCC_OscConfig
+08002674 T HAL_SPI_Init
+08002dfc T HAL_SPI_MspInit
+08002724 T HAL_SPI_Transmit
+08002884 T HAL_SPI_TransmitReceive
+080013c0 T HAL_SYSTICK_Config
+08001f30 T HAL_UART_AbortReceive
+08005c1c T HAL_UART_ErrorCallback
+08001e5c T HAL_UART_Init
+08002200 T HAL_UART_IRQHandler
+08002f30 T HAL_UART_MspInit
+08002026 W HAL_UART_RxCpltCallback
+08002028 W HAL_UART_RxHalfCpltCallback
+08001ebc T HAL_UART_Transmit_DMA
+08005c04 T HAL_UART_TxCpltCallback
+0800201a W HAL_UART_TxHalfCpltCallback
+0800252c T HAL_UARTEx_ReceiveToIdle_DMA
+08005b40 T HAL_UARTEx_RxEventCallback
+08002eb6 T HardFault_Handler
+20000a14 B hdma_usart1_rx
+200009d0 B hdma_usart1_tx
+20000978 B hspi1
+20000a58 B huart1
+08005d70 W I2C1_ER_IRQHandler
+08005d70 W I2C1_EV_IRQHandler
+08005d70 W I2C2_ER_IRQHandler
+08005d70 W I2C2_EV_IRQHandler
+08003a98 T Lora_ApplyDefaultConfig
+08004d88 T Lora_GetStats
+08003b90 T Lora_Init
+08003e90 T Lora_Process
+08004c68 T Lora_RxDequeue
+08003b40 T Lora_ScheduleRoleSet
+08003cf8 T Lora_StartRx
+08003e18 T Lora_TxEnqueue
+08002d82 T main
+08005dcc T memcpy
+08002eb8 T MemManage_Handler
+08005d72 T memset
+08002bd8 T MX_DMA_Init
+08002c18 T MX_GPIO_Init
+08002db4 T MX_SPI1_Init
+08002ef8 T MX_USART1_UART_Init
+08002eb4 T NMI_Handler
+08005b00 T PcByteStream_Init
+08005c3c T PcByteStream_Read
+08005ca8 T PcByteStream_Write
+08002ec2 T PendSV_Handler
+0800125c T PlatformCritical_Enter
+08001264 T PlatformCritical_Exit
+08002b7c T PlatformGpio_IrqConsume
+08002b58 T PlatformGpio_Read
+08002b38 T PlatformGpio_Write
+08002ab0 T PlatformSpi_Transfer
+08002a7c T PlatformSpi_Write
+08005a94 T PlatformStm32f1Resource_GpioGet
+08005a80 T PlatformStm32f1Resource_SpiHandleGet
+08002bd4 T PlatformTime_DelayMs
+08002bd0 T PlatformTime_Ms
+08005a64 T ProjectSx1281Resources_Get
+08001200 T ProtocolCrc16_CcittFalse
+08005d70 W PVD_IRQHandler
+08005d70 W RCC_IRQHandler
+08005d28 W Reset_Handler
+08005d70 W RTC_Alarm_IRQHandler
+08005d70 W RTC_IRQHandler
+08005a00 T SilverStarAssert_Check
+080059d0 T SilverStarAssert_Fail
+08005a16 T SilverStarAssert_ObjectCheck
+08005d70 W SPI1_IRQHandler
+08005d70 W SPI2_IRQHandler
+08004e90 T SpiIn
+08004f08 T SpiInOut
+08002ebe T SVC_Handler
+080055aa T SX1280ClearIrqStatus
+08005050 T SX1280GetFirmwareVersion
+08005590 T SX1280GetIrqStatus
+08005360 T SX1280GetPacketStatus
+080050e8 T SX1280GetPacketType
+080055e4 T SX1280GetPayload
+08005540 T SX1280GetRssiInst
+080052f8 T SX1280GetRxBufferStatus
+08005070 T SX1280GetStatus
+08005734 T SX1280HalInit
+08005944 T SX1280HalReadBuffer
+080057a4 T SX1280HalReadCommand
+080058c4 T SX1280HalReadRegister
+08005830 T SX1280HalReadRegisters
+080056fa T SX1280HalReset
+080056e4 T SX1280HalWaitOnBusy
+080058e0 T SX1280HalWriteBuffer
+08005738 T SX1280HalWriteCommand
+0800504c T SX1280Init
+0800567c T SX1280SendPayload
+08005154 T SX1280SetBufferBaseAddresses
+08005562 T SX1280SetDioIrqParams
+08005170 T SX1280SetModulationParams
+08005210 T SX1280SetPacketParams
+080050c0 T SX1280SetPacketType
+080055da T SX1280SetPayload
+08005614 T SX1280SetRangingRole
+080055c2 T SX1280SetRegulatorMode
+080050f8 T SX1280SetRfFrequency
+08005694 T SX1280SetRx
+08005090 T SX1280SetStandby
+0800562c T SX1280SetTx
+08005138 T SX1280SetTxParams
+08004e38 T Sx1281Bus_BusyGet
+08004e50 T Sx1281Bus_Dio1Get
+08004df4 T Sx1281Bus_Init
+08004e08 T Sx1281Bus_NssGet
+08004e20 T Sx1281Bus_ResetGet
+08005034 T Sx1281Bus_StatusGet
+08002d24 T SystemClock_Config
+20000008 D SystemCoreClock
+08002ef4 T SystemInit
+08002ec4 T SysTick_Handler
+08005d70 W TAMPER_IRQHandler
+08005d70 W TIM1_BRK_IRQHandler
+08005d70 W TIM1_CC_IRQHandler
+08005d70 W TIM1_TRG_COM_IRQHandler
+08005d70 W TIM1_UP_IRQHandler
+08005d70 W TIM2_IRQHandler
+08005d70 W TIM3_IRQHandler
+08005d70 W TIM4_IRQHandler
+08002494 T UART_Start_Receive_DMA
+08002ebc T UsageFault_Handler
+08002ee8 T USART1_IRQHandler
+08005d70 W USART2_IRQHandler
+08005d70 W USART3_IRQHandler
+08005d70 W USB_HP_CAN1_TX_IRQHandler
+08005d70 W USB_LP_CAN1_RX0_IRQHandler
+08005d70 W USBWakeUp_IRQHandler
+200001f4 B uwTick
+20000000 D uwTickFreq
+20000004 D uwTickPrio
+08005d70 W WWDG_IRQHandler
+COMMAND ["arm-none-eabi-objdump", "-h", "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground.elf"]
+
+D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\.work\field_gui_new_auto\Ground_Station\build\ground.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   0000010c  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         00005fe4  08000110  08000110  00001110  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000480  080060f4  080060f4  000070f4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08006574  08006574  0000800c  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000008  08006574  08006574  00007574  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  5 .preinit_array 00000000  0800657c  0800657c  0000800c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  0800657c  0800657c  0000757c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  08006580  08006580  00007580  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000000c  20000000  08006584  00008000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000335c  20000010  08006590  00008010  2**3
+                  ALLOC
+ 10 ._user_heap_stack 00000404  2000336c  08006590  0000836c  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  0000800c  2**0
+                  CONTENTS, READONLY
+ 12 .comment      00000046  00000000  00000000  00008035  2**0
+                  CONTENTS, READONLY
+ 13 .debug_frame  000001f4  00000000  00000000  0000807c  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_line_str 000000de  00000000  00000000  00008270  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+COMMAND ["arm-none-eabi-objcopy", "-O", "binary", "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground.elf", "D:\\python_software\\SilverStar\\.work\\FieldGuiIntegration_20261002\\.work\\field_gui_new_auto\\Ground_Station\\build\\ground-artifact.bin"]
+SHA256 D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\.work\field_gui_new_auto\Ground_Station\build\ground.elf ffb4107628c97227f60cf172570f3b6dd9473343e59f7ada3d1e5c1ba3ecdfa1
+SHA256 D:\python_software\SilverStar\.work\FieldGuiIntegration_20261002\.work\field_gui_new_auto\Ground_Station\build\ground.bin 919a98ad8a8d37446cbcdc404f4d0ca2f73cfb3888ca857d1661f51f61ec152f
+PASS ARM ELF/BIN identity, declared memory bounds, required symbols and linked source graph
+Metadata version is configuration provenance; embedded product version NOT PROVEN
+Actual task/ISR stack margin, radio timing and hardware qualification: NOT PROVEN
