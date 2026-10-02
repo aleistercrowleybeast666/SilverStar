@@ -79,7 +79,7 @@ static void Test_ReinitializationFailure(void)
     TEST_CHECK(Lora_TxEnqueue(0U, &data, 1U) == LORA_TX_ENQUEUE_OK);
     Lora_Process(0U);
     TEST_CHECK(s_send_count == 0U);
-    s_tick_ms += 120U;
+    s_tick_ms += 122U; /* Maximum64-byte airtime ceil118ms plus4ms margin. */
     Lora_Process(0U);
     TEST_CHECK(s_send_count == 1U);
 }
@@ -154,6 +154,14 @@ static void Test_Corruption(const char *name)
     SilverStarAssertFaultRecord fault;
     volatile SilverStarAssertReasonId reason = SILVERSTAR_ASSERT_REASON_INDEX_RANGE;
     TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
+    if (strcmp(name, "air_sf") == 0) { s_contexts[0].mod_params.Params.LoRa.SpreadingFactor = (RadioLoRaSpreadingFactors_t)0xA1U; reason = SILVERSTAR_ASSERT_REASON_ENUM_RANGE; }
+    else if (strcmp(name, "air_bw") == 0) { s_contexts[0].mod_params.Params.LoRa.Bandwidth = (RadioLoRaBandwidths_t)0x19U; reason = SILVERSTAR_ASSERT_REASON_ENUM_RANGE; }
+    else if (strcmp(name, "air_cr") == 0) { s_contexts[0].mod_params.Params.LoRa.CodingRate = LORA_CR_LI_4_5; reason = SILVERSTAR_ASSERT_REASON_ENUM_RANGE; }
+    else if (strcmp(name, "air_crc") == 0) { s_contexts[0].pkt_params.Params.LoRa.CrcMode = (RadioLoRaCrcModes_t)0x10U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
+    else if (strcmp(name, "air_header") == 0) { s_contexts[0].pkt_params.Params.LoRa.HeaderType = (RadioLoRaPacketLengthsModes_t)0x01U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
+    else if (strcmp(name, "air_preamble") == 0) { s_contexts[0].pkt_params.Params.LoRa.PreambleLength = 0x19U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
+    else if (strcmp(name, "rx_hold") == 0) { s_contexts[0].rx_packet_active = 2U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
+    else if (strcmp(name, "schedule_role") == 0) { s_contexts[0].schedule_role = 2U; reason = SILVERSTAR_ASSERT_REASON_ENUM_RANGE; }
     if (strcmp(name, "tx_head") == 0) { s_contexts[0].tx_head = LORA_TX_QUEUE_DEPTH; }
     else if (strcmp(name, "tx_count") == 0) { s_contexts[0].tx_count = LORA_TX_QUEUE_DEPTH + 1U; reason = SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY; }
     else if (strcmp(name, "tx_control_count") == 0) { s_contexts[0].tx_control_count = 1U; reason = SILVERSTAR_ASSERT_REASON_STATE_INVARIANT; }
@@ -191,7 +199,10 @@ static void Test_Corruption(const char *name)
     memset(output, 0xCC, sizeof(output));
     if (setjmp(s_trap_return) == 0)
     {
-        if (strcmp(name, "tx_len") == 0) { Lora_TryStartNextTx(0U); }
+        if (strncmp(name, "air_", 4U) == 0) { (void)Lora_PacketAirtimeMs(0U, 64U); }
+        else if (strcmp(name, "rx_hold") == 0) { (void)Lora_RxPacketHeld(0U); }
+        else if (strcmp(name, "schedule_role") == 0) { (void)Lora_ScheduleRoleSet(0U, LoraScheduleRole_Ground); }
+        else if (strcmp(name, "tx_len") == 0) { Lora_TryStartNextTx(0U); }
         else if (strncmp(name, "tx_", 3U) == 0) { (void)Lora_TxEnqueue(0U, &byte, 1U); }
         else if (strcmp(name, "rx_tail") == 0 || strcmp(name, "rx_len") == 0 || strcmp(name, "rx_count") == 0 || strcmp(name, "rx_sequence") == 0) { (void)Lora_RxDequeue(0U, output, &len, NULL, NULL); }
         else if (strcmp(name, "rx_done_flag") == 0) { Lora_RxCompletionProcess(0U); }

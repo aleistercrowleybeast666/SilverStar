@@ -78,6 +78,9 @@ typedef struct
     uint8_t tx_control_count;
     uint8_t tx_control_burst;
     uint8_t rx_window_active;
+    uint8_t schedule_role;
+    uint8_t rx_packet_active;
+    uint32_t rx_packet_started_ms;
     uint32_t tx_ids[LORA_TX_QUEUE_DEPTH];
     uint32_t next_tx_id;
     uint32_t active_tx_id;
@@ -93,6 +96,7 @@ typedef struct
 _Static_assert((LORA_TX_NORMAL_QUEUE_DEPTH + LORA_TX_CONTROL_QUEUE_DEPTH) == LORA_TX_QUEUE_DEPTH,
     "TX lane capacities must fill the existing bounded queue");
 _Static_assert(LORA_TX_CONTROL_BURST_MAX > 0U, "control fairness burst must be positive");
+_Static_assert(LORA_TX_TIMEOUT_STEP == RADIO_TICK_SIZE_1000_US, "TX watchdog requires a1ms timeout step");
 static Sx1281Context s_contexts[PROJECT_SX1281_INSTANCE_COUNT];
 
 _Static_assert(PROJECT_SX1281_INSTANCE_COUNT <=
@@ -175,11 +179,18 @@ static void Lora_TxQueueAssert(uint8_t instance)
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     SILVERSTAR_ASSERT(s_tx_count <= LORA_TX_QUEUE_DEPTH,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    uint8_t normal_capacity = (s_contexts[instance].schedule_role == LoraScheduleRole_Ground) ?
+        LORA_TX_QUEUE_DEPTH : LORA_TX_NORMAL_QUEUE_DEPTH;
+    SILVERSTAR_ASSERT(s_contexts[instance].schedule_role <= LoraScheduleRole_Ground,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     SILVERSTAR_ASSERT((s_tx_control_count <= LORA_TX_CONTROL_QUEUE_DEPTH) &&
         (s_tx_control_count <= s_tx_count) &&
-        (((uint32_t)s_tx_count - (uint32_t)s_tx_control_count) <= LORA_TX_NORMAL_QUEUE_DEPTH) &&
+        (((uint32_t)s_tx_count - (uint32_t)s_tx_control_count) <= normal_capacity) &&
         (s_tx_control_burst <= LORA_TX_CONTROL_BURST_MAX),
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT((s_contexts[instance].schedule_role != LoraScheduleRole_Ground) ||
+        ((s_tx_control_count == 0U) && (s_tx_control_burst == 0U)),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
     SILVERSTAR_ASSERT(s_tx_head == (((uint32_t)s_tx_tail + s_tx_count) % LORA_TX_QUEUE_DEPTH),
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
 }
@@ -464,8 +475,11 @@ static uint8_t Lora_TxQueuePushClass(uint8_t instance, const uint8_t *data,
     if ((data == NULL) || (len == 0U) || (len > LORA_MAX_PAYLOAD_LEN)) { return 0U; }
     primask = Lora_IrqLock();
     Lora_TxQueueAssert(instance);
+    uint8_t normal_capacity = (s_contexts[instance].schedule_role == LoraScheduleRole_Ground) ?
+        LORA_TX_QUEUE_DEPTH : LORA_TX_NORMAL_QUEUE_DEPTH;
+    if (s_contexts[instance].schedule_role == LoraScheduleRole_Ground) { control = 0U; }
     if (((control != 0U) && (s_tx_control_count >= LORA_TX_CONTROL_QUEUE_DEPTH)) ||
-        ((control == 0U) && (((uint32_t)s_tx_count - (uint32_t)s_tx_control_count) >= LORA_TX_NORMAL_QUEUE_DEPTH)))
+        ((control == 0U) && (((uint32_t)s_tx_count - (uint32_t)s_tx_control_count) >= normal_capacity)))
     { Lora_IrqUnlock(primask); return 0U; }
     if (transaction_id != NULL)
     {
@@ -615,6 +629,122 @@ static uint8_t Lora_RxQueuePop(uint8_t instance, LoraRxPacket *pkt)
     return 1U;
 }
 
+/* Semtech Rev3.2 sections7.4.4.1/11.9.1: legacy CR, SF5..12.
+ * Quarter-symbol arithmetic keeps the 4.25/6.25 contribution exact. */
+static uint32_t Lora_PacketAirtimeMs(uint8_t instance, uint8_t length)
+{
+    uint32_t bandwidth = 0U;
+    uint32_t sf = (uint32_t)s_mod_params.Params.LoRa.SpreadingFactor >> 4U;
+    uint32_t cr = (uint32_t)s_mod_params.Params.LoRa.CodingRate;
+    uint32_t preamble = (uint32_t)(s_pkt_params.Params.LoRa.PreambleLength & 0x0FU) <<
+        ((uint32_t)s_pkt_params.Params.LoRa.PreambleLength >> 4U);
+    SILVERSTAR_ASSERT((sf >= 5U) && (sf <= 12U) &&
+        ((uint32_t)s_mod_params.Params.LoRa.SpreadingFactor == (sf << 4U)) &&
+        (cr >= 1U) && (cr <= 4U),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT((s_mod_params.PacketType == PACKET_TYPE_LORA) &&
+        (s_pkt_params.PacketType == PACKET_TYPE_LORA) &&
+        ((s_pkt_params.Params.LoRa.HeaderType == LORA_PACKET_VARIABLE_LENGTH) ||
+         (s_pkt_params.Params.LoRa.HeaderType == LORA_PACKET_FIXED_LENGTH)) &&
+        ((s_pkt_params.Params.LoRa.CrcMode == LORA_CRC_ON) || (s_pkt_params.Params.LoRa.CrcMode == LORA_CRC_OFF)) &&
+        (preamble == LORA_CFG_PREAMBLE_SYMBOLS),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT((length > 0U) && (length <= LORA_MAX_PAYLOAD_LEN),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    switch (s_mod_params.Params.LoRa.Bandwidth)
+    {
+        case LORA_BW_0200: bandwidth = 203125U; break;
+        case LORA_BW_0400: bandwidth = 406250U; break;
+        case LORA_BW_0800: bandwidth = 812500U; break;
+        case LORA_BW_1600: bandwidth = 1625000U; break;
+        default: break;
+    }
+    SILVERSTAR_ASSERT(bandwidth != 0U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    int32_t bits = (int32_t)(8U * length) - (int32_t)(4U * sf);
+    if (s_pkt_params.Params.LoRa.CrcMode == LORA_CRC_ON) { bits += 16; }
+    if (s_pkt_params.Params.LoRa.HeaderType == LORA_PACKET_VARIABLE_LENGTH) { bits += 20; }
+    if (sf >= 7U) { bits += 8; }
+    uint32_t denominator = 4U * ((sf > 10U) ? (sf - 2U) : sf);
+    uint32_t blocks = (bits > 0) ? ((uint32_t)bits + denominator - 1U) / denominator : 0U;
+    uint32_t quarter_symbols = 4U * (preamble + 8U + blocks * (cr + 4U)) +
+        ((sf < 7U) ? 25U : 17U);
+    uint64_t numerator = (uint64_t)quarter_symbols * (1UL << sf) * 1000ULL;
+    return (uint32_t)((numerator + (uint64_t)4U * bandwidth - 1U) / ((uint64_t)4U * bandwidth));
+}
+
+static uint32_t Lora_RxGrantMs(uint8_t instance)
+{
+    uint32_t minimum = Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS;
+    return (minimum > LORA_RX_DWELL_MS) ? minimum : LORA_RX_DWELL_MS;
+}
+
+static uint32_t Lora_RxListenMs(uint8_t instance)
+{
+    uint32_t grant = Lora_RxGrantMs(instance);
+    if (s_contexts[instance].schedule_role == LoraScheduleRole_Ground)
+    { grant += Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS; }
+    return grant;
+}
+
+/* No peer/late arrival recovery has a finite bound. A received packet grants
+ * Ground an early slot; never begin a packet that overruns Flight's RX grant. */
+static uint8_t Lora_TxTurnAvailable(uint8_t instance)
+{
+    if (s_contexts[instance].rx_window_active == 0U) { return 0U; }
+    uint32_t elapsed = PlatformTime_Ms() - s_rx_started_ms;
+    uint32_t grant = Lora_RxGrantMs(instance);
+    if (s_contexts[instance].schedule_role == LoraScheduleRole_Flight)
+    { return (uint8_t)(elapsed >= grant); }
+    uint32_t recovery = Lora_RxListenMs(instance);
+    if (elapsed >= recovery) { return 1U; }
+    if (s_contexts[instance].rx_window_active != 2U) { return 0U; }
+    uint32_t primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance);
+    uint8_t length = (s_tx_count != 0U) ? s_tx_queue[s_tx_tail].len : 0U;
+    Lora_IrqUnlock(primask);
+    if (length == 0U) { return 0U; }
+    return (uint8_t)((elapsed + Lora_PacketAirtimeMs(instance, length) + LORA_RX_TURN_MARGIN_MS) <= grant);
+}
+
+/* First detection owns the immutable deadline. Late/repeated indications
+ * cannot prolong a lost-completion/noise hold. Expiry discards the stale RX
+ * in the ordinary timeout path, before any queued payload is transmitted. */
+static uint8_t Lora_RxPacketHeld(uint8_t instance)
+{
+    SILVERSTAR_ASSERT(s_contexts[instance].rx_packet_active <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (s_contexts[instance].rx_packet_active == 0U) { return 0U; }
+    uint32_t bound = Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS;
+    if ((uint32_t)(PlatformTime_Ms() - s_contexts[instance].rx_packet_started_ms) < bound)
+    { return 1U; }
+    SX1280SetStandby(instance, STDBY_RC);
+    SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
+    s_contexts[instance].rx_packet_active = 0U;
+    s_radio_in_rx = 0U;
+    Lora_StatsIncrement(&s_stats.rx_timeout);
+    return 0U;
+}
+
+/* Hardware timed RX protects the pre-detection gap too. Only a completed
+ * RX/timeout, verified standby, or the fixed lost-IRQ watchdog allows TX. */
+static uint8_t Lora_RxIdleForTx(uint8_t instance)
+{
+    if (s_radio_in_rx == 0U) { return 1U; }
+    RadioStatus_t status = SX1280GetStatus(instance);
+    if ((status.Fields.ChipMode == 2U) || (status.Fields.ChipMode == 3U))
+    { s_radio_in_rx = 0U; return 1U; }
+    uint32_t bound = Lora_RxListenMs(instance) +
+        Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS;
+    if ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) < bound) { return 0U; }
+    SX1280SetStandby(instance, STDBY_RC);
+    SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
+    s_radio_in_rx = 0U;
+    s_contexts[instance].rx_packet_active = 0U;
+    Lora_StatsIncrement(&s_stats.rx_timeout);
+    return 1U;
+}
+
 static void Lora_TryStartNextTx(uint8_t instance)
 {
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
@@ -666,6 +796,20 @@ LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance)
     return ((after.spi_error_count != before.spi_error_count) ||
             (after.busy_timeout_count != before.busy_timeout_count)) ?
         LORA_CONFIG_PORT_ERROR : LORA_CONFIG_OK;
+}
+
+LoraScheduleRoleResult Lora_ScheduleRoleSet(uint8_t instance, LoraScheduleRole role)
+{
+    if ((instance >= PROJECT_SX1281_INSTANCE_COUNT) ||
+        ((role != LoraScheduleRole_Flight) && (role != LoraScheduleRole_Ground)))
+    { return LoraScheduleRoleResult_InvalidArgument; }
+    uint32_t primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance);
+    if ((s_inited == 0U) || (s_tx_busy != 0U) || (s_tx_count != 0U) || (s_radio_in_rx != 0U))
+    { Lora_IrqUnlock(primask); return LoraScheduleRoleResult_NotReady; }
+    s_contexts[instance].schedule_role = (uint8_t)role;
+    Lora_IrqUnlock(primask);
+    return LoraScheduleRoleResult_Ok;
 }
 
 LoraInitResult Lora_Init(uint8_t instance)
@@ -725,15 +869,25 @@ void Lora_StartRx(uint8_t instance)
     SILVERSTAR_ASSERT(s_pkt_params.PacketType == PACKET_TYPE_LORA,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
 
+    uint32_t now = PlatformTime_Ms();
+    if (s_contexts[instance].rx_window_active == 0U)
+    { s_rx_started_ms = now; s_contexts[instance].rx_window_active = 1U; }
+    uint32_t listen = Lora_RxListenMs(instance);
+    uint32_t elapsed = now - s_rx_started_ms;
+    if ((elapsed >= listen) && (s_tx_count == 0U))
+    { s_rx_started_ms = now; elapsed = 0U; s_contexts[instance].rx_window_active = 1U; }
+    uint32_t remaining = (elapsed < listen) ? (listen - elapsed) : 1U;
+    SILVERSTAR_ASSERT(remaining < UINT16_MAX,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
     s_pkt_params.Params.LoRa.PayloadLength = LORA_MAX_PAYLOAD_LEN;
     SX1280SetPacketParams(instance, &s_pkt_params);
     Lora_DiagSetDioIrqParams(instance, LORA_RX_IRQ_MASK, LORA_RX_IRQ_MASK, IRQ_RADIO_NONE, IRQ_RADIO_NONE);
-    SX1280SetRx(instance, RX_TX_CONTINUOUS);
+    /* Hardware disables this timer when it detects a packet, finishing the
+     * packet before RX_DONE. Software must observe RX completion or idle. */
+    SX1280SetRx(instance, (TickTime_t){RADIO_TICK_SIZE_1000_US, (uint16_t)remaining});
     Lora_DiagRecordSetRx(instance);
 
     s_radio_in_rx = 1U;
-    if (s_contexts[instance].rx_window_active == 0U)
-    { s_rx_started_ms = PlatformTime_Ms(); s_contexts[instance].rx_window_active = 1U; }
     if (s_tx_busy != 0)
     {
         Lora_SetRadioState(instance, LORA_RADIO_STATE_TX);
@@ -844,6 +998,13 @@ static void Lora_IrqProcess(uint8_t instance, uint16_t raw_irq)
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     SILVERSTAR_ASSERT(s_tx_busy <= 1U,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (((raw_irq & (IRQ_PREAMBLE_DETECTED | IRQ_HEADER_VALID)) != 0U) &&
+        (s_tx_busy == 0U) && (s_radio_in_rx != 0U) &&
+        (s_contexts[instance].rx_packet_active == 0U))
+    {
+        s_contexts[instance].rx_packet_started_ms = PlatformTime_Ms();
+        s_contexts[instance].rx_packet_active = 1U;
+    }
     if ((raw_irq & IRQ_TX_DONE) != 0U)
     {
         Lora_OnTxDone(instance);
@@ -894,7 +1055,7 @@ static void Lora_RawIrqProcess(uint8_t instance)
     uint32_t primask;
 
     if ((PlatformGpio_IrqConsume(Sx1281Bus_Dio1Get(instance)) != 0U) ||
-        (s_tx_busy != 0U))
+        (s_tx_busy != 0U) || (s_radio_in_rx != 0U))
     {
         raw_irq = SX1280GetIrqStatus(instance);
     }
@@ -1006,6 +1167,11 @@ static void Lora_RxCompletionProcess(uint8_t instance)
         SILVERSTAR_ASSERT(size <= LORA_MAX_PAYLOAD_LEN,
             SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
         SX1280GetPacketStatus(instance, &s_pkt_status);
+        if (s_contexts[instance].schedule_role == LoraScheduleRole_Ground)
+        {
+            s_rx_started_ms = PlatformTime_Ms();
+            s_contexts[instance].rx_window_active = 2U;
+        }
         rssi = s_pkt_status.Params.LoRa.RssiPkt;
         snr = s_pkt_status.Params.LoRa.SnrPkt;
         Lora_LastRxRecord(instance, size, rssi, snr);
@@ -1057,7 +1223,9 @@ void Lora_Process(uint8_t instance)
 {
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
-    SILVERSTAR_ASSERT((s_inited <= 1U) && (s_contexts[instance].rx_window_active <= 1U),
+    SILVERSTAR_ASSERT((s_inited <= 1U) && (s_contexts[instance].rx_window_active <= 2U) &&
+        ((s_contexts[instance].rx_window_active != 2U) ||
+         (s_contexts[instance].schedule_role == LoraScheduleRole_Ground)),
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_inited == 0)
     {
@@ -1066,22 +1234,38 @@ void Lora_Process(uint8_t instance)
 
     Lora_ControlProcess(instance);
     Lora_RawIrqProcess(instance);
+    if ((s_tx_busy != 0U) && (s_tx_done_flag == 0U) && (s_tx_timeout_flag == 0U) &&
+        ((uint32_t)(PlatformTime_Ms() - s_diag.last_settx_ms) >=
+         ((uint32_t)LORA_TX_TIMEOUT_COUNT + LORA_RX_TURN_MARGIN_MS)))
+    {
+        /* Timeout step is fixed at1ms; recover a lost completion IRQ without
+         * publishing a successful tracked receipt. */
+        SX1280SetStandby(instance, STDBY_RC);
+        SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
+        Lora_OnTxTimeout(instance);
+    }
     Lora_DiagnosticsRefresh(instance);
     Lora_TxCompletionProcess(instance);
     Lora_RxCompletionProcess(instance);
     Lora_RxErrorProcess(instance);
     if (s_tx_busy == 0)
     {
+        if (Lora_RxPacketHeld(instance) != 0U) { return; }
+        if ((s_tx_count != 0U) && (Lora_TxTurnAvailable(instance) != 0U) &&
+            (Lora_RxIdleForTx(instance) != 0U))
+        { Lora_TryStartNextTx(instance); return; }
         if (s_radio_in_rx == 0)
         {
+            /* Peer just finished its packet and grants Ground the channel.
+             * Stay in standby during the early uplink slot rather than
+             * starting RX and forcibly cutting an unseen preamble. */
+            if ((s_contexts[instance].schedule_role == LoraScheduleRole_Ground) &&
+                (s_contexts[instance].rx_window_active == 2U) &&
+                ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) <
+                 (Lora_RxGrantMs(instance) - LORA_RX_TURN_MARGIN_MS)))
+            { return; }
             Lora_StartRx(instance);
         }
-        /* Restart RX after an RX event without resetting its granted window.
-         * A continuous RX stream therefore cannot defer TX forever. A new
-         * 120-ms receive opportunity follows every transmission. */
-        if ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) < LORA_RX_DWELL_MS)
-        { return; }
-        Lora_TryStartNextTx(instance);
     }
 }
 
@@ -1221,6 +1405,8 @@ static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
     s_rx_error_flag = 0U;
     s_tx_busy = 0U;
     s_radio_in_rx = 0U;
+    s_contexts[instance].rx_packet_active = 0U;
+    s_contexts[instance].rx_window_active = 1U;
     Lora_IrqUnlock(primask);
 
     s_pkt_params.Params.LoRa.PayloadLength = LORA_MAX_PAYLOAD_LEN;
@@ -1481,6 +1667,7 @@ static void Lora_OnTxDone(uint8_t instance)
 
 static void Lora_OnRxDone(uint8_t instance)
 {
+    s_contexts[instance].rx_packet_active = 0U;
     Lora_StatsIncrement(&s_stats.rx_irq_count);
     s_rx_done_flag = 1U;
     s_radio_in_rx = 0U;
@@ -1495,6 +1682,7 @@ static void Lora_OnTxTimeout(uint8_t instance)
 
 static void Lora_OnRxTimeout(uint8_t instance)
 {
+    s_contexts[instance].rx_packet_active = 0U;
     Lora_StatsIncrement(&s_stats.rx_timeout_irq_count);
     s_rx_timeout_flag = 1U;
     s_radio_in_rx = 0U;
@@ -1502,6 +1690,7 @@ static void Lora_OnRxTimeout(uint8_t instance)
 
 static void Lora_OnRxError(uint8_t instance, IrqErrorCode_t errCode)
 {
+    s_contexts[instance].rx_packet_active = 0U;
     Lora_StatsIncrement(&s_stats.rx_error_irq_count);
     s_rx_error_code = errCode;
     s_rx_error_flag = 1U;

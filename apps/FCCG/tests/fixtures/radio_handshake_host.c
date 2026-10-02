@@ -89,12 +89,12 @@ static void Test_AckBacklog(void)
     Radio_Init();
     for (index = 0U; index < 8U; index++)
     { frame[1] = index; (void)SystemTelemetry_Send(frame, sizeof(frame)); }
-    Radio_Clock(120U); Lora_Process(0U); /* One normal frame is already in flight. */
-    Radio_Clock(121U);
+    Radio_Clock(122U); Lora_Process(0U); /* ceil117.524ms maximum packet plus4ms margin. */
+    Radio_Clock(123U);
     Radio_Command(200U, AIR_CMD_PING, 0U, 0U);
     TelemetryService_Process();
     Radio_Complete(194U);
-    Radio_Clock(314U); TelemetryService_Process();
+    Radio_Clock(316U); TelemetryService_Process();
     TEST_CHECK(s_over_air_count >= 2U);
     printf("ACK_BACKLOG first=%02x second=%02x queue_count=%u\n",
         s_over_air[0].data[0], s_over_air[1].data[0], s_contexts[0].tx_count);
@@ -109,7 +109,7 @@ static void Test_CapabilityQueuedSupersedes(void)
     Radio_Init();
     /* Finite startup statuses precede the initial Capability. */
     for (unsigned int i = 0U; i < 5U; i++) { TelemetryService_Process(); }
-    for (uint32_t now = 120U; now < 1000U; now += 194U)
+    for (uint32_t now = 122U; now < 1000U; now += 196U)
     { Radio_Clock(now); TelemetryService_Process(); Radio_Complete(now + 74U); }
     first = 0U;
     for (uint8_t i = 0U; i < s_over_air_count; i++)
@@ -185,7 +185,7 @@ static void Test_AckFullRetry(void)
     TEST_CHECK(s_ack_tail != ack_tail);
     for (uint8_t i = 0U; i < 5U; i++) { TEST_CHECK(Lora_TxQueuePop(0U, &packet) != 0U); }
     /* Send through the actual hardware port, rather than merely inspecting a queue. */
-    Radio_Clock(120U); Lora_Process(0U);
+    Radio_Clock(122U); Lora_Process(0U);
     TEST_CHECK(s_over_air_count == 1U);
     TEST_CHECK(s_over_air[0].data[0] == AIR_TYPE_ACK);
     TEST_CHECK(s_over_air[0].data[2] == 200U);
@@ -199,13 +199,13 @@ static void Test_RxContinuousFairness(void)
     { Radio_Clock(ms); s_raw_irq = IRQ_RX_DONE; s_dio1_pending = 1U; Lora_Process(0U); TEST_CHECK(s_over_air_count == 0U); }
     Radio_Clock(119U); s_raw_irq = IRQ_CRC_ERROR; s_dio1_pending = 1U; Lora_Process(0U);
     TEST_CHECK(s_over_air_count == 0U);
-    Radio_Clock(120U); s_raw_irq = IRQ_HEADER_ERROR; s_dio1_pending = 1U; Lora_Process(0U);
+    Radio_Clock(122U); s_raw_irq = IRQ_HEADER_ERROR; s_dio1_pending = 1U; Lora_Process(0U);
     TEST_CHECK(s_over_air_count == 1U);
     TEST_CHECK(s_contexts[0].stats.rx_ok == 3U);
     Radio_Complete(194U);
     TEST_CHECK(SystemTelemetry_SendControl(&data, 1U, NULL) == SYSTEM_DEVICE_OK);
     Radio_Clock(313U); Lora_Process(0U); TEST_CHECK(s_over_air_count == 1U);
-    Radio_Clock(314U); Lora_Process(0U); TEST_CHECK(s_over_air_count == 2U);
+    Radio_Clock(316U); Lora_Process(0U); TEST_CHECK(s_over_air_count == 2U);
     s_host_receive_enabled = 0U;
 }
 static void Test_TokenWrap(void)
@@ -258,7 +258,7 @@ static void Test_CapSequenceWrap(void)
     Radio_Init();
     Radio_CapStart(255U, 0U);
     TEST_CHECK(TelemetryService_CapabilityAdvertised(255U, &sent_us) == 0U);
-    Radio_Clock(120U); Lora_Process(0U); Radio_Complete(194U); TelemetryService_CapabilityTxPoll();
+    Radio_Clock(122U); Lora_Process(0U); Radio_Complete(194U); TelemetryService_CapabilityTxPoll();
     TEST_CHECK(TelemetryService_CapabilityAdvertised(255U, &sent_us) != 0U);
     TEST_CHECK(sent_us == 194000ULL);
     Radio_CapStart(0U, 300U);
@@ -291,18 +291,18 @@ static void Test_CapSequenceWrap(void)
     TEST_CHECK(s_capability_state == TELEMETRY_CAPABILITY_NOT_ACKED);
     Radio_Clock(4800U); Lora_Process(0U); Radio_Complete(4874U); TelemetryService_CapabilityTxPoll();
     TEST_CHECK(TelemetryService_CapabilityAdvertised(255U, &sent_us) == 0U);
-    Radio_Clock(4994U); Lora_Process(0U); Radio_Complete(5068U); TelemetryService_CapabilityTxPoll();
+    Radio_Clock(4996U); Lora_Process(0U); Radio_Complete(5070U); TelemetryService_CapabilityTxPoll();
     TEST_CHECK(TelemetryService_CapabilityAdvertised(255U, &sent_us) != 0U);
-    TEST_CHECK(sent_us == 5068000ULL);
+    TEST_CHECK(sent_us == 5070000ULL);
 }
 static void Test_CapTxTimeout(void)
 {
     uint32_t id, age;
     uint64_t sent_us;
     Radio_Init(); Radio_CapStart(42U, 0U); id = s_capability_tx.pending_id;
-    Radio_Clock(120U); Lora_Process(0U);
+    Radio_Clock(122U); Lora_Process(0U);
     TEST_CHECK(SystemTelemetry_TxResultGet(id, &age) == SYSTEM_DEVICE_BUSY);
-    Radio_Clock(920U); s_raw_irq = IRQ_RX_TX_TIMEOUT; s_dio1_pending = 1U; Lora_Process(0U);
+    Radio_Clock(922U); s_raw_irq = IRQ_RX_TX_TIMEOUT; s_dio1_pending = 1U; Lora_Process(0U);
     TEST_CHECK(SystemTelemetry_TxResultGet(id, &age) == SYSTEM_DEVICE_TIMEOUT);
     TelemetryService_CapabilityTxPoll();
     TEST_CHECK(s_capability_tx.pending_id == 0U);
@@ -321,7 +321,7 @@ static void Test_MixedTokenFairness(void)
     { TEST_CHECK(SystemTelemetry_SendControl(&i, 1U, &ids[i]) == SYSTEM_DEVICE_OK); }
     for (uint8_t i = 0U; i < 8U; i++)
     {
-        Radio_Clock(120U + (uint32_t)i * 194U); Lora_Process(0U);
+        Radio_Clock(122U + (uint32_t)i * 194U); Lora_Process(0U);
         TEST_CHECK(s_over_air_count == (uint8_t)(i + 1U));
         if (order[i] == 255U)
         { TEST_CHECK(s_over_air[i].data[0] == 90U); TEST_CHECK(s_contexts[0].active_tx_id == 0U); }
@@ -334,7 +334,7 @@ static void Test_CapLongExpiry(void)
 {
     uint64_t sent_us;
     Radio_Init(); Radio_CapStart(250U, 0U);
-    Radio_Clock(120U); Lora_Process(0U); Radio_Complete(194U); TelemetryService_CapabilityTxPoll();
+    Radio_Clock(122U); Lora_Process(0U); Radio_Complete(194U); TelemetryService_CapabilityTxPoll();
     Radio_Clock(194U); s_now_us = (0x100000000ULL + 194ULL) * 1000ULL;
     TEST_CHECK(TelemetryService_CapabilityAdvertised(250U, &sent_us) == 0U);
 }
@@ -343,7 +343,7 @@ static void Test_CapPendingLongExpiry(void)
     uint64_t sent_us;
     uint32_t id, age;
     Radio_Init(); Radio_CapStart(42U, 0U); id = s_capability_tx.pending_id;
-    Radio_Clock(120U); Lora_Process(0U); Radio_Complete(194U);
+    Radio_Clock(122U); Lora_Process(0U); Radio_Complete(194U);
     Radio_Clock(194U); s_now_us = (0x100000000ULL + 194ULL) * 1000ULL;
     /* Its 32-bit receipt age aliases to zero; the 64-bit pending lifetime wins. */
     TEST_CHECK(SystemTelemetry_TxResultGet(id, &age) == SYSTEM_DEVICE_OK);
@@ -369,7 +369,7 @@ static void Test_CapReconnectAndCache(void)
     uint64_t sent_us;
     AirCmdPayload command = {0};
     Radio_Init(); Radio_CapStart(10U, 0U);
-    Radio_Clock(120U); Lora_Process(0U); Radio_Complete(194U); TelemetryService_CapabilityTxPoll();
+    Radio_Clock(122U); Lora_Process(0U); Radio_Complete(194U); TelemetryService_CapabilityTxPoll();
     command.seq = 100U; command.cmd_id = AIR_CMD_CAPABILITY_ACK;
     command.param0 = 10U; command.param1 = AIR_PROFILE_ID_CURRENT;
     TelemetryService_CapabilityCommand(&command);

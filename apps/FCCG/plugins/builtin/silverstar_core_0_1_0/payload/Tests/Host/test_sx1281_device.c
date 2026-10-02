@@ -28,7 +28,7 @@ RadioStatus_t SX1280GetStatus(uint8_t instance)
     RadioStatus_t status;
 
     (void)instance;
-    status.Value = 0x20U;
+    status.Value = 0x40U; /* ChipMode2: standby, not the reserved mode1. */
     return status;
 }
 
@@ -297,7 +297,7 @@ static void Test_ContinuousTxLoadPreservesRx(void)
     before = s_host_send_count;
     Lora_Process();
     TEST_CHECK(s_host_send_count == before);
-    s_tick_ms += 120U;
+    s_tick_ms += 122U; /* 64-byte airtime ceil118ms plus4ms turn margin. */
     Lora_Process();
     TEST_CHECK(s_host_send_count == before + 1U);
     s_host_receive_enabled = 1U;

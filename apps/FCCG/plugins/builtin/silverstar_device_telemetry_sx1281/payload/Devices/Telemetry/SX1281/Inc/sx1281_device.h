@@ -179,6 +179,20 @@ typedef struct
     int16_t rssi_inst;
 } LoraDiagSnapshot;
 
+typedef enum
+{
+    LoraScheduleRole_Flight = 0U,
+    LoraScheduleRole_Ground
+} LoraScheduleRole;
+typedef enum
+{
+    LoraScheduleRoleResult_Ok = 0U,
+    LoraScheduleRoleResult_InvalidArgument,
+    LoraScheduleRoleResult_NotReady
+} LoraScheduleRoleResult;
+/* Bootstrap only, before RX or enqueue. Default is Flight. Ground remains an
+ * opaque eight-frame FIFO and initiates within a received peer's RX grant. */
+LoraScheduleRoleResult Lora_ScheduleRoleSet(uint8_t instance, LoraScheduleRole role);
 LoraInitResult Lora_Init(uint8_t instance);
 /* Bootstrap or Transport-owner context only. */
 LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance);
