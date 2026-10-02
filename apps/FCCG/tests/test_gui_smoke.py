@@ -407,7 +407,7 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             window.devices_page.device_combos["telemetry0"]
         )
         assert isinstance(telemetry_label, QLabel)
-        assert telemetry_label.text() == "遥测"
+        assert telemetry_label.text() == "遥测 0"
         assert "silverstar.device.console.uart" not in (
             window.devices_page.device_checks
         )

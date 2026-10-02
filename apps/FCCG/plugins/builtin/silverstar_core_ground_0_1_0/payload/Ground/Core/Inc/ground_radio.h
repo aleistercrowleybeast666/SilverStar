@@ -25,6 +25,8 @@ typedef struct
 
 GroundRadioResult GroundRadio_Init(void);
 void GroundRadio_Process(void);
+/* Runtime index only; this adds no GSP wire field. */
+uint8_t GroundRadio_ActiveInstanceGet(void);
 GroundRadioResult GroundRadio_TxEnqueue(const uint8_t *data, uint8_t length);
 GroundRadioResult GroundRadio_RxDequeue(
     uint8_t *data, uint8_t *length, int8_t *rssi_dbm, int8_t *snr_db);

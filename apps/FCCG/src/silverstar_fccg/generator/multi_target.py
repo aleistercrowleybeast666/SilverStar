@@ -12,6 +12,7 @@ from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.assembler import GenerationProgressCallback, ProjectAssembler
 from silverstar_fccg.generator.ground_environment import GroundEnvironmentFiles_Render
 from silverstar_fccg.generator.eide_ownership import EideOwnedFields_Merge, EideOwnedFields_Normalize
+from silverstar_fccg.generator.ground_radio import GroundRadioConfig_Render, GroundRadioAirHeader_Render
 from silverstar_fccg.generator.render import (
     AirLinkHeader_Render,
     _InstanceResourcesSource_Render,
@@ -31,6 +32,7 @@ from silverstar_fccg.project.model import (
     DeviceInstance,
     ProjectModel,
     ProjectModel_Load,
+    GroundRadioConfigurations_Get,
 )
 
 GROUND_CORE_ID = "silverstar.core.ground.0_1_0"
@@ -71,7 +73,8 @@ def _GroundModel_Get(model: ProjectModel, catalog: PluginCatalog) -> ProjectMode
     return replace(
         model, core=GROUND_CORE_ID, mcu_family=mcu_family,
         mcu=ground.mcu, board=ground.board, os="",
-        device_instances=[DeviceInstance("radio0", ground.radio_plugin)],
+        device_instances=[DeviceInstance(radio.instance_id, radio.plugin)
+                          for radio in GroundRadioConfigurations_Get(ground)],
         base_components=[], strategies={}, modes={}, protocols={
             "telemetry": None, "maintenance": None, "logging": None,
         }, development_environment="", hardware=ground.hardware,
@@ -402,6 +405,7 @@ def GroundFiles_Render(
         raise ValueError("; ".join(f"{issue.code}: {issue.message}" for issue in issues))
     ground = model.ground_target
     ground_model = _GroundModel_Get(model, catalog)
+    catalog = catalog.ProjectView_Get(ground_model)
     core = catalog.Component_Get(GROUND_CORE_ID)
     radio = catalog.Component_Get(ground.radio_plugin)
     mcu = catalog.Component_Get(ground.mcu)
@@ -460,7 +464,9 @@ def GroundFiles_Render(
     files["Generated/Src/platform_resources.c"] = _PlatformResources_Render(
         ground_model, catalog
     ).encode("utf-8")
-    files["Generated/Inc/air_link_config.h"] = AirLinkHeader_Render(model, target="ground").encode("utf-8")
+    files["Generated/Inc/ground_radio_config.h"] = GroundRadioConfig_Render(ground).encode("utf-8")
+    files["Generated/Inc/air_link_config.h"] = GroundRadioAirHeader_Render(
+        ground, AirLinkHeader_Render(model, target="ground")).encode("utf-8")
     files["Generated/Src/pc_byte_stream.c"] = _PcAdapter_Render(model, family).encode("utf-8")
 
     base_graph = SourceGraph_Resolve(ground_model, catalog)

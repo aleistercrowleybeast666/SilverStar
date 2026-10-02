@@ -35,7 +35,7 @@ def radio_contract_executable(tmp_path_factory):
 
 
 @pytest.mark.parametrize("scenario", [
-    "reinit", "normal", "instance", "tx_head", "tx_count", "tx_sequence",
+    "reinit", "normal", "deactivate", "instance", "tx_head", "tx_count", "tx_sequence",
     "tx_len", "rx_tail", "rx_len", "control_op", "control_id", "control_time",
     "control_state", "control_active_init", "flags", "packet_type", "rx_error",
     "radio_state", "tx_control_count", "tx_control_burst", "rx_window",

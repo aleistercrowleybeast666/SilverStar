@@ -104,12 +104,14 @@ from silverstar_fccg.project.logging import (
 )
 from silverstar_fccg.project.model import (
     DeviceInstance,
+    GroundRadioConfigurations_Get,
     HardwareConfiguration,
     HardwareResource,
     LogStreamConfig,
     ProjectModel,
     ProtocolSelection,
 )
+from silverstar_fccg.project.ground_radios import GroundRadiosConfiguration_Apply
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
 from silverstar_fccg.project.quality_results import QualityResultRecord
 from silverstar_fccg.project.power10_report import (
@@ -520,6 +522,7 @@ class MainWindow(QMainWindow):
         self.ground_target_page.generateRequested.connect(
             lambda: self._Targets_Generate("generate_ground")
         )
+        self.ground_target_page.radiosChanged.connect(self._GroundRadios_Change)
         self.flight_configuration_page.strategyChanged.connect(
             self._Strategy_Change
         )
@@ -1583,8 +1586,14 @@ class MainWindow(QMainWindow):
             and (manifest.board.verified or manifest.source == "installed")
         )
         selected = model.ground_target.radio_plugin
-        manifest = self._service.catalog.Component_Get(selected) if selected else None
+        try:
+            manifest = self._service.catalog.Component_Get(selected) if selected else None
+        except ValueError:
+            manifest = None
         requirements = {
+            "radio_contracts": {candidate.component_id: candidate.radio
+                                for candidate in self._service.catalog.Type_Get("device")
+                                if candidate.radio is not None},
             "fixed_resources": {
                 role.key.removeprefix("telemetry:"): role.default
                 for board in self._service.catalog.Type_Get("board")
@@ -1604,6 +1613,18 @@ class MainWindow(QMainWindow):
                 if requirement.required
             ),
         }
+        if model.ground_target.radio_instances:
+            resources = []
+            for radio in GroundRadioConfigurations_Get(model.ground_target):
+                try:
+                    instance_manifest = self._service.catalog.Component_Get(radio.plugin)
+                except ValueError:
+                    continue
+                resources.extend((f"{radio.instance_id}:{requirement.name}", requirement.kind)
+                                 for requirement in instance_manifest.resource_requirements if requirement.required)
+            requirements["resources"] = tuple(resources)
+            requirements["fixed_resources"] = {"radio0:" + key: value
+                                               for key, value in requirements["fixed_resources"].items()}
         flight_instance = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
         try:
             flight_manifest = (
@@ -1626,9 +1647,7 @@ class MainWindow(QMainWindow):
             ground_module if model.ground_target.enabled else None,
         ) if item is not None]
         frequency_range = None
-        if active_modules and flight_module is not None and (
-            not model.ground_target.enabled or ground_module is not None
-        ):
+        if active_modules and flight_module is not None:
             low = max(item["validated_frequency_min_hz"] for item in active_modules)
             high = min(item["validated_frequency_max_hz"] for item in active_modules)
             if low <= high:
@@ -1671,12 +1690,11 @@ class MainWindow(QMainWindow):
                 lambda candidate: setattr(candidate, "flight_tx_power_dbm", value)
             )
         elif endpoint == "ground":
-            self._ProjectConfiguration_Change(
-                lambda candidate: setattr(
-                    candidate, "ground_target",
-                    replace(candidate.ground_target, tx_power_dbm=value),
-                )
-            )
+            self._GroundTarget_Change("tx_power_dbm", value)
+
+    def _GroundRadios_Change(self, radios, active: str) -> None:
+        self._ProjectConfiguration_Change(lambda candidate: setattr(candidate, "ground_target",
+            GroundRadiosConfiguration_Apply(candidate.ground_target, radios, active)))
 
     def _GroundTarget_Change(self, field: str, value: object) -> None:
         if field == "board":
@@ -1694,7 +1712,16 @@ class MainWindow(QMainWindow):
                 updates["resource_assignments"] = {}
             if field == "pc_interface" and value != ground.pc_interface:
                 updates["pc_resource"] = ""
-            candidate.ground_target = replace(ground, **updates)
+            if ground.radio_instances and field in {"radio_plugin", "module_variant", "tx_power_dbm"}:
+                selected_fields = {"plugin" if key == "radio_plugin" else key: selected
+                                   for key, selected in updates.items()
+                                   if key in {"radio_plugin", "module_variant", "tx_power_dbm"}}
+                radios = tuple(replace(radio, **selected_fields)
+                               if radio.instance_id == ground.active_radio_instance else radio
+                               for radio in ground.radio_instances)
+                candidate.ground_target = GroundRadiosConfiguration_Apply(ground, radios, ground.active_radio_instance)
+            else:
+                candidate.ground_target = replace(ground, **updates)
         self._ProjectConfiguration_Change(change)
 
     def _GroundBoard_Change(self, board_id: str) -> None:
@@ -1756,7 +1783,7 @@ class MainWindow(QMainWindow):
     def _GroundAssignment_Change(self, requirement: str, resource: str) -> None:
         def change(candidate: ProjectModel) -> None:
             assignments = dict(candidate.ground_target.resource_assignments)
-            key = f"radio0:{requirement}"
+            key = requirement if ":" in requirement else f"radio0:{requirement}"
             if resource:
                 assignments[key] = resource
             else:

@@ -523,7 +523,7 @@
   "device.required_tooltip": "当前飞行配置必需，不能取消。",
   "device.instance.imu": "IMU {index}",
   "device.instance.gnss": "GNSS {index}",
-  "device.instance.telemetry": "遥测",
+  "device.instance.telemetry": "遥测 {index}",
   "device.instance.console": "维护控制台",
   "device.instance.barometer": "气压计 {index}",
   "device.instance.magnetometer": "磁力计 {index}",
@@ -922,5 +922,12 @@
   "field.ground_rx_led_resource": "接收指示灯 GPIO",
   "field.ground_tx_led_active_high": "发送指示灯高电平点亮",
   "field.ground_rx_led_active_high": "接收指示灯高电平点亮",
-  "field.ground_activity_led_pulse_ms": "指示脉冲时长"
+  "field.ground_activity_led_pulse_ms": "指示脉冲时长",
+  "ground.radio_order_note": "实例顺序定义优先级。初始模块用于启动链路；失效后仅向后切换。资源分别绑定到各实例。",
+  "ground.initial_radio": "初始遥测实例",
+  "ground.add_radio": "添加地面遥测实例",
+  "ground.radio_title": "地面遥测 {id}",
+  "ground.radio_up": "上移",
+  "ground.radio_down": "下移",
+  "ground.radio_runtime_pending": "多实例可以保存为配置；地面站生成需要已整合的无线运行时。"
 }

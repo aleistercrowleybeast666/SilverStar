@@ -284,6 +284,9 @@ def test_qt_flight_button_exports_with_enabled_unconfigured_ground(qapp, window,
     ground = window._model.ground_target
     assert ground.enabled and not ground.mcu and not ground.radio_instances
     assert GroundTargetIssues_Get(window._model, window._service.catalog)
+    assert window.air_link_page.fields["frequency_hz"].isEnabled()
+    assert window.air_link_page.flight_tx_power.isEnabled()
+    assert not window.air_link_page.ground_tx_power.isEnabled()
     errors, plans = [], []
     monkeypatch.setattr(window, "_Error_Show", lambda *args: errors.append(args))
     original_plan = window._GenerationPlan_ApplyAllowed

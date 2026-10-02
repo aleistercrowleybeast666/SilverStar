@@ -101,7 +101,8 @@ class DevicesPage(ScrollableLocalizedPage):
             lambda _checked=False: self.installRequested.emit()
         )
         self.other_layout.addWidget(self.install_button, 0, Qt.AlignmentFlag.AlignLeft)
-        self.other_group = self.Group_Create("group.other_sensors", self.other_layout)
+        self.other_group = CollapsibleSection(translator.Text_Get("group.other_sensors"))
+        self.other_group.BodyLayout_Set(self.other_layout)
         self.other_group.setObjectName("otherSensorsGroup")
         self.root_layout.addWidget(self.other_group)
 
@@ -330,7 +331,7 @@ class DevicesPage(ScrollableLocalizedPage):
                 )
                 form.addRow(
                     QLabel(
-                        self._DeviceInstanceTitle_Get(candidates[0], row_index)
+                        self._DeviceInstanceTitle_Get(candidates[0], row_index, instance_id)
                     ),
                     combo,
                 )
@@ -566,6 +567,7 @@ class DevicesPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        self.other_group.Title_Set(translator.Text_Get("group.other_sensors"))
         if self._components:
             self.Configuration_Set(
                 self._components,
@@ -578,9 +580,11 @@ class DevicesPage(ScrollableLocalizedPage):
         title = self._translator.Text_Get(key)
         return component.name if title == key else title
 
-    def _DeviceInstanceTitle_Get(self, component: ComponentView, index: int) -> str:
+    def _DeviceInstanceTitle_Get(self, component: ComponentView, index: int, instance_id: str = "") -> str:
         if component.component_class == "telemetry":
-            return self._translator.Text_Get("device.class.telemetry")
+            suffix = instance_id.removeprefix("telemetry")
+            if instance_id.startswith("telemetry") and suffix.isdecimal():
+                index = int(suffix)
         key = f"device.instance.{component.component_class}"
         title = self._translator.Text_Get(key, index=index)
         if title == key:

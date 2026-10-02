@@ -20,6 +20,17 @@ static uint16_t s_raw_irq;
 static uint8_t s_dio1_pending;
 static uint32_t s_host_send_count;
 static uint8_t s_host_receive_enabled;
+static PlatformResult s_gpio_write_result = PLATFORM_OK;
+static PlatformGpioId s_gpio_written;
+static uint8_t s_gpio_written_level;
+
+PlatformResult PlatformGpio_Write(PlatformGpioId id, uint8_t logical_high)
+{
+    if (id >= PLATFORM_GPIO_COUNT) { return PLATFORM_INVALID_ARGUMENT; }
+    s_gpio_written = id;
+    s_gpio_written_level = logical_high;
+    return s_gpio_write_result;
+}
 
 void SX1280Init(uint8_t instance) { (void)instance; }
 
@@ -180,7 +191,9 @@ uint8_t PlatformGpio_IrqConsume(PlatformGpioId id)
 {
     uint8_t pending;
 
-    if (id != PLATFORM_GPIO_3) { return 0U; }
+    /* Follow the fixture's actual binding (GPIO7 in MultiInstance), rather
+     * than the legacy single-board GPIO3 ordinal. */
+    if (id != Sx1281Bus_Dio1Get(0U)) { return 0U; }
     pending = s_dio1_pending;
     s_dio1_pending = 0U;
     return pending;

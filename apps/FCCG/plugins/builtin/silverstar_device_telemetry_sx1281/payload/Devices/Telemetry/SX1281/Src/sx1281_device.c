@@ -871,7 +871,7 @@ LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance)
     SX1280SetPacketParams(instance, &s_pkt_params);
     SX1280SetRfFrequency(instance, LORA_RF_FREQUENCY_HZ);
     SX1280SetBufferBaseAddresses(instance, 0x00, 0x00);
-    SX1280SetTxParams(instance, LORA_TX_OUTPUT_POWER_DBM, RADIO_RAMP_02_US);
+    SX1280SetTxParams(instance, LORA_INSTANCE_TX_POWER_DBM(instance), RADIO_RAMP_02_US);
     Sx1281Bus_StatusGet(instance, &after);
     return ((after.spi_error_count != before.spi_error_count) ||
             (after.spi_timeout_count != before.spi_timeout_count) ||
@@ -1798,4 +1798,30 @@ static void Lora_OnRxError(uint8_t instance, IrqErrorCode_t errCode)
     s_rx_error_code = errCode;
     s_rx_error_flag = 1U;
     s_radio_in_rx = 0U;
+}
+
+/* Appended to preserve legacy assertion-site line provenance. */
+LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+{
+    PlatformResult result;
+    uint32_t primask;
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_control_transaction.state != LoraControlStateActive,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    /* Drop queued commands, completion IDs and READY before replacement.
+     * RESET is active-low in the existing SX1280HalReset sequence. Holding
+     * it low retires the old radio without waiting on a failed SPI/BUSY path.
+     * The caller must not process this context until a new Lora_Init. */
+    /* Keep Init's original one-caller inlining and assertion provenance.
+     * Retirement performs the same whole-context reset under its IRQ lock. */
+    primask = Lora_IrqLock();
+    memset(&s_contexts[instance], 0, sizeof(s_contexts[instance]));
+    s_rx_error_code = IRQ_HEADER_ERROR_CODE;
+    s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
+    Lora_IrqUnlock(primask);
+    result = PlatformGpio_Write(Sx1281Bus_ResetGet(instance), 0U);
+    /* IRQ callbacks only latch GPIO events; consume the retired DIO1 latch. */
+    (void)PlatformGpio_IrqConsume(Sx1281Bus_Dio1Get(instance));
+    return result == PLATFORM_OK ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;
 }
