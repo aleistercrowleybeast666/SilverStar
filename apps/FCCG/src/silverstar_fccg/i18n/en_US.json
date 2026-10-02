@@ -1,4 +1,5 @@
 {
+  "ground.uart_binding_source": "PC serial: {physical} · {resource} (from {source})",
   "device.interface_profile": "Interface / Operating profile",
   "protocol.selection_unavailable": "Selected protocol unavailable: {component} / {profile}",
   "app.credit": "By CXYL",
