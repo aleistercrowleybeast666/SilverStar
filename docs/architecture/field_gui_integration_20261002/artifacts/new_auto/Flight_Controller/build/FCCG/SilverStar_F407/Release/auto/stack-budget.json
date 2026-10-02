@@ -1,0 +1,554 @@
+{
+  "schema": "silverstar.stack-budget/1",
+  "configuration": "Release",
+  "elf": "build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf",
+  "elf_sha256": "416e65d63cb1ce3b251bd6e6998131c9b94c3042ac283e51cdb5c319e4f695bc",
+  "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+  "su_files": 152,
+  "minimum_margin_bytes": 256,
+  "method": "Conservative, reproducible stack budgets from GCC .su and the linked Arm ELF.\n\nNo LTO is used by the generated Make project. Inline frames are already in .su.\nAll direct calls and cross-function branches are conservatively nested, including\ntail calls (overestimates). Linked library frames without .su use the sum of all\nconstant stack decrements/pushes in disassembly, also an overestimate. Unknown\nindirect calls, dynamic frames, recursion and unaccounted SP writes fail closed.\nThis is a worst-known static budget, not a hardware high-water measurement.\n",
+  "checks": {
+    "indicator_in_production_init": true,
+    "alignment_start_deferred": true,
+    "flight_processes_alignment": true,
+    "communication_does_not_process_alignment": true,
+    "all_enabled_tasks_budgeted": true
+  },
+  "tasks": [
+    {
+      "task": "Device",
+      "configured_bytes": 2560,
+      "call_chain_bytes": 1872,
+      "context_bytes": 256,
+      "worst_known_bytes": 2128,
+      "margin_bytes": 432,
+      "chain": [
+        {
+          "function": "AppTask_Device",
+          "frame_bytes": 280
+        },
+        {
+          "function": "SystemStartup_ProcessDevices",
+          "frame_bytes": 264
+        },
+        {
+          "function": "SystemStartup_CommunicationProcess",
+          "frame_bytes": 8
+        },
+        {
+          "function": "SystemGnss_Process",
+          "frame_bytes": 112
+        },
+        {
+          "function": "ProjectGnssInstance_Process",
+          "frame_bytes": 0
+        },
+        {
+          "function": "NeoM9nGnssInstance_Process",
+          "frame_bytes": 8
+        },
+        {
+          "function": "NeoM9nGnssAdapter_Process",
+          "frame_bytes": 360
+        },
+        {
+          "function": "DebugLog_Print",
+          "frame_bytes": 352
+        },
+        {
+          "function": "CommonFormat_Print",
+          "frame_bytes": 16
+        },
+        {
+          "function": "CommonFormat_VPrint",
+          "frame_bytes": 264
+        },
+        {
+          "function": "CommonFormat_FixedCreate",
+          "frame_bytes": 80
+        },
+        {
+          "function": "CommonFormat_UnsignedCreate",
+          "frame_bytes": 80
+        },
+        {
+          "function": "__aeabi_uldivmod",
+          "frame_bytes": 16
+        },
+        {
+          "function": "__udivmoddi4",
+          "frame_bytes": 32
+        }
+      ],
+      "passes": true
+    },
+    {
+      "task": "INS",
+      "configured_bytes": 3072,
+      "call_chain_bytes": 1984,
+      "context_bytes": 256,
+      "worst_known_bytes": 2240,
+      "margin_bytes": 832,
+      "chain": [
+        {
+          "function": "AppTask_Ins",
+          "frame_bytes": 672
+        },
+        {
+          "function": "InsTask_InputReject",
+          "frame_bytes": 24
+        },
+        {
+          "function": "InsTask_DiagnosticsPublish",
+          "frame_bytes": 824
+        },
+        {
+          "function": "Estimator_GetLatestSnapshot",
+          "frame_bytes": 456
+        },
+        {
+          "function": "memcpy",
+          "frame_bytes": 8
+        }
+      ],
+      "passes": true
+    },
+    {
+      "task": "Estimator",
+      "configured_bytes": 4096,
+      "call_chain_bytes": 2988,
+      "context_bytes": 256,
+      "worst_known_bytes": 3244,
+      "margin_bytes": 852,
+      "chain": [
+        {
+          "function": "AppTask_Estimator",
+          "frame_bytes": 608
+        },
+        {
+          "function": "Estimator_GnssUpdate",
+          "frame_bytes": 1056
+        },
+        {
+          "function": "NavigationReplay_Insert",
+          "frame_bytes": 160
+        },
+        {
+          "function": "NavigationReplay_EventApply",
+          "frame_bytes": 64
+        },
+        {
+          "function": "NavigationKf_UpdateGnssPositionGroups",
+          "frame_bytes": 64
+        },
+        {
+          "function": "NavigationKf_UpdateVector",
+          "frame_bytes": 48
+        },
+        {
+          "function": "NavigationKf_UpdateVector.part.0",
+          "frame_bytes": 872
+        },
+        {
+          "function": "NavigationKf_CholeskyInverse",
+          "frame_bytes": 104
+        },
+        {
+          "function": "SilverStarAssert_ObjectCheck",
+          "frame_bytes": 8
+        },
+        {
+          "function": "SilverStarAssert_Fail",
+          "frame_bytes": 4
+        }
+      ],
+      "passes": true
+    },
+    {
+      "task": "Flight",
+      "configured_bytes": 4096,
+      "call_chain_bytes": 3344,
+      "context_bytes": 256,
+      "worst_known_bytes": 3600,
+      "margin_bytes": 496,
+      "chain": [
+        {
+          "function": "AppTask_Flight",
+          "frame_bytes": 1352
+        },
+        {
+          "function": "SystemLifecycle_Process",
+          "frame_bytes": 64
+        },
+        {
+          "function": "SystemLifecycle_StartExecute",
+          "frame_bytes": 32
+        },
+        {
+          "function": "SystemLifecycleBackend_AbortStart",
+          "frame_bytes": 8
+        },
+        {
+          "function": "SystemAlignment_MissionPreparationAbort",
+          "frame_bytes": 24
+        },
+        {
+          "function": "SystemAlignment_Process",
+          "frame_bytes": 24
+        },
+        {
+          "function": "SystemAlignment_Process.part.0",
+          "frame_bytes": 1056
+        },
+        {
+          "function": "SystemAlignmentBackend_GuardSampleGet",
+          "frame_bytes": 160
+        },
+        {
+          "function": "SystemInertial_LatestGet",
+          "frame_bytes": 88
+        },
+        {
+          "function": "SystemImu_LatestSampleGet",
+          "frame_bytes": 16
+        },
+        {
+          "function": "SystemSourceSelector_ImuFreshSelect",
+          "frame_bytes": 152
+        },
+        {
+          "function": "ProjectImuInstance_LatestSampleGet",
+          "frame_bytes": 0
+        },
+        {
+          "function": "Jy901bImuInstance_LatestSampleGet",
+          "frame_bytes": 280
+        },
+        {
+          "function": "Jy901bSample_QualityEvaluate",
+          "frame_bytes": 40
+        },
+        {
+          "function": "__aeabi_uldivmod",
+          "frame_bytes": 16
+        },
+        {
+          "function": "__udivmoddi4",
+          "frame_bytes": 32
+        }
+      ],
+      "passes": true
+    },
+    {
+      "task": "Logger",
+      "configured_bytes": 3072,
+      "call_chain_bytes": 1848,
+      "context_bytes": 256,
+      "worst_known_bytes": 2104,
+      "margin_bytes": 968,
+      "chain": [
+        {
+          "function": "AppTask_Logger",
+          "frame_bytes": 488
+        },
+        {
+          "function": "SystemMissionSnapshot_FinalStatusWrite",
+          "frame_bytes": 456
+        },
+        {
+          "function": "MissionSnapshot_SectionCommit",
+          "frame_bytes": 32
+        },
+        {
+          "function": "PersistentStorage_ObjectWriteAtomic",
+          "frame_bytes": 72
+        },
+        {
+          "function": "PersistentStorage_LatestGet",
+          "frame_bytes": 64
+        },
+        {
+          "function": "SystemStorage_ObjectSlotRead",
+          "frame_bytes": 136
+        },
+        {
+          "function": "f_open",
+          "frame_bytes": 104
+        },
+        {
+          "function": "dir_register",
+          "frame_bytes": 80
+        },
+        {
+          "function": "dir_find",
+          "frame_bytes": 64
+        },
+        {
+          "function": "dir_next",
+          "frame_bytes": 48
+        },
+        {
+          "function": "create_chain",
+          "frame_bytes": 24
+        },
+        {
+          "function": "put_fat.part.0",
+          "frame_bytes": 32
+        },
+        {
+          "function": "sync_window",
+          "frame_bytes": 24
+        },
+        {
+          "function": "disk_write",
+          "frame_bytes": 8
+        },
+        {
+          "function": "SD_write",
+          "frame_bytes": 40
+        },
+        {
+          "function": "SdDiskIo_CompletionWait",
+          "frame_bytes": 32
+        },
+        {
+          "function": "xQueueReceive",
+          "frame_bytes": 40
+        },
+        {
+          "function": "xTaskResumeAll",
+          "frame_bytes": 8
+        },
+        {
+          "function": "xTaskResumeAll.part.0",
+          "frame_bytes": 48
+        },
+        {
+          "function": "xTaskIncrementTick.part.0",
+          "frame_bytes": 48
+        }
+      ],
+      "passes": true
+    },
+    {
+      "task": "Serial",
+      "configured_bytes": 6144,
+      "call_chain_bytes": 4688,
+      "context_bytes": 256,
+      "worst_known_bytes": 4944,
+      "margin_bytes": 1200,
+      "chain": [
+        {
+          "function": "AppTask_Serial",
+          "frame_bytes": 8
+        },
+        {
+          "function": "SystemConsole_Process",
+          "frame_bytes": 392
+        },
+        {
+          "function": "SystemConsole_ExecuteLine",
+          "frame_bytes": 2032
+        },
+        {
+          "function": "SystemConsole_AlignmentStartExecute",
+          "frame_bytes": 896
+        },
+        {
+          "function": "SystemAlignment_Start",
+          "frame_bytes": 40
+        },
+        {
+          "function": "SystemAlignmentBackend_Reset",
+          "frame_bytes": 8
+        },
+        {
+          "function": "InsTask_AlignmentReset",
+          "frame_bytes": 24
+        },
+        {
+          "function": "InsTask_DiagnosticsPublish",
+          "frame_bytes": 824
+        },
+        {
+          "function": "Estimator_GetLatestSnapshot",
+          "frame_bytes": 456
+        },
+        {
+          "function": "memcpy",
+          "frame_bytes": 8
+        }
+      ],
+      "passes": true
+    },
+    {
+      "task": "Telemetry",
+      "configured_bytes": 4096,
+      "call_chain_bytes": 1880,
+      "context_bytes": 256,
+      "worst_known_bytes": 2136,
+      "margin_bytes": 1960,
+      "chain": [
+        {
+          "function": "AppTask_Telemetry",
+          "frame_bytes": 16
+        },
+        {
+          "function": "TelemetryService_Process",
+          "frame_bytes": 400
+        },
+        {
+          "function": "SystemCalibration_FaceCollect",
+          "frame_bytes": 120
+        },
+        {
+          "function": "SystemAlignment_CalibrationInvalidate",
+          "frame_bytes": 24
+        },
+        {
+          "function": "SystemAlignmentBackend_Reset",
+          "frame_bytes": 8
+        },
+        {
+          "function": "InsTask_AlignmentReset",
+          "frame_bytes": 24
+        },
+        {
+          "function": "InsTask_DiagnosticsPublish",
+          "frame_bytes": 824
+        },
+        {
+          "function": "Estimator_GetLatestSnapshot",
+          "frame_bytes": 456
+        },
+        {
+          "function": "memcpy",
+          "frame_bytes": 8
+        }
+      ],
+      "passes": true
+    },
+    {
+      "task": "Idle",
+      "configured_bytes": 512,
+      "call_chain_bytes": 0,
+      "context_bytes": 256,
+      "worst_known_bytes": 256,
+      "margin_bytes": 256,
+      "chain": [
+        {
+          "function": "prvIdleTask",
+          "frame_bytes": 0
+        }
+      ],
+      "passes": true
+    }
+  ],
+  "library_frames": {
+    "Estimator_GnssEnuSampleInlier.constprop.0": 24,
+    "Gnss_ConfigAsyncKeyFinish.constprop.0": 32,
+    "Gnss_ConfigAsyncNextGroup.constprop.0": 32,
+    "Gnss_UbxFrameEnqueue.part.0.constprop.0": 168,
+    "InsTask_AttitudeReadinessRefresh.isra.0": 16,
+    "Jy901bBarometerAdapter_ConfigCheck.isra.0": 24,
+    "Jy901bQuaternionAdapter_ConfigCheck.isra.0": 24,
+    "Lora_BusReadSucceeded.isra.0": 40,
+    "NavigationReplay_ModelMatches.isra.0": 24,
+    "NeoM9nGnssAdapter_RuntimeTransactionCancel.constprop.0": 24,
+    "PersistentStorage_RecordCrcGet.constprop.0": 12,
+    "PersistentStorage_RecordParse.constprop.0": 40,
+    "SD_FindSCR.constprop.0": 56,
+    "SystemConsole_AlignmentSourcesAppend.part.0.constprop.0": 40,
+    "SystemConsole_FieldFloatFormat.constprop.0": 16,
+    "SystemSourceSelector_OrderBuild.part.0.constprop.0": 64,
+    "__adddf3": 12,
+    "__aeabi_cdcmpeq": 8,
+    "__aeabi_cdrcmple": 0,
+    "__aeabi_d2f": 0,
+    "__aeabi_d2iz": 0,
+    "__aeabi_d2uiz": 0,
+    "__aeabi_d2ulz": 16,
+    "__aeabi_dcmpeq": 8,
+    "__aeabi_dcmpge": 8,
+    "__aeabi_dcmpgt": 8,
+    "__aeabi_dcmple": 8,
+    "__aeabi_dcmplt": 8,
+    "__aeabi_dcmpun": 0,
+    "__aeabi_ddiv": 16,
+    "__aeabi_dmul": 16,
+    "__aeabi_dsub": 0,
+    "__aeabi_f2d": 12,
+    "__aeabi_i2d": 12,
+    "__aeabi_idiv0": 0,
+    "__aeabi_l2d": 12,
+    "__aeabi_l2f": 0,
+    "__aeabi_ldivmod": 16,
+    "__aeabi_ui2d": 12,
+    "__aeabi_ul2d": 12,
+    "__aeabi_ul2f": 0,
+    "__aeabi_uldivmod": 16,
+    "__cmpdf2": 4,
+    "__errno": 0,
+    "__fpclassifyf": 0,
+    "__ieee754_acosf": 16,
+    "__ieee754_atan2f": 16,
+    "__ieee754_hypotf": 8,
+    "__ieee754_pow": 112,
+    "__ieee754_powf": 48,
+    "__ieee754_rem_pio2": 96,
+    "__ieee754_rem_pio2f": 40,
+    "__ieee754_sqrt": 40,
+    "__ieee754_sqrtf": 0,
+    "__kernel_cos": 56,
+    "__kernel_cosf": 0,
+    "__kernel_rem_pio2": 648,
+    "__kernel_rem_pio2f": 416,
+    "__kernel_sin": 56,
+    "__kernel_sinf": 0,
+    "__math_oflow": 0,
+    "__math_oflowf": 0,
+    "__math_uflow": 0,
+    "__math_uflowf": 0,
+    "__udivmoddi4": 32,
+    "acosf": 16,
+    "atan2f": 0,
+    "atanf": 16,
+    "cos": 24,
+    "cosf": 16,
+    "fabs": 0,
+    "fabsf": 0,
+    "finite": 8,
+    "finitef": 0,
+    "floor": 24,
+    "floorf": 0,
+    "fmaxf": 16,
+    "fminf": 16,
+    "get_fat.isra.0": 24,
+    "hypotf": 24,
+    "lroundf": 0,
+    "memchr": 16,
+    "memcmp": 8,
+    "memcpy": 8,
+    "memmove": 8,
+    "memset": 0,
+    "nanf": 0,
+    "pow": 32,
+    "powf": 24,
+    "prvAddCurrentTaskToDelayedList.isra.0": 24,
+    "scalbn": 16,
+    "scalbnf": 0,
+    "sin": 24,
+    "sinf": 16,
+    "sqrt": 24,
+    "sqrtf": 16,
+    "strcmp": 0,
+    "strlen": 0,
+    "strncmp": 8,
+    "with_errno": 16,
+    "with_errnof": 16,
+    "xflow": 16,
+    "xflowf": 0
+  },
+  "hardware_high_water_marks": "not measured; use normal stack snapshot on SS0.5",
+  "passes": true
+}
