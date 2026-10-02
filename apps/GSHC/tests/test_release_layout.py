@@ -3,7 +3,7 @@ os.environ.setdefault('QT_QPA_PLATFORM', 'windows')
 
 import pytest
 from PySide6.QtCore import QPoint, QRect, QSettings, QSize
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QLabel
 from services.i18n import I18n
 from services.state_model import EventHistory
 from test_ui_workflow import ready_state
@@ -55,6 +55,11 @@ def test_original_monitor_rows_and_six_plots_are_visible(tmp_path, size, languag
     for widget in (window.lbl_flight_lifecycle,window.lbl_packet_loss,window.lbl_flight_vel,
                    window.lbl_flight_pos,window.lbl_mission_parachute):
         assert viewport.contains(rect(widget)), (language,size,rect(widget),viewport)
+    for card in (window.lbl_flight_lifecycle.parentWidget(), window.lbl_flight_accel.parentWidget(),
+                 window.lbl_mission_state.parentWidget()):
+        for label in card.findChildren(QLabel):
+            assert viewport.contains(rect(label)), (language,size,label.text(),rect(label),viewport)
+    assert window.flight_status_scroll.verticalScrollBar().maximum() == 0
     plots=[rect(window.plot_widgets[(key,axis)]) for key in ('vel','pos') for axis in range(3)]
     assert len({r.top() for r in plots[:3]}) == 1
     assert len({r.top() for r in plots[3:]}) == 1
