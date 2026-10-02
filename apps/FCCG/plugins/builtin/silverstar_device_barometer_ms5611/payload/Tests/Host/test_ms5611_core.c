@@ -3,10 +3,12 @@
 #include <assert.h>
 #include <math.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 
 typedef struct
 {
+    uint64_t io_elapsed_us;
     uint16_t prom[8];
     uint8_t last_conversion;
     uint32_t reset_count;
@@ -18,6 +20,7 @@ Ms5611BusResult Ms5611Bus_Write(void *bus, uint8_t command)
 {
     TestMs5611Bus *mock = (TestMs5611Bus *)bus;
     if (mock == NULL) { return Ms5611BusError; }
+    mock->io_elapsed_us += 2000ULL;
     if (command == 0x1EU) { mock->reset_count++; return Ms5611BusOk; }
     if (command == 0x58U)
     { mock->last_conversion = command; mock->temperature_start_count++; return Ms5611BusOk; }
@@ -32,6 +35,7 @@ Ms5611BusResult Ms5611Bus_Read(void *bus, uint8_t command,
     TestMs5611Bus *mock = (TestMs5611Bus *)bus;
     uint32_t raw;
     if ((mock == NULL) || (bytes == NULL)) { return Ms5611BusError; }
+    mock->io_elapsed_us += 2000ULL;
     if ((command >= 0xA0U) && (command <= 0xAEU) &&
         ((command & 1U) == 0U) && (length == 2U))
     {
@@ -119,8 +123,34 @@ static void TestMs5611_CrcAndTimeout(void)
     assert(context.state == Ms5611StateFailed);
 }
 
+static void TestMs5611_FirstSampleActivationBudget(void)
+{
+    TestMs5611Bus bus;
+    Ms5611Context context;
+    Ms5611Port port;
+    Ms5611StepResult result = Ms5611StepPending;
+    uint64_t time_us = 0ULL;
+    TestMs5611_Seed(&bus);
+    port.bus = &bus;
+    Ms5611_Init(&context, &port);
+    for (uint8_t step = 0U; step < 64U; step++)
+    {
+        uint64_t before_io = bus.io_elapsed_us;
+        result = Ms5611_Step(&context, time_us);
+        if (result == Ms5611StepSampleReady)
+        { time_us += bus.io_elapsed_us - before_io; break; }
+        assert(result == Ms5611StepPending);
+        /*10ms after each Process plus every actual mocked2ms bus operation. */
+        time_us += 10000ULL + bus.io_elapsed_us - before_io;
+    }
+    assert(result == Ms5611StepSampleReady && time_us < 250000ULL);
+    assert(fabsf(context.sample.pressure_pa - 100009.0F) < 2.0F);
+    (void)printf("ms5611 first sample at %llu us under10ms service/2ms bus\n",
+        (unsigned long long)time_us);
+}
 int main(void)
 {
+    TestMs5611_FirstSampleActivationBudget();
     TestMs5611_OfficialVectorAndBoundedCycle();
     TestMs5611_CrcAndTimeout();
     return 0;

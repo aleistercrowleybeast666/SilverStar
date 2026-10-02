@@ -53,6 +53,7 @@ static uint8_t s_async_config;
 static uint16_t s_async_busy_ticks;
 static uint32_t s_power_process_count;
 static uint32_t s_output_process_count;
+static uint8_t s_baro_window_stage;
 
 static SystemDeviceResult Test_InfoFill(SystemDeviceInfo *info,
                                         const char *device_name,
@@ -334,6 +335,21 @@ SystemDeviceResult SystemBarometer_Start(void) { return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemBarometerCold_StartupWindowBegin(uint64_t phase_started_us)
 {
     TEST_CHECK(phase_started_us == s_now_us);
+    TEST_CHECK(s_baro_window_stage == 0U);
+    s_baro_window_stage = 1U;
+    return SYSTEM_DEVICE_OK;
+}
+SystemDeviceResult SystemBarometerCold_StartupCommunicationBegin(uint64_t phase_started_us)
+{
+    TEST_CHECK(phase_started_us == s_now_us);
+    TEST_CHECK(s_baro_window_stage == 1U);
+    s_baro_window_stage = 2U;
+    return SYSTEM_DEVICE_OK;
+}
+SystemDeviceResult SystemBarometerCold_StartupWindowEnd(void)
+{
+    TEST_CHECK(s_baro_window_stage == 2U);
+    s_baro_window_stage = 3U;
     return SYSTEM_DEVICE_OK;
 }
 #endif
@@ -445,6 +461,7 @@ static void Test_Reset(void)
     s_async_busy_ticks = 0U;
     s_power_process_count = 0U;
     s_output_process_count = 0U;
+    s_baro_window_stage = 0U;
 }
 
 static SystemStartupResult Test_StartupComplete(void)
@@ -476,6 +493,8 @@ static void Test_AllEnabledDevicesPass(void)
     report = SystemStartup_GetReport();
     imu = SystemStartup_GetDeviceReport(SYSTEM_STARTUP_DEVICE_IMU);
     TEST_CHECK(report->completed != 0U);
+    TEST_CHECK(s_baro_window_stage ==
+        (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U ? 3U : 0U));
     TEST_CHECK(report->mission_capable != 0U);
     TEST_CHECK(report->degraded == 0U);
     TEST_CHECK(report->required_failure_mask == 0U);

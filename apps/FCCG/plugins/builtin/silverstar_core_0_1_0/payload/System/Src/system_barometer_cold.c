@@ -9,6 +9,14 @@
 #include "silverstar_assert.h"
 #include "system_time.h"
 
+typedef enum
+{
+    SystemBarometerColdStartup_Idle = 0,
+    SystemBarometerColdStartup_Configuration,
+    SystemBarometerColdStartup_Communication,
+    SystemBarometerColdStartup_Complete
+} SystemBarometerColdStartupStage;
+
 typedef struct
 {
     uint8_t order[PROJECT_BAROMETER_INSTANCE_COUNT_MAX];
@@ -18,8 +26,10 @@ typedef struct
     uint8_t running;
     uint8_t sample_valid;
     uint8_t raw_known;
-    uint8_t startup_window_started;
-    uint64_t first_sample_started_us;
+    uint8_t sample_ever_received;
+    uint8_t startup_grace_instance;
+    SystemBarometerColdStartupStage startup_stage;
+    uint64_t startup_phase_started_us;
     uint64_t activated_us;
     uint64_t last_good_us;
     uint32_t raw_sequence;
@@ -114,7 +124,6 @@ static SystemDeviceResult SystemBarometerCold_NextSelect(uint8_t start)
         {
             s_cold.activated_us = SystemTime_GetMonotonicUs();
             s_cold.last_good_us = s_cold.activated_us;
-            s_cold.first_sample_started_us = s_cold.activated_us;
             return SYSTEM_DEVICE_OK;
         }
         if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_IO_ERROR; }
@@ -158,7 +167,6 @@ SystemDeviceResult SystemBarometerCold_Start(void)
     }
     s_cold.activated_us = SystemTime_GetMonotonicUs();
     s_cold.last_good_us = s_cold.activated_us;
-    s_cold.first_sample_started_us = s_cold.activated_us;
     return SYSTEM_DEVICE_OK;
 }
 
@@ -168,15 +176,67 @@ SystemDeviceResult SystemBarometerCold_StartupWindowBegin(uint64_t phase_started
     if ((s_cold.active == SYSTEM_BAROMETER_COLD_INSTANCE_NONE) ||
         (s_cold.running == SYSTEM_BAROMETER_COLD_INSTANCE_NONE))
     { return SYSTEM_DEVICE_NOT_READY; }
-    if ((s_cold.startup_window_started != 0U) || (s_cold.raw_known != 0U))
+    if ((s_cold.startup_stage != SystemBarometerColdStartup_Idle) ||
+        (s_cold.sample_ever_received != 0U))
     { return SYSTEM_DEVICE_BAD_STATE; }
     if ((phase_started_us < s_cold.activated_us) || (phase_started_us > now_us))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     SILVERSTAR_ASSERT(s_cold.active == s_cold.running, SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    s_cold.first_sample_started_us = phase_started_us;
-    s_cold.startup_window_started = 1U;
+    s_cold.startup_grace_instance = s_cold.active;
+    s_cold.startup_phase_started_us = phase_started_us;
+    s_cold.startup_stage = SystemBarometerColdStartup_Configuration;
     return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemBarometerCold_StartupCommunicationBegin(uint64_t phase_started_us)
+{
+    const uint64_t now_us = SystemTime_GetMonotonicUs();
+    if (s_cold.startup_stage != SystemBarometerColdStartup_Configuration)
+    { return SYSTEM_DEVICE_BAD_STATE; }
+    if ((phase_started_us < s_cold.startup_phase_started_us) || (phase_started_us > now_us))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    s_cold.startup_phase_started_us = phase_started_us;
+    s_cold.startup_stage = SystemBarometerColdStartup_Communication;
+    return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemBarometerCold_StartupWindowEnd(void)
+{
+    if ((s_cold.startup_stage != SystemBarometerColdStartup_Configuration) &&
+        (s_cold.startup_stage != SystemBarometerColdStartup_Communication))
+    { return SYSTEM_DEVICE_BAD_STATE; }
+    s_cold.startup_stage = SystemBarometerColdStartup_Complete;
+    return SYSTEM_DEVICE_OK;
+}
+
+static uint8_t SystemBarometerCold_FirstSamplePending(uint64_t now_us)
+{
+    SILVERSTAR_ASSERT(((uint32_t)s_cold.startup_stage <=
+        (uint32_t)SystemBarometerColdStartup_Complete) &&
+        (s_cold.sample_ever_received <= 1U), SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((s_cold.sample_ever_received == 0U) &&
+        (s_cold.active == s_cold.startup_grace_instance) &&
+        ((s_cold.startup_stage == SystemBarometerColdStartup_Configuration) ||
+         (s_cold.startup_stage == SystemBarometerColdStartup_Communication)))
+    {
+        const uint64_t timeout_us =
+            s_cold.startup_stage == SystemBarometerColdStartup_Configuration ?
+            SYSTEM_BAROMETER_COLD_FIRST_SAMPLE_TIMEOUT_US :
+            SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US;
+        SILVERSTAR_ASSERT(now_us >= s_cold.startup_phase_started_us,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+        return (uint8_t)((now_us - s_cold.startup_phase_started_us) <
+            timeout_us);
+    }
+    /* This per-source activation budget never inherits a global config timer.
+     * BMP/MS finite configuration/conversion states fit 250ms at <=10ms polling
+     * and <=2ms bus operations. JY SharedStart adds no global configuration. */
+    SILVERSTAR_ASSERT(now_us >= s_cold.activated_us, SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+    return (uint8_t)((now_us - s_cold.activated_us) <
+        SYSTEM_BAROMETER_COLD_BACKUP_FIRST_SAMPLE_TIMEOUT_US);
 }
 
 static uint8_t SystemBarometerCold_SampleUsable(
@@ -212,6 +272,7 @@ static void SystemBarometerCold_SamplePublish(
     }
     s_cold.raw_sequence = sample->sequence;
     s_cold.raw_known = 1U;
+    s_cold.sample_ever_received = 1U;
     s_cold.sample = *sample;
     s_cold.sample.sequence = s_cold.logical_sequence;
     s_cold.health = *health;
@@ -257,14 +318,9 @@ SystemDeviceResult SystemBarometerCold_Process(void)
     }
     SILVERSTAR_ASSERT(now_us >= s_cold.last_good_us, SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
-    /* No data during legal baud scanning/configuration is not runtime loss.
-     * Once a usable sample is published, the existing 250 ms limit applies. */
     if (s_cold.raw_known == 0U)
     {
-        SILVERSTAR_ASSERT(now_us >= s_cold.first_sample_started_us,
-            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
-        if ((now_us - s_cold.first_sample_started_us) <
-            SYSTEM_BAROMETER_COLD_FIRST_SAMPLE_TIMEOUT_US)
+        if (SystemBarometerCold_FirstSamplePending(now_us) != 0U)
         { return SYSTEM_DEVICE_NOT_READY; }
     }
     else if ((now_us - s_cold.last_good_us) < SYSTEM_BAROMETER_COLD_FAILURE_TIMEOUT_US)
