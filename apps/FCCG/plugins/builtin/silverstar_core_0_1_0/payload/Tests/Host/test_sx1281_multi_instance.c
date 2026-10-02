@@ -25,6 +25,10 @@ typedef struct
 static TestRadioContext s_radios[TEST_INSTANCE_COUNT];
 static uint8_t s_gpio_irq[PLATFORM_GPIO_COUNT];
 static uint32_t s_tick_ms;
+static PlatformResult s_gpio_write_results[PLATFORM_GPIO_COUNT];
+static uint32_t s_gpio_write_attempts[PLATFORM_GPIO_COUNT];
+static uint8_t s_gpio_written_levels[PLATFORM_GPIO_COUNT];
+static uint8_t s_gpio_levels[PLATFORM_GPIO_COUNT];
 
 void SX1280Init(uint8_t instance) { (void)instance; }
 
@@ -160,6 +164,17 @@ uint64_t PlatformTime_Us(void) { return (uint64_t)s_tick_ms * 1000ULL; }
 void PlatformTime_DelayMs(uint32_t delay_ms) { s_tick_ms += delay_ms; }
 PlatformCriticalState PlatformCritical_Enter(void) { return 0U; }
 void PlatformCritical_Exit(PlatformCriticalState state) { (void)state; }
+
+PlatformResult PlatformGpio_Write(PlatformGpioId id, uint8_t logical_high)
+{
+    if ((id >= PLATFORM_GPIO_COUNT) || (logical_high > 1U))
+    { return PLATFORM_INVALID_ARGUMENT; }
+    s_gpio_write_attempts[id]++;
+    s_gpio_written_levels[id] = logical_high;
+    if (s_gpio_write_results[id] == PLATFORM_OK)
+    { s_gpio_levels[id] = logical_high; }
+    return s_gpio_write_results[id];
+}
 
 PlatformResult PlatformGpio_Read(
     PlatformGpioId id, uint8_t *logical_high)
@@ -318,6 +333,112 @@ static void Test_RoleCapacityIsolation(void)
     TEST_CHECK(s_radios[1].send_count == 1U);
 }
 
+static void Test_DeactivateIsolation(uint8_t retired, PlatformResult gpio_result)
+{
+    static const uint8_t payload[] = {0x30U, 0x31U};
+    uint32_t completed[TEST_INSTANCE_COUNT];
+    uint32_t pending[TEST_INSTANCE_COUNT];
+    uint32_t control[TEST_INSTANCE_COUNT];
+    uint32_t age_ms = 0U;
+    uint8_t other = (uint8_t)(1U - retired);
+    uint8_t received[16];
+    uint8_t length = 0U;
+    PlatformGpioId reset = Sx1281Bus_ResetGet(retired);
+    PlatformGpioId other_reset = Sx1281Bus_ResetGet(other);
+    LoraDebugSnapshot before = {0};
+    LoraDebugSnapshot after = {0};
+    LoraDebugSnapshot cleared = {0};
+    LoraDiagSnapshot diag_before = {0};
+    LoraDiagSnapshot diag_after = {0};
+    LoraDiagSnapshot diag_cleared = {0};
+    LoraControlResult control_result = {0};
+    LoraChipStatus chip = {0};
+    LoraDeactivateResult result;
+
+    (void)memset(s_radios, 0, sizeof(s_radios));
+    (void)memset(s_gpio_irq, 0, sizeof(s_gpio_irq));
+    (void)memset(s_gpio_write_results, 0, sizeof(s_gpio_write_results));
+    (void)memset(s_gpio_write_attempts, 0, sizeof(s_gpio_write_attempts));
+    (void)memset(s_gpio_written_levels, 1, sizeof(s_gpio_written_levels));
+    (void)memset(s_gpio_levels, 1, sizeof(s_gpio_levels));
+    s_tick_ms = 0U;
+    TEST_CHECK(reset != other_reset && reset < PLATFORM_GPIO_COUNT);
+    for (uint8_t instance = 0U; instance < TEST_INSTANCE_COUNT; instance++)
+    {
+        TEST_CHECK(Lora_Init(instance) == LORA_INIT_OK);
+        TEST_CHECK(Lora_TxEnqueueTracked(instance, payload, sizeof(payload),
+                                       &completed[instance]) == LORA_TX_ENQUEUE_OK);
+        Lora_StartRx(instance);
+    }
+    s_tick_ms = 122U;
+    for (uint8_t instance = 0U; instance < TEST_INSTANCE_COUNT; instance++)
+    {
+        Lora_Process(instance);
+        TEST_CHECK(s_radios[instance].send_count == 1U);
+        Test_IrqRaise(instance, IRQ_TX_DONE);
+        Lora_Process(instance);
+        TEST_CHECK(Lora_TxResultGet(instance, completed[instance], &age_ms) ==
+                   LoraTxQueryResult_Complete);
+        s_radios[instance].receive[0] = (uint8_t)(0xA0U + instance);
+        s_radios[instance].receive_length = 1U;
+        Test_IrqRaise(instance, IRQ_RX_DONE);
+        Lora_Process(instance);
+        TEST_CHECK(Lora_TxEnqueueTracked(instance, payload, sizeof(payload),
+                                       &pending[instance]) == LORA_TX_ENQUEUE_OK);
+        TEST_CHECK(Lora_ControlSubmit(instance, LORA_CONTROL_IRQ_CLEAR, 1000U,
+                                     &control[instance]) == LORA_CONTROL_SUBMIT_OK);
+        TEST_CHECK(Lora_ControlResultGet(instance, control[instance], &control_result) ==
+                   LORA_CONTROL_GET_PENDING);
+        Test_IrqRaise(instance, IRQ_RX_DONE); /* Leave both GPIO latches pending. */
+    }
+    Lora_GetDebugSnapshot(other, &before);
+    Lora_GetDiagSnapshot(other, &diag_before);
+    TEST_CHECK(before.initialized == 1U && before.tx_queue_count == 1U &&
+               before.rx_queue_count == 1U);
+    TEST_CHECK(before.stats.tx_ok == 1U && before.stats.rx_ok == 1U);
+    s_gpio_write_results[reset] = gpio_result;
+    result = Lora_Deactivate(retired);
+    TEST_CHECK(result == ((gpio_result == PLATFORM_OK) ?
+               LoraDeactivateResult_Ok : LoraDeactivateResult_PortError));
+    TEST_CHECK(s_gpio_write_attempts[reset] == 1U);
+    TEST_CHECK(s_gpio_written_levels[reset] == 0U);
+    TEST_CHECK(s_gpio_levels[reset] == ((gpio_result == PLATFORM_OK) ? 0U : 1U));
+    TEST_CHECK(s_gpio_write_attempts[other_reset] == 0U && s_gpio_levels[other_reset] == 1U);
+    TEST_CHECK(s_gpio_irq[Sx1281Bus_Dio1Get(retired)] == 0U);
+    TEST_CHECK(s_gpio_irq[Sx1281Bus_Dio1Get(other)] == 1U);
+    Lora_GetDebugSnapshot(retired, &after);
+    TEST_CHECK(memcmp(&after, &cleared, sizeof(after)) == 0);
+    Lora_GetDiagSnapshot(retired, &diag_after);
+    TEST_CHECK(memcmp(&diag_after, &diag_cleared, sizeof(diag_after)) == 0);
+    TEST_CHECK(Lora_IsBusy(retired) == LORA_BUSY_IDLE);
+    TEST_CHECK(Lora_TxResultGet(retired, completed[retired], &age_ms) == LoraTxQueryResult_NotFound);
+    TEST_CHECK(Lora_TxResultGet(retired, pending[retired], &age_ms) == LoraTxQueryResult_NotFound);
+    TEST_CHECK(Lora_ControlResultGet(retired, control[retired], &control_result) ==
+               LORA_CONTROL_GET_NOT_FOUND);
+    TEST_CHECK(Lora_ControlSubmit(retired, LORA_CONTROL_IRQ_CLEAR, 1000U, &age_ms) ==
+               LORA_CONTROL_SUBMIT_NOT_INIT);
+    TEST_CHECK(Lora_ChipStatusGet(retired, &chip) == LORA_DIAG_RESULT_NOT_INIT);
+    TEST_CHECK(Lora_RxDequeue(retired, received, &length, NULL, NULL) == LORA_RX_DEQUEUE_EMPTY);
+    TEST_CHECK(Lora_TxEnqueue(retired, payload, sizeof(payload)) == LORA_TX_ENQUEUE_NOT_INIT);
+    (void)memset(&after, 0, sizeof(after));
+    Lora_GetDebugSnapshot(other, &after);
+    TEST_CHECK(memcmp(&before, &after, sizeof(before)) == 0);
+    Lora_GetDiagSnapshot(other, &diag_after);
+    TEST_CHECK(memcmp(&diag_before, &diag_after, sizeof(diag_before)) == 0);
+    TEST_CHECK(Lora_TxResultGet(other, completed[other], &age_ms) == LoraTxQueryResult_Complete);
+    TEST_CHECK(Lora_TxResultGet(other, pending[other], &age_ms) == LoraTxQueryResult_Pending);
+    TEST_CHECK(Lora_ControlResultGet(other, control[other], &control_result) == LORA_CONTROL_GET_PENDING);
+    TEST_CHECK(Lora_ChipStatusGet(other, &chip) == LORA_DIAG_RESULT_OK && chip.verified == 1U);
+    TEST_CHECK(Lora_RxDequeue(other, received, &length, NULL, NULL) == LORA_RX_DEQUEUE_OK);
+    TEST_CHECK(length == 1U && received[0] == (uint8_t)(0xA0U + other));
+    s_gpio_write_results[reset] = PLATFORM_OK;
+    TEST_CHECK(Lora_Init(retired) == LORA_INIT_OK);
+    Lora_GetDebugSnapshot(retired, &after);
+    TEST_CHECK(after.initialized == 1U && after.tx_queue_count == 0U && after.rx_queue_count == 0U);
+    TEST_CHECK(Lora_ControlSubmit(retired, LORA_CONTROL_IRQ_CLEAR, 1000U, &age_ms) ==
+               LORA_CONTROL_SUBMIT_OK);
+}
+
 int main(void)
 {
     _Static_assert(PROJECT_SX1281_INSTANCE_COUNT == TEST_INSTANCE_COUNT,
@@ -325,5 +446,9 @@ int main(void)
     Test_ContextQueueAndIrqIsolation();
     Test_ReceiveHoldIsolation();
     Test_RoleCapacityIsolation();
+    Test_DeactivateIsolation(0U, PLATFORM_OK);
+    Test_DeactivateIsolation(1U, PLATFORM_OK);
+    Test_DeactivateIsolation(0U, PLATFORM_IO_ERROR);
+    Test_DeactivateIsolation(1U, PLATFORM_TIMEOUT);
     return Test_Finish("sx1281_multi_instance");
 }
