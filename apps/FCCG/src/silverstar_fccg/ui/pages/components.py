@@ -357,7 +357,9 @@ class DevicesPage(ScrollableLocalizedPage):
                             instance.interface or variants[0][1],
                             instance.profile or variants[0][2],
                         )
-                        selected_variant = variant_combo.findData(selected_pair)
+                        # QVariant-wrapped Python tuples can compare by object identity.
+                        selected_variant = next((index for index in range(variant_combo.count())
+                            if tuple(variant_combo.itemData(index)) == selected_pair), -1)
                         variant_combo.setCurrentIndex(max(0, selected_variant))
                         variant_combo.currentIndexChanged.connect(
                             lambda _index, selected_instance=instance_id,

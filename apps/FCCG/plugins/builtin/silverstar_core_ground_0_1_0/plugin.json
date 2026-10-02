@@ -46,6 +46,7 @@
     "target_role": "ground_station",
     "ground_activity_leds_ready": true,
     "reference_repository": "aleistercrowleybeast666/GS_SS1",
-    "reference_commit": "7fe0f61142c7360f7dbae0ac0000036315631320"
+    "reference_commit": "7fe0f61142c7360f7dbae0ac0000036315631320",
+    "ground_radio_instances_ready": true
   }
 }

@@ -237,9 +237,18 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
         issues.append(AirLinkIssue(
             "GROUND_PC_INTERFACE_UNBOUND", "Ground PC interface must be UART or USB CDC"
         ))
-    if ground.radio_plugin:
+    from silverstar_fccg.project.model import GroundRadioConfigurations_Get
+    configurations = GroundRadioConfigurations_Get(ground)
+    exclusive: dict[str, str] = {}
+    occupied_pins: dict[str, str] = {}
+    pc_resource = available.get(ground.pc_resource) if ground.pc_interface == "uart" else None
+    if pc_resource is not None:
+        pc_pins = pc_resource.metadata.get("pins", {})
+        if isinstance(pc_pins, dict):
+            occupied_pins.update((str(pin), "pc_interface") for pin in pc_pins.values() if pin)
+    for radio_index, configuration in enumerate(configurations):
         try:
-            radio = catalog.Component_Get(ground.radio_plugin)
+            radio = catalog.Component_Get(configuration.plugin)
         except ValueError:
             radio = None
         if radio is not None:
@@ -250,22 +259,14 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                 _RequirementConstraintsErrors_Get,
             )
 
-            if radio.radio is not None and ground.module_variant not in radio.radio.modules:
+            if radio.radio is not None and configuration.module_variant not in radio.radio.modules:
                 issues.append(AirLinkIssue(
                     "AIR_LINK_NO_RADIO", "Ground radio module variant is unavailable"
                 ))
-            exclusive: dict[str, str] = {}
-            occupied_pins: dict[str, str] = {}
-            pc_resource = available.get(ground.pc_resource) if ground.pc_interface == "uart" else None
-            if pc_resource is not None:
-                pc_pins = pc_resource.metadata.get("pins", {})
-                if isinstance(pc_pins, dict):
-                    occupied_pins.update((str(pin), "pc_interface")
-                                         for pin in pc_pins.values() if pin)
             for requirement in radio.resource_requirements:
-                key = f"radio0:{requirement.name}"
+                key = f"{configuration.instance_id}:{requirement.name}"
                 assigned = ground.resource_assignments.get(key)
-                if board is not None and ground.hardware.mode == "board_plugin":
+                if radio_index == 0 and board is not None and ground.hardware.mode == "board_plugin":
                     role = next((item for item in board.resource_roles
                                  if item.key == f"telemetry:{requirement.name}"), None)
                     if role is not None and role.fixed and assigned != role.default:
@@ -277,7 +278,7 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                 ):
                     issues.append(AirLinkIssue(
                         "GROUND_RADIO_RESOURCE_UNBOUND",
-                        f"Ground radio {requirement.name} needs a {requirement.kind} resource",
+                        f"Ground {configuration.instance_id} {requirement.name} needs a {requirement.kind} resource",
                     ))
                     continue
                 if resource is None:
@@ -291,7 +292,9 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                     issues.append(AirLinkIssue(
                         "GROUND_RADIO_RESOURCE_CONSTRAINT", detail,
                     ))
-                if requirement.mode == ResourceMode.EXCLUSIVE:
+                # Ground cold standby uses one task and retires a port before switching.
+                shared_ground_spi = requirement.name == "radio_bus" and requirement.kind == "spi"
+                if requirement.mode == ResourceMode.EXCLUSIVE and not shared_ground_spi:
                     physical = str(resource.metadata.get(
                         "physical_pin", resource.metadata.get(
                             "physical_resource", resource.resource_id,

@@ -312,7 +312,7 @@ def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path,
         page = window.ground_target_page
         page.enabled.setChecked(True)
         assert page.board.findData("silverstar.board.silverstar_0_5") == -1
-        assert page.board.currentData() is None  # Shared hardware page's unselected state.
+        assert page.board.currentData() == "__custom__"  # New Ground uses the custom hardware workflow.
         page.radio.setCurrentIndex(
             page.radio.findData("silverstar.device.telemetry.sx1281")
         )
@@ -635,7 +635,8 @@ def test_device_interface_profile_selector_updates_one_chip_instance(
         qapp.processEvents()
         combo = window.devices_page.variant_combos["imu0"]
         assert combo.count() == 4
-        selected = combo.findData(("spi", "bosch_sync_400_hz"))
+        selected = next((index for index in range(combo.count())
+                         if tuple(combo.itemData(index)) == ("spi", "bosch_sync_400_hz")), -1)
         assert selected >= 0
         combo.setCurrentIndex(selected)
         qapp.processEvents()
