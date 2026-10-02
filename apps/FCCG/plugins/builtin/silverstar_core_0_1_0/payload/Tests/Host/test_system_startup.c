@@ -4,6 +4,7 @@
 
 #include "debug_log.h"
 #include "system_barometer_if.h"
+#include "system_barometer_cold.h"
 #include "system_console.h"
 #include "system_console_if.h"
 #include "system_gnss_if.h"
@@ -329,6 +330,13 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
 const char *SystemBarometer_NameGet(void) { return "Mock Barometer"; }
 SystemDeviceResult SystemBarometer_Init(void) { return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemBarometer_Start(void) { return SYSTEM_DEVICE_OK; }
+#if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U)
+SystemDeviceResult SystemBarometerCold_StartupWindowBegin(uint64_t phase_started_us)
+{
+    TEST_CHECK(phase_started_us == s_now_us);
+    return SYSTEM_DEVICE_OK;
+}
+#endif
 SystemDeviceResult SystemBarometer_Process(void)
 { s_baro_process_count++; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemBarometer_InfoGet(SystemDeviceInfo *info)

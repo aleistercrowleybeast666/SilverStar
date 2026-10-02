@@ -29,8 +29,7 @@
 #include "system_user_config.h"
 #include "system_user_startup_config.h"
 
-#define SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US 2000000ULL
-#define SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US 120000000ULL
+#include "system_barometer_cold.h"
 
 typedef enum
 {
@@ -960,6 +959,16 @@ static uint8_t SystemStartup_WaitCommunicationTick(void)
     return 1U;
 }
 
+static inline void SystemStartup_BarometerWindowBegin(uint64_t phase_started_us)
+{
+    /* Constant selection removes this operation entirely from single-source
+     * firmware, while the timeout owner supplies the exact phase boundary. */
+    if ((SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) &&
+        (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_BAROMETER) != 0U) &&
+        (SystemBarometerCold_StartupWindowBegin(phase_started_us) != SYSTEM_DEVICE_OK))
+    { DebugLog_Print("STARTUP barometer first-sample window unavailable"); }
+}
+
 void SystemStartup_ProcessDevices(void)
 {
     SILVERSTAR_ASSERT_OBJECT(&s_startup_report, SystemStartupReport,
@@ -995,6 +1004,7 @@ void SystemStartup_ProcessDevices(void)
         case SystemStartupPhase_OtherAdapters:
             SystemStartup_OtherAdaptersStart();
             s_phase_started_us = SystemTime_GetMonotonicUs();
+            SystemStartup_BarometerWindowBegin(s_phase_started_us);
             s_startup_phase = SystemStartupPhase_WaitConfig;
             return;
         case SystemStartupPhase_WaitConfig:

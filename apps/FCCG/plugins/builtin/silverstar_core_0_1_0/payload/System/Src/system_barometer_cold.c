@@ -18,6 +18,8 @@ typedef struct
     uint8_t running;
     uint8_t sample_valid;
     uint8_t raw_known;
+    uint8_t startup_window_started;
+    uint64_t first_sample_started_us;
     uint64_t activated_us;
     uint64_t last_good_us;
     uint32_t raw_sequence;
@@ -112,6 +114,7 @@ static SystemDeviceResult SystemBarometerCold_NextSelect(uint8_t start)
         {
             s_cold.activated_us = SystemTime_GetMonotonicUs();
             s_cold.last_good_us = s_cold.activated_us;
+            s_cold.first_sample_started_us = s_cold.activated_us;
             return SYSTEM_DEVICE_OK;
         }
         if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_IO_ERROR; }
@@ -155,6 +158,24 @@ SystemDeviceResult SystemBarometerCold_Start(void)
     }
     s_cold.activated_us = SystemTime_GetMonotonicUs();
     s_cold.last_good_us = s_cold.activated_us;
+    s_cold.first_sample_started_us = s_cold.activated_us;
+    return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemBarometerCold_StartupWindowBegin(uint64_t phase_started_us)
+{
+    const uint64_t now_us = SystemTime_GetMonotonicUs();
+    if ((s_cold.active == SYSTEM_BAROMETER_COLD_INSTANCE_NONE) ||
+        (s_cold.running == SYSTEM_BAROMETER_COLD_INSTANCE_NONE))
+    { return SYSTEM_DEVICE_NOT_READY; }
+    if ((s_cold.startup_window_started != 0U) || (s_cold.raw_known != 0U))
+    { return SYSTEM_DEVICE_BAD_STATE; }
+    if ((phase_started_us < s_cold.activated_us) || (phase_started_us > now_us))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT(s_cold.active == s_cold.running, SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    s_cold.first_sample_started_us = phase_started_us;
+    s_cold.startup_window_started = 1U;
     return SYSTEM_DEVICE_OK;
 }
 
@@ -236,7 +257,17 @@ SystemDeviceResult SystemBarometerCold_Process(void)
     }
     SILVERSTAR_ASSERT(now_us >= s_cold.last_good_us, SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
-    if ((now_us - s_cold.last_good_us) < SYSTEM_BAROMETER_COLD_FAILURE_TIMEOUT_US)
+    /* No data during legal baud scanning/configuration is not runtime loss.
+     * Once a usable sample is published, the existing 250 ms limit applies. */
+    if (s_cold.raw_known == 0U)
+    {
+        SILVERSTAR_ASSERT(now_us >= s_cold.first_sample_started_us,
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+        if ((now_us - s_cold.first_sample_started_us) <
+            SYSTEM_BAROMETER_COLD_FIRST_SAMPLE_TIMEOUT_US)
+        { return SYSTEM_DEVICE_NOT_READY; }
+    }
+    else if ((now_us - s_cold.last_good_us) < SYSTEM_BAROMETER_COLD_FAILURE_TIMEOUT_US)
     { return SYSTEM_DEVICE_NOT_READY; }
     if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_IO_ERROR; }
     return SystemBarometerCold_NextSelect(1U);

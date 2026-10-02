@@ -162,7 +162,7 @@ static void TestFailedStopAndPartialStart(void)
     assert(SystemBarometerCold_Start() == SYSTEM_DEVICE_OK);
     assert(SystemBarometerCold_ActiveGet() == 3U && s_stop[2] == 1U);
     assert(s_running[0] == 0U && s_running[1] == 0U && s_running[2] == 0U && s_running[3] == 1U);
-    s_now += 250001U;
+    s_now += SYSTEM_BAROMETER_COLD_FIRST_SAMPLE_TIMEOUT_US;
     assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_NOT_PRESENT);
     assert(SystemBarometerCold_ActiveGet() == SYSTEM_BAROMETER_COLD_INSTANCE_NONE);
     assert(SystemBarometerCold_SampleGet(&sample) == SYSTEM_DEVICE_NOT_READY);
@@ -182,7 +182,7 @@ static void TestPressureDatumReject(void)
     s_sample[0].valid_fields = SYSTEM_BARO_FIELD_ALTITUDE;
     assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_NOT_READY);
     assert(SystemBarometerCold_SampleGet(&sample) == SYSTEM_DEVICE_NOT_READY);
-    s_now += 250001U;
+    s_now += SYSTEM_BAROMETER_COLD_FIRST_SAMPLE_TIMEOUT_US;
     assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_OK && SystemBarometerCold_ActiveGet() == 1U);
 }
 static void TestSampleProducedDuringProcess(void)
@@ -201,8 +201,41 @@ static void TestSampleProducedDuringProcess(void)
     assert(SystemBarometerCold_SampleGet(&sample) == SYSTEM_DEVICE_NOT_READY);
     assert(s_stop[0] == 0U);
 }
+static void TestDelayedFirstSample(void)
+{
+    SystemBarometerSample sample;
+    TestReset(0U);
+    s_sample[0].valid_fields = 0U;
+    s_now += 2000000ULL;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_NOT_READY);
+    assert(SystemBarometerCold_ActiveGet() == 0U && s_stop[0] == 0U);
+    s_sample[0].valid_fields = s_sample[0].supported_fields;
+    s_sample[0].sample_timestamp_us = s_now;
+    s_sample[0].receive_timestamp_us = s_now;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_OK);
+    assert(SystemBarometerCold_SampleGet(&sample) == SYSTEM_DEVICE_OK);
+    assert(s_start[1] == 0U);
+}
+static void TestFirstSampleWindowBoundary(void)
+{
+    TestReset(2U);
+    s_sample[2].valid_fields = 0U;
+    s_now += 5000000ULL; /* Startup phases precede the configuration wait. */
+    assert(SystemBarometerCold_StartupWindowBegin(s_now) == SYSTEM_DEVICE_OK);
+    assert(SystemBarometerCold_StartupWindowBegin(s_now) == SYSTEM_DEVICE_BAD_STATE);
+    s_now += SYSTEM_STARTUP_CONFIGURATION_TIMEOUT_US;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_NOT_READY);
+    assert(SystemBarometerCold_ActiveGet() == 2U && s_start[0] == 0U);
+    s_now += SYSTEM_STARTUP_COMMUNICATION_TIMEOUT_US - 1ULL;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_NOT_READY);
+    s_now++;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_OK);
+    assert(s_stop[2] == 1U && s_start[0] == 1U && SystemBarometerCold_ActiveGet() == 0U);
+}
 int main(void)
 {
+    TestFirstSampleWindowBoundary();
+    TestDelayedFirstSample();
     TestColdOrderAndIdentity(); TestFailedStopAndPartialStart(); TestPressureDatumReject();
     TestSampleProducedDuringProcess();
     assert(SystemBarometerCold_Stop() == SYSTEM_DEVICE_OK);
