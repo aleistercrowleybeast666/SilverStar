@@ -74,7 +74,6 @@ from services.state_model import (
     HandshakeState,
     MissionPhase,
 )
-from ui.navigation_panel import NavigationPanel
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
@@ -1581,8 +1580,6 @@ class MainWindow(QMainWindow):
         root.setContentsMargins(6, 6, 6, 6)
         root.setSpacing(8)
 
-        self.navigation_preparation_panel = NavigationPanel(self.i18n, preflight=True)
-        # Preserve the monitoring rows from the pre-navigation GSHC layout.
         summary_row = QHBoxLayout()
         summary_row.addWidget(self._build_preflight_system_panel(), 1)
         summary_row.addWidget(self._build_calibration_panel(), 1)
@@ -1594,9 +1591,6 @@ class MainWindow(QMainWindow):
         root.addLayout(detail_row)
         root.addWidget(self._build_preflight_command_panel())
         root.addWidget(self._build_event_panel(), 1)
-        # Supplemental preparation diagnostics must not displace the original
-        # status, commands and event monitoring rows.
-        root.addWidget(self.navigation_preparation_panel)
         return TouchScroll_Wrap(page)
 
     def _build_preflight_system_panel(self) -> QWidget:
@@ -1824,8 +1818,6 @@ class MainWindow(QMainWindow):
         top.addWidget(self._build_flight_data_panel(), 2)
         top.addWidget(self._build_mission_state_panel(), 2)
         status_layout.addLayout(top)
-        self.navigation_health_panel = NavigationPanel(self.i18n, preflight=False)
-        status_layout.addWidget(self.navigation_health_panel)
         self.flight_status_scroll = TouchScroll_Wrap(status_content, fit_content=True)
         root.addWidget(self.flight_status_scroll)
         # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
@@ -2567,8 +2559,6 @@ class MainWindow(QMainWindow):
         self._render_sensor(state)
         self._render_mission_state(state)
         self._render_commands(state)
-        self.navigation_preparation_panel.Navigation_Render(state)
-        self.navigation_health_panel.Navigation_Render(state)
         self._render_events()
         self._render_plots(state)
         self._render_data_tool_buttons()

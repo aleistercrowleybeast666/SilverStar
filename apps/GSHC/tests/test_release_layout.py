@@ -53,8 +53,7 @@ def test_original_monitor_rows_and_six_plots_are_visible(tmp_path, size, languag
     assert status.top() == data.top() == mission.top()
     viewport=rect(window.flight_status_scroll.viewport())
     for widget in (window.lbl_flight_lifecycle,window.lbl_packet_loss,window.lbl_flight_vel,
-                   window.lbl_flight_pos,window.lbl_mission_parachute,
-                   window.navigation_health_panel.summary,window.navigation_health_panel.toggle):
+                   window.lbl_flight_pos,window.lbl_mission_parachute):
         assert viewport.contains(rect(widget)), (language,size,rect(widget),viewport)
     plots=[rect(window.plot_widgets[(key,axis)]) for key in ('vel','pos') for axis in range(3)]
     assert len({r.top() for r in plots[:3]}) == 1
@@ -67,7 +66,7 @@ def test_original_monitor_rows_and_six_plots_are_visible(tmp_path, size, languag
     app.processEvents()
 
 
-def test_collapsed_navigation_summary_does_not_reserve_blank_chart_space(tmp_path):
+def test_m0_flight_status_does_not_reserve_navigation_chart_space(tmp_path):
     app = QApplication.instance() or QApplication([])
     i18n = I18n(QSettings(str(tmp_path/'settings.ini'), QSettings.IniFormat))
     window = MainWindow(i18n)
@@ -79,7 +78,8 @@ def test_collapsed_navigation_summary_does_not_reserve_blank_chart_space(tmp_pat
         window.resize(1536, 816)
         window.show()
         app.processEvents()
-        panel = window.navigation_health_panel
+        assert not hasattr(window, "navigation_health_panel")
+        panel = window.flight_status_scroll
         summary_bottom = panel.mapTo(window, QPoint()).y() + panel.height()
         chart_top = window.plot_layout.parentWidget().mapTo(window, QPoint()).y()
         assert chart_top - summary_bottom <= 24

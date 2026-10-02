@@ -5,7 +5,6 @@ import os
 import shutil
 import sys
 import time
-import secrets
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -28,7 +27,6 @@ from config import (
 )
 from protocol.air import (
     TOKEN_ALIGNMENT,
-    TOKEN_NAV_SUBSCRIBE,
     TOKEN_CALIBRATION,
     TOKEN_LOCK,
     TOKEN_START_MISSION,
@@ -1432,7 +1430,7 @@ class Controller(QObject):
         param1: int = 0,
     ) -> bool:
         if (cmd_id & 0xFF) == int(AirCmdId.START_MISSION) and not self.state.start_prerequisites_ready():
-            self._set_radio_message("navigation.start_blocked")
+            self._set_radio_message("radio.start_blocked", reason=self._tr("common.not_ready"))
             return False
         if (cmd_id & 0xFF) == int(AirCmdId.CAL_START) and not self._cal_start_allowed(param0):
             return False
@@ -1471,10 +1469,6 @@ class Controller(QObject):
             baseline_completed_face_mask=self.state.calibration.completed_face_mask,
         )
         self.pending_air_cmds[(pending.seq, pending.cmd_id)] = pending
-        if cmd_id in {int(AirCmdId.CAL_START), int(AirCmdId.CAL_FACE), int(AirCmdId.CAL_RESET),
-                      int(AirCmdId.ALIGN_START), int(AirCmdId.ALIGN_STOP), int(AirCmdId.ALIGN_RESET)}:
-            self.state.navigation.Navigation_Invalidate("WAITING")
-            self.state.navigation.awaiting_generation = True
         self._transmit_pending_air_cmd(pending, is_retry=False)
         return True
 
@@ -1485,8 +1479,8 @@ class Controller(QObject):
         is_retry: bool,
     ) -> None:
         if pending.cmd_id == int(AirCmdId.START_MISSION) and not self.state.start_prerequisites_ready():
-            self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="navigation readiness expired")
-            self._set_radio_message("navigation.start_blocked")
+            self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="M0 board prerequisites expired")
+            self._set_radio_message("radio.start_blocked", reason=self._tr("common.not_ready"))
             return
         if pending.cmd_id == int(AirCmdId.CAL_START) and not self._cal_start_allowed(pending.param0):
             self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="CAL_START gate")
@@ -1634,23 +1628,6 @@ class Controller(QObject):
                 "source": source,
             }
         )
-        self.Navigation_Subscribe()
-
-    def Navigation_Subscribe(self) -> None:
-        """One bounded optional extension probe, separate from base handshake."""
-        navigation = self.state.navigation
-        if self.worker is None or not self.state.capability_acked or navigation.requested_session is not None:
-            return
-        nonce = (getattr(self, "_navigation_nonce", secrets.randbelow(65535)) % 65535) + 1
-        self._navigation_nonce = nonce
-        navigation.Navigation_Request(nonce)
-        seq = self._next_air_seq()
-        navigation.subscription_seq = seq
-        frame = build_air_cmd(seq, int(AirCmdId.NAV_SUBSCRIBE), TOKEN_NAV_SUBSCRIBE | nonce, 1, 0)
-        packet = build_pc_to_gs_air_frame(frame)
-        self.worker.send_bytes(packet)
-        self.state.handshake.gsp_air_tx_requests += 1
-        self._log_tx_command(frame, packet, seq, int(AirCmdId.NAV_SUBSCRIBE), TOKEN_NAV_SUBSCRIBE | nonce, 1, 0, 1, False)
 
     def _check_air_cmd_timeouts(self) -> None:
         now = time.monotonic()

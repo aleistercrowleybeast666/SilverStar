@@ -27,6 +27,12 @@ from services.navigation_state import (
 )
 
 
+def archived_navigation_request(controller):
+    """Simulate recorded extension negotiation, without Controller TX activation."""
+    controller.state.navigation.Navigation_Request(42)
+    controller.state.navigation.subscription_seq = 3
+
+
 def navigation_ready(state, *, session=42, generation=1, seq=4, now=None):
     """A complete real protocol fixture, not a local READY override."""
     nav = state.navigation
@@ -66,7 +72,7 @@ def test_navigation_subscribe_golden():
 def test_declared_sf6_preserves_preparation_and_capability_start_gates(algorithm, allowed):
     controller = make_controller()
     configure_ready(controller)
-    controller.Navigation_Subscribe()
+    archived_navigation_request(controller)
     nav = controller.state.navigation
     controller.Navigation_HandleMessage(AirNavigationCapabilityMessage(
         5, nav.requested_session, 1, 1, algorithm, 31))
@@ -97,7 +103,7 @@ def test_ss0002_prepare_ack_and_alignment_ready_cannot_allow_start():
     controller.state.navigation = NavigationState()
     assert controller.state.start_ready()  # Missing NAV schema is display-only.
     controller.state.system_ready = False
-    controller.Navigation_Subscribe()
+    archived_navigation_request(controller)
     nav = controller.state.navigation
     controller._handle_ack_message(AirAckMessage(4, nav.subscription_seq, 0x0E, 0, 200))
     assert nav.Navigation_StartCheck() is NavigationStartResult.UNSUPPORTED
@@ -115,18 +121,12 @@ def test_ss0002_prepare_ack_and_alignment_ready_cannot_allow_start():
     assert len(controller.worker.sent) == baseline + 1
 
 
-def test_unsupported_subscribe_does_not_break_base_handshake_or_retry():
+def test_release_does_not_offer_navigation_subscription():
     controller = make_controller()
-    controller.state.capability = capability()
-    controller.state.capability_acked = True
-    controller.Navigation_Subscribe()
-    count = len(controller.worker.sent)
-    controller._handle_ack_message(AirAckMessage(4, controller.state.navigation.subscription_seq, 0x0E, 2, 200))
-    controller.Navigation_Subscribe()
-    assert controller.state.capability_acked
-    assert len(controller.worker.sent) == count
-    assert controller.state.navigation.Navigation_StartCheck() is NavigationStartResult.UNSUPPORTED
-
+    configure_ready(controller)
+    assert not hasattr(controller, "Navigation_Subscribe")
+    assert controller.state.start_ready()
+    assert not controller.worker.sent
 
 def test_stale_wrong_session_out_of_order_duplicate_and_generation():
     controller = make_controller()
@@ -187,20 +187,19 @@ def test_required_mask_supports_explicit_pure_ins_without_inventing_gnss_origin(
     assert not nav.preparation.ready_mask & 16
 
 
-def test_local_reprepare_old_generation_cannot_restore_ready():
+def test_local_reprepare_still_waits_for_real_board_alignment():
     controller = make_controller()
     configure_ready(controller)
-    navigation_ready(controller.state)
-    old = controller.state.navigation.preparation
     controller.send_align_start()
-    assert controller.state.navigation.Navigation_ApplyPreparation(replace(old, snapshot=5)) is NavigationApplyResult.STALE
-    assert not controller.state.start_ready()
+    assert not controller.state.start_ready()  # The real M0 command is pending.
+    assert controller.state.navigation.preparation is None
 
 
 @pytest.mark.parametrize("cause", ["disconnect", "boot"])
 def test_connection_loss_or_boot_immediately_forgets_ready_and_old_nonce(cause):
     controller = make_controller()
     configure_ready(controller)
+    navigation_ready(controller.state)  # Explicit archived-extension fixture.
     old = controller.state.navigation.preparation
     if cause == "disconnect":
         controller.on_connection_changed(False, "lost")
@@ -244,7 +243,7 @@ def test_sparse_detail_sequence_unwrap_uses_intervening_navigation_frames():
 def test_optional_gnss_origin_does_not_block_start(algorithm):
     controller = make_controller()
     configure_ready(controller)
-    controller.Navigation_Subscribe()
+    archived_navigation_request(controller)
     nav = controller.state.navigation
     controller.Navigation_HandleMessage(AirNavigationCapabilityMessage(
         5, nav.requested_session, 1, 1, algorithm, 31))

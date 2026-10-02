@@ -100,9 +100,6 @@ Ground Station 遇到尚未认识的 sensor ID 时应显示 `Unknown Sensor 0xNN
 | `0x12` | `CAPABILITY` | 9 | START 前且未 ACK，立即一次 + 1 Hz |
 | `0x13` | `PREFLIGHT_STATUS` | 9 | Capability ACK 后至 START |
 | `0x14` | `SENSOR_STATUS` | 9 | Alignment 事务结束时组成一次 snapshot |
-| `0x15` | `NAV_CAPABILITY` | 9 | 协商后的导航 schema / session / generation |
-| `0x16` | `NAV_PREPARATION` | 9 | 原子导航准备 required / ready / reason |
-| `0x17` | `NAV_HEALTH` | 9 | 独立限时的组级导航健康字段 |
 | `0x20` | `STATUS` | 9 | 边沿事件 |
 | `0x30` | `CMD` | 9 | GS→FC |
 | `0x40` | `ACK` | 9 | FC→GS command response |
@@ -724,9 +721,11 @@ Alignment `READY → STALE` 后重新阻止 START，必须显式重新 `ALIGN_ST
 
 AIR START 额外要求 Capability ACKED 与 interlock UNLOCKED。
 
-旧固件曾允许无预飞 GNSS origin 启动。导航 schema 1 的任务策略由 required mask 声明；
-要求 GNSS 的任务必须完成本次 generation 的 GNSS origin 和 navigation ready。
-GSHC 在无法确认新鲜导航准备状态时阻止普通 START，不自动选择无 GNSS 降级启动。
+本次发布以板端 M0 的真实自检、校准、对准、解锁及 system_ready / START block reason
+作为 START 前置条件。GNSS 是否必需由项目和内部对准/估计器配置决定；默认可选 GNSS
+保持可在无 fix / 无 GNSS origin 时运行本地 INS/Baro。GSHC 不要求 NAV 扩展或额外订阅
+才能 START，也不会通过 NAV 显示状态制造 READY。板端 preparation generation 和二次
+前置安全检查保持有效；缺失真实 IMU、对准或系统就绪仍阻止 START。
 
 ---
 
@@ -967,13 +966,34 @@ AIR M0 wire在0.0.10当前契约内冻结；普通物理设备或能力实例扩
 
 只有 application framing、fragmentation、encryption/authentication framing、多节点寻址、重大 telemetry encoding redesign 等级别变化，才考虑未来新的 Profile。
 
-## 41. 导航准备 / 健康扩展 schema 1
+## 41. 导航扩展 schema 1：延期，保留历史记录解码资料
+
+仅用于历史记录解码的固定长度（本次发布不发送）：
+
+| ID | type | bytes | 范围 |
+|---|---|---|---|
+| `0x15` | `NAV_CAPABILITY` | 9 | 历史实验解码，不启用发送 |
+| `0x16` | `NAV_PREPARATION` | 9 | 历史实验解码，不启用发送 |
+| `0x17` | `NAV_HEALTH` | 9 | 历史实验解码，不启用发送 |
+
+
+2026-10-02 本次发布恢复原 M0 八种帧集合：`10/11/12/13/14/20/30/40`。
+飞控不发送 `NAV_CAPABILITY (15)`、`NAV_PREPARATION (16)`、`NAV_HEALTH (17)`；
+基础握手后，`NAV_SUBSCRIBE (0E)` 按不支持的命令返回原有 `BAD_CMD` ACK；
+未握手仍保留 `CAPABILITY_REQUIRED` 门槛。GSHC 不自动订阅、
+不提供实时 NAV 面板，也不把扩展就绪作为 START 依赖。原帧字段、编号、量化、
+ACK / 关键 STATUS / FLIGHT_STATE 调度范围不变。下述格式与周期仅说明历史实验
+记录，解码兼容保留，当前发布不启用这些发送周期。
+
+ESKF_15、SF6、传感器能力、内部估计器健康、preparation generation 安全检查及
+本地日志/诊断仍保留。导航详细诊断不通过 M0 发送。扩展重新发布须另行评估
+实际有限半双工吞吐、控制响应和主流 FLIGHT_STATE 预算。
 
 新增独立 type，不改变旧固定帧、旧保留位、基础 Capability ACK、AIR profile、MTU、
 GSP 封装或任何 CRC。三个新增状态帧都只有 **9 bytes**，每帧可独立解释，无分片重组。
 本节明确修订旧 START 可缺 GNSS origin 的规则，仅对协商后的 schema 1 生效。
 
-基线 Capability 握手成功后，GSHC 每连接发送一次 `NAV_SUBSCRIBE`：
+历史实验在基础 Capability 握手成功后发送一次 `NAV_SUBSCRIBE`；本次发布已取消。
 
 | ID | 命令 | token | param0 | param1 |
 |---|---|---|---|---|
