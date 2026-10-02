@@ -1,0 +1,17 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1
+FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+SilverStar architecture check failed: checks=334 failures=1
+FAIL: EIDE preprocessor definitions differ from Make.
+mingw32-make: *** [Makefile:224: architecture-check] Error 1

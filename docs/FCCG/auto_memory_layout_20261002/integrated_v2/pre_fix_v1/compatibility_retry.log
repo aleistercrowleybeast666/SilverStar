@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\AutoMemory_Integrated_20261002_v1\verify_compatibility.py", line 29, in <module>
+    before = hashlib.sha256(file.read_bytes()).hexdigest()
+                            ~~~~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 782, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\.work\\AutoMemory_Integrated_20261002_v1\\SourceDrift_ESKF15_v2\\Interfaces\\Inc\\navigation_backend.h'

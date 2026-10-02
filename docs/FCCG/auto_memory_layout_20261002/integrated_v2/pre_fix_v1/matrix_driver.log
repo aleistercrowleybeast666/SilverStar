@@ -1,0 +1,65 @@
+BEGIN sf6_auto_arm
+BEGIN kf6_auto_arm
+END sf6_auto_arm 0
+BEGIN sf6_auto_architecture
+END kf6_auto_arm 0
+BEGIN kf6_auto_architecture
+END sf6_auto_architecture 2
+BEGIN sf6_auto_power10
+END kf6_auto_architecture 2
+BEGIN kf6_auto_power10
+END sf6_auto_power10 0
+BEGIN sf6_auto_host
+END kf6_auto_power10 0
+BEGIN kf6_auto_host
+END kf6_auto_host 0
+BEGIN kf6_auto_analyzer
+END sf6_auto_host 0
+BEGIN sf6_auto_analyzer
+END sf6_auto_analyzer 0
+BEGIN sf6_auto_resources
+END kf6_auto_analyzer 0
+BEGIN kf6_auto_resources
+END sf6_auto_resources 0
+BEGIN sf6_legacy_arm
+END kf6_auto_resources 0
+BEGIN kf6_legacy_arm
+END sf6_legacy_arm 0
+BEGIN sf6_legacy_resources
+END kf6_legacy_arm 0
+BEGIN kf6_legacy_resources
+END sf6_legacy_resources 0
+BEGIN pureins_auto_arm
+END kf6_legacy_resources 0
+BEGIN eskf15_auto_arm
+END pureins_auto_arm 0
+BEGIN pureins_auto_architecture
+END pureins_auto_architecture 2
+BEGIN pureins_auto_power10
+END eskf15_auto_arm 0
+BEGIN eskf15_auto_architecture
+END eskf15_auto_architecture 2
+BEGIN eskf15_auto_power10
+END pureins_auto_power10 0
+BEGIN pureins_auto_host
+END eskf15_auto_power10 0
+BEGIN eskf15_auto_host
+END pureins_auto_host 0
+BEGIN pureins_auto_analyzer
+END eskf15_auto_host 0
+BEGIN eskf15_auto_analyzer
+END pureins_auto_analyzer 0
+BEGIN pureins_auto_resources
+END pureins_auto_resources 0
+BEGIN pureins_legacy_arm
+END eskf15_auto_analyzer 0
+BEGIN eskf15_auto_resources
+END eskf15_auto_resources 0
+BEGIN eskf15_legacy_arm
+END pureins_legacy_arm 0
+BEGIN pureins_legacy_resources
+END pureins_legacy_resources 0
+END eskf15_legacy_arm 0
+BEGIN eskf15_legacy_resources
+END eskf15_legacy_resources 0
+COMPLETE

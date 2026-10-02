@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="2.765" timestamp="2026-10-02T08:39:03.319968+08:00" hostname="CHD"><testcase classname="tests.test_sf6_recorded" name="test_actual_sf6_backend_exact_decoder_and_recorded_sources" time="1.450" /></testsuite></testsuites>

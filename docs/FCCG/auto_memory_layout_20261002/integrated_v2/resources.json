@@ -1,0 +1,362 @@
+[
+  {
+    "name": "PureINS",
+    "layout": "legacy",
+    "regions": {
+      "FLASH": {
+        "used": 284748,
+        "remaining": 239540,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 83000,
+        "remaining": 48072,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 44016,
+        "remaining": 21520,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 127016,
+    "elf_sha256": "349651d318eb49b2cb7a99cd6bea58c5c3b15ce857781b8e2b1f4df30d789663",
+    "bin_sha256": "e3c1003aaa3a79aa21b8e2e806f98e876212502cedd436326a37b049d3a885d4",
+    "bin_bytes": 284752,
+    "v8_bin_equal": false,
+    "assignment": null,
+    "attempts": null,
+    "groups": null
+  },
+  {
+    "name": "PureINS",
+    "layout": "auto",
+    "regions": {
+      "FLASH": {
+        "used": 284748,
+        "remaining": 239540,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 83320,
+        "remaining": 47752,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 43696,
+        "remaining": 21840,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 127016,
+    "elf_sha256": "b109d619419ea11564ff5cbce4667dd1910cbd3f7fd690e912526699e20ab496",
+    "bin_sha256": "bbd831f020ca5a3d9ccff9967a3278e6399f36c81eea39d9578d701d5af166ab",
+    "bin_bytes": 284752,
+    "v8_bin_equal": false,
+    "assignment": {
+      "nav_health": "RAM"
+    },
+    "attempts": 2,
+    "groups": {
+      "nav_health": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/System/Src/system_navigation_health.o",
+        "symbol": "s_groups",
+        "size": 320,
+        "alignment": 8,
+        "source_sha256": "2099c529470af4f19b4407cd44ef023cb0e64b169d8d59a245aa3d45b60c6c92",
+        "address": 536880952,
+        "region": "RAM",
+        "output_section": ".bss",
+        "zero_bounds": [
+          "_sbss",
+          "_ebss"
+        ]
+      }
+    }
+  },
+  {
+    "name": "KF6",
+    "layout": "legacy",
+    "regions": {
+      "FLASH": {
+        "used": 317124,
+        "remaining": 207164,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 102328,
+        "remaining": 28744,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 55432,
+        "remaining": 10104,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 157760,
+    "elf_sha256": "6a1679e1346bd18ac98f80ed7a0b68af300d12cbcf2a9fdccec940a0600bb88b",
+    "bin_sha256": "b3876ab119643ba4f7dbd9468759414acc6ee55467440fea6b06f2f286e0d110",
+    "bin_bytes": 317128,
+    "v8_bin_equal": false,
+    "assignment": null,
+    "attempts": null,
+    "groups": null
+  },
+  {
+    "name": "KF6",
+    "layout": "auto",
+    "regions": {
+      "FLASH": {
+        "used": 317124,
+        "remaining": 207164,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 102648,
+        "remaining": 28424,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 55112,
+        "remaining": 10424,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 157760,
+    "elf_sha256": "eaf46ba3e627886a68f1e1f774d1a387e0a8ba159264d140623cc8226f9c7c72",
+    "bin_sha256": "f64f2c64375f0d3bab30c7dc8e039428929e8c9452e91a74753de1c2b40e98b5",
+    "bin_bytes": 317128,
+    "v8_bin_equal": false,
+    "assignment": {
+      "kf_replay": "CCMRAM",
+      "nav_health": "RAM"
+    },
+    "attempts": 4,
+    "groups": {
+      "kf_replay": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/APP/Src/estimator_task.o",
+        "symbol": "s_replay_storage",
+        "size": 10368,
+        "alignment": 8,
+        "source_sha256": "53e49a47cf4fd6aa9ba76038eb3b7d1cb7df3130ff090e5470a7590213636e8e",
+        "address": 268435456,
+        "region": "CCMRAM",
+        "output_section": ".ccmram_bss",
+        "zero_bounds": [
+          "_sccmram_bss",
+          "_eccmram_bss"
+        ]
+      },
+      "nav_health": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/System/Src/system_navigation_health.o",
+        "symbol": "s_groups",
+        "size": 320,
+        "alignment": 8,
+        "source_sha256": "2099c529470af4f19b4407cd44ef023cb0e64b169d8d59a245aa3d45b60c6c92",
+        "address": 536880952,
+        "region": "RAM",
+        "output_section": ".bss",
+        "zero_bounds": [
+          "_sbss",
+          "_ebss"
+        ]
+      }
+    }
+  },
+  {
+    "name": "ESKF15",
+    "layout": "legacy",
+    "regions": {
+      "FLASH": {
+        "used": 303276,
+        "remaining": 221012,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 100928,
+        "remaining": 30144,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 63456,
+        "remaining": 2080,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 164384,
+    "elf_sha256": "b00b38603f4303832536a763b3d1259ca77873a888d2fe50a066c57a527ee382",
+    "bin_sha256": "c2b4cdcf355fcdca387a2085b5704f06f14c66ecaf634127f66111f303388ece",
+    "bin_bytes": 303280,
+    "v8_bin_equal": false,
+    "assignment": null,
+    "attempts": null,
+    "groups": null
+  },
+  {
+    "name": "ESKF15",
+    "layout": "auto",
+    "regions": {
+      "FLASH": {
+        "used": 303276,
+        "remaining": 221012,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 117920,
+        "remaining": 13152,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 46464,
+        "remaining": 19072,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 164384,
+    "elf_sha256": "f310298452110841adbc998662b71e0c039bb9c2c00b98d6b71356da0609ec1e",
+    "bin_sha256": "2763d586a24b9fb85b741e882d5807df7f0d957e01fee7e829f450ec176a6cea",
+    "bin_bytes": 303280,
+    "v8_bin_equal": false,
+    "assignment": {
+      "eskf_history": "RAM",
+      "eskf_window": "CCMRAM",
+      "eskf_work": "CCMRAM",
+      "nav_health": "CCMRAM"
+    },
+    "attempts": 16,
+    "groups": {
+      "eskf_history": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.o",
+        "symbol": "s_history",
+        "size": 16992,
+        "alignment": 8,
+        "source_sha256": "476fbefb532b10a2f7dc51b270490e57e3e241f7250b08b79475d827cd51ecc7",
+        "address": 536880952,
+        "region": "RAM",
+        "output_section": ".bss",
+        "zero_bounds": [
+          "_sbss",
+          "_ebss"
+        ]
+      },
+      "eskf_window": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.o",
+        "symbol": "s_eskf_window",
+        "size": 184,
+        "alignment": 8,
+        "source_sha256": "476fbefb532b10a2f7dc51b270490e57e3e241f7250b08b79475d827cd51ecc7",
+        "address": 268435456,
+        "region": "CCMRAM",
+        "output_section": ".ccmram_bss",
+        "zero_bounds": [
+          "_sccmram_bss",
+          "_eccmram_bss"
+        ]
+      },
+      "eskf_work": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.o",
+        "symbol": "s_work",
+        "size": 3140,
+        "alignment": 8,
+        "source_sha256": "476fbefb532b10a2f7dc51b270490e57e3e241f7250b08b79475d827cd51ecc7",
+        "address": 268435640,
+        "region": "CCMRAM",
+        "output_section": ".ccmram_bss",
+        "zero_bounds": [
+          "_sccmram_bss",
+          "_eccmram_bss"
+        ]
+      },
+      "nav_health": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/System/Src/system_navigation_health.o",
+        "symbol": "s_groups",
+        "size": 320,
+        "alignment": 8,
+        "source_sha256": "2099c529470af4f19b4407cd44ef023cb0e64b169d8d59a245aa3d45b60c6c92",
+        "address": 268438784,
+        "region": "CCMRAM",
+        "output_section": ".ccmram_bss",
+        "zero_bounds": [
+          "_sccmram_bss",
+          "_eccmram_bss"
+        ]
+      }
+    }
+  },
+  {
+    "name": "SF6",
+    "layout": "legacy",
+    "regions": {
+      "FLASH": {
+        "used": 291420,
+        "remaining": 232868,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 101704,
+        "remaining": 29368,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 44016,
+        "remaining": 21520,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 145720,
+    "elf_sha256": "bce234adccb734ec5630e740696eca3f942889fa7a9a1e20a40eb895de71b26b",
+    "bin_sha256": "2d4fa94a2499c6be365e0195aaa7712b09bf5a0bf642306142275d37876c0206",
+    "bin_bytes": 291424,
+    "v8_bin_equal": false,
+    "assignment": null,
+    "attempts": null,
+    "groups": null
+  },
+  {
+    "name": "SF6",
+    "layout": "auto",
+    "regions": {
+      "FLASH": {
+        "used": 291420,
+        "remaining": 232868,
+        "capacity": 524288
+      },
+      "main SRAM": {
+        "used": 101704,
+        "remaining": 29368,
+        "capacity": 131072
+      },
+      "CCMRAM": {
+        "used": 44016,
+        "remaining": 21520,
+        "capacity": 65536
+      }
+    },
+    "physical_ram_total_bytes": 145720,
+    "elf_sha256": "75925e9ed0f24276554e1188026915d7f13e0b4be7a89a9abbeb7b38ff048fda",
+    "bin_sha256": "841d3303e6401d64998ee55b5e89c597a4bc69da292e7b3d7bc874b2833492ff",
+    "bin_bytes": 291424,
+    "v8_bin_equal": false,
+    "assignment": {
+      "nav_health": "CCMRAM"
+    },
+    "attempts": 2,
+    "groups": {
+      "nav_health": {
+        "object": "build/FCCG/SilverStar_F407/Release/auto/System/Src/system_navigation_health.o",
+        "symbol": "s_groups",
+        "size": 320,
+        "alignment": 8,
+        "source_sha256": "2099c529470af4f19b4407cd44ef023cb0e64b169d8d59a245aa3d45b60c6c92",
+        "address": 268435456,
+        "region": "CCMRAM",
+        "output_section": ".ccmram_bss",
+        "zero_bounds": [
+          "_sccmram_bss",
+          "_eccmram_bss"
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,789 @@
+--- PureINS/v8/APP/Src/estimator_task.c
++++ PureINS/integrated/APP/Src/estimator_task.c
+@@ -246,7 +246,7 @@
+  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
+ #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+ static NavigationReplayContext s_replay;
+-static PLATFORM_CPU_FAST_BSS NavigationReplayStorage s_replay_storage;
++static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
+ static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
+ static uint64_t s_native_week_us;
+ static uint32_t s_native_previous_tow_ms;
+--- PureINS/v8/Generated/Src/project_log_decoder_profile.c
++++ PureINS/integrated/Generated/Src/project_log_decoder_profile.c
+@@ -13,13 +13,13 @@
+ };
+ static const uint8_t s_project_semantics_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0xE4U, 0xD1U, 0xA6U, 0x47U, 0x60U, 0x23U, 0xB1U, 0xC0U,
+-    0xE6U, 0x26U, 0x41U, 0xFCU, 0x55U, 0x53U, 0x7CU, 0x2DU
++    0x81U, 0xB5U, 0x68U, 0x9AU, 0xBAU, 0xFCU, 0x47U, 0x06U,
++    0xE9U, 0x51U, 0x8FU, 0x9BU, 0x23U, 0xEEU, 0xB8U, 0x34U
+ };
+ static const uint8_t s_generation_profile_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0x00U, 0x62U, 0xCAU, 0xCCU, 0xC0U, 0x68U, 0xFDU, 0x04U,
+-    0x8DU, 0x64U, 0xD8U, 0xEDU, 0xFDU, 0xD9U, 0x96U, 0x90U
++    0xD4U, 0x3FU, 0x49U, 0xA4U, 0xA4U, 0xDAU, 0xA7U, 0xF1U,
++    0x04U, 0xF0U, 0xD0U, 0xDCU, 0xE0U, 0x42U, 0x82U, 0xB9U
+ };
+ 
+ void ProjectLogDecoderProfile_Get(ProjectLogDecoderProfile *profile)
+--- PureINS/v8/Generated/Src/project_metadata.c
++++ PureINS/integrated/Generated/Src/project_metadata.c
+@@ -9,7 +9,7 @@
+ #include "system_capabilities.h"
+ #include "system_user_config.h"
+ 
+-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x29898972UL
++#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x3075D382UL
+ 
+ static const SystemDeviceDescriptor s_device_descriptors[] =
+ {
+--- PureINS/v8/Platform/Inc/platform_memory.h
++++ PureINS/integrated/Platform/Inc/platform_memory.h
+@@ -12,16 +12,43 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* Link-time opt-in only. Each private CPU-only BSS group has a reviewed owner.
++ * Legacy expands to the original placement. No data or DMA section is eligible. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WORK_BSS __attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(8)))
++#define PLATFORM_ESKF_HISTORY_BSS __attribute__((section(".bss.silverstar_auto_eskf_history"), aligned(8)))
++#define PLATFORM_KF_REPLAY_BSS __attribute__((section(".bss.silverstar_auto_kf_replay"), aligned(8)))
++#define PLATFORM_NAV_HEALTH_BSS __attribute__((section(".bss.silverstar_auto_nav_health"), aligned(8)))
++#else
++#error "Auto memory layout requires a supported compiler"
++#endif
++#elif (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
++#define PLATFORM_ESKF_WORK_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_ESKF_HISTORY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_KF_REPLAY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_NAV_HEALTH_BSS PLATFORM_CPU_FAST_BSS
++#else
++#error "Invalid auto memory layout"
++#endif
++
+ /* One audited CPU-only object; the target owns its section and alignment.
+  * An old target header cannot silently accept the experimental layout. */
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+ #ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#define PLATFORM_ESKF_WINDOW_BSS __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#else
+ #if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+ #error "The selected target does not support ESKF consistency window SRAM placement"
+ #endif
+ #define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
+ #endif
+ 
+ #ifndef PLATFORM_DMA_ACCESSIBLE
+--- PureINS/v8/STM32F407XX_FLASH.ld
++++ PureINS/integrated/STM32F407XX_FLASH.ld
+@@ -181,6 +181,7 @@
+   {
+     . = ALIGN(8);
+     _sccmram_bss = .;
++    /* SILVERSTAR_AUTO_CCM_BSS */
+     *(.ccmram_bss)
+     *(.ccmram_bss*)
+     . = ALIGN(8);
+@@ -206,6 +207,7 @@
+     /* This is used by the startup in order to initialize the .bss secion */
+     _sbss = .;         /* define a global symbol at bss start */
+     __bss_start__ = _sbss;
++    /* SILVERSTAR_AUTO_RAM_BSS */
+     *(.bss)
+     *(.bss*)
+     *(COMMON)
+--- PureINS/v8/System/Src/system_navigation_health.c
++++ PureINS/integrated/System/Src/system_navigation_health.c
+@@ -10,7 +10,7 @@
+ _Static_assert(sizeof(SystemNavigationGroupHealth) == 64U,
+     "Navigation group health must retain its bounded memory footprint");
+ 
+-static PLATFORM_CPU_FAST_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
++static PLATFORM_NAV_HEALTH_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
+ static uint64_t s_epoch_us;
+ static uint32_t s_imu_faults;
+ static uint32_t s_imu_quality;
+--- PureINS/v8/Targets/SilverStar_F407/Inc/platform_memory_target.h
++++ PureINS/integrated/Targets/SilverStar_F407/Inc/platform_memory_target.h
+@@ -1,5 +1,9 @@
+ #ifndef __PLATFORM_MEMORY_TARGET_H
+ #define __PLATFORM_MEMORY_TARGET_H
++
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
+ 
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+@@ -24,7 +28,13 @@
+ 
+ /* .bss.* remains inside _sbss/_ebss and uses the unchanged startup clear.
+  * SRAM is a deliberate CCM relief tradeoff, not a timing qualification. */
+-#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
++#error "Auto and manual ESKF window layouts are mutually exclusive"
++#endif
++#define PLATFORM_ESKF_WINDOW_BSS \
++    __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#elif (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
+ #if defined(__GNUC__) || defined(__clang__)
+ #define PLATFORM_ESKF_WINDOW_BSS \
+     __attribute__((section(".bss.silverstar_eskf_window"), aligned(8)))
+--- PureINS/v8/Tests/Host/test_estimator_preparation.c
++++ PureINS/integrated/Tests/Host/test_estimator_preparation.c
+@@ -192,7 +192,15 @@
+     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+     TEST_CHECK(initial.initialized == 1U && initial.mission_running == 0U && initial.predict_count == 0U);
+     TEST_CHECK(fabsf(initial.q_nb[0] - 1.0f) < 0.00001f);
+-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
++    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
++    {
++        uint8_t axis;
++        /* SF6's committed contract has gains, not a covariance estimate;
++         * its backend explicitly publishes NAN for these unavailable fields. */
++        for (axis = 0U; axis < 6U; axis++)
++        { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
++    }
++    else if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+     {
+         uint8_t axis;
+         for (axis = 0U; axis < 6U; axis++)
+--- PureINS/v8/Tests/Host/test_logger.c
++++ PureINS/integrated/Tests/Host/test_logger.c
+@@ -101,13 +101,25 @@
+     uint16_t index;
+ 
+     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
+-    TEST_CHECK(SSLOG_RECORD_COUNT == 40U);
++    /* The committed SF6 contract adds two records to the prior 38. Check
++     * their wire identity and metadata, rather than only changing a count. */
++    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U));
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_STATE == 0x2BU);
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_MEASUREMENT == 0x2CU);
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_STATE);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 72U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_STATE) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 72U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_STATE") == 0));
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_MEASUREMENT);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 56U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_MEASUREMENT) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 56U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_MEASUREMENT") == 0));
+     TEST_CHECK(FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE == 0x28U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY == 0x29U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY == 0x2AU);
+--- KF6/v8/APP/Src/estimator_task.c
++++ KF6/integrated/APP/Src/estimator_task.c
+@@ -246,7 +246,7 @@
+  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
+ #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+ static NavigationReplayContext s_replay;
+-static PLATFORM_CPU_FAST_BSS NavigationReplayStorage s_replay_storage;
++static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
+ static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
+ static uint64_t s_native_week_us;
+ static uint32_t s_native_previous_tow_ms;
+--- KF6/v8/Generated/Src/project_log_decoder_profile.c
++++ KF6/integrated/Generated/Src/project_log_decoder_profile.c
+@@ -13,13 +13,13 @@
+ };
+ static const uint8_t s_project_semantics_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0x1FU, 0x00U, 0x8AU, 0x03U, 0xB6U, 0xE4U, 0x57U, 0x54U,
+-    0xACU, 0x93U, 0x31U, 0xFBU, 0xC4U, 0x5CU, 0xDAU, 0xB8U
++    0xC4U, 0x7EU, 0xD0U, 0xBBU, 0xFBU, 0x17U, 0xBBU, 0x4EU,
++    0xFFU, 0x5AU, 0xACU, 0x03U, 0xB5U, 0xADU, 0xA3U, 0x56U
+ };
+ static const uint8_t s_generation_profile_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0x5CU, 0x29U, 0x23U, 0xA5U, 0x78U, 0x09U, 0x18U, 0xA1U,
+-    0x6CU, 0x95U, 0xAAU, 0xE3U, 0xB6U, 0x43U, 0xF4U, 0xB0U
++    0x8BU, 0xABU, 0xB8U, 0x62U, 0x78U, 0x9BU, 0x2BU, 0x20U,
++    0xA0U, 0x36U, 0xE7U, 0x80U, 0xE1U, 0x88U, 0xA5U, 0xACU
+ };
+ 
+ void ProjectLogDecoderProfile_Get(ProjectLogDecoderProfile *profile)
+--- KF6/v8/Generated/Src/project_metadata.c
++++ KF6/integrated/Generated/Src/project_metadata.c
+@@ -9,7 +9,7 @@
+ #include "system_capabilities.h"
+ #include "system_user_config.h"
+ 
+-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x8EEF132BUL
++#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x2B659CD4UL
+ 
+ static const SystemDeviceDescriptor s_device_descriptors[] =
+ {
+--- KF6/v8/Platform/Inc/platform_memory.h
++++ KF6/integrated/Platform/Inc/platform_memory.h
+@@ -12,16 +12,43 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* Link-time opt-in only. Each private CPU-only BSS group has a reviewed owner.
++ * Legacy expands to the original placement. No data or DMA section is eligible. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WORK_BSS __attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(8)))
++#define PLATFORM_ESKF_HISTORY_BSS __attribute__((section(".bss.silverstar_auto_eskf_history"), aligned(8)))
++#define PLATFORM_KF_REPLAY_BSS __attribute__((section(".bss.silverstar_auto_kf_replay"), aligned(8)))
++#define PLATFORM_NAV_HEALTH_BSS __attribute__((section(".bss.silverstar_auto_nav_health"), aligned(8)))
++#else
++#error "Auto memory layout requires a supported compiler"
++#endif
++#elif (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
++#define PLATFORM_ESKF_WORK_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_ESKF_HISTORY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_KF_REPLAY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_NAV_HEALTH_BSS PLATFORM_CPU_FAST_BSS
++#else
++#error "Invalid auto memory layout"
++#endif
++
+ /* One audited CPU-only object; the target owns its section and alignment.
+  * An old target header cannot silently accept the experimental layout. */
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+ #ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#define PLATFORM_ESKF_WINDOW_BSS __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#else
+ #if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+ #error "The selected target does not support ESKF consistency window SRAM placement"
+ #endif
+ #define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
+ #endif
+ 
+ #ifndef PLATFORM_DMA_ACCESSIBLE
+--- KF6/v8/STM32F407XX_FLASH.ld
++++ KF6/integrated/STM32F407XX_FLASH.ld
+@@ -181,6 +181,7 @@
+   {
+     . = ALIGN(8);
+     _sccmram_bss = .;
++    /* SILVERSTAR_AUTO_CCM_BSS */
+     *(.ccmram_bss)
+     *(.ccmram_bss*)
+     . = ALIGN(8);
+@@ -206,6 +207,7 @@
+     /* This is used by the startup in order to initialize the .bss secion */
+     _sbss = .;         /* define a global symbol at bss start */
+     __bss_start__ = _sbss;
++    /* SILVERSTAR_AUTO_RAM_BSS */
+     *(.bss)
+     *(.bss*)
+     *(COMMON)
+--- KF6/v8/System/Src/system_navigation_health.c
++++ KF6/integrated/System/Src/system_navigation_health.c
+@@ -10,7 +10,7 @@
+ _Static_assert(sizeof(SystemNavigationGroupHealth) == 64U,
+     "Navigation group health must retain its bounded memory footprint");
+ 
+-static PLATFORM_CPU_FAST_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
++static PLATFORM_NAV_HEALTH_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
+ static uint64_t s_epoch_us;
+ static uint32_t s_imu_faults;
+ static uint32_t s_imu_quality;
+--- KF6/v8/Targets/SilverStar_F407/Inc/platform_memory_target.h
++++ KF6/integrated/Targets/SilverStar_F407/Inc/platform_memory_target.h
+@@ -1,5 +1,9 @@
+ #ifndef __PLATFORM_MEMORY_TARGET_H
+ #define __PLATFORM_MEMORY_TARGET_H
++
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
+ 
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+@@ -24,7 +28,13 @@
+ 
+ /* .bss.* remains inside _sbss/_ebss and uses the unchanged startup clear.
+  * SRAM is a deliberate CCM relief tradeoff, not a timing qualification. */
+-#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
++#error "Auto and manual ESKF window layouts are mutually exclusive"
++#endif
++#define PLATFORM_ESKF_WINDOW_BSS \
++    __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#elif (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
+ #if defined(__GNUC__) || defined(__clang__)
+ #define PLATFORM_ESKF_WINDOW_BSS \
+     __attribute__((section(".bss.silverstar_eskf_window"), aligned(8)))
+--- KF6/v8/Tests/Host/test_estimator_preparation.c
++++ KF6/integrated/Tests/Host/test_estimator_preparation.c
+@@ -192,7 +192,15 @@
+     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+     TEST_CHECK(initial.initialized == 1U && initial.mission_running == 0U && initial.predict_count == 0U);
+     TEST_CHECK(fabsf(initial.q_nb[0] - 1.0f) < 0.00001f);
+-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
++    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
++    {
++        uint8_t axis;
++        /* SF6's committed contract has gains, not a covariance estimate;
++         * its backend explicitly publishes NAN for these unavailable fields. */
++        for (axis = 0U; axis < 6U; axis++)
++        { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
++    }
++    else if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+     {
+         uint8_t axis;
+         for (axis = 0U; axis < 6U; axis++)
+--- KF6/v8/Tests/Host/test_logger.c
++++ KF6/integrated/Tests/Host/test_logger.c
+@@ -101,13 +101,25 @@
+     uint16_t index;
+ 
+     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
+-    TEST_CHECK(SSLOG_RECORD_COUNT == 40U);
++    /* The committed SF6 contract adds two records to the prior 38. Check
++     * their wire identity and metadata, rather than only changing a count. */
++    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U));
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_STATE == 0x2BU);
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_MEASUREMENT == 0x2CU);
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_STATE);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 72U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_STATE) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 72U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_STATE") == 0));
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_MEASUREMENT);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 56U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_MEASUREMENT) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 56U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_MEASUREMENT") == 0));
+     TEST_CHECK(FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE == 0x28U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY == 0x29U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY == 0x2AU);
+--- ESKF15/v8/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
++++ ESKF15/integrated/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c
+@@ -46,8 +46,8 @@
+ 
+ /* EstimatorTask is the only runtime owner. No DMA, heap, or replay side effects. */
+ static NavigationEskfState s_state; /* CPU main SRAM, never DMA. */
+-static PLATFORM_CPU_FAST_BSS NavigationEskfWorkspace s_work;
+-static PLATFORM_CPU_FAST_BSS NavigationEskfReplay s_history;
++static PLATFORM_ESKF_WORK_BSS NavigationEskfWorkspace s_work;
++static PLATFORM_ESKF_HISTORY_BSS NavigationEskfReplay s_history;
+ static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
+ static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;
+ static GeoLocalFrame s_frame;
+--- ESKF15/v8/APP/Src/estimator_task.c
++++ ESKF15/integrated/APP/Src/estimator_task.c
+@@ -246,7 +246,7 @@
+  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
+ #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+ static NavigationReplayContext s_replay;
+-static PLATFORM_CPU_FAST_BSS NavigationReplayStorage s_replay_storage;
++static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
+ static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
+ static uint64_t s_native_week_us;
+ static uint32_t s_native_previous_tow_ms;
+--- ESKF15/v8/Generated/Src/project_log_decoder_profile.c
++++ ESKF15/integrated/Generated/Src/project_log_decoder_profile.c
+@@ -13,13 +13,13 @@
+ };
+ static const uint8_t s_project_semantics_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0x8AU, 0x16U, 0x71U, 0xC8U, 0x57U, 0xD9U, 0x20U, 0x82U,
+-    0x06U, 0xCCU, 0xBDU, 0x06U, 0xDDU, 0xE8U, 0x71U, 0x03U
++    0x30U, 0x92U, 0xB9U, 0x89U, 0x76U, 0xE0U, 0x99U, 0x5DU,
++    0x29U, 0x9FU, 0xB9U, 0x93U, 0xB4U, 0xD1U, 0x1FU, 0xB4U
+ };
+ static const uint8_t s_generation_profile_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0xFBU, 0xB9U, 0xE7U, 0x2BU, 0x56U, 0x2FU, 0x40U, 0xD8U,
+-    0x81U, 0x9FU, 0x8EU, 0x9EU, 0x3FU, 0x2BU, 0x9CU, 0x79U
++    0x15U, 0xD1U, 0x91U, 0x8FU, 0x67U, 0x51U, 0xF2U, 0xE5U,
++    0xFFU, 0xB1U, 0xF7U, 0x0AU, 0xF8U, 0x98U, 0xAAU, 0x53U
+ };
+ 
+ void ProjectLogDecoderProfile_Get(ProjectLogDecoderProfile *profile)
+--- ESKF15/v8/Generated/Src/project_metadata.c
++++ ESKF15/integrated/Generated/Src/project_metadata.c
+@@ -9,7 +9,7 @@
+ #include "system_capabilities.h"
+ #include "system_user_config.h"
+ 
+-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0xCD2195C1UL
++#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x94277241UL
+ 
+ static const SystemDeviceDescriptor s_device_descriptors[] =
+ {
+--- ESKF15/v8/Platform/Inc/platform_memory.h
++++ ESKF15/integrated/Platform/Inc/platform_memory.h
+@@ -12,16 +12,43 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* Link-time opt-in only. Each private CPU-only BSS group has a reviewed owner.
++ * Legacy expands to the original placement. No data or DMA section is eligible. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WORK_BSS __attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(8)))
++#define PLATFORM_ESKF_HISTORY_BSS __attribute__((section(".bss.silverstar_auto_eskf_history"), aligned(8)))
++#define PLATFORM_KF_REPLAY_BSS __attribute__((section(".bss.silverstar_auto_kf_replay"), aligned(8)))
++#define PLATFORM_NAV_HEALTH_BSS __attribute__((section(".bss.silverstar_auto_nav_health"), aligned(8)))
++#else
++#error "Auto memory layout requires a supported compiler"
++#endif
++#elif (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
++#define PLATFORM_ESKF_WORK_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_ESKF_HISTORY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_KF_REPLAY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_NAV_HEALTH_BSS PLATFORM_CPU_FAST_BSS
++#else
++#error "Invalid auto memory layout"
++#endif
++
+ /* One audited CPU-only object; the target owns its section and alignment.
+  * An old target header cannot silently accept the experimental layout. */
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+ #ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#define PLATFORM_ESKF_WINDOW_BSS __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#else
+ #if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+ #error "The selected target does not support ESKF consistency window SRAM placement"
+ #endif
+ #define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
+ #endif
+ 
+ #ifndef PLATFORM_DMA_ACCESSIBLE
+--- ESKF15/v8/STM32F407XX_FLASH.ld
++++ ESKF15/integrated/STM32F407XX_FLASH.ld
+@@ -181,6 +181,7 @@
+   {
+     . = ALIGN(8);
+     _sccmram_bss = .;
++    /* SILVERSTAR_AUTO_CCM_BSS */
+     *(.ccmram_bss)
+     *(.ccmram_bss*)
+     . = ALIGN(8);
+@@ -206,6 +207,7 @@
+     /* This is used by the startup in order to initialize the .bss secion */
+     _sbss = .;         /* define a global symbol at bss start */
+     __bss_start__ = _sbss;
++    /* SILVERSTAR_AUTO_RAM_BSS */
+     *(.bss)
+     *(.bss*)
+     *(COMMON)
+--- ESKF15/v8/System/Src/system_navigation_health.c
++++ ESKF15/integrated/System/Src/system_navigation_health.c
+@@ -10,7 +10,7 @@
+ _Static_assert(sizeof(SystemNavigationGroupHealth) == 64U,
+     "Navigation group health must retain its bounded memory footprint");
+ 
+-static PLATFORM_CPU_FAST_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
++static PLATFORM_NAV_HEALTH_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
+ static uint64_t s_epoch_us;
+ static uint32_t s_imu_faults;
+ static uint32_t s_imu_quality;
+--- ESKF15/v8/Targets/SilverStar_F407/Inc/platform_memory_target.h
++++ ESKF15/integrated/Targets/SilverStar_F407/Inc/platform_memory_target.h
+@@ -1,5 +1,9 @@
+ #ifndef __PLATFORM_MEMORY_TARGET_H
+ #define __PLATFORM_MEMORY_TARGET_H
++
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
+ 
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+@@ -24,7 +28,13 @@
+ 
+ /* .bss.* remains inside _sbss/_ebss and uses the unchanged startup clear.
+  * SRAM is a deliberate CCM relief tradeoff, not a timing qualification. */
+-#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
++#error "Auto and manual ESKF window layouts are mutually exclusive"
++#endif
++#define PLATFORM_ESKF_WINDOW_BSS \
++    __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#elif (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
+ #if defined(__GNUC__) || defined(__clang__)
+ #define PLATFORM_ESKF_WINDOW_BSS \
+     __attribute__((section(".bss.silverstar_eskf_window"), aligned(8)))
+--- ESKF15/v8/Tests/Host/test_estimator_preparation.c
++++ ESKF15/integrated/Tests/Host/test_estimator_preparation.c
+@@ -192,7 +192,15 @@
+     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+     TEST_CHECK(initial.initialized == 1U && initial.mission_running == 0U && initial.predict_count == 0U);
+     TEST_CHECK(fabsf(initial.q_nb[0] - 1.0f) < 0.00001f);
+-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
++    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
++    {
++        uint8_t axis;
++        /* SF6's committed contract has gains, not a covariance estimate;
++         * its backend explicitly publishes NAN for these unavailable fields. */
++        for (axis = 0U; axis < 6U; axis++)
++        { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
++    }
++    else if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+     {
+         uint8_t axis;
+         for (axis = 0U; axis < 6U; axis++)
+--- ESKF15/v8/Tests/Host/test_logger.c
++++ ESKF15/integrated/Tests/Host/test_logger.c
+@@ -101,13 +101,25 @@
+     uint16_t index;
+ 
+     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
+-    TEST_CHECK(SSLOG_RECORD_COUNT == 40U);
++    /* The committed SF6 contract adds two records to the prior 38. Check
++     * their wire identity and metadata, rather than only changing a count. */
++    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U));
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_STATE == 0x2BU);
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_MEASUREMENT == 0x2CU);
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_STATE);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 72U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_STATE) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 72U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_STATE") == 0));
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_MEASUREMENT);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 56U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_MEASUREMENT) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 56U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_MEASUREMENT") == 0));
+     TEST_CHECK(FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE == 0x28U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY == 0x29U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY == 0x2AU);
+--- SF6/v8/APP/Src/estimator_task.c
++++ SF6/integrated/APP/Src/estimator_task.c
+@@ -246,7 +246,7 @@
+  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
+ #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+ static NavigationReplayContext s_replay;
+-static PLATFORM_CPU_FAST_BSS NavigationReplayStorage s_replay_storage;
++static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
+ static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
+ static uint64_t s_native_week_us;
+ static uint32_t s_native_previous_tow_ms;
+--- SF6/v8/Generated/Src/project_log_decoder_profile.c
++++ SF6/integrated/Generated/Src/project_log_decoder_profile.c
+@@ -13,13 +13,13 @@
+ };
+ static const uint8_t s_project_semantics_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0x58U, 0xD9U, 0x31U, 0xEBU, 0x1DU, 0xD5U, 0xAEU, 0x05U,
+-    0xB7U, 0x21U, 0xAEU, 0x01U, 0xC0U, 0x0EU, 0x1DU, 0x68U
++    0x4AU, 0x26U, 0x8DU, 0x02U, 0x89U, 0x5EU, 0x2EU, 0x30U,
++    0xFDU, 0xF2U, 0x85U, 0x3CU, 0x6EU, 0x01U, 0x09U, 0x61U
+ };
+ static const uint8_t s_generation_profile_hash[PROJECT_LOG_DECODER_HASH_SIZE] =
+ {
+-    0xD7U, 0x3DU, 0x7EU, 0xE7U, 0xD2U, 0x23U, 0x0DU, 0xCAU,
+-    0x33U, 0xAFU, 0x5FU, 0x53U, 0x5BU, 0x86U, 0x06U, 0x98U
++    0x28U, 0xE3U, 0xD3U, 0x00U, 0x60U, 0x15U, 0x89U, 0xAAU,
++    0x9DU, 0x1FU, 0xAFU, 0x06U, 0x73U, 0xACU, 0x71U, 0x42U
+ };
+ 
+ void ProjectLogDecoderProfile_Get(ProjectLogDecoderProfile *profile)
+--- SF6/v8/Generated/Src/project_metadata.c
++++ SF6/integrated/Generated/Src/project_metadata.c
+@@ -9,7 +9,7 @@
+ #include "system_capabilities.h"
+ #include "system_user_config.h"
+ 
+-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x7C402A56UL
++#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x05BFDB64UL
+ 
+ static const SystemDeviceDescriptor s_device_descriptors[] =
+ {
+--- SF6/v8/Platform/Inc/platform_memory.h
++++ SF6/integrated/Platform/Inc/platform_memory.h
+@@ -12,16 +12,43 @@
+ #define PLATFORM_CPU_FAST_BSS
+ #endif
+ 
++/* Link-time opt-in only. Each private CPU-only BSS group has a reviewed owner.
++ * Legacy expands to the original placement. No data or DMA section is eligible. */
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if defined(__GNUC__) || defined(__clang__)
++#define PLATFORM_ESKF_WORK_BSS __attribute__((section(".bss.silverstar_auto_eskf_work"), aligned(8)))
++#define PLATFORM_ESKF_HISTORY_BSS __attribute__((section(".bss.silverstar_auto_eskf_history"), aligned(8)))
++#define PLATFORM_KF_REPLAY_BSS __attribute__((section(".bss.silverstar_auto_kf_replay"), aligned(8)))
++#define PLATFORM_NAV_HEALTH_BSS __attribute__((section(".bss.silverstar_auto_nav_health"), aligned(8)))
++#else
++#error "Auto memory layout requires a supported compiler"
++#endif
++#elif (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
++#define PLATFORM_ESKF_WORK_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_ESKF_HISTORY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_KF_REPLAY_BSS PLATFORM_CPU_FAST_BSS
++#define PLATFORM_NAV_HEALTH_BSS PLATFORM_CPU_FAST_BSS
++#else
++#error "Invalid auto memory layout"
++#endif
++
+ /* One audited CPU-only object; the target owns its section and alignment.
+  * An old target header cannot silently accept the experimental layout. */
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+ #endif
+ #ifndef PLATFORM_ESKF_WINDOW_BSS
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#define PLATFORM_ESKF_WINDOW_BSS __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#else
+ #if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
+ #error "The selected target does not support ESKF consistency window SRAM placement"
+ #endif
+ #define PLATFORM_ESKF_WINDOW_BSS PLATFORM_CPU_FAST_BSS
++#endif
+ #endif
+ 
+ #ifndef PLATFORM_DMA_ACCESSIBLE
+--- SF6/v8/STM32F407XX_FLASH.ld
++++ SF6/integrated/STM32F407XX_FLASH.ld
+@@ -181,6 +181,7 @@
+   {
+     . = ALIGN(8);
+     _sccmram_bss = .;
++    /* SILVERSTAR_AUTO_CCM_BSS */
+     *(.ccmram_bss)
+     *(.ccmram_bss*)
+     . = ALIGN(8);
+@@ -206,6 +207,7 @@
+     /* This is used by the startup in order to initialize the .bss secion */
+     _sbss = .;         /* define a global symbol at bss start */
+     __bss_start__ = _sbss;
++    /* SILVERSTAR_AUTO_RAM_BSS */
+     *(.bss)
+     *(.bss*)
+     *(COMMON)
+--- SF6/v8/System/Src/system_navigation_health.c
++++ SF6/integrated/System/Src/system_navigation_health.c
+@@ -10,7 +10,7 @@
+ _Static_assert(sizeof(SystemNavigationGroupHealth) == 64U,
+     "Navigation group health must retain its bounded memory footprint");
+ 
+-static PLATFORM_CPU_FAST_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
++static PLATFORM_NAV_HEALTH_BSS SystemNavigationGroupHealth s_groups[SYSTEM_NAVIGATION_GROUP_COUNT];
+ static uint64_t s_epoch_us;
+ static uint32_t s_imu_faults;
+ static uint32_t s_imu_quality;
+--- SF6/v8/Targets/SilverStar_F407/Inc/platform_memory_target.h
++++ SF6/integrated/Targets/SilverStar_F407/Inc/platform_memory_target.h
+@@ -1,5 +1,9 @@
+ #ifndef __PLATFORM_MEMORY_TARGET_H
+ #define __PLATFORM_MEMORY_TARGET_H
++
++#ifndef SILVERSTAR_MEMORY_LAYOUT_AUTO
++#define SILVERSTAR_MEMORY_LAYOUT_AUTO 0
++#endif
+ 
+ #ifndef SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM
+ #define SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM 0
+@@ -24,7 +28,13 @@
+ 
+ /* .bss.* remains inside _sbss/_ebss and uses the unchanged startup clear.
+  * SRAM is a deliberate CCM relief tradeoff, not a timing qualification. */
+-#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 1)
++#if (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM != 0)
++#error "Auto and manual ESKF window layouts are mutually exclusive"
++#endif
++#define PLATFORM_ESKF_WINDOW_BSS \
++    __attribute__((section(".bss.silverstar_auto_eskf_window"), aligned(8)))
++#elif (SILVERSTAR_MEMORY_LAYOUT_ESKF_WINDOW_SRAM == 1)
+ #if defined(__GNUC__) || defined(__clang__)
+ #define PLATFORM_ESKF_WINDOW_BSS \
+     __attribute__((section(".bss.silverstar_eskf_window"), aligned(8)))
+--- SF6/v8/Tests/Host/test_estimator_preparation.c
++++ SF6/integrated/Tests/Host/test_estimator_preparation.c
+@@ -192,7 +192,15 @@
+     TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+     TEST_CHECK(initial.initialized == 1U && initial.mission_running == 0U && initial.predict_count == 0U);
+     TEST_CHECK(fabsf(initial.q_nb[0] - 1.0f) < 0.00001f);
+-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
++    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)
++    {
++        uint8_t axis;
++        /* SF6's committed contract has gains, not a covariance estimate;
++         * its backend explicitly publishes NAN for these unavailable fields. */
++        for (axis = 0U; axis < 6U; axis++)
++        { TEST_CHECK(isnan(initial.covariance_diagonal[axis])); }
++    }
++    else if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+     {
+         uint8_t axis;
+         for (axis = 0U; axis < 6U; axis++)
+--- SF6/v8/Tests/Host/test_logger.c
++++ SF6/integrated/Tests/Host/test_logger.c
+@@ -101,13 +101,25 @@
+     uint16_t index;
+ 
+     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
+-    TEST_CHECK(SSLOG_RECORD_COUNT == 40U);
++    /* The committed SF6 contract adds two records to the prior 38. Check
++     * their wire identity and metadata, rather than only changing a count. */
++    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U));
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_STATE == 0x2BU);
+     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_MEASUREMENT == 0x2CU);
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_STATE);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 72U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_STATE) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 72U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_STATE") == 0));
+     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_MEASUREMENT);
+-    TEST_CHECK(metadata != NULL && metadata->record_version == 1U && metadata->payload_size == 56U);
++    TEST_CHECK((metadata != NULL) &&
++               (metadata->record_type == FLIGHT_LOG_RECORD_SF6_MEASUREMENT) &&
++               (metadata->record_version == 1U) &&
++               (metadata->payload_size == 56U) &&
++               (metadata->name != NULL) &&
++               (strcmp(metadata->name, "SF6_MEASUREMENT") == 0));
+     TEST_CHECK(FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE == 0x28U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY == 0x29U);
+     TEST_CHECK(FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY == 0x2AU);

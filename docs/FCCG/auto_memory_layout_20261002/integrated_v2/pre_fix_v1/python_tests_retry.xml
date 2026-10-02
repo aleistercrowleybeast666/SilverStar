@@ -1,0 +1,1340 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="17" skipped="0" tests="40" time="97.878" timestamp="2026-10-02T07:56:30.441391+08:00" hostname="CHD"><testcase classname="tests.test_auto_memory_layout" name="test_old_configuration_defaults_to_legacy_and_auto_round_trip" time="1.515" /><testcase classname="tests.test_auto_memory_layout" name="test_gui_selection_is_explicit_and_runner_carries_it" time="2.163" /><testcase classname="tests.test_auto_memory_layout" name="test_actual_f407_links_overflow_relief_determinism_alignment_and_startup" time="4.125" /><testcase classname="tests.test_auto_memory_layout" name="test_no_ccm_uses_real_sram_and_insufficient_capacity_really_fails" time="1.156" /><testcase classname="tests.test_auto_memory_layout" name="test_unreviewed_dma_data_and_bad_alignment_are_rejected[dma]" time="0.503" /><testcase classname="tests.test_auto_memory_layout" name="test_unreviewed_dma_data_and_bad_alignment_are_rejected[initialized]" time="0.373" /><testcase classname="tests.test_auto_memory_layout" name="test_unreviewed_dma_data_and_bad_alignment_are_rejected[alignment]" time="0.453" /><testcase classname="tests.test_auto_memory_layout" name="test_unreviewed_dma_data_and_bad_alignment_are_rejected[wrong_owner]" time="0.474" /><testcase classname="tests.test_auto_memory_layout" name="test_preserved_linker_missing_hooks_fails_closed" time="0.287" /><testcase classname="tests.test_auto_memory_layout" name="test_preserved_user_source_cannot_inherit_cpu_only_proof" time="0.363" /><testcase classname="tests.test_auto_memory_layout" name="test_alternate_linker_cannot_inherit_selected_mcu_physical_capacity" time="0.370" /><testcase classname="tests.test_auto_memory_layout" name="test_late_link_failure_removes_unaccepted_elf_and_success_report[wrong_bank]" time="3.934" /><testcase classname="tests.test_auto_memory_layout" name="test_late_link_failure_removes_unaccepted_elf_and_success_report[zero_bounds]" time="3.896" /><testcase classname="tests.test_auto_memory_layout" name="test_late_link_failure_removes_unaccepted_elf_and_success_report[usage]" time="4.513" /><testcase classname="tests.test_auto_memory_layout" name="test_late_link_failure_removes_unaccepted_elf_and_success_report[decision_write]" time="4.163" /><testcase classname="tests.test_auto_memory_layout" name="test_preserved_helper_or_memory_contract_edit_is_rejected[silverstar.algorithm.estimator.eskf15-Algorithm/Estimator/ESKF15/Src/helper.c]" time="0.332" /><testcase classname="tests.test_auto_memory_layout" name="test_preserved_helper_or_memory_contract_edit_is_rejected[silverstar.platform.api-Platform/Inc/platform_memory.h]" time="0.313" /><testcase classname="tests.test_auto_memory_layout" name="test_preserved_helper_or_memory_contract_edit_is_rejected[silverstar.mcu.stm32f407vet6-startup_stm32f407xx.s]" time="0.344" /><testcase classname="tests.test_auto_memory_layout" name="test_preserved_helper_or_memory_contract_edit_is_rejected[silverstar.mcu.stm32f407vet6-STM32F407XX_FLASH.ld]" time="0.312" /><testcase classname="tests.test_auto_memory_layout" name="test_generated_audit_loader_does_not_write_bytecode" time="0.015" /><testcase classname="tests.test_auto_memory_layout" name="test_f413_alias_cannot_be_counted_as_an_independent_ccm_bank" time="0.002" /><testcase classname="tests.test_gui_smoke" name="test_build_log_and_internal_build_actions_are_advanced_only" time="1.377"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_build_log_and_internal_bu0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_build_log_and_internal_bu0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_build_log_and_internal_bu0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_build_log_and_internal_bu0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_build_log_and_internal_bu0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_build_log_and_internal_build_actions_are_advanced_only(
+        tmp_path: Path, qapp
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_build_log_and_internal_bu0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_build_log_and_internal_bu0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_actuators_are_optional_and_parachute_removal_clears_modes" time="1.444"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_actuators_are_optional_an0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_actuators_are_optional_an0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_actuators_are_optional_an0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_actuators_are_optional_an0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_actuators_are_optional_an0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_actuators_are_optional_and_parachute_removal_clears_modes(
+        tmp_path: Path, qapp
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_actuators_are_optional_an0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_actuators_are_optional_an0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_vscode_workspace_launcher_prefers_code_cmd_and_opens_new_window" time="1.493"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_vscode_workspace_launcher0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_vscode_workspace_launcher0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002730D609250&gt;
+
+    def test_vscode_workspace_launcher_prefers_code_cmd_and_opens_new_window(
+        tmp_path: Path, qapp, monkeypatch
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_vscode_workspace_launcher0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_vscode_workspace_open_failure_shows_exact_reason" time="1.841"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_vscode_workspace_open_fai0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_open_fai0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_open_fai0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_vscode_workspace_open_fai0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_open_fai0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002730D609D50&gt;
+
+    def test_vscode_workspace_open_failure_shows_exact_reason(
+        tmp_path: Path, qapp, monkeypatch
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_open_fai0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_vscode_workspace_open_fai0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_vscode_workspace_launcher_reports_missing_installation_and_association" time="1.405"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_vscode_workspace_launcher1\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher1/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher1/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_vscode_workspace_launcher1\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher1')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002730CFF0AA0&gt;
+
+    def test_vscode_workspace_launcher_reports_missing_installation_and_association(
+        tmp_path: Path, qapp, monkeypatch
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_vscode_workspace_launcher1/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_vscode_workspace_launcher1\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_main_window_shell_navigation_theme_and_language" time="1.357"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_main_window_shell_navigat0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_main_window_shell_navigat0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_main_window_shell_navigat0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_main_window_shell_navigat0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_main_window_shell_navigat0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_main_window_shell_navigat0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_main_window_shell_navigat0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_ground_page_excludes_flight_board_and_owns_uart_binding" time="1.550"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_ground_page_excludes_flig0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_page_excludes_flig0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_page_excludes_flig0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_ground_page_excludes_flig0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_page_excludes_flig0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path, qapp) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:310: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_page_excludes_flig0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_ground_page_excludes_flig0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_new_project_wizard_is_one_step_and_requires_identity" time="1.432"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_new_project_wizard_is_one0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_new_project_wizard_is_one0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_new_project_wizard_is_one0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_new_project_wizard_is_one0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_new_project_wizard_is_one0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_new_project_wizard_is_one_step_and_requires_identity(tmp_path: Path, qapp) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:332: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_new_project_wizard_is_one0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_new_project_wizard_is_one0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_devices_page_is_physical_and_capabilities_are_on_flight_page" time="1.413"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_devices_page_is_physical_0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_devices_page_is_physical_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_devices_page_is_physical_0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_devices_page_is_physical_0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_devices_page_is_physical_0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+        tmp_path: Path, qapp
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:397: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_devices_page_is_physical_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_devices_page_is_physical_0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_device_interface_profile_selector_updates_one_chip_instance" time="1.344"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_device_interface_profile_0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_device_interface_profile_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_device_interface_profile_0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_device_interface_profile_0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_device_interface_profile_0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_device_interface_profile_selector_updates_one_chip_instance(
+        tmp_path: Path, qapp
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:632: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_device_interface_profile_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_device_interface_profile_0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_official_repeated_device_rows_add_to_limit_and_remove_atomically" time="1.489"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_official_repeated_device_0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_official_repeated_device_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_official_repeated_device_0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_official_repeated_device_0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_official_repeated_device_0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_official_repeated_device_rows_add_to_limit_and_remove_atomically(
+        tmp_path: Path, qapp
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:655: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_official_repeated_device_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_official_repeated_device_0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_pending_custom_hardware_keeps_sd_tf_storage_selectable" time="1.383"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_pending_custom_hardware_k0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_pending_custom_hardware_k0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_pending_custom_hardware_k0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_pending_custom_hardware_k0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_pending_custom_hardware_k0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_pending_custom_hardware_keeps_sd_tf_storage_selectable(
+        tmp_path: Path, qapp
+    ) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:713: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_pending_custom_hardware_k0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_pending_custom_hardware_k0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_background_worker_updates_shared_progress" time="1.278"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_background_worker_updates0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_background_worker_updates0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_background_worker_updates0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_background_worker_updates0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_background_worker_updates0')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+
+    def test_background_worker_updates_shared_progress(tmp_path: Path, qapp) -&gt; None:
+&gt;       window = _Window_Create(tmp_path, qapp)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_gui_smoke.py:745: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\tests\test_gui_smoke.py:33: in _Window_Create
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_background_worker_updates0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_background_worker_updates0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_target_build_controls_and_quality_actions_use_shared_worker" time="17.246"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_target_build_controls_and0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_target_build_controls_and0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_target_build_controls_and0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_target_build_controls_and0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_target_build_controls_and0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002730E37C6E0&gt;
+
+    def test_target_build_controls_and_quality_actions_use_shared_worker(
+        tmp_path: Path, workspace_root: Path, qapp, monkeypatch
+    ) -&gt; None:
+        service = FccgService(workspace_root)
+        project_root = tmp_path / "ProgressActions"
+        model = service.ReferenceProject_Create("ProgressActions")
+        TargetGeneration_Apply(
+            model, service.catalog, service.policy, project_root, TargetScope.FLIGHT
+        )
+&gt;       window = MainWindow(
+            SettingsStore(tmp_path / "progress-actions.ini"),
+            service=service,
+        )
+
+apps\FCCG\tests\test_gui_smoke.py:778: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_target_build_controls_and0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_target_build_controls_and0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_gui_smoke" name="test_hardware_prepare_plans_off_ui_thread_and_completes_safely" time="1.632"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_hardware_prepare_plans_of0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_hardware_prepare_plans_of0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_hardware_prepare_plans_of0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_hardware_prepare_plans_of0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_hardware_prepare_plans_of0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002730AE48750&gt;
+
+    def test_hardware_prepare_plans_off_ui_thread_and_completes_safely(
+        tmp_path: Path, workspace_root: Path, qapp, monkeypatch
+    ) -&gt; None:
+        service = FccgService(workspace_root)
+&gt;       window = MainWindow(
+            SettingsStore(tmp_path / "hardware-async.ini"),
+            service=service,
+        )
+
+apps\FCCG\tests\test_gui_smoke.py:825: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_hardware_prepare_plans_of0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_hardware_prepare_plans_of0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_release_011_gui" name="test_alignment_group_contains_mode_draft_and_actions" time="1.634"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_alignment_group_contains_0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_alignment_group_contains_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_alignment_group_contains_0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_alignment_group_contains_0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_alignment_group_contains_0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_alignment_group_contains_mode_draft_and_actions(qapp, tmp_path, workspace_root):
+&gt;       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_release_011_gui.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_alignment_group_contains_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_alignment_group_contains_0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_release_011_gui" name="test_ground_existing_selection_cancel_commit_and_common_page" time="1.977"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_ground_existing_selection0\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_existing_selection0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_existing_selection0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/FCCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\pytest\\test_ground_existing_selection0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\FCCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+qapp = &lt;PySide6.QtWidgets.QApplication(0x273087e4df0) at 0x000002730C63D440&gt;
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_existing_selection0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/FCCG')
+
+    def test_ground_existing_selection_cancel_commit_and_common_page(qapp, tmp_path, workspace_root):
+&gt;       window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FCCG\tests\test_release_011_gui.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FCCG\src\silverstar_fccg\ui\main_window.py:204: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FCCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/FCCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_ground_existing_selection0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\pytest\test_ground_existing_selection0\path_preferences.json
+
+apps\FCCG\src\silverstar_fccg\core\workspace.py:91: WorkspacePolicyError</failure></testcase><testcase classname="tests.test_release_011_gui" name="test_classified_pcbs_preserve_legacy_and_conflicts" time="12.360" /><testcase classname="tests.test_release_011_gui" name="test_service_save_classifies_archives_and_reload" time="9.334" /></testsuite></testsuites>

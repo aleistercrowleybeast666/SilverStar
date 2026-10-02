@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\AutoMemory_Integrated_20261002_v1\verify_compatibility.py", line 26, in <module>
+    config = json.loads((fixture / 'SilverStar.ssproject').read_text())
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 793, in read_text
+    return f.read()
+           ~~~~~~^^
+UnicodeDecodeError: 'gbk' codec can't decode byte 0x89 in position 60865: illegal multibyte sequence

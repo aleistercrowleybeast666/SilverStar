@@ -1,0 +1,258 @@
+[
+  {
+    "name": "PureINS",
+    "language": "zh_CN",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=284748/239540/524288/83320/47752/131072/43696/21840/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：284,748 / 524,288 字节；剩余 239,540 字节 (45.69%)</span><br><span style=\"color:#22863a\">SRAM：83,320 / 131,072 字节；剩余 47,752 字节 (36.43%)</span><br><span style=\"color:#22863a\">CCMRAM：43,696 / 65,536 字节；剩余 21,840 字节 (33.33%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "PureINS_zh_CN_light.png"
+  },
+  {
+    "name": "PureINS",
+    "language": "zh_CN",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=284748/239540/524288/83320/47752/131072/43696/21840/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：284,748 / 524,288 字节；剩余 239,540 字节 (45.69%)</span><br><span style=\"color:#22863a\">SRAM：83,320 / 131,072 字节；剩余 47,752 字节 (36.43%)</span><br><span style=\"color:#22863a\">CCMRAM：43,696 / 65,536 字节；剩余 21,840 字节 (33.33%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "PureINS_zh_CN_dark.png"
+  },
+  {
+    "name": "PureINS",
+    "language": "en_US",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=284748/239540/524288/83320/47752/131072/43696/21840/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 284,748 / 524,288 bytes; 239,540 bytes remaining (45.69%)</span><br><span style=\"color:#22863a\">SRAM: 83,320 / 131,072 bytes; 47,752 bytes remaining (36.43%)</span><br><span style=\"color:#22863a\">CCMRAM: 43,696 / 65,536 bytes; 21,840 bytes remaining (33.33%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "PureINS_en_US_light.png"
+  },
+  {
+    "name": "PureINS",
+    "language": "en_US",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=284748/239540/524288/83320/47752/131072/43696/21840/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 284,748 / 524,288 bytes; 239,540 bytes remaining (45.69%)</span><br><span style=\"color:#22863a\">SRAM: 83,320 / 131,072 bytes; 47,752 bytes remaining (36.43%)</span><br><span style=\"color:#22863a\">CCMRAM: 43,696 / 65,536 bytes; 21,840 bytes remaining (33.33%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "PureINS_en_US_dark.png"
+  },
+  {
+    "name": "KF6",
+    "language": "zh_CN",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=317124/207164/524288/102648/28424/131072/55112/10424/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：317,124 / 524,288 字节；剩余 207,164 字节 (39.51%)</span><br><span style=\"color:#22863a\">SRAM：102,648 / 131,072 字节；剩余 28,424 字节 (21.69%)</span><br><span style=\"color:#a66b00\">CCMRAM：55,112 / 65,536 字节；剩余 10,424 字节 (15.91%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "KF6_zh_CN_light.png"
+  },
+  {
+    "name": "KF6",
+    "language": "zh_CN",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=317124/207164/524288/102648/28424/131072/55112/10424/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：317,124 / 524,288 字节；剩余 207,164 字节 (39.51%)</span><br><span style=\"color:#22863a\">SRAM：102,648 / 131,072 字节；剩余 28,424 字节 (21.69%)</span><br><span style=\"color:#a66b00\">CCMRAM：55,112 / 65,536 字节；剩余 10,424 字节 (15.91%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "KF6_zh_CN_dark.png"
+  },
+  {
+    "name": "KF6",
+    "language": "en_US",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=317124/207164/524288/102648/28424/131072/55112/10424/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 317,124 / 524,288 bytes; 207,164 bytes remaining (39.51%)</span><br><span style=\"color:#22863a\">SRAM: 102,648 / 131,072 bytes; 28,424 bytes remaining (21.69%)</span><br><span style=\"color:#a66b00\">CCMRAM: 55,112 / 65,536 bytes; 10,424 bytes remaining (15.91%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "KF6_en_US_light.png"
+  },
+  {
+    "name": "KF6",
+    "language": "en_US",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=317124/207164/524288/102648/28424/131072/55112/10424/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 317,124 / 524,288 bytes; 207,164 bytes remaining (39.51%)</span><br><span style=\"color:#22863a\">SRAM: 102,648 / 131,072 bytes; 28,424 bytes remaining (21.69%)</span><br><span style=\"color:#a66b00\">CCMRAM: 55,112 / 65,536 bytes; 10,424 bytes remaining (15.91%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "KF6_en_US_dark.png"
+  },
+  {
+    "name": "ESKF15",
+    "language": "zh_CN",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=303276/221012/524288/117920/13152/131072/46464/19072/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：303,276 / 524,288 字节；剩余 221,012 字节 (42.15%)</span><br><span style=\"color:#a66b00\">SRAM：117,920 / 131,072 字节；剩余 13,152 字节 (10.03%)</span><br><span style=\"color:#22863a\">CCMRAM：46,464 / 65,536 字节；剩余 19,072 字节 (29.10%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "ESKF15_zh_CN_light.png"
+  },
+  {
+    "name": "ESKF15",
+    "language": "zh_CN",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=303276/221012/524288/117920/13152/131072/46464/19072/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：303,276 / 524,288 字节；剩余 221,012 字节 (42.15%)</span><br><span style=\"color:#a66b00\">SRAM：117,920 / 131,072 字节；剩余 13,152 字节 (10.03%)</span><br><span style=\"color:#22863a\">CCMRAM：46,464 / 65,536 字节；剩余 19,072 字节 (29.10%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "ESKF15_zh_CN_dark.png"
+  },
+  {
+    "name": "ESKF15",
+    "language": "en_US",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=303276/221012/524288/117920/13152/131072/46464/19072/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 303,276 / 524,288 bytes; 221,012 bytes remaining (42.15%)</span><br><span style=\"color:#a66b00\">SRAM: 117,920 / 131,072 bytes; 13,152 bytes remaining (10.03%)</span><br><span style=\"color:#22863a\">CCMRAM: 46,464 / 65,536 bytes; 19,072 bytes remaining (29.10%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "ESKF15_en_US_light.png"
+  },
+  {
+    "name": "ESKF15",
+    "language": "en_US",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=303276/221012/524288/117920/13152/131072/46464/19072/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 303,276 / 524,288 bytes; 221,012 bytes remaining (42.15%)</span><br><span style=\"color:#a66b00\">SRAM: 117,920 / 131,072 bytes; 13,152 bytes remaining (10.03%)</span><br><span style=\"color:#22863a\">CCMRAM: 46,464 / 65,536 bytes; 19,072 bytes remaining (29.10%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "warning",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "ESKF15_en_US_dark.png"
+  },
+  {
+    "name": "SF6",
+    "language": "zh_CN",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=291420/232868/524288/101704/29368/131072/44016/21520/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：291,420 / 524,288 字节；剩余 232,868 字节 (44.42%)</span><br><span style=\"color:#22863a\">SRAM：101,704 / 131,072 字节；剩余 29,368 字节 (22.41%)</span><br><span style=\"color:#22863a\">CCMRAM：44,016 / 65,536 字节；剩余 21,520 字节 (32.84%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "SF6_zh_CN_light.png"
+  },
+  {
+    "name": "SF6",
+    "language": "zh_CN",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=291420/232868/524288/101704/29368/131072/44016/21520/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash：291,420 / 524,288 字节；剩余 232,868 字节 (44.42%)</span><br><span style=\"color:#22863a\">SRAM：101,704 / 131,072 字节；剩余 29,368 字节 (22.41%)</span><br><span style=\"color:#22863a\">CCMRAM：44,016 / 65,536 字节；剩余 21,520 字节 (32.84%)</span><br>以上为最近一次链接占用；容量检查通过不证明运行或任务栈有安全余量。<br>建议各区保持绿色（余量 >20%）。颜色仅提示静态链接占用，不保证栈、时序或硬件安全；SRAM 与 CCM 不可相加。",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "SF6_zh_CN_dark.png"
+  },
+  {
+    "name": "SF6",
+    "language": "en_US",
+    "theme": "light",
+    "selected": "auto",
+    "summary": "artifact_memory=291420/232868/524288/101704/29368/131072/44016/21520/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 291,420 / 524,288 bytes; 232,868 bytes remaining (44.42%)</span><br><span style=\"color:#22863a\">SRAM: 101,704 / 131,072 bytes; 29,368 bytes remaining (22.41%)</span><br><span style=\"color:#22863a\">CCMRAM: 44,016 / 65,536 bytes; 21,520 bytes remaining (32.84%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "SF6_en_US_light.png"
+  },
+  {
+    "name": "SF6",
+    "language": "en_US",
+    "theme": "dark",
+    "selected": "auto",
+    "summary": "artifact_memory=291420/232868/524288/101704/29368/131072/44016/21520/65536",
+    "visible_text": "<span style=\"color:#22863a\">Flash: 291,420 / 524,288 bytes; 232,868 bytes remaining (44.42%)</span><br><span style=\"color:#22863a\">SRAM: 101,704 / 131,072 bytes; 29,368 bytes remaining (22.41%)</span><br><span style=\"color:#22863a\">CCMRAM: 44,016 / 65,536 bytes; 21,520 bytes remaining (32.84%)</span><br>Latest linked occupancy; capacity checks do not establish safe runtime or stack margins.<br>Keep each region green (>20% spare). Colors describe static linked occupancy only, not stack, timing or hardware safety. SRAM and CCM cannot be combined.",
+    "status": "success",
+    "fonts": {
+      "msyh.ttc": 0,
+      "msyhbd.ttc": 1,
+      "segoeui.ttf": 2,
+      "segoeuib.ttf": 3
+    },
+    "image": "SF6_en_US_dark.png"
+  }
+]
