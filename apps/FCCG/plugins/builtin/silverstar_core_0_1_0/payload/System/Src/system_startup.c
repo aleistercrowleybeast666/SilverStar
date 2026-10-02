@@ -592,10 +592,9 @@ static void SystemStartup_CommunicationProcess(void)
     { SystemBarometer_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_MAGNETOMETER) != 0U)
     { SystemMagnetometer_Process(); }
-#if (SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U)
-    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_TELEMETRY) != 0U)
-    { SystemTelemetry_Process(); }
-#endif
+    /* TelemetryTask owns transport Process even during SELF_TEST. Startup
+     * observes cached health; a second owner can preempt an SPI transaction
+     * and invalidate the active driver's lifecycle and bus snapshot. */
 #if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U)
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_CONSOLE) != 0U)
     { SystemConsoleDevice_Process(); }
