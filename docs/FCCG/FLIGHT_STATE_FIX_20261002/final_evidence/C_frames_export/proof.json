@@ -1,0 +1,18 @@
+{
+  "C_counter_log": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\m0_final_v2_evidence\\counter_contended.log",
+  "C_counter_sha256": "638520ea5b28ca80eb440b009f81d9859d61c9a007b184a1a7401a53620dc0bf",
+  "C_flight_frames": 61,
+  "actual_receive_pipeline_records": 186,
+  "source_log": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\m0_c_frames_export\\HOST_GENERATED_C_NOT_HARDWARE.jsonl",
+  "source_before": "01c376986f659a5161fcad1eb249db6322cb04669f80d315e291f3da6d73e9d6",
+  "source_after": "01c376986f659a5161fcad1eb249db6322cb04669f80d315e291f3da6d73e9d6",
+  "export_path": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\m0_c_frames_export\\export\\2026-10-02-1",
+  "last_export_errors": {},
+  "files": {
+    "HOST_GENERATED_C_NOT_HARDWARE.jsonl": "01c376986f659a5161fcad1eb249db6322cb04669f80d315e291f3da6d73e9d6",
+    "export\\2026-10-02-1\\manifest_EN.json": "9e91394425cbda340593f25adaa0aaf31eeb21533684604e74e67ab4d8761ead",
+    "export\\2026-10-02-1\\processed_data_EN.txt": "36dd59c74d25334e001013397f3e16bf81e7cde21a27818b980ceb867d6446c3",
+    "export\\2026-10-02-1\\summary_EN.txt": "5ee2e8d21a004231003afd28c50fc0722cbf21653106df5e1b4405ed49217665"
+  },
+  "scope": "Host C scheduler frame/export proof; no hardware mission. Missing MISSION_START uses existing first-FLIGHT start fallback; no source log fabrication of a mission-start event."
+}

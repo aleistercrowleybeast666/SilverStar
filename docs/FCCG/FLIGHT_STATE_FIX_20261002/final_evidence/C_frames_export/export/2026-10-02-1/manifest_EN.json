@@ -1,0 +1,75 @@
+{
+  "source_log": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\m0_c_frames_export\\HOST_GENERATED_C_NOT_HARDWARE.jsonl",
+  "created_at": "2026-10-02T21:12:13",
+  "protocol": "SilverStar_0.0.8_AIR_PROFILE_COMPACT_V0",
+  "data_kind": "REAL_FLIGHT",
+  "simulated": false,
+  "simulation_label": "",
+  "mission_start_ms": 2,
+  "landing_ms": null,
+  "parachute_ms": null,
+  "duration_s": 13.457,
+  "capability": {
+    "air_profile_id": 0,
+    "command_policy": 1,
+    "accel_full_scale_g": 16.0,
+    "gyro_full_scale_dps": 2000.0
+  },
+  "preflight": {
+    "final_lifecycle": null,
+    "calibration_mode": null,
+    "calibration_final_state": null,
+    "alignment_final_state": null,
+    "gnss_position_usable_before_start": null
+  },
+  "packet_loss": {
+    "expected_period_ms": 200,
+    "expected_rate_hz": 5,
+    "received_packets": 61,
+    "expected_packets": 68,
+    "lost_packets": 7,
+    "packet_loss_rate": 0.10294117647058823,
+    "packet_loss_percent": 10.294117647058822,
+    "loss_window_end_basis": "last_received_flight_state"
+  },
+  "export": {
+    "language": "en_US",
+    "theme": "light",
+    "theme_mode": "follow_ui",
+    "resolved_theme": "light",
+    "filename_language_suffix": "EN",
+    "items": [
+      "processed_data",
+      "summary",
+      "session_info"
+    ],
+    "partial_failures": {},
+    "page_duration_s": 30.0,
+    "pages_s": [
+      [
+        0.0,
+        13.457
+      ]
+    ],
+    "gif": {
+      "source_range_s": [
+        0.0,
+        13.457
+      ],
+      "source_duration_s": 13.457,
+      "speed_factor": 1.0,
+      "fps": 30,
+      "motion_frames": 404,
+      "hold_frames": 30,
+      "motion_duration_s": 13.466666666666667,
+      "hold_duration_s": 1.0,
+      "event_slow_motion": false,
+      "gif_timing": "centisecond-quantized 30 fps (30/40 ms)"
+    }
+  },
+  "warnings": [
+    "LANDING not found; using last data timestamp as end.",
+    "PARACHUTE_DEPLOY not found; no chute marker.",
+    "MISSION_START not found; first FLIGHT_STATE defines mission start."
+  ]
+}

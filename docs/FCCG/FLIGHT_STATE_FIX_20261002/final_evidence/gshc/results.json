@@ -1,0 +1,69 @@
+[
+  {
+    "name": "docs_gui_offscreen",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_docs_gui_final",
+      "apps/GSHC/tests/test_docs.py",
+      "apps/GSHC/tests/test_navigation_gui.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002",
+    "qt_backend": "offscreen",
+    "exit": 0,
+    "started": "2026-10-02T13:18:13.963829+00:00",
+    "finished": "2026-10-02T13:18:25.486041+00:00",
+    "log": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_final_evidence\\docs_gui_offscreen.log",
+    "sha256": "1bfcb3aa137af89982f244e8e22159e596855fd622a6980bc0cfd423a0ad881a"
+  },
+  {
+    "name": "live_windows",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_live_final",
+      "apps/GSHC/tests/test_navigation_gui.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002",
+    "qt_backend": "windows",
+    "exit": 0,
+    "started": "2026-10-02T13:18:25.498696+00:00",
+    "finished": "2026-10-02T13:18:42.839291+00:00",
+    "log": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_final_evidence\\live_windows.log",
+    "sha256": "1ee3529a83e44f7ea1bea03009b0ca514d32ff8619d08434f85e64dd87d8ad05"
+  },
+  {
+    "name": "GSHC_full",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_full_final",
+      "apps/GSHC/tests"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002",
+    "qt_backend": "offscreen",
+    "exit": 0,
+    "started": "2026-10-02T13:18:42.854304+00:00",
+    "finished": "2026-10-02T13:28:21.264597+00:00",
+    "log": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_final_evidence\\GSHC_full.log",
+    "sha256": "177e475eb5b4efe221a29d0b4105fc4eadd9dc5fc6d2c64c8f32909487cc4864"
+  }
+]

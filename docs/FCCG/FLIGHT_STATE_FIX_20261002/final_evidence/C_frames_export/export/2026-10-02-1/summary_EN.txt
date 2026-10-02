@@ -1,0 +1,46 @@
+Flight summary
+data_kind: REAL_FLIGHT
+simulated: false
+source_log: D:\python_software\SilverStar\.work\FlightStateTelemetryHotfix_20261002\.work\m0_c_frames_export\HOST_GENERATED_C_NOT_HARDWARE.jsonl
+duration_s: 13.457
+air_profile_id: 0
+command_policy: 1
+accel_full_scale_g: 16.0
+gyro_full_scale_dps: 2000.0
+final_preflight_lifecycle: None
+calibration_mode: None
+calibration_final_state: None
+alignment_final_state: None
+gnss_position_usable_before_start: None
+parachute_time_s: not_found
+warning: LANDING not found; using last data timestamp as end.
+warning: PARACHUTE_DEPLOY not found; no chute marker.
+warning: MISSION_START not found; first FLIGHT_STATE defines mission start.
+
+max_accel:
+time_s: 0.000000
+ax_mps2: 9.80665
+ay_mps2: 0
+az_mps2: 0
+norm_mps2: 9.80665
+
+max_velocity:
+time_s: 0.000000
+vx_mps: -0.0981512
+vy_mps: 0.0991783
+vz_mps: 0.0932015
+norm_mps: 0.167799
+
+max_height:
+time_s: 0.000000
+z_m: 0.0722621
+
+packet_loss:
+expected_period_ms: 200
+expected_rate_hz: 5
+received_packets: 61
+expected_packets: 68
+lost_packets: 7
+packet_loss_rate: 0.102941176
+packet_loss_percent: 10.2941%
+loss_window_end_basis: last_received_flight_state

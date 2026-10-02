@@ -1,0 +1,172 @@
+-    uint64_t now_us = SystemTime_GetMonotonicUs();
+-    uint8_t type;
+-
+-    if (s_navigation_session == 0U) { return 0U; }
+-    SILVERSTAR_ASSERT(s_navigation_preparation_pending <= 1U,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+-    SILVERSTAR_ASSERT(now_us <= (UINT64_MAX - TELEMETRY_NAV_PREPARATION_PERIOD_US),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+-    if ((now_us >= s_next_navigation_preparation_us) || (s_navigation_preparation_pending != 0U))
+-    {
+-        if (TelemetryService_NavigationPreparationGet(&payload, &preparation) == 0U) { return 0U; }
+-        type = AIR_TYPE_NAV_PREPARATION;
+-        if (s_navigation_preparation_pending == 0U)
+-        {
+-            type = AIR_TYPE_NAV_CAPABILITY;
+-            payload.tail[0] = AIR_NAV_SCHEMA_VERSION;
+-            payload.tail[1] = preparation.algorithm_id;
+-            payload.tail[2] = (preparation.algorithm_id == 0U) ? 0U : AIR_NAV_GROUP_MASK;
+-        }
+-        if (TelemetryService_NavigationFrameSend(type, &payload) != 0U)
+-        {
+-            s_navigation_preparation_pending = (uint8_t)(type == AIR_TYPE_NAV_CAPABILITY);
+-            s_next_navigation_preparation_us = now_us + TELEMETRY_NAV_PREPARATION_PERIOD_US;
+-        }
+-        return 1U;
+-    }
+-    return TelemetryService_NavigationHealthSend(now_us);
+-}
+-
+ static void TelemetryService_StreamSend(void)
+ {
+     EstimatorOutputSnapshot estimator;
+@@ -2017,7 +1633,6 @@ SystemDeviceResult TelemetryService_Init(void)
+     s_next_preflight_status_us = 0ULL;
+     s_next_preflight_state_us = 0ULL;
+     s_next_stream_us = 0ULL;
+-    TelemetryService_NavigationReset();
+     return SYSTEM_DEVICE_OK;
+ }
+ 
+@@ -2061,7 +1676,6 @@ void TelemetryService_Process(void)
+     if (TelemetryService_PreflightStatusSend() != 0U) { return; }
+     if (TelemetryService_CapabilitySend() != 0U) { return; }
+     if (TelemetryService_PreflightStateSend() != 0U) { return; }
+-    if (TelemetryService_NavigationSend() != 0U) { return; }
+     TelemetryService_StreamSend();
+ }
+ 
+diff --git a/apps/GSHC/app.py b/apps/GSHC/app.py
+index 5caf4e0..8977b0a 100644
+--- a/apps/GSHC/app.py
++++ b/apps/GSHC/app.py
+@@ -5,7 +5,6 @@ import os
+ import shutil
+ import sys
+ import time
+-import secrets
+ from dataclasses import dataclass
+ from datetime import datetime
+ from pathlib import Path
+@@ -28,7 +27,6 @@ from config import (
+ )
+ from protocol.air import (
+     TOKEN_ALIGNMENT,
+-    TOKEN_NAV_SUBSCRIBE,
+     TOKEN_CALIBRATION,
+     TOKEN_LOCK,
+     TOKEN_START_MISSION,
+@@ -1432,7 +1430,7 @@ class Controller(QObject):
+         param1: int = 0,
+     ) -> bool:
+         if (cmd_id & 0xFF) == int(AirCmdId.START_MISSION) and not self.state.start_prerequisites_ready():
+-            self._set_radio_message("navigation.start_blocked")
++            self._set_radio_message("radio.start_blocked", reason=self._tr("common.not_ready"))
+             return False
+         if (cmd_id & 0xFF) == int(AirCmdId.CAL_START) and not self._cal_start_allowed(param0):
+             return False
+@@ -1471,10 +1469,6 @@ class Controller(QObject):
+             baseline_completed_face_mask=self.state.calibration.completed_face_mask,
+         )
+         self.pending_air_cmds[(pending.seq, pending.cmd_id)] = pending
+-        if cmd_id in {int(AirCmdId.CAL_START), int(AirCmdId.CAL_FACE), int(AirCmdId.CAL_RESET),
+-                      int(AirCmdId.ALIGN_START), int(AirCmdId.ALIGN_STOP), int(AirCmdId.ALIGN_RESET)}:
+-            self.state.navigation.Navigation_Invalidate("WAITING")
+-            self.state.navigation.awaiting_generation = True
+         self._transmit_pending_air_cmd(pending, is_retry=False)
+         return True
+ 
+@@ -1485,8 +1479,8 @@ class Controller(QObject):
+         is_retry: bool,
+     ) -> None:
+         if pending.cmd_id == int(AirCmdId.START_MISSION) and not self.state.start_prerequisites_ready():
+-            self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="navigation readiness expired")
+-            self._set_radio_message("navigation.start_blocked")
++            self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="M0 board prerequisites expired")
++            self._set_radio_message("radio.start_blocked", reason=self._tr("common.not_ready"))
+             return
+         if pending.cmd_id == int(AirCmdId.CAL_START) and not self._cal_start_allowed(pending.param0):
+             self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="CAL_START gate")
+@@ -1634,23 +1628,6 @@ class Controller(QObject):
+                 "source": source,
+             }
+         )
+-        self.Navigation_Subscribe()
+-
+-    def Navigation_Subscribe(self) -> None:
+-        """One bounded optional extension probe, separate from base handshake."""
+-        navigation = self.state.navigation
+-        if self.worker is None or not self.state.capability_acked or navigation.requested_session is not None:
+-            return
+-        nonce = (getattr(self, "_navigation_nonce", secrets.randbelow(65535)) % 65535) + 1
+-        self._navigation_nonce = nonce
+-        navigation.Navigation_Request(nonce)
+-        seq = self._next_air_seq()
+-        navigation.subscription_seq = seq
+-        frame = build_air_cmd(seq, int(AirCmdId.NAV_SUBSCRIBE), TOKEN_NAV_SUBSCRIBE | nonce, 1, 0)
+-        packet = build_pc_to_gs_air_frame(frame)
+-        self.worker.send_bytes(packet)
+-        self.state.handshake.gsp_air_tx_requests += 1
+-        self._log_tx_command(frame, packet, seq, int(AirCmdId.NAV_SUBSCRIBE), TOKEN_NAV_SUBSCRIBE | nonce, 1, 0, 1, False)
+ 
+     def _check_air_cmd_timeouts(self) -> None:
+         now = time.monotonic()
+diff --git a/apps/GSHC/ui/main_window.py b/apps/GSHC/ui/main_window.py
+index 6307c92..fbf53cf 100644
+--- a/apps/GSHC/ui/main_window.py
++++ b/apps/GSHC/ui/main_window.py
+@@ -74,7 +74,6 @@ from services.state_model import (
+     HandshakeState,
+     MissionPhase,
+ )
+-from ui.navigation_panel import NavigationPanel
+ from ui.port_combo import PortComboBox
+ from ui.theme import ThemeColors, apply_application_theme, theme_colors
+ from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
+@@ -1581,8 +1580,6 @@ class MainWindow(QMainWindow):
+         root.setContentsMargins(6, 6, 6, 6)
+         root.setSpacing(8)
+ 
+-        self.navigation_preparation_panel = NavigationPanel(self.i18n, preflight=True)
+-        # Preserve the monitoring rows from the pre-navigation GSHC layout.
+         summary_row = QHBoxLayout()
+         summary_row.addWidget(self._build_preflight_system_panel(), 1)
+         summary_row.addWidget(self._build_calibration_panel(), 1)
+@@ -1594,9 +1591,6 @@ class MainWindow(QMainWindow):
+         root.addLayout(detail_row)
+         root.addWidget(self._build_preflight_command_panel())
+         root.addWidget(self._build_event_panel(), 1)
+-        # Supplemental preparation diagnostics must not displace the original
+-        # status, commands and event monitoring rows.
+-        root.addWidget(self.navigation_preparation_panel)
+         return TouchScroll_Wrap(page)
+ 
+     def _build_preflight_system_panel(self) -> QWidget:
+@@ -1824,8 +1818,6 @@ class MainWindow(QMainWindow):
+         top.addWidget(self._build_flight_data_panel(), 2)
+         top.addWidget(self._build_mission_state_panel(), 2)
+         status_layout.addLayout(top)
+-        self.navigation_health_panel = NavigationPanel(self.i18n, preflight=False)
+-        status_layout.addWidget(self.navigation_health_panel)
+         self.flight_status_scroll = TouchScroll_Wrap(status_content, fit_content=True)
+         root.addWidget(self.flight_status_scroll)
+         # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
+@@ -2567,8 +2559,6 @@ class MainWindow(QMainWindow):
+         self._render_sensor(state)
+         self._render_mission_state(state)
+         self._render_commands(state)
+-        self.navigation_preparation_panel.Navigation_Render(state)
+-        self.navigation_health_panel.Navigation_Render(state)
+         self._render_events()
+         self._render_plots(state)
+         self._render_data_tool_buttons()

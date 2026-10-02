@@ -1,0 +1,563 @@
+diff --git a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c
+index 64a5f56..3a6222b 100644
+--- a/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c
++++ b/apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Modules/Src/telemetry_service.c
+@@ -35,19 +35,6 @@
+ #define TELEMETRY_START_RESPONSE_MAX_PER_CYCLE \
+     SYSTEM_LIFECYCLE_QUEUE_DEPTH
+ #define TELEMETRY_RX_MAX_FRAMES_PER_CYCLE 8U
+-#define TELEMETRY_NAV_PREPARATION_PERIOD_US 1000000ULL
+-#define TELEMETRY_NAV_HEALTH_PERIOD_US 250000ULL
+-#define TELEMETRY_NAV_DETAIL_PERIOD_US 100000ULL
+-#define TELEMETRY_NAV_REQUIRED_DEVICES (1U << 0)
+-#define TELEMETRY_NAV_REQUIRED_CALIBRATION (1U << 1)
+-#define TELEMETRY_NAV_REQUIRED_ATTITUDE (1U << 2)
+-#define TELEMETRY_NAV_REQUIRED_GNSS_FIX (1U << 3)
+-#define TELEMETRY_NAV_REQUIRED_GNSS_ORIGIN (1U << 4)
+-#define TELEMETRY_NAV_REQUIRED_BARO_ORIGIN (1U << 5)
+-#define TELEMETRY_NAV_REQUIRED_ESTIMATOR (1U << 6)
+-#define TELEMETRY_NAV_HEALTH_ITEM_COUNT 10U
+-#define TELEMETRY_NAV_DETAIL_GROUP_ITEMS 35U
+-#define TELEMETRY_NAV_DETAIL_ITEM_COUNT 52U
+ 
+ _Static_assert(SYSTEM_TELEMETRY_COMMAND_POLICY ==
+                    AIR_COMMAND_POLICY_PREFLIGHT_ONLY ||
+@@ -199,28 +186,6 @@ static uint64_t s_next_capability_us;
+ static uint64_t s_next_preflight_status_us;
+ static uint64_t s_next_preflight_state_us;
+ static uint64_t s_next_stream_us;
+-static uint16_t s_navigation_session;
+-static uint16_t s_navigation_generation;
+-static uint32_t s_navigation_generation_base;
+-static uint8_t s_navigation_preparation_pending;
+-static uint8_t s_navigation_health_index;
+-static uint64_t s_next_navigation_preparation_us;
+-static uint64_t s_next_navigation_health_us;
+-static uint64_t s_next_navigation_detail_us;
+-static uint8_t s_navigation_detail_index;
+-
+-static void TelemetryService_NavigationReset(void)
+-{
+-    s_navigation_session = 0U;
+-    s_navigation_generation = 0U;
+-    s_navigation_generation_base = 0U;
+-    s_navigation_preparation_pending = 0U;
+-    s_navigation_health_index = 0U;
+-    s_next_navigation_preparation_us = 0ULL;
+-    s_next_navigation_health_us = 0ULL;
+-    s_next_navigation_detail_us = 0ULL;
+-    s_navigation_detail_index = 0U;
+-}
+ 
+ static uint8_t TelemetryService_QueueNext(uint8_t index)
+ {
+@@ -682,37 +647,6 @@ static void TelemetryService_CapabilityCommand(
+                               AIR_ACK_RESULT_OK);
+ }
+ 
+-static void TelemetryService_NavigationSubscribe(const AirCmdPayload *command)
+-{
+-    EstimatorPreparationSnapshot preparation;
+-    AirAckResult result = AIR_ACK_RESULT_CAPABILITY_REQUIRED;
+-
+-    SILVERSTAR_ASSERT_OBJECT(command, AirCmdPayload,
+-        SILVERSTAR_ASSERT_MODULE_MODULES);
+-    if (s_capability_state == TELEMETRY_CAPABILITY_ACKED)
+-    {
+-        s_navigation_session = (uint16_t)(command->token & UINT16_MAX);
+-        s_navigation_generation_base = 0U;
+-        if (EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK)
+-        {
+-            s_navigation_generation_base = preparation.generation & 0xFFFF0000UL;
+-        }
+-        s_navigation_generation = 0U;
+-        s_navigation_preparation_pending = 0U;
+-        s_navigation_health_index = 0U;
+-        s_next_navigation_preparation_us = 0ULL;
+-        s_next_navigation_health_us = 0ULL;
+-        s_next_navigation_detail_us = 0ULL;
+-        s_navigation_detail_index = 0U;
+-        result = AIR_ACK_RESULT_OK;
+-    }
+-    if (TelemetryService_AckQueue(command, result) == 0U)
+-    {
+-        /* No extension state is advertised when its request could not be acknowledged. */
+-        s_navigation_session = 0U;
+-    }
+-}
+-
+ static void TelemetryService_CalibrationCommand(
+     const AirCmdPayload *command)
+ {
+@@ -845,12 +779,6 @@ static void TelemetryService_CommandDispatch(const AirCmdPayload *command)
+     if (command == NULL) { return; }
+     SILVERSTAR_ASSERT_OBJECT(command, AirCmdPayload,
+         SILVERSTAR_ASSERT_MODULE_MODULES);
+-    if (command->cmd_id == AIR_CMD_NAV_SUBSCRIBE)
+-    {
+-        /* A new subscriber nonce must not be swallowed by the old seq/id ACK cache. */
+-        TelemetryService_NavigationSubscribe(command);
+-        return;
+-    }
+     if (command->cmd_id == AIR_CMD_CAPABILITY_ACK)
+     {
+         TelemetryService_CapabilityCommand(command);
+@@ -1601,318 +1529,6 @@ static uint8_t TelemetryService_PreflightStateSend(void)
+     return 1U;
+ }
+ 
+-static uint8_t TelemetryService_NavigationPreparationGet(
+-    AirNavigationStatusPayload *payload, EstimatorPreparationSnapshot *preparation)
+-{
+-    SystemAlignmentSummary alignment;
+-    SystemCalibrationStatus calibration;
+-    const SystemStartupReport *startup = SystemStartup_GetReport();
+-
+-    SILVERSTAR_ASSERT_OBJECT(payload, AirNavigationStatusPayload,
+-        SILVERSTAR_ASSERT_MODULE_MODULES);
+-    SILVERSTAR_ASSERT_OBJECT(preparation, EstimatorPreparationSnapshot,
+-        SILVERSTAR_ASSERT_MODULE_MODULES);
+-    if ((EstimatorTask_PreparationGet(preparation) != SYSTEM_DEVICE_OK) ||
+-        (SystemAlignment_SummaryGet(&alignment) != SYSTEM_DEVICE_OK) ||
+-        (SystemCalibration_StatusGet(&calibration) != SYSTEM_DEVICE_OK))
+-    {
+-        return 0U;
+-    }
+-    if ((preparation->generation < s_navigation_generation_base) ||
+-        ((preparation->generation - s_navigation_generation_base) > UINT16_MAX))
+-    {
+-        s_navigation_session = 0U;
+-        return 0U;
+-    }
+-    s_navigation_generation = (uint16_t)(preparation->generation - s_navigation_generation_base);
+-    payload->session = s_navigation_session;
+-    payload->generation = s_navigation_generation;
+-    payload->tail[0] = TELEMETRY_NAV_REQUIRED_DEVICES | TELEMETRY_NAV_REQUIRED_CALIBRATION |
+-        TELEMETRY_NAV_REQUIRED_ATTITUDE | TELEMETRY_NAV_REQUIRED_ESTIMATOR;
+-    payload->tail[1] = 0U;
+-    if ((alignment.required_mask & SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) != 0U)
+-    {
+-        payload->tail[0] |= TELEMETRY_NAV_REQUIRED_GNSS_FIX | TELEMETRY_NAV_REQUIRED_GNSS_ORIGIN;
+-    }
+-    if ((alignment.required_mask & SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U)
+-    {
+-        payload->tail[0] |= TELEMETRY_NAV_REQUIRED_BARO_ORIGIN;
+-    }
+-    if ((startup != NULL) && (startup->completed != 0U) && (startup->mission_capable != 0U))
+-    {
+-        payload->tail[1] |= TELEMETRY_NAV_REQUIRED_DEVICES;
+-    }
+-    if (calibration.ready != 0U) { payload->tail[1] |= TELEMETRY_NAV_REQUIRED_CALIBRATION; }
+-    if ((alignment.ready_mask & SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE) != 0U)
+-    {
+-        payload->tail[1] |= TELEMETRY_NAV_REQUIRED_ATTITUDE;
+-    }
+-    if (s_gnss_position_usable != 0U) { payload->tail[1] |= TELEMETRY_NAV_REQUIRED_GNSS_FIX; }
+-    if ((alignment.ready_mask & SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) != 0U)
+-    {
+-        payload->tail[1] |= TELEMETRY_NAV_REQUIRED_GNSS_ORIGIN;
+-    }
+-    if ((alignment.ready_mask & SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U)
+-    {
+-        payload->tail[1] |= TELEMETRY_NAV_REQUIRED_BARO_ORIGIN;
+-    }
+-    if (preparation->initialized != 0U) { payload->tail[1] |= TELEMETRY_NAV_REQUIRED_ESTIMATOR; }
+-    payload->tail[2] = (uint8_t)TelemetryService_AirStartBlockReasonGet();
+-    return 1U;
+-}
+-
+-static uint8_t TelemetryService_NavigationFrameSend(uint8_t type,
+-    const AirNavigationStatusPayload *payload)
+-{
+-    uint8_t frame[AIR_NAV_CAPABILITY_LEN];
+-    uint8_t length = 0U;
+-
+-    if (Air_NavigationStatusBuild(s_tx_sequence, type, payload, frame,
+-            sizeof(frame), &length) != AIR_BUILD_OK)
+-    {
+-        return 0U;
+-    }
+-    if (SystemTelemetry_Send(frame, length) != SYSTEM_DEVICE_OK) { return 0U; }
+-    s_tx_sequence++;
+-    return 1U;
+-}
+-
+-static uint16_t TelemetryService_NavigationAge(uint64_t timestamp_us, uint64_t now_us)
+-{
+-    uint64_t age;
+-    if ((timestamp_us == 0ULL) || (timestamp_us > now_us)) { return UINT16_MAX; }
+-    age = (now_us - timestamp_us) / 100000ULL;
+-    return (age >= UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)age;
+-}
+-
+-static uint16_t TelemetryService_NavigationValue(float value, float scale)
+-{
+-    if ((isfinite(value) == 0) || (value < 0.0f)) { return UINT16_MAX; }
+-    value *= scale;
+-    return (value >= (float)UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)value;
+-}
+-
+-static uint16_t TelemetryService_NavigationGnssMetric(uint8_t metric, uint64_t now_us)
+-{
+-    SystemGnssSample sample;
+-    uint32_t fields;
+-
+-    SILVERSTAR_ASSERT(metric <= 5U, SILVERSTAR_ASSERT_MODULE_MODULES,
+-        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    SILVERSTAR_ASSERT_OBJECT(&sample, SystemGnssSample, SILVERSTAR_ASSERT_MODULE_MODULES);
+-    if (SystemGnss_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK) { return UINT16_MAX; }
+-    if (metric == 4U) { return TelemetryService_NavigationAge(sample.receive_timestamp_us, now_us); }
+-    if ((sample.receive_timestamp_us == 0ULL) || (sample.receive_timestamp_us > now_us) ||
+-        ((now_us - sample.receive_timestamp_us) > 3000000ULL)) { return UINT16_MAX; }
+-    fields = sample.supported_fields & sample.valid_fields;
+-    if ((metric == 0U) && ((fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U))
+-    { return sample.satellite_count; }
+-    if ((metric == 1U) && ((fields & SYSTEM_GNSS_FIELD_HORIZONTAL_ACCURACY) != 0U))
+-    { return TelemetryService_NavigationValue(sample.horizontal_accuracy_m, 100.0f); }
+-    if ((metric == 2U) && ((fields & SYSTEM_GNSS_FIELD_VERTICAL_ACCURACY) != 0U))
+-    { return TelemetryService_NavigationValue(sample.vertical_accuracy_m, 100.0f); }
+-    if ((metric == 3U) && ((fields & SYSTEM_GNSS_FIELD_SPEED_ACCURACY) != 0U))
+-    { return TelemetryService_NavigationValue(sample.speed_accuracy_mps, 100.0f); }
+-    if ((metric == 5U) && ((fields & (SYSTEM_GNSS_FIELD_FIX_TYPE | SYSTEM_GNSS_FIELD_FIX_OK)) ==
+-        (SYSTEM_GNSS_FIELD_FIX_TYPE | SYSTEM_GNSS_FIELD_FIX_OK)))
+-    { return (uint16_t)(sample.fix_type | ((uint16_t)sample.online << 8U) |
+-        ((uint16_t)sample.fix_ok << 9U) | ((uint16_t)sample.position_usable << 10U) |
+-        ((uint16_t)sample.quality_degraded << 11U)); }
+-    return UINT16_MAX;
+-}
+-
+-static uint16_t TelemetryService_NavigationImuGeneration(void)
+-{
+-    SystemImuIoDetail detail;
+-    if ((SystemImu_IoDetailGet(&detail) != SYSTEM_DEVICE_OK) ||
+-        (detail.config_generation_valid == 0U)) { return UINT16_MAX; }
+-    return (detail.config_generation >= UINT16_MAX) ?
+-        (UINT16_MAX - 1U) : (uint16_t)detail.config_generation;
+-}
+-
+-static uint16_t TelemetryService_NavigationImuMetric(uint8_t metric, uint64_t now_us)
+-{
+-    SystemImuSample sample;
+-    SystemImuConfig config;
+-    SILVERSTAR_ASSERT((metric >= 6U) && (metric <= 16U),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    SILVERSTAR_ASSERT(now_us <= UINT64_MAX - TELEMETRY_NAV_DETAIL_PERIOD_US,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+-    if (metric == 8U) { return TelemetryService_NavigationImuGeneration(); }
+-    if ((metric == 9U) || (metric == 16U))
+-    {
+-        if (SystemImu_EffectiveConfigGet(&config) != SYSTEM_DEVICE_OK) { return UINT16_MAX; }
+-        if ((metric == 9U) && ((config.requested_mask & SYSTEM_IMU_CFG_GYRO_RANGE) != 0U))
+-        { return TelemetryService_NavigationValue(config.gyro_range_dps, 1.0f); }
+-        if ((metric == 16U) && ((config.requested_mask & SYSTEM_IMU_CFG_ACCEL_RANGE) != 0U))
+-        { return TelemetryService_NavigationValue(config.accel_range_g, 100.0f); }
+-        return UINT16_MAX;
+-    }
+-    if (SystemImu_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK) { return UINT16_MAX; }
+-    if (metric == 7U) { return TelemetryService_NavigationAge(sample.receive_timestamp_us, now_us); }
+-    if ((sample.receive_timestamp_us == 0ULL) || (sample.receive_timestamp_us > now_us) ||
+-        ((now_us - sample.receive_timestamp_us) > 1000000ULL)) { return UINT16_MAX; }
+-    return (uint16_t)sample.quality_flags;
+-}
+-
+-static uint16_t TelemetryService_NavigationLoggerMetric(uint8_t metric)
+-{
+-#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+-    LoggerBusDiagnostics diagnostics;
+-    uint32_t value;
+-    SILVERSTAR_ASSERT(metric >= 10U, SILVERSTAR_ASSERT_MODULE_MODULES,
+-        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    SILVERSTAR_ASSERT(metric <= 15U, SILVERSTAR_ASSERT_MODULE_MODULES,
+-        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    if (LoggerBus_DiagnosticsGet(&diagnostics) != LOGGER_BUS_RESULT_OK) { return UINT16_MAX; }
+-    switch (metric)
+-    {
+-        case 10U: value = diagnostics.overflow_count; break;
+-        case 11U: value = diagnostics.normal_high_water; break;
+-        case 12U: value = diagnostics.estimator_high_water; break;
+-        case 13U: value = diagnostics.bootstrap_suppressed_count; break;
+-        case 14U: value = diagnostics.state_reject_count; break;
+-        case 15U: value = diagnostics.capacity_reject_count; break;
+-        default: return UINT16_MAX;
+-    }
+-    return (value >= UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)value;
+-#else
+-    (void)metric;
+-    return UINT16_MAX;
+-#endif
+-}
+-
+-static uint16_t TelemetryService_NavigationSystemMetric(uint8_t metric, uint64_t now_us)
+-{
+-    if (metric <= 5U) { return TelemetryService_NavigationGnssMetric(metric, now_us); }
+-    if ((metric <= 9U) || (metric == 16U)) { return TelemetryService_NavigationImuMetric(metric, now_us); }
+-    return TelemetryService_NavigationLoggerMetric(metric);
+-}
+-
+-static uint16_t TelemetryService_NavigationHistoryMetric(
+-    const SystemNavigationGroupHealth *health, uint8_t metric, uint64_t now_us)
+-{
+-    switch (metric)
+-    {
+-        case 4U: return TelemetryService_NavigationAge(health->last_receive_us, now_us);
+-        case 5U: return TelemetryService_NavigationAge(health->last_physically_valid_us, now_us);
+-        case 6U: return TelemetryService_NavigationAge(health->last_update_attempt_us, now_us);
+-        case 7U: return TelemetryService_NavigationAge(health->last_recovery_us, now_us);
+-        case 8U: return (health->recovery_count >= UINT16_MAX) ?
+-            (UINT16_MAX - 1U) : (uint16_t)health->recovery_count;
+-        default: return UINT16_MAX;
+-    }
+-}
+-
+-static uint16_t TelemetryService_NavigationMetricGet(uint8_t group,
+-    uint8_t metric, uint64_t now_us)
+-{
+-    SystemNavigationGroupHealth health;
+-    uint64_t age;
+-    float value;
+-
+-    if (group == 7U) { return TelemetryService_NavigationSystemMetric(metric, now_us); }
+-    SILVERSTAR_ASSERT(group < SYSTEM_NAVIGATION_GROUP_COUNT,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    SILVERSTAR_ASSERT(metric <= 8U,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    if (SystemNavigationHealth_GroupGet(group, now_us, &health) != SYSTEM_DEVICE_OK)
+-    {
+-        return (metric == 0U) ? 0U : UINT16_MAX;
+-    }
+-    if (metric >= 4U) { return TelemetryService_NavigationHistoryMetric(&health, metric, now_us); }
+-    if (metric == 0U)
+-    {
+-        return (uint16_t)(((uint16_t)health.state & 15U) |
+-            (((uint16_t)health.quality & 15U) << 4U) | ((uint16_t)health.reason << 8U));
+-    }
+-    if (metric == 1U)
+-    {
+-        if ((health.has_success == 0U) || (health.last_successful_fusion_us > now_us))
+-        {
+-            return UINT16_MAX;
+-        }
+-        age = (now_us - health.last_successful_fusion_us) / 100000ULL;
+-        return (age >= UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)age;
+-    }
+-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) { return UINT16_MAX; }
+-    value = (metric == 2U) ? health.variance_scale : health.nis;
+-    if ((isfinite(value) == 0) || (value < 0.0f)) { return UINT16_MAX; }
+-    value *= 256.0f;
+-    return (value >= (float)UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)value;
+-}
+-
+-static uint8_t TelemetryService_NavigationHealthSend(uint64_t now_us)
+-{
+-    AirNavigationStatusPayload payload;
+-    uint8_t regular = (uint8_t)(now_us >= s_next_navigation_health_us);
+-    uint8_t index = (regular != 0U) ? s_navigation_health_index : s_navigation_detail_index;
+-    uint8_t group = ((regular != 0U) || (index < TELEMETRY_NAV_DETAIL_GROUP_ITEMS)) ?
+-        (index % SYSTEM_NAVIGATION_GROUP_COUNT) : 7U;
+-    uint8_t metric = (group == 7U) ? (uint8_t)(index - TELEMETRY_NAV_DETAIL_GROUP_ITEMS) :
+-        (uint8_t)((index / SYSTEM_NAVIGATION_GROUP_COUNT) + ((regular != 0U) ? 0U : 2U));
+-    uint16_t value;
+-
+-    SILVERSTAR_ASSERT(index < ((regular != 0U) ? TELEMETRY_NAV_HEALTH_ITEM_COUNT : TELEMETRY_NAV_DETAIL_ITEM_COUNT),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    SILVERSTAR_ASSERT(now_us <= (UINT64_MAX - TELEMETRY_NAV_DETAIL_PERIOD_US),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+-    if ((regular == 0U) && (now_us < s_next_navigation_detail_us)) { return 0U; }
+-    value = TelemetryService_NavigationMetricGet(group, metric, now_us);
+-    payload.session = s_navigation_session;
+-    payload.generation = s_navigation_generation;
+-    payload.tail[0] = (uint8_t)(group + (metric * 8U));
+-    payload.tail[1] = (uint8_t)value;
+-    payload.tail[2] = (uint8_t)(value >> 8U);
+-    if (TelemetryService_NavigationFrameSend(AIR_TYPE_NAV_HEALTH, &payload) != 0U)
+-    {
+-        if (regular != 0U)
+-        {
+-            s_navigation_health_index = (uint8_t)((index + 1U) % TELEMETRY_NAV_HEALTH_ITEM_COUNT);
+-            s_next_navigation_health_us = now_us + TELEMETRY_NAV_HEALTH_PERIOD_US;
+-        }
+-        else
+-        {
+-            s_navigation_detail_index = (uint8_t)((index + 1U) % TELEMETRY_NAV_DETAIL_ITEM_COUNT);
+-            s_next_navigation_detail_us = now_us + TELEMETRY_NAV_DETAIL_PERIOD_US;
+-        }
+-    }
+-    return 1U;
+-}
+-
+-static uint8_t TelemetryService_NavigationSend(void)
+-{
+-    EstimatorPreparationSnapshot preparation;
+-    AirNavigationStatusPayload payload;
+-    uint64_t now_us = SystemTime_GetMonotonicUs();
+-    uint8_t type;
+-
+-    if (s_navigation_session == 0U) { return 0U; }
+-    SILVERSTAR_ASSERT(s_navigation_preparation_pending <= 1U,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+-    SILVERSTAR_ASSERT(now_us <= (UINT64_MAX - TELEMETRY_NAV_PREPARATION_PERIOD_US),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+-    if ((now_us >= s_next_navigation_preparation_us) || (s_navigation_preparation_pending != 0U))
+-    {
+-        if (TelemetryService_NavigationPreparationGet(&payload, &preparation) == 0U) { return 0U; }
+-        type = AIR_TYPE_NAV_PREPARATION;
+-        if (s_navigation_preparation_pending == 0U)
+-        {
+-            type = AIR_TYPE_NAV_CAPABILITY;
+-            payload.tail[0] = AIR_NAV_SCHEMA_VERSION;
+-            payload.tail[1] = preparation.algorithm_id;
+-            payload.tail[2] = (preparation.algorithm_id == 0U) ? 0U : AIR_NAV_GROUP_MASK;
+-        }
+-        if (TelemetryService_NavigationFrameSend(type, &payload) != 0U)
+-        {
+-            s_navigation_preparation_pending = (uint8_t)(type == AIR_TYPE_NAV_CAPABILITY);
+-            s_next_navigation_preparation_us = now_us + TELEMETRY_NAV_PREPARATION_PERIOD_US;
+-        }
+-        return 1U;
+-    }
+-    return TelemetryService_NavigationHealthSend(now_us);
+-}
+-
+ static void TelemetryService_StreamSend(void)
+ {
+     EstimatorOutputSnapshot estimator;
+@@ -2017,7 +1633,6 @@ SystemDeviceResult TelemetryService_Init(void)
+     s_next_preflight_status_us = 0ULL;
+     s_next_preflight_state_us = 0ULL;
+     s_next_stream_us = 0ULL;
+-    TelemetryService_NavigationReset();
+     return SYSTEM_DEVICE_OK;
+ }
+ 
+@@ -2061,7 +1676,6 @@ void TelemetryService_Process(void)
+     if (TelemetryService_PreflightStatusSend() != 0U) { return; }
+     if (TelemetryService_CapabilitySend() != 0U) { return; }
+     if (TelemetryService_PreflightStateSend() != 0U) { return; }
+-    if (TelemetryService_NavigationSend() != 0U) { return; }
+     TelemetryService_StreamSend();
+ }
+ 
+diff --git a/apps/GSHC/app.py b/apps/GSHC/app.py
+index 5caf4e0..8977b0a 100644
+--- a/apps/GSHC/app.py
++++ b/apps/GSHC/app.py
+@@ -5,7 +5,6 @@ import os
+ import shutil
+ import sys
+ import time
+-import secrets
+ from dataclasses import dataclass
+ from datetime import datetime
+ from pathlib import Path
+@@ -28,7 +27,6 @@ from config import (
+ )
+ from protocol.air import (
+     TOKEN_ALIGNMENT,
+-    TOKEN_NAV_SUBSCRIBE,
+     TOKEN_CALIBRATION,
+     TOKEN_LOCK,
+     TOKEN_START_MISSION,
+@@ -1432,7 +1430,7 @@ class Controller(QObject):
+         param1: int = 0,
+     ) -> bool:
+         if (cmd_id & 0xFF) == int(AirCmdId.START_MISSION) and not self.state.start_prerequisites_ready():
+-            self._set_radio_message("navigation.start_blocked")
++            self._set_radio_message("radio.start_blocked", reason=self._tr("common.not_ready"))
+             return False
+         if (cmd_id & 0xFF) == int(AirCmdId.CAL_START) and not self._cal_start_allowed(param0):
+             return False
+@@ -1471,10 +1469,6 @@ class Controller(QObject):
+             baseline_completed_face_mask=self.state.calibration.completed_face_mask,
+         )
+         self.pending_air_cmds[(pending.seq, pending.cmd_id)] = pending
+-        if cmd_id in {int(AirCmdId.CAL_START), int(AirCmdId.CAL_FACE), int(AirCmdId.CAL_RESET),
+-                      int(AirCmdId.ALIGN_START), int(AirCmdId.ALIGN_STOP), int(AirCmdId.ALIGN_RESET)}:
+-            self.state.navigation.Navigation_Invalidate("WAITING")
+-            self.state.navigation.awaiting_generation = True
+         self._transmit_pending_air_cmd(pending, is_retry=False)
+         return True
+ 
+@@ -1485,8 +1479,8 @@ class Controller(QObject):
+         is_retry: bool,
+     ) -> None:
+         if pending.cmd_id == int(AirCmdId.START_MISSION) and not self.state.start_prerequisites_ready():
+-            self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="navigation readiness expired")
+-            self._set_radio_message("navigation.start_blocked")
++            self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="M0 board prerequisites expired")
++            self._set_radio_message("radio.start_blocked", reason=self._tr("common.not_ready"))
+             return
+         if pending.cmd_id == int(AirCmdId.CAL_START) and not self._cal_start_allowed(pending.param0):
+             self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="CAL_START gate")
+@@ -1634,23 +1628,6 @@ class Controller(QObject):
+                 "source": source,
+             }
+         )
+-        self.Navigation_Subscribe()
+-
+-    def Navigation_Subscribe(self) -> None:
+-        """One bounded optional extension probe, separate from base handshake."""
+-        navigation = self.state.navigation
+-        if self.worker is None or not self.state.capability_acked or navigation.requested_session is not None:
+-            return
+-        nonce = (getattr(self, "_navigation_nonce", secrets.randbelow(65535)) % 65535) + 1
+-        self._navigation_nonce = nonce
+-        navigation.Navigation_Request(nonce)
+-        seq = self._next_air_seq()
+-        navigation.subscription_seq = seq
+-        frame = build_air_cmd(seq, int(AirCmdId.NAV_SUBSCRIBE), TOKEN_NAV_SUBSCRIBE | nonce, 1, 0)
+-        packet = build_pc_to_gs_air_frame(frame)
+-        self.worker.send_bytes(packet)
+-        self.state.handshake.gsp_air_tx_requests += 1
+-        self._log_tx_command(frame, packet, seq, int(AirCmdId.NAV_SUBSCRIBE), TOKEN_NAV_SUBSCRIBE | nonce, 1, 0, 1, False)
+ 
+     def _check_air_cmd_timeouts(self) -> None:
+         now = time.monotonic()
+diff --git a/apps/GSHC/ui/main_window.py b/apps/GSHC/ui/main_window.py
+index 6307c92..fbf53cf 100644
+--- a/apps/GSHC/ui/main_window.py
++++ b/apps/GSHC/ui/main_window.py
+@@ -74,7 +74,6 @@ from services.state_model import (
+     HandshakeState,
+     MissionPhase,
+ )
+-from ui.navigation_panel import NavigationPanel
+ from ui.port_combo import PortComboBox
+ from ui.theme import ThemeColors, apply_application_theme, theme_colors
+ from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
+@@ -1581,8 +1580,6 @@ class MainWindow(QMainWindow):
+         root.setContentsMargins(6, 6, 6, 6)
+         root.setSpacing(8)
+ 
+-        self.navigation_preparation_panel = NavigationPanel(self.i18n, preflight=True)
+-        # Preserve the monitoring rows from the pre-navigation GSHC layout.
+         summary_row = QHBoxLayout()
+         summary_row.addWidget(self._build_preflight_system_panel(), 1)
+         summary_row.addWidget(self._build_calibration_panel(), 1)
+@@ -1594,9 +1591,6 @@ class MainWindow(QMainWindow):
+         root.addLayout(detail_row)
+         root.addWidget(self._build_preflight_command_panel())
+         root.addWidget(self._build_event_panel(), 1)
+-        # Supplemental preparation diagnostics must not displace the original
+-        # status, commands and event monitoring rows.
+-        root.addWidget(self.navigation_preparation_panel)
+         return TouchScroll_Wrap(page)
+ 
+     def _build_preflight_system_panel(self) -> QWidget:
+@@ -1824,8 +1818,6 @@ class MainWindow(QMainWindow):
+         top.addWidget(self._build_flight_data_panel(), 2)
+         top.addWidget(self._build_mission_state_panel(), 2)
+         status_layout.addLayout(top)
+-        self.navigation_health_panel = NavigationPanel(self.i18n, preflight=False)
+-        status_layout.addWidget(self.navigation_health_panel)
+         self.flight_status_scroll = TouchScroll_Wrap(status_content, fit_content=True)
+         root.addWidget(self.flight_status_scroll)
+         # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
+@@ -2567,8 +2559,6 @@ class MainWindow(QMainWindow):
+         self._render_sensor(state)
+         self._render_mission_state(state)
+         self._render_commands(state)
+-        self.navigation_preparation_panel.Navigation_Render(state)
+-        self.navigation_health_panel.Navigation_Render(state)
+         self._render_events()
+         self._render_plots(state)
+         self._render_data_tool_buttons()

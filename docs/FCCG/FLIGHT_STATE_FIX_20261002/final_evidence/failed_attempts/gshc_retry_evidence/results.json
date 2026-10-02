@@ -1,0 +1,29 @@
+[
+  {
+    "name": "targeted_windows",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_targeted_retry",
+      "apps/GSHC/tests/test_navigation_gui.py",
+      "apps/GSHC/tests/test_navigation_readiness.py",
+      "apps/GSHC/tests/test_calibration_capability.py",
+      "apps/GSHC/tests/test_air_protocol.py",
+      "apps/GSHC/tests/test_start_ack_state.py",
+      "apps/GSHC/tests/test_release_layout.py"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002",
+    "qt_backend": "windows",
+    "exit": 1,
+    "started": "2026-10-02T12:57:31.470252+00:00",
+    "finished": "2026-10-02T13:00:08.028658+00:00",
+    "log": "D:\\python_software\\SilverStar\\.work\\FlightStateTelemetryHotfix_20261002\\.work\\gshc_retry_evidence\\targeted_windows.log",
+    "sha256": "c03520f1a8f1a51a7ff0eabdeb5d3bb308edb215b4083cd9de680ebf50579207"
+  }
+]

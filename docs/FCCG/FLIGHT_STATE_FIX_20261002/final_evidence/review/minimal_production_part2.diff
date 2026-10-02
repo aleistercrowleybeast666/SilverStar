@@ -1,0 +1,181 @@
+-        ((now_us - sample.receive_timestamp_us) > 3000000ULL)) { return UINT16_MAX; }
+-    fields = sample.supported_fields & sample.valid_fields;
+-    if ((metric == 0U) && ((fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U))
+-    { return sample.satellite_count; }
+-    if ((metric == 1U) && ((fields & SYSTEM_GNSS_FIELD_HORIZONTAL_ACCURACY) != 0U))
+-    { return TelemetryService_NavigationValue(sample.horizontal_accuracy_m, 100.0f); }
+-    if ((metric == 2U) && ((fields & SYSTEM_GNSS_FIELD_VERTICAL_ACCURACY) != 0U))
+-    { return TelemetryService_NavigationValue(sample.vertical_accuracy_m, 100.0f); }
+-    if ((metric == 3U) && ((fields & SYSTEM_GNSS_FIELD_SPEED_ACCURACY) != 0U))
+-    { return TelemetryService_NavigationValue(sample.speed_accuracy_mps, 100.0f); }
+-    if ((metric == 5U) && ((fields & (SYSTEM_GNSS_FIELD_FIX_TYPE | SYSTEM_GNSS_FIELD_FIX_OK)) ==
+-        (SYSTEM_GNSS_FIELD_FIX_TYPE | SYSTEM_GNSS_FIELD_FIX_OK)))
+-    { return (uint16_t)(sample.fix_type | ((uint16_t)sample.online << 8U) |
+-        ((uint16_t)sample.fix_ok << 9U) | ((uint16_t)sample.position_usable << 10U) |
+-        ((uint16_t)sample.quality_degraded << 11U)); }
+-    return UINT16_MAX;
+-}
+-
+-static uint16_t TelemetryService_NavigationImuGeneration(void)
+-{
+-    SystemImuIoDetail detail;
+-    if ((SystemImu_IoDetailGet(&detail) != SYSTEM_DEVICE_OK) ||
+-        (detail.config_generation_valid == 0U)) { return UINT16_MAX; }
+-    return (detail.config_generation >= UINT16_MAX) ?
+-        (UINT16_MAX - 1U) : (uint16_t)detail.config_generation;
+-}
+-
+-static uint16_t TelemetryService_NavigationImuMetric(uint8_t metric, uint64_t now_us)
+-{
+-    SystemImuSample sample;
+-    SystemImuConfig config;
+-    SILVERSTAR_ASSERT((metric >= 6U) && (metric <= 16U),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    SILVERSTAR_ASSERT(now_us <= UINT64_MAX - TELEMETRY_NAV_DETAIL_PERIOD_US,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+-    if (metric == 8U) { return TelemetryService_NavigationImuGeneration(); }
+-    if ((metric == 9U) || (metric == 16U))
+-    {
+-        if (SystemImu_EffectiveConfigGet(&config) != SYSTEM_DEVICE_OK) { return UINT16_MAX; }
+-        if ((metric == 9U) && ((config.requested_mask & SYSTEM_IMU_CFG_GYRO_RANGE) != 0U))
+-        { return TelemetryService_NavigationValue(config.gyro_range_dps, 1.0f); }
+-        if ((metric == 16U) && ((config.requested_mask & SYSTEM_IMU_CFG_ACCEL_RANGE) != 0U))
+-        { return TelemetryService_NavigationValue(config.accel_range_g, 100.0f); }
+-        return UINT16_MAX;
+-    }
+-    if (SystemImu_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK) { return UINT16_MAX; }
+-    if (metric == 7U) { return TelemetryService_NavigationAge(sample.receive_timestamp_us, now_us); }
+-    if ((sample.receive_timestamp_us == 0ULL) || (sample.receive_timestamp_us > now_us) ||
+-        ((now_us - sample.receive_timestamp_us) > 1000000ULL)) { return UINT16_MAX; }
+-    return (uint16_t)sample.quality_flags;
+-}
+-
+-static uint16_t TelemetryService_NavigationLoggerMetric(uint8_t metric)
+-{
+-#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+-    LoggerBusDiagnostics diagnostics;
+-    uint32_t value;
+-    SILVERSTAR_ASSERT(metric >= 10U, SILVERSTAR_ASSERT_MODULE_MODULES,
+-        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    SILVERSTAR_ASSERT(metric <= 15U, SILVERSTAR_ASSERT_MODULE_MODULES,
+-        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    if (LoggerBus_DiagnosticsGet(&diagnostics) != LOGGER_BUS_RESULT_OK) { return UINT16_MAX; }
+-    switch (metric)
+-    {
+-        case 10U: value = diagnostics.overflow_count; break;
+-        case 11U: value = diagnostics.normal_high_water; break;
+-        case 12U: value = diagnostics.estimator_high_water; break;
+-        case 13U: value = diagnostics.bootstrap_suppressed_count; break;
+-        case 14U: value = diagnostics.state_reject_count; break;
+-        case 15U: value = diagnostics.capacity_reject_count; break;
+-        default: return UINT16_MAX;
+-    }
+-    return (value >= UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)value;
+-#else
+-    (void)metric;
+-    return UINT16_MAX;
+-#endif
+-}
+-
+-static uint16_t TelemetryService_NavigationSystemMetric(uint8_t metric, uint64_t now_us)
+-{
+-    if (metric <= 5U) { return TelemetryService_NavigationGnssMetric(metric, now_us); }
+-    if ((metric <= 9U) || (metric == 16U)) { return TelemetryService_NavigationImuMetric(metric, now_us); }
+-    return TelemetryService_NavigationLoggerMetric(metric);
+-}
+-
+-static uint16_t TelemetryService_NavigationHistoryMetric(
+-    const SystemNavigationGroupHealth *health, uint8_t metric, uint64_t now_us)
+-{
+-    switch (metric)
+-    {
+-        case 4U: return TelemetryService_NavigationAge(health->last_receive_us, now_us);
+-        case 5U: return TelemetryService_NavigationAge(health->last_physically_valid_us, now_us);
+-        case 6U: return TelemetryService_NavigationAge(health->last_update_attempt_us, now_us);
+-        case 7U: return TelemetryService_NavigationAge(health->last_recovery_us, now_us);
+-        case 8U: return (health->recovery_count >= UINT16_MAX) ?
+-            (UINT16_MAX - 1U) : (uint16_t)health->recovery_count;
+-        default: return UINT16_MAX;
+-    }
+-}
+-
+-static uint16_t TelemetryService_NavigationMetricGet(uint8_t group,
+-    uint8_t metric, uint64_t now_us)
+-{
+-    SystemNavigationGroupHealth health;
+-    uint64_t age;
+-    float value;
+-
+-    if (group == 7U) { return TelemetryService_NavigationSystemMetric(metric, now_us); }
+-    SILVERSTAR_ASSERT(group < SYSTEM_NAVIGATION_GROUP_COUNT,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    SILVERSTAR_ASSERT(metric <= 8U,
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    if (SystemNavigationHealth_GroupGet(group, now_us, &health) != SYSTEM_DEVICE_OK)
+-    {
+-        return (metric == 0U) ? 0U : UINT16_MAX;
+-    }
+-    if (metric >= 4U) { return TelemetryService_NavigationHistoryMetric(&health, metric, now_us); }
+-    if (metric == 0U)
+-    {
+-        return (uint16_t)(((uint16_t)health.state & 15U) |
+-            (((uint16_t)health.quality & 15U) << 4U) | ((uint16_t)health.reason << 8U));
+-    }
+-    if (metric == 1U)
+-    {
+-        if ((health.has_success == 0U) || (health.last_successful_fusion_us > now_us))
+-        {
+-            return UINT16_MAX;
+-        }
+-        age = (now_us - health.last_successful_fusion_us) / 100000ULL;
+-        return (age >= UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)age;
+-    }
+-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) { return UINT16_MAX; }
+-    value = (metric == 2U) ? health.variance_scale : health.nis;
+-    if ((isfinite(value) == 0) || (value < 0.0f)) { return UINT16_MAX; }
+-    value *= 256.0f;
+-    return (value >= (float)UINT16_MAX) ? (UINT16_MAX - 1U) : (uint16_t)value;
+-}
+-
+-static uint8_t TelemetryService_NavigationHealthSend(uint64_t now_us)
+-{
+-    AirNavigationStatusPayload payload;
+-    uint8_t regular = (uint8_t)(now_us >= s_next_navigation_health_us);
+-    uint8_t index = (regular != 0U) ? s_navigation_health_index : s_navigation_detail_index;
+-    uint8_t group = ((regular != 0U) || (index < TELEMETRY_NAV_DETAIL_GROUP_ITEMS)) ?
+-        (index % SYSTEM_NAVIGATION_GROUP_COUNT) : 7U;
+-    uint8_t metric = (group == 7U) ? (uint8_t)(index - TELEMETRY_NAV_DETAIL_GROUP_ITEMS) :
+-        (uint8_t)((index / SYSTEM_NAVIGATION_GROUP_COUNT) + ((regular != 0U) ? 0U : 2U));
+-    uint16_t value;
+-
+-    SILVERSTAR_ASSERT(index < ((regular != 0U) ? TELEMETRY_NAV_HEALTH_ITEM_COUNT : TELEMETRY_NAV_DETAIL_ITEM_COUNT),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    SILVERSTAR_ASSERT(now_us <= (UINT64_MAX - TELEMETRY_NAV_DETAIL_PERIOD_US),
+-        SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+-    if ((regular == 0U) && (now_us < s_next_navigation_detail_us)) { return 0U; }
+-    value = TelemetryService_NavigationMetricGet(group, metric, now_us);
+-    payload.session = s_navigation_session;
+-    payload.generation = s_navigation_generation;
+-    payload.tail[0] = (uint8_t)(group + (metric * 8U));
+-    payload.tail[1] = (uint8_t)value;
+-    payload.tail[2] = (uint8_t)(value >> 8U);
+-    if (TelemetryService_NavigationFrameSend(AIR_TYPE_NAV_HEALTH, &payload) != 0U)
+-    {
+-        if (regular != 0U)
+-        {
+-            s_navigation_health_index = (uint8_t)((index + 1U) % TELEMETRY_NAV_HEALTH_ITEM_COUNT);
+-            s_next_navigation_health_us = now_us + TELEMETRY_NAV_HEALTH_PERIOD_US;
+-        }
+-        else
+-        {
+-            s_navigation_detail_index = (uint8_t)((index + 1U) % TELEMETRY_NAV_DETAIL_ITEM_COUNT);
+-            s_next_navigation_detail_us = now_us + TELEMETRY_NAV_DETAIL_PERIOD_US;
+-        }
+-    }
+-    return 1U;
+-}
+-
+-static uint8_t TelemetryService_NavigationSend(void)
+-{
+-    EstimatorPreparationSnapshot preparation;
+-    AirNavigationStatusPayload payload;
