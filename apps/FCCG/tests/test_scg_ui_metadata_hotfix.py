@@ -271,3 +271,47 @@ def test_flight_export_with_empty_enabled_ground_matches_disabled_ground(workspa
                 for p in root.rglob("*") if p.is_file() and
                 (p.suffix.lower() in (".c", ".h", ".s", ".ld") or p.name == "Makefile")}
     assert firmware_files(enabled_root) == firmware_files(disabled_root)
+
+
+def test_qt_flight_button_exports_with_enabled_unconfigured_ground(qapp, window, tmp_path, monkeypatch):
+    from PySide6.QtCore import Qt
+    from silverstar_fccg.project.model import GroundTargetConfiguration
+    from silverstar_fccg.project.air_link import GroundTargetIssues_Get
+    window._model = window._service.ReferenceProject_Create("QtFlightOnly")
+    window._model.ground_target = GroundTargetConfiguration(enabled=True)
+    window._project_root = tmp_path / "qt_flight_only"
+    window._Project_Refresh()
+    ground = window._model.ground_target
+    assert ground.enabled and not ground.mcu and not ground.radio_instances
+    assert GroundTargetIssues_Get(window._model, window._service.catalog)
+    errors, plans = [], []
+    monkeypatch.setattr(window, "_Error_Show", lambda *args: errors.append(args))
+    original_plan = window._GenerationPlan_ApplyAllowed
+    def observe_plan(plan):
+        plans.append(plan)
+        return original_plan(plan)
+    monkeypatch.setattr(window, "_GenerationPlan_ApplyAllowed", observe_plan)
+    window.pages.setCurrentWidget(window.board_hardware_page)
+    window.show()
+    qapp.processEvents()
+    button = window.board_hardware_page.generate_button
+    assert button.isEnabled() and button.isVisible()
+    QTest.mouseClick(button, Qt.MouseButton.LeftButton)
+    assert window._active_worker is not None
+    deadline = time.monotonic() + 120
+    while (window._active_worker is not None) and time.monotonic() < deadline:
+        qapp.processEvents()
+        time.sleep(0.005)
+        QTest.qWait(5)
+    assert window._active_worker is None
+    assert not errors, errors
+    assert len(plans) == 1 and plans[0].valid
+    assert window.progress_bar.value() == 1000
+    assert window._model.ground_target == ground
+    root = window._project_root
+    assert (root / "Flight_Controller/Makefile").is_file()
+    # Saving the root creates the established empty target directories.
+    # Flight-only generation must not materialize any Ground payload.
+    assert not any(path.is_file() for path in (root / "Ground_Station").rglob("*"))
+    descriptor = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf8"))
+    assert descriptor["ground_target"]["enabled"] is True
