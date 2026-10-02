@@ -1,0 +1,655 @@
+{
+  "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\SilverStar_RadioRuntime_JYReadonly_20261002_105453",
+  "probe_uid": "132765403520",
+  "scope": "Running-only sequential non-atomic memory reads after GUI/COM closed; no halt, reset, writes, MCU functions or serial commands.",
+  "samples_nonatomic": true,
+  "startup_failure": {
+    "state": 9,
+    "failure": 2,
+    "failure_name": "ConfigRead",
+    "failure_entered_ms": 709,
+    "first_register_read_started_ms": 109,
+    "elapsed_ms": 600,
+    "single_reply_timeout_ms": 600,
+    "stage_timeout_ms": 10000,
+    "read_index": 0,
+    "read_active": 0,
+    "expected_register_address": "0x04 BAUD",
+    "expected_value": "0x0007 target230400",
+    "last_retained_TX_first5_hex": "ffaa270400",
+    "tx_bytes_total": 5,
+    "actual_array_hex": "0000000000000000000000000000000000000000",
+    "verified_array_hex": "0000000000000000000000000000000000000000",
+    "reply_parser_frame_hex": "5500000000000000000000",
+    "reply_parser_index": 0,
+    "apply_index": 0,
+    "verify_index": 0,
+    "probe_candidate_index": 0,
+    "probe_pass_index": 0
+  },
+  "diagnosis": "Captured Failed entry709ms minus retained first read start109ms equals600ms single reply timeout. Startup failed before register0 completed/apply/verify. Source maps failure to verify_result TIMEOUT. Independent total10s deadline not reached. Current healthy continuous sensor data rules out current total no-data state; does not prove whether5F reply reached/was consumed/misparsed at109–709ms. No reply register-address/sequence discrimination can be concluded from retained partial frame55+zeros.",
+  "current_uart": {
+    "instance": 0,
+    "baud": 230400,
+    "USART1_registers": {
+      "SR": 192,
+      "BRR": 364,
+      "CR1": 8220,
+      "CR2": 0,
+      "CR3": 65,
+      "RCC_CFGR": 37898
+    },
+    "BRR_hex": "0x16c",
+    "diagnostics": {
+      "UART_rx_bytes": 6232110,
+      "UART_tx_bytes": 5,
+      "UART_rx_event_count": 190329,
+      "UART_rx_idle_event_count": 141642,
+      "UART_rx_transfer_complete_count": 48689,
+      "UART_rx_discarded_bytes": 512,
+      "UART_tx_discarded_bytes": 0,
+      "UART_uart_overrun_error_count": 0,
+      "UART_uart_framing_error_count": 0,
+      "UART_uart_noise_error_count": 0,
+      "UART_uart_parity_error_count": 0,
+      "UART_dma_error_count": 0,
+      "UART_rx_restart_count": 1,
+      "UART_rx_restart_failure_count": 0,
+      "UART_rx_discontinuity_count": 2,
+      "UART_transport_error_count": 0,
+      "UART_rx_active": 1,
+      "UART_tx_active": 0,
+      "UART_BaudRate": 230400,
+      "UART_ErrorCode": 0,
+      "UART_RxState": 34,
+      "UART_gState": 32
+    },
+    "rx_ring": {
+      "buffer": 536943504,
+      "size": 512,
+      "head": 360,
+      "tail": 360,
+      "discarded": 0
+    },
+    "tx_ring": {
+      "buffer": 536880120,
+      "size": 192,
+      "head": 0,
+      "tail": 0,
+      "discarded": 0
+    },
+    "tx_priority_ring": {
+      "buffer": 536879928,
+      "size": 192,
+      "head": 5,
+      "tail": 5,
+      "discarded": 0
+    }
+  },
+  "imu_stream": {
+    "JY_driver_sample_fifo_head": 5,
+    "JY_driver_sample_fifo_tail": 6,
+    "JY_driver_sample_overflow_count": 0,
+    "JY_driver_last_sample_acc_count": 141432,
+    "JY_driver_last_sample_gyro_count": 141434,
+    "JY_driver_frame_buffer": "555917e4b01161558ea654",
+    "JY_driver_frame_index": 0,
+    "JY_driver_consecutive_legal_frame_count": 65535,
+    "JY_driver_valid_frame_count": 565764,
+    "JY_driver_checksum_error_count": 0,
+    "JY_driver_parser_resync_count": 1,
+    "JY_driver_process_limit_count": 0,
+    "JY_driver_port_discontinuity_sequence": 2,
+    "JY_driver_register_read_active": 0,
+    "JY_driver_register_read_index": 0,
+    "JY_driver_register_read_frame": "5500000000000000000000",
+    "JY_driver_register_read_started_ms": 109,
+    "JY_driver_register_write_phase": 0,
+    "JY_driver_register_write_reg": 0,
+    "JY_driver_register_write_value": 0,
+    "JY_driver_register_write_started_ms": 0,
+    "JY_data_Online": 1,
+    "JY_data_NewFrame": 1,
+    "JY_data_LastFrameType": 89,
+    "JY_data_ValidMask": 51,
+    "JY_data_FrameCount": 565832,
+    "JY_data_LastUpdateTickMs": 706451,
+    "JY_data_AccFrameCount": 141460,
+    "JY_data_GyroFrameCount": 141462,
+    "JY_data_MagFrameCount": 0,
+    "JY_data_PressureFrameCount": 141464,
+    "JY_data_QuaternionFrameCount": 141465,
+    "JY_data_AccTimestampUs": 706485029,
+    "JY_data_GyroTimestampUs": 706505030,
+    "JY_data_PressureTimestampUs": 706520040,
+    "JY_data_QuaternionTimestampUs": 706540047,
+    "JY_cache_BaudrateValue": 0,
+    "JY_cache_OutputRateValue": 0,
+    "JY_cache_BandwidthValue": 0,
+    "JY_cache_AlgorithmValue": 0,
+    "JY_cache_OrientationValue": 0,
+    "JY_cache_GyroRangeValue": 0,
+    "JY_cache_AccelRangeValue": 0,
+    "JY_cache_FusionFilterValue": 0,
+    "JY_cache_AccelerationFilterValue": 0,
+    "JY_cache_ReturnContentValue": 0,
+    "JY_cache_ValidMask": 0,
+    "JY_cache_OrientationConfigAttempted": 0,
+    "JY_cache_OrientationConfigOk": 0
+  },
+  "rates": {
+    "Acc": {
+      "count_first": 141460,
+      "count_second": 141893,
+      "delta": 433,
+      "timestamp_delta_us": 2158994,
+      "approx_hz_nonatomic": 200.55637023539668
+    },
+    "Gyro": {
+      "count_first": 141462,
+      "count_second": 141894,
+      "delta": 432,
+      "timestamp_delta_us": 2164000,
+      "approx_hz_nonatomic": 199.63031423290204
+    },
+    "Pressure": {
+      "count_first": 141464,
+      "count_second": 141897,
+      "delta": 433,
+      "timestamp_delta_us": 2169000,
+      "approx_hz_nonatomic": 199.6311664361457
+    },
+    "Quaternion": {
+      "count_first": 141465,
+      "count_second": 141898,
+      "delta": 433,
+      "timestamp_delta_us": 2169002,
+      "approx_hz_nonatomic": 199.630982359629
+    }
+  },
+  "saved_buffer_frame_candidates": [
+    {
+      "buffer": "UART_rx_ring_RAW",
+      "valid_checksum_frame_candidates": [
+        {
+          "offset": 7,
+          "type": "0x52",
+          "hex": "5552000000000000130cc6"
+        },
+        {
+          "offset": 18,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 29,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 40,
+          "type": "0x51",
+          "hex": "5551c90006f89300070c13"
+        },
+        {
+          "offset": 51,
+          "type": "0x52",
+          "hex": "5552000000000000070cba"
+        },
+        {
+          "offset": 62,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 73,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 84,
+          "type": "0x51",
+          "hex": "5551c90007f893000d0c1a"
+        },
+        {
+          "offset": 95,
+          "type": "0x52",
+          "hex": "555200000000ffff0d0cbe"
+        },
+        {
+          "offset": 106,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 117,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 128,
+          "type": "0x51",
+          "hex": "5551c80007f89500010c0f"
+        },
+        {
+          "offset": 139,
+          "type": "0x52",
+          "hex": "5552000000000000010cb4"
+        },
+        {
+          "offset": 150,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 161,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 172,
+          "type": "0x51",
+          "hex": "5551c90008f894000d0c1c"
+        },
+        {
+          "offset": 183,
+          "type": "0x52",
+          "hex": "55520000000000000d0cc0"
+        },
+        {
+          "offset": 194,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 205,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 238,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 249,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 266,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 277,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 288,
+          "type": "0x51",
+          "hex": "5551ca0006f89300130c20"
+        },
+        {
+          "offset": 299,
+          "type": "0x52",
+          "hex": "5552000000000000130cc6"
+        },
+        {
+          "offset": 310,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 321,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 332,
+          "type": "0x51",
+          "hex": "5551c90005f893000d0c18"
+        },
+        {
+          "offset": 343,
+          "type": "0x52",
+          "hex": "55520000000000000d0cc0"
+        },
+        {
+          "offset": 354,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 365,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 376,
+          "type": "0x51",
+          "hex": "5551ca0007f89300250c33"
+        },
+        {
+          "offset": 387,
+          "type": "0x52",
+          "hex": "5552000000000000250cd8"
+        },
+        {
+          "offset": 398,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 409,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 420,
+          "type": "0x51",
+          "hex": "5551c80006f89400130c1f"
+        },
+        {
+          "offset": 431,
+          "type": "0x52",
+          "hex": "5552000000000000130cc6"
+        },
+        {
+          "offset": 442,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 453,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 464,
+          "type": "0x51",
+          "hex": "5551c90007f89500130c22"
+        },
+        {
+          "offset": 475,
+          "type": "0x52",
+          "hex": "5552000000000000130cc6"
+        },
+        {
+          "offset": 486,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 497,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        }
+      ],
+      "scope": "Saved buffer only; not a chronological wire capture and contains previously processed bytes."
+    },
+    {
+      "buffer": "UART_rx_dma_RAW",
+      "valid_checksum_frame_candidates": [
+        {
+          "offset": 1,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 12,
+          "type": "0x51",
+          "hex": "5551c90007f89400250c33"
+        },
+        {
+          "offset": 23,
+          "type": "0x52",
+          "hex": "5552000000000000250cd8"
+        },
+        {
+          "offset": 34,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 45,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 56,
+          "type": "0x51",
+          "hex": "5551c90006f89400190c26"
+        },
+        {
+          "offset": 67,
+          "type": "0x52",
+          "hex": "5552000000000000190ccc"
+        },
+        {
+          "offset": 78,
+          "type": "0x56",
+          "hex": "55569187010016240000fe"
+        },
+        {
+          "offset": 89,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        },
+        {
+          "offset": 100,
+          "type": "0x51",
+          "hex": "5551c90008f89400130c22"
+        },
+        {
+          "offset": 111,
+          "type": "0x52",
+          "hex": "5552000000000000130cc6"
+        }
+      ],
+      "scope": "Saved buffer only; not a chronological wire capture and contains previously processed bytes."
+    },
+    {
+      "buffer": "JY_driver_frame_buffer",
+      "valid_checksum_frame_candidates": [
+        {
+          "offset": 0,
+          "type": "0x59",
+          "hex": "555917e4b01161558ea654"
+        }
+      ],
+      "scope": "Saved buffer only; not a chronological wire capture and contains previously processed bytes."
+    }
+  ],
+  "configuration_comparison": {
+    "components": true,
+    "algorithm_parameters": true,
+    "resources": true,
+    "hardware": true,
+    "modes": true,
+    "mode_parameters": true
+  },
+  "relevant_source_hashes": [
+    {
+      "path": "Devices/IMU/JY901B/Src/jy901b_device.c",
+      "old_sha256": "b981d3afa7a23a10a9d756d87416abeeabc8858d98a3e509643865388277df06",
+      "new_sha256": "b981d3afa7a23a10a9d756d87416abeeabc8858d98a3e509643865388277df06",
+      "identical": true
+    },
+    {
+      "path": "Devices/IMU/JY901B/Inc/jy901b_device.h",
+      "old_sha256": "9b8646e82c2217c7b1639f27b2c5a5778511245dae2b4079614377de63a56396",
+      "new_sha256": "9b8646e82c2217c7b1639f27b2c5a5778511245dae2b4079614377de63a56396",
+      "identical": true
+    },
+    {
+      "path": "Devices/IMU/JY901B/Inc/jy901b_config.h",
+      "old_sha256": "32622a35b064ebae91c5a8726ddb3860cfdd595213318b58108d062f95569a49",
+      "new_sha256": "32622a35b064ebae91c5a8726ddb3860cfdd595213318b58108d062f95569a49",
+      "identical": true
+    },
+    {
+      "path": "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+      "old_sha256": "30f86dedd176fc25782958a1f69322e696a73c638e392306a43391d080243055",
+      "new_sha256": "30f86dedd176fc25782958a1f69322e696a73c638e392306a43391d080243055",
+      "identical": true
+    },
+    {
+      "path": "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+      "old_sha256": "c00d995ffd9162addbb2dbed6663650acaccf6cf4cd5344ca1c9dcde11644a87",
+      "new_sha256": "c00d995ffd9162addbb2dbed6663650acaccf6cf4cd5344ca1c9dcde11644a87",
+      "identical": true
+    },
+    {
+      "path": "System/Src/system_device_startup.c",
+      "old_sha256": "09748fe3be2f42c7c4899a7fac1b92009b7675ff49888c6d363b880e6ac4c9d8",
+      "new_sha256": "09748fe3be2f42c7c4899a7fac1b92009b7675ff49888c6d363b880e6ac4c9d8",
+      "identical": true
+    },
+    {
+      "path": "Platform/STM32F4/Src/platform_uart_stm32f4.c",
+      "old_sha256": "92ac12cbf737e3acc05237306603e11c5adbc4faec5eca30eafde88775378735",
+      "new_sha256": "92ac12cbf737e3acc05237306603e11c5adbc4faec5eca30eafde88775378735",
+      "identical": true
+    }
+  ],
+  "old_ready_proof": {
+    "utc": "2026-10-02T08:17:09.731852+00:00",
+    "stage": "NAV_WAIT",
+    "connected": true,
+    "capability_acked": true,
+    "capability": {
+      "seq": 233,
+      "air_profile_id": 0,
+      "command_policy": 1,
+      "calibration_mode_mask": 1,
+      "sensor_summary_flags": 15,
+      "accel_full_scale_g": 16,
+      "gyro_full_scale_dps": 2000
+    },
+    "lifecycle": 2,
+    "system_ready": false,
+    "selftest_passed": true,
+    "start_unlocked": false,
+    "gnss_position_usable": false,
+    "start_block_reason": 7,
+    "start_block_name": "LOCKED_REQUIRED",
+    "calibration": {
+      "state": 4,
+      "mode": 0,
+      "completed_face_mask": 0,
+      "current_face": 255,
+      "ready": true
+    },
+    "alignment": {
+      "state": 0,
+      "ready": false
+    },
+    "mission_started": false,
+    "mission_phase": "MissionPhase.PRE_START",
+    "nav_check": "NavigationStartResult.UNSUPPORTED",
+    "nav_algorithm": null,
+    "nav_protocol_version": null,
+    "nav_session": null,
+    "nav_requested_session": 37103,
+    "nav_invalidation_reason": "WAITING",
+    "nav_preparation": null,
+    "handshake": {
+      "handshake_state": "ACKED",
+      "capability_rx": 1,
+      "preflight_status_rx": 1,
+      "last_air_rx_monotonic_ns": 54110444108700,
+      "last_preflight_status_rx_monotonic_ns": 54110279099600,
+      "last_capability_seq": 233,
+      "accepted_capability_seq": 233,
+      "last_capability_rx_time": 1790929028.9397023,
+      "capability_ack_cmd_seq": 0,
+      "capability_ack_attempts": 1,
+      "last_capability_ack_tx_time": 1790929028.9397633,
+      "gsp_air_tx_requests": 2,
+      "gsp_air_tx_serial_writes": 2,
+      "serial_tx_bytes": 32,
+      "gsp_air_tx_ack_ok": 2,
+      "gsp_air_tx_ack_fail": 0,
+      "last_gsp_air_tx_ack_result": 0,
+      "air_ack_rx": 1,
+      "air_ack_result": 0,
+      "capability_acked_by_air_ack": true,
+      "capability_acked_by_preflight_status": false,
+      "preflight_status_capability_acked": true,
+      "duplicate_capability_after_ack": 0,
+      "last_handshake_error": ""
+    },
+    "receive_health": {
+      "serial_rx_bytes": 230,
+      "serial_rx_chunks": 10,
+      "gsp_frames": 10,
+      "gsp_parse_errors": 0,
+      "gsp_crc_errors": 0,
+      "gsp_resyncs": 0,
+      "parser_buffer_size": 0,
+      "air_frames": 7,
+      "air_parse_errors": 0,
+      "protocol_queue_depth": 0,
+      "protocol_queue_capacity": 1024,
+      "ui_mailbox_depth": 1,
+      "ui_mailbox_capacity": 4096,
+      "ui_coalesced_events": 0,
+      "logger_queue_depth": 0,
+      "logger_queue_capacity": 20000,
+      "max_processing_lag_ms": 0.4966,
+      "last_rx_monotonic_ns": 54110258593000,
+      "warning": ""
+    },
+    "ground_tx": 0,
+    "ground_rx": 1076,
+    "ground_crc": 0,
+    "radio_hint": "Capability handshake completed (AIR_ACK)",
+    "pending_command_name": "",
+    "buttons": {
+      "btn_align_start": true,
+      "btn_unlock": true,
+      "btn_start": false,
+      "btn_process_data": true
+    },
+    "GNSS_UI_text": "No",
+    "mission_presentation": {
+      "phase": "PRE_START",
+      "last_critical_event_name": "",
+      "last_critical_event_time_ms": null,
+      "last_critical_event_host_monotonic_ns": null,
+      "parachute_deployed": false
+    },
+    "last_air_ack": "ack_seq=0 cmd=CAPABILITY_ACK result=OK",
+    "processing_status_key": "task.processing.idle",
+    "processing_params": {}
+  },
+  "firmware_identity": {
+    "old_elf": "6a5f739542fb1392b035957fcdc47b6ddd9f67115866473ec3d0522e591852a4",
+    "new_elf": "822395860acc1e8687bc3cd8fb74f576d667ccdb1b7944aa5334c97d5eadc29e",
+    "firmware_equal": false,
+    "project_equal": false,
+    "differences_scope": "Authorized firmware and project identity/provenance/explicitlegacy metadata differ; JY settings and seven source files compared are identical."
+  },
+  "missing": [
+    "Historical raw JY ConfigRead RX timeline109–709ms",
+    "Previous Ready boot actual baud/register caches were not captured; source/config equal is not proof of equal runtime state",
+    "No separately stored last completed5F response, retrycount per read, nor chronological5F receive history in this driver"
+  ],
+  "authorization_source": {
+    "message_id": "Not exposed by current conversation context/tools; not fabricated",
+    "role": "Direct user message in this thread, not parent inference or local record",
+    "exact_text": "补充一点，以后对所有飞控探针相关的烧录都允许，SilverStar本体在电脑上，不会影响系统的安全，而且测试飞控已经做好了隔离，不会有安全问题",
+    "prior_exact_candidate_message": "允许仅烧录飞控探针132765403520的 bc083159／492f308 已验证候选，校验并软件复位，不修改读保护、写保护或Option Bytes。"
+  },
+  "target_locked_final": 1,
+  "start_pending": 0,
+  "assert_active": 0,
+  "radio_inited": 1,
+  "uptime_samples": [
+    705832,
+    708143
+  ],
+  "openocd_exit": 0
+}

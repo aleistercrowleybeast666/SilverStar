@@ -1,0 +1,8 @@
+normal-reader isolation checked
+FAIL line 46: IMU_RegisterReadAsyncPoll(0U,&value)==Jy901bRegisterReadPollResult_Complete
+FAIL line 47: value==7U
+payload overlap retained frame1=5f index=0 active=1
+FAIL line 64: result==Jy901bRegisterReadPollResult_Complete
+FAIL line 65: value==7U
+deadline backlog retained frame1=00 index=0 active=0
+actual generated JY read: 26 checks 4 failures

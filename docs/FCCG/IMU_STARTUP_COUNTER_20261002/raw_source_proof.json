@@ -1,0 +1,32 @@
+[
+  {
+    "relative": "Devices/IMU/JY901B/Src/jy901b_device.c",
+    "raw_equal_to_burned_source": true,
+    "counter_sha256": "b981d3afa7a23a10a9d756d87416abeeabc8858d98a3e509643865388277df06",
+    "burned_source_sha256": "b981d3afa7a23a10a9d756d87416abeeabc8858d98a3e509643865388277df06"
+  },
+  {
+    "relative": "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+    "raw_equal_to_burned_source": true,
+    "counter_sha256": "30f86dedd176fc25782958a1f69322e696a73c638e392306a43391d080243055",
+    "burned_source_sha256": "30f86dedd176fc25782958a1f69322e696a73c638e392306a43391d080243055"
+  },
+  {
+    "relative": "Platform/STM32F4/Src/platform_uart_stm32f4.c",
+    "raw_equal_to_burned_source": true,
+    "counter_sha256": "92ac12cbf737e3acc05237306603e11c5adbc4faec5eca30eafde88775378735",
+    "burned_source_sha256": "92ac12cbf737e3acc05237306603e11c5adbc4faec5eca30eafde88775378735"
+  },
+  {
+    "relative": "Generated/Inc/project_resources.h",
+    "raw_equal_to_burned_source": true,
+    "counter_sha256": "cc791254475a97defbc3df6890dcb2068c03775a243d37261139c7185118a1e2",
+    "burned_source_sha256": "cc791254475a97defbc3df6890dcb2068c03775a243d37261139c7185118a1e2"
+  },
+  {
+    "relative": "APP/Inc/app_task_config.h",
+    "raw_equal_to_burned_source": true,
+    "counter_sha256": "0054215d62985a11adbee546ca1025a0530cf912a0b0fb17a2f24a285b5de735",
+    "burned_source_sha256": "0054215d62985a11adbee546ca1025a0530cf912a0b0fb17a2f24a285b5de735"
+  }
+]

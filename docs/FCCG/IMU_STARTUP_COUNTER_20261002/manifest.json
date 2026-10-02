@@ -1,0 +1,70 @@
+{
+  "compile.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "compile_v2.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "counter.exe": {
+    "bytes": 291117,
+    "sha256": "3228013438afce04068cce7156e77d78c0599fcee1648f713797b4d7e44f515d"
+  },
+  "counter_command.py": {
+    "bytes": 1055,
+    "sha256": "5afee7edf4dcfa8451ce52ccf2d930adff8fee960857c38701159240a1c69365"
+  },
+  "counter_v2.exe": {
+    "bytes": 291629,
+    "sha256": "1c7ea4ac4a7b4973838258566605f42dce5e421380af758fec8970376b863748"
+  },
+  "generation_command.py": {
+    "bytes": 2652,
+    "sha256": "4c8cf9c97834cbc6a930c1ff67b199242c1d612da56ae1486128df8213b0c747"
+  },
+  "hardware_readonly_analysis.json": {
+    "bytes": 20326,
+    "sha256": "3b6431643a590897b3c7ec0ab689dd26df2b557615d277efebc8c11108a500a8"
+  },
+  "Input.ssproject": {
+    "bytes": 155604,
+    "sha256": "93d7535af0bcd267388bfe5f52e30991194d292314b5f64734801f00224a3f6d"
+  },
+  "jy901b_device_original.c.txt": {
+    "bytes": 62500,
+    "sha256": "b981d3afa7a23a10a9d756d87416abeeabc8858d98a3e509643865388277df06"
+  },
+  "old_counter.log": {
+    "bytes": 420,
+    "sha256": "9726d74696be55278129c08e7544ddffa08c9bfb4cee8a51259f63b6a2c8a5f8"
+  },
+  "old_counter_v2.log": {
+    "bytes": 390,
+    "sha256": "dba1b4b151b7945745f742a2cd385a463c9f3d6cd58e8235f6ce6b380d7618fa"
+  },
+  "raw_source_proof.json": {
+    "bytes": 1492,
+    "sha256": "8e65f682eacc79f73c8f83c10b3ce4d76fc7087b2de0b7aeacbca71e9e800099"
+  },
+  "README.md": {
+    "bytes": 4936,
+    "sha256": "72aa06cf9ba5a6d73df583c522113f7b600bda6ee715199efadf259df69028b4"
+  },
+  "results.json": {
+    "bytes": 7975,
+    "sha256": "e06e58b4ff4fa6e02bdeb73c7a696290f62d7205f021c1113f926bfe5af17e60"
+  },
+  "results_v2.json": {
+    "bytes": 7993,
+    "sha256": "ede9dbd5d3821ceef4a44ea7994732a6be7b33a801ea523e2834784b2fe243b1"
+  },
+  "startup_readonly_diff.json": {
+    "bytes": 289,
+    "sha256": "334a5203ac0d218f1b6f2d7b6384b5e620a885e3f0dc71185ca44ec83e997c6d"
+  },
+  "test_imu_read_stream.c": {
+    "bytes": 3599,
+    "sha256": "9cde5419365f64dfcc647d75f1668efd7e53ab51a9cd8aeb1a5b29c684dbe912"
+  }
+}
