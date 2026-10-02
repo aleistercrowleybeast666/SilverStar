@@ -102,3 +102,20 @@ def test_led_gui_keeps_defaults_until_explicit_binding(window):
     window.Language_Apply("en_US")
     assert window._model.ground_target == before
     assert window.ground_target_page.activity_led_controls["tx_led_resource"].currentData() == "LED_OUTPUT"
+
+
+def test_led_binding_requires_integrated_runtime_capability(model, workspace_root):
+    from types import SimpleNamespace
+    catalog = FccgService(workspace_root).catalog
+    ground = _Output_Add(model)
+    assert not GroundActivityLedIssues_Get(ground, catalog)
+    ground = replace(ground, tx_led_resource="LED_OUTPUT")
+    assert "GROUND_LED_RUNTIME_UNAVAILABLE" in {
+        issue.code for issue in GroundActivityLedIssues_Get(ground, catalog)}
+    core = catalog.Component_Get("silverstar.core.ground.0_1_0")
+    ready_core = replace(core, metadata={**core.metadata, "ground_activity_leds_ready": True})
+    ready_catalog = SimpleNamespace(Component_Get=lambda identity: ready_core)
+    assert not GroundActivityLedIssues_Get(ground, ready_catalog)
+    # Declaring readiness must not bypass GPIO and polarity validation.
+    assert "GROUND_LED_OUTPUT_UNBOUND" in {issue.code for issue in
+        GroundActivityLedIssues_Get(replace(ground, tx_led_resource="MISSING"), ready_catalog)}

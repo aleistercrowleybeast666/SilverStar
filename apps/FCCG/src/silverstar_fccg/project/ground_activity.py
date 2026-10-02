@@ -23,11 +23,16 @@ def _ResourceClaims_Get(resource):
     return claims
 
 
-def GroundActivityLedIssues_Get(ground):
+def GroundActivityLedIssues_Get(ground, catalog=None):
     from silverstar_fccg.project.air_link import AirLinkIssue
     if not ground.enabled:
         return ()
     issues = []
+    if catalog is not None and (ground.tx_led_resource or ground.rx_led_resource):
+        core = catalog.Component_Get("silverstar.core.ground.0_1_0")
+        if core.metadata.get("ground_activity_leds_ready") is not True:
+            issues.append(AirLinkIssue("GROUND_LED_RUNTIME_UNAVAILABLE",
+                                      "Activity LEDs require the integrated Ground runtime/generator"))
     if type(ground.activity_led_pulse_ms) is not int or not 1 <= ground.activity_led_pulse_ms <= 200:
         issues.append(AirLinkIssue("GROUND_LED_PULSE_INVALID", "LED pulse must be 1..200 ms"))
     available = {resource.resource_id: resource for resource in ground.hardware.resources}
