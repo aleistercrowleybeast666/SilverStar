@@ -2093,6 +2093,23 @@ static GnssNeoM9nIdentityResult Gnss_ProtocolCapabilityGet(
     return GnssNeoM9nIdentityUnsupportedProtocol;
 }
 
+/* Negative evidence only: M8 CORE 2.x/3.x (UBX-13003221 R28 pp.6-8)
+ * and M10 SPG 5.x (UBX-21035062 R03 sec.1.5) contradict SPG4.04/32.01.
+ * Unknown/empty software stays compatible; EXT CORE is not a M9 whitelist. */
+static uint8_t Gnss_SoftwareExplicitConflict(const char *software)
+{
+    static const char *const prefixes[] = {"ROM CORE 2.", "EXT CORE 2.",
+        "ROM CORE 3.", "EXT CORE 3.", "ROM SPG 5.", "EXT SPG 5."};
+    uint8_t index;
+    if (software == NULL) { return 1U; }
+    for (index = 0U; index < sizeof(prefixes) / sizeof(prefixes[0]); index++)
+    {
+        if (strncmp(software, prefixes[index], strlen(prefixes[index])) == 0)
+        { return 1U; }
+    }
+    return 0U;
+}
+
 static GnssNeoM9nIdentityResult Gnss_MonVerIdentityValidate(
     GnssMonVerIdentity *identity)
 {
@@ -2112,6 +2129,9 @@ static GnssNeoM9nIdentityResult Gnss_MonVerIdentityValidate(
         if ((identity->hardware[0] != '\0') &&
             (strcmp(identity->hardware, "00190000") != 0))
         { return GnssNeoM9nIdentityUnsupportedHardware; }
+        if ((identity->diagnostics.protocol_major == 32U) &&
+            (Gnss_SoftwareExplicitConflict(identity->software) != 0U))
+        { return GnssNeoM9nIdentityWrongFirmware; }
         identity->diagnostics.profile = (identity->diagnostics.protocol_major == 27U) ? 1U : 2U;
         return GnssNeoM9nIdentityOk;
     }
