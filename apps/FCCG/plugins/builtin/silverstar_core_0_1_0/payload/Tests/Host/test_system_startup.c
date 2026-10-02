@@ -405,6 +405,12 @@ static void Test_Reset(void)
         SYSTEM_CAPABILITY_HARDWARE_QUATERNION |
         SYSTEM_CAPABILITY_TELEMETRY | SYSTEM_CAPABILITY_CONSOLE |
         SYSTEM_CAPABILITY_POWER | SYSTEM_CAPABILITY_STORAGE;
+    if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED == 0U)
+    {
+        /* Production profiles never advertise a disabled Console transport. */
+        s_profile.enabled_capabilities &= ~(uint32_t)SYSTEM_CAPABILITY_CONSOLE;
+        s_profile.optional_capabilities &= ~(uint32_t)SYSTEM_CAPABILITY_CONSOLE;
+    }
     s_navigation.alignment_algorithm =
         SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW;
     s_output_init_result = SYSTEM_DEVICE_OK;
@@ -466,6 +472,8 @@ static void Test_AllEnabledDevicesPass(void)
     TEST_CHECK(report->degraded == 0U);
     TEST_CHECK(report->required_failure_mask == 0U);
     TEST_CHECK(report->optional_failure_mask == 0U);
+    TEST_CHECK(report->devices[SYSTEM_STARTUP_DEVICE_CONSOLE].present ==
+        (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U ? 1U : 0U));
     TEST_CHECK(imu != NULL && imu->required != 0U && imu->present != 0U);
     TEST_CHECK(strcmp(imu->device_name, "Mock IMU Adapter") == 0);
     TEST_CHECK(imu->requested_mask == SYSTEM_IMU_CFG_OUTPUT_RATE);

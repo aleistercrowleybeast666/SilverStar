@@ -225,6 +225,7 @@ function Get-ArchitectureLoggingSelection {
     try {
         $configuration = Get-ArchitectureRuntimeSource -Text (
             Get-Content -Raw -LiteralPath (Join-Path $repoRoot 'Generated\Inc\project_flight_config.h'))
+        $configuration = $configuration.Replace("`r`n", "`n")
         $declarations = [regex]::Matches($configuration,
             '(?m)^[ \t]*#[ \t]*define[ \t]+SILVERSTAR_PROTOCOL_LOGGING_ENABLED\b[^\r\n]*$')
         $literal = [regex]::Match($configuration,
@@ -247,6 +248,52 @@ function Get-ArchitectureLoggingSelection {
         Assert-ArchitectureCondition -Condition $false `
             -Message ('Logging selection validation failed: ' + $_.Exception.Message)
     }
+    return $enabled
+}
+
+function Get-ArchitectureMaintenanceSelection {
+    # A missing/invalid binding fails closed and retains every enabled check.
+    $enabled = $true
+    $failureBaseline = $script:failures.Count
+    try {
+        $configuration = Get-ArchitectureRuntimeSource -Text (
+            Get-Content -Raw -LiteralPath (Join-Path $repoRoot 'Generated\Inc\project_flight_config.h'))
+        $configuration = $configuration.Replace("`r`n", "`n")
+        $declarations = [regex]::Matches($configuration,
+            '(?m)^[ \t]*#[ \t]*define[ \t]+SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED\b[^\r\n]*$')
+        $literal = [regex]::Match($configuration,
+            '(?m)^[ \t]*#[ \t]*define[ \t]+SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED[ \t]+(?<value>[01])U[ \t]*$')
+        $valid = ($declarations.Count -eq 1) -and $literal.Success
+        Assert-ArchitectureCondition -Condition $valid `
+            -Message 'Generated maintenance selection must be exactly one literal 0U or 1U.'
+        if ($valid) { $enabled = $literal.Groups['value'].Value -eq '1' }
+        $semantics = Get-Content -Raw -Encoding UTF8 -LiteralPath (
+            Join-Path $repoRoot 'Generated\project_semantics.json') | ConvertFrom-Json
+        $present = ($null -ne $semantics.protocols) -and
+            (@($semantics.protocols.PSObject.Properties.Name) -contains 'maintenance')
+        Assert-ArchitectureCondition -Condition $present `
+            -Message 'Project semantics must explicitly declare the maintenance protocol selection.'
+        Assert-ArchitectureCondition `
+            -Condition ($present -and ($enabled -eq ($null -ne $semantics.protocols.maintenance))) `
+            -Message 'Generated maintenance literal differs from project semantics protocol selection.'
+        $configured = (@($projectConfiguration.protocols.PSObject.Properties.Name) -contains 'maintenance')
+        Assert-ArchitectureCondition `
+            -Condition ($configured -and ($enabled -eq ($null -ne $projectConfiguration.protocols.maintenance))) `
+            -Message 'Generated maintenance literal differs from saved project protocol selection.'
+        $consoleLiteral = [regex]::Matches($configuration,
+            '(?m)^[ \t]*#[ \t]*define[ \t]+SYSTEM_USER_CONSOLE_ENABLE[ \t]+(?<value>[01])U[ \t]*$')
+        $consoleDeclarations = [regex]::Matches($configuration,
+            '(?m)^[ \t]*#[ \t]*define[ \t]+SYSTEM_USER_CONSOLE_ENABLE\b[^\r\n]*$')
+        Assert-ArchitectureCondition `
+            -Condition (($consoleLiteral.Count -eq 1) -and ($consoleDeclarations.Count -eq 1) -and
+                ($enabled -eq ($consoleLiteral[0].Groups['value'].Value -eq '1'))) `
+            -Message 'Generated Console transport literal differs from maintenance selection.'
+    }
+    catch {
+        Assert-ArchitectureCondition -Condition $false `
+            -Message ('Maintenance selection validation failed: ' + $_.Exception.Message)
+    }
+    if ($script:failures.Count -ne $failureBaseline) { return $true }
     return $enabled
 }
 
@@ -300,16 +347,26 @@ $firstPartyRuntimePaths = @(
 $systemLayerPaths = @(
     'System', 'Algorithm', 'FlightLogic', 'Protocol', 'Interfaces', 'Modules'
 )
+# Only an explicitly validated disabled maintenance selection can omit
+# Console scopes. Any present optional files are still scanned; enabled
+# scopes remain mandatory, and invalid facts retain fail-closed checks.
+$maintenanceEnabled = Get-ArchitectureMaintenanceSelection
 $deviceCorePaths = @(
-    'Devices\IMU\JY901B\Inc',
-    'Devices\IMU\JY901B\Src',
-    'Devices\GNSS\NEO_M9N\Inc',
-    'Devices\GNSS\NEO_M9N\Src',
-    'Devices\Telemetry\SX1281\Inc',
-    'Devices\Telemetry\SX1281\Src',
-    'Devices\Console\UART\Inc',
-    'Devices\Console\UART\Src'
+    'Devices\IMU\JY901B\Inc', 'Devices\IMU\JY901B\Src',
+    'Devices\GNSS\NEO_M9N\Inc', 'Devices\GNSS\NEO_M9N\Src',
+    'Devices\Telemetry\SX1281\Inc', 'Devices\Telemetry\SX1281\Src'
 )
+$deviceAdapterPaths = @(
+    'Devices\IMU\JY901B\Adapter', 'Devices\GNSS\NEO_M9N\Adapter',
+    'Devices\Telemetry\SX1281\Adapter'
+)
+foreach ($consoleScope in @('Inc', 'Src', 'Adapter')) {
+    $relative = 'Devices\Console\UART\' + $consoleScope
+    if ($maintenanceEnabled -or (Test-Path -LiteralPath (Join-Path $repoRoot $relative))) {
+        if ($consoleScope -eq 'Adapter') { $deviceAdapterPaths += $relative }
+        else { $deviceCorePaths += $relative }
+    }
+}
 
 $vendorPattern = '(?i)\bHAL_[A-Za-z0-9_]*|\bstm32[A-Za-z0-9_]*|' +
     '\bGPIO_TypeDef\b|\bUART_HandleTypeDef\b|\bSPI_HandleTypeDef\b|' +
@@ -337,12 +394,7 @@ Assert-NoArchitecturePattern -Name `
 
 Assert-NoArchitecturePattern -Name `
     'A Device Adapter depends directly on STM32, HAL, a concrete Board, or a concrete Target.' `
-    -Paths @(
-        'Devices\IMU\JY901B\Adapter',
-        'Devices\GNSS\NEO_M9N\Adapter',
-        'Devices\Telemetry\SX1281\Adapter',
-        'Devices\Console\UART\Adapter'
-    ) -Pattern ('(?i)\bHAL_[A-Za-z0-9_]*|\bstm32[A-Za-z0-9_]*|' +
+    -Paths $deviceAdapterPaths -Pattern ('(?i)\bHAL_[A-Za-z0-9_]*|\bstm32[A-Za-z0-9_]*|' +
         '#include\s*[<"](?:Board|Targets)[/\\]|\bUART_HandleTypeDef\b|' +
         '\bSPI_HandleTypeDef\b')
 
@@ -706,6 +758,15 @@ if ($makeExitCode -eq 0) {
         Where-Object { $_ -match '\.c$' } |
         ForEach-Object { $_ -replace '\\', '/' })
     $uniqueSources = @($selectedSources | Sort-Object -Unique)
+    foreach ($maintenanceSource in @('APP/Src/serial_task.c', 'System/Src/system_console.c')) {
+        Assert-ArchitectureCondition `
+            -Condition (($uniqueSources -contains $maintenanceSource) -eq $maintenanceEnabled) `
+            -Message ("Maintenance source selection differs from validated configuration: " + $maintenanceSource)
+    }
+    $consoleSources = @($uniqueSources | Where-Object { $_ -like 'Devices/Console/UART/*' })
+    Assert-ArchitectureCondition `
+        -Condition (($consoleSources.Count -ne 0) -eq $maintenanceEnabled) `
+        -Message 'Console transport source selection differs from validated maintenance configuration.'
     Assert-ArchitectureCondition `
         -Condition ($selectedSources.Count -eq $uniqueSources.Count) `
         -Message 'The authoritative manifest selected duplicate C sources.'

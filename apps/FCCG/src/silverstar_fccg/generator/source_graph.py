@@ -119,6 +119,16 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
     available_provider_sources: list[str] = []
     declared_module_provider_sources: list[str] = []
     declared_variant_sources: set[str] = set()
+    # Optional profile assets can live in dependency payloads that stay copied
+    # (e.g. Core/System). EIDE must exclude the same unselected assets as Make.
+    declared_protocol_sources = {
+        source
+        for manifest in catalog.Type_Get("protocol")
+        if manifest.protocol is not None
+        for profiles in manifest.protocol.profiles.values()
+        for profile in profiles
+        for source in (*profile.codec_sources, *profile.parser_sources)
+    }
     resource_resolution = ResourceAssignments_Resolve(
         model, catalog, auto_assign=False
     )
@@ -422,6 +432,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
     # EIDE must compile the same selected transport union as Make, even when
     # inactive variant payloads share the selected device's source directory.
     exclude_sources.extend(sorted(declared_variant_sources - set(sources)))
+    exclude_sources.extend(sorted(declared_protocol_sources - set(sources)))
     if model.protocols.get("logging") is not None:
         generated_sources.extend(
             (
