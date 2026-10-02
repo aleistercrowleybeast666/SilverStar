@@ -15,11 +15,17 @@ def _Wait(qapp, condition):
 
 
 @pytest.mark.parametrize("outcome", ["success", "error", "cancelled"])
-def test_unknown_job_uses_real_phase_events_until_actual_outcome(qapp, window, outcome):
+def test_unknown_job_uses_real_phase_events_until_actual_outcome(qapp, window, outcome, monkeypatch):
     advance = [Event() for _ in range(3)]
-    results, errors = [], []
+    results, errors, reported = [], [], []
+    original_progress = window._Task_Progress
+    def observe_progress(progress, code):
+        reported.append(progress)
+        original_progress(progress, code)
+    monkeypatch.setattr(window, "_Task_Progress", observe_progress)
 
     def run(context):
+        context.Progress_Report(0.0, "status.task_running")
         assert advance[0].wait(10)
         context.Line_Report("FCCG_PROGRESS|CHECK|BEGIN|1|2|first_phase")
         context.Line_Report("FCCG_PROGRESS|CHECK|DONE|1|2|first_phase")
@@ -33,6 +39,8 @@ def test_unknown_job_uses_real_phase_events_until_actual_outcome(qapp, window, o
 
     try:
         assert window.Task_Run(run, results.append, errors.append)
+        assert window.progress_bar.minimum() == window.progress_bar.maximum() == 0
+        _Wait(qapp, lambda: reported == [0.0])
         assert window.progress_bar.minimum() == window.progress_bar.maximum() == 0
         advance[0].set()
         _Wait(qapp, lambda: window.progress_bar.maximum() == 1000 and
