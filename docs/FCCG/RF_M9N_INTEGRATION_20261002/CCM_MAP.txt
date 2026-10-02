@@ -1,0 +1,7 @@
+ .ccmram_bss    0x1000c248      0x140 build/FCCG/SilverStar_F407/Release/System/Src/system_navigation_health.o
+ .ccmram_bss    0x1000c388       0x58 build/FCCG/SilverStar_F407/Release/Modules/Src/telemetry_service.o
+ .ccmram_bss    0x1000c3e0      0x200 build/FCCG/SilverStar_F407/Release/OS/FreeRTOS/freertos_hooks.o
+ .ccmram_bss    0x1000c5e0      0x180 build/FCCG/SilverStar_F407/Release/Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.o
+ .ccmram_bss    0x1000c760     0x1300 build/FCCG/SilverStar_F407/Release/System/Src/system_console.o
+ *(.ccmram_bss*)
+                0x1000da60                        . = ALIGN (0x8)
