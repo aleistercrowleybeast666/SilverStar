@@ -21,10 +21,14 @@ def test_navigation_sections_are_single_level_and_draft_is_cancelable(qapp) -> N
     changes: list[tuple[str, AlignmentConfiguration]] = []
     page.alignmentConfirmed.connect(lambda strategy, config: changes.append((strategy, config)))
     try:
-        sections = [label.property("navigationSectionKey")
-                    for label in page.findChildren(QLabel)
+        parameters = page.parameters_section
+        headings = [label for label in page.findChildren(QLabel)
                     if label.property("navigationSectionKey")]
-        assert sections == ["navigation.parameters", "navigation.resource_timing"]
+        assert [label.property("navigationSectionKey") for label in headings] == ["navigation.resource_timing"]
+        assert parameters.toggle_button.text() == "Algorithm Parameters"
+        assert not parameters.Expanded_Is()
+        assert page.root_layout.indexOf(parameters) < page.root_layout.indexOf(headings[0].parentWidget())
+        assert not any(label.text() == parameters.toggle_button.text() for label in page.findChildren(QLabel))
         original = AlignmentConfiguration(external_known_azimuth_deg=0.0)
         page.AlignmentConfiguration_Set(original, EXTERNAL,
             (DeviceInstance("imu0", "silverstar.device.imu.jy901b"),))
