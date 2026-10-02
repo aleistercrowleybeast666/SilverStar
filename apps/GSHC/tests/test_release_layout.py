@@ -65,3 +65,27 @@ def test_original_monitor_rows_and_six_plots_are_visible(tmp_path, size, languag
     window.close()
     window.deleteLater()
     app.processEvents()
+
+
+def test_collapsed_navigation_summary_does_not_reserve_blank_chart_space(tmp_path):
+    app = QApplication.instance() or QApplication([])
+    i18n = I18n(QSettings(str(tmp_path/'settings.ini'), QSettings.IniFormat))
+    window = MainWindow(i18n)
+    try:
+        window.render_timer.stop()
+        window.gl_view.hide()
+        window.bind_runtime_model(ready_state(), EventHistory())
+        window.pages.setCurrentWidget(window.flight_page)
+        window.resize(1536, 816)
+        window.show()
+        app.processEvents()
+        panel = window.navigation_health_panel
+        summary_bottom = panel.mapTo(window, QPoint()).y() + panel.height()
+        chart_top = window.plot_layout.parentWidget().mapTo(window, QPoint()).y()
+        assert chart_top - summary_bottom <= 24
+        assert all(window.plot_widgets[(key, axis)].height() >= 140
+                   for key in ('vel', 'pos') for axis in range(3))
+    finally:
+        window.close()
+        window.deleteLater()
+        app.processEvents()
