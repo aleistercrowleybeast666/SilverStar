@@ -74,7 +74,7 @@ from silverstar_flp.ui.plugin_manager import AboutDialog, PluginManagerDialog
 from silverstar_flp.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_flp.ui.time_range import TimeRangeBar
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
-from silverstar_flp.ui.widgets import StandardComboBox
+from silverstar_flp.ui.widgets import StandardComboBox, ProjectHeaderLabel
 from silverstar_flp.ui.workers import FunctionWorker
 
 
@@ -165,20 +165,20 @@ class MainWindow(QMainWindow):
         header = QFrame()
         header.setObjectName("headerBar")
         header.setMinimumHeight(54)
-        header_layout = QVBoxLayout(header)
+        header_layout = QHBoxLayout(header)
         header_layout.setContentsMargins(14, 6, 14, 6)
-        header_layout.setSpacing(2)
+        header_layout.setSpacing(8)
         self.title_label = QLabel()
         self.title_label.setObjectName("headerTitle")
+        self.title_label.setStyleSheet("font-size: 16px;")
         self.version_label = QLabel(f"v{__version__}")
         self.version_label.setObjectName("headerVersion")
         self.credit_label = QLabel()
         self.credit_label.setObjectName("headerCredit")
         self.project_caption_label = QLabel()
         self.project_caption_label.setObjectName("headerControlLabel")
-        self.project_name_label = QLabel()
+        self.project_name_label = ProjectHeaderLabel()
         self.project_name_label.setObjectName("headerProject")
-        self.project_name_label.setMaximumWidth(600)
         self.language_label = QLabel()
         self.language_label.setObjectName("headerControlLabel")
         self.language_combo = StandardComboBox()
@@ -195,22 +195,16 @@ class MainWindow(QMainWindow):
         self.theme_combo.addItem("浅色", "light")
         self.theme_combo.addItem("深色", "dark")
         self.theme_combo.currentIndexChanged.connect(self._Theme_Selected)
-        identity_row = QHBoxLayout()
-        identity_row.setSpacing(8)
+        identity_row = header_layout
         identity_row.addWidget(self.title_label)
         identity_row.addWidget(self.version_label)
         identity_row.addWidget(self.credit_label)
-        identity_row.addStretch(1)
+        identity_row.addWidget(self.project_caption_label)
+        identity_row.addWidget(self.project_name_label, 1)
         identity_row.addWidget(self.language_label)
         identity_row.addWidget(self.language_combo)
         identity_row.addWidget(self.theme_label)
         identity_row.addWidget(self.theme_combo)
-        header_layout.addLayout(identity_row)
-        project_row = QHBoxLayout()
-        project_row.setSpacing(8)
-        project_row.addWidget(self.project_caption_label)
-        project_row.addWidget(self.project_name_label, 1)
-        header_layout.addLayout(project_row)
         root_layout.addWidget(header)
 
         body = QWidget()
@@ -1168,11 +1162,9 @@ class MainWindow(QMainWindow):
         if self._silverstar_project_root is not None:
             session = path.stem if path is not None else self._translator.Text_Get("project.analysis_unsaved")
             full_name = self._silverstar_project_root.name + " / " + session
+        self.project_name_label.ProjectName_Set(full_name, self._project_dirty)
         if self._project_dirty:
             full_name += " *"
-        self.project_name_label.setText(self.project_name_label.fontMetrics().elidedText(
-            full_name, Qt.TextElideMode.ElideRight, max(1, self.project_name_label.width() - 5),
-        ))
         if self._silverstar_project_root is not None:
             tooltip = "\n".join(value for value in (
                 full_name, str(self._silverstar_project_root),
