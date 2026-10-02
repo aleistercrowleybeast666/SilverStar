@@ -153,6 +153,49 @@ GnssNeoM9nIdentifyResult GnssNeoM9n_Identify(uint8_t instance);
 
 typedef enum
 {
+    GnssNeoM9nIdentityNone = 0,
+    GnssNeoM9nIdentityOk,
+    GnssNeoM9nIdentityBadLength,
+    GnssNeoM9nIdentityUnterminatedField,
+    GnssNeoM9nIdentityDuplicateConflict,
+    GnssNeoM9nIdentityMissingModel,
+    GnssNeoM9nIdentityWrongModel,
+    GnssNeoM9nIdentityMissingProtocol,
+    GnssNeoM9nIdentityUnsupportedProtocol,
+    GnssNeoM9nIdentityMissingFirmware,
+    GnssNeoM9nIdentityWrongFirmware,
+    GnssNeoM9nIdentityChecksumError,
+    GnssNeoM9nIdentityTimeout,
+    GnssNeoM9nIdentityIoError,
+    GnssNeoM9nIdentityDiscontinuity,
+    GnssNeoM9nIdentityUnsupportedHardware,
+    GnssNeoM9nIdentityCapabilitiesPending
+} GnssNeoM9nIdentityResult;
+
+/* Native, task-owned diagnostics only; existing AIR/SSLOG layouts are unchanged.
+ * Last rejection survives baud scanning. Profile/version/field-presence describe
+ * checksum-valid MON-VER; raw strings are parsed locally, not retained per instance. */
+typedef struct
+{
+    GnssNeoM9nIdentityResult identity_result;
+    GnssNeoM9nIdentityResult probe_result;
+    GnssNeoM9nIdentityResult last_rejection;
+    uint32_t sequence;
+    uint32_t baudrate;
+    uint16_t signal_settle_ms;
+    uint8_t protocol_major;
+    uint8_t protocol_minor;
+    uint8_t fields_seen;
+    uint32_t capability_read_mask;
+    uint8_t profile; /* 1=legacy27, 2=named32, 3=restricted M9 ROM32 (package unknown) */
+} GnssNeoM9nIdentityDiagnostics;
+
+GnssNeoM9nIdentityResult GnssNeoM9n_IdentityDiagnosticsGet(
+    uint8_t instance, GnssNeoM9nIdentityDiagnostics *out);
+
+
+typedef enum
+{
     GnssNeoM9nProbeStartResult_Ok = 0,
     GnssNeoM9nProbeStartResult_Busy,
     GnssNeoM9nProbeStartResult_NotReady,

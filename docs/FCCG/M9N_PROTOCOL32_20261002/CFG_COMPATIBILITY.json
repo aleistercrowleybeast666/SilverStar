@@ -1,0 +1,179 @@
+{
+  "document": "UBX-21022436 R02 (2023-06-27)",
+  "url": "https://content.u-blox.com/sites/default/files/u-blox-M9-SPG-4.04_InterfaceDescription_UBX-21022436.pdf",
+  "protocol": "32.01",
+  "keys": [
+    {
+      "driver_key": "GNSS_CFG_UART1INPROT_UBX",
+      "id": "0x10730001",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 231
+    },
+    {
+      "driver_key": "GNSS_CFG_UART1INPROT_NMEA",
+      "id": "0x10730002",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 231
+    },
+    {
+      "driver_key": "GNSS_CFG_UART1INPROT_RTCM3X",
+      "id": "0x10730004",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 231
+    },
+    {
+      "driver_key": "GNSS_CFG_UART1OUTPROT_UBX",
+      "id": "0x10740001",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 232
+    },
+    {
+      "driver_key": "GNSS_CFG_UART1OUTPROT_NMEA",
+      "id": "0x10740002",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 232
+    },
+    {
+      "driver_key": "GNSS_CFG_UART1_BAUDRATE",
+      "id": "0x40520001",
+      "type": "U4",
+      "bytes": 4,
+      "official_pdf_page": 231
+    },
+    {
+      "driver_key": "GNSS_CFG_RATE_MEAS",
+      "id": "0x30210001",
+      "type": "U2",
+      "bytes": 2,
+      "official_pdf_page": 223
+    },
+    {
+      "driver_key": "GNSS_CFG_RATE_NAV",
+      "id": "0x30210002",
+      "type": "U2",
+      "bytes": 2,
+      "official_pdf_page": 223
+    },
+    {
+      "driver_key": "GNSS_CFG_RATE_TIMEREF",
+      "id": "0x20210003",
+      "type": "E1",
+      "bytes": 1,
+      "official_pdf_page": 223
+    },
+    {
+      "driver_key": "GNSS_CFG_MSGOUT_NAV_PVT_UART1",
+      "id": "0x20910007",
+      "type": "U1",
+      "bytes": 1,
+      "official_pdf_page": 211
+    },
+    {
+      "driver_key": "GNSS_CFG_NAVSPG_DYNMODEL",
+      "id": "0x20110021",
+      "type": "E1",
+      "bytes": 1,
+      "official_pdf_page": 216
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_GPS_ENA",
+      "id": "0x1031001f",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_GPS_L1CA_ENA",
+      "id": "0x10310001",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_SBAS_ENA",
+      "id": "0x10310020",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_SBAS_L1CA_ENA",
+      "id": "0x10310005",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_GAL_ENA",
+      "id": "0x10310021",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_GAL_E1_ENA",
+      "id": "0x10310007",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_BDS_ENA",
+      "id": "0x10310022",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_BDS_B1_ENA",
+      "id": "0x1031000d",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_QZSS_ENA",
+      "id": "0x10310024",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_QZSS_L1CA_ENA",
+      "id": "0x10310012",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_GLO_ENA",
+      "id": "0x10310025",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 226
+    },
+    {
+      "driver_key": "GNSS_CFG_SIGNAL_GLO_L1_ENA",
+      "id": "0x10310018",
+      "type": "L",
+      "bytes": 1,
+      "official_pdf_page": 227
+    }
+  ],
+  "messages": {
+    "MON-VER": "0A/04, 40+n*30, poll pp134-135",
+    "CFG-VALGET": "06/8B, request v0 RAM layer0, response v1 pp88-89",
+    "CFG-VALSET": "06/8A, v0, RAM layer bit0, ACK pp89-90",
+    "NAV-PVT": "01/07, 92-byte v1 pp141-143",
+    "NAV-SAT": "01/35, v1 header8 + 12*numSvs pp143-145",
+    "MON-RF": "0A/38, v0 header4 + 24*nBlocks pp131-132",
+    "PUBX,41": "volatile protocol rescue p39-40"
+  },
+  "signal_write_requirement": "ACK then wait 0.5 s before next command, pp226-227",
+  "capability_confirmation": "Every one of the 23 RAM keys must be individually VALGET-verified with unchanged CRC/version/layer/position/key/type/count checks before restricted-profile VALSET."
+}
