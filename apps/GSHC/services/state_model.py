@@ -8,6 +8,7 @@ from enum import Enum
 from typing import Iterable
 
 from config import MAX_LIVE_POINTS, PLOT_WINDOW_SECONDS, UI_EVENT_HISTORY_LIMIT
+from services.mission_trajectory import MissionTrajectoryHistory
 from services.navigation_state import NavigationState
 from protocol.air import AirCapabilityMessage, AirSensorStatusMessage
 from protocol.common import (
@@ -482,6 +483,7 @@ class FlightControllerState:
     )
     sensor: SensorSnapshot = field(default_factory=SensorSnapshot)
     live_plot: LiveFlightPlotBuffer = field(default_factory=LiveFlightPlotBuffer)
+    horizontal_trajectory: MissionTrajectoryHistory = field(default_factory=MissionTrajectoryHistory)
     receive_health: ReceiveHealth = field(default_factory=ReceiveHealth)
     mission_started: bool = False
     mission_start_source: str = ""

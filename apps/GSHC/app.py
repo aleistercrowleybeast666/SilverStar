@@ -2304,6 +2304,10 @@ class Controller(QObject):
             (message.time_ms - self.state.mission_first_time_ms) / 1000.0,
         )
         self.state.live_plot.append(mission_time_s, message.vel_mps, message.pos_m)
+        if self.state.mission_presentation.phase is not MissionPhase.LANDED:
+            # Display-only result counters retain rejected samples; serial and
+            # protocol workers never access this GUI-owned O(1) task history.
+            _ = self.state.horizontal_trajectory.Sample_Append(message.time_ms / 1000.0, message.pos_m)
 
         stats = event.packet_stats if event is not None else None
         if stats is None:
@@ -2344,6 +2348,10 @@ class Controller(QObject):
         elif status_id == int(AirStatusId.SELFTEST_COMPLETE):
             self.state.selftest_passed = message.arg0 == 1
         elif status_id == int(AirStatusId.MISSION_START):
+            if self.state.mission_presentation.phase is MissionPhase.LANDED:
+                # Explicit new mission after landing; duplicate active START
+                # and a late START after first telemetry preserve task history.
+                self.state.horizontal_trajectory.Clear()
             self._mark_mission_started("mission_start_status", message.time_ms)
             self._update_mission_presentation(
                 MissionPhase.MISSION_ACTIVE,
@@ -2358,6 +2366,7 @@ class Controller(QObject):
             )
             self.state.lifecycle_state = int(AirLifecycleState.FLIGHT)
         elif status_id == int(AirStatusId.PARACHUTE_DEPLOY):
+            self.state.horizontal_trajectory.Deploy_Observe(message.time_ms / 1000.0)
             self._update_mission_presentation(
                 MissionPhase.RECOVERY,
                 "PARACHUTE_DEPLOY",

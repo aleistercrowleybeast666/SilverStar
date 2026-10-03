@@ -1084,6 +1084,9 @@ ZH_CN.update({'horizontal.title': '水平轨迹', 'horizontal.east': '东 E / m'
 
 EN_US.update({'horizontal.title': 'Horizontal trajectory', 'horizontal.east': 'East E / m', 'horizontal.north': 'North N / m', 'horizontal.height': 'Relative height U / m', 'horizontal.start': 'Start', 'horizontal.end': 'End', 'horizontal.view_start': 'View start', 'horizontal.view_end': 'View end', 'horizontal.deploy': 'Parachute', 'horizontal.empty': 'No valid trajectory in range'})
 
+ZH_CN["horizontal.history_trimmed"] = "已达容量；省略最早 {count} 个样本，显示可用范围"
+EN_US["horizontal.history_trimmed"] = "Capacity reached: {count} oldest samples omitted; available range"
+
 class I18n:
     SETTINGS_ORGANIZATION = APP_ORGANIZATION
     SETTINGS_APPLICATION = APP_EN_NAME
