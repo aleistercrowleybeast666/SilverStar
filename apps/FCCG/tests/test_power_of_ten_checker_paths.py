@@ -260,7 +260,7 @@ def test_sparse_long_function_is_nonblocking(checker_fixture: Path) -> None:
     (checker_fixture / "APP/fixture.c").write_text(source, encoding="utf-8")
     result = _Checker_Run(checker_fixture)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "POWER10_RULE5_RECOMMENDATION|APP\\fixture.c|1|Sparse|24|zero_runtime_candidates|nonblocking" in result.stdout
+    assert f"POWER10_RULE5_RECOMMENDATION|{Path('APP/fixture.c')}|1|Sparse|24|zero_runtime_candidates|nonblocking" in result.stdout
 
 
 @pytest.mark.parametrize("ending", ("\n", "\r\n"))
@@ -298,7 +298,7 @@ def test_invalid_source_encoding_is_failure_not_silent_exclusion(checker_fixture
     (checker_fixture / "APP/invalid.c").write_bytes(b"// invalid UTF8: \xff\n")
     result = _Checker_Run(checker_fixture)
     assert result.returncode == 1
-    assert "Source cannot be decoded as UTF-8: APP\\invalid.c" in result.stdout
+    assert f"Source cannot be decoded as UTF-8: {Path('APP/invalid.c')}" in result.stdout
     assert "files=2|functions=1|eligible_assertions=2|" in result.stdout
 
 
@@ -328,7 +328,7 @@ def test_first_character_and_function_location_preserved(
     path.write_bytes(bom + source.replace("\n", ending).encode())
     result = _Checker_Run(checker_fixture)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|3|Fixture|5|2" in result.stdout
+    assert f"POWER10_RULE5_FUNCTION|Flight|{Path('APP/fixture.c')}|3|Fixture|5|2" in result.stdout
 
 
 @pytest.mark.parametrize("ending", ("\n", "\r\n"))
@@ -346,7 +346,7 @@ def test_macro_continuations_do_not_create_or_inflate_functions(
     result = _Checker_Run(checker_fixture)
     assert result.returncode == 0, result.stdout + result.stderr
     start = macro.count("\n") + 1
-    assert f"POWER10_RULE5_FUNCTION|Flight|APP\\fixture.c|{start}|Fixture|5|2" in result.stdout
+    assert f"POWER10_RULE5_FUNCTION|Flight|{Path('APP/fixture.c')}|{start}|Fixture|5|2" in result.stdout
     assert "functions=1|eligible_assertions=2|" in result.stdout
     assert "|Ghost|" not in result.stdout
 
