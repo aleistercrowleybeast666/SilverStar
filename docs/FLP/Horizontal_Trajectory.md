@@ -36,9 +36,10 @@ duplicate epochs themselves never create a connecting edge.
 
 FLP uses the existing active analysis source, flight display bounds, shared time
 range and display-only mission origin. Cropping preserves that origin. GSHC uses
-its existing mission-relative ENU data and bounded live buffer; a live buffer
-start after zero is a view start, and its end remains a view end until LANDED.
-GSHC retains its existing live ten-second range. Export uses the existing range,
+its existing mission-relative ENU data and a separate bounded task history; an
+oldest-sample capacity trim is explicitly labelled and its end remains a view end
+until LANDED. Only GSHC's six live curves retain the ten-second range; see its
+[task history policy](../GSHC/Horizontal_Trajectory.md). Export uses the existing range,
 page, language and theme options and writes `Trajectory2D` PNGs under plots/charts.
 The same builder and renderer produce the GUI and export geometry. Existing plot
 items remain present; GSHC chart output increases from seven to eight per page.

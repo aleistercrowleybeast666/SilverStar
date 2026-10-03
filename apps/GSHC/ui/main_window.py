@@ -2898,22 +2898,21 @@ class MainWindow(QMainWindow):
 
     def _render_plots(self, state: FlightControllerState) -> None:
         plot = state.live_plot
-        event_revision = self._events.revision if self._events is not None else -1
-        horizontal_revision = (plot.revision, event_revision, state.mission_presentation.phase)
+        history = state.horizontal_trajectory
+        horizontal_revision = (history.revision, state.mission_presentation.phase)
         if horizontal_revision != self._horizontal_revision:
             self._horizontal_revision = horizontal_revision
-            times, _velocity, position = plot.snapshot()
-            deploy_time = None
-            if self._events is not None and state.mission_first_time_ms is not None:
-                deploy_time = next(((event.time_ms - state.mission_first_time_ms) / 1000.0
-                                    for event in self._events.snapshot()
-                                    if event.status_id == int(AirStatusId.PARACHUTE_DEPLOY)), None)
-            trajectory = HorizontalTrajectory_Build(times, np.asarray(position).T,
-                                                      deploy_time_s=deploy_time)
-            # The bounded live buffer is a view, never a claim of mission completion.
-            trajectory = replace(trajectory, start_clipped=bool(times and times[0] > 0),
+            times, position, breaks = history.Snapshot_Get()
+            landing_time = state.mission_presentation.last_critical_event_time_ms
+            view_range = ((0, landing_time / 1000.0)
+                          if state.mission_presentation.phase is MissionPhase.LANDED
+                          and landing_time is not None else None)
+            trajectory = HorizontalTrajectory_Build(times, position, breaks_s=breaks,
+                time_range=view_range, deploy_time_s=history.deploy_time_s)
+            trajectory = replace(trajectory, start_clipped=history.dropped_sample_count > 0,
                                  end_clipped=state.mission_presentation.phase != MissionPhase.LANDED)
-            self.horizontal_trajectory_widget.Trajectory_Set(trajectory)
+            self.horizontal_trajectory_widget.Trajectory_Set(
+                trajectory, omitted_samples=history.dropped_sample_count)
         if plot.revision == self._last_plot_revision:
             return
         self._last_plot_revision = plot.revision

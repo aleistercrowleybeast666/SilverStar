@@ -43,10 +43,12 @@ def test_gshc_live_tab_does_not_replace_six_plots_and_event_only_refresh(tmp_pat
     window.bind_runtime_model(state, events)
     for t in np.arange(0, 1.01, .2):
         state.live_plot.append(t, (0, 0, 0), (t*10, t*20, t*30))
+        state.horizontal_trajectory.Sample_Append(1 + t, (t*10, t*20, t*30))
     window._render_plots(state)
     assert len(window.plot_widgets) == 6
     assert window.horizontal_trajectory_widget.trajectory.deploy_enu is None
     events.append(FlightEvent(1, int(AirStatusId.PARACHUTE_DEPLOY), "PARACHUTE_DEPLOY", 1500, 0, 0, 0))
+    state.horizontal_trajectory.Deploy_Observe(1.5)
     window._render_plots(state)
     np.testing.assert_allclose(window.horizontal_trajectory_widget.trajectory.deploy_enu, [5, 10, 15])
     assert window.horizontal_trajectory_widget.trajectory.end_clipped
@@ -55,6 +57,7 @@ def test_gshc_live_tab_does_not_replace_six_plots_and_event_only_refresh(tmp_pat
     replacement, replacement_events = FlightControllerState(), EventHistory()
     for t in np.arange(0, 1.01, .2):
         replacement.live_plot.append(t, (0, 0, 0), (-t*10, -t*20, -t*30))
+        replacement.horizontal_trajectory.Sample_Append(t, (-t*10, -t*20, -t*30))
     replacement_events.append(FlightEvent(1, 0, "OTHER", 1500, 0, 0, 0))
     window.bind_runtime_model(replacement, replacement_events)
     window._render_plots(replacement)
