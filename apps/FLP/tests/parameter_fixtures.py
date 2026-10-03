@@ -37,6 +37,9 @@ def FirmwareSets_Build(overrides=None):
             "parameters": [],
         }
         for p in contract["parameters"]:
+            if name == "sf6" and p["id"] == "gravity_mps2":
+                # SF6 replay reads this shared value from the existing INS owner.
+                continue
             overrides_for_plugin = (overrides or {}).get(name, {})
             value = overrides_for_plugin.get(p["id"], p["default"])
             # These revision-0 synthetic packages model the old KF6 firmware.

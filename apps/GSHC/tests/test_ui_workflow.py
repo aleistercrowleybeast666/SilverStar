@@ -91,9 +91,9 @@ class UiWorkflowTests(unittest.TestCase):
         self.window.close()
         self.temporary_directory.cleanup()
 
-    def test_three_release_pages_are_always_manually_selectable(self) -> None:
+    def test_release_pages_and_horizontal_trajectory_are_manually_selectable(self) -> None:
         labels = [self.window.pages.tabText(index) for index in range(self.window.pages.count())]
-        self.assertEqual(labels, ["预飞行", "飞行", "后期处理"])
+        self.assertEqual(labels, ["预飞行", "飞行", "后期处理", "水平轨迹"])
         self.assertFalse(hasattr(self.window, "magnetometer_calibration_page"))
         self.assertEqual(self.window.pages.objectName(), "pageTabs")
         self.assertEqual(self.window.pages.tabBar().objectName(), "pageNavigation")
@@ -103,6 +103,7 @@ class UiWorkflowTests(unittest.TestCase):
             self.window.preflight_page,
             self.window.flight_page,
             self.window.post_process_page,
+            self.window.horizontal_trajectory_widget,
         ):
             self.window.pages.setCurrentWidget(page)
             self.assertIs(self.window.pages.currentWidget(), page)

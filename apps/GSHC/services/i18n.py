@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 from typing import Any, Mapping
-
-from PySide6.QtCore import QSettings
 
 from config import (
     APP_EN_DISPLAY_NAME,
@@ -14,6 +12,7 @@ from config import (
     APP_WINDOW_TITLE,
     APP_ZH_DISPLAY_NAME,
 )
+from PySide6.QtCore import QSettings
 
 
 class Language(str, Enum):
@@ -1080,6 +1079,10 @@ for _key, (_zh, _en) in _NAVIGATION_TEXT.items():
 ZH_CN["button.align_start"] = "开始导航准备"
 EN_US["button.align_start"] = "Prepare Navigation"
 
+
+ZH_CN.update({'horizontal.title': '水平轨迹', 'horizontal.east': '东 E / m', 'horizontal.north': '北 N / m', 'horizontal.height': '相对高度 U / m', 'horizontal.start': '起点', 'horizontal.end': '终点', 'horizontal.view_start': '范围起点', 'horizontal.view_end': '范围终点', 'horizontal.deploy': '开伞', 'horizontal.empty': '范围内无有效轨迹'})
+
+EN_US.update({'horizontal.title': 'Horizontal trajectory', 'horizontal.east': 'East E / m', 'horizontal.north': 'North N / m', 'horizontal.height': 'Relative height U / m', 'horizontal.start': 'Start', 'horizontal.end': 'End', 'horizontal.view_start': 'View start', 'horizontal.view_end': 'View end', 'horizontal.deploy': 'Parachute', 'horizontal.empty': 'No valid trajectory in range'})
 
 class I18n:
     SETTINGS_ORGANIZATION = APP_ORGANIZATION

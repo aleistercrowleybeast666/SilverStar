@@ -12,7 +12,7 @@ The log input boundary has two user-managed layers:
    partitions and channels. Both documents are pure data in one checksummed ZIP.
 
 Algorithm Plugins remain a separate internal extension point for complete navigation and
-state-estimation algorithms. Pure INS and KF_6 are the built-ins. A decoder package describes
+state-estimation algorithms. The built-ins are ordered Pure INS, SF6, KF_6 and ESKF_15. A decoder package describes
 recorded data but never supplies executable algorithm behavior. Plotting, export, project
 persistence, Data Explorer, deploy replay, landing replay, and GUI code remain Core services.
 
@@ -23,6 +23,10 @@ not reachable from GUI, CLI, project restore, or drag/drop.
 
 The GUI never reads byte offsets. It consumes `FlightDataset`, standard channels, algorithm
 results, stable diagnostic codes, and metadata.
+
+SF6 replay and its fidelity boundary are documented in [SF6 Replay](SF6_Replay.md).
+The appended Flight horizontal tab shares GUI/export drawing semantics with GSHC;
+see [Horizontal Trajectory](Horizontal_Trajectory.md).
 
 ## Protocol truth and data flow
 

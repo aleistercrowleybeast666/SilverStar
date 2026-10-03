@@ -292,6 +292,10 @@ class ReplayPage(QWidget):
             self._parameter_specs[parameter.parameter_id] = parameter
             self._ParameterTooltip_Apply(parameter)
         self._ParameterGroups_Refresh()
+        if plugin.metadata.plugin_id == "silverstar.algorithm.sf6":
+            self.parameter_group_combo.setCurrentIndex(
+                self.parameter_group_combo.findData("parameter_group.sf6_gain")
+            )
         self._ParameterForm_Refresh()
         self._ParametersDirty_Refresh()
         self._Mode_Refresh()
@@ -829,6 +833,11 @@ class ReplayPage(QWidget):
         label = self._translator.Text_Get("status.recorded")
         if self._dataset is not None and self._store is not None:
             solution = (
+                "SF6"
+                if self._dataset.Series_Get("sf6.recorded.navigation.position_enu") is not None
+                else "ESKF15"
+                if self._dataset.Series_Get("eskf15.recorded.navigation.position_enu") is not None
+                else
                 "KF_6"
                 if self._dataset.Series_Get("kf6.recorded.navigation.position_enu") is not None
                 else "Pure INS"
@@ -924,6 +933,9 @@ class ReplayPage(QWidget):
         if self._dataset is None:
             return
         recorded_prefix = (
+            "sf6.recorded"
+            if self._dataset.Series_Get("sf6.recorded.navigation.position_enu") is not None
+            else
             "eskf15.recorded"
             if self._dataset.Series_Get("eskf15.recorded.navigation.position_enu") is not None
             else "kf6.recorded"

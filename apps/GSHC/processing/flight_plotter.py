@@ -7,17 +7,22 @@ from pathlib import Path
 from typing import Generator, Optional
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import font_manager
 from matplotlib.text import Text
-import numpy as np
 from PIL import GifImagePlugin, Image
-
-from .time_ranges import GifPlan_Build
-
-from services.i18n import Language
+from services.i18n import EN_US, ZH_CN, Language
 from services.preferences import Theme
+
+from .horizontal_trajectory import (
+    LABEL_IDS,
+    HorizontalTrajectory_Build,
+    HorizontalTrajectory_Draw,
+)
+from .time_ranges import GifPlan_Build
 
 
 @dataclass
@@ -128,6 +133,21 @@ class FlightPlotter:
             return key
         template = values[0] if self.config.language is Language.ZH_CN else values[1]
         return template.format(**params)
+
+    def plot_horizontal_trajectory(self, output_path: Path, data) -> None:
+        trajectory = HorizontalTrajectory_Build(
+            [sample.time_s for sample in data.pos], [sample.values[:3] for sample in data.pos],
+            time_range=self.page_range, deploy_time_s=data.parachute_time_s,
+            gap_threshold_s=self.config.gap_threshold_s,
+        )
+        catalog = ZH_CN if self.config.language is Language.ZH_CN else EN_US
+        figure = plt.figure(figsize=(8, 6))
+        labels = {key: catalog["horizontal." + key] for key in LABEL_IDS}
+        HorizontalTrajectory_Draw(figure, trajectory, labels, theme=self.config.theme.value)
+        self._style_figure(figure)
+        # Time ranges select samples; they must never become E-axis limits.
+        figure.savefig(output_path, dpi=160, facecolor=figure.get_facecolor())
+        plt.close(figure)
 
     def _style_figure(self, fig) -> None:
         colors = self.colors

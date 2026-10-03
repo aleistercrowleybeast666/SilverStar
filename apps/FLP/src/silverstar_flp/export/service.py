@@ -26,6 +26,11 @@ from silverstar_flp.core.analysis_source import (
 )
 from silverstar_flp.core.context import TaskCancelledError, TaskContext
 from silverstar_flp.core.dataset import FlightDataset, TimeSeries
+from silverstar_flp.core.horizontal_trajectory import (
+    LABEL_IDS,
+    HorizontalTrajectory_Build,
+    HorizontalTrajectory_Draw,
+)
 from silverstar_flp.core.i18n import Translator
 from silverstar_flp.core.math import Quaternion_RotateVector
 from silverstar_flp.core.mission import (
@@ -634,7 +639,10 @@ class FlightExporter:
             + int(requested.include_events)
             + (len(channels) if requested.include_csv else 0)
             + int(full_covariance is not None)
-            + standard_plot_units * len(pages)
+            + (standard_plot_units + int(requested.include_plots)) * len(pages)
+            + (sum(entry.algorithm_id == "silverstar.algorithm.sf6"
+                   for entry in store.Entries_Get())
+               if requested.include_csv else 0)
             + (3 * len(pages) if integrity_result is not None else 0)
             + int(requested.include_trajectory_3d)
             + gif_frame_units
@@ -766,6 +774,20 @@ class FlightExporter:
         if requested.include_csv:
             csv_directory = output / f"CSV{suffix}"
             csv_directory.mkdir(exist_ok=True)
+            for entry in store.Entries_Get():
+                if entry.algorithm_id == "silverstar.algorithm.sf6":
+                    path = csv_directory / (
+                        f"SF6_{_Filename_Sanitize(entry.result_id)}_Replay_Audit{suffix}.json"
+                    )
+                    attempt(
+                        f"sf6_replay_audit:{entry.result_id}", path,
+                        lambda p=path, e=entry: p.write_text(json.dumps({
+                            "algorithm_id": e.algorithm_id, "mode": e.mode.value,
+                            "fidelity": e.fidelity.value, "warnings": list(e.warnings),
+                            "parameters": dict(e.parameters), "diagnostics": dict(e.diagnostics),
+                        }, ensure_ascii=False, indent=2, default=_Json_Default), encoding="utf-8"),
+                        "SF6 replay audit",
+                    )
             for channel_id, series in channels.items():
                 path = csv_directory / f"{_Filename_Sanitize(channel_id)}{suffix}.csv"
                 attempt(
@@ -814,6 +836,16 @@ class FlightExporter:
                     self._StandardPlots_Write(
                         dataset, resolver, PlotDirectory(plot_directory, page_start, page_end),
                         suffix, language, resolved_theme, attempt, skip,
+                    )
+                    path = plot_directory / "Trajectory2D" / (
+                        f"Horizontal_Trajectory_{page_start:010.3f}-{page_end:010.3f}{suffix}.png"
+                    )
+                    attempt(
+                        f"horizontal_trajectory:{page_start:g}-{page_end:g}", path,
+                        lambda p=path, a=page_start, b=page_end: self._HorizontalTrajectory_Write(
+                            dataset, resolver.Series_Get("navigation.position_enu"), p,
+                            language, resolved_theme, flight_bounds, (a, b)),
+                        Translator(language.value).Text_Get("horizontal.title"),
                     )
                 finally:
                     self._plot_page_range = None
@@ -2999,6 +3031,34 @@ class FlightExporter:
         start_timestamp_us: int,
     ) -> np.ndarray:
         return TrajectoryOrigin_Get(position, start_timestamp_us)
+
+    def _HorizontalTrajectory_Write(self, dataset, position, path, language, theme,
+                                    mission_bounds, page_range) -> None:
+        from matplotlib.backends.backend_agg import FigureCanvasAgg
+        from matplotlib.figure import Figure
+
+        start = mission_bounds.start_timestamp_us
+        end = mission_bounds.end_timestamp_us
+        deploy = _Event_Timestamp(dataset, 0x29)
+        origin = TrajectoryOrigin_Get(position, start) if position is not None else np.zeros(3)
+        trajectory = HorizontalTrajectory_Build(
+            position.time_s if position is not None else [],
+            position.values if position is not None else [],
+            valid=position.valid if position is not None else None, origin_enu=origin,
+            mission_range=(start * 1e-6, end * 1e-6),
+            time_range=(start * 1e-6 + page_range[0], start * 1e-6 + page_range[1]),
+            deploy_time_s=deploy * 1e-6 if deploy is not None else None,
+            breaks_s=tuple(t * 1e-6 for t in
+                           position.metadata.get("discontinuity_timestamps_us", ()))
+                     if position is not None else (),
+        )
+        figure = Figure(figsize=(8, 6))
+        FigureCanvasAgg(figure)
+        translator = Translator(language.value)
+        labels = {key: translator.Text_Get("horizontal." + key) for key in LABEL_IDS}
+        HorizontalTrajectory_Draw(figure, trajectory, labels, theme=theme.value)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        figure.savefig(path, dpi=160, facecolor=figure.get_facecolor())
 
     @staticmethod
     def _Axis3d_Equal(axis: Any, values: np.ndarray) -> None:
