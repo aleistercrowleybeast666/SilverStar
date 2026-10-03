@@ -750,8 +750,13 @@ def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
                        source_label=board.name,
                        inventory=inventory.Dictionary_Get(), resources=resources)
     assignments = dict(ground.resource_assignments)
-    if ground.radio_plugin:
-        radio = catalog.Component_Get(ground.radio_plugin)
+    primary = next((radio for radio in ground.radio_instances
+                    if radio.instance_id == "radio0"), None)
+    primary_plugin = (ground.radio_plugin if not ground.radio_instances else
+                      primary.plugin if primary is not None else "")
+    if primary_plugin:
+        # The board defaults own radio0, never a deleted or different instance.
+        radio = catalog.Component_Get(primary_plugin)
         available = {item.resource_id: item for item in resources}
         for requirement in radio.resource_requirements:
             role = next((item for item in board.resource_roles

@@ -101,8 +101,7 @@ class DevicesPage(ScrollableLocalizedPage):
             lambda _checked=False: self.installRequested.emit()
         )
         self.other_layout.addWidget(self.install_button, 0, Qt.AlignmentFlag.AlignLeft)
-        self.other_group = CollapsibleSection(translator.Text_Get("group.other_sensors"))
-        self.other_group.BodyLayout_Set(self.other_layout)
+        self.other_group = self.Group_Create("group.other_sensors", self.other_layout)
         self.other_group.setObjectName("otherSensorsGroup")
         self.root_layout.addWidget(self.other_group)
 
@@ -408,8 +407,7 @@ class DevicesPage(ScrollableLocalizedPage):
                 default=1,
             )
             if (
-                selected_instances
-                and class_max > len(selected_instances)
+                class_max > len(selected_instances)
                 and any(
                     selected_plugin_counts[item.component_id]
                     < (item.plugin_max or item.project_max)
@@ -569,7 +567,6 @@ class DevicesPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
-        self.other_group.Title_Set(translator.Text_Get("group.other_sensors"))
         if self._components:
             self.Configuration_Set(
                 self._components,
@@ -583,10 +580,10 @@ class DevicesPage(ScrollableLocalizedPage):
         return component.name if title == key else title
 
     def _DeviceInstanceTitle_Get(self, component: ComponentView, index: int, instance_id: str = "") -> str:
-        if component.component_class == "telemetry":
-            suffix = instance_id.removeprefix("telemetry")
-            if instance_id.startswith("telemetry") and suffix.isdecimal():
-                index = int(suffix)
+        prefix = component.component_class
+        suffix = instance_id.removeprefix(prefix)
+        if instance_id.startswith(prefix) and suffix.isdecimal():
+            index = int(suffix)
         key = f"device.instance.{component.component_class}"
         title = self._translator.Text_Get(key, index=index)
         if title == key:
@@ -1505,9 +1502,9 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                 combo.addItem(self._translator.Text_Get(none_key), None)
             ordered = (
                 sorted(candidates, key=lambda item: (
-                    0 if item.component_id == "silverstar.algorithm.estimator.kf6" else
-                    1 if item.component_id == "silverstar.algorithm.estimator.eskf15" else
-                    2 if item.component_id == "silverstar.algorithm.estimator.sf6" else 3,
+                    0 if item.component_id == "silverstar.algorithm.estimator.sf6" else
+                    1 if item.component_id == "silverstar.algorithm.estimator.kf6" else
+                    2 if item.component_id == "silverstar.algorithm.estimator.eskf15" else 3,
                     item.ui_order,
                 ))
                 if slot == "estimator" else sorted(candidates, key=lambda item: item.name)
