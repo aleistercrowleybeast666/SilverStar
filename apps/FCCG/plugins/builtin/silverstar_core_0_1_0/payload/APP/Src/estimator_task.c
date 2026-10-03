@@ -39,6 +39,11 @@
 #include "system_source_selector.h"
 #include "system_time.h"
 
+_Static_assert((SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U) ==
+    ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) ||
+     (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)),
+    "Selected navigation backend requires matching linkage capability");
+
 _Static_assert(SYSTEM_ESTIMATOR_MEAS_ACCEPTED == 0U, "SSLOG accepted result");
 _Static_assert(SYSTEM_ESTIMATOR_MEAS_SOFT_WEIGHTED == 1U, "SSLOG soft result");
 _Static_assert(SYSTEM_ESTIMATOR_MEAS_REJECTED_NIS == 2U, "SSLOG NIS result");
@@ -3090,6 +3095,7 @@ static NavigationReplayResult Estimator_PredictionApply(
 
 #endif
 
+#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
 static void Estimator_BackendPredictionProcess(const SystemInertialIncrement *prediction)
 {
     if (SystemNavigationBackend_Predict(prediction, &s_snapshot) != SYSTEM_DEVICE_OK)
@@ -3097,6 +3103,8 @@ static void Estimator_BackendPredictionProcess(const SystemInertialIncrement *pr
     EstimatorTask_SnapshotCommit();
     Estimator_DiagnosticsPublish(prediction->timestamp_us);
 }
+
+#endif
 
 static void Estimator_PredictionProcess(
     const SystemInertialIncrement *prediction)
@@ -3119,8 +3127,10 @@ static void Estimator_PredictionProcess(
     {
         return;
     }
+#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
     if (Estimator_NavigationBackendSelected() != 0U)
     { Estimator_BackendPredictionProcess(prediction); return; }
+#endif
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U)
     Estimator_PureInsPublish(prediction->timestamp_us);
     Estimator_DiagnosticsPublish(prediction->timestamp_us);
@@ -3536,6 +3546,7 @@ static void Estimator_KfRuntimeInitialize(uint8_t activate)
 
 #endif
 
+#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
 static SystemDeviceResult Estimator_BackendInitialize(uint8_t activate)
 {
     SILVERSTAR_ASSERT(activate <= 1U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
@@ -3556,6 +3567,8 @@ static SystemDeviceResult Estimator_BackendInitialize(uint8_t activate)
     EstimatorTask_SnapshotCommit();
     return backend_result;
 }
+
+#endif
 
 static SystemDeviceResult Estimator_InitializeNavigation(uint8_t activate)
 {
@@ -3583,10 +3596,12 @@ static SystemDeviceResult Estimator_InitializeNavigation(uint8_t activate)
     {
         return SYSTEM_DEVICE_NOT_READY;
     }
+#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
     if (Estimator_NavigationBackendSelected() != 0U)
     {
         return Estimator_BackendInitialize(activate);
     }
+#endif
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U)
     if ((activate == 0U) && (InsTask_PrepareNavigation(s_estimator.q_nb) != SYSTEM_DEVICE_OK))
     { return SYSTEM_DEVICE_VERIFY_FAILED; }
@@ -3686,8 +3701,10 @@ void EstimatorTask_RollbackMissionStart(void)
     s_estimator.initialized = 0U;
     s_preparation.initialized = 0U;
     s_preparation.generation++;
+#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
     if (Estimator_NavigationBackendSelected() != 0U)
     { SystemNavigationBackend_Reset(); }
+#endif
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     NavigationKf_Reset(&s_estimator.kf);
     NavigationReplay_Reset(&s_replay, &s_replay_storage, &s_estimator.kf, 0U, ++s_replay_epoch);
@@ -3735,7 +3752,9 @@ void EstimatorTask_RollbackMissionStart(void)
 
 void EstimatorTask_AbortMission(void)
 {
+#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
     if (Estimator_NavigationBackendSelected() != 0U) { SystemNavigationBackend_Reset(); }
+#endif
     s_preparation.initialized = 0U; s_preparation.generation++;
     s_estimator.mission_running = 0U;
     s_estimator.initialized = 0U;

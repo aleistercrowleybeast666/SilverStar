@@ -6,6 +6,14 @@
 #include "estimator_task.h"
 #include "platform_memory.h"
 
+/* Enum constants are C expressions, not preprocessor macros. The selected
+ * plugin declares linkage capability; validate it against the typed build ID. */
+#if (defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)) || \
+    (defined(SYSTEM_BUILD_SF6_ENABLED) && (SYSTEM_BUILD_SF6_ENABLED != 0U))
+#define SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED 1U
+#else
+#define SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED 0U
+#endif
 /* CPU-only output caches use the bank left by the selected backend.
  * Both placements are checked against the unchanged linked-ELF budgets. */
 #if defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)
