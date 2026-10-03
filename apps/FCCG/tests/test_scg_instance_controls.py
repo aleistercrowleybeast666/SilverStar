@@ -101,10 +101,12 @@ def test_ground_legacy_single_has_matching_row_controls_without_migration(window
     page = window.ground_target_page
     assert page.radio_selection_group.isAncestorOf(page.enabled)
     row = page.radio_instances_editor.rows['radio0']
-    assert isinstance(row['plugin'], StandardComboBox)
-    assert row['plugin'].itemData(0) == ''
+    assert isinstance(row['selection'], StandardComboBox)
+    assert tuple(row['selection'].itemData(0)) == ('', '')
     assert row['remove'].isVisible() and row['remove'].isEnabled()
-    assert row['plugin'].currentData() == window._model.ground_target.radio_plugin
+    assert tuple(row['selection'].currentData()) == (
+        window._model.ground_target.radio_plugin,
+        window._model.ground_target.module_variant)
     for language in ('en_US', 'zh_CN'):
         window.Language_Apply(language)
         assert window._model.Dictionary_Get() == before
@@ -122,7 +124,8 @@ def test_ground_rapid_add_middle_delete_reuse_and_saved_order(window, qapp, tmp_
     editor.rows['radio1']['remove'].click()
     _Wait(qapp, lambda: len(window._model.ground_target.radio_instances) == 2)
     assert [r.instance_id for r in window._model.ground_target.radio_instances] == ['radio0', 'radio2']
-    assert editor.rows['radio2']['title'].text() == window._translator.Text_Get('ground.radio_title', id=2)
+    assert editor.rows['radio2']['title'].text() == window._translator.Text_Get(
+        'device.instance.telemetry', index=2)
     editor.add_button.click()
     _Wait(qapp, lambda: len(window._model.ground_target.radio_instances) == 3)
     assert [r.instance_id for r in window._model.ground_target.radio_instances] == ['radio0', 'radio2', 'radio1']
@@ -132,7 +135,7 @@ def test_ground_rapid_add_middle_delete_reuse_and_saved_order(window, qapp, tmp_
     assert window._model.ground_target.active_radio_instance == 'radio2'
 
 
-def test_ground_last_remove_clears_only_radio_and_add_restores_legacy_selection(window, qapp):
+def test_ground_last_remove_clears_only_radio_and_add_creates_explicit_selection(window, qapp):
     window._model = window._service.ProjectConfiguration_Reconcile(
         _GroundF103Model_Get(window._service.catalog)).model
     previous = window._model.ground_target
@@ -149,8 +152,9 @@ def test_ground_last_remove_clears_only_radio_and_add_restores_legacy_selection(
     assert not editor.rows['radio0']['remove'].isEnabled()
     editor.add_button.click()
     _Wait(qapp, lambda: bool(window._model.ground_target.radio_plugin))
-    assert not window._model.ground_target.radio_instances
+    assert [radio.instance_id for radio in window._model.ground_target.radio_instances] == ['radio0']
     assert window._model.ground_target.module_variant
+    assert window._model.ground_target.resource_assignments['other:keep'] == 'KEEP'
 
 
 def test_estimator_display_order_and_legacy_ids_survive_refresh_reopen(window, qapp, tmp_path):
@@ -182,7 +186,7 @@ def test_ground_none_selection_uses_the_same_removal_boundary(window, qapp, case
         editor.rows['radio0']['remove'].click()
         _Wait(qapp, lambda: len(window._model.ground_target.radio_instances) == 1)
     identity = 'radio1' if case in {'middle', 'only'} else 'radio0'
-    editor.rows[identity]['plugin'].setCurrentIndex(0)
+    editor.rows[identity]['selection'].setCurrentIndex(0)
     _Wait(qapp, lambda: identity not in {
         radio.instance_id for radio in window._model.ground_target.radio_instances})
     if case in {'legacy', 'only'}:

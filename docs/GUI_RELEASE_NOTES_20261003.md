@@ -1,9 +1,16 @@
 # GUI closeout notes (2026-10-03)
 
 On the GSHC Flight page, the status cards allocate more width to the
-seven-row status card. At 1280x720 in the Qt layout probe, its height changed
+seven-row status card. At 1280x720 in the Chinese Qt layout probe, its height changed
 from 156 to 132 pixels and each of the six plots grew from about 175 to 187
 pixels. The same six plots and status fields remain visible.
+At narrower English window widths, the brand and connection headings elide
+within the header and expose their full text in tooltips. The Preflight page
+keeps its controls reachable by vertical scrolling without horizontal overflow.
+At shorter heights, the Flight status summary also scrolls when translated
+text needs more rows, leaving room for all six plots. In the English 1280x720
+probe, the status viewport was 151 pixels and each plot remained at least 178
+pixels high; the status fields remained reachable by scrolling.
 
 The Ground activity LED settings are on the Telemetry page. A TX pulse follows
 completion of a wireless packet send; an RX pulse follows receipt of a valid

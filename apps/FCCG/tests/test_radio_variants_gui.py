@@ -156,7 +156,12 @@ def test_ground_all_variants_selector_add_delete_save_power_and_requirements(qap
     _Wait(qapp, lambda: len(window._model.ground_target.radio_instances) == 2)
     assert [radio.instance_id for radio in window._model.ground_target.radio_instances] == ["radio1","radio0"]
     assert window._model.ground_target.active_radio_instance == "radio1"
-    assert window._model.ground_target.resource_assignments == {"radio1:radio_bus":"PLATFORM_SPI_1"}
+    board = window._service.catalog.Component_Get(window._model.ground_target.board)
+    fixed = {"radio0:" + role.key.removeprefix("telemetry:"): role.default
+             for role in board.resource_roles
+             if role.fixed and role.key.startswith("telemetry:")}
+    assert window._model.ground_target.resource_assignments == {
+        "radio1:radio_bus": "PLATFORM_SPI_1", **fixed}
     assert not errors, errors
 
 

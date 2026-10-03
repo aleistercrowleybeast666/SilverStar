@@ -102,6 +102,58 @@ def test_explicit_radio0_recovers_fixed_board_bindings_after_open(builtin_catalo
         issue.code for issue in GroundTargetIssues_Get(checked, builtin_catalog)}
 
 
+def test_fixed_defaults_preserve_wrong_explicit_binding_and_other_instance(builtin_catalog):
+    from silverstar_fccg.project.model import GroundRadioConfigurations_Get
+    from test_f103_ground_reference import _GroundF103Model_Get
+    model = _GroundF103Model_Get(builtin_catalog)
+    primary = GroundRadioConfigurations_Get(model.ground_target)[0]
+    other = replace(primary, instance_id='radio1')
+    assignments = {**model.ground_target.resource_assignments,
+                   'radio0:radio_nss': 'PLATFORM_GPIO_1',
+                   'radio1:radio_bus': 'PLATFORM_SPI_1'}
+    model.ground_target = replace(model.ground_target,
+        radio_instances=(primary, other), resource_assignments=assignments)
+    checked = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+    assert checked.ground_target.resource_assignments['radio0:radio_nss'] == 'PLATFORM_GPIO_1'
+    assert checked.ground_target.resource_assignments['radio1:radio_bus'] == 'PLATFORM_SPI_1'
+    assert 'GROUND_BOARD_FIXED_RESOURCE_MISMATCH' in {
+        issue.code for issue in GroundTargetIssues_Get(checked, builtin_catalog)}
+
+
+def test_fixed_defaults_do_not_claim_another_instance_gpio(builtin_catalog):
+    from silverstar_fccg.project.model import GroundRadioConfigurations_Get
+    from test_f103_ground_reference import _GroundF103Model_Get
+    model = _GroundF103Model_Get(builtin_catalog)
+    primary = GroundRadioConfigurations_Get(model.ground_target)[0]
+    assignments = {'radio1:radio_nss': 'PLATFORM_GPIO_0',
+                   'radio1:radio_bus': 'PLATFORM_SPI_1'}
+    model.ground_target = replace(model.ground_target,
+        radio_instances=(primary, replace(primary, instance_id='radio1')),
+        resource_assignments=assignments)
+    checked = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+    assert 'radio0:radio_nss' not in checked.ground_target.resource_assignments
+    assert checked.ground_target.resource_assignments['radio1:radio_nss'] == 'PLATFORM_GPIO_0'
+    assert checked.ground_target.resource_assignments['radio1:radio_bus'] == 'PLATFORM_SPI_1'
+    assert checked.ground_target.resource_assignments['radio0:radio_bus'] == 'PLATFORM_SPI_1'
+    assert 'GROUND_BOARD_FIXED_RESOURCE_MISMATCH' in {
+        issue.code for issue in GroundTargetIssues_Get(checked, builtin_catalog)}
+
+
+def test_fixed_defaults_skip_wrong_resource_kind(builtin_catalog, monkeypatch):
+    import silverstar_fccg.project.configuration as configuration
+    from test_f103_ground_reference import _GroundF103Model_Get
+    original = configuration.BoardResourceProvisions_Get
+    monkeypatch.setattr(configuration, 'BoardResourceProvisions_Get', lambda board: tuple(
+        replace(item, kind='gpio_input') if item.resource_id == 'PLATFORM_GPIO_0'
+        else item for item in original(board)))
+    model = _GroundF103Model_Get(builtin_catalog)
+    model.ground_target = replace(model.ground_target, resource_assignments={})
+    checked = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+    assert 'radio0:radio_nss' not in checked.ground_target.resource_assignments
+    assert 'GROUND_RADIO_RESOURCE_UNBOUND' in {
+        issue.code for issue in GroundTargetIssues_Get(checked, builtin_catalog)}
+
+
 def test_current_user_ground_descriptor_recovers_bindings_if_available(workspace_root, tmp_path):
     descriptor = Path('D:/stm32_project/SS_0_5_TEST_6/SilverStar.ssproject')
     if not descriptor.is_file():

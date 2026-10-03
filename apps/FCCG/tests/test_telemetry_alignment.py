@@ -17,6 +17,13 @@ from test_ground_radio_editor import _Wait
 from test_scg_ui_metadata_hotfix import window
 
 
+def _FixedRadio0Bindings_Get(window):
+    board = window._service.catalog.Component_Get(window._model.ground_target.board)
+    return {"radio0:" + role.key.removeprefix("telemetry:"): role.default
+            for role in board.resource_roles
+            if role.fixed and role.key.startswith("telemetry:")}
+
+
 def test_ground_layout_and_power_ownership(window):
     window._model = _GroundF103Model_Get(window._service.catalog)
     window._Project_Refresh()
@@ -59,13 +66,14 @@ def test_delete_primary_keeps_secondary_identity_bindings_and_order(qapp, window
     updated = window._model.ground_target
     assert [r.instance_id for r in updated.radio_instances] == ["radio1", "radio0"]
     assert updated.active_radio_instance == "radio1"
-    assert updated.resource_assignments == survivor.resource_assignments
+    assert updated.resource_assignments == {
+        **survivor.resource_assignments, **_FixedRadio0Bindings_Get(window)}
     assert all(r.tx_power_dbm == 10 for r in updated.radio_instances)
     window._AirLink_Change("preamble_symbols", window._model.air_link.preamble_symbols)
-    assert window._model.ground_target.resource_assignments == survivor.resource_assignments
+    assert window._model.ground_target.resource_assignments == updated.resource_assignments
 
 
-def test_delete_final_and_add_does_not_restore_old_bindings(qapp, window):
+def test_delete_final_and_add_recovers_fixed_board_defaults(qapp, window):
     window._model = _GroundF103Model_Get(window._service.catalog)
     window._Project_Refresh()
     editor = window.ground_target_page.radio_instances_editor
@@ -78,7 +86,7 @@ def test_delete_final_and_add_does_not_restore_old_bindings(qapp, window):
     editor.add_button.click()
     _Wait(qapp, lambda: bool(window._model.ground_target.radio_instances))
     assert [r.instance_id for r in window._model.ground_target.radio_instances] == ["radio0"]
-    assert not window._model.ground_target.resource_assignments
+    assert window._model.ground_target.resource_assignments == _FixedRadio0Bindings_Get(window)
 
 
 def test_folded_per_module_power_roundtrip(qapp, window):

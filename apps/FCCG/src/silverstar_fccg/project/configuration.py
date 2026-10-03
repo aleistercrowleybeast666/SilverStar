@@ -7,7 +7,7 @@ from dataclasses import dataclass, replace
 
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.plugins.catalog import PluginCatalog
-from silverstar_fccg.plugins.manifest import PluginManifest, SelectionKind
+from silverstar_fccg.plugins.manifest import PluginManifest, ResourceMode, SelectionKind
 from silverstar_fccg.hardware.platform import (
     DetectedMcuFacts,
     DetectedMcuFacts_FromInventory,
@@ -720,6 +720,28 @@ def _LegacyLandingStrategy_Reconcile(model: ProjectModel) -> None:
         )
 
 
+def _GroundBoard_DefaultOccupied(ground, available, assignments, key, resource, requirement) -> bool:
+    if requirement.mode != ResourceMode.EXCLUSIVE or requirement.name == "radio_bus":
+        return False
+
+    def pins(item):
+        metadata = item.metadata
+        pin_map = metadata.get("pins", {})
+        return {str(value) for value in (
+            metadata.get("physical_pin"), metadata.get("physical_resource"),
+            *(pin_map.values() if isinstance(pin_map, dict) else ()),
+        ) if value}
+
+    proposed = pins(resource)
+    for owner, identity in (*assignments.items(), ("pc_interface", ground.pc_resource)):
+        if owner == key or not identity:
+            continue
+        other = available.get(identity)
+        if identity == resource.resource_id or (other is not None and proposed & pins(other)):
+            return True
+    return False
+
+
 def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
     ground = model.ground_target
     if ground.hardware.mode != "board_plugin" or not ground.board:
@@ -774,7 +796,9 @@ def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
             key = f"radio0:{requirement.name}"
             if role is not None and role.fixed and not assignments.get(key):
                 resource = available.get(role.default)
-                if resource is not None and resource.kind == requirement.kind:
+                if (resource is not None and resource.kind == requirement.kind and
+                        not _GroundBoard_DefaultOccupied(
+                            ground, available, assignments, key, resource, requirement)):
                     assignments[key] = role.default
     pc_resource = ground.pc_resource
     if ground.pc_interface == "uart" and not pc_resource:
