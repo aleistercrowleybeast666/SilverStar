@@ -123,6 +123,10 @@ static uint8_t s_startup_pubx_count;
 static uint8_t s_startup_pubx_fail;
 static uint8_t s_startup_nmea_count;
 static uint32_t s_startup_next_nmea_ms;
+static uint8_t s_recovery_test_active;
+static uint8_t s_recovery_baud_fail;
+static uint32_t s_recovery_mon_requests;
+static uint32_t s_recovery_baud_changes;
 
 static uint16_t Test_ReadU16Le(const uint8_t *data)
 {
@@ -487,6 +491,9 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
         s_startup_ubx_enabled = 1U;
         return PLATFORM_OK;
     }
+    if ((s_recovery_test_active != 0U) &&
+        (data[2] == TEST_MON_CLASS) && (data[3] == 4U))
+    { s_recovery_mon_requests++; }
     if (s_startup_item_mode != 0U) { TEST_CHECK(s_tick_ms >= s_signal_reset_until); }
     payload_length = Test_ReadU16Le(&data[4]);
     if ((s_startup_item_mode != 0U) &&
@@ -670,6 +677,14 @@ PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
     if ((id != PROJECT_RESOURCE_GNSS_UART) || (baudrate == 0U))
     {
         return PLATFORM_INVALID_ARGUMENT;
+    }
+    if (s_recovery_test_active != 0U)
+    {
+        s_recovery_baud_changes++;
+        if ((s_recovery_baud_fail != 0U) &&
+            (baudrate == s_startup_physical_baud) &&
+            (s_uart_baudrate != baudrate) && (s_recovery_mon_requests != 0U))
+        { return PLATFORM_IO_ERROR; }
     }
     s_uart_baudrate = baudrate;
     if ((s_startup_nmea_only != 0U) &&
@@ -1503,11 +1518,189 @@ static void Test_CapturedCapabilityFailures(void)
     s_use_captured = 0U;
 }
 
+
+/* Field failure: a valid stream is not an identity, but losing one MON-VER
+ * response must not strand the MCU at the final wrong scan baud. */
+static void Test_StartupLostIdentityRestore(void)
+{
+    SystemGnssConfig target = {0U};
+    GnssNeoM9nData data;
+    GnssNeoM9nIdentityDiagnostics identity;
+    uint8_t payload[92] = {0U};
+    uint8_t frame[100];
+    uint16_t length;
+    uint32_t cycle;
+
+    s_tick_ms = 100U;
+    s_mode = TEST_RESPONSE_OK;
+    s_rx_count = 0U;
+    s_rx_head = 0U;
+    s_rx_tail = 0U;
+    s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
+    s_startup_physical_baud = GNSS_DEFAULT_BAUDRATE;
+    s_startup_item_mode = 1U;
+    s_startup_item_count = 0U;
+    s_startup_write_count = 0U;
+    s_monver_silent = 1U;
+    target.navigation_rate_hz = 25U;
+    target.constellation_mask = SYSTEM_GNSS_CONSTELLATION_GPS;
+    target.dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G;
+    target.output_protocol = SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX;
+    target.enabled_message_mask = SYSTEM_GNSS_MESSAGE_NAV_PVT;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(NeoM9nStartup_Init(0U, &target) == NeoM9nStartupResult_Ok);
+    length = Test_FrameBuild(TEST_NAV_CLASS, 0x07U,
+        payload, sizeof(payload), frame);
+    for (cycle = 0U; cycle < 3500U; cycle++)
+    {
+        if ((s_uart_baudrate == s_startup_physical_baud) &&
+            ((cycle % 4U) == 0U))
+        { Test_FrameInject(frame, length, 0U); }
+        NeoM9nStartup_Tick(0U, s_tick_ms);
+        if (NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Failed)
+        { break; }
+        s_tick_ms += 10U;
+    }
+    (void)GnssNeoM9n_GetData(0U, &data);
+    (void)GnssNeoM9n_IdentityDiagnosticsGet(0U, &identity);
+    TEST_CHECK(NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Failed);
+    TEST_CHECK(NeoM9nStartup_FailureGet(0U) == SystemDeviceStartupFailure_NotPresent);
+    TEST_CHECK(data.pvtSequence > 0U);
+    TEST_CHECK(identity.sequence == 0U);
+    TEST_CHECK(s_startup_write_count == 0U);
+    printf("FIELD_REPRO pvt=%lu identity=%lu baud=%lu failed_ms=%lu\n",
+        (unsigned long)data.pvtSequence, (unsigned long)identity.sequence,
+        (unsigned long)s_uart_baudrate, (unsigned long)s_tick_ms);
+    TEST_CHECK(s_uart_baudrate == s_startup_physical_baud);
+    s_monver_silent = 0U;
+    s_startup_item_mode = 0U;
+}
+
+
+/* 0/5: MON-VER becomes available after failure, including tick wrap.
+ * 1: permanent response loss; 2/6: explicit wrong model/version;
+ * 3: corrupt PVT only; 4: failed UART restore. */
+static void Test_StartupRecoveryFault(uint8_t scenario)
+{
+    SystemGnssConfig target = {0U};
+    NeoM9nStartupRecoveryDiagnostics recovery = {0U};
+    GnssNeoM9nIdentityDiagnostics identity;
+    uint8_t payload[92] = {0U};
+    uint8_t frame[100];
+    uint16_t length;
+    uint32_t cycle;
+    uint32_t failure_ms = 0U;
+    uint32_t quiet_requests;
+    uint32_t quiet_bauds;
+    uint8_t first_failure_seen = 0U;
+    uint8_t expect_ready = (uint8_t)((scenario == 0U) || (scenario == 5U));
+
+    s_tick_ms = (scenario == 5U) ? UINT32_MAX - 24500U : 100U;
+    s_mode = TEST_RESPONSE_OK;
+    s_rx_count = 0U;
+    s_rx_head = 0U;
+    s_rx_tail = 0U;
+    s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
+    s_startup_physical_baud = GNSS_DEFAULT_BAUDRATE;
+    s_startup_item_mode = 1U;
+    s_startup_item_count = 0U;
+    s_startup_write_count = 0U;
+    s_startup_nmea_only = 0U;
+    s_recovery_test_active = 1U;
+    s_recovery_baud_fail = (uint8_t)(scenario == 4U);
+    s_recovery_mon_requests = 0U;
+    s_recovery_baud_changes = 0U;
+    s_signal_reset_until = 0U;
+    s_monver_silent = (uint8_t)((scenario != 2U) && (scenario != 6U));
+    s_wrong_model = (uint8_t)(scenario == 2U);
+    s_test_protocol = (scenario == 6U) ? "PROTVER=99.99" : "PROTVER=32.01";
+    target.navigation_rate_hz = 25U;
+    target.constellation_mask = SYSTEM_GNSS_CONSTELLATION_GPS;
+    target.dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G;
+    target.output_protocol = SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX;
+    target.enabled_message_mask = SYSTEM_GNSS_MESSAGE_NAV_PVT;
+    TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    TEST_CHECK(NeoM9nStartup_Init(0U, &target) == NeoM9nStartupResult_Ok);
+    length = Test_FrameBuild(TEST_NAV_CLASS, 0x07U, payload, sizeof(payload), frame);
+    for (cycle = 0U; cycle < 5000U; cycle++)
+    {
+        if ((s_uart_baudrate == s_startup_physical_baud) && ((cycle % 4U) == 0U))
+        {
+            Test_FrameInject(frame, length, (uint8_t)(scenario == 3U));
+            if (scenario == 3U) { frame[length - 1U] ^= 0x01U; }
+        }
+        NeoM9nStartup_Tick(0U, s_tick_ms);
+        TEST_CHECK(NeoM9nStartup_RecoveryDiagnosticsGet(0U, &recovery) == NeoM9nStartupResult_Ok);
+        if ((first_failure_seen == 0U) &&
+            (NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Failed))
+        {
+            first_failure_seen = 1U;
+            failure_ms = s_tick_ms;
+            TEST_CHECK(s_startup_write_count == 0U);
+            TEST_CHECK(recovery.attempt_count == 0U);
+        }
+        if ((first_failure_seen != 0U) && (expect_ready != 0U) &&
+            ((uint32_t)(s_tick_ms - failure_ms) >= 500U))
+        { s_monver_silent = 0U; }
+        if ((first_failure_seen != 0U) &&
+            ((uint32_t)(s_tick_ms - failure_ms) < 1000U))
+        { TEST_CHECK(recovery.attempt_count == 0U); }
+        if ((NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Ready) ||
+            ((first_failure_seen != 0U) && (NeoM9nStartup_RecoveryPending(0U) == 0U)))
+        { break; }
+        s_tick_ms += 10U;
+    }
+    TEST_CHECK(first_failure_seen != 0U);
+    TEST_CHECK(cycle < 5000U);
+    TEST_CHECK((NeoM9nStartup_StateGet(0U) == SystemDeviceStartupState_Ready) == (expect_ready != 0U));
+    if (expect_ready != 0U)
+    {
+        TEST_CHECK(recovery.state == NeoM9nStartupRecoveryState_Ready);
+        TEST_CHECK(recovery.attempt_count == 1U);
+        TEST_CHECK(GnssNeoM9n_IdentityDiagnosticsGet(0U, &identity) == GnssNeoM9nIdentityOk);
+        TEST_CHECK(identity.protocol_major == 32U && identity.protocol_minor == 1U);
+        TEST_CHECK(s_startup_write_count != 0U);
+        TEST_CHECK(Test_KeyValue(GNSS_CFG_UART1_BAUDRATE) == GNSS_DEFAULT_BAUDRATE);
+        TEST_CHECK(s_uart_baudrate == GNSS_DEFAULT_BAUDRATE);
+    }
+    else
+    {
+        TEST_CHECK(s_startup_write_count == 0U);
+        TEST_CHECK(recovery.attempt_count == ((scenario == 1U) ? 2U : 0U));
+        TEST_CHECK(recovery.state == ((scenario == 1U) ? NeoM9nStartupRecoveryState_Exhausted :
+            (scenario == 3U) ? NeoM9nStartupRecoveryState_NoStream :
+            (scenario == 4U) ? NeoM9nStartupRecoveryState_RestoreFailed : NeoM9nStartupRecoveryState_Rejected));
+        if (scenario != 3U && scenario != 4U)
+        { TEST_CHECK(s_uart_baudrate == s_startup_physical_baud); }
+    }
+    if (scenario == 1U) { TEST_CHECK(s_recovery_mon_requests == 12U); }
+    quiet_requests = s_recovery_mon_requests;
+    quiet_bauds = s_recovery_baud_changes;
+    for (cycle = 0U; cycle < 1000U; cycle++)
+    { s_tick_ms += 100U; NeoM9nStartup_Tick(0U, s_tick_ms); }
+    TEST_CHECK(s_recovery_mon_requests == quiet_requests);
+    TEST_CHECK(s_recovery_baud_changes == quiet_bauds);
+    TEST_CHECK(s_recovery_baud_changes <= 16U);
+    TEST_CHECK(NeoM9nStartup_RecoveryDiagnosticsGet(0U, NULL) == NeoM9nStartupResult_InvalidArgument);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(UINT8_MAX) == 0U);
+    s_recovery_test_active = 0U;
+    s_signal_reset_until = 0U;
+    s_recovery_baud_fail = 0U;
+    s_monver_silent = 0U;
+    s_wrong_model = 0U;
+    s_test_protocol = "PROTVER=27.12";
+    s_startup_item_mode = 0U;
+    s_tick_ms = 100U;
+}
+
 int main(void)
 {
     (void)memset(&s_uart_diagnostics, 0, sizeof(s_uart_diagnostics));
     s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
     TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);
+    Test_StartupLostIdentityRestore();
+    for (uint8_t scenario = 0U; scenario < 7U; scenario++)
+    { Test_StartupRecoveryFault(scenario); }
     Test_CapturedCapabilityFailures();
     Test_CapturedIdentity();
     Test_IdentityBoundary();

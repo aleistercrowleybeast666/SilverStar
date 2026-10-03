@@ -14,11 +14,14 @@
 #define NEO_M9N_STARTUP_PROBE_TIMEOUT_MS 5000U
 #define NEO_M9N_STARTUP_STAGE_TIMEOUT_MS 45000U
 #define NEO_M9N_STARTUP_SAMPLE_TIMEOUT_MS 3000U
+#define NEO_M9N_STARTUP_RECOVERY_MAX_ATTEMPTS 2U
+#define NEO_M9N_STARTUP_RECOVERY_BACKOFF_MS 1000U
 
 typedef struct
 {
     SystemDeviceStartup controller;
     SystemGnssConfig target;
+    NeoM9nStartupRecoveryDiagnostics recovery;
     uint64_t actual[NEO_M9N_STARTUP_ITEM_COUNT];
     uint8_t instance;
     uint8_t read_index;
@@ -452,10 +455,134 @@ NeoM9nStartupResult NeoM9nStartup_Init(
         NeoM9nStartupResult_Ok : NeoM9nStartupResult_ControllerError;
 }
 
+
+/* Retry only transport/response failures. Explicit identity rejections must
+ * remain rejected even if checksum-valid PVT was seen at the same baud. */
+static uint8_t NeoM9nStartup_IdentityRetryAllowed(
+    GnssNeoM9nIdentityResult rejection)
+{
+    switch (rejection)
+    {
+        case GnssNeoM9nIdentityNone:
+        case GnssNeoM9nIdentityChecksumError:
+        case GnssNeoM9nIdentityTimeout:
+        case GnssNeoM9nIdentityIoError:
+        case GnssNeoM9nIdentityDiscontinuity: return 1U;
+        case GnssNeoM9nIdentityOk:
+        case GnssNeoM9nIdentityBadLength:
+        case GnssNeoM9nIdentityUnterminatedField:
+        case GnssNeoM9nIdentityDuplicateConflict:
+        case GnssNeoM9nIdentityMissingModel:
+        case GnssNeoM9nIdentityWrongModel:
+        case GnssNeoM9nIdentityMissingProtocol:
+        case GnssNeoM9nIdentityUnsupportedProtocol:
+        case GnssNeoM9nIdentityMissingFirmware:
+        case GnssNeoM9nIdentityWrongFirmware:
+        case GnssNeoM9nIdentityUnsupportedHardware:
+        case GnssNeoM9nIdentityCapabilitiesPending:
+        default: return 0U;
+    }
+}
+
+static void NeoM9nStartup_RecoveryPrepare(
+    NeoM9nStartupContext *context, uint32_t now_ms)
+{
+    GnssNeoM9nIdentityDiagnostics identity;
+    uint32_t baudrate;
+    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(context->recovery.attempt_count <=
+        NEO_M9N_STARTUP_RECOVERY_MAX_ATTEMPTS, SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (context->controller.failure != SystemDeviceStartupFailure_NotPresent)
+    { context->recovery.state = NeoM9nStartupRecoveryState_Rejected; return; }
+    baudrate = GnssNeoM9n_LastValidBaudGet(context->instance);
+    context->recovery.last_confirmed_baudrate = baudrate;
+    if (baudrate == 0U)
+    { context->recovery.state = NeoM9nStartupRecoveryState_NoStream; return; }
+    context->recovery.last_probe_result = (uint8_t)
+        GnssNeoM9n_IdentityDiagnosticsGet(context->instance, &identity);
+    if (GnssNeoM9n_ProbeStart(context->instance, baudrate) !=
+        GnssNeoM9nProbeStartResult_Ok)
+    { context->recovery.state = NeoM9nStartupRecoveryState_RestoreFailed; return; }
+    if (NeoM9nStartup_IdentityRetryAllowed(identity.last_rejection) == 0U)
+    { context->recovery.state = NeoM9nStartupRecoveryState_Rejected; return; }
+    if (context->recovery.attempt_count >= NEO_M9N_STARTUP_RECOVERY_MAX_ATTEMPTS)
+    { context->recovery.state = NeoM9nStartupRecoveryState_Exhausted; return; }
+    context->recovery.backoff_started_ms = now_ms;
+    context->recovery.backoff_ms = NEO_M9N_STARTUP_RECOVERY_BACKOFF_MS *
+        ((uint32_t)context->recovery.attempt_count + 1U);
+    context->recovery.state = NeoM9nStartupRecoveryState_Backoff;
+}
+
+static void NeoM9nStartup_RecoveryBegin(NeoM9nStartupContext *context)
+{
+    SystemDeviceStartupConfig config;
+    SILVERSTAR_ASSERT_OBJECT(context, NeoM9nStartupContext,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT((context->recovery.attempt_count <
+        NEO_M9N_STARTUP_RECOVERY_MAX_ATTEMPTS) &&
+        (context->recovery.last_confirmed_baudrate != 0U),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    /* Probe only the previously observed transport, then use the unchanged
+     * identity, all-23-key read/apply/readback and fresh-sample path. */
+    config = context->controller.config;
+    config.persistence = SystemDeviceStartupPersistence_None;
+    config.target.baudrate = context->recovery.last_confirmed_baudrate;
+    config.supported_candidates = NULL;
+    config.supported_candidate_count = 0U;
+    config.probe_pass_count = 1U;
+    context->recovery.attempt_count++;
+    if (SystemDeviceStartup_Init(&context->controller, &config) !=
+        SystemDeviceStartupResult_Ok)
+    { context->recovery.state = NeoM9nStartupRecoveryState_RestoreFailed; return; }
+    context->recovery.state = NeoM9nStartupRecoveryState_Probing;
+}
+
+uint8_t NeoM9nStartup_RecoveryPending(uint8_t instance)
+{
+    NeoM9nStartupRecoveryState state;
+    if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) { return 0U; }
+    state = s_contexts[instance].recovery.state;
+    return (uint8_t)((state == NeoM9nStartupRecoveryState_Backoff) ||
+        (state == NeoM9nStartupRecoveryState_Probing));
+}
+
+NeoM9nStartupResult NeoM9nStartup_RecoveryDiagnosticsGet(
+    uint8_t instance, NeoM9nStartupRecoveryDiagnostics *out)
+{
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) || (out == NULL))
+    { return NeoM9nStartupResult_InvalidArgument; }
+    *out = s_contexts[instance].recovery;
+    return NeoM9nStartupResult_Ok;
+}
+
 void NeoM9nStartup_Tick(uint8_t instance, uint32_t now_ms)
 {
+    NeoM9nStartupContext *context;
     if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) { return; }
-    SystemDeviceStartup_Tick(&s_contexts[instance].controller, now_ms);
+    context = &s_contexts[instance];
+    SILVERSTAR_ASSERT(context->recovery.state <= NeoM9nStartupRecoveryState_Ready,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(context->recovery.attempt_count <=
+        NEO_M9N_STARTUP_RECOVERY_MAX_ATTEMPTS, SILVERSTAR_ASSERT_MODULE_DEVICE,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (context->recovery.state == NeoM9nStartupRecoveryState_Backoff)
+    {
+        (void)GnssNeoM9n_Process(instance, now_ms);
+        if ((uint32_t)(now_ms - context->recovery.backoff_started_ms) <
+            context->recovery.backoff_ms) { return; }
+        NeoM9nStartup_RecoveryBegin(context);
+        return;
+    }
+    SystemDeviceStartup_Tick(&context->controller, now_ms);
+    if ((context->controller.state == SystemDeviceStartupState_Ready) &&
+        (context->recovery.state == NeoM9nStartupRecoveryState_Probing))
+    { context->recovery.state = NeoM9nStartupRecoveryState_Ready; }
+    if ((context->controller.state == SystemDeviceStartupState_Failed) &&
+        ((context->recovery.state == NeoM9nStartupRecoveryState_None) ||
+         (context->recovery.state == NeoM9nStartupRecoveryState_Probing)))
+    { NeoM9nStartup_RecoveryPrepare(context, now_ms); }
 }
 
 SystemDeviceStartupState NeoM9nStartup_StateGet(uint8_t instance)

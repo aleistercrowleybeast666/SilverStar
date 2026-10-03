@@ -242,7 +242,8 @@ static uint8_t NeoM9nGnssAdapter_StartupProcess(
         SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     SILVERSTAR_ASSERT_OBJECT(&s_contexts[instance], NeoM9nAdapterContext,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
-    if (s_contexts[instance].startup_active == 0U) { return 1U; }
+    if ((s_contexts[instance].startup_active == 0U) &&
+        (NeoM9nStartup_RecoveryPending(instance) == 0U)) { return 1U; }
     NeoM9nStartup_Tick(instance, now_ms);
     state = NeoM9nStartup_StateGet(instance);
     if (s_contexts[instance].startup_reported != (uint8_t)state)
@@ -261,7 +262,8 @@ static uint8_t NeoM9nGnssAdapter_StartupProcess(
         s_contexts[instance].startup_active = 0U;
         return 1U;
     }
-    if (state == SystemDeviceStartupState_Failed)
+    if ((state == SystemDeviceStartupState_Failed) &&
+        (s_contexts[instance].startup_active != 0U))
     {
         s_health.error_count++;
         s_config_transaction.verify_result = SYSTEM_DEVICE_VERIFY_FAILED;
@@ -281,6 +283,7 @@ static void NeoM9nGnssAdapter_Process(uint8_t instance)
     uint32_t now_ms;
     uint8_t recent_ubx;
     uint8_t recent_unknown;
+    uint8_t startup_ready;
     uint32_t primask;
 
     SILVERSTAR_ASSERT_OBJECT(&s_health, SystemDeviceHealth,
@@ -289,9 +292,10 @@ static void NeoM9nGnssAdapter_Process(uint8_t instance)
     now_us = PlatformTime_Us();
     now_ms = (uint32_t)(now_us / 1000ULL);
     (void)GnssNeoM9n_Process(instance, now_ms);
-    if (NeoM9nGnssAdapter_StartupProcess(instance, now_ms) == 0U)
-    { return; }
-    NeoM9nGnssAdapter_RuntimeTransactionProcess(instance);
+    startup_ready = NeoM9nGnssAdapter_StartupProcess(instance, now_ms);
+    if ((startup_ready != 0U) &&
+        (NeoM9nStartup_RecoveryPending(instance) == 0U))
+    { NeoM9nGnssAdapter_RuntimeTransactionProcess(instance); }
     (void)GnssNeoM9n_GetData(instance, &data);
     GnssNeoM9n_GetStatusSnapshot(instance, &status);
     (void)PlatformUart_DiagnosticsGet(NeoM9nAdapter_UartGet(instance), &io_diagnostics);
@@ -307,11 +311,18 @@ static void NeoM9nGnssAdapter_Process(uint8_t instance)
                            ((now_ms - status.last_ubx_ms) <= GNSS_TIMEOUT_MS));
     recent_unknown = (uint8_t)((status.last_unknown_ms != 0U) &&
         ((now_ms - status.last_unknown_ms) <= GNSS_TIMEOUT_MS));
-    health.online = (uint8_t)((s_started != 0U) && (data.online != 0U));
+    /* Selector liveness uses adapter online. An unidentified transport must
+     * not prevent selection of a verified cold standby. Raw communication
+     * remains visible in native data and existing I/O diagnostics. */
+    health.online = (uint8_t)((s_started != 0U) && (data.online != 0U) &&
+        ((s_contexts[instance].startup_target.navigation_rate_hz == 0U) ||
+         (NeoM9nStartup_StateGet(instance) == SystemDeviceStartupState_Ready)));
     health.healthy = (uint8_t)((health.online != 0U) &&
                                (recent_ubx != 0U) &&
                                (recent_unknown == 0U) &&
-                               (io_diagnostics.rx_active != 0U));
+                               (io_diagnostics.rx_active != 0U) &&
+                               ((s_contexts[instance].startup_target.navigation_rate_hz == 0U) ||
+                                (NeoM9nStartup_StateGet(instance) == SystemDeviceStartupState_Ready)));
     primask = NeoM9nGnssAdapter_IrqLock();
     s_health = health;
     NeoM9nGnssAdapter_IrqUnlock(primask);
@@ -404,6 +415,10 @@ static SystemDeviceResult NeoM9nGnssAdapter_GetSample(uint8_t instance, SystemGn
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     SILVERSTAR_ASSERT_OBJECT(sample, SystemGnssSample,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
+    /* A restored transport is not an identity/configuration success. */
+    if ((s_contexts[instance].startup_target.navigation_rate_hz != 0U) &&
+        (NeoM9nStartup_StateGet(instance) != SystemDeviceStartupState_Ready))
+    { return SYSTEM_DEVICE_NOT_READY; }
     if (GnssNeoM9n_GetData(instance, &data) == 0U) { return SYSTEM_DEVICE_NOT_READY; }
     (void)memset(sample, 0, sizeof(*sample));
     sample->sample_timestamp_us = data.lastUpdate_us;
@@ -1049,7 +1064,8 @@ static SystemDeviceResult NeoM9nGnssAdapter_RuntimeRequestSubmit(uint8_t instanc
     SILVERSTAR_ASSERT_OBJECT(transaction_id, uint32_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     primask = NeoM9nGnssAdapter_IrqLock();
-    if (s_runtime_transaction.state != NeoM9nRuntimeTransactionIdle)
+    if ((s_runtime_transaction.state != NeoM9nRuntimeTransactionIdle) ||
+        (NeoM9nStartup_RecoveryPending(instance) != 0U))
     {
         *transaction_id = s_runtime_transaction.transaction_id;
         NeoM9nGnssAdapter_IrqUnlock(primask);

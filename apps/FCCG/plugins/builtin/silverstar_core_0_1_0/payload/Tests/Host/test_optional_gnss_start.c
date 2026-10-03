@@ -198,7 +198,24 @@ static void Test_StartNoFix(void)
     TEST_CHECK(output.mission_running == 1U && output.gnss_origin_valid == 0U && output.baro_origin_valid == 1U);
     TEST_CHECK(s_estimator.gnss_fusion_enabled == 0U && s_estimator.origin_collection_frozen == 1U);
     TEST_CHECK(s_estimator.gnss_frame.valid == 0U && s_estimator.frozen_gnss.position_usable == 0U);
-    Test_Collect(1U); /* Late stationary or moving fixes must not establish a new origin. */
+    Test_Collect(1U); /* A late stationary fix must not establish an origin. */
+    for (uint16_t index = 0U;
+         index < SYSTEM_ESTIMATOR_GNSS_ORIGIN_WINDOW_SAMPLES; index++)
+    {
+        s_test_now += 50000ULL;
+        HostPlatformMock_TimeSetUs(s_test_now);
+        s_test_gnss.sequence++;
+        s_test_gnss.sample_timestamp_us = s_test_now;
+        s_test_gnss.receive_timestamp_us = s_test_now;
+        s_test_gnss.latitude_e7 += 100;
+        s_test_gnss.longitude_e7 += 200;
+        s_test_gnss.velocity_enu_mps[0] = 5.0f;
+        s_test_gnss.velocity_enu_mps[1] = 2.0f;
+        Estimator_OriginWindowCollect();
+        TEST_CHECK(s_estimator.origin_collection_frozen == 1U);
+        TEST_CHECK(s_estimator.gnss_origin_valid == 0U);
+        TEST_CHECK(s_estimator.gnss_frame.valid == 0U);
+    }
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     EstimatorGnssUpdateWork work = {0};
     TEST_CHECK(Estimator_GnssSamplePrepare(s_test_now, &work) == ESTIMATOR_GNSS_PREPARE_STOP);

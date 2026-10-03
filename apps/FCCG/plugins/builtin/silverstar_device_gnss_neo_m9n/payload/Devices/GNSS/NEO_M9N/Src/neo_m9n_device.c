@@ -159,6 +159,7 @@ typedef struct
     uint32_t uart_baseline_ubx_frames;
     uint32_t port_discontinuity_sequence;
     uint32_t parser_resync_count;
+    uint32_t last_valid_baudrate;
     uint8_t transaction_discontinuity;
     uint8_t satellite_wait_active;
     uint8_t rf_wait_active;
@@ -334,6 +335,7 @@ static void Gnss_NmeaReset(uint8_t instance);
 static void Gnss_DiscontinuityHandle(uint8_t instance);
 static uint8_t Gnss_RingPopByte(uint8_t instance, uint8_t *byte);
 static uint32_t Gnss_UartBaudrateGet(uint8_t instance);
+static void Gnss_ValidBaudRecord(uint8_t instance);
 static void Gnss_ParseByte(uint8_t instance, uint8_t byte, uint32_t now_ms);
 static uint8_t Gnss_ParseNmeaByte(uint8_t instance, uint8_t byte, uint32_t now_ms);
 static void Gnss_FinishNmea(uint8_t instance, uint32_t now_ms);
@@ -562,6 +564,7 @@ static void Gnss_FinishNmea(uint8_t instance, uint32_t now_ms)
             (s_nmea_parser.checksum_rx == s_nmea_parser.checksum_calc))
         {
             s_status.nmea_checksum_ok_count++;
+            Gnss_ValidBaudRecord(instance);
         }
         else
         {
@@ -667,6 +670,22 @@ static uint32_t Gnss_UartBaudrateGet(uint8_t instance)
 
     (void)PlatformUart_BaudGet(NeoM9nResource_UartGet(instance), &baudrate);
     return baudrate;
+}
+
+static void Gnss_ValidBaudRecord(uint8_t instance)
+{
+    uint32_t baudrate = 0U;
+    SILVERSTAR_ASSERT(instance < PROJECT_NEO_M9N_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    if ((PlatformUart_BaudGet(NeoM9nResource_UartGet(instance), &baudrate) ==
+            PLATFORM_OK) && (baudrate != 0U))
+    { s_contexts[instance].last_valid_baudrate = baudrate; }
+}
+
+uint32_t GnssNeoM9n_LastValidBaudGet(uint8_t instance)
+{
+    if (instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) { return 0U; }
+    return s_contexts[instance].last_valid_baudrate;
 }
 
 static void Gnss_ChecksumAdd(uint8_t instance, uint8_t byte)
@@ -1018,6 +1037,7 @@ static void Gnss_UpdateUbxStats(uint8_t instance, uint32_t now_ms)
     s_status.ubx_seen = 1U;
     s_status.last_ubx_ms = now_ms;
     s_status.ubx_frames++;
+    Gnss_ValidBaudRecord(instance);
 }
 
 static void Gnss_UpdateUnknownStats(uint8_t instance, uint32_t now_ms)
@@ -2637,6 +2657,7 @@ static void Gnss_TransactionStateResetLocked(uint8_t instance)
     s_uart_baud_changed = 0U;
     s_uart_baseline_ubx_frames = 0U;
     s_parser_resync_count = 0U;
+    s_contexts[instance].last_valid_baudrate = 0U;
     s_transaction_discontinuity = 0U;
     s_valget_wait_active = 0U;
     s_valget_received = 0U;

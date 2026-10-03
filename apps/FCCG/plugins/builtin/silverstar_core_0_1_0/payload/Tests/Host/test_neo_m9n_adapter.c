@@ -4,6 +4,9 @@
 #include "debug_log.h"
 #include "host_platform_mock.h"
 #include "neo_m9n_instance.h"
+#include "neo_m9n_device.h"
+#include "neo_m9n_startup.h"
+#include "neo_m9n_config.h"
 #include "project_resources.h"
 #include "system_gnss_if.h"
 #include "test_common.h"
@@ -102,8 +105,83 @@ static void Test_DeviceSampleConvertsToSystemInterface(void)
     TEST_CHECK(SystemGnss_Stop() == SYSTEM_DEVICE_OK);
 }
 
+
+/* A fresh, checksum-valid position stream restores transport only. Configured
+ * adapters must withhold navigation samples until identity/readback succeeds. */
+static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
+{
+    uint8_t frame[TEST_NAV_PVT_FRAME_SIZE];
+    SystemGnssConfig target = {0U};
+    SystemGnssSample sample;
+    SystemDeviceHealth health;
+    SystemDeviceConfigReport report;
+    SystemGnssHardwareConfig hardware;
+    GnssNeoM9nData raw;
+    NeoM9nStartupRecoveryDiagnostics recovery;
+    uint32_t baudrate = 0U;
+    uint32_t cycle;
+    uint32_t first_error_count = 0U;
+    uint8_t owner_active = 0U;
+
+    TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
+    target.requested_mask = SYSTEM_GNSS_CFG_NAVIGATION_RATE |
+        SYSTEM_GNSS_CFG_CONSTELLATIONS | SYSTEM_GNSS_CFG_DYNAMIC_MODEL |
+        SYSTEM_GNSS_CFG_OUTPUT_PROTOCOL | SYSTEM_GNSS_CFG_ENABLED_MESSAGES;
+    target.navigation_rate_hz = 25U;
+    target.constellation_mask = SYSTEM_GNSS_CONSTELLATION_GPS;
+    target.dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G;
+    target.output_protocol = SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX;
+    target.enabled_message_mask = SYSTEM_GNSS_MESSAGE_NAV_PVT;
+    TEST_CHECK(NeoM9nGnssInstance_ConfigApply(0U, &target, &report) ==
+        SYSTEM_DEVICE_CONFIG_DELEGATED);
+    Test_NavPvtFrameBuild(frame);
+    for (cycle = 0U; cycle < 4500U; cycle++)
+    {
+        HostPlatformMock_TimeAdvanceUs(10000ULL);
+        TEST_CHECK(PlatformUart_BaudGet(PROJECT_RESOURCE_GNSS_UART,
+            &baudrate) == PLATFORM_OK);
+        if (baudrate == GNSS_DEFAULT_BAUDRATE)
+        {
+            TEST_CHECK(HostPlatformMock_UartRxInject(PROJECT_RESOURCE_GNSS_UART,
+                frame, sizeof(frame)) == sizeof(frame));
+        }
+        SystemGnss_Process();
+        TEST_CHECK(NeoM9nStartup_RecoveryDiagnosticsGet(0U, &recovery) ==
+            NeoM9nStartupResult_Ok);
+        if ((owner_active == 0U) &&
+            (recovery.state == NeoM9nStartupRecoveryState_Backoff))
+        {
+            TEST_CHECK(NeoM9nGnssInstance_RuntimeOwnerActivate(0U) == SYSTEM_DEVICE_OK);
+            TEST_CHECK(NeoM9nGnssInstance_HardwareConfigRead(0U, &hardware) == SYSTEM_DEVICE_BUSY);
+            TEST_CHECK(NeoM9nGnssInstance_HealthGet(0U, &health) == SYSTEM_DEVICE_OK);
+            first_error_count = health.error_count;
+            owner_active = 1U;
+        }
+        if (owner_active != 0U)
+        { TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_NOT_READY); }
+        if (recovery.state == NeoM9nStartupRecoveryState_Exhausted) { break; }
+    }
+    TEST_CHECK(owner_active == 1U);
+    TEST_CHECK(recovery.state == NeoM9nStartupRecoveryState_Exhausted);
+    TEST_CHECK(recovery.attempt_count == 2U);
+    TEST_CHECK(PlatformUart_BaudGet(PROJECT_RESOURCE_GNSS_UART,
+        &baudrate) == PLATFORM_OK);
+    TEST_CHECK(baudrate == GNSS_DEFAULT_BAUDRATE);
+    TEST_CHECK(HostPlatformMock_UartRxInject(PROJECT_RESOURCE_GNSS_UART,
+        frame, sizeof(frame)) == sizeof(frame));
+    SystemGnss_Process();
+    TEST_CHECK(NeoM9nGnssInstance_HealthGet(0U, &health) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(GnssNeoM9n_GetData(0U, &raw) != 0U);
+    TEST_CHECK(raw.online == 1U && raw.pvtSequence > 0U);
+    TEST_CHECK(health.online == 0U && health.healthy == 0U);
+    TEST_CHECK(health.error_count == first_error_count);
+    TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_NOT_READY);
+    TEST_CHECK(SystemGnss_Stop() == SYSTEM_DEVICE_OK);
+}
+
 int main(void)
 {
     Test_DeviceSampleConvertsToSystemInterface();
+    Test_UnidentifiedRecoveryCannotSupplyNavigation();
     return Test_Finish("neo_m9n_adapter");
 }

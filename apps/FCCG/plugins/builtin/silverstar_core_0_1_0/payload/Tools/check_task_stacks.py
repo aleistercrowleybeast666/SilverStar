@@ -160,7 +160,15 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
         startup_callers = {caller for caller, callees in edges.items()
                            if "SystemDeviceStartup_Init" in callees}
         expected_callers = {"Jy901bStartup_Init", "NeoM9nStartup_Init"}
-        if startup_callers != expected_callers:
+        # The reviewed M9N recovery reuses controller.config, including the
+        # original immutable operations table. O2 inlines RecoveryBegin into
+        # Tick; Debug retains its separate frame. Admit exactly one of these
+        # known caller sets; keep unknown callers/tables fatal.
+        reviewed_callers = (
+            expected_callers | {"NeoM9nStartup_Tick"},
+            expected_callers | {"NeoM9nStartup_RecoveryBegin"},
+        )
+        if startup_callers not in reviewed_callers:
             raise ValueError("Unreviewed device startup operation binding: " +
                              repr(sorted(startup_callers)))
         callbacks: set[str] = set()
@@ -177,6 +185,15 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
                 raise ValueError("Unbound device startup operation table: " + source_name)
             if not all(entry in instructions for entry in entries):
                 raise ValueError("Missing linked device startup callback: " + source_name)
+            if source_name.endswith("neo_m9n_startup.c"):
+                recovery = re.search(
+                    r"static void NeoM9nStartup_RecoveryBegin\(.*?\n}\s*",
+                    source_text, re.DOTALL)
+                if (not recovery or
+                        len(re.findall(r"config\s*=\s*context->controller\.config\s*;",
+                                       recovery[0])) != 1 or
+                        re.search(r"config\.operations\s*=", recovery[0])):
+                    raise ValueError("Unreviewed M9N recovery operation binding")
             callbacks.update(entries)
         for caller in ("SystemDeviceStartup_ProbeTick", "SystemDeviceStartup_ReadTick",
                        "SystemDeviceStartup_ApplyTick", "SystemDeviceStartup_Tick"):
