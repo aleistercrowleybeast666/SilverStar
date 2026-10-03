@@ -38,6 +38,15 @@ class Context(ct.Structure):
     ]
 
 
+class CurrentContext(ct.Structure):
+    _fields_ = [
+        ("latest", Sample), ("gain", Float6), ("epoch", ct.c_uint64),
+        ("last_measurement", ct.c_uint64 * 5), ("last_receive", ct.c_uint64 * 5),
+        ("sequence", ct.c_uint32 * 5), ("seen", ct.c_uint8 * 5),
+        ("initialized", ct.c_uint8),
+    ]
+
+
 class Measurement(ct.Structure):
     _fields_ = [
         ("measurement", ct.c_uint64),
@@ -48,13 +57,19 @@ class Measurement(ct.Structure):
     ]
 
 
-def Library_Build(directory):
+def Library_Build(directory, *, revision=1):
     compiler = shutil.which("gcc")
     if not compiler:
         raise FileNotFoundError("SF6 oracle requires an actual gcc compiler")
     root = Path(__file__).resolve().parents[2]
     payload = root / "FCCG/plugins/builtin"
-    sf6 = payload / "silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6"
+    sf6 = Path(__file__).parent / "fixtures/sf6_revision1"
+    context_type = Context
+    if revision == 2:
+        sf6 = payload / "silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6"
+        context_type = CurrentContext
+    elif revision != 1:
+        raise ValueError("sf6_oracle_revision_unsupported")
     common = payload / "silverstar_core_0_1_0/payload/Common"
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
@@ -72,7 +87,9 @@ void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
         encoding="utf-8",
     )
     library_path = directory / ("sf6_oracle.dll" if os.name == "nt" else "sf6_oracle.so")
-    sources = [sf6 / "Src/navigation_sf6.c", stub]
+    include = sf6 if revision == 1 else sf6 / "Inc"
+    source = sf6 / "navigation_sf6.c" if revision == 1 else sf6 / "Src/navigation_sf6.c"
+    sources = [source, stub]
     command = [
         compiler,
         "-shared",
@@ -83,7 +100,7 @@ void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
         "-Wall",
         "-Wextra",
         "-Werror",
-        "-I" + str(sf6 / "Inc"),
+        "-I" + str(include),
         "-I" + str(common / "Inc"),
         *map(str, sources),
         "-lm",
@@ -95,6 +112,7 @@ void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
     result = subprocess.run(command, capture_output=True, text=True)
     report = {
         "command": command,
+        "algorithm_revision": revision,
         "exit_code": result.returncode,
         "stdout": result.stdout,
         "stderr": result.stderr,
@@ -103,7 +121,7 @@ void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
         ).stdout,
         "source_hashes": {
             str(p): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in (*sources, sf6 / "Inc/navigation_sf6.h")
+            for p in (*sources, include / "navigation_sf6.h")
         },
     }
     if library_path.exists():
@@ -118,29 +136,30 @@ void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
     if os.name == "nt":
         library._search_directory = search_directory
     library.NavigationSf6_Initialize.argtypes = [
-        ct.POINTER(Context),
+        ct.POINTER(context_type),
         ct.POINTER(ct.c_float),
         ct.POINTER(ct.c_float),
         ct.c_uint64,
     ]
     library.NavigationSf6_Predict.argtypes = [
-        ct.POINTER(Context),
+        ct.POINTER(context_type),
         ct.c_uint64,
         ct.POINTER(ct.c_float),
         ct.c_float,
     ]
     library.NavigationSf6_Update.argtypes = [
-        ct.POINTER(Context),
+        ct.POINTER(context_type),
         ct.POINTER(Measurement),
         ct.POINTER(ct.c_uint64),
     ]
-    library.NavigationSf6_SnapshotGet.argtypes = [ct.POINTER(Context), ct.POINTER(Sample)]
+    library.NavigationSf6_SnapshotGet.argtypes = [ct.POINTER(context_type), ct.POINTER(Sample)]
+    library._context_type = context_type
     return library
 
 
 class CCore:
     def __init__(self, library, gain, velocity=(0, 0, 0), timestamp=0):
-        self.library, self.context = library, Context()
+        self.library, self.context = library, library._context_type()
         assert (
             library.NavigationSf6_Initialize(
                 ct.byref(self.context), Float6(*gain), Float3(*velocity), timestamp

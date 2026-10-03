@@ -194,9 +194,12 @@ class DecoderProfilePackage:
         integrity_revision = replay_declaration.get("gnss_integrity_revision", 0)
         if type(integrity_revision) is not int or integrity_revision not in (0, 2, 3):
             raise DecoderProfileError("gnss_integrity_revision_unsupported")
+        from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_FromSemantics
+        sf6_revision = Sf6Revision_FromSemantics(semantics_document)
         FirmwareParameters_CheckPlugins(
             semantics_document["firmware_algorithm_parameters"],
             integrity_revision=integrity_revision,
+            sf6_revision=sf6_revision,
         )
         semantics = semantics.Catalog_Bind(catalog)
         _CatalogSemantics_Validate(catalog, semantics)

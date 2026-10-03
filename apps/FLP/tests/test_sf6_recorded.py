@@ -36,6 +36,9 @@ def test_actual_sf6_backend_exact_decoder_and_recorded_sources(tmp_path):
     assert tuple(calibration[0].payload["accel_scale"]) == (1.0, 1.0, 1.0)
     assert tuple(calibration[0].payload["gyro_scale"]) == (1.0, 1.0, 1.0)
     assert all(record.payload["algorithm_id"] == 3 for record in states)
+    revision = states[0].payload["algorithm_revision"]
+    assert revision in (1, 2)
+    assert all(record.payload["algorithm_revision"] == revision for record in states)
     assert all(tuple(record.payload["gain"]) == pytest.approx((0.2,) * 6) for record in states)
     assert not dataset.Records_Get("ESTIMATOR")
     assert not dataset.Records_Get("ESKF15_STATE")
@@ -51,8 +54,13 @@ def test_actual_sf6_backend_exact_decoder_and_recorded_sources(tmp_path):
         assert resolver.RecordedSeries_Get(channel) is series
     successful = [r.payload for r in measurements if r.payload["result"] == 0]
     assert successful
-    assert all(p["boundary_timestamp_us"] <= p["measurement_timestamp_us"] <= p["receive_timestamp_us"] <= p["evaluation_timestamp_us"] for p in successful)
-    assert all(p["measurement_timestamp_us"] - p["boundary_timestamp_us"] <= 20000 for p in successful)
+    assert all(p["measurement_timestamp_us"] <= p["receive_timestamp_us"] <= p["evaluation_timestamp_us"] for p in successful)
+    if revision == 1:
+        assert all(p["boundary_timestamp_us"] <= p["measurement_timestamp_us"] for p in successful)
+        assert all(p["measurement_timestamp_us"] - p["boundary_timestamp_us"] <= 20000 for p in successful)
+    else:
+        assert all(p["boundary_timestamp_us"] == p["evaluation_timestamp_us"] for p in successful)
+        assert all(p["evaluation_timestamp_us"] - p["measurement_timestamp_us"] <= 500000 for p in successful)
     assert any(p["group"] == 4 for p in successful)
     for p, digest in before.items():
         assert hashlib.sha256(p.read_bytes()).hexdigest() == digest

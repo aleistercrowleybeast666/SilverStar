@@ -895,5 +895,8 @@
   "parameter.gain_pe": "pE 固定增益",
   "parameter.gain_pn": "pN 固定增益",
   "parameter.gain_pu": "pU 固定增益",
-  "parameter_group.measurement_delay": "观测延迟"
+  "parameter_group.measurement_delay": "观测延迟",
+  "replay.warning.sf6_delayed_measurements_not_compensated": "SF6 第 2 版将延迟量测合并到当前状态，不补偿延迟。",
+  "replay.warning.sf6_revision1_explicit_offline_revision2": "显式 Offline 模式使用 SF6 第 2 版当前状态语义重新计算本第 1 版数据集。",
+  "replay.warning.sf6_timestamp_trust_missing_receive_only_revision2": "缺少量测时间戳可信证据：SF6 第 2 版显式使用接收时刻，不扣除延迟。"
 }

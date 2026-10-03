@@ -18,15 +18,10 @@
 #include <math.h>
 #include <string.h>
 
-/* One logical barometer is active. Conservatively cover both the integrated
- * IMU packet rate and the independent barometer configured output rate.
- * These are configuration bounds, not measured MCU timing guarantees. */
-#define NAV_SF6_BARO_BOUND_HZ ((SYSTEM_IMU_OUTPUT_RATE_HZ > SYSTEM_BAROMETER_OUTPUT_RATE_HZ) ? SYSTEM_IMU_OUTPUT_RATE_HZ : SYSTEM_BAROMETER_OUTPUT_RATE_HZ)
-_Static_assert(4ULL * ((NAV_SF6_HISTORY_US * SYSTEM_GNSS_NAVIGATION_RATE_HZ + 999999ULL) / 1000000ULL + 1ULL) +
-    ((NAV_SF6_HISTORY_US * NAV_SF6_BARO_BOUND_HZ + 999999ULL) / 1000000ULL + 1ULL) <= NAV_SF6_EVENT_CAPACITY,
-    "SF6 observation capacity cannot retain configured GNSS groups and barometer rate for 600ms");
-_Static_assert((NAV_SF6_HISTORY_US * SYSTEM_IMU_OUTPUT_RATE_HZ + 999999ULL) / 1000000ULL + 1ULL <= NAV_SF6_HISTORY_CAPACITY,
-    "SF6 prediction capacity cannot retain configured IMU rate for 600ms");
+/* Revision 2 has no history/replay capacity. Admission age remains bounded
+ * and agrees with the existing source-quality policy. */
+_Static_assert(NAV_SF6_MAX_MEASUREMENT_AGE_US == SYSTEM_ESTIMATOR_MEASUREMENT_MAX_AGE_US,
+    "SF6 source-age policy must match the navigation quality policy");
 
 /* CPU-only, single EstimatorTask owner. No KF/ESKF workspace or callback table. */
 static NavigationSf6Context s_context;
@@ -117,7 +112,7 @@ static void Backend_StateLog(EstimatorOutputSnapshot *output)
 {
     FlightLogSf6StateRecord record = {0};
     record.snapshot_id = output->update_sequence;
-    record.algorithm_id = 3U; record.algorithm_revision = 1U;
+    record.algorithm_id = 3U; record.algorithm_revision = NAV_SF6_ALGORITHM_REVISION;
     record.health = (uint8_t)SystemNavigationHealth_OverallGet(output->timestamp_us, 0x0FU, 0U);
     memcpy(record.position_enu_m, output->position_enu_m, sizeof(record.position_enu_m));
     memcpy(record.velocity_enu_mps, output->velocity_enu_mps, sizeof(record.velocity_enu_mps));
@@ -218,17 +213,14 @@ static void Backend_GnssGroupApply(const SystemGnssSample *sample,
 {
     NavigationSf6Measurement measurement = {0};
     uint8_t first, physical;
-    uint32_t delay;
     SILVERSTAR_ASSERT(group < 4U,
         SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     first = (group & 1U) ? 2U : 0U;
     physical = (uint8_t)((sample->valid_group_mask & (1U << group)) != 0U);
-    delay = group < 2U ? SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS :
-        SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS;
     measurement.group = group; measurement.receive_us = sample->receive_timestamp_us;
     measurement.sequence = sample->sequence;
     if (SystemTime_MeasurementTimestampResolve(sample->receive_timestamp_us,
-        sample->sample_timestamp_us, sample->measurement_timestamp_trusted, delay,
+        sample->sample_timestamp_us, sample->measurement_timestamp_trusted, 0U,
         &measurement.measurement_us) != SYSTEM_MEASUREMENT_TIME_OK) { physical = 0U; }
     measurement.observation[0] = group < 2U ? position[first] : sample->velocity_enu_mps[first];
     if (first == 0U)
@@ -289,7 +281,7 @@ static void Backend_BarometerUpdate(EstimatorOutputSnapshot *output)
     measurement.receive_us = pressure.receive_timestamp_us;
     if (SystemTime_MeasurementTimestampResolve(pressure.receive_timestamp_us,
         pressure.timestamp_us, pressure.measurement_timestamp_trusted,
-        SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS, &measurement.measurement_us) != SYSTEM_MEASUREMENT_TIME_OK)
+        0U, &measurement.measurement_us) != SYSTEM_MEASUREMENT_TIME_OK)
     { physical = 0U; }
     if (physical) { measurement.observation[0] = altitude - s_baro_origin; }
     output->last_baro_timestamp_us = pressure.receive_timestamp_us;

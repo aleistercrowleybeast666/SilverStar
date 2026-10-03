@@ -1,0 +1,10 @@
+{
+  "source_commit": "cc424443",
+  "algorithm_revision": 1,
+  "purpose": "Frozen test-only C oracle for historical SF6 log compatibility; never firmware payload.",
+  "sha256": {
+    "navigation_sf6.c": "7de0d85f236ceb092a8deb87026447bec629f5410a3e714740c6a32f1f17a412",
+    "navigation_sf6.h": "50511a55b2f6d63c0eb3810e213a9224dcbfab1cb935bbf640bdd5065685d575"
+  },
+  "export_baseline_commit": "4d88d380"
+}

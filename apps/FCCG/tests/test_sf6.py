@@ -37,7 +37,8 @@ def test_sf6_six_gains_source_ownership_roundtrip_and_exact_decoder(builtin_cata
     values = model.algorithm_parameters[SF6]
     assert {key for key in values if key.startswith("gain_")} == set(GAINS)
     assert all(values[key] == 0.2 for key in GAINS)
-    assert values["gnss_velocity_measurement_delay_ms"] == 270
+    assert set(values) == set(GAINS)
+    assert builtin_catalog.Component_Get(SF6).version == "0.2.0"
     assert ProjectModel_Parse(model.Dictionary_Get()).Dictionary_Get() == model.Dictionary_Get()
     assert Project_Validate(model, builtin_catalog).valid
     graph = SourceGraph_Resolve(model, builtin_catalog)
@@ -65,6 +66,19 @@ def test_sf6_gain_bounds_block_generation(builtin_catalog, value):
     assert not Project_Validate(model, builtin_catalog).valid
 
 
+def test_sf6_current_state_has_no_replay_and_rejects_obsolete_delay_fields(builtin_catalog):
+    from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
+    model = _Model(builtin_catalog)
+    plan = InertialRatePlan_Resolve(model, builtin_catalog)
+    assert plan.maximum_measurement_delay_ms == plan.maximum_replay_steps == 0
+    assert plan.replay_window_ms == plan.required_history_steps == plan.history_capacity == 0
+    assert not plan.issues
+    model.algorithm_parameters[SF6]["gnss_velocity_measurement_delay_ms"] = 270
+    reconciled = ProjectConfiguration_Reconcile(model, builtin_catalog).model
+    assert reconciled.algorithm_parameters[SF6]["gnss_velocity_measurement_delay_ms"] == 270
+    assert not Project_Validate(reconciled, builtin_catalog).valid
+
+
 def test_sf6_legacy_project_preserves_old_algorithm_values(builtin_catalog):
     old = ReferenceProject_Create(catalog=builtin_catalog)
     before = json.loads(json.dumps(old.Dictionary_Get()))
@@ -90,7 +104,7 @@ def test_sf6_gui_order_gains_edit_save_reopen(tmp_path, workspace_root, qapp, mo
         window._Project_Refresh()
         combo = window.flight_configuration_page.strategy_combos["estimator"]
         assert [combo.itemData(i) for i in range(combo.count())][:4] == [
-            None, "silverstar.algorithm.estimator.kf6", "silverstar.algorithm.estimator.eskf15", SF6]
+            None, SF6, "silverstar.algorithm.estimator.kf6", "silverstar.algorithm.estimator.eskf15"]
         combo.setCurrentIndex(combo.findData(SF6))
         qapp.processEvents()
         qapp.processEvents()

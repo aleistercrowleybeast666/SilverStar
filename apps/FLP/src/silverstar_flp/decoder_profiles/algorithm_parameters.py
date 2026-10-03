@@ -81,13 +81,17 @@ def FirmwareParameters_Validate(value: Any, members: tuple[str, ...]) -> None:
                 raise DecoderProfileError("firmware_parameter_metadata_invalid", name)
 
 
-def FirmwareParameters_CheckPlugins(value: Any, *, integrity_revision: int = 0) -> None:
+def FirmwareParameters_CheckPlugins(value: Any, *, integrity_revision: int = 0,
+                                    sf6_revision: int | None = None) -> None:
     # Only already trusted builtin algorithm schemas are inspected. Membership never
     # instantiates executable components named by the package.
     from silverstar_flp.plugins.registry import builtin_registry
 
     registry = builtin_registry()
     for plugin in registry.algorithms:
+        if plugin.metadata.plugin_id == "silverstar.algorithm.sf6" and sf6_revision == 1:
+            from silverstar_flp.plugins.algorithms.sf6.legacy_plugin import Sf6AlgorithmPlugin
+            plugin = Sf6AlgorithmPlugin()
         tunables = {p.parameter_id for p in plugin.metadata.parameter_schema}
         specs = {p.parameter_id: p for p in (*plugin.metadata.parameter_schema,
                                            *plugin.metadata.firmware_only_parameter_schema)}

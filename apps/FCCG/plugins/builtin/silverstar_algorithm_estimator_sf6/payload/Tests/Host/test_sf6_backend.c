@@ -1,6 +1,7 @@
 /* Actual SF6/backend/INS prediction/clock/queues/log codecs. Only sensor inputs
  * and source identity are fixtures. Export uses actual LoggerTask bootstrap. */
 #include <math.h>
+#include "navigation_sf6.h"
 #include <string.h>
 #include <stdio.h>
 #include "test_common.h"
@@ -83,6 +84,7 @@ static void Test_RecordsDrain(void)
             s_states++;
             TEST_CHECK(length == 100U);
             TEST_CHECK(decoded.payload.sf6_state.algorithm_id == 3U);
+            TEST_CHECK(decoded.payload.sf6_state.algorithm_revision == NAV_SF6_ALGORITHM_REVISION);
             for (uint8_t axis = 0U; axis < 6U; axis++)
             { TEST_CHECK_NEAR(decoded.payload.sf6_state.gain[axis], 0.2f, 1.0e-6f); }
             wire[30] ^= 1U;
@@ -97,8 +99,8 @@ static void Test_RecordsDrain(void)
             if (value->result == 0U)
             {
                 TEST_CHECK(value->measurement_timestamp_us <= value->receive_timestamp_us);
-                TEST_CHECK(value->boundary_timestamp_us <= value->measurement_timestamp_us);
-                TEST_CHECK(value->measurement_timestamp_us - value->boundary_timestamp_us <= 20000ULL);
+                TEST_CHECK(value->boundary_timestamp_us == value->evaluation_timestamp_us);
+                TEST_CHECK(value->evaluation_timestamp_us - value->measurement_timestamp_us <= NAV_SF6_MAX_MEASUREMENT_AGE_US);
                 TEST_CHECK(value->effective_update == 1U);
             }
             else { s_invalid++; TEST_CHECK(value->effective_update == 0U); }
@@ -131,8 +133,18 @@ static void Test_MissingReferencesAndSources(const float q[4])
     SystemInertialIncrement input = {0};
     Test_GnssPrepare();
     s_gnss.position_usable = 0U;
-    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 0.0f, 0U, 78U, 1U) == SYSTEM_DEVICE_NOT_READY);
-    TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_NOT_READY);
+    /* Missing position origin is supported; readiness policy belongs to the
+     * preparation layer. The backend publishes a finite inertial state and
+     * explicitly reports that its GNSS origin is unavailable. */
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 0.0f, 0U, 78U, 1U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(output.gnss_origin_valid == 0U && output.initialized == 1U);
+    TEST_CHECK((output.health_flags & ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE) != 0U);
+    for (uint8_t axis = 0U; axis < 3U; axis++)
+    {
+        TEST_CHECK(isfinite(output.position_enu_m[axis]));
+        TEST_CHECK(isfinite(output.velocity_enu_mps[axis]));
+    }
     s_gnss.position_usable = 1U; s_gnss_source_available = 0U;
     TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 0.0f, 0U, 78U, 1U) == SYSTEM_DEVICE_NOT_READY);
     s_gnss_source_available = 1U;

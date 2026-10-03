@@ -77,7 +77,9 @@ def InertialRatePlan_Resolve(
                 "TIMING_PROFILE_UNQUALIFIED",
                 f"{estimator.component_id} has no qualified timing profile for {cpu_profile}",
             ))
-        if window_ms < delay_ms or history_capacity <= 0:
+        no_replay = contract.get("mode") == "none"
+        if ((no_replay and (delay_ms != 0 or window_ms != 0 or history_capacity != 0))
+                or (not no_replay and (window_ms < delay_ms or history_capacity <= 0))):
             issues.append(InertialRateIssue(
                 "REPLAY_CONTRACT_INVALID",
                 "Estimator history window or capacity cannot cover configured delay",

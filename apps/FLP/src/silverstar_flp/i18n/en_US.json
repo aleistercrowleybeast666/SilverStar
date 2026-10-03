@@ -895,5 +895,8 @@
   "parameter.gain_pe": "pE fixed gain",
   "parameter.gain_pn": "pN fixed gain",
   "parameter.gain_pu": "pU fixed gain",
-  "parameter_group.measurement_delay": "Measurement delay"
+  "parameter_group.measurement_delay": "Measurement delay",
+  "replay.warning.sf6_delayed_measurements_not_compensated": "SF6 revision 2 applies delayed observations to the current state without delay compensation.",
+  "replay.warning.sf6_revision1_explicit_offline_revision2": "Explicit Offline mode recomputes this revision 1 dataset with SF6 revision 2 current-state semantics.",
+  "replay.warning.sf6_timestamp_trust_missing_receive_only_revision2": "Timestamp trust evidence missing: SF6 revision 2 explicitly uses receive time without a delay offset."
 }

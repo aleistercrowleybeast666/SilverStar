@@ -241,6 +241,7 @@ class ReplayPage(QWidget):
         self._parameter_labels = {}
         self._parameter_specs = {}
         plugin = self._CurrentPlugin_Get()
+        self._parameter_algorithm_version = plugin.metadata.version
         self.quality_policy_combo.blockSignals(True)
         self.quality_policy_combo.clear()
         self.quality_policy_combo.addItem(
@@ -419,6 +420,10 @@ class ReplayPage(QWidget):
         return parameter.parameter_id if translated == code else translated
 
     def _Mode_Refresh(self) -> None:
+        if (getattr(self, "_parameter_algorithm_version", None)
+                != self._CurrentPlugin_Get().metadata.version):
+            self._Algorithm_Refresh()
+            return
         mode = self.mode_combo.currentData()
         what_if = mode == ReplayMode.WHAT_IF
         quality_visible = what_if and bool(
@@ -549,6 +554,10 @@ class ReplayPage(QWidget):
             parameters=configuration["actual_values"],
             quality_policy_revision=configuration.get("quality_policy_revision"),
         )
+        selector = getattr(plugin, "PluginForDataset_Get", None)
+        effective = selector(self._dataset, request.mode) if selector else plugin
+        if effective.metadata.version != configuration["algorithm_version"]:
+            raise ValueError("project_algorithm_semantics_mismatch")
         plugin.Parameters_Resolve(self._dataset, request)
         self.algorithm_combo.setCurrentIndex(
             self.algorithm_combo.findData(configuration["algorithm_id"])
@@ -563,7 +572,9 @@ class ReplayPage(QWidget):
         self._ParametersDirty_Refresh()
 
     def _CurrentPlugin_Get(self):
-        return self._registry.Algorithm_Get(str(self.algorithm_combo.currentData()))
+        plugin = self._registry.Algorithm_Get(str(self.algorithm_combo.currentData()))
+        selector = getattr(plugin, "PluginForDataset_Get", None)
+        return selector(self._dataset, self.mode_combo.currentData()) if selector else plugin
 
     def Fidelity_Text_Get(self, fidelity: ReplayFidelity) -> str:
         return self._translator.Text_Get(f"replay.fidelity.{fidelity.value.lower()}")

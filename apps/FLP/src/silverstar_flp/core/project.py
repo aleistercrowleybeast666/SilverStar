@@ -189,6 +189,10 @@ def ReplayConfiguration_Validate(configuration: Any) -> None:
         plugin = builtin_registry().Algorithm_Get(configuration["algorithm_id"])
     except (KeyError, TypeError) as exc:
         raise ValueError("project_algorithm_unknown") from exc
+    if (configuration["algorithm_id"] == "silverstar.algorithm.sf6"
+            and configuration["algorithm_version"] == "0.1.0-c-core-revision1"):
+        from silverstar_flp.plugins.algorithms.sf6.legacy_plugin import Sf6AlgorithmPlugin
+        plugin = Sf6AlgorithmPlugin()
     if configuration[
         "algorithm_version"
     ] != plugin.metadata.version or not plugin.ParameterSchemaCompatible_Is(

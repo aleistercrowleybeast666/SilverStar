@@ -134,75 +134,6 @@
       }
     },
     {
-      "id": "gnss_position_measurement_delay_ms",
-      "type": "integer",
-      "default": 0,
-      "legacy_default": 0,
-      "unit": "ms",
-      "representation": "value",
-      "min": 0,
-      "max": 550,
-      "precision": 0,
-      "step": 5,
-      "group": "advanced",
-      "order": 6,
-      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
-      "display_names": {
-        "en_US": "GNSS position measurement delay",
-        "zh_CN": "GNSS 位置量测延迟"
-      },
-      "description": {
-        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
-        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
-      }
-    },
-    {
-      "id": "gnss_velocity_measurement_delay_ms",
-      "type": "integer",
-      "default": 270,
-      "legacy_default": 0,
-      "unit": "ms",
-      "representation": "value",
-      "min": 0,
-      "max": 550,
-      "precision": 0,
-      "step": 5,
-      "group": "advanced",
-      "order": 7,
-      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
-      "display_names": {
-        "en_US": "GNSS velocity measurement delay",
-        "zh_CN": "GNSS 速度量测延迟"
-      },
-      "description": {
-        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
-        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
-      }
-    },
-    {
-      "id": "baro_measurement_delay_ms",
-      "type": "integer",
-      "default": 0,
-      "legacy_default": 0,
-      "unit": "ms",
-      "representation": "value",
-      "min": 0,
-      "max": 550,
-      "precision": 0,
-      "step": 5,
-      "group": "advanced",
-      "order": 8,
-      "generated_symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
-      "display_names": {
-        "en_US": "Barometer measurement delay",
-        "zh_CN": "气压高度量测延迟"
-      },
-      "description": {
-        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
-        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
-      }
-    },
-    {
       "id": "gravity_mps2",
       "type": "float",
       "default": 9.78,
@@ -225,5 +156,5 @@
       }
     }
   ],
-  "source_note": "Audited SF6 component parameters joined with shared INS gravity; production gravity remains owned by INS."
+  "source_note": "Audited SF6 revision2 six gains joined with shared INS gravity; no fixed-lag delay parameters. Revision1 contract remains in sf6_revision1_fccg_1_2.json."
 }

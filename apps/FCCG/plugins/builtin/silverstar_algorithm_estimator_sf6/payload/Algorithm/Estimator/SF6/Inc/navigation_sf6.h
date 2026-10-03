@@ -3,9 +3,8 @@
 
 #include <stdint.h>
 
-#define NAV_SF6_HISTORY_CAPACITY 256U
-#define NAV_SF6_EVENT_CAPACITY 256U
-#define NAV_SF6_HISTORY_US 600000ULL
+#define NAV_SF6_ALGORITHM_REVISION 2U
+#define NAV_SF6_MAX_MEASUREMENT_AGE_US 500000ULL
 #define NAV_SF6_MAX_DT_S 0.02f
 #define NAV_SF6_GROUP_COUNT 5U
 
@@ -17,7 +16,7 @@ typedef enum
     NAV_SF6_STALE,
     NAV_SF6_DUPLICATE,
     NAV_SF6_NUMERIC_ERROR,
-    NAV_SF6_FULL
+    NAV_SF6_FULL /* Reserved revision-1 wire value; revision 2 has no queue. */
 } NavigationSf6Result;
 
 /* State order and gain order are vE, vN, vU, pE, pN, pU. No covariance. */
@@ -25,29 +24,20 @@ typedef struct
 {
     uint64_t timestamp_us;
     float state[6];
-    float delta_velocity[3]; /* Increment leading to this boundary. */
-    float dt_s; /* Preserve the admitted integration interval during replay. */
+    float delta_velocity[3]; /* Latest admitted prediction increment. */
+    float dt_s; /* Latest admitted integration interval. */
 } NavigationSf6Sample;
 
+/* Revision 2 applies each admitted observation to the present state. There is
+ * no history, delayed observation queue, rewind, or event replay. */
 typedef struct
 {
-    uint64_t measurement_us;
-    float observation[2];
-    uint8_t group;
-} NavigationSf6Event;
-
-typedef struct
-{
-    NavigationSf6Sample history[NAV_SF6_HISTORY_CAPACITY];
-    NavigationSf6Event events[NAV_SF6_EVENT_CAPACITY];
-    float base_state[6]; /* Before observations at the oldest boundary. */
+    NavigationSf6Sample latest;
     float gain[6];
+    uint64_t epoch_us;
     uint64_t last_measurement_us[NAV_SF6_GROUP_COUNT];
     uint64_t last_receive_us[NAV_SF6_GROUP_COUNT];
     uint32_t last_sequence[NAV_SF6_GROUP_COUNT];
-    uint16_t first;
-    uint16_t count;
-    uint16_t event_count;
     uint8_t seen[NAV_SF6_GROUP_COUNT];
     uint8_t initialized;
 } NavigationSf6Context;

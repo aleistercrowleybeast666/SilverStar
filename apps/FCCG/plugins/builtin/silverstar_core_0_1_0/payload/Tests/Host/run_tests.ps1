@@ -1093,6 +1093,7 @@ elseif ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
     )
 }
 elseif ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
+    $preparationArgs += '-DSYSTEM_BUILD_SF6_ENABLED=1U'
     $preparationSources += @(
         "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6.c",
         "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6_backend.c"
@@ -1203,6 +1204,7 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
     Invoke-HostTest -Name 'sf6_backend_actual' -ExtraCompilerArgs @(
         '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
         '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U',
+        '-DSYSTEM_BUILD_SF6_ENABLED=1U',
         '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_SF6'
     ) -Sources $sf6BackendSources
 }

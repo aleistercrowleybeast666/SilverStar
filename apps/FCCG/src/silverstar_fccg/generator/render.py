@@ -1578,6 +1578,25 @@ def _BoardPlatformResources_Get(
     return platform
 
 
+def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
+    metadata: dict[str, Any]) -> dict[str, Any]:
+    declarations = deepcopy(metadata.get("project_semantics", {}))
+    owners: set[str] = set()
+    for component_id in model.ComponentIds_Get():
+        manifest = catalog.Component_Get(component_id)
+        if manifest.component_type != "algorithm":
+            continue
+        fragments = manifest.metadata.get("navigation_semantics", {})
+        if not isinstance(fragments, dict):
+            raise ValueError(f"{component_id}: navigation_semantics must be an object")
+        for name, declaration in fragments.items():
+            if name in owners or not isinstance(declaration, dict):
+                raise ValueError(f"{component_id}: duplicate or invalid navigation semantics {name}")
+            owners.add(name)
+            declarations[name] = deepcopy(declaration)
+    return declarations
+
+
 def LogDecoderProfile_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> LogDecoderPackageResult:
@@ -1787,7 +1806,7 @@ def LogDecoderProfile_Render(
         "enum_catalog": _LogCatalogSection_Get(
             metadata, schema, "enum_catalog"
         ),
-        "metadata_declarations": metadata.get("project_semantics", {}),
+        "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
     }
     # The selected Logging Protocol owns the base catalog. Selected Device and
     # Algorithm plugins may append data-only fragments; conflicts are rejected

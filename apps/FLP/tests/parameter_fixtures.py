@@ -25,9 +25,10 @@ def FirmwareSets_Build(overrides=None):
     groups = []
     for plugin in builtin_registry().algorithms:
         name = plugin.metadata.plugin_id.rsplit(".", 1)[-1]
+        fixture_name = "sf6_revision1" if name == "sf6" else name
         contract = json.loads(
             (
-                Path(__file__).parent / "fixtures/parameter_contracts" / f"{name}_fccg_1_2.json"
+                Path(__file__).parent / "fixtures/parameter_contracts" / f"{fixture_name}_fccg_1_2.json"
             ).read_text(encoding="utf8")
         )
         group = {

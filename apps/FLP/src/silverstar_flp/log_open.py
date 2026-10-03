@@ -413,6 +413,8 @@ class LogOpenCoordinator:
         dataset = SilverStarSslog0SemanticAdapter(package).Apply(dataset)
         from silverstar_flp.decoder_profiles.algorithm_parameters import FirmwareMechanizationRecords_Validate
         FirmwareMechanizationRecords_Validate(dataset)
+        from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_Get
+        Sf6Revision_Get(dataset)
         context.Progress_Report(1.0, "log_open.complete")
         return LogOpenResult(
             dataset=dataset,

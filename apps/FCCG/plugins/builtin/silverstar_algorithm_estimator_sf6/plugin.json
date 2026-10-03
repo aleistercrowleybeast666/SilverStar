@@ -1,11 +1,11 @@
 {
   "schema_version": 0,
   "id": "silverstar.algorithm.estimator.sf6",
-  "name": "SF6 Fixed-Gain Navigation",
+  "name": "SF6 Current-State Fixed-Gain Navigation",
   "type": "algorithm",
   "class": "estimator",
-  "version": "0.1.0",
-  "description": "Six-state ENU fixed-gain complementary fusion; no covariance or statistical confidence.",
+  "version": "0.2.0",
+  "description": "Revision 2: six-state ENU current-state fixed-gain fusion; no history, delayed replay, covariance or statistical confidence.",
   "requires": {
     "components": [
       {
@@ -66,7 +66,7 @@
       "zh_CN": "SF6算法",
       "en_US": "SF6 Algorithm"
     },
-    "algorithm_revision": 1,
+    "algorithm_revision": 2,
     "navigation_contract": "silverstar.navigation/1",
     "algorithm_descriptors": [
       {
@@ -74,30 +74,54 @@
         "class": "SYSTEM_ALGORITHM_CLASS_FUSION",
         "algorithm": "SYSTEM_FUSION_ALGORITHM",
         "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
-        "name_hash": "0x53463631UL"
+        "name_hash": "0x53463632UL"
       }
     ],
     "source_origins": {
       "default": "silverstar_sf6"
     },
-      "delay_contract": {
-        "history_capacity": 256,
-        "event_capacity": 256,
-        "window_us": 600000,
-        "alignment": "previous_completed_prediction_boundary",
-        "maximum_boundary_error_us": 20000,
-        "observation_replay": "measurement_timestamp_then_ascending_group",
-        "publication": "validate_complete_replay_before_commit",
-        "capacity": "configured_gnss_four_groups_plus_max_imu_barometer_rate_with_closed_window_margin"
-    },
     "gain_defaults": "Initial engineering defaults; not bench-tuned and not an optimality claim.",
     "qualified_timing_profiles": [
       "cortex_m4f_hardfp"
     ],
-      "replay_contract": {
-        "window_ms": 600,
-        "history_capacity": 256,
-        "event_capacity": 256
+    "fusion_contract": {
+      "semantics": "current_state_arrival_order",
+      "prediction": "INS ENU increments",
+      "observation": "present_state_plus_gain_times_innovation",
+      "maximum_measurement_age_us": 500000,
+      "timestamp": "trusted_MCU_sample_else_receive_no_fixed_delay",
+      "publication": "validate_candidate_before_commit",
+      "compatibility": "revision_1_recordings_require_revision_1_replay; old_delay_fields_require_explicit_removal",
+      "lag_error": "No latency compensation; delayed observation is blended against present state."
+    },
+    "navigation_semantics": {
+      "sf6": {
+        "algorithm_id": 3,
+        "name": "SF6",
+        "revision": 2,
+        "gain_order": [
+          "vE",
+          "vN",
+          "vU",
+          "pE",
+          "pN",
+          "pU"
+        ],
+        "fusion": "Current-state arrival-order fixed gains; no rewind, historical states or observation replay.",
+        "timestamp": "Trusted MCU sample else receive timestamp. No fixed-delay subtraction or latency compensation.",
+        "boundary": "Successful measurement boundary equals current evaluation/prediction timestamp.",
+        "maximum_measurement_age_us": 500000,
+        "confidence": "Unavailable: no covariance, NIS or statistically optimal confidence.",
+        "height": "Independent GNSS U and barometer U observations share pU gain; update only physically valid groups.",
+        "defaults": "Initial engineering defaults, not bench tuned or optimal.",
+        "compatibility": "Revision 1 requires its original decoder and legacy replay. Obsolete SF6 fixed-delay parameters must be explicitly removed before revision 2 generation."
+      }
+    },
+    "replay_contract": {
+      "mode": "none",
+      "window_ms": 0,
+      "history_capacity": 0,
+      "event_capacity": 0
     }
   },
   "selection": {
@@ -244,75 +268,6 @@
         "description": {
           "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。pU 同时用于 GNSS 高度和气压相对高度。",
           "en_US": "Initial engineering default, not bench-tuned or optimal.Shared by GNSS height and barometer relative altitude."
-        }
-      },
-      {
-        "id": "gnss_position_measurement_delay_ms",
-        "type": "integer",
-        "default": 0,
-        "legacy_default": 0,
-        "unit": "ms",
-        "representation": "value",
-        "min": 0,
-        "max": 550,
-        "precision": 0,
-        "step": 5,
-        "group": "advanced",
-        "order": 6,
-        "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
-        "display_names": {
-          "en_US": "GNSS position measurement delay",
-          "zh_CN": "GNSS 位置量测延迟"
-        },
-        "description": {
-          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
-          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
-        }
-      },
-      {
-        "id": "gnss_velocity_measurement_delay_ms",
-        "type": "integer",
-        "default": 270,
-        "legacy_default": 0,
-        "unit": "ms",
-        "representation": "value",
-        "min": 0,
-        "max": 550,
-        "precision": 0,
-        "step": 5,
-        "group": "advanced",
-        "order": 7,
-        "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
-        "display_names": {
-          "en_US": "GNSS velocity measurement delay",
-          "zh_CN": "GNSS 速度量测延迟"
-        },
-        "description": {
-          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
-          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
-        }
-      },
-      {
-        "id": "baro_measurement_delay_ms",
-        "type": "integer",
-        "default": 0,
-        "legacy_default": 0,
-        "unit": "ms",
-        "representation": "value",
-        "min": 0,
-        "max": 550,
-        "precision": 0,
-        "step": 5,
-        "group": "advanced",
-        "order": 8,
-        "generated_symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
-        "display_names": {
-          "en_US": "Barometer measurement delay",
-          "zh_CN": "气压高度量测延迟"
-        },
-        "description": {
-          "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
-          "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
         }
       }
     ]
