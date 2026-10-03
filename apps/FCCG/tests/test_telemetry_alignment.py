@@ -130,8 +130,9 @@ def test_direct_selection_is_catalog_driven_and_atomic(qapp, window):
     assert active == "radio0"
     assert radios[0].plugin == ground.radio_plugin
     assert radios[0].module_variant == "variant27"
-    assert radios[0].tx_power_dbm == ground.tx_power_dbm
-    updated = replace(ground, radio_instances=radios, module_variant="variant27")
+    assert radios[0].tx_power_dbm == 27
+    updated = replace(ground, radio_instances=(replace(radios[0], tx_power_dbm=ground.tx_power_dbm),),
+                      module_variant="variant27")
     editor.Configuration_Set(updated, (("E28", ground.radio_plugin, True, ""),),
                              {ground.radio_plugin: SimpleNamespace(modules=modules)})
     power = editor.rows["radio0"]["tx_power_dbm"]

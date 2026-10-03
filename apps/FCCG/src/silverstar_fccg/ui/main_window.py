@@ -102,6 +102,9 @@ from silverstar_fccg.project.logging import (
     LogPolicyLevel,
     ProtocolLogDefinitions_Get,
 )
+from silverstar_fccg.project.radio_variants import (
+    RADIO_PLUGIN, FlightRadioConfiguration_Get, FlightRadioConfiguration_Apply, RadioManifest_Resolve,
+)
 from silverstar_fccg.project.model import (
     DeviceInstance,
     GroundRadioConfigurations_Get,
@@ -342,6 +345,7 @@ class MainWindow(QMainWindow):
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
+        self.air_link_page.air_link_group.body.layout().addRow(self.devices_page.radio_power_editor)
         self.air_link_page.air_link_group.body.layout().addRow(
             self.ground_target_page.radio_instances_editor.power_editor)
         self.ground_configuration_page = self.air_link_page
@@ -476,6 +480,8 @@ class MainWindow(QMainWindow):
         self.refresh_plugins_action.triggered.connect(self._Plugins_Refresh)
         self.about_action.triggered.connect(self._About_Show)
         self.devices_page.instanceChanged.connect(self._DeviceInstance_Change)
+        self.devices_page.radioSelectionChanged.connect(self._FlightRadioSelection_Change)
+        self.devices_page.radioPowerChanged.connect(self._FlightRadioPower_Change)
         self.devices_page.variantChanged.connect(self._DeviceVariant_Change)
         self.devices_page.instanceAddRequested.connect(self._DeviceInstance_Add)
         self.devices_page.otherDeviceToggled.connect(self._OtherDevice_Toggle)
@@ -767,6 +773,11 @@ class MainWindow(QMainWindow):
                 display.devices,
                 display.device_instances,
                 display.device_availability,
+                {manifest.component_id: manifest.radio.modules
+                 for manifest in self._service.catalog.Type_Get("device")
+                 if manifest.component_id == RADIO_PLUGIN and manifest.radio is not None},
+                {instance.instance_id: FlightRadioConfiguration_Get(display.model, instance)
+                 for instance in display.model.device_instances if instance.plugin == RADIO_PLUGIN},
             )
             self.flight_configuration_page.Configuration_Set(
                 display.selectable_components,
@@ -1140,6 +1151,11 @@ class MainWindow(QMainWindow):
                     for item in candidate.device_instances
                     if item.instance_id != instance_id
                 ]
+                if candidate.air_link.flight_radio_instance == instance_id:
+                    remaining = next((item.instance_id for item in candidate.device_instances
+                                      if self._service.Plugin_Get(item.plugin).component_class == "telemetry"),
+                                     "telemetry0")
+                    candidate.air_link = replace(candidate.air_link, flight_radio_instance=remaining)
 
         self._ProjectConfiguration_Change(
             change, logging_availability_changed=True
@@ -1165,6 +1181,44 @@ class MainWindow(QMainWindow):
         self._ProjectConfiguration_Change(
             change, logging_availability_changed=True
         )
+
+    def _FlightRadioSelection_Change(self, identity: str, plugin: str, module: str) -> None:
+        if not plugin or plugin != RADIO_PLUGIN:
+            self._DeviceInstance_Change(identity, plugin)
+            return
+        manifest = self._service.catalog.Component_Get(plugin)
+        powers = tuple(manifest.radio.modules.get(module, {}).get("supported_tx_powers_dbm", ()))
+        if not powers:
+            self._Error_Show("Selected radio module has no supported output power")
+            return
+        def change(candidate):
+            existing = candidate.DeviceInstance_Get(identity)
+            if existing is None:
+                candidate.device_instances.append(DeviceInstance(identity, plugin))
+            elif existing.plugin != plugin:
+                candidate.device_instances = [
+                    DeviceInstance(identity, plugin) if item.instance_id == identity else item
+                    for item in candidate.device_instances]
+                candidate.resource_assignments = {key: value
+                    for key, value in candidate.resource_assignments.items()
+                    if not key.startswith(identity + ":")}
+            edited = FlightRadioConfiguration_Apply(candidate, identity, module, powers[0])
+            candidate.device_instances = edited.device_instances
+            candidate.resource_assignments = edited.resource_assignments
+            if candidate.DeviceInstance_Get(candidate.air_link.flight_radio_instance) is None:
+                candidate.air_link = replace(candidate.air_link, flight_radio_instance=identity)
+        self._ProjectConfiguration_Change(change, logging_availability_changed=True)
+
+    def _FlightRadioPower_Change(self, identity: str, value: int) -> None:
+        def change(candidate):
+            instance = candidate.DeviceInstance_Get(identity)
+            if instance is None:
+                raise ValueError("Flight radio instance is unavailable")
+            module, _power = FlightRadioConfiguration_Get(candidate, instance)
+            edited = FlightRadioConfiguration_Apply(candidate, identity, module, value)
+            candidate.device_instances = edited.device_instances
+            candidate.resource_assignments = edited.resource_assignments
+        self._ProjectConfiguration_Change(change)
 
     def _DeviceInstance_Add(self, component_class: str) -> None:
         candidates = sorted(
@@ -1209,9 +1263,15 @@ class MainWindow(QMainWindow):
             available_candidates[0],
         )
         instance_id = self._DeviceInstanceId_Next(component_class)
+        template = None
+        if component_class == "telemetry":
+            template = next((item for item in selected
+                             if item.instance_id == self._model.air_link.flight_radio_instance),
+                            selected[0] if selected else None)
         self._ProjectConfiguration_Change(
             lambda candidate: candidate.device_instances.append(
-                DeviceInstance(instance_id, preferred.component_id)
+                replace(template, instance_id=instance_id) if template is not None
+                and template.plugin == preferred.component_id else DeviceInstance(instance_id, preferred.component_id)
             ),
             logging_availability_changed=True,
         )
@@ -1605,6 +1665,14 @@ class MainWindow(QMainWindow):
             manifest = self._service.catalog.Component_Get(selected) if selected else None
         except ValueError:
             manifest = None
+        if manifest is not None:
+            try:
+                manifest = RadioManifest_Resolve(manifest, DeviceInstance(
+                    model.ground_target.active_radio_instance, selected,
+                    module_variant=model.ground_target.module_variant,
+                    tx_power_dbm=model.ground_target.tx_power_dbm))
+            except ValueError:
+                pass
         requirements = {
             "module_availability": module_availability,
             "radio_contracts": {candidate.component_id: candidate.radio
@@ -1634,6 +1702,9 @@ class MainWindow(QMainWindow):
             for radio in GroundRadioConfigurations_Get(model.ground_target):
                 try:
                     instance_manifest = self._service.catalog.Component_Get(radio.plugin)
+                    instance_manifest = RadioManifest_Resolve(instance_manifest, DeviceInstance(
+                        radio.instance_id, radio.plugin, module_variant=radio.module_variant,
+                        tx_power_dbm=radio.tx_power_dbm))
                 except ValueError:
                     continue
                 resources.extend((f"{radio.instance_id}:{requirement.name}", requirement.kind)
@@ -1649,11 +1720,11 @@ class MainWindow(QMainWindow):
             )
         except ValueError:
             flight_manifest = None
-        flight_modules = (
-            tuple(flight_manifest.radio.modules.values())
-            if flight_manifest is not None and flight_manifest.radio is not None else ()
-        )
-        flight_module = flight_modules[0] if len(flight_modules) == 1 else None
+        flight_module_id, flight_power = (FlightRadioConfiguration_Get(model, flight_instance)
+                                        if flight_instance is not None and flight_instance.plugin == RADIO_PLUGIN
+                                        else ("", model.flight_tx_power_dbm))
+        flight_module = (flight_manifest.radio.modules.get(flight_module_id)
+                         if flight_manifest is not None and flight_manifest.radio is not None else None)
         ground_module = (
             manifest.radio.modules.get(model.ground_target.module_variant)
             if manifest is not None and manifest.radio is not None else None
@@ -1678,7 +1749,7 @@ class MainWindow(QMainWindow):
             model.air_link, AirLinkIssues_Get(model, self._service.catalog)
         )
         self.air_link_page.EndpointPowers_Set(
-            model.flight_tx_power_dbm, model.ground_target.tx_power_dbm,
+            flight_power, model.ground_target.tx_power_dbm,
             model.ground_target.enabled,
         )
         self.ground_target_page.Configuration_Set(
@@ -1712,7 +1783,23 @@ class MainWindow(QMainWindow):
         def change(candidate: ProjectModel) -> None:
             ground = candidate.ground_target
             if radios:
-                candidate.ground_target = GroundRadiosConfiguration_Apply(ground, radios, active)
+                updated = GroundRadiosConfiguration_Apply(ground, radios, active)
+                previous = {radio.instance_id: radio for radio in GroundRadioConfigurations_Get(ground)}
+                obsolete = set()
+                for radio in radios:
+                    old = previous.get(radio.instance_id)
+                    if old is None or (old.plugin, old.module_variant) == (radio.plugin, radio.module_variant):
+                        continue
+                    manifest = self._service.catalog.Component_Get(radio.plugin)
+                    resolved = RadioManifest_Resolve(manifest, DeviceInstance(
+                        radio.instance_id, radio.plugin, module_variant=radio.module_variant,
+                        tx_power_dbm=radio.tx_power_dbm))
+                    names = {requirement.name for requirement in resolved.resource_requirements}
+                    obsolete.update(radio.instance_id + ":" + requirement.name
+                                    for requirement in manifest.resource_requirements
+                                    if requirement.name not in names)
+                candidate.ground_target = replace(updated, resource_assignments={
+                    key: value for key, value in updated.resource_assignments.items() if key not in obsolete})
                 return
             removed = {radio.instance_id for radio in GroundRadioConfigurations_Get(ground)}
             # Clearing the final selection uses the existing empty legacy state.

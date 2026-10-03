@@ -4,7 +4,7 @@ from collections import defaultdict
 from collections.abc import Iterable
 from typing import ClassVar
 
-from PySide6.QtCore import QSignalBlocker, Qt, Signal
+from PySide6.QtCore import QSignalBlocker, Qt, Signal, QTimer
 from PySide6.QtGui import QColor, QPalette, QResizeEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
@@ -57,6 +57,8 @@ from silverstar_fccg.ui.widgets import (
 
 class DevicesPage(ScrollableLocalizedPage):
     instanceChanged = Signal(str, str)
+    radioSelectionChanged = Signal(str, str, str)
+    radioPowerChanged = Signal(str, int)
     variantChanged = Signal(str, str, str)
     instanceAddRequested = Signal(str)
     otherDeviceToggled = Signal(str, bool)
@@ -161,6 +163,12 @@ class DevicesPage(ScrollableLocalizedPage):
         self._components: tuple[ComponentView, ...] = ()
         self._instances: tuple[DeviceInstanceView, ...] = ()
         self._device_availability: dict[str, SelectionAvailability] = {}
+        self.radio_power_editor = QWidget()
+        self.radio_power_form = QFormLayout(self.radio_power_editor)
+        self.radio_power_form.setContentsMargins(0, 0, 0, 0)
+        self.radio_power_combos = {}
+        self._radio_modules = {}
+        self._radio_configurations = {}
         self.Language_Apply(translator)
 
     @staticmethod
@@ -177,10 +185,17 @@ class DevicesPage(ScrollableLocalizedPage):
         components: Iterable[ComponentView],
         instances: Iterable[DeviceInstanceView],
         device_availability: dict[str, SelectionAvailability] | None = None,
+        radio_modules: dict | None = None,
+        radio_configurations: dict | None = None,
     ) -> None:
         self._components = tuple(components)
         self._instances = tuple(instances)
         self._device_availability = dict(device_availability or {})
+        self._radio_modules = radio_modules or {}
+        self._radio_configurations = radio_configurations or {}
+        self.radio_power_combos.clear()
+        while self.radio_power_form.rowCount():
+            self.radio_power_form.removeRow(0)
 
         initialization_expanded = {
             key: section.Expanded_Is() for key, section in self.initialization_sections.items()
@@ -321,13 +336,14 @@ class DevicesPage(ScrollableLocalizedPage):
                         Qt.ItemDataRole.ToolTipRole,
                     )
                 selected_plugin = instance.plugin_id if instance is not None else ""
-                selected_index = combo.findData(selected_plugin)
-                combo.setCurrentIndex(max(0, selected_index))
-                combo.currentIndexChanged.connect(
-                    lambda _index, selected_instance=instance_id, editor=combo: self.instanceChanged.emit(
-                        selected_instance, str(editor.currentData() or "")
-                    )
-                )
+                if component_class == "telemetry" and self._radio_modules:
+                    self._RadioCombo_Configure(combo, instance_id, selected_plugin)
+                else:
+                    selected_index = combo.findData(selected_plugin)
+                    combo.setCurrentIndex(max(0, selected_index))
+                    combo.currentIndexChanged.connect(
+                        lambda _index, selected_instance=instance_id, editor=combo: self.instanceChanged.emit(
+                            selected_instance, str(editor.currentData() or "")))
                 form.addRow(
                     QLabel(
                         self._DeviceInstanceTitle_Get(candidates[0], row_index, instance_id)
@@ -335,6 +351,9 @@ class DevicesPage(ScrollableLocalizedPage):
                     combo,
                 )
                 self.device_combos[instance_id] = combo
+                if instance is not None and selected_plugin in self._radio_modules:
+                    self._RadioPower_Add(instance_id, selected_plugin,
+                                         self._DeviceInstanceTitle_Get(candidates[0], row_index, instance_id))
                 if instance is not None:
                     selected_component = next(
                         (item for item in candidates if item.component_id == selected_plugin),
@@ -432,6 +451,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.primary_group.setVisible("primary_devices" in populated_groups)
         self.telemetry_group.setVisible("communication_links" in populated_groups)
         self.storage_group.setVisible("storage" in populated_groups)
+        self.radio_power_editor.setVisible(bool(self.radio_power_combos))
 
         self._Layout_Clear(self.other_checks_layout)
         self._Layout_Clear(self.indicator_checks_layout)
@@ -572,7 +592,63 @@ class DevicesPage(ScrollableLocalizedPage):
                 self._components,
                 self._instances,
                 self._device_availability,
+                self._radio_modules,
+                self._radio_configurations,
             )
+
+    def _RadioCombo_Configure(self, combo, instance_id, selected_plugin):
+        choices = tuple((combo.itemText(i), combo.itemData(i),
+                         combo.model().item(i).isEnabled(),
+                         combo.itemData(i, Qt.ItemDataRole.ToolTipRole))
+                        for i in range(combo.count()))
+        combo.clear()
+        for title, plugin_id, available, reason in choices:
+            modules = self._radio_modules.get(plugin_id, {})
+            for module_id, module in (modules.items() if modules else (("", {}),)):
+                combo.addItem(str(module.get("display_name", module.get("model", title))),
+                              (plugin_id, module_id))
+                item = combo.model().item(combo.count() - 1)
+                item.setEnabled(available)
+                status = self._translator.Text_Get("radio.hardware_unverified") if (
+                    module.get("hardware_status") == "hardware_unverified") else ""
+                item.setToolTip("\n".join(filter(None, (reason, status))))
+        module_id, _power = self._radio_configurations.get(instance_id, ("", 12))
+        selected = (selected_plugin, module_id)
+        index = combo.findData(selected)
+        if index < 0:
+            combo.addItem(f"{selected_plugin} / {module_id}", selected)
+            index = combo.count() - 1
+            combo.model().item(index).setEnabled(False)
+        combo.setCurrentIndex(index)
+        combo.currentIndexChanged.connect(
+            lambda _index: self._RadioSelection_Emit(instance_id, combo.currentData()))
+
+    def _RadioSelection_Emit(self, identity, selection):
+        if selection:
+            plugin, module = selection
+            QTimer.singleShot(0, self, lambda: self.radioSelectionChanged.emit(identity, plugin, module))
+
+    def _RadioPower_Add(self, identity, plugin, title):
+        module_id, value = self._radio_configurations.get(identity, ("", 12))
+        supported = tuple(self._radio_modules[plugin].get(
+            module_id, {}).get("supported_tx_powers_dbm", ()))
+        power = StandardComboBox()
+        power.setObjectName("flightRadioPower_" + identity)
+        for declared in supported:
+            power.addItem(f"{declared} dBm", declared)
+        if power.findData(value) < 0:
+            power.addItem(f"{value} dBm", value)
+            power.model().item(power.count() - 1).setEnabled(False)
+        power.setCurrentIndex(power.findData(value))
+        power.setEnabled(bool(supported))
+        power.currentIndexChanged.connect(
+            lambda _index: self._RadioPower_Emit(identity, power.currentData()))
+        self.radio_power_form.addRow(self._translator.Text_Get("flight.radio_power", title=title), power)
+        self.radio_power_combos[identity] = power
+
+    def _RadioPower_Emit(self, identity, value):
+        if value is not None:
+            QTimer.singleShot(0, self, lambda: self.radioPowerChanged.emit(identity, value))
 
     def _DeviceClassTitle_Get(self, component: ComponentView) -> str:
         key = f"device.class.{component.component_class}"

@@ -78,6 +78,7 @@ class AirLinkPage(ScrollableLocalizedPage):
         flight_power_label = QLabel()
         self.Text_Register(flight_power_label, "field.flight_tx_power")
         form.addRow(flight_power_label, self.flight_tx_power)
+        form.setRowVisible(self.flight_tx_power, False)
         self.ground_tx_power = EnterCommittedSpinBox()
         self.ground_tx_power.setRange(0, 0)
         self.ground_tx_power.setEnabled(False)

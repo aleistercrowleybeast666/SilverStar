@@ -927,6 +927,8 @@
   "ground.initial_radio": "Initial telemetry instance",
   "ground.add_radio": "Add Ground telemetry instance",
   "ground.radio_title": "Ground telemetry {id}",
+  "flight.radio_power": "Flight {title} TX power",
+  "radio.hardware_unverified": "Hardware unverified",
   "ground.radio_power": "Ground {title} TX power",
   "ground.radio_up": "Move up",
   "ground.radio_down": "Move down",

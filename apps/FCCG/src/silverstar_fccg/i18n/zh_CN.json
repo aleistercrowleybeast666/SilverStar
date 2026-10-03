@@ -927,6 +927,8 @@
   "ground.initial_radio": "初始遥测实例",
   "ground.add_radio": "添加地面遥测实例",
   "ground.radio_title": "地面遥测 {id}",
+  "flight.radio_power": "飞控 {title} 发射功率",
+  "radio.hardware_unverified": "硬件尚未验证",
   "ground.radio_power": "地面站 {title} 发射功率",
   "ground.radio_up": "上移",
   "ground.radio_down": "下移",

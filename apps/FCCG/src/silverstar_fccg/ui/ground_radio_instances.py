@@ -180,11 +180,17 @@ class GroundRadioInstancesEditor(QWidget):
         if not plugin:
             self._Remove(identity)
             return
+        contract = self._contracts.get(plugin)
+        module_data = contract.modules.get(module, {}) if contract is not None else {}
+        powers = tuple(module_data.get("supported_tx_powers_dbm", ()))
         if not self._radios:
             self._Commit((GroundRadioConfiguration(
-                identity, plugin, module, self._ground.tx_power_dbm),), identity)
+                identity, plugin, module, powers[0] if powers else self._ground.tx_power_dbm),), identity)
             return
-        updated = tuple(replace(radio, plugin=plugin, module_variant=module)
+        updated = tuple(replace(radio, plugin=plugin, module_variant=module,
+                                tx_power_dbm=(powers[0] if powers and
+                                    (radio.plugin, radio.module_variant) != (plugin, module)
+                                    and radio.tx_power_dbm not in powers else radio.tx_power_dbm))
                         if radio.instance_id == identity else radio for radio in self._radios)
         self._Commit(updated, self._ground.active_radio_instance)
 
