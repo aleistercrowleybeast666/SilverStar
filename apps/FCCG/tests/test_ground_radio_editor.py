@@ -26,7 +26,7 @@ def test_legacy_single_ground_refresh_does_not_promote_or_rebind(window):
         window.Language_Apply(language)
         assert window._model.Dictionary_Get() == before
         assert not window._model.ground_target.radio_instances
-        assert not window.ground_target_page.radio.isHidden()
+        assert window.ground_target_page.radio_instances_editor.rows["radio0"]["plugin"].currentData() == window._model.ground_target.radio_plugin
         assert window.ground_target_page.radio_instances_editor.initial_instance.isHidden()
     assert window._model.Dictionary_Get()["format_version"] == 14
 

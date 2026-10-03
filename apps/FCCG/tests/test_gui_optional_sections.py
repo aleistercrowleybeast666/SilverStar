@@ -2,24 +2,25 @@ from dataclasses import replace
 import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
+from PySide6.QtWidgets import QGroupBox
 from test_scg_ui_metadata_hotfix import window
 
 
 @pytest.mark.parametrize("language", ["zh_CN", "en_US"])
-def test_folds_preserve_values_bindings_and_language(qapp, window, language):
+def test_air_fold_and_visible_sensors_preserve_values_bindings_and_language(qapp, window, language):
     before = window._model.Dictionary_Get()
     air = window.air_link_page.air_link_group
     other = window.devices_page.other_group
-    assert not air.Expanded_Is() and not other.Expanded_Is()
+    assert not air.Expanded_Is()
+    assert isinstance(other, QGroupBox) and not other.isHidden()
     QTest.mouseClick(air.toggle_button, Qt.MouseButton.LeftButton)
-    QTest.mouseClick(other.toggle_button, Qt.MouseButton.LeftButton)
-    assert air.Expanded_Is() and other.Expanded_Is()
+    assert air.Expanded_Is() and not other.isHidden()
     window.Language_Apply(language)
-    assert air.Expanded_Is() and other.Expanded_Is()
+    assert air.Expanded_Is() and not other.isHidden()
     assert air.toggle_button.text() == window._translator.Text_Get("group.air_link")
-    assert other.toggle_button.text() == window._translator.Text_Get("group.other_sensors")
+    assert other.title() == window._translator.Text_Get("group.other_sensors")
     window._Project_Refresh()
-    assert air.Expanded_Is() and other.Expanded_Is()
+    assert air.Expanded_Is() and not other.isHidden()
     assert window._model.Dictionary_Get() == before
     # Unsupported technologies stay unavailable when their settings are folded.
     combo = window.air_link_page.fields["radio_technology"]

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QPalette
-from silverstar_fccg.ui.widgets import CollapsibleSection, StandardComboBox
+from silverstar_fccg.ui.widgets import CollapsibleSection, StandardCheckBox, StandardComboBox
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QHBoxLayout, QLabel,
     QPushButton, QSpinBox,
@@ -229,7 +229,7 @@ class GroundTargetPage(BoardHardwarePage):
 
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, target="ground")
-        self.enabled = QCheckBox()
+        self.enabled = StandardCheckBox()
         self.enabled.setObjectName("standardCheckBox")
         self.Text_Register(self.enabled, "field.ground_enabled")
         self.enabled.toggled.connect(self.enabledChanged.emit)
@@ -245,6 +245,8 @@ class GroundTargetPage(BoardHardwarePage):
         self.importDirectoryRequested.connect(lambda: self.importRequested.emit(True))
         self.exportRequested.connect(self.saveInstanceRequested.emit)
         radio_form = QFormLayout()
+        self.root_layout.removeWidget(self.enabled)
+        radio_form.addRow(self.enabled)
         label = QLabel()
         self.Text_Register(label, "field.ground_radio")
         self.radio = StandardComboBox()
@@ -262,6 +264,7 @@ class GroundTargetPage(BoardHardwarePage):
         self.radio_form = radio_form
         self.radio_instances_editor = GroundRadioInstancesEditor(translator)
         self.radio_instances_editor.configurationChanged.connect(self.radiosChanged.emit)
+        self.radio_instances_editor.legacyConfigurationChanged.connect(self.configurationChanged.emit)
         radio_form.addRow(self.radio_instances_editor)
         self.assignment_form = QFormLayout()
         self.assignments: dict[str, QComboBox] = {}
@@ -398,8 +401,9 @@ class GroundTargetPage(BoardHardwarePage):
                 item.setEnabled(False)
                 item.setToolTip("AIR_LINK_NO_RADIO: selected module variant is unavailable")
         self.module.setCurrentIndex(max(0, self.module.findData(ground.module_variant)))
-        self.radio_form.setRowVisible(self.radio, not ground.radio_instances)
-        self.radio_form.setRowVisible(self.module, not ground.radio_instances)
+        # Keep legacy value bindings without duplicate visible selectors.
+        self.radio_form.setRowVisible(self.radio, False)
+        self.radio_form.setRowVisible(self.module, False)
         self.radio_instances_editor.Configuration_Set(ground, radios, requirements.get("radio_contracts", {}))
         if any(issue.code == "GROUND_RADIO_RUNTIME_UNAVAILABLE" for issue in issues):
             self.radio_instances_editor.note.setText(self.radio_instances_editor.note.text() + "\n" +

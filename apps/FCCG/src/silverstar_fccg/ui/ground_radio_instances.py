@@ -1,7 +1,7 @@
 from dataclasses import replace
 
 from PySide6.QtCore import QSignalBlocker, QTimer, Qt, Signal
-from PySide6.QtWidgets import QFormLayout, QGroupBox, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFormLayout, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from silverstar_fccg.project.model import GroundRadioConfigurations_Get
 from silverstar_fccg.ui.widgets import StandardComboBox
@@ -9,12 +9,14 @@ from silverstar_fccg.ui.widgets import StandardComboBox
 
 class GroundRadioInstancesEditor(QWidget):
     configurationChanged = Signal(object, str)
+    legacyConfigurationChanged = Signal(str, object)
 
     def __init__(self, translator):
         super().__init__()
         self._translator = translator
         self._ground = None
         self._contracts = {}
+        self._choices = ()
         self._radios = ()
         self.rows = {}
         layout = QVBoxLayout(self)
@@ -45,6 +47,7 @@ class GroundRadioInstancesEditor(QWidget):
     def Configuration_Set(self, ground, choices, contracts):
         self._ground = ground
         self._contracts = contracts
+        self._choices = tuple(choices)
         self._radios = GroundRadioConfigurations_Get(ground)
         self.rows.clear()
         while self.rows_layout.count():
@@ -60,13 +63,20 @@ class GroundRadioInstancesEditor(QWidget):
         self.initial_instance.setVisible(bool(ground.radio_instances))
         self.initial_label.setVisible(bool(ground.radio_instances))
         self.add_button.setEnabled(ground.enabled and len(self._radios) < 4 and
-            bool(ground.radio_plugin) and bool(ground.module_variant))
-        if not ground.radio_instances:
-            return
+            ((bool(ground.radio_plugin) and bool(ground.module_variant)) or
+             (not ground.radio_plugin and any(available for _, _, available, _ in choices))))
         for index, radio in enumerate(self._radios):
-            group = QGroupBox(self._translator.Text_Get("ground.radio_title", id=radio.instance_id))
+            group = QWidget()
+            group.setObjectName("groundRadioRow_" + radio.instance_id)
             form = QFormLayout(group)
+            form.setContentsMargins(0, 0, 0, 0)
+            suffix = radio.instance_id.removeprefix("radio")
+            number = int(suffix) if suffix.isdecimal() else radio.instance_id
+            instance_title = QLabel(self._translator.Text_Get("ground.radio_title", id=number))
+            instance_title.setToolTip(radio.instance_id)
             plugin = StandardComboBox()
+            plugin.setObjectName("groundRadioPlugin_" + radio.instance_id)
+            plugin.addItem(self._translator.Text_Get("selection.none"), "")
             for title, identity, available, reason in choices:
                 plugin.addItem(title, identity)
                 plugin.model().item(plugin.count() - 1).setEnabled(available)
@@ -77,7 +87,7 @@ class GroundRadioInstancesEditor(QWidget):
             plugin.setCurrentIndex(plugin.findData(radio.plugin))
             plugin.currentIndexChanged.connect(lambda _index, identity=radio.instance_id, combo=plugin:
                 self._Field_Change(identity, "plugin", combo.currentData()))
-            form.addRow(self._translator.Text_Get("field.ground_radio"), plugin)
+            form.addRow(instance_title, plugin)
             module = StandardComboBox()
             contract = contracts.get(radio.plugin)
             modules = contract.modules if contract is not None else {}
@@ -103,12 +113,13 @@ class GroundRadioInstancesEditor(QWidget):
                 self._Field_Change(identity, "tx_power_dbm", combo.currentData()))
             form.addRow(self._translator.Text_Get("field.ground_tx_power"), power)
             buttons = QHBoxLayout()
-            controls = {"plugin": plugin, "module_variant": module, "tx_power_dbm": power}
+            controls = {"title": instance_title, "plugin": plugin, "module_variant": module, "tx_power_dbm": power}
             for name, key, available, operation in (
                 ("up", "ground.radio_up", index > 0, lambda identity=radio.instance_id: self._Move(identity, -1)),
                 ("down", "ground.radio_down", index < len(self._radios) - 1, lambda identity=radio.instance_id: self._Move(identity, 1)),
-                ("remove", "action.remove_device", len(self._radios) > 1, lambda identity=radio.instance_id: self._Remove(identity))):
+                ("remove", "action.remove_device", bool(radio.plugin), lambda identity=radio.instance_id: self._Remove(identity))):
                 button = QPushButton(self._translator.Text_Get(key))
+                button.setObjectName("groundRadio_" + name + "_" + radio.instance_id)
                 button.setEnabled(ground.enabled and available)
                 button.clicked.connect(lambda _checked=False, action=operation: action())
                 buttons.addWidget(button)
@@ -132,15 +143,31 @@ class GroundRadioInstancesEditor(QWidget):
             self._Commit(self._radios, active)
 
     def _Add(self):
-        if not self._ground or len(self._radios) >= 4:
+        if not self._ground or not self._ground.enabled or len(self._radios) >= 4:
             return
-        selected = next(radio for radio in self._radios if radio.instance_id == self._ground.active_radio_instance)
+        selected = next((radio for radio in self._radios
+                         if radio.instance_id == self._ground.active_radio_instance),
+                        GroundRadioConfigurations_Get(self._ground)[0])
+        if not selected.plugin:
+            identity = next((identity for _, identity, available, _ in self._choices if available), None)
+            if identity:
+                self._LegacyField_Commit("radio_plugin", identity)
+            return
         identifiers = {radio.instance_id for radio in self._radios}
         identity = next((f"radio{i}" for i in range(4) if f"radio{i}" not in identifiers), None)
         if identity and selected.plugin and selected.module_variant:
             self._Commit((*self._radios, replace(selected, instance_id=identity)), selected.instance_id)
 
+    def _LegacyField_Commit(self, field, value):
+        QTimer.singleShot(0, self, lambda: self.legacyConfigurationChanged.emit(field, value))
+
     def _Field_Change(self, identity, field, value):
+        if field == "plugin" and not value:
+            self._Remove(identity)
+            return
+        if not self._ground.radio_instances:
+            self._LegacyField_Commit("radio_plugin" if field == "plugin" else field, value)
+            return
         updated = []
         for radio in self._radios:
             if radio.instance_id == identity:
@@ -163,7 +190,9 @@ class GroundRadioInstancesEditor(QWidget):
             self._Commit(radios, self._ground.active_radio_instance)
 
     def _Remove(self, identity):
-        if len(self._radios) > 1:
-            remaining = tuple(radio for radio in self._radios if radio.instance_id != identity)
-            active = self._ground.active_radio_instance
-            self._Commit(remaining, active if active != identity else remaining[0].instance_id)
+        remaining = tuple(radio for radio in self._radios if radio.instance_id != identity)
+        if len(remaining) == len(self._radios):
+            return
+        active = self._ground.active_radio_instance
+        self._Commit(remaining, active if active != identity else
+                     remaining[0].instance_id if remaining else "radio0")

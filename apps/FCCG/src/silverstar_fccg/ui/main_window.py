@@ -343,7 +343,7 @@ class MainWindow(QMainWindow):
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
         self.ground_configuration_page = self.air_link_page
-        for group in (self.ground_target_page.enabled, self.ground_target_page.pc_group):
+        for group in (self.ground_target_page.pc_group,):
             self.ground_target_page.root_layout.removeWidget(group)
             self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
         self.build_page = BuildPage(self._translator)
@@ -1693,8 +1693,19 @@ class MainWindow(QMainWindow):
             self._GroundTarget_Change("tx_power_dbm", value)
 
     def _GroundRadios_Change(self, radios, active: str) -> None:
-        self._ProjectConfiguration_Change(lambda candidate: setattr(candidate, "ground_target",
-            GroundRadiosConfiguration_Apply(candidate.ground_target, radios, active)))
+        def change(candidate: ProjectModel) -> None:
+            ground = candidate.ground_target
+            if radios:
+                candidate.ground_target = GroundRadiosConfiguration_Apply(ground, radios, active)
+                return
+            removed = {radio.instance_id for radio in GroundRadioConfigurations_Get(ground)}
+            # Clearing the final selection uses the existing empty legacy state.
+            # Hardware, AIR settings, PC and unrelated assignments remain owned.
+            candidate.ground_target = replace(ground, radio_instances=(),
+                active_radio_instance="radio0", radio_plugin="", module_variant="",
+                resource_assignments={key: value for key, value in ground.resource_assignments.items()
+                                      if key.split(":", 1)[0] not in removed})
+        self._ProjectConfiguration_Change(change)
 
     def _GroundTarget_Change(self, field: str, value: object) -> None:
         if field == "board":

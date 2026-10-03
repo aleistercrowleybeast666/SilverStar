@@ -465,6 +465,7 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
         assert set(window.devices_page.add_buttons) == {
             "imu",
             "gnss",
+            "barometer",
             "telemetry",
         }
         assert all(
