@@ -24,6 +24,8 @@ static uint8_t s_file_open;
 static SystemStorageHealth s_health;
 static uint32_t s_mission_id;
 static uint8_t s_manifest_ready;
+/* DAP-only first mount result; UINT32_MAX means f_mount was never called. */
+static volatile uint32_t s_first_mount_fresult = UINT32_MAX;
 static void SilverStarStorageService_ObjectFaultRecord(void);
 
 static uint32_t SilverStarStorageService_IrqLock(void)
@@ -95,6 +97,7 @@ static SystemDeviceResult SilverStarStorageService_Mount(void)
     primask = SilverStarStorageService_IrqLock();
     if (s_health.initial_probe_complete == 0U)
     {
+        s_first_mount_fresult = (uint32_t)result;
         s_health.initial_probe_complete = 1U;
         s_health.initial_medium_unavailable = (uint8_t)(
             (result == FR_NOT_READY) || (result == FR_NO_FILESYSTEM));

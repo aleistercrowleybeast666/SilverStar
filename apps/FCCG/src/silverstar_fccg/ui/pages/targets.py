@@ -374,6 +374,11 @@ class GroundTargetPage(BoardHardwarePage):
             detected_package=str(ground.hardware.inventory.get("package", "")),
             detected_core=str(ground.hardware.inventory.get("core", "")),
             cubemx_version=ground.hardware.cubemx_version, firmware_package=ground.hardware.firmware_package))
+        used_resources = set(ground.resource_assignments.values()) | {
+            ground.pc_resource, ground.tx_led_resource, ground.rx_led_resource}
+        unused_resources = (sorted(resource.resource_id for resource in ground.hardware.resources
+                                   if resource.resource_id not in used_resources)
+                            if ground.hardware.mode == "board_plugin" else [])
         self.radio.clear()
         self.radio.addItem("—", "")
         for title, identity, available, reason in radios:
@@ -496,6 +501,10 @@ class GroundTargetPage(BoardHardwarePage):
             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
             if issues else self._translator.Text_Get("status.ground_ready")
         )
+        self.status.setToolTip(
+            self._translator.Text_Get("ground.unused_resources",
+                                      resources=", ".join(unused_resources))
+            if unused_resources else "")
         self.generate_button.setToolTip(self._translator.Text_Get(
             "status.ground_disabled" if not ground.enabled else
             "status.ground_configuration_required" if issues else "status.ground_ready"))

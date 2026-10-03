@@ -22,7 +22,10 @@ def runtime_owner_executable(tmp_path_factory):
     (build/"source-hashes.json").write_text(json.dumps({str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files},indent=2),encoding="utf8")
     assert result.returncode==0,result.stdout+result.stderr
     return exe,build
-@pytest.mark.parametrize("fault",["busy","spi","timeout"])
+@pytest.mark.parametrize("fault",[
+    "busy","spi","timeout","start_fail","exhaust",
+    "history_success","history_timeout",
+])
 def test_runtime_owner_generated(runtime_owner_executable,fault):
     exe,build=runtime_owner_executable
     result=subprocess.run([str(exe),fault],cwd=build,capture_output=True,text=True,encoding="utf8",errors="replace",timeout=30)

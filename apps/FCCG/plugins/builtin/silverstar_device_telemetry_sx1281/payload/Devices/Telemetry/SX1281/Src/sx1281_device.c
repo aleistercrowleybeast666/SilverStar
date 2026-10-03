@@ -466,10 +466,18 @@ static void Lora_ClearRuntimeState(uint8_t instance)
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask = Lora_IrqLock();
+    LoraStats lifetime_stats = s_stats;
+    uint32_t next_tx_id = s_contexts[instance].next_tx_id;
 
-    /* Reset the owned context together, including READY and future fields.
-     * Default modulation/packet configuration is loaded after this reset. */
+    /* Retire receipts and READY, but never reuse an old tracked TX ID or
+     * rewind counters observed by the source selector across recovery. */
     memset(&s_contexts[instance], 0, sizeof(s_contexts[instance]));
+    s_stats = lifetime_stats;
+    s_stats.last_rx_len = 0U;
+    s_stats.last_rx_rssi = 0;
+    s_stats.last_rx_snr = 0;
+    s_stats.last_rx_type = 0U;
+    s_contexts[instance].next_tx_id = next_tx_id;
     s_rx_error_code = IRQ_HEADER_ERROR_CODE;
     s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
     Lora_IrqUnlock(primask);
@@ -1871,6 +1879,8 @@ LoraDeactivateResult Lora_Deactivate(uint8_t instance)
 {
     PlatformResult result;
     uint32_t primask;
+    LoraStats lifetime_stats;
+    uint32_t next_tx_id;
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     SILVERSTAR_ASSERT(s_control_transaction.state != LoraControlStateActive,
@@ -1882,7 +1892,15 @@ LoraDeactivateResult Lora_Deactivate(uint8_t instance)
     /* Keep Init's original one-caller inlining and assertion provenance.
      * Retirement performs the same whole-context reset under its IRQ lock. */
     primask = Lora_IrqLock();
+    lifetime_stats = s_stats;
+    next_tx_id = s_contexts[instance].next_tx_id;
     memset(&s_contexts[instance], 0, sizeof(s_contexts[instance]));
+    s_stats = lifetime_stats;
+    s_stats.last_rx_len = 0U;
+    s_stats.last_rx_rssi = 0;
+    s_stats.last_rx_snr = 0;
+    s_stats.last_rx_type = 0U;
+    s_contexts[instance].next_tx_id = next_tx_id;
     s_rx_error_code = IRQ_HEADER_ERROR_CODE;
     s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
     Lora_IrqUnlock(primask);

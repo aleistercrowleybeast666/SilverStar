@@ -71,6 +71,74 @@ _Static_assert((uint32_t)NAV_KF_UPDATE_NUMERIC_ERROR == (uint32_t)SYSTEM_ESTIMAT
 #define ESTIMATOR_ORIGIN_FREEZE_MAX_RETRIES \
     SYSTEM_ESTIMATOR_ORIGIN_FREEZE_WAIT_MS
 
+/* EstimatorTask is the sole writer. A live DAP reader accepts only equal,
+ * even sequence values around a read. Sampling adds bounded clock calls. */
+typedef struct
+{
+    uint32_t sequence;
+    uint64_t last_start_us;
+    uint64_t last_end_us;
+    uint64_t max_duration_end_us;
+    uint64_t first_long_duration_end_us;
+    uint64_t last_long_duration_end_us;
+    uint32_t last_interval_us;
+    uint32_t max_interval_us;
+    uint32_t last_duration_us;
+    uint32_t max_duration_us;
+    uint32_t duration_over_20ms_count;
+    uint32_t last_prediction_count;
+    uint32_t max_prediction_count;
+    uint32_t prediction_cap_count;
+} EstimatorTaskTimingDiagnostics;
+
+static volatile EstimatorTaskTimingDiagnostics s_estimator_task_timing;
+
+static uint32_t EstimatorTask_DurationUs(uint64_t start_us, uint64_t end_us)
+{
+    uint64_t elapsed_us = (end_us >= start_us) ? end_us - start_us : 0U;
+    return (elapsed_us > UINT32_MAX) ? UINT32_MAX : (uint32_t)elapsed_us;
+}
+
+static void EstimatorTask_TimingBegin(uint64_t now_us)
+{
+    uint32_t interval_us;
+
+    s_estimator_task_timing.sequence++;
+    if (s_estimator_task_timing.last_start_us != 0U)
+    {
+        interval_us = EstimatorTask_DurationUs(
+            s_estimator_task_timing.last_start_us, now_us);
+        s_estimator_task_timing.last_interval_us = interval_us;
+        if (interval_us > s_estimator_task_timing.max_interval_us)
+        { s_estimator_task_timing.max_interval_us = interval_us; }
+    }
+    s_estimator_task_timing.last_start_us = now_us;
+    s_estimator_task_timing.sequence++;
+}
+
+static void EstimatorTask_TimingEnd(uint64_t now_us)
+{
+    uint32_t duration_us = EstimatorTask_DurationUs(
+        s_estimator_task_timing.last_start_us, now_us);
+    s_estimator_task_timing.sequence++;
+    s_estimator_task_timing.last_duration_us = duration_us;
+    s_estimator_task_timing.last_end_us = now_us;
+    if (duration_us > s_estimator_task_timing.max_duration_us)
+    {
+        s_estimator_task_timing.max_duration_us = duration_us;
+        s_estimator_task_timing.max_duration_end_us = now_us;
+    }
+    if ((duration_us >= 20000U) &&
+        (s_estimator_task_timing.duration_over_20ms_count < UINT32_MAX))
+    {
+        if (s_estimator_task_timing.first_long_duration_end_us == 0U)
+        { s_estimator_task_timing.first_long_duration_end_us = now_us; }
+        s_estimator_task_timing.last_long_duration_end_us = now_us;
+        s_estimator_task_timing.duration_over_20ms_count++;
+    }
+    s_estimator_task_timing.sequence++;
+}
+
 /* Only admitted origin-estimation values are retained per sample. The full
  * latest frame is stored once for provenance; no samples or precision are lost. */
 typedef struct
@@ -3222,10 +3290,17 @@ static void Estimator_PredictionsProcessCycle(void)
         }
         Estimator_PredictionProcess(&prediction);
     }
+    s_estimator_task_timing.sequence++;
+    s_estimator_task_timing.last_prediction_count = prediction_index;
+    if (prediction_index > s_estimator_task_timing.max_prediction_count)
+    { s_estimator_task_timing.max_prediction_count = prediction_index; }
     if (prediction_index == ESTIMATOR_MAX_PREDICTIONS_PER_CYCLE)
     {
+        if (s_estimator_task_timing.prediction_cap_count < UINT32_MAX)
+        { s_estimator_task_timing.prediction_cap_count++; }
         s_snapshot.health_flags |= ESTIMATOR_HEALTH_PREDICTION_QUEUE_OVERFLOW;
     }
+    s_estimator_task_timing.sequence++;
 }
 
 static uint8_t Estimator_OriginCollectionIdleGet(void)
@@ -3270,11 +3345,13 @@ void AppTask_Estimator(void *argument)
 
     for (;;)
     {
+        EstimatorTask_TimingBegin(SystemTime_GetMonotonicUs());
         SILVERSTAR_ASSERT(s_estimator.initialized <= 1U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
         SILVERSTAR_ASSERT(s_estimator.mission_running <= 1U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
         Estimator_OriginWindowCollect();
         Estimator_PredictionsProcessCycle();
         Estimator_HealthEventsPublish(SystemTime_GetMonotonicUs());
+        EstimatorTask_TimingEnd(SystemTime_GetMonotonicUs());
         vTaskDelay(pdMS_TO_TICKS(1U));
     }
 }

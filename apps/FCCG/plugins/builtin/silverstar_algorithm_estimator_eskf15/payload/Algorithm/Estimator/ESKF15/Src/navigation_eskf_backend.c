@@ -67,6 +67,55 @@ static uint8_t s_gnss_source;
 static uint32_t s_imu_quality_flags;
 static uint32_t s_calibration_generation;
 
+/* EstimatorTask is the sole writer. A live DAP reader accepts only equal,
+ * even sequence values around a read of this history-insertion evidence. */
+typedef struct
+{
+    uint32_t sequence;
+    uint64_t last_start_us;
+    uint64_t last_end_us;
+    uint64_t max_duration_end_us;
+    uint64_t first_long_duration_end_us;
+    uint64_t last_long_duration_end_us;
+    uint32_t last_duration_us;
+    uint32_t max_duration_us;
+    uint32_t duration_over_20ms_count;
+    uint32_t insert_count;
+    uint8_t last_group;
+    uint8_t max_group;
+} EskfReplayTimingDiagnostics;
+
+static volatile EskfReplayTimingDiagnostics s_eskf_replay_timing;
+
+static void Backend_ReplayTimingRecord(uint64_t start_us, uint64_t end_us,
+    uint8_t group)
+{
+    uint64_t elapsed_us = (end_us >= start_us) ? end_us - start_us : 0U;
+    uint32_t duration_us = (elapsed_us > UINT32_MAX) ? UINT32_MAX : (uint32_t)elapsed_us;
+
+    s_eskf_replay_timing.sequence++;
+    s_eskf_replay_timing.last_end_us = end_us;
+    s_eskf_replay_timing.last_duration_us = duration_us;
+    s_eskf_replay_timing.last_group = group;
+    if (duration_us > s_eskf_replay_timing.max_duration_us)
+    {
+        s_eskf_replay_timing.max_duration_us = duration_us;
+        s_eskf_replay_timing.max_duration_end_us = end_us;
+        s_eskf_replay_timing.max_group = group;
+    }
+    if ((duration_us >= 20000U) &&
+        (s_eskf_replay_timing.duration_over_20ms_count < UINT32_MAX))
+    {
+        if (s_eskf_replay_timing.first_long_duration_end_us == 0U)
+        { s_eskf_replay_timing.first_long_duration_end_us = end_us; }
+        s_eskf_replay_timing.last_long_duration_end_us = end_us;
+        s_eskf_replay_timing.duration_over_20ms_count++;
+    }
+    if (s_eskf_replay_timing.insert_count < UINT32_MAX)
+    { s_eskf_replay_timing.insert_count++; }
+    s_eskf_replay_timing.sequence++;
+}
+
 static const NavigationEskfConfig s_config = {
     SYSTEM_ESKF_GRAVITY_MPS2, SYSTEM_ESKF_GYRO_NOISE_DENSITY,
     SYSTEM_ESKF_ACCEL_NOISE_DENSITY, SYSTEM_ESKF_GYRO_BIAS_RW,
@@ -380,7 +429,12 @@ static void Backend_EventApply(NavigationEskfReplayEvent *event, BackendMeasurem
     }
     Backend_AngularRateGet(event->measurement_us, event->measurement.angular_rate_b_radps);
     memset(&outcome, 0, sizeof(outcome)); outcome.r_scale = 1.0f;
+    s_eskf_replay_timing.sequence++;
+    s_eskf_replay_timing.last_start_us = SystemTime_GetMonotonicUs();
+    s_eskf_replay_timing.sequence++;
     result = NavigationEskfReplay_Insert(&s_history, &s_state, &s_work, &s_config, event, &outcome);
+    Backend_ReplayTimingRecord(s_eskf_replay_timing.last_start_us,
+        SystemTime_GetMonotonicUs(), event->measurement.group);
     Backend_OutcomePublish(event, record, result, &outcome, output);
 }
 

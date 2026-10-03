@@ -346,8 +346,8 @@ static void Test_DeactivateIsolation(uint8_t retired, PlatformResult gpio_result
     PlatformGpioId reset = Sx1281Bus_ResetGet(retired);
     PlatformGpioId other_reset = Sx1281Bus_ResetGet(other);
     LoraDebugSnapshot before = {0};
+    LoraDebugSnapshot retired_before = {0};
     LoraDebugSnapshot after = {0};
-    LoraDebugSnapshot cleared = {0};
     LoraDiagSnapshot diag_before = {0};
     LoraDiagSnapshot diag_after = {0};
     LoraDiagSnapshot diag_cleared = {0};
@@ -395,7 +395,8 @@ static void Test_DeactivateIsolation(uint8_t retired, PlatformResult gpio_result
     Lora_GetDiagSnapshot(other, &diag_before);
     TEST_CHECK(before.initialized == 1U && before.tx_queue_count == 1U &&
                before.rx_queue_count == 1U);
-    TEST_CHECK(before.stats.tx_ok == 1U && before.stats.rx_ok == 1U);
+    TEST_CHECK(before.stats.tx_ok >= 1U && before.stats.rx_ok >= 1U);
+    Lora_GetDebugSnapshot(retired, &retired_before);
     s_gpio_write_results[reset] = gpio_result;
     result = Lora_Deactivate(retired);
     TEST_CHECK(result == ((gpio_result == PLATFORM_OK) ?
@@ -407,7 +408,12 @@ static void Test_DeactivateIsolation(uint8_t retired, PlatformResult gpio_result
     TEST_CHECK(s_gpio_irq[Sx1281Bus_Dio1Get(retired)] == 0U);
     TEST_CHECK(s_gpio_irq[Sx1281Bus_Dio1Get(other)] == 1U);
     Lora_GetDebugSnapshot(retired, &after);
-    TEST_CHECK(memcmp(&after, &cleared, sizeof(after)) == 0);
+    TEST_CHECK(after.initialized == 0U && after.tx_queue_count == 0U &&
+               after.rx_queue_count == 0U);
+    TEST_CHECK(after.stats.radio_state == LORA_RADIO_STATE_NOT_INIT &&
+               after.stats.tx_ok == retired_before.stats.tx_ok &&
+               after.stats.tx_timeout == retired_before.stats.tx_timeout &&
+               after.stats.rx_ok == retired_before.stats.rx_ok);
     Lora_GetDiagSnapshot(retired, &diag_after);
     TEST_CHECK(memcmp(&diag_after, &diag_cleared, sizeof(diag_after)) == 0);
     TEST_CHECK(Lora_IsBusy(retired) == LORA_BUSY_IDLE);
@@ -435,6 +441,11 @@ static void Test_DeactivateIsolation(uint8_t retired, PlatformResult gpio_result
     TEST_CHECK(Lora_Init(retired) == LORA_INIT_OK);
     Lora_GetDebugSnapshot(retired, &after);
     TEST_CHECK(after.initialized == 1U && after.tx_queue_count == 0U && after.rx_queue_count == 0U);
+    uint32_t fresh_id = 0U;
+    TEST_CHECK(Lora_TxEnqueueTracked(retired, payload, sizeof(payload), &fresh_id) ==
+               LORA_TX_ENQUEUE_OK);
+    TEST_CHECK(fresh_id != 0U && fresh_id != completed[retired] &&
+               fresh_id != pending[retired]);
     TEST_CHECK(Lora_ControlSubmit(retired, LORA_CONTROL_IRQ_CLEAR, 1000U, &age_ms) ==
                LORA_CONTROL_SUBMIT_OK);
 }

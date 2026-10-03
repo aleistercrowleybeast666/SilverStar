@@ -154,7 +154,19 @@ int main(int argc, char **argv)
     calibration_result = SystemCalibration_StatusGet(&calibration);
     TEST_CHECK(calibration_result == SYSTEM_DEVICE_OK);
     if (calibration_result != SYSTEM_DEVICE_OK) { return Test_Finish("eskf_backend_actual"); }
-    TEST_CHECK(calibration.mode == SYSTEM_CALIBRATION_MODE_NONE && calibration.ready != 0U);
+    /* This direct backend fixture does not run a physical IMU calibration.
+     * Check the generated startup contract before exercising the kernel. */
+    if (SYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK == 0U)
+    {
+        TEST_CHECK(calibration.mode == SYSTEM_CALIBRATION_MODE_NONE &&
+                   calibration.ready != 0U);
+    }
+    else
+    {
+        TEST_CHECK(calibration.mode == SYSTEM_CALIBRATION_MODE_NOT_SELECTED &&
+                   calibration.ready == 0U &&
+                   calibration.state == SYSTEM_CALIBRATION_STATE_IDLE);
+    }
 #ifdef TEST_ESKF_BACKEND_EXPORT
     FlightTask_CalibrationResultWrite(&calibration);
 #endif

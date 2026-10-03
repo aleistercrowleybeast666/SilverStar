@@ -888,6 +888,7 @@
   "action.generate_all": "全部生成",
   "status.air_link_ready": "AIR Link 兼容状态：READY",
   "status.ground_ready": "地面站：READY",
+  "ground.unused_resources": "未使用的板载资源（仅提示）：{resources}",
   "status.targets_generated": "已生成 Target",
   "dialog.select_project_root": "选择 SilverStar 项目目录",
   "selection.unavailable.air_link": "与所选 AIR Link 不兼容",

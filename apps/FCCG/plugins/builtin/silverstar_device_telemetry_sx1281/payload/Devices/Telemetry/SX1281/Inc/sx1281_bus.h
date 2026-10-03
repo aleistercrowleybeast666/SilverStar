@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "platform_gpio.h"
+#include "platform_types.h"
 
 typedef enum
 {
@@ -19,6 +20,23 @@ typedef struct
     uint32_t spi_error_count;
     uint32_t spi_timeout_count;
     uint32_t busy_timeout_count;
+    uint32_t first_failure_at_ms;
+    uint32_t first_failure_elapsed_ms;
+    PlatformResult first_failure_platform_result;
+    Sx1281BusResult first_failure_result;
+    uint16_t first_failure_length;
+    uint8_t first_failure_opcode;
+    uint8_t first_failure_valid;
+    uint8_t first_failure_opcode_valid;
+    uint8_t first_failure_platform_result_valid;
+    uint8_t first_failure_driver_valid;
+    uint32_t first_failure_driver_status;
+    uint32_t first_failure_driver_error_code;
+    uint32_t first_failure_driver_state;
+    uint32_t first_failure_spi_sr;
+    uint32_t first_failure_driver_elapsed_ms;
+    uint16_t first_failure_tx_remaining;
+    uint16_t first_failure_rx_remaining;
 } Sx1281BusStatus;
 
 void Sx1281Bus_Init(uint8_t instance);

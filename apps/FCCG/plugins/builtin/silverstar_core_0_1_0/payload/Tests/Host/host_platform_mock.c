@@ -439,6 +439,22 @@ PlatformResult PlatformSpi_Transfer(PlatformSpiId id,
     return s_spi_result;
 }
 
+PlatformResult PlatformSpi_WriteObserved(PlatformSpiId id,
+    const uint8_t *data, uint16_t length, uint32_t timeout_ms,
+    PlatformSpiDriverObservation *observation)
+{
+    if (observation != NULL) { observation->valid = 0U; }
+    return PlatformSpi_Write(id, data, length, timeout_ms);
+}
+
+PlatformResult PlatformSpi_TransferObserved(PlatformSpiId id,
+    const uint8_t *tx_data, uint8_t *rx_data, uint16_t length,
+    uint32_t timeout_ms, PlatformSpiDriverObservation *observation)
+{
+    if (observation != NULL) { observation->valid = 0U; }
+    return PlatformSpi_Transfer(id, tx_data, rx_data, length, timeout_ms);
+}
+
 PlatformResult PlatformI2c_Write(PlatformI2cId id, uint16_t address,
                                  const uint8_t *data, uint16_t length,
                                  uint32_t timeout_ms)

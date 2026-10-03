@@ -888,6 +888,7 @@
   "action.generate_all": "Generate All",
   "status.air_link_ready": "AIR Link compatibility: READY",
   "status.ground_ready": "Ground Station: READY",
+  "ground.unused_resources": "Unused board resources (informational): {resources}",
   "status.targets_generated": "Generated targets",
   "dialog.select_project_root": "Select SilverStar project directory",
   "selection.unavailable.air_link": "Incompatible with the selected AIR Link",

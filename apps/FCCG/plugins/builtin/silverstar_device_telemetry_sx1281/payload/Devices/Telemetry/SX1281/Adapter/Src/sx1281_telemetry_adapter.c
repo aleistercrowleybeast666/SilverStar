@@ -14,10 +14,19 @@
 #include "sx1281_device.h"
 #include "sx1281_instance.h"
 
+#define SX1281_RECOVERY_LIMIT 3U
+#define SX1281_RECOVERY_DELAY_US 1000000ULL
+
 typedef struct
 {
     volatile uint8_t initialized;
     volatile uint8_t started;
+    uint8_t recovery_pending;
+    uint8_t recovery_attempts;
+    uint8_t recovery_limit_exhausted;
+    uint8_t fault_captured;
+    uint64_t next_recovery_us;
+    Sx1281BusStatus fault_bus_status;
     SystemTelemetryHealth health;
     SystemDeviceIoDiagnostics io_diagnostics;
     LoraStats previous_stats;
@@ -74,6 +83,7 @@ static SystemDeviceResult Sx1281Transport_Init(uint8_t instance)
     LoraInitResult init_result;
     LoraChipStatus chip_status;
     Sx1281BusStatus bus_status;
+    SystemTelemetryHealth previous_health;
     uint32_t primask;
 
     SILVERSTAR_ASSERT(s_initialized <= 1U,
@@ -84,8 +94,16 @@ static SystemDeviceResult Sx1281Transport_Init(uint8_t instance)
                       SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_initialized != 0U) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
     primask = Sx1281Transport_IrqLock(instance);
+    previous_health = s_health;
     (void)memset(&s_health, 0, sizeof(s_health));
-    (void)memset(&s_previous_stats, 0, sizeof(s_previous_stats));
+    /* Public counters are cumulative within a boot. DeviceTask can sample
+     * them between Init and the next TelemetryTask Process during recovery. */
+    s_health.transmit_packet_count = previous_health.transmit_packet_count;
+    s_health.receive_packet_count = previous_health.receive_packet_count;
+    s_health.transmit_timeout_count = previous_health.transmit_timeout_count;
+    s_health.transmit_error_count = previous_health.transmit_error_count;
+    s_health.receive_error_count = previous_health.receive_error_count;
+    s_health.integrity_error_count = previous_health.integrity_error_count;
     (void)memset(&s_previous_bus_status, 0, sizeof(s_previous_bus_status));
     (void)memset(&s_io_diagnostics, 0, sizeof(s_io_diagnostics));
     s_io_diagnostics.supported_mask = SYSTEM_DEVICE_IO_VALID_TRANSPORT |
@@ -166,8 +184,38 @@ static SystemDeviceResult Sx1281Transport_Stop(uint8_t instance)
 
     s_started = 0U;
     s_health.started = 0U;
+    s_transport_contexts[instance].recovery_pending = 0U;
     Sx1281Transport_IrqUnlock(instance, primask);
     return SYSTEM_DEVICE_OK;
+}
+
+/* Only TelemetryTask calls Process after bootstrap. Failed attempts stay
+ * offline, and the lifetime budget also bounds repeated later faults. */
+static void Sx1281Transport_RecoveryProcess(uint8_t instance)
+{
+    Sx1281TransportContext *context = &s_transport_contexts[instance];
+    uint64_t now_us = PlatformTime_Us();
+    uint32_t primask = Sx1281Transport_IrqLock(instance);
+    if ((context->recovery_pending == 0U) ||
+        (context->recovery_attempts >= SX1281_RECOVERY_LIMIT) ||
+        (now_us < context->next_recovery_us))
+    { Sx1281Transport_IrqUnlock(instance, primask); return; }
+    context->recovery_pending = 0U;
+    context->recovery_attempts++;
+    Sx1281Transport_IrqUnlock(instance, primask);
+    if ((Sx1281Transport_Init(instance) == SYSTEM_DEVICE_OK) &&
+        (Sx1281Transport_Start(instance) == SYSTEM_DEVICE_OK))
+    { return; }
+    uint64_t next_recovery_us = PlatformTime_Us() + SX1281_RECOVERY_DELAY_US;
+    primask = Sx1281Transport_IrqLock(instance);
+    if (context->recovery_attempts >= SX1281_RECOVERY_LIMIT)
+    { context->recovery_limit_exhausted = 1U; }
+    else
+    {
+        context->recovery_pending = 1U;
+        context->next_recovery_us = next_recovery_us;
+    }
+    Sx1281Transport_IrqUnlock(instance, primask);
 }
 
 static SystemDeviceResult Sx1281Transport_Send(uint8_t instance, const uint8_t *data,
@@ -288,6 +336,28 @@ static void Sx1281Transport_HealthStatsApply(uint8_t instance,
     health->last_snr_q4 = (int8_t)(stats->last_rx_snr * 4);
 }
 
+/* Called under the adapter lock after the owning task observes NOT_INIT. */
+static void Sx1281Transport_FaultMark(uint8_t instance,
+    SystemTelemetryHealth *health, Sx1281BusStatus bus_status, uint64_t now_us)
+{
+    s_started = 0U; s_initialized = 0U;
+    health->started = 0U; health->initialized = 0U;
+    health->online = 0U; health->healthy = 0U;
+    if (s_transport_contexts[instance].fault_captured == 0U)
+    {
+        s_transport_contexts[instance].fault_bus_status = bus_status;
+        s_transport_contexts[instance].fault_captured = 1U;
+    }
+    if (s_transport_contexts[instance].recovery_attempts < SX1281_RECOVERY_LIMIT)
+    {
+        s_transport_contexts[instance].recovery_pending = 1U;
+        s_transport_contexts[instance].next_recovery_us =
+            now_us + SX1281_RECOVERY_DELAY_US;
+    }
+    else
+    { s_transport_contexts[instance].recovery_limit_exhausted = 1U; }
+}
+
 static void Sx1281Transport_Process(uint8_t instance)
 {
     (void)instance;
@@ -306,7 +376,11 @@ static void Sx1281Transport_Process(uint8_t instance)
     SILVERSTAR_ASSERT(s_started <= 1U,
                       SILVERSTAR_ASSERT_MODULE_DEVICE,
                       SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    if (s_started == 0U) { return; }
+    if (s_started == 0U)
+    {
+        Sx1281Transport_RecoveryProcess(instance);
+        return;
+    }
     (void)memset(&chip_status, 0, sizeof(chip_status));
     Lora_Process(instance);
     Lora_GetStats(instance, &stats);
@@ -336,11 +410,7 @@ static void Sx1281Transport_Process(uint8_t instance)
     primask = Sx1281Transport_IrqLock(instance);
     Sx1281Transport_IoDiagnosticsUpdate(instance, &stats, &bus_status);
     if (stats.radio_state == LORA_RADIO_STATE_NOT_INIT)
-    {
-        s_started = 0U; s_initialized = 0U;
-        health.started = 0U; health.initialized = 0U;
-        health.online = 0U; health.healthy = 0U;
-    }
+    { Sx1281Transport_FaultMark(instance, &health, bus_status, now_us); }
     s_health = health;
     s_previous_stats = stats;
     s_previous_bus_status = bus_status;
@@ -452,6 +522,23 @@ SystemDeviceResult Sx1281TelemetryInstance_IoDiagnosticsGet(uint8_t instance,
     SystemDeviceIoDiagnostics *diagnostics)
 {
     (void)instance; return Sx1281Transport_GetIoDiagnostics(instance, diagnostics); }
+SystemDeviceResult Sx1281TelemetryInstance_RecoveryDiagnosticsGet(
+    uint8_t instance, Sx1281RecoveryDiagnostics *diagnostics)
+{
+    uint32_t primask;
+    if ((instance >= PROJECT_SX1281_INSTANCE_COUNT) || (diagnostics == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    primask = Sx1281Transport_IrqLock(instance);
+    diagnostics->attempts = s_transport_contexts[instance].recovery_attempts;
+    diagnostics->limit = SX1281_RECOVERY_LIMIT;
+    diagnostics->pending = s_transport_contexts[instance].recovery_pending;
+    diagnostics->limit_exhausted =
+        s_transport_contexts[instance].recovery_limit_exhausted;
+    diagnostics->fault_captured = s_transport_contexts[instance].fault_captured;
+    diagnostics->fault_bus_status = s_transport_contexts[instance].fault_bus_status;
+    Sx1281Transport_IrqUnlock(instance, primask);
+    return SYSTEM_DEVICE_OK;
+}
 SystemDeviceResult Sx1281TelemetryInstance_SelfTestRun(uint8_t instance,
     SystemDeviceSelfTestResult *result)
 {

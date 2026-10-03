@@ -24,6 +24,7 @@ from silverstar_fccg.project.model import (
     DeviceInstance,
     HardwareConfiguration,
     HardwareResource,
+    GroundRadioConfigurations_Get,
     ProjectModel,
     ProtocolSelection,
 )
@@ -31,6 +32,7 @@ from silverstar_fccg.project.protocols import (
     ProtocolAutoManagedDevices_Reconcile,
     ProtocolProfileAvailabilities_Get,
 )
+from silverstar_fccg.project.radio_variants import RadioManifest_Resolve
 from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get,
     BoardResourceProvisions_Get,
@@ -750,13 +752,21 @@ def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
                        source_label=board.name,
                        inventory=inventory.Dictionary_Get(), resources=resources)
     assignments = dict(ground.resource_assignments)
-    # Explicit instance lists own their bindings. Filling board defaults on
-    # every reconcile would bind a newly added radio0 to a deleted instance's
-    # resources. Retain the legacy single-radio board initialization route.
-    primary_plugin = ground.radio_plugin if not ground.radio_instances else ""
-    if primary_plugin:
+    # The fixed telemetry roles belong to radio0 in both the legacy single
+    # radio format and the explicit instance format. Other radios retain their
+    # own bindings, and an absent radio0 must not inherit a deleted one's pins.
+    primary = next((radio for radio in GroundRadioConfigurations_Get(ground)
+                    if radio.instance_id == "radio0"), None)
+    if primary is not None and primary.plugin:
         # The board defaults own radio0, never a deleted or different instance.
-        radio = catalog.Component_Get(primary_plugin)
+        radio = catalog.Component_Get(primary.plugin)
+        try:
+            radio = RadioManifest_Resolve(radio, DeviceInstance(
+                primary.instance_id, primary.plugin,
+                module_variant=primary.module_variant,
+                tx_power_dbm=primary.tx_power_dbm))
+        except ValueError:
+            pass  # The Ground validation path reports the unsupported module.
         available = {item.resource_id: item for item in resources}
         for requirement in radio.resource_requirements:
             role = next((item for item in board.resource_roles

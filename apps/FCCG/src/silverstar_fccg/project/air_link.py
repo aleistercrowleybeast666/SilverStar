@@ -258,7 +258,7 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
     if ground.pc_interface == "usb_cdc":
         frontend_bindings.extend(("pc_interface", item.metadata, item.resource_id)
             for item in available.values() if item.kind == "usb_cdc")
-    for radio_index, configuration in enumerate(configurations):
+    for configuration in configurations:
         try:
             radio = catalog.Component_Get(configuration.plugin)
             from silverstar_fccg.project.model import DeviceInstance
@@ -292,7 +292,7 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
             for requirement in radio.resource_requirements:
                 key = f"{configuration.instance_id}:{requirement.name}"
                 assigned = ground.resource_assignments.get(key)
-                if radio_index == 0 and board is not None and ground.hardware.mode == "board_plugin":
+                if configuration.instance_id == "radio0" and board is not None and ground.hardware.mode == "board_plugin":
                     role = next((item for item in board.resource_roles
                                  if item.key == f"telemetry:{requirement.name}"), None)
                     if role is not None and role.fixed and assigned != role.default:

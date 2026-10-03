@@ -4,6 +4,20 @@
 #include <stdint.h>
 
 #include "system_telemetry_transport_if.h"
+#include "sx1281_bus.h"
+
+typedef struct
+{
+    uint8_t attempts;
+    uint8_t limit;
+    uint8_t pending;
+    uint8_t limit_exhausted;
+    uint8_t fault_captured;
+    Sx1281BusStatus fault_bus_status;
+} Sx1281RecoveryDiagnostics;
+
+SystemDeviceResult Sx1281TelemetryInstance_RecoveryDiagnosticsGet(
+    uint8_t instance, Sx1281RecoveryDiagnostics *diagnostics);
 
 const char *Sx1281TelemetryInstance_NameGet(uint8_t instance);
 SystemDeviceResult Sx1281TelemetryInstance_Init(uint8_t instance);

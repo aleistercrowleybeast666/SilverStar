@@ -14,6 +14,8 @@
 #include "system_telemetry_transport_if.h"
 #include "system_time.h"
 #include "test_common.h"
+#include <errno.h>
+#include <stdlib.h>
 
 #define TEST_INSTANCE_COUNT 3U
 #define TEST_EVENT_COUNT_MAX 32U
@@ -799,6 +801,25 @@ static void Test_TelemetryInitFailureSkipsCandidate(void)
     TEST_CHECK(s_telemetry_start_count[2] == 0U);
 }
 
+static void Test_TelemetrySingleFaultProcessContinues(void)
+{
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_telemetry_health[0].initialized = 0U;
+    s_telemetry_health[0].started = 0U;
+    s_telemetry_health[0].healthy = 0U;
+    s_telemetry_health[0].online = 0U;
+    s_telemetry_health[0].transmit_timeout_count = 1U;
+    SystemTelemetry_Process();
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_process_count[0] == 2U);
+    TEST_CHECK(Test_ActiveGet(
+        SystemSourceSelector_TelemetryActiveInstanceGet) == 0U);
+    TEST_CHECK(s_telemetry_stop_count[0] == 0U);
+}
+
 static void Test_TelemetryControlRouting(void)
 {
     uint8_t data = 1U;
@@ -826,9 +847,90 @@ static void Test_TelemetryControlRouting(void)
     TEST_CHECK(SystemTelemetry_TxResultGet(id, &age) == SYSTEM_DEVICE_NOT_READY);
 }
 
-int main(void)
+static void Test_TelemetryRecoveryCounters(void)
+{
+    /* The SX1281 adapter exports lifetime counters across owner recovery.
+     * The selector must count only the next real TX result. */
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_telemetry_health[0].transmit_packet_count = 299U;
+    SystemTelemetry_Process();
+    s_telemetry_health[0].transmit_timeout_count = 1U;
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 1U);
+    SystemTelemetry_Process(); /* Adapter recovery with unchanged counters. */
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 1U);
+    s_telemetry_health[0].transmit_timeout_count = 2U;
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 2U);
+    s_telemetry_health[0].transmit_packet_count = 300U;
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 0U);
+
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_telemetry_health[0].transmit_timeout_count = 1U;
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 1U);
+    SystemTelemetry_Process(); /* No phantom success after radio reinit. */
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 1U);
+    s_telemetry_health[0].transmit_timeout_count = 2U;
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 2U);
+}
+
+static int Test_TelemetryRecoveryTrace(int argc, char **argv)
+{
+    uint32_t count[6];
+    uint8_t index;
+    if (argc != 7) { return 2; }
+    for (index = 0U; index < 6U; index++)
+    {
+        char *end = NULL;
+        unsigned long value;
+        errno = 0;
+        value = strtoul(argv[index + 1U], &end, 10);
+        if ((errno != 0) || (end == argv[index + 1U]) || (*end != '\0') ||
+            (value > UINT32_MAX)) { return 2; }
+        count[index] = (uint32_t)value;
+    }
+    if ((count[2] < count[0]) || (count[3] < count[1]) ||
+        (count[4] != count[2]) || (count[5] != count[3]) ||
+        (count[3] >= SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT))
+    { return 2; }
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_telemetry_health[0].transmit_packet_count = count[0];
+    s_telemetry_health[0].transmit_timeout_count = count[1];
+    SystemTelemetry_Process();
+    s_telemetry_health[0].transmit_packet_count = count[2];
+    s_telemetry_health[0].transmit_timeout_count = count[3];
+    SystemTelemetry_Process();
+    s_telemetry_health[0].transmit_packet_count = count[4];
+    s_telemetry_health[0].transmit_timeout_count = count[5];
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() ==
+               count[3]);
+    s_telemetry_health[0].transmit_timeout_count++;
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() ==
+               count[3] + 1U);
+    s_telemetry_health[0].transmit_packet_count++;
+    SystemTelemetry_Process();
+    TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() == 0U);
+    return Test_Finish("source_selector_recovery_trace");
+}
+
+int main(int argc, char **argv)
 {
     SystemMagnetometerSample magnetometer;
+    if (argc != 1) { return Test_TelemetryRecoveryTrace(argc, argv); }
     Test_StateReset();
     s_magnetometer_sample.sequence = 7U;
     TEST_CHECK(SystemMagnetometer_LatestSampleGet(&magnetometer) ==
@@ -844,6 +946,8 @@ int main(void)
     Test_TelemetryThresholdAndReset();
     Test_TelemetryChainAndLastCandidate();
     Test_TelemetryInitFailureSkipsCandidate();
+    Test_TelemetrySingleFaultProcessContinues();
     Test_TelemetryControlRouting();
+    Test_TelemetryRecoveryCounters();
     return Test_Finish("source_selector");
 }
