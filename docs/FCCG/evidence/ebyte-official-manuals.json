@@ -1,0 +1,76 @@
+[
+  {
+    "manual_id": 2049,
+    "url": "https://www.ebyte.com/downpdf/2049.html",
+    "models": [
+      "12S",
+      "12SX"
+    ],
+    "sha256": "13293d3991b29201e80149f39d9f900b9aad4bb9c3647c7864a8b79e739c8c2b",
+    "bytes": 1103122,
+    "pin_table_pdf_page_1_based": 6,
+    "nominal_output_pdf_page_1_based": 5,
+    "review": "Official PDF text extracted with pypdf; SPI max10Mbps; nominal points only; no calibrated output ladder inferred."
+  },
+  {
+    "manual_id": 285,
+    "url": "https://www.ebyte.com/downpdf/285.html",
+    "models": [
+      "12S"
+    ],
+    "sha256": "0666ff672118c4ef4e30d670f0d5555bd3a13d96328b1c79b3429b6326db3bac",
+    "bytes": 1058686,
+    "pin_table_pdf_page_1_based": 5,
+    "nominal_output_pdf_page_1_based": 4,
+    "review": "Official PDF text extracted with pypdf; SPI max10Mbps; nominal points only; no calibrated output ladder inferred."
+  },
+  {
+    "manual_id": 304,
+    "url": "https://www.ebyte.com/downpdf/304.html",
+    "models": [
+      "20S"
+    ],
+    "sha256": "14ab0d3a9294f4888a85df7cfc5e36555b6616217bd0415f023bc71517585489",
+    "bytes": 1052363,
+    "pin_table_pdf_page_1_based": 5,
+    "nominal_output_pdf_page_1_based": 6,
+    "review": "Official PDF text extracted with pypdf; SPI max10Mbps; nominal points only; no calibrated output ladder inferred."
+  },
+  {
+    "manual_id": 2217,
+    "url": "https://www.ebyte.com/downpdf/2217.html",
+    "models": [
+      "20S",
+      "20SX"
+    ],
+    "sha256": "1b90fc4e0dbb5819c11af01e379c2200b06ac8cb39bd2bc5994a289a154c80e3",
+    "bytes": 1184782,
+    "pin_table_pdf_page_1_based": 6,
+    "nominal_output_pdf_page_1_based": 7,
+    "review": "Official PDF text extracted with pypdf; SPI max10Mbps; nominal points only; no calibrated output ladder inferred."
+  },
+  {
+    "manual_id": 527,
+    "url": "https://www.ebyte.com/downpdf/527.html",
+    "models": [
+      "27S"
+    ],
+    "sha256": "5022ee478a41074d441e037a543e4420f5dba35545c72b098631e9f094c08ae6",
+    "bytes": 1109940,
+    "pin_table_pdf_page_1_based": 5,
+    "nominal_output_pdf_page_1_based": 6,
+    "review": "Official PDF text extracted with pypdf; SPI max10Mbps; nominal points only; no calibrated output ladder inferred."
+  },
+  {
+    "manual_id": 1920,
+    "url": "https://www.ebyte.com/downpdf/1920.html",
+    "models": [
+      "27SX"
+    ],
+    "sha256": "9499207e36935a28246e22f6f315c6c66a3601dd9189f4a37c7f10c957868915",
+    "bytes": 947749,
+    "pin_table_pdf_page_1_based": 6,
+    "nominal_output_pdf_page_1_based": 7,
+    "review": "Official PDF text extracted with pypdf; SPI max10Mbps; nominal points only; no calibrated output ladder inferred."
+  }
+]

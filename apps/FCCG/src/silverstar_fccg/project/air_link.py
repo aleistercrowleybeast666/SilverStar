@@ -5,6 +5,9 @@ from dataclasses import dataclass
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.plugins.manifest import PluginManifest, RadioContribution
 from silverstar_fccg.project.model import ProjectModel
+from silverstar_fccg.project.radio_variants import (
+    RADIO_PLUGIN, FlightRadioConfiguration_Get, RadioManifest_Resolve,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,15 +112,19 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
         if manifest is not None and manifest.radio is not None
     )
     for endpoint, radio in radios:
-        module_id = model.ground_target.module_variant if endpoint == "Ground" else ""
+        module_id = (model.ground_target.module_variant if endpoint == "Ground" else
+                     FlightRadioConfiguration_Get(model, flight_instance)[0] if flight_instance else "")
         issues.extend(RadioCandidateIssues_Get(link, radio, module_id, endpoint))
     if flight is not None and flight.radio is not None:
-        flight_modules = tuple(flight.radio.modules.values())
-        if len(flight_modules) != 1 or model.flight_tx_power_dbm not in flight_modules[0]["supported_tx_powers_dbm"]:
-            issues.append(AirLinkIssue(
-                "AIR_LINK_TX_POWER_UNSUPPORTED",
-                "Flight TX power is not supported by the selected radio module",
-            ))
+        for instance in model.device_instances:
+            if instance.plugin != RADIO_PLUGIN:
+                continue
+            module_id, power = FlightRadioConfiguration_Get(model, instance)
+            module = flight.radio.modules.get(module_id)
+            issues.extend(RadioCandidateIssues_Get(link, flight.radio, module_id, instance.instance_id))
+            if module is None or type(power) is not int or power not in module["supported_tx_powers_dbm"]:
+                issues.append(AirLinkIssue("AIR_LINK_TX_POWER_UNSUPPORTED",
+                    f"Flight {instance.instance_id} TX power is not supported by its module"))
     if ground is not None and ground.radio is not None:
         module = ground.radio.modules.get(model.ground_target.module_variant)
         if module is not None and model.ground_target.tx_power_dbm not in module["supported_tx_powers_dbm"]:
@@ -241,16 +248,27 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
     configurations = GroundRadioConfigurations_Get(ground)
     exclusive: dict[str, str] = {}
     occupied_pins: dict[str, str] = {}
+    frontend_bindings = []
     pc_resource = available.get(ground.pc_resource) if ground.pc_interface == "uart" else None
     if pc_resource is not None:
+        frontend_bindings.append(("pc_interface", pc_resource.metadata, pc_resource.resource_id))
         pc_pins = pc_resource.metadata.get("pins", {})
         if isinstance(pc_pins, dict):
             occupied_pins.update((str(pin), "pc_interface") for pin in pc_pins.values() if pin)
+    if ground.pc_interface == "usb_cdc":
+        frontend_bindings.extend(("pc_interface", item.metadata, item.resource_id)
+            for item in available.values() if item.kind == "usb_cdc")
     for radio_index, configuration in enumerate(configurations):
         try:
             radio = catalog.Component_Get(configuration.plugin)
+            from silverstar_fccg.project.model import DeviceInstance
+            radio = RadioManifest_Resolve(radio, DeviceInstance(configuration.instance_id,
+                configuration.plugin, module_variant=configuration.module_variant,
+                tx_power_dbm=configuration.tx_power_dbm))
         except ValueError:
             radio = None
+            issues.append(AirLinkIssue("AIR_LINK_NO_RADIO",
+                f"Ground {configuration.instance_id} module or radio is unavailable"))
         if radio is not None:
             from silverstar_fccg.plugins.manifest import (
                 ResourceMode, ResourceProvision,
@@ -263,6 +281,14 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                 issues.append(AirLinkIssue(
                     "AIR_LINK_NO_RADIO", "Ground radio module variant is unavailable"
                 ))
+            if radio.radio is not None:
+                issues.extend(RadioCandidateIssues_Get(model.air_link, radio.radio,
+                    configuration.module_variant, configuration.instance_id))
+                module = radio.radio.modules.get(configuration.module_variant)
+                if module is not None and (type(configuration.tx_power_dbm) is not int or
+                        configuration.tx_power_dbm not in module["supported_tx_powers_dbm"]):
+                    issues.append(AirLinkIssue("AIR_LINK_TX_POWER_UNSUPPORTED",
+                        f"Ground {configuration.instance_id} TX power is unsupported"))
             for requirement in radio.resource_requirements:
                 key = f"{configuration.instance_id}:{requirement.name}"
                 assigned = ground.resource_assignments.get(key)
@@ -283,6 +309,7 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                     continue
                 if resource is None:
                     continue
+                frontend_bindings.append((key, resource.metadata, resource.resource_id))
                 for detail in _RequirementConstraintsErrors_Get(
                     key, requirement,
                     ResourceProvision(resource.resource_id, resource.kind,
@@ -320,5 +347,8 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                                 f"{previous} and {key} both use pin {pin}",
                             ))
     from silverstar_fccg.project.ground_activity import GroundActivityLedIssues_Get
+    from silverstar_fccg.project.resources import RadioFrontendConflicts_Get
+    issues.extend(AirLinkIssue("GROUND_RESOURCE_CONFLICT", detail)
+                  for detail in RadioFrontendConflicts_Get(frontend_bindings))
     issues.extend(GroundActivityLedIssues_Get(ground, catalog))
     return tuple(issues)

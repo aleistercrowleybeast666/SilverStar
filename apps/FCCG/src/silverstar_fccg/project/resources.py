@@ -1120,6 +1120,10 @@ def ResourceAssignments_Resolve(
                 AssignedResource(key, owner_id, requirement, provision, role)
             )
 
+    errors.extend(RadioFrontendConflicts_Get([
+        (assignment.requirement_key, assignment.provision.metadata, assignment.provision.resource_id)
+        for assignment in assignments
+    ]))
     used = {assignment.provision.resource_id for assignment in assignments}
     for conflict in board_conflicts:
         conflict_set = set(conflict.resources)
@@ -1234,6 +1238,27 @@ def ResourceAssignments_Resolve(
                 + ", ".join(str(value) for value in sorted(exact_frequencies))
             )
     return ResourceAssignmentResult(tuple(assignments), tuple(errors))
+
+
+def RadioFrontendConflicts_Get(bindings) -> tuple[str, ...]:
+    """PA outputs cannot alias another GPIO or a peripheral's physical pins."""
+    errors = []
+    def pins(metadata):
+        values = metadata.get("pins", {})
+        raw = [*values.values()] if isinstance(values, dict) else []
+        raw.extend((metadata.get("physical_pin"), metadata.get("physical_resource")))
+        return {re.sub(r"^GPIO([A-K])", r"P\1", re.sub(r"[^A-Z0-9]", "", str(pin).upper())) for pin in raw if pin}
+    for key, metadata, resource_id in bindings:
+        if key.rsplit(":", 1)[-1] not in {"radio_rx_en", "radio_tx_en"}:
+            continue
+        physical = pins(metadata)
+        for other_key, other_metadata, other_id in bindings:
+            if key == other_key:
+                continue
+            same_token = metadata.get("c_id", resource_id) == other_metadata.get("c_id", other_id)
+            if same_token or physical.intersection(pins(other_metadata)):
+                errors.append(f"RF frontend resource conflict: {key} overlaps {other_key}")
+    return tuple(dict.fromkeys(errors))
 
 
 def BoardCompatibility_Resolve(

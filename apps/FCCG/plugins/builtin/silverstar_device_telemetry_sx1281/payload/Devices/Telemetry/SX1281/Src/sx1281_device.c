@@ -10,6 +10,33 @@
 #include "sx1280.h"
 #include "sx1281_bus.h"
 
+/* Owner-task only: no SPI, waits, allocation or ISR work. 0=off, 1=RX, 2=TX.
+ * Every transition disables both outputs before enabling exactly one. */
+static uint8_t Lora_RfFrontendSet(uint8_t instance, uint8_t mode)
+{
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(mode <= 2U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    ProjectSx1281Resources resources;
+    if (ProjectSx1281Resources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return 0U; }
+    if ((resources.rx_en == PLATFORM_GPIO_COUNT) && (resources.tx_en == PLATFORM_GPIO_COUNT))
+    { return 1U; } /* M12 in a mixed-module project has no external frontend. */
+    if ((resources.rx_en >= PLATFORM_GPIO_COUNT) || (resources.tx_en >= PLATFORM_GPIO_COUNT) ||
+        (resources.rx_en == resources.tx_en)) { return 0U; }
+    PlatformResult rx_result = PlatformGpio_Write(resources.rx_en, 0U);
+    PlatformResult tx_result = PlatformGpio_Write(resources.tx_en, 0U);
+    if ((rx_result != PLATFORM_OK) || (tx_result != PLATFORM_OK)) { return 0U; }
+    if (mode == 0U) { return 1U; }
+    PlatformResult enabled = PlatformGpio_Write(mode == 1U ? resources.rx_en : resources.tx_en, 1U);
+    if (enabled == PLATFORM_OK) { return 1U; }
+    /* Best effort after an I/O failure; caller invalidates READY and stops radio work. */
+    rx_result = PlatformGpio_Write(resources.rx_en, 0U);
+    tx_result = PlatformGpio_Write(resources.tx_en, 0U);
+    (void)rx_result; (void)tx_result; /* No successful recovery is claimed. */
+    return 0U;
+}
+
 typedef struct
 {
     uint8_t len;
@@ -736,6 +763,9 @@ static uint8_t Lora_TxTurnAvailable(uint8_t instance)
  * No successful receipt is manufactured and no further radio command runs. */
 static void Lora_RadioFault(uint8_t instance, uint8_t failed_tx)
 {
+    /* Best-effort hardware retirement, even when SPI/BUSY is unavailable. */
+    if (Lora_RfFrontendSet(instance, 0U) == 0U)
+    { (void)PlatformGpio_Write(Sx1281Bus_ResetGet(instance), 0U); }
     uint32_t primask = Lora_IrqLock();
     Lora_TxQueueAssert(instance); Lora_RxQueueAssert(instance); Lora_ControlAssert(instance);
     if (failed_tx != 0U) { s_stats.tx_timeout++; }
@@ -779,6 +809,8 @@ static void Lora_RadioFault(uint8_t instance, uint8_t failed_tx)
 
 static uint8_t Lora_RadioRecover(uint8_t instance, uint8_t failed_tx)
 {
+    if (Lora_RfFrontendSet(instance, 0U) == 0U)
+    { Lora_RadioFault(instance, failed_tx); return 0U; }
     Sx1281BusStatus before;
     Sx1281Bus_StatusGet(instance, &before);
     SX1280SetStandby(instance, STDBY_RC);
@@ -813,7 +845,11 @@ static uint8_t Lora_RxIdleForTx(uint8_t instance)
     RadioStatus_t status = SX1280GetStatus(instance);
     if ((Lora_BusReadSucceeded(instance, before) != 0U) &&
         ((status.Fields.ChipMode == 2U) || (status.Fields.ChipMode == 3U)))
-    { s_radio_in_rx = 0U; return 1U; }
+    {
+        if (Lora_RfFrontendSet(instance, 0U) == 0U)
+        { Lora_RadioFault(instance, 0U); return 0U; }
+        s_radio_in_rx = 0U; return 1U;
+    }
     uint32_t bound = Lora_RxListenMs(instance) +
         Lora_PacketAirtimeMs(instance, LORA_MAX_PAYLOAD_LEN) + LORA_RX_TURN_MARGIN_MS;
     if ((uint32_t)(PlatformTime_Ms() - s_rx_started_ms) < bound) { return 0U; }
@@ -845,6 +881,8 @@ static void Lora_TryStartNextTx(uint8_t instance)
     SX1280SetPacketParams(instance, &s_pkt_params);
     Lora_DiagSetDioIrqParams(instance, LORA_TX_IRQ_MASK, LORA_TX_IRQ_MASK, IRQ_RADIO_NONE, IRQ_RADIO_NONE);
     Lora_DiagRecordTxStart(instance);
+    if (Lora_RfFrontendSet(instance, 2U) == 0U)
+    { Lora_RadioFault(instance, 1U); return; }
     SX1280SendPayload(instance, pkt.data, pkt.len,
                       (TickTime_t){ LORA_TX_TIMEOUT_STEP,
                                     LORA_TX_TIMEOUT_COUNT });
@@ -871,7 +909,7 @@ LoraConfigResult Lora_ApplyDefaultConfig(uint8_t instance)
     SX1280SetPacketParams(instance, &s_pkt_params);
     SX1280SetRfFrequency(instance, LORA_RF_FREQUENCY_HZ);
     SX1280SetBufferBaseAddresses(instance, 0x00, 0x00);
-    SX1280SetTxParams(instance, LORA_INSTANCE_TX_POWER_DBM(instance), RADIO_RAMP_02_US);
+    SX1280SetTxParams(instance, LORA_INSTANCE_CHIP_TX_POWER_DBM(instance), RADIO_RAMP_02_US);
     Sx1281Bus_StatusGet(instance, &after);
     return ((after.spi_error_count != before.spi_error_count) ||
             (after.spi_timeout_count != before.spi_timeout_count) ||
@@ -906,6 +944,8 @@ LoraInitResult Lora_Init(uint8_t instance)
     Sx1281Bus_Init(instance);
     Lora_ClearRuntimeState(instance);
     Lora_LoadDefaultConfig(instance);
+
+    if (Lora_RfFrontendSet(instance, 0U) == 0U) { return LORA_INIT_PORT_ERROR; }
 
     SX1280Init(instance);
     SX1280SetRegulatorMode(instance, USE_LDO);
@@ -970,6 +1010,8 @@ void Lora_StartRx(uint8_t instance)
     Lora_DiagSetDioIrqParams(instance, LORA_RX_IRQ_MASK, LORA_RX_IRQ_MASK, IRQ_RADIO_NONE, IRQ_RADIO_NONE);
     /* Hardware disables this timer when it detects a packet, finishing the
      * packet before RX_DONE. Software must observe RX completion or idle. */
+    if (Lora_RfFrontendSet(instance, 1U) == 0U)
+    { Lora_RadioFault(instance, 0U); return; }
     SX1280SetRx(instance, (TickTime_t){RADIO_TICK_SIZE_1000_US, (uint16_t)remaining});
     Lora_DiagRecordSetRx(instance);
     if (Lora_BusReadSucceeded(instance, before) == 0U)
@@ -1223,6 +1265,11 @@ static void Lora_TxReceiptRecord(uint8_t instance, LoraTxQueryResult result)
 
 static void Lora_TxCompletionProcess(uint8_t instance)
 {
+    if ((s_tx_done_flag != 0U) || (s_tx_timeout_flag != 0U))
+    {
+        if (Lora_RfFrontendSet(instance, 0U) == 0U)
+        { Lora_RadioFault(instance, 1U); return; }
+    }
     if (s_tx_done_flag != 0U)
     {
         s_tx_done_flag = 0U;
@@ -1255,6 +1302,8 @@ static void Lora_RxCompletionProcess(uint8_t instance)
     {
         return;
     }
+    if (Lora_RfFrontendSet(instance, 0U) == 0U)
+    { Lora_RadioFault(instance, 0U); return; }
     s_rx_done_flag = 0U;
     Sx1281BusStatus before;
     Sx1281Bus_StatusGet(instance, &before);
@@ -1299,6 +1348,11 @@ static void Lora_RxErrorProcess(uint8_t instance)
         (s_rx_error_code == IRQ_CRC_ERROR_CODE) ||
         (s_rx_error_code == IRQ_HEADER_ERROR_CODE),
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if ((s_rx_timeout_flag != 0U) || (s_rx_error_flag != 0U))
+    {
+        if (Lora_RfFrontendSet(instance, 0U) == 0U)
+        { Lora_RadioFault(instance, 0U); return; }
+    }
     if (s_rx_timeout_flag != 0U)
     {
         s_rx_timeout_flag = 0U;
@@ -1331,6 +1385,7 @@ void Lora_Process(uint8_t instance)
     }
 
     Lora_ControlProcess(instance);
+    if (s_inited == 0U) { return; }
     Lora_RawIrqProcess(instance);
     if ((s_tx_busy != 0U) && (s_tx_done_flag == 0U) && (s_tx_timeout_flag == 0U) &&
         ((uint32_t)(PlatformTime_Ms() - s_diag.last_settx_ms) >=
@@ -1343,8 +1398,11 @@ void Lora_Process(uint8_t instance)
     }
     Lora_DiagnosticsRefresh(instance);
     Lora_TxCompletionProcess(instance);
+    if (s_inited == 0U) { return; }
     Lora_RxCompletionProcess(instance);
+    if (s_inited == 0U) { return; }
     Lora_RxErrorProcess(instance);
+    if (s_inited == 0U) { return; }
     if (s_tx_busy == 0)
     {
         if (Lora_RxPacketHeld(instance) != 0U) { return; }
@@ -1496,6 +1554,10 @@ static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
     SILVERSTAR_ASSERT(s_pkt_params.PacketType == PACKET_TYPE_LORA,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
 
+    if (Lora_RfFrontendSet(instance, 0U) == 0U)
+    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
+    Sx1281BusStatus before;
+    Sx1281Bus_StatusGet(instance, &before);
     SX1280SetStandby(instance, STDBY_RC);
     SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
     s_diag_counted_raw_irq = 0U;
@@ -1515,8 +1577,12 @@ static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
     s_pkt_params.Params.LoRa.PayloadLength = LORA_MAX_PAYLOAD_LEN;
     SX1280SetPacketParams(instance, &s_pkt_params);
     Lora_DiagSetDioIrqParams(instance, LORA_RX_IRQ_MASK, LORA_RX_IRQ_MASK, IRQ_RADIO_NONE, IRQ_RADIO_NONE);
+    if (Lora_RfFrontendSet(instance, 1U) == 0U)
+    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
     SX1280SetRx(instance, RX_TX_CONTINUOUS);
     Lora_DiagRecordSetRx(instance);
+    if (Lora_BusReadSucceeded(instance, before) == 0U)
+    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
 
     primask = Lora_IrqLock();
     s_radio_in_rx = 1U;
@@ -1820,8 +1886,9 @@ LoraDeactivateResult Lora_Deactivate(uint8_t instance)
     s_rx_error_code = IRQ_HEADER_ERROR_CODE;
     s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
     Lora_IrqUnlock(primask);
+    uint8_t frontend_off = Lora_RfFrontendSet(instance, 0U);
     result = PlatformGpio_Write(Sx1281Bus_ResetGet(instance), 0U);
     /* IRQ callbacks only latch GPIO events; consume the retired DIO1 latch. */
     (void)PlatformGpio_IrqConsume(Sx1281Bus_Dio1Get(instance));
-    return result == PLATFORM_OK ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;
+    return (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;
 }

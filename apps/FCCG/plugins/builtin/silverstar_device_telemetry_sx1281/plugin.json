@@ -26,7 +26,7 @@
             "data_bits": 8,
             "bit_order": "msb",
             "minimum_clock_hz": 100000,
-            "maximum_clock_hz": 18000000,
+            "maximum_clock_hz": 10000000,
             "dma": false,
             "irq": false
           }
@@ -39,7 +39,10 @@
         "electrical_constraints": {
           "mode": "gpio_output",
           "output_type": "push_pull",
-          "allowed_pulls": ["none", "up"],
+          "allowed_pulls": [
+            "none",
+            "up"
+          ],
           "speed": "low",
           "safe_initial_level": "inactive",
           "active_polarity": "low",
@@ -85,6 +88,34 @@
         "name": "time",
         "kind": "time",
         "mode": "shared"
+      },
+      {
+        "name": "radio_rx_en",
+        "kind": "gpio_output",
+        "required": false,
+        "electrical_constraints": {
+          "mode": "gpio_output",
+          "output_type": "push_pull",
+          "pull": "none",
+          "speed": "low",
+          "safe_initial_level": "inactive",
+          "active_polarity": "high",
+          "startup_glitch_free": true
+        }
+      },
+      {
+        "name": "radio_tx_en",
+        "kind": "gpio_output",
+        "required": false,
+        "electrical_constraints": {
+          "mode": "gpio_output",
+          "output_type": "push_pull",
+          "pull": "none",
+          "speed": "low",
+          "safe_initial_level": "inactive",
+          "active_polarity": "high",
+          "startup_glitch_free": true
+        }
       }
     ],
     "capabilities": []
@@ -123,7 +154,11 @@
     ]
   },
   "metadata": {
-    "target_resource_modes": {"ground_station": {"radio_bus": "shared"}},
+    "target_resource_modes": {
+      "ground_station": {
+        "radio_bus": "shared"
+      }
+    },
     "reference": {
       "source_kind": "reference_snapshot",
       "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
@@ -194,11 +229,20 @@
         {
           "requirement": "time",
           "member": "time"
+        },
+        {
+          "requirement": "radio_rx_en",
+          "member": "rx_en"
+        },
+        {
+          "requirement": "radio_tx_en",
+          "member": "tx_en"
         }
       ]
     },
-    "source_origins": {
-      "default": "reference_base",
+      "source_origins": {
+        "default": "reference_base",
+        "Devices/Telemetry/SX1281/Inc/sx1281_config.h": "fccg_radio_variant_capabilities",
       "Devices/Telemetry/SX1281/Inc/sx1281_bus.h": "fccg_multi_instance_context",
       "Devices/Telemetry/SX1281/Inc/sx1281_device.h": "fccg_multi_instance_context",
       "Devices/Telemetry/SX1281/Adapter/Inc/sx1281_instance.h": "fccg_multi_instance_context",
@@ -210,6 +254,88 @@
       "Middlewares/Third_Party/SX1280lib/sx1280-hal.h": "fccg_multi_instance_context",
       "Middlewares/Third_Party/SX1280lib/sx1280.c": "fccg_multi_instance_context",
       "Middlewares/Third_Party/SX1280lib/sx1280.h": "fccg_multi_instance_context"
+    },
+    "radio_variant_capabilities": {
+      "e28_2g4m12sx": {
+        "chip_drive_dbm": 12,
+        "external_frontend": false,
+        "maximum_spi_clock_hz": 10000000,
+        "hardware_status": "existing_field_profile",
+        "manual_url": "https://www.ebyte.com/downpdf/2049.html",
+        "module_pins": {
+          "reset": 9,
+          "busy": 10,
+          "dio1": 11
+        }
+      },
+      "e28_2g4m12s": {
+        "chip_drive_dbm": 12,
+        "external_frontend": false,
+        "maximum_spi_clock_hz": 10000000,
+        "hardware_status": "hardware_unverified",
+        "manual_url": "https://www.ebyte.com/downpdf/285.html",
+        "module_pins": {
+          "reset": 9,
+          "busy": 10,
+          "dio1": 11
+        }
+      },
+      "e28_2g4m20s": {
+        "chip_drive_dbm": -2,
+        "external_frontend": true,
+        "maximum_spi_clock_hz": 10000000,
+        "hardware_status": "hardware_unverified",
+        "manual_url": "https://www.ebyte.com/downpdf/304.html",
+        "module_pins": {
+          "reset": 11,
+          "busy": 12,
+          "dio1": 13,
+          "rx_en": 8,
+          "tx_en": 9
+        }
+      },
+      "e28_2g4m20sx": {
+        "chip_drive_dbm": -2,
+        "external_frontend": true,
+        "maximum_spi_clock_hz": 10000000,
+        "hardware_status": "hardware_unverified",
+        "manual_url": "https://www.ebyte.com/downpdf/2217.html",
+        "module_pins": {
+          "reset": 11,
+          "busy": 12,
+          "dio1": 13,
+          "rx_en": 8,
+          "tx_en": 9
+        }
+      },
+      "e28_2g4m27s": {
+        "chip_drive_dbm": 0,
+        "external_frontend": true,
+        "maximum_spi_clock_hz": 10000000,
+        "hardware_status": "hardware_unverified",
+        "manual_url": "https://www.ebyte.com/downpdf/527.html",
+        "module_pins": {
+          "reset": 11,
+          "busy": 12,
+          "dio1": 13,
+          "rx_en": 8,
+          "tx_en": 9
+        }
+      },
+      "e28_2g4m27sx": {
+        "chip_drive_dbm": 0,
+        "external_frontend": true,
+        "maximum_spi_clock_hz": 10000000,
+        "hardware_status": "hardware_unverified",
+        "manual_url": "https://www.ebyte.com/downpdf/1920.html",
+        "module_pins": {
+          "reset": 11,
+          "busy": 12,
+          "dio1": 13,
+          "rx_en": 8,
+          "tx_en": 9
+        }
+      }
     }
   },
   "instance_policy": {
@@ -227,25 +353,80 @@
   "radio": {
     "technology": "lora",
     "family": "sx128x",
-    "phy_modes": ["lora"],
+    "phy_modes": [
+      "lora"
+    ],
     "frequency_min_hz": 2473000000,
     "frequency_max_hz": 2473000000,
-    "bandwidths_hz": [800000],
-    "spreading_factors": [10],
-    "coding_rates": ["4/5"],
+    "bandwidths_hz": [
+      800000
+    ],
+    "spreading_factors": [
+      10
+    ],
+    "coding_rates": [
+      "4/5"
+    ],
     "maximum_payload": 64,
-    "maximum_tx_power_dbm": 12,
+    "maximum_tx_power_dbm": 27,
     "datasheet_capabilities": {
       "frequency_min_hz": 2400000000,
       "frequency_max_hz": 2500000000,
-      "maximum_tx_power_dbm": 14,
-      "source": "https://www.ebyte.com/Uploadfiles/Files/2023-7-12/20237121022567349.pdf"
+      "maximum_tx_power_dbm": 27,
+      "source": "https://www.ebyte.com/downpdf/1920.html"
     },
     "modules": {
       "e28_2g4m12sx": {
         "model": "E28-2G4M12SX",
         "tx_power_limit_dbm": 12,
-        "supported_tx_powers_dbm": [12],
+        "supported_tx_powers_dbm": [
+          12
+        ],
+        "validated_frequency_min_hz": 2473000000,
+        "validated_frequency_max_hz": 2473000000
+      },
+      "e28_2g4m12s": {
+        "model": "E28-2G4M12S (hardware unverified)",
+        "tx_power_limit_dbm": 12,
+        "supported_tx_powers_dbm": [
+          12
+        ],
+        "validated_frequency_min_hz": 2473000000,
+        "validated_frequency_max_hz": 2473000000
+      },
+      "e28_2g4m20s": {
+        "model": "E28-2G4M20S (hardware unverified)",
+        "tx_power_limit_dbm": 20,
+        "supported_tx_powers_dbm": [
+          20
+        ],
+        "validated_frequency_min_hz": 2473000000,
+        "validated_frequency_max_hz": 2473000000
+      },
+      "e28_2g4m20sx": {
+        "model": "E28-2G4M20SX (hardware unverified)",
+        "tx_power_limit_dbm": 20,
+        "supported_tx_powers_dbm": [
+          20
+        ],
+        "validated_frequency_min_hz": 2473000000,
+        "validated_frequency_max_hz": 2473000000
+      },
+      "e28_2g4m27s": {
+        "model": "E28-2G4M27S (hardware unverified)",
+        "tx_power_limit_dbm": 27,
+        "supported_tx_powers_dbm": [
+          27
+        ],
+        "validated_frequency_min_hz": 2473000000,
+        "validated_frequency_max_hz": 2473000000
+      },
+      "e28_2g4m27sx": {
+        "model": "E28-2G4M27SX (hardware unverified)",
+        "tx_power_limit_dbm": 27,
+        "supported_tx_powers_dbm": [
+          27
+        ],
         "validated_frequency_min_hz": 2473000000,
         "validated_frequency_max_hz": 2473000000
       }

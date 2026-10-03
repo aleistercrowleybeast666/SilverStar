@@ -1,0 +1,237 @@
+{
+  "timestamp_utc": "2026-10-03T13:28:30.971798+00:00",
+  "base_commit": "cc424443fe217cf6c9cf0fd674805158b5bfce45",
+  "runtime_implementation_commit": "0ee1b0201c001b1947a783c91b3f8323ed8e6fa0",
+  "final_source_commit": "9b0948ea35750b0ea38daa3328c71a4dc5e6b851",
+  "branch": "feature/ebyte-sx128x-variants",
+  "candidate": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio",
+  "final_matrix": [
+    {
+      "module": "e28_2g4m12sx",
+      "final_release_and_gates": {
+        "Flight_Controller": [
+          0,
+          0
+        ],
+        "Ground_Station": [
+          0,
+          0
+        ]
+      },
+      "analyzer": {
+        "Flight_Controller": {
+          "exit_code": 0,
+          "warnings": []
+        },
+        "Ground_Station": {
+          "exit_code": 0,
+          "warnings": [
+            "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+            "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+            "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+            "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+          ]
+        }
+      },
+      "flight_full_host": "75 executables;4430924 checks;7 compile-pass cases;17 expected compile failures;zero failures",
+      "ground_full_host": "2 generated-source executables; HAL/radio mocks; zero failures",
+      "final_generated_hash_and_startup_host": "4 targeted executables;4205841 checks;zero failures"
+    },
+    {
+      "module": "e28_2g4m12s",
+      "final_release_and_gates": {
+        "Flight_Controller": [
+          0,
+          0
+        ],
+        "Ground_Station": [
+          0,
+          0
+        ]
+      },
+      "analyzer": {
+        "Flight_Controller": {
+          "exit_code": 0,
+          "warnings": []
+        },
+        "Ground_Station": {
+          "exit_code": 0,
+          "warnings": [
+            "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+            "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+            "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+            "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+          ]
+        }
+      },
+      "flight_full_host": "75 executables;4430924 checks;7 compile-pass cases;17 expected compile failures;zero failures",
+      "ground_full_host": "2 generated-source executables; HAL/radio mocks; zero failures",
+      "final_generated_hash_and_startup_host": "4 targeted executables;4205841 checks;zero failures"
+    },
+    {
+      "module": "e28_2g4m20s",
+      "final_release_and_gates": {
+        "Flight_Controller": [
+          0,
+          0
+        ],
+        "Ground_Station": [
+          0,
+          0
+        ]
+      },
+      "analyzer": {
+        "Flight_Controller": {
+          "exit_code": 0,
+          "warnings": []
+        },
+        "Ground_Station": {
+          "exit_code": 0,
+          "warnings": [
+            "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+            "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+            "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+            "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+          ]
+        }
+      },
+      "flight_full_host": "75 executables;4430924 checks;7 compile-pass cases;17 expected compile failures;zero failures",
+      "ground_full_host": "2 generated-source executables; HAL/radio mocks; zero failures",
+      "final_generated_hash_and_startup_host": "4 targeted executables;4205841 checks;zero failures"
+    },
+    {
+      "module": "e28_2g4m20sx",
+      "final_release_and_gates": {
+        "Flight_Controller": [
+          0,
+          0
+        ],
+        "Ground_Station": [
+          0,
+          0
+        ]
+      },
+      "analyzer": {
+        "Flight_Controller": {
+          "exit_code": 0,
+          "warnings": []
+        },
+        "Ground_Station": {
+          "exit_code": 0,
+          "warnings": [
+            "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+            "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+            "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+            "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+          ]
+        }
+      },
+      "flight_full_host": "75 executables;4430924 checks;7 compile-pass cases;17 expected compile failures;zero failures",
+      "ground_full_host": "2 generated-source executables; HAL/radio mocks; zero failures",
+      "final_generated_hash_and_startup_host": "4 targeted executables;4205841 checks;zero failures"
+    },
+    {
+      "module": "e28_2g4m27s",
+      "final_release_and_gates": {
+        "Flight_Controller": [
+          0,
+          0
+        ],
+        "Ground_Station": [
+          0,
+          0
+        ]
+      },
+      "analyzer": {
+        "Flight_Controller": {
+          "exit_code": 0,
+          "warnings": []
+        },
+        "Ground_Station": {
+          "exit_code": 0,
+          "warnings": [
+            "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+            "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+            "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+            "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+          ]
+        }
+      },
+      "flight_full_host": "75 executables;4430924 checks;7 compile-pass cases;17 expected compile failures;zero failures",
+      "ground_full_host": "2 generated-source executables; HAL/radio mocks; zero failures",
+      "final_generated_hash_and_startup_host": "4 targeted executables;4205841 checks;zero failures"
+    },
+    {
+      "module": "e28_2g4m27sx",
+      "final_release_and_gates": {
+        "Flight_Controller": [
+          0,
+          0
+        ],
+        "Ground_Station": [
+          0,
+          0
+        ]
+      },
+      "analyzer": {
+        "Flight_Controller": {
+          "exit_code": 0,
+          "warnings": []
+        },
+        "Ground_Station": {
+          "exit_code": 0,
+          "warnings": [
+            "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+            "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+            "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+            "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+          ]
+        }
+      },
+      "flight_full_host": "75 executables;4430924 checks;7 compile-pass cases;17 expected compile failures;zero failures",
+      "ground_full_host": "2 generated-source executables; HAL/radio mocks; zero failures",
+      "final_generated_hash_and_startup_host": "4 targeted executables;4205841 checks;zero failures"
+    }
+  ],
+  "regression": {
+    "final_source_tests": 148,
+    "indicator_board_suite_tests": 6,
+    "qualification": "host software checks; no hardware or flight proof"
+  },
+  "retained_failed_runs": {
+    "initial_matrix": {
+      "failures": 6,
+      "test": "runtime_startup",
+      "assertion": "gpio == PLATFORM_GPIO_6",
+      "baseline_fixture_identical": true,
+      "baseline_fixture_sha256": "daf246e7275e595ccdab885f444960d20e5dfff34af1335c66a3f22aa9a39300",
+      "custom_physical_pin": "IMU_CAL_LED_GPIO_Port/IMU_CAL_LED_Pin",
+      "custom_logical_gpio": 0,
+      "verified_board_logical_gpio": 6,
+      "correction": "retain equality to PROJECT_RESOURCE_SYSTEM_INDICATOR; check GPIO bounds; existing verified-board binding tests retained and passed"
+    },
+    "earlier_pytest_harness_failures": [
+      "SILVERSTAR_RADIO_GENERATED_PROJECT missing",
+      "Windows generated output path exceeds existing260-character safety limit",
+      "UI settings path outside FCCG WorkspacePolicy root"
+    ],
+    "resolution": "final148-test run and separately authorized6-test indicator/board run passed"
+  },
+  "analysis_scope": "12 real emitted -fanalyzer runs at runtime commit0ee1b02. Every final executable function and build input matches except two fixed16-byte SSLOG metadata hash initializers. Fresh final9b0948e Release builds/gates cover all12targets, and targeted final hash/startup host tests cover all6Flight variants. Ground warnings are four newlib unimplemented syscall linker warnings, identical across variants; no analyzer warnings suppressed.",
+  "remaining_scope": {
+    "hardware_qualification": "UNVERIFIED; new variants NOT flight qualified",
+    "critical_contract_manual_acceptance": "NOT_PROVEN",
+    "gui_integration": "separate worker owns main_window/page changes; use documented per-instance API",
+    "regulatory": "existing validated2473MHz/PHY limits preserved; no geography policy present in accepted source; lower PA outputs unsupported without calibration evidence"
+  },
+  "evidence_paths": {
+    "initial_matrix": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio\\.work\\ebyte_matrix_v1\\evidence.json",
+    "corrected_full_flight_hosts": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio\\.work\\corrected_startup_hosts\\evidence.json",
+    "final_projection": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio\\.work\\final_projection\\evidence.json",
+    "final_release_gates": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio\\.work\\final_projection\\final-build-evidence.json",
+    "final_hash_hosts": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio\\.work\\final_projection\\final-hash-host-evidence.json",
+    "final_pytest": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio\\.work\\pr2\\evidence.json",
+    "original_m12": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\silverstar-radio\\.work\\original_m12_final\\evidence.json",
+    "exact_runtime_text": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-03\\task-3\\evidence\\ebyte-runtime-review.txt"
+  }
+}

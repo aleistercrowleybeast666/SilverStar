@@ -44,6 +44,8 @@ typedef struct
     PlatformGpioId busy;
     PlatformGpioId dio1;
     PlatformTimeId time;
+    PlatformGpioId rx_en;
+    PlatformGpioId tx_en;
 } ProjectSx1281Resources;
 
 SystemDeviceResult ProjectSx1281Resources_Get(

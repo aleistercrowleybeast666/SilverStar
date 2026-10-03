@@ -47,8 +47,9 @@ class PluginCatalog:
         view._components = dict(self._components)
         view._project_variant_view = True
         selected: dict[str, list[PluginManifest]] = {}
+        from silverstar_fccg.project.radio_variants import RadioManifest_Resolve
         for instance in model.device_instances:
-            manifest = self.Component_Get(instance.plugin)
+            manifest = RadioManifest_Resolve(self.Component_Get(instance.plugin), instance)
             if not manifest.device_variants:
                 if instance.interface or instance.profile:
                     raise PluginCatalogError(f"{instance.plugin} has no Device variants")
@@ -112,7 +113,10 @@ class PluginCatalog:
                     view._components[plugin_id] = resolved
                     for instance in model.device_instances:
                         if instance.plugin == plugin_id:
-                            view._instance_components[instance.instance_id] = resolved
+                            per_instance = view._instance_components[instance.instance_id]
+                            view._instance_components[instance.instance_id] = replace(per_instance,
+                                resource_requirements=tuple(replace(item, mode=ResourceMode(modes[item.name]))
+                                    if item.name in modes else item for item in per_instance.resource_requirements))
         if target_role == "ground_station" and model.board and model.device_instances:
             # A verified PCB's one telemetry footprint belongs to the first
             # configured radio, regardless of which instance owns uplink.

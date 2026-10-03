@@ -73,7 +73,8 @@ def _GroundModel_Get(model: ProjectModel, catalog: PluginCatalog) -> ProjectMode
     return replace(
         model, core=GROUND_CORE_ID, mcu_family=mcu_family,
         mcu=ground.mcu, board=ground.board, os="",
-        device_instances=[DeviceInstance(radio.instance_id, radio.plugin)
+        device_instances=[DeviceInstance(radio.instance_id, radio.plugin,
+                          module_variant=radio.module_variant, tx_power_dbm=radio.tx_power_dbm)
                           for radio in GroundRadioConfigurations_Get(ground)],
         base_components=[], strategies={}, modes={}, protocols={
             "telemetry": None, "maintenance": None, "logging": None,

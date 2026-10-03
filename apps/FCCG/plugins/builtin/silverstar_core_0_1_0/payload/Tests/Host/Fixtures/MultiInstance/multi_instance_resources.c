@@ -17,9 +17,11 @@ static const ProjectJy901bResources s_imu_resources[] =
 static const ProjectSx1281Resources s_telemetry_resources[] =
 {
     {PLATFORM_SPI_1, PLATFORM_GPIO_4, PLATFORM_GPIO_5,
-     PLATFORM_GPIO_6, PLATFORM_GPIO_7, PLATFORM_TIME_1},
+     PLATFORM_GPIO_6, PLATFORM_GPIO_7, PLATFORM_TIME_1,
+     (PlatformGpioId)PLATFORM_GPIO_COUNT, (PlatformGpioId)PLATFORM_GPIO_COUNT},
     {(PlatformSpiId)1U, PLATFORM_GPIO_8, (PlatformGpioId)9U,
-     (PlatformGpioId)10U, (PlatformGpioId)11U, PLATFORM_TIME_1}
+     (PlatformGpioId)10U, (PlatformGpioId)11U, PLATFORM_TIME_1,
+     (PlatformGpioId)PLATFORM_GPIO_COUNT, (PlatformGpioId)PLATFORM_GPIO_COUNT}
 };
 
 SystemDeviceResult ProjectNeoM9nResources_Get(

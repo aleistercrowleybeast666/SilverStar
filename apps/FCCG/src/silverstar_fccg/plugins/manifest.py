@@ -2990,6 +2990,30 @@ def PluginManifest_Parse(
             for module_id, module in modules.items()
         ):
             raise PluginManifestError("radio.modules is invalid")
+        variant_capabilities = metadata.get("radio_variant_capabilities")
+        if variant_capabilities is not None:
+            expected = {"chip_drive_dbm", "external_frontend", "maximum_spi_clock_hz",
+                        "hardware_status", "manual_url", "module_pins"}
+            if not isinstance(variant_capabilities, dict) or set(variant_capabilities) != set(modules):
+                raise PluginManifestError("radio_variant_capabilities must cover every module")
+            for capability in variant_capabilities.values():
+                if (not isinstance(capability, dict) or set(capability) != expected
+                        or type(capability["chip_drive_dbm"]) is not int
+                        or not -18 <= capability["chip_drive_dbm"] <= 13
+                        or type(capability["external_frontend"]) is not bool
+                        or type(capability["maximum_spi_clock_hz"]) is not int
+                        or not 0 < capability["maximum_spi_clock_hz"] <= 10_000_000
+                        or capability["hardware_status"] not in {"hardware_unverified", "existing_field_profile"}
+                        or not isinstance(capability["manual_url"], str)
+                        or not capability["manual_url"].startswith("https://www.ebyte.com/")
+                        or not isinstance(capability["module_pins"], dict)):
+                    raise PluginManifestError("radio_variant_capabilities contains an invalid capability")
+                pins = capability["module_pins"]
+                if (set(pins) != ({"reset", "busy", "dio1", "rx_en", "tx_en"}
+                        if capability["external_frontend"] else {"reset", "busy", "dio1"})
+                        or any(type(pin) is not int or not 1 <= pin <= 16 for pin in pins.values())
+                        or len(set(pins.values())) != len(pins)):
+                    raise PluginManifestError("radio_variant_capabilities contains invalid module pins")
         radio = RadioContribution(
             technology=radio_data["technology"], family=radio_data["family"],
             phy_modes=tuple(radio_data["phy_modes"]),

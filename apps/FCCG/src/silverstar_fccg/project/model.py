@@ -45,6 +45,7 @@ RELATIVE_FILE_PATTERN = re.compile(r"^[A-Za-z0-9_./+@ -]+$")
 
 PROJECT_FORMAT_VERSION = 14
 PROJECT_GROUND_RADIOS_FORMAT_VERSION = 15
+PROJECT_RADIO_VARIANTS_FORMAT_VERSION = 16
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
     "telemetry": "air.m0",
@@ -97,6 +98,8 @@ class DeviceInstance:
     plugin: str
     interface: str = ""
     profile: str = ""
+    module_variant: str = ""
+    tx_power_dbm: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -344,7 +347,9 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": PROJECT_GROUND_RADIOS_FORMAT_VERSION if self.ground_target.radio_instances else self.format_version,
+            "format_version": (PROJECT_RADIO_VARIANTS_FORMAT_VERSION
+                if any(instance.module_variant or instance.tx_power_dbm is not None for instance in self.device_instances)
+                else max(self.format_version, PROJECT_GROUND_RADIOS_FORMAT_VERSION) if self.ground_target.radio_instances else self.format_version),
             "project": {
                 "name": self.identity.name,
                 "firmware_version": self.identity.firmware_version,
@@ -362,6 +367,8 @@ class ProjectModel:
                         "plugin": instance.plugin,
                         "interface": instance.interface,
                         "profile": instance.profile,
+                        **({"module_variant": instance.module_variant, "tx_power_dbm": instance.tx_power_dbm}
+                           if instance.module_variant or instance.tx_power_dbm is not None else {}),
                     }
                     for instance in self.device_instances
                 ],
@@ -1004,7 +1011,8 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
     instance_ids: set[str] = set()
     for entry_value in value:
         entry = _Object_Require(entry_value, "device instance")
-        if set(entry) != {"instance_id", "plugin", "interface", "profile"}:
+        base_fields = {"instance_id", "plugin", "interface", "profile"}
+        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm"}):
             raise ProjectModelError(
                 "device instance must contain instance_id, plugin, interface and profile"
             )
@@ -1012,6 +1020,11 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         plugin = _String_Require(entry, "plugin")
         interface = _String_Require(entry, "interface", allow_empty=True)
         profile = _String_Require(entry, "profile", allow_empty=True)
+        module = entry.get("module_variant", "")
+        power = entry.get("tx_power_dbm")
+        if (not isinstance(module, str) or (module and not SELECTION_OPTION_PATTERN.fullmatch(module))
+                or (power is not None and type(power) is not int)):
+            raise ProjectModelError("Invalid radio module variant or TX power")
         if not DEVICE_INSTANCE_ID_PATTERN.fullmatch(instance_id):
             raise ProjectModelError(f"Invalid device instance id: {instance_id!r}")
         _ComponentId_Validate(plugin, "device plugin")
@@ -1020,7 +1033,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         if instance_id in instance_ids:
             raise ProjectModelError(f"Duplicate device instance id: {instance_id}")
         instance_ids.add(instance_id)
-        instances.append(DeviceInstance(instance_id, plugin, interface, profile))
+        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power))
     return instances
 
 
@@ -1806,9 +1819,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION):
         raise ProjectModelError(
-            f"Only project format_version {PROJECT_FORMAT_VERSION} or {PROJECT_GROUND_RADIOS_FORMAT_VERSION} is supported"
+            "Only project format_version 14, 15 or 16 is supported"
         )
     project_data = _Object_Require(root.get("project"), "project")
     if set(project_data) != {"name", "firmware_version", "build_target"}:
@@ -1835,6 +1848,10 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         strategies,
         environment,
     ) = _Components_Parse(root.get("components"))
+    if root["format_version"] != PROJECT_RADIO_VARIANTS_FORMAT_VERSION and any(
+        item.module_variant or item.tx_power_dbm is not None for item in device_instances
+    ):
+        raise ProjectModelError("Per-instance radio configuration requires project format 16")
     modes = _Modes_Parse(root.get("modes"))
     algorithm_parameters = _AlgorithmParameters_Parse(root.get("algorithm_parameters"))
     try:
@@ -1848,7 +1865,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     if type(root["flight_tx_power_dbm"]) is not int:
         raise ProjectModelError("flight_tx_power_dbm must be integer")
     ground_target = _GroundTarget_Parse(root.get("ground_target"),
-        radio_instances_allowed=root["format_version"] == PROJECT_GROUND_RADIOS_FORMAT_VERSION)
+        radio_instances_allowed=(root["format_version"] == PROJECT_GROUND_RADIOS_FORMAT_VERSION
+            or root["format_version"] == PROJECT_RADIO_VARIANTS_FORMAT_VERSION and
+               "radio_instances" in root["ground_target"]))
     resources = _Object_Require(root.get("resources"), "resources")
     if not all(
         isinstance(key, str)

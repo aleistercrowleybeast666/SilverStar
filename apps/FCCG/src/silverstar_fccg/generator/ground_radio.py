@@ -2,6 +2,7 @@
 import re
 
 from silverstar_fccg.project.model import GroundRadioConfigurations_Get
+from silverstar_fccg.project.radio_variants import RadioVariant_Get, RadioInstanceMacros_Render
 
 
 def GroundRadioConfig_Render(ground) -> str:
@@ -13,10 +14,8 @@ def GroundRadioConfig_Render(ground) -> str:
         raise ValueError("Ground initial active radio is not configured")
     if any(radio.plugin != "silverstar.device.telemetry.sx1281" for radio in radios):
         raise ValueError("Ground runtime requires the existing SX1281 driver")
-    if any(radio.module_variant != "e28_2g4m12sx" or
-           isinstance(radio.tx_power_dbm, bool) or not isinstance(radio.tx_power_dbm, int) or
-           radio.tx_power_dbm != 12 for radio in radios):
-        raise ValueError("Ground renderer requires the validated E28-2G4M12SX / 12 dBm configuration")
+    for radio in radios:
+        RadioVariant_Get(radio.module_variant, radio.tx_power_dbm)
     pulse = getattr(ground, "activity_led_pulse_ms", 40)
     if isinstance(pulse, bool) or not isinstance(pulse, int) or not 1 <= pulse <= 200:
         raise ValueError("Ground activity LED pulse must be 1–200 ms")
@@ -64,6 +63,9 @@ def GroundRadioConfig_Render(ground) -> str:
 def GroundRadioAirHeader_Render(ground, legacy_header: str) -> str:
     GroundRadioConfig_Render(ground)  # Validate values before inserting C tokens.
     radios = GroundRadioConfigurations_Get(ground)
+    variant_macros = RadioInstanceMacros_Render([(radio.module_variant, radio.tx_power_dbm) for radio in radios])
+    legacy_header = legacy_header.replace("#endif /* __AIR_LINK_CONFIG_H */",
+        variant_macros + "#endif /* __AIR_LINK_CONFIG_H */")
     if len(radios) == 1:
         return legacy_header  # Single-radio PHY/power/HAL capacity remain exact.
     expression = str(radios[-1].tx_power_dbm)

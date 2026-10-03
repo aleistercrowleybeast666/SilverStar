@@ -339,6 +339,18 @@ def GeneratedFiles_Render(
 
 
 def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
+    from silverstar_fccg.project.radio_variants import (
+        RADIO_PLUGIN, FlightRadioConfiguration_Get, RadioInstanceMacros_Render,
+    )
+    variant_macros = ""
+    output_power = model.ground_target.tx_power_dbm
+    if target == "flight":
+        active = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
+        output_power = FlightRadioConfiguration_Get(model, active)[1] if active is not None else model.flight_tx_power_dbm
+        variant_macros = RadioInstanceMacros_Render([
+            FlightRadioConfiguration_Get(model, instance) for instance in model.device_instances
+            if instance.plugin == RADIO_PLUGIN
+        ])
     link = model.air_link
     bandwidths = {200000: "LORA_BW_0200", 400000: "LORA_BW_0400", 800000: "LORA_BW_0800", 1600000: "LORA_BW_1600"}
     coding_rates = {"4/5": "LORA_CR_4_5", "4/6": "LORA_CR_4_6", "4/7": "LORA_CR_4_7", "4/8": "LORA_CR_4_8"}
@@ -351,7 +363,7 @@ def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
 
 /* Shared SilverStar AIR Link snapshot; AIR M0 remains a separate wire protocol. */
 #define AIR_LINK_FREQUENCY_HZ {link.frequency_hz}UL
-#define AIR_LINK_TX_POWER_DBM {model.flight_tx_power_dbm if target == "flight" else model.ground_target.tx_power_dbm}
+#define AIR_LINK_TX_POWER_DBM {output_power}
 #define AIR_LINK_SPREADING_FACTOR {link.spreading_factor}U
 #define AIR_LINK_BANDWIDTH_HZ {link.bandwidth_hz}UL
 #define AIR_LINK_CODING_RATE_DENOMINATOR {int(link.coding_rate[-1])}U
@@ -365,7 +377,7 @@ def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
 #define AIR_LINK_SX128X_IQ LORA_IQ_NORMAL
 #define AIR_LINK_PACKET_MTU {link.packet_mtu}U
 
-#endif /* __AIR_LINK_CONFIG_H */
+{variant_macros}#endif /* __AIR_LINK_CONFIG_H */
 """
 
 
@@ -1005,6 +1017,7 @@ def _ResourceHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
 
 
 def _InstanceBindingGroups_Get(model: ProjectModel, catalog: PluginCatalog):
+    catalog = catalog.ProjectView_Get(model)
     groups: dict[str, tuple[PluginManifest, list[DeviceInstance]]] = {}
     for instance in model.device_instances:
         manifest = catalog.InstanceComponent_Get(instance)
@@ -1013,6 +1026,8 @@ def _InstanceBindingGroups_Get(model: ProjectModel, catalog: PluginCatalog):
             continue
         if binding.accessor not in groups:
             groups[binding.accessor] = (manifest, [])
+        elif len(binding.fields) > len(groups[binding.accessor][0].instance_resource_binding.fields):
+            groups[binding.accessor] = (manifest, groups[binding.accessor][1])
         groups[binding.accessor][1].append(instance)
     return tuple(groups[key] for key in sorted(groups))
 
@@ -1042,6 +1057,8 @@ def _InstanceResourceDeclarations_Render(
                     f"Platform has no typed resource binding for {requirement.kind}"
                 )
             fields.append(f"    {platform_binding.id_type} {field.member};")
+        if binding.accessor == "ProjectSx1281Resources_Get" and not any(field.member == "rx_en" for field in binding.fields):
+            fields.extend(("    PlatformGpioId rx_en;", "    PlatformGpioId tx_en;"))
         sections.append(
             f"#define {binding.count_symbol:<42} {len(instances)}U\n"
             f"#define {binding.count_symbol}_MAX{' ' * max(1, 38 - len(binding.count_symbol))} "
@@ -1082,6 +1099,13 @@ def _InstanceResourcesSource_Render(
             for field in binding.fields:
                 assignment = assignments.get((instance.instance_id, field.requirement))
                 if assignment is None:
+                    if (binding.accessor == "ProjectSx1281Resources_Get" and
+                            field.member in {"rx_en", "tx_en"}):
+                        from silverstar_fccg.project.radio_variants import EBYTE_VARIANTS, LEGACY_MODULE
+                        capability = EBYTE_VARIANTS[instance.module_variant or LEGACY_MODULE]
+                        if not capability.external_frontend:
+                            values.append(f".{field.member} = (PlatformGpioId)PLATFORM_GPIO_COUNT")
+                            continue
                     raise ValueError(
                         f"Missing instance resource assignment: "
                         f"{instance.instance_id}:{field.requirement}"
@@ -1096,6 +1120,8 @@ def _InstanceResourcesSource_Render(
                         f"Instance resource C identifier is unsafe: {c_id}"
                     )
                 values.append(f".{field.member} = {c_id}")
+            if binding.accessor == "ProjectSx1281Resources_Get" and not any(field.member == "rx_en" for field in binding.fields):
+                values.extend((".rx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT", ".tx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT"))
             rows.append("    { " + ", ".join(values) + " }")
         table_symbol = f"s_{binding.accessor.removesuffix('_Get')}"
         sections.append(

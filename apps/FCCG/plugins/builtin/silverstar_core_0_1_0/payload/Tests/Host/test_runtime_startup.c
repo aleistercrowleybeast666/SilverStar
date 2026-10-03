@@ -109,7 +109,7 @@ UBaseType_t uxTaskGetStackHighWaterMark(TaskHandle_t task)
 PlatformResult PlatformGpio_Write(PlatformGpioId gpio, uint8_t level)
 {
     TEST_CHECK(gpio == PROJECT_RESOURCE_SYSTEM_INDICATOR);
-    TEST_CHECK(gpio == PLATFORM_GPIO_6);
+    TEST_CHECK(gpio < PLATFORM_GPIO_COUNT);
     s_gpio_level = level;
     s_gpio_writes++;
     return PLATFORM_OK;

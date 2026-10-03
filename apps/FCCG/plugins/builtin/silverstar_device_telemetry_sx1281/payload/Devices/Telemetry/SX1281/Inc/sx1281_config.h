@@ -130,4 +130,11 @@
 #define LORA_INSTANCE_TX_POWER_DBM(instance) LORA_TX_OUTPUT_POWER_DBM
 #endif
 
+/* Never pass nominal PA module output (20/27 dBm) as SX128x chip drive. */
+#ifdef AIR_LINK_INSTANCE_CHIP_TX_POWER_DBM
+#define LORA_INSTANCE_CHIP_TX_POWER_DBM(instance) AIR_LINK_INSTANCE_CHIP_TX_POWER_DBM(instance)
+#else
+#define LORA_INSTANCE_CHIP_TX_POWER_DBM(instance) LORA_INSTANCE_TX_POWER_DBM(instance)
+#endif
+
 #endif
