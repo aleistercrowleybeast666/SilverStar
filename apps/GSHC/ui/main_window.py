@@ -28,7 +28,7 @@ from protocol.common import (
     air_sensor_descriptor,
     enum_name,
 )
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import QSize, Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
     QApplication,
@@ -78,6 +78,34 @@ from ui.horizontal_trajectory import HorizontalTrajectoryWidget
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
+
+
+class HeaderTitleLabel(QLabel):
+    """Keep the full brand in a tooltip when the connection row narrows."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._full_text = ""
+        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+
+    def setText(self, text: str) -> None:
+        self._full_text = text
+        self.setToolTip(text)
+        self._Text_Refresh()
+
+    def minimumSizeHint(self) -> QSize:
+        return QSize(0, super().minimumSizeHint().height())
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self._Text_Refresh()
+
+    def _Text_Refresh(self) -> None:
+        visible = self.fontMetrics().elidedText(
+            self._full_text, Qt.TextElideMode.ElideRight, self.contentsRect().width()
+        )
+        if visible != self.text():
+            super().setText(visible)
 
 
 def calibration_mode_text(i18n: I18n, state: FlightControllerState) -> str:
@@ -1497,16 +1525,18 @@ class MainWindow(QMainWindow):
         self.header_connection_layout = connection_layout
         self.header_identity_layout = identity_layout
 
-        self.header_title = QLabel()
+        self.header_title = HeaderTitleLabel()
+        self.header_title.setMinimumWidth(180)
         self.header_title.setObjectName("headerTitle")
         self._bind_text(self.header_title, "app.brand")
-        connection_layout.addWidget(self.header_title)
-        self.header_connection = QLabel()
+        connection_layout.addWidget(self.header_title, 1)
+        self.header_connection = HeaderTitleLabel()
+        self.header_connection.setMinimumWidth(180)
         self.header_connection.setObjectName("headerSection")
         self._bind_text(self.header_connection, "group.connection")
         status_layout = identity_layout
         status_layout.setSpacing(8)
-        status_layout.addWidget(self.header_connection)
+        status_layout.addWidget(self.header_connection, 1)
 
         self.port_combo = PortComboBox()
         self.btn_refresh = QPushButton()
@@ -1537,7 +1567,6 @@ class MainWindow(QMainWindow):
         connection_layout.addWidget(self.btn_connect)
         connection_layout.addWidget(self.btn_disconnect)
         status_layout.addWidget(self.conn_label, 1)
-        connection_layout.addStretch(1)
         root_layout.addLayout(connection_layout)
 
         self.header_version = QLabel()
@@ -1622,7 +1651,7 @@ class MainWindow(QMainWindow):
         self.btn_link_details = QPushButton()
         self._bind_text(self.btn_link_details, "button.details")
         self.btn_link_details.clicked.connect(self._show_link_details)
-        grid.addWidget(self.btn_link_details, 3, 2)
+        grid.addWidget(self.btn_link_details, 6, 0, 1, 2)
         return box
 
     def _build_calibration_panel(self) -> QWidget:
@@ -1658,7 +1687,7 @@ class MainWindow(QMainWindow):
         self.lbl_cal_capability = QLabel()
         self.lbl_cal_capability.setWordWrap(True)
         layout.addWidget(self.lbl_cal_capability)
-        actions = QHBoxLayout()
+        actions = QVBoxLayout()
         self.btn_calibration = QPushButton()
         self._bind_text(self.btn_calibration, "button.calibration")
         self.btn_calibration.setStyleSheet(self._cmd_button_style)
@@ -1668,7 +1697,6 @@ class MainWindow(QMainWindow):
         self.btn_cal_reset.setStyleSheet(self._cmd_button_style)
         self.btn_cal_reset.clicked.connect(lambda: self.on_cal_reset and self.on_cal_reset())
         actions.addWidget(self.btn_cal_reset)
-        actions.addStretch(1)
         layout.addLayout(actions)
         self.btn_calibration.clicked.connect(self._show_calibration_dialog)
         return box
@@ -2199,6 +2227,10 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event) -> None:
         super().resizeEvent(event)
+        if hasattr(self, "flight_status_scroll"):
+            self.flight_status_scroll.setMaximumHeight(
+                max(132, event.size().height() * 21 // 100)
+            )
         if hasattr(self, "conn_label"):
             self._ConnectionStatus_Display()
 

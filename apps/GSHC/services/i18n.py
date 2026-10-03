@@ -604,7 +604,7 @@ ZH_CN.update(
 EN_US.update(
     {
         "button.details": "Details",
-        "button.sensor_details": "Sensor Status / Details",
+        "button.sensor_details": "Sensor Details",
         "button.calibration_start": "Start Calibration",
         "button.calibration_restart": "Restart Calibration",
         "button.cal_restart": "Restart Selected Calibration",
