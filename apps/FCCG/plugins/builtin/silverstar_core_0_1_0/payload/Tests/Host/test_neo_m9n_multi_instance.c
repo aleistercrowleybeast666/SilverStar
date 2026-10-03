@@ -199,6 +199,10 @@ static void Test_ParserAndLivenessIsolation(void)
     TEST_CHECK(GnssNeoM9n_Init(0U) == GnssNeoM9n_InitOk);
     TEST_CHECK(GnssNeoM9n_Init(1U) == GnssNeoM9n_InitOk);
 
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(0U) == 0U);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(1U) == 0U);
+    TEST_CHECK(PlatformUart_BaudSet(resources0.uart, 921600U) == PLATFORM_OK);
+    TEST_CHECK(PlatformUart_BaudSet(resources1.uart, 38400U) == PLATFORM_OK);
     length0 = Test_PvtFrameBuild(111111111, 222222222, 3U, 1U, frame0);
     length1 = Test_PvtFrameBuild(-333333333, -444444444, 1U, 0U, frame1);
     Test_UartInject(resources0.uart, frame0, length0);
@@ -207,6 +211,8 @@ static void Test_ParserAndLivenessIsolation(void)
                GnssNeoM9n_UpdateOk);
     TEST_CHECK(GnssNeoM9n_Process(1U, s_tick_ms) ==
                GnssNeoM9n_UpdateOk);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(0U) == 921600U);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(1U) == 38400U);
     TEST_CHECK(GnssNeoM9n_GetData(0U, &data0) != 0U);
     TEST_CHECK(GnssNeoM9n_GetData(1U, &data1) != 0U);
     TEST_CHECK(data0.lon == 111111111 && data0.lat == 222222222);
@@ -219,6 +225,12 @@ static void Test_ParserAndLivenessIsolation(void)
     TEST_CHECK(status0.ubx_pvt_count == 1U);
     TEST_CHECK(status1.ubx_pvt_count == 1U);
 
+    /* A baud change without new valid bytes cannot re-label cached PVT.
+     * A checksum failure at that new baud cannot establish it either. */
+    TEST_CHECK(PlatformUart_BaudSet(resources0.uart, 115200U) == PLATFORM_OK);
+    (void)GnssNeoM9n_Process(0U, s_tick_ms);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(0U) == 921600U);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(1U) == 38400U);
     frame0[length0 - 1U] ^= 0x01U;
     Test_UartInject(resources0.uart, frame0, length0);
     (void)GnssNeoM9n_Process(0U, s_tick_ms);
@@ -226,6 +238,8 @@ static void Test_ParserAndLivenessIsolation(void)
     GnssNeoM9n_GetStatusSnapshot(1U, &status1);
     TEST_CHECK(status0.ubx_checksum_error_count == 1U);
     TEST_CHECK(status1.ubx_checksum_error_count == 0U);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(0U) == 921600U);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(1U) == 38400U);
 
     s_tick_ms = 1701U;
     length1 = Test_PvtFrameBuild(-555555555, -666666666, 1U, 0U, frame1);
@@ -239,6 +253,8 @@ static void Test_ParserAndLivenessIsolation(void)
 
     GnssNeoM9n_GetStatusSnapshot(1U, &status1);
     TEST_CHECK(GnssNeoM9n_Init(0U) == GnssNeoM9n_InitOk);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(0U) == 0U);
+    TEST_CHECK(GnssNeoM9n_LastValidBaudGet(1U) == 38400U);
     GnssNeoM9n_GetStatusSnapshot(1U, &status0);
     TEST_CHECK(status0.ubx_pvt_count == status1.ubx_pvt_count);
     TEST_CHECK(status0.ubx_checksum_error_count ==

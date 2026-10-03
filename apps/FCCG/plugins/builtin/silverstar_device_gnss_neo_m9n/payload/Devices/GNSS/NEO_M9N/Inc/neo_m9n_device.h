@@ -151,6 +151,10 @@ typedef enum
 
 GnssNeoM9nIdentifyResult GnssNeoM9n_Identify(uint8_t instance);
 
+/* Transport evidence only. A checksum-valid frame never establishes model,
+ * firmware identity, configuration readiness, or a usable navigation fix. */
+uint32_t GnssNeoM9n_LastValidBaudGet(uint8_t instance);
+
 typedef enum
 {
     GnssNeoM9nIdentityNone = 0,
