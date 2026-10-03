@@ -13,7 +13,10 @@ from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.settings import SettingsStore
+from silverstar_fccg.core.errors import FccgError
+from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.log_decoder_profile import LogDecoderPackage_Verify
+from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.generator.render import LogDecoderProfile_Render
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
@@ -117,7 +120,20 @@ def test_sf6_gui_order_gains_edit_save_reopen(tmp_path, workspace_root, qapp, mo
         assert window._model.algorithm_parameters[SF6]["gain_pe"] == 0.35
         service = FccgService(workspace_root)
         project = fixture_root / "SF6GuiRoundtrip"
-        service.Project_Save(window._model, project, confirm_dangerous=True)
+        # Match the GUI Flight export flow while keeping the enabled,
+        # unconfigured Ground target and its ordinary rejection gate intact.
+        assert window._model.ground_target.enabled
+        with pytest.raises(FccgError, match="GROUND_HARDWARE_UNBOUND"):
+            service.Project_Save(window._model, project, confirm_dangerous=True)
+        service.ProjectRoot_Save(window._model, project, create_new=True)
+        generated = TargetGeneration_Apply(
+            window._model, service.catalog, WorkspacePolicy(workspace_root),
+            project, TargetScope.FLIGHT, confirm_dangerous=True)
+        service.ProjectRoot_Save(window._model, project)
+        assert generated.targets == ("Flight_Controller",)
+        assert (project / "Flight_Controller/Makefile").is_file()
+        assert not (project / "Ground_Station/Makefile").exists()
+        assert window._model.ground_target.enabled
         reopened = service.Project_Open(project)
         assert reopened.algorithm_parameters[SF6]["gain_pe"] == 0.35
     finally:
