@@ -84,6 +84,8 @@ def test_authorized_paths_match_both_separators(
     expression = (
         f"(Test-PowerTenApprovedConditional '{estimator}' "
         "'#if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)') -and "
+        f"(Test-PowerTenApprovedConditional '{estimator}' "
+        "'#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)') -and "
         f"(Test-PowerTenApprovedDoublePointer '{hooks}' "
         "'    StaticTask_t **task_control,')"
     )
@@ -97,6 +99,11 @@ def test_authorized_paths_match_both_separators(
         "Test-PowerTenApprovedConditional 'APP/Src/other_estimator_task.c' '#if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)'",
         "Test-PowerTenApprovedConditional 'Other/APP/Src/estimator_task.c' '#if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)'",
         "Test-PowerTenApprovedConditional 'APP/Src/estimator_task.c' '#if (SYSTEM_BUILD_ESTIMATOR_ENABLED == 1U)'",
+        "Test-PowerTenApprovedConditional 'APP/Src/other_estimator_task.c' '#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)'",
+        "Test-PowerTenApprovedConditional 'Other/APP/Src/estimator_task.c' '#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)'",
+        "Test-PowerTenApprovedConditional 'APP/Src/estimator_task.c' '#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED == 0U)'",
+        "Test-PowerTenApprovedConditional 'APP/Src/estimator_task.c' '#if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 1U)'",
+        "Test-PowerTenApprovedConditional 'APP/Src/estimator_task.c' '#if (UNREVIEWED_BACKEND_ENABLED != 0U)'",
         "Test-PowerTenApprovedDoublePointer 'OS/FreeRTOS/other_freertos_hooks.c' 'StaticTask_t **task_control,'",
         "Test-PowerTenApprovedDoublePointer 'Other/OS/FreeRTOS/freertos_hooks.c' 'StaticTask_t **task_control,'",
         "Test-PowerTenApprovedDoublePointer 'OS/FreeRTOS/freertos_hooks.c' 'uint8_t **user_buffer,'",

@@ -446,7 +446,8 @@ function Test-PowerTenApprovedConditional {
     $normalized = $RelativePath -replace '\\', '/'
     return (($Line -match $protocolConditionalPattern) -or
             (($normalized -eq 'APP/Src/estimator_task.c') -and
-             ($Line -match $estimatorConditionalPattern)) -or
+             (($Line -match $estimatorConditionalPattern) -or
+              ($Line -match $backendConditionalPattern))) -or
             ($Line -match '^\s*#\s*(?:else|endif)\b'))
 }
 
@@ -481,6 +482,13 @@ $protocolConditionalPattern = (
 # Only this source may compile out its KF6 implementation using the build lock.
 $estimatorConditionalPattern =
     '^\s*#\s*if\s+\(SYSTEM_BUILD_ESTIMATOR_ENABLED\s*(?:!=|==)\s*0U\)\s*$'
+
+# Authorized backend-linkage repair: only the reviewed task can compile its
+# external-backend call sites using this numeric capability. The owning header
+# derives it from selected plugin markers; C asserts agreement with the typed ID.
+# Arbitrary flag expressions, other paths and all existing rule gates stay denied.
+$backendConditionalPattern =
+    '^\s*#\s*if\s+\(SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED\s*!=\s*0U\)\s*$'
 
 foreach ($file in $files) {
     $progressCurrent++
