@@ -1,0 +1,229 @@
+{
+  "schema_id": "silverstar.algorithm-parameters/1.0",
+  "parameters": [
+    {
+      "id": "gain_ve",
+      "type": "float",
+      "default": 0.2,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.0,
+      "max": 1.0,
+      "precision": 4,
+      "step": 0.01,
+      "group": "basic",
+      "order": 0,
+      "generated_symbol": "SYSTEM_SF6_GAIN_VE",
+      "display_names": {
+        "zh_CN": "vE 固定增益",
+        "en_US": "vE fixed gain"
+      },
+      "description": {
+        "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+        "en_US": "Initial engineering default, not bench-tuned or optimal."
+      }
+    },
+    {
+      "id": "gain_vn",
+      "type": "float",
+      "default": 0.2,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.0,
+      "max": 1.0,
+      "precision": 4,
+      "step": 0.01,
+      "group": "basic",
+      "order": 1,
+      "generated_symbol": "SYSTEM_SF6_GAIN_VN",
+      "display_names": {
+        "zh_CN": "vN 固定增益",
+        "en_US": "vN fixed gain"
+      },
+      "description": {
+        "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+        "en_US": "Initial engineering default, not bench-tuned or optimal."
+      }
+    },
+    {
+      "id": "gain_vu",
+      "type": "float",
+      "default": 0.2,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.0,
+      "max": 1.0,
+      "precision": 4,
+      "step": 0.01,
+      "group": "basic",
+      "order": 2,
+      "generated_symbol": "SYSTEM_SF6_GAIN_VU",
+      "display_names": {
+        "zh_CN": "vU 固定增益",
+        "en_US": "vU fixed gain"
+      },
+      "description": {
+        "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+        "en_US": "Initial engineering default, not bench-tuned or optimal."
+      }
+    },
+    {
+      "id": "gain_pe",
+      "type": "float",
+      "default": 0.2,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.0,
+      "max": 1.0,
+      "precision": 4,
+      "step": 0.01,
+      "group": "basic",
+      "order": 3,
+      "generated_symbol": "SYSTEM_SF6_GAIN_PE",
+      "display_names": {
+        "zh_CN": "pE 固定增益",
+        "en_US": "pE fixed gain"
+      },
+      "description": {
+        "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+        "en_US": "Initial engineering default, not bench-tuned or optimal."
+      }
+    },
+    {
+      "id": "gain_pn",
+      "type": "float",
+      "default": 0.2,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.0,
+      "max": 1.0,
+      "precision": 4,
+      "step": 0.01,
+      "group": "basic",
+      "order": 4,
+      "generated_symbol": "SYSTEM_SF6_GAIN_PN",
+      "display_names": {
+        "zh_CN": "pN 固定增益",
+        "en_US": "pN fixed gain"
+      },
+      "description": {
+        "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。",
+        "en_US": "Initial engineering default, not bench-tuned or optimal."
+      }
+    },
+    {
+      "id": "gain_pu",
+      "type": "float",
+      "default": 0.2,
+      "unit": "1",
+      "representation": "value",
+      "min": 0.0,
+      "max": 1.0,
+      "precision": 4,
+      "step": 0.01,
+      "group": "basic",
+      "order": 5,
+      "generated_symbol": "SYSTEM_SF6_GAIN_PU",
+      "display_names": {
+        "zh_CN": "pU 固定增益",
+        "en_US": "pU fixed gain"
+      },
+      "description": {
+        "zh_CN": "初始工程默认值，尚未台架调参，非最优增益。pU 同时用于 GNSS 高度和气压相对高度。",
+        "en_US": "Initial engineering default, not bench-tuned or optimal.Shared by GNSS height and barometer relative altitude."
+      }
+    },
+    {
+      "id": "gnss_position_measurement_delay_ms",
+      "type": "integer",
+      "default": 0,
+      "legacy_default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "precision": 0,
+      "step": 5,
+      "group": "advanced",
+      "order": 6,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
+      "display_names": {
+        "en_US": "GNSS position measurement delay",
+        "zh_CN": "GNSS 位置量测延迟"
+      },
+      "description": {
+        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+      }
+    },
+    {
+      "id": "gnss_velocity_measurement_delay_ms",
+      "type": "integer",
+      "default": 270,
+      "legacy_default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "precision": 0,
+      "step": 5,
+      "group": "advanced",
+      "order": 7,
+      "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
+      "display_names": {
+        "en_US": "GNSS velocity measurement delay",
+        "zh_CN": "GNSS 速度量测延迟"
+      },
+      "description": {
+        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+      }
+    },
+    {
+      "id": "baro_measurement_delay_ms",
+      "type": "integer",
+      "default": 0,
+      "legacy_default": 0,
+      "unit": "ms",
+      "representation": "value",
+      "min": 0,
+      "max": 550,
+      "precision": 0,
+      "step": 5,
+      "group": "advanced",
+      "order": 8,
+      "generated_symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
+      "display_names": {
+        "en_US": "Barometer measurement delay",
+        "zh_CN": "气压高度量测延迟"
+      },
+      "description": {
+        "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+        "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+      }
+    },
+    {
+      "id": "gravity_mps2",
+      "type": "float",
+      "default": 9.78,
+      "unit": "m/s^2",
+      "representation": "value",
+      "min": 1.0,
+      "max": 20.0,
+      "precision": 6,
+      "step": 0.01,
+      "group": "basic",
+      "order": 0,
+      "generated_symbol": "SYSTEM_INS_GRAVITY_MPS2",
+      "display_names": {
+        "en_US": "Gravity",
+        "zh_CN": "重力加速度"
+      },
+      "description": {
+        "en_US": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+        "zh_CN": "仅用于导航重力扣除；校准、对准和传感器换算保留独立的平台重力配置。"
+      }
+    }
+  ],
+  "source_note": "Audited SF6 component parameters joined with shared INS gravity; production gravity remains owned by INS."
+}

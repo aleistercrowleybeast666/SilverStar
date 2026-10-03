@@ -523,7 +523,7 @@ class FlightLogProcessor:
         total_steps = 0
         total_steps += int(ExportItem.PROCESSED_DATA in options.items)
         total_steps += int(ExportItem.SUMMARY in options.items)
-        total_steps += 7 * len(pages) if ExportItem.CHARTS in options.items else 0
+        total_steps += 8 * len(pages) if ExportItem.CHARTS in options.items else 0
         total_steps += 2 * frame_count + 1 if ExportItem.ATTITUDE_3D in options.items else 0
         total_steps += int(ExportItem.SESSION_INFO in options.items)
         done = 0
@@ -560,6 +560,7 @@ class FlightLogProcessor:
 
         if ExportItem.CHARTS in options.items:
             chart_jobs: tuple[tuple[str, Callable[[Path], None]], ...] = (
+                ("horizontal_trajectory", lambda path: plotter.plot_horizontal_trajectory(path, data)),
                 (
                     "accel",
                     lambda path: plotter.plot_vector_figure(
@@ -644,6 +645,7 @@ class FlightLogProcessor:
                 ),
             )
             categories = {
+                "horizontal_trajectory": "Trajectory2D",
                 "accel": "Sensors", "gyro": "Sensors", "euler": "Attitude",
                 "velocity": "Velocity", "position": "Position",
                 "link_quality": "Diagnostics", "packet_loss_per_second": "Diagnostics",

@@ -1,12 +1,33 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Callable
 
 import numpy as np
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
+from config import (
+    PLOT_REFRESH_INTERVAL_MS,
+    PLOT_WINDOW_SECONDS,
+)
+from processing.horizontal_trajectory import HorizontalTrajectory_Build
+from protocol.common import (
+    AirAckResult,
+    AirAlignmentState,
+    AirCalibrationDiagnosticReason,
+    AirCalibrationMode,
+    AirCalibrationModeMask,
+    AirCalibrationState,
+    AirLifecycleState,
+    AirSensorDetailCode,
+    AirSensorStatusFlag,
+    AirSensorSummaryFlag,
+    AirStatusId,
+    GspAckResult,
+    air_sensor_descriptor,
+    enum_name,
+)
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
@@ -33,27 +54,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-
-from config import (
-    PLOT_REFRESH_INTERVAL_MS,
-    PLOT_WINDOW_SECONDS,
-)
-from protocol.common import (
-    AirAckResult,
-    AirAlignmentState,
-    AirCalibrationDiagnosticReason,
-    AirCalibrationMode,
-    AirCalibrationModeMask,
-    AirCalibrationState,
-    AirLifecycleState,
-    AirSensorDetailCode,
-    AirSensorStatusFlag,
-    AirSensorSummaryFlag,
-    AirStatusId,
-    GspAckResult,
-    air_sensor_descriptor,
-    enum_name,
-)
 from services.data_migration import DataMigrationConflictPolicy
 from services.i18n import I18n, Language
 from services.preferences import (
@@ -74,6 +74,7 @@ from services.state_model import (
     HandshakeState,
     MissionPhase,
 )
+from ui.horizontal_trajectory import HorizontalTrajectoryWidget
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
@@ -1330,6 +1331,7 @@ class MainWindow(QMainWindow):
         self._last_sensor_revision = -1
         self._last_plot_revision = -1
         self._last_event_revision = -1
+        self._horizontal_revision = None
         if select_preflight:
             self.pages.setCurrentWidget(self.preflight_page)
         self.render_state()
@@ -1448,9 +1450,12 @@ class MainWindow(QMainWindow):
         self.preflight_page = self._build_preflight_page()
         self.flight_page = self._build_flight_page()
         self.post_process_page = self._build_post_process_page()
+        self.horizontal_trajectory_widget = HorizontalTrajectoryWidget()
+        self._horizontal_revision = None
         self.pages.addTab(self.preflight_page, "")
         self.pages.addTab(self.flight_page, "")
         self.pages.addTab(self.post_process_page, "")
+        self.pages.addTab(self.horizontal_trajectory_widget, self.i18n.tr("horizontal.title"))
         splitter.addWidget(self.pages)
         splitter.setSizes([420, 1340])
         splitter.setStretchFactor(0, 0)
@@ -2161,6 +2166,7 @@ class MainWindow(QMainWindow):
         self.gl_view.update()
 
     def _apply_plot_theme(self) -> None:
+        self.horizontal_trajectory_widget.Presentation_Set(self.i18n.tr, self.theme.value)
         if not hasattr(self, "plot_widgets"):
             return
         colors = self._theme_colors
@@ -2892,6 +2898,22 @@ class MainWindow(QMainWindow):
 
     def _render_plots(self, state: FlightControllerState) -> None:
         plot = state.live_plot
+        event_revision = self._events.revision if self._events is not None else -1
+        horizontal_revision = (plot.revision, event_revision, state.mission_presentation.phase)
+        if horizontal_revision != self._horizontal_revision:
+            self._horizontal_revision = horizontal_revision
+            times, _velocity, position = plot.snapshot()
+            deploy_time = None
+            if self._events is not None and state.mission_first_time_ms is not None:
+                deploy_time = next(((event.time_ms - state.mission_first_time_ms) / 1000.0
+                                    for event in self._events.snapshot()
+                                    if event.status_id == int(AirStatusId.PARACHUTE_DEPLOY)), None)
+            trajectory = HorizontalTrajectory_Build(times, np.asarray(position).T,
+                                                      deploy_time_s=deploy_time)
+            # The bounded live buffer is a view, never a claim of mission completion.
+            trajectory = replace(trajectory, start_clipped=bool(times and times[0] > 0),
+                                 end_clipped=state.mission_presentation.phase != MissionPhase.LANDED)
+            self.horizontal_trajectory_widget.Trajectory_Set(trajectory)
         if plot.revision == self._last_plot_revision:
             return
         self._last_plot_revision = plot.revision
@@ -3135,6 +3157,9 @@ class MainWindow(QMainWindow):
             self.plot_title_keys[(key, axis)] = title_key
 
     def _retranslate_plots(self) -> None:
+        self.pages.setTabText(self.pages.indexOf(self.horizontal_trajectory_widget),
+                              self.i18n.tr("horizontal.title"))
+        self.horizontal_trajectory_widget.Presentation_Set(self.i18n.tr, self.theme.value)
         if not hasattr(self, "plot_widgets"):
             return
         for key, plot_widget in self.plot_widgets.items():

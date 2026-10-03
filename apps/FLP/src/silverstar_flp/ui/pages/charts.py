@@ -24,6 +24,7 @@ from silverstar_flp.core.analysis_source import (
     ReplayResultStore,
 )
 from silverstar_flp.core.dataset import FlightDataset, TimeSeries
+from silverstar_flp.core.horizontal_trajectory import HorizontalTrajectory_Build
 from silverstar_flp.core.i18n import Translator
 from silverstar_flp.core.math import Quaternion_RotateVector, Quaternion_ToEulerEnuDeg
 from silverstar_flp.core.mission import (
@@ -53,6 +54,7 @@ from silverstar_flp.core.visual_semantics import (
     TrajectoryMarkerWorldSizesFromExtent_Get,
     TrajectoryPhaseColor_Get,
 )
+from silverstar_flp.ui.horizontal_trajectory import HorizontalTrajectoryWidget
 from silverstar_flp.ui.plot_helpers import _Plot_Prepare, _Plot_Reset, _PlotViews_Reset
 from silverstar_flp.ui.widgets import StandardComboBox
 
@@ -359,6 +361,7 @@ class FlightPage(QWidget):
         self.angular_rate_plot = self._Plot_Create()
         self.attitude_widget = self._AttitudeWidget_Create()
         self.replay_3d_widget = self._Replay3d_Create()
+        self.horizontal_trajectory_widget = HorizontalTrajectoryWidget()
         for widget in (
             self.velocity_plot,
             self.position_plot,
@@ -366,6 +369,7 @@ class FlightPage(QWidget):
             self.angular_rate_plot,
             self.attitude_widget,
             self.replay_3d_widget,
+            self.horizontal_trajectory_widget,
         ):
             self.tabs.addTab(widget, "")
         layout.addWidget(self.tabs)
@@ -768,6 +772,7 @@ class FlightPage(QWidget):
         self.playback_slider.blockSignals(False)
         self._Trajectory3d_Prepare(reset_camera=reset_camera)
         self._ThreeD_Refresh(0)
+        self._HorizontalTrajectory_Refresh()
 
     def TimeRange_Set(self, start_us: int, end_us: int) -> None:
         visual_end = self._mission_bounds.end_timestamp_us if self._mission_bounds else end_us
@@ -777,6 +782,26 @@ class FlightPage(QWidget):
         self.playback_slider.setValue(0)
         self._Trajectory3d_Prepare(reset_camera=False)
         self._ThreeD_Refresh(0)
+        self._HorizontalTrajectory_Refresh()
+
+    def _HorizontalTrajectory_Refresh(self) -> None:
+        series = self._position
+        mission_start = self._mission_bounds.start_timestamp_us if self._mission_bounds else 0
+        # Origin stays at mission START when the visible time range changes.
+        origin = (TrajectoryOrigin_Get(series, mission_start) if series is not None
+                  else np.zeros(3))
+        self.horizontal_trajectory_widget.Trajectory_Set(HorizontalTrajectory_Build(
+            series.time_s if series is not None else [],
+            series.values if series is not None else [],
+            valid=series.valid if series is not None else None, origin_enu=origin,
+            mission_range=(mission_start * 1e-6, self._mission_bounds.end_timestamp_us * 1e-6)
+                          if self._mission_bounds else None,
+            time_range=(self._start_timestamp_us * 1e-6, self._end_timestamp_us * 1e-6),
+            deploy_time_s=(self._deploy_timestamp_us * 1e-6
+                           if self._deploy_timestamp_us is not None else None),
+            breaks_s=tuple(t * 1e-6 for t in series.metadata.get("discontinuity_timestamps_us", ()))
+                     if series is not None else (),
+        ))
 
     def _CameraLock_Toggled(self, unlocked: bool) -> None:
         if gl is not None:
@@ -1122,6 +1147,7 @@ class FlightPage(QWidget):
 
     def Theme_Apply(self, theme: str) -> None:
         self._theme = theme
+        self.horizontal_trajectory_widget.Presentation_Set(self._translator.Text_Get, theme)
         for plot in (
             self.velocity_plot,
             self.position_plot,
@@ -1178,9 +1204,11 @@ class FlightPage(QWidget):
             "tab.angular_rate",
             "tab.attitude",
             "tab.replay_3d",
+            "horizontal.title",
         )
         for index, code in enumerate(tab_codes):
             self.tabs.setTabText(index, translator.Text_Get(code))
+        self.horizontal_trajectory_widget.Presentation_Set(translator.Text_Get, self._theme)
         self.attitude_3d_group.setTitle(translator.Text_Get("flight.attitude_3d"))
         self.trajectory_3d_group.setTitle(
             translator.Text_Get("flight.trajectory_3d")

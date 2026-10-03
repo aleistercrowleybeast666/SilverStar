@@ -76,7 +76,8 @@ def test_flight_tabs_start_crop_complete_vectors_and_active_source(
     page.show()
     application.processEvents()
 
-    assert page.tabs.count() == 6
+    assert page.tabs.count() == 7
+    assert page.tabs.tabText(6) == "Horizontal trajectory"
     assert page._start_timestamp_us == START_TIMESTAMP_US
     assert page._position is result.channels["navigation.position_enu"]
     assert page._attitude is result.channels["attitude.q_nb"]

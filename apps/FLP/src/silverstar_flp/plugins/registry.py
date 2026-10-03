@@ -58,12 +58,14 @@ def builtin_registry() -> PluginRegistry:
     from silverstar_flp.plugins.algorithms.eskf15.plugin import Eskf15AlgorithmPlugin
     from silverstar_flp.plugins.algorithms.kf6.plugin import Kf6AlgorithmPlugin
     from silverstar_flp.plugins.algorithms.pure_ins.plugin import PureInsAlgorithmPlugin
+    from silverstar_flp.plugins.algorithms.sf6.plugin import Sf6AlgorithmPlugin
     from silverstar_flp.plugins.log_containers.sslog0.plugin import Sslog0ContainerPlugin
 
     registry = PluginRegistry()
     sslog0_container = Sslog0ContainerPlugin()
     registry.LogContainer_Register(sslog0_container)
     registry.Algorithm_Register(PureInsAlgorithmPlugin())
+    registry.Algorithm_Register(Sf6AlgorithmPlugin())
     registry.Algorithm_Register(Kf6AlgorithmPlugin())
     registry.Algorithm_Register(Eskf15AlgorithmPlugin())
     return registry

@@ -126,9 +126,9 @@ def test_real_61s_png_pages_and_full_text(tmp_path):
         output = processor.process_file(data.source_log, progress=lambda *v: progress.append(v))
     assert not processor.last_export_errors
     files = list(output.rglob("*.png"))
-    assert len(files) == 21
-    assert {p.parent.name for p in files} == {"Position", "Velocity", "Attitude", "Sensors", "Diagnostics"}
-    for category in ("Position", "Velocity"):
+    assert len(files) == 24
+    assert {p.parent.name for p in files} == {"Position", "Velocity", "Attitude", "Sensors", "Diagnostics", "Trajectory2D"}
+    for category in ("Position", "Velocity", "Trajectory2D"):
         assert len(list((output / category).glob("*.png"))) == 3
     assert any("000060.000-000061.000" in p.name for p in files)
     assert "61.000" in (output / "processed_data_EN.txt").read_text()
@@ -137,7 +137,7 @@ def test_real_61s_png_pages_and_full_text(tmp_path):
     assert manifest["export"]["gif"]["source_range_s"] == [0, 61]
     assert manifest["export"]["theme_mode"] == "follow_ui"
     assert manifest["export"]["resolved_theme"] == "light"
-    assert progress[-1][0] == progress[-1][1] == 23
+    assert progress[-1][0] == progress[-1][1] == 26
     assert data.duration_s == 61 and data.pos[-1].time_s == 61
 
 
