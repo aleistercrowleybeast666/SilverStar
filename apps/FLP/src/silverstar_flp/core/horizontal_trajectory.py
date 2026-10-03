@@ -173,7 +173,11 @@ def HorizontalTrajectory_Draw(figure, trajectory, labels, *, theme="light", titl
     radius = max(float((maximum - minimum).max()) * 0.55, 1.0)
     axis.set_xlim(centre[0] - radius, centre[0] + radius)
     axis.set_ylim(centre[1] - radius, centre[1] + radius)
-    bar = figure.colorbar(ScalarMappable(norm=norm, cmap="viridis"), ax=axis, pad=0.04)
+    # Preserve the centred parent anchor when equal aspect shrinks a wide pane;
+    # the colourbar's default parent anchor otherwise pins the square to the right.
+    bar = figure.colorbar(
+        ScalarMappable(norm=norm, cmap="viridis"), ax=axis, pad=0.04, panchor=False
+    )
     bar.set_label(labels["height"], color=foreground)
     bar.ax.tick_params(colors=foreground)
     if constant:

@@ -103,3 +103,18 @@ def test_flp_export_draws_same_geometry_and_keeps_equal_axes(tmp_path, monkeypat
     )
     assert path.exists() and path.stat().st_size > 10000
     assert len(observed) == 1 and observed[0].start_clipped and observed[0].end_clipped
+
+
+def test_wide_pane_keeps_metric_square_centred_with_external_colourbar():
+    trajectory = HorizontalTrajectory_Build([0, .2], [(0, 0, 0), (1, 100, 20)])
+    translator = Translator("en_US")
+    labels = {key: translator.Text_Get("horizontal." + key) for key in LABEL_IDS}
+    figure = Figure(figsize=(14, 5))
+    FigureCanvasAgg(figure)
+    axis = HorizontalTrajectory_Draw(figure, trajectory, labels)
+    figure.canvas.draw()
+    allocated, actual = axis.get_position(original=True), axis.get_position()
+    assert abs((actual.x0 + actual.x1) - (allocated.x0 + allocated.x1)) < 1e-9
+    pixels = axis.get_window_extent()
+    assert abs(pixels.width - pixels.height) < 1e-9
+    assert figure.axes[1].get_position().x0 > actual.x1

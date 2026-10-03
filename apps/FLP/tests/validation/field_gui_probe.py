@@ -16,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[4]
 APP_NAME = sys.argv[1]
 OUTPUT = Path(sys.argv[2]).resolve()
 OUTPUT.mkdir(parents=True, exist_ok=True)
+WIDTH = int(sys.argv[3]) if len(sys.argv) > 3 else 1280
+HEIGHTS = (int(sys.argv[4]),) if len(sys.argv) > 4 else (720, 900)
 app_root = ROOT / "apps" / APP_NAME.upper()
 sys.path[:0] = [str(app_root / "src"), str(app_root)]
 
@@ -41,7 +43,7 @@ def capture(window, name):
     pump()
     qt_path = OUTPUT / (name + "_qt.png")
     assert window.grab().save(str(qt_path))
-    observations.append({"name": name, "requested_window": [1280, int(name.split("_")[-1])],
+    observations.append({"name": name, "requested_window": [WIDTH, int(name.split("_")[-1])],
                          "actual_window": [window.width(), window.height()],
                          "native_capture": False, "qt_capture": str(qt_path),
                          "native_capture_limitation": "QScreen capture includes occluding windows; sky capture tool not exposed"})
@@ -66,16 +68,20 @@ if APP_NAME == "gshc":
         window.i18n.set_language(language)
         window._apply_theme(Theme(theme), persist=True)
         window.retranslate_ui()
-        for height in (720, 900):
-            window.resize(1280, height)
+        for height in HEIGHTS:
+            window.resize(WIDTH, height)
             window.pages.setCurrentWidget(window.horizontal_trajectory_widget)
             state.live_plot.clear()
+            state.horizontal_trajectory.Clear()
             window.refresh_plots()
             capture(window, f"GSHC_empty_{language}_{height}")
             for index in range(51):
                 t = index * .2
                 state.live_plot.append(t, (0, 0, 0), (100*np.sin(t/4), 10*t, 50*np.sin(t/5)))
+                state.horizontal_trajectory.Sample_Append(
+                    1 + t, (100*np.sin(t/4), 10*t, 50*np.sin(t/5)))
                 if index == 20:
+                    state.horizontal_trajectory.Deploy_Observe(5)
                     events.append(FlightEvent(1, int(AirStatusId.PARACHUTE_DEPLOY),
                                              "PARACHUTE_DEPLOY", 5000, 0, 0, 0))
                 if index % 5 == 0:
@@ -129,8 +135,8 @@ else:
     for language, theme in (("en_US", "light"), ("zh_CN", "dark")):
         window.Language_Apply(language)
         window.Theme_Apply(theme)
-        for height in (720, 900):
-            window.resize(1280, height)
+        for height in HEIGHTS:
+            window.resize(WIDTH, height)
             window.navigation_list.setCurrentRow(2)
             window.flight_page.tabs.setCurrentWidget(window.flight_page.horizontal_trajectory_widget)
             window.flight_page.TimeRange_Set(3_000_000, 9_000_000)
