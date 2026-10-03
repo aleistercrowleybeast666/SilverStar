@@ -53,6 +53,8 @@ def test_ground_selection_defaults_and_checkbox_visibility(qapp, tmp_path, works
     assert window.ground_target_page.enabled.objectName() == 'standardCheckBox'
     assert window.air_link_page.crc.objectName() == 'standardCheckBox'
     window._GroundTarget_Change('enabled', False)
-    assert not window.ground_target_page.generate_button.isEnabled()
-    assert window.ground_target_page.status.text() != window._translator.Text_Get('status.ground_ready')
+    assert window.ground_target_page.enabled.isHidden()
+    assert window._model.ground_target.enabled
+    assert window.ground_target_page.generate_button.isEnabled()
+    assert window.ground_target_page.status.text() == window._translator.Text_Get('status.ground_ready')
     window.close()

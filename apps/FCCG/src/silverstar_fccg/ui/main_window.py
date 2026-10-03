@@ -342,6 +342,8 @@ class MainWindow(QMainWindow):
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
+        self.air_link_page.air_link_group.body.layout().addRow(
+            self.ground_target_page.radio_instances_editor.power_editor)
         self.ground_configuration_page = self.air_link_page
         for group in (self.ground_target_page.pc_group,):
             self.ground_target_page.root_layout.removeWidget(group)
@@ -568,6 +570,8 @@ class MainWindow(QMainWindow):
         model: ProjectModel,
         configuration: ProjectConfigurationResult | None = None,
     ) -> _ProjectDisplayState:
+        # Both targets are available; generation scope decides which is required.
+        model.ground_target = replace(model.ground_target, enabled=True)
         devices = tuple(
             component
             for component in self._component_views
@@ -1548,6 +1552,7 @@ class MainWindow(QMainWindow):
 
     def _TargetPages_Refresh(self, model: ProjectModel) -> None:
         radios = []
+        module_availability = {}
         radio_contracts = tuple(
             manifest.radio for manifest in self._service.catalog.Type_Get("device")
             if manifest.radio is not None
@@ -1556,6 +1561,16 @@ class MainWindow(QMainWindow):
         for candidate in self._service.catalog.Type_Get("device"):
             if candidate.radio is None:
                 continue
+            for module_id in candidate.radio.modules:
+                module_issues = RadioCandidateIssues_Get(
+                    model.air_link, candidate.radio, module_id, "Ground")
+                if model.air_link.packet_mtu > 61:
+                    module_issues = (*module_issues,
+                                     "AIR_LINK_MTU_TOO_SMALL: Ground GSP bridge permits 61 bytes")
+                module_availability[(candidate.component_id, module_id)] = (
+                    not module_issues, "; ".join(
+                        f"{issue.code}: {issue.message}" if hasattr(issue, "code") else issue
+                        for issue in module_issues))
             selected_module = (
                 model.ground_target.module_variant
                 if model.ground_target.enabled
@@ -1591,6 +1606,7 @@ class MainWindow(QMainWindow):
         except ValueError:
             manifest = None
         requirements = {
+            "module_availability": module_availability,
             "radio_contracts": {candidate.component_id: candidate.radio
                                 for candidate in self._service.catalog.Type_Get("device")
                                 if candidate.radio is not None},

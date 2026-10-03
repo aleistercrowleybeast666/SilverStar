@@ -504,7 +504,7 @@
   "error.save_as_symlink": "工程源码中含符号链接，无法安全另存：{path}",
   "error.device_instance_limit": "无法为{device}分配更多实例编号。",
   "device.plugin_instance_limit": "该型号最多允许 {count} 个实例",
-  "device.instance_order_failover_note": "实例顺序为备用顺序。当前 IMU 仅对准前选择，GNSS 为在线热备，气压计尚无自动切换；长期故障冷备尚未实现。首测使用单默认 KF6 配置。",
+  "device.instance_order_failover_note": "实例顺序为生成顺序。当前 IMU 仅校准前选择；GNSS 和气压计支持单向冷备切换。气压计优先级由主源配置及生成的端点 ID 决定。首页使用的默认 KF6 配置。",
   "group.primary_devices": "主要传感器",
   "group.other_sensors": "其他传感器",
   "group.actuators": "执行器",
@@ -927,6 +927,7 @@
   "ground.initial_radio": "初始遥测实例",
   "ground.add_radio": "添加地面遥测实例",
   "ground.radio_title": "地面遥测 {id}",
+  "ground.radio_power": "地面站 {title} 发射功率",
   "ground.radio_up": "上移",
   "ground.radio_down": "下移",
   "ground.radio_runtime_pending": "多实例可以保存为配置；地面站生成需要已整合的无线运行时。"

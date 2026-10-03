@@ -26,7 +26,7 @@ def test_legacy_single_ground_refresh_does_not_promote_or_rebind(window):
         window.Language_Apply(language)
         assert window._model.Dictionary_Get() == before
         assert not window._model.ground_target.radio_instances
-        assert window.ground_target_page.radio_instances_editor.rows["radio0"]["plugin"].currentData() == window._model.ground_target.radio_plugin
+        assert tuple(window.ground_target_page.radio_instances_editor.rows["radio0"]["selection"].currentData()) == (window._model.ground_target.radio_plugin, window._model.ground_target.module_variant)
         assert window.ground_target_page.radio_instances_editor.initial_instance.isHidden()
     assert window._model.Dictionary_Get()["format_version"] == 14
 
@@ -50,8 +50,8 @@ def test_ground_editor_order_initial_binding_and_reopen(qapp, window, monkeypatc
     assert not window.ground_target_page.assignments["radio1:radio_bus"].currentData()
     editor.initial_instance.setCurrentIndex(editor.initial_instance.findData("radio1"))
     _Wait(qapp, lambda: window._model.ground_target.active_radio_instance == "radio1")
-    editor.rows["radio1"]["up"].click()
-    _Wait(qapp, lambda: window._model.ground_target.radio_instances[0].instance_id == "radio1")
+    assert [r.instance_id for r in window._model.ground_target.radio_instances] == ["radio0", "radio1"]
+    assert all("up" not in row and "down" not in row for row in editor.rows.values())
     assert window._model.ground_target.resource_assignments == before
     data = window._model.Dictionary_Get()
     assert data["format_version"] == 15

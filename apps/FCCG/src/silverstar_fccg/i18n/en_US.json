@@ -504,7 +504,7 @@
   "error.save_as_symlink": "Save As refuses symbolic links in project source: {path}",
   "error.device_instance_limit": "No additional {device} instance identifier is available.",
   "device.plugin_instance_limit": "This model allows at most {count} instance(s)",
-  "device.instance_order_failover_note": "Instance order defines backup priority. Current IMU selection is pre-alignment only; GNSS uses online warm backups and barometers do not switch automatically. Long-fault cold backup is unfinished. Use the single-source default KF6 configuration for the first test.",
+  "device.instance_order_failover_note": "Instance order defines generation order. Current IMU selection is pre-alignment only; GNSS and barometers support one-way cold-standby switching. Barometer priority follows the primary source configuration and generated endpoint IDs. Use the default KF6 configuration for the first test.",
   "group.primary_devices": "Primary Sensors",
   "group.other_sensors": "Other Sensors",
   "group.actuators": "Actuators",
@@ -927,6 +927,7 @@
   "ground.initial_radio": "Initial telemetry instance",
   "ground.add_radio": "Add Ground telemetry instance",
   "ground.radio_title": "Ground telemetry {id}",
+  "ground.radio_power": "Ground {title} TX power",
   "ground.radio_up": "Move up",
   "ground.radio_down": "Move down",
   "ground.radio_runtime_pending": "Multiple instances are saved as configuration. Ground generation requires the integrated radio runtime."

@@ -93,6 +93,7 @@ class AirLinkPage(ScrollableLocalizedPage):
         ground_power_label = QLabel()
         self.Text_Register(ground_power_label, "field.ground_tx_power")
         form.addRow(ground_power_label, self.ground_tx_power)
+        form.setRowVisible(self.ground_tx_power, False)
         for name, key, choices in (
             ("radio_technology", "field.air_technology",
              (("LoRa", "lora"), ("Packet Radio / Other", "packet"))),
@@ -247,6 +248,7 @@ class GroundTargetPage(BoardHardwarePage):
         radio_form = QFormLayout()
         self.root_layout.removeWidget(self.enabled)
         radio_form.addRow(self.enabled)
+        radio_form.setRowVisible(self.enabled, False)
         label = QLabel()
         self.Text_Register(label, "field.ground_radio")
         self.radio = StandardComboBox()
@@ -264,7 +266,6 @@ class GroundTargetPage(BoardHardwarePage):
         self.radio_form = radio_form
         self.radio_instances_editor = GroundRadioInstancesEditor(translator)
         self.radio_instances_editor.configurationChanged.connect(self.radiosChanged.emit)
-        self.radio_instances_editor.legacyConfigurationChanged.connect(self.configurationChanged.emit)
         radio_form.addRow(self.radio_instances_editor)
         self.assignment_form = QFormLayout()
         self.assignments: dict[str, QComboBox] = {}
@@ -404,7 +405,9 @@ class GroundTargetPage(BoardHardwarePage):
         # Keep legacy value bindings without duplicate visible selectors.
         self.radio_form.setRowVisible(self.radio, False)
         self.radio_form.setRowVisible(self.module, False)
-        self.radio_instances_editor.Configuration_Set(ground, radios, requirements.get("radio_contracts", {}))
+        self.radio_instances_editor.Configuration_Set(
+            ground, radios, requirements.get("radio_contracts", {}),
+            requirements.get("module_availability", {}))
         if any(issue.code == "GROUND_RADIO_RUNTIME_UNAVAILABLE" for issue in issues):
             self.radio_instances_editor.note.setText(self.radio_instances_editor.note.text() + "\n" +
                 self._translator.Text_Get("ground.radio_runtime_pending"))
