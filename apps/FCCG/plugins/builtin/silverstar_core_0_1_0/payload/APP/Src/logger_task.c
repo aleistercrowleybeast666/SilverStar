@@ -7,6 +7,9 @@
 #include "task.h"
 #include "logger_bus.h"
 #include "logger_task.h"
+#include "debug_log.h"
+#include "project_device_instances.h"
+#include "system_storage_if.h"
 #include "platform_critical.h"
 #include "platform_memory.h"
 #include "silverstar_assert.h"
@@ -505,6 +508,25 @@ static uint8_t LoggerTask_StartupReportWrite(void)
         report->timestamp_us, &report->gnss_config);
 }
 
+static uint8_t LoggerTask_NoStorageLatch(void)
+{
+    static const uint8_t warning[] =
+        "[WARN] TF unavailable at boot; file logging disabled until reset.\r\n";
+    SystemStorageHealth storage;
+    if ((s_diagnostics.io_fault != 0U) ||
+        (s_diagnostics.session_count != 0U) ||
+        (SystemStorage_HealthGet(&storage) != SYSTEM_DEVICE_OK) ||
+        (storage.initial_probe_complete == 0U) ||
+        (storage.initial_medium_unavailable == 0U)) { return 0U; }
+    if (LoggerBus_DisableForBootNoStorage() != LOGGER_BUS_RESULT_OK)
+    { return 0U; }
+    s_diagnostics.boot_logging_disabled = 1U;
+    /* One bounded maintenance-UART attempt. No AIR message or wire change. */
+    s_diagnostics.no_storage_warning_delivered = (uint8_t)(
+        DebugLog_Write(warning, sizeof(warning) - 1U) == sizeof(warning) - 1U);
+    return 1U;
+}
+
 static void LoggerTask_SessionOpenTry(uint64_t now_us)
 {
     SILVERSTAR_ASSERT(s_logger.session_active == 0U,
@@ -518,6 +540,7 @@ static void LoggerTask_SessionOpenTry(uint64_t now_us)
     if (LoggerTask_SessionOpen() == 0U)
     {
         s_diagnostics.open_failure_count++;
+        if (LoggerTask_NoStorageLatch() != 0U) { return; }
         s_logger.next_retry_us = now_us + SYSTEM_LOG_RETRY_PERIOD_US;
     }
 }
@@ -657,6 +680,45 @@ static void LoggerTask_PeriodicFlushTry(uint64_t now_us)
     }
 }
 
+static void LoggerTask_DisabledProcess(LoggerBusFinalizationState finalization)
+{
+    SILVERSTAR_ASSERT(s_logger.session_active == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(LoggerBus_Count() == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    /* The zero-instance load completes without I/O. Configured magnetometers
+     * retain their real persistent-load/calibration gates. Never save to TF. */
+    if ((ProjectMagnetometerInstance_CountGet() == 0U) &&
+        (SystemMagCalibrationStorage_LoadCompleteGet() == 0U))
+    { SystemMagCalibrationStorage_Service(); }
+    if (finalization == LOGGER_BUS_FINALIZATION_DRAINING)
+    {
+        LoggerBus_FinalizationComplete();
+        s_logger.session_finalized = 1U;
+    }
+}
+
+/* One owner decides session admission before any queue drain or file I/O.
+ * Boot-disabled and finalized sessions never enter the open/retry path. */
+static uint8_t LoggerTask_SessionUnavailableProcess(
+    uint64_t now_us, LoggerBusFinalizationState finalization)
+{
+    SILVERSTAR_ASSERT(s_logger.session_finalized <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(finalization <= LOGGER_BUS_FINALIZATION_FINALIZED,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if (LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE)
+    {
+        s_diagnostics.boot_logging_disabled = 1U;
+        LoggerTask_DisabledProcess(finalization);
+        return 1U;
+    }
+    if ((s_logger.session_finalized != 0U) ||
+        (finalization == LOGGER_BUS_FINALIZATION_FINALIZED)) { return 1U; }
+    if (s_logger.session_active == 0U) { LoggerTask_SessionOpenTry(now_us); }
+    return (uint8_t)(s_logger.session_active == 0U);
+}
+
 void AppTask_Logger(void *argument)
 {
     FlightLogRecord record;
@@ -677,18 +739,8 @@ void AppTask_Logger(void *argument)
         now_us = SystemTime_GetMonotonicUs();
         LoggerTask_IterationRecord(now_us);
         finalization_state = LoggerBus_FinalizationProcess(now_us);
-        if ((s_logger.session_finalized != 0U) ||
-            (finalization_state == LOGGER_BUS_FINALIZATION_FINALIZED))
-        {
-            vTaskDelay(pdMS_TO_TICKS(10U));
-            continue;
-        }
-        if (s_logger.session_active == 0U)
-        {
-            LoggerTask_SessionOpenTry(now_us);
-            if (s_logger.session_active == 0U)
-            { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
-        }
+        if (LoggerTask_SessionUnavailableProcess(now_us, finalization_state) != 0U)
+        { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
 
         if (LoggerBus_NextPop(&record) == LOGGER_BUS_RESULT_OK)
         {

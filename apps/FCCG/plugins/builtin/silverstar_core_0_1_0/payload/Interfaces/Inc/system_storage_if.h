@@ -34,6 +34,9 @@ typedef struct
     uint8_t mounted;
     uint8_t file_open;
     uint8_t healthy;
+    /* First real mount outcome, boot-latched; never a hotplug detector. */
+    uint8_t initial_probe_complete;
+    uint8_t initial_medium_unavailable;
 } SystemStorageHealth;
 
 const char *SystemStorage_NameGet(void);

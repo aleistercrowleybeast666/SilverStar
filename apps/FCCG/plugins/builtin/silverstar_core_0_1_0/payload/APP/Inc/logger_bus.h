@@ -25,7 +25,8 @@ typedef enum
 typedef enum
 {
     LOGGER_BOOTSTRAP = 0U,
-    LOGGER_STREAMING_READY
+    LOGGER_STREAMING_READY,
+    LOGGER_DISABLED_NO_STORAGE
 } LoggerBusStartupState;
 
 /* Internal diagnostics; SSLOG STATS and all wire layouts remain unchanged.
@@ -38,6 +39,8 @@ typedef struct
     uint32_t bootstrap_suppressed_count;
     uint32_t state_reject_count;
     uint32_t capacity_reject_count;
+    uint32_t disabled_suppressed_count;
+    uint32_t disabled_discarded_count;
     LoggerBusStartupState startup_state;
     uint16_t normal_count;
     uint16_t estimator_count;
@@ -50,6 +53,8 @@ LoggerBusResult LoggerBus_DiagnosticsGet(LoggerBusDiagnostics *diagnostics);
  * Suppressed periodic pushes return OK like policy filtering; they were never
  * admitted, consume no queue slot/sequence and increment only suppression. */
 LoggerBusResult LoggerBus_StreamingReady(void);
+/* LoggerTask only, after first mount proves unavailable. Reset cannot undo it. */
+LoggerBusResult LoggerBus_DisableForBootNoStorage(void);
 LoggerBusStartupState LoggerBus_StartupStateGet(void);
 LoggerBusResult LoggerBus_Init(void);
 void LoggerBus_Reset(void);

@@ -13,9 +13,11 @@
 #include "app_tasks.h"
 #include "logger_bus.h"
 #include "logger_task.h"
+#include "debug_log.h"
 #include "platform_critical.h"
 #include "system_log_policy.h"
 #include "system_storage_if.h"
+#include "system_log_sink_if.h"
 #include "persistent_storage.h"
 #include "system_calibration.h"
 #include "system_flight_recovery.h"
@@ -30,6 +32,15 @@
 FATFS SDFatFS;
 char SDPath[4];
 static jmp_buf s_exit;
+static uint8_t s_boot_mode_test;
+static uint32_t s_boot_delay_count;
+static uint32_t s_warning_count;
+uint16_t DebugLog_Write(const uint8_t *data, uint16_t length)
+{
+    if (data == NULL || length == 0U) { abort(); }
+    s_warning_count++;
+    return length;
+}
 static uint8_t s_running;
 static uint8_t s_in_producer;
 static uint8_t s_overflow_test;
@@ -287,6 +298,8 @@ void vTaskDelay(TickType_t ticks)
     if (s_running && s_first_delay_ticks == 0U) { s_first_delay_ticks = ticks; }
     Fixture_BaseDelay(ticks);
     Fixture_Produce();
+    if (s_boot_mode_test && ++s_boot_delay_count >= 64U)
+    { longjmp(s_exit, 1); }
     if (s_running && LoggerBus_FinalizationStateGet() == LOGGER_BUS_FINALIZATION_FINALIZED)
     { longjmp(s_exit, 1); }
     if (s_running && PlatformTime_Us() > 300000000ULL)
@@ -646,6 +659,90 @@ static int Test_PersistentObjects(void)
     return 1;
 }
 
+static int Test_BootMedium(const char *mode)
+{
+    SystemStorageHealth health;
+    LoggerTaskDiagnostics task;
+    uint32_t transactions;
+    uint8_t unavailable = (uint8_t)(strcmp(mode, "initial-io-error") != 0);
+    s_fixture_medium_absent = (uint8_t)(strcmp(mode, "initial-absent") == 0);
+    s_timeout = (uint8_t)(unavailable == 0U);
+    CHECK(LoggerBus_Init() == LOGGER_BUS_RESULT_OK);
+    SystemMagCalibration_Init();
+    s_boot_mode_test = 1U;
+    if (setjmp(s_exit) == 0) { AppTask_Logger(NULL); }
+    CHECK(SystemStorage_HealthGet(&health) == SYSTEM_DEVICE_OK);
+    CHECK(health.initial_probe_complete == 1U);
+    CHECK(health.initial_medium_unavailable == unavailable);
+    CHECK(health.mounted == 0U && health.healthy == 0U);
+    CHECK(LoggerTask_DiagnosticsGet(&task) == SYSTEM_DEVICE_OK);
+    CHECK(task.boot_logging_disabled == unavailable);
+    CHECK(task.snapshot_ready == 0U && task.session_count == 0U);
+    CHECK(task.streaming_ready_us == 0ULL && task.write_count == 0U);
+    CHECK(s_warning_count == unavailable);
+    if (unavailable)
+    {
+        CHECK(task.open_attempt_count == 1U && task.open_failure_count == 1U);
+        CHECK(LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE);
+        CHECK(SystemMagCalibrationStorage_LoadCompleteGet() != 0U);
+        transactions = s_dma_transactions;
+        s_fixture_medium_absent = 0U;
+        s_timeout = 0U;
+        CHECK(SystemStorage_Init() == SYSTEM_DEVICE_ALREADY_MATCHED);
+        CHECK(SystemStorage_Mount() == SYSTEM_DEVICE_NOT_READY);
+        CHECK(s_dma_transactions == transactions);
+        LoggerBus_Reset();
+        CHECK(LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE);
+        CHECK(LoggerBus_FinalizationArm(0ULL) == LOGGER_BUS_RESULT_OK);
+        s_clock_us += (uint64_t)SYSTEM_LOG_POST_LANDING_GRACE_MS * 1000ULL;
+        s_boot_delay_count = 0U;
+        if (setjmp(s_exit) == 0) { AppTask_Logger(NULL); }
+        CHECK(LoggerBus_FinalizationStateGet() == LOGGER_BUS_FINALIZATION_FINALIZED);
+        CHECK(s_dma_transactions == transactions && s_warning_count == 1U);
+    }
+    else
+    {
+        CHECK(LoggerBus_StartupStateGet() == LOGGER_BOOTSTRAP);
+        CHECK(task.open_attempt_count > 1U);
+    }
+    printf("BOOT_MEDIUM mode=%s unavailable=%u warning=%lu attempts=%lu no_hotplug=1\n",
+        mode, unavailable, (unsigned long)s_warning_count,
+        (unsigned long)task.open_attempt_count);
+    return 1;
+}
+
+static int Test_PostMountFault(const char *mode)
+{
+    SystemStorageHealth health;
+    SystemLogSessionInfo session = {0};
+    uint32_t written = 0U;
+    static const uint8_t bytes[] = {1U, 2U, 3U};
+    CHECK(SystemStorage_Init() == SYSTEM_DEVICE_OK);
+    CHECK(SystemStorage_Mount() == SYSTEM_DEVICE_OK);
+    CHECK(SystemStorage_HealthGet(&health) == SYSTEM_DEVICE_OK);
+    CHECK(health.initial_probe_complete == 1U && health.initial_medium_unavailable == 0U);
+    CHECK(SystemLogSink_Init() == SYSTEM_DEVICE_OK);
+    if (strcmp(mode, "initial-manifest-error") == 0)
+    {
+        CHECK(SystemStorage_MissionDirectoryReserve(1U) == SYSTEM_DEVICE_OK);
+        s_start_failure = 1U;
+        CHECK(SystemStorage_MissionManifestCreate(1U, 0U, 1U, 0U) == SYSTEM_DEVICE_IO_ERROR);
+    }
+    else
+    {
+        CHECK(SystemLogSink_SessionBegin(&session) == SYSTEM_DEVICE_OK);
+        s_start_failure = 1U;
+        /* Small writes may buffer. The following flush must expose failure. */
+        (void)SystemLogSink_Write(bytes, sizeof(bytes), &written);
+        CHECK(SystemLogSink_Flush() != SYSTEM_DEVICE_OK);
+    }
+    CHECK(SystemStorage_HealthGet(&health) == SYSTEM_DEVICE_OK);
+    CHECK(health.initial_medium_unavailable == 0U && health.healthy == 0U);
+    CHECK(health.error_count != 0U);
+    printf("POST_MOUNT_FAULT mode=%s initial_unavailable=0 healthy=0\n", mode);
+    return 1;
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2 && argc != 3 && argc != 4) { return 2; }
@@ -664,8 +761,15 @@ int main(int argc, char **argv)
         s_startup_overflow_test = (uint8_t)(strcmp(argv[2], "startup-overflow") == 0);
     }
     if (FATFS_LinkDriver(&SD_Driver, SDPath) != 0U) { return 3; }
+    if (argc == 3 && (strcmp(argv[2], "initial-absent") == 0 ||
+        strcmp(argv[2], "initial-no-filesystem") == 0 ||
+        strcmp(argv[2], "initial-io-error") == 0))
+    { return Test_BootMedium(argv[2]) ? 0 : 1; }
     if (f_mkfs(SDPath, FM_FAT | FM_SFD, 512U, s_work, sizeof(s_work)) != FR_OK) { return 4; }
     if (f_mount(&s_fs, SDPath, 1U) != FR_OK) { return 5; }
+    if (argc == 3 && (strcmp(argv[2], "initial-manifest-error") == 0 ||
+        strcmp(argv[2], "post-open-write-error") == 0))
+    { return Test_PostMountFault(argv[2]) ? 0 : 1; }
     if (argc == 3 && strcmp(argv[2], "persistent-objects") == 0)
     { return Test_PersistentObjects() ? 0 : 1; }
     return Test_Writer(argv[1]) ? 0 : 1;

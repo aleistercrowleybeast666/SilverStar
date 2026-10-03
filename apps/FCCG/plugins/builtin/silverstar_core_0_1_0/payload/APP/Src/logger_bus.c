@@ -35,6 +35,7 @@ static uint8_t s_initialized;
 static uint8_t s_next_estimator_queue;
 static uint8_t s_queue_drain_run;
 static uint8_t s_accepting_records;
+static uint8_t s_boot_disabled;
 static LoggerBusFinalizationState s_finalization_state;
 static uint64_t s_finalization_deadline_us;
 
@@ -53,7 +54,8 @@ static LoggerBusResult LoggerBus_PushStateGet(void)
     LoggerBusResult result;
     PlatformCriticalState state = LoggerBus_IrqLock();
 
-    result = ((s_initialized != 0U) && (s_accepting_records != 0U)) ?
+    result = ((s_initialized != 0U) &&
+              ((s_accepting_records != 0U) || (s_boot_disabled != 0U))) ?
         LOGGER_BUS_RESULT_OK : LOGGER_BUS_RESULT_BAD_STATE;
     if (result != LOGGER_BUS_RESULT_OK) { s_diagnostics.state_reject_count++; }
     LoggerBus_IrqUnlock(state);
@@ -73,11 +75,18 @@ static LoggerBusResult LoggerBus_QueuePush(
     SILVERSTAR_ASSERT_OBJECT(queue, CommonSpscQueue,
                              SILVERSTAR_ASSERT_MODULE_APP);
     state = LoggerBus_IrqLock();
-    if ((s_initialized == 0U) || (s_accepting_records == 0U))
+    if ((s_initialized == 0U) ||
+        ((s_accepting_records == 0U) && (s_boot_disabled == 0U)))
     {
         s_diagnostics.state_reject_count++;
         LoggerBus_IrqUnlock(state);
         return LOGGER_BUS_RESULT_BAD_STATE;
+    }
+    if (s_boot_disabled != 0U)
+    {
+        s_diagnostics.disabled_suppressed_count++;
+        LoggerBus_IrqUnlock(state);
+        return LOGGER_BUS_RESULT_OK;
     }
     queue_result = CommonSpscQueue_Push(queue, record);
     if (queue_result == COMMON_SPSC_QUEUE_RESULT_OK)
@@ -154,7 +163,8 @@ LoggerBusResult LoggerBus_StreamingReady(void)
 {
     LoggerBusResult result = LOGGER_BUS_RESULT_BAD_STATE;
     PlatformCriticalState state = LoggerBus_IrqLock();
-    if ((s_initialized != 0U) && (s_accepting_records != 0U))
+    if ((s_initialized != 0U) && (s_accepting_records != 0U) &&
+        (s_boot_disabled == 0U))
     {
         result = LOGGER_BUS_RESULT_FULL;
         if ((CommonSpscQueue_Count(&s_logger_queue) == 0U) &&
@@ -177,6 +187,42 @@ LoggerBusStartupState LoggerBus_StartupStateGet(void)
     return startup_state;
 }
 
+LoggerBusResult LoggerBus_DisableForBootNoStorage(void)
+{
+    LoggerBusResult result = LOGGER_BUS_RESULT_BAD_STATE;
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    SILVERSTAR_ASSERT((s_diagnostics.startup_state == LOGGER_BOOTSTRAP) ||
+        (s_diagnostics.startup_state == LOGGER_STREAMING_READY) ||
+        (s_diagnostics.startup_state == LOGGER_DISABLED_NO_STORAGE),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(s_boot_disabled <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((s_initialized != 0U) &&
+        (s_diagnostics.startup_state != LOGGER_STREAMING_READY))
+    {
+        s_boot_disabled = 1U;
+        s_diagnostics.disabled_discarded_count +=
+            (uint32_t)CommonSpscQueue_Count(&s_logger_queue) +
+            CommonSpscQueue_Count(&s_estimator_logger_queue);
+        CommonSpscQueue_Reset(&s_logger_queue);
+        CommonSpscQueue_Reset(&s_estimator_logger_queue);
+        s_diagnostics.startup_state = LOGGER_DISABLED_NO_STORAGE;
+        result = LOGGER_BUS_RESULT_OK;
+    }
+    LoggerBus_IrqUnlock(state);
+    return result;
+}
+
+static uint8_t LoggerBus_DisabledSuppress(void)
+{
+    uint8_t disabled;
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    disabled = s_boot_disabled;
+    if (disabled != 0U) { s_diagnostics.disabled_suppressed_count++; }
+    LoggerBus_IrqUnlock(state);
+    return disabled;
+}
+
 static LoggerBusResult LoggerBus_ConfiguredRecordPush(
     FlightLogRecordType type, uint64_t timestamp_us,
     uint32_t valid_flags, const void *payload,
@@ -192,6 +238,7 @@ static LoggerBusResult LoggerBus_ConfiguredRecordPush(
     {
         return LOGGER_BUS_RESULT_BAD_STATE;
     }
+    if (LoggerBus_DisabledSuppress() != 0U) { return LOGGER_BUS_RESULT_OK; }
     if (SystemLogPolicy_ShouldEmitAt(type, timestamp_us) == 0U)
     {
         return LOGGER_BUS_RESULT_OK;
@@ -248,6 +295,8 @@ void LoggerBus_Reset(void)
     if (s_initialized != 0U)
     {
         (void)memset(&s_diagnostics, 0, sizeof(s_diagnostics));
+        s_diagnostics.startup_state = (s_boot_disabled != 0U) ?
+            LOGGER_DISABLED_NO_STORAGE : LOGGER_BOOTSTRAP;
         CommonSpscQueue_Reset(&s_logger_queue);
         CommonSpscQueue_Reset(&s_estimator_logger_queue);
         s_next_estimator_queue = 0U;
@@ -510,6 +559,7 @@ LoggerBusResult LoggerBus_SystemConfigPush(uint64_t timestamp_us)
     {
         return LOGGER_BUS_RESULT_BAD_STATE;
     }
+    if (LoggerBus_DisabledSuppress() != 0U) { return LOGGER_BUS_RESULT_OK; }
     if (SystemLogPolicy_ShouldEmit(FLIGHT_LOG_RECORD_SYSTEM_CONFIG) == 0U)
     {
         return LOGGER_BUS_RESULT_OK;
@@ -714,6 +764,7 @@ LoggerBusResult LoggerBus_Eskf15CovariancePush(
         FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART;
     if (LoggerBus_PushStateGet() != LOGGER_BUS_RESULT_OK)
     { return LOGGER_BUS_RESULT_BAD_STATE; }
+    if (LoggerBus_DisabledSuppress() != 0U) { return LOGGER_BUS_RESULT_OK; }
     /* Cadence belongs to a whole covariance snapshot. Evaluating it for each
      * fragment silently suppresses fragments 1..3 after fragment 0 succeeds. */
     if (SystemLogPolicy_ShouldEmitAt(type, timestamp_us) == 0U)
@@ -1128,6 +1179,7 @@ LoggerBusResult LoggerBus_NavigationSnapshotPush(uint64_t timestamp_us,
     LoggerBusResult covariance_result = LOGGER_BUS_RESULT_OK;
     if ((state == NULL) || (covariance == NULL)) { return LOGGER_BUS_RESULT_BAD_PARAM; }
     if (LoggerBus_PushStateGet() != LOGGER_BUS_RESULT_OK) { return LOGGER_BUS_RESULT_BAD_STATE; }
+    if (LoggerBus_DisabledSuppress() != 0U) { return LOGGER_BUS_RESULT_OK; }
     /* Critical snapshots bypass cadence/bootstrap suppression; queue failures
      * retain normal sequence gaps and overflow accounting. */
     if (SystemLogPolicy_IsEnabled(FLIGHT_LOG_RECORD_ESTIMATOR) != 0U)

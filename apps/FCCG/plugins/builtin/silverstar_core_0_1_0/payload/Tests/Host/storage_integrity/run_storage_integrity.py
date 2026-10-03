@@ -99,6 +99,10 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
     subprocess.run([str(writer), str(output / "persistent-objects.sslog"),
                     "persistent-objects"], check=True, cwd=project,
                    env=environment)
+    for mode in ("initial-absent", "initial-no-filesystem", "initial-io-error",
+                 "initial-manifest-error", "post-open-write-error"):
+        subprocess.run([str(writer), str(output / "boot-mode-unused.sslog"), mode],
+                       check=True, cwd=project, env=environment)
     decoders = list(project.glob("*.ssdecoder"))
     if len(decoders) != 1:
         raise ValueError("exactly one generated decoder is required for writer acceptance")

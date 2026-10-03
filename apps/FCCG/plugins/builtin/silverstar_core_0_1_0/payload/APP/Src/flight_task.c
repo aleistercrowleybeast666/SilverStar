@@ -28,6 +28,7 @@
 #include "system_inertial.h"
 #include "system_lifecycle.h"
 #include "system_lifecycle_backend.h"
+#include "system_profile.h"
 #include "system_time.h"
 #include "system_navigation_health.h"
 #include "system_navigation_profile.h"
@@ -967,6 +968,7 @@ static void FlightTask_WriteStartRecords(void)
     LoggerBusResult event_log_result;
     uint64_t timestamp_us = SystemTime_GetMonotonicUs();
 
+    if (LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE) { return; }
     mission_config_log_result = LoggerBus_MissionConfigPush(timestamp_us);
     snapshot_log_result =
         FlightTask_MissionSnapshotIdentityWrite(timestamp_us);
@@ -1066,6 +1068,14 @@ uint8_t SystemLifecycleBackend_StorageReadyGet(void)
     SystemLogSinkHealth sink;
     SystemStorageHealth storage;
     uint32_t mission_id = 0U;
+    if (LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE)
+    {
+        return (uint8_t)(
+            ((SystemProfile_Get()->required_capabilities &
+              SYSTEM_CAPABILITY_STORAGE) == 0U) &&
+            (SystemMagCalibrationStorage_LoadCompleteGet() != 0U) &&
+            (SystemMagCalibration_ReadyForMissionGet() != 0U));
+    }
     if ((LoggerBus_StartupStateGet() != LOGGER_STREAMING_READY) ||
         (LoggerTask_DiagnosticsGet(&logger) != SYSTEM_DEVICE_OK) ||
         (SystemLogSink_HealthGet(&sink) != SYSTEM_DEVICE_OK) ||

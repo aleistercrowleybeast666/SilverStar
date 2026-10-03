@@ -30,6 +30,8 @@ typedef struct
     uint8_t snapshot_base_instance;
     uint8_t final_status_write_failed;
     uint8_t io_fault;
+    uint8_t boot_logging_disabled;
+    uint8_t no_storage_warning_delivered;
 } LoggerTaskDiagnostics;
 
 SystemDeviceResult LoggerTask_DiagnosticsGet(LoggerTaskDiagnostics *diagnostics);

@@ -95,7 +95,8 @@ BaseType_t xQueueReceive(QueueHandle_t queue, void *data, TickType_t ticks)
     return pdFALSE;
 }
 
-uint8_t BSP_SD_Init(void) { return MSD_OK; }
+static uint8_t s_fixture_medium_absent;
+uint8_t BSP_SD_Init(void) { return s_fixture_medium_absent ? MSD_ERROR : MSD_OK; }
 uint8_t BSP_SD_GetCardState(void) { return (s_dma_pending || s_card_busy) ? MSD_ERROR : SD_TRANSFER_OK; }
 void BSP_SD_GetCardInfo(BSP_SD_CardInfo *info)
 { info->LogBlockNbr = CARD_SECTORS; info->LogBlockSize = BLOCKSIZE; }

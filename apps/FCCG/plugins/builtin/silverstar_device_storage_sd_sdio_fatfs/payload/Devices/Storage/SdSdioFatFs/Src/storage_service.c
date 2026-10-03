@@ -89,7 +89,17 @@ static SystemDeviceResult SilverStarStorageService_Mount(void)
                       SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_initialized == 0U) { return SYSTEM_DEVICE_NOT_READY; }
     if (s_mounted != 0U) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
+    if (s_health.initial_medium_unavailable != 0U)
+    { return SYSTEM_DEVICE_NOT_READY; }
     result = f_mount(&PROJECT_STORAGE_FATFS_OBJECT, PROJECT_STORAGE_FATFS_PATH, 1U);
+    primask = SilverStarStorageService_IrqLock();
+    if (s_health.initial_probe_complete == 0U)
+    {
+        s_health.initial_probe_complete = 1U;
+        s_health.initial_medium_unavailable = (uint8_t)(
+            (result == FR_NOT_READY) || (result == FR_NO_FILESYSTEM));
+    }
+    SilverStarStorageService_IrqUnlock(primask);
     if (result != FR_OK)
     {
         primask = SilverStarStorageService_IrqLock();

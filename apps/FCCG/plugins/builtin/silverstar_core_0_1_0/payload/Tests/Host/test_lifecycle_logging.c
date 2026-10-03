@@ -8,6 +8,7 @@
 #include "ins_task.h"
 #include "logger_bus.h"
 #include "logger_task.h"
+#include "debug_log.h"
 #include "project_device_instances.h"
 #include "system_alignment.h"
 #include "system_barometer_if.h"
@@ -19,6 +20,7 @@
 #include "system_imu_if.h"
 #include "system_inertial.h"
 #include "system_lifecycle.h"
+#include "system_lifecycle_backend.h"
 #include "system_log_sink_if.h"
 #include "system_mag_calibration.h"
 #include "system_mag_calibration_storage_if.h"
@@ -51,6 +53,8 @@ static uint8_t s_complete_startup_after_delay;
 static uint32_t s_first_delay_ticks;
 
 static uint8_t s_ready;
+static uint8_t s_calibration_ready;
+static uint8_t s_inertial_available;
 static uint8_t s_mission_started;
 static uint64_t s_now_us;
 static uint32_t s_abort_count;
@@ -86,6 +90,12 @@ static LoggerBusResult s_initial_state_push_result;
 static LoggerBusResult s_event_push_result;
 
 static uint8_t s_log_sink_available;
+static uint8_t s_initial_medium_unavailable;
+static uint8_t s_mag_load_complete;
+static uint8_t s_mag_ready;
+static uint32_t s_warning_count;
+static uint32_t s_mag_storage_service_count;
+static uint8_t s_warning_accept;
 static uint8_t s_mission_directory_available;
 static SystemDeviceResult s_sink_init_result;
 static uint32_t s_sink_init_count;
@@ -187,7 +197,7 @@ void SystemNavigationProfile_UnfreezeForRollback(void) {}
 void SystemEstimatorProfile_Freeze(void) {}
 void SystemEstimatorProfile_UnfreezeForRollback(void) {}
 
-static const SystemProfile s_profile =
+static SystemProfile s_profile =
 {
     .profile_id = SYSTEM_PROFILE_ID
 };
@@ -307,7 +317,7 @@ void SystemCalibration_Process(void) {}
 
 uint8_t SystemCalibration_IsReady(void)
 {
-    return 1U;
+    return s_calibration_ready;
 }
 
 uint32_t SystemCalibration_GenerationGet(void)
@@ -315,9 +325,13 @@ uint32_t SystemCalibration_GenerationGet(void)
     return 1U;
 }
 
-void SystemMagCalibrationStorage_Service(void) {}
-uint8_t SystemMagCalibrationStorage_LoadCompleteGet(void) { return 1U; }
-uint8_t SystemMagCalibration_ReadyForMissionGet(void) { return 1U; }
+void SystemMagCalibrationStorage_Service(void)
+{
+    s_mag_storage_service_count++;
+    if (s_mag_instance_count == 0U) { s_mag_load_complete = 1U; }
+}
+uint8_t SystemMagCalibrationStorage_LoadCompleteGet(void) { return s_mag_load_complete; }
+uint8_t SystemMagCalibration_ReadyForMissionGet(void) { return s_mag_ready; }
 uint32_t SystemMagCalibration_GenerationHashGet(void) { return 0x12345678UL; }
 uint8_t ProjectMagnetometerInstance_CountGet(void)
 { return s_mag_instance_count; }
@@ -442,6 +456,7 @@ SystemDeviceResult SystemInertial_LatestGet(SystemInertialSample *sample)
     {
         return SYSTEM_DEVICE_INVALID_ARGUMENT;
     }
+    if (s_inertial_available == 0U) { return SYSTEM_DEVICE_NOT_READY; }
     (void)memset(sample, 0, sizeof(*sample));
     sample->sample_timestamp_us = s_now_us + TEST_LOGGER_TIME_STEP_US;
     sample->receive_timestamp_us = sample->sample_timestamp_us;
@@ -498,6 +513,7 @@ SystemDeviceResult InsTask_AttitudeAlignmentStatusGet(
     SystemAlignmentAttitudeStatus *status)
 {
     if (status == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (s_inertial_available == 0U) { return SYSTEM_DEVICE_NOT_READY; }
     (void)memset(status, 0, sizeof(*status));
     status->state = SYSTEM_ALIGNMENT_COMPONENT_READY;
     status->source =
@@ -826,6 +842,8 @@ SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health)
 {
     if (health == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     (void)memset(health, 0, sizeof(*health));
+    health->initial_probe_complete = s_initial_medium_unavailable;
+    health->initial_medium_unavailable = s_initial_medium_unavailable;
     health->initialized = s_log_sink_available;
     health->mounted = s_log_sink_available;
     health->healthy = s_log_sink_available;
@@ -842,14 +860,35 @@ SystemDeviceResult SystemStorage_MissionIdGet(uint32_t *mission_id)
 }
 
 const char *SystemLogSink_NameGet(void) { return "Host TF"; }
+uint16_t DebugLog_Write(const uint8_t *data, uint16_t length)
+{
+    TEST_CHECK(data != NULL && length > 0U && length < 100U);
+    TEST_CHECK(strstr((const char *)data, "TF unavailable at boot") != NULL);
+    s_warning_count++;
+    return s_warning_accept ? length : 0U;
+}
+
+LoggerBusResult LoggerBus_DisableForBootNoStorage(void)
+{
+    if (s_startup_state == LOGGER_STREAMING_READY)
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    s_startup_state = LOGGER_DISABLED_NO_STORAGE;
+    s_logger_record_count = 0U;
+    s_logger_record_index = 0U;
+    return LOGGER_BUS_RESULT_OK;
+}
+
 SystemDeviceResult SystemLogSink_Init(void)
 {
+    if (s_initial_medium_unavailable != 0U) { return Mock_LogInit(); }
     return (s_log_sink_available != 0U) ?
         Mock_LogInit() : SYSTEM_DEVICE_UNSUPPORTED;
 }
 SystemDeviceResult SystemLogSink_SessionBegin(
     const SystemLogSessionInfo *session)
 {
+    if (s_initial_medium_unavailable != 0U)
+    { s_sink_begin_count++; return SYSTEM_DEVICE_NOT_READY; }
     return (s_log_sink_available != 0U) ?
         Mock_LogSessionBegin(session) : SYSTEM_DEVICE_UNSUPPORTED;
 }
@@ -980,12 +1019,21 @@ static void Test_StateReset(void)
 {
     s_delay_count = 0U;
     s_delay_limit = 1U;
+    s_initial_medium_unavailable = 0U;
+    s_mag_load_complete = 1U;
+    s_mag_ready = 1U;
+    s_warning_count = 0U;
+    s_warning_accept = 1U;
+    s_mag_storage_service_count = 0U;
+    s_profile.required_capabilities = 0U;
     s_enable_sink_after_first_delay = 0U;
     s_disable_sink_after_first_delay = 0U;
     s_complete_startup_after_delay = 0U;
     s_first_delay_ticks = 0U;
     s_startup_state = LOGGER_BOOTSTRAP;
     s_ready = 1U;
+    s_calibration_ready = 1U;
+    s_inertial_available = 1U;
     s_mission_started = 0U;
     s_now_us = 0U;
     s_abort_count = 0U;
@@ -1079,6 +1127,9 @@ static void Test_FlightTaskRunWithStorage(uint8_t storage_ready)
         s_initial_state_push_result;
     const LoggerBusResult event_push_after_start = s_event_push_result;
     const uint32_t delay_limit_after_start = s_delay_limit;
+    const uint8_t health_after_start = s_ready;
+    const uint8_t calibration_after_start = s_calibration_ready;
+    const uint8_t inertial_after_start = s_inertial_available;
 
     /* Exercise the real LoggerTask bootstrap before submitting START. */
     s_log_sink_available = storage_ready;
@@ -1118,12 +1169,20 @@ static void Test_FlightTaskRunWithStorage(uint8_t storage_ready)
     s_mission_config_push_result = mission_push_after_start;
     s_initial_state_push_result = initial_push_after_start;
     s_event_push_result = event_push_after_start;
+    /* Establish READY with healthy inputs, then inject the requested failure
+     * before START. READY itself must never be fabricated from bad health. */
+    s_ready = 1U;
+    s_calibration_ready = 1U;
+    s_inertial_available = 1U;
     SystemLifecycle_Init();
     SystemAlignment_Init();
     TEST_CHECK(SystemAlignment_Start() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemLifecycle_EnterSelfTest() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemLifecycle_EnterPreflight() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
+    s_ready = health_after_start;
+    s_calibration_ready = calibration_after_start;
+    s_inertial_available = inertial_after_start;
     request.source = SYSTEM_START_SOURCE_CONSOLE;
     request.request_id = TEST_START_REQUEST_ID;
     TEST_CHECK(SystemLifecycle_SubmitStart(&request) == SYSTEM_DEVICE_OK);
@@ -1516,8 +1575,102 @@ static void Test_IncompleteStartupKeepsSession(void)
     TEST_CHECK(diagnostics.streaming_ready_us != 0ULL && diagnostics.io_fault == 0U);
 }
 
+static void Test_InitialMissingTfBootMode(void)
+{
+    LoggerTaskDiagnostics diagnostics;
+    SystemLifecycleStartRequest request = {SYSTEM_START_SOURCE_CONSOLE, 92U};
+    Test_StateReset();
+    s_initial_medium_unavailable = 1U;
+    s_delay_limit = 32U;
+    Test_LoggerEventQueuePush(1ULL, FLIGHT_LOG_EVENT_SELF_TEST_COMPLETE);
+    if (setjmp(s_task_exit) == 0) { AppTask_Logger(NULL); }
+    TEST_CHECK(LoggerTask_DiagnosticsGet(&diagnostics) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(diagnostics.open_attempt_count == 1U);
+    TEST_CHECK(diagnostics.boot_logging_disabled == 1U);
+    TEST_CHECK(diagnostics.no_storage_warning_delivered == 1U);
+    TEST_CHECK(diagnostics.io_fault == 0U && diagnostics.snapshot_ready == 0U);
+    TEST_CHECK(diagnostics.streaming_ready_us == 0ULL && diagnostics.session_count == 0U);
+    TEST_CHECK(s_sink_init_count == 1U && s_sink_begin_count == 1U);
+    TEST_CHECK(s_warning_count == 1U && s_snapshot_create_count == 0U);
+    TEST_CHECK(s_header_serialize_count == 0U && s_logger_record_count == 0U);
+    s_delay_count = 0U;
+    s_delay_limit = 1U;
+    Test_FlightTaskRunWithStorage(0U);
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_FLIGHT);
+    TEST_CHECK(s_mission_started == 1U);
+    TEST_CHECK(s_snapshot_identity_push_count == 0U);
+    TEST_CHECK(s_initial_state_push_count == 0U);
+    TEST_CHECK(SystemLifecycle_SubmitStart(&request) == SYSTEM_DEVICE_OK);
+    SystemLifecycle_Process();
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_FLIGHT);
+    TEST_CHECK(s_abort_count == 0U);
+    /* Insertion/restarting task cannot re-open storage or make a snapshot. */
+    s_initial_medium_unavailable = 0U;
+    s_log_sink_available = 1U;
+    s_delay_count = 0U;
+    s_delay_limit = 4U;
+    TEST_CHECK(LoggerBus_FinalizationArm(s_now_us) == LOGGER_BUS_RESULT_OK);
+    s_now_us += (uint64_t)SYSTEM_LOG_POST_LANDING_GRACE_MS * 1000ULL;
+    if (setjmp(s_task_exit) == 0) { AppTask_Logger(NULL); }
+    TEST_CHECK(s_finalization_state == LOGGER_BUS_FINALIZATION_FINALIZED);
+    TEST_CHECK(s_warning_count == 1U && s_sink_begin_count == 1U);
+    TEST_CHECK(s_sink_write_count == 0U && s_sink_flush_count == 0U && s_sink_end_count == 0U);
+    TEST_CHECK(s_snapshot_create_count == 0U && s_final_status_count == 0U);
+}
+
+static void Test_NoLogRetainsConfiguredMagLoad(void)
+{
+    LoggerTaskDiagnostics diagnostics;
+    Test_StateReset();
+    s_initial_medium_unavailable = 1U;
+    s_mag_instance_count = 1U;
+    s_mag_load_complete = 0U;
+    s_warning_accept = 0U;
+    s_delay_limit = 32U;
+    if (setjmp(s_task_exit) == 0) { AppTask_Logger(NULL); }
+    TEST_CHECK(LoggerTask_DiagnosticsGet(&diagnostics) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(diagnostics.boot_logging_disabled == 1U);
+    TEST_CHECK(diagnostics.no_storage_warning_delivered == 0U);
+    TEST_CHECK(diagnostics.open_attempt_count == 1U && diagnostics.io_fault == 0U);
+    TEST_CHECK(s_warning_count == 1U && s_mag_storage_service_count == 0U);
+    TEST_CHECK(s_mag_load_complete == 0U);
+    TEST_CHECK(SystemLifecycleBackend_StorageReadyGet() == 0U);
+}
+
+static void Test_NoLogRetainsRequiredGates(void)
+{
+    Test_StateReset();
+    s_startup_state = LOGGER_DISABLED_NO_STORAGE;
+    s_mag_load_complete = 0U;
+    TEST_CHECK(SystemLifecycleBackend_StorageReadyGet() == 0U);
+    s_mag_load_complete = 1U;
+    s_mag_ready = 0U;
+    TEST_CHECK(SystemLifecycleBackend_StorageReadyGet() == 0U);
+    s_mag_ready = 1U;
+    s_profile.required_capabilities = SYSTEM_CAPABILITY_STORAGE;
+    TEST_CHECK(SystemLifecycleBackend_StorageReadyGet() == 0U);
+    s_profile.required_capabilities = 0U;
+    s_ready = 0U;
+    Test_FlightTaskRunWithStorage(0U);
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_READY);
+    TEST_CHECK(s_mission_started == 0U);
+}
+
 int main(void)
 {
+    Test_InitialMissingTfBootMode();
+    Test_NoLogRetainsRequiredGates();
+    Test_NoLogRetainsConfiguredMagLoad();
+    Test_StateReset();
+    s_startup_state = LOGGER_DISABLED_NO_STORAGE;
+    s_calibration_ready = 0U;
+    Test_FlightTaskRunWithStorage(0U);
+    TEST_CHECK(s_mission_started == 0U);
+    Test_StateReset();
+    s_startup_state = LOGGER_DISABLED_NO_STORAGE;
+    s_inertial_available = 0U;
+    Test_FlightTaskRunWithStorage(0U);
+    TEST_CHECK(s_mission_started == 0U);
     Test_StartRequiresStorage();
     Test_StartRequiresMissionDirectory();
     Test_StartRequiresMissionSnapshot();

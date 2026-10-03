@@ -1015,6 +1015,47 @@ static void Test_Eskf15CovarianceSnapshot(void)
     }
 }
 
+static void Test_NoStorageBootLatch(void)
+{
+    LoggerBusDiagnostics diagnostics;
+    FlightLogEstimatorRecord estimator = {0};
+    FlightLogKf6FullPRecord covariance = {0};
+    FlightLogEskf15CovariancePartRecord identity = {0};
+    float matrix[225] = {0};
+    uint32_t index;
+    LoggerBus_Reset();
+    TEST_CHECK(LoggerBus_EventPush(1ULL, FLIGHT_LOG_EVENT_SELF_TEST_COMPLETE, 0U, 0U) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_DisableForBootNoStorage() == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE);
+    TEST_CHECK(LoggerBus_Count() == 0U);
+    TEST_CHECK(LoggerBus_DiagnosticsGet(&diagnostics) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(diagnostics.disabled_discarded_count == 1U);
+    TEST_CHECK(LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_BAD_STATE);
+    identity.algorithm_id = 2U;
+    for (index = 0U; index < 1000U; index++)
+    {
+        TEST_CHECK(LoggerBus_EventPush(index, FLIGHT_LOG_EVENT_MISSION_START, 0U, 0U) == LOGGER_BUS_RESULT_OK);
+        TEST_CHECK(LoggerBus_SystemConfigPush(index) == LOGGER_BUS_RESULT_OK);
+        TEST_CHECK(LoggerBus_NavigationSnapshotPush(index, &estimator, &covariance) == LOGGER_BUS_RESULT_OK);
+        TEST_CHECK(LoggerBus_Eskf15CovariancePush(index, &identity, matrix) == LOGGER_BUS_RESULT_OK);
+    }
+    TEST_CHECK(LoggerBus_NavigationSnapshotPush(0ULL, NULL, &covariance) == LOGGER_BUS_RESULT_BAD_PARAM);
+    TEST_CHECK(LoggerBus_Count() == 0U);
+    TEST_CHECK(LoggerBus_DiagnosticsGet(&diagnostics) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(diagnostics.disabled_suppressed_count >= 4000U);
+    TEST_CHECK(diagnostics.accepted_count == 1U && diagnostics.overflow_count == 0U);
+    LoggerBus_Reset();
+    TEST_CHECK(LoggerBus_Init() == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE);
+    TEST_CHECK(LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_BAD_STATE);
+    TEST_CHECK(LoggerBus_FinalizationArm(0ULL) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_FinalizationProcess(UINT64_MAX) == LOGGER_BUS_FINALIZATION_DRAINING);
+    LoggerBus_FinalizationComplete();
+    TEST_CHECK(LoggerBus_FinalizationStateGet() == LOGGER_BUS_FINALIZATION_FINALIZED);
+    TEST_CHECK(LoggerBus_EventPush(0ULL, FLIGHT_LOG_EVENT_MISSION_START, 0U, 0U) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_Count() == 0U);
+}
+
 int main(void)
 {
     HostPlatformMock_Reset();
@@ -1035,5 +1076,6 @@ int main(void)
     Test_QueueOverflowAndFinalization();
     Test_Eskf15CovarianceSnapshot();
     Test_QueuePressureFairness();
+    Test_NoStorageBootLatch();
     return Test_Finish("logger");
 }
