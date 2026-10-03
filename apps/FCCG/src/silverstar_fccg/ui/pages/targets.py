@@ -311,6 +311,10 @@ class GroundTargetPage(BoardHardwarePage):
         self.pc_group = self.Group_Create("group.ground_pc", pc_form)
         self.root_layout.addWidget(self.pc_group)
         led_form = QFormLayout()
+        led_note = QLabel()
+        self.Text_Register(led_note, "ground.activity_led_semantics")
+        led_note.setWordWrap(True)
+        led_form.addRow(led_note)
         self.activity_led_controls = {}
         for role in ("tx", "rx"):
             resource_key = role + "_led_resource"

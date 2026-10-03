@@ -242,11 +242,18 @@ def test_algorithm_parameter_region_collapses_without_changing_values(window):
     assert json.dumps(window._model.Dictionary_Get(), sort_keys=True) == before
 
 
-def test_new_draft_enables_ground_without_changing_reference_or_existing_projects(workspace_root):
+def test_new_draft_enables_ground_without_changing_reference_or_existing_projects(workspace_root, tmp_path):
     from silverstar_fccg.project.model import ProjectModel_Parse
     service = FccgService(workspace_root)
     draft = service.ProjectDraft_Create("NewGroundDefault")
     assert draft.ground_target.enabled
+    assert draft.ground_target.radio_plugin == "silverstar.device.telemetry.sx1281"
+    assert draft.ground_target.module_variant == "e28_2g4m12sx"
+    assert draft.ground_target.pc_interface == "uart"
+    assert ProjectModel_Parse(draft.Dictionary_Get()).ground_target == draft.ground_target
+    draft_root = tmp_path / "new_ground_default"
+    service.ProjectRoot_Save(draft, draft_root, create_new=True)
+    assert service.Project_Open(draft_root).ground_target == draft.ground_target
     assert not draft.ground_target.board and not draft.ground_target.mcu
     assert not service.ReferenceProject_Create("Reference").ground_target.enabled
     old = draft.Dictionary_Get()

@@ -349,7 +349,8 @@ class MainWindow(QMainWindow):
         self.air_link_page.air_link_group.body.layout().addRow(
             self.ground_target_page.radio_instances_editor.power_editor)
         self.ground_configuration_page = self.air_link_page
-        for group in (self.ground_target_page.pc_group,):
+        for group in (self.ground_target_page.pc_group,
+                      self.ground_target_page.activity_led_group):
             self.ground_target_page.root_layout.removeWidget(group)
             self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
         self.build_page = BuildPage(self._translator)

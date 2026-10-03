@@ -145,6 +145,9 @@ class FccgService:
         model.build = replace(model.build, memory_layout="auto")
         model.ground_target = replace(
             model.ground_target, enabled=True,
+            radio_plugin="silverstar.device.telemetry.sx1281",
+            module_variant="e28_2g4m12sx",
+            pc_interface="uart",
             hardware=HardwareConfiguration(
                 mode="custom", source_kind="manual_import", provider=provider,
             ) if provider else HardwareConfiguration(),

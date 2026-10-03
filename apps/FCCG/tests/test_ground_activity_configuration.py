@@ -89,6 +89,10 @@ def test_led_gui_keeps_defaults_until_explicit_binding(window):
     _Output_Add(window._model)
     window._Project_Refresh()
     controls = window.ground_target_page.activity_led_controls
+    assert window.air_link_page.isAncestorOf(window.ground_target_page.activity_led_group)
+    assert not window.ground_target_page.isAncestorOf(window.ground_target_page.activity_led_group)
+    note = window._translator.Text_Get("ground.activity_led_semantics")
+    assert "valid wireless packet" in note or "有效无线包" in note
     assert controls["tx_led_resource"].currentData() == controls["rx_led_resource"].currentData() == ""
     assert controls["activity_led_pulse_ms"].value() == 40
     assert not controls["tx_led_active_high"].isChecked()

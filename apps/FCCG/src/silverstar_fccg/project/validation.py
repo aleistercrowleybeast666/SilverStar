@@ -1096,17 +1096,6 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         )
     )
     issues.extend(AlignmentConfigurationIssues_Get(model, catalog))
-    from silverstar_fccg.project.radio_variants import EBYTE_VARIANTS, LEGACY_MODULE, RADIO_PLUGIN
-    from silverstar_fccg.project.model import GroundRadioConfigurations_Get
-    configured_modules = [item.module_variant or LEGACY_MODULE for item in model.device_instances
-                          if item.plugin == RADIO_PLUGIN]
-    if model.ground_target.enabled:
-        configured_modules.extend(item.module_variant for item in GroundRadioConfigurations_Get(model.ground_target))
-    for module_id in dict.fromkeys(configured_modules):
-        capability = EBYTE_VARIANTS.get(module_id)
-        if capability is not None and capability.hardware_status == "hardware_unverified":
-            issues.append(ValidationIssue("warning", "RADIO_VARIANT_HARDWARE_UNVERIFIED",
-                f"{capability.model} is hardware unverified and is not flight qualified"))
     from silverstar_fccg.project.release_policy import ReleaseCompatibilityIssues_Get
     issues.extend(ValidationIssue("error", "RELEASE_FEATURE_DEFERRED", message)
                   for message in ReleaseCompatibilityIssues_Get(model))

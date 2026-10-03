@@ -919,6 +919,7 @@
   "ground.uart_unavailable": "{resource} · 不可用",
   "status.ground_configuration_required": "需修复地面站配置并通过校验后生成。",
   "group.ground_activity_leds": "收发指示灯",
+  "ground.activity_led_semantics": "无线包发送完成后，发送灯短闪一次；收到有效无线包后，接收灯短闪一次。请按实际电路选择 GPIO 极性，同一 GPIO 的收发极性不能冲突。",
   "field.ground_tx_led_resource": "发送指示灯 GPIO",
   "field.ground_rx_led_resource": "接收指示灯 GPIO",
   "field.ground_tx_led_active_high": "发送指示灯高电平点亮",

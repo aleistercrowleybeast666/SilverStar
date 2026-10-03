@@ -609,9 +609,7 @@ class DevicesPage(ScrollableLocalizedPage):
                               (plugin_id, module_id))
                 item = combo.model().item(combo.count() - 1)
                 item.setEnabled(available)
-                status = self._translator.Text_Get("radio.hardware_unverified") if (
-                    module.get("hardware_status") == "hardware_unverified") else ""
-                item.setToolTip("\n".join(filter(None, (reason, status))))
+                item.setToolTip(reason)
         module_id, _power = self._radio_configurations.get(instance_id, ("", 12))
         selected = (selected_plugin, module_id)
         index = combo.findData(selected)

@@ -90,6 +90,10 @@ def test_m0_flight_status_does_not_reserve_navigation_chart_space(tmp_path):
         assert chart_top - summary_bottom <= 24
         assert all(window.plot_widgets[(key, axis)].height() >= 140
                    for key in ('vel', 'pos') for axis in range(3))
+        window.resize(1280, 720)
+        app.processEvents()
+        assert window.flight_status_scroll.height() <= 140
+        assert all(plot.height() >= 180 for plot in window.plot_widgets.values())
     finally:
         window.close()
         window.deleteLater()

@@ -919,6 +919,7 @@
   "ground.uart_unavailable": "{resource} · unavailable",
   "status.ground_configuration_required": "Fix Ground configuration and pass validation before generating.",
   "group.ground_activity_leds": "Activity LEDs",
+  "ground.activity_led_semantics": "TX flashes briefly after a wireless packet is sent. RX flashes briefly when a valid wireless packet is received. Choose GPIO polarity to match the board; the same GPIO cannot use conflicting TX/RX polarity.",
   "field.ground_tx_led_resource": "TX LED GPIO",
   "field.ground_rx_led_resource": "RX LED GPIO",
   "field.ground_tx_led_active_high": "TX LED active high",
