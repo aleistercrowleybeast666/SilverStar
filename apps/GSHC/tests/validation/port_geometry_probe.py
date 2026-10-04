@@ -8,7 +8,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from PySide6.QtCore import QSettings, Qt, QRect
 from PySide6.QtGui import QFont, QFontDatabase
-from PySide6.QtWidgets import QApplication, QStyle, QStyleOptionComboBox, QStyleOptionSpinBox
+from PySide6.QtWidgets import QApplication, QStyle, QStyleOptionComboBox
 from services.i18n import I18n
 from ui.main_window import MainWindow
 
@@ -43,12 +43,12 @@ def Probe_Run(output: Path, width: int, height: int, baseline: bool = False) -> 
         window.set_connection_status(status)
         app.processEvents()
         if not baseline:
-            spin = window.baud_spin
-            spin_option = QStyleOptionSpinBox()
-            spin.initStyleOption(spin_option)
-            spin_field = spin.style().subControlRect(QStyle.ComplexControl.CC_SpinBox,
-                spin_option, QStyle.SubControl.SC_SpinBoxEditField, spin)
-            assert spin_field.width() >= spin.fontMetrics().horizontalAdvance(spin.text())
+            baud = window.baud_combo
+            baud_option = QStyleOptionComboBox()
+            baud.initStyleOption(baud_option)
+            baud_field = baud.style().subControlRect(QStyle.ComplexControl.CC_ComboBox,
+                baud_option, QStyle.SubControl.SC_ComboBoxEditField, baud)
+            assert baud_field.width() >= baud.fontMetrics().horizontalAdvance(baud.currentText())
         combo = window.port_combo
         option = QStyleOptionComboBox()
         combo.initStyleOption(option)

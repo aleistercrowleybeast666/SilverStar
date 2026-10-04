@@ -922,6 +922,8 @@
   "ground.uart_missing_binding": "已保存的 UART 绑定不在当前硬件清单中。生成前请选择可用 UART。",
   "ground.uart_unavailable": "{resource} · 不可用",
   "status.ground_configuration_required": "需修复地面站配置并通过校验后生成。",
+  "ground.activity_led_enable": "启用收发共用指示灯",
+  "ground.activity_led_hint": "收发活动共用唯一未占用的 LED 输出。已有工程的接线设置在切换前保持不变。",
   "group.ground_activity_leds": "收发指示灯",
   "ground.activity_led_semantics": "无线包发送完成后，发送灯短闪一次；收到有效无线包后，接收灯短闪一次。请按实际电路选择 GPIO 极性，同一 GPIO 的收发极性不能冲突。",
   "field.ground_tx_led_resource": "发送指示灯 GPIO",

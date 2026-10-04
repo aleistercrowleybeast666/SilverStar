@@ -922,6 +922,8 @@
   "ground.uart_missing_binding": "The saved UART binding is absent from this hardware inventory. Select an available UART before generating.",
   "ground.uart_unavailable": "{resource} · unavailable",
   "status.ground_configuration_required": "Fix Ground configuration and pass validation before generating.",
+  "ground.activity_led_enable": "Enable shared TX/RX activity LED",
+  "ground.activity_led_hint": "Uses the single unassigned LED output for both transmit and receive activity. Existing project bindings remain unchanged until toggled.",
   "group.ground_activity_leds": "Activity LEDs",
   "ground.activity_led_semantics": "TX flashes briefly after a wireless packet is sent. RX flashes briefly when a valid wireless packet is received. Choose GPIO polarity to match the board; the same GPIO cannot use conflicting TX/RX polarity.",
   "field.ground_tx_led_resource": "TX LED GPIO",

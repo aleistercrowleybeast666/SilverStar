@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from PySide6.QtCore import Signal
+from dataclasses import replace
+
+from PySide6.QtCore import QSignalBlocker, Signal
 from PySide6.QtGui import QPalette
 from silverstar_fccg.ui.widgets import CollapsibleSection, StandardCheckBox, StandardComboBox
 from PySide6.QtWidgets import (
@@ -12,7 +14,9 @@ from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox, EnterCommittedSpinBox
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.pages.components import BoardHardwarePage
-from silverstar_fccg.project.ground_activity import GroundActivityLedOutputResources_Get
+from silverstar_fccg.project.ground_activity import (
+    GroundActivityLedIssues_Get, GroundActivityLedOutputResources_Get,
+)
 from silverstar_fccg.ui.ground_radio_instances import GroundRadioInstancesEditor
 from silverstar_fccg.core.view_models import BoardCompatibilityView, ResourceRequirementView, PlatformMatchView
 
@@ -228,6 +232,7 @@ class GroundTargetPage(BoardHardwarePage):
     saveInstanceRequested = Signal()
     generateRequested = Signal()
     radiosChanged = Signal(object, str)
+    activityLedToggled = Signal(bool)
 
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, target="ground")
@@ -311,36 +316,10 @@ class GroundTargetPage(BoardHardwarePage):
         self.pc_group = self.Group_Create("group.ground_pc", pc_form)
         self.root_layout.addWidget(self.pc_group)
         led_form = QFormLayout()
-        led_note = QLabel()
-        self.Text_Register(led_note, "ground.activity_led_semantics")
-        led_note.setWordWrap(True)
-        led_form.addRow(led_note)
-        self.activity_led_controls = {}
-        for role in ("tx", "rx"):
-            resource_key = role + "_led_resource"
-            label = QLabel()
-            self.Text_Register(label, "field.ground_" + resource_key)
-            resource = StandardComboBox()
-            resource.currentIndexChanged.connect(
-                lambda _index, key=resource_key, combo=resource:
-                self.configurationChanged.emit(key, combo.currentData()))
-            self.activity_led_controls[resource_key] = resource
-            led_form.addRow(label, resource)
-            polarity_key = role + "_led_active_high"
-            polarity = QCheckBox()
-            self.Text_Register(polarity, "field.ground_" + polarity_key)
-            polarity.toggled.connect(
-                lambda value, key=polarity_key: self.configurationChanged.emit(key, value))
-            self.activity_led_controls[polarity_key] = polarity
-            led_form.addRow(polarity)
-        pulse_label = QLabel()
-        self.Text_Register(pulse_label, "field.ground_activity_led_pulse_ms")
-        pulse = EnterCommittedSpinBox()
-        pulse.setRange(1, 200)
-        pulse.setSuffix(" ms")
-        pulse.committed.connect(lambda value: self.configurationChanged.emit("activity_led_pulse_ms", value))
-        self.activity_led_controls["activity_led_pulse_ms"] = pulse
-        led_form.addRow(pulse_label, pulse)
+        self.activity_led_enabled = StandardCheckBox()
+        self.Text_Register(self.activity_led_enabled, "ground.activity_led_enable")
+        self.activity_led_enabled.toggled.connect(self.activityLedToggled.emit)
+        led_form.addRow(self.activity_led_enabled)
         self.activity_led_group = self.Group_Create("group.ground_activity_leds", led_form)
         self.root_layout.addWidget(self.activity_led_group)
         build_form = QFormLayout()
@@ -353,6 +332,21 @@ class GroundTargetPage(BoardHardwarePage):
         self.status = QLabel()
         self.status.setWordWrap(True)
         self.root_layout.addStretch(1)
+
+    @staticmethod
+    def ActivityLedCandidate_Get(ground) -> str | None:
+        candidates = []
+        for resource in GroundActivityLedOutputResources_Get(ground):
+            names = (resource.resource_id, resource.metadata.get("label", ""),
+                     resource.metadata.get("physical_resource", ""))
+            if not any("LED" in str(name).upper() for name in names):
+                continue
+            trial = replace(ground, tx_led_resource=resource.resource_id,
+                            rx_led_resource=resource.resource_id,
+                            tx_led_active_high=False, rx_led_active_high=False)
+            if not GroundActivityLedIssues_Get(trial):
+                candidates.append(resource.resource_id)
+        return candidates[0] if len(candidates) == 1 else None
 
     def Configuration_Set(self, ground, boards, radios, requirements, issues) -> None:
         for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
@@ -457,26 +451,15 @@ class GroundTargetPage(BoardHardwarePage):
             source=ground.hardware.source_label or ground.board or ground.hardware.source_kind,
         ) if selected_uart is not None else "")
         self.baudrate.CommittedValue_Set(ground.baudrate)
-        outputs = GroundActivityLedOutputResources_Get(ground)
-        for key, widget in self.activity_led_controls.items():
-            widget.blockSignals(True)
-            value = getattr(ground, key)
-            if key.endswith("_resource"):
-                widget.clear()
-                widget.addItem("—", "")
-                for resource in outputs:
-                    physical = resource.metadata.get("physical_pin", resource.metadata.get("physical_resource", resource.resource_id))
-                    widget.addItem(f"{physical} · {resource.resource_id}", resource.resource_id)
-                if value and widget.findData(value) < 0:
-                    widget.addItem(value + " · unavailable", value)
-                    widget.model().item(widget.count() - 1).setEnabled(False)
-                widget.setCurrentIndex(max(0, widget.findData(value)))
-            elif key.endswith("_active_high"):
-                widget.setChecked(value)
-            else:
-                widget.CommittedValue_Set(value)
-            widget.setEnabled(ground.enabled)
-            widget.blockSignals(False)
+        with QSignalBlocker(self.activity_led_enabled):
+            active = bool(ground.tx_led_resource or ground.rx_led_resource)
+            self.activity_led_enabled.setChecked(active)
+            self.activity_led_enabled.setEnabled(
+                ground.enabled and (active or self.ActivityLedCandidate_Get(ground) is not None)
+            )
+        self.activity_led_enabled.setToolTip(
+            self._translator.Text_Get("ground.activity_led_hint")
+        )
         self.build_summary.setText(
             f"{ground.build.make_command} · "
             f"{ground.build.toolchain_prefix}gcc · Ground_Station.code-workspace"

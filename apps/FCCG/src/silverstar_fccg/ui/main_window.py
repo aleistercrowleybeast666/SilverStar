@@ -524,6 +524,7 @@ class MainWindow(QMainWindow):
             lambda enabled: self._GroundTarget_Change("enabled", enabled)
         )
         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
+        self.ground_target_page.activityLedToggled.connect(self._GroundActivityLed_Toggle)
         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
         self.ground_target_page.prepareRequested.connect(self._GroundExistingHardware_Request)
         self.ground_target_page.importRequested.connect(self._GroundCubeMxImport_Request)
@@ -1825,6 +1826,25 @@ class MainWindow(QMainWindow):
                 active_radio_instance="radio0", radio_plugin="", module_variant="",
                 resource_assignments={key: value for key, value in ground.resource_assignments.items()
                                       if key.split(":", 1)[0] not in removed})
+        self._ProjectConfiguration_Change(change)
+
+    def _GroundActivityLed_Toggle(self, enabled: bool) -> None:
+        def change(candidate: ProjectModel) -> None:
+            ground = candidate.ground_target
+            if enabled:
+                if ground.tx_led_resource or ground.rx_led_resource:
+                    return
+                resource = self.ground_target_page.ActivityLedCandidate_Get(ground)
+                if resource is None:
+                    return
+                candidate.ground_target = replace(
+                    ground, tx_led_resource=resource, rx_led_resource=resource,
+                    tx_led_active_high=False, rx_led_active_high=False,
+                )
+            else:
+                candidate.ground_target = replace(
+                    ground, tx_led_resource="", rx_led_resource="",
+                )
         self._ProjectConfiguration_Change(change)
 
     def _GroundTarget_Change(self, field: str, value: object) -> None:

@@ -36,10 +36,14 @@ def test_three_pages_serial_row_and_flight_grid(tmp_path, size, language):
         assert window.header_title.toolTip() == i18n.tr("app.brand")
         assert rect(window.header_title, window).right() < rect(window.port_combo, window).left()
         assert rect(window.port_combo, window).right() < rect(window.btn_refresh, window).left()
-        assert rect(window.btn_refresh, window).right() < rect(window.baud_spin, window).left()
-        assert rect(window.baud_spin, window).right() < rect(window.btn_connect, window).left()
+        assert rect(window.btn_refresh, window).right() < rect(window.baud_combo, window).left()
+        assert rect(window.baud_combo, window).right() < rect(window.btn_connect, window).left()
         assert rect(window.btn_connect, window).right() < rect(window.btn_disconnect, window).left()
         assert window.current_port() == "COM100"
+        assert window.baud_combo.isEditable()
+        assert window.current_baudrate() == 230400
+        window.baud_combo.setCurrentText("250000")
+        assert window.current_baudrate() == 250000
 
         window.pages.setCurrentWidget(window.preflight_page)
         app.processEvents()
@@ -94,7 +98,7 @@ def test_small_window_scrolls_to_flight_plots_and_post_process_actions(tmp_path)
         app.processEvents()
         assert window.size().width() == 1024
         assert window.size().height() == 600
-        for widget in (window.port_combo, window.btn_refresh, window.baud_spin,
+        for widget in (window.port_combo, window.btn_refresh, window.baud_combo,
                        window.btn_connect, window.btn_disconnect):
             assert window.rect().contains(rect(widget, window))
         window.pages.setCurrentWidget(window.flight_page)

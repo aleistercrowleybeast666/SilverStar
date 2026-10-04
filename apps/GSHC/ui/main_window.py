@@ -28,7 +28,7 @@ from protocol.common import (
     enum_name,
 )
 from PySide6.QtCore import QSize, Qt, QTimer
-from PySide6.QtGui import QColor, QFont, QTextCursor, QVector3D
+from PySide6.QtGui import QColor, QFont, QIntValidator, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -1543,7 +1543,7 @@ class MainWindow(QMainWindow):
         bar.setObjectName("headerBar")
         self.header_bar = bar
         root_layout = QVBoxLayout(bar)
-        root_layout.setContentsMargins(10, 4, 10, 4)
+        root_layout.setContentsMargins(10, 5, 10, 5)
         root_layout.setSpacing(3)
         connection_layout = QHBoxLayout()
         connection_layout.setSpacing(4)
@@ -1559,26 +1559,27 @@ class MainWindow(QMainWindow):
         self.header_connection = HeaderTitleLabel()
         self.header_connection.setObjectName("headerSection")
         self._bind_text(self.header_connection, "group.connection")
-        status_layout = identity_layout
-        status_layout.setSpacing(8)
-        status_layout.addWidget(self.header_connection)
+        identity_layout.addWidget(self.header_connection)
 
         self.port_combo = PortComboBox()
         self.btn_refresh = QPushButton()
         self._bind_text(self.btn_refresh, "button.refresh_ports")
-        self.baud_spin = QSpinBox()
-        self.baud_spin.setRange(9600, 2_000_000)
-        self.baud_spin.setValue(230400)
-        self.baud_spin.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.baud_combo = QComboBox()
+        self.baud_combo.setEditable(True)
+        self.baud_combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+        self.baud_combo.addItems(("9600", "57600", "115200", "230400", "460800", "921600", "2000000"))
+        self.baud_combo.setCurrentText("230400")
+        self.baud_combo.lineEdit().setValidator(QIntValidator(9600, 2_000_000, self.baud_combo))
+        self.baud_combo.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.btn_connect = QPushButton()
         self.btn_disconnect = QPushButton()
         self._bind_text(self.btn_connect, "button.connect")
         self._bind_text(self.btn_disconnect, "button.disconnect")
         self.conn_label = QLabel()
         self._connection_status_text = ""
-        self._configure_dynamic_label(self.conn_label, 0, show_tooltip=True)
+        self._configure_dynamic_label(self.conn_label, 110, show_tooltip=True)
         self.conn_label.setWordWrap(True)
-        self.conn_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        self.conn_label.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
 
         self.lbl_port_name = QLabel()
         self._bind_text(self.lbl_port_name, "field.port")
@@ -1588,11 +1589,12 @@ class MainWindow(QMainWindow):
         self.lbl_baud_name = QLabel()
         self._bind_text(self.lbl_baud_name, "field.baudrate")
         connection_layout.addWidget(self.lbl_baud_name)
-        connection_layout.addWidget(self.baud_spin)
+        connection_layout.addWidget(self.baud_combo)
         connection_layout.addWidget(self.btn_connect)
         connection_layout.addWidget(self.btn_disconnect)
-        status_layout.addWidget(self.conn_label, 1)
+        identity_layout.addWidget(self.conn_label, 1)
         root_layout.addLayout(connection_layout)
+        identity_layout.addStretch(1)
 
         self.header_version = QLabel()
         self.header_version.setObjectName("headerVersion")
@@ -2242,7 +2244,11 @@ class MainWindow(QMainWindow):
         return self.port_combo.currentText().strip()
 
     def current_baudrate(self) -> int:
-        return int(self.baud_spin.value())
+        value = self.baud_combo.currentText().strip()
+        if not value.isascii() or not value.isdecimal():
+            return 0
+        baudrate = int(value)
+        return baudrate if 9600 <= baudrate <= 2_000_000 else 0
 
     def set_connection_status(self, text: str) -> None:
         self._connection_status_text = text

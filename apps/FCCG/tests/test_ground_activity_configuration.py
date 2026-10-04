@@ -2,6 +2,7 @@ from dataclasses import replace
 import json
 
 import pytest
+from PySide6.QtWidgets import QCheckBox
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.project.model import HardwareResource, ProjectModel_Parse, ProjectModelError
@@ -86,26 +87,45 @@ def test_shared_gpio_requires_equal_polarity(model):
 
 def test_led_gui_keeps_defaults_until_explicit_binding(window):
     window._model = _GroundF103Model_Get(window._service.catalog)
-    _Output_Add(window._model)
     window._Project_Refresh()
-    controls = window.ground_target_page.activity_led_controls
-    assert window.air_link_page.isAncestorOf(window.ground_target_page.activity_led_group)
-    assert not window.ground_target_page.isAncestorOf(window.ground_target_page.activity_led_group)
-    note = window._translator.Text_Get("ground.activity_led_semantics")
-    assert "valid wireless packet" in note or "有效无线包" in note
-    assert controls["tx_led_resource"].currentData() == controls["rx_led_resource"].currentData() == ""
-    assert controls["activity_led_pulse_ms"].value() == 40
-    assert not controls["tx_led_active_high"].isChecked()
-    assert controls["tx_led_resource"].findData("PLATFORM_GPIO_2") < 0
-    combo = controls["tx_led_resource"]
-    combo.setCurrentIndex(combo.findData("LED_OUTPUT"))
-    assert window._model.ground_target.tx_led_resource == "LED_OUTPUT"
-    controls["tx_led_active_high"].setChecked(True)
-    assert window._model.ground_target.tx_led_active_high
+    page = window.ground_target_page
+    checkbox = page.activity_led_enabled
+    assert window.air_link_page.isAncestorOf(page.activity_led_group)
+    assert not page.isAncestorOf(page.activity_led_group)
+    assert page.activity_led_group.findChildren(QCheckBox) == [checkbox]
+    assert checkbox.isEnabled() and not checkbox.isChecked()
+    assert page.ActivityLedCandidate_Get(window._model.ground_target) == "PLATFORM_GPIO_6"
+    checkbox.setChecked(True)
+    assert window._model.ground_target.tx_led_resource == "PLATFORM_GPIO_6"
+    assert window._model.ground_target.rx_led_resource == "PLATFORM_GPIO_6"
+    assert not window._model.ground_target.tx_led_active_high
+    assert not window._model.ground_target.rx_led_active_high
     before = window._model.ground_target
     window.Language_Apply("en_US")
     assert window._model.ground_target == before
-    assert window.ground_target_page.activity_led_controls["tx_led_resource"].currentData() == "LED_OUTPUT"
+    assert checkbox.isChecked()
+    checkbox.setChecked(False)
+    assert not window._model.ground_target.tx_led_resource
+    assert not window._model.ground_target.rx_led_resource
+
+
+def test_led_gui_preserves_legacy_bindings_and_rejects_ambiguous_output(window):
+    window._model = _GroundF103Model_Get(window._service.catalog)
+    _Output_Add(window._model)
+    window._Project_Refresh()
+    checkbox = window.ground_target_page.activity_led_enabled
+    assert not checkbox.isChecked() and not checkbox.isEnabled()
+    ground = window._model.ground_target
+    window._model.ground_target = replace(
+        ground, tx_led_resource="LED_OUTPUT", tx_led_active_high=True,
+        activity_led_pulse_ms=75,
+    )
+    window._Project_Refresh()
+    assert checkbox.isChecked() and checkbox.isEnabled()
+    assert window._model.ground_target.tx_led_resource == "LED_OUTPUT"
+    assert window._model.ground_target.rx_led_resource == ""
+    assert window._model.ground_target.tx_led_active_high
+    assert window._model.ground_target.activity_led_pulse_ms == 75
 
 
 def test_led_binding_requires_integrated_runtime_capability(model, workspace_root):
