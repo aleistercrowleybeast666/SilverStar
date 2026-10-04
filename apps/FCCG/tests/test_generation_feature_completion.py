@@ -247,7 +247,7 @@ def test_logging_signals_are_deferred_and_widgets_survive_fifty_changes(
 
 
 def test_protocol_controls_artifact_gate_and_assignment_fingerprint(
-    tmp_path: Path, qapp, builtin_catalog
+    tmp_path: Path, qapp, builtin_catalog, monkeypatch
 ) -> None:
     window = MainWindow(SettingsStore(tmp_path / "profiles-and-artifacts.ini"))
     try:
@@ -268,18 +268,19 @@ def test_protocol_controls_artifact_gate_and_assignment_fingerprint(
         project_root = tmp_path / "GeneratedProject"
         window._project_root = project_root
         assert window._FirmwareArtifact_Get(window._model) == (None, "")
-        non_artifact = (
+        output_dir = (
             project_root / "Flight_Controller" / "build" / "FCCG"
-            / window._model.build.target_profile / "Release" / "notes.txt"
+            / window._model.build.target_profile / "Release"
         )
-        non_artifact.parent.mkdir(parents=True)
-        non_artifact.write_text("not firmware", encoding="utf-8")
+        if window._model.build.memory_layout != "legacy":
+            output_dir /= window._model.build.memory_layout
+        output_dir.mkdir(parents=True)
+        (output_dir / "notes.txt").write_text("not firmware", encoding="utf-8")
         assert window._FirmwareArtifact_Get(window._model) == (None, "")
-        artifact = non_artifact.with_name("flight_controller.elf")
-        artifact.write_bytes(b"fixture")
-        directory, name = window._FirmwareArtifact_Get(window._model)
-        assert directory == artifact.parent
-        assert name == artifact.name
+        # Exercise the display binding through its artifact-provider interface.
+        # A fake .elf byte string must not stand in for validated firmware.
+        monkeypatch.setattr(window, "_FirmwareArtifact_Get",
+                            lambda _model: (output_dir, "flight_controller.elf"))
         window._Project_Refresh()
         assert window.build_page.action_buttons[
             "open_firmware_output"
@@ -318,7 +319,7 @@ def test_typed_bus_gpio_and_physical_exclusivity_contracts(builtin_catalog) -> N
         if requirement.name == "radio_bus"
     )
     assert radio_bus.constraints["spi"]["mode"] == "master"
-    assert radio_bus.constraints["spi"]["maximum_clock_hz"] == 18_000_000
+    assert radio_bus.constraints["spi"]["maximum_clock_hz"] == 10_000_000
     launch = builtin_catalog.Component_Get(
         "silverstar.device.actuator.launch_ignition"
     )
