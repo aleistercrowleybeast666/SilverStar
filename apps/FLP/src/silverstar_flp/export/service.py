@@ -1366,6 +1366,10 @@ class FlightExporter:
             "Microsoft YaHei",
             "SimHei",
             "Noto Sans CJK SC",
+            "Noto Sans CJK JP",
+            "Noto Sans CJK TC",
+            "Noto Sans CJK HK",
+            "Noto Sans CJK KR",
             "Arial Unicode MS",
             "DejaVu Sans",
         ]

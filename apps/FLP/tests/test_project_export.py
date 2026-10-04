@@ -390,6 +390,24 @@ def test_plot_metadata_has_language_specific_titles(tmp_path: Path) -> None:
     assert "inertial" not in generic.Title_Get("zh_CN")
 
 
+def test_matplotlib_cjk_font_fallback_order():
+    from matplotlib import rcParams
+
+    previous_families = list(rcParams["font.sans-serif"])
+    previous_minus = rcParams["axes.unicode_minus"]
+    try:
+        FlightExporter._Matplotlib_Configure()
+        families = list(rcParams["font.sans-serif"])
+        assert families[:3] == ["Microsoft YaHei", "SimHei", "Noto Sans CJK SC"]
+        assert families.index("Noto Sans CJK SC") < families.index("Noto Sans CJK JP")
+        assert families.index("Noto Sans CJK JP") < families.index("DejaVu Sans")
+        assert {"Noto Sans CJK TC", "Noto Sans CJK HK", "Noto Sans CJK KR"} <= set(families)
+        assert rcParams["axes.unicode_minus"] is False
+    finally:
+        rcParams["font.sans-serif"] = previous_families
+        rcParams["axes.unicode_minus"] = previous_minus
+
+
 def test_export_3d_uses_unique_colors_rocket_mesh_and_mission_relative_points(
     tmp_path: Path,
 ) -> None:
