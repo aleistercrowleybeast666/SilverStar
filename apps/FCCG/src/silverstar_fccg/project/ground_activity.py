@@ -10,7 +10,7 @@ def GroundActivityLedOutputResources_Get(ground):
 
 
 def GroundActivityLedEnabled_Get(ground) -> bool:
-    configured = ground.activity_led_enabled
+    configured = getattr(ground, "activity_led_enabled", None)
     return bool(ground.tx_led_resource or ground.rx_led_resource) if configured is None else configured
 
 
