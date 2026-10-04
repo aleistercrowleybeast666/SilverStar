@@ -12,6 +12,7 @@ typedef struct
     uint8_t limit;
     uint8_t pending;
     uint8_t limit_exhausted;
+    uint8_t consecutive_failures;
     uint8_t fault_captured;
     Sx1281BusStatus fault_bus_status;
 } Sx1281RecoveryDiagnostics;

@@ -14,8 +14,8 @@
 #include "sx1281_device.h"
 #include "sx1281_instance.h"
 
-#define SX1281_RECOVERY_LIMIT 3U
 #define SX1281_RECOVERY_DELAY_US 1000000ULL
+#define SX1281_RECOVERY_BACKOFF_MAX 5U
 
 typedef struct
 {
@@ -23,9 +23,9 @@ typedef struct
     volatile uint8_t started;
     uint8_t recovery_pending;
     uint8_t recovery_attempts;
-    uint8_t recovery_limit_exhausted;
+    uint8_t recovery_failures;
     uint8_t fault_captured;
-    uint64_t next_recovery_us;
+    uint64_t recovery_scheduled_us;
     Sx1281BusStatus fault_bus_status;
     SystemTelemetryHealth health;
     SystemDeviceIoDiagnostics io_diagnostics;
@@ -77,23 +77,10 @@ static void Sx1281Transport_IrqUnlock(uint8_t instance, uint32_t primask)
     PlatformCritical_Exit(primask);
 }
 
-static SystemDeviceResult Sx1281Transport_Init(uint8_t instance)
+static void Sx1281Transport_HealthReset(uint8_t instance)
 {
-    (void)instance;
-    LoraInitResult init_result;
-    LoraChipStatus chip_status;
-    Sx1281BusStatus bus_status;
     SystemTelemetryHealth previous_health;
-    uint32_t primask;
-
-    SILVERSTAR_ASSERT(s_initialized <= 1U,
-                      SILVERSTAR_ASSERT_MODULE_DEVICE,
-                      SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    SILVERSTAR_ASSERT(s_started <= 1U,
-                      SILVERSTAR_ASSERT_MODULE_DEVICE,
-                      SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    if (s_initialized != 0U) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
-    primask = Sx1281Transport_IrqLock(instance);
+    uint32_t primask = Sx1281Transport_IrqLock(instance);
     previous_health = s_health;
     (void)memset(&s_health, 0, sizeof(s_health));
     /* Public counters are cumulative within a boot. DeviceTask can sample
@@ -117,6 +104,24 @@ static SystemDeviceResult Sx1281Transport_Init(uint8_t instance)
     s_io_diagnostics.transport_type = SYSTEM_DEVICE_TRANSPORT_SPI;
     s_io_diagnostics.owner = SYSTEM_DEVICE_IO_OWNER_SELF;
     Sx1281Transport_IrqUnlock(instance, primask);
+}
+
+static SystemDeviceResult Sx1281Transport_Init(uint8_t instance)
+{
+    LoraInitResult init_result;
+    LoraChipStatus chip_status;
+    LoraStats stats;
+    Sx1281BusStatus bus_status;
+    uint32_t primask;
+
+    SILVERSTAR_ASSERT(s_initialized <= 1U,
+                      SILVERSTAR_ASSERT_MODULE_DEVICE,
+                      SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_started <= 1U,
+                      SILVERSTAR_ASSERT_MODULE_DEVICE,
+                      SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (s_initialized != 0U) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
+    Sx1281Transport_HealthReset(instance);
     init_result = Lora_Init(instance);
     Sx1281Bus_StatusGet(instance, &bus_status);
     Sx1281Transport_IoDiagnosticsUpdate(instance, NULL, &bus_status);
@@ -131,10 +136,12 @@ static SystemDeviceResult Sx1281Transport_Init(uint8_t instance)
     {
         return SYSTEM_DEVICE_VERIFY_FAILED;
     }
+    Lora_GetStats(instance, &stats);
     primask = Sx1281Transport_IrqLock(instance);
     s_initialized = 1U;
     s_health.initialized = 1U;
     s_health.healthy = 1U;
+    s_previous_stats = stats;
     s_previous_bus_status = bus_status;
     Sx1281Transport_IrqUnlock(instance, primask);
     return SYSTEM_DEVICE_OK;
@@ -189,32 +196,35 @@ static SystemDeviceResult Sx1281Transport_Stop(uint8_t instance)
     return SYSTEM_DEVICE_OK;
 }
 
-/* Only TelemetryTask calls Process after bootstrap. Failed attempts stay
- * offline, and the lifetime budget also bounds repeated later faults. */
+/* Only TelemetryTask calls Process after bootstrap. One bounded Init/Start
+ * attempt is made per due tick; failure never ends future recovery. */
 static void Sx1281Transport_RecoveryProcess(uint8_t instance)
 {
     Sx1281TransportContext *context = &s_transport_contexts[instance];
     uint64_t now_us = PlatformTime_Us();
     uint32_t primask = Sx1281Transport_IrqLock(instance);
     if ((context->recovery_pending == 0U) ||
-        (context->recovery_attempts >= SX1281_RECOVERY_LIMIT) ||
-        (now_us < context->next_recovery_us))
+        ((now_us - context->recovery_scheduled_us) <
+         (SX1281_RECOVERY_DELAY_US << context->recovery_failures)))
     { Sx1281Transport_IrqUnlock(instance, primask); return; }
     context->recovery_pending = 0U;
-    context->recovery_attempts++;
+    if (context->recovery_attempts < UINT8_MAX)
+    { context->recovery_attempts++; }
     Sx1281Transport_IrqUnlock(instance, primask);
     if ((Sx1281Transport_Init(instance) == SYSTEM_DEVICE_OK) &&
         (Sx1281Transport_Start(instance) == SYSTEM_DEVICE_OK))
-    { return; }
-    uint64_t next_recovery_us = PlatformTime_Us() + SX1281_RECOVERY_DELAY_US;
-    primask = Sx1281Transport_IrqLock(instance);
-    if (context->recovery_attempts >= SX1281_RECOVERY_LIMIT)
-    { context->recovery_limit_exhausted = 1U; }
-    else
     {
-        context->recovery_pending = 1U;
-        context->next_recovery_us = next_recovery_us;
+        primask = Sx1281Transport_IrqLock(instance);
+        context->recovery_failures = 0U;
+        Sx1281Transport_IrqUnlock(instance, primask);
+        return;
     }
+    now_us = PlatformTime_Us();
+    primask = Sx1281Transport_IrqLock(instance);
+    if (context->recovery_failures < SX1281_RECOVERY_BACKOFF_MAX)
+    { context->recovery_failures++; }
+    context->recovery_pending = 1U;
+    context->recovery_scheduled_us = now_us;
     Sx1281Transport_IrqUnlock(instance, primask);
 }
 
@@ -325,13 +335,15 @@ static void Sx1281Transport_HealthStatsApply(uint8_t instance,
     {
         health->last_receive_timestamp_us = now_us;
     }
-    health->transmit_packet_count = stats->tx_ok;
-    health->receive_packet_count = stats->rx_ok;
-    health->transmit_timeout_count = stats->tx_timeout;
-    health->transmit_error_count = stats->tx_timeout + stats->tx_dropped;
-    health->receive_error_count = stats->rx_timeout + stats->rx_error +
-                                  stats->rx_dropped;
-    health->integrity_error_count = stats->rx_crc_error;
+    health->transmit_packet_count += stats->tx_ok - previous_stats->tx_ok;
+    health->receive_packet_count += stats->rx_ok - previous_stats->rx_ok;
+    health->transmit_timeout_count += stats->tx_timeout - previous_stats->tx_timeout;
+    health->transmit_error_count += (stats->tx_timeout - previous_stats->tx_timeout) +
+                                    (stats->tx_dropped - previous_stats->tx_dropped);
+    health->receive_error_count += (stats->rx_timeout - previous_stats->rx_timeout) +
+                                   (stats->rx_error - previous_stats->rx_error) +
+                                   (stats->rx_dropped - previous_stats->rx_dropped);
+    health->integrity_error_count += stats->rx_crc_error - previous_stats->rx_crc_error;
     health->last_rssi_dbm = stats->last_rx_rssi;
     health->last_snr_q4 = (int8_t)(stats->last_rx_snr * 4);
 }
@@ -348,14 +360,8 @@ static void Sx1281Transport_FaultMark(uint8_t instance,
         s_transport_contexts[instance].fault_bus_status = bus_status;
         s_transport_contexts[instance].fault_captured = 1U;
     }
-    if (s_transport_contexts[instance].recovery_attempts < SX1281_RECOVERY_LIMIT)
-    {
-        s_transport_contexts[instance].recovery_pending = 1U;
-        s_transport_contexts[instance].next_recovery_us =
-            now_us + SX1281_RECOVERY_DELAY_US;
-    }
-    else
-    { s_transport_contexts[instance].recovery_limit_exhausted = 1U; }
+    s_transport_contexts[instance].recovery_pending = 1U;
+    s_transport_contexts[instance].recovery_scheduled_us = now_us;
 }
 
 static void Sx1281Transport_Process(uint8_t instance)
@@ -530,10 +536,11 @@ SystemDeviceResult Sx1281TelemetryInstance_RecoveryDiagnosticsGet(
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     primask = Sx1281Transport_IrqLock(instance);
     diagnostics->attempts = s_transport_contexts[instance].recovery_attempts;
-    diagnostics->limit = SX1281_RECOVERY_LIMIT;
+    diagnostics->limit = 0U; /* No lifetime attempt limit. */
     diagnostics->pending = s_transport_contexts[instance].recovery_pending;
-    diagnostics->limit_exhausted =
-        s_transport_contexts[instance].recovery_limit_exhausted;
+    diagnostics->limit_exhausted = 0U;
+    diagnostics->consecutive_failures =
+        s_transport_contexts[instance].recovery_failures;
     diagnostics->fault_captured = s_transport_contexts[instance].fault_captured;
     diagnostics->fault_bus_status = s_transport_contexts[instance].fault_bus_status;
     Sx1281Transport_IrqUnlock(instance, primask);

@@ -180,25 +180,41 @@ int main(int argc, char **argv)
     Sx1281BusStatus before = s_runtime_bus;
     for (unsigned int step = 0U; step < 8U; step++) { SystemTelemetry_Process(); SystemStartup_ProcessDevices(); }
     TEST_CHECK(memcmp(&before, &s_runtime_bus, sizeof(before)) == 0);
-    if (strcmp(argv[1], "exhaust") == 0)
+    if ((strcmp(argv[1], "exhaust") == 0) ||
+        (strcmp(argv[1], "saturate") == 0))
     {
-        for (unsigned int attempt = 1U; attempt <= 3U; attempt++)
+        unsigned int attempts = strcmp(argv[1], "saturate") == 0 ? 260U : 4U;
+        unsigned int due_ms = 1300U;
+        for (unsigned int attempt = 1U; attempt <= attempts; attempt++)
         {
-            s_tick_ms = 300U + 1000U * attempt;
+            s_tick_ms = due_ms;
             s_now_us = (unsigned long long)s_tick_ms * 1000ULL;
             SystemTelemetry_Process();
             TEST_CHECK(SystemTelemetry_HealthGet(&health) == SYSTEM_DEVICE_OK);
             TEST_CHECK(health.started == 0U && health.healthy == 0U);
+            due_ms += 1000U << (attempt < 5U ? attempt : 5U);
+            SystemTelemetry_Process(); /* Same tick cannot restart again. */
         }
+        Sx1281RecoveryDiagnostics recovery;
+        TEST_CHECK(Sx1281TelemetryInstance_RecoveryDiagnosticsGet(0U, &recovery) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(recovery.attempts == (attempts > 255U ? 255U : attempts));
+        TEST_CHECK(recovery.limit == 0U && recovery.pending == 1U &&
+            recovery.limit_exhausted == 0U);
+        TEST_CHECK(recovery.consecutive_failures == (attempts < 5U ? attempts : 5U));
         s_runtime_fault = 0U;
-        s_tick_ms = 5300U; s_now_us = 5300000ULL;
+        s_tick_ms = due_ms - 1U;
+        s_now_us = (unsigned long long)s_tick_ms * 1000ULL;
         SystemTelemetry_Process();
         TEST_CHECK(SystemTelemetry_HealthGet(&health) == SYSTEM_DEVICE_OK);
         TEST_CHECK(health.started == 0U && health.healthy == 0U);
-        Sx1281RecoveryDiagnostics recovery;
+        s_tick_ms = due_ms;
+        s_now_us = (unsigned long long)s_tick_ms * 1000ULL;
+        SystemTelemetry_Process();
+        TEST_CHECK(SystemTelemetry_HealthGet(&health) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(health.started == 1U && health.healthy == 1U);
         TEST_CHECK(Sx1281TelemetryInstance_RecoveryDiagnosticsGet(0U, &recovery) == SYSTEM_DEVICE_OK);
-        TEST_CHECK(recovery.attempts == 3U && recovery.limit == 3U);
-        TEST_CHECK(recovery.pending == 0U && recovery.limit_exhausted == 1U);
+        TEST_CHECK(recovery.attempts == (attempts > 255U ? 255U : attempts + 1U));
+        TEST_CHECK(recovery.pending == 0U && recovery.consecutive_failures == 0U);
         TEST_CHECK(recovery.fault_bus_status.first_failure_valid == 1U);
         TEST_CHECK(recovery.fault_bus_status.first_failure_at_ms == 300U);
         TEST_CHECK(recovery.fault_captured == 1U);
@@ -217,11 +233,18 @@ int main(int argc, char **argv)
         if (strcmp(argv[1], "start_fail") == 0)
         {
             TEST_CHECK(health.started == 0U && health.healthy == 0U);
-            s_tick_ms = 2300U; s_now_us = 2300000ULL;
+            s_tick_ms = 3300U; s_now_us = 3300000ULL;
             SystemTelemetry_Process();
             TEST_CHECK(SystemTelemetry_HealthGet(&health) == SYSTEM_DEVICE_OK);
         }
         TEST_CHECK(health.initialized == 1U && health.started == 1U && health.healthy == 1U);
+        if ((history_success != 0U) || (history_timeout != 0U))
+        {
+            SystemTelemetry_Process();
+            TEST_CHECK(SystemTelemetry_HealthGet(&health) == SYSTEM_DEVICE_OK);
+            TEST_CHECK(health.transmit_packet_count == (history_success != 0U ? 299U : 0U));
+            TEST_CHECK(health.transmit_timeout_count >= (history_timeout != 0U ? 1U : 0U));
+        }
         if ((history_success != 0U) || (history_timeout != 0U))
         {
             TEST_CHECK(health.transmit_packet_count == (history_success != 0U ? 299U : 0U));

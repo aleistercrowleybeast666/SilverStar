@@ -23,7 +23,7 @@ def runtime_owner_executable(tmp_path_factory):
     assert result.returncode==0,result.stdout+result.stderr
     return exe,build
 @pytest.mark.parametrize("fault",[
-    "busy","spi","timeout","start_fail","exhaust",
+    "busy","spi","timeout","start_fail","exhaust","saturate",
     "history_success","history_timeout",
 ])
 def test_runtime_owner_generated(runtime_owner_executable,fault):
