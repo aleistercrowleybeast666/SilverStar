@@ -884,6 +884,18 @@ def _CalibrationSnapshot_FromRecord(
         raise DecoderProfileError("calibration_result_counter_invalid")
     if start_sequence < 0:
         raise DecoderProfileError("calibration_result_counter_invalid")
+    mission_snapshots = [
+        item
+        for item in dataset.Records_Get("MISSION_SNAPSHOT_IDENTITY")
+        if item.timestamp_us <= boundary and bool(int(item.payload.get("ready", 0)))
+    ]
+    if mission_snapshots:
+        mission_snapshot = max(
+            mission_snapshots,
+            key=lambda item: (item.timestamp_us, item.record_sequence, item.file_offset),
+        )
+        if start_sequence != int(mission_snapshot.payload["imu_calibration_generation"]):
+            raise DecoderProfileError("calibration_generation_mismatch")
     accel_bias = _Vector3_Get(payload, "accel_bias_mps2")
     accel_scale = _Vector3_Get(payload, "accel_scale")
     gyro_bias = _Vector3_Get(payload, "gyro_bias_radps")
@@ -899,7 +911,9 @@ def _CalibrationSnapshot_FromRecord(
         ):
             raise DecoderProfileError("calibration_none_identity_invalid")
     elif mode == 1:
-        if face_mask == 0 or samples <= 0:
+        # One-face publishes READY after its sample window; only six-face
+        # collection writes completed_face_mask in the firmware.
+        if samples <= 0:
             raise DecoderProfileError("calibration_one_face_incomplete")
     elif mode == 2 and ((face_mask & 0x3F) != 0x3F or samples <= 0):
         raise DecoderProfileError("calibration_six_face_incomplete")

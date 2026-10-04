@@ -1216,6 +1216,131 @@ def test_calibration_selects_latest_ready_snapshot_not_after_start(
     assert context.calibration.samples == 120
 
 
+@pytest.mark.parametrize(
+    ("mode", "state", "ready", "samples", "face_mask", "generation", "error"),
+    [
+        (1, 4, 1, 190, 0, 2, None),
+        (1, 3, 1, 190, 0, 2, "calibration_result_not_ready"),
+        (1, 4, 0, 190, 0, 2, "calibration_result_not_ready"),
+        (1, 4, 1, 0, 0, 2, "calibration_one_face_incomplete"),
+        (1, 4, 1, 190, 0, 1, "calibration_generation_mismatch"),
+        (2, 4, 1, 190, 0, 2, "calibration_six_face_incomplete"),
+        (2, 4, 1, 190, 0x1F, 2, "calibration_six_face_incomplete"),
+        (2, 4, 1, 0, 0x3F, 2, "calibration_six_face_incomplete"),
+        (2, 4, 1, 190, 0x3F, 2, None),
+    ],
+)
+def test_calibration_one_face_mask_zero_and_generation_contract(
+    tmp_path: Path,
+    mode: int,
+    state: int,
+    ready: int,
+    samples: int,
+    face_mask: int,
+    generation: int,
+    error: str | None,
+) -> None:
+    catalog = _CatalogDocument_Build()
+    catalog["records"].append(
+        {
+            "id": "0x29",
+            "version": 0,
+            "name": "MISSION_SNAPSHOT_IDENTITY",
+            "payload_size": 24,
+            "fields": [
+                {"name": "mission_id", "type": "u32"},
+                {"name": "commit_generation", "type": "u32"},
+                {"name": "snapshot_sequence", "type": "u32"},
+                {"name": "imu_calibration_generation", "type": "u32"},
+                {"name": "mag_calibration_set_hash", "type": "u32"},
+                {"name": "base_instance", "type": "u8"},
+                {"name": "ready", "type": "u8"},
+                {"type": "pad", "count": 2},
+            ],
+        }
+    )
+    semantics = _SemanticsDocument_Build()
+    semantics["modes"]["calibration"] = ["OneFace", "SixFace"]
+    files, hashes = _PackageFiles_Build(
+        catalog_document=catalog, semantics_document=semantics
+    )
+    package_path, _ = _Package_Write(tmp_path / "calibration.ssdecoder", files=files)
+    builder = SyntheticSslogBuilder()
+    builder.Record_Add(
+        DESCRIPTOR_RECORD_TYPE,
+        _DescriptorPayload_Build(hashes),
+        START_TIMESTAMP_US - 1_000,
+    )
+    builder.Record_Add(
+        0x17,
+        _CalibrationPayload_Build(
+            mode=mode,
+            completed_face_mask=face_mask,
+            samples=samples,
+            state=state,
+            ready=ready,
+            start_sequence=generation,
+        ),
+        START_TIMESTAMP_US - 500,
+    )
+    builder.Record_Add(
+        0x29,
+        struct.pack("<5IBB2x", 35, 1, 1, 2, 0, 0, 1),
+        START_TIMESTAMP_US - 100,
+    )
+    builder.Record_Add(0x02, Event_Payload(0x03), START_TIMESTAMP_US)
+    coordinator = LogOpenCoordinator(
+        builtin_registry(), cache=DecoderProfileCache(tmp_path / "cache")
+    )
+    request = LogOpenRequest(
+        log_path=builder.File_Write(tmp_path / "calibration.sslog"),
+        decoder_package_path=package_path,
+    )
+
+    if error:
+        with pytest.raises(DecoderProfileError, match=error):
+            coordinator.Open(request)
+    else:
+        result = coordinator.Open(request)
+        calibration = result.dataset.semantic_context.calibration
+        assert calibration.mode == mode
+        assert calibration.completed_face_mask == face_mask
+        assert calibration.samples == 190
+        assert calibration.start_sequence == 2
+
+
+def test_calibration_one_face_after_start_cannot_satisfy_open(tmp_path: Path) -> None:
+    semantics = _SemanticsDocument_Build()
+    semantics["modes"]["calibration"] = ["OneFace"]
+    files, hashes = _PackageFiles_Build(semantics_document=semantics)
+    package_path, _ = _Package_Write(tmp_path / "future.ssdecoder", files=files)
+    builder = SyntheticSslogBuilder()
+    builder.Record_Add(
+        DESCRIPTOR_RECORD_TYPE,
+        _DescriptorPayload_Build(hashes),
+        START_TIMESTAMP_US - 1,
+    )
+    builder.Record_Add(0x02, Event_Payload(0x03), START_TIMESTAMP_US)
+    builder.Record_Add(
+        0x17,
+        _CalibrationPayload_Build(
+            mode=1, completed_face_mask=0, samples=190, start_sequence=2
+        ),
+        START_TIMESTAMP_US + 1,
+    )
+    with pytest.raises(
+        DecoderProfileError, match="calibration_result_before_boundary_missing"
+    ):
+        LogOpenCoordinator(
+            builtin_registry(), cache=DecoderProfileCache(tmp_path / "cache")
+        ).Open(
+            LogOpenRequest(
+                log_path=builder.File_Write(tmp_path / "future.sslog"),
+                decoder_package_path=package_path,
+            )
+        )
+
+
 @pytest.mark.parametrize("result_after_start", [False, True])
 def test_calibration_missing_or_only_after_start_is_rejected(
     tmp_path: Path,
