@@ -60,6 +60,7 @@ class DevicesPage(ScrollableLocalizedPage):
     radioSelectionChanged = Signal(str, str, str)
     radioPowerChanged = Signal(str, int)
     variantChanged = Signal(str, str, str)
+    installationOrientationChanged = Signal(str, str)
     instanceAddRequested = Signal(str)
     otherDeviceToggled = Signal(str, bool)
     installRequested = Signal()
@@ -156,6 +157,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.root_layout.addStretch(1)
         self.device_combos: dict[str, StandardComboBox] = {}
         self.variant_combos: dict[str, StandardComboBox] = {}
+        self.orientation_combos: dict[str, StandardComboBox] = {}
         self.device_checks: dict[str, StandardCheckBox] = {}
         self.add_buttons: dict[str, QPushButton] = {}
         self.remove_buttons: dict[str, QPushButton] = {}
@@ -207,6 +209,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self._Layout_Clear(self.storage_form)
         self.device_combos.clear()
         self.variant_combos.clear()
+        self.orientation_combos.clear()
         self.add_buttons.clear()
         self.remove_buttons.clear()
         components_by_class: defaultdict[str, list[ComponentView]] = defaultdict(list)
@@ -392,6 +395,26 @@ class DevicesPage(ScrollableLocalizedPage):
                             variant_combo,
                         )
                         self.variant_combos[instance_id] = variant_combo
+                    if selected_plugin == "silverstar.device.imu.jy901b":
+                        orientation_combo = StandardComboBox()
+                        orientation_combo.setObjectName(f"jy901bOrientation_{instance_id}")
+                        if instance.installation_orientation == "preserve":
+                            orientation_combo.addItem(
+                                self._translator.Text_Get("device.jy901b.preserve"), "preserve")
+                        for orientation in ("horizontal", "vertical"):
+                            orientation_combo.addItem(
+                                self._translator.Text_Get("device.jy901b." + orientation), orientation)
+                        orientation_combo.setCurrentIndex(
+                            orientation_combo.findData(instance.installation_orientation))
+                        orientation_combo.setToolTip(
+                            self._translator.Text_Get("device.jy901b.orientation_note"))
+                        orientation_combo.currentIndexChanged.connect(
+                            lambda _index, selected_instance=instance_id,
+                            editor=orientation_combo: self.installationOrientationChanged.emit(
+                                selected_instance, str(editor.currentData())))
+                        form.addRow(QLabel(self._translator.Text_Get(
+                            "device.jy901b.orientation")), orientation_combo)
+                        self.orientation_combos[instance_id] = orientation_combo
                     summary = QLabel(self._CapabilitySummary_Get(instance))
                     summary.setToolTip("\n".join(instance.provides))
                     summary.setObjectName(f"deviceCapabilitySummary_{instance_id}")

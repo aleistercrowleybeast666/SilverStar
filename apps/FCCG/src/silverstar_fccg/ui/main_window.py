@@ -484,6 +484,8 @@ class MainWindow(QMainWindow):
         self.devices_page.radioSelectionChanged.connect(self._FlightRadioSelection_Change)
         self.devices_page.radioPowerChanged.connect(self._FlightRadioPower_Change)
         self.devices_page.variantChanged.connect(self._DeviceVariant_Change)
+        self.devices_page.installationOrientationChanged.connect(
+            self._Jy901bOrientation_Change)
         self.devices_page.instanceAddRequested.connect(self._DeviceInstance_Add)
         self.devices_page.otherDeviceToggled.connect(self._OtherDevice_Toggle)
         self.devices_page.installRequested.connect(self._PluginInstall_Dialog)
@@ -1182,6 +1184,20 @@ class MainWindow(QMainWindow):
         self._ProjectConfiguration_Change(
             change, logging_availability_changed=True
         )
+
+    def _Jy901bOrientation_Change(self, instance_id: str, orientation: str) -> None:
+        if self._displaying_model or orientation not in ("horizontal", "vertical"):
+            return
+
+        def change(candidate: ProjectModel) -> None:
+            candidate.device_instances = [
+                replace(instance, installation_orientation=orientation)
+                if instance.instance_id == instance_id and
+                instance.plugin == "silverstar.device.imu.jy901b" else instance
+                for instance in candidate.device_instances
+            ]
+
+        self._ProjectConfiguration_Change(change)
 
     def _FlightRadioSelection_Change(self, identity: str, plugin: str, module: str) -> None:
         if not plugin or plugin != RADIO_PLUGIN:

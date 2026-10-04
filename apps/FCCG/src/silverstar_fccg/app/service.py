@@ -1198,6 +1198,7 @@ class FccgService:
                 ),
                 interface=instance.interface,
                 profile=instance.profile,
+                installation_orientation=instance.installation_orientation,
             )
             for instance in model.device_instances
         )

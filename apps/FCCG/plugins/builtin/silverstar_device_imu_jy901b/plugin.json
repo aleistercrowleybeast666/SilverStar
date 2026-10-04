@@ -306,6 +306,10 @@
     },
     "initialization": {
       "configure_on_boot": true,
+      "installation_orientation": {
+        "en_US": "Selectable horizontal (0) / vertical (1) in module ORIENT register 0x23; the reference project defaults to vertical. Recalibrate after changing.",
+        "zh_CN": "JY901B 模块内部 ORIENT 0x23 可选横放(0)/竖放(1)；参考项目默认竖放。更改后需重新校准。"
+      },
       "output_rate_hz": 200,
       "target_baud": 230400,
       "accelerometer_range_g": 16,

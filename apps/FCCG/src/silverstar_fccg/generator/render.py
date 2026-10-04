@@ -1062,6 +1062,8 @@ def _InstanceResourceDeclarations_Render(
             fields.append(f"    {platform_binding.id_type} {field.member};")
         if binding.accessor == "ProjectSx1281Resources_Get" and not any(field.member == "rx_en" for field in binding.fields):
             fields.extend(("    PlatformGpioId rx_en;", "    PlatformGpioId tx_en;"))
+        if binding.accessor == "ProjectJy901bResources_Get":
+            fields.append("    uint16_t installation_orientation;")
         sections.append(
             f"#define {binding.count_symbol:<42} {len(instances)}U\n"
             f"#define {binding.count_symbol}_MAX{' ' * max(1, 38 - len(binding.count_symbol))} "
@@ -1125,6 +1127,10 @@ def _InstanceResourcesSource_Render(
                 values.append(f".{field.member} = {c_id}")
             if binding.accessor == "ProjectSx1281Resources_Get" and not any(field.member == "rx_en" for field in binding.fields):
                 values.extend((".rx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT", ".tx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT"))
+            if binding.accessor == "ProjectJy901bResources_Get":
+                orientation = {"horizontal": 0, "vertical": 1,
+                               "preserve": 2}[instance.installation_orientation]
+                values.append(f".installation_orientation = {orientation}U")
             rows.append("    { " + ", ".join(values) + " }")
         table_symbol = f"s_{binding.accessor.removesuffix('_Get')}"
         sections.append(
@@ -2011,6 +2017,12 @@ def _LogPhysicalDevices_Get(
                 "model": physical.model,
                 "chipset": physical.chipset,
                 "driver": physical.driver,
+                **({"installation_orientation": instance.installation_orientation,
+                    "orientation_config_source": (
+                        "JY901B_ORIENT_0x23_preserve_actual_unknown" if
+                        instance.installation_orientation == "preserve" else
+                        "JY901B_ORIENT_0x23_module_internal")}
+                   if instance.plugin == "silverstar.device.imu.jy901b" else {}),
                 "capabilities": list(manifest.provides),
                 "recordable_outputs": dict(
                     sorted(recordable_outputs.items())

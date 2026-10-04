@@ -101,6 +101,7 @@ class DeviceInstanceView:
     runtime_defaults: dict[str, Any] = field(default_factory=dict)
     interface: str = ""
     profile: str = ""
+    installation_orientation: str = "vertical"
 
 
 @dataclass(frozen=True, slots=True)

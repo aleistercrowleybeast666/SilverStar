@@ -47,9 +47,12 @@ static void Test_RegisterDefaultsSet(void)
     {
         uint8_t reg;
         uint16_t expected;
-        TEST_CHECK(IMU_StartupRegisterGet(index, OutputRate_200Hz,
+        TEST_CHECK(IMU_StartupRegisterGet(0U, index, OutputRate_200Hz,
             Algorithm_6Axis, &reg, &expected) ==
             Jy901bStartupRegisterResult_Ok);
+#ifdef JY_TEST_PRESERVE_ORIENT
+        if (reg == IMU_REG_ORIENT) { expected = IMU_ORIENT_HORIZONTAL_VALUE; }
+#endif
         HostPlatformMock_Jy901bRegisterSet(PLATFORM_UART_1,
             reg, expected);
     }
@@ -176,6 +179,34 @@ static void Test_AbsentProbeBudget(uint32_t initial_ms)
     TEST_CHECK((uint32_t)(PlatformTime_Ms() - initial_ms) == 4200U);
 }
 
+#ifdef JY_TEST_PRESERVE_ORIENT
+static void Test_PreserveInvalidOrientation(void)
+{
+    uint32_t tick;
+    uint8_t last_reg;
+
+    HostPlatformMock_Reset();
+    HostPlatformMock_Jy901bEnable(PLATFORM_UART_1, 1U, 0U);
+    TEST_CHECK(IMU_Init(0U) == IMU_OK);
+    Test_RegisterDefaultsSet();
+    HostPlatformMock_Jy901bRegisterSet(PLATFORM_UART_1, IMU_REG_ORIENT, 2U);
+    TEST_CHECK(Jy901bStartup_Init(0U, OutputRate_200Hz,
+        Algorithm_6Axis) == Jy901bStartupResult_Ok);
+    for (tick = 0U; tick < 1000U; tick++)
+    {
+        if (Jy901bStartup_StateGet(0U) == SystemDeviceStartupState_Probing)
+        { Test_SamplesInject(); }
+        Jy901bStartup_Tick(0U, PlatformTime_Ms());
+        if (Jy901bStartup_StateGet(0U) == SystemDeviceStartupState_Failed)
+        { break; }
+        HostPlatformMock_TimeAdvanceUs(10000ULL);
+    }
+    TEST_CHECK(tick < 1000U);
+    TEST_CHECK(Jy901bStartup_FailureGet(0U) == SystemDeviceStartupFailure_ConfigRead);
+    TEST_CHECK(Test_ConfigWritesCount(&last_reg) == 0U);
+}
+#endif
+
 int main(void)
 {
     uint8_t last_reg;
@@ -190,6 +221,20 @@ int main(void)
     Test_Run(JY901B_UART_BOOT_BAUD, 1U);
     TEST_CHECK(Jy901bStartup_StateGet(0U) == SystemDeviceStartupState_Ready);
     TEST_CHECK(Test_ConfigWritesCount(&last_reg) == 0U);
+
+#ifdef JY_TEST_PRESERVE_ORIENT
+    HostPlatformMock_Reset();
+    HostPlatformMock_Jy901bEnable(PLATFORM_UART_1, 1U, 0U);
+    TEST_CHECK(IMU_Init(0U) == IMU_OK);
+    Test_RegisterDefaultsSet();
+    HostPlatformMock_Jy901bRegisterSet(PLATFORM_UART_1,
+        IMU_REG_ORIENT, IMU_ORIENT_VERTICAL_VALUE);
+    TEST_CHECK(Jy901bStartup_Init(0U, OutputRate_200Hz,
+        Algorithm_6Axis) == Jy901bStartupResult_Ok);
+    Test_Run(JY901B_UART_BOOT_BAUD, 1U);
+    TEST_CHECK(Jy901bStartup_StateGet(0U) == SystemDeviceStartupState_Ready);
+    TEST_CHECK(Test_ConfigWritesCount(&last_reg) == 0U);
+#endif
 
     HostPlatformMock_Reset();
     HostPlatformMock_Jy901bEnable(PLATFORM_UART_1, 1U, 0U);
@@ -227,5 +272,8 @@ int main(void)
     Test_LateStream(JY901B_FACTORY_BAUD, UINT32_MAX - 1000U);
     Test_AbsentProbeBudget(0U);
     Test_AbsentProbeBudget(UINT32_MAX - 1000U);
+#ifdef JY_TEST_PRESERVE_ORIENT
+    Test_PreserveInvalidOrientation();
+#endif
     return Test_Finish("jy901b_startup");
 }

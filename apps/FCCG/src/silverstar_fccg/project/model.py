@@ -100,6 +100,7 @@ class DeviceInstance:
     profile: str = ""
     module_variant: str = ""
     tx_power_dbm: int | None = None
+    installation_orientation: str = "vertical"
 
 
 @dataclass(frozen=True, slots=True)
@@ -369,6 +370,8 @@ class ProjectModel:
                         "profile": instance.profile,
                         **({"module_variant": instance.module_variant, "tx_power_dbm": instance.tx_power_dbm}
                            if instance.module_variant or instance.tx_power_dbm is not None else {}),
+                        **({"installation_orientation": instance.installation_orientation}
+                           if instance.plugin == "silverstar.device.imu.jy901b" else {}),
                     }
                     for instance in self.device_instances
                 ],
@@ -1012,7 +1015,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
     for entry_value in value:
         entry = _Object_Require(entry_value, "device instance")
         base_fields = {"instance_id", "plugin", "interface", "profile"}
-        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm"}):
+        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm", "installation_orientation"}):
             raise ProjectModelError(
                 "device instance must contain instance_id, plugin, interface and profile"
             )
@@ -1022,6 +1025,10 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         profile = _String_Require(entry, "profile", allow_empty=True)
         module = entry.get("module_variant", "")
         power = entry.get("tx_power_dbm")
+        orientation = entry.get("installation_orientation", "preserve")
+        if (orientation not in ("horizontal", "vertical", "preserve") or
+                ("installation_orientation" in entry and plugin != "silverstar.device.imu.jy901b")):
+            raise ProjectModelError("Invalid JY901B installation orientation")
         if (not isinstance(module, str) or (module and not SELECTION_OPTION_PATTERN.fullmatch(module))
                 or (power is not None and type(power) is not int)):
             raise ProjectModelError("Invalid radio module variant or TX power")
@@ -1033,7 +1040,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         if instance_id in instance_ids:
             raise ProjectModelError(f"Duplicate device instance id: {instance_id}")
         instance_ids.add(instance_id)
-        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power))
+        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power, orientation))
     return instances
 
 

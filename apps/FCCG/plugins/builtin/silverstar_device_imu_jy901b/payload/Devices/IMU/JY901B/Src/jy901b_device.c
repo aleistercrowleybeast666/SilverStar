@@ -1177,9 +1177,10 @@ static void IMU_DefaultValuesGet(const IMUConfig *config, uint16_t values[10])
 }
 
 Jy901bStartupRegisterResult IMU_StartupRegisterGet(
-    uint8_t index, IMUOutputRate output_rate, IMUAlgorithm algorithm,
+    uint8_t instance, uint8_t index, IMUOutputRate output_rate, IMUAlgorithm algorithm,
     uint8_t *reg, uint16_t *expected_value)
 {
+    ProjectJy901bResources resources;
     static const uint8_t registers[JY901B_STARTUP_REGISTER_COUNT] =
     {
         IMU_REG_BAUD, IMU_REG_ORIENT, IMU_REG_AXIS6,
@@ -1189,7 +1190,7 @@ Jy901bStartupRegisterResult IMU_StartupRegisterGet(
     };
     const uint16_t values[JY901B_STARTUP_REGISTER_COUNT] =
     {
-        IMU_DEFAULT_BAUD_VALUE, IMU_DEFAULT_ORIENT_VALUE,
+        IMU_DEFAULT_BAUD_VALUE, 0U,
         (uint16_t)algorithm, IMU_DEFAULT_BANDWIDTH_VALUE,
         (uint16_t)output_rate, IMU_DEFAULT_GYRO_RANGE_VALUE,
         IMU_DEFAULT_ACCEL_RANGE_VALUE, IMU_DEFAULT_FUSION_FILTER_VALUE,
@@ -1199,12 +1200,15 @@ Jy901bStartupRegisterResult IMU_StartupRegisterGet(
     if ((index >= JY901B_STARTUP_REGISTER_COUNT) ||
         (reg == NULL) || (expected_value == NULL))
     { return Jy901bStartupRegisterResult_InvalidArgument; }
+    if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK ||
+        resources.installation_orientation > IMU_ORIENT_PRESERVE_VALUE)
+    { return Jy901bStartupRegisterResult_InvalidArgument; }
     SILVERSTAR_ASSERT_OBJECT(reg, uint8_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     SILVERSTAR_ASSERT_OBJECT(expected_value, uint16_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     *reg = registers[index];
-    *expected_value = values[index];
+    *expected_value = (index == 1U) ? resources.installation_orientation : values[index];
     return Jy901bStartupRegisterResult_Ok;
 }
 
@@ -1220,8 +1224,10 @@ static IMUState IMU_DefaultDifferencesApply(uint8_t instance,
         uint8_t reg;
         uint16_t ignored_expected;
         if (actual[index] == expected[index]) { continue; }
-        (void)IMU_StartupRegisterGet(index, OutputRate_200Hz,
-            Algorithm_6Axis, &reg, &ignored_expected);
+        if (IMU_StartupRegisterGet(instance, index, OutputRate_200Hz,
+            Algorithm_6Axis, &reg, &ignored_expected) !=
+            Jy901bStartupRegisterResult_Ok)
+        { return IMU_RESP_INVALID; }
         result = (index == 0U) ? IMU_SetBaudrate(instance, Baudrate_230400) :
             IMU_WriteRegister(instance, reg, expected[index], 0U);
         if (result != IMU_OK) { return result; }
@@ -1243,11 +1249,18 @@ IMUState IMU_ApplyDefaultConfig(uint8_t instance, IMUOutputRate output_rate,
     SILVERSTAR_ASSERT_OBJECT(&actual, IMUConfig, SILVERSTAR_ASSERT_MODULE_DEVICE);
     for (index = 0U; index < JY901B_STARTUP_REGISTER_COUNT; index++)
     {
-        (void)IMU_StartupRegisterGet(index, output_rate, algorithm,
-            &reg, &expected[index]);
+        if (IMU_StartupRegisterGet(instance, index, output_rate, algorithm,
+            &reg, &expected[index]) != Jy901bStartupRegisterResult_Ok)
+        { return IMU_RESP_INVALID; }
     }
     result = IMU_ReadCurrentConfig(instance, &actual);
     if (result != IMU_OK) { return result; }
+    if (expected[1] == IMU_ORIENT_PRESERVE_VALUE)
+    {
+        if (actual.OrientationValue > IMU_ORIENT_VERTICAL_VALUE)
+        { return IMU_RESP_INVALID; }
+        expected[1] = actual.OrientationValue;
+    }
     IMU_DefaultValuesGet(&actual, values);
     result = IMU_DefaultDifferencesApply(instance, values, expected, &changed);
     if (result != IMU_OK) { return result; }

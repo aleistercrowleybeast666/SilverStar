@@ -102,7 +102,7 @@ static SystemDeviceStartupStepResult Jy901bStartup_RegisterReadStep(
 
     if (*position >= JY901B_STARTUP_REGISTER_COUNT)
     { return SystemDeviceStartupStep_Ok; }
-    if (IMU_StartupRegisterGet(*position, context->output_rate,
+    if (IMU_StartupRegisterGet(context->instance, *position, context->output_rate,
             context->algorithm, &reg, &expected) !=
         Jy901bStartupRegisterResult_Ok)
     { return SystemDeviceStartupStep_Failed; }
@@ -148,8 +148,16 @@ static SystemDeviceStartupStepResult Jy901bStartup_ConfigRead(
     {
         uint8_t reg;
         uint16_t expected;
-        (void)IMU_StartupRegisterGet(index, context->output_rate,
-            context->algorithm, &reg, &expected);
+        if (IMU_StartupRegisterGet(context->instance, index, context->output_rate,
+            context->algorithm, &reg, &expected) !=
+            Jy901bStartupRegisterResult_Ok)
+        { return SystemDeviceStartupStep_Failed; }
+        if ((index == 1U) && (expected == IMU_ORIENT_PRESERVE_VALUE))
+        {
+            if (context->actual[index] > IMU_ORIENT_VERTICAL_VALUE)
+            { return SystemDeviceStartupStep_Failed; }
+            continue;
+        }
         if (context->actual[index] != expected)
         { *difference_mask |= 1UL << index; }
     }
@@ -186,7 +194,7 @@ static SystemDeviceStartupStepResult Jy901bStartup_ConfigApply(
         context->apply_index++;
         return SystemDeviceStartupStep_Pending;
     }
-    if (IMU_StartupRegisterGet(index, context->output_rate,
+    if (IMU_StartupRegisterGet(context->instance, index, context->output_rate,
             context->algorithm, &reg, &expected) !=
         Jy901bStartupRegisterResult_Ok)
     { return SystemDeviceStartupStep_Failed; }
@@ -274,8 +282,16 @@ static SystemDeviceStartupStepResult Jy901bStartup_ConfigVerify(void *owner)
     {
         uint8_t reg;
         uint16_t expected;
-        (void)IMU_StartupRegisterGet(index, context->output_rate,
-            context->algorithm, &reg, &expected);
+        if (IMU_StartupRegisterGet(context->instance, index, context->output_rate,
+            context->algorithm, &reg, &expected) !=
+            Jy901bStartupRegisterResult_Ok)
+        { return SystemDeviceStartupStep_Failed; }
+        if ((index == 1U) && (expected == IMU_ORIENT_PRESERVE_VALUE))
+        {
+            if (context->verified[index] > IMU_ORIENT_VERTICAL_VALUE)
+            { return SystemDeviceStartupStep_Failed; }
+            continue;
+        }
         if (context->verified[index] != expected)
         { return SystemDeviceStartupStep_Failed; }
     }

@@ -626,6 +626,7 @@ static uint32_t Jy901bImuAdapter_ConfigMismatchMaskGet(uint8_t instance,
     IMUOutputRate expected_rate)
 {
     uint32_t mismatch_mask = 0U;
+    ProjectJy901bResources resources;
 
     SILVERSTAR_ASSERT_OBJECT(config, IMUConfig,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
@@ -637,7 +638,11 @@ static uint32_t Jy901bImuAdapter_ConfigMismatchMaskGet(uint8_t instance,
     { mismatch_mask |= IMU_CONFIG_VALID_BANDWIDTH; }
     if (config->AlgorithmValue != (uint16_t)s_staged_algorithm)
     { mismatch_mask |= IMU_CONFIG_VALID_ALGORITHM; }
-    if (config->OrientationValue != IMU_DEFAULT_ORIENT_VALUE)
+    if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK)
+    { return IMU_CONFIG_VALID_ORIENTATION; }
+    if ((config->OrientationValue > IMU_ORIENT_VERTICAL_VALUE) ||
+        ((resources.installation_orientation != IMU_ORIENT_PRESERVE_VALUE) &&
+         (config->OrientationValue != resources.installation_orientation)))
     { mismatch_mask |= IMU_CONFIG_VALID_ORIENTATION; }
     if (config->GyroRangeValue != IMU_DEFAULT_GYRO_RANGE_VALUE)
     { mismatch_mask |= IMU_CONFIG_VALID_GYRO_RANGE; }

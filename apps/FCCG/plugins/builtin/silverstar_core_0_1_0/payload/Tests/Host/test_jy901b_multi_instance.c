@@ -66,6 +66,8 @@ static void Test_ContextAndStreamIsolation(void)
     TEST_CHECK(ProjectJy901bResources_Get(1U, &resources1) ==
                SYSTEM_DEVICE_OK);
     TEST_CHECK(resources0.uart != resources1.uart);
+    TEST_CHECK(resources0.installation_orientation == 1U);
+    TEST_CHECK(resources1.installation_orientation == 0U);
     TEST_CHECK(IMU_LocalGravitySet(0U, SYSTEM_LOCAL_GRAVITY_MPS2) == IMU_OK);
     TEST_CHECK(IMU_LocalGravitySet(1U, SYSTEM_LOCAL_GRAVITY_MPS2) == IMU_OK);
     TEST_CHECK(IMU_Init(0U) == IMU_OK);
@@ -100,6 +102,8 @@ static void Test_ContextAndStreamIsolation(void)
     HostPlatformMock_Jy901bEnable(resources1.uart, 1U, 0U);
     TEST_CHECK(IMU_ApplyDefaultConfig(
         1U, OutputRate_100Hz, Algorithm_9Axis) == IMU_OK);
+    TEST_CHECK(HostPlatformMock_Jy901bRegisterGet(
+        resources1.uart, IMU_REG_ORIENT) == 0U);
     TEST_CHECK(IMU_GetData(1U)->FrameCount == 0U);
     Test_PairInject(resources1.uart, -1024, -222);
     IMU_Poll(1U);

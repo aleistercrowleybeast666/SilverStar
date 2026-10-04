@@ -378,7 +378,7 @@ typedef enum
 } Jy901bStartupRegisterResult;
 
 Jy901bStartupRegisterResult IMU_StartupRegisterGet(
-    uint8_t index, IMUOutputRate output_rate, IMUAlgorithm algorithm,
+    uint8_t instance, uint8_t index, IMUOutputRate output_rate, IMUAlgorithm algorithm,
     uint8_t *reg, uint16_t *expected_value);
 
 #endif /* __JY901B_DEVICE_H */
