@@ -220,7 +220,7 @@ int main(int argc, char **argv)
         Test_SwitchFault(argv[2]);
         return Test_Finish("source_selector_switch_contract");
     }
-    if (strcmp(argv[2], "normal") == 0) { return Test_PreviousMain(); }
+    if (strcmp(argv[2], "normal") == 0) { return Test_PreviousMain(1, argv); }
     if ((strcmp(argv[2], "init_capacity") == 0) || (strcmp(argv[2], "next_failed_restart") == 0))
     {
         Test_OrdinaryBoundary(kind, argv[2]);

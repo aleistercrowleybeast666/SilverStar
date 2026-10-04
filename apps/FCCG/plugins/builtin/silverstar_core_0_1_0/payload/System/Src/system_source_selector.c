@@ -24,6 +24,11 @@
 
 #define SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE 0xFFU
 #define SYSTEM_SOURCE_SELECTOR_PENDING_EVENT_COUNT_MAX 4U
+#define SYSTEM_GNSS_RECOVERY_DELAY_MS 1000UL
+#define SYSTEM_GNSS_RECOVERY_BACKOFF_MAX 5U
+#define SYSTEM_TELEMETRY_RECOVERY_DELAY_MS 1000UL
+#define SYSTEM_TELEMETRY_RECOVERY_BACKOFF_MAX 5U
+#define SYSTEM_TELEMETRY_SWITCH_COOLDOWN_MS 32000UL
 
 typedef struct
 {
@@ -50,10 +55,17 @@ typedef struct
     uint8_t order[PROJECT_GNSS_INSTANCE_COUNT_MAX];
     uint8_t initialized[PROJECT_GNSS_INSTANCE_COUNT_MAX];
     uint8_t started[PROJECT_GNSS_INSTANCE_COUNT_MAX];
+    uint8_t cleanup_pending[PROJECT_GNSS_INSTANCE_COUNT_MAX];
     uint8_t count;
     uint8_t configured_primary;
     uint8_t active;
     uint8_t active_position;
+    uint8_t recovery_position;
+    uint8_t runtime_enabled;
+    uint8_t runtime_owner_active;
+    uint8_t recovery_failures[PROJECT_GNSS_INSTANCE_COUNT_MAX];
+    uint32_t recovery_scheduled_ms[PROJECT_GNSS_INSTANCE_COUNT_MAX];
+    uint64_t active_after_us;
 } SystemSourceSelectorGnssState;
 
 typedef struct
@@ -68,6 +80,11 @@ typedef struct
     uint16_t consecutive_timeout_count;
     uint32_t observed_transmit_count;
     uint32_t observed_timeout_count;
+    uint32_t recovery_scheduled_ms;
+    uint8_t recovery_failures;
+    uint8_t active_offline;
+    uint8_t cooldown_active[PROJECT_TELEMETRY_INSTANCE_COUNT_MAX];
+    uint32_t cooldown_scheduled_ms[PROJECT_TELEMETRY_INSTANCE_COUNT_MAX];
 } SystemSourceSelectorTelemetryState;
 
 static SystemSourceSelectorImuState s_imu;
@@ -90,6 +107,10 @@ _Static_assert(SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT > 0U,
     "telemetry timeout failover limit must be positive");
 
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+_Static_assert(
+    (int)SYSTEM_SOURCE_CHANGE_REASON_RECOVERY ==
+        (int)FLIGHT_LOG_SENSOR_SOURCE_CHANGE_RECOVERY,
+    "source-change reason catalog mismatch");
 _Static_assert(
     (int)SYSTEM_SOURCE_CHANGE_REASON_PRESTART_PRIMARY_UNAVAILABLE ==
         (int)FLIGHT_LOG_SENSOR_SOURCE_CHANGE_PRESTART_PRIMARY_UNAVAILABLE,
@@ -169,10 +190,14 @@ static LoggerBusResult SystemSourceSelector_EventWrite(
     SystemDeviceDescriptor new_descriptor;
 
     if (event == NULL) { return LOGGER_BUS_RESULT_BAD_PARAM; }
-    if ((ProjectDeviceInstance_DescriptorGet(event->device_class,
-             event->old_instance, &old_descriptor) != SYSTEM_DEVICE_OK) ||
-        (ProjectDeviceInstance_DescriptorGet(event->device_class,
-             event->new_instance, &new_descriptor) != SYSTEM_DEVICE_OK))
+    (void)memset(&old_descriptor, 0, sizeof(old_descriptor));
+    (void)memset(&new_descriptor, 0, sizeof(new_descriptor));
+    if (((event->old_instance != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) &&
+         (ProjectDeviceInstance_DescriptorGet(event->device_class,
+             event->old_instance, &old_descriptor) != SYSTEM_DEVICE_OK)) ||
+        ((event->new_instance != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) &&
+         (ProjectDeviceInstance_DescriptorGet(event->device_class,
+             event->new_instance, &new_descriptor) != SYSTEM_DEVICE_OK)))
     {
         return LOGGER_BUS_RESULT_BAD_PARAM;
     }
@@ -194,14 +219,15 @@ static void SystemSourceSelector_EventRecord(
                       SILVERSTAR_ASSERT_MODULE_SYSTEM,
                       SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     SILVERSTAR_ASSERT(
-        (reason >= SYSTEM_SOURCE_CHANGE_REASON_PRESTART_PRIMARY_UNAVAILABLE) &&
+        (reason >= SYSTEM_SOURCE_CHANGE_REASON_RECOVERY) &&
         (reason <= SYSTEM_SOURCE_CHANGE_REASON_TELEMETRY_INIT_FAILURE),
         SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
     SystemSourceSelectorPendingEvent event;
 
-    if (old_instance == new_instance) { return; }
+    if ((old_instance == new_instance) &&
+        (reason != SYSTEM_SOURCE_CHANGE_REASON_RECOVERY)) { return; }
     event.device_class = device_class;
     event.old_instance = old_instance;
     event.new_instance = new_instance;
@@ -822,7 +848,7 @@ static void SystemSourceSelector_GnssSwitchEvaluate(void)
         uint8_t candidate;
 
         if (position >= s_gnss.count) { break; }
-        if (position <= s_gnss.active_position) { continue; }
+        if (position == s_gnss.active_position) { continue; }
         candidate = s_gnss.order[position];
         SILVERSTAR_ASSERT(candidate < s_gnss.count,
             SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
@@ -842,11 +868,108 @@ static void SystemSourceSelector_GnssSwitchEvaluate(void)
 
             s_gnss.active = candidate;
             s_gnss.active_position = position;
+            s_gnss.active_after_us = SystemTime_GetMonotonicUs();
             SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
                 previous, candidate,
                 SYSTEM_SOURCE_CHANGE_REASON_GNSS_LIVENESS_TIMEOUT);
             break;
         }
+    }
+}
+
+static void SystemSourceSelector_GnssFailureCount(uint8_t candidate)
+{
+    if (s_gnss.recovery_failures[candidate] < SYSTEM_GNSS_RECOVERY_BACKOFF_MAX)
+    { s_gnss.recovery_failures[candidate]++; }
+}
+
+static void SystemSourceSelector_GnssRecoveryAttempt(
+    uint8_t candidate, uint8_t position)
+{
+    SystemDeviceResult result;
+    if ((s_gnss.started[candidate] != 0U) ||
+        (s_gnss.cleanup_pending[candidate] != 0U))
+    {
+        result = ProjectGnssInstance_Stop(candidate);
+        if (SystemSourceSelector_ResultSuccessful(result) == 0U)
+        { SystemSourceSelector_GnssFailureCount(candidate); return; }
+        s_gnss.started[candidate] = 0U;
+        s_gnss.cleanup_pending[candidate] = 0U;
+    }
+    if (s_gnss.initialized[candidate] == 0U)
+    {
+        result = ProjectGnssInstance_Init(candidate);
+        if (SystemSourceSelector_ResultSuccessful(result) == 0U)
+        { SystemSourceSelector_GnssFailureCount(candidate); return; }
+        s_gnss.initialized[candidate] = 1U;
+    }
+    s_gnss.cleanup_pending[candidate] = 1U;
+    result = ProjectGnssInstance_Start(candidate);
+    SystemSourceSelector_GnssFailureCount(candidate);
+    if (SystemSourceSelector_ResultSuccessful(result) == 0U) { return; }
+    s_gnss.started[candidate] = 1U;
+    s_gnss.cleanup_pending[candidate] = 0U;
+    if (s_gnss.runtime_owner_active != 0U)
+    {
+        result = ProjectGnssInstance_RuntimeOwnerActivate(candidate);
+        if (SystemSourceSelector_ResultSuccessful(result) == 0U)
+        { s_gnss.started[candidate] = 0U;
+          s_gnss.cleanup_pending[candidate] = 1U; return; }
+    }
+    if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
+    {
+        s_gnss.active = candidate;
+        s_gnss.active_position = position;
+        SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
+            SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE, candidate,
+            SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
+    }
+    if (candidate == s_gnss.active)
+    { s_gnss.active_after_us = SystemTime_GetMonotonicUs(); }
+}
+
+/* A cold backup is considered before restarting anything. Recovery visits at
+ * most one offline instance per Process call and never restarts a healthy one. */
+static void SystemSourceSelector_GnssRecoveryProcess(void)
+{
+    uint8_t step;
+    uint64_t now_us = SystemTime_GetMonotonicUs();
+    uint32_t now_ms = (uint32_t)(now_us / 1000ULL);
+    SystemDeviceHealth health;
+    if ((s_gnss.runtime_enabled == 0U) || (s_gnss.count == 0U)) { return; }
+    if ((s_gnss.active != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) &&
+        (ProjectGnssInstance_HealthGet(s_gnss.active, &health) == SYSTEM_DEVICE_OK) &&
+        (health.initialized != 0U) && (health.started != 0U) &&
+        (health.online != 0U))
+    {
+        if (s_gnss.recovery_failures[s_gnss.active] != 0U)
+        {
+            SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
+                s_gnss.active, s_gnss.active,
+                SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
+        }
+        s_gnss.recovery_failures[s_gnss.active] = 0U;
+        return;
+    }
+    if (s_gnss.active != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
+    { s_gnss.active_after_us = now_us; }
+    for (step = 0U; step < PROJECT_GNSS_INSTANCE_COUNT_MAX; step++)
+    {
+        uint8_t position;
+        uint8_t candidate;
+        if (step >= s_gnss.count) { break; }
+        position = (uint8_t)((s_gnss.recovery_position + step) % s_gnss.count);
+        candidate = s_gnss.order[position];
+        if ((s_gnss.started[candidate] != 0U) &&
+            (ProjectGnssInstance_HealthGet(candidate, &health) == SYSTEM_DEVICE_OK) &&
+            (health.online != 0U)) { continue; }
+        if ((uint32_t)(now_ms - s_gnss.recovery_scheduled_ms[candidate]) <
+            (SYSTEM_GNSS_RECOVERY_DELAY_MS << s_gnss.recovery_failures[candidate]))
+        { continue; }
+        s_gnss.recovery_position = (uint8_t)((position + 1U) % s_gnss.count);
+        s_gnss.recovery_scheduled_ms[candidate] = now_ms;
+        SystemSourceSelector_GnssRecoveryAttempt(candidate, position);
+        break;
     }
 }
 
@@ -919,6 +1042,19 @@ SystemDeviceResult SystemGnss_Init(void)
     return (success_count > 0U) ? SYSTEM_DEVICE_OK : first_failure;
 }
 
+static SystemDeviceResult SystemSourceSelector_GnssStartOne(uint8_t instance_id)
+{
+    SystemDeviceResult result;
+    s_gnss.started[instance_id] = 0U;
+    s_gnss.cleanup_pending[instance_id] = 1U;
+    result = ProjectGnssInstance_Start(instance_id);
+    SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if (SystemSourceSelector_ResultSuccessful(result) != 0U)
+    { s_gnss.started[instance_id] = 1U; s_gnss.cleanup_pending[instance_id] = 0U; }
+    return result;
+}
+
 SystemDeviceResult SystemGnss_Start(void)
 {
     SystemDeviceResult first_failure = SYSTEM_DEVICE_NOT_READY;
@@ -928,6 +1064,7 @@ SystemDeviceResult SystemGnss_Start(void)
 
     SILVERSTAR_ASSERT(s_gnss.count <= PROJECT_GNSS_INSTANCE_COUNT_MAX,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    s_gnss.runtime_enabled = 1U;
     SILVERSTAR_ASSERT((s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
         (s_gnss.active < s_gnss.count), SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
@@ -947,13 +1084,9 @@ SystemDeviceResult SystemGnss_Start(void)
         SILVERSTAR_ASSERT(instance_id < s_gnss.count,
             SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         if (s_gnss.initialized[instance_id] == 0U) { continue; }
-        s_gnss.started[instance_id] = 0U;
-        result = ProjectGnssInstance_Start(instance_id);
-        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
-            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+        result = SystemSourceSelector_GnssStartOne(instance_id);
         if (SystemSourceSelector_ResultSuccessful(result) != 0U)
         {
-            s_gnss.started[instance_id] = 1U;
             success_count++;
             if ((position >= s_gnss.active_position) &&
                 (selected_position == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE))
@@ -985,6 +1118,8 @@ SystemDeviceResult SystemGnss_Stop(void)
 {
     SystemDeviceResult result = SYSTEM_DEVICE_OK;
     uint8_t position;
+    s_gnss.runtime_enabled = 0U;
+    s_gnss.runtime_owner_active = 0U;
 
     for (position = 0U;
          position < PROJECT_GNSS_INSTANCE_COUNT_MAX;
@@ -993,10 +1128,12 @@ SystemDeviceResult SystemGnss_Stop(void)
         uint8_t instance_id;
         if (position >= s_gnss.count) { break; }
         instance_id = s_gnss.order[position];
-        if (s_gnss.started[instance_id] == 0U) { continue; }
+        if ((s_gnss.started[instance_id] == 0U) &&
+            (s_gnss.cleanup_pending[instance_id] == 0U)) { continue; }
         if (ProjectGnssInstance_Stop(instance_id) != SYSTEM_DEVICE_OK)
         { result = SYSTEM_DEVICE_IO_ERROR; }
-        s_gnss.started[instance_id] = 0U;
+        else
+        { s_gnss.started[instance_id] = 0U; s_gnss.cleanup_pending[instance_id] = 0U; }
     }
     return result;
 }
@@ -1005,6 +1142,7 @@ SystemDeviceResult SystemGnss_RuntimeOwnerActivate(void)
 {
     SystemDeviceResult result = SYSTEM_DEVICE_NOT_READY;
     uint8_t position;
+    s_gnss.runtime_owner_active = 1U;
 
     for (position = 0U;
          position < PROJECT_GNSS_INSTANCE_COUNT_MAX;
@@ -1037,6 +1175,7 @@ void SystemGnss_Process(void)
         { (void)ProjectGnssInstance_Process(instance_id); }
     }
     SystemSourceSelector_GnssSwitchEvaluate();
+    SystemSourceSelector_GnssRecoveryProcess();
     SystemSourceSelector_PendingEventsFlush();
 }
 
@@ -1084,10 +1223,15 @@ SystemDeviceResult SystemGnss_IoDetailGet(SystemGnssIoDetail *detail)
 
 SystemDeviceResult SystemGnss_LatestSampleGet(SystemGnssSample *sample)
 {
+    SystemDeviceResult result;
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
     { return SYSTEM_DEVICE_NOT_READY; }
-    return ProjectGnssInstance_LatestSampleGet(s_gnss.active, sample);
+    result = ProjectGnssInstance_LatestSampleGet(s_gnss.active, sample);
+    if ((result == SYSTEM_DEVICE_OK) && (s_gnss.active_after_us != 0U) &&
+        (sample->receive_timestamp_us <= s_gnss.active_after_us))
+    { return SYSTEM_DEVICE_NOT_READY; }
+    return result;
 }
 
 SystemDeviceResult SystemGnss_TimeGet(SystemGnssTime *time)
@@ -1274,44 +1418,142 @@ static void SystemSourceSelector_TelemetryBaselineSet(void)
     }
 }
 
+typedef enum
+{
+    SystemSourceSelectorTelemetryCandidate_Failed = 0,
+    SystemSourceSelectorTelemetryCandidate_Ready,
+    SystemSourceSelectorTelemetryCandidate_Blocked
+} SystemSourceSelectorTelemetryCandidateResult;
+
+static SystemSourceSelectorTelemetryCandidateResult
+SystemSourceSelector_TelemetryCandidateStart(uint8_t candidate)
+{
+    SystemDeviceResult result;
+    if (s_telemetry.started[candidate] != 0U)
+    {
+        result = ProjectTelemetryInstance_Stop(candidate);
+        if (SystemSourceSelector_ResultSuccessful(result) == 0U)
+        { return SystemSourceSelectorTelemetryCandidate_Blocked; }
+        s_telemetry.started[candidate] = 0U;
+        s_telemetry.initialized[candidate] = 0U;
+    }
+    if (s_telemetry.initialized[candidate] == 0U)
+    {
+        result = ProjectTelemetryInstance_Init(candidate);
+        if (SystemSourceSelector_ResultSuccessful(result) == 0U)
+        { return SystemSourceSelectorTelemetryCandidate_Failed; }
+        s_telemetry.initialized[candidate] = 1U;
+    }
+    result = ProjectTelemetryInstance_Start(candidate);
+    SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if (SystemSourceSelector_ResultSuccessful(result) == 0U)
+    {
+        if (SystemSourceSelector_ResultSuccessful(
+                ProjectTelemetryInstance_Stop(candidate)) == 0U)
+        { s_telemetry.started[candidate] = 1U;
+          return SystemSourceSelectorTelemetryCandidate_Blocked; }
+        s_telemetry.initialized[candidate] = 0U;
+        return SystemSourceSelectorTelemetryCandidate_Failed;
+    }
+    s_telemetry.started[candidate] = 1U;
+    return SystemSourceSelectorTelemetryCandidate_Ready;
+}
+
 static uint8_t SystemSourceSelector_TelemetryNextStart(void)
 {
-    uint8_t position;
+    uint8_t step;
 
     SILVERSTAR_ASSERT(s_telemetry.count <= PROJECT_TELEMETRY_INSTANCE_COUNT_MAX,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
-    SILVERSTAR_ASSERT((s_telemetry.active_position < s_telemetry.count) &&
-        (s_telemetry.order[s_telemetry.active_position] == s_telemetry.active),
+    SILVERSTAR_ASSERT((s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
+        ((s_telemetry.active_position < s_telemetry.count) &&
+         (s_telemetry.order[s_telemetry.active_position] == s_telemetry.active)),
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    for (position = 0U;
-         position < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX;
-         position++)
+    for (step = 0U; step < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX; step++)
     {
+        uint8_t position;
         uint8_t candidate;
-        SystemDeviceResult result;
-
-        if (position >= s_telemetry.count) { break; }
-        if (position <= s_telemetry.active_position) { continue; }
+        SystemSourceSelectorTelemetryCandidateResult result;
+        if (step >= s_telemetry.count) { break; }
+        position = s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE ?
+            step : (uint8_t)((s_telemetry.active_position + step + 1U) % s_telemetry.count);
         candidate = s_telemetry.order[position];
+        if (candidate == s_telemetry.active) { continue; }
+        if ((s_telemetry.cooldown_active[candidate] != 0U) &&
+            ((uint32_t)((uint32_t)(SystemTime_GetMonotonicUs() / 1000ULL) -
+              s_telemetry.cooldown_scheduled_ms[candidate]) <
+             SYSTEM_TELEMETRY_SWITCH_COOLDOWN_MS)) { continue; }
         SILVERSTAR_ASSERT(candidate < s_telemetry.count,
             SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
-        if (s_telemetry.initialized[candidate] == 0U) { continue; }
-        s_telemetry.started[candidate] = 0U;
-        result = ProjectTelemetryInstance_Start(candidate);
-        SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
-            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
-        if (SystemSourceSelector_ResultSuccessful(result) == 0U)
-        {
-            continue;
-        }
-        s_telemetry.started[candidate] = 1U;
+        result = SystemSourceSelector_TelemetryCandidateStart(candidate);
+        if (result == SystemSourceSelectorTelemetryCandidate_Blocked)
+        { return 0U; }
+        if (result != SystemSourceSelectorTelemetryCandidate_Ready)
+        { continue; }
         s_telemetry.active = candidate;
         s_telemetry.active_position = position;
+        s_telemetry.active_offline = 0U;
         s_telemetry.consecutive_timeout_count = 0U;
         SystemSourceSelector_TelemetryBaselineSet();
         return 1U;
     }
     return 0U;
+}
+
+static void SystemSourceSelector_TelemetryQuarantine(uint8_t instance)
+{
+    SILVERSTAR_ASSERT(instance < s_telemetry.count,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    s_telemetry.cooldown_active[instance] = 1U;
+    s_telemetry.cooldown_scheduled_ms[instance] =
+        (uint32_t)(SystemTime_GetMonotonicUs() / 1000ULL);
+}
+
+static uint8_t SystemSourceSelector_TelemetryRecoveryTry(void)
+{
+    uint32_t now_ms = (uint32_t)(SystemTime_GetMonotonicUs() / 1000ULL);
+    if ((uint32_t)(now_ms - s_telemetry.recovery_scheduled_ms) <
+        (SYSTEM_TELEMETRY_RECOVERY_DELAY_MS << s_telemetry.recovery_failures))
+    { return 0U; }
+    s_telemetry.recovery_scheduled_ms = now_ms;
+    if (SystemSourceSelector_TelemetryNextStart() != 0U)
+    {
+        s_telemetry.recovery_failures = 0U;
+        s_telemetry.recovery_scheduled_ms = 0U;
+        return 1U;
+    }
+    if (s_telemetry.recovery_failures < SYSTEM_TELEMETRY_RECOVERY_BACKOFF_MAX)
+    { s_telemetry.recovery_failures++; }
+    return 0U;
+}
+
+static void SystemSourceSelector_TelemetrySwitchIfAvailable(
+    SystemSourceChangeReason reason)
+{
+    uint8_t previous = s_telemetry.active;
+    if (SystemSourceSelector_TelemetryRecoveryTry() == 0U) { return; }
+    (void)ProjectTelemetryInstance_Stop(previous);
+    s_telemetry.started[previous] = 0U;
+    SystemSourceSelector_TelemetryQuarantine(previous);
+    SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_TELEMETRY,
+        previous, s_telemetry.active, reason);
+}
+
+static void SystemSourceSelector_TelemetryTimeoutAccumulate(uint32_t timeout_delta)
+{
+    if (timeout_delta >=
+        ((uint32_t)SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT -
+         (uint32_t)s_telemetry.consecutive_timeout_count))
+    {
+        s_telemetry.consecutive_timeout_count =
+            SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT;
+    }
+    else
+    {
+        s_telemetry.consecutive_timeout_count = (uint16_t)(
+            (uint32_t)s_telemetry.consecutive_timeout_count + timeout_delta);
+    }
 }
 
 static void SystemSourceSelector_TelemetryHealthProcess(void)
@@ -1328,10 +1570,21 @@ static void SystemSourceSelector_TelemetryHealthProcess(void)
     SILVERSTAR_ASSERT(s_telemetry.consecutive_timeout_count <=
         SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    if (ProjectTelemetryInstance_HealthGet(
-            s_telemetry.active, &health) != SYSTEM_DEVICE_OK)
+    if ((ProjectTelemetryInstance_HealthGet(
+            s_telemetry.active, &health) != SYSTEM_DEVICE_OK) ||
+        (health.initialized == 0U) || (health.started == 0U))
     {
+        s_telemetry.active_offline = 1U;
+        SystemSourceSelector_TelemetrySwitchIfAvailable(
+            SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
         return;
+    }
+    if (s_telemetry.active_offline != 0U)
+    {
+        SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_TELEMETRY,
+            s_telemetry.active, s_telemetry.active,
+            SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
+        s_telemetry.active_offline = 0U;
     }
     success_delta = health.transmit_packet_count -
                     s_telemetry.observed_transmit_count;
@@ -1342,35 +1595,17 @@ static void SystemSourceSelector_TelemetryHealthProcess(void)
     if (success_delta > 0U)
     {
         s_telemetry.consecutive_timeout_count = 0U;
+        s_telemetry.recovery_failures = 0U;
+        s_telemetry.recovery_scheduled_ms = 0U;
+        s_telemetry.cooldown_active[s_telemetry.active] = 0U;
         return;
     }
     if (timeout_delta == 0U) { return; }
-    if (timeout_delta >=
-        ((uint32_t)SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT -
-         (uint32_t)s_telemetry.consecutive_timeout_count))
-    {
-        s_telemetry.consecutive_timeout_count =
-            SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT;
-    }
-    else
-    {
-        s_telemetry.consecutive_timeout_count = (uint16_t)(
-            (uint32_t)s_telemetry.consecutive_timeout_count + timeout_delta);
-    }
+    SystemSourceSelector_TelemetryTimeoutAccumulate(timeout_delta);
     if (s_telemetry.consecutive_timeout_count >=
         SYSTEM_TELEMETRY_FAILOVER_CONSECUTIVE_TIMEOUT_LIMIT)
-    {
-        uint8_t previous = s_telemetry.active;
-
-        if (SystemSourceSelector_TelemetryNextStart() != 0U)
-        {
-            (void)ProjectTelemetryInstance_Stop(previous);
-            s_telemetry.started[previous] = 0U;
-            SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_TELEMETRY,
-                previous, s_telemetry.active,
-                SYSTEM_SOURCE_CHANGE_REASON_TELEMETRY_CONSECUTIVE_TX_TIMEOUT);
-        }
-    }
+    { SystemSourceSelector_TelemetrySwitchIfAvailable(
+        SYSTEM_SOURCE_CHANGE_REASON_TELEMETRY_CONSECUTIVE_TX_TIMEOUT); }
 }
 
 const char *SystemTelemetry_NameGet(void)
@@ -1531,6 +1766,15 @@ SystemDeviceResult SystemTelemetry_Receive(
 
 void SystemTelemetry_Process(void)
 {
+    if (s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
+    {
+        if (SystemSourceSelector_TelemetryRecoveryTry() != 0U)
+        {
+            SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_TELEMETRY,
+                SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE, s_telemetry.active,
+                SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
+        }
+    }
     if ((s_telemetry.active != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) &&
         (s_telemetry.started[s_telemetry.active] != 0U))
     {
@@ -1816,7 +2060,19 @@ SystemDeviceResult SystemBarometer_Stop(void)
 }
 SystemDeviceResult SystemBarometer_Process(void)
 {
-    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) { return SystemBarometerCold_Process(); }
+    if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U)
+    {
+        uint8_t previous = SystemBarometerCold_ActiveGet();
+        SystemDeviceResult result = SystemBarometerCold_Process();
+        uint8_t active = SystemBarometerCold_ActiveGet();
+        if (active != previous)
+        {
+            SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_BAROMETER,
+                previous, active, SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
+        }
+        SystemSourceSelector_PendingEventsFlush();
+        return result;
+    }
     SystemSourceSelector_PassiveProcess(SYSTEM_DEVICE_CLASS_BAROMETER);
     return SYSTEM_DEVICE_OK;
 }

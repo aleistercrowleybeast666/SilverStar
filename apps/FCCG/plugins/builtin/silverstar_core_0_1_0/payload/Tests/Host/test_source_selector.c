@@ -312,7 +312,8 @@ SystemDeviceResult ProjectGnssInstance_LatestSampleGet(
     return SYSTEM_DEVICE_OK;
 }
 
-TEST_STUB_NO_OUTPUT(ProjectGnssInstance_Stop)
+SystemDeviceResult ProjectGnssInstance_Stop(uint8_t instance_id)
+{ (void)instance_id; return SYSTEM_DEVICE_OK; }
 TEST_STUB_NO_OUTPUT(ProjectGnssInstance_RuntimeOwnerActivate)
 TEST_STUB_OUTPUT(ProjectGnssInstance_InfoGet, SystemDeviceInfo)
 SystemDeviceResult ProjectGnssInstance_CapabilitiesGet(uint8_t instance_id,
@@ -617,12 +618,12 @@ static void Test_GnssOneWayLiveness(void)
     s_gnss_health[1].online = 0U;
     SystemGnss_Process();
     TEST_CHECK(Test_ActiveGet(
-        SystemSourceSelector_GnssActiveInstanceGet) == 2U);
+        SystemSourceSelector_GnssActiveInstanceGet) == 0U);
     Test_EventCountAssert(2U);
     s_gnss_health[2].online = 0U;
     SystemGnss_Process();
     TEST_CHECK(Test_ActiveGet(
-        SystemSourceSelector_GnssActiveInstanceGet) == 2U);
+        SystemSourceSelector_GnssActiveInstanceGet) == 0U);
     Test_EventCountAssert(2U);
     for (instance = 0U; instance < TEST_INSTANCE_COUNT; instance++)
     {
@@ -640,6 +641,62 @@ static void Test_GnssOneWayLiveness(void)
     TEST_CHECK(Test_ActiveGet(
         SystemSourceSelector_GnssActiveInstanceGet) == 0U);
     TEST_CHECK(s_event_count == 0U);
+}
+
+static void Test_GnssRuntimeRecovery(void)
+{
+    SystemGnssSample sample;
+    Test_StateReset();
+    s_gnss_count = 1U;
+    TEST_CHECK(SystemGnss_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
+    s_gnss_health[0].online = 0U;
+    s_gnss_start_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    for (uint8_t attempt = 0U; attempt < 4U; attempt++)
+    {
+        s_now_us += 32000000ULL;
+        SystemGnss_Process();
+        TEST_CHECK(s_gnss_start_count[0] == (uint32_t)attempt + 2U);
+        SystemGnss_Process();
+        TEST_CHECK(s_gnss_start_count[0] == (uint32_t)attempt + 2U);
+    }
+    s_gnss_start_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 32000000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_start_count[0] == 6U);
+    TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_NOT_READY);
+    s_gnss_health[0].online = 1U;
+    s_gnss_sample[0].receive_timestamp_us = s_now_us + 1U;
+    SystemGnss_Process();
+    TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(s_gnss_start_count[0] == 6U);
+
+    Test_StateReset();
+    s_gnss_count = 1U;
+    s_gnss_init_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemGnss_Init() == SYSTEM_DEVICE_IO_ERROR);
+    TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_NOT_READY);
+    s_gnss_init_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 1000000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_init_count[0] == 2U && s_gnss_start_count[0] == 1U);
+    TEST_CHECK(Test_ActiveGet(SystemSourceSelector_GnssActiveInstanceGet) == 0U);
+
+    Test_StateReset();
+    s_gnss_count = 1U;
+    TEST_CHECK(SystemGnss_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
+    s_gnss_health[0].online = 0U;
+    s_gnss_start_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    s_now_us = ((uint64_t)UINT32_MAX - 500ULL) * 1000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_start_count[0] == 2U);
+    s_now_us += 1000000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_start_count[0] == 2U);
+    s_now_us += 1000000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_start_count[0] == 3U);
 }
 
 static void Test_GnssReadOnlyConfigFanout(void)
@@ -732,6 +789,57 @@ static void Test_TelemetryThresholdAndReset(void)
     TEST_CHECK(SystemSourceSelector_TelemetryConsecutiveTimeoutCountGet() ==
                0U);
     TEST_CHECK(s_event_count == 0U);
+}
+
+static void Test_TelemetryRuntimeRecovery(void)
+{
+    Test_StateReset();
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_telemetry_health[0].started = 0U;
+    SystemTelemetry_Process();
+    TEST_CHECK(Test_ActiveGet(SystemSourceSelector_TelemetryActiveInstanceGet) == 1U);
+    TEST_CHECK(s_telemetry_start_count[1] == 1U);
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_start_count[0] == 1U);
+
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_telemetry_health[0].started = 0U;
+    for (uint8_t poll = 0U; poll < 100U; poll++) { SystemTelemetry_Process(); }
+    TEST_CHECK(s_telemetry_start_count[0] == 1U);
+
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    s_telemetry_init_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_IO_ERROR);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_NOT_READY);
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_init_count[0] == 2U);
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_init_count[0] == 2U);
+    s_telemetry_init_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(Test_ActiveGet(SystemSourceSelector_TelemetryActiveInstanceGet) == 0U);
+    TEST_CHECK(s_telemetry_start_count[0] == 1U);
+
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    s_telemetry_init_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_IO_ERROR);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_NOT_READY);
+    s_now_us = ((uint64_t)UINT32_MAX - 500ULL) * 1000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_init_count[0] == 2U);
+    s_now_us += 1000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_init_count[0] == 2U);
+    s_now_us += 1000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_init_count[0] == 3U);
 }
 
 static void Test_TelemetryChainAndLastCandidate(void)
@@ -942,8 +1050,10 @@ int main(int argc, char **argv)
     TEST_CHECK(magnetometer.physical_device_id == magnetometer.descriptor_id);
     Test_ImuSelectionAndLock();
     Test_GnssOneWayLiveness();
+    Test_GnssRuntimeRecovery();
     Test_GnssReadOnlyConfigFanout();
     Test_TelemetryThresholdAndReset();
+    Test_TelemetryRuntimeRecovery();
     Test_TelemetryChainAndLastCandidate();
     Test_TelemetryInitFailureSkipsCandidate();
     Test_TelemetrySingleFaultProcessContinues();

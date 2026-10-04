@@ -281,6 +281,44 @@ static void TestEarlyStartupEndRevokesGrace(void)
     assert(SystemBarometerCold_ActiveGet() == 2U && s_stop[1] == 1U);
     assert(SystemBarometerCold_StartupWindowBegin(s_now) == SYSTEM_DEVICE_BAD_STATE);
 }
+static void TestRepeatedColdRecovery(void)
+{
+    SystemBarometerSample sample;
+    uint8_t active;
+    uint32_t total_before;
+    TestReset(0U);
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_OK);
+    for (uint8_t instance = 0U; instance < 4U; instance++)
+    { s_init_result[instance] = SYSTEM_DEVICE_IO_ERROR; }
+    s_sample[0].valid_fields = 0U;
+    s_now += SYSTEM_BAROMETER_COLD_FAILURE_TIMEOUT_US;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_IO_ERROR);
+    assert(SystemBarometerCold_ActiveGet() == SYSTEM_BAROMETER_COLD_INSTANCE_NONE);
+    assert(SystemBarometerCold_SampleGet(&sample) == SYSTEM_DEVICE_NOT_READY);
+    for (uint8_t attempt = 0U; attempt < 6U; attempt++)
+    {
+        total_before = s_init[0] + s_init[1] + s_init[2] + s_init[3];
+        SystemBarometerCold_Process();
+        assert(s_init[0] + s_init[1] + s_init[2] + s_init[3] == total_before);
+        s_now += 32000000ULL;
+        assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_IO_ERROR);
+        assert(s_init[0] + s_init[1] + s_init[2] + s_init[3] == total_before + 1U);
+    }
+    for (uint8_t instance = 0U; instance < 4U; instance++)
+    { s_init_result[instance] = SYSTEM_DEVICE_OK; }
+    s_now += 32000000ULL;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_OK);
+    active = SystemBarometerCold_ActiveGet();
+    assert(active < 4U);
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_NOT_READY);
+    assert(SystemBarometerCold_SampleGet(&sample) == SYSTEM_DEVICE_NOT_READY);
+    s_now++;
+    s_sample[active].valid_fields = s_sample[active].supported_fields;
+    s_sample[active].receive_timestamp_us = s_now;
+    s_sample[active].sample_timestamp_us = s_now;
+    assert(SystemBarometerCold_Process() == SYSTEM_DEVICE_OK);
+    assert(SystemBarometerCold_SampleGet(&sample) == SYSTEM_DEVICE_OK);
+}
 int main(void)
 {
     TestEarlyStartupEndRevokesGrace();
@@ -289,6 +327,7 @@ int main(void)
     TestDelayedFirstSample();
     TestColdOrderAndIdentity(); TestFailedStopAndPartialStart(); TestPressureDatumReject();
     TestSampleProducedDuringProcess();
+    TestRepeatedColdRecovery();
     assert(SystemBarometerCold_Stop() == SYSTEM_DEVICE_OK);
     (void)puts("cold barometer order/cache/stop/start/exhaustion/wrap/pressure datum PASS");
     return 0;

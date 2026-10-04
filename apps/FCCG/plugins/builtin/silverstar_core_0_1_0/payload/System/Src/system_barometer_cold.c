@@ -9,6 +9,9 @@
 #include "silverstar_assert.h"
 #include "system_time.h"
 
+#define SYSTEM_BAROMETER_RECOVERY_DELAY_US 1000000ULL
+#define SYSTEM_BAROMETER_RECOVERY_BACKOFF_MAX 5U
+
 typedef enum
 {
     SystemBarometerColdStartup_Idle = 0,
@@ -27,11 +30,14 @@ typedef struct
     uint8_t sample_valid;
     uint8_t raw_known;
     uint8_t sample_ever_received;
+    uint8_t start_requested;
+    uint8_t recovery_failures;
     uint8_t startup_grace_instance;
     SystemBarometerColdStartupStage startup_stage;
     uint64_t startup_phase_started_us;
     uint64_t activated_us;
     uint64_t last_good_us;
+    uint64_t recovery_scheduled_us;
     uint32_t raw_sequence;
     uint32_t logical_sequence;
     SystemBarometerSample sample;
@@ -88,6 +94,7 @@ static SystemDeviceResult SystemBarometerCold_OrderBuild(void)
 SystemDeviceResult SystemBarometerCold_Stop(void)
 {
     uint8_t running = s_cold.running;
+    s_cold.start_requested = 0U;
     SystemBarometerCold_SelectionSet(SYSTEM_BAROMETER_COLD_INSTANCE_NONE);
     if (running == SYSTEM_BAROMETER_COLD_INSTANCE_NONE) { return SYSTEM_DEVICE_OK; }
     SILVERSTAR_ASSERT(running < s_cold.count, SILVERSTAR_ASSERT_MODULE_SYSTEM,
@@ -115,7 +122,8 @@ static SystemDeviceResult SystemBarometerCold_NextSelect(uint8_t start)
         SILVERSTAR_ASSERT(candidate < s_cold.count, SILVERSTAR_ASSERT_MODULE_SYSTEM,
             SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         failure = ProjectBarometerInstance_Init(candidate);
-        if (SystemBarometerCold_Successful(failure) == 0U) { continue; }
+        if (SystemBarometerCold_Successful(failure) == 0U)
+        { if (start == 2U) { return failure; } continue; }
         SystemBarometerCold_SelectionSet(candidate);
         if (start == 0U) { return SYSTEM_DEVICE_OK; }
         s_cold.running = candidate; /* Start failure may have partial side effects. */
@@ -126,7 +134,10 @@ static SystemDeviceResult SystemBarometerCold_NextSelect(uint8_t start)
             s_cold.last_good_us = s_cold.activated_us;
             return SYSTEM_DEVICE_OK;
         }
-        if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_IO_ERROR; }
+        if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK)
+        { s_cold.start_requested = 1U; return SYSTEM_DEVICE_IO_ERROR; }
+        s_cold.start_requested = 1U;
+        if (start == 2U) { return failure; }
     }
     SystemBarometerCold_SelectionSet(SYSTEM_BAROMETER_COLD_INSTANCE_NONE);
     return failure;
@@ -152,6 +163,7 @@ SystemDeviceResult SystemBarometerCold_Init(void)
 SystemDeviceResult SystemBarometerCold_Start(void)
 {
     SystemDeviceResult result;
+    s_cold.start_requested = 1U;
     if (s_cold.running != SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
     { return SYSTEM_DEVICE_BAD_STATE; }
     if (s_cold.active == SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
@@ -162,12 +174,44 @@ SystemDeviceResult SystemBarometerCold_Start(void)
     result = ProjectBarometerInstance_Start(s_cold.active);
     if (SystemBarometerCold_Successful(result) == 0U)
     {
-        if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_IO_ERROR; }
+        if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK)
+        { s_cold.start_requested = 1U; return SYSTEM_DEVICE_IO_ERROR; }
+        s_cold.start_requested = 1U;
         return SystemBarometerCold_NextSelect(1U);
     }
     s_cold.activated_us = SystemTime_GetMonotonicUs();
     s_cold.last_good_us = s_cold.activated_us;
     return SYSTEM_DEVICE_OK;
+}
+
+static SystemDeviceResult SystemBarometerCold_RecoveryProcess(void)
+{
+    SystemDeviceResult result;
+    uint64_t now_us = SystemTime_GetMonotonicUs();
+    if (s_cold.start_requested == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    if ((now_us - s_cold.recovery_scheduled_us) <
+        (SYSTEM_BAROMETER_RECOVERY_DELAY_US << s_cold.recovery_failures))
+    { return SYSTEM_DEVICE_NOT_READY; }
+    s_cold.recovery_scheduled_us = now_us;
+    if (s_cold.running != SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
+    {
+        result = SystemBarometerCold_Stop();
+        s_cold.start_requested = 1U;
+        if (result != SYSTEM_DEVICE_OK)
+        {
+            if (s_cold.recovery_failures < SYSTEM_BAROMETER_RECOVERY_BACKOFF_MAX)
+            { s_cold.recovery_failures++; }
+            return result;
+        }
+    }
+    if (s_cold.next_position >= s_cold.count) { s_cold.next_position = 0U; }
+    result = SystemBarometerCold_NextSelect(2U);
+    if (s_cold.active == SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
+    {
+        if (s_cold.recovery_failures < SYSTEM_BAROMETER_RECOVERY_BACKOFF_MAX)
+        { s_cold.recovery_failures++; }
+    }
+    return result;
 }
 
 SystemDeviceResult SystemBarometerCold_StartupWindowBegin(uint64_t phase_started_us)
@@ -288,7 +332,7 @@ SystemDeviceResult SystemBarometerCold_Process(void)
     uint64_t now_us;
     uint8_t sample_ready;
     if (s_cold.active == SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
-    { return SYSTEM_DEVICE_NOT_READY; }
+    { return SystemBarometerCold_RecoveryProcess(); }
     if (s_cold.running == SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
     { return SYSTEM_DEVICE_BAD_STATE; }
     SILVERSTAR_ASSERT((s_cold.active < s_cold.count) &&
@@ -306,6 +350,7 @@ SystemDeviceResult SystemBarometerCold_Process(void)
         (SystemBarometerCold_SampleUsable(&sample, &health, now_us) != 0U))
     {
         s_cold.last_good_us = sample.receive_timestamp_us;
+        s_cold.recovery_failures = 0U;
         SystemBarometerCold_SamplePublish(&sample, &health);
         return SYSTEM_DEVICE_OK;
     }
@@ -325,8 +370,21 @@ SystemDeviceResult SystemBarometerCold_Process(void)
     }
     else if ((now_us - s_cold.last_good_us) < SYSTEM_BAROMETER_COLD_FAILURE_TIMEOUT_US)
     { return SYSTEM_DEVICE_NOT_READY; }
-    if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_IO_ERROR; }
-    return SystemBarometerCold_NextSelect(1U);
+    if (SystemBarometerCold_Stop() != SYSTEM_DEVICE_OK)
+    {
+        s_cold.start_requested = 1U;
+        s_cold.recovery_scheduled_us = now_us;
+        return SYSTEM_DEVICE_IO_ERROR;
+    }
+    s_cold.start_requested = 1U;
+    result = SystemBarometerCold_NextSelect(2U);
+    if (s_cold.active == SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
+    {
+        s_cold.recovery_scheduled_us = SystemTime_GetMonotonicUs();
+        if (s_cold.recovery_failures < SYSTEM_BAROMETER_RECOVERY_BACKOFF_MAX)
+        { s_cold.recovery_failures++; }
+    }
+    return result;
 }
 
 uint8_t SystemBarometerCold_ActiveGet(void)

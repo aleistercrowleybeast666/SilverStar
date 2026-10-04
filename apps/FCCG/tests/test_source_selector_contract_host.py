@@ -21,7 +21,8 @@ def source_selector_contract_executable(tmp_path_factory):
                 root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc"]
     executable = tmp_path_factory.mktemp("selector-contract") / "contract.exe"
     command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic",
-               "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U", "-ffunction-sections",
+               "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+               "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U", "-ffunction-sections",
                "-fdata-sections", "-Wl,--gc-sections"]
     for p in includes:
         command.extend(["-I", str(p)])
