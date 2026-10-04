@@ -295,10 +295,8 @@ static void SystemStartup_JyLogicalStart(void)
         device->init_result = SystemBarometer_Init();
         SystemStartup_InfoCapture(device, SystemBarometer_NameGet(),
                                   SystemBarometer_InfoGet(&info), &info);
-        if (SystemStartup_DeviceResultIsSuccessful(device->init_result) != 0U)
-        {
-            device->start_result = SystemBarometer_Start();
-        }
+        /* Cold mode records recovery intent after a failed bounded Init. */
+        device->start_result = SystemBarometer_Start();
     }
 }
 
@@ -506,10 +504,8 @@ static void SystemStartup_GnssStart(void)
     device->init_result = SystemGnss_Init();
     SystemStartup_InfoCapture(device, SystemGnss_NameGet(),
                               SystemGnss_InfoGet(&info), &info);
-    if (SystemStartup_DeviceResultIsSuccessful(device->init_result) != 0U)
-    {
-        device->start_result = SystemGnss_Start();
-    }
+    /* Start records recovery intent even if every bounded Init failed. */
+    device->start_result = SystemGnss_Start();
     if (SystemStartup_DeviceResultIsSuccessful(device->start_result) == 0U) { return; }
     SystemStartup_GnssConfigGet(&config);
     SystemStartup_GnssConfigExecute(device, &config);
@@ -530,10 +526,8 @@ static void SystemStartup_OtherAdaptersStart(void)
         device->init_result = SystemTelemetry_Init();
         SystemStartup_InfoCapture(device, SystemTelemetry_NameGet(),
                                   SystemTelemetry_InfoGet(&info), &info);
-        if (SystemStartup_DeviceResultIsSuccessful(device->init_result) != 0U)
-        {
-            device->start_result = SystemTelemetry_Start();
-        }
+        /* Start records recovery intent even if every bounded Init failed. */
+        device->start_result = SystemTelemetry_Start();
         if (SYSTEM_TELEMETRY_BOOT_WRITE_CONFIG != 0U)
         {
             device->requested_mask = 1UL;

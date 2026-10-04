@@ -106,6 +106,28 @@ SystemDeviceResult SystemBarometerCold_Stop(void)
     return SYSTEM_DEVICE_OK;
 }
 
+static SystemDeviceResult SystemBarometerCold_SharedRecoveryTry(uint8_t candidate)
+{
+    SystemDeviceDescriptor descriptor;
+    SystemDeviceHealth health;
+    if (ProjectDeviceInstance_DescriptorGet(SYSTEM_DEVICE_CLASS_BAROMETER,
+            candidate, &descriptor) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_INTERNAL_ERROR; }
+    if ((descriptor.flags & SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL) == 0U)
+    { return SYSTEM_DEVICE_UNSUPPORTED; }
+    /* A companion may be selected when the IMU already supplies fresh data.
+     * Never initialize or start its shared transport during recovery. */
+    if ((ProjectBarometerInstance_HealthGet(candidate, &health) != SYSTEM_DEVICE_OK) ||
+        (health.started == 0U) || (health.online == 0U) ||
+        (health.healthy == 0U))
+    { return SYSTEM_DEVICE_NOT_READY; }
+    SystemBarometerCold_SelectionSet(candidate);
+    s_cold.running = candidate;
+    s_cold.activated_us = SystemTime_GetMonotonicUs();
+    s_cold.last_good_us = s_cold.activated_us;
+    return SYSTEM_DEVICE_OK;
+}
+
 static SystemDeviceResult SystemBarometerCold_NextSelect(uint8_t start)
 {
     uint8_t step;
@@ -121,6 +143,11 @@ static SystemDeviceResult SystemBarometerCold_NextSelect(uint8_t start)
         candidate = s_cold.order[s_cold.next_position++];
         SILVERSTAR_ASSERT(candidate < s_cold.count, SILVERSTAR_ASSERT_MODULE_SYSTEM,
             SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+        if (start == 2U)
+        {
+            failure = SystemBarometerCold_SharedRecoveryTry(candidate);
+            if (failure != SYSTEM_DEVICE_UNSUPPORTED) { return failure; }
+        }
         failure = ProjectBarometerInstance_Init(candidate);
         if (SystemBarometerCold_Successful(failure) == 0U)
         { if (start == 2U) { return failure; } continue; }
@@ -153,7 +180,7 @@ SystemDeviceResult SystemBarometerCold_Init(void)
     s_cold.running = SYSTEM_BAROMETER_COLD_INSTANCE_NONE;
     PlatformCritical_Exit(state);
     s_cold.count = ProjectDeviceInstance_CountGet(SYSTEM_DEVICE_CLASS_BAROMETER);
-    if ((s_cold.count < 2U) || (s_cold.count > PROJECT_BAROMETER_INSTANCE_COUNT_MAX))
+    if ((s_cold.count == 0U) || (s_cold.count > PROJECT_BAROMETER_INSTANCE_COUNT_MAX))
     { s_cold.count = 0U; return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (SystemBarometerCold_OrderBuild() != SYSTEM_DEVICE_OK)
     { s_cold.count = 0U; return SYSTEM_DEVICE_INTERNAL_ERROR; }
@@ -167,7 +194,11 @@ SystemDeviceResult SystemBarometerCold_Start(void)
     if (s_cold.running != SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
     { return SYSTEM_DEVICE_BAD_STATE; }
     if (s_cold.active == SYSTEM_BAROMETER_COLD_INSTANCE_NONE)
-    { return SystemBarometerCold_NextSelect(1U); }
+    {
+        if (s_cold.next_position >= s_cold.count)
+        { return SYSTEM_DEVICE_NOT_READY; }
+        return SystemBarometerCold_NextSelect(1U);
+    }
     SILVERSTAR_ASSERT(s_cold.active < s_cold.count, SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     s_cold.running = s_cold.active;

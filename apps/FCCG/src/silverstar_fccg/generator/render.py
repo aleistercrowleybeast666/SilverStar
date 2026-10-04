@@ -750,10 +750,13 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
-    definitions.append(("SYSTEM_BUILD_BAROMETER_COLD_ENABLED", "1U" if sum(
-        entry["class"] == "SYSTEM_DEVICE_CLASS_BAROMETER"
+    # A sole independent barometer also needs bounded runtime recovery. A
+    # JY901B-only companion remains owned by the locked IMU transport.
+    definitions.append(("SYSTEM_BUILD_BAROMETER_COLD_ENABLED", "1U" if any(
+        entry["class"] == "SYSTEM_DEVICE_CLASS_BAROMETER" and
+        "SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL" not in str(entry.get("flags", ""))
         for entry in _DeviceDescriptorEntries_Get(model, catalog)
-    ) > 1 else "0U"))
+    ) else "0U"))
     # Instance-selected flags retain inactive transports as compile-time zero.
     # They describe existing declarative variants, never new hardware resources.
     instance_symbols: set[str] = set()
@@ -2697,10 +2700,15 @@ def _DeviceInstanceFunctionSwitch_Render(
         re.DOTALL,
     )
     if argument_match is None:
-        raise ValueError(
-            f"Device-instance facade reference case changed: {function_marker}"
-        )
-    arguments = " ".join(argument_match.group(1).split())
+        if (label == "Gnss" and operation == "RecoveryBusyGet" and
+                "case 0U: return SYSTEM_DEVICE_UNSUPPORTED;" in original):
+            arguments = "busy"
+        else:
+            raise ValueError(
+                f"Device-instance facade reference case changed: {function_marker}"
+            )
+    else:
+        arguments = " ".join(argument_match.group(1).split())
     cases: list[str] = []
     for entry, binding in endpoints:
         unsupported = binding.get("unsupported_operations", [])
@@ -2721,6 +2729,10 @@ def _DeviceInstanceFunctionSwitch_Render(
         ):
             raise ValueError("Device-instance operation overrides are invalid")
         if (label == "Telemetry" and operation in ("SendControl", "TxResultGet")
+                and operation not in overrides):
+            cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
+            continue
+        if (label == "Gnss" and operation == "RecoveryBusyGet"
                 and operation not in overrides):
             cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
             continue

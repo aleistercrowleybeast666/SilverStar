@@ -17,6 +17,8 @@ SystemDeviceResult NeoM9nGnssInstance_CapabilitiesGet(
     uint8_t instance, uint32_t *capability_mask);
 SystemDeviceResult NeoM9nGnssInstance_HealthGet(
     uint8_t instance, SystemDeviceHealth *health);
+SystemDeviceResult NeoM9nGnssInstance_RecoveryBusyGet(
+    uint8_t instance, uint8_t *busy);
 SystemDeviceResult NeoM9nGnssInstance_IoDiagnosticsGet(
     uint8_t instance, SystemDeviceIoDiagnostics *diagnostics);
 SystemDeviceResult NeoM9nGnssInstance_IoDetailGet(

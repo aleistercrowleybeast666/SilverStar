@@ -111,6 +111,8 @@ SystemDeviceResult ProjectGnssInstance_CapabilitiesGet(
     uint8_t instance_id, uint32_t *capability_mask);
 SystemDeviceResult ProjectGnssInstance_HealthGet(
     uint8_t instance_id, SystemDeviceHealth *health);
+SystemDeviceResult ProjectGnssInstance_RecoveryBusyGet(
+    uint8_t instance_id, uint8_t *busy);
 SystemDeviceResult ProjectGnssInstance_LatestSampleGet(
     uint8_t instance_id, SystemGnssSample *sample);
 SystemDeviceResult ProjectGnssInstance_TimeGet(

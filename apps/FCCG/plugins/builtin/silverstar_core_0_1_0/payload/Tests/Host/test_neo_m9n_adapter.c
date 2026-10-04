@@ -122,6 +122,7 @@ static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
     uint32_t cycle;
     uint32_t first_error_count = 0U;
     uint8_t owner_active = 0U;
+    uint8_t recovery_busy = 0U;
 
     TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
     target.requested_mask = SYSTEM_GNSS_CFG_NAVIGATION_RATE |
@@ -154,6 +155,8 @@ static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
             TEST_CHECK(NeoM9nGnssInstance_RuntimeOwnerActivate(0U) == SYSTEM_DEVICE_OK);
             TEST_CHECK(NeoM9nGnssInstance_HardwareConfigRead(0U, &hardware) == SYSTEM_DEVICE_BUSY);
             TEST_CHECK(NeoM9nGnssInstance_HealthGet(0U, &health) == SYSTEM_DEVICE_OK);
+            TEST_CHECK(NeoM9nGnssInstance_RecoveryBusyGet(0U, &recovery_busy) ==
+                SYSTEM_DEVICE_OK && recovery_busy == 1U);
             first_error_count = health.error_count;
             owner_active = 1U;
         }
@@ -164,6 +167,13 @@ static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
     TEST_CHECK(owner_active == 1U);
     TEST_CHECK(recovery.state == NeoM9nStartupRecoveryState_Exhausted);
     TEST_CHECK(recovery.attempt_count == 2U);
+    TEST_CHECK(NeoM9nGnssInstance_RecoveryBusyGet(0U, &recovery_busy) ==
+        SYSTEM_DEVICE_OK && recovery_busy == 0U);
+    TEST_CHECK(NeoM9nGnssInstance_RecoveryBusyGet(
+        PROJECT_NEO_M9N_INSTANCE_COUNT, &recovery_busy) ==
+        SYSTEM_DEVICE_INVALID_ARGUMENT);
+    TEST_CHECK(NeoM9nGnssInstance_RecoveryBusyGet(0U, NULL) ==
+        SYSTEM_DEVICE_INVALID_ARGUMENT);
     TEST_CHECK(PlatformUart_BaudGet(PROJECT_RESOURCE_GNSS_UART,
         &baudrate) == PLATFORM_OK);
     TEST_CHECK(baudrate == GNSS_DEFAULT_BAUDRATE);

@@ -32,6 +32,8 @@ static SystemDeviceResult s_output_init_result;
 static SystemDeviceResult s_output_safe_result;
 static SystemDeviceResult s_imu_init_result;
 static SystemDeviceResult s_gnss_init_result;
+static SystemDeviceResult s_baro_init_result;
+static SystemDeviceResult s_telemetry_init_result;
 static SystemDeviceResult s_gnss_sample_result;
 static uint64_t s_now_us;
 static uint8_t s_precise_time;
@@ -49,6 +51,9 @@ static uint32_t s_baro_process_count;
 static uint32_t s_mag_process_count;
 static uint32_t s_imu_init_count;
 static uint32_t s_gnss_init_count;
+static uint32_t s_gnss_start_count;
+static uint32_t s_baro_start_count;
+static uint32_t s_telemetry_start_count;
 static uint8_t s_async_config;
 static uint16_t s_async_busy_ticks;
 static uint32_t s_power_process_count;
@@ -218,7 +223,8 @@ void SystemImu_Process(void) { s_imu_process_count++; }
 const char *SystemGnss_NameGet(void) { return "Mock GNSS"; }
 SystemDeviceResult SystemGnss_Init(void)
 { s_gnss_init_count++; return s_gnss_init_result; }
-SystemDeviceResult SystemGnss_Start(void) { return SYSTEM_DEVICE_OK; }
+SystemDeviceResult SystemGnss_Start(void)
+{ s_gnss_start_count++; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemGnss_InfoGet(SystemDeviceInfo *info)
 { return Test_InfoFill(info, "Mock GNSS Adapter", "Mock GNSS"); }
 SystemDeviceResult SystemGnss_CapabilitiesGet(uint32_t *capability_mask)
@@ -329,8 +335,9 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
 }
 
 const char *SystemBarometer_NameGet(void) { return "Mock Barometer"; }
-SystemDeviceResult SystemBarometer_Init(void) { return SYSTEM_DEVICE_OK; }
-SystemDeviceResult SystemBarometer_Start(void) { return SYSTEM_DEVICE_OK; }
+SystemDeviceResult SystemBarometer_Init(void) { return s_baro_init_result; }
+SystemDeviceResult SystemBarometer_Start(void)
+{ s_baro_start_count++; return SYSTEM_DEVICE_OK; }
 #if (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U)
 SystemDeviceResult SystemBarometerCold_StartupWindowBegin(uint64_t phase_started_us)
 {
@@ -372,8 +379,9 @@ SystemDeviceResult SystemBarometer_LatestSampleGet(
 }
 
 const char *SystemTelemetry_NameGet(void) { return "Mock Telemetry"; }
-SystemDeviceResult SystemTelemetry_Init(void) { return SYSTEM_DEVICE_OK; }
-SystemDeviceResult SystemTelemetry_Start(void) { return SYSTEM_DEVICE_OK; }
+SystemDeviceResult SystemTelemetry_Init(void) { return s_telemetry_init_result; }
+SystemDeviceResult SystemTelemetry_Start(void)
+{ s_telemetry_start_count++; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemTelemetry_InfoGet(SystemDeviceInfo *info)
 { return Test_InfoFill(info, "Mock Telemetry Adapter", "Telemetry"); }
 SystemDeviceResult SystemTelemetry_HealthGet(SystemTelemetryHealth *health)
@@ -441,6 +449,8 @@ static void Test_Reset(void)
     s_output_safe_result = SYSTEM_DEVICE_OK;
     s_imu_init_result = SYSTEM_DEVICE_OK;
     s_gnss_init_result = SYSTEM_DEVICE_OK;
+    s_baro_init_result = SYSTEM_DEVICE_OK;
+    s_telemetry_init_result = SYSTEM_DEVICE_OK;
     s_gnss_sample_result = SYSTEM_DEVICE_OK;
     s_health_process_count = 0U;
     s_preflight_count = 0U;
@@ -456,6 +466,9 @@ static void Test_Reset(void)
     s_mag_process_count = 0U;
     s_imu_init_count = 0U;
     s_gnss_init_count = 0U;
+    s_gnss_start_count = 0U;
+    s_baro_start_count = 0U;
+    s_telemetry_start_count = 0U;
     s_async_config = 0U;
     s_precise_time = 0U;
     s_async_busy_ticks = 0U;
@@ -594,6 +607,23 @@ static void Test_OptionalFailureDegrades(void)
     TEST_CHECK(report->degraded != 0U);
     TEST_CHECK((report->optional_failure_mask &
                 (1UL << SYSTEM_STARTUP_DEVICE_GNSS)) != 0U);
+    TEST_CHECK(s_gnss_start_count == 1U);
+}
+
+static void Test_FailedInitStillRequestsRuntimeRecovery(void)
+{
+    Test_Reset();
+    s_gnss_init_result = SYSTEM_DEVICE_IO_ERROR;
+    s_baro_init_result = SYSTEM_DEVICE_IO_ERROR;
+    s_telemetry_init_result = SYSTEM_DEVICE_IO_ERROR;
+    s_gnss_sample_result = SYSTEM_DEVICE_NOT_READY;
+    (void)Test_StartupComplete();
+    TEST_CHECK(SystemStartup_GetReport()->completed != 0U);
+    TEST_CHECK(s_gnss_start_count == 1U);
+    TEST_CHECK(s_baro_start_count == 1U);
+#if (SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U)
+    TEST_CHECK(s_telemetry_start_count == 1U);
+#endif
 }
 
 static void Test_RequiredFailureBlocks(void)
@@ -703,6 +733,7 @@ int main(void)
     Test_DeviceInitStartsAfterSchedulerTick();
     Test_DelegatedConfigWaitsWithoutBlocking();
     Test_OptionalFailureDegrades();
+    Test_FailedInitStillRequestsRuntimeRecovery();
     Test_RequiredFailureBlocks();
     Test_ProfileCanRequireGnss();
     Test_OutputSafetyFailureIsFatal();

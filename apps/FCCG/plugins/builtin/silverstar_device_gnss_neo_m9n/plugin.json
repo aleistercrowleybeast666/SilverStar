@@ -130,6 +130,7 @@
         "headers": [
           "neo_m9n_instance.h"
         ],
+        "operations": {"RecoveryBusyGet": "NeoM9nGnssInstance_RecoveryBusyGet"},
         "pass_instance": true
       }
     },

@@ -500,6 +500,18 @@ SystemDeviceResult ProjectGnssInstance_HealthGet(
     }
 }
 
+SystemDeviceResult ProjectGnssInstance_RecoveryBusyGet(
+    uint8_t instance_id, uint8_t *busy)
+{
+    if (busy == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *busy = 0U;
+    switch (instance_id)
+    {
+        case 0U: return SYSTEM_DEVICE_UNSUPPORTED;
+        default: return SYSTEM_DEVICE_NOT_PRESENT;
+    }
+}
+
 SystemDeviceResult ProjectGnssInstance_LatestSampleGet(
     uint8_t instance_id, SystemGnssSample *sample)
 {

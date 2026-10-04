@@ -170,7 +170,7 @@ static void Test_SwitchFault(const char *case_name)
     if (setjmp(s_fault_return) == 0)
     {
         if (strncmp(case_name, "gnss_", 5U) == 0) { SystemSourceSelector_GnssSwitchEvaluate(); }
-        else if (strncmp(case_name, "next_", 5U) == 0) { (void)SystemSourceSelector_TelemetryNextStart(); }
+        else if (strncmp(case_name, "next_", 5U) == 0) { (void)SystemSourceSelector_TelemetryNextStart(0U); }
         else { SystemSourceSelector_TelemetryHealthProcess(); }
         TEST_CHECK(0);
     }
@@ -204,7 +204,7 @@ static void Test_OrdinaryBoundary(uint8_t kind, const char *case_name)
         s_telemetry.started[1] = 1U;
         s_telemetry_start_result[1] = SYSTEM_DEVICE_IO_ERROR;
         s_telemetry_start_result[2] = SYSTEM_DEVICE_IO_ERROR;
-        TEST_CHECK(SystemSourceSelector_TelemetryNextStart() == 0U);
+        TEST_CHECK(SystemSourceSelector_TelemetryNextStart(0U) == 0U);
         TEST_CHECK(s_telemetry.active == 0U && s_telemetry.active_position == 0U);
         TEST_CHECK(s_telemetry.started[1] == 0U);
     }

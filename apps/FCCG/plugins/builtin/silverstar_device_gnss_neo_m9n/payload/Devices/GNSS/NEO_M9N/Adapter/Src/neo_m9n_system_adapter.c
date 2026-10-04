@@ -1644,6 +1644,14 @@ SystemDeviceResult NeoM9nGnssInstance_CapabilitiesGet(
 }
 SystemDeviceResult NeoM9nGnssInstance_HealthGet(uint8_t instance, SystemDeviceHealth *health)
 { return NeoM9nGnssAdapter_GetHealth(instance, health); }
+SystemDeviceResult NeoM9nGnssInstance_RecoveryBusyGet(uint8_t instance, uint8_t *busy)
+{
+    if ((instance >= PROJECT_NEO_M9N_INSTANCE_COUNT) || (busy == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *busy = (uint8_t)((s_contexts[instance].startup_active != 0U) ||
+        (NeoM9nStartup_RecoveryPending(instance) != 0U));
+    return SYSTEM_DEVICE_OK;
+}
 SystemDeviceResult NeoM9nGnssInstance_IoDiagnosticsGet(uint8_t instance,
     SystemDeviceIoDiagnostics *diagnostics)
 { return NeoM9nGnssAdapter_GetIoDiagnostics(instance, diagnostics); }

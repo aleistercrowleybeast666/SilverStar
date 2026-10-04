@@ -57,6 +57,8 @@ static uint32_t s_imu_process_count[TEST_INSTANCE_COUNT];
 static SystemDeviceResult s_gnss_init_result[TEST_INSTANCE_COUNT];
 static SystemDeviceResult s_gnss_start_result[TEST_INSTANCE_COUNT];
 static SystemDeviceHealth s_gnss_health[TEST_INSTANCE_COUNT];
+static SystemDeviceResult s_gnss_health_result[TEST_INSTANCE_COUNT];
+static uint8_t s_gnss_recovery_busy[TEST_INSTANCE_COUNT];
 static SystemGnssSample s_gnss_sample[TEST_INSTANCE_COUNT];
 static uint32_t s_gnss_init_count[TEST_INSTANCE_COUNT];
 static uint32_t s_gnss_start_count[TEST_INSTANCE_COUNT];
@@ -67,6 +69,7 @@ static uint32_t s_gnss_verify_count[TEST_INSTANCE_COUNT];
 
 static SystemDeviceResult s_telemetry_init_result[TEST_INSTANCE_COUNT];
 static SystemDeviceResult s_telemetry_start_result[TEST_INSTANCE_COUNT];
+static SystemDeviceResult s_telemetry_stop_result[TEST_INSTANCE_COUNT];
 static SystemDeviceResult s_telemetry_send_result[TEST_INSTANCE_COUNT];
 static SystemTelemetryHealth s_telemetry_health[TEST_INSTANCE_COUNT];
 static uint32_t s_telemetry_init_count[TEST_INSTANCE_COUNT];
@@ -100,6 +103,7 @@ static void Test_StateReset(void)
     (void)memset(s_imu_start_count, 0, sizeof(s_imu_start_count));
     (void)memset(s_imu_process_count, 0, sizeof(s_imu_process_count));
     (void)memset(s_gnss_health, 0, sizeof(s_gnss_health));
+    (void)memset(s_gnss_recovery_busy, 0, sizeof(s_gnss_recovery_busy));
     (void)memset(s_gnss_sample, 0, sizeof(s_gnss_sample));
     (void)memset(s_gnss_init_count, 0, sizeof(s_gnss_init_count));
     (void)memset(s_gnss_start_count, 0, sizeof(s_gnss_start_count));
@@ -147,6 +151,7 @@ static void Test_StateReset(void)
         }
 
         s_gnss_init_result[instance] = SYSTEM_DEVICE_OK;
+        s_gnss_health_result[instance] = SYSTEM_DEVICE_OK;
         s_gnss_start_result[instance] = SYSTEM_DEVICE_OK;
         s_gnss_health[instance].initialized = 1U;
         s_gnss_health[instance].started = 1U;
@@ -158,6 +163,7 @@ static void Test_StateReset(void)
 
         s_telemetry_init_result[instance] = SYSTEM_DEVICE_OK;
         s_telemetry_start_result[instance] = SYSTEM_DEVICE_OK;
+        s_telemetry_stop_result[instance] = SYSTEM_DEVICE_OK;
         s_telemetry_send_result[instance] = SYSTEM_DEVICE_OK;
         s_telemetry_health[instance].initialized = 1U;
         s_telemetry_health[instance].healthy = 1U;
@@ -301,6 +307,14 @@ SystemDeviceResult ProjectGnssInstance_HealthGet(
     if ((instance_id >= s_gnss_count) || (health == NULL))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     *health = s_gnss_health[instance_id];
+    return s_gnss_health_result[instance_id];
+}
+SystemDeviceResult ProjectGnssInstance_RecoveryBusyGet(
+    uint8_t instance_id, uint8_t *busy)
+{
+    if ((instance_id >= s_gnss_count) || (busy == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *busy = s_gnss_recovery_busy[instance_id];
     return SYSTEM_DEVICE_OK;
 }
 SystemDeviceResult ProjectGnssInstance_LatestSampleGet(
@@ -391,8 +405,9 @@ SystemDeviceResult ProjectTelemetryInstance_Start(uint8_t instance_id)
 SystemDeviceResult ProjectTelemetryInstance_Stop(uint8_t instance_id)
 {
     s_telemetry_stop_count[instance_id]++;
-    s_telemetry_health[instance_id].started = 0U;
-    return SYSTEM_DEVICE_OK;
+    if (s_telemetry_stop_result[instance_id] == SYSTEM_DEVICE_OK)
+    { s_telemetry_health[instance_id].started = 0U; }
+    return s_telemetry_stop_result[instance_id];
 }
 SystemDeviceResult ProjectTelemetryInstance_Send(
     uint8_t instance_id, const uint8_t *data, uint16_t length)
@@ -699,6 +714,34 @@ static void Test_GnssRuntimeRecovery(void)
     TEST_CHECK(s_gnss_start_count[0] == 3U);
 }
 
+static void Test_GnssStartupIntentAndProbeOwnership(void)
+{
+    Test_StateReset();
+    s_gnss_count = 1U;
+    s_gnss_init_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemGnss_Init() == SYSTEM_DEVICE_IO_ERROR);
+    s_now_us += 32000000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_init_count[0] == 1U);
+    TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_NOT_READY);
+    s_gnss_init_result[0] = SYSTEM_DEVICE_OK;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_init_count[0] == 2U);
+    TEST_CHECK(s_gnss_start_count[0] == 1U);
+    s_gnss_health[0].online = 0U;
+    s_gnss_recovery_busy[0] = 1U;
+    s_now_us += 32000000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_start_count[0] == 1U);
+    s_gnss_recovery_busy[0] = 0U;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_start_count[0] == 2U);
+    TEST_CHECK(SystemGnss_Stop() == SYSTEM_DEVICE_OK);
+    s_now_us += 32000000ULL;
+    SystemGnss_Process();
+    TEST_CHECK(s_gnss_start_count[0] == 2U);
+}
+
 static void Test_GnssReadOnlyConfigFanout(void)
 {
     SystemGnssConfig config;
@@ -840,6 +883,87 @@ static void Test_TelemetryRuntimeRecovery(void)
     s_now_us += 1000000ULL;
     SystemTelemetry_Process();
     TEST_CHECK(s_telemetry_init_count[0] == 3U);
+}
+
+static void Test_TelemetryStartFailureAndExplicitStop(void)
+{
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_start_count[0] == 0U);
+    s_telemetry_start_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_NOT_READY);
+    TEST_CHECK(s_telemetry_start_count[0] == 1U);
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_start_count[0] == 2U);
+    s_telemetry_start_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_start_count[0] == 3U);
+    TEST_CHECK(SystemTelemetry_Stop() == SYSTEM_DEVICE_OK);
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_start_count[0] == 3U);
+
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    s_telemetry_init_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_IO_ERROR);
+    TEST_CHECK(SystemTelemetry_Stop() == SYSTEM_DEVICE_NOT_READY);
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_init_count[0] == 1U);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_NOT_READY);
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_init_count[0] == 2U);
+
+    Test_StateReset();
+    s_telemetry_count = 2U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    s_telemetry_start_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    s_telemetry_stop_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_IO_ERROR);
+    TEST_CHECK(s_telemetry_start_count[1] == 0U);
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 2U);
+    TEST_CHECK(s_telemetry_start_count[1] == 0U);
+    s_telemetry_stop_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 3U);
+    TEST_CHECK(s_telemetry_start_count[1] == 0U);
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_start_count[1] == 1U);
+}
+
+static void Test_TelemetryStopFailureBlocksBackup(void)
+{
+    uint8_t packet[1] = {0U};
+    Test_StateReset();
+    s_telemetry_count = 2U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_telemetry_health[0].started = 0U;
+    s_telemetry_stop_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 1U);
+    TEST_CHECK(s_telemetry_start_count[1] == 1U);
+    TEST_CHECK(SystemTelemetry_Send(packet, sizeof(packet)) ==
+        SYSTEM_DEVICE_NOT_READY);
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_BUSY);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_BUSY);
+    TEST_CHECK(s_telemetry_start_count[1] == 1U);
+    s_telemetry_stop_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 2U);
+    TEST_CHECK(s_telemetry_start_count[1] == 1U);
+    TEST_CHECK(SystemTelemetry_Send(packet, sizeof(packet)) == SYSTEM_DEVICE_OK);
+    Test_EventCountAssert(1U);
 }
 
 static void Test_TelemetryChainAndLastCandidate(void)
@@ -1051,9 +1175,12 @@ int main(int argc, char **argv)
     Test_ImuSelectionAndLock();
     Test_GnssOneWayLiveness();
     Test_GnssRuntimeRecovery();
+    Test_GnssStartupIntentAndProbeOwnership();
     Test_GnssReadOnlyConfigFanout();
     Test_TelemetryThresholdAndReset();
     Test_TelemetryRuntimeRecovery();
+    Test_TelemetryStartFailureAndExplicitStop();
+    Test_TelemetryStopFailureBlocksBackup();
     Test_TelemetryChainAndLastCandidate();
     Test_TelemetryInitFailureSkipsCandidate();
     Test_TelemetrySingleFaultProcessContinues();
