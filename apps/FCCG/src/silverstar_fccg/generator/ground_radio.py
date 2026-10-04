@@ -1,6 +1,7 @@
 """Ground-only radio/LED generation; no changes to AIR M0 or Flight policy."""
 import re
 
+from silverstar_fccg.project.ground_activity import GroundActivityLedEnabled_Get
 from silverstar_fccg.project.model import GroundRadioConfigurations_Get
 from silverstar_fccg.project.radio_variants import RadioVariant_Get, RadioInstanceMacros_Render
 
@@ -20,9 +21,12 @@ def GroundRadioConfig_Render(ground) -> str:
     if isinstance(pulse, bool) or not isinstance(pulse, int) or not 1 <= pulse <= 200:
         raise ValueError("Ground activity LED pulse must be 1–200 ms")
     resources = {resource.resource_id: resource for resource in ground.hardware.resources}
+    activity_enabled = GroundActivityLedEnabled_Get(ground)
+    if activity_enabled and not (ground.tx_led_resource or ground.rx_led_resource):
+        raise ValueError("Enabled Ground activity LED needs a GPIO output")
     values = []
     for direction in ("tx", "rx"):
-        identity = getattr(ground, direction + "_led_resource", "")
+        identity = getattr(ground, direction + "_led_resource", "") if activity_enabled else ""
         polarity = getattr(ground, direction + "_led_active_high", False)
         if not isinstance(identity, str) or not isinstance(polarity, bool):
             raise ValueError("Ground LED resource/polarity types are invalid")
@@ -50,7 +54,7 @@ def GroundRadioConfig_Render(ground) -> str:
 /* Ordered cold replacement only; no aggregation or command replay. */
 #define GROUND_RADIO_INITIAL_INSTANCE {owner}U
 #define GROUND_RADIO_FAILOVER_HOLD_MS 250U
-#define GROUND_ACTIVITY_ENABLED {int(any(index != 96 for index, _ in values))}U
+#define GROUND_ACTIVITY_ENABLED {int(activity_enabled and any(index != 96 for index, _ in values))}U
 #define GROUND_ACTIVITY_TX_GPIO ((PlatformGpioId){values[0][0]}U)
 #define GROUND_ACTIVITY_RX_GPIO ((PlatformGpioId){values[1][0]}U)
 #define GROUND_ACTIVITY_TX_ACTIVE_HIGH {values[0][1]}U

@@ -15,7 +15,8 @@ from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox, Enter
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.pages.components import BoardHardwarePage
 from silverstar_fccg.project.ground_activity import (
-    GroundActivityLedIssues_Get, GroundActivityLedOutputResources_Get,
+    GroundActivityLedEnabled_Get, GroundActivityLedIssues_Get,
+    GroundActivityLedOutputResources_Get,
 )
 from silverstar_fccg.ui.ground_radio_instances import GroundRadioInstancesEditor
 from silverstar_fccg.core.view_models import BoardCompatibilityView, ResourceRequirementView, PlatformMatchView
@@ -344,13 +345,13 @@ class GroundTargetPage(BoardHardwarePage):
             active_high = metadata["activity_led_active_high"]
             trial = replace(ground, tx_led_resource=resource.resource_id,
                             rx_led_resource=resource.resource_id,
-                            tx_led_active_high=active_high, rx_led_active_high=active_high)
+                            tx_led_active_high=active_high, rx_led_active_high=active_high,
+                            activity_led_enabled=True)
             if not GroundActivityLedIssues_Get(trial):
                 candidates.append((resource.resource_id, active_high))
         return candidates[0] if len(candidates) == 1 else None
 
-    def Configuration_Set(self, ground, boards, radios, requirements, issues,
-                          restorable_led=False) -> None:
+    def Configuration_Set(self, ground, boards, radios, requirements, issues) -> None:
         for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
                        self.pc_resource, self.baudrate):
             widget.blockSignals(True)
@@ -454,10 +455,13 @@ class GroundTargetPage(BoardHardwarePage):
         ) if selected_uart is not None else "")
         self.baudrate.CommittedValue_Set(ground.baudrate)
         with QSignalBlocker(self.activity_led_enabled):
-            active = bool(ground.tx_led_resource or ground.rx_led_resource)
+            active = GroundActivityLedEnabled_Get(ground)
+            restorable = bool(ground.tx_led_resource or ground.rx_led_resource) and not (
+                GroundActivityLedIssues_Get(replace(ground, activity_led_enabled=True))
+            )
             self.activity_led_enabled.setChecked(active)
             self.activity_led_enabled.setEnabled(
-                ground.enabled and (active or restorable_led
+                ground.enabled and (active or restorable
                                     or self.ActivityLedCandidate_Get(ground) is not None)
             )
         self.activity_led_enabled.setToolTip(

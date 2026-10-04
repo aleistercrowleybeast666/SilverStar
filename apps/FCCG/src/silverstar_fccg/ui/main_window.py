@@ -225,7 +225,6 @@ class MainWindow(QMainWindow):
         self._progress_hide_timer.timeout.connect(self._Progress_CompletionHide)
         self._component_views: tuple[ComponentView, ...] = ()
         self._model: ProjectModel = self._service.ProjectDraft_Create("SilverStar")
-        self._activity_led_restore = None
         self._project_root: Path | None = None
         self._legacy_source_bytes: bytes | None = None
         self._generation_plan: GenerationPlan | None = None
@@ -1775,7 +1774,6 @@ class MainWindow(QMainWindow):
         self.ground_target_page.Configuration_Set(
             model.ground_target, boards, tuple(radios), requirements,
             GroundTargetIssues_Get(model, self._service.catalog),
-            restorable_led=self._GroundActivityLedRestore_Get(model.ground_target) is not None,
         )
         ground = model.ground_target
         platform = self._service.PlatformMatchView_Get(
@@ -1831,48 +1829,27 @@ class MainWindow(QMainWindow):
                                       if key.split(":", 1)[0] not in removed})
         self._ProjectConfiguration_Change(change)
 
-    def _GroundActivityLedRestore_Get(self, ground):
-        saved = self._activity_led_restore
-        if saved is None or saved[0] != ground.board or saved[1] != ground.hardware.resources:
-            return None
-        trial = replace(ground, **saved[2])
-        return trial if not GroundActivityLedIssues_Get(trial, self._service.catalog) else None
-
     def _GroundActivityLed_Toggle(self, enabled: bool) -> None:
-        previous = self._activity_led_restore
-        ground = self._model.ground_target
-        if not enabled and (ground.tx_led_resource or ground.rx_led_resource):
-            self._activity_led_restore = (
-                ground.board, ground.hardware.resources,
-                {key: getattr(ground, key) for key in (
-                    "tx_led_resource", "rx_led_resource", "tx_led_active_high",
-                    "rx_led_active_high", "activity_led_pulse_ms",
-                )},
-            )
-
         def change(candidate: ProjectModel) -> None:
             ground = candidate.ground_target
             if enabled:
                 if ground.tx_led_resource or ground.rx_led_resource:
+                    trial = replace(ground, activity_led_enabled=True)
+                    if not GroundActivityLedIssues_Get(trial, self._service.catalog):
+                        candidate.ground_target = trial
                     return
-                restored = self._GroundActivityLedRestore_Get(ground)
-                if restored is not None:
-                    candidate.ground_target = restored
-                else:
-                    binding = self.ground_target_page.ActivityLedCandidate_Get(ground)
-                    if binding is None:
-                        return
-                    resource, active_high = binding
-                    candidate.ground_target = replace(
-                        ground, tx_led_resource=resource, rx_led_resource=resource,
-                        tx_led_active_high=active_high, rx_led_active_high=active_high,
-                    )
-            else:
+                binding = self.ground_target_page.ActivityLedCandidate_Get(ground)
+                if binding is None:
+                    return
+                resource, active_high = binding
                 candidate.ground_target = replace(
-                    ground, tx_led_resource="", rx_led_resource="",
+                    ground, tx_led_resource=resource, rx_led_resource=resource,
+                    tx_led_active_high=active_high, rx_led_active_high=active_high,
+                    activity_led_enabled=True,
                 )
-        if self._ProjectConfiguration_Change(change) is None:
-            self._activity_led_restore = previous
+            else:
+                candidate.ground_target = replace(ground, activity_led_enabled=False)
+        self._ProjectConfiguration_Change(change)
 
     def _GroundTarget_Change(self, field: str, value: object) -> None:
         if field == "board":
@@ -2587,7 +2564,6 @@ class MainWindow(QMainWindow):
         self._pending_strategy_changes.clear()
         self.algorithm_parameters_page.alignment_editor.Draft_Discard()
         self._model = model
-        self._activity_led_restore = None
         self._project_root = project_root
         self._legacy_source_bytes = None
         self._generation_plan = None
@@ -2621,7 +2597,6 @@ class MainWindow(QMainWindow):
             self._pending_strategy_changes.clear()
             self.algorithm_parameters_page.alignment_editor.Draft_Discard()
             self._model = reconciled
-            self._activity_led_restore = None
             self._legacy_source_bytes = source_bytes
             self._project_root = (
                 path.resolve() if path.is_dir() else path.resolve().parent

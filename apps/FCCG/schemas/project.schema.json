@@ -91,6 +91,7 @@
         "tx_led_active_high": {"type": "boolean"},
         "rx_led_active_high": {"type": "boolean"},
         "activity_led_pulse_ms": {"type": "integer", "minimum": 1, "maximum": 200},
+        "activity_led_enabled": {"type": "boolean"},
         "build": {"$ref": "#/properties/build"}
       },
       "additionalProperties": false

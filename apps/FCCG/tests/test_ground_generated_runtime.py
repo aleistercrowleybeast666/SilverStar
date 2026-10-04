@@ -12,7 +12,7 @@ from ground_radio_led_fixture import GroundMultiFixture_Create
 from test_round2_targets import _GroundBoardProject_Get
 
 
-def _GeneratedRuntime_Check(catalog, root, count, owner=0, led=False):
+def _GeneratedRuntime_Check(catalog, root, count, owner=0, led=False, disabled=False):
     gcc = shutil.which("gcc")
     assert gcc is not None, "Host GCC required for runtime readiness validation"
     model = (_GroundBoardProject_Get(catalog) if count == 1
@@ -22,8 +22,14 @@ def _GeneratedRuntime_Check(catalog, root, count, owner=0, led=False):
         resource = next(r for r in ground.hardware.resources
                         if r.kind == "gpio_output" and r.metadata.get("label") == "LED")
         model.ground_target = replace(ground, tx_led_resource=resource.resource_id,
-                                      rx_led_resource=resource.resource_id)
+                                      rx_led_resource=resource.resource_id,
+                                      activity_led_enabled=False if disabled else None)
     generated = GroundFiles_Render(model, catalog, WorkspacePolicy(root))
+    if disabled:
+        header = generated["Generated/Inc/ground_radio_config.h"]
+        assert b"#define GROUND_ACTIVITY_ENABLED 0U" in header
+        assert b"GROUND_ACTIVITY_TX_GPIO ((PlatformGpioId)96U)" in header
+        assert b"GROUND_ACTIVITY_RX_GPIO ((PlatformGpioId)96U)" in header
     output = root / "Ground_Station"
     for relative, content in generated.items():
         path = output / relative
@@ -50,7 +56,7 @@ def _GeneratedRuntime_Check(catalog, root, count, owner=0, led=False):
         scenarios += ["init_error", "config_error", "role_error"]
     elif owner == 0:
         scenarios += ["transient", "init_error", "retire_error", "forward", "wrap", "cold_start_error"]
-    if led: scenarios.append("led")
+    if led and not disabled: scenarios.append("led")
     for scenario in scenarios:
         result = subprocess.run([str(executable), scenario], capture_output=True, text=True, timeout=10)
         assert result.returncode == 0, scenario + result.stdout + result.stderr
@@ -60,6 +66,10 @@ def _GeneratedRuntime_Check(catalog, root, count, owner=0, led=False):
 @pytest.mark.parametrize("count,owner,led", [(1,0,False), (1,0,True), (2,0,False), (2,1,False), (2,0,True)])
 def test_actual_fresh_generated_runtime(builtin_catalog, tmp_path, count, owner, led):
     _GeneratedRuntime_Check(builtin_catalog, tmp_path, count, owner, led)
+
+
+def test_saved_disabled_led_generated_runtime_stays_quiet(builtin_catalog, tmp_path):
+    _GeneratedRuntime_Check(builtin_catalog, tmp_path, 1, led=True, disabled=True)
 
 
 def test_ground_board_pc13_has_verified_output_mapping(builtin_catalog, tmp_path):

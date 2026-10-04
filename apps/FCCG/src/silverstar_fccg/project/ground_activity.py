@@ -9,6 +9,11 @@ def GroundActivityLedOutputResources_Get(ground):
                  if resource.kind == "gpio_output")
 
 
+def GroundActivityLedEnabled_Get(ground) -> bool:
+    configured = ground.activity_led_enabled
+    return bool(ground.tx_led_resource or ground.rx_led_resource) if configured is None else configured
+
+
 def _ResourceClaims_Get(resource):
     claims = {"resource:" + resource.resource_id,
               "resource:" + str(resource.metadata.get("c_id", resource.resource_id))}
@@ -25,9 +30,11 @@ def _ResourceClaims_Get(resource):
 
 def GroundActivityLedIssues_Get(ground, catalog=None):
     from silverstar_fccg.project.air_link import AirLinkIssue
-    if not ground.enabled:
+    if not ground.enabled or not GroundActivityLedEnabled_Get(ground):
         return ()
     issues = []
+    if not (ground.tx_led_resource or ground.rx_led_resource):
+        issues.append(AirLinkIssue("GROUND_LED_OUTPUT_UNBOUND", "Enabled activity LED needs a GPIO output"))
     if catalog is not None and (ground.tx_led_resource or ground.rx_led_resource):
         core = catalog.Component_Get("silverstar.core.ground.0_1_0")
         if core.metadata.get("ground_activity_leds_ready") is not True:

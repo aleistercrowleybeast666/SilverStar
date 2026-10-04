@@ -23,7 +23,8 @@ def schema():
 def test_schema_and_parser_keep_format14_without_optional_fields(schema, document):
     ground = schema["properties"]["ground_target"]
     optional = {"radio_instances", "active_radio_instance", "tx_led_resource", "rx_led_resource",
-                "tx_led_active_high", "rx_led_active_high", "activity_led_pulse_ms"}
+                "tx_led_active_high", "rx_led_active_high", "activity_led_pulse_ms",
+                "activity_led_enabled"}
     assert optional <= ground["properties"].keys()
     assert not optional & set(ground["required"])
     assert document["format_version"] == 14
@@ -68,6 +69,7 @@ def test_parser_rejects_radio_counts_outside_schema_bounds(schema, document, cou
 
 @pytest.mark.parametrize("key,bad", [("tx_led_resource", "bad/pin"), ("rx_led_resource", None),
     ("tx_led_active_high", 1), ("rx_led_active_high", "false"),
+    ("activity_led_enabled", None),
     ("activity_led_pulse_ms", 0), ("activity_led_pulse_ms", 201), ("activity_led_pulse_ms", True)])
 def test_schema_led_types_and_limits_match_parser(schema, document, key, bad):
     field = schema["properties"]["ground_target"]["properties"][key]
@@ -75,7 +77,7 @@ def test_schema_led_types_and_limits_match_parser(schema, document, key, bad):
         assert field["type"] == "string" and re.fullmatch(field["pattern"], "LED_PB6")
         assert re.fullmatch(field["pattern"], "")
         assert not isinstance(bad, str) or not re.fullmatch(field["pattern"], bad)
-    elif key.endswith("_active_high"):
+    elif key.endswith("_active_high") or key == "activity_led_enabled":
         assert field["type"] == "boolean"
     else:
         assert (field["type"], field["minimum"], field["maximum"]) == ("integer", 1, 200)

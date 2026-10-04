@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QCheckBox
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.project.model import HardwareResource, ProjectModel_Parse, ProjectModelError
 from silverstar_fccg.project.ground_activity import GroundActivityLedIssues_Get
+from silverstar_fccg.generator.ground_radio import GroundRadioConfig_Render
 from test_f103_ground_reference import _GroundF103Model_Get
 from test_scg_ui_metadata_hotfix import window
 
@@ -49,6 +50,7 @@ def test_shared_output_roundtrip_and_bounds(model, pulse):
 @pytest.mark.parametrize("key,value", [
     ("activity_led_pulse_ms", 0), ("activity_led_pulse_ms", 201),
     ("activity_led_pulse_ms", True), ("activity_led_pulse_ms", "40"),
+    ("activity_led_enabled", 1), ("activity_led_enabled", None),
     ("tx_led_active_high", 1), ("rx_led_active_high", "false"),
     ("tx_led_resource", None), ("rx_led_resource", "bad/pin")])
 def test_invalid_led_fields_are_rejected(model, key, value):
@@ -120,8 +122,9 @@ def test_led_gui_keeps_defaults_until_explicit_binding(window):
     assert window._model.ground_target == before
     assert checkbox.isChecked()
     checkbox.setChecked(False)
-    assert not window._model.ground_target.tx_led_resource
-    assert not window._model.ground_target.rx_led_resource
+    assert window._model.ground_target.activity_led_enabled is False
+    assert window._model.ground_target.tx_led_resource == "PLATFORM_GPIO_6"
+    assert window._model.ground_target.rx_led_resource == "PLATFORM_GPIO_6"
 
 
 def test_led_gui_restores_legacy_bindings_after_toggle(window):
@@ -138,18 +141,30 @@ def test_led_gui_restores_legacy_bindings_after_toggle(window):
     window._model = ProjectModel_Parse(window._model.Dictionary_Get())
     window._Project_Refresh()
     original = window._model.ground_target
+    assert original.activity_led_enabled is None
+    assert "#define GROUND_ACTIVITY_ENABLED 1U" in GroundRadioConfig_Render(original)
     assert checkbox.isChecked() and checkbox.isEnabled()
     assert window._model.ground_target.tx_led_resource == "PLATFORM_GPIO_6"
     assert window._model.ground_target.rx_led_resource == "PLATFORM_GPIO_6"
     assert window._model.ground_target.tx_led_active_high
     assert window._model.ground_target.activity_led_pulse_ms == 75
     checkbox.setChecked(False)
-    assert not window._model.ground_target.tx_led_resource
-    assert not window._model.ground_target.rx_led_resource
-    assert window._GroundActivityLedRestore_Get(window._model.ground_target) is not None
+    assert window._model.ground_target.activity_led_enabled is False
+    for key in ("tx_led_resource", "rx_led_resource", "tx_led_active_high",
+                "rx_led_active_high", "activity_led_pulse_ms"):
+        assert getattr(window._model.ground_target, key) == getattr(original, key)
+    disabled_header = GroundRadioConfig_Render(window._model.ground_target)
+    assert "#define GROUND_ACTIVITY_ENABLED 0U" in disabled_header
+    assert "#define GROUND_ACTIVITY_TX_GPIO ((PlatformGpioId)96U)" in disabled_header
+    saved = window._model.Dictionary_Get()
+    assert saved["ground_target"]["activity_led_enabled"] is False
+    window._model = ProjectModel_Parse(saved)
+    window._Project_Refresh()
     assert checkbox.isEnabled() and not checkbox.isChecked()
     checkbox.setChecked(True)
     assert checkbox.isChecked()
+    assert window._model.ground_target.activity_led_enabled is True
+    assert "#define GROUND_ACTIVITY_ENABLED 1U" in GroundRadioConfig_Render(window._model.ground_target)
     for key in ("tx_led_resource", "rx_led_resource", "tx_led_active_high",
                 "rx_led_active_high", "activity_led_pulse_ms"):
         assert getattr(window._model.ground_target, key) == getattr(original, key)

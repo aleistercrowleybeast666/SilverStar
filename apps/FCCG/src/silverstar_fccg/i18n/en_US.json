@@ -923,7 +923,7 @@
   "ground.uart_unavailable": "{resource} · unavailable",
   "status.ground_configuration_required": "Fix Ground configuration and pass validation before generating.",
   "ground.activity_led_enable": "Enable shared TX/RX activity LED",
-  "ground.activity_led_hint": "Toggle TX/RX activity LEDs. This session restores the previous binding, polarity and pulse when switched back on.",
+  "ground.activity_led_hint": "Toggle TX/RX activity LEDs. Turning them off retains their saved binding, polarity and pulse for later use.",
   "ground.activity_led_unavailable": "No unique board-declared activity LED output and polarity are available.",
   "group.ground_activity_leds": "Activity LEDs",
   "ground.activity_led_semantics": "TX flashes briefly after a wireless packet is sent. RX flashes briefly when a valid wireless packet is received. Choose GPIO polarity to match the board; the same GPIO cannot use conflicting TX/RX polarity.",
