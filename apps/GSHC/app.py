@@ -21,7 +21,6 @@ from config import (
     APP_ORGANIZATION,
     APP_VERSION,
     APP_WINDOW_TITLE,
-    DEFAULT_BAUDRATE,
     USER_DATA_ROOT,
     save_user_data_root,
 )
@@ -1129,10 +1128,15 @@ class Controller(QObject):
             )
             return
         port = self.window.current_port()
-        baud = self.window.current_baudrate() or DEFAULT_BAUDRATE
+        baud = self.window.current_baudrate()
         if not port:
             QMessageBox.warning(
                 self.window, self._tr("app.title"), self._tr("message.select_port")
+            )
+            return
+        if not baud:
+            QMessageBox.warning(
+                self.window, self._tr("app.title"), self._tr("message.invalid_baudrate")
             )
             return
 

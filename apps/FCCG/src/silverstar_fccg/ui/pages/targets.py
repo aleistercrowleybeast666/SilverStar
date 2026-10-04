@@ -334,21 +334,23 @@ class GroundTargetPage(BoardHardwarePage):
         self.root_layout.addStretch(1)
 
     @staticmethod
-    def ActivityLedCandidate_Get(ground) -> str | None:
+    def ActivityLedCandidate_Get(ground) -> tuple[str, bool] | None:
         candidates = []
         for resource in GroundActivityLedOutputResources_Get(ground):
-            names = (resource.resource_id, resource.metadata.get("label", ""),
-                     resource.metadata.get("physical_resource", ""))
-            if not any("LED" in str(name).upper() for name in names):
+            metadata = resource.metadata
+            if (metadata.get("activity_led_shared") is not True
+                    or type(metadata.get("activity_led_active_high")) is not bool):
                 continue
+            active_high = metadata["activity_led_active_high"]
             trial = replace(ground, tx_led_resource=resource.resource_id,
                             rx_led_resource=resource.resource_id,
-                            tx_led_active_high=False, rx_led_active_high=False)
+                            tx_led_active_high=active_high, rx_led_active_high=active_high)
             if not GroundActivityLedIssues_Get(trial):
-                candidates.append(resource.resource_id)
+                candidates.append((resource.resource_id, active_high))
         return candidates[0] if len(candidates) == 1 else None
 
-    def Configuration_Set(self, ground, boards, radios, requirements, issues) -> None:
+    def Configuration_Set(self, ground, boards, radios, requirements, issues,
+                          restorable_led=False) -> None:
         for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
                        self.pc_resource, self.baudrate):
             widget.blockSignals(True)
@@ -455,10 +457,14 @@ class GroundTargetPage(BoardHardwarePage):
             active = bool(ground.tx_led_resource or ground.rx_led_resource)
             self.activity_led_enabled.setChecked(active)
             self.activity_led_enabled.setEnabled(
-                ground.enabled and (active or self.ActivityLedCandidate_Get(ground) is not None)
+                ground.enabled and (active or restorable_led
+                                    or self.ActivityLedCandidate_Get(ground) is not None)
             )
         self.activity_led_enabled.setToolTip(
-            self._translator.Text_Get("ground.activity_led_hint")
+            self._translator.Text_Get(
+                "ground.activity_led_hint" if self.activity_led_enabled.isEnabled()
+                else "ground.activity_led_unavailable"
+            )
         )
         self.build_summary.setText(
             f"{ground.build.make_command} · "

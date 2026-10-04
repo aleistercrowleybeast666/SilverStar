@@ -93,13 +93,28 @@ def test_led_gui_keeps_defaults_until_explicit_binding(window):
     assert window.air_link_page.isAncestorOf(page.activity_led_group)
     assert not page.isAncestorOf(page.activity_led_group)
     assert page.activity_led_group.findChildren(QCheckBox) == [checkbox]
+    assert not checkbox.isEnabled() and not checkbox.isChecked()
+    assert page.ActivityLedCandidate_Get(window._model.ground_target) is None
+    assert "polarity" in checkbox.toolTip().lower() or "极性" in checkbox.toolTip()
+    ground = window._model.ground_target
+    resources = tuple(
+        replace(resource, metadata={**resource.metadata,
+                                    "activity_led_shared": True,
+                                    "activity_led_active_high": True})
+        if resource.resource_id == "PLATFORM_GPIO_6" else resource
+        for resource in ground.hardware.resources
+    )
+    window._model.ground_target = replace(
+        ground, hardware=replace(ground.hardware, resources=resources)
+    )
+    window._Project_Refresh()
     assert checkbox.isEnabled() and not checkbox.isChecked()
-    assert page.ActivityLedCandidate_Get(window._model.ground_target) == "PLATFORM_GPIO_6"
+    assert page.ActivityLedCandidate_Get(window._model.ground_target) == ("PLATFORM_GPIO_6", True)
     checkbox.setChecked(True)
     assert window._model.ground_target.tx_led_resource == "PLATFORM_GPIO_6"
     assert window._model.ground_target.rx_led_resource == "PLATFORM_GPIO_6"
-    assert not window._model.ground_target.tx_led_active_high
-    assert not window._model.ground_target.rx_led_active_high
+    assert window._model.ground_target.tx_led_active_high
+    assert window._model.ground_target.rx_led_active_high
     before = window._model.ground_target
     window.Language_Apply("en_US")
     assert window._model.ground_target == before
@@ -109,23 +124,56 @@ def test_led_gui_keeps_defaults_until_explicit_binding(window):
     assert not window._model.ground_target.rx_led_resource
 
 
-def test_led_gui_preserves_legacy_bindings_and_rejects_ambiguous_output(window):
+def test_led_gui_restores_legacy_bindings_after_toggle(window):
     window._model = _GroundF103Model_Get(window._service.catalog)
-    _Output_Add(window._model)
     window._Project_Refresh()
     checkbox = window.ground_target_page.activity_led_enabled
     assert not checkbox.isChecked() and not checkbox.isEnabled()
     ground = window._model.ground_target
     window._model.ground_target = replace(
-        ground, tx_led_resource="LED_OUTPUT", tx_led_active_high=True,
+        ground, tx_led_resource="PLATFORM_GPIO_6", rx_led_resource="PLATFORM_GPIO_6",
+        tx_led_active_high=True, rx_led_active_high=True,
         activity_led_pulse_ms=75,
     )
+    window._model = ProjectModel_Parse(window._model.Dictionary_Get())
     window._Project_Refresh()
+    original = window._model.ground_target
     assert checkbox.isChecked() and checkbox.isEnabled()
-    assert window._model.ground_target.tx_led_resource == "LED_OUTPUT"
-    assert window._model.ground_target.rx_led_resource == ""
+    assert window._model.ground_target.tx_led_resource == "PLATFORM_GPIO_6"
+    assert window._model.ground_target.rx_led_resource == "PLATFORM_GPIO_6"
     assert window._model.ground_target.tx_led_active_high
     assert window._model.ground_target.activity_led_pulse_ms == 75
+    checkbox.setChecked(False)
+    assert not window._model.ground_target.tx_led_resource
+    assert not window._model.ground_target.rx_led_resource
+    assert window._GroundActivityLedRestore_Get(window._model.ground_target) is not None
+    assert checkbox.isEnabled() and not checkbox.isChecked()
+    checkbox.setChecked(True)
+    assert checkbox.isChecked()
+    for key in ("tx_led_resource", "rx_led_resource", "tx_led_active_high",
+                "rx_led_active_high", "activity_led_pulse_ms"):
+        assert getattr(window._model.ground_target, key) == getattr(original, key)
+
+
+def test_led_gui_rejects_ambiguous_board_declarations(window):
+    window._model = _GroundF103Model_Get(window._service.catalog)
+    _Output_Add(window._model, "LED_A", "PB6")
+    ground = _Output_Add(window._model, "LED_B", "PB7")
+    resources = tuple(
+        replace(resource, metadata={**resource.metadata,
+                                    "activity_led_shared": True,
+                                    "activity_led_active_high": False})
+        if resource.resource_id in {"LED_A", "LED_B"} else resource
+        for resource in ground.hardware.resources
+    )
+    window._model.ground_target = replace(
+        ground, hardware=replace(ground.hardware, resources=resources)
+    )
+    window._Project_Refresh()
+    checkbox = window.ground_target_page.activity_led_enabled
+    assert window.ground_target_page.ActivityLedCandidate_Get(window._model.ground_target) is None
+    assert not checkbox.isEnabled()
+    assert "polarity" in checkbox.toolTip().lower() or "极性" in checkbox.toolTip()
 
 
 def test_led_binding_requires_integrated_runtime_capability(model, workspace_root):

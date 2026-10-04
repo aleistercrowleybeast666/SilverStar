@@ -18,6 +18,31 @@ from transport.serial_backend import SerialConfig, SerialWorker, list_serial_por
 from ui.main_window import MainWindow
 
 
+def test_invalid_editable_baudrate_stops_before_serial_open(tmp_path):
+    application = QApplication.instance() or QApplication([])
+    window = MainWindow(I18n(QSettings(str(tmp_path / "invalid-baud.ini"),
+                                     QSettings.Format.IniFormat)))
+    try:
+        window.render_timer.stop()
+        window.set_ports(["COM100"])
+        controller = MagicMock()
+        controller.window = window
+        controller.data_migration_thread = None
+        controller._tr.side_effect = window.i18n.tr
+        for invalid in ("abc", "0", "2000001"):
+            window.baud_combo.setEditText(invalid)
+            assert window.current_baudrate() == 0
+            with patch("app.QMessageBox.warning") as warning:
+                Controller.connect(controller)
+            assert warning.call_args.args[2] == window.i18n.tr("message.invalid_baudrate")
+            controller.disconnect.assert_not_called()
+            controller.link.open.assert_not_called()
+    finally:
+        window.close()
+        window.deleteLater()
+        application.processEvents()
+
+
 @pytest.mark.parametrize("port", ["COM1", "COM9", "COM10", "COM99", "COM100"])
 @pytest.mark.parametrize("font_size", [10, 16])
 def test_port_text_fits_and_reaches_serial_unchanged(tmp_path, port, font_size):
