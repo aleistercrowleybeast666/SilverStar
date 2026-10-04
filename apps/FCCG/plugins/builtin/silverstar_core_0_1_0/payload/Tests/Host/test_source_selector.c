@@ -943,10 +943,13 @@ static void Test_TelemetryStartFailureAndExplicitStop(void)
 static void Test_TelemetryStopFailureBlocksBackup(void)
 {
     uint8_t packet[1] = {0U};
+    uint8_t attempt;
+    uint32_t delay_ms = 2000U;
     Test_StateReset();
     s_telemetry_count = 2U;
     TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_now_us = 100000000ULL;
     s_telemetry_health[0].started = 0U;
     s_telemetry_stop_result[0] = SYSTEM_DEVICE_IO_ERROR;
     SystemTelemetry_Process();
@@ -957,13 +960,56 @@ static void Test_TelemetryStopFailureBlocksBackup(void)
     TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_BUSY);
     TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_BUSY);
     TEST_CHECK(s_telemetry_start_count[1] == 1U);
-    s_telemetry_stop_result[0] = SYSTEM_DEVICE_OK;
-    s_now_us += 32000000ULL;
+    s_now_us += 10000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 1U);
+    s_now_us += 989000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 1U);
+    s_now_us += 1000ULL;
     SystemTelemetry_Process();
     TEST_CHECK(s_telemetry_stop_count[0] == 2U);
+    for (attempt = 0U; attempt < 6U; attempt++)
+    {
+        s_now_us += ((uint64_t)delay_ms - 1ULL) * 1000ULL;
+        SystemTelemetry_Process();
+        TEST_CHECK(s_telemetry_stop_count[0] == (uint32_t)attempt + 2U);
+        s_now_us += 1000ULL;
+        SystemTelemetry_Process();
+        TEST_CHECK(s_telemetry_stop_count[0] == (uint32_t)attempt + 3U);
+        if (delay_ms < 32000U) { delay_ms *= 2U; }
+    }
+    s_telemetry_stop_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 31999000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 8U);
+    TEST_CHECK(SystemTelemetry_Send(packet, sizeof(packet)) ==
+        SYSTEM_DEVICE_NOT_READY);
+    s_now_us += 1000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 9U);
     TEST_CHECK(s_telemetry_start_count[1] == 1U);
     TEST_CHECK(SystemTelemetry_Send(packet, sizeof(packet)) == SYSTEM_DEVICE_OK);
     Test_EventCountAssert(1U);
+
+    Test_StateReset();
+    s_telemetry_count = 1U;
+    TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+    s_now_us = 100000000ULL;
+    s_telemetry_stop_result[0] = SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemTelemetry_Stop() == SYSTEM_DEVICE_IO_ERROR);
+    SystemTelemetry_Process();
+    s_now_us += 10000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 1U);
+    s_telemetry_stop_result[0] = SYSTEM_DEVICE_OK;
+    s_now_us += 990000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_stop_count[0] == 2U);
+    s_now_us += 32000000ULL;
+    SystemTelemetry_Process();
+    TEST_CHECK(s_telemetry_start_count[0] == 1U);
 }
 
 static void Test_TelemetryChainAndLastCandidate(void)

@@ -28,6 +28,7 @@
 #define SYSTEM_GNSS_RECOVERY_BACKOFF_MAX 5U
 #define SYSTEM_TELEMETRY_RECOVERY_DELAY_MS 1000UL
 #define SYSTEM_TELEMETRY_RECOVERY_BACKOFF_MAX 5U
+#define SYSTEM_TELEMETRY_CLEANUP_BACKOFF_MAX 6U
 #define SYSTEM_TELEMETRY_SWITCH_COOLDOWN_MS 32000UL
 
 typedef struct
@@ -1533,15 +1534,28 @@ static void SystemSourceSelector_TelemetryQuarantine(uint8_t instance)
         (uint32_t)(SystemTime_GetMonotonicUs() / 1000ULL);
 }
 
-static uint8_t SystemSourceSelector_TelemetryRecoveryTry(
-    uint8_t include_inactive_active)
+static uint8_t SystemSourceSelector_TelemetryCleanupPending(void)
 {
-    uint32_t now_ms = (uint32_t)(SystemTime_GetMonotonicUs() / 1000ULL);
+    uint8_t candidate;
+    for (candidate = 0U; candidate < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX;
+         candidate++)
+    {
+        if (candidate >= s_telemetry.count) { break; }
+        if (s_telemetry.cleanup_pending[candidate] != 0U) { return 1U; }
+    }
+    return 0U;
+}
+
+static void SystemSourceSelector_TelemetryCleanupFirstFailure(void)
+{
+    s_telemetry.recovery_scheduled_ms =
+        (uint32_t)(SystemTime_GetMonotonicUs() / 1000ULL);
+    s_telemetry.recovery_failures = 1U;
+}
+
+static void SystemSourceSelector_TelemetryCleanupTry(void)
+{
     uint8_t position;
-    if ((uint32_t)(now_ms - s_telemetry.recovery_scheduled_ms) <
-        (SYSTEM_TELEMETRY_RECOVERY_DELAY_MS << s_telemetry.recovery_failures))
-    { return 0U; }
-    s_telemetry.recovery_scheduled_ms = now_ms;
     for (position = 0U; position < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX;
          position++)
     {
@@ -1552,17 +1566,27 @@ static uint8_t SystemSourceSelector_TelemetryRecoveryTry(
         {
             SILVERSTAR_ASSERT(candidate < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX,
                 SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
-            return 0U;
+            return;
         }
         SILVERSTAR_ASSERT(candidate < s_telemetry.count,
             SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
         if (s_telemetry.cleanup_pending[candidate] == 0U) { continue; }
         if (SystemSourceSelector_ResultSuccessful(
                 ProjectTelemetryInstance_Stop(candidate)) == 0U)
-        { return 0U; }
+        {
+            if (s_telemetry.recovery_failures <
+                SYSTEM_TELEMETRY_CLEANUP_BACKOFF_MAX)
+            { s_telemetry.recovery_failures++; }
+            return;
+        }
         s_telemetry.cleanup_pending[candidate] = 0U;
         s_telemetry.started[candidate] = 0U;
         s_telemetry.initialized[candidate] = 0U;
+        if (SystemSourceSelector_TelemetryCleanupPending() == 0U)
+        {
+            s_telemetry.recovery_failures = 0U;
+            s_telemetry.recovery_scheduled_ms = 0U;
+        }
         if ((candidate != s_telemetry.active) &&
             (s_telemetry.active_offline != 0U))
         {
@@ -1571,6 +1595,27 @@ static uint8_t SystemSourceSelector_TelemetryRecoveryTry(
                 SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
             s_telemetry.active_offline = 0U;
         }
+        return;
+    }
+}
+
+static uint8_t SystemSourceSelector_TelemetryRecoveryTry(
+    uint8_t include_inactive_active)
+{
+    uint32_t now_ms = (uint32_t)(SystemTime_GetMonotonicUs() / 1000ULL);
+    uint8_t cleanup_pending = SystemSourceSelector_TelemetryCleanupPending();
+    uint8_t backoff_shift = s_telemetry.recovery_failures;
+    SILVERSTAR_ASSERT(backoff_shift <= SYSTEM_TELEMETRY_CLEANUP_BACKOFF_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((cleanup_pending != 0U) && (backoff_shift > 0U))
+    { backoff_shift--; }
+    if ((uint32_t)(now_ms - s_telemetry.recovery_scheduled_ms) <
+        (SYSTEM_TELEMETRY_RECOVERY_DELAY_MS << backoff_shift))
+    { return 0U; }
+    s_telemetry.recovery_scheduled_ms = now_ms;
+    if (cleanup_pending != 0U)
+    {
+        SystemSourceSelector_TelemetryCleanupTry();
         return 0U;
     }
     if (SystemSourceSelector_TelemetryNextStart(include_inactive_active) != 0U)
@@ -1595,24 +1640,13 @@ static void SystemSourceSelector_TelemetrySwitchIfAvailable(
         s_telemetry.started[previous] = 0U;
         s_telemetry.cleanup_pending[previous] = 1U;
         s_telemetry.active_offline = 1U;
+        SystemSourceSelector_TelemetryCleanupFirstFailure();
         return;
     }
     s_telemetry.started[previous] = 0U;
     SystemSourceSelector_TelemetryQuarantine(previous);
     SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_TELEMETRY,
         previous, s_telemetry.active, reason);
-}
-
-static uint8_t SystemSourceSelector_TelemetryCleanupPending(void)
-{
-    uint8_t candidate;
-    for (candidate = 0U; candidate < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX;
-         candidate++)
-    {
-        if (candidate >= s_telemetry.count) { break; }
-        if (s_telemetry.cleanup_pending[candidate] != 0U) { return 1U; }
-    }
-    return 0U;
 }
 
 static void SystemSourceSelector_TelemetryTimeoutAccumulate(uint32_t timeout_delta)
@@ -1793,6 +1827,8 @@ SystemDeviceResult SystemTelemetry_Start(void)
 SystemDeviceResult SystemTelemetry_Stop(void)
 {
     SystemDeviceResult result;
+    uint8_t cleanup_was_pending =
+        SystemSourceSelector_TelemetryCleanupPending();
     s_telemetry.start_requested = 0U;
 
     if (s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
@@ -1801,6 +1837,9 @@ SystemDeviceResult SystemTelemetry_Stop(void)
     s_telemetry.started[s_telemetry.active] = 0U;
     s_telemetry.cleanup_pending[s_telemetry.active] =
         (uint8_t)(SystemSourceSelector_ResultSuccessful(result) == 0U);
+    if ((s_telemetry.cleanup_pending[s_telemetry.active] != 0U) &&
+        (cleanup_was_pending == 0U))
+    { SystemSourceSelector_TelemetryCleanupFirstFailure(); }
     return result;
 }
 
@@ -1856,8 +1895,8 @@ void SystemTelemetry_Process(void)
     if (SystemSourceSelector_TelemetryCleanupPending() != 0U)
     {
         (void)SystemSourceSelector_TelemetryRecoveryTry(0U);
-        if (SystemSourceSelector_TelemetryCleanupPending() != 0U)
-        { SystemSourceSelector_PendingEventsFlush(); return; }
+        SystemSourceSelector_PendingEventsFlush();
+        return;
     }
     if ((s_telemetry.start_requested != 0U) &&
         ((s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE) ||
