@@ -1,5 +1,6 @@
 #include "app_tasks.h"
 
+#include <math.h>
 #include <string.h>
 
 #include "FreeRTOS.h"
@@ -36,6 +37,8 @@
 
 #define FLIGHT_TASK_FAULT_READY_TRANSITION 0x52445954UL
 #define FLIGHT_TASK_FAULT_RECOVERY_INIT 0x52435649UL
+#define FLIGHT_TASK_RECOVERY_ATTITUDE_MAX_AGE_US 100000ULL
+#define FLIGHT_TASK_RECOVERY_QUATERNION_NORM_MIN_SQUARED 0.25f
 
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
 static uint8_t s_fault_event_written;
@@ -458,12 +461,19 @@ static void FlightTask_RecoveryEstimatorInputApply(
 {
     EstimatorOutputSnapshot estimator;
     EstimatorPressureSnapshot pressure;
+    uint64_t now_us;
+    float q_norm_squared;
 
     if (input == NULL) { return; }
     SILVERSTAR_ASSERT_OBJECT(input, SystemFlightRecoveryInput,
         SILVERSTAR_ASSERT_MODULE_APP);
     if (Estimator_GetLatestSnapshot(&estimator) != 0U)
     {
+        now_us = SystemTime_GetMonotonicUs();
+        q_norm_squared = estimator.q_nb[0] * estimator.q_nb[0] +
+            estimator.q_nb[1] * estimator.q_nb[1] +
+            estimator.q_nb[2] * estimator.q_nb[2] +
+            estimator.q_nb[3] * estimator.q_nb[3];
         input->estimator_timestamp_us = estimator.timestamp_us;
         input->estimator_sequence = estimator.update_sequence;
         (void)memcpy(input->q_nb, estimator.q_nb, sizeof(input->q_nb));
@@ -474,10 +484,20 @@ static void FlightTask_RecoveryEstimatorInputApply(
             (estimator.initialized != 0U) &&
             (estimator.mission_running != 0U) &&
             ((estimator.health_flags & ESTIMATOR_HEALTH_KF_NUMERIC_ERROR) == 0U) &&
-            (SystemNavigationHealth_OverallGet(SystemTime_GetMonotonicUs(),
+            (estimator.timestamp_us != 0ULL) &&
+            (estimator.timestamp_us <= now_us) &&
+            ((now_us - estimator.timestamp_us) <=
+                FLIGHT_TASK_RECOVERY_ATTITUDE_MAX_AGE_US) &&
+            isfinite(estimator.q_nb[0]) && isfinite(estimator.q_nb[1]) &&
+            isfinite(estimator.q_nb[2]) && isfinite(estimator.q_nb[3]) &&
+            isfinite(q_norm_squared) &&
+            (q_norm_squared >= FLIGHT_TASK_RECOVERY_QUATERNION_NORM_MIN_SQUARED) &&
+            (SystemNavigationHealth_OverallGet(now_us, 0U, 0U) !=
+                SYSTEM_NAVIGATION_HEALTH_INVALID));
+        input->velocity_valid = (uint8_t)(input->attitude_valid != 0U &&
+            (SystemNavigationHealth_OverallGet(now_us,
                 (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_NONE) ? 0U : 0x0FU,
                 0U) != SYSTEM_NAVIGATION_HEALTH_INVALID));
-        input->velocity_valid = input->attitude_valid;
         input->ins_timestamp_us = estimator.timestamp_us;
         input->ins_sequence = estimator.update_sequence;
         (void)memcpy(input->linear_accel_n_mps2,
