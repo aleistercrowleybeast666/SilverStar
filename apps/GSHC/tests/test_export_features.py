@@ -112,6 +112,9 @@ class ExportProcessingTests(unittest.TestCase):
                 output_dir = processor.process_file(data.source_log)
 
             self.assertTrue((output_dir / "summary_ZH.txt").is_file())
+            self.assertTrue(
+                (output_dir / "Trajectory2D/horizontal_trajectory_000000.000-000001.000_ZH.png").is_file()
+            )
             self.assertTrue((output_dir / "Velocity/velocity_000000.000-000001.000_ZH.png").is_file())
             self.assertFalse((output_dir / "Sensors/accel_000000.000-000001.000_ZH.png").exists())
             self.assertIn("Sensors/accel_000000.000-000001.000_ZH.png", processor.last_export_errors)

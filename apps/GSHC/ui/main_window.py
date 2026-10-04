@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
@@ -11,7 +11,6 @@ from config import (
     PLOT_REFRESH_INTERVAL_MS,
     PLOT_WINDOW_SECONDS,
 )
-from processing.horizontal_trajectory import HorizontalTrajectory_Build
 from protocol.common import (
     AirAckResult,
     AirAlignmentState,
@@ -47,6 +46,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QProgressBar,
     QPushButton,
+    QScrollArea,
     QSizePolicy,
     QSpinBox,
     QSplitter,
@@ -74,7 +74,6 @@ from services.state_model import (
     HandshakeState,
     MissionPhase,
 )
-from ui.horizontal_trajectory import HorizontalTrajectoryWidget
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
@@ -86,7 +85,7 @@ class HeaderTitleLabel(QLabel):
     def __init__(self) -> None:
         super().__init__()
         self._full_text = ""
-        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
     def setText(self, text: str) -> None:
         self._full_text = text
@@ -106,6 +105,38 @@ class HeaderTitleLabel(QLabel):
         )
         if visible != self.text():
             super().setText(visible)
+
+
+class FlightPageContent(QWidget):
+    def sizeHint(self) -> QSize:
+        hint = super().sizeHint()
+        # Keep a scrollable surface for the summary and both plot rows.
+        hint.setHeight(max(570, self.minimumSizeHint().height()))
+        return hint
+
+
+class FlightPageScroll(QScrollArea):
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self._Content_Fit()
+        QTimer.singleShot(0, self._Content_Fit)
+        QTimer.singleShot(0, self._PlotMinimum_Update)
+
+    def _PlotMinimum_Update(self) -> None:
+        owner = self.window()
+        if hasattr(owner, "_PlotMinimum_Update"):
+            owner._PlotMinimum_Update()
+
+    def _Content_Fit(self) -> None:
+        content = self.widget()
+        if content is None:
+            return
+        target = QSize(
+            max(self.viewport().width(), content.minimumSizeHint().width()),
+            max(self.viewport().height(), content.sizeHint().height()),
+        )
+        if content.size() != target:
+            content.resize(target)
 
 
 def calibration_mode_text(i18n: I18n, state: FlightControllerState) -> str:
@@ -1359,7 +1390,6 @@ class MainWindow(QMainWindow):
         self._last_sensor_revision = -1
         self._last_plot_revision = -1
         self._last_event_revision = -1
-        self._horizontal_revision = None
         if select_preflight:
             self.pages.setCurrentWidget(self.preflight_page)
         self.render_state()
@@ -1478,12 +1508,9 @@ class MainWindow(QMainWindow):
         self.preflight_page = self._build_preflight_page()
         self.flight_page = self._build_flight_page()
         self.post_process_page = self._build_post_process_page()
-        self.horizontal_trajectory_widget = HorizontalTrajectoryWidget()
-        self._horizontal_revision = None
         self.pages.addTab(self.preflight_page, "")
         self.pages.addTab(self.flight_page, "")
         self.pages.addTab(self.post_process_page, "")
-        self.pages.addTab(self.horizontal_trajectory_widget, self.i18n.tr("horizontal.title"))
         splitter.addWidget(self.pages)
         splitter.setSizes([420, 1340])
         splitter.setStretchFactor(0, 0)
@@ -1526,17 +1553,15 @@ class MainWindow(QMainWindow):
         self.header_identity_layout = identity_layout
 
         self.header_title = HeaderTitleLabel()
-        self.header_title.setMinimumWidth(180)
         self.header_title.setObjectName("headerTitle")
         self._bind_text(self.header_title, "app.brand")
-        connection_layout.addWidget(self.header_title, 1)
+        connection_layout.addWidget(self.header_title)
         self.header_connection = HeaderTitleLabel()
-        self.header_connection.setMinimumWidth(180)
         self.header_connection.setObjectName("headerSection")
         self._bind_text(self.header_connection, "group.connection")
         status_layout = identity_layout
         status_layout.setSpacing(8)
-        status_layout.addWidget(self.header_connection, 1)
+        status_layout.addWidget(self.header_connection)
 
         self.port_combo = PortComboBox()
         self.btn_refresh = QPushButton()
@@ -1838,29 +1863,26 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_flight_page(self) -> QWidget:
-        page = QWidget()
+        page = FlightPageContent()
         root = QVBoxLayout(page)
         root.setContentsMargins(6, 6, 6, 6)
-        root.setSpacing(8)
-        status_content = QWidget()
-        status_layout = QVBoxLayout(status_content)
-        status_layout.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(4)
         top = QHBoxLayout()
-        top.addWidget(self._build_flight_status_panel(), 2)
-        top.addWidget(self._build_flight_data_panel(), 3)
+        top.addWidget(self._build_flight_status_panel(), 1)
+        top.addWidget(self._build_flight_data_panel(), 2)
         top.addWidget(self._build_mission_state_panel(), 2)
-        status_layout.addLayout(top)
-        self.flight_status_scroll = TouchScroll_Wrap(status_content, fit_content=True)
-        self.flight_status_scroll.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum
-        )
-        root.addWidget(self.flight_status_scroll)
-        # Plots keep their own pan/zoom gestures, outside page-scroll ancestors.
+        root.addLayout(top)
         root.addWidget(self._build_plot_panel(), 1)
-        return page
+        scroll = FlightPageScroll()
+        scroll.setFrameShape(QScrollArea.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        scroll.setWidget(page)
+        TouchScroll_Enable(scroll)
+        return scroll
 
     def _build_flight_status_panel(self) -> QWidget:
         box = QGroupBox()
+        box.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         self._bind_text(box, "group.important_status")
         grid = QGridLayout(box)
         grid.setContentsMargins(4, 0, 4, 0)
@@ -1888,6 +1910,7 @@ class MainWindow(QMainWindow):
 
     def _build_flight_data_panel(self) -> QWidget:
         box = QGroupBox()
+        box.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         self._bind_text(box, "group.current_data")
         grid = QGridLayout(box)
         grid.setContentsMargins(4, 0, 4, 0)
@@ -1923,6 +1946,7 @@ class MainWindow(QMainWindow):
 
     def _build_mission_state_panel(self) -> QWidget:
         box = QGroupBox()
+        box.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         self._bind_text(box, "group.mission_state")
         grid = QGridLayout(box)
         grid.setContentsMargins(4, 0, 4, 0)
@@ -1947,7 +1971,7 @@ class MainWindow(QMainWindow):
         self._bind_text(box, "group.live_plots", seconds=PLOT_WINDOW_SECONDS)
         self.plot_layout = QGridLayout(box)
         self.plot_layout.setHorizontalSpacing(8)
-        self.plot_layout.setVerticalSpacing(8)
+        self.plot_layout.setVerticalSpacing(4)
         return box
 
     def _build_post_process_page(self) -> QWidget:
@@ -2194,7 +2218,6 @@ class MainWindow(QMainWindow):
         self.gl_view.update()
 
     def _apply_plot_theme(self) -> None:
-        self.horizontal_trajectory_widget.Presentation_Set(self.i18n.tr, self.theme.value)
         if not hasattr(self, "plot_widgets"):
             return
         colors = self._theme_colors
@@ -2227,12 +2250,19 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event) -> None:
         super().resizeEvent(event)
-        if hasattr(self, "flight_status_scroll"):
-            self.flight_status_scroll.setMaximumHeight(
-                max(132, event.size().height() * 21 // 100)
-            )
+        self._PlotMinimum_Update()
         if hasattr(self, "conn_label"):
             self._ConnectionStatus_Display()
+
+    def _PlotMinimum_Update(self) -> None:
+        if not hasattr(self, "plot_widgets"):
+            return
+        # Reserve plot margins, axes, and gaps at narrow viewport widths.
+        width = min(240, max(140, (self.flight_page.viewport().width() - 101) // 3))
+        height = min(190, max(90, (self.height() - 400) // 2))
+        for plot in self.plot_widgets.values():
+            if plot.minimumWidth() != width or plot.minimumHeight() != height:
+                plot.setMinimumSize(width, height)
 
     def _ConnectionStatus_Display(self) -> None:
         text = self._connection_status_text
@@ -2930,21 +2960,6 @@ class MainWindow(QMainWindow):
 
     def _render_plots(self, state: FlightControllerState) -> None:
         plot = state.live_plot
-        history = state.horizontal_trajectory
-        horizontal_revision = (history.revision, state.mission_presentation.phase)
-        if horizontal_revision != self._horizontal_revision:
-            self._horizontal_revision = horizontal_revision
-            times, position, breaks = history.Snapshot_Get()
-            landing_time = state.mission_presentation.last_critical_event_time_ms
-            view_range = ((0, landing_time / 1000.0)
-                          if state.mission_presentation.phase is MissionPhase.LANDED
-                          and landing_time is not None else None)
-            trajectory = HorizontalTrajectory_Build(times, position, breaks_s=breaks,
-                time_range=view_range, deploy_time_s=history.deploy_time_s)
-            trajectory = replace(trajectory, start_clipped=history.dropped_sample_count > 0,
-                                 end_clipped=state.mission_presentation.phase != MissionPhase.LANDED)
-            self.horizontal_trajectory_widget.Trajectory_Set(
-                trajectory, omitted_samples=history.dropped_sample_count)
         if plot.revision == self._last_plot_revision:
             return
         self._last_plot_revision = plot.revision
@@ -3174,7 +3189,7 @@ class MainWindow(QMainWindow):
         for index, (title_key, key, axis) in enumerate(titles):
             row, column = divmod(index, 3)
             plot_widget = pg.PlotWidget(title=self.i18n.tr(title_key))
-            plot_widget.setMinimumSize(200, 100)
+            plot_widget.setMinimumSize(240, 190)
             plot_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             plot_widget.showGrid(x=True, y=True, alpha=0.3)
             plot_widget.setLabel("bottom", self.i18n.tr("plot.mission_time"))
@@ -3186,11 +3201,9 @@ class MainWindow(QMainWindow):
             self.curves[(key, axis)] = curve
             self.plot_widgets[(key, axis)] = plot_widget
             self.plot_title_keys[(key, axis)] = title_key
+        self._PlotMinimum_Update()
 
     def _retranslate_plots(self) -> None:
-        self.pages.setTabText(self.pages.indexOf(self.horizontal_trajectory_widget),
-                              self.i18n.tr("horizontal.title"))
-        self.horizontal_trajectory_widget.Presentation_Set(self.i18n.tr, self.theme.value)
         if not hasattr(self, "plot_widgets"):
             return
         for key, plot_widget in self.plot_widgets.items():

@@ -1,136 +1,117 @@
+"""Geometry checks for the three-page GSHC layout; no serial connection."""
 import os
-os.environ.setdefault('QT_QPA_PLATFORM', 'windows')
+os.environ.setdefault("QT_QPA_PLATFORM", "windows")
 
 import pytest
-from PySide6.QtCore import QPoint, QRect, QSettings, QSize
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtCore import QPoint, QRect, QSettings
+from PySide6.QtWidgets import QApplication
 from services.i18n import I18n
-from services.state_model import EventHistory
-from test_ui_workflow import ready_state
 from ui.main_window import MainWindow
 
 
-@pytest.mark.parametrize('size', [(1280,720), (1536,816)])
-@pytest.mark.parametrize('language', ['zh_CN','en_US'])
-def test_original_monitor_rows_and_six_plots_are_visible(tmp_path, size, language):
-    app=QApplication.instance() or QApplication([])
-    i18n=I18n(QSettings(str(tmp_path/'settings.ini'),QSettings.IniFormat))
-    i18n.set_language(language)
-    window=MainWindow(i18n)
-    window.render_timer.stop()
-    state=ready_state()
-    state.sensor.accel_mps2=(0.125,-0.375,9.807)
-    state.sensor.gyro_radps=(0.012,-0.025,0.001)
-    state.sensor.quat=(1.0,0.0,0.0,0.0)
-    state.sensor.quat_valid=True
-    state.sensor.euler_rpy=(0.01,-0.02,1.57)
-    state.sensor.velocity_mps=(12.345,-6.789,20.012)
-    state.sensor.position_m=(123.456,-234.567,1200.012)
-    state.sensor.revision=1
-    window.bind_runtime_model(state, EventHistory())
-    window.show()
-    app.processEvents()
-    window.resize(*size)
-    app.processEvents()
-    assert window.size() == QSize(*size)
-    def rect(widget):
-        return QRect(widget.mapTo(window,QPoint()),widget.size())
-    system=rect(window.lbl_pf_system_ready.parentWidget())
-    calibration=rect(window.lbl_cal_ready.parentWidget())
-    alignment=rect(window.lbl_align_ready.parentWidget())
-    assert system.top() == calibration.top() == alignment.top()
-    assert system.right() < calibration.left() < alignment.left()
-    assert rect(window.lbl_pf_accel).top() < rect(window.btn_start).top()
-    preflight_viewport = rect(window.preflight_page.viewport())
-    for widget in (window.lbl_pf_system_ready, window.lbl_pf_selftest, window.lbl_cal_ready,
-                   window.lbl_align_ready, window.lbl_pf_accel, window.lbl_pf_gyro,window.lbl_pf_gnss_usable,window.btn_start):
-        window.preflight_page.ensureWidgetVisible(widget, 0, 0)
-        app.processEvents()
-        assert preflight_viewport.contains(rect(widget)), (language,size,rect(widget))
-    window.pages.setCurrentWidget(window.flight_page)
-    app.processEvents()
-    assert window.size() == QSize(*size)
-    status=rect(window.lbl_flight_lifecycle.parentWidget())
-    data=rect(window.lbl_flight_accel.parentWidget())
-    mission=rect(window.lbl_mission_state.parentWidget())
-    assert status.top() == data.top() == mission.top()
-    viewport=rect(window.flight_status_scroll.viewport())
-    for widget in (window.lbl_flight_lifecycle,window.lbl_packet_loss,window.lbl_flight_vel,
-                   window.lbl_flight_pos,window.lbl_mission_parachute):
-        window.flight_status_scroll.ensureWidgetVisible(widget, 0, 0)
-        app.processEvents()
-        assert viewport.contains(rect(widget)), (language,size,rect(widget),viewport)
-    for card in (window.lbl_flight_lifecycle.parentWidget(), window.lbl_flight_accel.parentWidget(),
-                 window.lbl_mission_state.parentWidget()):
-        for label in card.findChildren(QLabel):
-            window.flight_status_scroll.ensureWidgetVisible(label, 0, 0)
-            app.processEvents()
-            assert viewport.contains(rect(label)), (language,size,label.text(),rect(label),viewport)
-    plots=[rect(window.plot_widgets[(key,axis)]) for key in ('vel','pos') for axis in range(3)]
-    assert len({r.top() for r in plots[:3]}) == 1
-    assert len({r.top() for r in plots[3:]}) == 1
-    assert plots[0].top() < plots[3].top()
-    assert all(window.rect().contains(r) for r in plots)
-    assert all(r.width() >= 200 and r.height() >= 100 for r in plots)
-    window.close()
-    window.deleteLater()
-    app.processEvents()
+def rect(widget, window):
+    return QRect(widget.mapTo(window, QPoint()), widget.size())
 
 
-def test_m0_flight_status_does_not_reserve_navigation_chart_space(tmp_path):
+@pytest.mark.parametrize("size", [(1280, 720), (1536, 816)])
+@pytest.mark.parametrize("language", ["zh_CN", "en_US"])
+def test_three_pages_serial_row_and_flight_grid(tmp_path, size, language):
     app = QApplication.instance() or QApplication([])
-    i18n = I18n(QSettings(str(tmp_path/'settings.ini'), QSettings.IniFormat))
+    i18n = I18n(QSettings(str(tmp_path / "settings.ini"), QSettings.IniFormat))
+    i18n.set_language(language)
     window = MainWindow(i18n)
     try:
         window.render_timer.stop()
         window.gl_view.hide()
-        window.bind_runtime_model(ready_state(), EventHistory())
-        window.pages.setCurrentWidget(window.flight_page)
-        window.resize(1536, 816)
+        window.set_ports(["COM100"])
+        window.resize(*size)
         window.show()
         app.processEvents()
-        assert not hasattr(window, "navigation_health_panel")
-        panel = window.flight_status_scroll
-        summary_bottom = panel.mapTo(window, QPoint()).y() + panel.height()
-        chart_top = window.plot_layout.parentWidget().mapTo(window, QPoint()).y()
-        assert chart_top - summary_bottom <= 24
-        assert all(window.plot_widgets[(key, axis)].height() >= 140
-                   for key in ('vel', 'pos') for axis in range(3))
-        window.resize(1280, 720)
+        assert window.width() == size[0]
+        assert window.height() == size[1]
+        assert [window.pages.widget(index) for index in range(window.pages.count())] == [
+            window.preflight_page, window.flight_page, window.post_process_page
+        ]
+        assert window.header_title.width() > 0
+        assert window.header_title.toolTip() == i18n.tr("app.brand")
+        assert rect(window.header_title, window).right() < rect(window.port_combo, window).left()
+        assert rect(window.port_combo, window).right() < rect(window.btn_refresh, window).left()
+        assert rect(window.btn_refresh, window).right() < rect(window.baud_spin, window).left()
+        assert rect(window.baud_spin, window).right() < rect(window.btn_connect, window).left()
+        assert rect(window.btn_connect, window).right() < rect(window.btn_disconnect, window).left()
+        assert window.current_port() == "COM100"
+
+        window.pages.setCurrentWidget(window.preflight_page)
         app.processEvents()
-        assert window.flight_status_scroll.height() <= 140
-        assert all(plot.height() >= 180 for plot in window.plot_widgets.values())
+        summary = [rect(widget.parentWidget(), window) for widget in (
+            window.lbl_pf_system_ready, window.lbl_cal_ready, window.lbl_align_ready
+        )]
+        assert summary[0].top() == summary[1].top() == summary[2].top()
+        assert summary[0].right() < summary[1].left() < summary[2].left()
+        viewport = rect(window.preflight_page.viewport(), window)
+        for widget in (window.lbl_pf_system_ready, window.lbl_pf_accel,
+                       window.btn_start):
+            window.preflight_page.ensureWidgetVisible(widget, 0, 0)
+            app.processEvents()
+            assert viewport.contains(rect(widget, window))
+
+        window.pages.setCurrentWidget(window.post_process_page)
+        app.processEvents()
+        assert window.post_process_page.isAncestorOf(window.btn_process_data)
+        assert window.post_process_page.isAncestorOf(window.btn_select_data_root)
+
+        window.pages.setCurrentWidget(window.flight_page)
+        app.processEvents()
+        cards = [rect(widget.parentWidget(), window) for widget in (
+            window.lbl_flight_lifecycle, window.lbl_flight_accel, window.lbl_mission_state
+        )]
+        assert cards[0].top() == cards[1].top() == cards[2].top()
+        assert cards[0].right() < cards[1].left() < cards[2].left()
+        assert abs(cards[1].width() - 2 * cards[0].width()) <= 10
+        assert abs(cards[2].width() - 2 * cards[0].width()) <= 10
+        plots = [rect(window.plot_widgets[(key, axis)], window)
+                 for key in ("vel", "pos") for axis in range(3)]
+        assert len({plot.top() for plot in plots[:3]}) == 1
+        assert len({plot.top() for plot in plots[3:]}) == 1
+        assert plots[0].bottom() < plots[3].top()
+        assert all(window.rect().contains(plot) for plot in plots)
+        expected_height = 160 if size[1] == 720 else 190
+        assert all(plot.width() >= 240 and plot.height() >= expected_height for plot in plots)
     finally:
         window.close()
         window.deleteLater()
         app.processEvents()
 
 
-@pytest.mark.parametrize('size', [(1280, 720), (1280, 1080), (1920, 720), (1920, 1080)])
-@pytest.mark.parametrize('language', ['zh_CN', 'en_US'])
-def test_flight_header_and_plots_fit_responsive_window(tmp_path, size, language):
+def test_small_window_scrolls_to_flight_plots_and_post_process_actions(tmp_path):
     app = QApplication.instance() or QApplication([])
-    i18n = I18n(QSettings(str(tmp_path / 'settings.ini'), QSettings.IniFormat))
-    i18n.set_language(language)
-    window = MainWindow(i18n)
+    window = MainWindow(I18n(QSettings(str(tmp_path / "small.ini"), QSettings.IniFormat)))
     try:
         window.render_timer.stop()
         window.gl_view.hide()
-        window.bind_runtime_model(ready_state(), EventHistory())
-        window.pages.setCurrentWidget(window.flight_page)
-        window.resize(*size)
+        window.resize(1024, 600)
         window.show()
         app.processEvents()
-        assert window.size() == QSize(*size)
-        assert window.header_title.width() >= 180
-        assert window.header_title.toolTip() == i18n.tr('app.brand')
-        assert window.header_connection.width() >= 180
-        assert all(window.rect().contains(QRect(
-            plot.mapTo(window, QPoint()), plot.size()))
-            for plot in window.plot_widgets.values())
-        assert all(plot.height() >= 100 for plot in window.plot_widgets.values())
-        if size[1] == 720:
-            assert all(plot.height() >= 120 for plot in window.plot_widgets.values())
+        assert window.size().width() == 1024
+        assert window.size().height() == 600
+        for widget in (window.port_combo, window.btn_refresh, window.baud_spin,
+                       window.btn_connect, window.btn_disconnect):
+            assert window.rect().contains(rect(widget, window))
+        window.pages.setCurrentWidget(window.flight_page)
+        app.processEvents()
+        assert window.flight_page.verticalScrollBar().maximum() > 0
+        last_plot = window.plot_widgets[("pos", 2)]
+        window.flight_page.verticalScrollBar().setValue(
+            window.flight_page.verticalScrollBar().maximum()
+        )
+        app.processEvents()
+        assert rect(window.flight_page.viewport(), window).contains(rect(last_plot, window))
+        window.pages.setCurrentWidget(window.post_process_page)
+        window.post_process_page.ensureWidgetVisible(window.btn_select_data_root, 0, 0)
+        app.processEvents()
+        assert rect(window.post_process_page.viewport(), window).contains(
+            rect(window.btn_select_data_root, window)
+        )
     finally:
         window.close()
         window.deleteLater()

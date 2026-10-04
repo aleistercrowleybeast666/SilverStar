@@ -24,7 +24,7 @@ from protocol.air import AirStatusMessage
 from protocol.common import AirStatusId
 from services.i18n import I18n
 from services.preferences import Theme
-from test_mission_trajectory import _Frame_Get
+from test_mission_trajectory import _Frame_Get, _Trajectory_FromState
 from test_start_ack_state import make_controller
 from ui.main_window import MainWindow
 
@@ -46,6 +46,16 @@ for index in range(1751):
 window.bind_runtime_model(controller.state, controller.events)
 window._render_plots(controller.state)
 window.show()
+assert window.pages.count() == 3
+assert not hasattr(window, "horizontal_trajectory_widget")
+report["layout_hints"] = {
+    "window": window.minimumSizeHint().height(),
+    "flight": window.flight_page.minimumSizeHint().height(),
+    "status": window.lbl_flight_lifecycle.parentWidget().minimumSizeHint().height(),
+    "data": window.lbl_flight_accel.parentWidget().minimumSizeHint().height(),
+    "mission": window.lbl_mission_state.parentWidget().minimumSizeHint().height(),
+    "plots": window.plot_layout.parentWidget().minimumSizeHint().height(),
+}
 
 def pump(seconds=0.7):
     deadline = time.monotonic() + seconds
@@ -79,8 +89,8 @@ report["pre_fix_553ad43"] = {"first_s": float(old_geometry.times_s[0]),
                             "early_deploy_visible": old_geometry.deploy_enu is not None}
 assert old_geometry.times_s[0] == 340 and old_geometry.deploy_enu is None
 old.close()
-new_geometry = window.horizontal_trajectory_widget.trajectory
-report["full_task_350s"] = {"sample_count": len(new_geometry.times_s),
+new_geometry = _Trajectory_FromState(controller.state)
+report["full_task_350s_state"] = {"sample_count": len(new_geometry.times_s),
                            "first_s": float(new_geometry.times_s[0]),
                            "last_s": float(new_geometry.times_s[-1]),
                            "start_clipped": new_geometry.start_clipped,
@@ -95,33 +105,31 @@ for language, theme in (("en_US", "light"), ("zh_CN", "dark")):
     window.theme_combo.setCurrentIndex(window.theme_combo.findData(theme))
     for height in (720, 900):
         window.resize(1280, height)
-        window.pages.setCurrentWidget(window.horizontal_trajectory_widget)
-        capture(f"full_350s_{language}_{height}")
         window.pages.setCurrentWidget(window.flight_page)
-        capture(f"preserved_six_curves_{language}_{height}")
+        capture(f"six_curves_{language}_{height}")
 
 # Freeze at landing, then an explicit next task, fill beyond the real capacity.
 controller._handle_status_message(AirStatusMessage(3, int(AirStatusId.LANDING), 350000, 0, 0), None)
 window._render_plots(controller.state)
-assert not window.horizontal_trajectory_widget.trajectory.end_clipped
+assert not _Trajectory_FromState(controller.state).end_clipped
 controller._handle_status_message(AirStatusMessage(4, int(AirStatusId.MISSION_START), 0, 0, 0), None)
 assert controller.state.horizontal_trajectory.Snapshot_Get()[0] == []
 for index in range(HORIZONTAL_TRAJECTORY_MAX_POINTS + 7):
     controller.state.horizontal_trajectory.Sample_Append(index / 5, _Frame_Get(index).pos_m)
 window._render_plots(controller.state)
 report["capacity"] = {"max_points": HORIZONTAL_TRAJECTORY_MAX_POINTS,
-                      "retained": len(window.horizontal_trajectory_widget.trajectory.times_s),
-                      "omitted": window.horizontal_trajectory_widget.omitted_samples}
+                      "retained": len(controller.state.horizontal_trajectory.Snapshot_Get()[0]),
+                      "omitted": controller.state.horizontal_trajectory.dropped_sample_count}
 for language, theme in (("en_US", "light"), ("zh_CN", "dark")):
     window.i18n.set_language(language)
     window.retranslate_ui()
     window._apply_theme(Theme(theme), persist=True)
     window.theme_combo.setCurrentIndex(window.theme_combo.findData(theme))
-    window.pages.setCurrentWidget(window.horizontal_trajectory_widget)
+    window.pages.setCurrentWidget(window.flight_page)
     window.resize(1280, 900)
     capture(f"capacity_{language}_900")
 
 window.close()
-report["limitations"] = "Qt window render only; no sky/native screen tool exposed; no hardware data/actions."
+report["limitations"] = "Native Qt render with synthetic data only; no serial or hardware actions."
 (OUT / "gui_report.json").write_text(json.dumps(report, indent=2), encoding="utf8")
 app.quit()

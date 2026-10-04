@@ -70,22 +70,23 @@ def test_controller_350s_5hz_keeps_start_and_early_deploy_after_event_eviction(
     assert controller.state.live_plot.snapshot()[0][0] == 340
     window.bind_runtime_model(controller.state, controller.events)
     window._render_plots(controller.state)
-    trajectory = window.horizontal_trajectory_widget.trajectory
+    trajectory = _Trajectory_FromState(controller.state)
     np.testing.assert_allclose(trajectory.points_enu[0], _Frame_Get(0).pos_m)
     np.testing.assert_allclose(trajectory.deploy_enu, _Frame_Get(50).pos_m)
     assert not trajectory.start_clipped and trajectory.end_clipped
-    assert window.horizontal_trajectory_widget.omitted_samples == 0
+    assert controller.state.horizontal_trajectory.dropped_sample_count == 0
     controller._handle_status_message(
         AirStatusMessage(3, int(AirStatusId.LANDING), 350000, 0, 0), None
     )
     controller._handle_flight_state(_Frame_Get(1752), None)
     window._render_plots(controller.state)
-    assert not window.horizontal_trajectory_widget.trajectory.end_clipped
-    assert window.horizontal_trajectory_widget.trajectory.times_s[-1] == 350
+    assert controller.state.mission_presentation.phase is MissionPhase.LANDED
+    assert not _Trajectory_FromState(controller.state).end_clipped
+    assert _Trajectory_FromState(controller.state).times_s[-1] == 350
     window.close()
 
 
-def test_capacity_clips_oldest_without_sampling_and_labels_range(tmp_path):
+def test_capacity_clips_oldest_without_sampling(tmp_path):
     _app, window = _Window_Create(tmp_path)
     controller = make_controller()
     history = controller.state.horizontal_trajectory
@@ -94,25 +95,12 @@ def test_capacity_clips_oldest_without_sampling_and_labels_range(tmp_path):
     history.Deploy_Observe(0.2)  # No extrapolation back into the clipped-away data.
     window.bind_runtime_model(controller.state, controller.events)
     window._render_plots(controller.state)
-    trajectory = window.horizontal_trajectory_widget.trajectory
+    trajectory = _Trajectory_FromState(controller.state)
     assert len(trajectory.times_s) == HORIZONTAL_TRAJECTORY_MAX_POINTS
     assert trajectory.times_s[0] == 7 / 5
-    assert (
-        history.dropped_sample_count
-        == window.horizontal_trajectory_widget.omitted_samples
-        == 7
-    )
+    assert history.dropped_sample_count == 7
     assert trajectory.start_clipped and trajectory.deploy_enu is None
     assert len(trajectory.edges_enu) == HORIZONTAL_TRAJECTORY_MAX_POINTS - 1
-    for language in ("en_US", "zh_CN"):
-        window.i18n.set_language(language)
-        window.retranslate_ui()
-        window.horizontal_trajectory_widget._Draw()
-        axis = window.horizontal_trajectory_widget.figure.axes[0]
-        assert "7" in axis.get_title()
-        assert axis.get_legend().get_texts()[0].get_text() == window.i18n.tr(
-            "horizontal.view_start"
-        )
     window.close()
 
 
@@ -156,13 +144,13 @@ def test_reconnect_or_session_replacement_has_no_old_positions_or_deploy(
     window.bind_runtime_model(controller.state, controller.events)
     window._render_plots(controller.state)
     assert controller.state.horizontal_trajectory is not previous
-    assert controller.state.horizontal_trajectory.Snapshot_Get()[0] == []
+    assert len(_Trajectory_FromState(controller.state).points_enu) == 0
     assert controller.state.horizontal_trajectory.deploy_time_s is None
-    assert len(window.horizontal_trajectory_widget.trajectory.points_enu) == 0
+    assert controller.state.horizontal_trajectory.Snapshot_Get()[0] == []
     controller._handle_flight_state(_Frame_Get(1), None)
     window._render_plots(controller.state)
-    assert len(window.horizontal_trajectory_widget.trajectory.points_enu) == 1
-    assert window.horizontal_trajectory_widget.trajectory.deploy_enu is None
+    assert len(_Trajectory_FromState(controller.state).points_enu) == 1
+    assert controller.state.horizontal_trajectory.deploy_time_s is None
     window.close()
 
 
@@ -188,18 +176,22 @@ def test_new_mission_after_landing_clears_history_but_late_or_duplicate_start_do
     assert history.Snapshot_Get()[0] == [0]
 
 
-def test_hidden_stream_is_not_painted_and_visible_updates_are_coalesced(tmp_path):
-    app, window = _Window_Create(tmp_path)
-    widget = window.horizontal_trajectory_widget
-    trajectory = HorizontalTrajectory_Build([0, 0.2], [(0, 0, 0), (1, 1, 1)])
-    for _ in range(10):
-        widget.Trajectory_Set(trajectory)
-    assert not widget.redraw_timer.isActive()
-    window.show()
-    window.pages.setCurrentWidget(widget)
-    app.processEvents()
-    for _ in range(20):
-        widget.Trajectory_Set(trajectory)
-    assert widget.redraw_timer.isActive() and widget.redraw_timer.interval() == 500
-    assert widget.redraw_timer.isSingleShot()
-    window.close()
+def _Trajectory_FromState(state):
+    history = state.horizontal_trajectory
+    times, positions, breaks = history.Snapshot_Get()
+    landing_time = state.mission_presentation.last_critical_event_time_ms
+    view_range = (
+        (0, landing_time / 1000.0)
+        if state.mission_presentation.phase is MissionPhase.LANDED
+        and landing_time is not None
+        else None
+    )
+    trajectory = HorizontalTrajectory_Build(
+        times, positions, breaks_s=breaks, time_range=view_range,
+        deploy_time_s=history.deploy_time_s,
+    )
+    return replace(
+        trajectory,
+        start_clipped=history.dropped_sample_count > 0,
+        end_clipped=state.mission_presentation.phase is not MissionPhase.LANDED,
+    )
