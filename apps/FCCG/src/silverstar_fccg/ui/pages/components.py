@@ -398,9 +398,6 @@ class DevicesPage(ScrollableLocalizedPage):
                     if selected_plugin == "silverstar.device.imu.jy901b":
                         orientation_combo = StandardComboBox()
                         orientation_combo.setObjectName(f"jy901bOrientation_{instance_id}")
-                        if instance.installation_orientation == "preserve":
-                            orientation_combo.addItem(
-                                self._translator.Text_Get("device.jy901b.preserve"), "preserve")
                         for orientation in ("horizontal", "vertical"):
                             orientation_combo.addItem(
                                 self._translator.Text_Get("device.jy901b." + orientation), orientation)

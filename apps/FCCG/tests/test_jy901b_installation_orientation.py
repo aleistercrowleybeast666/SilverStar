@@ -18,7 +18,6 @@ from test_scg_ui_metadata_hotfix import window
 @pytest.mark.parametrize("orientation, command", [
     ("horizontal", ".installation_orientation = 0U"),
     ("vertical", ".installation_orientation = 1U"),
-    ("preserve", ".installation_orientation = 2U"),
 ])
 def test_orientation_survives_save_and_reaches_generated_driver(
     tmp_path, workspace_root, orientation, command,
@@ -48,7 +47,7 @@ def test_orientation_survives_save_and_reaches_generated_driver(
     logged = next(item for item in semantics["devices"]
                   if item["plugin"] == "silverstar.device.imu.jy901b")
     assert logged["installation_orientation"] == orientation
-    if orientation in ("horizontal", "preserve"):
+    if orientation == "horizontal":
         sources = (
             "Tests/Host/host_platform_mock.c",
             "Common/Src/common_ringbuf.c",
@@ -63,7 +62,6 @@ def test_orientation_survives_save_and_reaches_generated_driver(
         command = _CompilerCommand(project) + [
             "-DJY_BOOT_PROBE_ADAPTER_VERIFY=1", "-ffunction-sections",
             "-fdata-sections", "-Wl,--gc-sections",
-            *(["-DJY_TEST_PRESERVE_ORIENT=1"] if orientation == "preserve" else []),
             *(str(project / source) for source in sources),
             str(workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_jy901b_startup.c"),
             "-lm",
@@ -71,7 +69,7 @@ def test_orientation_survives_save_and_reaches_generated_driver(
         _CompileAndRun(command, project, tmp_path / "jy901b-horizontal.exe")
 
 
-def test_legacy_jy901b_project_retains_previous_vertical_mode(workspace_root):
+def test_legacy_jy901b_project_enforces_previous_vertical_mode(tmp_path, workspace_root):
     service = FccgService(workspace_root)
     model = service.ReferenceProject_Create("Jy901bLegacy")
     data = model.Dictionary_Get()
@@ -80,21 +78,47 @@ def test_legacy_jy901b_project_retains_previous_vertical_mode(workspace_root):
     restored = ProjectModel_Parse(json.loads(json.dumps(data)))
     jy = next(item for item in restored.device_instances
               if item.plugin == "silverstar.device.imu.jy901b")
-    assert jy.installation_orientation == "preserve"
+    assert jy.installation_orientation == "vertical"
     assert next(item for item in model.device_instances
                 if item.plugin == "silverstar.device.imu.jy901b").installation_orientation == "vertical"
+    project = tmp_path / "legacy"
+    service.Project_Save(restored, project, confirm_dangerous=True)
+    reopened = service.Project_Open(project)
+    assert reopened.DeviceInstance_Get(jy.instance_id).installation_orientation == "vertical"
+    resources = (project / "Generated/Src/project_resources.c").read_text(encoding="utf-8")
+    assert ".installation_orientation = 1U" in resources
+    with zipfile.ZipFile(project / "Jy901bLegacy.ssdecoder") as package:
+        semantics = json.loads(package.read("project_semantics.json"))
+    logged = next(item for item in semantics["devices"]
+                  if item["plugin"] == "silverstar.device.imu.jy901b")
+    assert logged["installation_orientation"] == "vertical"
+    sources = (
+        "Tests/Host/host_platform_mock.c",
+        "Common/Src/common_ringbuf.c",
+        "Common/Src/silverstar_assert.c",
+        "Generated/Src/project_resources.c",
+        "Devices/IMU/JY901B/Src/jy901b_device.c",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c",
+        "System/Src/system_device_startup.c",
+    )
+    command = _CompilerCommand(project) + [
+        "-DJY_BOOT_PROBE_ADAPTER_VERIFY=1", "-DJY_TEST_LEGACY_VERTICAL=1",
+        "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+        *(str(project / source) for source in sources),
+        str(workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_jy901b_startup.c"),
+        "-lm",
+    ]
+    _CompileAndRun(command, project, tmp_path / "legacy-vertical.exe")
 
 
 def test_gui_orientation_selector_updates_and_reopens(window, qapp, tmp_path):
     window._model = window._service.ReferenceProject_Create("Jy901bGuiOrientation")
-    window._model.device_instances = [
-        replace(item, installation_orientation="preserve")
-        if item.plugin == "silverstar.device.imu.jy901b" else item
-        for item in window._model.device_instances
-    ]
     window._Project_Refresh()
     combo = window.devices_page.orientation_combos["imu0"]
-    assert combo.currentData() == "preserve"
+    assert combo.currentData() == "vertical"
+    assert combo.count() == 2
     combo.setCurrentIndex(combo.findData("horizontal"))
     qapp.processEvents()
     assert window._model.DeviceInstance_Get("imu0").installation_orientation == "horizontal"

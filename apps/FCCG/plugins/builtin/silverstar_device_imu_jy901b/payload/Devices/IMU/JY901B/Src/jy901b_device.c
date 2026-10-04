@@ -1201,7 +1201,7 @@ Jy901bStartupRegisterResult IMU_StartupRegisterGet(
         (reg == NULL) || (expected_value == NULL))
     { return Jy901bStartupRegisterResult_InvalidArgument; }
     if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK ||
-        resources.installation_orientation > IMU_ORIENT_PRESERVE_VALUE)
+        resources.installation_orientation > IMU_ORIENT_VERTICAL_VALUE)
     { return Jy901bStartupRegisterResult_InvalidArgument; }
     SILVERSTAR_ASSERT_OBJECT(reg, uint8_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
@@ -1255,12 +1255,6 @@ IMUState IMU_ApplyDefaultConfig(uint8_t instance, IMUOutputRate output_rate,
     }
     result = IMU_ReadCurrentConfig(instance, &actual);
     if (result != IMU_OK) { return result; }
-    if (expected[1] == IMU_ORIENT_PRESERVE_VALUE)
-    {
-        if (actual.OrientationValue > IMU_ORIENT_VERTICAL_VALUE)
-        { return IMU_RESP_INVALID; }
-        expected[1] = actual.OrientationValue;
-    }
     IMU_DefaultValuesGet(&actual, values);
     result = IMU_DefaultDifferencesApply(instance, values, expected, &changed);
     if (result != IMU_OK) { return result; }

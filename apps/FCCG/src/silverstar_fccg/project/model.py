@@ -1025,8 +1025,8 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         profile = _String_Require(entry, "profile", allow_empty=True)
         module = entry.get("module_variant", "")
         power = entry.get("tx_power_dbm")
-        orientation = entry.get("installation_orientation", "preserve")
-        if (orientation not in ("horizontal", "vertical", "preserve") or
+        orientation = entry.get("installation_orientation", "vertical")
+        if (orientation not in ("horizontal", "vertical") or
                 ("installation_orientation" in entry and plugin != "silverstar.device.imu.jy901b")):
             raise ProjectModelError("Invalid JY901B installation orientation")
         if (not isinstance(module, str) or (module and not SELECTION_OPTION_PATTERN.fullmatch(module))

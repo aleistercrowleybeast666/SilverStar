@@ -640,9 +640,7 @@ static uint32_t Jy901bImuAdapter_ConfigMismatchMaskGet(uint8_t instance,
     { mismatch_mask |= IMU_CONFIG_VALID_ALGORITHM; }
     if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK)
     { return IMU_CONFIG_VALID_ORIENTATION; }
-    if ((config->OrientationValue > IMU_ORIENT_VERTICAL_VALUE) ||
-        ((resources.installation_orientation != IMU_ORIENT_PRESERVE_VALUE) &&
-         (config->OrientationValue != resources.installation_orientation)))
+    if (config->OrientationValue != resources.installation_orientation)
     { mismatch_mask |= IMU_CONFIG_VALID_ORIENTATION; }
     if (config->GyroRangeValue != IMU_DEFAULT_GYRO_RANGE_VALUE)
     { mismatch_mask |= IMU_CONFIG_VALID_GYRO_RANGE; }

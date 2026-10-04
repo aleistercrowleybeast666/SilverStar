@@ -1128,8 +1128,7 @@ def _InstanceResourcesSource_Render(
             if binding.accessor == "ProjectSx1281Resources_Get" and not any(field.member == "rx_en" for field in binding.fields):
                 values.extend((".rx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT", ".tx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT"))
             if binding.accessor == "ProjectJy901bResources_Get":
-                orientation = {"horizontal": 0, "vertical": 1,
-                               "preserve": 2}[instance.installation_orientation]
+                orientation = {"horizontal": 0, "vertical": 1}[instance.installation_orientation]
                 values.append(f".installation_orientation = {orientation}U")
             rows.append("    { " + ", ".join(values) + " }")
         table_symbol = f"s_{binding.accessor.removesuffix('_Get')}"
@@ -2018,10 +2017,7 @@ def _LogPhysicalDevices_Get(
                 "chipset": physical.chipset,
                 "driver": physical.driver,
                 **({"installation_orientation": instance.installation_orientation,
-                    "orientation_config_source": (
-                        "JY901B_ORIENT_0x23_preserve_actual_unknown" if
-                        instance.installation_orientation == "preserve" else
-                        "JY901B_ORIENT_0x23_module_internal")}
+                    "orientation_config_source": "JY901B_ORIENT_0x23_module_internal"}
                    if instance.plugin == "silverstar.device.imu.jy901b" else {}),
                 "capabilities": list(manifest.provides),
                 "recordable_outputs": dict(
