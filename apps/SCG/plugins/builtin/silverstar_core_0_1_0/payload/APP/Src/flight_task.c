@@ -62,6 +62,14 @@ static uint32_t s_calibration_diagnostic_sequence;
 static uint32_t s_alignment_start_sequence;
 static SystemAlignmentState s_logged_alignment_state;
 static uint8_t s_alignment_state_known;
+typedef struct
+{
+    FlightLogAlignmentEvidenceRecord record;
+    uint64_t timestamp_us;
+    uint8_t pending;
+} FlightAlignmentLog;
+/* FlightTask-owned retry copy: independent of mutable alignment/sensor inputs. */
+static PLATFORM_CPU_FAST_BSS FlightAlignmentLog s_alignment_log;
 static uint32_t s_deploy_log_sequence;
 static uint32_t s_deploy_detail_log_sequence;
 static uint32_t s_impact_log_sequence;
@@ -139,6 +147,20 @@ static void FlightTask_CalibrationResultWrite(
     }
 }
 
+static uint8_t FlightTask_AlignmentEvidenceRetry(void)
+{
+    LoggerBusResult result;
+    SILVERSTAR_ASSERT(s_alignment_log.pending <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (s_alignment_log.pending == 0U) { return 1U; }
+    result = LoggerBus_AlignmentEvidencePush(s_alignment_log.timestamp_us,
+        &s_alignment_log.record);
+    if (result != LOGGER_BUS_RESULT_OK) { return 0U; }
+    /* OK is queue admission (or disabled-no-storage suppression), not sync. */
+    s_alignment_log.pending = 0U;
+    return 1U;
+}
+
 static void FlightTask_AlignmentEvidenceWrite(
     const SystemAlignmentStatus *status,
     const InsAlignmentSnapshot *snapshot, uint8_t snapshot_valid)
@@ -151,6 +173,8 @@ static void FlightTask_AlignmentEvidenceWrite(
         SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT_OBJECT(snapshot, InsAlignmentSnapshot,
         SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT(s_alignment_log.pending == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     (void)memset(&record, 0, sizeof(record));
     record.alignment_algorithm = (uint8_t)SYSTEM_ALIGNMENT_ALGORITHM;
     record.constraint_count = SYSTEM_ALIGNMENT_CONSTRAINT_COUNT;
@@ -196,8 +220,9 @@ static void FlightTask_AlignmentEvidenceWrite(
     if (status->ready != 0U) { record.flags |= 8U; }
     record.mag_calibration_set_hash =
         SystemMagCalibration_GenerationHashGet();
-    (void)LoggerBus_AlignmentEvidencePush(
-        SystemTime_GetMonotonicUs(), &record);
+    s_alignment_log.record = record;
+    s_alignment_log.timestamp_us = SystemTime_GetMonotonicUs();
+    s_alignment_log.pending = 1U;
 }
 
 static void FlightTask_AlignmentResultWrite(
@@ -309,6 +334,8 @@ static void FlightTask_AlignmentEventsProcess(uint64_t now_us)
 {
     SystemAlignmentSummary alignment;
 
+    /* Do not replace a rejected first evidence with a later terminal state. */
+    if (FlightTask_AlignmentEvidenceRetry() == 0U) { return; }
     if (SystemAlignment_SummaryGet(&alignment) != SYSTEM_DEVICE_OK) { return; }
     SILVERSTAR_ASSERT(alignment.state <= SYSTEM_ALIGNMENT_STATE_STALE,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
@@ -334,6 +361,7 @@ static void FlightTask_AlignmentEventsProcess(uint64_t now_us)
     }
     s_logged_alignment_state = alignment.state;
     s_alignment_state_known = 1U;
+    if (FlightTask_AlignmentEvidenceRetry() == 0U) { return; }
 }
 
 static void FlightTask_CalibrationTerminalEventsProcess(
@@ -1050,6 +1078,7 @@ static void FlightTask_RuntimeInitialize(void)
     s_calibration_diagnostic_sequence = 0U;
     s_alignment_start_sequence = 0U;
     s_alignment_state_known = 0U;
+    s_alignment_log.pending = 0U;
     s_deploy_log_sequence = 0U;
     s_deploy_detail_log_sequence = 0U;
     s_impact_log_sequence = 0U;

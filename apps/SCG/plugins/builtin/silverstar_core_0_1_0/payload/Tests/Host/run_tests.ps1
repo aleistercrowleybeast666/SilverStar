@@ -1221,6 +1221,11 @@ Invoke-HostTest -Name 'logger_snapshot_actual' -ExtraCompilerArgs @(
     '-DLOGGER_SNAPSHOT_START_TEST=1', '-flto', '-ffunction-sections',
     '-fdata-sections', '-Wl,--gc-sections', '-Wl,--wrap=CommonSpscQueue_Push'
 ) -Sources $loggerSnapshotSources
+Invoke-HostTest -Name 'logger_alignment_actual' -ExtraCompilerArgs @(
+    '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections'
+) -Sources (@($loggerSnapshotSources | Where-Object {
+    $_ -notmatch 'test_logger_snapshot\.c$'
+}) + @("$repoRoot\Tests\Host\test_logger_alignment.c"))
 Invoke-HostTest -Name 'logger_streaming_actual' -ExtraCompilerArgs @(
     '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections'
 ) -Sources (@("$repoRoot\Tests\Host\test_logger_streaming.c", $hostPlatformMock) + $sslogSources)

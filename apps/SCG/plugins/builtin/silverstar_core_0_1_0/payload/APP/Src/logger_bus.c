@@ -263,6 +263,7 @@ static uint8_t LoggerBus_BootstrapAllows(FlightLogRecordType type)
         (type == FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR) ||
         (type == FLIGHT_LOG_RECORD_CALIBRATION_RESULT) ||
         (type == FLIGHT_LOG_RECORD_ALIGNMENT_RESULT) ||
+        (type == FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE) ||
         (type == FLIGHT_LOG_RECORD_MISSION_CONFIG) ||
         (type == FLIGHT_LOG_RECORD_INITIAL_STATE) ||
         (type == FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE) ||
