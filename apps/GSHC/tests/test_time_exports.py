@@ -117,27 +117,46 @@ def test_cli_gif_source_default_and_explicit_range(args, expected):
     assert processor.export_options.gif_source_duration_s == expected
 
 
-def test_real_61s_png_pages_and_full_text(tmp_path):
+@pytest.mark.parametrize('page_duration', [30, None])
+def test_real_61s_png_pages_and_full_text(tmp_path, monkeypatch, page_duration):
     data = Data_Build(61)
-    options = ResolvedExportOptions(items=frozenset({ExportItem.CHARTS, ExportItem.PROCESSED_DATA, ExportItem.SESSION_INFO}))
+    data.parachute_ms = 46000
+    options = ResolvedExportOptions(items=frozenset({ExportItem.CHARTS, ExportItem.PROCESSED_DATA, ExportItem.SESSION_INFO}), page_duration_s=page_duration)
+    from processing import flight_plotter
+    observed = []
+    draw = flight_plotter.HorizontalTrajectory_Draw
+    def capture(figure, trajectory, labels, **kwargs):
+        observed.append(trajectory)
+        return draw(figure, trajectory, labels, **kwargs)
+    monkeypatch.setattr(flight_plotter, 'HorizontalTrajectory_Draw', capture)
     processor = FlightLogProcessor(tmp_path, export_options=options)
     progress = []
     with patch.object(processor, "_read_jsonl", return_value=[]), patch.object(processor, "_extract_flight_data", return_value=data):
         output = processor.process_file(data.source_log, progress=lambda *v: progress.append(v))
     assert not processor.last_export_errors
     files = list(output.rglob("*.png"))
-    assert len(files) == 24
+    page_count = 3 if page_duration == 30 else 1
+    assert len(files) == 7 * page_count + 1
     assert {p.parent.name for p in files} == {"Position", "Velocity", "Attitude", "Sensors", "Diagnostics", "Trajectory2D"}
-    for category in ("Position", "Velocity", "Trajectory2D"):
-        assert len(list((output / category).glob("*.png"))) == 3
-    assert any("000060.000-000061.000" in p.name for p in files)
+    for category in ("Position", "Velocity"):
+        assert len(list((output / category).glob("*.png"))) == page_count
+    assert len(list((output / "Trajectory2D").glob("*.png"))) == 1
+    if page_count == 3:
+        assert any("000060.000-000061.000" in p.name for p in files)
+    assert len(observed) == 1
+    trajectory = observed[0]
+    np.testing.assert_allclose(trajectory.points_enu[[0, -1]], [[0, 0, 0], [61, 0, 61]])
+    np.testing.assert_allclose(trajectory.deploy_enu, [46, 0, 46])
+    assert not trajectory.start_clipped and not trajectory.end_clipped
+    assert trajectory.edge_height_m.min() < trajectory.edge_height_m.max()
     assert "61.000" in (output / "processed_data_EN.txt").read_text()
     manifest = json.loads((output / "manifest_EN.json").read_text())
-    assert manifest["export"]["pages_s"] == [[0, 30], [30, 60], [60, 61]]
+    assert manifest["export"]["pages_s"] == ([[0, 30], [30, 60], [60, 61]] if page_count == 3 else [[0, 61]])
+    assert manifest["export"]["horizontal_trajectory_s"] == [0, 61]
     assert manifest["export"]["gif"]["source_range_s"] == [0, 61]
     assert manifest["export"]["theme_mode"] == "follow_ui"
     assert manifest["export"]["resolved_theme"] == "light"
-    assert progress[-1][0] == progress[-1][1] == 26
+    assert progress[-1][0] == progress[-1][1] == 7 * page_count + 3
     assert data.duration_s == 61 and data.pos[-1].time_s == 61
 
 

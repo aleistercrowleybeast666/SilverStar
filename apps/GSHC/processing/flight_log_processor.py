@@ -532,7 +532,7 @@ class FlightLogProcessor:
         total_steps = 0
         total_steps += int(ExportItem.PROCESSED_DATA in options.items)
         total_steps += int(ExportItem.SUMMARY in options.items)
-        total_steps += 8 * len(pages) if ExportItem.CHARTS in options.items else 0
+        total_steps += 7 * len(pages) + 1 if ExportItem.CHARTS in options.items else 0
         total_steps += 2 * frame_count + 1 if ExportItem.ATTITUDE_3D in options.items else 0
         total_steps += int(ExportItem.SESSION_INFO in options.items)
         done = 0
@@ -568,8 +568,16 @@ class FlightLogProcessor:
             run_export(name, lambda: self._write_summary(data, output_dir / name))
 
         if ExportItem.CHARTS in options.items:
+            # Spatial context always covers the whole mission, independently
+            # of the time-series page selection.
+            directory = output_dir / "Trajectory2D"
+            directory.mkdir(exist_ok=True)
+            plotter.page_range = None
+            name = PageName_Build("horizontal_trajectory", options.language_suffix,
+                                  (0.0, data.duration_s))
+            run_export(f"Trajectory2D/{name}",
+                       lambda: plotter.plot_horizontal_trajectory(directory / name, data))
             chart_jobs: tuple[tuple[str, Callable[[Path], None]], ...] = (
-                ("horizontal_trajectory", lambda path: plotter.plot_horizontal_trajectory(path, data)),
                 (
                     "accel",
                     lambda path: plotter.plot_vector_figure(
@@ -654,7 +662,6 @@ class FlightLogProcessor:
                 ),
             )
             categories = {
-                "horizontal_trajectory": "Trajectory2D",
                 "accel": "Sensors", "gyro": "Sensors", "euler": "Attitude",
                 "velocity": "Velocity", "position": "Position",
                 "link_quality": "Diagnostics", "packet_loss_per_second": "Diagnostics",
@@ -1386,6 +1393,7 @@ class FlightLogProcessor:
                 "page_duration_s": options.page_duration_s,
                 "gif_source_duration_s": options.gif_source_duration_s,
                 "pages_s": list(Pages_Build(data.duration_s, options.page_duration_s)),
+                "horizontal_trajectory_s": [0.0, data.duration_s],
                 "gif": GifPlan_Build(data.duration_s, options.gif_source_duration_s).Metadata_Get(),
             },
             "warnings": data.warnings,

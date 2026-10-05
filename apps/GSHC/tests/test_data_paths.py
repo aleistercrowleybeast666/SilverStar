@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 from pathlib import Path
 from types import SimpleNamespace
@@ -12,6 +13,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 import config
 from app import Controller, DataMigrationWorker, SimulationWorker
+from processing.flight_log_processor import FlightLogProcessor
 from services.i18n import Language
 from services.preferences import ExportItem, ResolvedExportOptions, Theme
 from services.data_migration import DataMigrationConflictPolicy
@@ -20,6 +22,52 @@ from ui.main_window import DataDirectorySelection
 
 
 class DataPathTests(unittest.TestCase):
+    def test_explicit_reexport_reads_changed_log_and_preserves_prior_results(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            source = root / "record.jsonl"
+            record = {"dir": "RX", "layer": "AIR_PARSED", "kind": "FLIGHT_STATE",
+                      "seq": 1, "time_ms": 1000, "pos_m": [0.0, 0.0, 1.0],
+                      "vel_mps": [0.0, 0.0, 0.0], "quat": [1.0, 0.0, 0.0, 0.0],
+                      "quat_valid": True}
+            source.write_text(json.dumps(record) + "\n", encoding="utf-8")
+            options = ResolvedExportOptions(
+                language=Language.EN_US, theme=Theme.LIGHT,
+                items=frozenset({ExportItem.PROCESSED_DATA, ExportItem.SESSION_INFO}),
+            )
+            outputs = [FlightLogProcessor(root / "data", export_options=options).process_file(source)]
+            prior_hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest()
+                            for path in outputs[0].iterdir() if path.is_file()}
+            first_input_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+            added = dict(record, seq=2, time_ms=1200, pos_m=[99.5, 0.0, 2.0])
+            with source.open("a", encoding="utf-8") as file:
+                file.write(json.dumps(added) + "\n")
+            self.assertNotEqual(hashlib.sha256(source.read_bytes()).hexdigest(), first_input_hash)
+            window = Mock()
+            window.request_export_options.return_value = options
+            controller = SimpleNamespace(
+                data_migration_thread=None, state=SimpleNamespace(mission_started=False),
+                window=window, log_dir=root, data_dir=root / "data",
+                _tr=lambda key, **params: key, _ensure_user_dirs=lambda: True,
+                _is_log_already_processed=Mock(return_value=True),
+                _start_processing=lambda path, selected: outputs.append(
+                    FlightLogProcessor(root / "data", export_options=selected).process_file(path)),
+            )
+            with (patch("app.QFileDialog.getOpenFileName", return_value=(str(source), "")),
+                  patch("app.QMessageBox.information") as information):
+                Controller.choose_and_process_data(controller)
+                self.assertEqual(len(outputs), 2)
+                self.assertIn("99.5", (outputs[1] / "processed_data_EN.txt").read_text())
+                manifest = json.loads((outputs[1] / "manifest_EN.json").read_text())
+                self.assertEqual(manifest["duration_s"], 0.2)
+                Controller.choose_and_process_data(controller)
+                self.assertEqual(len(outputs), 3)
+                self.assertEqual(len(set(outputs)), 3)
+                information.assert_not_called()
+            controller._is_log_already_processed.assert_not_called()
+            for path, digest in prior_hashes.items():
+                self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), digest)
+
     def test_simulation_commit_failure_never_reports_complete(self) -> None:
         with TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
@@ -45,42 +93,6 @@ class DataPathTests(unittest.TestCase):
               patch("app.QMessageBox.warning") as warning):
             self.assertFalse(Controller._ensure_user_dirs(controller))
             warning.assert_called_once()
-
-    def test_processed_log_identity_includes_path_theme_and_items(self) -> None:
-        with TemporaryDirectory() as temporary_directory:
-            root = Path(temporary_directory)
-            first = root / "flight_a" / "record.jsonl"
-            second = root / "flight_b" / "record.jsonl"
-            first.parent.mkdir()
-            second.parent.mkdir()
-            first.write_text("{}\n", encoding="utf-8")
-            second.write_text("{}\n", encoding="utf-8")
-            result_dir = root / "data" / "2026-10-05-1"
-            result_dir.mkdir(parents=True)
-            manifest = result_dir / "manifest_EN.json"
-            manifest.write_text(json.dumps({
-                "source_log": str(first),
-                "export": {"theme": "light", "items": ["processed_data"],
-                           "page_duration_s": 30.0},
-            }), encoding="utf-8")
-            controller = SimpleNamespace(data_dir=root / "data")
-            light = ResolvedExportOptions(
-                language=Language.EN_US, theme=Theme.LIGHT,
-                items=frozenset({ExportItem.PROCESSED_DATA}),
-            )
-            dark = ResolvedExportOptions(
-                language=Language.EN_US, theme=Theme.DARK,
-                items=frozenset({ExportItem.PROCESSED_DATA}),
-            )
-            original = manifest.read_bytes()
-            self.assertTrue(Controller._is_log_already_processed(controller, first, light))
-            self.assertFalse(Controller._is_log_already_processed(controller, second, light))
-            self.assertFalse(Controller._is_log_already_processed(controller, first, dark))
-            self.assertEqual(manifest.read_bytes(), original)
-            failed_manifest = json.loads(original)
-            failed_manifest["export"]["partial_failures"] = {"chart.png": "failure"}
-            manifest.write_text(json.dumps(failed_manifest), encoding="utf-8")
-            self.assertFalse(Controller._is_log_already_processed(controller, first, light))
 
     def test_default_data_root_is_d_drive_data_directory(self) -> None:
         self.assertEqual(config.DEFAULT_USER_DATA_ROOT, Path("D:/SilverStar_GSHC_Data"))

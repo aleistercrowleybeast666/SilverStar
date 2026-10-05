@@ -3156,46 +3156,9 @@ class Controller(QObject):
         export_options = self.window.request_export_options()
         if export_options is None:
             return
-        if self._is_log_already_processed(
-            log_path,
-            export_options,
-        ):
-            QMessageBox.information(
-                self.window, self._tr("app.title"), self._tr("message.already_processed")
-            )
-            return
+        # An explicit export always rereads the selected source. The processor
+        # creates a new numbered directory and preserves earlier results.
         self._start_processing(log_path, export_options)
-
-    def _is_log_already_processed(
-        self,
-        log_path: Path,
-        export_options: ResolvedExportOptions,
-    ) -> bool:
-        data_dir = self.data_dir
-        if not data_dir.exists():
-            return False
-        try:
-            selected = log_path.resolve()
-        except OSError:
-            selected = log_path
-        for manifest_path in data_dir.glob(
-            f"*/manifest_{export_options.language_suffix.upper()}.json"
-        ):
-            try:
-                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-                source_text = str(manifest.get("source_log", ""))
-                exported = manifest.get("export", {})
-                requested_items = {item.value for item in export_options.items}
-                if (source_text and Path(source_text).resolve() == selected
-                    and exported.get("theme") == export_options.theme.value
-                    and set(exported.get("items", ())) == requested_items
-                    and not exported.get("partial_failures")
-                    and exported.get("page_duration_s") == export_options.page_duration_s
-                    and exported.get("gif_source_duration_s") == export_options.gif_source_duration_s):
-                    return True
-            except Exception:
-                continue
-        return False
 
     def _start_processing(
         self,
