@@ -116,7 +116,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.assertEqual(self.window.header_credit.text(), "辰星引力开发")
         self.assertEqual(
             self.window.header_version.text(),
-            "SilverStar GSHC 0.1.1",
+            "SilverStar GSHC v0.1.1",
         )
         header_layout = self.window.header_identity_layout
         self.assertLess(
@@ -128,7 +128,19 @@ class UiWorkflowTests(unittest.TestCase):
             header_layout.indexOf(self.window.lbl_language),
         )
         self.assertLess(
+            header_layout.indexOf(self.window.theme_combo),
+            header_layout.indexOf(self.window.lbl_language),
+        )
+        self.assertLess(
+            header_layout.indexOf(self.window.lbl_theme),
+            header_layout.indexOf(self.window.theme_combo),
+        )
+        self.assertLess(
+            header_layout.indexOf(self.window.lbl_language),
             header_layout.indexOf(self.window.language_combo),
+        )
+        self.assertLess(
+            header_layout.indexOf(self.window.header_title),
             header_layout.indexOf(self.window.lbl_theme),
         )
 
@@ -146,7 +158,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.assertEqual(self.window.header_credit.text(), "by CXYL")
         self.assertEqual(
             self.window.header_version.text(),
-            "SilverStar GSHC 0.1.1",
+            "SilverStar GSHC v0.1.1",
         )
 
     def test_post_process_uses_inline_progress_and_cancel_controls(self) -> None:

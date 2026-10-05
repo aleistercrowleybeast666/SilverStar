@@ -803,7 +803,8 @@ def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
     pc_resource = ground.pc_resource
     if ground.pc_interface == "uart" and not pc_resource:
         candidates = [item.resource_id for item in resources if item.kind == "uart"
-                      and item.metadata.get("baud_rate") == ground.baudrate
+                      and type(item.metadata.get("baud_rate")) is int
+                      and item.metadata["baud_rate"] > 0
                       and item.metadata.get("word_length") == 8
                       and item.metadata.get("parity") == "none"
                       and item.metadata.get("stop_bits") == 1.0
@@ -814,6 +815,17 @@ def _GroundBoard_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
         resource_assignments=assignments, pc_resource=pc_resource)
 
 
+def _GroundPcBaud_Reconcile(model: ProjectModel) -> None:
+    ground = model.ground_target
+    if ground.pc_interface != "uart":
+        return
+    selected = next((item for item in ground.hardware.resources
+                     if item.resource_id == ground.pc_resource and item.kind == "uart"), None)
+    baudrate = selected.metadata.get("baud_rate") if selected is not None else None
+    if type(baudrate) is int and baudrate > 0:
+        model.ground_target = replace(ground, baudrate=baudrate)
+
+
 def ProjectConfiguration_Reconcile(
     model: ProjectModel, catalog: PluginCatalog
 ) -> ProjectConfigurationResult:
@@ -822,6 +834,7 @@ def ProjectConfiguration_Reconcile(
     _RequiredDependencies_Reconcile(candidate, catalog)
     notices = [*_Hardware_Reconcile(candidate, catalog)]
     _GroundBoard_Reconcile(candidate, catalog)
+    _GroundPcBaud_Reconcile(candidate)
     notices.extend(_UnavailableOptionalDevices_Reconcile(candidate, catalog))
     notices.extend(_Strategies_Reconcile(candidate, catalog))
     notices.extend(_Modes_Reconcile(candidate, catalog))

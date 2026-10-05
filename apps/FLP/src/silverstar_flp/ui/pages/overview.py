@@ -15,6 +15,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
+
 from silverstar_flp.analysis.overview import (
     AlignmentOverview,
     CalibrationOverview,
@@ -199,7 +201,7 @@ class OverviewPage(QWidget):
         self.file_label.setText(
             f"{dataset.source_path} · SSLOG0 · "
             f"{self._translator.Text_Get('overview.recorded_navigation')}: "
-            f"{summary.source_name}{synthetic}{start_note}"
+            f"{AlgorithmName_Display(summary.source_name)}{synthetic}{start_note}"
         )
         if dataset.semantic_context is not None:
             context = dataset.semantic_context
@@ -332,7 +334,7 @@ class OverviewPage(QWidget):
         details: list[str] = []
         if deploy.altitude_m is not None:
             details.append(
-                self._translator.Text_Get("overview.deploy_source", source=deploy.altitude_source)
+                self._translator.Text_Get("overview.deploy_source", source=AlgorithmName_Display(deploy.altitude_source))
             )
         if deploy.timestamp_us is None:
             details.append(self._translator.Text_Get("overview.deploy_not_recorded"))

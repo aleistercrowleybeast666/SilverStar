@@ -37,6 +37,7 @@ from silverstar_flp.app.version import PRODUCT_NAME, __version__
 from silverstar_flp.core.analysis_source import ChannelResolver, ReplayResultStore
 from silverstar_flp.core.dataset import FlightDataset
 from silverstar_flp.core.i18n import Translator
+from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
 from silverstar_flp.core.path_preferences import (
     ExistingDirectory_Get,
     ExportDirectory_Default,
@@ -442,7 +443,8 @@ class MainWindow(QMainWindow):
         recorded_name = (
             self._channel_resolver.RecordedNavigationSource_Get()
             if self._channel_resolver is not None else "N/A"
-        ).replace("KF_6", "KF6")
+        )
+        recorded_name = AlgorithmName_Display(recorded_name)
         sources = [(
             self._replay_store.RECORDED_SOURCE_ID,
             self._translator.Text_Get(
@@ -454,7 +456,7 @@ class MainWindow(QMainWindow):
             self._translator.Text_Get(
                 "export.source_replay",
                 index=entry.run_index,
-                algorithm=entry.algorithm_name,
+                algorithm=AlgorithmName_Display(entry.algorithm_name),
             ),
         ) for entry in self._replay_store.Entries_Get() if entry.analysis_ready)
         self.export_dialog.Sources_Set(tuple(sources))

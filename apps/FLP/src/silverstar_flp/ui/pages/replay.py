@@ -20,6 +20,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
+
 from silverstar_flp.core.analysis_source import (
     AnalysisSourceKind,
     ReplayResultStore,
@@ -81,7 +83,7 @@ class ReplayPage(QWidget):
         self.algorithm_label = QLabel()
         self.algorithm_combo = StandardComboBox()
         for plugin in registry.algorithms:
-            self.algorithm_combo.addItem(plugin.metadata.display_name, plugin.metadata.plugin_id)
+            self.algorithm_combo.addItem(AlgorithmName_Display(plugin.metadata.display_name), plugin.metadata.plugin_id)
         self.mode_label = QLabel()
         self.mode_combo = StandardComboBox()
         self.quality_policy_label = QLabel()
@@ -230,7 +232,7 @@ class ReplayPage(QWidget):
                     )
             self.algorithm_combo.setItemText(
                 index,
-                f"{plugin.metadata.display_name} · {' / '.join(tags)}",
+                f"{AlgorithmName_Display(plugin.metadata.display_name)} · {' / '.join(tags)}",
             )
 
     def _Algorithm_Refresh(self) -> None:
@@ -721,7 +723,7 @@ class ReplayPage(QWidget):
         warnings = self._Warnings_Text_Get(entry.warnings)
         channels = ", ".join(sorted(entry.channels))
         lines = (
-            self._translator.Text_Get("replay.detail.algorithm", value=entry.algorithm_name),
+            self._translator.Text_Get("replay.detail.algorithm", value=AlgorithmName_Display(entry.algorithm_name)),
             self._translator.Text_Get(
                 "replay.detail.mode", value=self._translator.Text_Get(mode_code)
             ),
@@ -793,7 +795,7 @@ class ReplayPage(QWidget):
                 mode = self._translator.Text_Get("diagnostic.analysis")
             values = (
                 entry.result_id,
-                entry.algorithm_name,
+                AlgorithmName_Display(entry.algorithm_name),
                 mode,
                 self._InputSource_Text_Get(entry.input_source),
                 self.Fidelity_Text_Get(entry.fidelity),
@@ -849,7 +851,7 @@ class ReplayPage(QWidget):
                 else "ESKF15"
                 if self._dataset.Series_Get("eskf15.recorded.navigation.position_enu") is not None
                 else
-                "KF_6"
+                "KF6"
                 if self._dataset.Series_Get("kf6.recorded.navigation.position_enu") is not None
                 else "Pure INS"
             )
@@ -880,7 +882,7 @@ class ReplayPage(QWidget):
                 else "status.recomputed"
             )
             self.analysis_source_combo.addItem(
-                f"{entry.algorithm_name} · "
+                f"{AlgorithmName_Display(entry.algorithm_name)} · "
                 f"{self._EntryMode_Text(entry, mode_code)} #{entry.run_index}",
                 entry.source_id,
             )
@@ -917,7 +919,7 @@ class ReplayPage(QWidget):
                     else "status.recomputed"
                 )
                 value = (
-                    f"{entry.algorithm_name} · "
+                    f"{AlgorithmName_Display(entry.algorithm_name)} · "
                     f"{self._EntryMode_Text(entry, mode_code)} #{entry.run_index}"
                 )
         self.active_source_label.setText(

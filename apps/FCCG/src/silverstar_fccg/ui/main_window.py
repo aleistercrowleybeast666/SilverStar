@@ -94,7 +94,6 @@ from silverstar_fccg.project.configuration import (
 from silverstar_fccg.project.folder_contract import (
     FLIGHT_DIRECTORY,
 )
-from silverstar_fccg.project.ground_activity import GroundActivityLedIssues_Get
 from silverstar_fccg.project.lifecycle import ProjectLifecycleState
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
@@ -1697,6 +1696,15 @@ class MainWindow(QMainWindow):
             "radio_contracts": {candidate.component_id: candidate.radio
                                 for candidate in self._service.catalog.Type_Get("device")
                                 if candidate.radio is not None},
+            "radio_descriptions": {
+                candidate.component_id: (
+                    candidate.physical_device.vendor,
+                    candidate.physical_device.model,
+                    candidate.physical_device.chipset,
+                )
+                for candidate in self._service.catalog.Type_Get("device")
+                if candidate.radio is not None and candidate.physical_device is not None
+            },
             "fixed_resources": {
                 role.key.removeprefix("telemetry:"): role.default
                 for board in self._service.catalog.Type_Get("board")
@@ -1834,12 +1842,11 @@ class MainWindow(QMainWindow):
             ground = candidate.ground_target
             if enabled:
                 if ground.tx_led_resource or ground.rx_led_resource:
-                    trial = replace(ground, activity_led_enabled=True)
-                    if not GroundActivityLedIssues_Get(trial, self._service.catalog):
-                        candidate.ground_target = trial
+                    candidate.ground_target = replace(ground, activity_led_enabled=True)
                     return
                 binding = self.ground_target_page.ActivityLedCandidate_Get(ground)
                 if binding is None:
+                    candidate.ground_target = replace(ground, activity_led_enabled=True)
                     return
                 resource, active_high = binding
                 candidate.ground_target = replace(

@@ -52,52 +52,52 @@ _CHANNEL_METADATA = {
     ),
     "kf6.covariance.diagonal": ChannelDisplayMetadata(
         "kf6.covariance.diagonal",
-        "KF_6 协方差对角线",
-        "KF_6 Covariance Diagonal",
+        "KF6 协方差对角线",
+        "KF6 Covariance Diagonal",
         "协方差",
         "Covariance",
     ),
     "kf6.innovation.position": ChannelDisplayMetadata(
         "kf6.innovation.position",
-        "KF_6 位置新息",
-        "KF_6 Position Innovation",
+        "KF6 位置新息",
+        "KF6 Position Innovation",
         "位置新息",
         "Position Innovation",
     ),
     "kf6.innovation.velocity": ChannelDisplayMetadata(
         "kf6.innovation.velocity",
-        "KF_6 速度新息",
-        "KF_6 Velocity Innovation",
+        "KF6 速度新息",
+        "KF6 Velocity Innovation",
         "速度新息",
         "Velocity Innovation",
     ),
     "kf6.innovation.baro": ChannelDisplayMetadata(
         "kf6.innovation.baro",
-        "KF_6 气压高度新息",
-        "KF_6 Barometer Innovation",
+        "KF6 气压高度新息",
+        "KF6 Barometer Innovation",
         "高度新息",
         "Altitude Innovation",
     ),
     "kf6.nis.position": ChannelDisplayMetadata(
-        "kf6.nis.position", "KF_6 位置 NIS", "KF_6 Position NIS", "NIS", "NIS"
+        "kf6.nis.position", "KF6 位置 NIS", "KF6 Position NIS", "NIS", "NIS"
     ),
     "kf6.nis.velocity": ChannelDisplayMetadata(
-        "kf6.nis.velocity", "KF_6 速度 NIS", "KF_6 Velocity NIS", "NIS", "NIS"
+        "kf6.nis.velocity", "KF6 速度 NIS", "KF6 Velocity NIS", "NIS", "NIS"
     ),
     "kf6.nis.baro": ChannelDisplayMetadata(
-        "kf6.nis.baro", "KF_6 气压高度 NIS", "KF_6 Barometer NIS", "NIS", "NIS"
+        "kf6.nis.baro", "KF6 气压高度 NIS", "KF6 Barometer NIS", "NIS", "NIS"
     ),
     "kf6.update_result": ChannelDisplayMetadata(
         "kf6.update_result",
-        "KF_6 量测更新结果",
-        "KF_6 Measurement Update Results",
+        "KF6 量测更新结果",
+        "KF6 Measurement Update Results",
         "更新结果",
         "Update Result",
     ),
     "kf6.measurement_r_scale": ChannelDisplayMetadata(
         "kf6.measurement_r_scale",
-        "KF_6 量测噪声缩放",
-        "KF_6 Measurement-noise Scale",
+        "KF6 量测噪声缩放",
+        "KF6 Measurement-noise Scale",
         "R 缩放",
         "R Scale",
     ),

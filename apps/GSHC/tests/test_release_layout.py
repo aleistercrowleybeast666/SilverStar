@@ -34,11 +34,20 @@ def test_three_pages_serial_row_and_flight_grid(tmp_path, size, language):
         ]
         assert window.header_title.width() > 0
         assert window.header_title.toolTip() == i18n.tr("app.brand")
-        assert rect(window.header_title, window).right() < rect(window.port_combo, window).left()
+        assert window.header_version.text() == "SilverStar GSHC v0.1.1"
+        assert rect(window.header_title, window).bottom() < rect(window.port_combo, window).top()
+        assert rect(window.header_title, window).right() < rect(window.header_version, window).left()
+        assert rect(window.header_version, window).right() < rect(window.header_credit, window).left()
+        assert rect(window.lbl_theme, window).right() < rect(window.theme_combo, window).left()
+        assert rect(window.theme_combo, window).right() < rect(window.lbl_language, window).left()
+        assert rect(window.lbl_language, window).right() < rect(window.language_combo, window).left()
+        assert rect(window.lbl_port_name, window).right() < rect(window.port_combo, window).left()
         assert rect(window.port_combo, window).right() < rect(window.btn_refresh, window).left()
-        assert rect(window.btn_refresh, window).right() < rect(window.baud_combo, window).left()
+        assert rect(window.btn_refresh, window).right() < rect(window.lbl_baud_name, window).left()
+        assert rect(window.lbl_baud_name, window).right() < rect(window.baud_combo, window).left()
         assert rect(window.baud_combo, window).right() < rect(window.btn_connect, window).left()
         assert rect(window.btn_connect, window).right() < rect(window.btn_disconnect, window).left()
+        assert rect(window.btn_disconnect, window).right() < rect(window.conn_label, window).left()
         assert window.current_port() == "COM100"
         assert window.baud_combo.isEditable()
         assert window.current_baudrate() == 230400
@@ -79,7 +88,7 @@ def test_three_pages_serial_row_and_flight_grid(tmp_path, size, language):
         assert len({plot.top() for plot in plots[3:]}) == 1
         assert plots[0].bottom() < plots[3].top()
         assert all(window.rect().contains(plot) for plot in plots)
-        expected_height = 160 if size[1] == 720 else 190
+        expected_height = 160 if size[1] <= 720 else 190
         assert all(plot.width() >= 240 and plot.height() >= expected_height for plot in plots)
     finally:
         window.close()
@@ -87,9 +96,12 @@ def test_three_pages_serial_row_and_flight_grid(tmp_path, size, language):
         app.processEvents()
 
 
-def test_small_window_scrolls_to_flight_plots_and_post_process_actions(tmp_path):
+@pytest.mark.parametrize("language", ["zh_CN", "en_US"])
+def test_small_window_scrolls_to_flight_plots_and_post_process_actions(tmp_path, language):
     app = QApplication.instance() or QApplication([])
-    window = MainWindow(I18n(QSettings(str(tmp_path / "small.ini"), QSettings.IniFormat)))
+    i18n = I18n(QSettings(str(tmp_path / "small.ini"), QSettings.IniFormat))
+    i18n.set_language(language)
+    window = MainWindow(i18n)
     try:
         window.render_timer.stop()
         window.gl_view.hide()
@@ -98,9 +110,14 @@ def test_small_window_scrolls_to_flight_plots_and_post_process_actions(tmp_path)
         app.processEvents()
         assert window.size().width() == 1024
         assert window.size().height() == 600
-        for widget in (window.port_combo, window.btn_refresh, window.baud_combo,
-                       window.btn_connect, window.btn_disconnect):
+        for widget in (window.header_title, window.header_version, window.header_credit,
+                       window.theme_combo, window.language_combo, window.lbl_port_name,
+                       window.port_combo, window.btn_refresh, window.lbl_baud_name,
+                       window.baud_combo, window.btn_connect, window.btn_disconnect,
+                       window.conn_label):
             assert window.rect().contains(rect(widget, window))
+        assert rect(window.lbl_port_name, window).right() < rect(window.port_combo, window).left()
+        assert rect(window.lbl_baud_name, window).right() < rect(window.baud_combo, window).left()
         window.pages.setCurrentWidget(window.flight_page)
         app.processEvents()
         assert window.flight_page.verticalScrollBar().maximum() > 0

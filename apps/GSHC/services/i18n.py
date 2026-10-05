@@ -29,7 +29,7 @@ class EnumParam:
 ZH_CN: dict[str, str] = {
     "app.title": APP_WINDOW_TITLE,
     "app.brand": APP_ZH_DISPLAY_NAME,
-    "app.product_version": f"{APP_WINDOW_TITLE} {APP_VERSION}",
+    "app.product_version": f"{APP_WINDOW_TITLE} v{APP_VERSION}",
     "app.credit": "辰星引力开发",
     "language.label": "语言",
     "page.preflight": "预飞行",
@@ -258,7 +258,7 @@ ZH_CN: dict[str, str] = {
 EN_US: dict[str, str] = {
     "app.title": APP_WINDOW_TITLE,
     "app.brand": APP_EN_DISPLAY_NAME,
-    "app.product_version": f"{APP_WINDOW_TITLE} {APP_VERSION}",
+    "app.product_version": f"{APP_WINDOW_TITLE} v{APP_VERSION}",
     "app.credit": "by CXYL",
     "language.label": "Language",
     "page.preflight": "Preflight",

@@ -87,7 +87,9 @@
         "kind": "gpio_output",
         "metadata": {
           "c_id": "PLATFORM_GPIO_6",
-          "header": "platform_gpio.h"
+          "header": "platform_gpio.h",
+          "activity_led_shared": true,
+          "activity_led_active_high": false
         }
       },
       {
@@ -192,8 +194,8 @@
       "evidence": "User-reported burn and successful operation on GS_SS1 PCB"
     },
     "display_names": {
-      "zh_CN": "Ground Station 0.5（硬件参考已验证）",
-      "en_US": "Ground Station 0.5 (Hardware-validated reference)"
+      "zh_CN": "SSGS0.5",
+      "en_US": "SSGS0.5"
     }
   },
   "board": {

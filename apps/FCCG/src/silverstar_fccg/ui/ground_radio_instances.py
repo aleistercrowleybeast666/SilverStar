@@ -4,6 +4,8 @@ from PySide6.QtCore import QSignalBlocker, QTimer, Qt, Signal
 from PySide6.QtWidgets import QFormLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from silverstar_fccg.project.model import GroundRadioConfigurations_Get, GroundRadioConfiguration
+from silverstar_fccg.ui.telemetry_card import (TelemetryDetails_Add,
+    TelemetryName_Display, TelemetryRemoveButton_Add)
 from silverstar_fccg.ui.widgets import StandardComboBox
 
 
@@ -50,15 +52,18 @@ class GroundRadioInstancesEditor(QWidget):
         self.add_button.setText(translator.Text_Get(
             "action.add_device", device=translator.Text_Get("device.class.telemetry")))
 
-    def Configuration_Set(self, ground, choices, contracts, module_availability=None):
+    def Configuration_Set(self, ground, choices, contracts, module_availability=None,
+                          descriptions=None):
         self._ground = ground
         self._contracts = contracts
         self._choices = tuple(choices)
         self._module_availability = module_availability or {}
+        descriptions = descriptions or {}
         self._radios = tuple(radio for radio in GroundRadioConfigurations_Get(ground) if radio.plugin)
         self.rows.clear()
         while self.rows_layout.count():
             item = self.rows_layout.takeAt(0)
+            item.widget().hide()
             item.widget().deleteLater()
         while self.power_form.rowCount():
             self.power_form.removeRow(0)
@@ -95,7 +100,7 @@ class GroundRadioInstancesEditor(QWidget):
                 for module_id, data in (contract.modules.items() if contract is not None else ()):
                     module_available, module_reason = self._ModuleAvailability_Get(
                         identity, module_id, available, reason)
-                    plugin.addItem(str(data.get("display_name", data.get("model", title))), (identity, module_id))
+                    plugin.addItem(TelemetryName_Display(str(data.get("display_name", data.get("model", title)))), (identity, module_id))
                     plugin.model().item(plugin.count() - 1).setEnabled(module_available)
                     plugin.setItemData(plugin.count() - 1, module_reason, Qt.ItemDataRole.ToolTipRole)
             selected = (radio.plugin, radio.module_variant)
@@ -108,6 +113,11 @@ class GroundRadioInstancesEditor(QWidget):
             form.addRow(instance_title, plugin)
             contract = contracts.get(radio.plugin)
             modules = contract.modules if contract is not None else {}
+            vendor, model, chipset = descriptions.get(radio.plugin, ("", "", ""))
+            module = modules.get(radio.module_variant, {})
+            if radio.plugin:
+                TelemetryDetails_Add(form, self._translator, vendor,
+                    TelemetryName_Display(str(module.get("model", model))), chipset)
             power = StandardComboBox()
             power.setObjectName("groundRadioPower_" + radio.instance_id)
             supported = tuple(modules.get(radio.module_variant, {}).get("supported_tx_powers_dbm", ()))
@@ -127,7 +137,7 @@ class GroundRadioInstancesEditor(QWidget):
             button.setObjectName("groundRadio_remove_" + radio.instance_id)
             button.setEnabled(ground.enabled and bool(radio.plugin))
             button.clicked.connect(lambda _checked=False, identity=radio.instance_id: self._Remove(identity))
-            form.addRow(QLabel(), button)
+            TelemetryRemoveButton_Add(form, button)
             controls["remove"] = button
             plugin.setEnabled(ground.enabled)
             self.rows[radio.instance_id] = controls

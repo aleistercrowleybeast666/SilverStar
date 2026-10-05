@@ -45,6 +45,8 @@ from silverstar_fccg.ui.committed_spin import (
 )
 from silverstar_fccg.ui.device_initialization import InitializationSection_Create
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
+from silverstar_fccg.ui.telemetry_card import (TelemetryDetails_Add,
+    TelemetryName_Display, TelemetryRemoveButton_Add)
 from silverstar_fccg.ui.widgets import (
     CollapsibleSection,
     LockedCheckBox,
@@ -178,6 +180,7 @@ class DevicesPage(ScrollableLocalizedPage):
         while layout.count():
             item = layout.takeAt(0)
             if item.widget() is not None:
+                item.widget().hide()
                 item.widget().deleteLater()
             elif item.layout() is not None:
                 DevicesPage._Layout_Clear(item.layout())
@@ -362,6 +365,13 @@ class DevicesPage(ScrollableLocalizedPage):
                         (item for item in candidates if item.component_id == selected_plugin),
                         None,
                     )
+                    if component_class == "telemetry" and selected_component is not None:
+                        module_id, _power = self._radio_configurations.get(instance_id, ("", 12))
+                        module = self._radio_modules.get(selected_plugin, {}).get(module_id, {})
+                        TelemetryDetails_Add(form, self._translator,
+                            selected_component.physical_vendor,
+                            TelemetryName_Display(str(module.get("model", selected_component.physical_model))),
+                            selected_component.chipset)
                     variants = (
                         selected_component.options.get("device_variants", ())
                         if selected_component is not None else ()
@@ -412,12 +422,13 @@ class DevicesPage(ScrollableLocalizedPage):
                         form.addRow(QLabel(self._translator.Text_Get(
                             "device.jy901b.orientation")), orientation_combo)
                         self.orientation_combos[instance_id] = orientation_combo
-                    summary = QLabel(self._CapabilitySummary_Get(instance))
-                    summary.setToolTip("\n".join(instance.provides))
-                    summary.setObjectName(f"deviceCapabilitySummary_{instance_id}")
-                    summary.setWordWrap(True)
-                    summary.setProperty("muted", True)
-                    form.addRow(QLabel(), summary)
+                    if component_class != "telemetry":
+                        summary = QLabel(self._CapabilitySummary_Get(instance))
+                        summary.setToolTip("\n".join(instance.provides))
+                        summary.setObjectName(f"deviceCapabilitySummary_{instance_id}")
+                        summary.setWordWrap(True)
+                        summary.setProperty("muted", True)
+                        form.addRow(QLabel(), summary)
                     if instance.initialization or instance.runtime_defaults:
                         section = InitializationSection_Create(
                             instance, self._translator,
@@ -436,7 +447,10 @@ class DevicesPage(ScrollableLocalizedPage):
                             selected_instance, ""
                         )
                     )
-                    form.addRow(QLabel(), remove_button)
+                    if component_class == "telemetry":
+                        TelemetryRemoveButton_Add(form, remove_button)
+                    else:
+                        form.addRow(QLabel(), remove_button)
                     self.remove_buttons[instance_id] = remove_button
             class_max = max(
                 (
@@ -625,7 +639,7 @@ class DevicesPage(ScrollableLocalizedPage):
         for title, plugin_id, available, reason in choices:
             modules = self._radio_modules.get(plugin_id, {})
             for module_id, module in (modules.items() if modules else (("", {}),)):
-                combo.addItem(str(module.get("display_name", module.get("model", title))),
+                combo.addItem(TelemetryName_Display(str(module.get("display_name", module.get("model", title)))),
                               (plugin_id, module_id))
                 item = combo.model().item(combo.count() - 1)
                 item.setEnabled(available)
@@ -1776,11 +1790,13 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             item = self.protocol_form.takeAt(0)
             widget = item.widget()
             if widget is not None:
+                widget.hide()
                 widget.deleteLater()
         while self.telemetry_protocol_form.count():
             item = self.telemetry_protocol_form.takeAt(0)
             widget = item.widget()
             if widget is not None:
+                widget.hide()
                 widget.deleteLater()
         self.protocol_combos.clear()
         ordered_categories = ("telemetry", "maintenance", "logging")
@@ -1891,6 +1907,13 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         self._capabilities = tuple(item for item in capabilities
                                    if not item.capability.startswith("magnetometer."))
         self.capability_table.blockSignals(True)
+        for row in range(self.capability_table.rowCount()):
+            previous_editor = self.capability_table.cellWidget(row, 3)
+            if previous_editor is not None:
+                previous_editor.currentIndexChanged.disconnect()
+                previous_editor.hide()
+                self.capability_table.removeCellWidget(row, 3)
+                previous_editor.deleteLater()
         self.capability_table.setRowCount(len(self._capabilities))
         for row, capability in enumerate(self._capabilities):
             capability_name = self._translator.Text_Get(

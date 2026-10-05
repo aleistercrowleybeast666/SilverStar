@@ -18,6 +18,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
+
 from silverstar_flp.core.analysis_source import (
     AnalysisSourceKind,
     ChannelResolver,
@@ -252,7 +254,7 @@ def _Source_Label(
     source = resolver.Source_Get(source_id)
     if source.kind == AnalysisSourceKind.RECORDED:
         return (
-            translator.Text_Get("status.recorded") + " · " + resolver.RecordedNavigationSource_Get()
+            translator.Text_Get("status.recorded") + " · " + AlgorithmName_Display(resolver.RecordedNavigationSource_Get())
         )
     entry = resolver.store.SourceEntry_Get(source.source_id)
     if entry is None:
@@ -264,7 +266,7 @@ def _Source_Label(
     )
     if entry.analysis_only:
         mode_code = "diagnostic.analysis"
-    return f"{entry.algorithm_name} · {translator.Text_Get(mode_code)} #{entry.run_index}"
+    return f"{AlgorithmName_Display(entry.algorithm_name)} · {translator.Text_Get(mode_code)} #{entry.run_index}"
 
 
 def _RecordedSolution_Label(translator: Translator, solution_id: str) -> str:

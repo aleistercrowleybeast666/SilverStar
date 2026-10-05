@@ -308,11 +308,7 @@ class GroundTargetPage(BoardHardwarePage):
         pc_form.addRow(self.pc_resource_notice)
         label = QLabel()
         self.Text_Register(label, "field.ground_baud")
-        self.baudrate = EnterCommittedSpinBox()
-        self.baudrate.setRange(1200, 3000000)
-        self.baudrate.committed.connect(
-            lambda selected: self.configurationChanged.emit("baudrate", selected)
-        )
+        self.baudrate = QLabel()
         pc_form.addRow(label, self.baudrate)
         self.pc_group = self.Group_Create("group.ground_pc", pc_form)
         self.root_layout.addWidget(self.pc_group)
@@ -414,14 +410,14 @@ class GroundTargetPage(BoardHardwarePage):
         self.radio_form.setRowVisible(self.module, False)
         self.radio_instances_editor.Configuration_Set(
             ground, radios, requirements.get("radio_contracts", {}),
-            requirements.get("module_availability", {}))
+            requirements.get("module_availability", {}),
+            requirements.get("radio_descriptions", {}))
         if any(issue.code == "GROUND_RADIO_RUNTIME_UNAVAILABLE" for issue in issues):
             self.radio_instances_editor.note.setText(self.radio_instances_editor.note.text() + "\n" +
                 self._translator.Text_Get("ground.radio_runtime_pending"))
         self.pc_interface.setCurrentIndex(max(0, self.pc_interface.findData(ground.pc_interface)))
         uart_selected = ground.enabled and ground.pc_interface == "uart"
         self.pc_resource.setEnabled(uart_selected)
-        self.baudrate.setEnabled(uart_selected)
         self.pc_resource.clear()
         self.pc_resource.addItem("—", "")
         uarts = tuple(resource for resource in ground.hardware.resources if resource.kind == "uart")
@@ -453,17 +449,14 @@ class GroundTargetPage(BoardHardwarePage):
             resource=selected_uart.resource_id,
             source=ground.hardware.source_label or ground.board or ground.hardware.source_kind,
         ) if selected_uart is not None else "")
-        self.baudrate.CommittedValue_Set(ground.baudrate)
+        selected_baud = selected_uart.metadata.get("baud_rate") if selected_uart is not None else None
+        self.baudrate.setText(f"{selected_baud} baud" if type(selected_baud) is int
+                              and selected_baud > 0 else "—")
+        self.pc_form.setRowVisible(self.baudrate, ground.pc_interface == "uart")
         with QSignalBlocker(self.activity_led_enabled):
             active = GroundActivityLedEnabled_Get(ground)
-            restorable = bool(ground.tx_led_resource or ground.rx_led_resource) and not (
-                GroundActivityLedIssues_Get(replace(ground, activity_led_enabled=True))
-            )
             self.activity_led_enabled.setChecked(active)
-            self.activity_led_enabled.setEnabled(
-                ground.enabled and (active or restorable
-                                    or self.ActivityLedCandidate_Get(ground) is not None)
-            )
+            self.activity_led_enabled.setEnabled(ground.enabled)
         self.activity_led_enabled.setToolTip(
             self._translator.Text_Get(
                 "ground.activity_led_hint" if self.activity_led_enabled.isEnabled()

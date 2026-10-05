@@ -444,7 +444,7 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             window.board_hardware_page.board_combo.itemText(index)
             for index in range(window.board_hardware_page.board_combo.count())
         }
-        assert "SS0.5（已验证）" in board_labels
+        assert "SSFC0.5" in board_labels
         assert all("SilverStar 0.5" not in label for label in board_labels)
         assert not window.board_hardware_page.preparation_widget.isVisible()
         assert not window.board_hardware_page.prepare_button.isVisible()

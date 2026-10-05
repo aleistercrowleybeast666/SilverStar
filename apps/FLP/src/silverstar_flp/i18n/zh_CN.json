@@ -60,7 +60,7 @@
   "status.recomputed": "离线复算",
   "status.what_if": "假设参数复算",
   "solution.recorded_pure_ins": "飞控纯惯导",
-  "solution.recorded_kf6": "飞控 KF_6",
+  "solution.recorded_kf6": "飞控 KF6",
   "status.na": "无数据",
   "status.none": "无",
   "status.failed": "失败",

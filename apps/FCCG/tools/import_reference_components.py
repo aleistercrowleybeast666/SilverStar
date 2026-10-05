@@ -1325,7 +1325,7 @@ def _Components_Get(
             provides=["board.silverstar_0_5", "hardware.stm32.generated"],
             metadata={
                 "build_symbol": "SILVERSTAR_0_5",
-                "display_names": {"zh_CN": "SS0.5（已验证）", "en_US": "SS0.5 (Validated)"},
+                "display_names": {"zh_CN": "SSFC0.5", "en_US": "SSFC0.5"},
                 "descriptions": {
                     "zh_CN": "已验证的SS0.5板卡、CubeMX硬件源、固定服务与资源映射。",
                     "en_US": "Verified SS0.5 PCB, CubeMX hardware source, fixed services, and resource mapping.",

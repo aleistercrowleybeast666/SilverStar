@@ -57,7 +57,7 @@
   "status.recomputed": "Recomputed (offline replay)",
   "status.what_if": "What-if (modified parameters)",
   "solution.recorded_pure_ins": "Recorded Pure INS",
-  "solution.recorded_kf6": "Recorded KF_6",
+  "solution.recorded_kf6": "Recorded KF6",
   "status.opengl_unavailable": "OpenGL is unavailable; the 3D view cannot be displayed",
   "status.task_cancelled": "Task cancelled",
   "status.start_unavailable": "START unavailable",

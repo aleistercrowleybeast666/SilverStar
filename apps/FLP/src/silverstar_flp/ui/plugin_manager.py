@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
 
 from silverstar_flp.app.version import PRODUCT_NAME, __version__
 from silverstar_flp.core.i18n import Translator
+from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
 from silverstar_flp.plugins.container_packages import ContainerPluginDiscovery
 from silverstar_flp.plugins.registry import PluginRegistry
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
@@ -118,7 +119,7 @@ class PluginManagerDialog(QDialog):
             rows.append(
                 PluginDisplayRow(
                     "plugin.type.algorithm",
-                    metadata.display_name,
+                    AlgorithmName_Display(metadata.display_name),
                     metadata.plugin_id,
                     metadata.version,
                     "plugin.source.builtin"
