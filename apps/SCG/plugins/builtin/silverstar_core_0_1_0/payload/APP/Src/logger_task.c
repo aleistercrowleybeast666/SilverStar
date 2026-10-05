@@ -284,7 +284,8 @@ static uint8_t LoggerTask_DescriptorRecordIsCritical(uint8_t record_type)
         (record_type == FLIGHT_LOG_RECORD_INITIAL_STATE) ||
         (record_type == FLIGHT_LOG_RECORD_MISSION_CONFIG) ||
         (record_type == FLIGHT_LOG_RECORD_CALIBRATION_RESULT) ||
-        (record_type == FLIGHT_LOG_RECORD_ALIGNMENT_RESULT));
+        (record_type == FLIGHT_LOG_RECORD_ALIGNMENT_RESULT) ||
+        (record_type == FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE));
 }
 
 static uint8_t LoggerTask_EventRecordIsCritical(

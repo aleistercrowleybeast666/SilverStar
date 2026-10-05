@@ -173,6 +173,7 @@ def test_storage_sources_survive_reference_reimport(monkeypatch, workspace_root)
     for relative in ("APP/Src/logger_bus.c", "APP/Src/logger_task.c", "APP/Inc/logger_bus.h",
                      "System/Inc/system_log_policy.h", "System/Src/system_log_policy.c",
                      "Tests/Host/test_logger_snapshot.c",
+                     "Tests/Host/test_logger_alignment.c",
                      "APP/Inc/logger_task.h", "Interfaces/Inc/system_storage_if.h",
                      "Tests/Host/storage_integrity/test_storage_integrity.c",
                      "Tests/Host/storage_integrity/test_logger_storage.c",
