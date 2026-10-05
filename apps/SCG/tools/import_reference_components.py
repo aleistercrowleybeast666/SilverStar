@@ -1055,6 +1055,7 @@ def _Components_Get(
             "APP/Inc/logger_bus.h",
             "APP/Inc/device_native_log.h",
             "System/Inc/system_log_policy.h",
+            "System/Src/system_log_policy.c",
             "System/Inc/system_flight_recovery.h",
             "APP/Inc/logger_task.h",
             "APP/Src/logger_bus.c",
