@@ -90,6 +90,7 @@ from silverstar_fccg.project.configuration import (
     ModeOptionAvailabilities_Get,
     ProjectConfigurationResult,
     StrategyAvailabilities_Get,
+    SelectionAvailabilityTransition_Apply,
 )
 from silverstar_fccg.project.folder_contract import (
     FLIGHT_DIRECTORY,
@@ -219,6 +220,11 @@ class MainWindow(QMainWindow):
         self._worker_outcome: tuple[str, object, str] | None = None
         self._last_task_progress = 0
         self._task_indeterminate = False
+        self._task_progress_range = (0.0, 1.0)
+        self._completion_worker: FunctionWorker | None = None
+        self._disabled_strategy_choices: set[str] = set()
+        self._disabled_mode_choices: set[tuple[str, str]] = set()
+        self._selection_restore_project = None
         self._retired_workers: list[FunctionWorker] = []
         self._progress_hide_timer = QTimer(self)
         self._progress_hide_timer.setSingleShot(True)
@@ -1080,6 +1086,17 @@ class MainWindow(QMainWindow):
             previous_display = self._ProjectDisplayState_Build(self._model)
             mutator(candidate)
             result = self._service.ProjectConfiguration_Reconcile(candidate)
+            restore_project = (self._project_root, self._model.identity.name)
+            if self._selection_restore_project != restore_project:
+                self._disabled_strategy_choices.clear()
+                self._disabled_mode_choices.clear()
+                self._selection_restore_project = restore_project
+            restored = SelectionAvailabilityTransition_Apply(
+                self._model, result.model, self._service.catalog,
+                self._disabled_strategy_choices, self._disabled_mode_choices)
+            if restored:
+                reconciled = self._service.ProjectConfiguration_Reconcile(result.model)
+                result = replace(reconciled, notices=result.notices + restored + reconciled.notices)
             if logging_availability_changed:
                 LoggingProfile_AvailabilityTransitionApply(
                     self._model, result.model, self._service.catalog
@@ -1519,6 +1536,8 @@ class MainWindow(QMainWindow):
             prepare_plan,
             self._HardwarePreparePlan_Complete,
             self._HardwarePreparePlan_Error,
+            indeterminate=False,
+            progress_range=(0.0, 0.2),
         )
 
     def _HardwarePreparePlan_Complete(
@@ -1526,6 +1545,10 @@ class MainWindow(QMainWindow):
     ) -> None:
         candidate, plan = prepared
         if not self._GenerationPlan_ApplyAllowed(plan):
+            self._Task_Cancel()
+            return
+        if (self._completion_worker is not None and
+                self._completion_worker.context.cancelled):
             return
         self._project_state = ProjectLifecycleState.MATERIALIZING
 
@@ -1552,6 +1575,8 @@ class MainWindow(QMainWindow):
             prepare,
             self._HardwarePrepareApply_Complete,
             self._Project_Materialization_Error,
+            indeterminate=False,
+            progress_range=(0.2, 1.0),
         )
 
     def _HardwarePreparePlan_Error(self, error: object) -> None:
@@ -3959,6 +3984,7 @@ class MainWindow(QMainWindow):
         *,
         indeterminate: bool = True,
         line_callback: Callable[[str], None] | None = None,
+        progress_range: tuple[float, float] = (0.0, 1.0),
     ) -> bool:
         if self._active_worker is not None:
             self._Error_Show(
@@ -3972,7 +3998,8 @@ class MainWindow(QMainWindow):
         self._worker_error_callback = error_callback
         self._worker_line_callback = line_callback
         self._worker_outcome = None
-        self._last_task_progress = 0
+        self._task_progress_range = progress_range
+        self._last_task_progress = round(progress_range[0] * 1000)
         self._task_indeterminate = indeterminate
         worker.signals.progress.connect(self._Task_Progress)
         worker.signals.line.connect(self._Task_Line)
@@ -3982,7 +4009,7 @@ class MainWindow(QMainWindow):
         worker.signals.finished.connect(self._Task_Finish)
         self.progress_bar.setRange(0, 0 if indeterminate else 1000)
         if not indeterminate:
-            self.progress_bar.setValue(0)
+            self.progress_bar.setValue(self._last_task_progress)
         self.progress_bar.setVisible(True)
         self.cancel_button.setVisible(True)
         self._Actions_SetEnabled(False)
@@ -4009,8 +4036,10 @@ class MainWindow(QMainWindow):
     def _Task_Progress(self, progress: float, code: str) -> None:
         # A completed phase is not a successful task; only _Task_Finish may
         # show 100%. A real report replaces the initial unknown-duration busy state.
+        start, end = self._task_progress_range
+        fraction = start + (end - start) * max(0.0, min(1.0, progress))
         self._last_task_progress = max(self._last_task_progress, min(999, int(
-            max(0.0, min(1.0, progress)) * 1000
+            fraction * 1000
         )))
         if not self._task_indeterminate or progress > 0.0:
             self._task_indeterminate = False
@@ -4064,12 +4093,29 @@ class MainWindow(QMainWindow):
         result_callback = self._worker_result_callback
         error_callback = self._worker_error_callback
         outcome = self._worker_outcome
+        if worker is not None and worker.context.cancelled:
+            outcome = ("cancelled", None, "")
+            self.status_label.setText(self._translator.Text_Get("status.task_cancelled"))
         self._active_worker = None
         self._worker_result_callback = None
         self._worker_error_callback = None
         self._worker_line_callback = None
         self._worker_outcome = None
+        self._Actions_SetEnabled(True)
+        dispatched = False
+        self._completion_worker = worker
+        try:
+            if not closing:
+                dispatched = self._TaskOutcome_Dispatch(
+                    outcome, result_callback, error_callback)
+        finally:
+            self._completion_worker = None
+        if worker is not None and worker.context.cancelled:
+            outcome = ("cancelled", None, "")
+            self.status_label.setText(self._translator.Text_Get("status.task_cancelled"))
         succeeded = bool(
+            dispatched
+            and
             outcome is not None
             and outcome[0] == "result"
             and bool(getattr(outcome[1], "succeeded", True))
@@ -4078,6 +4124,14 @@ class MainWindow(QMainWindow):
             result = outcome[1]
             if result.action == BuildAction.POWER10_CHECK:
                 succeeded = Power10TextPassed_Is(result.output, result.return_code)
+        if worker is not None:
+            self._retired_workers.append(worker)
+            QTimer.singleShot(
+                0, lambda retired=worker: self._TaskWorker_Release(retired))
+        # A result callback may start the next phase or a separate operation.
+        # Its progress and control state now belong to the new worker.
+        if self._active_worker is not None:
+            return
         self.progress_bar.setRange(0, 1000)
         self.progress_bar.setValue(1000 if succeeded else self._last_task_progress)
         self.progress_bar.setProperty(
@@ -4092,16 +4146,7 @@ class MainWindow(QMainWindow):
         self.progress_bar.style().polish(self.progress_bar)
         self._task_indeterminate = False
         self.cancel_button.setVisible(False)
-        self._Actions_SetEnabled(True)
         self._progress_hide_timer.start(350)
-        if worker is not None:
-            self._retired_workers.append(worker)
-        if not closing:
-            self._TaskOutcome_Dispatch(outcome, result_callback, error_callback)
-        if worker is not None:
-            QTimer.singleShot(
-                0, lambda retired=worker: self._TaskWorker_Release(retired)
-            )
         if closing:
             QTimer.singleShot(0, self, self.close)
 
@@ -4110,9 +4155,9 @@ class MainWindow(QMainWindow):
         outcome: tuple[str, object, str] | None,
         result_callback: Callable[[Any], None] | None,
         error_callback: Callable[[object], None] | None,
-    ) -> None:
+    ) -> bool:
         if outcome is None or outcome[0] == "cancelled":
-            return
+            return False
         try:
             if outcome[0] == "result":
                 if result_callback is not None:
@@ -4121,9 +4166,11 @@ class MainWindow(QMainWindow):
                 error_callback(outcome[1])
             else:
                 self._Error_Show(outcome[1], outcome[2])
+            return outcome[0] == "result"
         except Exception as error:
             logging.exception("Background task completion callback failed")
             self._Error_Show(error)
+            return False
 
     def _TaskWorker_Release(self, worker: FunctionWorker) -> None:
         if worker in self._retired_workers:
@@ -4134,8 +4181,9 @@ class MainWindow(QMainWindow):
             self.progress_bar.setVisible(False)
 
     def _Task_Cancel(self) -> None:
-        if self._active_worker is not None:
-            self._active_worker.Worker_Cancel()
+        worker = self._active_worker or self._completion_worker
+        if worker is not None:
+            worker.Worker_Cancel()
 
     def _Actions_SetEnabled(self, enabled: bool) -> None:
         controls = (

@@ -257,7 +257,10 @@ def _Strategies_Reconcile(
         availability = StrategyAvailabilities_Get(model, catalog)
         for slot in catalog.SelectionSlots_Get(SelectionKind.STRATEGY.value):
             selected = model.strategies.get(slot)
-            if selected is None:
+            manifests = catalog.SelectionSlot_Get(slot)
+            required = any(item.selection.required for item in manifests
+                           if item.selection is not None)
+            if selected is None and not required:
                 continue
             selected_availability = availability.get(selected)
             if selected_availability is not None and selected_availability.available:
@@ -269,13 +272,14 @@ def _Strategies_Reconcile(
                     manifest.component_id, SelectionAvailability(False)
                 ).available
             ]
-            if len(legal) == 1:
-                model.strategies[slot] = legal[0]
+            replacement = _StrategyDefault_Get(slot, legal)
+            if replacement is not None:
+                model.strategies[slot] = replacement
                 notices.append(
                     ConfigurationNotice(
                         "configuration.strategy_auto_selected",
                         slot=slot,
-                        component_id=legal[0],
+                        component_id=replacement,
                     )
                 )
             else:
@@ -291,9 +295,77 @@ def _Strategies_Reconcile(
                         component_id=selected,
                     )
                 )
-            changed = True
+            changed = selected != model.strategies[slot] or changed
         if not changed:
             break
+    return tuple(notices)
+
+
+def _StrategyDefault_Get(slot: str, legal: list[str]) -> str | None:
+    preferred = {
+        "alignment": "silverstar.algorithm.alignment.vector_constraints",
+        "ins": "silverstar.algorithm.ins.coning2_sculling2",
+        "estimator": "silverstar.algorithm.estimator.kf6",
+        "landing": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+    }.get(slot)
+    return preferred if preferred in legal else sorted(legal)[0] if legal else None
+
+
+def SelectionAvailabilityTransition_Apply(
+    previous: ProjectModel, model: ProjectModel, catalog: PluginCatalog,
+    disabled_strategies: set[str], disabled_modes: set[tuple[str, str]],
+) -> tuple[ConfigurationNotice, ...]:
+    """Restore defaults only when explicit edits make unavailable choices legal.
+
+    A legal but unselected optional choice stays disabled. Rendering and opening
+    a saved project do not call this transition operation.
+    """
+    notices: list[ConfigurationNotice] = []
+    before = StrategyAvailabilities_Get(previous, catalog)
+    after = StrategyAvailabilities_Get(model, catalog)
+    for slot in catalog.SelectionSlots_Get(SelectionKind.STRATEGY.value):
+        manifests = catalog.SelectionSlot_Get(slot)
+        previously_available = any(
+            before.get(item.component_id, SelectionAvailability(False)).available
+            for item in manifests
+        )
+        if previously_available:
+            if previous.strategies.get(slot) is None:
+                disabled_strategies.add(slot)
+            else:
+                disabled_strategies.discard(slot)
+        if (model.strategies.get(slot) is not None or previously_available or
+                slot in disabled_strategies):
+            continue
+        legal = [item.component_id for item in manifests
+                 if after.get(item.component_id, SelectionAvailability(False)).available]
+        replacement = _StrategyDefault_Get(slot, legal)
+        if replacement is not None:
+            model.strategies[slot] = replacement
+            notices.append(ConfigurationNotice("configuration.strategy_auto_selected",
+                                               slot=slot, component_id=replacement))
+    before_modes = ModeOptionAvailabilities_Get(previous, catalog)
+    after_modes = ModeOptionAvailabilities_Get(model, catalog)
+    for component_id in model.base_components:
+        selection = catalog.Component_Get(component_id).selection
+        if selection is None or selection.kind != SelectionKind.MODE:
+            continue
+        values = model.modes.get(selection.slot, [])
+        for option in selection.default:
+            key = (selection.slot, option)
+            if before_modes.get(key, SelectionAvailability(False)).available:
+                if option in previous.modes.get(selection.slot, []):
+                    disabled_modes.discard(key)
+                else:
+                    disabled_modes.add(key)
+        restored = [option for option in selection.default if option not in values
+                    and (selection.slot, option) not in disabled_modes
+                    and not before_modes.get((selection.slot, option), SelectionAvailability(False)).available
+                    and after_modes.get((selection.slot, option), SelectionAvailability(False)).available]
+        if restored:
+            model.modes[selection.slot] = values + restored
+            notices.append(ConfigurationNotice("configuration.options_restored",
+                                               slot=selection.slot, count=len(restored)))
     return tuple(notices)
 
 

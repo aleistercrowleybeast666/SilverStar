@@ -189,9 +189,9 @@ def test_device_change_safely_replaces_invalid_strategy_and_modes(
 
     result = ProjectConfiguration_Reconcile(model, catalog)
 
-    assert result.model.strategies["alignment"] is None
+    assert result.model.strategies["alignment"] == "silverstar.algorithm.alignment.vector_constraints"
     assert any(
-        notice.code == "configuration.strategy_reselect"
+        notice.code == "configuration.strategy_auto_selected"
         for notice in result.notices
     )
     assert result.edit_validation.valid
