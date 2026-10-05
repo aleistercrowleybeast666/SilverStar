@@ -246,10 +246,19 @@ class BuildRunner:
         placeholder_plan = plan.stage_steps == (("TASK", 1),)
         generic_plan_seen = False
 
+        def overall_stage(stage: str) -> bool:
+            # Host executables may report their own child checks. Those are
+            # already covered by one HOST_TEST unit in the parent plan.
+            return action != BuildAction.HOST_TESTS or stage in {
+                "HOST_TEST", "HOST_COMPILE_PASS", "HOST_EXPECTED_FAILURE",
+            }
+
         def plan_refresh() -> None:
             nonlocal plan, completed
-            completed = sum(stage_completed.values())
-            total = sum(stage_totals.values())
+            completed = sum(count for stage, count in stage_completed.items()
+                            if overall_stage(stage))
+            total = sum(count for stage, count in stage_totals.items()
+                        if overall_stage(stage))
             compile_steps = sum(
                 stage_totals.get(stage, 0)
                 for stage in ("COMPILE", "ANALYZE", "DEPENDENCY_COMPILE")
@@ -257,7 +266,8 @@ class BuildRunner:
             plan = BuildPlan(
                 max(total, 1),
                 compile_steps,
-                tuple(stage_totals.items()),
+                tuple((stage, count) for stage, count in stage_totals.items()
+                      if overall_stage(stage)),
             )
 
         def output_line(line: str) -> None:

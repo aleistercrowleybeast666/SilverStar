@@ -189,6 +189,37 @@ def test_generic_progress_advances_only_on_done_and_failure_stays_partial(
     assert live_lines == ["FCCG_DETAIL|compiler diagnostic"]
 
 
+def test_host_child_plan_does_not_double_count_parent_work(tmp_path, monkeypatch):
+    root, model, runner = _BuildRoot_Create(tmp_path)
+    with (root / "Makefile").open("a", encoding="utf-8") as file:
+        file.write("\n.PHONY: host-tests\nhost-tests:\n\t@echo ok\n")
+    lines = [
+        "FCCG_PROGRESS|HOST_TEST|PLAN|2\n",
+        "FCCG_PROGRESS|HOST_TEST|DONE|1|2|first\n",
+        "FCCG_PROGRESS|HOST_TEST|BEGIN|2|2|storage\n",
+        "FCCG_PROGRESS|STORAGE_INTEGRITY|PLAN|4\n",
+        "FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|4|4|storage_checks\n",
+        "FCCG_PROGRESS|HOST_TEST|DONE|2|2|storage\n",
+    ]
+
+    def process_run(_command, _root, _environment, _token, line_callback=None):
+        for line in lines:
+            if line_callback is not None:
+                line_callback(line)
+        return 0, lines
+
+    monkeypatch.setattr(BuildRunner, "_Process_Run", staticmethod(process_run))
+    progress = []
+    result = runner.Run(model, root, BuildAction.HOST_TESTS,
+                        progress_callback=progress.append)
+    assert result.plan.total_steps == result.completed_steps == 2
+    ratios = [item.completed_steps / item.total_steps for item in progress]
+    assert ratios == sorted(ratios)
+    child = next(item for item in progress if item.stage == "STORAGE_INTEGRITY")
+    assert (child.stage_completed, child.stage_total) == (4, 4)
+    assert (child.completed_steps, child.total_steps) == (1, 2)
+
+
 def test_clean_all_make_progress_is_determinate_and_failure_stays_partial(
     tmp_path: Path, monkeypatch
 ) -> None:
