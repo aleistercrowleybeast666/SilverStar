@@ -6,6 +6,10 @@
 #include <stddef.h>
 #include <string.h>
 
+#if (NAV_KF_ALGORITHM_REVISION != 2U)
+#error "KF6 replay/core process model revision mismatch"
+#endif
+
 static NavigationReplayResult NavigationReplay_Reject(
     NavigationReplayContext *history, NavigationReplayResult result)
 {
@@ -572,7 +576,8 @@ static NavigationReplayResult NavigationReplay_SegmentPredict(
     fraction = (float)(end_us - start_us) / (float)(imu->end_us - imu->start_us);
     for (axis = 0U; axis < 3U; axis++)
     { delta[axis] = imu->delta_velocity[axis] * fraction; }
-    return (NavigationKf_Predict(&history->working, delta, imu->dt_s * fraction) != 0U) ?
+    return (NavigationKf_PredictInterval(&history->working, delta,
+        imu->dt_s * fraction, imu->dt_s) == NAV_KF_PREDICT_OK) ?
         NAV_REPLAY_OK : NAV_REPLAY_NUMERIC_ERROR;
 }
 

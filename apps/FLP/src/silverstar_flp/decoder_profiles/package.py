@@ -196,6 +196,8 @@ class DecoderProfilePackage:
             raise DecoderProfileError("gnss_integrity_revision_unsupported")
         from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_FromSemantics
         sf6_revision = Sf6Revision_FromSemantics(semantics_document)
+        from silverstar_flp.decoder_profiles.kf6_revision import Kf6Revision_FromSemantics
+        Kf6Revision_FromSemantics(semantics_document)
         FirmwareParameters_CheckPlugins(
             semantics_document["firmware_algorithm_parameters"],
             integrity_revision=integrity_revision,

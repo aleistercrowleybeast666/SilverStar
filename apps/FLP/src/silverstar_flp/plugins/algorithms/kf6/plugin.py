@@ -1001,6 +1001,7 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         analysis_legacy_reacquisition: bool = False,
         analysis_frozen_initial: bool = False,
         analysis_options: Kf6DiagnosticOptions | None = None,
+        analysis_algorithm_revision: int | None = None,
     ) -> AlgorithmResult:
         if analysis_options is not None:
             if not isinstance(analysis_options, Kf6DiagnosticOptions):
@@ -1009,6 +1010,17 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
             if velocity_shift_ms is None and analysis_options.velocity_shift_ms:
                 velocity_shift_ms = analysis_options.velocity_shift_ms
         task_context = context or TaskContext()
+        from silverstar_flp.decoder_profiles.kf6_revision import Kf6Revision_Get
+        dataset_revision = Kf6Revision_Get(dataset)
+        algorithm_revision = dataset_revision if dataset_revision is not None else 1
+        if analysis_algorithm_revision is not None:
+            if (request.mode not in (ReplayMode.WHAT_IF, ReplayMode.OFFLINE)
+                    or type(analysis_algorithm_revision) is not int
+                    or analysis_algorithm_revision not in (1, 2)):
+                raise ValueError("kf6_algorithm_revision_override_requires_explicit_what_if")
+            algorithm_revision = analysis_algorithm_revision
+        elif request.mode == ReplayMode.OFFLINE:
+            algorithm_revision = 2
         if request.quality_policy_revision not in (None, *self.metadata.what_if_quality_revisions):
             raise ValueError("quality_policy_revision_unsupported")
         availability = self.availability(dataset, request.input_source)
@@ -1071,7 +1083,13 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 source_end_timestamp_us=increments[-1].interval_end_timestamp_us,
             )
         parameters = self._Parameters_Resolve(dataset, request)
+        source_diagnostics.update({"algorithm_revision": algorithm_revision,
+            "dataset_algorithm_revision": dataset_revision,
+            "algorithm_revision_override": analysis_algorithm_revision,
+            "process_noise_model": ("original_increment_equivalent_white_acceleration"
+                if algorithm_revision == 2 else "legacy_fragment_constant_acceleration")})
         filter_instance = Kf6Filter.Kf6_Create(
+            algorithm_revision=algorithm_revision,
             gnss_reacquire_outage_ms=parameters.get("gnss_reacquire_outage_ms", 300),
             process_accel_std_mps2=np.asarray(
                 (
@@ -1200,6 +1218,12 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         if source_diagnostics.get("gnss_integrity", {}).get("gnss_available") is False:
             warnings.append("gnss_unavailable")
         fidelity = availability.fidelity
+        if algorithm_revision != dataset_revision:
+            fidelity = ReplayFidelity.APPROXIMATE
+            warnings.append("kf6_process_model_counterfactual")
+        elif algorithm_revision == 2:
+            fidelity = ReplayFidelity.APPROXIMATE
+            warnings.append("kf6_revision2_cross_validation_scope_limited")
         if quality_revision == 3:
             fidelity = ReplayFidelity.APPROXIMATE
             warnings.append("revision3_cross_validation_scope_limited")

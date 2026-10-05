@@ -7,6 +7,10 @@
 #include "silverstar_assert.h"
 #include "system_user_config.h"
 
+#if (NAV_KF_ALGORITHM_REVISION != 2U)
+#error "KF6 source/header process model revision mismatch"
+#endif
+
 #define NAV_KF_STATE_DIMENSION 6U
 #define NAV_KF_VECTOR_DIMENSION 3U
 #define NAV_KF_P_DIAGONAL_MIN SYSTEM_ESTIMATOR_P_DIAGONAL_MIN
@@ -944,8 +948,7 @@ uint8_t NavigationKf_ResetWithCovariance(
 static void NavigationKf_PredictState(
     NavigationKfContext *context,
     const float delta_velocity_enu_mps[3],
-    float dt_s,
-    float delta_velocity_variance[3])
+    float dt_s)
 {
     float velocity_previous[3];
     uint8_t row;
@@ -957,20 +960,39 @@ static void NavigationKf_PredictState(
     memcpy(velocity_previous, &context->state[3], sizeof(velocity_previous));
     for (row = 0U; row < NAV_KF_VECTOR_DIMENSION; row++)
     {
-        float sigma_delta_velocity =
-            context->process_accel_std_mps2[row] * dt_s;
-        delta_velocity_variance[row] =
-            sigma_delta_velocity * sigma_delta_velocity;
-
         context->state[row] += velocity_previous[row] * dt_s +
                                0.5f * delta_velocity_enu_mps[row] * dt_s;
         context->state[row + 3U] += delta_velocity_enu_mps[row];
     }
 }
 
+static uint8_t NavigationKf_PredictNoise(
+    const NavigationKfContext *context, float dt_s, float original_dt_s,
+    float noise[3][3])
+{
+    uint8_t axis;
+    float pp_gain = dt_s * dt_s * dt_s / 3.0f;
+    float pv_gain = 0.5f * dt_s * dt_s;
+    SILVERSTAR_ASSERT_OBJECT(context, NavigationKfContext,
+                             SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(noise, float, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    for (axis = 0U; axis < NAV_KF_VECTOR_DIMENSION; axis++)
+    {
+        float sigma = context->process_accel_std_mps2[axis];
+        float density;
+        if (!isfinite(sigma) || (sigma <= 0.0f)) { return 0U; }
+        density = sigma * sigma * original_dt_s;
+        noise[axis][0] = density * pp_gain;
+        noise[axis][1] = density * pv_gain;
+        noise[axis][2] = density * dt_s;
+        if (NavigationKf_IsFiniteVector(noise[axis], 3U) == 0U) { return 0U; }
+    }
+    return 1U;
+}
+
 static void NavigationKf_PredictCovariance(
     const NavigationKfContext *context,
-    const float delta_velocity_variance[3],
+    const float noise[3][3],
     float dt_s,
     float covariance_new[6][6])
 {
@@ -985,14 +1007,11 @@ static void NavigationKf_PredictCovariance(
     {
         uint8_t row_axis = (uint8_t)(row % 3U);
         uint8_t row_is_position = (row < 3U) ? 1U : 0U;
-        float row_noise_gain = (row_is_position != 0U) ? (0.5f * dt_s) : 1.0f;
 
         for (column = 0U; column < NAV_KF_STATE_DIMENSION; column++)
         {
             uint8_t column_axis = (uint8_t)(column % 3U);
             uint8_t column_is_position = (column < 3U) ? 1U : 0U;
-            float column_noise_gain =
-                (column_is_position != 0U) ? (0.5f * dt_s) : 1.0f;
             float value = context->covariance[row][column];
 
             if (row_is_position != 0U)
@@ -1010,8 +1029,9 @@ static void NavigationKf_PredictCovariance(
             }
             if (row_axis == column_axis)
             {
-                value += row_noise_gain * column_noise_gain *
-                         delta_velocity_variance[row_axis];
+                uint8_t component = (uint8_t)((row_is_position == 0U) +
+                                             (column_is_position == 0U));
+                value += noise[row_axis][component];
             }
             covariance_new[row][column] = value;
         }
@@ -1022,34 +1042,48 @@ uint8_t NavigationKf_Predict(NavigationKfContext *context,
                              const float delta_velocity_enu_mps[3],
                              float dt_s)
 {
+    return (uint8_t)(NavigationKf_PredictInterval(
+        context, delta_velocity_enu_mps, dt_s, dt_s) == NAV_KF_PREDICT_OK);
+}
+
+NavigationKfPredictResult NavigationKf_PredictInterval(
+    NavigationKfContext *context, const float delta_velocity_enu_mps[3],
+    float dt_s, float original_dt_s)
+{
     float state_backup[6];
     float covariance_new[6][6];
-    float delta_velocity_variance[3];
+    float noise[3][3];
 
     if ((context == NULL) || (context->initialized == 0U) ||
         (NavigationKf_IsFiniteVector(delta_velocity_enu_mps, 3U) == 0U) ||
-        (!isfinite(dt_s)) || (dt_s <= 0.0f) || (dt_s > NAV_KF_DT_MAX_S))
+        (!isfinite(dt_s)) || (dt_s <= 0.0f) || (dt_s > NAV_KF_DT_MAX_S) ||
+        (!isfinite(original_dt_s)) || (original_dt_s < dt_s) ||
+        (original_dt_s > NAV_KF_DT_MAX_S))
     {
         if (context != NULL)
         {
             context->health_flags |= NAV_KF_HEALTH_INVALID_INPUT;
         }
-        return 0U;
+        return NAV_KF_PREDICT_INVALID;
     }
     SILVERSTAR_ASSERT_OBJECT(context, NavigationKfContext,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(delta_velocity_enu_mps, float,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    if (NavigationKf_PredictNoise(context, dt_s, original_dt_s, noise) == 0U)
+    {
+        context->health_flags |= NAV_KF_HEALTH_INVALID_INPUT;
+        return NAV_KF_PREDICT_INVALID;
+    }
     memcpy(state_backup, context->state, sizeof(state_backup));
     if (NavigationKf_StateAndCovarianceValid(context) == 0U)
     {
         NavigationKf_NumericRecovery(context, state_backup, 0U);
-        return 0U;
+        return NAV_KF_PREDICT_NUMERIC_ERROR;
     }
-    NavigationKf_PredictState(context, delta_velocity_enu_mps, dt_s,
-                              delta_velocity_variance);
+    NavigationKf_PredictState(context, delta_velocity_enu_mps, dt_s);
     NavigationKf_PredictCovariance(
-        context, delta_velocity_variance, dt_s, covariance_new);
+        context, (const float (*)[3])noise, dt_s, covariance_new);
 
     memcpy(context->covariance, covariance_new, sizeof(covariance_new));
     NavigationKf_CovarianceSymmetrizeAndClamp(context);
@@ -1057,11 +1091,11 @@ uint8_t NavigationKf_Predict(NavigationKfContext *context,
     {
         memcpy(context->state, state_backup, sizeof(state_backup));
         NavigationKf_NumericRecovery(context, state_backup, 0U);
-        return 0U;
+        return NAV_KF_PREDICT_NUMERIC_ERROR;
     }
 
     context->predict_count++;
-    return 1U;
+    return NAV_KF_PREDICT_OK;
 }
 
 NavigationKfUpdateResult NavigationKf_UpdateGnssPosition(

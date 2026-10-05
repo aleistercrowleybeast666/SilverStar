@@ -1690,6 +1690,15 @@ def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
                 raise ValueError(f"{component_id}: duplicate or invalid navigation semantics {name}")
             owners.add(name)
             declarations[name] = deepcopy(declaration)
+            if name == "kf6":
+                from silverstar_fccg.generator.kf6_identity import KERNEL_PATHS
+                provenance = (model.component_provenance.get(component_id)
+                              or ComponentProvenance_Get(catalog, component_id))
+                files = provenance.get("files", {})
+                if not all(path in files for path in KERNEL_PATHS):
+                    raise ValueError("KF6 source model identity NOT PROVEN: missing kernel provenance")
+                declarations[name]["kernel_sha256"] = {
+                    path: files[path] for path in KERNEL_PATHS}
     return declarations
 
 

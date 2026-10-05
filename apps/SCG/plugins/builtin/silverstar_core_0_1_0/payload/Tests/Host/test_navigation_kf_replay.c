@@ -258,9 +258,10 @@ static void Test_BarometerBetweenImuSamples(void)
         uint64_t timestamp = 1000000ULL + (uint64_t)step * 5000ULL;
         if (step == 40U)
         {
-            TEST_CHECK(NavigationKf_Predict(&s_reference, half_delta, 0.0025f) != 0U);
+            /* Revision2 fragments retain the original 5ms increment's H. */
+            TEST_CHECK(NavigationKf_PredictInterval(&s_reference, half_delta, 0.0025f, 0.005f) == NAV_KF_PREDICT_OK);
             (void)NavigationKf_UpdateBaroAltitude(&s_reference, event.altitude, event.altitude_variance);
-            TEST_CHECK(NavigationKf_Predict(&s_reference, half_delta, 0.0025f) != 0U);
+            TEST_CHECK(NavigationKf_PredictInterval(&s_reference, half_delta, 0.0025f, 0.005f) == NAV_KF_PREDICT_OK);
         }
         else { TEST_CHECK(NavigationKf_Predict(&s_reference, delta, 0.005f) != 0U); }
         TEST_CHECK(NavigationReplay_Predict(&s_delayed_history, &s_delayed, timestamp, delta, 0.005f) == NAV_REPLAY_OK);

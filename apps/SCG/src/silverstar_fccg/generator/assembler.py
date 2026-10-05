@@ -28,6 +28,7 @@ from silverstar_fccg.project.generation_state import (
     ProjectGenerationFingerprint_Get,
 )
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+from silverstar_fccg.generator.kf6_identity import Kf6Identity_Validate
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.plugins.manifest import PayloadCachePath_Is
 from silverstar_fccg.project.model import ProjectModel
@@ -369,6 +370,10 @@ class ProjectAssembler:
         hardware_files: dict[str, bytes] | None = None,
         progress_callback: GenerationProgressCallback | None = None,
     ) -> tuple[dict[str, bytes], dict]:
+        previous = self._Ownership_Load(project_root)
+        if "silverstar.algorithm.estimator.kf6" in model.ComponentIds_Get():
+            Kf6Identity_Validate(project_root, previous, ComponentProvenance_Get(
+                self.catalog, "silverstar.algorithm.estimator.kf6"))
         self._Progress_Report(progress_callback, 4, "generate_glue", False)
         graph = SourceGraph_Resolve(model, self.catalog)
         desired = GeneratedFiles_Render(model, self.catalog, graph)

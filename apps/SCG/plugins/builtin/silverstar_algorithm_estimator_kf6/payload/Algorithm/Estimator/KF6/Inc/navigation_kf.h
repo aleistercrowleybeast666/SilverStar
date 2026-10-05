@@ -3,6 +3,16 @@
 
 #include <stdint.h>
 
+/* Source-owned identity: original-increment equivalent white acceleration. */
+#define NAV_KF_ALGORITHM_REVISION 2U
+
+typedef enum
+{
+    NAV_KF_PREDICT_INVALID = 0U,
+    NAV_KF_PREDICT_OK,
+    NAV_KF_PREDICT_NUMERIC_ERROR
+} NavigationKfPredictResult;
+
 #define NAV_KF_HEALTH_NONE                 0U
 #define NAV_KF_HEALTH_INVALID_INPUT        (1U << 0)
 #define NAV_KF_HEALTH_MATRIX_NOT_SPD       (1U << 1)
@@ -136,6 +146,10 @@ uint8_t NavigationKf_ResetWithCovariance(
 uint8_t NavigationKf_Predict(NavigationKfContext *context,
                              const float delta_velocity_enu_mps[3],
                              float dt_s);
+/* fragment_dt_s <= original_dt_s; original_dt_s owns the process sigma. */
+NavigationKfPredictResult NavigationKf_PredictInterval(
+    NavigationKfContext *context, const float delta_velocity_enu_mps[3],
+    float fragment_dt_s, float original_dt_s);
 NavigationKfUpdateResult NavigationKf_UpdateGnssPosition(
     NavigationKfContext *context,
     const float position_enu_m[3],

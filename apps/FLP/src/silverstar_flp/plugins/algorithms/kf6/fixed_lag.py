@@ -91,7 +91,7 @@ class FixedLagReplay:
         return all(np.array_equal(getattr(initial, field), getattr(self.state, field))
                    for field in ('process_accel_std_mps2', 'nis_soft_threshold',
                                  'nis_hard_threshold', 'nis_max_r_scale',
-                                 'require_effective_gain'))
+                                 'require_effective_gain', 'algorithm_revision'))
 
     def _Prune(self):
         while len(self.checkpoints) > 1 and self.checkpoints[1][0] <= self.present - self.WINDOW_US:
@@ -302,7 +302,7 @@ class FixedLagReplay:
                         fraction = np.float32(current.measurement_us - cursor) / np.float32(
                             imu[1] - imu[0]
                         )
-                        if not working.Kf6_Predict(imu[2] * fraction, imu[3] * fraction):
+                        if not working.Kf6_Predict(imu[2] * fraction, imu[3] * fraction, imu[3]):
                             result = ReplayResult.NUMERIC_ERROR
                             break
                         cursor = current.measurement_us
@@ -317,7 +317,7 @@ class FixedLagReplay:
                     break
                 if imu and end > cursor:
                     fraction = np.float32(end - cursor) / np.float32(imu[1] - imu[0])
-                    if not working.Kf6_Predict(imu[2] * fraction, imu[3] * fraction):
+                    if not working.Kf6_Predict(imu[2] * fraction, imu[3] * fraction, imu[3]):
                         result = ReplayResult.NUMERIC_ERROR
                         break
                     steps += 1
@@ -402,6 +402,7 @@ def EpochState_Restore(dataset, epoch, template):
         nis_hard_threshold=template.nis_hard_threshold,
         nis_max_r_scale=template.nis_max_r_scale,
         gnss_reacquire_outage_ms=template.gnss_reacquire_outage_ms,
+        algorithm_revision=template.algorithm_revision,
     )
     state.state[:3] = start.payload['position_enu_m']
     state.covariance = covariance

@@ -776,6 +776,13 @@ Invoke-HostTest -Name 'navigation_kf_replay' -Sources @(
     "$repoRoot\System\Src\system_time.c"
 )
 
+Invoke-HostTest -Name 'kf6_process_model_revision2' -Sources @(
+    "$repoRoot\Tests\Host\test_kf6_process_model.c",
+    "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf.c",
+    "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf_replay.c",
+    "$repoRoot\System\Src\system_gnss_quality.c"
+)
+
 Invoke-HostTest -Name 'air_kf' -Sources @(
     "$repoRoot\Tests\Host\test_air_kf.c",
     "$repoRoot\Protocol\Src\air_protocol.c",

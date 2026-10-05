@@ -57,6 +57,7 @@ class _ReacquireGroupState:
     inflation_attempt_count: int = 0
     epochs_since_inflation: int = 0
     last_inflation_factor: float = 1.0
+
     active: bool = False
 
 
@@ -115,6 +116,7 @@ class Kf6Filter:
     reacquire_active_mask: int = 0
     last_inflation_group: int = -1
     last_inflation_factor: float = 1.0
+    algorithm_revision: int = 1
 
     @classmethod
     def Kf6_Create(
@@ -127,6 +129,7 @@ class Kf6Filter:
         nis_hard_threshold: NDArray[np.floating],
         nis_max_r_scale: float,
         gnss_reacquire_outage_ms: int = 300,
+        algorithm_revision: int = 1,
     ) -> Kf6Filter:
         process = np.asarray(process_accel_std_mps2, dtype=np.float32)
         p0 = np.asarray(p0_diagonal, dtype=np.float32)
@@ -145,6 +148,7 @@ class Kf6Filter:
             or np.any(hard <= soft)
             or not 100 <= gnss_reacquire_outage_ms <= 10000
             or nis_max_r_scale < 1.0
+            or type(algorithm_revision) is not int or algorithm_revision not in (1, 2)
         ):
             raise ValueError("kf6_configuration_invalid")
         instance = cls(
@@ -153,23 +157,35 @@ class Kf6Filter:
             nis_hard_threshold=hard.copy(),
             nis_max_r_scale=np.float32(nis_max_r_scale),
             gnss_reacquire_outage_ms=gnss_reacquire_outage_ms,
+            algorithm_revision=algorithm_revision,
         )
         instance.covariance = np.diag(np.maximum(p0, P_DIAGONAL_MIN)).astype(np.float32)
         instance.state[3:6] = velocity
         return instance
 
-    def Kf6_Predict(self, delta_velocity_enu_mps: NDArray[np.floating], dt_s: float) -> bool:
+    def Kf6_Predict(self, delta_velocity_enu_mps: NDArray[np.floating], dt_s: float,
+                   original_dt_s: float | None = None) -> bool:
         delta_velocity = np.asarray(delta_velocity_enu_mps, dtype=np.float32)
         dt = np.float32(dt_s)
+        original_dt = dt if original_dt_s is None else np.float32(original_dt_s)
         if (
             delta_velocity.shape != (3,)
             or not np.all(np.isfinite(delta_velocity))
             or not np.isfinite(dt)
             or dt <= 0.0
             or dt > PREDICTION_DT_MAX_S
+            or not np.isfinite(original_dt) or original_dt < dt
+            or original_dt > PREDICTION_DT_MAX_S
         ):
             self.health_flags |= 1
             return False
+        if self.algorithm_revision == 2:
+            density = self.process_accel_std_mps2 * self.process_accel_std_mps2 * original_dt
+            noise = np.stack((density * (dt * dt * dt / np.float32(3.0)),
+                              density * (np.float32(0.5) * dt * dt), density * dt), axis=1)
+            if not np.isfinite(noise).all() or np.any(self.process_accel_std_mps2 <= 0):
+                self.health_flags |= 1
+                return False
         covariance_previous = self.covariance.copy()
         velocity_previous = self.state[3:6].copy()
         for axis in range(3):
@@ -195,7 +211,10 @@ class Kf6Filter:
                 if row_position and column_position:
                     value += dt * dt * covariance_previous[row + 3, column + 3]
                 if row_axis == column_axis:
-                    value += row_noise_gain * column_noise_gain * delta_velocity_variance[row_axis]
+                    if self.algorithm_revision == 2:
+                        value += noise[row_axis, int(not row_position) + int(not column_position)]
+                    else:
+                        value += row_noise_gain * column_noise_gain * delta_velocity_variance[row_axis]
                 covariance_new[row, column] = value
         self.covariance = covariance_new
         if not self._Covariance_Repair():

@@ -4,7 +4,7 @@
   "name": "KF6 Navigation Estimator",
   "type": "algorithm",
   "class": "estimator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Optional build-selected KF6 fusion estimator.",
   "requires": {
     "components": [
@@ -41,10 +41,23 @@
   },
   "payload": {
     "roots": [
-      "Algorithm/Estimator/KF6"
+      "Algorithm/Estimator/KF6",
+      "Tests/Host"
     ]
   },
   "metadata": {
+    "navigation_semantics": {
+      "kf6": {
+        "revision": 2,
+        "process_noise_model": "original_increment_equivalent_white_acceleration",
+        "state_order": ["pE", "pN", "pU", "vE", "vN", "vU"],
+        "sigma_unit": "m/s^2",
+        "density": "q_axis = sigma_axis^2 * original_prediction_increment_dt_s",
+        "original_interval": "immutable NavigationReplayImu.dt_s, not observation fragment length",
+        "Q_fragment": "q * [[h^3/3,h^2/2],[h^2/2,h]] per axis",
+        "compatibility": "Qvv/Qpv retained for a whole original interval; Qpp is 4/3 of revision1. No resampling or old-trajectory equivalence claim."
+      }
+    },
     "measurement_any_of": ["gnss.position", "gnss.velocity", "barometer.altitude"],
     "arithmetic_requirements": ["fp32"],
     "qualified_timing_profiles": ["cortex_m3_softfp", "cortex_m4f_hardfp"],
@@ -288,7 +301,7 @@
           "zh_CN": "过程加速度标准差 E"
         },
         "description": {
-          "en_US": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+          "en_US": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
           "zh_CN": "逐轴加速度标准差；预测过程按原公式平方并乘以原有时间系数生成 Q。"
         }
       },
@@ -310,7 +323,7 @@
           "zh_CN": "过程加速度标准差 N"
         },
         "description": {
-          "en_US": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+          "en_US": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
           "zh_CN": "逐轴加速度标准差；预测过程按原公式平方并乘以原有时间系数生成 Q。"
         }
       },
@@ -332,7 +345,7 @@
           "zh_CN": "过程加速度标准差 U"
         },
         "description": {
-          "en_US": "Per-axis acceleration sigma; the existing prediction squares sigma and applies its unchanged time gains to Q.",
+          "en_US": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
           "zh_CN": "逐轴加速度标准差；预测过程按原公式平方并乘以原有时间系数生成 Q。"
         }
       },
