@@ -167,12 +167,61 @@ def test_state_groups_map_own_covariance_indices_and_primary_thresholds(qtbot,sa
     assert page._source_parameters==parameters
     store.ActiveSource_Set(b.source_id);page.SecondarySource_Set(a.source_id)
     page.Dataset_Set(dataset,resolver)
+    position_note = page.comparison_note.text()
     page.state_group_combo.setCurrentIndex(page.state_group_combo.findData('attitude_error'))
     assert len(page.covariance_plot.listDataItems())==3
     assert all('Primary' in t.name() for t in page.covariance_plot.listDataItems())
+    assert page.comparison_note.text() != position_note
+    page.state_group_combo.setCurrentIndex(page.state_group_combo.findData('position'))
+    assert len(page.covariance_plot.listDataItems())==6
+    assert page.comparison_note.text() == position_note
     ins=store.Result_Add(result('pure_ins'));store.ActiveSource_Set(ins.source_id)
     page.Dataset_Set(dataset,resolver)
     assert all(not plot.listDataItems() for plot in page._Plots_Get())
+
+
+def test_recorded_kf6_legacy_covariance_metadata_is_not_missing(qtbot,sample):
+    # Metadata/shape reported by the exact decoder for real log 000027.
+    # Values are synthetic; this regression does not claim real-log execution.
+    dataset,channels,_,result=sample
+    count=703
+    legacy=TimeSeries(
+        START_TIMESTAMP_US + np.arange(count,dtype=np.uint64)*10000,
+        np.tile([1.,4.,9.,16.,25.,36.],(count,1)),
+        '1','dimensionless','ESTIMATOR',np.ones(count,dtype=bool),
+        ('PxE','PxN','PxU','PvE','PvN','PvU'))
+    dataset=replace(dataset,series={**dataset.series,
+        'kf6.recorded.covariance.diagonal':legacy})
+    store=ReplayResultStore();store.ActiveSource_Set('recorded:kf6')
+    page=StateEstimationPage(Translator('en_US'),builtin_registry());qtbot.addWidget(page)
+    resolver=ChannelResolver(dataset,store)
+    page.Dataset_Set(dataset,resolver)
+    assert len(page.covariance_plot.listDataItems())==3
+    assert np.allclose([trace.yData[0] for trace in page.covariance_plot.listDataItems()],[1,2,3])
+    page.state_group_combo.setCurrentIndex(page.state_group_combo.findData('velocity'))
+    assert np.allclose([trace.yData[0] for trace in page.covariance_plot.listDataItems()],[4,5,6])
+    # Legacy scalar metadata is accepted only for the recorded KF6 contract.
+    entry=store.Result_Add(result(channels_override={**channels,'kf6.covariance.diagonal':legacy}))
+    store.ActiveSource_Set(entry.source_id);page.Dataset_Set(dataset,resolver)
+    assert not page.covariance_plot.listDataItems()
+    store.ActiveSource_Set('recorded:kf6');page.SecondarySource_Set(entry.source_id)
+    page.Dataset_Set(dataset,resolver)
+    assert len(page.covariance_plot.listDataItems())==3
+    assert all('Primary' in trace.name() for trace in page.covariance_plot.listDataItems())
+
+
+@pytest.mark.parametrize('change',['width','unit','quantity'])
+def test_recorded_legacy_covariance_requires_exact_storage_contract(qtbot,sample,change):
+    dataset,_,s,_=sample
+    legacy=s([1,4,9,16,25,36],'1','dimensionless')
+    if change=='width':legacy=replace(legacy,values=legacy.values[:,:3],columns=legacy.columns[:3])
+    elif change=='unit':legacy=replace(legacy,unit='ft')
+    else:legacy=replace(legacy,quantity='innovation')
+    dataset=replace(dataset,series={**dataset.series,'kf6.recorded.covariance.diagonal':legacy})
+    store=ReplayResultStore();store.ActiveSource_Set('recorded:kf6')
+    page=StateEstimationPage(Translator('en_US'),builtin_registry());qtbot.addWidget(page)
+    page.Dataset_Set(dataset,ChannelResolver(dataset,store))
+    assert not page.covariance_plot.listDataItems()
 
 
 def test_export_click_freezes_only_primary_even_if_follow_ui_has_stale_id(monkeypatch,sample,tmp_path):

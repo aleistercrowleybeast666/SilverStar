@@ -170,8 +170,8 @@ class StateEstimationPage(QWidget):
         self.state_group_combo = StandardComboBox()
         self.covariance_display_label = QLabel()
         self.covariance_display_combo = StandardComboBox()
-        self.state_group_combo.currentIndexChanged.connect(self._Covariance_Refresh)
-        self.covariance_display_combo.currentIndexChanged.connect(self._Covariance_Refresh)
+        self.state_group_combo.currentIndexChanged.connect(self._Refresh)
+        self.covariance_display_combo.currentIndexChanged.connect(self._Refresh)
         controls.addWidget(self.state_group_label)
         controls.addWidget(self.state_group_combo)
         controls.addSpacing(12)
@@ -192,7 +192,7 @@ class StateEstimationPage(QWidget):
         controls = QHBoxLayout()
         self.innovation_measurement_label = QLabel()
         self.innovation_measurement_combo = StandardComboBox()
-        self.innovation_measurement_combo.currentIndexChanged.connect(self._Innovation_Refresh)
+        self.innovation_measurement_combo.currentIndexChanged.connect(self._Refresh)
         controls.addWidget(self.innovation_measurement_label)
         controls.addWidget(self.innovation_measurement_combo)
         controls.addStretch(1)
@@ -220,7 +220,7 @@ class StateEstimationPage(QWidget):
         controls = QHBoxLayout()
         self.nis_measurement_label = QLabel()
         self.nis_measurement_combo = StandardComboBox()
-        self.nis_measurement_combo.currentIndexChanged.connect(self._Nis_Refresh)
+        self.nis_measurement_combo.currentIndexChanged.connect(self._Refresh)
         controls.addWidget(self.nis_measurement_label)
         controls.addWidget(self.nis_measurement_combo)
         controls.addStretch(1)
@@ -256,7 +256,7 @@ class StateEstimationPage(QWidget):
         controls = QHBoxLayout()
         self.measurement_group_label = QLabel()
         self.measurement_group_combo = StandardComboBox()
-        self.measurement_group_combo.currentIndexChanged.connect(self._Measurements_Refresh)
+        self.measurement_group_combo.currentIndexChanged.connect(self._Refresh)
         controls.addWidget(self.measurement_group_label)
         controls.addWidget(self.measurement_group_combo)
         controls.addStretch(1)
@@ -577,7 +577,12 @@ class StateEstimationPage(QWidget):
             self._translator, self._resolver, self._secondary_source_id)
 
     def _CovarianceSeries_Get(self, group: StateGroupSpec, *, reference: bool = False) -> TimeSeries | None:
-        primary = self._Covariance_Select(self._Series_Get(group.covariance_channel), group)
+        source = self._estimator_source
+        legacy_kf6 = bool(source and source.kind == AnalysisSourceKind.RECORDED
+                          and source.recorded_solution_id == "kf6"
+                          and source.algorithm_id == "silverstar.algorithm.kf6")
+        primary = self._Covariance_Select(self._Series_Get(group.covariance_channel), group,
+                                          legacy_recorded_kf6=legacy_kf6)
         if not reference or self._resolver is None or self._secondary_source_id is None:
             return primary if not reference else None
         spec = self._SecondaryVisualization_Get()
@@ -590,13 +595,25 @@ class StateEstimationPage(QWidget):
         return self._Reference_Check(primary, secondary)
 
     @staticmethod
-    def _Covariance_Select(series: TimeSeries | None, group: StateGroupSpec) -> TimeSeries | None:
-        if series is None or series.quantity != "covariance" or series.unit != "mixed":
+    def _Covariance_Select(series: TimeSeries | None, group: StateGroupSpec, *,
+                           legacy_recorded_kf6: bool = False) -> TimeSeries | None:
+        if series is None:
+            return None
+        published = series.quantity == "covariance" and series.unit == "mixed"
+        # Older exact decoders label ESTIMATOR.covariance_diagonal as generic
+        # scalar data. Only the selected recorded KF6 channel and its audited
+        # six-state storage contract supply the missing physical metadata.
+        legacy = (legacy_recorded_kf6
+                  and group.covariance_channel == "kf6.covariance.diagonal"
+                  and series.values.ndim == 2 and series.values.shape[1] == 6
+                  and series.quantity == "dimensionless" and series.unit == "1")
+        if not published and not legacy:
             return None
         # Published diagonal storage is mixed-unit; the plugin group owns the
         # indices and squared physical units of this selected block.
         return _Series_ComponentsSelect(series, group.covariance_diagonal_indices,
-                                       group.component_names, unit=f"({group.unit})2")
+                                       group.component_names, unit=f"({group.unit})2",
+                                       quantity="covariance")
 
     def _StateGroup_Get(self) -> StateGroupSpec | None:
         if self._visualization is None:
