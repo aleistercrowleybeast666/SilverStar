@@ -43,6 +43,10 @@ _Static_assert(SYSTEM_USER_IMU_ENABLE == 1U,
 _Static_assert(SYSTEM_USER_TIME_SOURCE_ENABLE == 1U,
                "SilverStar requires one monotonic time source");
 
+#ifndef SYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED
+#define SYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED 1U
+#endif
+#if SYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED != 0U
 #if !defined(SYSTEM_ESTIMATOR_PROCESS_ACCEL_E_STD_MPS2_OVERRIDE) || \
     !defined(SYSTEM_ESTIMATOR_PROCESS_ACCEL_N_STD_MPS2_OVERRIDE) || \
     !defined(SYSTEM_ESTIMATOR_PROCESS_ACCEL_U_STD_MPS2_OVERRIDE)
@@ -66,6 +70,7 @@ _Static_assert(
     (SYSTEM_SELECTED_BAROMETER_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE != 0U),
     "Selected Barometer needs an estimator noise recommendation or override");
 #endif
+#endif /* covariance estimator noise contract */
 
 _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
                 SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW) ||
@@ -122,12 +127,25 @@ _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
                   (SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED != 0U)))),
                "External attitude needs a qualified quaternion and yaw mode");
 
+#if defined(SILVERSTAR_COMPACT_MODE)
+/* The cold barometer path derives height from validated SI pressure through
+ * SystemBarometer_AltitudeResolve, with one fixed datum before/after START. */
+_Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+                 SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) == 0U) ||
+               ((SYSTEM_USER_BAROMETER_ENABLE != 0U) &&
+                (((SYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE != 0U) &&
+                  (SYSTEM_SELECTED_BAROMETER_ALIGNMENT_ORIGIN_QUALIFIED != 0U)) ||
+                 ((SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U) &&
+                  (SYSTEM_SELECTED_BAROMETER_PRESSURE_AVAILABLE != 0U)))),
+               "Required Barometer origin needs qualified altitude or validated cold pressure");
+#else
 _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
                  SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) == 0U) ||
                ((SYSTEM_USER_BAROMETER_ENABLE != 0U) &&
                 (SYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE != 0U) &&
                 (SYSTEM_SELECTED_BAROMETER_ALIGNMENT_ORIGIN_QUALIFIED != 0U)),
                "Required Barometer origin needs a qualified altitude source");
+#endif
 
 _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
                  SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) == 0U) ||

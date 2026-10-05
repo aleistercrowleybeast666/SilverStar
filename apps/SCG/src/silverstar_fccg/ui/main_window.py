@@ -565,6 +565,7 @@ class MainWindow(QMainWindow):
         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
         self.build_page.actionRequested.connect(self._Build_Request)
         self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
+        self.build_page.compactModeChanged.connect(self._CompactMode_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
             self._PluginInstall_Dialog
         )
@@ -836,6 +837,7 @@ class MainWindow(QMainWindow):
                 display.generated_project
             )
             self.build_page.MemoryLayout_Set(display.model.build.memory_layout)
+            self.build_page.CompactMode_Set(display.model.build.compact_mode)
             if not self._alignment_commit_in_progress:
                 self.algorithm_parameters_page.AlignmentConfiguration_Set(
                     display.model.alignment,
@@ -1063,6 +1065,11 @@ class MainWindow(QMainWindow):
             return
         def mutate(model: ProjectModel) -> None:
             model.build = replace(model.build, memory_layout=layout)
+        self._ProjectConfiguration_Change(mutate)
+
+    def _CompactMode_Change(self, enabled: bool) -> None:
+        def mutate(model: ProjectModel) -> None:
+            model.build = replace(model.build, compact_mode=enabled)
         self._ProjectConfiguration_Change(mutate)
 
     def _ProjectConfiguration_Change(

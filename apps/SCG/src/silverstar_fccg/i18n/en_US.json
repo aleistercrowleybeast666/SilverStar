@@ -957,5 +957,6 @@
   "device.raw_imu.mount.y_positive": "+Y toward nose",
   "device.raw_imu.mount.y_negative": "-Y toward nose",
   "device.raw_imu.mount.z_positive": "+Z toward nose",
-  "device.raw_imu.mount.z_negative": "-Z toward nose"
+  "device.raw_imu.mount.z_negative": "-Z toward nose",
+  "field.compact_mode": "Compact mode: at most one IMU, GNSS, telemetry and barometer"
 }

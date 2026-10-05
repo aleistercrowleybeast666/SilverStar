@@ -1,0 +1,31 @@
+........................................................................ [ 76%]
+.....................F                                                   [100%]
+================================== FAILURES ===================================
+__ test_generated_defaults_numerically_identical_and_changed_values_consumed __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/sf6_compact_ret6/apps/SCG/.work/pytest_ret6/test_generated_defaults_numeri0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/.work/sf6_compact_ret6/apps/SCG')
+
+    def test_generated_defaults_numerically_identical_and_changed_values_consumed(tmp_path,workspace_root):
+        if not Path(r'D:\msys64\ucrt64\bin\gcc.exe').is_file():
+            pytest.skip('Reference golden compiler unavailable')
+        service=FccgService(workspace_root)
+        model=service.ReferenceProject_Create('AlgorithmGolden')
+        # Keep the historical golden unchanged; use its explicit actual parameters.
+        model.algorithm_parameters[KF]['baro_std_m'] = 5.0
+        model.algorithm_parameters[KF]['gnss_velocity_vertical_scale'] = 1.0
+        model.algorithm_parameters[KF]['gnss_integrity_enable'] = 0
+        project=tmp_path/'generated'
+        service.Project_Save(model,project,confirm_dangerous=True)
+        baseline=Trajectory_Run(project,workspace_root)
+        expected=json.loads((workspace_root/'tests/fixtures/algorithm_parameters_golden.json').read_text())
+>       assert hashlib.sha256(baseline).hexdigest()==expected['trajectory_sha256']
+E       AssertionError: assert '4deb49b19d86...e5266ff9525cb' == 'ad64bc875b4e...3ec9484486aa1'
+E         
+E         - ad64bc875b4ec87f0bafdd65e868bb99822b79dfe79fc0debf13ec9484486aa1
+E         + 4deb49b19d86bd4a8ade8fb35013fb3f9b1e5347bc0b7cde9ace5266ff9525cb
+
+apps\SCG\tests\test_algorithm_parameters.py:286: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_algorithm_parameters.py::test_generated_defaults_numerically_identical_and_changed_values_consumed
+1 failed, 93 passed in 249.31s (0:04:09)

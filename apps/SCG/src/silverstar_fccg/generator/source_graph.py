@@ -103,6 +103,10 @@ def _ModuleProviderActive_Is(
 
 def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGraph:
     catalog = catalog.ProjectView_Get(model)
+    from silverstar_fccg.project.compact import CompactErrors_Get
+    compact_errors = CompactErrors_Get(model, catalog)
+    if compact_errors:
+        raise SourceGraphError("; ".join(compact_errors))
     sources: list[str] = []
     asm_sources: list[str] = []
     include_dirs: list[str] = []
@@ -448,6 +452,8 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
     ):
         defines.append("SILVERSTAR_AIR_LINK_ENABLED=1")
     forced_includes.append("Generated/Inc/project_flight_config.h")
+    if model.build.compact_mode:
+        defines.extend(("SILVERSTAR_COMPACT_MODE=1", "AIR_LINK_HAL_BUFFER_SIZE=260"))
     if model.device_instances:
         include_dirs.append("Devices")
     duplicate_sources = sorted(

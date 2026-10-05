@@ -654,6 +654,16 @@ def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCa
     if not isinstance(bindings, list):
         raise ValueError("Target device build capabilities must be an array")
     definitions: dict[str, str] = {}
+    if model.build.compact_mode:
+        barometer = providers.get("SYSTEM_DEVICE_CLASS_BAROMETER")
+        definitions["SYSTEM_SELECTED_BAROMETER_PRESSURE_AVAILABLE"] = (
+            "1U" if barometer and "barometer.pressure" in barometer.provides else "0U"
+        )
+        estimator_id = model.strategies.get("estimator")
+        noise_required = not estimator_id or catalog.Component_Get(estimator_id).metadata.get(
+            "uses_covariance_noise_parameters", True
+        ) is not False
+        definitions["SYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED"] = "1U" if noise_required else "0U"
     for binding in bindings:
         if not isinstance(binding, dict):
             raise ValueError("Invalid target device build capability")
@@ -1124,7 +1134,7 @@ def _InstanceResourceDeclarations_Render(
         sections.append(
             f"#define {binding.count_symbol:<42} {len(instances)}U\n"
             f"#define {binding.count_symbol}_MAX{' ' * max(1, 38 - len(binding.count_symbol))} "
-            f"{binding.runtime_context_upper_bound}U\n\n"
+            f"{max(1, len(instances)) if model.build.compact_mode else binding.runtime_context_upper_bound}U\n\n"
             f"typedef struct\n{{\n" + "\n".join(fields) + "\n"
             f"}} {binding.struct_type};\n\n"
             f"SystemDeviceResult {binding.accessor}(\n"
@@ -2602,7 +2612,8 @@ def _DeviceInstancesHeader_Render(
             raise ValueError(
                 f"Device-instance facade bound is missing: {bound_macro}"
             )
-        bound_values.append((bound_macro, max(int(match.group(1)), selected_count)))
+        bound_values.append((bound_macro, max(1, selected_count) if model.build.compact_mode
+                             else max(int(match.group(1)), selected_count)))
     bound_width = max(len(macro) for macro, _value in bound_values)
     bound_rows = "\n".join(
         f"#define {macro:<{bound_width}} {value}U"
@@ -3467,6 +3478,10 @@ def _Eide_Render(
     model: ProjectModel, graph: SourceGraph, environment: PluginManifest
 ) -> str:
     reference = _EnvironmentTemplate_Read(environment, ".eide/eide.yml")
+    if "-mcpu=cortex-m3" in graph.mcu_flags:
+        reference = reference.replace("cpuType: Cortex-M4", "cpuType: Cortex-M3")
+        reference = reference.replace("floatingPointHardware: single", "floatingPointHardware: none")
+        reference = reference.replace("$float-abi-type: hard", "$float-abi-type: soft")
     target_marker = "targets:\n  Debug:\n"
     if target_marker not in reference:
         raise ValueError("Reference EIDE template has no Debug target")

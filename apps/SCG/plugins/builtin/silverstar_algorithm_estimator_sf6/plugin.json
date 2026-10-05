@@ -46,7 +46,11 @@
     ]
   },
   "metadata": {
-    "measurement_any_of": ["gnss.position", "gnss.velocity", "barometer.altitude"],
+    "measurement_any_of": [
+      "gnss.position",
+      "gnss.velocity",
+      "barometer.altitude"
+    ],
     "arithmetic_requirements": [
       "fp32"
     ],
@@ -110,7 +114,8 @@
       "window_ms": 0,
       "history_capacity": 0,
       "event_capacity": 0
-    }
+    },
+    "uses_covariance_noise_parameters": false
   },
   "selection": {
     "kind": "strategy",

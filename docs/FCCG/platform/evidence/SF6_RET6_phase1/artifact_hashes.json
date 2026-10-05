@@ -1,0 +1,26 @@
+[
+  {
+    "Hash": "99DA4719B6CA70367F633375F9BE02B4DCFA67316CBFF7C2E81BF96ED4F4DBEA",
+    "Path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_phase1\\compact_rate_tests.log"
+  },
+  {
+    "Hash": "401F29AB9772D2A4A652BF2B62EE4D6E7B84853E543D1C5EC8C5FECA9F668D8A",
+    "Path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_phase1\\compiled_source_ownership.json"
+  },
+  {
+    "Hash": "29F9AAF7EDDB0946F832C4CDB9A9E12F64A65D7E5570CCBFEDD890105BA5A4FA",
+    "Path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_phase1\\complete_logs.zip"
+  },
+  {
+    "Hash": "60F299F87083AA00A03A91D5F46421B715DBF0D9536D6DA1EED8D438B9BFDF3E",
+    "Path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_phase1\\minimal_arm.log"
+  },
+  {
+    "Hash": "8EA1B17EC44A7C3C38BEDA3741E6C18C72700DA3586C940B0B232067BE4726DA",
+    "Path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_phase1\\scg_regression_scoped.log"
+  },
+  {
+    "Hash": "D0F2612F370668396FBD8A86DA614815EE2C5D8EC98FC3D2CA9B61D04D13A9B7",
+    "Path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_phase1\\SF6_RET6_Hardware.ioc"
+  }
+]

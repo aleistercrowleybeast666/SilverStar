@@ -133,6 +133,7 @@ class BuildOptions:
     eide_mode: str = "native"
     tool_paths: dict[str, str] = field(default_factory=dict)
     memory_layout: str = "legacy"
+    compact_mode: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -535,6 +536,7 @@ class ProjectModel:
                 "eide_mode": self.build.eide_mode,
                 "tool_paths": dict(sorted(self.build.tool_paths.items())),
                 "memory_layout": self.build.memory_layout,
+                **({"compact_mode": True} if self.build.compact_mode else {}),
             },
             "generated_glue": list(self.generated_glue),
             "component_provenance": self.component_provenance,
@@ -560,7 +562,10 @@ def _Hardware_Dictionary(hardware: HardwareConfiguration) -> dict[str, Any]:
 
 
 def _Build_Dictionary(build: BuildOptions) -> dict[str, Any]:
-    return asdict(build)
+    result = asdict(build)
+    if not build.compact_mode:
+        result.pop("compact_mode")
+    return result
 
 
 def _String_Require(
@@ -1559,8 +1564,11 @@ def _Build_Parse(value: Any) -> BuildOptions:
         "eide_mode",
         "tool_paths",
     }
-    if set(data) - {"memory_layout"} != expected:
+    if set(data) - {"memory_layout", "compact_mode"} != expected:
         raise ProjectModelError("build has missing or unknown fields")
+    compact_mode = data.get("compact_mode", False)
+    if not isinstance(compact_mode, bool):
+        raise ProjectModelError("build.compact_mode must be a boolean")
     memory_layout = data.get("memory_layout", "legacy")
     if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
         raise ProjectModelError("build.memory_layout is invalid")
@@ -1607,6 +1615,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
         eide_mode=eide_mode,
         tool_paths=dict(tool_paths),
         memory_layout=memory_layout,
+        compact_mode=compact_mode,
     )
 
 

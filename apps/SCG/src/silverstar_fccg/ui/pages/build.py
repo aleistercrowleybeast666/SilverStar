@@ -5,6 +5,7 @@ from collections.abc import Iterable
 from PySide6.QtCore import QSignalBlocker, Signal
 from PySide6.QtWidgets import (
     QApplication,
+    QCheckBox,
     QFormLayout,
     QComboBox,
     QGridLayout,
@@ -30,6 +31,7 @@ class BuildPage(ScrollableLocalizedPage):
     detectionRequested = Signal()
     actionRequested = Signal(str)
     memoryLayoutChanged = Signal(str)
+    compactModeChanged = Signal(bool)
 
     _PRIMARY_ACTIONS: tuple[tuple[str, str], ...] = ()
     _TARGET_ACTIONS = (
@@ -57,6 +59,10 @@ class BuildPage(ScrollableLocalizedPage):
         self.Text_Register(self.environment_label, "field.development_environment")
         self.environment_value = QLabel("VS Code + EIDE")
         summary_form.addRow(self.environment_label, self.environment_value)
+        self.compact_mode_checkbox = QCheckBox()
+        self.Text_Register(self.compact_mode_checkbox, "field.compact_mode")
+        self.compact_mode_checkbox.toggled.connect(self.compactModeChanged.emit)
+        summary_form.addRow(self.compact_mode_checkbox)
         self.memory_layout_label = QLabel()
         self.Text_Register(self.memory_layout_label, "field.memory_layout")
         self.memory_layout_combo = QComboBox()
@@ -446,6 +452,10 @@ class BuildPage(ScrollableLocalizedPage):
             elif layout != "legacy" and legacy_index >= 0:
                 self.memory_layout_combo.removeItem(legacy_index)
             self.memory_layout_combo.setCurrentIndex(self.memory_layout_combo.findData(layout))
+
+    def CompactMode_Set(self, enabled: bool) -> None:
+        with QSignalBlocker(self.compact_mode_checkbox):
+            self.compact_mode_checkbox.setChecked(enabled)
 
     def GeneratedProject_Set(self, available: bool) -> None:
         self._target_generated["flight"] = available

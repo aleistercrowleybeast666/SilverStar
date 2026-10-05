@@ -957,5 +957,6 @@
   "device.raw_imu.mount.y_positive": "+Y \u6307\u5411\u5934\u90e8",
   "device.raw_imu.mount.y_negative": "-Y \u6307\u5411\u5934\u90e8",
   "device.raw_imu.mount.z_positive": "+Z \u6307\u5411\u5934\u90e8",
-  "device.raw_imu.mount.z_negative": "-Z \u6307\u5411\u5934\u90e8"
+  "device.raw_imu.mount.z_negative": "-Z \u6307\u5411\u5934\u90e8",
+  "field.compact_mode": "精简模式：每类最多一个 IMU、GNSS、遥测和气压计"
 }

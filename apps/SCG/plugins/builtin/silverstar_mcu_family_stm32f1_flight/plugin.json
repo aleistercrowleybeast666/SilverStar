@@ -1,0 +1,441 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.mcu_family.stm32f1_flight",
+  "name": "STM32F1 Flight backend",
+  "type": "mcu_family",
+  "class": "stm32f1",
+  "version": "0.1.0",
+  "description": "F103 high-density Flight HAL adapters; compile validation only, no board qualification.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "platform.stm32f1"
+  ],
+  "build": {
+    "sources": [
+      "Platform/STM32F1/Src/platform_critical_stm32f1.c",
+      "Platform/STM32F1Flight/Src/platform_memory_stm32f1flight.c"
+    ],
+    "include_dirs": [
+      "Platform/STM32F1/Inc",
+      "Drivers/STM32F1xx_HAL_Driver/Inc",
+      "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+      "Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+      "Drivers/CMSIS/Include",
+      "Platform/STM32F1Flight/Inc"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Platform/STM32F1",
+      "Platform/STM32F1Flight",
+      "Drivers",
+      "Middlewares/Third_Party/FatFs/src"
+    ]
+  },
+  "metadata": {
+    "vendor": "STM32",
+    "family": "STM32F1",
+    "pc_uart_dma_adapter": "stm32_hal_receive_to_idle",
+    "source_policy": "plugin_payload_authoritative",
+    "reference": {
+      "vendor_package": "STM32Cube FW_F1 V1.8.7",
+      "qualification": "compile only; no MCU or board runtime verification"
+    },
+    "display_names": {
+      "zh_CN": "STM32F1 系列后端",
+      "en_US": "STM32F1 Family Backend"
+    }
+  },
+  "platform": {
+    "abi": {
+      "id": "silverstar.platform.resources",
+      "major": 1,
+      "minor": 0
+    },
+    "provider": "stm32_cubemx",
+    "build_target": {
+      "profile": "STM32F1"
+    },
+    "match_rules": [
+      {
+        "vendor": "STM32",
+        "family_pattern": "STM32F1*",
+        "priority": 10,
+        "specificity": 100,
+        "verification": "supported",
+        "exact_part": "STM32F103RET6"
+      }
+    ],
+    "resource_binding": {
+      "header": "platform_stm32f1flight_resources.h",
+      "bindings": {
+        "uart": {
+          "collection": "uarts",
+          "include_header": "usart.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformUartId",
+          "count_symbol": "PLATFORM_UART_COUNT",
+          "table_symbol": "s_uart_handles",
+          "getter": "PlatformStm32f1flightResource_UartHandleGet",
+          "struct_type": ""
+        },
+        "spi": {
+          "collection": "spis",
+          "include_header": "spi.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformSpiId",
+          "count_symbol": "PLATFORM_SPI_COUNT",
+          "table_symbol": "s_spi_handles",
+          "getter": "PlatformStm32f1flightResource_SpiHandleGet",
+          "struct_type": ""
+        },
+        "gpio": {
+          "collection": "gpios",
+          "include_header": "main.h",
+          "entry_kind": "gpio",
+          "id_type": "PlatformGpioId",
+          "count_symbol": "PLATFORM_GPIO_COUNT",
+          "table_symbol": "s_gpio_resources",
+          "getter": "PlatformStm32f1flightResource_GpioGet",
+          "struct_type": "PlatformStm32f1flightGpioResource"
+        },
+        "i2c": {
+          "collection": "i2cs",
+          "include_header": "i2c.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformI2cId",
+          "count_symbol": "PLATFORM_I2C_COUNT",
+          "table_symbol": "s_i2c_handles",
+          "getter": "PlatformStm32f1flightResource_I2cHandleGet",
+          "struct_type": ""
+        },
+        "time": {
+          "collection": "timebases",
+          "include_header": "stm32f1xx_hal_tim.h",
+          "entry_kind": "timebase",
+          "id_type": "PlatformTimeId",
+          "count_symbol": "PLATFORM_TIME_COUNT",
+          "table_symbol": "s_time_resources",
+          "getter": "PlatformStm32f1flightResource_TimeGet",
+          "struct_type": "PlatformStm32f1flightTimeResource"
+        }
+      }
+    },
+    "resource_backends": {
+      "uart": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "uart"
+        ],
+        "sources": [
+          "Platform/STM32F1Flight/Src/platform_uart_stm32f1flight.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "uart.blocking",
+          "uart.interrupt_dma"
+        ],
+        "ownership": "shared"
+      },
+      "spi": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "spi"
+        ],
+        "sources": [
+          "Platform/STM32F1Flight/Src/platform_spi_stm32f1flight.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "spi.master_blocking"
+        ],
+        "ownership": "shared"
+      },
+      "gpio": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "gpio_input",
+          "gpio_output",
+          "gpio_interrupt"
+        ],
+        "sources": [
+          "Platform/STM32F1Flight/Src/platform_gpio_stm32f1flight.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "gpio.digital",
+          "gpio.exti"
+        ],
+        "ownership": "single_owner"
+      },
+      "time": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "time"
+        ],
+        "sources": [
+          "Platform/STM32F1Flight/Src/platform_time_stm32f1flight.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "time.monotonic_us"
+        ],
+        "ownership": "shared"
+      },
+      "i2c": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "i2c"
+        ],
+        "sources": [
+          "Platform/STM32F1Flight/Src/platform_i2c_stm32f1flight.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "i2c.master_blocking",
+          "i2c.memory_read_write"
+        ],
+        "ownership": "shared_bus_unique_address"
+      }
+    },
+    "module_providers": {
+      "base": {
+        "inventory_modules": [
+          "NVIC",
+          "RCC",
+          "SYS"
+        ],
+        "init_sources": [
+          "Core/Src/main.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.base"
+        ],
+        "limitations": [],
+        "always": true
+      },
+      "gpio": {
+        "inventory_modules": [
+          "GPIO"
+        ],
+        "init_sources": [
+          "Core/Src/gpio.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.gpio"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "dma": {
+        "inventory_modules": [
+          "DMA"
+        ],
+        "init_sources": [
+          "Core/Src/dma.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.dma"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "uart": {
+        "inventory_modules": [
+          "USART*",
+          "UART*",
+          "LPUART*"
+        ],
+        "init_sources": [
+          "Core/Src/usart.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.uart"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "spi": {
+        "inventory_modules": [
+          "SPI*"
+        ],
+        "init_sources": [
+          "Core/Src/spi.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.spi"
+        ],
+        "limitations": [],
+        "always": false
+      },
+      "i2c": {
+        "inventory_modules": [
+          "I2C*"
+        ],
+        "init_sources": [
+          "Core/Src/i2c.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.i2c"
+        ],
+        "limitations": [
+          "RET6 compile-only validation; hardware timing and fault behavior unverified"
+        ],
+        "always": false
+      },
+      "tim": {
+        "inventory_modules": [
+          "TIM*",
+          "LPTIM*"
+        ],
+        "init_sources": [
+          "Core/Src/tim.c",
+          "Core/Src/stm32f1xx_hal_timebase_tim.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.tim"
+        ],
+        "limitations": [
+          "RET6 compile-only validation; hardware timing and fault behavior unverified"
+        ],
+        "always": false
+      },
+      "sdio": {
+        "inventory_modules": [
+          "SDIO"
+        ],
+        "init_sources": [
+          "Core/Src/sdio.c"
+        ],
+        "provider_sources": [
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_sd.c",
+          "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_sdmmc.c"
+        ],
+        "middleware_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "hal.sdio"
+        ],
+        "limitations": [
+          "RET6 compile-only validation; hardware timing and fault behavior unverified"
+        ],
+        "always": false
+      },
+      "fatfs": {
+        "inventory_modules": [
+          "FATFS"
+        ],
+        "init_sources": [
+          "FATFS/App/fatfs.c"
+        ],
+        "provider_sources": [],
+        "middleware_sources": [
+          "Middlewares/Third_Party/FatFs/src/diskio.c",
+          "Middlewares/Third_Party/FatFs/src/ff.c",
+          "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c",
+          "Middlewares/Third_Party/FatFs/src/drivers/sd_diskio.c"
+        ],
+        "include_dirs": [
+          "Middlewares/Third_Party/FatFs/src",
+          "Middlewares/Third_Party/FatFs/src/drivers"
+        ],
+        "defines": [],
+        "capabilities": [
+          "middleware.fatfs"
+        ],
+        "limitations": [
+          "RET6 compile-only validation; hardware timing and fault behavior unverified"
+        ],
+        "always": false
+      }
+    },
+    "compatibility": {
+      "cubemx_versions": [
+        "6.15.0"
+      ],
+      "firmware_packages": [
+        "STM32Cube FW_F1 V1.8.7"
+      ],
+      "source_policy": "plugin_payload_authoritative"
+    },
+    "support": {
+      "level": "supported",
+      "limitations": [
+        "F103RET6 Flight is compile-only; no board validation",
+        "UART DMA and 1 MHz HAL TIM timebase required",
+        "SDIO/FatFs remains hardware-generated App/Target glue"
+      ]
+    }
+  }
+}

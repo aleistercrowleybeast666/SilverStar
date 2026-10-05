@@ -700,6 +700,26 @@ def _ResourceAssignments_Reconcile(
     return result, retained_count, cleared_count, pending_count
 
 
+def _CompactPlatform_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
+    if not model.build.compact_mode:
+        return
+    contract = catalog.Component_Get(model.mcu).metadata.get("compact_platform")
+    if not isinstance(contract, dict):
+        return
+    family = catalog.Component_Get(contract["family"])
+    os = catalog.Component_Get(contract["os"])
+    if family.component_type != "mcu_family" or os.component_type != "os":
+        raise ValueError("Invalid compact platform component types")
+    model.mcu_family = family.component_id
+    model.os = os.component_id
+    model.base_components = [value for value in model.base_components if value != family.component_id]
+    replacements = contract.get("device_replacements", {})
+    model.device_instances = [
+        replace(instance, plugin=replacements.get(instance.plugin, instance.plugin))
+        for instance in model.device_instances
+    ]
+
+
 def _RequiredDependencies_Reconcile(
     model: ProjectModel, catalog: PluginCatalog
 ) -> None:
@@ -913,6 +933,8 @@ def ProjectConfiguration_Reconcile(
     _LegacyLandingStrategy_Reconcile(candidate)
     _RequiredDependencies_Reconcile(candidate, catalog)
     notices = [*_Hardware_Reconcile(candidate, catalog)]
+    _CompactPlatform_Reconcile(candidate, catalog)
+    _RequiredDependencies_Reconcile(candidate, catalog)
     _GroundBoard_Reconcile(candidate, catalog)
     _GroundPcBaud_Reconcile(candidate)
     notices.extend(_UnavailableOptionalDevices_Reconcile(candidate, catalog))

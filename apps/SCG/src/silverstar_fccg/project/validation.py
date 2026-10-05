@@ -752,6 +752,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         return ProjectValidationResult(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
+    from silverstar_fccg.project.compact import CompactErrors_Get
+    issues.extend(ValidationIssue("error", "COMPACT_DEVICE_LIMIT", message)
+                  for message in CompactErrors_Get(model, catalog))
     if model.core == SILVERSTAR_CORE_COMPONENT_ID and (
         model.identity.firmware_version != SILVERSTAR_PLATFORM_VERSION
         or model.identity.build_target != SILVERSTAR_BUILD_ID
@@ -907,7 +910,16 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         except ValueError as error:
             issues.append(ValidationIssue("error", "missing_component", str(error)))
             continue
-        if component_type not in {"algorithm", "flight_logic"}:
+        required_shared_core = (
+            model.build.compact_mode
+            and component_type == "core"
+            and any(
+                requirement.component_id == component_id and not requirement.optional
+                for selected_id in model.ComponentIds_Get()
+                for requirement in catalog.Component_Get(selected_id).dependencies
+            )
+        )
+        if component_type not in {"algorithm", "flight_logic"} and not required_shared_core:
             issues.append(
                 ValidationIssue(
                     "error",
@@ -1110,7 +1122,12 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
             ))
         else:
             issues.extend(
-                ValidationIssue("error", issue.code, issue.message)
+                ValidationIssue(
+                    "warning" if (issue.code == "TIMING_PROFILE_UNQUALIFIED"
+                                  and model.build.compact_mode
+                                  and catalog.Component_Get(model.mcu).metadata.get("compile_only") is True)
+                    else "error", issue.code, issue.message
+                )
                 for issue in rate_plan.issues
             )
     return ProjectValidationResult(tuple(issues))
@@ -1139,6 +1156,9 @@ def Project_EditValidate(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
 
+    from silverstar_fccg.project.compact import CompactErrors_Get
+    issues.extend(ValidationIssue("error", "COMPACT_DEVICE_LIMIT", message)
+                  for message in CompactErrors_Get(model, catalog))
     if model.hardware.mode == "unselected":
         issues.append(
             ValidationIssue(

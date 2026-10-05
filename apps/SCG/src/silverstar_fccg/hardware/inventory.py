@@ -115,12 +115,16 @@ class HardwareInventory:
     timebase: TimebaseInventory = field(default_factory=TimebaseInventory)
     fatfs: FatFsInventory = field(default_factory=FatFsInventory)
     issues: tuple[str, ...] = ()
+    sdio_shared_dma_bound: bool = False
 
     def Dictionary_Get(self) -> dict[str, Any]:
         # HardwareConfiguration is persisted as strict JSON.  Normalize tuple
         # fields here so a freshly detected inventory is byte-semantically
         # identical to the same inventory after save/reload.
-        return json.loads(json.dumps(asdict(self), ensure_ascii=False))
+        values = asdict(self)
+        if not self.sdio_shared_dma_bound:
+            values.pop("sdio_shared_dma_bound")
+        return json.loads(json.dumps(values, ensure_ascii=False))
 
     def HardwareResources_Get(self) -> tuple[HardwareResource, ...]:
         resources: list[HardwareResource] = []
@@ -282,7 +286,7 @@ class HardwareInventory:
             sdio_dmas = tuple(
                 item
                 for item in self.dmas
-                if item.request.startswith("SDIO_")
+                if item.request.startswith("SDIO_") or item.request == "SDIO"
             )
             sdio_irq = next(
                 (item for item in self.nvic if item.irq == "SDIO_IRQn"),
@@ -305,6 +309,7 @@ class HardwareInventory:
                         "physical_resource": "SDIO",
                         "pins": sdio_pins,
                         "dma": [asdict(item) for item in sdio_dmas],
+                        **({"shared_dma_directions": ["rx", "tx"]} if self.sdio_shared_dma_bound else {}),
                         "irq": asdict(sdio_irq) if sdio_irq is not None else {},
                         "irq_enabled": int(
                             sdio_irq is not None and sdio_irq.enabled
@@ -1392,5 +1397,26 @@ def CubeMxInventory_Parse(
         generated_sources=tuple(sorted(normalized_generated_files)),
         timebase=timebase,
         fatfs=fatfs,
+        sdio_shared_dma_bound=(
+            values.get("Mcu.Family") == "STM32F1"
+            and len([item for item in dmas if item.request == "SDIO"]) == 1
+            and any(
+                re.search(r"__HAL_LINKDMA\s*\(\s*(\w+)\s*,\s*hdmarx\s*,\s*(\w+)\s*\)", text)
+                and any(
+                    re.search(
+                        rf"__HAL_LINKDMA\s*\(\s*{re.escape(owner)}\s*,\s*hdmatx\s*,\s*{re.escape(handle)}\s*\)", text,
+                    )
+                    and any(
+                        re.search(rf"\b{re.escape(handle)}\.Instance\s*=\s*{re.escape(item.instance)}\s*;", text)
+                        for item in dmas if item.request == "SDIO"
+                    )
+                    for owner, handle in re.findall(
+                        r"__HAL_LINKDMA\s*\(\s*(\w+)\s*,\s*hdmarx\s*,\s*(\w+)\s*\)", text,
+                    )
+                )
+                for path, text in normalized_generated_files.items()
+                if path.casefold().endswith("core/src/sdio.c")
+            )
+        ),
         issues=tuple(issues),
     )

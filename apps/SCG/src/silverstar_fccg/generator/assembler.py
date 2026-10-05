@@ -566,6 +566,18 @@ class ProjectAssembler:
             target = f"{self.HARDWARE_ROOT}/{relative}"
             self.internal_policy.RelativePath_Validate(target)
             files[target] = source.read_bytes()
+        mcu = self.catalog.Component_Get(model.mcu)
+        if (model.build.compact_mode
+                and mcu.metadata.get("compact_entry") == "cubemx_static_tasks"):
+            from silverstar_fccg.generator.compact_entry import CompactFlightMain_Integrate
+
+            main_path = f"{self.HARDWARE_ROOT}/Core/Src/main.c"
+            if main_path not in files:
+                raise ProjectAssemblerError("Compact Flight requires CubeMX Core/Src/main.c")
+            try:
+                files[main_path] = CompactFlightMain_Integrate(files[main_path])
+            except ValueError as error:
+                raise ProjectAssemblerError(str(error)) from error
         return files
 
     def _HardwareOperations_Get(

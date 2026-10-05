@@ -440,6 +440,10 @@ def _RequirementConstraintsErrors_Get(
                 or str(item.get("request", "")).upper().endswith(
                     "_" + direction.upper()
                 )
+                or (
+                    item.get("request") == "SDIO"
+                    and direction in metadata.get("shared_dma_directions", ())
+                )
             )
             for item in dma_values
         )
