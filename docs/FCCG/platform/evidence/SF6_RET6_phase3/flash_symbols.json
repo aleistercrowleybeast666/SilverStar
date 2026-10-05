@@ -1,0 +1,116 @@
+{
+  "flash_load_bytes": 214320,
+  "flash_capacity": 524288,
+  "object_attribution_status": "NOT PROVEN: raw input map sizes overlap after GNU string merging; they cannot be summed as allocated flash bytes",
+  "raw_input_contributions_do_not_sum": {
+    "other_code": 75533,
+    "toolchain_libraries": 23613,
+    "sample_queue_code": 2076,
+    "algorithm_code": 27062,
+    "logger_and_sslog_code": 23027,
+    "platform_hal_rtos_code": 21376,
+    "device_and_radio_fatfs_libraries": 45728
+  },
+  "largest_raw_input_sections": [
+    {
+      "section": ".text.SslogRecords_PayloadSerialize",
+      "bytes": 5920,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Protocol/SSLOG/Src/sslog_records.o"
+    },
+    {
+      "section": ".text.TelemetryService_Process",
+      "bytes": 4824,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Modules/Src/telemetry_service.o"
+    },
+    {
+      "section": ".rodata.AppTask_Device.str1.4",
+      "bytes": 4665,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/APP/Src/device_task.o"
+    },
+    {
+      "section": ".text.Lora_Process",
+      "bytes": 4600,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Src/sx1281_device.o"
+    },
+    {
+      "section": ".text.AppTask_Flight",
+      "bytes": 3388,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/APP/Src/flight_task.o"
+    },
+    {
+      "section": ".text.SystemStartup_ProcessDevices",
+      "bytes": 3060,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_startup.o"
+    },
+    {
+      "section": ".text.__ieee754_pow",
+      "bytes": 3016,
+      "owner": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libm.a(libm_a-e_pow.o)"
+    },
+    {
+      "section": ".text.VectorConstraints_Solve",
+      "bytes": 2784,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Algorithm/Alignment/Common/Src/vector_constraints.o"
+    },
+    {
+      "section": ".text.SystemMissionSnapshot_Create",
+      "bytes": 2412,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/mission_snapshot.o"
+    },
+    {
+      "section": ".text.AppTask_Logger",
+      "bytes": 2368,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_task.o"
+    },
+    {
+      "section": ".text.__kernel_rem_pio2",
+      "bytes": 2152,
+      "owner": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libm.a(libm_a-k_rem_pio2.o)"
+    },
+    {
+      "section": ".text.__ieee754_powf",
+      "bytes": 1992,
+      "owner": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libm.a(libm_a-ef_pow.o)"
+    },
+    {
+      "section": ".text.__kernel_rem_pio2f",
+      "bytes": 1904,
+      "owner": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libm.a(libm_a-kf_rem_pio2.o)"
+    },
+    {
+      "section": ".text.SystemFlightRecovery_Process",
+      "bytes": 1784,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/FlightLogic/FlightCycle/Src/silverstar_flight_recovery.o"
+    },
+    {
+      "section": ".text.AlignmentStrategy_SampleProcess",
+      "bytes": 1684,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Algorithm/Alignment/VectorConstraints/Src/alignment_strategy_binding.o"
+    },
+    {
+      "section": ".text.SystemCalibration_ImuSampleProcess",
+      "bytes": 1640,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/System/Calibration/Src/system_calibration.o"
+    },
+    {
+      "section": ".text.AppTask_Ins",
+      "bytes": 1636,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/APP/Src/ins_task.o"
+    },
+    {
+      "section": ".text.SensorImu_DrainFifo",
+      "bytes": 1604,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Devices/SensorBus/Src/sensor_imu.o"
+    },
+    {
+      "section": ".text.InsInertial_Update",
+      "bytes": 1580,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.o"
+    },
+    {
+      "section": ".text.SystemNavigationBackend_Predict",
+      "bytes": 1528,
+      "owner": "build/FCCG/SilverStar_F103RE/Release/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.o"
+    }
+  ]
+}
