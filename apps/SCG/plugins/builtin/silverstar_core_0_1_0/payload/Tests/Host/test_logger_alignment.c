@@ -68,7 +68,9 @@ static unsigned Test_DrainEvidence(uint64_t expected_time, uint32_t expected_has
             TEST_CHECK(record.payload.alignment_evidence.valid_pair_count == 9U);
             TEST_CHECK(record.payload.alignment_evidence.mag_calibration_set_hash == expected_hash);
         }
-        TEST_CHECK(LoggerTask_RecordAppend(&record) != 0U);
+        if (s_logger.session_active != 0U)
+        { TEST_CHECK(LoggerTask_RecordAppend(&record) != 0U); }
+        else { TEST_CHECK(s_diagnostics.io_fault == 1U); }
     }
     return evidence;
 }
@@ -107,6 +109,7 @@ static void Test_FullQueueRetryOwnership(void)
     for (unsigned i = 0U; i < SYSTEM_LOG_RECORD_QUEUE_DEPTH; ++i)
     { TEST_CHECK(LoggerBus_EventPush(1U, FLIGHT_LOG_EVENT_MISSION_START, i, 0U) == LOGGER_BUS_RESULT_OK); }
     FlightTask_AlignmentEventsProcess(s_now);
+    s_now = 200U; FlightTask_AlignmentEventsProcess(s_now);
     TEST_CHECK(Test_DrainEvidence(100U, 77U) == 0U);
     memset(&s_snapshot, 0xEE, sizeof(s_snapshot)); s_mag_hash = 999U;
     s_now = 900U; FlightTask_AlignmentEventsProcess(s_now);
@@ -114,6 +117,65 @@ static void Test_FullQueueRetryOwnership(void)
     printf("FULL_RETRY_ALIGNMENT evidence=%u accepted_time=100 captured_hash=77\n", count);
     TEST_CHECK(count == 1U);
     FlightTask_AlignmentEventsProcess(s_now); TEST_CHECK(LoggerBus_Count() == 0U);
+}
+
+static void Test_NewAlignmentGeneration(void)
+{
+    Test_Reset();
+    TEST_CHECK(LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_OK);
+    FlightTask_AlignmentEventsProcess(s_now);
+    unsigned first = Test_DrainEvidence(100U, 77U);
+    TEST_CHECK(first == 1U);
+    s_status.start_sequence = 2U; s_mag_hash = 88U; s_now = 300U;
+    FlightTask_AlignmentEventsProcess(s_now);
+    unsigned second = Test_DrainEvidence(300U, 88U);
+    TEST_CHECK(second == 1U);
+    FlightTask_AlignmentEventsProcess(s_now); TEST_CHECK(LoggerBus_Count() == 0U);
+    printf("NEW_GENERATION_ALIGNMENT start_sequence=2 first=%u second=%u duplicate_queue=%u\n",
+        first, second, LoggerBus_Count());
+}
+
+static void Test_PendingAcrossNewGenerationAndFault(void)
+{
+    FlightLogRecord record; FlightLogAlignmentEvidenceRecord evidence = {0};
+    Test_Reset();
+    for (unsigned i = 0U; i < SYSTEM_LOG_RECORD_QUEUE_DEPTH; ++i)
+    { TEST_CHECK(LoggerBus_EventPush(1U, FLIGHT_LOG_EVENT_MISSION_START, i, 0U) == LOGGER_BUS_RESULT_OK); }
+    FlightTask_AlignmentEventsProcess(s_now);
+    s_status.start_sequence = 2U; s_mag_hash = 88U; s_now = 300U;
+    FlightTask_AlignmentEventsProcess(s_now);
+    TEST_CHECK(Test_DrainEvidence(100U, 77U) == 0U);
+    FlightTask_AlignmentEventsProcess(s_now);
+    unsigned count = 0U;
+    for (unsigned i = 0U; i < 16U; ++i)
+    {
+        if (LoggerBus_NextPop(&record) != LOGGER_BUS_RESULT_OK) { break; }
+        if (record.record_type == FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE)
+        {
+            TEST_CHECK(record.timestamp_us == ((count == 0U) ? 100U : 300U));
+            TEST_CHECK(record.payload.alignment_evidence.mag_calibration_set_hash == ((count == 0U) ? 77U : 88U));
+            count++;
+        }
+    }
+    TEST_CHECK(count == 2U);
+    FlightTask_AlignmentEventsProcess(s_now); TEST_CHECK(LoggerBus_Count() == 0U);
+    Test_Reset(); s_diagnostics.io_fault = 1U; LoggerTask_Close();
+    TEST_CHECK(LoggerBus_AlignmentEvidencePush(s_now, &evidence) == LOGGER_BUS_RESULT_BAD_STATE);
+    FlightTask_AlignmentEventsProcess(s_now);
+    /* Ordinary event/result admission remains existing behavior. Evidence is
+     * rejected, retains its original data and never fabricates durable success. */
+    TEST_CHECK(Test_DrainEvidence(100U, 77U) == 0U);
+    memset(&s_snapshot, 0xEE, sizeof(s_snapshot)); s_mag_hash = 999U; s_now = 900U;
+    FlightTask_AlignmentEventsProcess(s_now);
+    TEST_CHECK(LoggerBus_Count() == 0U && s_diagnostics.io_fault == 1U);
+    /* Explicit test-only quiescent reset, not firmware media recovery. */
+    LoggerBus_Reset();
+    memset(&s_logger, 0, sizeof(s_logger)); memset(&s_diagnostics, 0, sizeof(s_diagnostics));
+    s_logger.session_active = 1U;
+    FlightTask_AlignmentEventsProcess(s_now);
+    unsigned retained = Test_DrainEvidence(100U, 77U);
+    TEST_CHECK(retained == 1U);
+    printf("PENDING_ALIGNMENT generations=%u retained_after_test_reset=%u\n", count, retained);
 }
 
 static void Test_NoStorage(void)
@@ -157,6 +219,7 @@ static void Test_EvidenceFlushAndFault(void)
 int main(void)
 {
     TEST_CHECK(LoggerBus_Init() == LOGGER_BUS_RESULT_OK);
-    Test_BootAndSlowStorage(); Test_FullQueueRetryOwnership(); Test_EvidenceFlushAndFault(); Test_NoStorage();
+    Test_BootAndSlowStorage(); Test_FullQueueRetryOwnership(); Test_NewAlignmentGeneration();
+    Test_EvidenceFlushAndFault(); Test_PendingAcrossNewGenerationAndFault(); Test_NoStorage();
     return Test_Finish("logger_alignment");
 }

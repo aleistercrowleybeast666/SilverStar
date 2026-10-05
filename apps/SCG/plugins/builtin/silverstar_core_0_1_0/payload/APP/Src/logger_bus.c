@@ -116,6 +116,14 @@ static LoggerBusResult LoggerBus_QueuePush(
         LoggerBus_IrqUnlock(state);
         return LOGGER_BUS_RESULT_OK;
     }
+    /* Mandatory evidence cannot be admitted to a latched failed writer. */
+    if ((record->record_type == FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE) &&
+        (s_request.io_fault != 0U))
+    {
+        s_diagnostics.state_reject_count++;
+        LoggerBus_IrqUnlock(state);
+        return LOGGER_BUS_RESULT_BAD_STATE;
+    }
     queue_result = CommonSpscQueue_Push(queue, record);
     if (queue_result == COMMON_SPSC_QUEUE_RESULT_OK)
     {
