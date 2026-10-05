@@ -136,6 +136,8 @@ class MainWindow(QMainWindow):
         self._suspend_dirty = False
         self._thread_pool = QThreadPool.globalInstance()
         self._active_worker: FunctionWorker | None = None
+        self._folder_search_generation = 0
+        self._folder_search_worker: FunctionWorker | None = None
         self._worker_error_callback = None
         self._worker_cancel_callback = None
         self._settings = QSettings("SilverStar", "SilverStar_FLP")
@@ -278,6 +280,8 @@ class MainWindow(QMainWindow):
         self.import_dialog.importRequested.connect(self.LogPair_Open)
         self.import_dialog.folderSearchRequested.connect(self._FolderSearch_Start)
         self.import_dialog.rejected.connect(self._PendingProject_Cancel)
+        self.import_dialog.rejected.connect(self._FolderSearch_Invalidate)
+        self.import_dialog.folder_path_edit.textChanged.connect(self._FolderSearch_Invalidate)
         self.export_dialog = ExportDialog(self._translator, self)
         self.export_dialog.exportRequested.connect(self._Export_Start)
         self.export_dialog.manifestOpenRequested.connect(self._ExportManifest_Open)
@@ -645,6 +649,7 @@ class MainWindow(QMainWindow):
         )
 
     def _FolderSearch_Start(self, folder_path: Path) -> None:
+        self._FolderSearch_Invalidate()
         if self._active_worker is not None:
             self._Error_Show("another_background_task_is_running")
             return
@@ -653,9 +658,11 @@ class MainWindow(QMainWindow):
         worker = FunctionWorker(
             lambda context: self._FolderSearch_Run(selected_path, context)
         )
+        request_generation = self._folder_search_generation
+        self._folder_search_worker = worker
         self._Task_Start(
             worker,
-            self._FolderSearch_Set,
+            lambda result: self._FolderSearch_Publish(result, request_generation, worker),
             lambda message: self._Error_Show(message),
         )
 
@@ -664,6 +671,19 @@ class MainWindow(QMainWindow):
         discovery = self._log_open_coordinator.PairDiscovery_Run(selected_path)
         context.Cancel_RaiseIfRequested()
         return discovery
+
+    def _FolderSearch_Invalidate(self, *_args) -> None:
+        self._folder_search_generation += 1
+        worker = self._folder_search_worker
+        if worker is not None and worker is self._active_worker:
+            worker.Worker_Cancel()
+
+    def _FolderSearch_Publish(self, discovery, request_generation, worker) -> None:
+        if (request_generation != self._folder_search_generation
+            or worker is not self._folder_search_worker
+            or worker.context.cancellation_event.is_set()):
+            return
+        self._FolderSearch_Set(discovery)
 
     def _SilverStarProjectDialog_Open(self) -> None:
         selected = QFileDialog.getExistingDirectory(
@@ -967,6 +987,7 @@ class MainWindow(QMainWindow):
         self.replay_page.Task_Busy()
         self._worker_error_callback = error_callback
         self._worker_cancel_callback = cancel_callback
+        self._worker_cancelled_published = False
         worker.signals.progress.connect(self._Task_Progress)
         worker.signals.result.connect(result_callback)
         worker.signals.error.connect(self._Task_Error)
@@ -998,12 +1019,20 @@ class MainWindow(QMainWindow):
             self._Error_Show(message)
 
     def _Task_Cancelled(self) -> None:
+        if self._worker_cancelled_published:
+            return
+        self._worker_cancelled_published = True
         message = self._translator.Text_Get("status.task_cancelled")
         self.status_label.setText(message)
         if self._worker_cancel_callback is not None:
             self._worker_cancel_callback(message)
 
     def _Task_Finish(self) -> None:
+        if (self._active_worker is not None and
+                self._active_worker.context.cancellation_event.is_set()):
+            self._Task_Cancelled()
+        if self._active_worker is self._folder_search_worker:
+            self._folder_search_worker = None
         self._source_restore_index = None
         self.progress_bar.setVisible(False)
         self.cancel_button.setVisible(False)
@@ -1044,6 +1073,8 @@ class MainWindow(QMainWindow):
 
     def _Task_Cancel(self) -> None:
         if self._active_worker is not None:
+            if self._active_worker is self._folder_search_worker:
+                self._FolderSearch_Invalidate()
             self._active_worker.Worker_Cancel()
             self.cancel_button.setEnabled(False)
 

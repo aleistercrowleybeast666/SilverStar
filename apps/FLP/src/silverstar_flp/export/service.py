@@ -639,7 +639,7 @@ class FlightExporter:
             + int(requested.include_events)
             + (len(channels) if requested.include_csv else 0)
             + int(full_covariance is not None)
-            + (standard_plot_units + int(requested.include_plots)) * len(pages)
+            + standard_plot_units * len(pages) + int(requested.include_plots)
             + (sum(entry.algorithm_id == "silverstar.algorithm.sf6"
                    for entry in store.Entries_Get())
                if requested.include_csv else 0)
@@ -837,18 +837,18 @@ class FlightExporter:
                         dataset, resolver, PlotDirectory(plot_directory, page_start, page_end),
                         suffix, language, resolved_theme, attempt, skip,
                     )
-                    path = plot_directory / "Trajectory2D" / (
-                        f"Horizontal_Trajectory_{page_start:010.3f}-{page_end:010.3f}{suffix}.png"
-                    )
-                    attempt(
-                        f"horizontal_trajectory:{page_start:g}-{page_end:g}", path,
-                        lambda p=path, a=page_start, b=page_end: self._HorizontalTrajectory_Write(
-                            dataset, resolver.Series_Get("navigation.position_enu"), p,
-                            language, resolved_theme, flight_bounds, (a, b)),
-                        Translator(language.value).Text_Get("horizontal.title"),
-                    )
                 finally:
                     self._plot_page_range = None
+            path = plot_directory / "Trajectory2D" / (
+                f"Horizontal_Trajectory_{0.0:010.3f}-{flight_duration:010.3f}{suffix}.png"
+            )
+            attempt(
+                f"horizontal_trajectory:0-{flight_duration:g}", path,
+                lambda: self._HorizontalTrajectory_Write(
+                    dataset, resolver.Series_Get("navigation.position_enu"), path,
+                    language, resolved_theme, flight_bounds, (0.0, flight_duration)),
+                Translator(language.value).Text_Get("horizontal.title"),
+            )
 
         if integrity_result is not None:
             integrity_dir = output / "GNSSIntegrity"
@@ -947,6 +947,7 @@ class FlightExporter:
                 tuple(channels),
                 tuple(pages),
                 selected,
+                (0.0, flight_duration),
             )
             files.append(manifest_path)
             generated.append(
@@ -1122,6 +1123,7 @@ class FlightExporter:
         exported_channel_ids: tuple[str, ...],
         page_ranges: tuple[tuple[float, float], ...],
         gif_range: tuple[float, float],
+        horizontal_range: tuple[float, float],
     ) -> None:
         active = store.ActiveSource_Get()
         source_hash = hashlib.sha256()
@@ -1319,6 +1321,7 @@ class FlightExporter:
             "resolved_time_range": {
                 "pages_s": page_ranges,
                 "gif_s": gif_range,
+                "horizontal_trajectory_s": horizontal_range,
             },
             "requested_topics": {
                 "overview": options.include_overview,
