@@ -146,7 +146,7 @@ def test_bmi088_sync_binding_requires_declared_nets_and_invalidates_fingerprint(
     assert HardwareAssignmentFingerprint_Get(model, builtin_catalog) != confirmed
 
 
-def test_bmi088_sync_qualification_cannot_be_borrowed_for_raw_source(builtin_catalog) -> None:
+def test_bmi088_raw_and_sync_qualifications_keep_one_physical_source(builtin_catalog) -> None:
     from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
     from silverstar_fccg.project.reference import ReferenceProject_Create
 
@@ -156,6 +156,10 @@ def test_bmi088_sync_qualification_cannot_be_borrowed_for_raw_source(builtin_cat
     ))
     assert not CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
     model.device_instances.insert(0, DeviceInstance("raw0", "silverstar.device.imu.bmi088"))
+    assert not CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
+    model.capability_source_overrides.update({
+        "imu.acceleration": "raw0", "imu.angular_rate": "sync0",
+    })
     conflicts = CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
     assert conflicts and any("raw0" in text and "sync0" in text for text in conflicts)
 

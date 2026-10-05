@@ -582,8 +582,6 @@ class MainWindow(QMainWindow):
         model: ProjectModel,
         configuration: ProjectConfigurationResult | None = None,
     ) -> _ProjectDisplayState:
-        # Both targets are available; generation scope decides which is required.
-        model.ground_target = replace(model.ground_target, enabled=True)
         devices = tuple(
             component
             for component in self._component_views
