@@ -222,7 +222,8 @@
           "i2c"
         ],
         "sources": [
-          "Platform/STM32F1Flight/Src/platform_i2c_stm32f1flight.c"
+          "Platform/STM32F1Flight/Src/platform_i2c_stm32f1flight.c",
+          "Platform/STM32F1Flight/Src/platform_i2c_deadline.c"
         ],
         "provider_sources": [],
         "include_dirs": [],

@@ -26,6 +26,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal_def.h"
+#include "platform_i2c_deadline.h"
 
 /** @addtogroup STM32F1xx_HAL_Driver
   * @{
@@ -221,6 +222,10 @@ typedef struct
   __IO uint32_t              MemaddSize;     /*!< I2C Target memory address  size          */
 
   __IO uint32_t              EventCount;     /*!< I2C Event counter                        */
+
+  /* SilverStar F1 Flight: one deadline across blocking memory BUSY/address/data.
+     HAL ABI extension is local to this owning family; all clients rebuild. */
+  PlatformI2cDeadline        MemoryDeadline;
 
 
 #if (USE_HAL_I2C_REGISTER_CALLBACKS == 1)
