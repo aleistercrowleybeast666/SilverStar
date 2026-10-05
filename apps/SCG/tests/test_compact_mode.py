@@ -103,3 +103,20 @@ def test_f1_shared_sdio_dma_requires_both_actual_handle_bindings():
     assert not parse(binding.replace("hdmatx", "other_field")).sdio_shared_dma_bound
     assert not parse(binding.replace("hdmatx, hdma_sdio", "hdmatx, other_dma")).sdio_shared_dma_bound
     assert not parse(binding.replace("DMA2_Channel4", "DMA1_Channel4")).sdio_shared_dma_bound
+
+
+def test_compact_no_gnss_cuts_origin_storage_and_sets_features_before_includes(builtin_catalog):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    normal = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert "SYSTEM_BUILD_GNSS_ORIGIN_STORAGE_SAMPLES" not in normal
+    model.build = replace(model.build, compact_mode=True)
+    with_gnss = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert re.search(r"SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE\s+1U", with_gnss)
+    model.device_instances = [instance for instance in model.device_instances
+                              if "gnss.position" not in builtin_catalog.InstanceComponent_Get(instance).provides]
+    without = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert re.search(r"SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE\s+0U", without)
+    assert re.search(r"SYSTEM_BUILD_GNSS_ORIGIN_STORAGE_SAMPLES\s+1U", without)
+    assert without.index("#define SYSTEM_USER_POWER_ENABLE") < without.index('#include "project_algorithm_parameters.h"')
+    graph = SourceGraph_Resolve(model, builtin_catalog)
+    assert not any(source.startswith("Devices/GNSS/") for source in graph.sources)

@@ -144,7 +144,8 @@ static uint32_t SystemCapabilities_ServiceHealthMaskGet(
         healthy_mask |= SYSTEM_CAPABILITY_CONSOLE;
     }
 #endif
-    if ((SystemPower_HealthGet(&device_health) == SYSTEM_DEVICE_OK) &&
+    if ((SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE != 0U) &&
+        (SystemPower_HealthGet(&device_health) == SYSTEM_DEVICE_OK) &&
         (device_health.initialized != 0U) && (device_health.healthy != 0U))
     {
         healthy_mask |= SYSTEM_CAPABILITY_POWER;

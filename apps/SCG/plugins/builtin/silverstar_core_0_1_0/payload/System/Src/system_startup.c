@@ -546,7 +546,8 @@ static void SystemStartup_OtherAdaptersStart(void)
 #endif
 
     device = &s_startup_report.devices[SYSTEM_STARTUP_DEVICE_POWER];
-    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U)
+    if ((SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE != 0U) &&
+        (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U))
     {
         (void)memset(&info, 0, sizeof(info));
         device->init_result = SystemPower_Init();
@@ -592,7 +593,8 @@ static void SystemStartup_CommunicationProcess(void)
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_CONSOLE) != 0U)
     { SystemConsoleDevice_Process(); }
 #endif
-    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U)
+    if ((SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE != 0U) &&
+        (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U))
     { SystemPower_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_OUTPUT) != 0U)
     { SystemOutput_Process(); }
@@ -633,7 +635,8 @@ static void SystemStartup_SensorCommunicationEvaluate(void)
          SYSTEM_DEVICE_OK))
     { device->communication_result = SYSTEM_DEVICE_OK; }
     device = &s_startup_report.devices[SYSTEM_STARTUP_DEVICE_POWER];
-    if ((SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U) &&
+    if (((SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE != 0U) &&
+        (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U)) &&
         (SystemPower_LatestSampleGet(&power_sample) == SYSTEM_DEVICE_OK))
     { device->communication_result = SYSTEM_DEVICE_OK; }
 }
@@ -1032,7 +1035,8 @@ void SystemStartup_ProcessDevices(void)
     { (void)SystemBarometer_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_MAGNETOMETER) != 0U)
     { (void)SystemMagnetometer_Process(); }
-    if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U)
+    if ((SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE != 0U) &&
+        (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_POWER) != 0U))
     { SystemPower_Process(); }
     if (SystemStartup_CapabilityEnabled(SYSTEM_CAPABILITY_OUTPUT) != 0U)
     { SystemOutput_Process(); }

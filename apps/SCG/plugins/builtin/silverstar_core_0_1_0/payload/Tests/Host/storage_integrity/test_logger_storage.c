@@ -765,7 +765,13 @@ int main(int argc, char **argv)
         strcmp(argv[2], "initial-no-filesystem") == 0 ||
         strcmp(argv[2], "initial-io-error") == 0))
     { return Test_BootMedium(argv[2]) ? 0 : 1; }
+#if defined(SILVERSTAR_HOST_FATFS_R011)
+    if (f_mount(&s_fs, SDPath, 0U) != FR_OK) { return 4; }
+    /* R0.11 needs FAT16 geometry on this fixed 32 MiB Host card. */
+    if (f_mkfs(SDPath, 1U, 1024U) != FR_OK) { return 4; }
+#else
     if (f_mkfs(SDPath, FM_FAT | FM_SFD, 512U, s_work, sizeof(s_work)) != FR_OK) { return 4; }
+#endif
     if (f_mount(&s_fs, SDPath, 1U) != FR_OK) { return 5; }
     if (argc == 3 && (strcmp(argv[2], "initial-manifest-error") == 0 ||
         strcmp(argv[2], "post-open-write-error") == 0))

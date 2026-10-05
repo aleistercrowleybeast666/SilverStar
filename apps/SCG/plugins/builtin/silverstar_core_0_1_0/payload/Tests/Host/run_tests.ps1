@@ -1,5 +1,6 @@
 param(
-    [string]$HostCompiler = 'gcc'
+    [string]$HostCompiler = 'gcc',
+    [string[]]$Only = @()
 )
 
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
@@ -42,6 +43,7 @@ if (Test-Path -LiteralPath $detailLogPath) {
 
 # FCCG generated configuration is force-included so Host Tests use the same selected-component feature gates as Make.
 $includeArgs = @(
+    ('-I' + $repoRoot + '\Targets\' + $hostTargetProfile + '\Inc'),
     '-include',
     "$repoRoot\Generated\Inc\project_flight_config.h",
     "-I$repoRoot\Tests\Host",
@@ -67,13 +69,14 @@ $includeArgs = @(
     "-I$repoRoot\System\Indicator\Inc",
     "-I$repoRoot\System\Inertial\Inc",
     "-I$repoRoot\System\User",
-    "-I$repoRoot\Targets\$hostTargetProfile\Inc",
+    "-I$repoRoot\Targets\SilverStar_F407\Inc",
     "-I$repoRoot\Board\SilverStar_0_5\Services\Inc",
     "-I$repoRoot\Generated\Inc",
     "-I$repoRoot\FlightLogic\Deployment\MultiTrigger\Inc",
     "-I$repoRoot\FlightLogic\Landing\BarometerImuWindow\Inc",
     "-I$repoRoot\Platform\Inc",
     "-I$repoRoot\Platform\STM32F4\Inc",
+    "-I$repoRoot\Platform\STM32F1Flight\Inc",
     "-I$repoRoot\Devices\IMU\JY901B\Inc",
     "-I$repoRoot\Devices\IMU\JY901B\Adapter\Inc",
     "-I$repoRoot\Devices\GNSS\NEO_M9N\Inc",
@@ -1263,6 +1266,14 @@ $plannedJobs = @($script:hostJobs | Where-Object {
         (@($_.Sources | Where-Object { -not (Test-Path -LiteralPath $_) }).Count -eq 0)) -or
     (($_.Kind -ne 'HOST_TEST') -and (Test-Path -LiteralPath $_.Source))
 })
+if ($Only.Count -ne 0) {
+    $availableNames = @($plannedJobs | ForEach-Object { $_.Name })
+    foreach ($name in $Only) {
+        if ($availableNames -notcontains $name) { throw "Requested Host case is unavailable: $name" }
+    }
+    $plannedJobs = @($plannedJobs | Where-Object { $Only -contains $_.Name })
+    Write-Output ('Host scope explicitly selected: ' + ($Only -join ', '))
+}
 foreach ($taskKind in @(
     'HOST_TEST',
     'HOST_COMPILE_PASS',
@@ -1334,4 +1345,5 @@ $hostSummary = ("SilverStar host summary: executables={0} checks={1} " +
     $script:hostFailureCount, $script:compilePassCaseCount, `
     $script:expectedCompileFailureCount
 Write-Output $hostSummary
-Write-Output 'All SilverStar host tests passed.'
+if ($Only.Count -eq 0) { Write-Output 'All SilverStar host tests passed.' }
+else { Write-Output 'Selected SilverStar host tests passed; full suite was not executed.' }

@@ -31,6 +31,23 @@
       "Drivers/CMSIS/Device/ST/STM32F1xx/Include",
       "Drivers/CMSIS/Include",
       "Platform/STM32F1Flight/Inc"
+    ],
+    "exclude_sources": [
+      "Middlewares/Third_Party/FatFs/src/drivers/sd_diskio.c",
+      "Middlewares/Third_Party/FatFs/src/drivers/sdram_diskio.c",
+      "Middlewares/Third_Party/FatFs/src/drivers/sram_diskio.c",
+      "Middlewares/Third_Party/FatFs/src/drivers/usbh_diskio.c",
+      "Middlewares/Third_Party/FatFs/src/option/cc932.c",
+      "Middlewares/Third_Party/FatFs/src/option/cc936.c",
+      "Middlewares/Third_Party/FatFs/src/option/cc949.c",
+      "Middlewares/Third_Party/FatFs/src/option/cc950.c",
+      "Middlewares/Third_Party/FatFs/src/option/ccsbcs.c",
+      "Middlewares/Third_Party/FatFs/src/option/syscall.c",
+      "Middlewares/Third_Party/FatFs/src/option/unicode.c",
+      "Platform/STM32F1/Src/platform_gpio_stm32f1.c",
+      "Platform/STM32F1/Src/platform_spi_stm32f1.c",
+      "Platform/STM32F1/Src/platform_time_stm32f1.c",
+      "Platform/STM32F1/Src/platform_uart_stm32f1.c"
     ]
   },
   "payload": {

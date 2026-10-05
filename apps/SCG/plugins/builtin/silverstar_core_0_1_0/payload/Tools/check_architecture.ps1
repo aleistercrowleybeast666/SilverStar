@@ -1,6 +1,17 @@
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+$architectureTargetProfile = 'SilverStar_F407'
+$architectureProject = Join-Path $repoRoot 'SilverStar.ssproject'
+if (Test-Path -LiteralPath $architectureProject -PathType Leaf) {
+    $architectureTargetProfile = (Get-Content -Raw -LiteralPath $architectureProject | ConvertFrom-Json).build.target_profile
+}
+$architectureFacts = switch ($architectureTargetProfile) {
+    'SilverStar_F407' { @{ Backend='STM32F4'; Cpu='cortex-m4'; EideCpu='Cortex-M4'; Fpu='single'; Abi='hard'; Linker='STM32F407XX_FLASH.ld'; Hal='stm32f4xx'; Tick='TIM1' } }
+    'SilverStar_F103RE' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RE_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6' } }
+    default { throw "Unsupported Flight architecture target: $architectureTargetProfile" }
+}
+$architectureTargetMk = 'Targets\' + $architectureTargetProfile + '\target.mk'
 $script:checkCount = 0
 $script:failures = New-Object 'System.Collections.Generic.List[string]'
 Write-Output 'FCCG_PROGRESS|ARCHITECTURE|PLAN|6'
@@ -351,15 +362,19 @@ $systemLayerPaths = @(
 # Console scopes. Any present optional files are still scanned; enabled
 # scopes remain mandatory, and invalid facts retain fail-closed checks.
 $maintenanceEnabled = Get-ArchitectureMaintenanceSelection
-$deviceCorePaths = @(
-    'Devices\IMU\JY901B\Inc', 'Devices\IMU\JY901B\Src',
-    'Devices\GNSS\NEO_M9N\Inc', 'Devices\GNSS\NEO_M9N\Src',
-    'Devices\Telemetry\SX1281\Inc', 'Devices\Telemetry\SX1281\Src'
-)
-$deviceAdapterPaths = @(
-    'Devices\IMU\JY901B\Adapter', 'Devices\GNSS\NEO_M9N\Adapter',
-    'Devices\Telemetry\SX1281\Adapter'
-)
+# Scan every emitted device implementation, including present inactive payloads.
+# Selected sources are checked independently against the authoritative manifest.
+$deviceCorePaths = @()
+$deviceAdapterPaths = @()
+$devicesRoot = Join-Path $repoRoot 'Devices'
+Assert-ArchitectureCondition -Condition (Test-Path -LiteralPath $devicesRoot -PathType Container) `
+    -Message 'Generated Device payload root is missing.'
+foreach ($directory in @(Get-ChildItem -LiteralPath $devicesRoot -Recurse -Directory)) {
+    $relative = $directory.FullName.Substring($repoRoot.Length + 1)
+    if ($relative -match '\\Adapter(?:\\|$)') {
+        if ($directory.Name -eq 'Adapter') { $deviceAdapterPaths += $relative }
+    } elseif ($directory.Name -in @('Inc', 'Src')) { $deviceCorePaths += $relative }
+}
 foreach ($consoleScope in @('Inc', 'Src', 'Adapter')) {
     $relative = 'Devices\Console\UART\' + $consoleScope
     if ($maintenanceEnabled -or (Test-Path -LiteralPath (Join-Path $repoRoot $relative))) {
@@ -598,14 +613,14 @@ Assert-FileContainsPattern -RelativePath 'Makefile' `
 Assert-FileContainsPattern -RelativePath 'Makefile' `
     -Pattern 'C_OBJECTS\s*:=\s*\$\(addprefix\s+\$\(BUILD_ROOT\)/,\$\(C_SOURCES:\.c=\.o\)\)' `
     -Message 'C object paths do not preserve source hierarchy.'
-Assert-FileContainsPattern -RelativePath 'Targets\SilverStar_F407\target.mk' `
-    -Pattern 'PLATFORM_BACKEND\s*:=\s*STM32F4' `
+Assert-FileContainsPattern -RelativePath $architectureTargetMk `
+    -Pattern ('PLATFORM_BACKEND\s*:=\s*' + [regex]::Escape($architectureFacts.Backend)) `
     -Message 'SilverStar_F407 target does not select the STM32F4 backend explicitly.'
-Assert-FileContainsPattern -RelativePath 'Targets\SilverStar_F407\target.mk' `
-    -Pattern 'TARGET_MCU_FLAGS\s*:=\s*-mcpu=cortex-m4' `
+Assert-FileContainsPattern -RelativePath $architectureTargetMk `
+    -Pattern ('TARGET_MCU_FLAGS\s*:=\s*-mcpu=' + [regex]::Escape($architectureFacts.Cpu)) `
     -Message 'SilverStar_F407 target does not own its MCU compiler flags.'
-Assert-FileContainsPattern -RelativePath 'Targets\SilverStar_F407\target.mk' `
-    -Pattern 'TARGET_LDSCRIPT\s*:=\s*STM32F407XX_FLASH\.ld' `
+Assert-FileContainsPattern -RelativePath $architectureTargetMk `
+    -Pattern ('TARGET_LDSCRIPT\s*:=\s*' + [regex]::Escape($architectureFacts.Linker)) `
     -Message 'SilverStar_F407 target does not own its linker script selection.'
 $eidePath = Join-Path $repoRoot '.eide\eide.yml'
 $eideContent = Get-Content -Raw -LiteralPath $eidePath
@@ -642,37 +657,37 @@ Assert-ArchitectureCondition -Condition ($missingEideDirectories.Count -eq 0) `
         ($missingEideDirectories -join ', '))
 Assert-ArchitectureCondition `
     -Condition ($eideContent -match `
-        '(?m)^outDir:\s*build\\FCCG\\SilverStar_F407\\EIDE\s*$') `
+        ('(?m)^outDir:\s*build\\FCCG\\' + [regex]::Escape($architectureTargetProfile) + '\\EIDE\s*$')) `
     -Message 'EIDE output is not isolated under build\FCCG\SilverStar_F407\EIDE.'
 Assert-ArchitectureCondition `
-    -Condition ($eideContent -match '(?m)^\s+cpuType:\s*Cortex-M4\s*$') `
+    -Condition ($eideContent -match ('(?m)^\s+cpuType:\s*' + [regex]::Escape($architectureFacts.EideCpu) + '\s*$')) `
     -Message 'EIDE CPU is not Cortex-M4.'
 Assert-ArchitectureCondition `
     -Condition ($eideContent -match `
-        '(?m)^\s+floatingPointHardware:\s*single\s*$') `
+        ('(?m)^\s+floatingPointHardware:\s*' + [regex]::Escape($architectureFacts.Fpu) + '\s*$')) `
     -Message 'EIDE FPU is not single precision.'
 Assert-ArchitectureCondition `
     -Condition ($eideContent -match `
-        '(?m)^\s+\$float-abi-type:\s*hard\s*$') `
+        ('(?m)^\s+\$float-abi-type:\s*' + [regex]::Escape($architectureFacts.Abi) + '\s*$')) `
     -Message 'EIDE float ABI is not hard.'
 Assert-ArchitectureCondition `
     -Condition ($eideContent -match '(?m)^\s+language-c:\s*c11\s*$') `
     -Message 'EIDE C language mode is not C11.'
 Assert-ArchitectureCondition `
     -Condition ($eideContent -match `
-        '(?m)^\s+scatterFilePath:\s*STM32F407XX_FLASH\.ld\s*$') `
+        ('(?m)^\s+scatterFilePath:\s*' + [regex]::Escape($architectureFacts.Linker) + '\s*$')) `
     -Message 'EIDE does not use the authoritative F407 linker script.'
 Assert-ArchitectureCondition `
     -Condition ($eideContent -match `
-        '(?m)^\s+C_FLAGS:\s*-include Targets/SilverStar_F407/Inc/platform_memory_target\.h -include Generated/Inc/project_flight_config\.h\s*$') `
+        ('(?m)^\s+C_FLAGS:\s*-include Targets/' + [regex]::Escape($architectureTargetProfile) + '/Inc/platform_memory_target\.h -include Generated/Inc/project_flight_config\.h\s*$')) `
     -Message 'EIDE does not force-include the target memory and flight configuration policies.'
 Assert-ArchitectureCondition `
     -Condition ($eideContent -match '(?m)^\s+LIB_FLAGS:\s*-lc -lm -lnosys\s*$') `
     -Message 'EIDE target libraries do not match the authoritative F407 link.'
 Assert-FileContainsPattern -RelativePath '.vscode\tasks.json' `
-    -Pattern '"command"\s*:\s*"mingw32-make"' `
+    -Pattern ('"command"\s*:\s*' + [regex]::Escape((ConvertTo-Json -InputObject ([string]$projectConfiguration.build.make_command) -Compress))) `
     -Message 'VS Code/EIDE workflow does not call the authoritative Make build.'
-Assert-FileContainsPattern -RelativePath 'STM32F407XX_FLASH.ld' `
+Assert-FileContainsPattern -RelativePath $architectureFacts.Linker `
     -Pattern '_Min_Heap_Size\s*=\s*0x0\s*;' `
     -Message 'The target linker script still reserves a C runtime heap.'
 Assert-FileContainsPattern -RelativePath $iocPath `
@@ -682,6 +697,7 @@ Assert-NoArchitecturePattern -Name `
     'CubeMX project metadata still owns FreeRTOS or a default task.' `
     -Paths @($iocPath) -Extensions @('.ioc') `
     -Pattern '(?i)FREERTOS|CMSIS_V2|defaultTask|rtos\.0\.ip'
+if ($architectureTargetProfile -eq 'SilverStar_F407') {
 Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'NVIC\.TimeBaseIP=TIM1' `
     -Message 'CubeMX no longer assigns the HAL tick to TIM1.'
@@ -743,7 +759,33 @@ foreach ($iocEntry in $requiredIocEntries) {
         -Message $iocEntry[1]
 }
 
-$makeOutput = @(& mingw32-make -s TARGET_PROFILE=SilverStar_F407 `
+} else {
+    $iocContent = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $iocPath)
+    Assert-ArchitectureCondition -Condition ($iocContent -match 'Mcu.CPN=STM32F103RET6') `
+        -Message 'RET6 custom hardware must contain the exact official RET6 part.'
+    Assert-ArchitectureCondition -Condition ($iocContent -match 'NVIC.TimeBaseIP=TIM6') `
+        -Message 'RET6 HAL timebase must use TIM6 independently of RTOS SysTick.'
+    Assert-ArchitectureCondition -Condition ($iocContent.Contains('NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4')) `
+        -Message 'RET6 IRQ priority grouping changed.'
+    Assert-ArchitectureCondition -Condition ($iocContent.Contains('NVIC.SysTick_IRQn=true\:15\:0')) `
+        -Message 'RET6 SysTick priority must remain 15.'
+    foreach ($irq in [regex]::Matches($iocContent,
+        '(?m)^NVIC\.(?<name>(?:DMA\w*|USART\w*|EXTI\w*|TIM6|SDIO)_IRQn)=true\\:(?<priority>[0-9]+)\\:')) {
+        Assert-ArchitectureCondition -Condition ([int]$irq.Groups['priority'].Value -ge 5) `
+            -Message ('RET6 peripheral IRQ violates FreeRTOS syscall ceiling: ' + $irq.Groups['name'].Value)
+    }
+    foreach ($collection in @('uarts', 'i2cs', 'spis', 'sdios')) {
+        foreach ($resource in @($projectConfiguration.hardware.inventory.$collection)) {
+            if ($null -eq $resource) { continue }
+            $instance = [string]$resource.instance
+            Assert-ArchitectureCondition -Condition (($instance -ne '') -and
+                ($iocContent -match ('(?m)^Mcu.IP[0-9]+=' + [regex]::Escape($instance) + '\r?$'))) `
+                -Message ('RET6 imported resource is absent from official IOC: ' + $instance)
+        }
+    }
+}
+
+$makeOutput = @(& mingw32-make -s "TARGET_PROFILE=$architectureTargetProfile" `
     CONFIG=Debug list-sources 2>&1)
 $makeExitCode = $LASTEXITCODE
 Assert-ArchitectureCondition -Condition ($makeExitCode -eq 0) `
@@ -787,7 +829,7 @@ if ($makeExitCode -eq 0) {
     } | Sort-Object)
     $expectedKernelSources = @(
         'ThirdParty/FreeRTOS-Kernel/list.c',
-        'ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c',
+        ('ThirdParty/FreeRTOS-Kernel/portable/GCC/' + $(if ($architectureTargetProfile -eq 'SilverStar_F103RE') { 'ARM_CM3' } else { 'ARM_CM4F' }) + '/port.c'),
         'ThirdParty/FreeRTOS-Kernel/queue.c',
         'ThirdParty/FreeRTOS-Kernel/tasks.c'
     ) | Sort-Object
@@ -808,7 +850,7 @@ if ($makeExitCode -eq 0) {
             ($forbiddenSelectedSources -join ', '))
 
     $wrongPlatformSources = @($uniqueSources | Where-Object {
-        ($_ -like 'Platform/*') -and ($_ -notlike 'Platform/STM32F4/*')
+        ($_ -like 'Platform/*') -and $(if ($architectureTargetProfile -eq 'SilverStar_F103RE') { ($_ -notlike 'Platform/STM32F1/*') -and ($_ -notlike 'Platform/STM32F1Flight/*') } else { $_ -notlike 'Platform/STM32F4/*' })
     })
     Assert-ArchitectureCondition -Condition ($wrongPlatformSources.Count -eq 0) `
         -Message ("Unselected Platform backend entered the build: " +
@@ -870,7 +912,7 @@ if ($makeExitCode -eq 0) {
     # FCCG resolves strategies before rendering one immutable source graph.
     $fccgResolvedSourceGraph = Test-Path -LiteralPath (Join-Path $repoRoot 'Generated\project_sources.mk')
     if (-not $fccgResolvedSourceGraph) {
-        $noneOutput = @(& mingw32-make -s TARGET_PROFILE=SilverStar_F407 `
+        $noneOutput = @(& mingw32-make -s "TARGET_PROFILE=$architectureTargetProfile" `
             CONFIG=Debug ESTIMATOR_STRATEGY=None list-sources 2>&1)
         $noneExitCode = $LASTEXITCODE
         Assert-ArchitectureCondition -Condition ($noneExitCode -eq 0) `
@@ -961,7 +1003,7 @@ if ($makeExitCode -eq 0) {
         $targetDefines = @(Get-YamlListValues -Content $targetContent `
             -BlockPattern '(?ms)^ {6}defineList:\s*\r?\n(?<items>(?: {8}-[^\r\n]+\r?\n)+)' `
             -ItemPattern '^\s{8}-\s+(?<value>.+?)\s*$')
-        $configOutput = @(& mingw32-make -s TARGET_PROFILE=SilverStar_F407 `
+        $configOutput = @(& mingw32-make -s "TARGET_PROFILE=$architectureTargetProfile" `
             "CONFIG=$configurationName" "MEMORY_LAYOUT=$configuredMemoryLayout" list-build-config 2>&1)
         $configExitCode = $LASTEXITCODE
         Assert-ArchitectureCondition -Condition ($configExitCode -eq 0) `
@@ -1021,11 +1063,11 @@ Assert-FileContainsPattern -RelativePath 'OS\FreeRTOS\FreeRTOSConfig.h' `
 Assert-FileContainsPattern -RelativePath 'OS\FreeRTOS\freertos_hooks.c' `
     -Pattern '\bvApplicationGetIdleTaskMemory\s*\(' `
     -Message 'Static Idle task storage hook is missing.'
-Assert-FileContainsPattern -RelativePath 'Targets\SilverStar_F407\Src\freertos_target_irq.c' `
+Assert-FileContainsPattern -RelativePath ('Targets\' + $architectureTargetProfile + '\Src\freertos_target_irq.c') `
     -Pattern '\bxPortSysTickHandler\s*\(' `
     -Message 'STM32F407 SysTick is not routed to the native FreeRTOS port.'
-Assert-FileContainsPattern -RelativePath ($cubeCorePath + '\Src\stm32f4xx_hal_timebase_tim.c') `
-    -Pattern '\bTIM1\b' `
+Assert-FileContainsPattern -RelativePath ($cubeCorePath + '\Src\' + $architectureFacts.Hal + '_hal_timebase_tim.c') `
+    -Pattern ('\b' + $architectureFacts.Tick + '\b') `
     -Message 'HAL tick is no longer kept on TIM1.'
 Assert-FileContainsPattern -RelativePath 'APP\Src\app_tasks.c' `
     -Pattern '\bxTaskCreateStatic\s*\(' `
@@ -1154,10 +1196,12 @@ Assert-NoArchitecturePattern -Name `
     -Paths @('Generated\Inc\project_device_instances.h',
              'Generated\Src\project_device_instances.c') `
     -Pattern '\(\s*\*\s*[A-Za-z_][A-Za-z0-9_]*\s*\)'
+if (Test-Path -LiteralPath (Join-Path $repoRoot 'Devices\IMU\JY901B\Src\jy901b_device.c')) {
 Assert-FileContainsPattern `
     -RelativePath 'Devices\IMU\JY901B\Inc\jy901b_imu_build_capabilities.h' `
     -Pattern 'JY901B_BUILD_MULTI_INSTANCE_READY\s+1U' `
     -Message 'JY901B must remain qualified for bounded context-safe repetition.'
+}
 foreach ($contextDriver in @(
     @{ Path = 'Devices\IMU\JY901B\Src\jy901b_device.c';
        Macro = 'PROJECT_JY901B_INSTANCE_COUNT_MAX' },
@@ -1165,6 +1209,7 @@ foreach ($contextDriver in @(
        Macro = 'PROJECT_NEO_M9N_INSTANCE_COUNT_MAX' },
     @{ Path = 'Devices\Telemetry\SX1281\Src\sx1281_device.c';
        Macro = 'PROJECT_SX1281_INSTANCE_COUNT_MAX' })) {
+    if (-not (Test-Path -LiteralPath (Join-Path $repoRoot $contextDriver.Path))) { continue }
     Assert-FileContainsPattern `
         -RelativePath $contextDriver.Path `
         -Pattern $contextDriver.Macro `

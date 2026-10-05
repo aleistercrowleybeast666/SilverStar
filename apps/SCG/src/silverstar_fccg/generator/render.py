@@ -766,26 +766,35 @@ def _FlightConfigHeader_Render(
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
     if model.build.compact_mode:
         descriptors = _DeviceDescriptorEntries_Get(model, catalog)
-        # Metadata emits four algorithm descriptors. The generated table
-        # assertion below ties this value to its actual compiled contents.
-        snapshot_slots = 1 + len(descriptors) + 4 + len(model.logging_streams)
+        algorithm_count = sum(len(catalog.Component_Get(component).metadata.get(
+            "algorithm_descriptors", [])) for component in model.ComponentIds_Get())
+        snapshot_slots = 1 + len(descriptors) + algorithm_count + len(model.logging_streams)
         definitions.extend((
             ("PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS", f"{snapshot_slots}U"),
-            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", f"{snapshot_slots + 4}U"),
-            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "8U"),
-            ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "1024U"),
+            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", f"{snapshot_slots + 5}U"),
+            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "16U"),
+            ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "2048U"),
             ("SYSTEM_IMU_SAMPLE_BUS_DEPTH", "16U"),
             ("ESTIMATOR_BUS_DEPTH", "16U"),
             ("SYSTEM_USER_POWER_ENABLE", "1U" if any(
                 entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
                 for entry in descriptors) else "0U"),
+            ("SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE", "1U" if any(
+                entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
+                for entry in descriptors) else "0U"),
+            ("SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE", "1U" if any(
+                "gnss.position" in catalog.InstanceComponent_Get(instance).provides
+                for instance in model.device_instances) else "0U"),
+            ("SYSTEM_BUILD_GNSS_ORIGIN_STORAGE_SAMPLES", "SYSTEM_ESTIMATOR_GNSS_ORIGIN_WINDOW_SAMPLES" if any(
+                "gnss.position" in catalog.InstanceComponent_Get(instance).provides
+                for instance in model.device_instances) else "1U"),
         ))
-        if model.hardware.mode == "custom" and model.mcu_family == "silverstar.mcu_family.stm32f1_flight":
-            gpio_indices = [int(resource.metadata["logical_index"])
-                            for resource in model.hardware.resources
-                            if resource.kind.startswith("gpio_")]
-            definitions.append(("SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT",
-                                f"{max(gpio_indices, default=0) + 1}U"))
+    if model.hardware.mode == "custom" and model.mcu_family == "silverstar.mcu_family.stm32f1_flight":
+        gpio_indices = [int(resource.metadata["logical_index"])
+                        for resource in model.hardware.resources
+                        if resource.kind.startswith("gpio_")]
+        definitions.append(("SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT",
+                            f"{max(gpio_indices, default=0) + 1}U"))
     landing_id = model.strategies.get("landing")
     if landing_id:
         landing_defines = [value.partition("=")[2]
@@ -969,15 +978,17 @@ def _FlightConfigHeader_Render(
         f"#endif"
         for symbol, value in definitions
     )
+    includes = '#include "project_algorithm_parameters.h"\n#include "project_device_build_capabilities.h"'
+    early_rows = ("#define SILVERSTAR_COMPACT_MODE 1\n#define AIR_LINK_HAL_BUFFER_SIZE 260\n\n" + rows + "\n\n" + includes) if model.build.compact_mode else includes
+    late_rows = "" if model.build.compact_mode else rows
     return f"""#ifndef __PROJECT_FLIGHT_CONFIG_H
 #define __PROJECT_FLIGHT_CONFIG_H
 
-#include "project_algorithm_parameters.h"
-#include "project_device_build_capabilities.h"
+{early_rows}
 
 {AUTOGEN_C_COMMENT}
 
-{rows}
+{late_rows}
 
 #if (SYSTEM_USER_MAGNETOMETER_ENABLE != 0U)
 #error "Magnetometer selection is deferred in the first SCG release"
@@ -2920,6 +2931,11 @@ def _MetadataSource_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
     digest = ProjectDigest_Get(model)
     device_rows_text = ",\n".join(device_rows)
     algorithm_rows_text = ",\n".join(algorithm_rows)
+    snapshot_assert = """#include "sslog_records.h"
+_Static_assert((1U + sizeof(s_device_descriptors) / sizeof(s_device_descriptors[0]) +
+               sizeof(s_algorithm_descriptors) / sizeof(s_algorithm_descriptors[0]) +
+               SSLOG_RECORD_COUNT) <= SYSTEM_LOG_RECORD_QUEUE_DEPTH,
+               "Compact log queue must hold all startup descriptors");""" if model.build.compact_mode and model.protocols.get("logging") is not None else ""
     return f"""#include "system_descriptor_if.h"
 
 {AUTOGEN_C_COMMENT}
@@ -2951,13 +2967,7 @@ _Static_assert((sizeof(s_algorithm_descriptors) /
                 sizeof(s_algorithm_descriptors[0])) <=
                SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX,
                "target algorithm descriptor table exceeds interface bound");
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-#include "sslog_records.h"
-_Static_assert((1U + sizeof(s_device_descriptors) / sizeof(s_device_descriptors[0]) +
-               sizeof(s_algorithm_descriptors) / sizeof(s_algorithm_descriptors[0]) +
-               SSLOG_RECORD_COUNT) <= SYSTEM_LOG_RECORD_QUEUE_DEPTH,
-               "Compact log queue must hold all startup descriptors");
-#endif
+{snapshot_assert}
 
 uint16_t SystemDescriptor_DeviceCountGet(void)
 {{

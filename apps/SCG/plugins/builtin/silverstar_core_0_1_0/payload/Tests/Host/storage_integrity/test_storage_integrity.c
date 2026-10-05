@@ -388,7 +388,15 @@ int main(int argc, char **argv)
     char path[4];
     if (argc != 2 && argc != 3) { return 2; }
     if (FATFS_LinkDriver(&SD_Driver, path) != 0U) { return 3; }
+#if defined(SILVERSTAR_HOST_FATFS_R011)
+    if (f_mount(&s_fs, path, 0U) != FR_OK) { return 4; }
+    /* R0.11 selects FAT32 from the pre-overhead 65536-cluster estimate;
+     * 512-byte clusters then fall below its FAT32 minimum after FAT overhead.
+     * Use FAT16 geometry for the same immutable 32 MiB Host card. */
+    if (f_mkfs(path, 1U, 1024U) != FR_OK) { return 4; }
+#else
     if (f_mkfs(path, FM_FAT | FM_SFD, 512U, s_work, sizeof(s_work)) != FR_OK) { return 4; }
+#endif
     if (f_mount(&s_fs, path, 1U) != FR_OK) { return 5; }
     if (strcmp(argv[1], "--target-bench") == 0)
     {

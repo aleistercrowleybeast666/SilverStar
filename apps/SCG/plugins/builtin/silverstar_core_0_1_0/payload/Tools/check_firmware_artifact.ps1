@@ -19,7 +19,12 @@ if ($MemoryLayout -ne 'legacy') {
 }
 $elfPath = Join-Path $buildRoot ($targetName + '.elf')
 $mapPath = Join-Path $buildRoot ($targetName + '.map')
-$linkerPath = Join-Path $repoRoot 'STM32F407XX_FLASH.ld'
+$targetFacts = switch ($TargetProfile) {
+    'SilverStar_F407' { @{ Linker='STM32F407XX_FLASH.ld'; Sram=131072; Ccm=65536 } }
+    'SilverStar_F103RE' { @{ Linker='STM32F103RE_FLASH.ld'; Sram=65536; Ccm=0 } }
+    default { throw "Unsupported artifact target: $TargetProfile" }
+}
+$linkerPath = Join-Path $repoRoot $targetFacts.Linker
 $failures = New-Object 'System.Collections.Generic.List[string]'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|PLAN|8'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX'
@@ -50,12 +55,12 @@ function ConvertFrom-HexValue {
 function Get-MemoryName {
     param([Parameter(Mandatory = $true)][uint64]$Address)
 
-    if (($Address -ge [uint64]0x10000000) -and
+    if (($targetFacts.Ccm -ne 0) -and ($Address -ge [uint64]0x10000000) -and
         ($Address -lt [uint64]0x10010000)) {
         return 'CCMRAM'
     }
     if (($Address -ge [uint64]0x20000000) -and
-        ($Address -lt [uint64]0x20020000)) {
+        ($Address -lt ([uint64]0x20000000 + [uint64]$targetFacts.Sram))) {
         return 'main SRAM'
     }
     if (($Address -ge [uint64]0x08000000) -and
@@ -186,9 +191,9 @@ if (($null -ne $objdumpCommand) -and
 Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP'
 $ccmStart = [uint64]0x10000000
-$ccmLength = [uint64](64 * 1024)
+$ccmLength = [uint64]$targetFacts.Ccm
 $mainSramStart = [uint64]0x20000000
-$mainSramLength = [uint64](128 * 1024)
+$mainSramLength = [uint64]$targetFacts.Sram
 $flashLength = [uint64](512 * 1024)
 
 # The whitelist has one private CPU-only scratch object. Inspect the actual
@@ -282,6 +287,7 @@ elseif ($eskfSelected) {
     Write-Output '  placement layout=legacy preserved_payload=unsupported experimental_audit=NOT_PROVEN'
 }
 
+if ($targetFacts.Ccm -ne 0) {
 Assert-ArtifactCondition -Condition $sections.ContainsKey('.ccmram_bss') `
     -Message 'ELF section .ccmram_bss is missing.'
 if ($sections.ContainsKey('.ccmram_bss')) {
@@ -293,6 +299,12 @@ if ($sections.ContainsKey('.ccmram_bss')) {
             (($ccmBss.Vma + $ccmBss.Size) -le ($ccmStart + $ccmLength))) `
         -Message ('.ccmram_bss is outside the 64 KiB CCMRAM range: ' +
             ('vma=0x{0:X8} size={1}' -f $ccmBss.Vma, $ccmBss.Size))
+}
+} else {
+    Assert-ArtifactCondition -Condition ((Get-SectionSize -Sections $sections -Name '.ccmram_bss') -eq 0) `
+        -Message 'RET6 has no CCM: a CCM BSS allocation is forbidden.'
+    Assert-ArtifactCondition -Condition ((Get-SectionSize -Sections $sections -Name '.ccmram_data') -eq 0) `
+        -Message 'RET6 has no CCM: a CCM initialized allocation is forbidden.'
 }
 
 $protocolEnabled = @{ LOGGING = $true; MAINTENANCE = $true; TELEMETRY = $true }
@@ -339,10 +351,17 @@ else {
         -Message 'Disabled logging must not allocate a Logger task stack.'
 }
 foreach ($name in $requiredCcmSymbols) {
-    Assert-SymbolRange -Symbols $symbols -Name $name -Start $ccmStart `
-        -Length $ccmLength -MemoryName 'CCMRAM'
+    if ($targetFacts.Ccm -ne 0) {
+        Assert-SymbolRange -Symbols $symbols -Name $name -Start $ccmStart `
+            -Length $ccmLength -MemoryName 'CCMRAM'
+    } else {
+        Assert-SymbolRange -Symbols $symbols -Name $name -Start $mainSramStart `
+            -Length $mainSramLength -MemoryName 'RET6 main SRAM'
+    }
 }
 
+$requiredDmaSymbols = @()
+if ($TargetProfile -eq 'SilverStar_F407') {
 $requiredDmaSymbols = @(
     's_uart1_rx_dma',
     's_uart2_rx_dma',
@@ -350,6 +369,7 @@ $requiredDmaSymbols = @(
     's_uart3_tx_ring',
     's_uart3_tx_priority_ring'
 )
+}
 # Preserved pre-UART-hotfix payloads remain supported; every linked TX ring
 # from the additive async UART implementation is audited when present.
 foreach ($uartNumber in 1..6) {
@@ -361,7 +381,10 @@ foreach ($uartNumber in 1..6) {
     }
 }
 if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
-else {
+if (($TargetProfile -eq 'SilverStar_F103RE') -and $loggingEnabled) {
+    $requiredDmaSymbols += 's_sd_scratch'
+}
+if (-not $loggingEnabled) {
     Assert-ArtifactCondition -Condition (-not $symbols.ContainsKey('s_aggregate_buffer')) `
         -Message 'Disabled logging must not allocate the log aggregation buffer.'
 }

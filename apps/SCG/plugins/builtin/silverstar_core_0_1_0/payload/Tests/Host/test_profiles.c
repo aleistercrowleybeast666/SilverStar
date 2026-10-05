@@ -58,7 +58,8 @@ static void Test_GnssDynamicUncertainty(void)
         SYSTEM_ESTIMATOR_GNSS_STD_VELOCITY, 0.5f);
 
     TEST_CHECK(FloatClose(horizontal_floor_result,
-        estimator->gnss_horizontal_position_std_floor_m));
+        fmaxf(0.01f * estimator->gnss_accuracy_scale,
+              estimator->gnss_horizontal_position_std_floor_m)));
     TEST_CHECK(FloatClose(horizontal_live_result,
         4.0f * estimator->gnss_accuracy_scale));
     TEST_CHECK(FloatClose(vertical_live_result,
@@ -105,7 +106,8 @@ int main(void)
     TEST_CHECK(system->optional_capabilities ==
                SYSTEM_PROFILE_OPTIONAL_CAPABILITIES);
     TEST_CHECK((system->enabled_capabilities & SYSTEM_CAPABILITY_IMU) != 0U);
-    TEST_CHECK((system->enabled_capabilities & SYSTEM_CAPABILITY_GNSS) != 0U);
+    TEST_CHECK(((system->enabled_capabilities & SYSTEM_CAPABILITY_GNSS) != 0U) ==
+               (SYSTEM_USER_GNSS_ENABLE != 0U));
     TEST_CHECK((system->enabled_capabilities &
                 SYSTEM_CAPABILITY_MAGNETOMETER) == 0U);
 

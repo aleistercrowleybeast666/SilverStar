@@ -58,7 +58,7 @@ _Static_assert((uint32_t)NAV_KF_UPDATE_NUMERIC_ERROR == (uint32_t)SYSTEM_ESTIMAT
 #endif
 
 #define ESTIMATOR_GNSS_ORIGIN_WINDOW_SIZE \
-    SYSTEM_ESTIMATOR_GNSS_ORIGIN_WINDOW_SAMPLES
+    SYSTEM_BUILD_GNSS_ORIGIN_STORAGE_SAMPLES
 #define ESTIMATOR_BARO_ORIGIN_WINDOW_SIZE \
     SYSTEM_ESTIMATOR_BARO_ORIGIN_WINDOW_SAMPLES
 #define ESTIMATOR_ORIGIN_MIN_INLIERS \
@@ -475,6 +475,7 @@ static uint8_t Estimator_GnssSampleFresh(
 
 static uint8_t Estimator_GnssOriginWindowReady(uint64_t now_us)
 {
+    if (SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE == 0U) { return 0U; }
     const EstimatorGnssOriginWindow *window = &s_estimator.gnss_window;
     const EstimatorGnssOriginSample *latest;
 
@@ -943,6 +944,7 @@ static void Estimator_BarometerOriginSampleStore(uint16_t index, const Estimator
 
 static void Estimator_GnssOriginCollect(uint64_t now_us)
 {
+    if (SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE == 0U) { return; }
     SystemGnssSample sample;
     SystemDeviceResult result;
     uint16_t index;
@@ -1371,6 +1373,7 @@ static void Estimator_GnssFrozenVelocityCommit(
 
 static uint8_t Estimator_GnssOriginFreeze(void)
 {
+    if (SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE == 0U) { return 0U; }
     EstimatorGnssOriginWindow *window = &s_estimator.gnss_window;
     GeoLocalFrame temporary_frame;
     EstimatorGnssFreezeWork work;
@@ -3974,6 +3977,8 @@ SystemDeviceResult EstimatorTask_GnssAlignmentStatusGet(
                              SILVERSTAR_ASSERT_MODULE_APP);
     (void)memset(status, 0, sizeof(*status));
     status->device_name = SystemGnss_NameGet();
+    if (SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE == 0U)
+    { return SYSTEM_DEVICE_UNSUPPORTED; }
     now_us = SystemTime_GetMonotonicUs();
     primask = EstimatorTask_IrqLock();
     window = &s_estimator.gnss_window;

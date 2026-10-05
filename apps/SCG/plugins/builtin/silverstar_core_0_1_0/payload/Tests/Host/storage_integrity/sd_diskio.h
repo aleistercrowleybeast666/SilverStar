@@ -14,5 +14,9 @@ uint8_t BSP_SD_ReadBlocks_DMA(uint32_t *buffer, uint32_t sector, uint32_t count)
 uint8_t BSP_SD_WriteBlocks_DMA(uint32_t *buffer, uint32_t sector, uint32_t count);
 void BSP_SD_ReadCpltCallback(void);
 void BSP_SD_WriteCpltCallback(void);
+#if defined(SILVERSTAR_HOST_FATFS_R011)
+extern Diskio_drvTypeDef SD_Driver;
+#else
 extern const Diskio_drvTypeDef SD_Driver;
+#endif
 #endif

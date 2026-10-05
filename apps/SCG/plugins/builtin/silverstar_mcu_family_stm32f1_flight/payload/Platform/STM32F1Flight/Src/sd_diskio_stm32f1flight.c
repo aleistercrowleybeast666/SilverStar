@@ -19,6 +19,8 @@
 #define SD_IO_TIMEOUT_TICKS pdMS_TO_TICKS(30000U)
 #define SD_IO_READ_COMPLETE 1U
 #define SD_IO_WRITE_COMPLETE 2U
+_Static_assert((_USE_WRITE == 1) && (_USE_IOCTL == 1),
+               "Local SSLOG SD backend requires write and ioctl support");
 
 /* Always bounce: even aligned application RAM may be inaccessible to DMA.
  * F103 has no DCache. Never borrow the caller buffer after disk_* returns. */
@@ -68,8 +70,10 @@ static DRESULT SdDiskIo_Fail(void)
 
 static DRESULT SdDiskIo_ReadyWait(TickType_t started)
 {
-    while ((TickType_t)(xTaskGetTickCount() - started) < SD_IO_TIMEOUT_TICKS)
+    for (uint32_t poll = 0U; poll < 30000U; poll++)
     {
+        if ((TickType_t)(xTaskGetTickCount() - started) >= SD_IO_TIMEOUT_TICKS)
+        { return SdDiskIo_Fail(); }
         if (BSP_SD_GetCardState() == SD_TRANSFER_OK) { return RES_OK; }
         vTaskDelay(1U);
     }
@@ -158,7 +162,6 @@ static DRESULT SD_read(BYTE lun, BYTE *buffer, DWORD sector, UINT count)
     return result;
 }
 
-#if _USE_WRITE == 1
 static DRESULT SD_write(BYTE lun, const BYTE *buffer, DWORD sector, UINT count)
 {
     UINT index;
@@ -174,9 +177,7 @@ static DRESULT SD_write(BYTE lun, const BYTE *buffer, DWORD sector, UINT count)
     SdDiskIo_Release();
     return result;
 }
-#endif
 
-#if _USE_IOCTL == 1
 static DRESULT SD_ioctl(BYTE lun, BYTE command, void *buffer)
 {
     BSP_SD_CardInfo info;
@@ -200,7 +201,6 @@ static DRESULT SD_ioctl(BYTE lun, BYTE command, void *buffer)
     SdDiskIo_Release();
     return result;
 }
-#endif
 
 static void SdDiskIo_CompleteFromIsr(uint16_t event)
 {
@@ -219,10 +219,6 @@ void BSP_SD_ReadCpltCallback(void) { SdDiskIo_CompleteFromIsr(SD_IO_READ_COMPLET
 /* FatFs R0.11 declares this fixed callback table without const. */
 Diskio_drvTypeDef SD_Driver = {
     SD_initialize, SD_status, SD_read,
-#if _USE_WRITE == 1
     SD_write,
-#endif
-#if _USE_IOCTL == 1
     SD_ioctl,
-#endif
 };

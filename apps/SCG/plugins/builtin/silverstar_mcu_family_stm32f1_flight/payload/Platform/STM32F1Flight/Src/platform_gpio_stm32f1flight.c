@@ -14,9 +14,6 @@ typedef struct
     uint8_t resource_loaded;
 } PlatformGpioContext;
 
-#ifndef SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT
-#define SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT PLATFORM_GPIO_COUNT
-#endif
 _Static_assert(SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT <= PLATFORM_GPIO_COUNT,
                "GPIO context capacity exceeds the platform interface");
 static PlatformGpioContext s_gpio[SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT];

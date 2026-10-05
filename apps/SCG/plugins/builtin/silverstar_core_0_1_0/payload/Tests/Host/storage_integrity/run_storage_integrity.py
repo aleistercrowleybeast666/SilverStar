@@ -40,6 +40,9 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
                 project / "Common/Inc", project / "Platform/Inc"]
     flags = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Wno-unused-parameter",
              "-Wno-unused-variable", "-Wno-pointer-to-int-cast"]
+    if f1_diskio.is_file():
+        flags += ["-DSILVERSTAR_HOST_FATFS_R011=1", "-D__IO=volatile",
+                  "-D__weak=__attribute__((weak))", "-include", "stdint.h"]
     command = list(flags)
     command += ["-I" + str(path) for path in includes]
     command += [str(path) for path in sources] + ["-lm", "-o", str(binary)]
@@ -81,6 +84,8 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
     host_script = (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf-8")
     host_includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"', host_script)
     logger_includes = includes + [project / relative.replace("\\", "/") for relative in host_includes]
+    target_profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))["build"]["target_profile"]
+    logger_includes.insert(0, project / "Targets" / target_profile / "Inc")
     logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Inc")
     writer = output / "logger_storage.exe"
     command = flags + ["-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",

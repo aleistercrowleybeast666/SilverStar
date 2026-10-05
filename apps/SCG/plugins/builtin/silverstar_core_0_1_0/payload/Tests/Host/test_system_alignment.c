@@ -674,7 +674,9 @@ int main(void)
     TEST_CHECK(s_prepare_count == 1U && s_freeze_count == 1U);
     TEST_CHECK(SystemAlignment_StatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_GNSS_ORIGIN]
-        .detail.gnss.origin_valid == 1U);
+        .detail.gnss.origin_valid == (uint8_t)(
+            (SYSTEM_USER_ALIGNMENT_SELECTED_MASK &
+             SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) != 0U));
     TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_BARO_ORIGIN]
         .detail.barometer.origin_valid == (uint8_t)(
             (SYSTEM_USER_ALIGNMENT_SELECTED_MASK &
@@ -744,7 +746,8 @@ int main(void)
         (((status.required_mask & SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) != 0U) ?
             SYSTEM_ALIGNMENT_CONFIG_REQUIRED_UNAVAILABLE : SYSTEM_ALIGNMENT_CONFIG_OK));
     TEST_CHECK(status.unavailable_mask ==
-        SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN);
+        (SYSTEM_USER_ALIGNMENT_SELECTED_MASK &
+         SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN));
     TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_GNSS_ORIGIN].state ==
         SYSTEM_ALIGNMENT_COMPONENT_DISABLED);
     TEST_CHECK(SystemCalibration_Reset() == SYSTEM_DEVICE_OK);
