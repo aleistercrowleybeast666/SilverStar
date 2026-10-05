@@ -43,7 +43,6 @@ typedef struct
     uint32_t capacity_reject_count;
     uint32_t disabled_suppressed_count;
     uint32_t disabled_discarded_count;
-    uint32_t request_busy_count;
     LoggerBusStartupState startup_state;
     uint16_t normal_count;
     uint16_t estimator_count;

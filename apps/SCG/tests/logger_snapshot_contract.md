@@ -8,7 +8,7 @@ The previous capacity precheck did not reserve slots: a producer after the first
 SYSTEM_CONFIG could leave an incomplete batch. Entire capacity rejection also
 did not advance overflow diagnostics. The new single request slot accepts a
 bounded snapshot independently of the ordinary queues. BUSY means retryable
-request admission, with no published records and an explicit request_busy_count;
+request admission, with no published records and an admission capacity_reject_count;
 FULL remains ordinary queue data loss with existing sequence-gap accounting.
 
 The claimant owns BUILDING and copies config and all stream policies, including
@@ -47,3 +47,9 @@ Manual acceptance remains NOT PROVEN pending independent review. Host timing,
 ARM linking, scanner success and static RAM delta are scoped evidence; IRQ
 latency, actual stack margin, hardware storage behavior and flight qualification
 are not established by these tests. Preserve all failed/intermediate run logs.
+
+New state is grouped into two CPU-only owned objects and uses the target's
+existing PLATFORM_CPU_FAST_BSS placement. Neither object nor any interior
+pointer goes to HAL/FatFs/DMA/sink interfaces. Targets lacking that section use
+ordinary BSS. This is RAM placement, not a resource-budget exemption; total
+and per-region deltas must remain explicit in the evidence.

@@ -11,6 +11,7 @@
 #include "ins_task.h"
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
 #include "logger_bus.h"
+#include "platform_memory.h"
 #include "logger_task.h"
 #include "project_device_instances.h"
 #include "system_log_sink_if.h"
@@ -43,11 +44,16 @@
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
 static uint8_t s_fault_event_written;
 static uint32_t s_start_diagnostic_sequence[3];
-static LoggerBusStartRecords s_start_records;
-static uint64_t s_start_timestamp_us;
-static uint32_t s_start_generation;
-static uint8_t s_start_pending;
-static uint8_t s_start_captured;
+typedef struct
+{
+    LoggerBusStartRecords records;
+    uint64_t timestamp_us;
+    uint32_t generation;
+    uint8_t pending;
+    uint8_t captured;
+} FlightStartLog;
+/* CPU-only retry input, copied into LoggerBus on admission; no DMA access. */
+static PLATFORM_CPU_FAST_BSS FlightStartLog s_start_log;
 
 static uint32_t s_calibration_start_sequence;
 static uint32_t s_calibration_state_sequence;
@@ -449,9 +455,9 @@ static void FlightTask_FaultEventProcess(void)
     if (SystemLifecycle_GetState() != SYSTEM_STATE_FAULT)
     {
         s_fault_event_written = 0U;
-    s_start_pending = 0U;
-    s_start_captured = 0U;
-    s_start_generation = 0U;
+    s_start_log.pending = 0U;
+    s_start_log.captured = 0U;
+    s_start_log.generation = 0U;
         return;
     }
     if ((s_fault_event_written == 0U) &&
@@ -970,52 +976,52 @@ static uint8_t FlightTask_StartRecordsCapture(void)
     uint8_t count = ProjectMagnetometerInstance_CountGet();
     if ((Ins_GetAlignmentSnapshot(&alignment) == 0U) ||
         (Estimator_GetInitialStateSnapshot(&estimator) == 0U) ||
-        (FlightTask_MissionSnapshotIdentityBuild(&s_start_records.identity) != LOGGER_BUS_RESULT_OK))
+        (FlightTask_MissionSnapshotIdentityBuild(&s_start_log.records.identity) != LOGGER_BUS_RESULT_OK))
     { return 0U; }
     SILVERSTAR_ASSERT(count <= PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
     for (uint8_t index = 0U; index < PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX; ++index)
     {
         if (index >= count) { break; }
-        if (FlightTask_MagCalibrationIdentityBuild(index, &s_start_records.mag[index]) !=
+        if (FlightTask_MagCalibrationIdentityBuild(index, &s_start_log.records.mag[index]) !=
             LOGGER_BUS_RESULT_OK) { return 0U; }
     }
-    s_start_records.mag_count = count;
-    FlightTask_InitialStateRecordBuild(&alignment, &estimator, &s_start_records.initial);
+    s_start_log.records.mag_count = count;
+    FlightTask_InitialStateRecordBuild(&alignment, &estimator, &s_start_log.records.initial);
     return 1U;
 }
 
 static void FlightTask_StartRecordsProcess(void)
 {
     LoggerBusResult result;
-    if (s_start_pending == 0U) { return; }
+    if (s_start_log.pending == 0U) { return; }
     if (LoggerBus_StartupStateGet() == LOGGER_DISABLED_NO_STORAGE)
-    { s_start_pending = 0U; return; }
-    if (s_start_generation != 0U)
+    { s_start_log.pending = 0U; return; }
+    if (s_start_log.generation != 0U)
     {
-        if (LoggerBus_StartAcknowledgedGet() == s_start_generation)
-        { s_start_pending = 0U; }
+        if (LoggerBus_StartAcknowledgedGet() == s_start_log.generation)
+        { s_start_log.pending = 0U; }
         return;
     }
-    if (s_start_captured == 0U)
+    if (s_start_log.captured == 0U)
     {
         if (FlightTask_StartRecordsCapture() == 0U) { return; }
-        s_start_captured = 1U;
+        s_start_log.captured = 1U;
     }
-    result = LoggerBus_StartRecordsPush(s_start_timestamp_us,
-        &s_start_records, &s_start_generation);
+    result = LoggerBus_StartRecordsPush(s_start_log.timestamp_us,
+        &s_start_log.records, &s_start_log.generation);
     if (result != LOGGER_BUS_RESULT_OK)
-    { s_start_generation = 0U; } /* Retain immutable input and retry admission. */
+    { s_start_log.generation = 0U; } /* Retain immutable input and retry admission. */
 }
 
 static void FlightTask_WriteStartRecords(void)
 {
-    SILVERSTAR_ASSERT(s_start_pending == 0U,
+    SILVERSTAR_ASSERT(s_start_log.pending == 0U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    s_start_timestamp_us = SystemTime_GetMonotonicUs();
-    s_start_generation = 0U;
-    s_start_captured = 0U;
-    s_start_pending = 1U;
+    s_start_log.timestamp_us = SystemTime_GetMonotonicUs();
+    s_start_log.generation = 0U;
+    s_start_log.captured = 0U;
+    s_start_log.pending = 1U;
 }
 
 #endif
