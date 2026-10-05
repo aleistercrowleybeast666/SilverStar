@@ -455,9 +455,6 @@ static void FlightTask_FaultEventProcess(void)
     if (SystemLifecycle_GetState() != SYSTEM_STATE_FAULT)
     {
         s_fault_event_written = 0U;
-    s_start_log.pending = 0U;
-    s_start_log.captured = 0U;
-    s_start_log.generation = 0U;
         return;
     }
     if ((s_fault_event_written == 0U) &&
@@ -1044,6 +1041,9 @@ static void FlightTask_RuntimeInitialize(void)
     }
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
     s_fault_event_written = 0U;
+    s_start_log.pending = 0U;
+    s_start_log.captured = 0U;
+    s_start_log.generation = 0U;
     s_calibration_start_sequence = 0U;
     s_calibration_state_sequence = 0U;
     s_calibration_face_event_sequence = 0U;
