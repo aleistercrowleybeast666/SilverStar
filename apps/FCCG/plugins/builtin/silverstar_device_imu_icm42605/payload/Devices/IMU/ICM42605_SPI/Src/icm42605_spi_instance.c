@@ -16,10 +16,13 @@ const char * Icm42605SpiImuInstance_NameGet(uint8_t instance)
 SystemDeviceResult Icm42605SpiImuInstance_Init(uint8_t instance)
 {
     ProjectIcm42605SpiResources resources;
+    SystemDeviceResult result;
     if (instance >= PROJECT_ICM42605_SPI_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectIcm42605SpiResources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
     SensorImuSpiResources spi = {resources.spi, resources.cs, (PlatformGpioId)PLATFORM_GPIO_COUNT, resources.drdy, (PlatformGpioId)PLATFORM_GPIO_COUNT};
-    return SensorImuAdapter_InitSpi(&s_contexts[instance], Icm42605Spi_ProfileGet(), &spi, instance);
+    result = SensorImuAdapter_InitSpi(&s_contexts[instance], Icm42605Spi_ProfileGet(), &spi, instance);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
 }
 
 SystemDeviceResult Icm42605SpiImuInstance_Start(uint8_t instance)

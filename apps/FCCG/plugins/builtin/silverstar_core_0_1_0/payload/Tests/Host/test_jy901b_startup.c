@@ -4,6 +4,7 @@
 #include "host_platform_mock.h"
 #include "jy901b_config.h"
 #include "jy901b_startup.h"
+#include "project_resources.h"
 #ifdef JY_BOOT_PROBE_ADAPTER_VERIFY
 #include "jy901b_instance.h"
 #include "debug_log.h"
@@ -37,6 +38,23 @@ static void Test_SamplesInject(void)
         accel, sizeof(accel));
     (void)HostPlatformMock_UartRxInject(PLATFORM_UART_1,
         gyro, sizeof(gyro));
+}
+
+static void Test_ModuleVariants(void)
+{
+    uint8_t reg;
+    uint16_t expected;
+    ProjectJy901bResources resources;
+    TEST_CHECK(ProjectJy901bResources_Get(0U, &resources) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(IMU_StartupRegisterGet(0U, 9U, OutputRate_200Hz,
+        Algorithm_6Axis, &reg, &expected) == Jy901bStartupRegisterResult_Ok);
+    TEST_CHECK(reg == IMU_REG_RSW && expected ==
+        ((resources.module_variant == 1U) ? 0x0206U : 0x0246U));
+#if PROJECT_JY901B_INSTANCE_COUNT > 1U
+    TEST_CHECK(IMU_StartupRegisterGet(1U, 9U, OutputRate_200Hz,
+        Algorithm_6Axis, &reg, &expected) == Jy901bStartupRegisterResult_Ok);
+    TEST_CHECK(reg == IMU_REG_RSW && expected == 0x0206U);
+#endif
 }
 
 static void Test_RegisterDefaultsSet(void)
@@ -184,6 +202,7 @@ int main(void)
     HostPlatformMock_Jy901bEnable(PLATFORM_UART_1, 1U, 0U);
     TEST_CHECK(IMU_LocalGravitySet(0U, 9.80665f) == IMU_OK);
     TEST_CHECK(IMU_Init(0U) == IMU_OK);
+    Test_ModuleVariants();
     Test_RegisterDefaultsSet();
     TEST_CHECK(Jy901bStartup_Init(0U, OutputRate_200Hz,
         Algorithm_6Axis) == Jy901bStartupResult_Ok);

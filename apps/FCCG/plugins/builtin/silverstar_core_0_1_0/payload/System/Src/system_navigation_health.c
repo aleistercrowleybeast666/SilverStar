@@ -144,6 +144,7 @@ uint8_t SystemNavigationHealth_DegradedGet(uint64_t evaluation_us)
     uint8_t group, mask = 0U;
     for (group = 0U; group < SYSTEM_NAVIGATION_GROUP_COUNT; group++)
     {
+        if ((SYSTEM_FUSION_CONFIGURED_MASK & (1U << group)) == 0U) { continue; }
         if ((SystemNavigationHealth_GroupGet(group, evaluation_us, &snapshot) != SYSTEM_DEVICE_OK) ||
             (snapshot.state >= SYSTEM_NAVIGATION_DEAD_RECKONING))
         { mask |= (uint8_t)(1U << group); }

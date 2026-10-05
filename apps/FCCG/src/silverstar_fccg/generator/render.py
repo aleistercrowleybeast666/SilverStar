@@ -45,6 +45,8 @@ from silverstar_fccg.project.logging import (
 )
 from silverstar_fccg.project.model import (
     DeviceInstance,
+    RAW_IMU_MOUNT_PLUGINS,
+    RAW_IMU_NOSE_AXIS_MAPS,
     LogDecoderProfileReference,
     ProjectModel,
 )
@@ -735,6 +737,7 @@ def _AlignmentDefinitions_Get(model: ProjectModel) -> tuple[tuple[str, str], ...
 def _FlightConfigHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
+    catalog = catalog.ProjectView_Get(model)
     definitions: list[tuple[str, str]] = [
         (
             "SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED",
@@ -750,6 +753,43 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
+    landing_id = model.strategies.get("landing")
+    if landing_id:
+        landing_defines = [value.partition("=")[2]
+                           for value in catalog.Component_Get(landing_id).build.defines
+                           if value.startswith("SYSTEM_BUILD_LANDING_MODE=")]
+        if len(landing_defines) != 1:
+            raise ValueError("Landing strategy must select one build mode")
+        definitions.append(("SYSTEM_BUILD_LANDING_MODE", landing_defines[0]))
+    observation_capabilities = {
+        capability
+        for instance in model.device_instances
+        for capability in catalog.InstanceComponent_Get(instance).provides
+    }
+    observation_mask = (
+        (0x03 if "gnss.position" in observation_capabilities else 0) |
+        (0x0C if "gnss.velocity" in observation_capabilities else 0) |
+        (0x10 if "barometer.altitude" in observation_capabilities else 0)
+    )
+    definitions.append(("SYSTEM_FUSION_CONFIGURED_MASK", f"0x{observation_mask:02X}U"))
+    # Only GNSS constrains horizontal navigation. Barometer-only fusion
+    # remains dead reckoning for overall horizontal health.
+    definitions.append(("SYSTEM_FUSION_REQUIRED_HEALTH_MASK",
+                        f"0x{observation_mask & 0x0F:02X}U"))
+    alignment_selected = ["SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE"]
+    if observation_mask & 0x03:
+        alignment_selected.append("SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN")
+    if observation_mask & 0x10:
+        alignment_selected.append("SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN")
+    definitions.append(("SYSTEM_USER_ALIGNMENT_SELECTED_MASK",
+                        "(" + " | ".join(alignment_selected) + ")"))
+    alignment_required = ["SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE"]
+    if observation_mask & 0x10:
+        alignment_required.append("SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN")
+    elif observation_mask & 0x03:
+        alignment_required.append("SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN")
+    definitions.append(("SYSTEM_USER_ALIGNMENT_REQUIRED_MASK",
+                        "(" + " | ".join(alignment_required) + ")"))
     # A sole independent barometer also needs bounded runtime recovery. A
     # JY901B-only companion remains owned by the locked IMU transport.
     definitions.append(("SYSTEM_BUILD_BAROMETER_COLD_ENABLED", "1U" if any(
@@ -1064,6 +1104,9 @@ def _InstanceResourceDeclarations_Render(
             fields.extend(("    PlatformGpioId rx_en;", "    PlatformGpioId tx_en;"))
         if binding.accessor == "ProjectJy901bResources_Get":
             fields.append("    uint16_t installation_orientation;")
+            fields.append("    uint8_t module_variant;")
+        if manifest.component_id in RAW_IMU_MOUNT_PLUGINS:
+            fields.append("    int8_t axis_map[3];")
         sections.append(
             f"#define {binding.count_symbol:<42} {len(instances)}U\n"
             f"#define {binding.count_symbol}_MAX{' ' * max(1, 38 - len(binding.count_symbol))} "
@@ -1129,7 +1172,12 @@ def _InstanceResourcesSource_Render(
                 values.extend((".rx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT", ".tx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT"))
             if binding.accessor == "ProjectJy901bResources_Get":
                 orientation = {"horizontal": 0, "vertical": 1}[instance.installation_orientation]
+                variant = {"": 0, "jy901b": 0, "jy901s": 1}[instance.profile]
                 values.append(f".installation_orientation = {orientation}U")
+                values.append(f".module_variant = {variant}U")
+            if manifest.component_id in RAW_IMU_MOUNT_PLUGINS:
+                axes = RAW_IMU_NOSE_AXIS_MAPS[instance.mount_nose_axis]
+                values.append(".axis_map = { " + ", ".join(map(str, axes)) + " }")
             rows.append("    { " + ", ".join(values) + " }")
         table_symbol = f"s_{binding.accessor.removesuffix('_Get')}"
         sections.append(

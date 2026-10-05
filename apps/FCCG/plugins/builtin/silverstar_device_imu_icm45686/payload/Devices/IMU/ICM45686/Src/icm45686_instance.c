@@ -16,10 +16,13 @@ const char * Icm45686ImuInstance_NameGet(uint8_t instance)
 SystemDeviceResult Icm45686ImuInstance_Init(uint8_t instance)
 {
     ProjectIcm45686Resources resources;
+    SystemDeviceResult result;
     if (instance >= PROJECT_ICM45686_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectIcm45686Resources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
-    return SensorImuAdapter_Init(&s_contexts[instance], Icm45686_ProfileGet(),
+    result = SensorImuAdapter_Init(&s_contexts[instance], Icm45686_ProfileGet(),
         resources.i2c, 0x68U, instance);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
 }
 
 SystemDeviceResult Icm45686ImuInstance_Start(uint8_t instance)

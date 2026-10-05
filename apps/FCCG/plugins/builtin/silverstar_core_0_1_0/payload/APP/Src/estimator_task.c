@@ -2468,7 +2468,7 @@ static void Estimator_NavigationQualityLog(const SystemGnssSample *sample, uint6
             { record.accepted_mask |= (uint8_t)(1U << group); }
         }
     }
-    record.health = (uint8_t)SystemNavigationHealth_OverallGet(evaluation_us, 0x0FU, 0U);
+    record.health = (uint8_t)SystemNavigationHealth_OverallGet(evaluation_us, SYSTEM_FUSION_REQUIRED_HEALTH_MASK, 0U);
     record.nav_output_valid = (uint8_t)(record.health != SYSTEM_NAVIGATION_HEALTH_INVALID);
     if (LoggerBus_NavigationQualityPush(evaluation_us, &record) != LOGGER_BUS_RESULT_OK)
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_LOG_EVENT_FAILED; }
@@ -3430,6 +3430,10 @@ SystemDeviceResult EstimatorTask_FreezeOrigins(void)
         s_estimator.origin_collection_frozen = 0U;
         return SYSTEM_DEVICE_NOT_READY;
     }
+#if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+    if ((SYSTEM_FUSION_CONFIGURED_MASK & 0x10U) == 0U)
+    { return SYSTEM_DEVICE_OK; }
+#endif
     return (s_estimator.baro_origin_valid != 0U) ?
         SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY;
 }

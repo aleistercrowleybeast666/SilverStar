@@ -60,7 +60,10 @@
   "provides": [
     "device.imu",
     "imu.acceleration",
-    "imu.angular_rate"
+    "imu.angular_rate",
+    "imu.software_alignment_qualified",
+    "imu.software_propagation_qualified",
+    "imu.landing_stillness_qualified"
   ],
   "build": {
     "sources": [

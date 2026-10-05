@@ -106,6 +106,7 @@ from silverstar_fccg.project.radio_variants import (
     RADIO_PLUGIN, FlightRadioConfiguration_Get, FlightRadioConfiguration_Apply, RadioManifest_Resolve,
 )
 from silverstar_fccg.project.model import (
+    RAW_IMU_MOUNT_PLUGINS,
     DeviceInstance,
     GroundRadioConfigurations_Get,
     HardwareConfiguration,
@@ -486,6 +487,7 @@ class MainWindow(QMainWindow):
         self.devices_page.variantChanged.connect(self._DeviceVariant_Change)
         self.devices_page.installationOrientationChanged.connect(
             self._Jy901bOrientation_Change)
+        self.devices_page.mountNoseAxisChanged.connect(self._RawImuMount_Change)
         self.devices_page.instanceAddRequested.connect(self._DeviceInstance_Add)
         self.devices_page.otherDeviceToggled.connect(self._OtherDevice_Toggle)
         self.devices_page.installRequested.connect(self._PluginInstall_Dialog)
@@ -1195,6 +1197,21 @@ class MainWindow(QMainWindow):
                 replace(instance, installation_orientation=orientation)
                 if instance.instance_id == instance_id and
                 instance.plugin == "silverstar.device.imu.jy901b" else instance
+                for instance in candidate.device_instances
+            ]
+
+        self._ProjectConfiguration_Change(change)
+
+    def _RawImuMount_Change(self, instance_id: str, nose_axis: str) -> None:
+        from silverstar_fccg.project.model import RAW_IMU_NOSE_AXIS_MAPS
+        if self._displaying_model or nose_axis not in RAW_IMU_NOSE_AXIS_MAPS:
+            return
+
+        def change(candidate: ProjectModel) -> None:
+            candidate.device_instances = [
+                replace(instance, mount_nose_axis=nose_axis)
+                if instance.instance_id == instance_id and
+                instance.plugin in RAW_IMU_MOUNT_PLUGINS else instance
                 for instance in candidate.device_instances
             ]
 

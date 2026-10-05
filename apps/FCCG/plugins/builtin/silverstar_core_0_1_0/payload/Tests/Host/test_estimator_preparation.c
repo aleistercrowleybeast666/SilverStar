@@ -157,16 +157,27 @@ int main(void)
     TEST_CHECK(EstimatorBus_Init() == ESTIMATOR_BUS_RESULT_OK);
     TEST_CHECK(EstimatorTask_OriginsReset() == SYSTEM_DEVICE_OK);
     Test_Collect(0U);
-    TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_OK);
-    TEST_CHECK(s_estimator.gnss_origin_valid == 0U);
-    TEST_CHECK(s_estimator.gnss_fusion_enabled == 0U);
-    TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
-    TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(preparation.initialized == 1U && preparation.last_result == SYSTEM_DEVICE_OK);
-    TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
-    TEST_CHECK(initial.gnss_origin_valid == 0U && initial.baro_origin_valid == 1U);
-    if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
-    { TEST_CHECK((initial.health_flags & ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE) != 0U); }
+    if ((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+         SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) != 0U)
+    {
+        TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_NOT_READY);
+        TEST_CHECK(EstimatorTask_PrepareNavigation() != SYSTEM_DEVICE_OK);
+        TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(preparation.initialized == 0U);
+    }
+    else
+    {
+        TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_OK);
+        TEST_CHECK(s_estimator.gnss_origin_valid == 0U);
+        TEST_CHECK(s_estimator.gnss_fusion_enabled == 0U);
+        TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
+        TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(preparation.initialized == 1U && preparation.last_result == SYSTEM_DEVICE_OK);
+        TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+        TEST_CHECK(initial.gnss_origin_valid == 0U && initial.baro_origin_valid == 1U);
+        if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+        { TEST_CHECK((initial.health_flags & ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE) != 0U); }
+    }
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     {
         EstimatorGnssUpdateWork work = {0};

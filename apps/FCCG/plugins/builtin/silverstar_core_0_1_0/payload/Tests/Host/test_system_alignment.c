@@ -403,7 +403,9 @@ static void Test_PreflightQuaternionAuthority(void)
     s_attitude.quaternion_wxyz[3] = 0.70710678f;
     TEST_CHECK(SystemAlignment_Process() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemAlignment_SummaryGet(&summary) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(summary.ready == 0U);
+    TEST_CHECK(summary.ready == (uint8_t)(
+        (SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+         SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) == 0U));
     TEST_CHECK(summary.preflight_attitude_source ==
         SYSTEM_ALIGNMENT_PREFLIGHT_ATTITUDE_ALIGNMENT);
     TEST_CHECK(SystemAlignment_PreflightQuaternionGet(
@@ -508,12 +510,11 @@ static void Test_ValidityGuard(void)
     TEST_CHECK(status.state == SYSTEM_ALIGNMENT_STATE_STALE);
     TEST_CHECK(status.stale_reason == SYSTEM_ALIGNMENT_STALE_REASON_MOTION);
     TEST_CHECK(status.ready == 0U);
-    TEST_CHECK(status.ready_mask ==
-        (SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE |
-         SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN |
-         SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN));
+    TEST_CHECK(status.ready_mask == SYSTEM_USER_ALIGNMENT_SELECTED_MASK);
     TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_ATTITUDE].ready != 0U);
-    TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_BARO_ORIGIN].ready != 0U);
+    TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_BARO_ORIGIN].ready ==
+        (uint8_t)((SYSTEM_USER_ALIGNMENT_SELECTED_MASK &
+            SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U));
     TEST_CHECK(s_lifecycle_state == SYSTEM_STATE_PREFLIGHT);
 
     Test_GuardConditionConfirm(0.0f, 0.0f, 0.0f);
@@ -619,7 +620,7 @@ int main(void)
     TEST_CHECK(status.state == SYSTEM_ALIGNMENT_STATE_IDLE);
     TEST_CHECK(status.capability_mask == 0x07U);
     TEST_CHECK(status.unavailable_mask == 0U);
-    TEST_CHECK(status.selected_mask == 0x07U);
+    TEST_CHECK(status.selected_mask == SYSTEM_USER_ALIGNMENT_SELECTED_MASK);
     TEST_CHECK(status.required_mask == SYSTEM_USER_ALIGNMENT_REQUIRED_MASK);
     TEST_CHECK(SystemAlignment_Start() == SYSTEM_DEVICE_NOT_READY);
 
@@ -659,10 +660,7 @@ int main(void)
     TEST_CHECK(SystemAlignment_StatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.state == SYSTEM_ALIGNMENT_STATE_READY);
     TEST_CHECK(status.ready == 1U);
-    TEST_CHECK(status.ready_mask ==
-        (SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE |
-         SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN |
-         SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN));
+    TEST_CHECK(status.ready_mask == SYSTEM_USER_ALIGNMENT_SELECTED_MASK);
     TEST_CHECK(Test_StartReadyGet() == 1U);
 
     s_gnss.state = SYSTEM_ALIGNMENT_COMPONENT_READY;
@@ -678,7 +676,9 @@ int main(void)
     TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_GNSS_ORIGIN]
         .detail.gnss.origin_valid == 1U);
     TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_BARO_ORIGIN]
-        .detail.barometer.origin_valid == 1U);
+        .detail.barometer.origin_valid == (uint8_t)(
+            (SYSTEM_USER_ALIGNMENT_SELECTED_MASK &
+             SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U));
     SystemAlignment_MissionPreparationAbort();
     TEST_CHECK(s_abort_count == 1U);
 
@@ -770,16 +770,33 @@ int main(void)
         SYSTEM_DEVICE_IO_ERROR;
     SystemAlignment_Init();
     TEST_CHECK(SystemAlignment_StatusGet(&status) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(status.config_result ==
-        SYSTEM_ALIGNMENT_CONFIG_REQUIRED_UNAVAILABLE);
-    TEST_CHECK((status.unavailable_mask &
-        SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U);
+    if ((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+         SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U)
+    {
+        TEST_CHECK(status.config_result ==
+            SYSTEM_ALIGNMENT_CONFIG_REQUIRED_UNAVAILABLE);
+        TEST_CHECK((status.unavailable_mask &
+            SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U);
+    }
+    else
+    {
+        TEST_CHECK(status.config_result == SYSTEM_ALIGNMENT_CONFIG_OK);
+        TEST_CHECK((status.unavailable_mask &
+            SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) ==
+            (status.selected_mask & SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN));
+    }
     TEST_CHECK(SystemCalibration_Reset() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemCalibration_Start(SYSTEM_CALIBRATION_MODE_NONE) ==
                SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemAlignment_Start() == SYSTEM_DEVICE_UNSUPPORTED);
+    TEST_CHECK(SystemAlignment_Start() ==
+        (((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+           SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U) ?
+            SYSTEM_DEVICE_UNSUPPORTED : SYSTEM_DEVICE_OK));
     TEST_CHECK(SystemAlignment_StatusGet(&status) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(status.state == SYSTEM_ALIGNMENT_STATE_IDLE);
+    TEST_CHECK(status.state ==
+        (((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+           SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U) ?
+            SYSTEM_ALIGNMENT_STATE_IDLE : SYSTEM_ALIGNMENT_STATE_COLLECTING));
     TEST_CHECK(status.ready == 0U);
     TEST_CHECK(status.component[SYSTEM_ALIGNMENT_SOURCE_BARO_ORIGIN].state ==
         SYSTEM_ALIGNMENT_COMPONENT_DISABLED);

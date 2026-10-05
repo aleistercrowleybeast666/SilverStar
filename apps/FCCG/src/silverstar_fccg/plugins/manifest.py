@@ -2821,7 +2821,7 @@ def PluginManifest_Parse(
         overrides = variant["overrides"]
         if not isinstance(overrides, dict) or set(overrides) - {
             "name", "description", "requires", "build", "payload", "metadata",
-            "provides",
+            "provides", "physical_device",
         }:
             raise PluginManifestError("device variant overrides unsupported common fields")
         if "provides" in overrides and not set(data.get("provides", [])).issubset(overrides["provides"]):

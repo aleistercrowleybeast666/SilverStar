@@ -16,10 +16,13 @@ const char * Lsm6Dsv32XImuInstance_NameGet(uint8_t instance)
 SystemDeviceResult Lsm6Dsv32XImuInstance_Init(uint8_t instance)
 {
     ProjectLsm6Dsv32XResources resources;
+    SystemDeviceResult result;
     if (instance >= PROJECT_LSM6DSV32X_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectLsm6Dsv32XResources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
-    return SensorImuAdapter_Init(&s_contexts[instance], Lsm6Dsv32X_ProfileGet(),
+    result = SensorImuAdapter_Init(&s_contexts[instance], Lsm6Dsv32X_ProfileGet(),
         resources.i2c, 0x6AU, instance);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
 }
 
 SystemDeviceResult Lsm6Dsv32XImuInstance_Start(uint8_t instance)

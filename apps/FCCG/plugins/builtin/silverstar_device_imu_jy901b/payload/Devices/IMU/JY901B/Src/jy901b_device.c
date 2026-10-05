@@ -1201,14 +1201,17 @@ Jy901bStartupRegisterResult IMU_StartupRegisterGet(
         (reg == NULL) || (expected_value == NULL))
     { return Jy901bStartupRegisterResult_InvalidArgument; }
     if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK ||
-        resources.installation_orientation > IMU_ORIENT_VERTICAL_VALUE)
+        resources.installation_orientation > IMU_ORIENT_VERTICAL_VALUE ||
+        resources.module_variant > 1U)
     { return Jy901bStartupRegisterResult_InvalidArgument; }
     SILVERSTAR_ASSERT_OBJECT(reg, uint8_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     SILVERSTAR_ASSERT_OBJECT(expected_value, uint16_t,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     *reg = registers[index];
-    *expected_value = (index == 1U) ? resources.installation_orientation : values[index];
+    *expected_value = (index == 1U) ? resources.installation_orientation :
+        ((index == 9U) && (resources.module_variant == 1U)) ?
+            (uint16_t)FC_IMU_RETURN_CONTENT_NO_PRESSURE : values[index];
     return Jy901bStartupRegisterResult_Ok;
 }
 
@@ -1742,7 +1745,12 @@ IMUState IMU_EnsureQuaternionOutput(uint8_t instance)
     IMUState state;
     uint16_t rsw;
     uint16_t target_rsw;
+    uint16_t expected_rsw;
+    uint8_t reg;
 
+    if (IMU_StartupRegisterGet(instance, 9U, OutputRate_200Hz,
+        Algorithm_6Axis, &reg, &expected_rsw) != Jy901bStartupRegisterResult_Ok)
+    { return IMU_RESP_INVALID; }
     SILVERSTAR_ASSERT_OBJECT(&s_config_cache, IMUConfig,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     state = IMU_ReadReturnContent(instance, &rsw);
@@ -1751,7 +1759,7 @@ IMUState IMU_EnsureQuaternionOutput(uint8_t instance)
         return state;
     }
 
-    if (((rsw & FC_IMU_RETURN_CONTENT_DEFAULT) == FC_IMU_RETURN_CONTENT_DEFAULT) &&
+    if (((rsw & expected_rsw) == expected_rsw) &&
         ((rsw & FC_IMU_RETURN_CONTENT_QUAT_MASK) != 0U))
     {
         IMU_ConfigCacheSetField(instance, IMU_CONFIG_VALID_RETURN_CONTENT, rsw);
@@ -1759,7 +1767,7 @@ IMUState IMU_EnsureQuaternionOutput(uint8_t instance)
     }
 
     target_rsw = (uint16_t)(rsw |
-                            FC_IMU_RETURN_CONTENT_DEFAULT |
+                            expected_rsw |
                             FC_IMU_RETURN_CONTENT_QUAT_MASK);
     state = IMU_SetReturnContent(instance, target_rsw);
     if (state != IMU_OK)
@@ -1774,7 +1782,7 @@ IMUState IMU_EnsureQuaternionOutput(uint8_t instance)
     }
 
     IMU_ConfigCacheSetField(instance, IMU_CONFIG_VALID_RETURN_CONTENT, rsw);
-    return (((rsw & FC_IMU_RETURN_CONTENT_DEFAULT) == FC_IMU_RETURN_CONTENT_DEFAULT) &&
+    return (((rsw & expected_rsw) == expected_rsw) &&
             ((rsw & FC_IMU_RETURN_CONTENT_QUAT_MASK) != 0U)) ? IMU_OK : IMU_RESP_INVALID;
 }
 

@@ -95,6 +95,15 @@ def Capability_UserSelectable_Is(capability: str) -> bool:
     )
 
 
+def MeasurementAnyOf_Get(manifest) -> tuple[str, ...]:
+    values = manifest.metadata.get("measurement_any_of", ())
+    if (not isinstance(values, (list, tuple)) or
+            any(not isinstance(value, str) or not value for value in values) or
+            len(set(values)) != len(values)):
+        raise ValueError(f"{manifest.component_id}: invalid measurement_any_of")
+    return tuple(values)
+
+
 def _Requirements_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> tuple[CapabilityUse, ...]:
@@ -109,8 +118,22 @@ def _Requirements_Get(
         for manifest in non_device_manifests
         for capability in manifest.provides
     }
+    device_capabilities = {
+        capability
+        for instance in model.device_instances
+        for capability in catalog.InstanceComponent_Get(instance).provides
+    }
     requirements: list[CapabilityUse] = []
     for manifest in non_device_manifests:
+        measurement_options = MeasurementAnyOf_Get(manifest)
+        if measurement_options:
+            available = tuple(capability for capability in measurement_options
+                              if capability in device_capabilities)
+            requirements.extend(CapabilityUse(manifest.component_id, capability,
+                                              "measurement_update") for capability in available)
+            if not available:
+                requirements.append(CapabilityUse(manifest.component_id,
+                                                  "fusion.measurement", "any_observation_source"))
         requirements.extend(
             CapabilityUse(
                 consumer_component=manifest.component_id,

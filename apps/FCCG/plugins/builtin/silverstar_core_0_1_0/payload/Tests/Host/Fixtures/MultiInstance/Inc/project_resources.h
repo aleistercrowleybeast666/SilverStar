@@ -29,6 +29,7 @@ typedef struct
     PlatformUartId uart;
     PlatformTimeId time;
     uint16_t installation_orientation;
+    uint8_t module_variant;
 } ProjectJy901bResources;
 
 SystemDeviceResult ProjectJy901bResources_Get(

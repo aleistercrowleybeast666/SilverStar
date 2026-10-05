@@ -139,8 +139,8 @@ def test_joint_sensor_qualification_uses_actual_primary(builtin_catalog) -> None
     assert CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
     model.capability_source_overrides.clear()
     model.device_instances[0] = DeviceInstance("bmi0", "silverstar.device.imu.bmi088")
-    assert CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
-    # An unused qualification must not constrain a raw-only consumer.
+    assert not CapabilityResolution_Resolve(model, builtin_catalog).source_conflicts
+    # Raw BMI088 now qualifies for software attitude and stillness functions.
     model.strategies = {}
     model.modes = {}
     result = CapabilityResolution_Resolve(model, builtin_catalog)
@@ -259,6 +259,8 @@ def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> N
         kinds = {item["name"]: item["kind"] for item in manifest_data["requires"]["resources"]}
         types = {"uart": "PlatformUartId", "i2c": "PlatformI2cId", "spi": "PlatformSpiId", "time": "PlatformTimeId", "gpio_output": "PlatformGpioId", "gpio_interrupt": "PlatformGpioId"}
         fields = " ".join(types[kinds[item["requirement"]]] + " " + item["member"] + ";" for item in manifest_data["metadata"]["instance_resource_binding"]["fields"])
+        if folder.startswith("silverstar_device_imu_"):
+            fields += " int8_t axis_map[3];"
         resource_lines += [f"#define {binding.count_symbol} 2U", f"typedef struct {{ {fields} }} {binding.struct_type};", f"SystemDeviceResult {binding.accessor}(uint8_t instance, {binding.struct_type} *resources);"]
     resource_lines.append("#endif")
     (tmp_path / "project_resources.h").write_text("\n".join(resource_lines) + "\n", encoding="utf-8")

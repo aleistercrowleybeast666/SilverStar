@@ -16,10 +16,13 @@ const char * Mpu6050ImuInstance_NameGet(uint8_t instance)
 SystemDeviceResult Mpu6050ImuInstance_Init(uint8_t instance)
 {
     ProjectMpu6050Resources resources;
+    SystemDeviceResult result;
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectMpu6050Resources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
-    return SensorImuAdapter_Init(&s_contexts[instance], Mpu6050_ProfileGet(),
+    result = SensorImuAdapter_Init(&s_contexts[instance], Mpu6050_ProfileGet(),
         resources.i2c, 0x68U, instance);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
 }
 
 SystemDeviceResult Mpu6050ImuInstance_Start(uint8_t instance)

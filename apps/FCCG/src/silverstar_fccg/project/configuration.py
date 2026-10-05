@@ -17,6 +17,7 @@ from silverstar_fccg.project.capabilities import (
     CapabilityResolution,
     CapabilityResolution_Resolve,
     CapabilitySourceOverrides_Reconcile,
+    MeasurementAnyOf_Get,
 )
 from silverstar_fccg.project.logging import LoggingProfile_Reconcile
 from silverstar_fccg.project.model import (
@@ -82,10 +83,11 @@ class ProjectConfigurationResult:
 def PhysicalCapabilities_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> frozenset[str]:
+    catalog = catalog.ProjectView_Get(model)
     return frozenset(
         capability
         for instance in model.device_instances
-        for capability in catalog.Component_Get(instance.plugin).provides
+        for capability in catalog.InstanceComponent_Get(instance).provides
     )
 
 
@@ -163,6 +165,10 @@ def _ManifestAvailability_Get(
             or capability not in _AutoSelectableCapabilities_Get(catalog)
         )
     )
+    measurement_options = MeasurementAnyOf_Get(manifest)
+    if measurement_options and not any(capability in capabilities
+                                       for capability in measurement_options):
+        missing_capabilities += ("fusion.measurement",)
     compatible_mcus = manifest.metadata.get("compatible_mcus", [])
     incompatible_mcu = (
         isinstance(compatible_mcus, list)
@@ -195,6 +201,7 @@ def McuCompatibilityMissing_Is(
 def StrategyAvailabilities_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> dict[str, SelectionAvailability]:
+    catalog = catalog.ProjectView_Get(model)
     values: dict[str, SelectionAvailability] = {}
     for slot in catalog.SelectionSlots_Get(SelectionKind.STRATEGY.value):
         for manifest in catalog.SelectionSlot_Get(slot):
@@ -210,6 +217,7 @@ def StrategyAvailabilities_Get(
 def ModeOptionAvailabilities_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> dict[tuple[str, str], SelectionAvailability]:
+    catalog = catalog.ProjectView_Get(model)
     component_ids = model.ComponentIds_Get()
     values: dict[tuple[str, str], SelectionAvailability] = {}
     for component_id in model.base_components:

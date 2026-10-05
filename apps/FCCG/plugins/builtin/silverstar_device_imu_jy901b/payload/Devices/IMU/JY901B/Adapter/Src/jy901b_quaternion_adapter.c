@@ -276,7 +276,12 @@ static SystemDeviceResult Jy901bQuaternionAdapter_GetConfig(uint8_t instance,
 
 const char *Jy901bQuaternionInstance_NameGet(uint8_t instance)
 {
-    (void)instance; return "JY901B Hardware Quaternion"; }
+    ProjectJy901bResources resources;
+    if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK)
+    { return "Invalid Hardware Quaternion"; }
+    return (resources.module_variant == 1U) ?
+        "JY901S Hardware Quaternion" : "JY901B Hardware Quaternion";
+}
 SystemDeviceResult Jy901bQuaternionInstance_Init(uint8_t instance)
 {
     (void)instance; return Jy901bQuaternionAdapter_Init(instance); }
@@ -291,7 +296,18 @@ void Jy901bQuaternionInstance_Process(uint8_t instance)
     (void)instance; Jy901bQuaternionAdapter_Process(instance); }
 SystemDeviceResult Jy901bQuaternionInstance_InfoGet(uint8_t instance, SystemDeviceInfo *info)
 {
-    (void)instance; return Jy901bQuaternionAdapter_GetInfo(instance, info); }
+    ProjectJy901bResources resources;
+    SystemDeviceResult result;
+    if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_NOT_PRESENT; }
+    result = Jy901bQuaternionAdapter_GetInfo(instance, info);
+    if ((result == SYSTEM_DEVICE_OK) && (resources.module_variant == 1U))
+    {
+        info->device_name = "JY901S Hardware Quaternion Adapter";
+        info->model_name = "JY901S";
+    }
+    return result;
+}
 SystemDeviceResult Jy901bQuaternionInstance_CapabilitiesGet(uint8_t instance, uint32_t *mask)
 {
     (void)instance; return Jy901bQuaternionAdapter_GetCapabilities(instance, mask); }

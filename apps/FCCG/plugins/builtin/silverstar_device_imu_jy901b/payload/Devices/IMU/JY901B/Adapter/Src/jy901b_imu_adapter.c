@@ -650,8 +650,14 @@ static uint32_t Jy901bImuAdapter_ConfigMismatchMaskGet(uint8_t instance,
     { mismatch_mask |= IMU_CONFIG_VALID_FUSION_FILTER; }
     if (config->AccelerationFilterValue != IMU_DEFAULT_ACCEL_FILTER_VALUE)
     { mismatch_mask |= IMU_CONFIG_VALID_ACCEL_FILTER; }
-    if (config->ReturnContentValue != FC_IMU_RETURN_CONTENT_DEFAULT)
-    { mismatch_mask |= IMU_CONFIG_VALID_RETURN_CONTENT; }
+    {
+        uint16_t expected_rsw;
+        uint8_t reg;
+        if (IMU_StartupRegisterGet(instance, 9U, expected_rate,
+            s_staged_algorithm, &reg, &expected_rsw) != Jy901bStartupRegisterResult_Ok ||
+            config->ReturnContentValue != expected_rsw)
+        { mismatch_mask |= IMU_CONFIG_VALID_RETURN_CONTENT; }
+    }
     return mismatch_mask;
 }
 
@@ -857,8 +863,10 @@ static SystemDeviceResult Jy901bImuAdapter_GetNoise(
 
 const char *Jy901bImuInstance_NameGet(uint8_t instance)
 {
-    (void)instance;
-    return "JY901B IMU";
+    ProjectJy901bResources resources;
+    if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK)
+    { return "Invalid IMU"; }
+    return (resources.module_variant == 1U) ? "JY901S IMU" : "JY901B IMU";
 }
 SystemDeviceResult Jy901bImuInstance_Init(uint8_t instance) { return Jy901bImuAdapter_Init(instance); }
 SystemDeviceResult Jy901bImuInstance_Start(uint8_t instance) { return Jy901bImuAdapter_Start(instance); }
@@ -875,8 +883,17 @@ SystemDeviceResult Jy901bImuInstance_Process(uint8_t instance)
 SystemDeviceResult Jy901bImuInstance_InfoGet(
     uint8_t instance, SystemDeviceInfo *info)
 {
-    (void)instance;
-    return Jy901bImuAdapter_GetInfo(info);
+    ProjectJy901bResources resources;
+    SystemDeviceResult result;
+    if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_NOT_PRESENT; }
+    result = Jy901bImuAdapter_GetInfo(info);
+    if ((result == SYSTEM_DEVICE_OK) && (resources.module_variant == 1U))
+    {
+        info->device_name = "JY901S IMU Adapter";
+        info->model_name = "JY901S";
+    }
+    return result;
 }
 SystemDeviceResult Jy901bImuInstance_CapabilitiesGet(
     uint8_t instance, uint32_t *capability_mask)

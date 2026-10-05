@@ -16,10 +16,13 @@ const char * Bmi088ImuInstance_NameGet(uint8_t instance)
 SystemDeviceResult Bmi088ImuInstance_Init(uint8_t instance)
 {
     ProjectBmi088Resources resources;
+    SystemDeviceResult result;
     if (instance >= PROJECT_BMI088_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectBmi088Resources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
-    return SensorImuAdapter_InitI2c(&s_contexts[instance], Bmi088_ProfileGet(),
+    result = SensorImuAdapter_InitI2c(&s_contexts[instance], Bmi088_ProfileGet(),
         resources.i2c, resources.gyro_i2c, 0x18U, instance);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
 }
 
 SystemDeviceResult Bmi088ImuInstance_Start(uint8_t instance)

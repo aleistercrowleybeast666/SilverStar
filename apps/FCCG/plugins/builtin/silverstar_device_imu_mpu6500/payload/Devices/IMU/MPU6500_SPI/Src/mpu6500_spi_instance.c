@@ -16,10 +16,13 @@ const char * Mpu6500SpiImuInstance_NameGet(uint8_t instance)
 SystemDeviceResult Mpu6500SpiImuInstance_Init(uint8_t instance)
 {
     ProjectMpu6500SpiResources resources;
+    SystemDeviceResult result;
     if (instance >= PROJECT_MPU6500_SPI_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectMpu6500SpiResources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
     SensorImuSpiResources spi = {resources.spi, resources.cs, (PlatformGpioId)PLATFORM_GPIO_COUNT, resources.drdy, (PlatformGpioId)PLATFORM_GPIO_COUNT};
-    return SensorImuAdapter_InitSpi(&s_contexts[instance], Mpu6500Spi_ProfileGet(), &spi, instance);
+    result = SensorImuAdapter_InitSpi(&s_contexts[instance], Mpu6500Spi_ProfileGet(), &spi, instance);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
 }
 
 SystemDeviceResult Mpu6500SpiImuInstance_Start(uint8_t instance)

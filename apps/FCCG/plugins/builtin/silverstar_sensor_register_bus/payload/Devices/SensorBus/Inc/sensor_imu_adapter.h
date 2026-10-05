@@ -39,6 +39,8 @@ SystemDeviceResult SensorImuAdapter_Init(SensorImuAdapter *adapter,
 SystemDeviceResult SensorImuAdapter_InitI2c(SensorImuAdapter *adapter,
     const SensorImuProfile *profile, PlatformI2cId bus_id,
     PlatformI2cId auxiliary_bus_id, uint16_t address_7bit, uint32_t source_id);
+SystemDeviceResult SensorImuAdapter_MountSet(SensorImuAdapter *adapter,
+    const int8_t axis_map[3]);
 SystemDeviceResult SensorImuAdapter_Start(SensorImuAdapter *adapter);
 SystemDeviceResult SensorImuAdapter_InitSpi(SensorImuAdapter *adapter,
     const SensorImuProfile *profile, const SensorImuSpiResources *resources,

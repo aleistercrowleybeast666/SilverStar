@@ -14,20 +14,7 @@
       }
     ],
     "resources": [],
-    "capabilities": [
-      {
-        "capability": "gnss.position",
-        "purpose": "measurement_update"
-      },
-      {
-        "capability": "gnss.velocity",
-        "purpose": "measurement_update"
-      },
-      {
-        "capability": "barometer.altitude",
-        "purpose": "measurement_update"
-      }
-    ]
+    "capabilities": []
   },
   "resources": {
     "provides": [],
@@ -59,6 +46,7 @@
     ]
   },
   "metadata": {
+    "measurement_any_of": ["gnss.position", "gnss.velocity", "barometer.altitude"],
     "arithmetic_requirements": [
       "fp32"
     ],

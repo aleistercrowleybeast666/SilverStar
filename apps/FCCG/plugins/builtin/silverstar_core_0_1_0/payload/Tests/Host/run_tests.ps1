@@ -525,7 +525,7 @@ Invoke-HostTest -Name 'system_alignment' -ExtraCompilerArgs @(
 ) -Sources $alignmentSystemSources
 Invoke-HostTest -Name 'system_alignment_explicit_required_gnss' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
-    '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=7U'
+    '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=3U'
 ) -Sources $alignmentSystemSources
 Invoke-HostTest -Name 'system_alignment_pure_ins' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
@@ -649,11 +649,19 @@ Invoke-ExpectedCompileFailure -Name 'capability_missing_gnss_noise' `
         '-include', "$repoRoot\Tests\Host\Fixtures\algorithm_noise_absent.h",
         '-DSYSTEM_SELECTED_GNSS_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE=0U'
     ) -Source $capabilitySource
-Invoke-ExpectedCompileFailure -Name 'capability_missing_baro_noise' `
-    -ExtraCompilerArgs @(
-        '-include', "$repoRoot\Tests\Host\Fixtures\algorithm_noise_absent.h",
-        '-DSYSTEM_SELECTED_BAROMETER_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE=0U'
-    ) -Source $capabilitySource
+$barometerNoiseArgs = @(
+    '-include', "$repoRoot\Tests\Host\Fixtures\algorithm_noise_absent.h",
+    '-DSYSTEM_SELECTED_BAROMETER_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE=0U'
+)
+$barometerEnabled = Select-String -Path "$repoRoot\Generated\Inc\project_flight_config.h" `
+    -Pattern '^#define\s+SYSTEM_USER_BAROMETER_ENABLE\s+1U$' -Quiet
+if ($barometerEnabled) {
+    Invoke-ExpectedCompileFailure -Name 'capability_missing_baro_noise' `
+        -ExtraCompilerArgs $barometerNoiseArgs -Source $capabilitySource
+} else {
+    Invoke-ExpectedCompileSuccess -Name 'capability_unused_baro_noise' `
+        -ExtraCompilerArgs $barometerNoiseArgs -Source $capabilitySource
+}
 Invoke-ExpectedCompileSuccess -Name 'capability_noise_overrides' `
     -ExtraCompilerArgs ($estimatorNoiseOverrideArgs + @(
         '-DSYSTEM_SELECTED_IMU_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE=0U',
@@ -707,10 +715,16 @@ Invoke-ExpectedCompileSuccess -Name 'capability_future_impact_qualified' `
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_IMPACT_THEN_STILLNESS',
         '-DSYSTEM_SELECTED_IMU_LANDING_IMPACT_QUALIFIED=1U'
     ) -Source $capabilitySource
-Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_baro_imu_window_landing' `
-    -ExtraCompilerArgs @(
-        '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW'
-    ) -Source $capabilitySource
+$barometerLandingArgs = @(
+    '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW'
+)
+if ($barometerEnabled) {
+    Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_baro_imu_window_landing' `
+        -ExtraCompilerArgs $barometerLandingArgs -Source $capabilitySource
+} else {
+    Invoke-ExpectedCompileFailure -Name 'capability_jy901s_baro_imu_window_rejected' `
+        -ExtraCompilerArgs $barometerLandingArgs -Source $capabilitySource
+}
 Invoke-ExpectedCompileFailure -Name 'capability_stillness_unqualified' `
     -ExtraCompilerArgs @(
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS',
@@ -898,32 +912,38 @@ $recoverySources = @(
     "$repoRoot\FlightLogic\Landing\BarometerImuWindow\Src\flight_landing.c"
 )
 Invoke-HostTest -Name 'flight_recovery_apogee' -ExtraCompilerArgs @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
     '-DTEST_EXPECT_APOGEE=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ',
     '-DSYSTEM_FLIGHT_DEPLOY_CONFIRM_MS=100U'
 ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_apogee_immediate' -ExtraCompilerArgs @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
     '-DTEST_EXPECT_APOGEE=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ'
 ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_tilt' -ExtraCompilerArgs @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
     '-DTEST_EXPECT_TILT=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_TILT',
     '-DSYSTEM_FLIGHT_TILT_THRESHOLD_DEG=30.0f',
     '-DSYSTEM_FLIGHT_DEPLOY_CONFIRM_MS=100U'
 ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_tilt_immediate' -ExtraCompilerArgs @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
     '-DTEST_EXPECT_TILT=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_TILT',
     '-DSYSTEM_FLIGHT_TILT_THRESHOLD_DEG=30.0f'
 ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_apogee_or_tilt' -ExtraCompilerArgs @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
     '-DTEST_EXPECT_OR=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=(SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ|SYSTEM_DEPLOY_TRIGGER_TILT)',
     '-DSYSTEM_FLIGHT_TILT_THRESHOLD_DEG=30.0f'
 ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_apogee_or_delay' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
         '-DTEST_EXPECT_PAIR=1',
         '-DTEST_EXPECTED_DEPLOY_MASK=(SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ|SYSTEM_DEPLOY_TRIGGER_DELAY)',
         '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=(SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ|SYSTEM_DEPLOY_TRIGGER_DELAY)',
@@ -931,6 +951,7 @@ Invoke-HostTest -Name 'flight_recovery_apogee_or_delay' `
     ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_tilt_or_delay' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
         '-DTEST_EXPECT_PAIR=1',
         '-DTEST_EXPECTED_DEPLOY_MASK=(SYSTEM_DEPLOY_TRIGGER_TILT|SYSTEM_DEPLOY_TRIGGER_DELAY)',
         '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=(SYSTEM_DEPLOY_TRIGGER_TILT|SYSTEM_DEPLOY_TRIGGER_DELAY)',
@@ -938,11 +959,13 @@ Invoke-HostTest -Name 'flight_recovery_tilt_or_delay' `
         '-DSYSTEM_FLIGHT_DEPLOY_DELAY_MS=5000U'
     ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_delay' -ExtraCompilerArgs @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
     '-DTEST_EXPECT_DELAY=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_DELAY',
     '-DSYSTEM_FLIGHT_DEPLOY_DELAY_MS=5000U'
 ) -Sources $recoverySources
 Invoke-HostTest -Name 'flight_recovery_all_triggers' -ExtraCompilerArgs @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=0U',
     '-DTEST_EXPECT_ALL=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=(SYSTEM_DEPLOY_TRIGGER_TILT|SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ|SYSTEM_DEPLOY_TRIGGER_DELAY)',
     '-DSYSTEM_FLIGHT_TILT_THRESHOLD_DEG=30.0f',
@@ -963,6 +986,7 @@ Invoke-HostTest -Name 'flight_recovery_impact_landing' -ExtraCompilerArgs @(
     '-DSYSTEM_FLIGHT_LANDING_CONFIRM_MS=100U',
     '-DSYSTEM_SELECTED_IMU_LANDING_IMPACT_QUALIFIED=1U'
 ) -Sources $recoverySources
+if ($barometerEnabled) {
 Invoke-HostTest -Name 'flight_recovery_baro_imu_landing' -ExtraCompilerArgs @(
     '-DTEST_EXPECT_NONE=1', '-DTEST_EXPECT_BARO=1',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_NONE',
@@ -974,6 +998,7 @@ Invoke-HostTest -Name 'flight_recovery_baro_imu_landing' -ExtraCompilerArgs @(
     '-DSYSTEM_FLIGHT_LANDING_IMU_MIN_SAMPLES=3U',
     '-DSYSTEM_FLIGHT_LANDING_MIN_COVERAGE_PERCENT=80U'
 ) -Sources $recoverySources
+}
 
 Invoke-ExpectedCompileFailure -Name 'impact_capability_guard' `
     -ExtraCompilerArgs @(
@@ -1140,7 +1165,7 @@ foreach ($alignmentDefine in @(Get-Content -LiteralPath $projectSourcesPath |
 Invoke-HostTest -Name 'optional_gnss_start_actual' -ExtraCompilerArgs $optionalStartArgs `
     -Sources $optionalStartSources
 Invoke-HostTest -Name 'optional_gnss_start_explicit_required' `
-    -ExtraCompilerArgs ($optionalStartArgs + @('-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=7U')) `
+    -ExtraCompilerArgs ($optionalStartArgs + @('-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=3U')) `
     -Sources $optionalStartSources
 
 $loggerSources = @(

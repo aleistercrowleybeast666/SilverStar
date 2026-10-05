@@ -244,9 +244,18 @@ static void Test_RequiredFailures(void)
     TEST_CHECK(SystemAlignment_Process() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_NOT_READY);
     Test_Reset(1U, 0U);
-    TEST_CHECK(SystemAlignment_IsReady() == 0U);
-    TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_NOT_READY);
-    TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_NOT_READY);
+    if ((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+         SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) != 0U)
+    {
+        TEST_CHECK(SystemAlignment_IsReady() == 0U);
+        TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_NOT_READY);
+        TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_NOT_READY);
+    }
+    else
+    {
+        TEST_CHECK(SystemAlignment_IsReady() == 1U);
+        TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_OK);
+    }
     Test_Reset(1U, 1U);
     TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
     s_storage_ready = 0U;

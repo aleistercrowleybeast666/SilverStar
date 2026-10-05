@@ -822,10 +822,10 @@
   "algorithm_parameters.recommendation": "{source} 推荐值：{value} {unit}（仅供参考，不限制当前值）",
   "algorithm_parameters.gnss_integrity": "GNSS 位置自检",
   "device.init.title": "初始化与实际配置",
-  "device.jy901b.orientation": "JY901B \u5b89\u88c5\u65b9\u5411",
+  "device.jy901b.orientation": "JY901B/JY901S \u5b89\u88c5\u65b9\u5411",
   "device.jy901b.horizontal": "\u6a2a\u653e\uff08\u6a21\u5757\u5185\u90e8\uff09",
   "device.jy901b.vertical": "\u7ad6\u653e\uff08\u6a21\u5757\u8bbe\u7f6e\uff1b\u5f53\u524d\u7269\u7406\u5b89\u88c5\uff09",
-  "device.jy901b.orientation_note": "\u4ec5\u914d\u7f6e JY901B ORIENT \u5bc4\u5b58\u5668\u3002\u66f4\u6539\u65b9\u5411\u540e\u9700\u91cd\u65b0\u8fdb\u884c\u4f20\u611f\u5668\u4e0e\u98de\u63a7\u6821\u51c6\uff0c\u5e76\u5728\u5b9e\u673a\u6838\u5bf9\u52a0\u901f\u5ea6\u3001\u89d2\u901f\u5ea6\u53ca\u5916\u90e8\u56db\u5143\u6570\uff1b\u98de\u63a7\u4fa7\u4e0d\u53e0\u52a0\u65cb\u8f6c\u3002",
+  "device.jy901b.orientation_note": "\u4ec5\u914d\u7f6e JY901B/JY901S ORIENT \u5bc4\u5b58\u5668\u3002\u66f4\u6539\u65b9\u5411\u540e\u9700\u91cd\u65b0\u8fdb\u884c\u4f20\u611f\u5668\u4e0e\u98de\u63a7\u6821\u51c6\uff0c\u5e76\u5728\u5b9e\u673a\u6838\u5bf9\u52a0\u901f\u5ea6\u3001\u89d2\u901f\u5ea6\u53ca\u5916\u90e8\u56db\u5143\u6570\uff1b\u98de\u63a7\u4fa7\u4e0d\u53e0\u52a0\u65cb\u8f6c\u3002",
   "device.init.fixed_profile": "所选驱动目前使用固定受支持配置。这里只显示声明的实际值；不会触发设备初始化、读回或持久化。",
   "device.init.configure_on_boot": "启动时初始化",
   "device.init.profile": "受支持配置",
@@ -942,5 +942,13 @@
   "ground.radio_power": "地面站 {title} 发射功率",
   "ground.radio_up": "上移",
   "ground.radio_down": "下移",
-  "ground.radio_runtime_pending": "多实例可以保存为配置；地面站生成需要已整合的无线运行时。"
+  "ground.radio_runtime_pending": "多实例可以保存为配置；地面站生成需要已整合的无线运行时。",
+  "device.raw_imu.mount": "\u539f\u59cb IMU \u671d\u7bad\u5934\u90e8\u8f74\u5411",
+  "device.raw_imu.mount.note": "\u9009\u62e9\u4f20\u611f\u5668\u6307\u5411\u7bad\u4f53\u5934\u90e8\u7684\u8f74\u3002\u56fa\u4ef6\u5728\u6821\u51c6\u524d\u5c06\u52a0\u901f\u5ea6\u548c\u89d2\u901f\u5ea6\u4e00\u8d77\u65cb\u8f6c\u5230\u673a\u4f53\u7cfb\uff08+Z \u5411\u524d\uff09\u3002\u9ed8\u8ba4 +Z \u4fdd\u6301\u65e7\u6620\u5c04\uff1b\u9700\u5728\u5b9e\u673a\u6838\u5bf9\u3002",
+  "device.raw_imu.mount.x_positive": "+X \u6307\u5411\u5934\u90e8",
+  "device.raw_imu.mount.x_negative": "-X \u6307\u5411\u5934\u90e8",
+  "device.raw_imu.mount.y_positive": "+Y \u6307\u5411\u5934\u90e8",
+  "device.raw_imu.mount.y_negative": "-Y \u6307\u5411\u5934\u90e8",
+  "device.raw_imu.mount.z_positive": "+Z \u6307\u5411\u5934\u90e8\uff08\u65e7\u914d\u7f6e\uff09",
+  "device.raw_imu.mount.z_negative": "-Z \u6307\u5411\u5934\u90e8"
 }

@@ -90,6 +90,21 @@ SystemDeviceResult SensorImuAdapter_InitI2c(SensorImuAdapter *adapter,
     return SYSTEM_DEVICE_OK;
 }
 
+SystemDeviceResult SensorImuAdapter_MountSet(SensorImuAdapter *adapter,
+    const int8_t axis_map[3])
+{
+    SensorImuResult result;
+    if ((adapter == NULL) || (axis_map == NULL) ||
+        (adapter->health.initialized == 0U))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(adapter, SensorImuAdapter,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    result = SensorImu_AxisMapSet(&adapter->driver, axis_map,
+        adapter->driver.calibration_generation);
+    return (result == SENSOR_IMU_OK) ? SYSTEM_DEVICE_OK :
+        SYSTEM_DEVICE_VERIFY_FAILED;
+}
+
 SystemDeviceResult SensorImuAdapter_Start(SensorImuAdapter *adapter)
 {
     if ((adapter == NULL) || (adapter->health.initialized == 0U))

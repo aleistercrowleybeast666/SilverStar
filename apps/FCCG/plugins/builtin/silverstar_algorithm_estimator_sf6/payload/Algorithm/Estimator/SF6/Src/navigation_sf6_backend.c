@@ -113,7 +113,7 @@ static void Backend_StateLog(EstimatorOutputSnapshot *output)
     FlightLogSf6StateRecord record = {0};
     record.snapshot_id = output->update_sequence;
     record.algorithm_id = 3U; record.algorithm_revision = NAV_SF6_ALGORITHM_REVISION;
-    record.health = (uint8_t)SystemNavigationHealth_OverallGet(output->timestamp_us, 0x0FU, 0U);
+    record.health = (uint8_t)SystemNavigationHealth_OverallGet(output->timestamp_us, SYSTEM_FUSION_REQUIRED_HEALTH_MASK, 0U);
     memcpy(record.position_enu_m, output->position_enu_m, sizeof(record.position_enu_m));
     memcpy(record.velocity_enu_mps, output->velocity_enu_mps, sizeof(record.velocity_enu_mps));
     memcpy(record.q_nb, output->q_nb, sizeof(record.q_nb));

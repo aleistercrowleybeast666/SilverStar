@@ -52,15 +52,12 @@
     "imu.angular_rate",
     "attitude.external",
     "magnetometer.field",
-    "barometer.altitude",
     "attitude.external.preflight_alignment_6axis_qualified",
     "attitude.external.preflight_alignment_9axis_qualified",
     "attitude.external.preflight_fallback_qualified",
     "imu.software_alignment_qualified",
     "imu.software_propagation_qualified",
     "imu.landing_stillness_qualified",
-    "barometer.landing_window_qualified",
-    "barometer.alignment_origin_qualified",
     "magnetometer.physical_unit"
   ],
   "build": {
@@ -69,7 +66,6 @@
       "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c",
-      "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c",
       "Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c"
     ],
@@ -107,16 +103,6 @@
         "name_hash": "0x53692179UL"
       },
       {
-        "order": 3,
-        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
-        "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
-        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
-        "capability": "SYSTEM_CAPABILITY_BAROMETER",
-        "rate": "SYSTEM_BAROMETER_OUTPUT_RATE_HZ",
-        "driver_hash": "0xADF02482UL",
-        "name_hash": "0x53692179UL"
-      },
-      {
         "order": 4,
         "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
         "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
@@ -143,7 +129,6 @@
     "device_category": "sensor.imu",
     "build_feature_symbols": [
       "SYSTEM_USER_IMU_ENABLE",
-      "SYSTEM_USER_BAROMETER_ENABLE",
       "SYSTEM_USER_HARDWARE_QUATERNION_ENABLE"
     ],
     "device_instance_bindings": {
@@ -210,9 +195,6 @@
       },
       "imu.landing_stillness_qualified": {
         "evidence": "Derived from the reference Stillness gate requiring selected acceleration and angular-rate data"
-      },
-      "barometer.landing_window_qualified": {
-        "evidence": "JY901B_BAROMETER_BUILD_LANDING_WINDOW_QUALIFIED=1U"
       }
     },
     "unqualified_capabilities": {
@@ -229,9 +211,6 @@
         "enabled": true
       },
       "attitude.external": {
-        "enabled": true
-      },
-      "barometer.altitude": {
         "enabled": true
       },
       "magnetometer.field": {
@@ -254,17 +233,6 @@
       "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c": "fccg_multi_instance_context"
     },
     "sensor_recommendations": [
-      {
-        "parameter_id": "baro_std_m",
-        "value": 1.5,
-        "unit": "m",
-        "representation": "sigma",
-        "source": "JY901B",
-        "description": {
-          "en_US": "Advisory ground-test starting point, not native per-sample variance or a hardware guarantee.",
-          "zh_CN": "地面实验初始建议，不是逐样本原生方差或硬件保证。"
-        }
-      },
       {
         "parameter_id": "process_accel_std_e",
         "value": 1.5,
@@ -348,5 +316,243 @@
     "chipset": "JY901B",
     "driver": "JY901B Driver"
   },
-  "transports": []
+  "transports": [],
+  "device_variants": {
+    "jy901b": {
+      "interface": "uart",
+      "profile": "jy901b",
+      "overrides": {
+        "provides": [
+          "device.imu",
+          "imu.acceleration",
+          "imu.angular_rate",
+          "attitude.external",
+          "magnetometer.field",
+          "barometer.altitude",
+          "attitude.external.preflight_alignment_6axis_qualified",
+          "attitude.external.preflight_alignment_9axis_qualified",
+          "attitude.external.preflight_fallback_qualified",
+          "imu.software_alignment_qualified",
+          "imu.software_propagation_qualified",
+          "imu.landing_stillness_qualified",
+          "barometer.landing_window_qualified",
+          "barometer.alignment_origin_qualified",
+          "magnetometer.physical_unit"
+        ],
+        "build": {
+          "sources": [
+            "Devices/IMU/JY901B/Src/jy901b_device.c",
+            "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c",
+            "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
+            "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c",
+            "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c",
+            "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c",
+            "Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c"
+          ]
+        },
+        "metadata": {
+          "device_descriptors": [
+            {
+              "order": 1,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+              "class": "SYSTEM_DEVICE_CLASS_IMU",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+              "capability": "SYSTEM_CAPABILITY_IMU",
+              "rate": "SYSTEM_IMU_OUTPUT_RATE_HZ",
+              "driver_hash": "0xADF02482UL",
+              "name_hash": "0x53692179UL"
+            },
+            {
+              "order": 3,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+              "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+              "capability": "SYSTEM_CAPABILITY_BAROMETER",
+              "rate": "SYSTEM_BAROMETER_OUTPUT_RATE_HZ",
+              "driver_hash": "0xADF02482UL",
+              "name_hash": "0x53692179UL"
+            },
+            {
+              "order": 4,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+              "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+              "capability": "SYSTEM_CAPABILITY_HARDWARE_QUATERNION",
+              "rate": "SYSTEM_HARDWARE_QUATERNION_OUTPUT_RATE_HZ",
+              "driver_hash": "0xADF02482UL",
+              "name_hash": "0x53692179UL"
+            },
+            {
+              "order": 13,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+              "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL | ((SYSTEM_USER_MAGNETOMETER_ENABLE != 0U) ? SYSTEM_DESCRIPTOR_FLAG_ENABLED : 0U)",
+              "capability": "SYSTEM_CAPABILITY_MAGNETOMETER",
+              "rate": "SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ",
+              "driver_hash": "0xADF02482UL",
+              "name_hash": "0x53692179UL"
+            }
+          ],
+          "build_feature_symbols": [
+            "SYSTEM_USER_IMU_ENABLE",
+            "SYSTEM_USER_BAROMETER_ENABLE",
+            "SYSTEM_USER_HARDWARE_QUATERNION_ENABLE"
+          ],
+          "capability_qualifications": {
+            "barometer.landing_window_qualified": {
+              "evidence": "JY901B_BAROMETER_BUILD_LANDING_WINDOW_QUALIFIED=1U"
+            }
+          },
+          "recordable_outputs": {
+            "barometer.altitude": {
+              "enabled": true
+            }
+          },
+          "sensor_recommendations": [
+            {
+              "parameter_id": "baro_std_m",
+              "value": 1.5,
+              "unit": "m",
+              "representation": "sigma",
+              "source": "JY901B",
+              "description": {
+                "en_US": "Advisory ground-test starting point, not native per-sample variance or a hardware guarantee.",
+                "zh_CN": "地面实验初始建议，不是逐样本原生方差或硬件保证。"
+              }
+            },
+            {
+              "parameter_id": "process_accel_std_e",
+              "value": 1.5,
+              "unit": "m/s^2",
+              "representation": "sigma",
+              "source": "JY901B",
+              "description": {
+                "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+                "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+              }
+            },
+            {
+              "parameter_id": "process_accel_std_n",
+              "value": 1.5,
+              "unit": "m/s^2",
+              "representation": "sigma",
+              "source": "JY901B",
+              "description": {
+                "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+                "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+              }
+            },
+            {
+              "parameter_id": "process_accel_std_u",
+              "value": 2.0,
+              "unit": "m/s^2",
+              "representation": "sigma",
+              "source": "JY901B",
+              "description": {
+                "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+                "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "jy901s": {
+      "interface": "uart",
+      "profile": "jy901s",
+      "overrides": {
+        "name": "JY901S",
+        "description": "JY901S UART IMU without barometer; shared JY901 protocol driver.",
+        "physical_device": {
+          "vendor": "WitMotion",
+          "model": "JY901S",
+          "chipset": "JY901S",
+          "driver": "JY901 UART Driver"
+        },
+        "metadata": {
+          "display_names": {
+            "en_US": "JY901S",
+            "zh_CN": "JY901S"
+          },
+          "device_descriptors": [
+            {
+              "order": 1,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+              "class": "SYSTEM_DEVICE_CLASS_IMU",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_REQUIRED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+              "capability": "SYSTEM_CAPABILITY_IMU",
+              "rate": "SYSTEM_IMU_OUTPUT_RATE_HZ",
+              "driver_hash": "0xADF02482UL",
+              "name_hash": "0x53692179UL"
+            },
+            {
+              "order": 4,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+              "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL",
+              "capability": "SYSTEM_CAPABILITY_HARDWARE_QUATERNION",
+              "rate": "SYSTEM_HARDWARE_QUATERNION_OUTPUT_RATE_HZ",
+              "driver_hash": "0xADF02482UL",
+              "name_hash": "0x53692179UL"
+            },
+            {
+              "order": 13,
+              "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_JY901B",
+              "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+              "flags": "SYSTEM_DESCRIPTOR_FLAG_SHARED_PHYSICAL | ((SYSTEM_USER_MAGNETOMETER_ENABLE != 0U) ? SYSTEM_DESCRIPTOR_FLAG_ENABLED : 0U)",
+              "capability": "SYSTEM_CAPABILITY_MAGNETOMETER",
+              "rate": "SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ",
+              "driver_hash": "0xADF02482UL",
+              "name_hash": "0x53692179UL"
+            }
+          ],
+          "build_feature_symbols": [
+            "SYSTEM_USER_IMU_ENABLE",
+            "SYSTEM_USER_HARDWARE_QUATERNION_ENABLE"
+          ],
+          "sensor_recommendations": [
+            {
+              "parameter_id": "process_accel_std_e",
+              "value": 1.5,
+              "unit": "m/s^2",
+              "representation": "sigma",
+              "source": "JY901B",
+              "description": {
+                "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+                "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+              }
+            },
+            {
+              "parameter_id": "process_accel_std_n",
+              "value": 1.5,
+              "unit": "m/s^2",
+              "representation": "sigma",
+              "source": "JY901B",
+              "description": {
+                "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+                "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+              }
+            },
+            {
+              "parameter_id": "process_accel_std_u",
+              "value": 2.0,
+              "unit": "m/s^2",
+              "representation": "sigma",
+              "source": "JY901B",
+              "description": {
+                "en_US": "Advisory initialization/fallback estimate; explicit algorithm values take precedence. This is not per-sample native uncertainty.",
+                "zh_CN": "仅用于初始建议或无显式配置时的回退；以算法实际配置为准。不是逐样本原生不确定度。"
+              }
+            }
+          ],
+          "recordable_outputs": {
+            "barometer.altitude": {
+              "enabled": false,
+              "reason_code": "logging.unavailable.no_barometer"
+            }
+          }
+        }
+      }
+    }
+  }
 }

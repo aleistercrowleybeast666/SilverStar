@@ -158,12 +158,17 @@ static void Test_ApplyUsesOneSave(void)
 {
     uint8_t tx[TEST_TX_BUFFER_CAPACITY];
     uint16_t tx_length;
+    uint16_t expected_rsw;
     IMUConfig config;
+    ProjectJy901bResources resources;
 
     HostPlatformMock_Reset();
     HostPlatformMock_Jy901bEnable(PROJECT_RESOURCE_IMU_UART, 1U, 0U);
     TEST_CHECK(IMU_LocalGravitySet(SYSTEM_LOCAL_GRAVITY_MPS2) == IMU_OK);
     TEST_CHECK(IMU_Init() == IMU_OK);
+    TEST_CHECK(ProjectJy901bResources_Get(0U, &resources) == SYSTEM_DEVICE_OK);
+    expected_rsw = (resources.module_variant == 1U) ?
+        FC_IMU_RETURN_CONTENT_NO_PRESSURE : FC_IMU_RETURN_CONTENT_DEFAULT;
     TEST_CHECK(IMU_ApplyDefaultConfig(OutputRate_200Hz,
                                       Algorithm_6Axis) == IMU_OK);
     tx_length = HostPlatformMock_UartTxTake(
@@ -179,11 +184,11 @@ static void Test_ApplyUsesOneSave(void)
     TEST_CHECK(Test_RegisterLastValue(tx, tx_length, IMU_REG_RRATE) ==
                IMU_RRATE_200HZ_VALUE);
     TEST_CHECK(Test_RegisterLastValue(tx, tx_length, IMU_REG_RSW) ==
-               FC_IMU_RETURN_CONTENT_DEFAULT);
+               expected_rsw);
     IMU_ConfigCacheGet(&config);
     TEST_CHECK(config.AlgorithmValue == IMU_ALGORITHM_6_AXIS_VALUE);
     TEST_CHECK(config.OutputRateValue == IMU_RRATE_200HZ_VALUE);
-    TEST_CHECK(config.ReturnContentValue == FC_IMU_RETURN_CONTENT_DEFAULT);
+    TEST_CHECK(config.ReturnContentValue == expected_rsw);
     TEST_CHECK(IMU_ApplyDefaultConfig(OutputRate_200Hz, Algorithm_6Axis) == IMU_OK);
     tx_length = HostPlatformMock_UartTxTake(PROJECT_RESOURCE_IMU_UART, tx, sizeof(tx));
     TEST_CHECK(Test_RegisterWriteCount(tx, tx_length, IMU_REG_SAVE) == 0U);

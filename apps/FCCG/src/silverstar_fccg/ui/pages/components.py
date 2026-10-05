@@ -39,6 +39,7 @@ from silverstar_fccg.project.capabilities import (
     CapabilityKind_Get,
 )
 from silverstar_fccg.project.configuration import SelectionAvailability
+from silverstar_fccg.project.model import RAW_IMU_MOUNT_PLUGINS
 from silverstar_fccg.ui.committed_spin import (
     EnterCommittedDoubleSpinBox,
     EnterCommittedSpinBox,
@@ -63,6 +64,7 @@ class DevicesPage(ScrollableLocalizedPage):
     radioPowerChanged = Signal(str, int)
     variantChanged = Signal(str, str, str)
     installationOrientationChanged = Signal(str, str)
+    mountNoseAxisChanged = Signal(str, str)
     instanceAddRequested = Signal(str)
     otherDeviceToggled = Signal(str, bool)
     installRequested = Signal()
@@ -160,6 +162,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.device_combos: dict[str, StandardComboBox] = {}
         self.variant_combos: dict[str, StandardComboBox] = {}
         self.orientation_combos: dict[str, StandardComboBox] = {}
+        self.mount_combos: dict[str, StandardComboBox] = {}
         self.device_checks: dict[str, StandardCheckBox] = {}
         self.add_buttons: dict[str, QPushButton] = {}
         self.remove_buttons: dict[str, QPushButton] = {}
@@ -213,6 +216,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.device_combos.clear()
         self.variant_combos.clear()
         self.orientation_combos.clear()
+        self.mount_combos.clear()
         self.add_buttons.clear()
         self.remove_buttons.clear()
         components_by_class: defaultdict[str, list[ComponentView]] = defaultdict(list)
@@ -418,6 +422,24 @@ class DevicesPage(ScrollableLocalizedPage):
                         form.addRow(QLabel(self._translator.Text_Get(
                             "device.jy901b.orientation")), orientation_combo)
                         self.orientation_combos[instance_id] = orientation_combo
+                    if selected_plugin in RAW_IMU_MOUNT_PLUGINS:
+                        mount_combo = StandardComboBox()
+                        mount_combo.setObjectName(f"rawImuMount_{instance_id}")
+                        for axis in ("z_positive", "z_negative", "x_positive",
+                                     "x_negative", "y_positive", "y_negative"):
+                            mount_combo.addItem(self._translator.Text_Get(
+                                "device.raw_imu.mount." + axis), axis)
+                        mount_combo.setCurrentIndex(max(0,
+                            mount_combo.findData(instance.mount_nose_axis)))
+                        mount_combo.setToolTip(self._translator.Text_Get(
+                            "device.raw_imu.mount.note"))
+                        mount_combo.currentIndexChanged.connect(
+                            lambda _index, selected_instance=instance_id,
+                            editor=mount_combo: self.mountNoseAxisChanged.emit(
+                                selected_instance, str(editor.currentData())))
+                        form.addRow(QLabel(self._translator.Text_Get(
+                            "device.raw_imu.mount")), mount_combo)
+                        self.mount_combos[instance_id] = mount_combo
                     if component_class != "telemetry":
                         summary = QLabel(self._CapabilitySummary_Get(instance))
                         summary.setToolTip("\n".join(instance.provides))

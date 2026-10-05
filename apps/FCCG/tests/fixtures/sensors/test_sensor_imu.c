@@ -265,6 +265,58 @@ static void HighG_Test(void)
     puts("LSM6DSV320X independent high-g/readback/range/clip/stop PASS");
 }
 
+static void MountMap_Test(void)
+{
+    static const int8_t maps[6][3] = {
+        {1, 2, 3}, {-1, 2, -3}, {-3, 2, 1},
+        {3, 2, -1}, {1, -3, 2}, {1, 3, -2}
+    };
+    const int16_t source_values[3] = {100, 200, 300};
+    const SensorImuProfile *profile = Mpu6050_ProfileGet();
+    uint8_t choice;
+    for (choice = 0U; choice < 6U; choice++)
+    {
+        MockBus mock;
+        SensorImu imu;
+        SensorImuSample sample;
+        uint64_t epoch;
+        uint8_t axis;
+        Mock_Init(&mock, &imu, profile, SENSOR_BUS_I2C);
+        assert(SensorImu_AxisMapSet(&imu, maps[choice], 0U) == SENSOR_IMU_OK);
+        epoch = Mock_Configure(&mock, &imu, 1U);
+        assert(SensorImu_Verify(&imu) == SENSOR_IMU_OK);
+        for (axis = 0U; axis < 3U; axis++)
+        {
+            uint16_t value = (uint16_t)source_values[axis];
+            uint16_t accel = (uint16_t)(profile->data_register +
+                profile->accel_offset + 2U * axis);
+            uint16_t gyro = (uint16_t)(profile->data_register +
+                profile->gyro_offset + 2U * axis);
+            mock.registers[accel] = (uint8_t)((profile->little_endian != 0U) ?
+                value : (value >> 8));
+            mock.registers[accel + 1U] = (uint8_t)((profile->little_endian != 0U) ?
+                (value >> 8) : value);
+            mock.registers[gyro] = (uint8_t)((profile->little_endian != 0U) ?
+                value : (value >> 8));
+            mock.registers[gyro + 1U] = (uint8_t)((profile->little_endian != 0U) ?
+                (value >> 8) : value);
+        }
+        assert(SensorImu_Read(&imu, epoch, epoch + 20U, &sample) == SENSOR_IMU_OK);
+        for (axis = 0U; axis < 3U; axis++)
+        {
+            int8_t mapped = maps[choice][axis];
+            uint8_t source = (uint8_t)(((mapped < 0) ? -mapped : mapped) - 1);
+            float signed_value = (float)source_values[source] *
+                ((mapped < 0) ? -1.0f : 1.0f);
+            assert(fabsf(sample.accel_b_mps2[axis] -
+                signed_value * profile->accel_scale_mps2) < 0.0001f);
+            assert(fabsf(sample.gyro_b_radps[axis] -
+                signed_value * profile->gyro_scale_radps) < 0.0001f);
+        }
+    }
+    puts("six right-handed mount maps transform acceleration and gyro PASS");
+}
+
 int main(void)
 {
     const SensorImuProfile *profiles[8] = {Mpu6000_ProfileGet(), Mpu6050_ProfileGet(),
@@ -277,6 +329,7 @@ int main(void)
     IcmFifo_Test(Icm42605_ProfileGet());
     IcmFifo_Test(Icm42688P_ProfileGet());
     HighG_Test();
+    MountMap_Test();
     puts("sensor model mock suite PASS (HARDWARE_UNVERIFIED)");
     return 0;
 }

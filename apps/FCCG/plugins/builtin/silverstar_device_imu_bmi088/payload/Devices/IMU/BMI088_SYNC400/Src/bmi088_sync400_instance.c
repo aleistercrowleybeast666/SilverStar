@@ -25,7 +25,8 @@ SystemDeviceResult Bmi088Sync400ImuInstance_Init(uint8_t instance)
         resources.i2c, resources.gyro_i2c, 0x18U, instance);
     s_contexts[instance].spi_resources.drdy = resources.drdy;
     s_contexts[instance].spi_resources.auxiliary_drdy = resources.auxiliary_drdy;
-    return result;
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
 }
 
 SystemDeviceResult Bmi088Sync400ImuInstance_Start(uint8_t instance)

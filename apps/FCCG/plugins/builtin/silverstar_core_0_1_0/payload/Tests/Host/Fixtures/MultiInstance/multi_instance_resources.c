@@ -10,8 +10,8 @@ static const ProjectNeoM9nResources s_gnss_resources[] =
 
 static const ProjectJy901bResources s_imu_resources[] =
 {
-    {PLATFORM_UART_1, PLATFORM_TIME_1, 1U},
-    {PLATFORM_UART_2, PLATFORM_TIME_1, 0U}
+    {PLATFORM_UART_1, PLATFORM_TIME_1, 1U, 0U},
+    {PLATFORM_UART_2, PLATFORM_TIME_1, 0U, 1U}
 };
 
 static const ProjectSx1281Resources s_telemetry_resources[] =

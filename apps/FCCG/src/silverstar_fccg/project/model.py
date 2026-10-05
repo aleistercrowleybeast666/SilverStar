@@ -80,6 +80,25 @@ BOARD_SOURCE_KINDS = frozenset(
     {"unselected", "verified_builtin", "manual_import", "third_party"}
 )
 
+RAW_IMU_MOUNT_PLUGINS = frozenset({
+    "silverstar.device.imu.bmi088", "silverstar.device.imu.bmi323",
+    "silverstar.device.imu.icm42605", "silverstar.device.imu.icm42688p",
+    "silverstar.device.imu.icm45686", "silverstar.device.imu.lsm6dsv320x",
+    "silverstar.device.imu.lsm6dsv32x", "silverstar.device.imu.mpu6000",
+    "silverstar.device.imu.mpu6050", "silverstar.device.imu.mpu6500",
+    "silverstar.device.imu.mpu9250",
+})
+# Signed source-axis indices yielding a right-handed module-to-body map.
+# The chosen module axis points toward the nose; body +Z remains longitudinal.
+RAW_IMU_NOSE_AXIS_MAPS = {
+    "z_positive": (1, 2, 3),
+    "z_negative": (-1, 2, -3),
+    "x_positive": (-3, 2, 1),
+    "x_negative": (3, 2, -1),
+    "y_positive": (1, -3, 2),
+    "y_negative": (1, 3, -2),
+}
+
 
 class ProjectModelError(FccgError):
     pass
@@ -101,6 +120,7 @@ class DeviceInstance:
     module_variant: str = ""
     tx_power_dbm: int | None = None
     installation_orientation: str = "vertical"
+    mount_nose_axis: str = "z_positive"
 
 
 @dataclass(frozen=True, slots=True)
@@ -373,6 +393,8 @@ class ProjectModel:
                            if instance.module_variant or instance.tx_power_dbm is not None else {}),
                         **({"installation_orientation": instance.installation_orientation}
                            if instance.plugin == "silverstar.device.imu.jy901b" else {}),
+                        **({"mount_nose_axis": instance.mount_nose_axis}
+                           if instance.plugin in RAW_IMU_MOUNT_PLUGINS else {}),
                     }
                     for instance in self.device_instances
                 ],
@@ -1018,7 +1040,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
     for entry_value in value:
         entry = _Object_Require(entry_value, "device instance")
         base_fields = {"instance_id", "plugin", "interface", "profile"}
-        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm", "installation_orientation"}):
+        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm", "installation_orientation", "mount_nose_axis"}):
             raise ProjectModelError(
                 "device instance must contain instance_id, plugin, interface and profile"
             )
@@ -1032,6 +1054,10 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         if (orientation not in ("horizontal", "vertical") or
                 ("installation_orientation" in entry and plugin != "silverstar.device.imu.jy901b")):
             raise ProjectModelError("Invalid JY901B installation orientation")
+        nose_axis = entry.get("mount_nose_axis", "z_positive")
+        if (nose_axis not in RAW_IMU_NOSE_AXIS_MAPS or
+                ("mount_nose_axis" in entry and plugin not in RAW_IMU_MOUNT_PLUGINS)):
+            raise ProjectModelError("Invalid raw IMU nose-axis mounting")
         if (not isinstance(module, str) or (module and not SELECTION_OPTION_PATTERN.fullmatch(module))
                 or (power is not None and type(power) is not int)):
             raise ProjectModelError("Invalid radio module variant or TX power")
@@ -1043,7 +1069,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         if instance_id in instance_ids:
             raise ProjectModelError(f"Duplicate device instance id: {instance_id}")
         instance_ids.add(instance_id)
-        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power, orientation))
+        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power, orientation, nose_axis))
     return instances
 
 

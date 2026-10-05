@@ -496,7 +496,7 @@ static void FlightTask_RecoveryEstimatorInputApply(
                 SYSTEM_NAVIGATION_HEALTH_INVALID));
         input->velocity_valid = (uint8_t)(input->attitude_valid != 0U &&
             (SystemNavigationHealth_OverallGet(now_us,
-                (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_NONE) ? 0U : 0x0FU,
+                (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_NONE) ? 0U : SYSTEM_FUSION_REQUIRED_HEALTH_MASK,
                 0U) != SYSTEM_NAVIGATION_HEALTH_INVALID));
         input->ins_timestamp_us = estimator.timestamp_us;
         input->ins_sequence = estimator.update_sequence;
