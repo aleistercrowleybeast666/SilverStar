@@ -31,6 +31,14 @@ sync indefinitely. Acknowledgement is internal and does not change AIR READY,
 START ACK or lifecycle/navigation decisions. The established no-storage boot
 path suppresses requests and keeps nonblocking startup.
 
+Admission returns the generation retained in the submitting call, even if the
+consumer completes that request and another producer publishes before return.
+Only READY, BARRIER and FAULT carry a published active START identity; BUILDING
+cannot validate a duplicate token. Reset clears active and acknowledged identity,
+cursor and count, while preserving the monotonic next-generation counter.
+The host interleaving tests demonstrate both former identity failures before
+the correction and check the same schedules afterwards.
+
 Write/sync faults remain latched ordinary storage errors. They retain an
 unacknowledged faulted request and prevent overwrite/false durable success;
 they do not roll back an already committed flight or claim MCU recovery. This

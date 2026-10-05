@@ -28,15 +28,39 @@ SystemDeviceResult SystemLogSink_SessionEnd(void) { return SYSTEM_DEVICE_OK; }
 static unsigned s_inject;
 static unsigned s_pending;
 static unsigned s_locked;
+static unsigned s_injected_bursts;
+static unsigned s_producer_attempts;
+#ifdef LOGGER_SNAPSHOT_UNLOCK_TEST
+static unsigned s_publication_hook_running;
+#endif
+#ifdef LOGGER_SNAPSHOT_START_TEST
+static unsigned s_request_hook_running;
+static void Test_RequestHook(void);
+#endif
 PlatformCriticalState PlatformCritical_Enter(void) { return s_locked++; }
 void PlatformCritical_Exit(PlatformCriticalState state)
 {
     s_locked = state;
+#ifdef LOGGER_SNAPSHOT_UNLOCK_TEST
+    if ((s_locked == 0U) && (s_inject != 0U) && (s_publication_hook_running == 0U))
+    {
+        LoggerBusDiagnostics diagnostics;
+        s_publication_hook_running = 1U;
+        TEST_CHECK(LoggerBus_DiagnosticsGet(&diagnostics) == LOGGER_BUS_RESULT_OK);
+        if (diagnostics.accepted_count != 0U) { s_inject = 0U; s_pending = 1U; }
+        s_publication_hook_running = 0U;
+    }
+#endif
+#ifdef LOGGER_SNAPSHOT_START_TEST
+    if ((s_locked == 0U) && (s_request_hook_running == 0U))
+    { s_request_hook_running = 1U; Test_RequestHook(); s_request_hook_running = 0U; }
+#endif
     if ((s_locked == 0U) && (s_pending != 0U))
     {
         s_pending = 0U;
+        s_injected_bursts++;
         for (unsigned i = 0U; i < SYSTEM_LOG_RECORD_QUEUE_DEPTH; ++i)
-        { (void)LoggerBus_EventPush(999U, FLIGHT_LOG_EVENT_MISSION_START, i, 0U); }
+        { s_producer_attempts++; (void)LoggerBus_EventPush(999U, FLIGHT_LOG_EVENT_MISSION_START, i, 0U); }
     }
 }
 CommonSpscQueueResult __real_CommonSpscQueue_Push(CommonSpscQueue *, const void *);
@@ -46,7 +70,11 @@ CommonSpscQueueResult __wrap_CommonSpscQueue_Push(CommonSpscQueue *q, const void
     const FlightLogRecord *record = item;
     if ((s_inject != 0U) && (r == COMMON_SPSC_QUEUE_RESULT_OK) &&
         (record->record_type == FLIGHT_LOG_RECORD_SYSTEM_CONFIG))
+#ifndef LOGGER_SNAPSHOT_UNLOCK_TEST
     { s_inject = 0U; s_pending = 1U; }
+#else
+    { /* The shared public admission diagnostic triggers at IRQ unlock. */ }
+#endif
     return r;
 }
 static unsigned Test_Drain(unsigned *config, unsigned *streams)
@@ -67,6 +95,78 @@ static unsigned Test_Drain(unsigned *config, unsigned *streams)
     return descriptors;
 }
 #ifdef LOGGER_SNAPSHOT_START_TEST
+static unsigned s_token_hook_active;
+static unsigned s_token_hook_count;
+static uint32_t s_first_actual_token;
+static uint32_t s_second_token;
+static unsigned s_stale_hook_active;
+static unsigned s_stale_hook_count;
+static uint32_t s_stale_token;
+static LoggerBusResult s_stale_result;
+static LoggerBusStartRecords s_hook_input;
+
+static void Test_RequestDrainAndSync(void)
+{
+    FlightLogRecord record;
+    for (unsigned i = 0U; i < 128U; ++i)
+    {
+        if (LoggerBus_NextPop(&record) != LOGGER_BUS_RESULT_OK) { break; }
+        TEST_CHECK(LoggerTask_RecordAppend(&record) != 0U);
+    }
+    TEST_CHECK(LoggerTask_StartBarrierProcess() != 0U);
+}
+
+static void Test_RequestHook(void)
+{
+    unsigned count = LoggerBus_Count();
+    if ((s_token_hook_active != 0U) && (count > 1U))
+    {
+        s_token_hook_active = 0U; s_token_hook_count++;
+        FlightLogRecord record;
+        for (unsigned i = 0U; i < 128U; ++i)
+        { if (LoggerBus_NextPop(&record) != LOGGER_BUS_RESULT_OK) { break; }
+          TEST_CHECK(LoggerTask_RecordAppend(&record) != 0U); }
+        s_first_actual_token = LoggerBus_StartBarrierGet();
+        TEST_CHECK(LoggerTask_StartBarrierProcess() != 0U);
+        TEST_CHECK(LoggerBus_StartRecordsPush(222U, &s_hook_input, &s_second_token) == LOGGER_BUS_RESULT_OK);
+    }
+    if ((s_stale_hook_active != 0U) && (count == 1U))
+    {
+        s_stale_hook_active = 0U; s_stale_hook_count++;
+        s_stale_result = LoggerBus_StartRecordsPush(333U, &s_hook_input, &s_stale_token);
+    }
+}
+
+static void Test_RequestIdentityInterleaving(void)
+{
+    uint32_t returned = 0U;
+    LoggerBus_Reset();
+    memset(&s_logger, 0, sizeof(s_logger)); memset(&s_diagnostics, 0, sizeof(s_diagnostics));
+    s_logger.session_active = 1U;
+    memset(&s_hook_input, 0, sizeof(s_hook_input));
+    s_hook_input.identity.mission_id = 1U; s_hook_input.identity.ready = 1U;
+    s_hook_input.identity.commit_generation = 1U;
+    s_token_hook_active = 1U; s_token_hook_count = 0U; s_second_token = 0U;
+    TEST_CHECK(LoggerBus_StartRecordsPush(111U, &s_hook_input, &returned) == LOGGER_BUS_RESULT_OK);
+    printf("TOKEN_RACE injections=%u first_actual=%lu second=%lu first_returned=%lu\n",
+        s_token_hook_count, (unsigned long)s_first_actual_token,
+        (unsigned long)s_second_token, (unsigned long)returned);
+    TEST_CHECK(s_token_hook_count == 1U);
+    TEST_CHECK(returned == s_first_actual_token && returned != s_second_token);
+    Test_RequestDrainAndSync();
+    LoggerBus_Reset();
+    s_stale_token = 0U;
+    TEST_CHECK(LoggerBus_StartRecordsPush(444U, &s_hook_input, &s_stale_token) == LOGGER_BUS_RESULT_OK);
+    LoggerBus_Reset(); /* quiescent cancellation must invalidate the old identity */
+    s_stale_hook_active = 1U; s_stale_hook_count = 0U;
+    TEST_CHECK(LoggerBus_SystemConfigPush(555U) == LOGGER_BUS_RESULT_OK);
+    printf("RESET_BUILDING injections=%u old_token=%lu duplicate_result=%u\n",
+        s_stale_hook_count, (unsigned long)s_stale_token, (unsigned)s_stale_result);
+    TEST_CHECK(s_stale_hook_count == 1U);
+    TEST_CHECK(s_stale_result == LOGGER_BUS_RESULT_BAD_STATE);
+    Test_RequestDrainAndSync();
+}
+
 static void Test_Start(void)
 {
     LoggerBusStartRecords input = {0};
@@ -139,6 +239,7 @@ static void Test_Start(void)
     LoggerTask_Close();
     TEST_CHECK(LoggerBus_StartAcknowledgedGet() == 0U && s_diagnostics.io_fault == 1U);
     s_write_failure = 0U;
+    Test_RequestIdentityInterleaving();
     LoggerBus_Reset();
     TEST_CHECK(LoggerBus_DisableForBootNoStorage() == LOGGER_BUS_RESULT_OK);
     generation = 0U;
@@ -157,8 +258,10 @@ int main(void)
     s_inject = 1U;
     LoggerBusResult r = LoggerBus_SystemConfigPush(123U);
     unsigned descriptors = Test_Drain(&config, &streams);
-    printf("PREEMPT result=%u config=%u descriptors=%u streams=%u expected=%u\n",
-        (unsigned)r, config, descriptors, streams, expected);
+    printf("PREEMPT result=%u config=%u descriptors=%u streams=%u expected=%u injections=%u producer_attempts=%u\n",
+        (unsigned)r, config, descriptors, streams, expected, s_injected_bursts, s_producer_attempts);
+    TEST_CHECK(s_injected_bursts == 1U);
+    TEST_CHECK(s_producer_attempts == SYSTEM_LOG_RECORD_QUEUE_DEPTH);
     TEST_CHECK(r == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(config == 1U && descriptors == expected && streams == SSLOG_RECORD_COUNT);
     LoggerBus_Reset();

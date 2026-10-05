@@ -331,6 +331,10 @@ void LoggerBus_Reset(void)
         SILVERSTAR_ASSERT(s_request.phase != LOGGER_REQUEST_BUILDING,
             SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
         s_request.phase = LOGGER_REQUEST_IDLE;
+        s_request.generation = 0U;
+        s_request.is_start = 0U;
+        s_request.cursor = 0U;
+        s_request.count = 0U;
         s_request.acknowledged_generation = 0U;
         s_request.io_fault = 0U;
         (void)memset(&s_diagnostics, 0, sizeof(s_diagnostics));
@@ -629,6 +633,7 @@ LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
     const LoggerBusStartRecords *records, uint32_t *generation)
 {
     LoggerBusResult result;
+    uint32_t assigned_generation;
     if ((records == NULL) || (generation == NULL))
     { return LOGGER_BUS_RESULT_BAD_PARAM; }
     if (LoggerBus_PushStateGet() != LOGGER_BUS_RESULT_OK)
@@ -639,7 +644,9 @@ LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
         PlatformCriticalState state = LoggerBus_IrqLock();
         uint8_t known = (uint8_t)((*generation == s_request.acknowledged_generation) ||
             ((s_request.is_start != 0U) && (*generation == s_request.generation) &&
-             (s_request.phase != LOGGER_REQUEST_IDLE)));
+             ((s_request.phase == LOGGER_REQUEST_READY) ||
+              (s_request.phase == LOGGER_REQUEST_BARRIER) ||
+              (s_request.phase == LOGGER_REQUEST_FAULT))));
         LoggerBus_IrqUnlock(state);
         return (known != 0U) ? LOGGER_BUS_RESULT_OK : LOGGER_BUS_RESULT_BAD_STATE;
     }
@@ -654,9 +661,10 @@ LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
     s_request.start = *records;
     result = LoggerBus_RequestBuild(timestamp_us);
     if (result != LOGGER_BUS_RESULT_OK) { LoggerBus_RequestCancel(); return result; }
-    s_request.generation = ++s_request.next_generation;
+    assigned_generation = ++s_request.next_generation;
+    s_request.generation = assigned_generation;
     result = LoggerBus_RequestPublish(1U);
-    if (result == LOGGER_BUS_RESULT_OK) { *generation = s_request.generation; }
+    if (result == LOGGER_BUS_RESULT_OK) { *generation = assigned_generation; }
     return result;
 }
 
