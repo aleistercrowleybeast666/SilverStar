@@ -257,6 +257,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
+#include "platform_sd_clock.h"
 
 #if defined(SDIO)
 
@@ -403,7 +404,21 @@ HAL_StatusTypeDef HAL_SD_Init(SD_HandleTypeDef *hsd)
 HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
 {
   uint32_t errorstate;
+  uint32_t initialization_divider;
+  uint32_t sdioclk_hz = HAL_RCC_GetHCLKFreq();
   SD_InitTypeDef Init;
+
+  /* SilverStar F1 Flight adaptation of STM32Cube FW_F1 V1.8.7:
+     the upstream fixed 118 assumes 48 MHz, but F103 SDIO is clocked by HCLK.
+     Resolve before touching CLKCR; retain this upstream file's license. */
+  if ((PlatformSdClock_InitializationDividerResolve(sdioclk_hz,
+        &initialization_divider) != PlatformSdClockResult_Ok) ||
+      (PlatformSdClock_TransferValidate(sdioclk_hz, hsd->Init.ClockDiv,
+        hsd->Init.ClockBypass) != PlatformSdClockResult_Ok))
+  {
+    hsd->ErrorCode |= HAL_SD_ERROR_PARAM;
+    return HAL_ERROR;
+  }
   
   /* Default SDIO peripheral configuration for SD card initialization */
   Init.ClockEdge           = SDIO_CLOCK_EDGE_RISING;
@@ -411,7 +426,7 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
   Init.ClockPowerSave      = SDIO_CLOCK_POWER_SAVE_DISABLE;
   Init.BusWide             = SDIO_BUS_WIDE_1B;
   Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
-  Init.ClockDiv            = SDIO_INIT_CLK_DIV;
+  Init.ClockDiv            = initialization_divider;
 
   /* Initialize SDIO peripheral interface with default configuration */
   SDIO_Init(hsd->Instance, Init);
