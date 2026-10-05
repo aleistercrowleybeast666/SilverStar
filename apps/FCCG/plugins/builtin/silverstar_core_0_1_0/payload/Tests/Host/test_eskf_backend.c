@@ -104,6 +104,62 @@ static void Test_RecordsDrain(void)
     }
 }
 
+static void Test_OptionalOrigins(void)
+{
+    const float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
+    EstimatorOutputSnapshot output = {0};
+    EstimatorPressureSnapshot pressure = {0};
+    SystemInertialIncrement input = {0};
+    memset(&s_gnss, 0, sizeof(s_gnss));
+    s_gnss.receive_timestamp_us = UINT64_MAX;
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f,
+        2U, 77U, 1U) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+    SystemNavigationBackend_Reset();
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f,
+        1U, 77U, 1U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(output.gnss_origin_valid == 0U && output.baro_origin_valid == 1U);
+    pressure.altitude_m = 10.1f; pressure.pressure_pa = 101325.0f;
+    pressure.variance_m2 = 1.0f; pressure.valid = 1U; pressure.healthy = 1U;
+    pressure.measurement_timestamp_trusted = 1U; pressure.sequence = 100U;
+    pressure.receive_timestamp_us = 12000000ULL;
+    pressure.timestamp_us = pressure.receive_timestamp_us - 1000ULL;
+    TEST_CHECK(EstimatorBus_PressurePublish(&pressure) == ESTIMATOR_BUS_RESULT_OK);
+    input.dt_s = 0.004f; input.timestamp_us = pressure.receive_timestamp_us;
+    input.sequence = 1U;
+    input.body_accel_mps2[0][2] = 9.80665f;
+    input.body_accel_mps2[1][2] = 9.80665f;
+    HostPlatformMock_TimeSetUs(input.timestamp_us);
+    TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(output.gnss_origin_valid == 0U && output.baro_origin_valid == 1U);
+    TEST_CHECK(output.baro_update_count > 0U &&
+        output.gnss_position_update_count == 0U);
+
+    SystemNavigationBackend_Reset();
+    memset(&output, 0, sizeof(output));
+    TEST_CHECK(SystemNavigationBackend_Initialize(q, &s_gnss, 10.0f,
+        0U, 77U, 1U) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemNavigationBackend_SnapshotGet(&output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(output.gnss_origin_valid == 0U && output.baro_origin_valid == 0U);
+    TEST_CHECK((output.health_flags & ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE) != 0U);
+    TEST_CHECK(isnan(output.baro_relative_altitude_m));
+    pressure.sequence++; pressure.receive_timestamp_us = 13000000ULL;
+    pressure.timestamp_us = pressure.receive_timestamp_us - 1000ULL;
+    TEST_CHECK(EstimatorBus_PressurePublish(&pressure) == ESTIMATOR_BUS_RESULT_OK);
+    input.timestamp_us = pressure.receive_timestamp_us; input.sequence++;
+    HostPlatformMock_TimeSetUs(input.timestamp_us);
+    TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(output.measurement_attempt_mask == 0U &&
+        output.baro_update_count == 0U && output.last_baro_sequence == 0U);
+    s_gnss.position_usable = 1U; s_gnss.sequence = 101U;
+    s_gnss.receive_timestamp_us = input.timestamp_us + 4000ULL;
+    input.timestamp_us += 4000ULL; input.sequence++;
+    HostPlatformMock_TimeSetUs(input.timestamp_us);
+    TEST_CHECK(SystemNavigationBackend_Predict(&input, &output) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(output.gnss_origin_valid == 0U &&
+        output.gnss_position_update_count == 0U);
+}
+
 int main(int argc, char **argv)
 {
     const FlightLogRecordType streams[] = { FLIGHT_LOG_RECORD_ESKF15_STATE,
@@ -267,6 +323,7 @@ int main(int argc, char **argv)
         TEST_CHECK(SystemNavigationHealth_GroupGet(group, input.timestamp_us, &health) == SYSTEM_DEVICE_OK);
         TEST_CHECK(health.has_success && health.last_successful_fusion_us == input.timestamp_us);
     }
+    Test_OptionalOrigins();
 #ifdef TEST_ESKF_BACKEND_EXPORT
     if (s_export_file != NULL)
     {

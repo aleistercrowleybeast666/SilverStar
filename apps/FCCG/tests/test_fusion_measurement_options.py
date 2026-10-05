@@ -24,6 +24,7 @@ from silverstar_fccg.project.reference import ReferenceProject_Create
 _ESTIMATORS = (
     "silverstar.algorithm.estimator.sf6",
     "silverstar.algorithm.estimator.kf6",
+    "silverstar.algorithm.estimator.eskf15",
 )
 
 
@@ -75,18 +76,6 @@ def test_estimator_requires_one_configured_measurement(
         assert "SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN" not in required.group(1)
     elif observations in {"both", "baro"}:
         assert "SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN" in required.group(1)
-
-
-@pytest.mark.parametrize("observations,available", (
-    ("both", True), ("gnss", False), ("baro", False), ("none", False),
-))
-def test_eskf15_keeps_existing_source_contract(
-    builtin_catalog, observations: str, available: bool,
-) -> None:
-    model = _Project_Create(builtin_catalog, observations)
-    estimator = "silverstar.algorithm.estimator.eskf15"
-    model.strategies["estimator"] = estimator
-    assert StrategyAvailabilities_Get(model, builtin_catalog)[estimator].available == available
 
 
 @pytest.mark.parametrize("profile", ("raw_200_hz", "bosch_sync_400_hz"))

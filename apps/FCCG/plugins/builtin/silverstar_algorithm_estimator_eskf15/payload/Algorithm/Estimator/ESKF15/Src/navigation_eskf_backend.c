@@ -52,6 +52,7 @@ static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
 static PLATFORM_ESKF_WINDOW_BSS NavigationWindowContext s_eskf_window;
 static GeoLocalFrame s_frame;
 static float s_baro_origin;
+static uint8_t s_baro_origin_valid;
 static uint32_t s_gnss_sequence;
 static uint32_t s_baro_sequence;
 static uint32_t s_operation;
@@ -140,6 +141,7 @@ void SystemNavigationBackend_Reset(void)
     s_active = 0U; s_started = 0U; s_gnss_seen = 0U; s_baro_seen = 0U;
     s_state.initialized = 0U; s_operation = 0U; s_snapshot_id = 0U;
     memset(&s_frame, 0, sizeof(s_frame));
+    s_baro_origin = 0.0f; s_baro_origin_valid = 0U;
     s_native_week_us = 0U; s_native_tow_ms = 0U; s_log_failures = 0U;
     s_imu_quality_flags = 0U;
     (void)NavigationWindow_Reset(&s_eskf_window);
@@ -149,11 +151,11 @@ SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     const SystemGnssSample *origin, float barometer_origin_m,
     uint8_t barometer_origin_valid, uint32_t generation, uint8_t activate)
 {
-    (void)barometer_origin_valid; /* ESKF behavior is unchanged by the SF6 reference contract. */
     float nominal[16] = {0.0f};
     uint32_t axis;
     uint8_t source;
-    if ((q_nb == NULL) || (origin == NULL) || !isfinite(barometer_origin_m))
+    if ((q_nb == NULL) || (origin == NULL) || (barometer_origin_valid > 1U) ||
+        !isfinite(barometer_origin_m))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     SILVERSTAR_ASSERT_OBJECT(q_nb, float, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(origin, SystemGnssSample, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
@@ -184,7 +186,8 @@ SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],
     { return SYSTEM_DEVICE_VERIFY_FAILED; }
     if (NavigationEskfReplay_Reset(&s_history, &s_state, s_body_history) != NAV_ESKF_REPLAY_OK)
     { return SYSTEM_DEVICE_INTERNAL_ERROR; }
-    s_baro_origin = barometer_origin_m; s_active = activate;
+    s_baro_origin = barometer_origin_m;
+    s_baro_origin_valid = barometer_origin_valid; s_active = activate;
     s_calibration_generation = SystemCalibration_GenerationGet();
     SystemNavigationHealth_Reset(0U);
     return SYSTEM_DEVICE_OK;
@@ -235,7 +238,7 @@ static void Backend_StateRecordBuild(FlightLogEskf15StateRecord *record)
     record->algorithm_id = 2U; record->algorithm_revision = NAV_ESKF_REVISION;
     record->quality_revision = NAV_QUALITY_REVISION;
     record->health = (uint8_t)SystemNavigationHealth_OverallGet(s_state.timestamp_us,
-        0x0FU, s_imu_quality_flags);
+        SYSTEM_FUSION_REQUIRED_HEALTH_MASK, s_imu_quality_flags);
     memcpy(record->position_enu_m, s_state.position, sizeof(s_state.position));
     memcpy(record->velocity_enu_mps, s_state.velocity, sizeof(s_state.velocity));
     memcpy(record->q_nb, s_state.quaternion, sizeof(s_state.quaternion));
@@ -519,7 +522,8 @@ static void Backend_NavigationQualityLog(const SystemGnssSample *sample, uint64_
             { record.accepted_mask |= (uint8_t)(1U << group); }
         }
     }
-    record.health = (uint8_t)SystemNavigationHealth_OverallGet(evaluation_us, 0x0FU, 0U);
+    record.health = (uint8_t)SystemNavigationHealth_OverallGet(evaluation_us,
+        SYSTEM_FUSION_REQUIRED_HEALTH_MASK, 0U);
     record.nav_output_valid = (uint8_t)(record.health != SYSTEM_NAVIGATION_HEALTH_INVALID);
     if (LoggerBus_NavigationQualityPush(evaluation_us, &record) != LOGGER_BUS_RESULT_OK)
     { s_log_failures++; }
@@ -575,7 +579,8 @@ static void Backend_BarometerUpdate(EstimatorOutputSnapshot *output)
     EstimatorPressureSnapshot sample;
     NavigationEskfReplayEvent event;
     BackendMeasurementContext record;
-    if ((EstimatorBus_PressureGetLatest(&sample) == 0U) ||
+    if ((s_baro_origin_valid == 0U) ||
+        (EstimatorBus_PressureGetLatest(&sample) == 0U) ||
         (sample.receive_timestamp_us > s_state.timestamp_us) ||
         (s_baro_seen && (sample.sequence == s_baro_sequence))) { return; }
     SILVERSTAR_ASSERT(sample.valid <= 1U, SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
@@ -610,8 +615,15 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
     SILVERSTAR_ASSERT_OBJECT(output, EstimatorOutputSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     output->timestamp_us = s_state.timestamp_us;
     output->initialized = s_state.initialized; output->mission_running = s_active;
-    output->gnss_origin_valid = s_frame.valid; output->baro_origin_valid = 1U;
+    output->gnss_origin_valid = s_frame.valid;
+    output->baro_origin_valid = s_baro_origin_valid;
     if (!s_frame.valid) { output->health_flags |= ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE; }
+    if (!s_baro_origin_valid)
+    {
+        output->health_flags |= ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE;
+        output->baro_relative_altitude_m = NAN;
+    }
+    else { output->health_flags &= ~ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE; }
     memcpy(output->position_enu_m, s_state.position, sizeof(s_state.position));
     memcpy(output->velocity_enu_mps, s_state.velocity, sizeof(s_state.velocity));
     memcpy(output->q_nb, s_state.quaternion, sizeof(s_state.quaternion));
