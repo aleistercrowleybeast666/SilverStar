@@ -377,8 +377,34 @@ class ProjectAssembler:
         self._Progress_Report(
             progress_callback, 5, "generate_environments", False
         )
-        desired.update(MetadataFiles_Render(model, self.catalog, graph))
         previous = self._Ownership_Load(project_root)
+        components = dict(previous.get("components", {}))
+        upstream_components = {}
+        for component_id in model.ComponentIds_Get():
+            current = ComponentProvenance_Get(self.catalog, component_id)
+            upstream_components[component_id] = current
+            prior = components.get(component_id, {})
+            prior_files = prior.get("files", {}) if isinstance(prior, dict) else {}
+            if prior_files:
+                # Apply preserves every previously copied payload file. Keep
+                # its recorded expected digest; never bless project edits by
+                # hashing the current destination or adopting upstream bytes.
+                preserved = dict(prior)
+                expected_files = dict(current["files"])
+                expected_files.update(prior_files)
+                aggregate = hashlib.sha256()
+                for relative, digest in sorted(expected_files.items()):
+                    aggregate.update(relative.encode("utf-8"))
+                    aggregate.update(b"\0")
+                    aggregate.update(bytes.fromhex(digest))
+                preserved["files"] = expected_files
+                preserved["payload_digest"] = aggregate.hexdigest()
+                components[component_id] = preserved
+            else:
+                components[component_id] = current
+        desired.update(MetadataFiles_Render(model, self.catalog, graph,
+            component_provenance={component_id: components[component_id]
+                                  for component_id in model.ComponentIds_Get()}))
         eide_relative = ".eide/eide.yml"
         eide_target = project_root / ".eide" / "eide.yml"
         desired_eide = desired[eide_relative].decode("utf-8")
@@ -411,13 +437,6 @@ class ProjectAssembler:
                 raise ProjectAssemblerError(
                     f"Renderer produced an unsafe managed path: {relative!r}"
                 ) from error
-        components = dict(previous.get("components", {}))
-        components.update(
-            {
-                component_id: ComponentProvenance_Get(self.catalog, component_id)
-                for component_id in model.ComponentIds_Get()
-            }
-        )
         hardware_files = hardware_files or {}
         hardware_hashes = {
             path: hashlib.sha256(content).hexdigest()
@@ -429,6 +448,7 @@ class ProjectAssembler:
             "generation_fingerprint": f"{ProjectGenerationFingerprint_Get(model):08x}",
             "active_components": list(model.ComponentIds_Get()),
             "components": components,
+            "upstream_components": upstream_components,
             "managed_files": managed_files,
             "managed_hashes": {
                 path: hashlib.sha256(content).hexdigest()

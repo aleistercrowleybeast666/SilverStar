@@ -384,13 +384,14 @@ def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
 
 
 def MetadataFiles_Render(
-    model: ProjectModel, catalog: PluginCatalog, graph: SourceGraph
+    model: ProjectModel, catalog: PluginCatalog, graph: SourceGraph,
+    *, component_provenance: dict[str, Any] | None = None,
 ) -> dict[str, bytes]:
     render_model = deepcopy(model)
     environment = catalog.Component_Get(render_model.development_environment)
     if environment.environment is None or environment.environment.renderer != "vscode_eide_gcc":
         raise ValueError("Selected development environment has no trusted renderer")
-    render_model.component_provenance = {
+    render_model.component_provenance = deepcopy(component_provenance) if component_provenance is not None else {
         component_id: ComponentProvenance_Get(catalog, component_id)
         for component_id in render_model.ComponentIds_Get()
     }

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from dataclasses import replace
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from silverstar_fccg.generator.assembler import ProjectAssembler
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.project.model import DeviceInstance, ProjectModel_Load
 from silverstar_fccg.project.reference import ReferenceProject_Create
+import silverstar_fccg.generator.assembler as assembler_module
 
 
 def test_service_normalizes_relative_generation_root(
@@ -72,6 +74,42 @@ def test_generate_reopen_and_apply_preserves_component_source(
     assert "FLIGHT_LOG_RECORD_TELEMETRY_DIAG, 1U, 2U" in (
         project_root / "Generated" / "Src" / "project_log_config.c"
     ).read_text(encoding="utf-8")
+
+
+def test_regeneration_preserves_expected_provenance_and_rejects_local_edits(
+    tmp_path: Path, builtin_catalog, monkeypatch,
+) -> None:
+    root = tmp_path / "PreservedProvenance"
+    assembler = ProjectAssembler(WorkspacePolicy(tmp_path), builtin_catalog)
+    model = ReferenceProject_Create("PreservedProvenance")
+    assembler.Apply(model, assembler.Plan(model, root))
+    component = "silverstar.core.0_1_0"
+    relative = "APP/Inc/app_task_config.h"
+    original = (root / relative).read_bytes()
+    expected = hashlib.sha256(original).hexdigest()
+    upstream = assembler_module.ComponentProvenance_Get
+
+    def changed_provenance(catalog, component_id):
+        value = upstream(catalog, component_id)
+        if component_id == component:
+            value["files"][relative] = "f" * 64
+            value["payload_digest"] = "e" * 64
+        return value
+
+    monkeypatch.setattr(assembler_module, "ComponentProvenance_Get", changed_provenance)
+    reopened = ProjectModel_Load(root / "SilverStar.ssproject")
+    assembler.Apply(reopened, assembler.Plan(reopened, root))
+    saved = ProjectModel_Load(root / "SilverStar.ssproject")
+    ownership = json.loads((root / ".fccg/ownership.json").read_text())
+    assert saved.component_provenance[component]["files"][relative] == expected
+    assert ownership["components"][component]["files"][relative] == expected
+    assert ownership["upstream_components"][component]["payload_digest"] == "e" * 64
+    assert (root / relative).read_bytes() == original
+    (root / relative).write_bytes(original + b"\n/* local edit */\n")
+    assembler.Apply(saved, assembler.Plan(saved, root))
+    edited = ProjectModel_Load(root / "SilverStar.ssproject")
+    assert edited.component_provenance[component]["files"][relative] == expected
+    assert assembler._ComponentModified_Is(root, edited.component_provenance[component])
 
 
 def test_generated_glue_is_small_static_and_heap_free(tmp_path: Path, builtin_catalog) -> None:
