@@ -10,6 +10,7 @@ from PySide6.QtCore import QSettings, QStandardPaths, Qt
 from PySide6.QtWidgets import QApplication
 
 import silverstar_flp
+from silverstar_flp.app.startup_error import StartupError_Report
 from silverstar_flp.app.version import PRODUCT_NAME, __version__
 from silverstar_flp.core.runtime import NumericalRuntime_Validate
 from silverstar_flp.export import service as export_service
@@ -70,7 +71,10 @@ def main(arguments: list[str] | None = None) -> int:
     try:
         NumericalRuntime_Validate()
     except RuntimeError as error:
-        print(f"error: {error}", file=sys.stderr)
+        language = options.lang or str(
+            QSettings("SilverStar", "SilverStar_FLP").value("language", "zh_CN")
+        )
+        StartupError_Report(error, language)
         return 2
     QApplication.setOrganizationName("SilverStar")
     QApplication.setApplicationName(PRODUCT_NAME)
