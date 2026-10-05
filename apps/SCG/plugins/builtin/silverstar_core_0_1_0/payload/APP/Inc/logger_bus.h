@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "sslog_protocol.h"
+#include "project_device_instances.h"
 
 typedef enum
 {
@@ -11,7 +12,8 @@ typedef enum
     LOGGER_BUS_RESULT_EMPTY,
     LOGGER_BUS_RESULT_FULL,
     LOGGER_BUS_RESULT_BAD_PARAM,
-    LOGGER_BUS_RESULT_BAD_STATE
+    LOGGER_BUS_RESULT_BAD_STATE,
+    LOGGER_BUS_RESULT_BUSY
 } LoggerBusResult;
 
 typedef enum
@@ -41,6 +43,7 @@ typedef struct
     uint32_t capacity_reject_count;
     uint32_t disabled_suppressed_count;
     uint32_t disabled_discarded_count;
+    uint32_t request_busy_count;
     LoggerBusStartupState startup_state;
     uint16_t normal_count;
     uint16_t estimator_count;
@@ -66,6 +69,22 @@ LoggerBusResult LoggerBus_StatsPush(
 LoggerBusResult LoggerBus_EstimatorPush(
     uint64_t timestamp_us, uint32_t valid_flags,
     const FlightLogEstimatorRecord *record);
+/* One owned request; OK means accepted, not durable. Caller retains rejected
+ * input for retry. LoggerTask alone consumes and acknowledges after sync. */
+typedef struct
+{
+    FlightLogInitialStateRecord initial;
+    FlightLogMissionSnapshotIdentityRecord identity;
+    FlightLogMagCalibrationIdentityRecord mag[PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX];
+    uint8_t mag_count;
+} LoggerBusStartRecords;
+
+LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
+    const LoggerBusStartRecords *records, uint32_t *generation);
+uint32_t LoggerBus_StartBarrierGet(void);
+LoggerBusResult LoggerBus_StartDurable(uint32_t generation);
+uint32_t LoggerBus_StartAcknowledgedGet(void);
+void LoggerBus_StartFault(void);
 LoggerBusResult LoggerBus_SystemConfigPush(uint64_t timestamp_us);
 LoggerBusResult LoggerBus_MissionConfigPush(uint64_t timestamp_us);
 LoggerBusResult LoggerBus_DecoderProfileDescriptorPush(uint64_t timestamp_us);

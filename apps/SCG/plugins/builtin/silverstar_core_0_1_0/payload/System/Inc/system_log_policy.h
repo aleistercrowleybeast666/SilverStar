@@ -19,6 +19,9 @@ void SystemLogPolicy_Init(void);
 uint16_t SystemLogPolicy_StreamCountGet(void);
 SystemDeviceResult SystemLogPolicy_StreamByIndexGet(
     uint16_t index, SystemLogStreamConfig *config);
+/* One coherent copy, including disabled streams; caller owns the destination. */
+SystemDeviceResult SystemLogPolicy_SnapshotCopy(
+    SystemLogStreamConfig *configs, uint16_t count);
 SystemDeviceResult SystemLogPolicy_StreamGet(
     FlightLogRecordType record_type, SystemLogStreamConfig *config);
 SystemDeviceResult SystemLogPolicy_StreamConfigure(

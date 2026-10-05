@@ -72,6 +72,20 @@ uint16_t SystemLogPolicy_StreamCountGet(void)
     return SSLOG_RECORD_COUNT;
 }
 
+SystemDeviceResult SystemLogPolicy_SnapshotCopy(
+    SystemLogStreamConfig *configs, uint16_t count)
+{
+    PlatformCriticalState state;
+    if ((configs == NULL) || (count != SSLOG_RECORD_COUNT))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SystemLogPolicy_Init();
+    state = PlatformCritical_Enter();
+    for (uint16_t index = 0U; index < SSLOG_RECORD_COUNT; ++index)
+    { configs[index] = s_streams[index].config; }
+    PlatformCritical_Exit(state);
+    return SYSTEM_DEVICE_OK;
+}
+
 SystemDeviceResult SystemLogPolicy_StreamByIndexGet(
     uint16_t index, SystemLogStreamConfig *config)
 {

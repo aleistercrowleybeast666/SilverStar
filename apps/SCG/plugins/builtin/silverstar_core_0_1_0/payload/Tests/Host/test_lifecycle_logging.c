@@ -61,6 +61,8 @@ static uint32_t s_abort_count;
 static uint32_t s_system_config_push_count;
 static uint32_t s_mission_config_push_count;
 static uint32_t s_snapshot_identity_push_count;
+static uint32_t s_start_initial_capture_count;
+static FlightLogInitialStateRecord s_start_initial_record;
 static FlightLogMissionSnapshotIdentityRecord s_snapshot_identity_record;
 static uint32_t s_mag_identity_push_count;
 static FlightLogMagCalibrationIdentityRecord s_mag_identity_record;
@@ -584,6 +586,7 @@ uint8_t Estimator_GetInitialStateSnapshot(
         return 0U;
     }
     (void)memset(snapshot, 0, sizeof(*snapshot));
+    s_start_initial_capture_count++;
     snapshot->valid = 1U;
     return 1U;
 }
@@ -627,6 +630,7 @@ LoggerBusResult LoggerBus_InitialStatePush(
         return LOGGER_BUS_RESULT_BAD_PARAM;
     }
     s_initial_state_push_count++;
+    s_start_initial_record = *record;
     return s_initial_state_push_result;
 }
 
@@ -706,6 +710,31 @@ LoggerBusResult LoggerBus_EventPush(uint64_t timestamp_us,
     s_event_push_count++;
     return s_event_push_result;
 }
+
+/* Admission facade for FlightTask tests. Existing per-record counters remain
+ * attempted inputs; actual atomic publication/sync is tested with LoggerBus
+ * and LoggerTask in test_logger_snapshot.c. */
+LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
+    const LoggerBusStartRecords *records, uint32_t *generation)
+{
+    LoggerBusResult result = LoggerBus_SystemConfigPush(timestamp_us);
+    LoggerBusResult mission = LoggerBus_MissionConfigPush(timestamp_us);
+    LoggerBusResult initial = LoggerBus_InitialStatePush(timestamp_us, &records->initial);
+    LoggerBusResult event = LoggerBus_EventPush(timestamp_us, FLIGHT_LOG_EVENT_MISSION_START, 0U, 0U);
+    TEST_CHECK(LoggerBus_MissionSnapshotIdentityPush(timestamp_us, &records->identity) == LOGGER_BUS_RESULT_OK);
+    for (uint8_t index = 0U; index < records->mag_count; ++index)
+    { TEST_CHECK(LoggerBus_MagCalibrationIdentityPush(timestamp_us, &records->mag[index]) == LOGGER_BUS_RESULT_OK); }
+    if (result == LOGGER_BUS_RESULT_OK) { result = mission; }
+    if (result == LOGGER_BUS_RESULT_OK) { result = initial; }
+    if (result == LOGGER_BUS_RESULT_OK) { result = event; }
+    if (result == LOGGER_BUS_RESULT_OK) { *generation = 1U; }
+    return result;
+}
+uint32_t LoggerBus_StartAcknowledgedGet(void) { return 1U; }
+uint32_t LoggerBus_StartBarrierGet(void) { return 0U; }
+LoggerBusResult LoggerBus_StartDurable(uint32_t generation)
+{ (void)generation; return LOGGER_BUS_RESULT_BAD_STATE; }
+void LoggerBus_StartFault(void) { }
 
 LoggerBusResult LoggerBus_FinalizationArm(uint64_t landing_timestamp_us)
 {
@@ -1040,6 +1069,7 @@ static void Test_StateReset(void)
     s_system_config_push_count = 0U;
     s_mission_config_push_count = 0U;
     s_snapshot_identity_push_count = 0U;
+    s_start_initial_capture_count = 0U;
     (void)memset(&s_snapshot_identity_record, 0,
                  sizeof(s_snapshot_identity_record));
     s_mag_identity_push_count = 0U;
@@ -1365,6 +1395,22 @@ static void Test_PostStartMissingTfDoesNotChangeFlightState(void)
     TEST_CHECK(s_mission_started != 0U);
 }
 
+static void Test_StartRecordAdmissionRetriesCapturedInput(void)
+{
+    Test_StateReset();
+    s_event_push_result = LOGGER_BUS_RESULT_FULL;
+    s_enable_event_after_first_delay = 1U;
+    s_delay_limit = 3U;
+    Test_FlightTaskRun();
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_FLIGHT);
+    TEST_CHECK(s_mission_started != 0U && s_abort_count == 0U);
+    TEST_CHECK(s_system_config_push_count == 2U);
+    TEST_CHECK(s_mission_config_push_count == 2U);
+    TEST_CHECK(s_initial_state_push_count == 2U);
+    TEST_CHECK(s_start_initial_capture_count == 1U);
+    TEST_CHECK(s_start_initial_record.origin_valid_flags == 0U);
+}
+
 static void Test_FlightRecoveryEventRetry(void)
 {
     Test_StateReset();
@@ -1678,6 +1724,7 @@ int main(void)
     Test_PostStartStorageLossAndFullBusKeepsFlight();
     Test_NoneCalibrationResultSnapshot();
     Test_StartRecordFailureDoesNotRollback();
+    Test_StartRecordAdmissionRetriesCapturedInput();
     Test_PostStartMissingTfDoesNotChangeFlightState();
     Test_FlightRecoveryEventRetry();
     Test_LoggerFinalizesAfterLandingGrace();
