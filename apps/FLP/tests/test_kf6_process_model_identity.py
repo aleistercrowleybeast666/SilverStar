@@ -1,4 +1,5 @@
 """Process-model identity is independent of parameters and GNSS policy."""
+import json
 from dataclasses import replace
 
 import numpy as np
@@ -135,6 +136,17 @@ def test_selected_what_if_survives_project_roundtrip_and_result_identity(tmp_pat
     second = store.Result_Add(upgraded, algorithm_name="KF6")
     assert first.source_id != second.source_id and first.result_id != second.result_id
     assert first.diagnostics["process_model_revision"] != second.diagnostics["process_model_revision"]
+    from silverstar_flp.export.service import ExportLanguage, ExportOptions, FlightExporter
+    manifest = FlightExporter().export(dataset, tmp_path / "manifest_export", replay_store=store,
+        options=ExportOptions(language=ExportLanguage.EN, source_id=second.source_id,
+            include_overview=False, include_diagnostics=False, include_events=False, include_csv=False,
+            include_full_covariance_keyframes=False, include_plots=False, include_trajectory_3d=False, include_attitude_gif=False))
+    assert not manifest.failures
+    payload = json.loads(manifest.ManifestPath_Get().read_text(encoding="utf8"))
+    result_identity = next(item for item in payload["replay_results"] if item["result_id"] == second.result_id)
+    assert result_identity["process_model_revision"] == 2
+    assert result_identity["dataset_algorithm_revision"] == 1
+    assert result_identity["process_noise_model"] == MODELS[2]
     old = dict(configuration)
     old.pop("process_model_revision")
     ReplayConfiguration_Validate(old)
