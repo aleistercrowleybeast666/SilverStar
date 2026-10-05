@@ -618,9 +618,6 @@ $eideVirtualSources = @(Get-YamlListValues -Content $eideContent `
 $eideIncludes = @(Get-YamlListValues -Content $eideContent `
     -BlockPattern '(?ms)^ {6}incList:\s*\r?\n(?<items>(?: {8}-[^\r\n]+\r?\n)+)' `
     -ItemPattern '^\s{8}-\s+(?<value>.+?)\s*$')
-$eideDefines = @(Get-YamlListValues -Content $eideContent `
-    -BlockPattern '(?ms)^ {6}defineList:\s*\r?\n(?<items>(?: {8}-[^\r\n]+\r?\n)+)' `
-    -ItemPattern '^\s{8}-\s+(?<value>.+?)\s*$')
 $eideExcludedSources = @(Get-YamlListValues -Content $eideContent `
     -BlockPattern '(?ms)^ {4}excludeList:\s*\r?\n(?<items>(?: {6}-[^\r\n]+\r?\n)+)' `
     -ItemPattern '^\s{6}-\s+(?<value>.+?)\s*$')
@@ -945,41 +942,61 @@ if ($makeExitCode -eq 0) {
         -Message ("EIDE C/assembly source graph differs from Make:`n  " +
             ($eideDifferenceSummary -join "`n  "))
 
-    $configOutput = @(& mingw32-make -s TARGET_PROFILE=SilverStar_F407 `
-        CONFIG=Debug list-build-config 2>&1)
-    $configExitCode = $LASTEXITCODE
-    Assert-ArchitectureCondition -Condition ($configExitCode -eq 0) `
-        -Message ("Authoritative build configuration evaluation failed:`n  " +
-            ($configOutput -join "`n  "))
-    if ($configExitCode -eq 0) {
-        $expectedIncludes = @($configOutput | Where-Object {
-            $_.ToString() -match '^INCLUDE:'
-        } | ForEach-Object {
-            ConvertTo-ArchitecturePath -Path `
-                ($_.ToString() -replace '^INCLUDE:', '').Trim()
-        } | Sort-Object -Unique)
-        $normalizedEideIncludes = @($eideIncludes | ForEach-Object {
-            ConvertTo-ArchitecturePath -Path $_
-        } | Sort-Object -Unique)
-        $eideIncludeDifference = @(Compare-Object `
-            -ReferenceObject $expectedIncludes `
-            -DifferenceObject $normalizedEideIncludes)
-        Assert-ArchitectureCondition `
-            -Condition ($eideIncludeDifference.Count -eq 0) `
-            -Message 'EIDE include directories differ from Make.'
+    foreach ($configurationName in @('Debug', 'Release')) {
+        # EIDE represents the saved project layout. A one-off Make override must
+        # not change the configuration used to validate that editor snapshot.
+        $configuredMemoryLayout = [string]$projectConfiguration.build.memory_layout
+        Assert-ArchitectureCondition -Condition ($configuredMemoryLayout -in @('legacy', 'auto', 'eskf_window_sram')) `
+            -Message 'Saved project has an invalid memory layout.'
+        if ($configuredMemoryLayout -notin @('legacy', 'auto', 'eskf_window_sram')) { continue }
+        $targetMatch = [regex]::Match($eideContent,
+            ('(?ms)^ {2}' + [regex]::Escape($configurationName) + ':\s*\r?\n(?<target>.*?)(?=^ {2}\S|\z)'))
+        Assert-ArchitectureCondition -Condition $targetMatch.Success `
+            -Message ("EIDE target is missing: " + $configurationName)
+        if (-not $targetMatch.Success) { continue }
+        $targetContent = $targetMatch.Groups['target'].Value
+        $targetIncludes = @(Get-YamlListValues -Content $targetContent `
+            -BlockPattern '(?ms)^ {6}incList:\s*\r?\n(?<items>(?: {8}-[^\r\n]+\r?\n)+)' `
+            -ItemPattern '^\s{8}-\s+(?<value>.+?)\s*$')
+        $targetDefines = @(Get-YamlListValues -Content $targetContent `
+            -BlockPattern '(?ms)^ {6}defineList:\s*\r?\n(?<items>(?: {8}-[^\r\n]+\r?\n)+)' `
+            -ItemPattern '^\s{8}-\s+(?<value>.+?)\s*$')
+        $configOutput = @(& mingw32-make -s TARGET_PROFILE=SilverStar_F407 `
+            "CONFIG=$configurationName" "MEMORY_LAYOUT=$configuredMemoryLayout" list-build-config 2>&1)
+        $configExitCode = $LASTEXITCODE
+        Assert-ArchitectureCondition -Condition ($configExitCode -eq 0) `
+            -Message ("Authoritative build configuration evaluation failed:`n  " +
+                ($configOutput -join "`n  "))
+        if ($configExitCode -eq 0) {
+            $expectedIncludes = @($configOutput | Where-Object {
+                $_.ToString() -match '^INCLUDE:'
+            } | ForEach-Object {
+                ConvertTo-ArchitecturePath -Path `
+                    ($_.ToString() -replace '^INCLUDE:', '').Trim()
+            } | Sort-Object -Unique)
+            $normalizedEideIncludes = @($targetIncludes | ForEach-Object {
+                ConvertTo-ArchitecturePath -Path $_
+            } | Sort-Object -Unique)
+            $eideIncludeDifference = @(Compare-Object `
+                -ReferenceObject $expectedIncludes `
+                -DifferenceObject $normalizedEideIncludes)
+            Assert-ArchitectureCondition `
+                -Condition ($eideIncludeDifference.Count -eq 0) `
+                -Message ("EIDE include directories differ from Make: " + $configurationName)
 
-        $expectedDefines = @($configOutput | Where-Object {
-            $_.ToString() -match '^DEFINE:'
-        } | ForEach-Object {
-            ($_.ToString() -replace '^DEFINE:', '').Trim()
-        } | Sort-Object -Unique)
-        $normalizedEideDefines = @($eideDefines | Sort-Object -Unique)
-        $eideDefineDifference = @(Compare-Object `
-            -ReferenceObject $expectedDefines `
-            -DifferenceObject $normalizedEideDefines)
-        Assert-ArchitectureCondition `
-            -Condition ($eideDefineDifference.Count -eq 0) `
-            -Message 'EIDE preprocessor definitions differ from Make.'
+            $expectedDefines = @($configOutput | Where-Object {
+                $_.ToString() -match '^DEFINE:'
+            } | ForEach-Object {
+                ($_.ToString() -replace '^DEFINE:', '').Trim()
+            } | Sort-Object -Unique)
+            $normalizedEideDefines = @($targetDefines | Sort-Object -Unique)
+            $eideDefineDifference = @(Compare-Object `
+                -ReferenceObject $expectedDefines `
+                -DifferenceObject $normalizedEideDefines)
+            Assert-ArchitectureCondition `
+                -Condition ($eideDefineDifference.Count -eq 0) `
+                -Message ("EIDE preprocessor definitions differ from Make: " + $configurationName)
+        }
     }
 }
 

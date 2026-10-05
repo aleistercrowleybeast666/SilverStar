@@ -4,6 +4,7 @@ import time
 import pytest
 
 from test_scg_ui_metadata_hotfix import window
+from silverstar_fccg.build.runner import BuildAction, BuildResult
 
 
 def _Wait(qapp, condition):
@@ -12,6 +13,25 @@ def _Wait(qapp, condition):
         qapp.processEvents()
         time.sleep(0.005)
     assert condition(), "bounded worker wait expired"
+
+
+def test_late_plan_keeps_progress_monotone_and_invalid_power10_stays_failed(window):
+    window._last_task_progress = 0
+    window._task_indeterminate = False
+    window.progress_bar.setRange(0, 1000)
+    window._Task_Progress(0.6, "status.task_running")
+    window._Task_Progress(0.2, "status.task_running")
+    assert window.progress_bar.value() == 600
+    invalid = BuildResult(BuildAction.POWER10_CHECK, ("make", "power10-check"),
+                          0, "Power of Ten check FAILED\n")
+    dispatched = []
+    window._worker_result_callback = dispatched.append
+    window._worker_error_callback = None
+    window._worker_outcome = ("result", invalid, "")
+    window._Task_Finish()
+    assert window.progress_bar.value() == 600
+    assert window.progress_bar.property("taskState") == "error"
+    assert dispatched == [invalid]
 
 
 @pytest.mark.parametrize("outcome", ["success", "error", "cancelled"])

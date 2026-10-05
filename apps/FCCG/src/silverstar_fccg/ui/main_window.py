@@ -3258,7 +3258,10 @@ class MainWindow(QMainWindow):
                 progress_callback=progress_report,
                 ensure_buildable=False,
             )
-            if result.succeeded:
+            if result.succeeded and (
+                action != BuildAction.POWER10_CHECK
+                or Power10TextPassed_Is(result.output, result.return_code)
+            ):
                 context.Progress_Report(1.0, "status.build_running")
             return result
 
@@ -4006,9 +4009,9 @@ class MainWindow(QMainWindow):
     def _Task_Progress(self, progress: float, code: str) -> None:
         # A completed phase is not a successful task; only _Task_Finish may
         # show 100%. A real report replaces the initial unknown-duration busy state.
-        self._last_task_progress = min(999, int(
+        self._last_task_progress = max(self._last_task_progress, min(999, int(
             max(0.0, min(1.0, progress)) * 1000
-        ))
+        )))
         if not self._task_indeterminate or progress > 0.0:
             self._task_indeterminate = False
             self.progress_bar.setRange(0, 1000)
@@ -4071,6 +4074,10 @@ class MainWindow(QMainWindow):
             and outcome[0] == "result"
             and bool(getattr(outcome[1], "succeeded", True))
         )
+        if succeeded and isinstance(outcome[1], BuildResult):
+            result = outcome[1]
+            if result.action == BuildAction.POWER10_CHECK:
+                succeeded = Power10TextPassed_Is(result.output, result.return_code)
         self.progress_bar.setRange(0, 1000)
         self.progress_bar.setValue(1000 if succeeded else self._last_task_progress)
         self.progress_bar.setProperty(
