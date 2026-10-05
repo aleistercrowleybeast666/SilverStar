@@ -60,7 +60,7 @@ class BuildPage(ScrollableLocalizedPage):
         self.memory_layout_label = QLabel()
         self.Text_Register(self.memory_layout_label, "field.memory_layout")
         self.memory_layout_combo = QComboBox()
-        for layout in ("legacy", "auto", "eskf_window_sram"):
+        for layout in ("auto", "eskf_window_sram"):
             self.memory_layout_combo.addItem(translator.Text_Get("memory.layout." + layout), layout)
         self.memory_layout_combo.currentIndexChanged.connect(
             lambda _: self.memoryLayoutChanged.emit(self.memory_layout_combo.currentData())
@@ -438,6 +438,13 @@ class BuildPage(ScrollableLocalizedPage):
 
     def MemoryLayout_Set(self, layout: str) -> None:
         with QSignalBlocker(self.memory_layout_combo):
+            legacy_index = self.memory_layout_combo.findData("legacy")
+            if layout == "legacy" and legacy_index < 0:
+                self.memory_layout_combo.insertItem(
+                    0, self._translator.Text_Get("memory.layout.legacy"), "legacy")
+                self.memory_layout_combo.model().item(0).setEnabled(False)
+            elif layout != "legacy" and legacy_index >= 0:
+                self.memory_layout_combo.removeItem(legacy_index)
             self.memory_layout_combo.setCurrentIndex(self.memory_layout_combo.findData(layout))
 
     def GeneratedProject_Set(self, available: bool) -> None:

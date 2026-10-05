@@ -366,11 +366,7 @@ class DevicesPage(ScrollableLocalizedPage):
                         None,
                     )
                     if component_class == "telemetry" and selected_component is not None:
-                        module_id, _power = self._radio_configurations.get(instance_id, ("", 12))
-                        module = self._radio_modules.get(selected_plugin, {}).get(module_id, {})
                         TelemetryDetails_Add(form, self._translator,
-                            selected_component.physical_vendor,
-                            TelemetryName_Display(str(module.get("model", selected_component.physical_model))),
                             selected_component.chipset)
                     variants = (
                         selected_component.options.get("device_variants", ())
@@ -479,7 +475,10 @@ class DevicesPage(ScrollableLocalizedPage):
                         selected_class
                     )
                 )
-                form.addRow(QLabel(), add_button)
+                if component_class == "telemetry":
+                    form.addRow(add_button)
+                else:
+                    form.addRow(QLabel(), add_button)
                 self.add_buttons[component_class] = add_button
 
         self.primary_group.setVisible("primary_devices" in populated_groups)

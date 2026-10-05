@@ -411,7 +411,7 @@ class GroundTargetPage(BoardHardwarePage):
         self.radio_instances_editor.Configuration_Set(
             ground, radios, requirements.get("radio_contracts", {}),
             requirements.get("module_availability", {}),
-            requirements.get("radio_descriptions", {}))
+            requirements.get("radio_chipsets", {}))
         if any(issue.code == "GROUND_RADIO_RUNTIME_UNAVAILABLE" for issue in issues):
             self.radio_instances_editor.note.setText(self.radio_instances_editor.note.text() + "\n" +
                 self._translator.Text_Get("ground.radio_runtime_pending"))

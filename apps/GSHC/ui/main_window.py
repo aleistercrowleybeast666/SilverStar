@@ -74,6 +74,7 @@ from services.state_model import (
     HandshakeState,
     MissionPhase,
 )
+from ui.baud_combo import BaudComboBox
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
@@ -1560,13 +1561,10 @@ class MainWindow(QMainWindow):
         self.port_combo = PortComboBox()
         self.btn_refresh = QPushButton()
         self._bind_text(self.btn_refresh, "button.refresh_ports")
-        self.baud_combo = QComboBox()
-        self.baud_combo.setEditable(True)
-        self.baud_combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+        self.baud_combo = BaudComboBox()
         self.baud_combo.addItems(("9600", "57600", "115200", "230400", "460800", "921600", "2000000"))
         self.baud_combo.setCurrentText("230400")
         self.baud_combo.lineEdit().setValidator(QIntValidator(9600, 2_000_000, self.baud_combo))
-        self.baud_combo.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.btn_connect = QPushButton()
         self.btn_disconnect = QPushButton()
         self._bind_text(self.btn_connect, "button.connect")
@@ -1575,7 +1573,14 @@ class MainWindow(QMainWindow):
         self._connection_status_text = ""
         self._configure_dynamic_label(self.conn_label, 110, show_tooltip=True)
         self.conn_label.setWordWrap(True)
-        self.conn_label.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        self.conn_label.setMaximumWidth(140)
+        self.conn_label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+
+        connection_group = QWidget()
+        self.header_connection_group = connection_group
+        controls_layout = QHBoxLayout(connection_group)
+        controls_layout.setContentsMargins(0, 0, 0, 0)
+        controls_layout.setSpacing(4)
 
         self.lbl_port_name = QLabel()
         self._bind_text(self.lbl_port_name, "field.port")
@@ -1586,7 +1591,7 @@ class MainWindow(QMainWindow):
         port_layout.addWidget(self.lbl_port_name)
         port_layout.addWidget(self.port_combo)
         port_layout.addWidget(self.btn_refresh)
-        connection_layout.addWidget(port_group)
+        controls_layout.addWidget(port_group)
         self.lbl_baud_name = QLabel()
         self._bind_text(self.lbl_baud_name, "field.baudrate")
         baud_group = QWidget()
@@ -1595,10 +1600,13 @@ class MainWindow(QMainWindow):
         baud_layout.setSpacing(4)
         baud_layout.addWidget(self.lbl_baud_name)
         baud_layout.addWidget(self.baud_combo)
-        connection_layout.addWidget(baud_group)
-        connection_layout.addWidget(self.btn_connect)
-        connection_layout.addWidget(self.btn_disconnect)
-        connection_layout.addWidget(self.conn_label, 1)
+        controls_layout.addWidget(baud_group)
+        controls_layout.addWidget(self.btn_connect)
+        controls_layout.addWidget(self.btn_disconnect)
+        controls_layout.addWidget(self.conn_label)
+        connection_layout.addStretch(1)
+        connection_layout.addWidget(connection_group)
+        connection_layout.addStretch(1)
 
         self.header_version = QLabel()
         self.header_version.setObjectName("headerVersion")

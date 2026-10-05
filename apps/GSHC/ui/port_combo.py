@@ -11,11 +11,14 @@ from ui.touch_scroll import TouchScroll_Enable
 class PortComboBox(QComboBox):
     """Reserve a measured edit field, including the active style's arrow and padding."""
 
+    _MAX_VISIBLE_WIDTH = 180
+
     def __init__(self) -> None:
         super().__init__()
         self._width_updating = False
         self.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         self.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.setMaximumWidth(self._MAX_VISIBLE_WIDTH)
         self.currentTextChanged.connect(self.setToolTip)
         for signal in (self.model().rowsInserted, self.model().rowsRemoved,
                        self.model().dataChanged, self.model().modelReset):
@@ -51,7 +54,7 @@ class PortComboBox(QComboBox):
                 if deficit <= 0:
                     break
                 width += deficit
-            self.setMinimumWidth(width)
+            self.setMinimumWidth(min(width, self._MAX_VISIBLE_WIDTH))
             self.updateGeometry()
         finally:
             self._width_updating = False

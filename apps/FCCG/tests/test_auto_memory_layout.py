@@ -60,13 +60,18 @@ def test_saved_layout_eide_defines_match_make_without_polluting_source_graph(lay
 
 def test_gui_selection_is_explicit_and_runner_carries_it(qapp, tmp_path):
     page = BuildPage(Translator("en_US"))
-    assert page.memory_layout_combo.currentData() == "legacy"
+    assert page.memory_layout_combo.currentData() == "auto"
+    assert page.memory_layout_combo.findData("legacy") == -1
     selected = []
     page.memoryLayoutChanged.connect(selected.append)
-    page.MemoryLayout_Set("auto")
+    page.MemoryLayout_Set("legacy")
     assert selected == []
-    page.memory_layout_combo.setCurrentIndex(page.memory_layout_combo.findData("legacy"))
-    assert selected == ["legacy"]
+    legacy_index = page.memory_layout_combo.findData("legacy")
+    assert not page.memory_layout_combo.model().item(legacy_index).isEnabled()
+    page.memory_layout_combo.setCurrentIndex(page.memory_layout_combo.findData("auto"))
+    assert selected == ["auto"]
+    page.MemoryLayout_Set("auto")
+    assert page.memory_layout_combo.findData("legacy") == -1
     model = ReferenceProject_Create("Layout")
     runner = BuildRunner(WorkspacePolicy(tmp_path))
     assert not any(item.startswith("MEMORY_LAYOUT=") for item in runner.Command_Get(model, BuildAction.BUILD))

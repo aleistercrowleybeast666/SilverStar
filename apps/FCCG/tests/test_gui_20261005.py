@@ -1,5 +1,5 @@
 from dataclasses import replace
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QFormLayout, QWidget
 
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.app.service import FccgService
@@ -9,9 +9,11 @@ from silverstar_fccg.ui.pages.components import FlightConfigurationPage
 from silverstar_fccg.ui.main_window import MainWindow
 from silverstar_fccg.project.ground_activity import GroundActivityLedIssues_Get
 from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
-from silverstar_fccg.project.model import HardwareResource, ProjectModel_Parse
+from silverstar_fccg.project.model import (GroundRadioConfiguration,
+    HardwareResource, ProjectModel_Parse)
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.resources import BoardResourceProvisions_Get
+from silverstar_fccg.ui.pages.build import BuildPage
 
 
 def test_capability_source_editor_is_removed_on_reorder_and_language(qapp):
@@ -88,16 +90,56 @@ def test_telemetry_cards_share_details_and_remove_geometry(qapp, tmp_path, works
     flight = window.devices_page.remove_buttons["telemetry0"]
     ground_editor = window.ground_target_page.radio_instances_editor
     ground = ground_editor.rows["radio0"]["remove"]
-    assert flight.width() == ground.width() == 120
-    assert flight.mapTo(window, flight.rect().topRight()).x() == (
-        ground.mapTo(window, ground.rect().topRight()).x())
-    assert window.devices_page.telemetry_form.rowCount() >= 5
-    assert ground_editor.rows_layout.itemAt(0).widget().layout().rowCount() >= 5
+    for width in (1024, 1280):
+        window.resize(width, 800)
+        qapp.processEvents()
+        for remove, add in ((flight, window.devices_page.add_buttons["telemetry"]),
+                            (ground, ground_editor.add_button)):
+            assert remove.width() == add.width()
+            assert remove.mapTo(window, remove.rect().topLeft()).x() == (
+                add.mapTo(window, add.rect().topLeft()).x())
+            assert remove.mapTo(window, remove.rect().topRight()).x() == (
+                add.mapTo(window, add.rect().topRight()).x())
+    assert window.devices_page.telemetry_form.rowCount() >= 4
+    ground_form = ground_editor.rows_layout.itemAt(0).widget().layout()
+    assert ground_form.rowCount() == 3
+    for form in (window.devices_page.telemetry_form, ground_form):
+        labels = []
+        for row in range(form.rowCount()):
+            label = form.itemAt(row, QFormLayout.ItemRole.LabelRole)
+            field = form.itemAt(row, QFormLayout.ItemRole.FieldRole)
+            if label is not None and field is not None and label.widget() is not None:
+                labels.append((label.widget().text(), field.widget().text()
+                               if hasattr(field.widget(), "text") else ""))
+        assert ("射频芯片", "SX1281") in labels
+        assert not {"厂商", "型号"}.intersection(name for name, _value in labels)
     assert not [widget for widget in window.devices_page.telemetry_group.findChildren(QWidget)
                 if widget.objectName() == "deviceCapabilitySummary_telemetry0"
                 and widget.isVisible()]
     assert len([widget for widget in window.findChildren(QWidget)
                 if widget.objectName() == "protocolProfile_telemetry" and widget.isVisible()]) == 1
+    window._DeviceInstance_Add("telemetry")
+    primary = window._model.ground_target
+    radios = (GroundRadioConfiguration("radio0", primary.radio_plugin,
+              primary.module_variant, primary.tx_power_dbm),
+              GroundRadioConfiguration("radio1", primary.radio_plugin,
+              primary.module_variant, primary.tx_power_dbm))
+    window._GroundRadios_Change(radios, "radio0")
+    qapp.processEvents()
+    assert "telemetry1" in window.devices_page.remove_buttons
+    assert "radio1" in ground_editor.rows
+    for width in (1024, 1280):
+        window.resize(width, 800)
+        qapp.processEvents()
+        for remove in (window.devices_page.remove_buttons["telemetry0"],
+                       window.devices_page.remove_buttons["telemetry1"]):
+            assert remove.width() == window.devices_page.add_buttons["telemetry"].width()
+        for remove in (ground_editor.rows["radio0"]["remove"],
+                       ground_editor.rows["radio1"]["remove"]):
+            add = ground_editor.add_button
+            assert remove.width() == add.width()
+            assert remove.mapTo(window, remove.rect().topLeft()).x() == (
+                add.mapTo(window, add.rect().topLeft()).x())
     window._GroundTarget_Change("pc_interface", "uart")
     qapp.processEvents()
     visible_rows = [row for row in ground_editor.findChildren(QWidget)
@@ -106,6 +148,25 @@ def test_telemetry_cards_share_details_and_remove_geometry(qapp, tmp_path, works
     assert len([widget for widget in window.findChildren(QWidget)
                 if widget.objectName() == "protocolProfile_telemetry" and widget.isVisible()]) == 1
     window.close()
+
+
+def test_memory_layout_legacy_is_read_only_only_for_older_projects(qapp, builtin_catalog):
+    page = BuildPage(Translator("zh_CN"))
+    combo = page.memory_layout_combo
+    assert [combo.itemData(index) for index in range(combo.count())] == [
+        "auto", "eskf_window_sram"]
+    model = ReferenceProject_Create("OldLayout", catalog=builtin_catalog)
+    model.build = replace(model.build, memory_layout="legacy")
+    reopened = ProjectModel_Parse(model.Dictionary_Get())
+    assert reopened.build.memory_layout == "legacy"
+    page.MemoryLayout_Set(reopened.build.memory_layout)
+    assert combo.currentData() == "legacy"
+    assert combo.currentText() == "旧工程布局（只读）"
+    assert not combo.model().item(combo.findData("legacy")).isEnabled()
+    page.Language_Apply(Translator("en_US"))
+    assert combo.currentText() == "Legacy project layout (read-only)"
+    page.MemoryLayout_Set("auto")
+    assert combo.findData("legacy") == -1 and combo.currentData() == "auto"
 
 
 def test_ground_led_intent_without_board_reports_missing_resource(builtin_catalog):

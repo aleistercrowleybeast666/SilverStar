@@ -1,6 +1,6 @@
 """Shared telemetry device details and action geometry."""
 
-from PySide6.QtWidgets import QFormLayout, QHBoxLayout, QLabel, QPushButton, QWidget
+from PySide6.QtWidgets import QFormLayout, QLabel, QPushButton
 
 
 def TelemetryName_Display(name: str) -> str:
@@ -12,21 +12,11 @@ def TelemetryName_Display(name: str) -> str:
     return name
 
 
-def TelemetryDetails_Add(form: QFormLayout, translator, vendor: str,
-                         model: str, chipset: str) -> None:
-    for key, value in (("device.detail.vendor", vendor),
-                       ("device.detail.model", model),
-                       ("device.detail.chipset", chipset)):
-        label = QLabel(value or "—")
-        label.setWordWrap(True)
-        form.addRow(QLabel(translator.Text_Get(key)), label)
+def TelemetryDetails_Add(form: QFormLayout, translator, chipset: str) -> None:
+    label = QLabel(chipset or "—")
+    label.setWordWrap(True)
+    form.addRow(QLabel(translator.Text_Get("device.detail.rf_chip")), label)
 
 
 def TelemetryRemoveButton_Add(form: QFormLayout, button: QPushButton) -> None:
-    button.setFixedWidth(120)
-    container = QWidget()
-    layout = QHBoxLayout(container)
-    layout.setContentsMargins(0, 0, 0, 0)
-    layout.addStretch(1)
-    layout.addWidget(button)
-    form.addRow(QLabel(), container)
+    form.addRow(button)

@@ -1053,7 +1053,7 @@ class MainWindow(QMainWindow):
         self._LoggingState_Apply(self._model)
 
     def _MemoryLayout_Change(self, layout: str) -> None:
-        if layout not in ("legacy", "auto", "eskf_window_sram"):
+        if layout not in ("auto", "eskf_window_sram"):
             return
         def mutate(model: ProjectModel) -> None:
             model.build = replace(model.build, memory_layout=layout)
@@ -1696,12 +1696,8 @@ class MainWindow(QMainWindow):
             "radio_contracts": {candidate.component_id: candidate.radio
                                 for candidate in self._service.catalog.Type_Get("device")
                                 if candidate.radio is not None},
-            "radio_descriptions": {
-                candidate.component_id: (
-                    candidate.physical_device.vendor,
-                    candidate.physical_device.model,
-                    candidate.physical_device.chipset,
-                )
+            "radio_chipsets": {
+                candidate.component_id: candidate.physical_device.chipset
                 for candidate in self._service.catalog.Type_Get("device")
                 if candidate.radio is not None and candidate.physical_device is not None
             },

@@ -38,7 +38,7 @@ class GroundRadioInstancesEditor(QWidget):
         self.add_button.setObjectName("groundRadioAddButton")
         self.add_button.clicked.connect(self._Add)
         add_form = QFormLayout()
-        add_form.addRow(QLabel(), self.add_button)
+        add_form.addRow(self.add_button)
         layout.addLayout(add_form)
         self.power_editor = QWidget()
         self.power_form = QFormLayout(self.power_editor)
@@ -53,12 +53,12 @@ class GroundRadioInstancesEditor(QWidget):
             "action.add_device", device=translator.Text_Get("device.class.telemetry")))
 
     def Configuration_Set(self, ground, choices, contracts, module_availability=None,
-                          descriptions=None):
+                          chipsets=None):
         self._ground = ground
         self._contracts = contracts
         self._choices = tuple(choices)
         self._module_availability = module_availability or {}
-        descriptions = descriptions or {}
+        chipsets = chipsets or {}
         self._radios = tuple(radio for radio in GroundRadioConfigurations_Get(ground) if radio.plugin)
         self.rows.clear()
         while self.rows_layout.count():
@@ -113,11 +113,8 @@ class GroundRadioInstancesEditor(QWidget):
             form.addRow(instance_title, plugin)
             contract = contracts.get(radio.plugin)
             modules = contract.modules if contract is not None else {}
-            vendor, model, chipset = descriptions.get(radio.plugin, ("", "", ""))
-            module = modules.get(radio.module_variant, {})
             if radio.plugin:
-                TelemetryDetails_Add(form, self._translator, vendor,
-                    TelemetryName_Display(str(module.get("model", model))), chipset)
+                TelemetryDetails_Add(form, self._translator, chipsets.get(radio.plugin, ""))
             power = StandardComboBox()
             power.setObjectName("groundRadioPower_" + radio.instance_id)
             supported = tuple(modules.get(radio.module_variant, {}).get("supported_tx_powers_dbm", ()))
