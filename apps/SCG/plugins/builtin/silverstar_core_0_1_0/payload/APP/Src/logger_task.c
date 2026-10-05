@@ -190,6 +190,9 @@ static uint8_t LoggerTask_SinkEnd(void)
 
 static void LoggerTask_Close(void)
 {
+    /* I/O faults are latched. A consumed START never receives a false durable
+     * acknowledgement and its owned request cannot be overwritten. */
+    LoggerBus_StartFault();
     if (s_logger.session_active != 0U)
     {
         /* The sink owns write/close error counters; close remains best effort. */
@@ -376,6 +379,18 @@ static uint8_t LoggerTask_RecordAppend(const FlightLogRecord *record)
         ((LoggerBus_Count() == 0U) ||
          (SystemTime_GetMonotonicUs() >= s_logger.critical_deadline_us)))
     { return LoggerTask_Flush(); }
+    return 1U;
+}
+
+static uint8_t LoggerTask_StartBarrierProcess(void)
+{
+    uint32_t generation = LoggerBus_StartBarrierGet();
+    if (generation == 0U) { return 1U; }
+    /* This follows successful append of the last START record. Flush even
+     * under continuous producer traffic before publishing the acknowledgement. */
+    if (LoggerTask_Flush() == 0U) { return 0U; }
+    if (LoggerBus_StartDurable(generation) != LOGGER_BUS_RESULT_OK)
+    { s_diagnostics.io_fault = 1U; return 0U; }
     return 1U;
 }
 
@@ -746,7 +761,8 @@ void AppTask_Logger(void *argument)
         {
             s_diagnostics.drain_count++;
             (void)LoggerTask_DecoderProfileQueue(now_us);
-            if (LoggerTask_RecordAppend(&record) == 0U)
+            if ((LoggerTask_RecordAppend(&record) == 0U) ||
+                (LoggerTask_StartBarrierProcess() == 0U))
             {
                 LoggerTask_Close();
                 s_logger.next_retry_us = now_us + SYSTEM_LOG_RETRY_PERIOD_US;

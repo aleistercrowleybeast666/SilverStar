@@ -18,6 +18,7 @@ static uint8_t s_fail_sync;
 uint64_t SystemTime_GetMonotonicUs(void) { return s_now; }
 uint32_t LoggerBus_OverflowCountGet(void) { return 0U; }
 uint16_t LoggerBus_Count(void) { return s_fixture_queue_count; }
+void LoggerBus_StartFault(void) { }
 SystemDeviceResult SystemLogSink_Write(const uint8_t *data, uint32_t length, uint32_t *written)
 {
     uint32_t count = s_short_write ? length / 2U : length;

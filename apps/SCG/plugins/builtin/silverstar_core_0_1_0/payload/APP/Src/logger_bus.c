@@ -39,6 +39,31 @@ static uint8_t s_boot_disabled;
 static LoggerBusFinalizationState s_finalization_state;
 static uint64_t s_finalization_deadline_us;
 
+/* Request payload is written by the claimant, immutable after publication.
+ * Descriptor tables are generated const data. Only LoggerTask advances cursor.
+ * Locks protect phase/publication, never construction of the record batch. */
+typedef enum
+{
+    LOGGER_REQUEST_IDLE = 0U, LOGGER_REQUEST_BUILDING,
+    LOGGER_REQUEST_READY, LOGGER_REQUEST_BARRIER, LOGGER_REQUEST_FAULT
+} LoggerRequestPhase;
+typedef struct
+{
+    FlightLogSystemConfigRecord config;
+    SystemLogStreamConfig streams[SSLOG_RECORD_COUNT];
+    LoggerBusStartRecords start;
+    uint64_t timestamp_us;
+    uint32_t generation;
+    uint16_t cursor;
+    uint16_t count;
+    uint8_t is_start;
+} LoggerSnapshotRequest;
+static LoggerSnapshotRequest s_request;
+static LoggerRequestPhase s_request_phase;
+static uint32_t s_request_generation;
+static uint32_t s_start_acknowledged;
+static uint8_t s_request_io_fault;
+
 static PlatformCriticalState LoggerBus_IrqLock(void)
 {
     return PlatformCritical_Enter();
@@ -168,7 +193,8 @@ LoggerBusResult LoggerBus_StreamingReady(void)
     {
         result = LOGGER_BUS_RESULT_FULL;
         if ((CommonSpscQueue_Count(&s_logger_queue) == 0U) &&
-            (CommonSpscQueue_Count(&s_estimator_logger_queue) == 0U))
+            (CommonSpscQueue_Count(&s_estimator_logger_queue) == 0U) &&
+            (s_request_phase == LOGGER_REQUEST_IDLE))
         {
             s_diagnostics.startup_state = LOGGER_STREAMING_READY;
             result = LOGGER_BUS_RESULT_OK;
@@ -204,6 +230,10 @@ LoggerBusResult LoggerBus_DisableForBootNoStorage(void)
         s_diagnostics.disabled_discarded_count +=
             (uint32_t)CommonSpscQueue_Count(&s_logger_queue) +
             CommonSpscQueue_Count(&s_estimator_logger_queue);
+        if (s_request_phase == LOGGER_REQUEST_READY)
+        { s_diagnostics.disabled_discarded_count += s_request.count - s_request.cursor; }
+        if (s_request_phase != LOGGER_REQUEST_BUILDING)
+        { s_request_phase = LOGGER_REQUEST_IDLE; }
         CommonSpscQueue_Reset(&s_logger_queue);
         CommonSpscQueue_Reset(&s_estimator_logger_queue);
         s_diagnostics.startup_state = LOGGER_DISABLED_NO_STORAGE;
@@ -294,6 +324,12 @@ void LoggerBus_Reset(void)
 
     if (s_initialized != 0U)
     {
+        /* Reset is an initialization/test operation with producers quiescent. */
+        SILVERSTAR_ASSERT(s_request_phase != LOGGER_REQUEST_BUILDING,
+            SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+        s_request_phase = LOGGER_REQUEST_IDLE;
+        s_start_acknowledged = 0U;
+        s_request_io_fault = 0U;
         (void)memset(&s_diagnostics, 0, sizeof(s_diagnostics));
         s_diagnostics.startup_state = (s_boot_disabled != 0U) ?
             LOGGER_DISABLED_NO_STORAGE : LOGGER_BOOTSTRAP;
@@ -422,232 +458,345 @@ static void LoggerBus_SystemConfigBuild(
     LoggerBus_EstimatorConfigBuild(record, estimator_profile);
 }
 
-static LoggerBusResult LoggerBus_DeviceDescriptorsPush(
-    uint64_t timestamp_us)
+static LoggerBusResult LoggerBus_DeviceDescriptorBuild(
+    uint16_t index, FlightLogDeviceDescriptorRecord *record)
 {
-    FlightLogDeviceDescriptorRecord record;
     SystemDeviceDescriptor descriptor;
-    LoggerBusResult result;
-    uint16_t count = SystemDescriptor_DeviceCountGet();
-    uint16_t index;
-
-    SILVERSTAR_ASSERT_OBJECT(&record, FlightLogDeviceDescriptorRecord,
-                             SILVERSTAR_ASSERT_MODULE_APP);
-    if (count > SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX)
-    {
-        return LOGGER_BUS_RESULT_BAD_STATE;
-    }
-    for (index = 0U; index < count; index++)
-    {
-        if (SystemDescriptor_DeviceGet(index, &descriptor) !=
-            SYSTEM_DEVICE_OK)
-        {
-            return LOGGER_BUS_RESULT_BAD_STATE;
-        }
-        (void)memset(&record, 0, sizeof(record));
-        record.descriptor_id = descriptor.descriptor_id;
-        record.physical_device_id = descriptor.physical_device_id;
-        record.device_class = (uint8_t)descriptor.device_class;
-        record.instance_id = descriptor.instance_id;
-        record.driver_id = descriptor.driver_id;
-        record.flags = descriptor.flags;
-        record.capability_mask = descriptor.capability_mask;
-        record.configured_rate_hz = descriptor.configured_rate_hz;
-        record.driver_name_hash = descriptor.driver_name_hash;
-        record.model_name_hash = descriptor.model_name_hash;
-        result = LoggerBus_RecordPush(
-            FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR, timestamp_us, 0U,
-            &record, sizeof(record), 0U);
-        if (result != LOGGER_BUS_RESULT_OK) { return result; }
-    }
+    if (SystemDescriptor_DeviceGet(index, &descriptor) != SYSTEM_DEVICE_OK)
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    (void)memset(record, 0, sizeof(*record));
+    record->descriptor_id = descriptor.descriptor_id;
+    record->physical_device_id = descriptor.physical_device_id;
+    record->device_class = (uint8_t)descriptor.device_class;
+    record->instance_id = descriptor.instance_id;
+    record->driver_id = descriptor.driver_id;
+    record->flags = descriptor.flags;
+    record->capability_mask = descriptor.capability_mask;
+    record->configured_rate_hz = descriptor.configured_rate_hz;
+    record->driver_name_hash = descriptor.driver_name_hash;
+    record->model_name_hash = descriptor.model_name_hash;
     return LOGGER_BUS_RESULT_OK;
 }
 
-static LoggerBusResult LoggerBus_AlgorithmDescriptorsPush(
-    uint64_t timestamp_us)
+static LoggerBusResult LoggerBus_AlgorithmDescriptorBuild(
+    uint16_t index, FlightLogAlgorithmDescriptorRecord *record)
 {
-    FlightLogAlgorithmDescriptorRecord record;
     SystemAlgorithmDescriptor descriptor;
-    LoggerBusResult result;
-    uint16_t count = SystemDescriptor_AlgorithmCountGet();
-    uint16_t index;
-
-    SILVERSTAR_ASSERT_OBJECT(&record, FlightLogAlgorithmDescriptorRecord,
-                             SILVERSTAR_ASSERT_MODULE_APP);
-    if (count > SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX)
-    {
-        return LOGGER_BUS_RESULT_BAD_STATE;
-    }
-    for (index = 0U; index < count; index++)
-    {
-        if (SystemDescriptor_AlgorithmGet(index, &descriptor) !=
-            SYSTEM_DEVICE_OK)
-        {
-            return LOGGER_BUS_RESULT_BAD_STATE;
-        }
-        (void)memset(&record, 0, sizeof(record));
-        record.descriptor_id = descriptor.descriptor_id;
-        record.algorithm_class = (uint8_t)descriptor.algorithm_class;
-        record.instance_id = descriptor.instance_id;
-        record.algorithm_id = descriptor.algorithm_id;
-        record.flags = descriptor.flags;
-        record.config_digest = descriptor.config_digest;
-        record.name_hash = descriptor.name_hash;
-        result = LoggerBus_RecordPush(
-            FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR, timestamp_us, 0U,
-            &record, sizeof(record), 0U);
-        if (result != LOGGER_BUS_RESULT_OK) { return result; }
-    }
+    if (SystemDescriptor_AlgorithmGet(index, &descriptor) != SYSTEM_DEVICE_OK)
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    (void)memset(record, 0, sizeof(*record));
+    record->descriptor_id = descriptor.descriptor_id;
+    record->algorithm_class = (uint8_t)descriptor.algorithm_class;
+    record->instance_id = descriptor.instance_id;
+    record->algorithm_id = descriptor.algorithm_id;
+    record->flags = descriptor.flags;
+    record->config_digest = descriptor.config_digest;
+    record->name_hash = descriptor.name_hash;
     return LOGGER_BUS_RESULT_OK;
 }
 
-static LoggerBusResult LoggerBus_StreamDescriptorsPush(
-    uint64_t timestamp_us)
+static void LoggerBus_MissionConfigBuild(FlightLogMissionConfigRecord *record)
 {
-    const SslogRecordMetadata *metadata;
-    FlightLogStreamDescriptorRecord record;
-    SystemLogStreamConfig config;
-    LoggerBusResult result;
-    uint16_t count = SystemLogPolicy_StreamCountGet();
-    uint16_t index;
-
-    SILVERSTAR_ASSERT_OBJECT(&record, FlightLogStreamDescriptorRecord,
+    (void)memset(record, 0, sizeof(*record));
+    SILVERSTAR_ASSERT_OBJECT(record, FlightLogMissionConfigRecord,
                              SILVERSTAR_ASSERT_MODULE_APP);
-    if (count > SSLOG_RECORD_COUNT)
+    record->alignment_algorithm = (uint8_t)SYSTEM_ALIGNMENT_ALGORITHM;
+    record->rocket_longitudinal_axis =
+        (uint8_t)SYSTEM_FLIGHT_ROCKET_LONGITUDINAL_AXIS;
+    record->deploy_trigger_mask =
+        (uint8_t)SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK;
+    record->tilt_reference = (uint8_t)SYSTEM_FLIGHT_TILT_REFERENCE;
+    record->landing_enable = SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE;
+    record->landing_mode = (uint8_t)SYSTEM_FLIGHT_LANDING_MODE;
+    record->impact_capable = SYSTEM_IMU_CAP_LANDING_IMPACT_DETECTION;
+    record->known_yaw_deg = SYSTEM_ALIGNMENT_KNOWN_YAW_DEG;
+    record->magnetic_declination_deg =
+        SYSTEM_ALIGNMENT_MAGNETIC_DECLINATION_DEG;
+    record->tilt_threshold_deg = SYSTEM_FLIGHT_TILT_THRESHOLD_DEG;
+    record->apogee_vz_threshold_mps =
+        SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS;
+    record->deploy_confirm_ms = SYSTEM_FLIGHT_DEPLOY_CONFIRM_MS;
+    record->deploy_delay_ms = SYSTEM_FLIGHT_DEPLOY_DELAY_MS;
+    record->baro_trigger_window_ms =
+        SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_WINDOW_MS;
+    record->baro_trigger_min_samples =
+        SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_MIN_SAMPLES;
+    record->baro_trigger_rate_mps =
+        SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_RATE_MPS;
+    record->candidate_duration_ms =
+        SYSTEM_FLIGHT_LANDING_CANDIDATE_DURATION_MS;
+    record->baro_confirm_rate_mps =
+        SYSTEM_FLIGHT_LANDING_BARO_CONFIRM_RATE_MPS;
+    record->baro_max_span_m = SYSTEM_FLIGHT_LANDING_BARO_MAX_SPAN_M;
+    record->candidate_baro_min_samples =
+        SYSTEM_FLIGHT_LANDING_BARO_MIN_SAMPLES;
+    record->candidate_imu_min_samples =
+        SYSTEM_FLIGHT_LANDING_IMU_MIN_SAMPLES;
+    record->candidate_min_coverage_percent =
+        SYSTEM_FLIGHT_LANDING_MIN_COVERAGE_PERCENT;
+    record->impact_inhibit_ms =
+        SYSTEM_FLIGHT_LANDING_IMPACT_INHIBIT_MS;
+    record->impact_threshold_mps2 =
+        SYSTEM_FLIGHT_LANDING_IMPACT_THRESHOLD_MPS2;
+    record->still_gyro_threshold_radps =
+        SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS;
+    record->still_accel_tolerance_mps2 =
+        SYSTEM_FLIGHT_LANDING_STILL_ACCEL_TOLERANCE_MPS2;
+    record->landing_confirm_ms = SYSTEM_FLIGHT_LANDING_CONFIRM_MS;
+    record->landing_sample_max_age_ms =
+        SYSTEM_FLIGHT_LANDING_SAMPLE_MAX_AGE_MS;
+}
+
+static LoggerBusResult LoggerBus_RequestClaim(void)
+{
+    LoggerBusResult result = LOGGER_BUS_RESULT_OK;
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    SILVERSTAR_ASSERT(s_request_phase <= LOGGER_REQUEST_FAULT,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if ((s_initialized == 0U) || (s_accepting_records == 0U) || (s_request_io_fault != 0U))
+    { result = LOGGER_BUS_RESULT_BAD_STATE; }
+    else if (s_request_phase != LOGGER_REQUEST_IDLE)
+    { s_diagnostics.request_busy_count++; result = LOGGER_BUS_RESULT_BUSY; }
+    else { s_request_phase = LOGGER_REQUEST_BUILDING; }
+    /* A busy request is retryable admission, not lost wire records. */
+    LoggerBus_IrqUnlock(state);
+    return result;
+}
+
+static LoggerBusResult LoggerBus_RequestPublish(uint8_t is_start)
+{
+    LoggerBusResult result = LOGGER_BUS_RESULT_OK;
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    SILVERSTAR_ASSERT(s_request_phase == LOGGER_REQUEST_BUILDING,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((s_accepting_records == 0U) || (s_boot_disabled != 0U) || (s_request_io_fault != 0U))
+    { result = LOGGER_BUS_RESULT_BAD_STATE; }
+    if (result == LOGGER_BUS_RESULT_OK)
     {
-        return LOGGER_BUS_RESULT_BAD_STATE;
+        s_request.is_start = is_start;
+        s_request.cursor = 0U;
+        s_request.count = (uint16_t)(1U + s_request.config.device_descriptor_count +
+            s_request.config.algorithm_descriptor_count + SSLOG_RECORD_COUNT);
+        if (is_start != 0U)
+        { s_request.count = (uint16_t)(s_request.count + 4U + s_request.start.mag_count); }
+        s_diagnostics.accepted_count += s_request.count;
+        s_request_phase = LOGGER_REQUEST_READY;
     }
-    for (index = 0U; index < count; index++)
-    {
-        if (SystemLogPolicy_StreamByIndexGet(index, &config) !=
-            SYSTEM_DEVICE_OK)
-        {
-            return LOGGER_BUS_RESULT_BAD_STATE;
-        }
-        metadata = SslogRecords_MetadataGet(config.record_type);
-        if (metadata == NULL) { return LOGGER_BUS_RESULT_BAD_STATE; }
-        (void)memset(&record, 0, sizeof(record));
-        record.record_type = (uint8_t)config.record_type;
-        record.record_version = metadata->record_version;
-        record.enabled = config.enabled;
-        record.policy = (uint8_t)config.policy;
-        record.decimation = config.decimation;
-        record.period_us = config.period_us;
-        result = LoggerBus_RecordPush(
-            FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR, timestamp_us, 0U,
-            &record, sizeof(record), 0U);
-        if (result != LOGGER_BUS_RESULT_OK) { return result; }
-    }
+    else { s_request_phase = LOGGER_REQUEST_IDLE; }
+    LoggerBus_IrqUnlock(state);
+    return result;
+}
+
+static LoggerBusResult LoggerBus_RequestBuild(uint64_t timestamp_us)
+{
+    LoggerBus_SystemConfigBuild(&s_request.config);
+    s_request.timestamp_us = timestamp_us;
+    if ((s_request.config.device_descriptor_count > SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX) ||
+        (s_request.config.algorithm_descriptor_count > SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX) ||
+        (s_request.config.log_stream_descriptor_count != SSLOG_RECORD_COUNT) ||
+        (SystemLogPolicy_SnapshotCopy(s_request.streams, SSLOG_RECORD_COUNT) != SYSTEM_DEVICE_OK))
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
     return LOGGER_BUS_RESULT_OK;
+}
+
+static void LoggerBus_RequestCancel(void)
+{
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    SILVERSTAR_ASSERT(s_request_phase == LOGGER_REQUEST_BUILDING,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    s_request_phase = LOGGER_REQUEST_IDLE;
+    LoggerBus_IrqUnlock(state);
 }
 
 LoggerBusResult LoggerBus_SystemConfigPush(uint64_t timestamp_us)
 {
-    FlightLogSystemConfigRecord record;
     LoggerBusResult result;
-    uint16_t required_slots;
-    uint16_t used_slots;
-    PlatformCriticalState state;
-
-    SILVERSTAR_ASSERT(s_initialized <= 1U,
-                      SILVERSTAR_ASSERT_MODULE_APP,
-                      SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    SILVERSTAR_ASSERT(s_accepting_records <= 1U,
-                      SILVERSTAR_ASSERT_MODULE_APP,
-                      SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (LoggerBus_PushStateGet() != LOGGER_BUS_RESULT_OK)
-    {
-        return LOGGER_BUS_RESULT_BAD_STATE;
-    }
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
     if (LoggerBus_DisabledSuppress() != 0U) { return LOGGER_BUS_RESULT_OK; }
-    if (SystemLogPolicy_ShouldEmit(FLIGHT_LOG_RECORD_SYSTEM_CONFIG) == 0U)
+    /* Mandatory metadata is independent of periodic queue capacity/cadence. */
+    result = LoggerBus_RequestClaim();
+    if (result != LOGGER_BUS_RESULT_OK) { return result; }
+    result = LoggerBus_RequestBuild(timestamp_us);
+    if (result != LOGGER_BUS_RESULT_OK) { LoggerBus_RequestCancel(); return result; }
+    return LoggerBus_RequestPublish(0U);
+}
+
+LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
+    const LoggerBusStartRecords *records, uint32_t *generation)
+{
+    LoggerBusResult result;
+    if ((records == NULL) || (generation == NULL))
+    { return LOGGER_BUS_RESULT_BAD_PARAM; }
+    if (LoggerBus_PushStateGet() != LOGGER_BUS_RESULT_OK)
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    if (LoggerBus_DisabledSuppress() != 0U) { *generation = 0U; return LOGGER_BUS_RESULT_OK; }
+    if (*generation != 0U)
     {
-        return LOGGER_BUS_RESULT_OK;
-    }
-    required_slots = (uint16_t)(1U + SystemDescriptor_DeviceCountGet() +
-        SystemDescriptor_AlgorithmCountGet() +
-        SystemLogPolicy_StreamCountGet());
-    state = LoggerBus_IrqLock();
-    used_slots = CommonSpscQueue_Count(&s_logger_queue);
-    LoggerBus_IrqUnlock(state);
-    if (required_slots > LOGGER_RECORD_QUEUE_DEPTH)
-    {
-        return LOGGER_BUS_RESULT_BAD_STATE;
-    }
-    if (used_slots > (LOGGER_RECORD_QUEUE_DEPTH - required_slots))
-    {
-        state = LoggerBus_IrqLock();
-        s_diagnostics.capacity_reject_count++;
+        PlatformCriticalState state = LoggerBus_IrqLock();
+        uint8_t known = (uint8_t)((*generation == s_start_acknowledged) ||
+            ((s_request.is_start != 0U) && (*generation == s_request.generation) &&
+             (s_request_phase != LOGGER_REQUEST_IDLE)));
         LoggerBus_IrqUnlock(state);
-        return LOGGER_BUS_RESULT_FULL;
+        return (known != 0U) ? LOGGER_BUS_RESULT_OK : LOGGER_BUS_RESULT_BAD_STATE;
     }
-    LoggerBus_SystemConfigBuild(&record);
-    result = LoggerBus_RecordPush(
-        FLIGHT_LOG_RECORD_SYSTEM_CONFIG, timestamp_us, 0U,
-        &record, sizeof(record), 0U);
+    if (records->mag_count > PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX)
+    { return LOGGER_BUS_RESULT_BAD_PARAM; }
+    result = LoggerBus_RequestClaim();
     if (result != LOGGER_BUS_RESULT_OK) { return result; }
-    result = LoggerBus_DeviceDescriptorsPush(timestamp_us);
-    if (result != LOGGER_BUS_RESULT_OK) { return result; }
-    result = LoggerBus_AlgorithmDescriptorsPush(timestamp_us);
-    if (result != LOGGER_BUS_RESULT_OK) { return result; }
-    return LoggerBus_StreamDescriptorsPush(timestamp_us);
+    if (s_request_generation == UINT32_MAX)
+    { LoggerBus_RequestCancel(); return LOGGER_BUS_RESULT_BAD_STATE; }
+    s_request.start = *records;
+    result = LoggerBus_RequestBuild(timestamp_us);
+    if (result != LOGGER_BUS_RESULT_OK) { LoggerBus_RequestCancel(); return result; }
+    s_request.generation = ++s_request_generation;
+    result = LoggerBus_RequestPublish(1U);
+    if (result == LOGGER_BUS_RESULT_OK) { *generation = s_request.generation; }
+    return result;
+}
+
+static LoggerBusResult LoggerBus_StreamDescriptorBuild(
+    uint16_t index, FlightLogStreamDescriptorRecord *record)
+{
+    const SystemLogStreamConfig *config;
+    const SslogRecordMetadata *metadata;
+    SILVERSTAR_ASSERT(index < SSLOG_RECORD_COUNT,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    config = &s_request.streams[index];
+    metadata = SslogRecords_MetadataGet(config->record_type);
+    SILVERSTAR_ASSERT((metadata != NULL) && (config->decimation > 0U) &&
+        (config->enabled <= 1U) && (config->policy <= SSLOG_STREAM_POLICY_ONE_SHOT),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    record->record_type = (uint8_t)config->record_type;
+    record->record_version = metadata->record_version;
+    record->enabled = config->enabled;
+    record->policy = (uint8_t)config->policy;
+    record->decimation = config->decimation;
+    record->period_us = config->period_us;
+    return LOGGER_BUS_RESULT_OK;
+}
+
+static void LoggerBus_StartRecordBuild(uint16_t index, FlightLogRecord *record)
+{
+    SILVERSTAR_ASSERT(index < (uint16_t)(4U + s_request.start.mag_count),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    if (index == 0U)
+    { record->record_type = FLIGHT_LOG_RECORD_MISSION_CONFIG;
+      LoggerBus_MissionConfigBuild(&record->payload.mission_config); }
+    else if (index == 1U)
+    { record->record_type = FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY;
+      record->payload.mission_snapshot_identity = s_request.start.identity; }
+    else if (index < (uint16_t)(2U + s_request.start.mag_count))
+    { record->record_type = FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY;
+      record->payload.mag_calibration_identity = s_request.start.mag[index - 2U]; }
+    else if (index == (uint16_t)(2U + s_request.start.mag_count))
+    { record->record_type = FLIGHT_LOG_RECORD_INITIAL_STATE;
+      record->payload.initial_state = s_request.start.initial; }
+    else
+    { record->record_type = FLIGHT_LOG_RECORD_EVENT;
+      record->payload.event.event_id = FLIGHT_LOG_EVENT_MISSION_START; }
+}
+
+static LoggerBusResult LoggerBus_RequestRecordBuild(FlightLogRecord *record)
+{
+    uint16_t index = s_request.cursor;
+    uint16_t devices = s_request.config.device_descriptor_count;
+    uint16_t algorithms = s_request.config.algorithm_descriptor_count;
+    SILVERSTAR_ASSERT((devices <= SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX) &&
+        (algorithms <= SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX) &&
+        (s_request.start.mag_count <= PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX ||
+         s_request.is_start == 0U),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    (void)memset(record, 0, sizeof(*record));
+    record->timestamp_us = s_request.timestamp_us;
+    SILVERSTAR_ASSERT(index < s_request.count,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    if (index == 0U)
+    { record->record_type = FLIGHT_LOG_RECORD_SYSTEM_CONFIG;
+      record->payload.system_config = s_request.config; return LOGGER_BUS_RESULT_OK; }
+    index--;
+    if (index < devices)
+    { record->record_type = FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR;
+      return LoggerBus_DeviceDescriptorBuild(index, &record->payload.device_descriptor); }
+    index = (uint16_t)(index - devices);
+    if (index < algorithms)
+    { record->record_type = FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR;
+      return LoggerBus_AlgorithmDescriptorBuild(index, &record->payload.algorithm_descriptor); }
+    index = (uint16_t)(index - algorithms);
+    if (index < SSLOG_RECORD_COUNT)
+    { record->record_type = FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR;
+      return LoggerBus_StreamDescriptorBuild(index, &record->payload.stream_descriptor); }
+    LoggerBus_StartRecordBuild((uint16_t)(index - SSLOG_RECORD_COUNT), record);
+    return LOGGER_BUS_RESULT_OK;
+}
+
+static LoggerBusResult LoggerBus_RequestPop(FlightLogRecord *record)
+{
+    LoggerBusResult result;
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    uint8_t ready = (uint8_t)(s_request_phase == LOGGER_REQUEST_READY);
+    LoggerBus_IrqUnlock(state);
+    if (ready == 0U) { return LOGGER_BUS_RESULT_EMPTY; }
+    /* Only the logger consumer calls pop; immutable construction needs no lock. */
+    result = LoggerBus_RequestRecordBuild(record);
+    state = LoggerBus_IrqLock();
+    if (result == LOGGER_BUS_RESULT_OK)
+    {
+        s_request.cursor++;
+        s_diagnostics.dequeued_count++;
+        if (s_request.cursor == s_request.count)
+        { s_request_phase = (s_request.is_start != 0U) ?
+            LOGGER_REQUEST_BARRIER : LOGGER_REQUEST_IDLE; }
+    }
+    else { s_request_phase = LOGGER_REQUEST_FAULT; }
+    LoggerBus_IrqUnlock(state);
+    return result;
+}
+
+uint32_t LoggerBus_StartBarrierGet(void)
+{
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    uint32_t generation = (s_request_phase == LOGGER_REQUEST_BARRIER) ? s_request.generation : 0U;
+    LoggerBus_IrqUnlock(state);
+    return generation;
+}
+
+LoggerBusResult LoggerBus_StartDurable(uint32_t generation)
+{
+    LoggerBusResult result = LOGGER_BUS_RESULT_BAD_STATE;
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    if ((s_request_phase == LOGGER_REQUEST_BARRIER) &&
+        (generation != 0U) && (generation == s_request.generation))
+    { s_start_acknowledged = generation; s_request_phase = LOGGER_REQUEST_IDLE;
+      result = LOGGER_BUS_RESULT_OK; }
+    LoggerBus_IrqUnlock(state);
+    return result;
+}
+
+uint32_t LoggerBus_StartAcknowledgedGet(void)
+{
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    uint32_t generation = s_start_acknowledged;
+    LoggerBus_IrqUnlock(state);
+    return generation;
+}
+
+void LoggerBus_StartFault(void)
+{
+    PlatformCriticalState state = LoggerBus_IrqLock();
+    s_request_io_fault = 1U;
+    if (((s_request_phase == LOGGER_REQUEST_READY) ||
+         (s_request_phase == LOGGER_REQUEST_BARRIER)) && (s_request.is_start != 0U))
+    { s_request_phase = LOGGER_REQUEST_FAULT; }
+    LoggerBus_IrqUnlock(state);
 }
 
 LoggerBusResult LoggerBus_MissionConfigPush(uint64_t timestamp_us)
 {
     FlightLogMissionConfigRecord record;
-
-    (void)memset(&record, 0, sizeof(record));
-    SILVERSTAR_ASSERT_OBJECT(&record, FlightLogMissionConfigRecord,
-                             SILVERSTAR_ASSERT_MODULE_APP);
-    record.alignment_algorithm = (uint8_t)SYSTEM_ALIGNMENT_ALGORITHM;
-    record.rocket_longitudinal_axis =
-        (uint8_t)SYSTEM_FLIGHT_ROCKET_LONGITUDINAL_AXIS;
-    record.deploy_trigger_mask =
-        (uint8_t)SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK;
-    record.tilt_reference = (uint8_t)SYSTEM_FLIGHT_TILT_REFERENCE;
-    record.landing_enable = SYSTEM_FLIGHT_LANDING_DETECTION_ENABLE;
-    record.landing_mode = (uint8_t)SYSTEM_FLIGHT_LANDING_MODE;
-    record.impact_capable = SYSTEM_IMU_CAP_LANDING_IMPACT_DETECTION;
-    record.known_yaw_deg = SYSTEM_ALIGNMENT_KNOWN_YAW_DEG;
-    record.magnetic_declination_deg =
-        SYSTEM_ALIGNMENT_MAGNETIC_DECLINATION_DEG;
-    record.tilt_threshold_deg = SYSTEM_FLIGHT_TILT_THRESHOLD_DEG;
-    record.apogee_vz_threshold_mps =
-        SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS;
-    record.deploy_confirm_ms = SYSTEM_FLIGHT_DEPLOY_CONFIRM_MS;
-    record.deploy_delay_ms = SYSTEM_FLIGHT_DEPLOY_DELAY_MS;
-    record.baro_trigger_window_ms =
-        SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_WINDOW_MS;
-    record.baro_trigger_min_samples =
-        SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_MIN_SAMPLES;
-    record.baro_trigger_rate_mps =
-        SYSTEM_FLIGHT_LANDING_BARO_TRIGGER_RATE_MPS;
-    record.candidate_duration_ms =
-        SYSTEM_FLIGHT_LANDING_CANDIDATE_DURATION_MS;
-    record.baro_confirm_rate_mps =
-        SYSTEM_FLIGHT_LANDING_BARO_CONFIRM_RATE_MPS;
-    record.baro_max_span_m = SYSTEM_FLIGHT_LANDING_BARO_MAX_SPAN_M;
-    record.candidate_baro_min_samples =
-        SYSTEM_FLIGHT_LANDING_BARO_MIN_SAMPLES;
-    record.candidate_imu_min_samples =
-        SYSTEM_FLIGHT_LANDING_IMU_MIN_SAMPLES;
-    record.candidate_min_coverage_percent =
-        SYSTEM_FLIGHT_LANDING_MIN_COVERAGE_PERCENT;
-    record.impact_inhibit_ms =
-        SYSTEM_FLIGHT_LANDING_IMPACT_INHIBIT_MS;
-    record.impact_threshold_mps2 =
-        SYSTEM_FLIGHT_LANDING_IMPACT_THRESHOLD_MPS2;
-    record.still_gyro_threshold_radps =
-        SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS;
-    record.still_accel_tolerance_mps2 =
-        SYSTEM_FLIGHT_LANDING_STILL_ACCEL_TOLERANCE_MPS2;
-    record.landing_confirm_ms = SYSTEM_FLIGHT_LANDING_CONFIRM_MS;
-    record.landing_sample_max_age_ms =
-        SYSTEM_FLIGHT_LANDING_SAMPLE_MAX_AGE_MS;
-    return LoggerBus_ConfiguredRecordPush(
-        FLIGHT_LOG_RECORD_MISSION_CONFIG, timestamp_us, 0U,
-        &record, sizeof(record), 0U);
+    LoggerBus_MissionConfigBuild(&record);
+    return LoggerBus_ConfiguredRecordPush(FLIGHT_LOG_RECORD_MISSION_CONFIG,
+        timestamp_us, 0U, &record, sizeof(record), 0U);
 }
 
 static void LoggerBus_DecoderProfileRecordBuild(
@@ -1064,6 +1213,10 @@ static LoggerBusResult LoggerBus_QueuePop(
 
 LoggerBusResult LoggerBus_Pop(FlightLogRecord *record)
 {
+    LoggerBusResult result;
+    if (record == NULL) { return LOGGER_BUS_RESULT_BAD_PARAM; }
+    result = LoggerBus_RequestPop(record);
+    if (result != LOGGER_BUS_RESULT_EMPTY) { return result; }
     return LoggerBus_QueuePop(&s_logger_queue, record);
 }
 
@@ -1099,6 +1252,8 @@ LoggerBusResult LoggerBus_NextPop(FlightLogRecord *record)
     if (record == NULL) { return LOGGER_BUS_RESULT_BAD_PARAM; }
     SILVERSTAR_ASSERT_OBJECT(record, FlightLogRecord,
                              SILVERSTAR_ASSERT_MODULE_APP);
+    result = LoggerBus_RequestPop(record);
+    if (result != LOGGER_BUS_RESULT_EMPTY) { return result; }
     preferred = LoggerBus_QueuePreferenceGet();
     if (preferred != 0U)
     {
@@ -1135,6 +1290,9 @@ uint16_t LoggerBus_Count(void)
 
     count = (uint16_t)(CommonSpscQueue_Count(&s_logger_queue) +
                        CommonSpscQueue_Count(&s_estimator_logger_queue));
+    if (s_request_phase == LOGGER_REQUEST_READY)
+    { count = (uint16_t)(count + s_request.count - s_request.cursor); }
+    else if (s_request_phase != LOGGER_REQUEST_IDLE) { count++; }
     LoggerBus_IrqUnlock(state);
     return count;
 }
