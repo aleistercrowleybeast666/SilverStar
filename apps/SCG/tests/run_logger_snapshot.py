@@ -4,7 +4,7 @@ import re
 import subprocess
 from pathlib import Path
 
-def run(project, test, output, start=False, compact=False):
+def run(project, test, output, start=False, compact=False, unlock_trigger=False):
     project, test, output = map(lambda p: Path(p).resolve(), (project, test, output))
     output.mkdir(parents=True, exist_ok=True)
     host = (project / 'Tests/Host/run_tests.ps1').read_text()
@@ -23,6 +23,8 @@ def run(project, test, output, start=False, compact=False):
     cmd += ['-I' + str(project / p.replace('\\', '/')) for p in includes]
     if start:
         cmd += ['-DLOGGER_SNAPSHOT_START_TEST=1', '-flto']
+    if unlock_trigger:
+        cmd += ['-DLOGGER_SNAPSHOT_UNLOCK_TEST=1']
     if compact:
         # Explicit synthetic capacity fixture; generated production config is untouched.
         config = (project / 'System/User/system_user_config.h').read_text()
@@ -39,5 +41,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('project'); parser.add_argument('test'); parser.add_argument('output')
     parser.add_argument('--start', action='store_true'); parser.add_argument('--compact', action='store_true')
+    parser.add_argument('--unlock-trigger', action='store_true')
     args = parser.parse_args()
-    raise SystemExit(run(args.project, args.test, args.output, args.start, args.compact))
+    raise SystemExit(run(args.project, args.test, args.output, args.start, args.compact, args.unlock_trigger))
