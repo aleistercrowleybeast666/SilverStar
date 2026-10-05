@@ -317,6 +317,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
+#include "silverstar_assert.h"
 
 /** @addtogroup STM32F1xx_HAL_Driver
   * @{
@@ -487,6 +488,7 @@ HAL_StatusTypeDef HAL_I2C_Init(I2C_HandleTypeDef *hi2c)
     /* Allocate lock resource and initialize it */
     hi2c->Lock = HAL_UNLOCKED;
     hi2c->MemoryDeadline.active = 0U;
+    hi2c->BlockingMemoryOwner = 0U;
 
 #if (USE_HAL_I2C_REGISTER_CALLBACKS == 1)
     /* Init the I2C Callback settings */
@@ -2566,7 +2568,14 @@ HAL_StatusTypeDef HAL_I2C_Slave_Receive_DMA(I2C_HandleTypeDef *hi2c, uint8_t *pD
 static HAL_StatusTypeDef I2C_MemoryPollCheck(I2C_HandleTypeDef *hi2c)
 {
   uint32_t errors;
-  if (hi2c->MemoryDeadline.active == 0U) { return HAL_OK; }
+  if (hi2c->BlockingMemoryOwner == 0U)
+  {
+    SILVERSTAR_ASSERT(hi2c->MemoryDeadline.active == 0U,
+        SILVERSTAR_ASSERT_MODULE_PLATFORM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    return HAL_OK;
+  }
+  SILVERSTAR_ASSERT((hi2c->BlockingMemoryOwner == 1U) && (hi2c->Lock == HAL_LOCKED),
+      SILVERSTAR_ASSERT_MODULE_PLATFORM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
   if (PlatformI2cDeadline_Expired(&hi2c->MemoryDeadline) != 0U)
   {
     hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
@@ -2592,11 +2601,15 @@ static HAL_StatusTypeDef I2C_MemoryBegin(I2C_HandleTypeDef *hi2c, uint16_t addre
   { return HAL_ERROR; }
   if (hi2c->State != HAL_I2C_STATE_READY) { return HAL_BUSY; }
   __HAL_LOCK(hi2c);
+  SILVERSTAR_ASSERT(hi2c->BlockingMemoryOwner == 0U,
+      SILVERSTAR_ASSERT_MODULE_PLATFORM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+  hi2c->BlockingMemoryOwner = 1U;
   hi2c->ErrorCode = HAL_I2C_ERROR_NONE;
   if (PlatformI2cDeadline_Start(&hi2c->MemoryDeadline, timeout) !=
       PlatformI2cDeadlineResult_Ok)
   {
     hi2c->ErrorCode = HAL_I2C_ERROR_TIMEOUT;
+    hi2c->BlockingMemoryOwner = 0U;
     __HAL_UNLOCK(hi2c);
     return HAL_TIMEOUT;
   }
@@ -2606,6 +2619,8 @@ static HAL_StatusTypeDef I2C_MemoryBegin(I2C_HandleTypeDef *hi2c, uint16_t addre
 static HAL_StatusTypeDef I2C_MemoryFinish(I2C_HandleTypeDef *hi2c,
     HAL_StatusTypeDef result, uint32_t original_ack_pos)
 {
+  SILVERSTAR_ASSERT((hi2c->BlockingMemoryOwner == 1U) && (hi2c->Lock == HAL_LOCKED),
+      SILVERSTAR_ASSERT_MODULE_PLATFORM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
   if ((result == HAL_OK) && (I2C_MemoryPollCheck(hi2c) != HAL_OK))
   { result = HAL_ERROR; }
   if (result != HAL_OK)
@@ -2624,6 +2639,7 @@ static HAL_StatusTypeDef I2C_MemoryFinish(I2C_HandleTypeDef *hi2c,
   hi2c->State = HAL_I2C_STATE_READY; /* HAL available; not controller/device READY. */
   hi2c->Mode = HAL_I2C_MODE_NONE;
   hi2c->MemoryDeadline.active = 0U;
+  hi2c->BlockingMemoryOwner = 0U;
   __HAL_UNLOCK(hi2c);
   return result;
 }
@@ -7439,7 +7455,7 @@ static HAL_StatusTypeDef I2C_WaitOnFlagUntilTimeout(I2C_HandleTypeDef *hi2c, uin
           hi2c->ErrorCode         |= HAL_I2C_ERROR_TIMEOUT;
 
           /* Process Unlocked */
-          if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+          if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
           return HAL_ERROR;
         }
@@ -7480,7 +7496,7 @@ static HAL_StatusTypeDef I2C_WaitOnMasterAddressFlagUntilTimeout(I2C_HandleTypeD
       hi2c->ErrorCode           |= HAL_I2C_ERROR_AF;
 
       /* Process Unlocked */
-      if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+      if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
       return HAL_ERROR;
     }
@@ -7498,7 +7514,7 @@ static HAL_StatusTypeDef I2C_WaitOnMasterAddressFlagUntilTimeout(I2C_HandleTypeD
           hi2c->ErrorCode           |= HAL_I2C_ERROR_TIMEOUT;
 
           /* Process Unlocked */
-          if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+          if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
           return HAL_ERROR;
         }
@@ -7543,7 +7559,7 @@ static HAL_StatusTypeDef I2C_WaitOnTXEFlagUntilTimeout(I2C_HandleTypeDef *hi2c, 
           hi2c->ErrorCode           |= HAL_I2C_ERROR_TIMEOUT;
 
           /* Process Unlocked */
-          if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+          if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
           return HAL_ERROR;
         }
@@ -7588,7 +7604,7 @@ static HAL_StatusTypeDef I2C_WaitOnBTFFlagUntilTimeout(I2C_HandleTypeDef *hi2c, 
           hi2c->ErrorCode           |= HAL_I2C_ERROR_TIMEOUT;
 
           /* Process Unlocked */
-          if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+          if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
           return HAL_ERROR;
         }
@@ -7692,7 +7708,7 @@ static HAL_StatusTypeDef I2C_WaitOnRXNEFlagUntilTimeout(I2C_HandleTypeDef *hi2c,
       hi2c->ErrorCode           |= HAL_I2C_ERROR_NONE;
 
       /* Process Unlocked */
-      if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+      if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
       return HAL_ERROR;
     }
@@ -7708,7 +7724,7 @@ static HAL_StatusTypeDef I2C_WaitOnRXNEFlagUntilTimeout(I2C_HandleTypeDef *hi2c,
         hi2c->ErrorCode           |= HAL_I2C_ERROR_TIMEOUT;
 
         /* Process Unlocked */
-        if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+        if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
         return HAL_ERROR;
       }
@@ -7738,7 +7754,7 @@ static HAL_StatusTypeDef I2C_IsAcknowledgeFailed(I2C_HandleTypeDef *hi2c)
     hi2c->ErrorCode           |= HAL_I2C_ERROR_AF;
 
     /* Process Unlocked */
-    if (hi2c->MemoryDeadline.active == 0U) { __HAL_UNLOCK(hi2c); }
+    if (hi2c->BlockingMemoryOwner == 0U) { __HAL_UNLOCK(hi2c); }
 
     return HAL_ERROR;
   }

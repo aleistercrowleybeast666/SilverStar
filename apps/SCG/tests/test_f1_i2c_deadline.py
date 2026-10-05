@@ -34,7 +34,8 @@ def test_f1_i2c_actual_hal_whole_transaction_deadline(tmp_path):
     print(result.stdout + result.stderr)
     assert result.returncode == 0, result.stdout + result.stderr
     assert "I2C_DEADLINE_MMIO PASS" in result.stdout
-    for mode in ("--corrupt-active", "--corrupt-budget", "--double-start"):
+    for mode in ("--corrupt-active", "--corrupt-budget", "--double-start",
+                 "--lost-active", "--lost-owner", "--lost-lock"):
         result = subprocess.run([str(executable), mode], capture_output=True, text=True, timeout=10)
         print(mode, "exit", result.returncode, result.stdout + result.stderr)
         assert result.returncode == 1

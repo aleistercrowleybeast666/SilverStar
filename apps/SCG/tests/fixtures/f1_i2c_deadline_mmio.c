@@ -17,6 +17,7 @@ static uint32_t s_time_us, s_seed_cycles, s_irq, s_exception;
 static uint32_t s_phase, s_phase_since, s_fault_phase, s_error_flag;
 static uint32_t s_busy_delay_us, s_data_delay_us, s_start_count, s_clear_count;
 static uint32_t s_frozen, s_masked_polls;
+static uint32_t s_context_corrupt_mode;
 static uint16_t s_mem_size;
 static int s_read;
 
@@ -40,6 +41,12 @@ static void Advance(void)
     { s_dwt.CYCCNT = s_seed_cycles + s_time_us * 64U; }
     if ((s_error_flag != 0U) && (s_phase == s_fault_phase))
     { s_registers.SR1 |= s_error_flag; }
+    if (s_phase == ADDR1)
+    {
+        if (s_context_corrupt_mode == 1U) { s_handle.MemoryDeadline.active=0U; }
+        if (s_context_corrupt_mode == 2U) { s_handle.BlockingMemoryOwner=0U; }
+        if (s_context_corrupt_mode == 3U) { s_handle.Lock=HAL_UNLOCKED; }
+    }
 }
 DWT_Type *HostDwt_Get(void) { Advance(); return &s_dwt; }
 CoreDebug_Type *HostCoreDebug_Get(void) { return &s_debug; }
@@ -127,7 +134,7 @@ static void Reset(int read)
     s_time_us=0U;s_seed_cycles=0U;s_irq=0U;s_exception=0U;s_phase=NONE;
     s_phase_since=0U;s_fault_phase=NONE;s_error_flag=0U;s_busy_delay_us=0U;
     s_data_delay_us=0U;s_start_count=0U;s_clear_count=0U;s_frozen=0U;
-    s_masked_polls=0U;s_read=read;s_mem_size=I2C_MEMADD_SIZE_16BIT;
+    s_masked_polls=0U;s_context_corrupt_mode=0U;s_read=read;s_mem_size=I2C_MEMADD_SIZE_16BIT;
 }
 static HAL_StatusTypeDef Run(uint16_t size)
 {
@@ -146,6 +153,7 @@ static HAL_StatusTypeDef Run(uint16_t size)
     CHECK(s_irq == 0U && s_handle.Lock == HAL_UNLOCKED);
     CHECK(s_handle.State == HAL_I2C_STATE_READY && s_handle.Mode == HAL_I2C_MODE_NONE);
     CHECK(s_handle.MemoryDeadline.active == 0U);
+    CHECK(s_handle.BlockingMemoryOwner == 0U);
     CHECK((s_registers.CR1 & (I2C_CR1_ACK | I2C_CR1_POS)) == I2C_CR1_ACK);
     return result;
 }
@@ -154,6 +162,10 @@ int main(int argc,char **argv)
     if (argc == 2)
     {
         Reset(1);
+        if (strcmp(argv[1],"--lost-active") == 0) { s_context_corrupt_mode=1U; }
+        if (strcmp(argv[1],"--lost-owner") == 0) { s_context_corrupt_mode=2U; }
+        if (strcmp(argv[1],"--lost-lock") == 0) { s_context_corrupt_mode=3U; }
+        if (s_context_corrupt_mode != 0U) { (void)Run(1U);CHECK(0); }
         if (strcmp(argv[1],"--corrupt-active") == 0)
         { s_handle.MemoryDeadline.active=2U;s_handle.MemoryDeadline.budget_cycles=1U; }
         else if (strcmp(argv[1],"--corrupt-budget") == 0)

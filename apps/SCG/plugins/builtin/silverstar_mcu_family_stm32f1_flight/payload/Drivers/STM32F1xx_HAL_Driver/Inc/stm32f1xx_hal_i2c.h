@@ -226,6 +226,7 @@ typedef struct
   /* SilverStar F1 Flight: one deadline across blocking memory BUSY/address/data.
      HAL ABI extension is local to this owning family; all clients rebuild. */
   PlatformI2cDeadline        MemoryDeadline;
+  uint32_t                  BlockingMemoryOwner; /*!< Wrapper owns lock independently of clock admission */
 
 
 #if (USE_HAL_I2C_REGISTER_CALLBACKS == 1)
