@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 
 from silverstar_flp.core.analysis_source import (
     AnalysisSourceKind,
+    ChannelResolver,
     ReplayResultStore,
     ReplayStoredResult,
 )
@@ -37,6 +38,7 @@ from silverstar_flp.plugins.api.algorithm import (
 )
 from silverstar_flp.plugins.registry import PluginRegistry
 from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
+from silverstar_flp.ui.pages.charts import _Source_Label
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 from silverstar_flp.ui.widgets import StandardComboBox
 
@@ -44,6 +46,7 @@ from silverstar_flp.ui.widgets import StandardComboBox
 class ReplayPage(QWidget):
     replayRequested = Signal(str, object)
     analysisSourceRequested = Signal(str)
+    secondarySourceRequested = Signal(object)
     configurationChanged = Signal()
 
     def __init__(self, translator: Translator, registry: PluginRegistry) -> None:
@@ -51,6 +54,7 @@ class ReplayPage(QWidget):
         self._translator = translator
         self._registry = registry
         self._dataset: FlightDataset | None = None
+        self._secondary_source_id: str | None = None
         self._last_result: AlgorithmResult | None = None
         self._last_entry: ReplayStoredResult | None = None
         self._mode_preferences: dict[str, ReplayMode] = {}
@@ -105,14 +109,29 @@ class ReplayPage(QWidget):
         content_layout.addWidget(self.controls_group)
 
         self.analysis_source_group = QGroupBox()
-        analysis_source_layout = QHBoxLayout(self.analysis_source_group)
+        analysis_source_layout = QVBoxLayout(self.analysis_source_group)
+        primary_row = QHBoxLayout()
+        self.primary_source_label = QLabel()
+        primary_row.addWidget(self.primary_source_label)
         self.analysis_source_combo = StandardComboBox()
         self.analysis_source_combo.currentIndexChanged.connect(self._AnalysisSource_Selected)
         self.active_source_label = QLabel("—")
         self.active_source_label.setObjectName("muted")
         self.active_source_label.setWordWrap(True)
-        analysis_source_layout.addWidget(self.analysis_source_combo, 1)
-        analysis_source_layout.addWidget(self.active_source_label, 2)
+        primary_row.addWidget(self.analysis_source_combo, 1)
+        primary_row.addWidget(self.active_source_label, 2)
+        analysis_source_layout.addLayout(primary_row)
+        secondary_row = QHBoxLayout()
+        self.secondary_source_label = QLabel()
+        self.secondary_source_combo = StandardComboBox()
+        self.secondary_source_combo.currentIndexChanged.connect(self._SecondarySource_Selected)
+        self.secondary_source_note = QLabel()
+        self.secondary_source_note.setObjectName("muted")
+        self.secondary_source_note.setWordWrap(True)
+        secondary_row.addWidget(self.secondary_source_label)
+        secondary_row.addWidget(self.secondary_source_combo, 1)
+        secondary_row.addWidget(self.secondary_source_note, 2)
+        analysis_source_layout.addLayout(secondary_row)
         content_layout.addWidget(self.analysis_source_group)
 
         self.parameters_group = QGroupBox()
@@ -210,6 +229,7 @@ class ReplayPage(QWidget):
         dataset_changed = self._dataset is not dataset
         self._dataset = dataset
         if dataset_changed:
+            self._secondary_source_id = None
             self._process_model_preferences.clear()
             self._last_entry = None
             self._last_result = None
@@ -902,73 +922,75 @@ class ReplayPage(QWidget):
             label += " · " + solution
         return label
 
+    def SecondarySource_Set(self, source_id: str | None) -> None:
+        self._secondary_source_id = source_id
+        self._AnalysisSources_Refresh()
+
     def _AnalysisSources_Refresh(self) -> None:
-        if self._store is None:
-            self.analysis_source_combo.clear()
+        for combo in (self.analysis_source_combo, self.secondary_source_combo):
+            combo.blockSignals(True)
+            combo.clear()
+        if self._store is None or self._dataset is None:
             self.active_source_label.setText("—")
-            return
-        active_source_id = self._store.ActiveSource_Get().source_id
-        self.analysis_source_combo.blockSignals(True)
-        self.analysis_source_combo.clear()
-        self.analysis_source_combo.addItem(
-            self._RecordedSourceLabel_Get(),
-            ReplayResultStore.RECORDED_SOURCE_ID,
-        )
-        for source in self._store.Sources_Get():
-            if source.kind == AnalysisSourceKind.RECORDED:
-                continue
-            entry = self._store.SourceEntry_Get(source.source_id)
-            if entry is None:
-                continue
-            mode_code = (
-                "status.what_if"
-                if entry.kind == AnalysisSourceKind.WHAT_IF
-                else "status.recomputed"
-            )
-            self.analysis_source_combo.addItem(
-                f"{AlgorithmName_Display(entry.algorithm_name)} · "
-                f"{self._EntryMode_Text(entry, mode_code)} #{entry.run_index}",
-                entry.source_id,
-            )
-        index = self.analysis_source_combo.findData(active_source_id)
-        self.analysis_source_combo.setCurrentIndex(max(index, 0))
-        self.analysis_source_combo.blockSignals(False)
+        else:
+            resolver = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False)
+            primary = resolver.Source_Get()
+            self.secondary_source_combo.addItem(self._translator.Text_Get("comparison.none"), None)
+            for source in resolver.Sources_Get():
+                label = _Source_Label(self._translator, resolver, source.source_id)
+                self.analysis_source_combo.addItem(label, source.source_id)
+                if source.source_id != primary.source_id:
+                    self.secondary_source_combo.addItem(label, source.source_id)
+            index = self.analysis_source_combo.findData(primary.source_id)
+            if index < 0:
+                self.analysis_source_combo.addItem(
+                    _Source_Label(self._translator, resolver, primary.source_id), primary.source_id)
+                index = self.analysis_source_combo.count() - 1
+            self.analysis_source_combo.setCurrentIndex(index)
+            secondary_index = self.secondary_source_combo.findData(self._secondary_source_id)
+            if secondary_index < 0:
+                self._secondary_source_id = None
+            self.secondary_source_combo.setCurrentIndex(max(secondary_index, 0))
+        for combo in (self.analysis_source_combo, self.secondary_source_combo):
+            combo.blockSignals(False)
         self._ActiveSourceLabel_Refresh()
 
     def _AnalysisSource_Selected(self) -> None:
-        if self._store is None:
+        if self._store is None or self._dataset is None:
             return
-        source_id = str(
-            self.analysis_source_combo.currentData() or ReplayResultStore.RECORDED_SOURCE_ID
-        )
-        if self._store.ActiveSource_Set(source_id):
-            self.analysisSourceRequested.emit(source_id)
-            self._ActiveSourceLabel_Refresh()
+        source_id = self.analysis_source_combo.currentData()
+        if source_id is None:
+            return
+        source = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False).Source_Get(str(source_id))
+        if not source.available or not self._store.ActiveSource_Set(source.source_id):
+            self.active_source_label.setText(self._translator.Text_Get("comparison.unavailable"))
+            return
+        self.analysisSourceRequested.emit(source.source_id)
+        self._AnalysisSources_Refresh()
+
+    def _SecondarySource_Selected(self) -> None:
+        selected = self.secondary_source_combo.currentData()
+        if self._dataset is None or self._store is None:
+            selected = None
+        elif selected is not None:
+            resolver = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False)
+            source = resolver.Source_Get(str(selected))
+            if not source.available or source.source_id == resolver.Source_Get().source_id:
+                selected = None
+        self._secondary_source_id = str(selected) if selected is not None else None
+        self.secondarySourceRequested.emit(self._secondary_source_id)
+        self._ActiveSourceLabel_Refresh()
 
     def _ActiveSourceLabel_Refresh(self) -> None:
-        if self._store is None:
+        if self._store is None or self._dataset is None:
             self.active_source_label.setText("—")
             return
-        source = self._store.ActiveSource_Get()
-        if source.kind.value == "recorded":
-            value = self._RecordedSourceLabel_Get()
-        else:
-            entry = self._store.SourceEntry_Get(source.source_id)
-            if entry is None:
-                value = self._RecordedSourceLabel_Get()
-            else:
-                mode_code = (
-                    "status.what_if"
-                    if entry.kind == AnalysisSourceKind.WHAT_IF
-                    else "status.recomputed"
-                )
-                value = (
-                    f"{AlgorithmName_Display(entry.algorithm_name)} · "
-                    f"{self._EntryMode_Text(entry, mode_code)} #{entry.run_index}"
-                )
-        self.active_source_label.setText(
-            self._translator.Text_Get("replay.active_source", value=value)
-        )
+        resolver = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False)
+        self.active_source_label.setText(self._translator.Text_Get(
+            "replay.active_source", value=_Source_Label(self._translator, resolver,
+                                                        resolver.Source_Get().source_id)))
+        self.secondary_source_note.setText(self._translator.Text_Get("comparison.compatible")
+            if self._secondary_source_id is not None else "")
 
     def Result_Error(self, message: str) -> None:
         self._last_error = message
@@ -1089,6 +1111,8 @@ class ReplayPage(QWidget):
             )
         self.fidelity_label.setText(translator.Text_Get("label.fidelity"))
         self.analysis_source_group.setTitle(translator.Text_Get("replay.analysis_data_source"))
+        self.primary_source_label.setText(translator.Text_Get("comparison.primary"))
+        self.secondary_source_label.setText(translator.Text_Get("comparison.secondary"))
         self.parameters_group.setTitle(translator.Text_Get("replay.what_if_parameters"))
         self.parameter_group_label.setText(translator.Text_Get("replay.parameter_group"))
         self.parameter_reset_button.setText(translator.Text_Get("action.reset_parameters"))

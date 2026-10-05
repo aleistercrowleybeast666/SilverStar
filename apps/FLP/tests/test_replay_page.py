@@ -51,7 +51,7 @@ def test_replay_uses_fixed_corrected_imu_and_translates_every_visible_field(
     )
     assert not hasattr(page, "source_combo")
     assert page.analysis_source_combo.count() == 1
-    assert page.analysis_source_combo.itemData(0) == ReplayResultStore.RECORDED_SOURCE_ID
+    assert page.analysis_source_combo.itemData(0) == "recorded:pure_ins"
     assert page.analysis_source_combo.itemText(0) == "Recorded (flight controller) · Pure INS"
 
     requested: list[ReplayRequest] = []
@@ -310,7 +310,7 @@ def test_replay_is_the_only_global_source_selector_and_can_return_to_recorded(
     assert ready.analysis_ready
     assert not unavailable.analysis_ready
     assert page.analysis_source_combo.count() == 2
-    assert page.analysis_source_combo.itemData(0) == ReplayResultStore.RECORDED_SOURCE_ID
+    assert page.analysis_source_combo.itemData(0) == "recorded:pure_ins"
     ready_index = page.analysis_source_combo.findData(ready.source_id)
     assert ready_index == 1
     assert page.analysis_source_combo.findData(unavailable.source_id) == -1
@@ -325,8 +325,8 @@ def test_replay_is_the_only_global_source_selector_and_can_return_to_recorded(
     assert selected[-1] == ready.source_id
     page.analysis_source_combo.setCurrentIndex(0)
     application.processEvents()
-    assert store.ActiveSource_Get().source_id == ReplayResultStore.RECORDED_SOURCE_ID
-    assert selected[-1] == ReplayResultStore.RECORDED_SOURCE_ID
+    assert store.ActiveSource_Get().source_id == "recorded:pure_ins"
+    assert selected[-1] == "recorded:pure_ins"
 
     page.Language_Apply(Translator("zh_CN"))
     assert page.analysis_source_combo.itemText(0) == "飞控记录 · Pure INS"

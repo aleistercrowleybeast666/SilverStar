@@ -517,7 +517,7 @@ class FlightExporter:
         failures: list[ExportFailure] = []
         source_store = self._Store_Prepare(replay_store, algorithm_results or {})
         resolved_source_id = requested.source_id or source_store.ActiveSource_Get().source_id
-        selected_source = ChannelResolver(dataset, source_store).Source_Get(resolved_source_id)
+        selected_source = ChannelResolver(dataset, source_store, prime_trajectory_bounds=False).Source_Get(resolved_source_id)
         if not selected_source.available:
             raise ValueError(f"export_source_unavailable:{resolved_source_id}")
         store = source_store.Snapshot_Create(selected_source.source_id)
@@ -1344,6 +1344,7 @@ class FlightExporter:
             "resolved_source_id": active.source_id,
             "resolved_result_id": active.result_id,
             "active_analysis_source": active.source_id,
+            "active_recorded_solution": active.recorded_solution_id,
             "active_source_kind": active.kind.value,
             "generated": generated_payload,
             "skipped": skipped_payload,

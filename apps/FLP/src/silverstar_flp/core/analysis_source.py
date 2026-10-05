@@ -274,13 +274,15 @@ class ChannelResolver:
         "imu.corrected.gyro_b": "imu.corrected.gyro_b",
     }
 
-    def __init__(self, dataset: FlightDataset, store: ReplayResultStore) -> None:
+    def __init__(self, dataset: FlightDataset, store: ReplayResultStore, *,
+                 prime_trajectory_bounds: bool = True) -> None:
         self.dataset = dataset
         self.store = store
         self._mission_bounds_cache: dict[str, MissionReplayBounds] = {}
         self._trajectory_bounds_cache: dict[str, TrajectoryBounds] = {}
         self._trajectory_bounds_calculation_count: dict[str, int] = {}
-        self._TrajectoryBounds_Prime()
+        if prime_trajectory_bounds:
+            self._TrajectoryBounds_Prime()
 
     @staticmethod
     def _SeriesValidEndTimestamp_Get(series: TimeSeries | None) -> int | None:

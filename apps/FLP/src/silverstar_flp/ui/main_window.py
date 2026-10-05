@@ -34,7 +34,7 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_flp.app.version import PRODUCT_NAME, __version__
-from silverstar_flp.core.analysis_source import ChannelResolver, ReplayResultStore
+from silverstar_flp.core.analysis_source import AnalysisSourceKind, ChannelResolver, ReplayResultStore
 from silverstar_flp.core.dataset import FlightDataset
 from silverstar_flp.core.i18n import Translator
 from silverstar_flp.core.path_preferences import (
@@ -127,6 +127,7 @@ class MainWindow(QMainWindow):
         self._dataset: FlightDataset | None = None
         self._log_open_result: LogOpenResult | None = None
         self._replay_store = ReplayResultStore()
+        self._secondary_source_id: str | None = None
         self._channel_resolver: ChannelResolver | None = None
         self._project = ProjectDocument()
         self._project_dirty = False
@@ -276,6 +277,7 @@ class MainWindow(QMainWindow):
 
         self.replay_page.replayRequested.connect(self._Replay_Start)
         self.replay_page.analysisSourceRequested.connect(self._AnalysisSource_Set)
+        self.replay_page.secondarySourceRequested.connect(self._SecondarySource_Set)
         self.replay_page.configurationChanged.connect(self._Project_MarkDirty)
         self.import_dialog = ImportDialog(self._translator, self)
         self.import_dialog.importRequested.connect(self.LogPair_Open)
@@ -446,17 +448,13 @@ class MainWindow(QMainWindow):
         if self._dataset is None:
             return
         self.export_dialog.OutputDirectory_Set(self._ExportDirectory_Default())
-        recorded_name = (
-            self._channel_resolver.RecordedNavigationSource_Get()
-            if self._channel_resolver is not None else "N/A"
-        )
-        recorded_name = AlgorithmName_Display(recorded_name)
-        sources = [(
-            self._replay_store.RECORDED_SOURCE_ID,
-            self._translator.Text_Get(
-                "export.source_recorded", algorithm=recorded_name
-            ),
-        )]
+        from silverstar_flp.ui.pages.charts import _Source_Label
+        sources = [
+            (source.source_id, _Source_Label(self._translator, self._channel_resolver,
+                                             source.source_id))
+            for source in self._channel_resolver.Sources_Get()
+            if source.kind == AnalysisSourceKind.RECORDED
+        ]
         sources.extend((
             entry.source_id,
             self._translator.Text_Get(
@@ -806,6 +804,8 @@ class MainWindow(QMainWindow):
                 configuration = project.replay_configurations.get(key)
                 if configuration is not None:
                     self._source_restore_pending = (key, configuration)
+            elif isinstance(selected_source, str) and selected_source.startswith("recorded:"):
+                self._AnalysisSource_Set(selected_source)
             page_index = project.ui_state.get("page_index")
             if isinstance(page_index, int) and 0 <= page_index < self.pages.count():
                 self.navigation_list.setCurrentRow(page_index)
@@ -821,6 +821,7 @@ class MainWindow(QMainWindow):
         self._source_restore_pending = None
         self._source_restore_index = None
         self._replay_store.Clear()
+        self._secondary_source_id = None
         self._channel_resolver = ChannelResolver(dataset, self._replay_store)
         bounds = self._channel_resolver.MissionReplayBounds_Get()
         self.time_range.Mission_Set((bounds.end_timestamp_us - bounds.start_timestamp_us) * 1e-6)
@@ -856,6 +857,9 @@ class MainWindow(QMainWindow):
             return
         self.overview_page.Dataset_Set(self._dataset)
         self.replay_page.Dataset_Set(self._dataset, self._replay_store)
+        self._secondary_source_id = self.replay_page._secondary_source_id
+        self.flight_page.SecondarySource_Set(self._secondary_source_id)
+        self.state_estimation_page.SecondarySource_Set(self._secondary_source_id)
         self.flight_page.Dataset_Set(self._dataset, self._channel_resolver)
         self.state_estimation_page.Dataset_Set(self._dataset, self._channel_resolver)
         self.explorer_page.Dataset_Set(self._dataset, self._replay_store)
@@ -913,8 +917,27 @@ class MainWindow(QMainWindow):
             )
         )
 
+    def _SecondarySource_Set(self, source_id: str | None) -> None:
+        if self._channel_resolver is None:
+            return
+        if source_id is not None:
+            selected = self._channel_resolver.Source_Get(source_id)
+            if (not selected.available or
+                    selected.source_id == self._channel_resolver.Source_Get().source_id):
+                source_id = None
+        self._secondary_source_id = source_id
+        self.replay_page.SecondarySource_Set(source_id)
+        self.flight_page.SecondarySource_Set(source_id)
+        self.state_estimation_page.SecondarySource_Set(source_id)
+        self.flight_page.Dataset_Set(self._dataset, self._channel_resolver)
+        self.state_estimation_page.Dataset_Set(self._dataset, self._channel_resolver)
+        self._TimeRange_Changed(self.time_range.controller.model)
+
     def _AnalysisSource_Set(self, source_id: str) -> None:
-        if not self._replay_store.ActiveSource_Set(source_id):
+        if (self._channel_resolver is None or
+                not self._channel_resolver.Source_Get(source_id).available or
+                not self._replay_store.ActiveSource_Set(source_id)):
+            self.status_label.setText(self._translator.Text_Get("comparison.unavailable"))
             return
         self._Pages_Refresh()
         self._Project_MarkDirty()
@@ -935,7 +958,9 @@ class MainWindow(QMainWindow):
         options = replace(options, selected_channels=selected, ui_theme=self._theme,
                           current_range=(self.time_range.controller.model.start,
                                          self.time_range.controller.model.end))
-        source_id = options.source_id or self._replay_store.ActiveSource_Get().source_id
+        source_id = (self._replay_store.ActiveSource_Get().source_id
+                     if options.source_mode == "follow_ui" else options.source_id)
+        source_id = source_id or self._replay_store.ActiveSource_Get().source_id
         source = self._channel_resolver.Source_Get(source_id)
         if not source.available:
             self.export_dialog.Result_Error(f"export_source_unavailable:{source_id}")

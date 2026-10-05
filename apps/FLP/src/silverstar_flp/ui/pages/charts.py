@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
+from silverstar_flp.ui.source_comparison import ComparisonSeries_Get
 
 from silverstar_flp.core.analysis_source import (
     AnalysisSourceKind,
@@ -153,6 +154,11 @@ class TraceColorAllocator:
     def __init__(self) -> None:
         self._index = 0
 
+    def Fork(self) -> TraceColorAllocator:
+        allocator = TraceColorAllocator()
+        allocator._index = self._index
+        return allocator
+
     def Color_Next(self) -> str:
         index = self._index
         self._index += 1
@@ -183,7 +189,10 @@ def _Series_Plot(
     if selected.size == 0:
         return
     full_t = series.timestamp_us[selected].astype(np.int64)
-    full_v = series.valid[selected]
+    full_values = np.asarray(series.values, dtype=np.float64)[selected]
+    finite = (np.isfinite(full_values) if full_values.ndim == 1
+              else np.all(np.isfinite(full_values), axis=1))
+    full_v = series.valid[selected] & finite
     cadence = np.diff(full_t)
     positive = cadence[cadence > 0]
     threshold = 3 * np.median(positive) if positive.size else np.inf
@@ -202,7 +211,7 @@ def _Series_Plot(
         series.timestamp_us[selected].astype(np.float64) - float(start_timestamp_us)
     ) * 1.0e-6
     values = np.asarray(series.values, dtype=np.float64)[selected].copy()
-    valid = np.asarray(series.valid, dtype=np.bool_)[selected]
+    valid = full_v[envelope]
     style = Qt.PenStyle.DashLine if reference else Qt.PenStyle.SolidLine
     if values.ndim == 1:
         values[~valid] = np.nan
@@ -329,6 +338,7 @@ class FlightPage(QWidget):
         self._playback_time_us = 0
         self._position: TimeSeries | None = None
         self._reference_position: TimeSeries | None = None
+        self._secondary_source_id: str | None = None
         self._attitude: TimeSeries | None = None
         self._mission_bounds: MissionReplayBounds | None = None
         self._trajectory_bounds: TrajectoryBounds | None = None
@@ -625,6 +635,9 @@ class FlightPage(QWidget):
         layout.addLayout(controls)
         return widget
 
+    def SecondarySource_Set(self, source_id: str | None) -> None:
+        self._secondary_source_id = source_id
+
     def Dataset_Set(
         self,
         dataset: FlightDataset,
@@ -692,54 +705,43 @@ class FlightPage(QWidget):
                     seconds=(onset - start) * 1e-6,
                 )
             )
-        selected_label = _Source_Label(self._translator, self._resolver, source_id)
-        reference_position = None
-        if source.kind != AnalysisSourceKind.RECORDED:
-            reference_position = self._resolver.RecordedSeries_Get("navigation.position_enu")
-        self._reference_position = reference_position
-        self.trajectory_sources_label.setText(
-            self._translator.Text_Get(
-                "flight.trajectory_two_sources",
-                recorded=_Source_Label(
-                    self._translator, self._resolver,
-                    ReplayResultStore.RECORDED_SOURCE_ID,
-                ),
-                selected=selected_label,
-            ) if reference_position is not None else ""
-        )
-        reference_label = _Source_Label(
-            self._translator, self._resolver, ReplayResultStore.RECORDED_SOURCE_ID
-        )
+        selected_label = self._translator.Text_Get("comparison.primary") + " · " + _Source_Label(
+            self._translator, self._resolver, source_id)
+        # Playback, event markers and horizontal trajectory remain primary-only.
+        self._reference_position = None
+        self.trajectory_sources_label.clear()
+        reasons = []
+        secondary_id = self._secondary_source_id
+        secondary_label = (self._translator.Text_Get("comparison.secondary") + " · " +
+                           _Source_Label(self._translator, self._resolver, secondary_id)
+                           if secondary_id is not None else "")
         for channel, selected_series, plot in (
             ("navigation.velocity_enu", velocity, self.velocity_plot),
             ("navigation.position_enu", position, self.position_plot),
             ("attitude.q_nb", attitude, self.quaternion_plot),
         ):
-            if source.kind != AnalysisSourceKind.RECORDED:
-                recorded = self._resolver.RecordedSeries_Get(channel)
-                _Series_Plot(
-                    plot, recorded, start, end_timestamp_us=end,
-                    colors=color_allocators[plot],
-                    prefix=f"{reference_label} · ",
-                    width=1.4, reference=True,
-                )
-                if channel == "attitude.q_nb" and recorded is not None:
-                    _Series_Plot(
-                        self.euler_plot, _EulerSeries_Create(recorded), start,
-                        end_timestamp_us=end, colors=color_allocators[self.euler_plot],
-                        prefix=f"{reference_label} · ",
-                        width=1.4, reference=True,
-                    )
-            _Series_Plot(
-                plot, selected_series, start, end_timestamp_us=end,
-                colors=color_allocators[plot], prefix=f"{selected_label} · ", width=1.7,
-            )
-        if attitude is not None:
-            _Series_Plot(
-                self.euler_plot, _EulerSeries_Create(attitude), start,
-                end_timestamp_us=end, colors=color_allocators[self.euler_plot],
-                prefix=f"{selected_label} · ", width=1.7,
-            )
+            raw_secondary = (self._resolver.Series_Get(channel, secondary_id)
+                             if secondary_id is not None else None)
+            secondary, reason = ComparisonSeries_Get(selected_series, raw_secondary,
+                                                     self._resolver, secondary_id)
+            if reason:
+                reasons.append(reason)
+            _Series_Plot(plot, selected_series, start, end_timestamp_us=end,
+                         colors=color_allocators[plot], prefix=f"{selected_label} · ", width=1.7)
+            _Series_Plot(plot, secondary, start, end_timestamp_us=end,
+                         colors=TraceColorAllocator(), prefix=f"{secondary_label} · ",
+                         reference=True)
+            if channel == "attitude.q_nb":
+                for layer, label, reference in ((selected_series, selected_label, False),
+                                                (secondary, secondary_label, True)):
+                    if layer is not None:
+                        _Series_Plot(self.euler_plot, _EulerSeries_Create(layer), start,
+                                     end_timestamp_us=end, colors=TraceColorAllocator(),
+                                     prefix=f"{label} · ", reference=reference)
+        if secondary_id is not None:
+            detail = " · ".join(self._translator.Text_Get(code) for code in dict.fromkeys(reasons))
+            self.source_detail_label.setText(self.source_detail_label.text() + "\n" +
+                secondary_label + " · " + (detail or self._translator.Text_Get("comparison.compatible")))
         _Series_Plot(
             self.acceleration_plot,
             self._resolver.RecordedSeries_Get("imu.corrected.accel_b"),

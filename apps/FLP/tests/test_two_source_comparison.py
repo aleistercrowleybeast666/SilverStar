@@ -67,6 +67,7 @@ def test_recorded_kf6_is_single_baseline_for_kf6_and_pure_ins(tmp_path):
     assert len(flight.velocity_plot.listDataItems()) == 3
     for entry in (kf_entry, pure_entry):
         assert store.ActiveSource_Set(entry.source_id)
+        flight.SecondarySource_Set("recorded:kf6")
         flight.Dataset_Set(dataset, resolver)
         app.processEvents()
         for plot, expected in ((flight.position_plot, 6),
@@ -76,9 +77,9 @@ def test_recorded_kf6_is_single_baseline_for_kf6_and_pure_ins(tmp_path):
             traces = plot.listDataItems()
             assert len(traces) == expected
             midpoint = expected // 2
-            assert all(item.opts["pen"].style() == Qt.PenStyle.DashLine
-                       for item in traces[:midpoint])
             assert all(item.opts["pen"].style() == Qt.PenStyle.SolidLine
+                       for item in traces[:midpoint])
+            assert all(item.opts["pen"].style() == Qt.PenStyle.DashLine
                        for item in traces[midpoint:])
         names = [item.name() for item in flight.position_plot.listDataItems()]
         assert sum("Recorded" in name for name in names) == 3

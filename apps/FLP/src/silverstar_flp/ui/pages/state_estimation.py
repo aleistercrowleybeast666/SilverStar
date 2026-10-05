@@ -47,6 +47,7 @@ from silverstar_flp.ui.pages.charts import (
 )
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 from silverstar_flp.ui.widgets import StandardComboBox
+from silverstar_flp.ui.source_comparison import ComparisonSeries_Get
 
 
 def _Series_ComponentsSelect(
@@ -114,6 +115,8 @@ class StateEstimationPage(QWidget):
         self._estimator_source: AnalysisSource | None = None
         self._visualization: EstimatorVisualizationSpec | None = None
         self._source_parameters: Mapping[str, object] = {}
+        self._secondary_source_id: str | None = None
+        self._comparison_reasons: list[str] = []
         self._interval = (0.0, float("inf"))
 
         layout = QVBoxLayout(self)
@@ -123,13 +126,18 @@ class StateEstimationPage(QWidget):
         self.source_value_label.setObjectName("muted")
         self.diagnostic_label = QLabel()
         self.diagnostic_label.setObjectName("muted")
+        self.diagnostic_label.setWordWrap(True)
         source_row.addWidget(self.source_label)
         source_row.addWidget(self.source_value_label, 1)
         source_row.addWidget(self.diagnostic_label, 2)
+        self.comparison_note = QLabel()
+        self.comparison_note.setObjectName("muted")
+        self.comparison_note.setWordWrap(True)
         self.reset_charts_button = QPushButton()
         self.reset_charts_button.clicked.connect(self._ChartViews_Reset)
         source_row.addWidget(self.reset_charts_button)
         layout.addLayout(source_row)
+        layout.addWidget(self.comparison_note)
         self.navigation_health_label = QLabel()
         self.navigation_health_label.setObjectName("warningLabel")
         self.navigation_health_label.setWordWrap(True)
@@ -292,6 +300,9 @@ class StateEstimationPage(QWidget):
         _PlotViews_Reset(self._Plots_Get())
         self.gnss_integrity.ChartViews_Reset()
 
+    def SecondarySource_Set(self, source_id: str | None) -> None:
+        self._secondary_source_id = source_id
+
     def Dataset_Set(
         self,
         dataset: FlightDataset,
@@ -310,6 +321,8 @@ class StateEstimationPage(QWidget):
             return
         selected = self._resolver.Source_Get()
         self._Content_Clear()
+        self._comparison_reasons = []
+        self._ComparisonNote_Refresh()
         self.source_value_label.setText(
             _Source_Label(self._translator, self._resolver, selected.source_id)
         )
@@ -322,6 +335,8 @@ class StateEstimationPage(QWidget):
             return
         visualization = plugin.metadata.estimator_visualization
         if visualization is None:
+            self._comparison_reasons.append("comparison.primary_missing")
+            self._ComparisonNote_Refresh()
             self.diagnostic_label.setText(self._translator.Text_Get("state.selected_no_estimator"))
             return
         self._estimator_source = selected
@@ -417,6 +432,10 @@ class StateEstimationPage(QWidget):
         ):
             combo.clear()
         _Plot_Reset(self._Plots_Get())
+        for plot in self._Plots_Get():
+            plot.setTitle("")
+            plot.setLabel("left", "")
+        self.state_estimate_plot.hide()
         self.nis_summary.clearContents()
         self.navigation_health_label.clear()
         self.navigation_health_label.hide()
@@ -478,6 +497,8 @@ class StateEstimationPage(QWidget):
     def _Refresh(self) -> None:
         if self._visualization is None:
             return
+        self._comparison_reasons = []
+        self._ComparisonNote_Refresh()
         health = self._Series_Get(self._visualization.navigation_health_channel)
         self.navigation_health_label.setVisible(health is not None)
         if health is not None and health.count:
@@ -506,22 +527,76 @@ class StateEstimationPage(QWidget):
             return None
         return self._resolver.Series_Get(channel_id, self._estimator_source.source_id)
 
-    def _ReferenceSeries_Get(self, channel_id: str) -> TimeSeries | None:
-        if (
-            not channel_id
-            or self._resolver is None
-            or self._estimator_source is None
-            or self._estimator_source.kind == AnalysisSourceKind.RECORDED
-        ):
+    def _SecondaryVisualization_Get(self) -> EstimatorVisualizationSpec | None:
+        if self._resolver is None or self._secondary_source_id is None:
             return None
-        selected = self._Series_Get(channel_id)
-        recorded = self._resolver.RecordedSeries_Get(channel_id)
-        return recorded if selected is not None else None
+        source = self._resolver.Source_Get(self._secondary_source_id)
+        if not source.available or source.algorithm_id is None:
+            return None
+        try:
+            return self._registry.Algorithm_Get(source.algorithm_id).metadata.estimator_visualization
+        except KeyError:
+            return None
+
+    def _ComparisonNote_Refresh(self) -> None:
+        if self._secondary_source_id is None or self._resolver is None:
+            self.comparison_note.clear()
+            return
+        label = self._ReferenceLabel_Get()
+        reasons = " · ".join(self._translator.Text_Get(code)
+                             for code in dict.fromkeys(self._comparison_reasons))
+        self.comparison_note.setText(label + " · " +
+            (reasons or self._translator.Text_Get("comparison.compatible")))
+
+    def _Reference_Check(self, primary: TimeSeries | None,
+                         secondary: TimeSeries | None) -> TimeSeries | None:
+        if self._resolver is None:
+            return None
+        series, reason = ComparisonSeries_Get(primary, secondary, self._resolver,
+                                              self._secondary_source_id)
+        if reason:
+            self._comparison_reasons.append(reason)
+        self._ComparisonNote_Refresh()
+        return series
+
+    def _ReferenceSeries_Get(self, channel_id: str) -> TimeSeries | None:
+        if not channel_id or self._resolver is None or self._secondary_source_id is None:
+            return None
+        # Only identical channel semantics use a direct lookup. Cross-algorithm
+        # covariance and measurements are mapped through their respective specs.
+        secondary = self._resolver.Series_Get(channel_id, self._secondary_source_id)
+        return self._Reference_Check(self._Series_Get(channel_id), secondary)
+
+    def _PrimaryLabel_Get(self) -> str:
+        return self._translator.Text_Get("comparison.primary") + " · " + self.source_value_label.text()
 
     def _ReferenceLabel_Get(self) -> str:
-        if self._resolver is None:
-            return self._translator.Text_Get("status.recorded")
-        return _Source_Label(self._translator, self._resolver, ReplayResultStore.RECORDED_SOURCE_ID)
+        if self._resolver is None or self._secondary_source_id is None:
+            return ""
+        return self._translator.Text_Get("comparison.secondary") + " · " + _Source_Label(
+            self._translator, self._resolver, self._secondary_source_id)
+
+    def _CovarianceSeries_Get(self, group: StateGroupSpec, *, reference: bool = False) -> TimeSeries | None:
+        primary = self._Covariance_Select(self._Series_Get(group.covariance_channel), group)
+        if not reference or self._resolver is None or self._secondary_source_id is None:
+            return primary if not reference else None
+        spec = self._SecondaryVisualization_Get()
+        other = next((item for item in spec.state_groups
+                      if (item.group_id, item.unit, item.component_names) ==
+                         (group.group_id, group.unit, group.component_names)), None) if spec else None
+        secondary = (self._Covariance_Select(
+            self._resolver.Series_Get(other.covariance_channel, self._secondary_source_id), other)
+            if other else None)
+        return self._Reference_Check(primary, secondary)
+
+    @staticmethod
+    def _Covariance_Select(series: TimeSeries | None, group: StateGroupSpec) -> TimeSeries | None:
+        if series is None or series.quantity != "covariance" or series.unit != "mixed":
+            return None
+        # Published diagonal storage is mixed-unit; the plugin group owns the
+        # indices and squared physical units of this selected block.
+        return _Series_ComponentsSelect(series, group.covariance_diagonal_indices,
+                                       group.component_names, unit=f"({group.unit})2")
 
     def _StateGroup_Get(self) -> StateGroupSpec | None:
         if self._visualization is None:
@@ -561,14 +636,10 @@ class StateEstimationPage(QWidget):
             unit = "1"
         colors = TraceColorAllocator()
         for raw_source, reference in (
-            (self._ReferenceSeries_Get(group.covariance_channel), True),
-            (self._Series_Get(group.covariance_channel), False),
+            (self._CovarianceSeries_Get(group, reference=True), True),
+            (self._CovarianceSeries_Get(group), False),
         ):
-            raw = _Series_ComponentsSelect(
-                raw_source,
-                group.covariance_diagonal_indices,
-                group.component_names,
-            )
+            raw = raw_source
             if raw is None:
                 continue
             values = np.asarray(raw.values, dtype=np.float64).copy()
@@ -599,8 +670,8 @@ class StateEstimationPage(QWidget):
                 self.covariance_plot,
                 series,
                 self._StartTimestamp_Get(),
-                colors=colors,
-                prefix=f"{self._ReferenceLabel_Get()} · " if reference else "",
+                colors=colors.Fork() if reference else colors,
+                prefix=f"{self._ReferenceLabel_Get() if reference else self._PrimaryLabel_Get()} · ",
                 reference=reference,
             )
         self.covariance_plot.setTitle(
@@ -616,8 +687,8 @@ class StateEstimationPage(QWidget):
                     self.state_estimate_plot,
                     series,
                     self._StartTimestamp_Get(),
-                    colors=colors,
-                    prefix=f"{self._ReferenceLabel_Get()} · " if reference else "",
+                    colors=colors.Fork() if reference else colors,
+                    prefix=f"{self._ReferenceLabel_Get() if reference else self._PrimaryLabel_Get()} · ",
                     reference=reference,
                 )
             self.state_estimate_plot.setTitle(
@@ -632,11 +703,33 @@ class StateEstimationPage(QWidget):
         *,
         reference: bool = False,
     ) -> TimeSeries | None:
-        return _Series_ComponentsSelect(
-            (self._ReferenceSeries_Get(channel_id) if reference else self._Series_Get(channel_id)),
-            tuple(range(group.dimension)),
-            group.component_names,
-        )
+        scalar = channel_id in (group.nis_channel, group.measurement_age_channel,
+                                 group.fixed_lag_latency_channel)
+        indices = (0,) if scalar else tuple(range(group.dimension))
+        columns = ("NIS",) if channel_id == group.nis_channel else ("Time",) if scalar else group.component_names
+        primary = _Series_ComponentsSelect(self._Series_Get(channel_id), indices, columns)
+        if not reference or self._resolver is None or self._secondary_source_id is None:
+            return primary if not reference else None
+        spec = self._SecondaryVisualization_Get()
+        other = next((item for item in spec.measurement_groups
+                      if (item.measurement_group_id, item.unit, item.component_names, item.dimension) ==
+                         (group.measurement_group_id, group.unit, group.component_names, group.dimension)),
+                     None) if spec else None
+        roles = ("innovation_channel", "nis_channel", "measurement_age_channel",
+                 "fixed_lag_latency_channel", "measurement_uncertainty_channel", "effective_r_channel")
+        role = next((name for name in roles if getattr(group, name) == channel_id), None)
+        secondary = (_Series_ComponentsSelect(
+            self._resolver.Series_Get(getattr(other, role), self._secondary_source_id),
+            indices, columns)
+            if other is not None and role is not None else None)
+        # Role/group specs prove physical equivalence; units and published
+        # quantities still need to agree. Unknown semantic variants stay absent.
+        return self._Reference_Check(primary, secondary)
+
+    def _MeasurementScalarReference_Get(self, channel_id: str, group: MeasurementGroupSpec) -> TimeSeries | None:
+        # NIS/timing are scalar even when the observation has several components.
+        secondary = self._MeasurementSeries_Get(channel_id, group, reference=True)
+        return _Series_ColumnSelect(secondary, 0)
 
     def _Innovation_Refresh(self) -> None:
         _Plot_Reset((self.innovation_plot,))
@@ -659,7 +752,7 @@ class StateEstimationPage(QWidget):
             series,
             self._StartTimestamp_Get(),
             colors=TraceColorAllocator(),
-            prefix=f"{self._translator.Text_Get('chart.innovation')} ",
+            prefix=f"{self._PrimaryLabel_Get()} · {self._translator.Text_Get('chart.innovation')} ",
         )
         self.innovation_plot.setTitle(f"{self._translator.Text_Get('chart.innovation')} · {label}")
         if series is not None:
@@ -674,9 +767,9 @@ class StateEstimationPage(QWidget):
         colors = TraceColorAllocator()
         _Series_Plot(
             self.nis_plot,
-            self._ReferenceSeries_Get(group.nis_channel),
+            self._MeasurementScalarReference_Get(group.nis_channel, group),
             self._StartTimestamp_Get(),
-            colors=colors,
+            colors=colors.Fork(),
             prefix=f"{self._ReferenceLabel_Get()} · NIS",
             reference=True,
         )
@@ -685,7 +778,7 @@ class StateEstimationPage(QWidget):
             series,
             self._StartTimestamp_Get(),
             colors=colors,
-            prefix="NIS",
+            prefix=f"{self._PrimaryLabel_Get()} · NIS",
             width=1.8,
         )
         for threshold in group.NisThresholds_Get():
@@ -732,7 +825,7 @@ class StateEstimationPage(QWidget):
             time,
             np.asarray((threshold, threshold), dtype=np.float64),
             pen=pg.mkPen(colors.Color_Next(), width=1.4, style=style),
-            name=self._translator.Text_Get(label_key),
+            name=f"{self._PrimaryLabel_Get()} · {self._translator.Text_Get(label_key)}",
         )
 
     def _MeasurementSigma_Get(
@@ -807,7 +900,7 @@ class StateEstimationPage(QWidget):
                 self.measurement_uncertainty_plot,
                 reference,
                 self._StartTimestamp_Get(),
-                colors=sigma_colors,
+                colors=sigma_colors.Fork(),
                 prefix=f"{self._ReferenceLabel_Get()} · {self._translator.Text_Get(label_key)} · ",
                 reference=True,
             )
@@ -816,7 +909,7 @@ class StateEstimationPage(QWidget):
                 series,
                 self._StartTimestamp_Get(),
                 colors=sigma_colors,
-                prefix=f"{self._translator.Text_Get(label_key)} · ",
+                prefix=f"{self._PrimaryLabel_Get()} · {self._translator.Text_Get(label_key)} · ",
             )
         unavailable = []
         if input_sigma is None or not np.any(input_sigma.valid):
@@ -839,9 +932,9 @@ class StateEstimationPage(QWidget):
         ):
             _Series_Plot(
                 self.measurement_age_plot,
-                self._ReferenceSeries_Get(channel_id),
+                self._MeasurementScalarReference_Get(channel_id, group),
                 self._StartTimestamp_Get(),
-                colors=timing_colors,
+                colors=timing_colors.Fork(),
                 prefix=f"{self._ReferenceLabel_Get()} · {self._translator.Text_Get(label_key)}",
                 reference=True,
             )
@@ -850,7 +943,7 @@ class StateEstimationPage(QWidget):
                 series,
                 self._StartTimestamp_Get(),
                 colors=timing_colors,
-                prefix=self._translator.Text_Get(label_key),
+                prefix=f"{self._PrimaryLabel_Get()} · {self._translator.Text_Get(label_key)}",
             )
         self.measurement_uncertainty_plot.setTitle(
             f"{self._translator.Text_Get('state.measurement_sigma')} · {label}"
