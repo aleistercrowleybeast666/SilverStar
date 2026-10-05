@@ -159,6 +159,7 @@ class LoggingStreamView:
     record_id: str = ""
     version: int = 0
     payload_size: int = 0
+    editable: bool = True
 
 
 @dataclass(frozen=True, slots=True)

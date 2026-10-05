@@ -2042,7 +2042,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                         self._translator.Text_Get("logging.decimation_suffix")
                     )
                     decimation.CommittedValue_Set(max(1, stream.decimation))
-                    decimation.setEnabled(stream.available)
+                    decimation.setEnabled(stream.available and stream.editable)
                 decimation.setToolTip(
                     self._translator.Text_Get("logging.decimation_help")
                 )
@@ -2066,7 +2066,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                     enabled_check.LockedState_Set(stream.available)
                 else:
                     enabled_check.setChecked(stream.enabled)
-                    enabled_check.setEnabled(stream.available)
+                    enabled_check.setEnabled(stream.available and stream.editable)
             enabled_check.setToolTip(
                 self._translator.Text_Get("logging.required_tooltip")
                 if stream.required and stream.available
@@ -2076,7 +2076,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                 kind=stream.cadence_kind,
                 text=stream.cadence_text,
                 period_us=stream.period_us,
-                enabled=stream.available,
+                enabled=stream.available and stream.editable,
             )
             name_item = self.logging_table.item(row, 1)
             if name_item is None:
@@ -2149,6 +2149,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                     record_id=original.record_id,
                     version=original.version,
                     payload_size=original.payload_size,
+                    editable=original.editable,
                 )
             )
         return tuple(values)
@@ -2169,6 +2170,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
     ) -> None:
         changed = False
         for row, stream in enumerate(self._streams):
+            if not stream.editable:
+                continue
             enabled_container = self.logging_table.cellWidget(row, 0)
             enabled_check = (
                 enabled_container.findChild(StandardCheckBox)

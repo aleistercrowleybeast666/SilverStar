@@ -134,6 +134,7 @@ class BuildOptions:
     tool_paths: dict[str, str] = field(default_factory=dict)
     memory_layout: str = "legacy"
     compact_mode: bool = False
+    logging_profile: str = "all_streams"
 
 
 @dataclass(frozen=True, slots=True)
@@ -537,6 +538,8 @@ class ProjectModel:
                 "tool_paths": dict(sorted(self.build.tool_paths.items())),
                 "memory_layout": self.build.memory_layout,
                 **({"compact_mode": True} if self.build.compact_mode else {}),
+                **({"logging_profile": self.build.logging_profile}
+                   if self.build.logging_profile != "all_streams" else {}),
             },
             "generated_glue": list(self.generated_glue),
             "component_provenance": self.component_provenance,
@@ -563,6 +566,8 @@ def _Hardware_Dictionary(hardware: HardwareConfiguration) -> dict[str, Any]:
 
 def _Build_Dictionary(build: BuildOptions) -> dict[str, Any]:
     result = asdict(build)
+    if build.logging_profile == "all_streams":
+        result.pop("logging_profile")
     if not build.compact_mode:
         result.pop("compact_mode")
     return result
@@ -1564,8 +1569,11 @@ def _Build_Parse(value: Any) -> BuildOptions:
         "eide_mode",
         "tool_paths",
     }
-    if set(data) - {"memory_layout", "compact_mode"} != expected:
+    if set(data) - {"memory_layout", "compact_mode", "logging_profile"} != expected:
         raise ProjectModelError("build has missing or unknown fields")
+    logging_profile = data.get("logging_profile", "all_streams")
+    if logging_profile not in ("all_streams", "sf6_minimal"):
+        raise ProjectModelError("build.logging_profile is invalid")
     compact_mode = data.get("compact_mode", False)
     if not isinstance(compact_mode, bool):
         raise ProjectModelError("build.compact_mode must be a boolean")
@@ -1616,6 +1624,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
         tool_paths=dict(tool_paths),
         memory_layout=memory_layout,
         compact_mode=compact_mode,
+        logging_profile=logging_profile,
     )
 
 

@@ -77,7 +77,11 @@ static SystemStartupReport s_startup;
 PlatformCriticalState PlatformCritical_Enter(void) { return 0U; }
 void PlatformCritical_Exit(PlatformCriticalState state) { (void)state; }
 uint64_t PlatformTime_Us(void) { return s_clock_us + (uint64_t)s_ticks * 1000ULL; }
+#ifdef SILVERSTAR_TEST_SF6_COMPACT
+uint64_t __wrap_SystemTime_GetMonotonicUs(void) { s_clock_us += 20ULL; return PlatformTime_Us(); }
+#else
 uint64_t SystemTime_GetMonotonicUs(void) { s_clock_us += 20ULL; return PlatformTime_Us(); }
+#endif
 const SystemStartupReport *SystemStartup_GetReport(void) { return &s_startup; }
 
 uint8_t SystemCalibration_IsReady(void) { return 1U; }
@@ -140,10 +144,14 @@ static void Fixture_ResultCheckAt(LoggerBusResult result, const char *file, unsi
 #define Fixture_ResultCheck(result) Fixture_ResultCheckAt((result), __FILE__, __LINE__)
 
 #include "test_sparse_preflight.h"
+#ifdef SILVERSTAR_TEST_SF6_COMPACT
+#include "test_sf6_compact_storage.h"
+#endif
 #if SYSTEM_BUILD_ESKF15_ENABLED
 #include "test_eskf_storage.h"
 #endif
 
+#ifndef SILVERSTAR_TEST_SF6_COMPACT
 static void Fixture_DefaultFrame(uint32_t frame, uint64_t now)
 {
     FlightLogRecord r = {0};
@@ -190,6 +198,7 @@ static void Fixture_DefaultFrame(uint32_t frame, uint64_t now)
     }
 }
 
+#endif
 static LoggerBusResult Fixture_RecordPush(uint32_t index, uint64_t now)
 {
     FlightLogRecord record;
@@ -247,7 +256,11 @@ static void Fixture_Produce(void)
         }
         else if (s_startup_burst_test)
         {
+#ifdef SILVERSTAR_TEST_SF6_COMPACT
+            Fixture_Sf6CompactFrame(s_produced++, s_next_production_us);
+#else
             Fixture_DefaultFrame(s_produced++, s_next_production_us);
+#endif
             result = LOGGER_BUS_RESULT_OK;
         }
         else { result = Fixture_RecordPush(s_produced++, s_next_production_us); }
@@ -430,6 +443,13 @@ static int Test_Writer(const char *output)
         (unsigned long)s_recovery_drops, (unsigned long)bus.overflow_count,
         (unsigned long)s_last_drop_frame);
     CHECK(bus.overflow_count == s_recovery_drops);
+#ifdef SILVERSTAR_TEST_SF6_COMPACT
+    CHECK(s_sf6_start_generation != 0U && s_sf6_start_acks == 1U);
+    CHECK(s_sf6_predict_count > 38000U && s_sf6_baro_count > 3800U);
+    printf("SF6_COMPACT_ACTUAL imu_hz=200 baro_hz=20 predicts=%lu baro=%lu start_ack=%lu slots=%u/%u\n",
+        (unsigned long)s_sf6_predict_count, (unsigned long)s_sf6_baro_count,
+        (unsigned long)s_sf6_start_acks, SYSTEM_LOG_RECORD_SLOT_SIZE, SYSTEM_LOG_ESTIMATOR_SLOT_SIZE);
+#endif
     CHECK(f_mount(NULL, "0:", 0U) == FR_OK);
     CHECK(f_mount(&s_fs, "0:", 1U) == FR_OK);
     CHECK(f_stat("0:/missions/000001/manifest", &info) == FR_OK);

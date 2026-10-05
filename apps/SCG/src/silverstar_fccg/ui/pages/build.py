@@ -32,6 +32,7 @@ class BuildPage(ScrollableLocalizedPage):
     actionRequested = Signal(str)
     memoryLayoutChanged = Signal(str)
     compactModeChanged = Signal(bool)
+    compactLogProfileChanged = Signal(str)
 
     _PRIMARY_ACTIONS: tuple[tuple[str, str], ...] = ()
     _TARGET_ACTIONS = (
@@ -63,6 +64,14 @@ class BuildPage(ScrollableLocalizedPage):
         self.Text_Register(self.compact_mode_checkbox, "field.compact_mode")
         self.compact_mode_checkbox.toggled.connect(self.compactModeChanged.emit)
         summary_form.addRow(self.compact_mode_checkbox)
+        self.compact_log_profile_label = QLabel()
+        self.Text_Register(self.compact_log_profile_label, "field.compact_log_profile")
+        self.compact_log_profile_combo = QComboBox()
+        for profile in ("all_streams", "sf6_minimal"):
+            self.compact_log_profile_combo.addItem(translator.Text_Get("logging.profile." + profile), profile)
+        self.compact_log_profile_combo.currentIndexChanged.connect(
+            lambda _: self.compactLogProfileChanged.emit(self.compact_log_profile_combo.currentData()))
+        summary_form.addRow(self.compact_log_profile_label, self.compact_log_profile_combo)
         self.memory_layout_label = QLabel()
         self.Text_Register(self.memory_layout_label, "field.memory_layout")
         self.memory_layout_combo = QComboBox()
@@ -457,6 +466,11 @@ class BuildPage(ScrollableLocalizedPage):
         with QSignalBlocker(self.compact_mode_checkbox):
             self.compact_mode_checkbox.setChecked(enabled)
 
+    def CompactLogProfile_Set(self, profile: str, available: bool) -> None:
+        with QSignalBlocker(self.compact_log_profile_combo):
+            self.compact_log_profile_combo.setCurrentIndex(self.compact_log_profile_combo.findData(profile))
+            self.compact_log_profile_combo.setEnabled(available)
+
     def GeneratedProject_Set(self, available: bool) -> None:
         self._target_generated["flight"] = available
         self._TargetActions_Update()
@@ -485,6 +499,9 @@ class BuildPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        for index in range(self.compact_log_profile_combo.count()):
+            self.compact_log_profile_combo.setItemText(index, translator.Text_Get(
+                "logging.profile." + self.compact_log_profile_combo.itemData(index)))
         for index in range(self.memory_layout_combo.count()):
             self.memory_layout_combo.setItemText(index, translator.Text_Get("memory.layout." + self.memory_layout_combo.itemData(index)))
         self.advanced_section.Title_Set(translator.Text_Get("group.advanced_build"))

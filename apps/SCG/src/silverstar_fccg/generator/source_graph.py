@@ -104,7 +104,8 @@ def _ModuleProviderActive_Is(
 def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGraph:
     catalog = catalog.ProjectView_Get(model)
     from silverstar_fccg.project.compact import CompactErrors_Get
-    compact_errors = CompactErrors_Get(model, catalog)
+    from silverstar_fccg.project.compact_logging import CompactLogProfileErrors_Get
+    compact_errors = CompactErrors_Get(model, catalog) + CompactLogProfileErrors_Get(model, catalog)
     if compact_errors:
         raise SourceGraphError("; ".join(compact_errors))
     sources: list[str] = []

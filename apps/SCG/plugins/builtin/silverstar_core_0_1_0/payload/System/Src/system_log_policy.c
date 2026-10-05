@@ -138,6 +138,9 @@ SystemDeviceResult SystemLogPolicy_StreamConfigure(
     }
     SILVERSTAR_ASSERT_OBJECT(config, SystemLogStreamConfig,
                              SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    if ((config->enabled != 0U) &&
+        (ProjectLogConfig_RecordSupported(config->record_type) == 0U))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     SystemLogPolicy_Init();
     state = PlatformCritical_Enter();
     index = SystemLogPolicy_StreamIndexFind(config->record_type);

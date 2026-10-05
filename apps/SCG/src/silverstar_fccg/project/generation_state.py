@@ -23,6 +23,8 @@ def ProjectGenerationState_Normalize(model: ProjectModel) -> dict[str, Any]:
         "target_profile": build["target_profile"],
         "toolchain_prefix": build["toolchain_prefix"],
         "eide_mode": build["eide_mode"],
+        **({"compact_mode": True} if build.get("compact_mode") else {}),
+        **({"logging_profile": build["logging_profile"]} if "logging_profile" in build else {}),
     }
     # Project files are strict JSON, so tuple-backed in-memory inventory values
     # and their list-backed loaded representation describe the same state.

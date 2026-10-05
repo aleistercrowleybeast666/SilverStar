@@ -25,6 +25,7 @@ from silverstar_fccg.project.model import (
     ProjectModel_Parse,
     ProjectModelError,
 )
+from silverstar_fccg.project.compact_logging import CompactLogProfileErrors_Get
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
 from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get,
@@ -752,6 +753,8 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         return ProjectValidationResult(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
+    issues.extend(ValidationIssue("error", "COMPACT_LOG_PROFILE", message)
+                  for message in CompactLogProfileErrors_Get(model, catalog))
     from silverstar_fccg.project.compact import CompactErrors_Get
     issues.extend(ValidationIssue("error", "COMPACT_DEVICE_LIMIT", message)
                   for message in CompactErrors_Get(model, catalog))
@@ -1156,6 +1159,8 @@ def Project_EditValidate(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
 
+    issues.extend(ValidationIssue("error", "COMPACT_LOG_PROFILE", message)
+                  for message in CompactLogProfileErrors_Get(model, catalog))
     from silverstar_fccg.project.compact import CompactErrors_Get
     issues.extend(ValidationIssue("error", "COMPACT_DEVICE_LIMIT", message)
                   for message in CompactErrors_Get(model, catalog))

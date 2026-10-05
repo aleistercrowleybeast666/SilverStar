@@ -36,6 +36,7 @@ from silverstar_fccg.project.capabilities import (
 from silverstar_fccg.project.generation_state import (
     ProjectDigest_Get,
 )
+from silverstar_fccg.project.compact_logging import CompactLogStreams_Get, SF6_MINIMAL_RECORDS
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
     LogRecordDefinition,
@@ -253,6 +254,8 @@ def _ProjectSemanticsWithoutLogging_Render(
         "mode_parameters": model.mode_parameters,
         "firmware_algorithm_parameters": AlgorithmParameters_Resolve(model, catalog),
         "available_records": [],
+        **({"logging_profile": model.build.logging_profile}
+           if model.build.logging_profile != "all_streams" else {}),
         "logging_streams": [
             {
                 "record": stream.record,
@@ -262,7 +265,7 @@ def _ProjectSemanticsWithoutLogging_Render(
                 "decimation_factor": stream.decimation,
                 "period_us": stream.period_us,
             }
-            for stream in model.logging_streams
+            for stream in CompactLogStreams_Get(model)
         ],
         "record_views": [],
         "raw_channel_id_templates": {},
@@ -569,6 +572,7 @@ def _LogHeader_Render() -> str:
 
 #include "system_log_policy.h"
 
+uint8_t ProjectLogConfig_RecordSupported(FlightLogRecordType type);
 uint16_t ProjectLogConfig_StreamCountGet(void);
 const SystemLogStreamConfig *ProjectLogConfig_StreamByIndexGet(
     uint16_t index);
@@ -769,11 +773,14 @@ def _FlightConfigHeader_Render(
         algorithm_count = sum(len(catalog.Component_Get(component).metadata.get(
             "algorithm_descriptors", [])) for component in model.ComponentIds_Get())
         snapshot_slots = 1 + len(descriptors) + algorithm_count + len(model.logging_streams)
+        if model.build.logging_profile == "sf6_minimal":
+            definitions.extend((("SYSTEM_LOG_RECORD_SLOT_SIZE", "168U"),
+                                ("SYSTEM_LOG_ESTIMATOR_SLOT_SIZE", "96U")))
         definitions.extend((
             ("PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS", f"{snapshot_slots}U"),
-            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", f"{snapshot_slots + 5}U"),
-            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "16U"),
-            ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "2048U"),
+            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", "56U" if model.build.logging_profile == "sf6_minimal" else f"{snapshot_slots + 5}U"),
+            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "40U" if model.build.logging_profile == "sf6_minimal" else "16U"),
+            ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "1024U" if model.build.logging_profile == "sf6_minimal" else "2048U"),
             ("SYSTEM_IMU_SAMPLE_BUS_DEPTH", "16U"),
             ("ESTIMATOR_BUS_DEPTH", "16U"),
             ("SYSTEM_USER_POWER_ENABLE", "1U" if any(
@@ -1935,6 +1942,8 @@ def LogDecoderProfile_Render(
                 LogAvailability_Get(definition, model, catalog),
             )
         ],
+        **({"logging_profile": model.build.logging_profile}
+           if model.build.logging_profile != "all_streams" else {}),
         "logging_streams": [
             {
                 "record": stream.record,
@@ -1943,7 +1952,7 @@ def LogDecoderProfile_Render(
                 "decimation_factor": stream.decimation,
                 "period_us": stream.period_us,
             }
-            for stream in model.logging_streams
+            for stream in CompactLogStreams_Get(model)
         ],
         "record_views": _LogRecordViews_Get(
             definitions, metadata, schema, model, catalog
@@ -2255,7 +2264,7 @@ def _LogRecordViews_Get(
     metadata_records = metadata.get("fccg", {}).get("records", {})
     if not isinstance(metadata_records, dict):
         metadata_records = {}
-    streams = {stream.record: stream for stream in model.logging_streams}
+    streams = {stream.record: stream for stream in CompactLogStreams_Get(model)}
     active_producers = ProjectLogProducers_Get(model, catalog)
     views: list[dict[str, Any]] = []
     for definition in definitions:
@@ -2390,18 +2399,78 @@ def _LogCatalogSection_Get(
 
 def _LogSource_Render(model: ProjectModel) -> str:
     rows = []
-    for stream in model.logging_streams:
+    for stream in CompactLogStreams_Get(model):
         rows.append(
             f"    {{{stream.record}, {1 if stream.enabled else 0}U, "
             f"{stream.decimation}U, {stream.period_us}UL,\n"
             f"     SSLOG_STREAM_POLICY_{stream.policy}}}"
         )
     body = ",\n".join(rows)
+    layout = {
+        'FLIGHT_LOG_RECORD_EVENT': ('event', False),
+        'FLIGHT_LOG_RECORD_STATS': ('stats', False),
+        'FLIGHT_LOG_RECORD_ESTIMATOR': ('estimator', True),
+        'FLIGHT_LOG_RECORD_SYSTEM_CONFIG': ('system_config', False),
+        'FLIGHT_LOG_RECORD_PURE_INS': ('pure_ins', False),
+        'FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC': ('kf6_diagnostic', True),
+        'FLIGHT_LOG_RECORD_KF6_FULL_P': ('kf6_full_p', True),
+        'FLIGHT_LOG_RECORD_POWER': ('power', False),
+        'FLIGHT_LOG_RECORD_HEALTH': ('health', False),
+        'FLIGHT_LOG_RECORD_TELEMETRY_DIAG': ('telemetry_diagnostic', False),
+        'FLIGHT_LOG_RECORD_INITIAL_STATE': ('initial_state', False),
+        'FLIGHT_LOG_RECORD_GNSS_NATIVE': ('gnss_native', False),
+        'FLIGHT_LOG_RECORD_BARO_NATIVE': ('baro_native', False),
+        'FLIGHT_LOG_RECORD_MAG_NATIVE': ('mag_native', False),
+        'FLIGHT_LOG_RECORD_INERTIAL_INCREMENT': ('inertial_increment', False),
+        'FLIGHT_LOG_RECORD_GNSS_MEASUREMENT': ('gnss_measurement', True),
+        'FLIGHT_LOG_RECORD_BARO_MEASUREMENT': ('baro_measurement', True),
+        'FLIGHT_LOG_RECORD_IMU_CORRECTED': ('imu_corrected', False),
+        'FLIGHT_LOG_RECORD_CALIBRATION_RESULT': ('calibration_result', False),
+        'FLIGHT_LOG_RECORD_ALIGNMENT_RESULT': ('alignment_result', False),
+        'FLIGHT_LOG_RECORD_MISSION_CONFIG': ('mission_config', False),
+        'FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR': ('device_descriptor', False),
+        'FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR': ('algorithm_descriptor', False),
+        'FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR': ('stream_descriptor', False),
+        'FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR': ('decoder_profile_descriptor', False),
+        'FLIGHT_LOG_RECORD_ESTIMATOR_STEP': ('estimator_step', True),
+        'FLIGHT_LOG_RECORD_GNSS_RECOVERY': ('gnss_recovery', True),
+        'FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC': ('landing_diagnostic', False),
+        'FLIGHT_LOG_RECORD_ESKF15_STATE': ('eskf15_state', False),
+        'FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART': ('eskf15_full_p_part', False),
+        'FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE': ('eskf15_initial_state', True),
+        'FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART': ('eskf15_initial_p_part', True),
+        'FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT': ('eskf15_measurement', True),
+        'FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT': ('eskf15_body_input', True),
+        'FLIGHT_LOG_RECORD_NAV_QUALITY': ('navigation_quality', True),
+        'FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE': ('alignment_evidence', False),
+        'FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY': ('mission_snapshot_identity', False),
+        'FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY': ('mag_calibration_identity', False),
+        'FLIGHT_LOG_RECORD_SF6_STATE': ('sf6_state', True),
+        'FLIGHT_LOG_RECORD_SF6_MEASUREMENT': ('sf6_measurement', True),
+    }
+    proofs = []
+    for stream in CompactLogStreams_Get(model):
+        if stream.enabled:
+            member, estimator = layout[stream.record]
+            slot = "SYSTEM_LOG_ESTIMATOR_SLOT_SIZE" if estimator else "SYSTEM_LOG_RECORD_SLOT_SIZE"
+            proofs.append(f'_Static_assert(offsetof(FlightLogRecord, payload) + sizeof(((FlightLogRecord *)0)->payload.{member}) <= {slot}, "{stream.record} does not fit its queue");')
+    proof_text = "\n".join(proofs)
+    supported = (sorted(SF6_MINIMAL_RECORDS) if model.build.logging_profile == "sf6_minimal" else sorted(layout))
+    cases = "\n".join(
+        f"        case {record}: return (uint8_t)(offsetof(FlightLogRecord, payload) + "
+        f"sizeof(((FlightLogRecord *)0)->payload.{layout[record][0]}) <= "
+        f"{'SYSTEM_LOG_ESTIMATOR_SLOT_SIZE' if layout[record][1] else 'SYSTEM_LOG_RECORD_SLOT_SIZE'});"
+        for record in supported) + "\n" + "\n".join(
+            f"        case {record}: return 0U;" for record in sorted(set(layout) - set(supported)))
     return f"""#include "project_log_config.h"
 
 {AUTOGEN_C_COMMENT}
 
 #include <stddef.h>
+#include "sslog_protocol.h"
+#include "system_user_config.h"
+
+{proof_text}
 
 static const SystemLogStreamConfig s_project_log_streams[] =
 {{
@@ -2411,6 +2480,15 @@ static const SystemLogStreamConfig s_project_log_streams[] =
 _Static_assert((sizeof(s_project_log_streams) /
                 sizeof(s_project_log_streams[0])) == SSLOG_RECORD_COUNT,
                "project log stream count mismatch");
+
+uint8_t ProjectLogConfig_RecordSupported(FlightLogRecordType type)
+{{
+    switch (type)
+    {{
+{cases}
+        default: return 0U;
+    }}
+}}
 
 uint16_t ProjectLogConfig_StreamCountGet(void)
 {{
@@ -2931,11 +3009,11 @@ def _MetadataSource_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
     digest = ProjectDigest_Get(model)
     device_rows_text = ",\n".join(device_rows)
     algorithm_rows_text = ",\n".join(algorithm_rows)
-    snapshot_assert = """#include "sslog_records.h"
+    snapshot_assert = f"""#include "sslog_records.h"
 _Static_assert((1U + sizeof(s_device_descriptors) / sizeof(s_device_descriptors[0]) +
                sizeof(s_algorithm_descriptors) / sizeof(s_algorithm_descriptors[0]) +
-               SSLOG_RECORD_COUNT) <= SYSTEM_LOG_RECORD_QUEUE_DEPTH,
-               "Compact log queue must hold all startup descriptors");""" if model.build.compact_mode and model.protocols.get("logging") is not None else ""
+               SSLOG_RECORD_COUNT{" + 4U + PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX" if model.build.logging_profile == "sf6_minimal" else ""}) <= {"65535U" if model.build.logging_profile == "sf6_minimal" else "SYSTEM_LOG_RECORD_QUEUE_DEPTH"},
+               "Snapshot descriptor count exceeds its owner cursor capacity");""" if model.build.compact_mode and model.protocols.get("logging") is not None else ""
     return f"""#include "system_descriptor_if.h"
 
 {AUTOGEN_C_COMMENT}
@@ -3705,7 +3783,7 @@ def _Configuration_Render(model: ProjectModel, catalog: PluginCatalog, graph: So
     lines.extend(("", "## SSLOG streams", ""))
     if model.protocols.get("logging") is None:
         lines.append("- Logging Protocol disabled; retained stream settings are inactive.")
-    for stream in model.logging_streams:
+    for stream in CompactLogStreams_Get(model):
         state = (
             "inactive (configured enabled)"
             if model.protocols.get("logging") is None and stream.enabled

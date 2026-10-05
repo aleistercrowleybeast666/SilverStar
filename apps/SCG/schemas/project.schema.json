@@ -299,6 +299,8 @@
         },
           "make_command": {"type": "string", "minLength": 1},
           "memory_layout": {"enum": ["legacy", "eskf_window_sram", "auto"], "default": "legacy"},
+          "compact_mode": {"type": "boolean", "default": false},
+          "logging_profile": {"enum": ["all_streams", "sf6_minimal"], "default": "all_streams"},
         "toolchain_prefix": {"type": "string", "pattern": "^[A-Za-z0-9_.+-]+$"},
         "gcc_path": {"type": "string"},
         "flash_command": {"type": "string"},

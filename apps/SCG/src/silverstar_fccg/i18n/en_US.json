@@ -958,5 +958,9 @@
   "device.raw_imu.mount.y_negative": "-Y toward nose",
   "device.raw_imu.mount.z_positive": "+Z toward nose",
   "device.raw_imu.mount.z_negative": "-Z toward nose",
-  "field.compact_mode": "Compact mode: at most one IMU, GNSS, telemetry and barometer"
+  "field.compact_mode": "Compact mode: at most one IMU, GNSS, telemetry and barometer",
+  "field.compact_log_profile": "Compact logging profile",
+  "logging.profile.all_streams": "All streams (retained settings)",
+  "logging.profile.sf6_minimal": "SF6 minimal (raw IMU/barometer + SF6 + lifecycle)",
+  "logging.profile.locked": "Controlled by the selected compact logging profile; select All streams to edit."
 }

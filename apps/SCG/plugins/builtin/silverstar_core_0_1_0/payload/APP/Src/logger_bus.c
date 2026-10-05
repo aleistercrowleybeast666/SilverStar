@@ -27,10 +27,10 @@ _Static_assert(FLIGHT_LOG_MAX_PAYLOAD_SIZE >=
 _Static_assert(FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR <= 0xFFU,
                "SSLOG0 record type must fit in one byte");
 static CommonSpscQueue s_logger_queue;
-static FlightLogRecord s_logger_storage[LOGGER_RECORD_QUEUE_DEPTH];
+static uint8_t s_logger_storage[LOGGER_RECORD_QUEUE_DEPTH][SYSTEM_LOG_RECORD_SLOT_SIZE];
 static CommonSpscQueue s_estimator_logger_queue;
-static FlightLogRecord
-    s_estimator_logger_storage[LOGGER_ESTIMATOR_RECORD_QUEUE_DEPTH];
+static uint8_t s_estimator_logger_storage[LOGGER_ESTIMATOR_RECORD_QUEUE_DEPTH]
+    [SYSTEM_LOG_ESTIMATOR_SLOT_SIZE];
 static LoggerBusDiagnostics s_diagnostics;
 static uint8_t s_initialized;
 static uint8_t s_next_estimator_queue;
@@ -66,6 +66,25 @@ typedef struct
 /* CPU-only owned copies: never passed to HAL, FatFs, a DMA engine or sink.
  * Target owns placement; targets without CCM retain ordinary static BSS. */
 static PLATFORM_CPU_FAST_BSS LoggerSnapshotRequest s_request;
+
+_Static_assert(SYSTEM_LOG_RECORD_SLOT_SIZE >= offsetof(FlightLogRecord, payload) &&
+    SYSTEM_LOG_RECORD_SLOT_SIZE <= sizeof(FlightLogRecord), "Invalid normal slot size");
+_Static_assert(SYSTEM_LOG_ESTIMATOR_SLOT_SIZE >= offsetof(FlightLogRecord, payload) &&
+    SYSTEM_LOG_ESTIMATOR_SLOT_SIZE <= sizeof(FlightLogRecord), "Invalid estimator slot size");
+
+/* Called with IRQ ownership held, before either queue's copy. A corrupted
+ * stride/capacity must fail-stop before accessing storage or the output. */
+static void LoggerBus_QueueGeometryValidate(const CommonSpscQueue *queue)
+{
+    uint8_t estimator = (uint8_t)(queue == &s_estimator_logger_queue);
+    SILVERSTAR_ASSERT((queue == &s_logger_queue) || estimator,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(queue->item_size == (estimator ? SYSTEM_LOG_ESTIMATOR_SLOT_SIZE :
+        SYSTEM_LOG_RECORD_SLOT_SIZE) && queue->capacity == (estimator ?
+        LOGGER_ESTIMATOR_RECORD_QUEUE_DEPTH : LOGGER_RECORD_QUEUE_DEPTH) &&
+        queue->storage == (estimator ? &s_estimator_logger_storage[0][0] : &s_logger_storage[0][0]),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+}
 
 static PlatformCriticalState LoggerBus_IrqLock(void)
 {
@@ -116,6 +135,7 @@ static LoggerBusResult LoggerBus_QueuePush(
         LoggerBus_IrqUnlock(state);
         return LOGGER_BUS_RESULT_OK;
     }
+    LoggerBus_QueueGeometryValidate(queue);
     queue_result = CommonSpscQueue_Push(queue, record);
     if (queue_result == COMMON_SPSC_QUEUE_RESULT_OK)
     {
@@ -135,6 +155,74 @@ static LoggerBusResult LoggerBus_QueuePush(
         LOGGER_BUS_RESULT_FULL : LOGGER_BUS_RESULT_BAD_PARAM;
 }
 
+/* C object sizes include native padding; SSLOG wire sizes are unrelated.
+ * Byte slots are copied by memcpy and are never dereferenced as typed objects. */
+static size_t LoggerBus_PayloadSizeGet(FlightLogRecordType type)
+{
+    switch (type)
+    {
+        case FLIGHT_LOG_RECORD_EVENT: return sizeof(((FlightLogRecord *)0)->payload.event);
+        case FLIGHT_LOG_RECORD_STATS: return sizeof(((FlightLogRecord *)0)->payload.stats);
+        case FLIGHT_LOG_RECORD_ESTIMATOR: return sizeof(((FlightLogRecord *)0)->payload.estimator);
+        case FLIGHT_LOG_RECORD_SYSTEM_CONFIG: return sizeof(((FlightLogRecord *)0)->payload.system_config);
+        case FLIGHT_LOG_RECORD_PURE_INS: return sizeof(((FlightLogRecord *)0)->payload.pure_ins);
+        case FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC: return sizeof(((FlightLogRecord *)0)->payload.kf6_diagnostic);
+        case FLIGHT_LOG_RECORD_KF6_FULL_P: return sizeof(((FlightLogRecord *)0)->payload.kf6_full_p);
+        case FLIGHT_LOG_RECORD_POWER: return sizeof(((FlightLogRecord *)0)->payload.power);
+        case FLIGHT_LOG_RECORD_HEALTH: return sizeof(((FlightLogRecord *)0)->payload.health);
+        case FLIGHT_LOG_RECORD_TELEMETRY_DIAG: return sizeof(((FlightLogRecord *)0)->payload.telemetry_diagnostic);
+        case FLIGHT_LOG_RECORD_INITIAL_STATE: return sizeof(((FlightLogRecord *)0)->payload.initial_state);
+        case FLIGHT_LOG_RECORD_GNSS_NATIVE: return sizeof(((FlightLogRecord *)0)->payload.gnss_native);
+        case FLIGHT_LOG_RECORD_BARO_NATIVE: return sizeof(((FlightLogRecord *)0)->payload.baro_native);
+        case FLIGHT_LOG_RECORD_MAG_NATIVE: return sizeof(((FlightLogRecord *)0)->payload.mag_native);
+        case FLIGHT_LOG_RECORD_INERTIAL_INCREMENT: return sizeof(((FlightLogRecord *)0)->payload.inertial_increment);
+        case FLIGHT_LOG_RECORD_GNSS_MEASUREMENT: return sizeof(((FlightLogRecord *)0)->payload.gnss_measurement);
+        case FLIGHT_LOG_RECORD_BARO_MEASUREMENT: return sizeof(((FlightLogRecord *)0)->payload.baro_measurement);
+        case FLIGHT_LOG_RECORD_IMU_CORRECTED: return sizeof(((FlightLogRecord *)0)->payload.imu_corrected);
+        case FLIGHT_LOG_RECORD_CALIBRATION_RESULT: return sizeof(((FlightLogRecord *)0)->payload.calibration_result);
+        case FLIGHT_LOG_RECORD_ALIGNMENT_RESULT: return sizeof(((FlightLogRecord *)0)->payload.alignment_result);
+        case FLIGHT_LOG_RECORD_MISSION_CONFIG: return sizeof(((FlightLogRecord *)0)->payload.mission_config);
+        case FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR: return sizeof(((FlightLogRecord *)0)->payload.device_descriptor);
+        case FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR: return sizeof(((FlightLogRecord *)0)->payload.algorithm_descriptor);
+        case FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR: return sizeof(((FlightLogRecord *)0)->payload.stream_descriptor);
+        case FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR: return sizeof(((FlightLogRecord *)0)->payload.decoder_profile_descriptor);
+        case FLIGHT_LOG_RECORD_ESTIMATOR_STEP: return sizeof(((FlightLogRecord *)0)->payload.estimator_step);
+        case FLIGHT_LOG_RECORD_GNSS_RECOVERY: return sizeof(((FlightLogRecord *)0)->payload.gnss_recovery);
+        case FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC: return sizeof(((FlightLogRecord *)0)->payload.landing_diagnostic);
+        case FLIGHT_LOG_RECORD_ESKF15_STATE: return sizeof(((FlightLogRecord *)0)->payload.eskf15_state);
+        case FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART: return sizeof(((FlightLogRecord *)0)->payload.eskf15_full_p_part);
+        case FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE: return sizeof(((FlightLogRecord *)0)->payload.eskf15_initial_state);
+        case FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART: return sizeof(((FlightLogRecord *)0)->payload.eskf15_initial_p_part);
+        case FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT: return sizeof(((FlightLogRecord *)0)->payload.eskf15_measurement);
+        case FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT: return sizeof(((FlightLogRecord *)0)->payload.eskf15_body_input);
+        case FLIGHT_LOG_RECORD_NAV_QUALITY: return sizeof(((FlightLogRecord *)0)->payload.navigation_quality);
+        case FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE: return sizeof(((FlightLogRecord *)0)->payload.alignment_evidence);
+        case FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY: return sizeof(((FlightLogRecord *)0)->payload.mission_snapshot_identity);
+        case FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY: return sizeof(((FlightLogRecord *)0)->payload.mag_calibration_identity);
+        case FLIGHT_LOG_RECORD_SF6_STATE: return sizeof(((FlightLogRecord *)0)->payload.sf6_state);
+        case FLIGHT_LOG_RECORD_SF6_MEASUREMENT: return sizeof(((FlightLogRecord *)0)->payload.sf6_measurement);
+        default: return 0U;
+    }
+}
+
+static uint8_t LoggerBus_EstimatorLaneGet(FlightLogRecordType type)
+{
+    return (uint8_t)(type == FLIGHT_LOG_RECORD_BARO_MEASUREMENT ||
+        type == FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT ||
+        type == FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART ||
+        type == FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE ||
+        type == FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT ||
+        type == FLIGHT_LOG_RECORD_ESTIMATOR ||
+        type == FLIGHT_LOG_RECORD_ESTIMATOR_STEP ||
+        type == FLIGHT_LOG_RECORD_GNSS_MEASUREMENT ||
+        type == FLIGHT_LOG_RECORD_GNSS_RECOVERY ||
+        type == FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC ||
+        type == FLIGHT_LOG_RECORD_KF6_FULL_P ||
+        type == FLIGHT_LOG_RECORD_NAV_QUALITY ||
+        type == FLIGHT_LOG_RECORD_SF6_MEASUREMENT ||
+        type == FLIGHT_LOG_RECORD_SF6_STATE);
+}
+
 static LoggerBusResult LoggerBus_RecordPush(
     FlightLogRecordType type, uint64_t timestamp_us,
     uint32_t valid_flags, const void *payload,
@@ -142,7 +230,13 @@ static LoggerBusResult LoggerBus_RecordPush(
 {
     FlightLogRecord record;
 
-    if ((payload == NULL) || (payload_size > sizeof(record.payload)))
+    size_t expected = LoggerBus_PayloadSizeGet(type);
+    size_t slot = (estimator_queue != 0U) ? SYSTEM_LOG_ESTIMATOR_SLOT_SIZE :
+        SYSTEM_LOG_RECORD_SLOT_SIZE;
+    if ((payload == NULL) || (expected == 0U) || (payload_size != expected) ||
+        (estimator_queue != LoggerBus_EstimatorLaneGet(type)) ||
+        (offsetof(FlightLogRecord, payload) + expected > slot) ||
+        (payload_size > sizeof(record.payload)))
     {
         return LOGGER_BUS_RESULT_BAD_PARAM;
     }
@@ -302,10 +396,10 @@ LoggerBusResult LoggerBus_Init(void)
                  sizeof(s_estimator_logger_storage));
     normal_result = CommonSpscQueue_Init(
         &s_logger_queue, s_logger_storage,
-        LOGGER_RECORD_QUEUE_DEPTH, sizeof(FlightLogRecord));
+        LOGGER_RECORD_QUEUE_DEPTH, SYSTEM_LOG_RECORD_SLOT_SIZE);
     estimator_result = CommonSpscQueue_Init(
         &s_estimator_logger_queue, s_estimator_logger_storage,
-        LOGGER_ESTIMATOR_RECORD_QUEUE_DEPTH, sizeof(FlightLogRecord));
+        LOGGER_ESTIMATOR_RECORD_QUEUE_DEPTH, SYSTEM_LOG_ESTIMATOR_SLOT_SIZE);
     if ((normal_result != COMMON_SPSC_QUEUE_RESULT_OK) ||
         (estimator_result != COMMON_SPSC_QUEUE_RESULT_OK))
     {
@@ -1223,7 +1317,24 @@ static LoggerBusResult LoggerBus_QueuePop(
         return LOGGER_BUS_RESULT_BAD_PARAM;
     }
     state = LoggerBus_IrqLock();
+    if (s_initialized == 0U)
+    {
+        LoggerBus_IrqUnlock(state);
+        return LOGGER_BUS_RESULT_BAD_PARAM;
+    }
+    LoggerBus_QueueGeometryValidate(queue);
+    (void)memset(record, 0, sizeof(*record));
     result = CommonSpscQueue_Pop(queue, record);
+    if (result == COMMON_SPSC_QUEUE_RESULT_OK)
+    {
+        size_t payload_size = LoggerBus_PayloadSizeGet(record->record_type);
+        SILVERSTAR_ASSERT(payload_size != 0U &&
+            (offsetof(FlightLogRecord, payload) + payload_size <= queue->item_size),
+            SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+        SILVERSTAR_ASSERT(LoggerBus_EstimatorLaneGet(record->record_type) ==
+            (uint8_t)(queue == &s_estimator_logger_queue),
+            SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    }
     if (result == COMMON_SPSC_QUEUE_RESULT_OK) { s_diagnostics.dequeued_count++; }
     LoggerBus_IrqUnlock(state);
     if (result == COMMON_SPSC_QUEUE_RESULT_OK)

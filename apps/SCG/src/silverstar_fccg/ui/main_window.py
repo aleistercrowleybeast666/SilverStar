@@ -96,6 +96,7 @@ from silverstar_fccg.project.folder_contract import (
     FLIGHT_DIRECTORY,
 )
 from silverstar_fccg.project.lifecycle import ProjectLifecycleState
+from silverstar_fccg.project.compact_logging import CompactLogStreams_Get
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
     LogCadenceKind,
@@ -566,6 +567,7 @@ class MainWindow(QMainWindow):
         self.build_page.actionRequested.connect(self._Build_Request)
         self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
         self.build_page.compactModeChanged.connect(self._CompactMode_Change)
+        self.build_page.compactLogProfileChanged.connect(self._CompactLogProfile_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
             self._PluginInstall_Dialog
         )
@@ -838,6 +840,8 @@ class MainWindow(QMainWindow):
             )
             self.build_page.MemoryLayout_Set(display.model.build.memory_layout)
             self.build_page.CompactMode_Set(display.model.build.compact_mode)
+            self.build_page.CompactLogProfile_Set(display.model.build.logging_profile,
+                display.model.build.compact_mode and display.model.strategies.get("estimator") == "silverstar.algorithm.estimator.sf6")
             if not self._alignment_commit_in_progress:
                 self.algorithm_parameters_page.AlignmentConfiguration_Set(
                     display.model.alignment,
@@ -916,7 +920,7 @@ class MainWindow(QMainWindow):
         definitions,
         model: ProjectModel,
     ) -> tuple[LoggingStreamView, ...]:
-        streams = {stream.record: stream for stream in model.logging_streams}
+        streams = {stream.record: stream for stream in CompactLogStreams_Get(model)}
         views: list[LoggingStreamView] = []
         for definition in definitions:
             stream = streams[definition.record]
@@ -961,7 +965,9 @@ class MainWindow(QMainWindow):
                     purpose=definition.purpose.value,
                     required=definition.level == LogPolicyLevel.REQUIRED,
                     available=availability.available,
-                    availability_reason=reason,
+                    editable=model.build.logging_profile == "all_streams",
+                    availability_reason=(self._translator.Text_Get("logging.profile.locked")
+                        if model.build.logging_profile != "all_streams" else reason),
                     record_id=definition.record_id,
                     version=definition.version,
                     payload_size=definition.payload_size,
@@ -1040,6 +1046,8 @@ class MainWindow(QMainWindow):
         model: ProjectModel,
         stream_views: tuple[LoggingStreamView, ...],
     ) -> None:
+        if model.build.logging_profile != "all_streams":
+            return
         if stream_views:
             model.logging_streams = [
                 LogStreamConfig(
@@ -1069,7 +1077,15 @@ class MainWindow(QMainWindow):
 
     def _CompactMode_Change(self, enabled: bool) -> None:
         def mutate(model: ProjectModel) -> None:
-            model.build = replace(model.build, compact_mode=enabled)
+            model.build = replace(model.build, compact_mode=enabled,
+                logging_profile=model.build.logging_profile if enabled else "all_streams")
+        self._ProjectConfiguration_Change(mutate)
+
+    def _CompactLogProfile_Change(self, profile: str) -> None:
+        if profile not in ("all_streams", "sf6_minimal"):
+            return
+        def mutate(model: ProjectModel) -> None:
+            model.build = replace(model.build, logging_profile=profile)
         self._ProjectConfiguration_Change(mutate)
 
     def _ProjectConfiguration_Change(

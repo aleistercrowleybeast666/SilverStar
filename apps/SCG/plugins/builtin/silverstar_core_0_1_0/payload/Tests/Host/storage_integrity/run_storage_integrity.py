@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 
-def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
+def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False) -> Path:
     fixture = Path(__file__).resolve().parent
     output = project / "build/FCCG/Host/Tests/StorageIntegrity"
     output.mkdir(parents=True, exist_ok=True)
@@ -80,6 +80,19 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
         "Devices/Storage/SdSdioFatFs/Src/mission_snapshot.c",
         "Devices/Storage/SdSdioFatFs/Src/mag_calibration_storage.c",
         "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c")]
+    if sf6_compact:
+        selected = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))
+        if selected["build"].get("logging_profile") != "sf6_minimal":
+            raise ValueError("SF6 compact pressure fixture requires the explicit SF6 minimal profile")
+        logger_sources += [project / relative for relative in (
+            "Algorithm/Estimator/SF6/Src/navigation_sf6.c",
+            "Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c",
+            "Algorithm/Common/Src/geodesy_local.c",
+            "Algorithm/Common/Src/attitude_frame.c",
+            "Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c",
+            "APP/Src/estimator_bus.c", "System/Src/system_navigation_health.c",
+            "System/Src/system_gnss_quality.c", "System/Src/system_barometer.c",
+            "System/Src/system_time.c")]
     # Reuse the generated Host include contract; never discover production sources.
     host_script = (project / "Tests/Host/run_tests.ps1").read_text(encoding="utf-8")
     host_includes = re.findall(r'"-I\$repoRoot\\([^"\r\n]+)"', host_script)
@@ -90,6 +103,9 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
     writer = output / "logger_storage.exe"
     command = flags + ["-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
                        "-include", str(project / "Generated/Inc/project_flight_config.h")]
+    if sf6_compact:
+        command += ["-DSILVERSTAR_TEST_SF6_COMPACT=1", "-DSYSTEM_BUILD_SF6_ENABLED=1U",
+                    "-Wl,--wrap=SystemTime_GetMonotonicUs"]
     source_graph = (project / "Generated/project_sources.mk").read_text(encoding="utf-8")
     for name in ("SYSTEM_BUILD_ESTIMATOR_ENABLED", "SYSTEM_BUILD_FUSION_ALGORITHM"):
         values = re.findall(r"^\s+" + name + r"=(\w+)\s*\\?\s*$", source_graph, re.MULTILINE)
@@ -118,8 +134,10 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
     decoders = list(project.glob("*.ssdecoder"))
     if len(decoders) != 1:
         raise ValueError("exactly one generated decoder is required for writer acceptance")
-    for mode in ("normal", "overflow", "startup-overflow", "startup-burst", "startup-burst-overload"):
-        writer_log = output / f"logger-{mode}.sslog"
+    modes = (("startup-burst", "startup-burst-overload") if sf6_compact else
+             ("normal", "overflow", "startup-overflow", "startup-burst", "startup-burst-overload"))
+    for mode in modes:
+        writer_log = output / f"{'sf6-compact' if sf6_compact else 'logger'}-{mode}.sslog"
         command = [str(writer), str(writer_log)] + ([mode] if mode != "normal" else [])
         subprocess.run(command, check=True, cwd=project, env=environment)
         command = [sys.executable, str(auditor), str(writer_log), "--decoder", str(decoders[0])]
@@ -141,7 +159,7 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
             full_p = next(stream for stream in streams if stream["record"] == "FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART")
             if full_p["enabled"] and (counts.get("ESKF15_FULL_P_PART", 0) == 0 or counts["ESKF15_FULL_P_PART"] % 4):
                 raise ValueError("Enabled ESKF full covariance must persist whole four-part snapshots")
-    for diagnostic in (False, True):
+    for diagnostic in (() if sf6_compact else (False, True)):
         if diagnostic:
             writer = output / "logger_preflight_diagnostic.exe"
             command = writer_command[:-1] + [str(writer)]
@@ -164,5 +182,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project", type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument("--compiler", default="gcc")
+    parser.add_argument("--sf6-compact", action="store_true",
+                        help="Separate 200 Hz IMU/20 Hz barometer/actual SF6 profile stress; does not run all-stream stress")
     args = parser.parse_args()
-    StorageIntegrity_Run(args.project.resolve(), args.compiler)
+    StorageIntegrity_Run(args.project.resolve(), args.compiler, args.sf6_compact)
