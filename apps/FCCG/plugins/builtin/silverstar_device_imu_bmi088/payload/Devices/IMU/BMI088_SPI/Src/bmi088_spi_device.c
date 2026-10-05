@@ -45,7 +45,7 @@ static SensorImuResult Bmi088Spi_FrameRead(SensorImu *imu, uint8_t *frame)
     { return SENSOR_IMU_BUS_ERROR; }
     if (SensorRegister_Read(&imu->bus, 0x22U, temperature, 2U) != SENSOR_BUS_OK)
     { return SENSOR_IMU_BUS_ERROR; }
-    temp = (int32_t)temperature[0] * 8L + (temperature[1] >> 5U);
+    temp = (int32_t)temperature[0] * 8 + (int32_t)(temperature[1] >> 5U);
     if (temp == 1024L) { return SENSOR_IMU_NOT_READY; }
     if (temp > 1023L) { temp -= 2048L; }
     frame[12] = (uint8_t)((uint16_t)temp & 0xFFU);

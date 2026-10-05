@@ -61,6 +61,23 @@ def test_joint_bmi088_sync_actual_c_mock(tmp_path: Path) -> None:
     assert output.count("official image/reset/readback/pairing/order/gap/reentry/cross-epoch/stall/errors PASS") == 2
 
 
+def test_joint_bmi088_temperature_sources_strict_compile(tmp_path: Path) -> None:
+    common = BUILTIN / "silverstar_sensor_register_bus/payload/Devices/SensorBus"
+    bmi = BUILTIN / "silverstar_device_imu_bmi088/payload/Devices/IMU"
+    core = BUILTIN / "silverstar_core_0_1_0/payload"
+    includes = [common / "Inc", bmi / "BMI088/Inc", bmi / "BMI088_SPI/Inc",
+                core / "Interfaces/Inc", core / "System/Inc", PLATFORM_API_INCLUDES]
+    sources = [common / "Src/sensor_bmi088_sync.c",
+               bmi / "BMI088/Src/bmi088_device.c",
+               bmi / "BMI088_SPI/Src/bmi088_spi_device.c"]
+    for index, source in enumerate(sources):
+        command = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror",
+                   "-Wconversion", "-pedantic", "-c", str(source),
+                   "-o", str(tmp_path / f"bmi_temperature_{index}.o")]
+        command += ["-I" + str(path) for path in includes]
+        _Command_Run(command, tmp_path, f"bmi_temperature_{index}")
+
+
 def test_joint_sensor_real_generation_dual_i2c_binding(builtin_catalog, tmp_path: Path) -> None:
     from silverstar_fccg.generator.render import _ResourceHeader_Render
     from silverstar_fccg.generator.source_graph import SourceGraph_Resolve

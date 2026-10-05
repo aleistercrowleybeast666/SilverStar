@@ -132,7 +132,7 @@ static SensorImuResult SensorBmi088Sync_FrameRead(SensorImu *imu, uint8_t *frame
     { return SENSOR_IMU_BUS_ERROR; }
     if (memcmp(&frame[6], gyro_check, sizeof(gyro_check)) != 0)
     { imu->history_reset = 1U; return SENSOR_IMU_TIME_ERROR; }
-    temp = (int32_t)temperature[0] * 8L + (temperature[1] >> 5U);
+    temp = (int32_t)temperature[0] * 8 + (int32_t)(temperature[1] >> 5U);
     if (temp == 1024L) { return SENSOR_IMU_NOT_READY; }
     if (temp > 1023L) { temp -= 2048L; }
     frame[12] = (uint8_t)((uint16_t)temp & 0xFFU);
