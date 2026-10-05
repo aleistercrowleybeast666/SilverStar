@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 def Application_Start(name: str) -> int:
-    implementation = "FCCG" if name == "SCG" else name
+    implementation = "SCG" if name in {"SCG", "FCCG"} else name
     application_root = Path(__file__).resolve().parents[1] / "apps" / implementation
     sys.path.insert(0, str(application_root))
     try:

@@ -14,7 +14,7 @@ def eskf_trace_executables(tmp_path_factory):
     if gcc is None:
         pytest.skip("Host GCC unavailable")
     root = Path(__file__).resolve().parents[3]
-    app = root / "apps/FCCG"
+    app = root / "apps/SCG"
     relative = "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15"
     baseline_commit = os.environ.get("SILVERSTAR_ESKF_BASELINE", "42d4203b0158184e4a8609a1a971a788f335cfb0")
     directory = tmp_path_factory.mktemp("eskf-equivalence")
@@ -28,7 +28,7 @@ def eskf_trace_executables(tmp_path_factory):
     executables = {}
     commands = []
     for optimization in ("-O0", "-O2"):
-        for version, source in (("before", baseline), ("after", root / relative)):
+        for version, source in (("before", baseline), ("after", root / relative.replace("apps/FCCG/", "apps/SCG/", 1))):
             exe = directory / f"{version}{optimization}.exe"
             command = [gcc, "-std=c11", optimization, "-Wall", "-Wextra", "-Werror", "-pedantic",
                 "-fno-fast-math", "-ffp-contract=off", "-I" + str(source / "Inc"),

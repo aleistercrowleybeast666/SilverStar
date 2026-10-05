@@ -7,7 +7,7 @@ SilverStar
 └─ FLP  — immutable SSLOG log opening, exact decoder validation, replay and export
 ```
 
-`apps/FCCG`, `apps/GSHC` and `apps/FLP` retain their existing internal module names. The root launchers locate their applications; they contain no product logic. All use one Python environment and the root `VERSION` for product release identity.
+`apps/SCG`, `apps/GSHC` and `apps/FLP` retain their existing internal module names. The root launchers locate their applications; they contain no product logic. All use one Python environment and the root `VERSION` for product release identity.
 
 `contracts/navigation_v1.json` is the one machine-readable navigation contract. FCCG generation, GSHC navigation documentation and FLP replay share that authority. AIR M0, SSLOG 0.0, `.ssdecoder`, project semantics and navigation revision are separate compatibility identities and remain unchanged by the product release version.
 

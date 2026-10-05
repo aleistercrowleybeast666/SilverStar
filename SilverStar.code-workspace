@@ -20,7 +20,7 @@
   "launch": {
     "version": "0.2.0",
     "configurations": [
-      { "name": "FCCG", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/FCCG.py", "cwd": "${workspaceFolder}" },
+      { "name": "SCG", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/SCG.py", "cwd": "${workspaceFolder}" },
       { "name": "GSHC", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/GSHC.py", "cwd": "${workspaceFolder}" },
       { "name": "FLP", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/FLP.py", "cwd": "${workspaceFolder}" }
     ]

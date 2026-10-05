@@ -1,5 +1,7 @@
 # SilverStar_FCCG Architecture
 
+Current application implementation: `apps/SCG`. The Python package and plugin IDs retain FCCG compatibility names. `docs/FCCG` and frozen evidence paths are historical namespaces; their recorded bytes and hashes are preserved.
+
 The current 0.1.1 pre-release project format is 14. The following “Algorithm actual parameters” paragraph describes a historical format-12 stage; the current UI uses Navigation Configuration and separate Flight and Ground targets.
 
 ## Algorithm actual parameters / 算法实际参数

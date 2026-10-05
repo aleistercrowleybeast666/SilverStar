@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 REPO = Path(__file__).resolve().parents[1]
-sys.path[:0] = [str(REPO / "apps/FCCG/src"), str(REPO / "apps/FCCG/tests")]
+sys.path[:0] = [str(REPO / "apps/SCG/src"), str(REPO / "apps/SCG/tests")]
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
@@ -52,10 +52,10 @@ def main():
         run([executable, "--version"], REPO, output / (tool + "-version.log"))
     report["source_commit"] = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip()
     report["dirty_status"] = subprocess.check_output(["git", "status", "--short"], cwd=REPO, text=True)
-    paths = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "apps/FCCG", "tools/run_ebyte_radio_evidence.py"], cwd=REPO, text=True).splitlines()
+    paths = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "apps/SCG", "tools/run_ebyte_radio_evidence.py"], cwd=REPO, text=True).splitlines()
     report["source_hashes"] = {path: hashlib.sha256((REPO / path).read_bytes()).hexdigest()
                                 for path in paths if (REPO / path).is_file()}
-    catalog = PluginCatalog(REPO / "apps/FCCG/plugins/builtin", REPO / "apps/FCCG/plugins/installed")
+    catalog = PluginCatalog(REPO / "apps/SCG/plugins/builtin", REPO / "apps/SCG/plugins/installed")
     catalog.Scan()
     seed_root = output / "seed"
     seed = RadioVariantFixture_Create(catalog, seed_root)

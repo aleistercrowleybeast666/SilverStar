@@ -80,7 +80,7 @@ Generated Make emits `.su` files. Run `mingw32-make CONFIG=Release stack-report`
 equivalent to check all static tasks against the real ELF. The fault record preserves task identity,
 lifecycle state and valid cached high-water marks. AIR M0, Maintenance/SSLOG 0.0 and `.ssdecoder`
 1.2 have no wire/layout breaking change. See [validation](VALIDATION.md) and the builtin
-[runtime contract](../../apps/FCCG/plugins/builtin/silverstar_core_0_1_0/docs/RUNTIME_SAFETY.md).
+[runtime contract](../../apps/SCG/plugins/builtin/silverstar_core_0_1_0/docs/RUNTIME_SAFETY.md).
 Continuous SS0.5 hardware testing is still required. Existing project-owned sources are preserved
 by normal Apply; use a fresh output directory or deliberately port the listed source repairs into
 an existing generated project.

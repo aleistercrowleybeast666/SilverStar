@@ -103,11 +103,11 @@ def test_invalid_or_preserved_target_fails_closed(tmp_path, layout, old_target):
         pytest.skip("ARM toolchain unavailable")
     root = Path(__file__).resolve().parents[3]
     relative = "apps/FCCG/plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Targets/SilverStar_F407/Inc/platform_memory_target.h"
-    target = root / relative
+    target = root / relative.replace("apps/FCCG/", "apps/SCG/", 1)
     if old_target:
         target = tmp_path / "old_target.h"
         target.write_bytes(subprocess.check_output(["git", "show", f"d410f4a7254f0433e91a22adb237b2944939fd99:{relative}"], cwd=root))
-    api = root / "apps/FCCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc"
+    api = root / "apps/SCG/plugins/builtin/silverstar_platform_api/payload/Platform/Inc"
     source = tmp_path / "invalid.c"
     source.write_text('#include "platform_memory.h"\n', encoding="utf-8")
     result = subprocess.run([compiler, "-mcpu=cortex-m4", "-mthumb", "-include", str(target),

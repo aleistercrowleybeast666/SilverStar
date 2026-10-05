@@ -1,5 +1,7 @@
 # Documentation
 
+Current application implementation: `apps/SCG`. The Python package and plugin IDs retain FCCG compatibility names. `docs/FCCG` and frozen evidence paths are historical namespaces; their recorded bytes and hashes are preserved.
+
 - [FCCG documentation](FCCG/README.md), [application guide](FCCG/APP_README.md), [historical validation](FCCG/VALIDATION.md)
 - [GSHC documentation](GSHC/README.md), [application guide](GSHC/APP_README.md), [historical validation](GSHC/VALIDATION.md)
 - [FLP documentation](FLP/APP_README.md), [architecture](FLP/Architecture.md), [historical validation](FLP/VALIDATION.md)

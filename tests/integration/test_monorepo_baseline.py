@@ -32,14 +32,14 @@ def test_one_release_version_and_independent_freertos_version() -> None:
     assert subprocess.check_output([sys.executable, "SCG.py", "--version"], cwd=ROOT, text=True).strip() == VERSION
     assert subprocess.check_output([sys.executable, "FLP.py", "--version"], cwd=ROOT, text=True).strip() == VERSION
     assert _Python_Run("from config import APP_VERSION; print(APP_VERSION)", ROOT / "apps/GSHC") == VERSION
-    manifests = sorted((ROOT / "apps/FCCG/plugins/builtin").glob("*/plugin.json"))
+    manifests = sorted((ROOT / "apps/SCG/plugins/builtin").glob("*/plugin.json"))
     assert manifests
     for path in manifests:
         manifest = json.loads(path.read_text(encoding="utf-8"))
         # Plugin identities remain independent of the product patch release.
         expected = "11.3.0" if manifest["id"] == "silverstar.os.freertos_11_3_0" else "0.1.0"
         assert manifest["version"] == expected, path
-    core = ROOT / "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/plugin.json"
+    core = ROOT / "apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json"
     assert json.loads(core.read_text(encoding="utf-8"))["id"] == "silverstar.core.0_1_0"
     gshc_version_info = _Python_Run(
         "import runpy; f=runpy.run_path('apps/GSHC/packaging/product_version.py')['ProductVersionResource_Create']; print(f())")
@@ -55,7 +55,7 @@ def test_one_navigation_contract_for_all_consumers() -> None:
     assert list(ROOT.glob("apps/**/navigation_v1.json")) == []
     assert list(ROOT.glob("docs/**/navigation_v1.json")) == []
     contract = json.loads(canonical.read_text(encoding="utf-8"))
-    manifest = json.loads((ROOT / "apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/plugin.json").read_text(encoding="utf-8"))
+    manifest = json.loads((ROOT / "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/plugin.json").read_text(encoding="utf-8"))
     parameters = {item["id"]: {key: item[key] for key in ("type", "default", "unit", "representation", "min", "max")} for item in manifest["algorithm_parameters"]["parameters"]}
     assert parameters == contract["eskf15"]["parameters"]
     flp_value = _Python_Run(
@@ -83,7 +83,7 @@ def test_root_launchers_create_offscreen_gui_without_old_source() -> None:
             process.terminate()
             stdout, stderr = process.communicate(timeout=10)
         assert "Traceback" not in stdout + stderr
-    for app in ("FCCG", "GSHC", "FLP"):
+    for app in ("SCG", "GSHC", "FLP"):
         for current, dirs, files in os.walk(ROOT / "apps" / app):
             dirs[:] = [
                 name for name in dirs
@@ -157,7 +157,7 @@ def test_indexed_snapshot_links_still_reject_missing_targets_and_changed_bytes(t
 def test_disposable_work_is_ignored_and_no_nested_repositories() -> None:
     for relative in (".work/probe.txt", ".venv/probe.txt"):
         assert subprocess.run(["git", "check-ignore", "-q", relative], cwd=ROOT, check=False).returncode == 0
-    for app in ("FCCG", "GSHC", "FLP"):
+    for app in ("SCG", "GSHC", "FLP"):
         subtree = ROOT / "apps" / app
         for current, dirs, _files in os.walk(subtree):
             assert ".git" not in dirs, current

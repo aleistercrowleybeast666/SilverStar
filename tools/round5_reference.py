@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from silverstar_fccg.plugins.catalog import PluginCatalog
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-FCCG_ROOT = REPOSITORY_ROOT / "apps" / "FCCG"
+FCCG_ROOT = REPOSITORY_ROOT / "apps" / "SCG"
 sys.path.insert(0, str(FCCG_ROOT / "src"))
 
 PROJECT_NAME = "Round5_Field_Qualification"

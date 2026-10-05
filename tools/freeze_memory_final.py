@@ -35,15 +35,15 @@ report = {
     "v6_stages": v6["stages"], "v8_stages": v8["results"], "resources": {}, "artifact_sha256": {},
     "archived_files_sha256": {},
 }
-tracked = subprocess.check_output(["git", "ls-files", "apps/FCCG"], cwd=ROOT, text=True).splitlines()
+tracked = subprocess.check_output(["git", "ls-files", "apps/SCG"], cwd=ROOT, text=True).splitlines()
 report["fccg_source_sha256"] = {name: sha(ROOT / name) for name in tracked}
-tool = ROOT / "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/auto_memory_layout.py"
+tool = ROOT / "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/auto_memory_layout.py"
 source = tool.read_text(); lines = source.splitlines(keepends=True)
 bodies = []
 for node in ast.parse(source).body:
     if isinstance(node, ast.FunctionDef) and node.name in ("Regions_Parse", "SourceOwners_Check", "Score_Get", "LinkedGroups_Check", "LayoutCandidates_Link", "Layout_Link"):
         bodies.append("".join(lines[node.lineno - 1:node.end_lineno]) + "\n\n")
-bodies.append(subprocess.check_output(["git", "diff", report["authorized_base"], "--", "apps/FCCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1"], cwd=ROOT, text=True))
+bodies.append(subprocess.check_output(["git", "diff", report["authorized_base"], "--", "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_firmware_artifact.ps1"], cwd=ROOT, text=True))
 (OUT / "review-critical-final.txt").write_text("".join(bodies))
 archive = OUT / "sources_artifacts_logs.zip"
 with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as packed:

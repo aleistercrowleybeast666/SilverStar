@@ -22,11 +22,11 @@ def ground_gsp_tool(tmp_path_factory) -> Path:
         pytest.skip("Host GCC is needed for the C/Python GSP contract test")
     output = tmp_path_factory.mktemp("ground-gsp") / "gsp_vectors.exe"
     protocol = (
-        ROOT / "apps/FCCG/plugins/builtin/silverstar_core_ground_0_1_0"
+        ROOT / "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0"
         / "payload/Ground/Protocol"
     )
     common = (
-        ROOT / "apps/FCCG/plugins/builtin/silverstar_core_0_1_0"
+        ROOT / "apps/SCG/plugins/builtin/silverstar_core_0_1_0"
         / "payload/Common"
     )
     subprocess.run(
