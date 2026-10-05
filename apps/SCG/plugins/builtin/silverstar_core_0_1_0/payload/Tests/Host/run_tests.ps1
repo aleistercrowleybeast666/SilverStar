@@ -1367,7 +1367,7 @@ $storageSourceGraph = Get-Content -LiteralPath "$repoRoot\Generated\project_sour
 $storageFlightConfig = Get-Content -LiteralPath "$repoRoot\Generated\Inc\project_flight_config.h" -Raw
 if (($storageFlightConfig -match '(?m)^#define\s+SILVERSTAR_PROTOCOL_LOGGING_ENABLED\s+1U\s*$') -and
     ($storageSourceGraph -match '(?m)^\s+Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service\.c\s*\\?\s*$') -and
-    ($storageSourceGraph -match '(?m)^\s+FATFS/Target/sd_diskio\.c\s*\\?\s*$')) {
+    ($storageSourceGraph -match '(?m)^\s+(?:HardwareGenerated/STM32CubeMX/)?FATFS/Target/sd_diskio\.c\s*\\?\s*$')) {
     $storageArguments = @('--project', $repoRoot, '--compiler', $script:hostCompilerPath)
     $storageModel = Get-Content -LiteralPath "$repoRoot/SilverStar.ssproject" -Raw | ConvertFrom-Json
     if ($storageModel.build.logging_profile -eq 'sf6_minimal') { $storageArguments += '--sf6-compact' }
