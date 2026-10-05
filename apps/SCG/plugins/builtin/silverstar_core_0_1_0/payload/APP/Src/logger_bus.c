@@ -643,7 +643,9 @@ LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
         LoggerBus_IrqUnlock(state);
         return (known != 0U) ? LOGGER_BUS_RESULT_OK : LOGGER_BUS_RESULT_BAD_STATE;
     }
-    if (records->mag_count > PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX)
+    if ((records->mag_count > PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX) ||
+        (records->identity.ready != 1U) || (records->identity.mission_id == 0U) ||
+        (records->identity.commit_generation == 0U))
     { return LOGGER_BUS_RESULT_BAD_PARAM; }
     result = LoggerBus_RequestClaim();
     if (result != LOGGER_BUS_RESULT_OK) { return result; }
@@ -710,6 +712,10 @@ static LoggerBusResult LoggerBus_RequestRecordBuild(FlightLogRecord *record)
         (s_request.start.mag_count <= PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX ||
          s_request.is_start == 0U),
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    SILVERSTAR_ASSERT((s_request.is_start <= 1U) &&
+        (s_request.count == (uint16_t)(1U + devices + algorithms + SSLOG_RECORD_COUNT +
+            ((s_request.is_start != 0U) ? (4U + s_request.start.mag_count) : 0U))),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
     (void)memset(record, 0, sizeof(*record));
     record->timestamp_us = s_request.timestamp_us;
     SILVERSTAR_ASSERT(index < s_request.count,
@@ -737,11 +743,17 @@ static LoggerBusResult LoggerBus_RequestPop(FlightLogRecord *record)
 {
     LoggerBusResult result;
     PlatformCriticalState state = LoggerBus_IrqLock();
+    SILVERSTAR_ASSERT(s_request.phase <= LOGGER_REQUEST_FAULT,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     uint8_t ready = (uint8_t)(s_request.phase == LOGGER_REQUEST_READY);
     LoggerBus_IrqUnlock(state);
     if (ready == 0U) { return LOGGER_BUS_RESULT_EMPTY; }
     /* Only the logger consumer calls pop; immutable construction needs no lock. */
     result = LoggerBus_RequestRecordBuild(record);
+    /* Generated immutable descriptor tables must satisfy their declared counts.
+     * A violation is internal corruption, not ordinary external storage input. */
+    SILVERSTAR_ASSERT(result == LOGGER_BUS_RESULT_OK,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     state = LoggerBus_IrqLock();
     if (result == LOGGER_BUS_RESULT_OK)
     {

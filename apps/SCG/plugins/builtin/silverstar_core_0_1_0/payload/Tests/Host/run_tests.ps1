@@ -1191,6 +1191,13 @@ $loggerSources = @(
 ) + $sslogSources
 Invoke-HostTest -Name 'logger' `
     -ExtraCompilerArgs $estimatorLoggerArgs -Sources $loggerSources
+$loggerSnapshotSources = @($loggerSources | Where-Object {
+    $_ -notmatch '(test_logger|diagnostic_log|host_platform_mock)\.c$'
+}) + @("$repoRoot\Tests\Host\test_logger_snapshot.c")
+Invoke-HostTest -Name 'logger_snapshot_actual' -ExtraCompilerArgs @(
+    '-DLOGGER_SNAPSHOT_START_TEST=1', '-flto', '-ffunction-sections',
+    '-fdata-sections', '-Wl,--gc-sections', '-Wl,--wrap=CommonSpscQueue_Push'
+) -Sources $loggerSnapshotSources
 Invoke-HostTest -Name 'logger_streaming_actual' -ExtraCompilerArgs @(
     '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections'
 ) -Sources (@("$repoRoot\Tests\Host\test_logger_streaming.c", $hostPlatformMock) + $sslogSources)

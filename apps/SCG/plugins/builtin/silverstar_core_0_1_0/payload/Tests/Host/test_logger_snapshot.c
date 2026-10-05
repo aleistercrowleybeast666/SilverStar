@@ -79,6 +79,7 @@ static void Test_Start(void)
     s_now = 1000U; s_logger.session_active = 1U;
     input.initial.gnss_origin_height_mm = 12345;
     input.identity.commit_generation = 77U;
+    input.identity.mission_id = 1U; input.identity.ready = 1U;
     input.mag_count = 1U; input.mag[0].generation = 88U;
     TEST_CHECK(LoggerBus_StartRecordsPush(321U, &input, &generation) == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(generation != 0U && LoggerBus_StartAcknowledgedGet() == 0U);
@@ -111,6 +112,9 @@ static void Test_Start(void)
     TEST_CHECK(LoggerBus_Count() == 1U);
     LoggerBus_Reset();
     generation = 0U; memset(&input, 0, sizeof(input));
+    TEST_CHECK(LoggerBus_StartRecordsPush(555U, &input, &generation) == LOGGER_BUS_RESULT_BAD_PARAM);
+    TEST_CHECK(LoggerBus_Count() == 0U && generation == 0U);
+    input.identity.mission_id = 1U; input.identity.commit_generation = 1U; input.identity.ready = 1U;
     TEST_CHECK(LoggerBus_StartRecordsPush(555U, &input, &generation) == LOGGER_BUS_RESULT_OK);
     for (unsigned i = 0U; i < 128U; ++i)
     { if (LoggerBus_NextPop(&record) != LOGGER_BUS_RESULT_OK) { break; }
@@ -123,6 +127,24 @@ static void Test_Start(void)
     TEST_CHECK(s_diagnostics.io_fault == 1U);
     TEST_CHECK(LoggerBus_SystemConfigPush(444U) == LOGGER_BUS_RESULT_BAD_STATE);
     s_flush_failure = 0U;
+    LoggerBus_Reset(); generation = 0U;
+    memset(&s_logger, 0, sizeof(s_logger)); memset(&s_diagnostics, 0, sizeof(s_diagnostics));
+    s_logger.session_active = 1U;
+    TEST_CHECK(LoggerBus_StartRecordsPush(777U, &input, &generation) == LOGGER_BUS_RESULT_OK);
+    for (unsigned i = 0U; i < 128U; ++i)
+    { if (LoggerBus_NextPop(&record) != LOGGER_BUS_RESULT_OK) { break; }
+      TEST_CHECK(LoggerTask_RecordAppend(&record) != 0U); }
+    s_write_failure = 1U;
+    TEST_CHECK(LoggerTask_StartBarrierProcess() == 0U);
+    LoggerTask_Close();
+    TEST_CHECK(LoggerBus_StartAcknowledgedGet() == 0U && s_diagnostics.io_fault == 1U);
+    s_write_failure = 0U;
+    LoggerBus_Reset();
+    TEST_CHECK(LoggerBus_DisableForBootNoStorage() == LOGGER_BUS_RESULT_OK);
+    generation = 0U;
+    TEST_CHECK(LoggerBus_StartRecordsPush(999U, &input, &generation) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_Count() == 0U && generation == 0U);
+    TEST_CHECK(LoggerBus_StartAcknowledgedGet() == 0U);
 }
 #endif
 int main(void)
