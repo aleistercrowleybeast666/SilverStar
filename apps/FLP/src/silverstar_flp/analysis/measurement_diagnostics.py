@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
+from dataclasses import replace
 
 import numpy as np
 
@@ -125,23 +126,28 @@ def RecordedMeasurementChannels_Build(
         ))
     rows = []
     for record in sorted(records.get("BARO_MEASUREMENT", ()),
-                         key=lambda row: (row.timestamp_us, row.record_sequence)):
+                         key=lambda row: (
+                             row.payload.get("estimator_present_timestamp_us", row.timestamp_us),
+                             row.record_sequence,
+                         )):
         payload = record.payload
         if not all(key in payload for key in (
             "variance_m2", "nis", "update_result", "receive_timestamp_us",
-            "measurement_timestamp_us", "estimator_present_timestamp_us",
+            "measurement_timestamp_us", "estimator_present_timestamp_us", "valid_mask",
         )):
             continue
         base = np.asarray([float(payload["variance_m2"])], dtype=np.float64)
         present = int(payload["estimator_present_timestamp_us"])
         receive = int(payload["receive_timestamp_us"])
         resolved = int(payload["measurement_timestamp_us"])
-        valid = bool(int(payload.get("valid_mask", 1)) & 1) and (
+        valid = bool(int(payload["valid_mask"]) & 1) and (
             0 < receive <= present and 0 < resolved <= present
             and np.isfinite(base[0]) and base[0] > 0
         )
         effective = _Effective_Get(base, float(payload["nis"]),
                                    int(payload["update_result"]), parameters, 1)
+        if float(payload["nis"]) < 0:
+            effective = np.full(base.shape, np.nan, dtype=np.float64)
         rows.append({"timestamp_us": present, "valid": valid,
                      "input_variance": base, "effective_variance": effective,
                      "receive_age": (present - receive) * .001,
@@ -150,7 +156,19 @@ def RecordedMeasurementChannels_Build(
                          float(effective[0] / base[0])
                          if np.isfinite(effective[0]) else math.nan
                      )})
-    channels.update(_Rows_Channels(rows, "kf6.recorded", "baro", (0,), "m^2"))
+    baro_channels = _Rows_Channels(rows, "kf6.recorded", "baro", (0,), "m^2")
+    channels.update({
+        name: replace(series, source="BARO_MEASUREMENT", metadata={
+            **series.metadata, "record_name": "BARO_MEASUREMENT",
+            "timestamp_field": "estimator_present_timestamp_us",
+            "value_source": (
+                "reconstructed_from_exact_firmware_parameters"
+                if ".measurement_effective_variance." in name or ".measurement_r_scale." in name
+                else "recorded_measurement_fields"
+            ),
+        })
+        for name, series in baro_channels.items()
+    })
     return channels
 
 

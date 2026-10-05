@@ -18,6 +18,7 @@ from silverstar_flp.analysis.navigation_policy import (
 from silverstar_flp.core.context import TaskContext
 from silverstar_flp.core.dataset import FlightDataset, TimeSeries
 from silverstar_flp.core.mission import MissionReplayBounds_Get
+from silverstar_flp.core.runtime import NumericalRuntime_Validate
 from silverstar_flp.plugins.algorithms.eskf15.filter import Eskf15Filter, EskfNoise, EskfState
 from silverstar_flp.plugins.algorithms.eskf15.inputs import BodySteps_Build
 from silverstar_flp.plugins.algorithms.eskf15.replay import DelayedReplay, Measurement
@@ -199,7 +200,9 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
         if dataset.Records_Get("ESKF15_BODY_INPUT") and "IMU_CORRECTED" in missing:
             missing.remove("IMU_CORRECTED")
         if not dataset.Records_Get("ESKF15_BODY_INPUT"):
-            from silverstar_flp.plugins.algorithms.pure_ins.mechanization import Mechanization_ConfigurationGet
+            from silverstar_flp.plugins.algorithms.pure_ins.mechanization import (
+                Mechanization_ConfigurationGet,
+            )
             if Mechanization_ConfigurationGet(dataset)["subsample_count"] != 2:
                 missing.append("mechanization_subsample_count=2")
         if (
@@ -464,6 +467,7 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
     def run(
         self, dataset: FlightDataset, request: ReplayRequest, context: TaskContext | None = None
     ) -> AlgorithmResult:
+        NumericalRuntime_Validate()
         context = context or TaskContext()
         available = self.availability(dataset, request.input_source)
         if not available.available:

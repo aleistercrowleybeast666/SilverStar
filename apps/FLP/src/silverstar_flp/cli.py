@@ -10,6 +10,7 @@ from typing import Any
 import numpy as np
 
 from silverstar_flp.analysis.overview import FlightSummary_Build
+from silverstar_flp.core.runtime import NumericalRuntime_Validate
 from silverstar_flp.export.service import (
     ExportLanguage,
     ExportOptions,
@@ -320,6 +321,7 @@ def main(arguments: list[str] | None = None) -> int:
     parser = _Parser_Create()
     try:
         options = parser.parse_args(arguments)
+        NumericalRuntime_Validate()
         return int(options.handler(options))
     except (OSError, ValueError, RuntimeError) as exc:
         print(f"error: {exc}", file=sys.stderr)

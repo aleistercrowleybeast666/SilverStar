@@ -577,6 +577,27 @@ def _StableSeries_Adapt(
             series[stable_id] = derived
             aliases[stable_id] = stable_id
 
+    # Older logs have only the aggregate diagnostic result. Publish its baro
+    # column under the same independent role used by current measurement records.
+    legacy_results = series.get("kf6.recorded.update_result")
+    if legacy_results is not None:
+        series["kf6.recorded.update_result.baro"] = replace(
+            legacy_results, values=legacy_results.values[:, 2], columns=(),
+            metadata={**legacy_results.metadata, "field_name": "baro_update_result"},
+        )
+        aliases["kf6.recorded.update_result.baro"] = "kf6.recorded.update_result"
+
+    baro_channels = _BaroDiagnosticSeries_Get(dataset.Records_Get("BARO_MEASUREMENT"))
+    if baro_channels is not None:
+        # Current operation evidence wins as a stream, even when its diagnostics
+        # are invalid/missing. Never fill holes with aggregate last-value snapshots.
+        for suffix in ("innovation", "nis", "update_result", "measurement_r"):
+            channel = f"kf6.recorded.{suffix}.baro"
+            series.pop(channel, None)
+            aliases.pop(channel, None)
+        series.update(baro_channels)
+        aliases.update({channel: channel for channel in baro_channels})
+
     # GNSS_MEASUREMENT owns four independent recorded update groups. Keep the
     # aggregate ESTIMATOR channels for Data Explorer compatibility only.
     measurements = tuple(
@@ -746,6 +767,65 @@ def _StableSeries_Adapt(
                 )
                 aliases[channel_id] = channel_id
     return series, aliases
+
+
+def _BaroDiagnosticSeries_Get(
+    records: tuple[DecodedRecord, ...],
+) -> Mapping[str, TimeSeries] | None:
+    """Current BARO_MEASUREMENT diagnostics are evaluated at estimator present time."""
+    if not any(
+        any(field in record.payload for field in ("innovation_m", "nis", "update_result"))
+        for record in records
+    ):
+        return None  # Legacy measurement layouts do not replace old diagnostics.
+    channels = {}
+    for suffix, field, unit, quantity in (
+        ("innovation", "innovation_m", "m", "innovation"),
+        ("nis", "nis", "1", "nis"),
+        ("update_result", "update_result", "enum", "update_result"),
+        ("measurement_r", "variance_m2", "m^2", "variance"),
+    ):
+        selected = sorted(
+            (record for record in records if all(key in record.payload for key in (
+                field, "valid_mask", "update_result", "estimator_present_timestamp_us",
+            ))),
+            key=lambda record: (
+                record.payload["estimator_present_timestamp_us"], record.record_sequence,
+            ),
+        )
+        if not selected:
+            continue
+        timestamps = np.asarray(
+            [record.payload["estimator_present_timestamp_us"] for record in selected],
+            dtype=np.uint64,
+        )
+        values = np.asarray([record.payload[field] for record in selected], dtype=np.float64)
+        results = np.asarray(
+            [record.payload["update_result"] for record in selected], dtype=np.float64,
+        )
+        valid = np.asarray(
+            [bool(int(record.payload["valid_mask"]) & 1) for record in selected],
+            dtype=np.bool_,
+        ) & (timestamps > 0) & np.isfinite(values)
+        valid &= np.isin(
+            results,
+            (0, 1, 2, 3, 4) if suffix in ("update_result", "measurement_r") else (0, 1, 2),
+        )
+        if suffix == "nis":
+            valid &= values >= 0
+        elif suffix == "measurement_r":
+            valid &= values > 0
+        channels[f"kf6.recorded.{suffix}.baro"] = TimeSeries(
+            timestamp_us=timestamps, values=values, valid=valid,
+            unit=unit, quantity=quantity, source="BARO_MEASUREMENT",
+            metadata={
+                "record_name": "BARO_MEASUREMENT", "field_name": field,
+                "timestamp_field": "estimator_present_timestamp_us",
+                "application_time_source": "operation_stream", "group_specific": True,
+                "semantic_adapter_derived": True,
+            },
+        )
+    return channels
 
 
 def _Vector3_Get(payload: Mapping[str, Any], field_name: str) -> tuple[float, float, float]:

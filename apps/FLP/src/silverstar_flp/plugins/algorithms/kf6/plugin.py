@@ -18,6 +18,7 @@ from silverstar_flp.core.mission import (
     MissionReplayBounds_Get,
     MissionReplayEndReason,
 )
+from silverstar_flp.core.runtime import NumericalRuntime_Validate
 from silverstar_flp.plugins.algorithms.kf6.diagnostics import (
     DiagnosticMetadata_Get,
     DiagnosticSchedule_Apply,
@@ -881,16 +882,16 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                     ("Baro",),
                     "kf6.innovation.baro",
                     "kf6.nis.baro",
-                    "kf6.update_result",
+                    "kf6.update_result.baro",
                     "kf6.measurement_r_scale.baro",
                     measurement_age_channel="kf6.measurement_receive_age.baro",
                     fixed_lag_latency_channel="kf6.measurement_fixed_lag_latency.baro",
                     measurement_uncertainty_channel="kf6.measurement_input_variance.baro",
                     effective_r_channel="kf6.measurement_effective_variance.baro",
-                    update_result_index=2,
+                    update_result_index=0,
                     r_scale_index=0,
-                    attempt_mask_channel="kf6.measurement_attempt_mask",
-                    attempt_mask_bit=0x04,
+                    attempt_mask_channel="",
+                    attempt_mask_bit=0,
                     soft_threshold_parameter_id="nis_1d_soft",
                     hard_threshold_parameter_id="nis_1d_hard",
                     unit="m",
@@ -1003,6 +1004,7 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         analysis_options: Kf6DiagnosticOptions | None = None,
         analysis_algorithm_revision: int | None = None,
     ) -> AlgorithmResult:
+        NumericalRuntime_Validate()
         if analysis_options is not None:
             if not isinstance(analysis_options, Kf6DiagnosticOptions):
                 raise TypeError("kf6_diagnostic_options_invalid")
@@ -1401,8 +1403,25 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                     parameters.setdefault(name, value)
             runtime = {p.parameter_id: p for p in self.RuntimeParameterSchema_Get(dataset, 3)}
             baseline = {**self.OfflineParameters_Get(), **self.recorded_parameters(dataset)}
+            declarations = (
+                dataset.semantic_context.FirmwareParameters_Get(
+                    self.metadata.firmware_component_ids[0]
+                ) or {} if dataset.semantic_context is not None else {}
+            )
             for name, value in request.parameters.items():
-                if name not in runtime and value != baseline.get(name):
+                if name in runtime:
+                    continue
+                same_value = value == baseline.get(name)
+                # Parameters_Resolve already validates both value domains. Only
+                # these retired floats with an exact decoder storage declaration
+                # may use binary32 equality; missing/unknown declarations stay exact.
+                if name in (
+                    "gnss_integrity_recovery_threshold_m",
+                    "gnss_integrity_hacc_max_m",
+                    "gnss_integrity_sacc_max_mps",
+                ) and declarations.get(name, {}).get("storage_type") == "float32":
+                    same_value = np.float32(value) == np.float32(baseline[name])
+                if not same_value:
                     raise ValueError(f"parameter_retired_revision3:{name}")
             for name, spec in runtime.items():
                 spec.Value_Validate(parameters[name])
@@ -2240,6 +2259,12 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 quantity="update_result",
                 columns=("GNSS position", "GNSS velocity", "Barometer"),
             ),
+            "kf6.update_result.baro": _Series_Create(
+                timestamps,
+                np.asarray([item.baro_result for item in snapshots]),
+                unit="enum",
+                quantity="update_result",
+            ),
             "kf6.measurement_attempt_mask": _Series_Create(
                 timestamps,
                 np.asarray([item.attempt_mask for item in snapshots]),
@@ -2274,6 +2299,16 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 quantity="variance",
             ),
         }
+        baro_results = np.asarray([item.baro_result for item in snapshots], dtype=np.float64)
+        baro_attempted = np.asarray([bool(item.attempt_mask & 0x04) for item in snapshots])
+        for channel in ("kf6.innovation.baro", "kf6.nis.baro", "kf6.update_result.baro"):
+            valid_results = (0, 1, 2, 3, 4) if channel.endswith("update_result.baro") else (0, 1, 2)
+            channels[channel] = replace(
+                channels[channel],
+                valid=(
+                    channels[channel].valid & baro_attempted & np.isin(baro_results, valid_results)
+                ),
+            )
         group_nis = np.asarray([item.group_nis for item in snapshots], dtype=np.float64)
         group_result = np.asarray([item.group_result for item in snapshots], dtype=np.float64)
         for index, name in enumerate(("position_en", "position_u", "velocity_en", "velocity_u")):

@@ -87,6 +87,21 @@ covariance, innovation, NIS, measurement diagnostics, and a generic update-event
 `StateGroupSpec`/`MeasurementGroupSpec`. Pure INS has no estimator visualization spec. Future
 ESKF_15/24 state or sensor groups are plugin metadata changes, not page changes.
 
+Recorded KF6 barometer diagnostics use independent `BARO_MEASUREMENT` operations,
+ordered at `estimator_present_timestamp_us`. Innovation/NIS require the recorded valid
+bit and an accepted, soft-weighted or NIS-rejected result; invalid/numeric-error outcomes
+remain visible as result codes without inventing computed diagnostics. This operation
+stream takes precedence over legacy `KF6_DIAGNOSTIC` and `ESTIMATOR` last-value snapshots,
+including when a current field is missing or invalid. Older measurement layouts without
+diagnostic fields retain their legacy diagnostic roles. Input R remains recorded variance;
+effective R and scale are reconstructed only for accepted updates with exact firmware
+parameters. Unknown effective R remains unavailable.
+
+Revision3 retired-parameter checks retain the original type/range/finite validation and
+reject substantive changes. The three retired floating fields compare exactly in binary32
+only when the matched decoder declares `float32`; missing/unknown declarations and integer
+fields retain exact comparisons. This does not change replay modes or algorithm numerics.
+
 `ReplayResultStore` assigns a unique result/source ID to every run and never replaces a prior
 Recorded-configuration, Offline, or What-if result. `ChannelResolver` is the single
 Recorded/replay lookup layer used
@@ -185,6 +200,28 @@ worker threads, reports progress, and requests cancellation without terminating 
 open never clears the current dataset or replay store. Core and plugins emit stable codes; the
 i18n layer translates them. Full tracebacks go to the application log while dialogs show concise
 user-facing messages.
+
+Changing datasets clears ReplayPage's last-result references, result details and
+comparison presentation. Refreshing the same dataset preserves its completed-run
+history. Worker result signals connect to a QObject bound slot without a closure
+owning the worker. The slot admits only the active worker's signal sender while
+that worker is uncancelled; cancel/accepted-close requests do not admit a previously
+emitted result after the GUI queue resumes. Active ownership is still released
+only at worker completion, without terminating numerical threads.
+
+Replay modes retain explicit user selections per algorithm. Automatic fallback
+when recorded configuration is unavailable does not overwrite those preferences.
+Without a preference, Recorded is selected when available, otherwise Offline.
+Detailed error codes are split at the first colon for translation; missing
+pre-START GNSS initialization uncertainty evidence remains a replay rejection.
+
+Project and FLP dependencies exclude NumPy 2.4.0: its flat-assignment iterator
+leak is reachable through repeated ESKF `eye(3)`/`eye(15)` calls. GUI/CLI startup
+and KF6/ESKF replay boundaries reject that known release with an environment-specific
+repair message, preserving supported earlier releases. NumPy 2.4.1 is verified
+in the FLP-specific isolated environment; no estimator equations or precision change.
+See [upstream fix](https://github.com/numpy/numpy/pull/30512) and
+[2.4.1 release notes](https://numpy.org/doc/stable/release/2.4.1-notes.html).
 
 ## Shared display closeout
 

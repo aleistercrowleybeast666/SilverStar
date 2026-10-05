@@ -1,4 +1,6 @@
 {
+  "error.detail.parameter_dynamic_uncertainty_missing.GNSS_initialization": "无法重建 GNSS 初始化：日志缺少此参数修改所需的 START 前初始化不确定度证据。可使用录制配置；本次选择的离线模式未运行。",
+  "error.code.numpy_version_unsafe": "当前 FLP 环境使用存在已知内存泄漏的 NumPy 2.4.0。复算前请在 FLP 环境安装已修复版本（已验证 2.4.1）。",
   "app.title": "SilverStar 飞行日志解析器",
   "app.credit": "辰星引力开发",
   "menu.file": "文件",
