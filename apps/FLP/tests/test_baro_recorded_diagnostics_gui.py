@@ -95,7 +95,9 @@ def test_measurement_only_baro_gui_and_png_have_exact_valid_points(
         combo.setCurrentIndex(combo.findData("barometric_altitude"))
     page.resize(1100, 900)
     page.show()
+    page.tabs.setCurrentWidget(page.innovation_plot.parentWidget())
     app.processEvents()
+    assert page.innovation_plot.isVisible()
     innovation_curves = page.innovation_plot.listDataItems()
     assert len(innovation_curves) == 1
     np.testing.assert_allclose(innovation_curves[0].getData()[1], [0.088341847, 0.25])

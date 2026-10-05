@@ -20,8 +20,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
-
 from silverstar_flp.core.analysis_source import (
     AnalysisSourceKind,
     ReplayResultStore,
@@ -38,6 +36,7 @@ from silverstar_flp.plugins.api.algorithm import (
     ReplayRequest,
 )
 from silverstar_flp.plugins.registry import PluginRegistry
+from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 from silverstar_flp.ui.widgets import StandardComboBox
 
@@ -83,7 +82,9 @@ class ReplayPage(QWidget):
         self.algorithm_label = QLabel()
         self.algorithm_combo = StandardComboBox()
         for plugin in registry.algorithms:
-            self.algorithm_combo.addItem(AlgorithmName_Display(plugin.metadata.display_name), plugin.metadata.plugin_id)
+            self.algorithm_combo.addItem(
+                AlgorithmName_Display(plugin.metadata.display_name), plugin.metadata.plugin_id
+            )
         self.mode_label = QLabel()
         self.mode_combo = StandardComboBox()
         self.quality_policy_label = QLabel()
@@ -204,6 +205,14 @@ class ReplayPage(QWidget):
     ) -> None:
         dataset_changed = self._dataset is not dataset
         self._dataset = dataset
+        if dataset_changed:
+            self._last_entry = None
+            self._last_result = None
+            self.result_label.setText("—")
+            self.result_information_label.setText("—")
+            self.result_information_label.setToolTip("")
+            self.comparison_table.clearContents()
+            self.comparison_table.setRowCount(0)
         if isinstance(results, ReplayResultStore):
             self._store = results
         elif self._store is None:
@@ -723,7 +732,9 @@ class ReplayPage(QWidget):
         warnings = self._Warnings_Text_Get(entry.warnings)
         channels = ", ".join(sorted(entry.channels))
         lines = (
-            self._translator.Text_Get("replay.detail.algorithm", value=AlgorithmName_Display(entry.algorithm_name)),
+            self._translator.Text_Get(
+                "replay.detail.algorithm", value=AlgorithmName_Display(entry.algorithm_name)
+            ),
             self._translator.Text_Get(
                 "replay.detail.mode", value=self._translator.Text_Get(mode_code)
             ),

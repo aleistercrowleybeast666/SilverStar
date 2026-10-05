@@ -201,6 +201,13 @@ open never clears the current dataset or replay store. Core and plugins emit sta
 i18n layer translates them. Full tracebacks go to the application log while dialogs show concise
 user-facing messages.
 
+Changing datasets clears ReplayPage's last-result references, result details and
+comparison presentation. Refreshing the same dataset preserves its completed-run
+history. Queued worker results publish only while their captured worker remains
+active and uncancelled; cancel/accepted-close requests do not admit a previously
+emitted result after the GUI queue resumes. Active ownership is still released
+only at worker completion, without terminating numerical threads.
+
 ## Shared display closeout
 
 Semantic columns are assigned during channel construction, before stable alias publication.
