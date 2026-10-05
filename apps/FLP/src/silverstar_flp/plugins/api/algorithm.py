@@ -400,12 +400,16 @@ class AlgorithmPlugin(ABC):
         values = self._FirmwareParameters_Get(dataset)
         return MappingProxyType({name: value for name, value in values.items() if name in fields})
 
-    def ProcessModelRevision_Resolve(self, dataset: FlightDataset, request: ReplayRequest) -> int | None:
+    def ProcessModelRevision_Resolve(
+        self, dataset: FlightDataset, request: ReplayRequest, *, required: bool = True
+    ) -> int | None:
         if request.process_model_revision is not None:
             raise ValueError("process_model_revision_unsupported")
         return None
 
     def Parameters_Resolve(self, dataset: FlightDataset, request: ReplayRequest) -> dict[str, Any]:
+        if request.process_model_revision not in (None, *self.metadata.process_model_revisions):
+            raise ValueError("process_model_revision_unsupported")
         if (
             request.quality_policy_revision is not None
             and request.quality_policy_revision not in self.metadata.what_if_quality_revisions

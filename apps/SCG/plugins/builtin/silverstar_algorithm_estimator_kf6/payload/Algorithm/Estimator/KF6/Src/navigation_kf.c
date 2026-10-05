@@ -7,9 +7,8 @@
 #include "silverstar_assert.h"
 #include "system_user_config.h"
 
-#if (NAV_KF_ALGORITHM_REVISION != 2U)
-#error "KF6 source/header process model revision mismatch"
-#endif
+_Static_assert(NAV_KF_ALGORITHM_REVISION == 2U,
+               "KF6 source/header process model revision mismatch");
 
 #define NAV_KF_STATE_DIMENSION 6U
 #define NAV_KF_VECTOR_DIMENSION 3U

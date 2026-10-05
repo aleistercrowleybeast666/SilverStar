@@ -569,7 +569,7 @@ class ReplayPage(QWidget):
         }
         if mode == ReplayMode.WHAT_IF and self.quality_policy_combo.currentData() is not None:
             configuration["quality_policy_revision"] = self.quality_policy_combo.currentData()
-        revision = plugin.ProcessModelRevision_Resolve(self._dataset, request)
+        revision = plugin.ProcessModelRevision_Resolve(self._dataset, request, required=False)
         if revision is not None:
             configuration["process_model_revision"] = revision
         return configuration

@@ -1382,7 +1382,9 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
             values[name] = item["value"]
         return values
 
-    def ProcessModelRevision_Resolve(self, dataset: FlightDataset, request: ReplayRequest) -> int:
+    def ProcessModelRevision_Resolve(
+        self, dataset: FlightDataset, request: ReplayRequest, *, required: bool = True
+    ) -> int | None:
         from silverstar_flp.decoder_profiles.kf6_revision import Kf6Revision_Get
         recorded = Kf6Revision_Get(dataset)
         selected = request.process_model_revision
@@ -1391,6 +1393,8 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         if request.mode == ReplayMode.WHAT_IF and selected is not None:
             return selected
         if recorded is None:
+            if not required and selected is None:
+                return None  # Unexecuted form configuration retains unknown identity.
             raise ValueError("kf6_algorithm_revision_missing")
         if selected is not None and selected != recorded:
             raise ValueError("kf6_algorithm_revision_override_requires_explicit_what_if")

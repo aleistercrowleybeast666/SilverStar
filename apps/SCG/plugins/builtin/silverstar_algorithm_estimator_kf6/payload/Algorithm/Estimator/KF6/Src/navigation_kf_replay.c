@@ -6,9 +6,8 @@
 #include <stddef.h>
 #include <string.h>
 
-#if (NAV_KF_ALGORITHM_REVISION != 2U)
-#error "KF6 replay/core process model revision mismatch"
-#endif
+_Static_assert(NAV_KF_ALGORITHM_REVISION == 2U,
+               "KF6 replay/core process model revision mismatch");
 
 static NavigationReplayResult NavigationReplay_Reject(
     NavigationReplayContext *history, NavigationReplayResult result)

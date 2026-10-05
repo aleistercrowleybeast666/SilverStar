@@ -153,3 +153,32 @@ def test_project_rejects_invalid_present_revision(tmp_path, value):
         "parameter_schema_identity": plugin.metadata.ParameterSchemaIdentity_Get(), "provenance": "Algorithm Plugin actual defaults", "process_model_revision": value}
     with pytest.raises(ValueError, match="project_process_model_revision_invalid"):
         ReplayConfiguration_Validate(configuration)
+
+
+def test_replay_page_restores_hidden_revision_without_a_new_selector(tmp_path):
+    from PySide6.QtWidgets import QApplication
+
+    from silverstar_flp.core.i18n import Translator
+    from silverstar_flp.plugins.registry import builtin_registry
+    from silverstar_flp.ui.pages.replay import ReplayPage
+    from tests.synthetic_parameter_navigation import NavigationPair_Open
+    application = QApplication.instance() or QApplication([])
+    dataset = NavigationPair_Open(tmp_path / "page", flight_samples=3).dataset
+    plugin = Kf6AlgorithmPlugin()
+    page = ReplayPage(Translator("en_US"), builtin_registry())
+    page.Dataset_Set(dataset)
+    configuration = {"algorithm_id": plugin.metadata.plugin_id, "algorithm_version": plugin.metadata.version,
+        "mode": "what_if", "input_source": "corrected_imu", "actual_values": dict(plugin.recorded_parameters(dataset)),
+        "parameter_schema_identity": plugin.metadata.ParameterSchemaIdentity_Get(),
+        "provenance": "Firmware build configuration from .ssdecoder", "process_model_revision": 2}
+    page.Configuration_Set(configuration)
+    assert page._Request_Get().process_model_revision == 2
+    assert page.Configuration_Get()["process_model_revision"] == 2
+    page.Dataset_Set(dataset)
+    assert page._Request_Get().process_model_revision == 2
+    page.mode_combo.setCurrentIndex(page.mode_combo.findData(ReplayMode.OFFLINE))
+    assert page._Request_Get().process_model_revision is None
+    page.Dataset_Set(replace(dataset, source_path=tmp_path / "another_source.BIN"))
+    assert page._process_model_preferences == {}
+    page.deleteLater()
+    application.processEvents()
