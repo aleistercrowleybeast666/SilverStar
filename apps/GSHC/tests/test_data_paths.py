@@ -11,13 +11,77 @@ from unittest.mock import Mock, patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 import config
-from app import Controller, DataMigrationWorker
+from app import Controller, DataMigrationWorker, SimulationWorker
+from services.i18n import Language
+from services.preferences import ExportItem, ResolvedExportOptions, Theme
 from services.data_migration import DataMigrationConflictPolicy
 from services.logger import AsyncJsonlLogger
 from ui.main_window import DataDirectorySelection
 
 
 class DataPathTests(unittest.TestCase):
+    def test_simulation_commit_failure_never_reports_complete(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            worker = SimulationWorker(root, 1)
+            progress, finished, errors = [], [], []
+            worker.progress.connect(lambda done, total, stage: progress.append(done))
+            worker.finished.connect(finished.append)
+            worker.failed.connect(errors.append)
+            with (patch("processing.fake_log_generator.simulate", return_value=[{}]),
+                  patch.object(Path, "replace", side_effect=PermissionError("commit rejected"))):
+                worker.run()
+            self.assertTrue(progress and max(progress) == 99)
+            self.assertFalse(finished)
+            self.assertEqual(len(errors), 1)
+            self.assertEqual(list(root.iterdir()), [])
+
+    def test_unavailable_user_directory_is_reported_as_normal_error(self) -> None:
+        controller = SimpleNamespace(
+            log_dir=Path("unused_logs"), data_dir=Path("unused_data"),
+            window=Mock(), _tr=lambda key, **params: key,
+        )
+        with (patch.object(Path, "mkdir", side_effect=PermissionError("denied")),
+              patch("app.QMessageBox.warning") as warning):
+            self.assertFalse(Controller._ensure_user_dirs(controller))
+            warning.assert_called_once()
+
+    def test_processed_log_identity_includes_path_theme_and_items(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            first = root / "flight_a" / "record.jsonl"
+            second = root / "flight_b" / "record.jsonl"
+            first.parent.mkdir()
+            second.parent.mkdir()
+            first.write_text("{}\n", encoding="utf-8")
+            second.write_text("{}\n", encoding="utf-8")
+            result_dir = root / "data" / "2026-10-05-1"
+            result_dir.mkdir(parents=True)
+            manifest = result_dir / "manifest_EN.json"
+            manifest.write_text(json.dumps({
+                "source_log": str(first),
+                "export": {"theme": "light", "items": ["processed_data"],
+                           "page_duration_s": 30.0},
+            }), encoding="utf-8")
+            controller = SimpleNamespace(data_dir=root / "data")
+            light = ResolvedExportOptions(
+                language=Language.EN_US, theme=Theme.LIGHT,
+                items=frozenset({ExportItem.PROCESSED_DATA}),
+            )
+            dark = ResolvedExportOptions(
+                language=Language.EN_US, theme=Theme.DARK,
+                items=frozenset({ExportItem.PROCESSED_DATA}),
+            )
+            original = manifest.read_bytes()
+            self.assertTrue(Controller._is_log_already_processed(controller, first, light))
+            self.assertFalse(Controller._is_log_already_processed(controller, second, light))
+            self.assertFalse(Controller._is_log_already_processed(controller, first, dark))
+            self.assertEqual(manifest.read_bytes(), original)
+            failed_manifest = json.loads(original)
+            failed_manifest["export"]["partial_failures"] = {"chart.png": "failure"}
+            manifest.write_text(json.dumps(failed_manifest), encoding="utf-8")
+            self.assertFalse(Controller._is_log_already_processed(controller, first, light))
+
     def test_default_data_root_is_d_drive_data_directory(self) -> None:
         self.assertEqual(config.DEFAULT_USER_DATA_ROOT, Path("D:/SilverStar_GSHC_Data"))
 

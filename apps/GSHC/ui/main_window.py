@@ -2385,7 +2385,8 @@ class MainWindow(QMainWindow):
     ) -> None:
         self._simulation_status_key = status_key
         self._simulation_status_params = dict(params)
-        self._set_progress_value(self.simulation_progress_bar, done, total)
+        self._set_progress_value(self.simulation_progress_bar,
+                                 min(done, max(0, total - 1)), total)
         self._render_data_task_status()
 
     def mark_simulation_cancelling(self) -> None:
@@ -2406,7 +2407,10 @@ class MainWindow(QMainWindow):
         self._simulation_cancel_enabled = False
         self._simulation_status_key = status_key
         self._simulation_status_params = dict(params)
-        self._set_progress_value(self.simulation_progress_bar, 100 if completed else 0, 100)
+        if completed:
+            self._set_progress_value(self.simulation_progress_bar, 100, 100)
+        elif self.simulation_progress_bar.maximum() == 0:
+            self._set_progress_value(self.simulation_progress_bar, 0, 100)
         self.set_data_tools_busy(False)
         self._render_data_task_status()
 
@@ -2428,7 +2432,8 @@ class MainWindow(QMainWindow):
     ) -> None:
         self._processing_status_key = status_key
         self._processing_status_params = dict(params)
-        self._set_progress_value(self.processing_progress_bar, done, total)
+        self._set_progress_value(self.processing_progress_bar,
+                                 min(done, max(0, total - 1)), total)
         self._render_data_task_status()
 
     def mark_processing_cancelling(self) -> None:
@@ -2449,7 +2454,10 @@ class MainWindow(QMainWindow):
         self._processing_cancel_enabled = False
         self._processing_status_key = status_key
         self._processing_status_params = dict(params)
-        self._set_progress_value(self.processing_progress_bar, 100 if completed else 0, 100)
+        if completed:
+            self._set_progress_value(self.processing_progress_bar, 100, 100)
+        elif self.processing_progress_bar.maximum() == 0:
+            self._set_progress_value(self.processing_progress_bar, 0, 100)
         self.set_data_tools_busy(False)
         self._render_data_task_status()
 

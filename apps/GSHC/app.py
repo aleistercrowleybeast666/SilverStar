@@ -291,7 +291,7 @@ class SimulationWorker(QObject):
                     if index % update_stride == 0 or index == record_total:
                         scaled = 70 + int(round(30.0 * index / record_total))
                         self.progress.emit(
-                            max(70, min(100, scaled)),
+                            max(70, min(99, scaled)),
                             100,
                             "task.simulation.writing",
                         )
@@ -2755,9 +2755,17 @@ class Controller(QObject):
         except Exception as exc:
             self.state.receive_health.warning = f"日志写入异常: {exc}"
 
-    def _ensure_user_dirs(self) -> None:
-        self.log_dir.mkdir(parents=True, exist_ok=True)
-        self.data_dir.mkdir(parents=True, exist_ok=True)
+    def _ensure_user_dirs(self) -> bool:
+        try:
+            self.log_dir.mkdir(parents=True, exist_ok=True)
+            self.data_dir.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            QMessageBox.warning(
+                self.window, self._tr("app.title"),
+                self._tr("message.data_root_failed", error=exc),
+            )
+            return False
+        return True
 
     def _open_folder(self, folder: Path) -> None:
         folder.mkdir(parents=True, exist_ok=True)
@@ -3006,7 +3014,8 @@ class Controller(QObject):
         ):
             return
 
-        self._ensure_user_dirs()
+        if not self._ensure_user_dirs():
+            return
         self.simulation_cancel_requested = False
         self.window.begin_simulation_task()
         self.simulation_thread = QThread(self.window)
@@ -3128,7 +3137,8 @@ class Controller(QObject):
                 self._tr("message.mission_processing_disabled"),
             )
             return
-        self._ensure_user_dirs()
+        if not self._ensure_user_dirs():
+            return
         log_path_text, _ = QFileDialog.getOpenFileName(
             self.window,
             self._tr("message.choose_log"),
@@ -3148,7 +3158,7 @@ class Controller(QObject):
             return
         if self._is_log_already_processed(
             log_path,
-            export_options.language_suffix,
+            export_options,
         ):
             QMessageBox.information(
                 self.window, self._tr("app.title"), self._tr("message.already_processed")
@@ -3159,7 +3169,7 @@ class Controller(QObject):
     def _is_log_already_processed(
         self,
         log_path: Path,
-        language_suffix: str,
+        export_options: ResolvedExportOptions,
     ) -> bool:
         data_dir = self.data_dir
         if not data_dir.exists():
@@ -3169,12 +3179,19 @@ class Controller(QObject):
         except OSError:
             selected = log_path
         for manifest_path in data_dir.glob(
-            f"*/manifest_{language_suffix.upper()}.json"
+            f"*/manifest_{export_options.language_suffix.upper()}.json"
         ):
             try:
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-                source = Path(str(manifest.get("source_log", "")))
-                if source and (source.resolve() == selected or source.name == log_path.name):
+                source_text = str(manifest.get("source_log", ""))
+                exported = manifest.get("export", {})
+                requested_items = {item.value for item in export_options.items}
+                if (source_text and Path(source_text).resolve() == selected
+                    and exported.get("theme") == export_options.theme.value
+                    and set(exported.get("items", ())) == requested_items
+                    and not exported.get("partial_failures")
+                    and exported.get("page_duration_s") == export_options.page_duration_s
+                    and exported.get("gif_source_duration_s") == export_options.gif_source_duration_s):
                     return True
             except Exception:
                 continue

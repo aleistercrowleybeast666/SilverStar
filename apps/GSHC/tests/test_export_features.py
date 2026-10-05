@@ -35,6 +35,22 @@ def minimal_flight_data() -> FlightData:
 
 
 class ExportProcessingTests(unittest.TestCase):
+    def test_invalid_jsonl_does_not_create_output_directory(self) -> None:
+        options = ResolvedExportOptions(
+            language=Language.EN_US,
+            theme=Theme.LIGHT,
+            items=frozenset({ExportItem.PROCESSED_DATA}),
+        )
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            source = root / "broken.jsonl"
+            source.write_text("{broken\n", encoding="utf-8")
+            output_root = root / "results"
+            processor = FlightLogProcessor(output_root=output_root, export_options=options)
+            with self.assertRaises(ValueError):
+                processor.process_file(source)
+            self.assertFalse(output_root.exists())
+
     def test_cancellation_removes_the_current_partial_output_directory(self) -> None:
         options = ResolvedExportOptions(
             language=Language.ZH_CN,

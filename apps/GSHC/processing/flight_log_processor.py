@@ -461,15 +461,27 @@ class FlightLogProcessor:
         progress: ProgressCallback | None = None,
         cancel_requested: CancelCallback | None = None,
     ) -> Path:
+        source = Path(log_path)
+        if not self.export_options.items:
+            raise ValueError("At least one export item must be selected.")
+        if cancel_requested is not None and cancel_requested():
+            raise ProcessingCancelledError("Data processing was cancelled.")
+        raw_records = self._read_jsonl(source, cancel_requested=cancel_requested)
+        if cancel_requested is not None and cancel_requested():
+            raise ProcessingCancelledError("Data processing was cancelled.")
+        data = self._extract_flight_data(raw_records, source)
+        if cancel_requested is not None and cancel_requested():
+            raise ProcessingCancelledError("Data processing was cancelled.")
         output_dir = self._make_output_dir()
         try:
             return self._process_file(
-                Path(log_path),
+                source,
                 output_dir,
+                data,
                 progress,
                 cancel_requested,
             )
-        except ProcessingCancelledError:
+        except Exception:
             self.remove_output_dir(output_dir)
             raise
 
@@ -485,6 +497,7 @@ class FlightLogProcessor:
         self,
         log_path: Path,
         output_dir: Path,
+        data: FlightData,
         progress: ProgressCallback | None,
         cancel_requested: CancelCallback | None,
     ) -> Path:
@@ -496,10 +509,6 @@ class FlightLogProcessor:
             if cancel_requested is not None and cancel_requested():
                 raise ProcessingCancelledError("Data processing was cancelled.")
 
-        check_cancel()
-        raw_records = self._read_jsonl(log_path, cancel_requested=cancel_requested)
-        check_cancel()
-        data = self._extract_flight_data(raw_records, log_path)
         check_cancel()
 
         plotter = FlightPlotter(
@@ -1375,6 +1384,7 @@ class FlightLogProcessor:
                 ],
                 "partial_failures": dict(export_errors or {}),
                 "page_duration_s": options.page_duration_s,
+                "gif_source_duration_s": options.gif_source_duration_s,
                 "pages_s": list(Pages_Build(data.duration_s, options.page_duration_s)),
                 "gif": GifPlan_Build(data.duration_s, options.gif_source_duration_s).Metadata_Get(),
             },

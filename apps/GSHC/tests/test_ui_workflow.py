@@ -198,7 +198,7 @@ class UiWorkflowTests(unittest.TestCase):
             "task.simulation.cancelled",
             completed=False,
         )
-        self.assertEqual(self.window.simulation_progress_bar.value(), 0)
+        self.assertEqual(self.window.simulation_progress_bar.value(), 35)
         self.assertIn("已清理", self.window.lbl_simulation_progress.text())
 
         self.window.begin_processing_task()
@@ -230,6 +230,18 @@ class UiWorkflowTests(unittest.TestCase):
         )
         self.assertEqual(self.window.processing_progress_bar.value(), 100)
         self.assertIn("D:/data/result", self.window.lbl_processing_progress.text())
+
+    def test_failed_task_retains_partial_progress_and_reserves_completion(self) -> None:
+        self.window.begin_simulation_task()
+        self.window.update_simulation_progress(100, 100, "task.simulation.writing")
+        self.assertEqual(self.window.simulation_progress_bar.value(), 99)
+        self.window.finish_simulation_task("task.simulation.failed", completed=False)
+        self.assertEqual(self.window.simulation_progress_bar.value(), 99)
+        self.window.begin_processing_task()
+        self.window.update_processing_progress(8, 8, "task.processing.running")
+        self.assertEqual(self.window.processing_progress_bar.value(), 7)
+        self.window.finish_processing_task("task.processing.failed", completed=False)
+        self.assertEqual(self.window.processing_progress_bar.value(), 7)
 
     def test_data_directory_button_opens_application_dialog_with_browse_choice(self) -> None:
         dialog = self.window.data_directory_dialog

@@ -452,6 +452,8 @@ class FlightPlotter:
         trajectory.view_init(elev=20, azim=35)
         self._style_figure(figure)
         figure.tight_layout()
+        figure.subplots_adjust(left=0.10, right=0.96, bottom=0.08, top=0.88,
+                               wspace=0.12)
         times = np.asarray([sample.time_s for sample in data.pos], dtype=float)
         points = np.asarray([sample.values[:3] for sample in data.pos], dtype=float).reshape(-1, 3)
         return dict(
