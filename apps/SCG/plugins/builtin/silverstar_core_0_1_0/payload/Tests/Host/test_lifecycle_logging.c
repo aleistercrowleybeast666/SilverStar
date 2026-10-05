@@ -62,6 +62,8 @@ static uint32_t s_system_config_push_count;
 static uint32_t s_mission_config_push_count;
 static uint32_t s_snapshot_identity_push_count;
 static uint32_t s_start_initial_capture_count;
+static uint32_t s_start_admission_attempt_count;
+static uint8_t s_start_busy_remaining;
 static FlightLogInitialStateRecord s_start_initial_record;
 static FlightLogMissionSnapshotIdentityRecord s_snapshot_identity_record;
 static uint32_t s_mag_identity_push_count;
@@ -717,6 +719,9 @@ LoggerBusResult LoggerBus_EventPush(uint64_t timestamp_us,
 LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
     const LoggerBusStartRecords *records, uint32_t *generation)
 {
+    s_start_admission_attempt_count++;
+    if (s_start_busy_remaining != 0U)
+    { s_start_busy_remaining--; return LOGGER_BUS_RESULT_BUSY; }
     LoggerBusResult result = LoggerBus_SystemConfigPush(timestamp_us);
     LoggerBusResult mission = LoggerBus_MissionConfigPush(timestamp_us);
     LoggerBusResult initial = LoggerBus_InitialStatePush(timestamp_us, &records->initial);
@@ -1070,6 +1075,8 @@ static void Test_StateReset(void)
     s_mission_config_push_count = 0U;
     s_snapshot_identity_push_count = 0U;
     s_start_initial_capture_count = 0U;
+    s_start_admission_attempt_count = 0U;
+    s_start_busy_remaining = 0U;
     (void)memset(&s_snapshot_identity_record, 0,
                  sizeof(s_snapshot_identity_record));
     s_mag_identity_push_count = 0U;
@@ -1398,15 +1405,16 @@ static void Test_PostStartMissingTfDoesNotChangeFlightState(void)
 static void Test_StartRecordAdmissionRetriesCapturedInput(void)
 {
     Test_StateReset();
-    s_event_push_result = LOGGER_BUS_RESULT_FULL;
-    s_enable_event_after_first_delay = 1U;
+    s_start_busy_remaining = 1U;
     s_delay_limit = 3U;
     Test_FlightTaskRun();
     TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_FLIGHT);
     TEST_CHECK(s_mission_started != 0U && s_abort_count == 0U);
-    TEST_CHECK(s_system_config_push_count == 2U);
-    TEST_CHECK(s_mission_config_push_count == 2U);
-    TEST_CHECK(s_initial_state_push_count == 2U);
+    TEST_CHECK(s_start_admission_attempt_count == 2U);
+    TEST_CHECK(s_start_busy_remaining == 0U);
+    TEST_CHECK(s_system_config_push_count == 1U);
+    TEST_CHECK(s_mission_config_push_count == 1U);
+    TEST_CHECK(s_initial_state_push_count == 1U);
     TEST_CHECK(s_start_initial_capture_count == 1U);
     TEST_CHECK(s_start_initial_record.origin_valid_flags == 0U);
 }
