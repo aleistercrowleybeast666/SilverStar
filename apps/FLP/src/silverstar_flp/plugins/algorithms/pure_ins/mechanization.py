@@ -8,6 +8,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from silverstar_flp.core.dataset import DecodedRecord
+from silverstar_flp.core.context import TaskContext
 from silverstar_flp.core.math import (
     Quaternion_Normalize,
     Quaternion_PropagateBodyIncrement,
@@ -195,6 +196,7 @@ def Mechanization_Run(
     gravity_mps2: float,
     initial_velocity_enu_mps: NDArray[np.floating] | None = None,
     initial_position_enu_m: NDArray[np.floating] | None = None,
+    context: TaskContext | None = None,
 ) -> tuple[MechanizationOutput, ...]:
     q_nb = Quaternion_Normalize(initial_q_nb)
     velocity = np.zeros(3, dtype=np.float32)
@@ -209,6 +211,8 @@ def Mechanization_Run(
 
     outputs: list[MechanizationOutput] = []
     for increment in increments:
+        if context is not None:
+            context.Cancel_RaiseIfRequested()
         dt = np.float32(increment.dt_s)
         if not np.isfinite(dt) or dt <= 0.0:
             continue

@@ -304,6 +304,7 @@ class Sf6AlgorithmPlugin(AlgorithmPlugin):
             increments,
             initial_q_nb=initial.payload["q_nb"],
             gravity_mps2=parameters["gravity_mps2"],
+            context=task,
         )
         velocity = initial.payload["initial_velocity_enu_mps"]
         gain = [parameters[name] for name in GAIN_IDS]

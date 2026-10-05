@@ -259,6 +259,7 @@ class PureInsAlgorithmPlugin(AlgorithmPlugin):
             increments,
             initial_q_nb=initial_q,
             gravity_mps2=gravity,
+            context=task_context,
         )
         task_context.Progress_Report(0.75, "replay.mechanization")
         if not outputs:

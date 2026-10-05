@@ -137,6 +137,7 @@ class MainWindow(QMainWindow):
         self._thread_pool = QThreadPool.globalInstance()
         self._active_worker: FunctionWorker | None = None
         self._worker_error_callback = None
+        self._worker_cancel_callback = None
         self._settings = QSettings("SilverStar", "SilverStar_FLP")
         self.setAcceptDrops(True)
         self.setWindowTitle(PRODUCT_NAME)
@@ -650,13 +651,19 @@ class MainWindow(QMainWindow):
         selected_path = Path(folder_path)
         self.status_label.setText(self._translator.Text_Get("status.searching_pairs"))
         worker = FunctionWorker(
-            lambda context: self._log_open_coordinator.PairDiscovery_Run(selected_path)
+            lambda context: self._FolderSearch_Run(selected_path, context)
         )
         self._Task_Start(
             worker,
             self._FolderSearch_Set,
             lambda message: self._Error_Show(message),
         )
+
+    def _FolderSearch_Run(self, selected_path: Path, context):
+        context.Cancel_RaiseIfRequested()
+        discovery = self._log_open_coordinator.PairDiscovery_Run(selected_path)
+        context.Cancel_RaiseIfRequested()
+        return discovery
 
     def _SilverStarProjectDialog_Open(self) -> None:
         selected = QFileDialog.getExistingDirectory(
@@ -859,6 +866,7 @@ class MainWindow(QMainWindow):
             worker,
             self._Replay_ResultSet,
             self.replay_page.Result_Error,
+            self.replay_page.Result_Error,
         )
 
     def _Replay_ResultSet(self, result: AlgorithmResult) -> None:
@@ -924,6 +932,7 @@ class MainWindow(QMainWindow):
             worker,
             self._Export_ResultSet,
             self.export_dialog.Result_Error,
+            self.export_dialog.Result_Error,
         )
 
     def _Export_ResultSet(self, manifest: ExportManifest) -> None:
@@ -949,19 +958,19 @@ class MainWindow(QMainWindow):
         if not opened:
             self.export_dialog.ManifestOpen_Error()
 
-    def _Task_Start(self, worker, result_callback, error_callback) -> None:
+    def _Task_Start(self, worker, result_callback, error_callback,
+                    cancel_callback=None) -> None:
         if self._active_worker is not None:
             error_callback("another_background_task_is_running")
             return
         self._active_worker = worker
         self.replay_page.Task_Busy()
         self._worker_error_callback = error_callback
+        self._worker_cancel_callback = cancel_callback
         worker.signals.progress.connect(self._Task_Progress)
         worker.signals.result.connect(result_callback)
         worker.signals.error.connect(self._Task_Error)
-        worker.signals.cancelled.connect(
-            lambda: self.status_label.setText(self._translator.Text_Get("status.task_cancelled"))
-        )
+        worker.signals.cancelled.connect(self._Task_Cancelled)
         worker.signals.finished.connect(self._Task_Finish)
         self.progress_bar.setValue(0)
         self.progress_bar.setVisible(True)
@@ -982,10 +991,17 @@ class MainWindow(QMainWindow):
 
     def _Task_Error(self, message: str, traceback_text: str) -> None:
         logging.error("Background task failed: %s\n%s", message, traceback_text)
+        self.status_label.setText(self._translator.Text_Get("status.failed"))
         if self._worker_error_callback is not None:
             self._worker_error_callback(message)
         else:
             self._Error_Show(message)
+
+    def _Task_Cancelled(self) -> None:
+        message = self._translator.Text_Get("status.task_cancelled")
+        self.status_label.setText(message)
+        if self._worker_cancel_callback is not None:
+            self._worker_cancel_callback(message)
 
     def _Task_Finish(self) -> None:
         self._source_restore_index = None
@@ -1002,6 +1018,7 @@ class MainWindow(QMainWindow):
         self.replay_page.Task_Finish()
         self._active_worker = None
         self._worker_error_callback = None
+        self._worker_cancel_callback = None
         if self._source_restore_pending is not None:
             QTimer.singleShot(0, self._AnalysisSource_Restore)
 
@@ -1372,9 +1389,9 @@ class MainWindow(QMainWindow):
         event.acceptProposedAction()
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        if self._active_worker is not None:
-            self._active_worker.Worker_Cancel()
         if self._ProjectChanges_Confirm():
+            if self._active_worker is not None:
+                self._active_worker.Worker_Cancel()
             event.accept()
         else:
             event.ignore()
