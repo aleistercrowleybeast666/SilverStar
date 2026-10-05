@@ -753,7 +753,7 @@ class MainWindow(QMainWindow):
         silverstar_root: Path | None = None,
     ) -> None:
         try:
-            for configuration in project.replay_configurations.values():
+            for configuration_name, configuration in project.replay_configurations.items():
                 plugin = self._registry.Algorithm_Get(configuration["algorithm_id"])
                 request = ReplayRequest(
                     mode=configuration["mode"],
@@ -763,7 +763,9 @@ class MainWindow(QMainWindow):
                     process_model_revision=configuration.get("process_model_revision"),
                 )
                 plugin.Parameters_Resolve(result.dataset, request)
-                plugin.ProcessModelRevision_Resolve(result.dataset, request)
+                plugin.ProcessModelRevision_Resolve(
+                    result.dataset, request, required=configuration_name != "draft"
+                )
                 provenance = plugin.ParameterAudit_Get(result.dataset, request)["config_source"]
                 if configuration["provenance"] != provenance:
                     raise ValueError("project_parameter_provenance_invalid")

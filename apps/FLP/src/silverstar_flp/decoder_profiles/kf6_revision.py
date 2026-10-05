@@ -31,11 +31,10 @@ def Kf6Revision_FromSemantics(document):
     if not isinstance(raw_locks, (list, tuple)) or any(not isinstance(item, Mapping) for item in raw_locks):
         raise DecoderProfileError("kf6_component_locks_invalid")
     locks = [item for item in raw_locks if item.get("component") == COMPONENT]
+    if len(locks) > 1:
+        raise DecoderProfileError("kf6_component_identity_ambiguous")
     if any(not isinstance(item.get("version"), str) for item in locks):
         raise DecoderProfileError("kf6_component_version_invalid")
-    versions = {item["version"] for item in locks}
-    if len(versions) > 1:
-        raise DecoderProfileError("kf6_component_identity_conflicting")
     expected = {"0.1.0": 1, "0.2.0": 2}.get(locks[0]["version"]) if len(locks) == 1 else None
     # Audited legacy packages identify their original model by the exact
     # pre-upgrade component version. Never infer revision 2 from membership.

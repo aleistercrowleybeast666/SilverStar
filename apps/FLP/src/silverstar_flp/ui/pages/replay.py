@@ -591,7 +591,7 @@ class ReplayPage(QWidget):
         if effective.metadata.version != configuration["algorithm_version"]:
             raise ValueError("project_algorithm_semantics_mismatch")
         plugin.Parameters_Resolve(self._dataset, request)
-        plugin.ProcessModelRevision_Resolve(self._dataset, request)
+        plugin.ProcessModelRevision_Resolve(self._dataset, request, required=False)
         self.algorithm_combo.setCurrentIndex(
             self.algorithm_combo.findData(configuration["algorithm_id"])
         )

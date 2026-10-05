@@ -73,6 +73,7 @@ def test_optional_identity_allows_raw_exact_pair_but_denies_recorded_math(tmp_pa
     lambda s: s["metadata_declarations"]["kf6"].pop("kernel_sha256"),
     lambda s: s["metadata_declarations"]["kf6"].update(revision=1),
     lambda s: s["metadata_declarations"]["kf6"].update(process_noise_model=MODELS[1]),
+    lambda s: s["component_locks"].append(dict(s["component_locks"][0])),
 ])
 def test_malformed_identity_is_decoder_error_and_discovery_continues(tmp_path, edit):
     bad = Semantics_Build(2)
@@ -190,6 +191,13 @@ def test_replay_page_restores_hidden_revision_without_a_new_selector(tmp_path):
     assert page._Request_Get().process_model_revision == 2
     page.mode_combo.setCurrentIndex(page.mode_combo.findData(ReplayMode.OFFLINE))
     assert page._Request_Get().process_model_revision is None
+    # An unexecuted draft can still restore a legal unknown raw identity.
+    # The same request cannot authorize mathematical replay.
+    draft = page.Configuration_Get()
+    assert "process_model_revision" not in draft
+    page.Configuration_Set(draft)
+    with pytest.raises(ValueError, match="kf6_algorithm_revision_missing"):
+        plugin.ProcessModelRevision_Resolve(dataset, page._Request_Get())
     page.Dataset_Set(replace(dataset, source_path=tmp_path / "another_source.BIN"))
     assert page._process_model_preferences == {}
     page.deleteLater()
