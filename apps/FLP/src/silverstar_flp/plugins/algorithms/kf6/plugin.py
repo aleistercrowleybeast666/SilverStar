@@ -18,6 +18,7 @@ from silverstar_flp.core.mission import (
     MissionReplayBounds_Get,
     MissionReplayEndReason,
 )
+from silverstar_flp.core.runtime import NumericalRuntime_Validate
 from silverstar_flp.plugins.algorithms.kf6.diagnostics import (
     DiagnosticMetadata_Get,
     DiagnosticSchedule_Apply,
@@ -1002,6 +1003,7 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         analysis_frozen_initial: bool = False,
         analysis_options: Kf6DiagnosticOptions | None = None,
     ) -> AlgorithmResult:
+        NumericalRuntime_Validate()
         if analysis_options is not None:
             if not isinstance(analysis_options, Kf6DiagnosticOptions):
                 raise TypeError("kf6_diagnostic_options_invalid")

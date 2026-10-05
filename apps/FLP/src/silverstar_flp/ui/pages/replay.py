@@ -53,6 +53,8 @@ class ReplayPage(QWidget):
         self._dataset: FlightDataset | None = None
         self._last_result: AlgorithmResult | None = None
         self._last_entry: ReplayStoredResult | None = None
+        self._mode_preferences: dict[str, ReplayMode] = {}
+        self._last_error: str | None = None
         self._store: ReplayResultStore | None = None
         self._parameter_widgets: dict[str, QDoubleSpinBox] = {}
         self._parameter_labels: dict[str, QLabel] = {}
@@ -195,6 +197,7 @@ class ReplayPage(QWidget):
 
         self.algorithm_combo.currentIndexChanged.connect(self._Algorithm_Refresh)
         self.mode_combo.currentIndexChanged.connect(self._Mode_Refresh)
+        self.mode_combo.activated.connect(self._ModePreference_Set)
         self.Language_Apply(translator)
         self._Algorithm_Refresh()
 
@@ -208,7 +211,9 @@ class ReplayPage(QWidget):
         if dataset_changed:
             self._last_entry = None
             self._last_result = None
+            self._last_error = None
             self.result_label.setText("—")
+            self.result_label.setToolTip("")
             self.result_information_label.setText("—")
             self.result_information_label.setToolTip("")
             self.comparison_table.clearContents()
@@ -270,14 +275,19 @@ class ReplayPage(QWidget):
             for key, value in plugin.OfflineParameters_Get().items()
             if isinstance(value, (int, float)) and not isinstance(value, bool)
         }
-        if self._dataset is not None:
-            configuration = plugin.ConfigurationAvailability_Get(self._dataset)
-            if (
-                self.mode_combo.currentData() == ReplayMode.RECORDED_CONFIGURATION
-                and not configuration.recorded_available
-            ):
-                offline_index = self.mode_combo.findData(ReplayMode.OFFLINE)
-                self.mode_combo.setCurrentIndex(max(offline_index, 0))
+        recorded_available = (
+            self._dataset is not None
+            and plugin.ConfigurationAvailability_Get(self._dataset).recorded_available
+        )
+        mode = self._mode_preferences.get(
+            plugin.metadata.plugin_id,
+            ReplayMode.RECORDED_CONFIGURATION if recorded_available else ReplayMode.OFFLINE,
+        )
+        if mode == ReplayMode.RECORDED_CONFIGURATION and not recorded_available:
+            mode = ReplayMode.OFFLINE
+        self.mode_combo.blockSignals(True)
+        self.mode_combo.setCurrentIndex(max(self.mode_combo.findData(mode), 0))
+        self.mode_combo.blockSignals(False)
         for parameter in plugin.metadata.parameter_schema:
             if parameter.kind not in ("float", "int"):
                 continue
@@ -430,6 +440,11 @@ class ReplayPage(QWidget):
         translated = self._translator.Text_Get(code)
         return parameter.parameter_id if translated == code else translated
 
+    def _ModePreference_Set(self, index: int) -> None:
+        mode = self.mode_combo.itemData(index)
+        if mode is not None:
+            self._mode_preferences[str(self.algorithm_combo.currentData())] = ReplayMode(mode)
+
     def _Mode_Refresh(self) -> None:
         if (getattr(self, "_parameter_algorithm_version", None)
                 != self._CurrentPlugin_Get().metadata.version):
@@ -574,6 +589,7 @@ class ReplayPage(QWidget):
             self.algorithm_combo.findData(configuration["algorithm_id"])
         )
         self.mode_combo.setCurrentIndex(self.mode_combo.findData(request.mode))
+        self._mode_preferences[str(configuration["algorithm_id"])] = request.mode
         self.quality_policy_combo.setCurrentIndex(
             max(0, self.quality_policy_combo.findData(request.quality_policy_revision))
         )
@@ -675,6 +691,8 @@ class ReplayPage(QWidget):
         self.replayRequested.emit(str(self.algorithm_combo.currentData()), request)
 
     def Result_Set(self, result: ReplayStoredResult | AlgorithmResult) -> None:
+        self._last_error = None
+        self.result_label.setToolTip("")
         if isinstance(result, ReplayStoredResult):
             entry = result
         else:
@@ -938,9 +956,17 @@ class ReplayPage(QWidget):
         )
 
     def Result_Error(self, message: str) -> None:
-        key = f"error.code.{message}"
+        self._last_error = message
+        code, _, detail = message.partition(":")
+        key = f"error.code.{code}"
         translated = self._translator.Text_Get(key)
-        self.result_label.setText(message if translated == key else translated)
+        text = message if translated == key else translated
+        if detail and translated != key:
+            detail_key = f"error.detail.{code}.{detail}"
+            translated_detail = self._translator.Text_Get(detail_key)
+            text += "\n" + (detail if translated_detail == detail_key else translated_detail)
+        self.result_label.setText(text)
+        self.result_label.setToolTip(message)
         self._Availability_Refresh()
 
     def Task_Busy(self) -> None:
@@ -1100,3 +1126,5 @@ class ReplayPage(QWidget):
         else:
             self._StoredResults_Refresh()
         self._AnalysisSources_Refresh()
+        if self._last_error is not None:
+            self.Result_Error(self._last_error)

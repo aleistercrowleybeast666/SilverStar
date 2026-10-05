@@ -1,4 +1,6 @@
 {
+  "error.detail.parameter_dynamic_uncertainty_missing.GNSS_initialization": "GNSS initialization cannot be reconstructed: the log lacks the pre-START initialization uncertainty evidence required by this parameter change. Recorded configuration can be selected; the selected Offline mode was not run.",
+  "error.code.numpy_version_unsafe": "This FLP environment uses NumPy 2.4.0, which has a known memory leak. Install a fixed release in the FLP environment before replay (validated: 2.4.1).",
   "app.title": "SilverStar Flight Log Parser",
   "app.credit": "By CXYL",
   "menu.file": "File",

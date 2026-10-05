@@ -9,7 +9,7 @@ description = "SilverStar Rocket Avionics & Ground Suite"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "PySide6>=6.8", "PyYAML>=6.0,<7", "numpy>=2.0",
+  "PySide6>=6.8", "PyYAML>=6.0,<7", "numpy>=2.0,!=2.4.0",
   "matplotlib>=3.9", "pyqtgraph>=0.13.7", "PyOpenGL>=3.1.7",
   "Pillow>=10.4", "pyserial>=3.5",
 ]

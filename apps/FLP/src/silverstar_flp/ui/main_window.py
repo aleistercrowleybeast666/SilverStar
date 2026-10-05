@@ -5,7 +5,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QSettings, QStandardPaths, Qt, QThreadPool, QTimer, QUrl
+from PySide6.QtCore import QSettings, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Slot
 from PySide6.QtGui import (
     QAction,
     QCloseEvent,
@@ -139,6 +139,7 @@ class MainWindow(QMainWindow):
         self._folder_search_generation = 0
         self._folder_search_worker: FunctionWorker | None = None
         self._worker_error_callback = None
+        self._worker_result_callback = None
         self._worker_cancel_callback = None
         self._settings = QSettings("SilverStar", "SilverStar_FLP")
         self.setAcceptDrops(True)
@@ -986,12 +987,11 @@ class MainWindow(QMainWindow):
         self._active_worker = worker
         self.replay_page.Task_Busy()
         self._worker_error_callback = error_callback
+        self._worker_result_callback = result_callback
         self._worker_cancel_callback = cancel_callback
         self._worker_cancelled_published = False
         worker.signals.progress.connect(self._Task_Progress)
-        worker.signals.result.connect(
-            lambda result: self._Task_ResultPublish(worker, result, result_callback)
-        )
+        worker.signals.result.connect(self._Task_ResultDispatch)
         worker.signals.error.connect(self._Task_Error)
         worker.signals.cancelled.connect(self._Task_Cancelled)
         worker.signals.finished.connect(self._Task_Finish)
@@ -1008,10 +1008,18 @@ class MainWindow(QMainWindow):
         self.new_project_action.setEnabled(False)
         self._thread_pool.start(worker)
 
+    @Slot(object)
+    def _Task_ResultDispatch(self, result) -> None:
+        worker = self._active_worker
+        if worker is None or self.sender() is not worker.signals:
+            return
+        self._Task_ResultPublish(worker, result, self._worker_result_callback)
+
     def _Task_ResultPublish(self, worker, result, result_callback) -> None:
         if worker is not self._active_worker or worker.context.cancellation_event.is_set():
             return
-        result_callback(result)
+        if result_callback is not None:
+            result_callback(result)
 
     def _Task_Progress(self, progress: float, code: str) -> None:
         self.progress_bar.setValue(int(progress * 1000))
@@ -1054,6 +1062,7 @@ class MainWindow(QMainWindow):
         self.replay_page.Task_Finish()
         self._active_worker = None
         self._worker_error_callback = None
+        self._worker_result_callback = None
         self._worker_cancel_callback = None
         if self._source_restore_pending is not None:
             QTimer.singleShot(0, self._AnalysisSource_Restore)

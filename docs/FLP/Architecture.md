@@ -203,10 +203,25 @@ user-facing messages.
 
 Changing datasets clears ReplayPage's last-result references, result details and
 comparison presentation. Refreshing the same dataset preserves its completed-run
-history. Queued worker results publish only while their captured worker remains
-active and uncancelled; cancel/accepted-close requests do not admit a previously
+history. Worker result signals connect to a QObject bound slot without a closure
+owning the worker. The slot admits only the active worker's signal sender while
+that worker is uncancelled; cancel/accepted-close requests do not admit a previously
 emitted result after the GUI queue resumes. Active ownership is still released
 only at worker completion, without terminating numerical threads.
+
+Replay modes retain explicit user selections per algorithm. Automatic fallback
+when recorded configuration is unavailable does not overwrite those preferences.
+Without a preference, Recorded is selected when available, otherwise Offline.
+Detailed error codes are split at the first colon for translation; missing
+pre-START GNSS initialization uncertainty evidence remains a replay rejection.
+
+Project and FLP dependencies exclude NumPy 2.4.0: its flat-assignment iterator
+leak is reachable through repeated ESKF `eye(3)`/`eye(15)` calls. GUI/CLI startup
+and KF6/ESKF replay boundaries reject that known release with an environment-specific
+repair message, preserving supported earlier releases. NumPy 2.4.1 is verified
+in the FLP-specific isolated environment; no estimator equations or precision change.
+See [upstream fix](https://github.com/numpy/numpy/pull/30512) and
+[2.4.1 release notes](https://numpy.org/doc/stable/release/2.4.1-notes.html).
 
 ## Shared display closeout
 
