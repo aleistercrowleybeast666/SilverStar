@@ -244,6 +244,7 @@ class AlgorithmMetadata:
     what_if_quality_revisions: tuple[int, ...] = ()
     # Trusted firmware configuration fields which are not replay tunables.
     firmware_only_parameter_schema: tuple[ParameterSpec, ...] = ()
+    process_model_revisions: tuple[int, ...] = ()
 
     def ParameterSchemaIdentity_Get(self) -> str:
         payload = [spec.ToDict() for spec in self.parameter_schema]
@@ -321,9 +322,14 @@ class ReplayRequest:
     input_source: str = "corrected_imu"
     parameters: Mapping[str, Any] = field(default_factory=dict)
     quality_policy_revision: int | None = None
+    process_model_revision: int | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "mode", ReplayMode(self.mode))
+        if self.process_model_revision is not None and (
+            type(self.process_model_revision) is not int or self.process_model_revision < 1
+        ):
+            raise ValueError("process_model_revision_invalid")
         if self.quality_policy_revision is not None and (
             self.mode != ReplayMode.WHAT_IF or type(self.quality_policy_revision) is not int
         ):
@@ -393,6 +399,11 @@ class AlgorithmPlugin(ABC):
             return MappingProxyType({})
         values = self._FirmwareParameters_Get(dataset)
         return MappingProxyType({name: value for name, value in values.items() if name in fields})
+
+    def ProcessModelRevision_Resolve(self, dataset: FlightDataset, request: ReplayRequest) -> int | None:
+        if request.process_model_revision is not None:
+            raise ValueError("process_model_revision_unsupported")
+        return None
 
     def Parameters_Resolve(self, dataset: FlightDataset, request: ReplayRequest) -> dict[str, Any]:
         if (

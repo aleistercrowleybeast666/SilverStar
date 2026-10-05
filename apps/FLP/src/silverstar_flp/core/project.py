@@ -180,9 +180,9 @@ def ReplayConfiguration_Validate(configuration: Any) -> None:
         "parameter_schema_identity",
         "provenance",
     }
-    if not isinstance(configuration, dict) or set(configuration) not in (
-        fields,
-        fields | {"quality_policy_revision"},
+    optional_fields = {"quality_policy_revision", "process_model_revision"}
+    if not isinstance(configuration, dict) or not (
+        fields <= set(configuration) <= fields | optional_fields
     ):
         raise ValueError("project_replay_configuration_invalid")
     try:
@@ -208,6 +208,11 @@ def ReplayConfiguration_Validate(configuration: Any) -> None:
         or configuration["quality_policy_revision"] not in plugin.metadata.what_if_quality_revisions
     ):
         raise ValueError("project_quality_policy_revision_invalid")
+    if "process_model_revision" in configuration and (
+        type(configuration["process_model_revision"]) is not int
+        or configuration["process_model_revision"] not in plugin.metadata.process_model_revisions
+    ):
+        raise ValueError("project_process_model_revision_invalid")
     if configuration["input_source"] not in ("corrected_imu", "recorded_inertial_increment"):
         raise ValueError("project_replay_input_invalid")
     if configuration["provenance"] not in (

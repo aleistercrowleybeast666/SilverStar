@@ -1697,6 +1697,9 @@ def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
                 files = provenance.get("files", {})
                 if not all(path in files for path in KERNEL_PATHS):
                     raise ValueError("KF6 source model identity NOT PROVEN: missing kernel provenance")
+                upstream_files = ComponentProvenance_Get(catalog, component_id)["files"]
+                if any(files[path] != upstream_files[path] for path in KERNEL_PATHS):
+                    raise ValueError("KF6 source model identity NOT PROVEN: catalog declaration differs from kernel provenance")
                 declarations[name]["kernel_sha256"] = {
                     path: files[path] for path in KERNEL_PATHS}
     return declarations

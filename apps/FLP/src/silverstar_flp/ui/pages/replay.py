@@ -54,6 +54,7 @@ class ReplayPage(QWidget):
         self._last_result: AlgorithmResult | None = None
         self._last_entry: ReplayStoredResult | None = None
         self._mode_preferences: dict[str, ReplayMode] = {}
+        self._process_model_preferences: dict[tuple[str, ReplayMode], int] = {}
         self._last_error: str | None = None
         self._store: ReplayResultStore | None = None
         self._parameter_widgets: dict[str, QDoubleSpinBox] = {}
@@ -209,6 +210,7 @@ class ReplayPage(QWidget):
         dataset_changed = self._dataset is not dataset
         self._dataset = dataset
         if dataset_changed:
+            self._process_model_preferences.clear()
             self._last_entry = None
             self._last_result = None
             self._last_error = None
@@ -554,7 +556,7 @@ class ReplayPage(QWidget):
             if mode == ReplayMode.WHAT_IF
             else dict(self._parameter_baseline_values)
         )
-        request = ReplayRequest(mode=mode, parameters=values)
+        request = self._Request_Get()
         plugin.metadata.Parameters_Validate(values)
         configuration = {
             "algorithm_id": plugin.metadata.plugin_id,
@@ -567,6 +569,9 @@ class ReplayPage(QWidget):
         }
         if mode == ReplayMode.WHAT_IF and self.quality_policy_combo.currentData() is not None:
             configuration["quality_policy_revision"] = self.quality_policy_combo.currentData()
+        revision = plugin.ProcessModelRevision_Resolve(self._dataset, request)
+        if revision is not None:
+            configuration["process_model_revision"] = revision
         return configuration
 
     def Configuration_Set(self, configuration: dict) -> None:
@@ -579,17 +584,24 @@ class ReplayPage(QWidget):
             input_source=configuration["input_source"],
             parameters=configuration["actual_values"],
             quality_policy_revision=configuration.get("quality_policy_revision"),
+            process_model_revision=configuration.get("process_model_revision"),
         )
         selector = getattr(plugin, "PluginForDataset_Get", None)
         effective = selector(self._dataset, request.mode) if selector else plugin
         if effective.metadata.version != configuration["algorithm_version"]:
             raise ValueError("project_algorithm_semantics_mismatch")
         plugin.Parameters_Resolve(self._dataset, request)
+        plugin.ProcessModelRevision_Resolve(self._dataset, request)
         self.algorithm_combo.setCurrentIndex(
             self.algorithm_combo.findData(configuration["algorithm_id"])
         )
         self.mode_combo.setCurrentIndex(self.mode_combo.findData(request.mode))
         self._mode_preferences[str(configuration["algorithm_id"])] = request.mode
+        key = (str(configuration["algorithm_id"]), request.mode)
+        if request.process_model_revision is not None:
+            self._process_model_preferences[key] = request.process_model_revision
+        else:
+            self._process_model_preferences.pop(key, None)
         self.quality_policy_combo.setCurrentIndex(
             max(0, self.quality_policy_combo.findData(request.quality_policy_revision))
         )
@@ -681,6 +693,9 @@ class ReplayPage(QWidget):
             quality_policy_revision=self.quality_policy_combo.currentData()
             if mode == ReplayMode.WHAT_IF
             else None,
+            process_model_revision=self._process_model_preferences.get(
+                (str(self.algorithm_combo.currentData()), ReplayMode(mode))
+            ),
         )
         return request
 

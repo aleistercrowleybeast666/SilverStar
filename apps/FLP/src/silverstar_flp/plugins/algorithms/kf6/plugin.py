@@ -127,6 +127,7 @@ def _Result_Aggregate(first: Kf6UpdateResult, second: Kf6UpdateResult) -> int:
 class Kf6AlgorithmPlugin(AlgorithmPlugin):
     metadata = AlgorithmMetadata(
         what_if_quality_revisions=(3,),
+        process_model_revisions=(1, 2),
         plugin_id="silverstar.algorithm.kf6",
         version="0.2.0-firmware-SILV0008",
         display_name="KF_6",
@@ -1014,15 +1015,15 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         task_context = context or TaskContext()
         from silverstar_flp.decoder_profiles.kf6_revision import Kf6Revision_Get
         dataset_revision = Kf6Revision_Get(dataset)
-        algorithm_revision = dataset_revision if dataset_revision is not None else 1
         if analysis_algorithm_revision is not None:
-            if (request.mode not in (ReplayMode.WHAT_IF, ReplayMode.OFFLINE)
+            if (request.mode != ReplayMode.WHAT_IF
                     or type(analysis_algorithm_revision) is not int
                     or analysis_algorithm_revision not in (1, 2)):
                 raise ValueError("kf6_algorithm_revision_override_requires_explicit_what_if")
-            algorithm_revision = analysis_algorithm_revision
-        elif request.mode == ReplayMode.OFFLINE:
-            algorithm_revision = 2
+            if request.process_model_revision not in (None, analysis_algorithm_revision):
+                raise ValueError("kf6_algorithm_revision_override_conflict")
+            request = replace(request, process_model_revision=analysis_algorithm_revision)
+        algorithm_revision = self.ProcessModelRevision_Resolve(dataset, request)
         if request.quality_policy_revision not in (None, *self.metadata.what_if_quality_revisions):
             raise ValueError("quality_policy_revision_unsupported")
         availability = self.availability(dataset, request.input_source)
@@ -1086,8 +1087,9 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
             )
         parameters = self._Parameters_Resolve(dataset, request)
         source_diagnostics.update({"algorithm_revision": algorithm_revision,
+            "process_model_revision": algorithm_revision,
             "dataset_algorithm_revision": dataset_revision,
-            "algorithm_revision_override": analysis_algorithm_revision,
+            "algorithm_revision_override": request.process_model_revision,
             "process_noise_model": ("original_increment_equivalent_white_acceleration"
                 if algorithm_revision == 2 else "legacy_fragment_constant_acceleration")})
         filter_instance = Kf6Filter.Kf6_Create(
@@ -1379,6 +1381,20 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
             spec.Value_Validate(item["value"])
             values[name] = item["value"]
         return values
+
+    def ProcessModelRevision_Resolve(self, dataset: FlightDataset, request: ReplayRequest) -> int:
+        from silverstar_flp.decoder_profiles.kf6_revision import Kf6Revision_Get
+        recorded = Kf6Revision_Get(dataset)
+        selected = request.process_model_revision
+        if selected is not None and selected not in self.metadata.process_model_revisions:
+            raise ValueError("kf6_algorithm_revision_unsupported")
+        if request.mode == ReplayMode.WHAT_IF and selected is not None:
+            return selected
+        if recorded is None:
+            raise ValueError("kf6_algorithm_revision_missing")
+        if selected is not None and selected != recorded:
+            raise ValueError("kf6_algorithm_revision_override_requires_explicit_what_if")
+        return recorded
 
     def _Parameters_Resolve(
         self, dataset: FlightDataset, request: ReplayRequest

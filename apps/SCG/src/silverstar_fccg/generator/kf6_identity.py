@@ -1,6 +1,6 @@
 """Do not label preserved or edited KF6 kernels with a catalog-only revision."""
-from pathlib import Path
 import hashlib
+from pathlib import Path
 
 COMPONENT = "silverstar.algorithm.estimator.kf6"
 KERNEL_PATHS = (
@@ -14,6 +14,8 @@ def Kf6Identity_Validate(project_root: Path, previous: dict, current: dict) -> N
     prior = previous.get("components", {}).get(COMPONENT, {}).get("files", {})
     if not prior:
         # A new project is assembled atomically from the owning payload.
+        if any(project_root.joinpath(*path.split("/")).exists() for path in KERNEL_PATHS):
+            raise ValueError("KF6 source model identity NOT PROVEN: existing kernel without ownership")
         return
     upstream = current["files"]
     for relative in KERNEL_PATHS:

@@ -2,37 +2,37 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
 from collections.abc import Callable
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 
-from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.core.errors import FccgError
+from silverstar_fccg.core.workspace import WorkspacePolicy
+from silverstar_fccg.generator.eide_ownership import (
+    EideOwnedFields_Compare,
+    EideOwnedFields_Merge,
+    EideOwnedFields_Normalize,
+    EideOwnedFingerprint_Get,
+    EideOwnershipError,
+)
+from silverstar_fccg.generator.hardware_preparation import (
+    HardwareResourceBindingFingerprint_Get,
+)
+from silverstar_fccg.generator.kf6_identity import Kf6Identity_Validate
 from silverstar_fccg.generator.render import (
     ComponentProvenance_Get,
     GeneratedFiles_Render,
     MetadataFiles_Render,
 )
-from silverstar_fccg.generator.eide_ownership import (
-    EideOwnershipError,
-    EideOwnedFields_Compare,
-    EideOwnedFields_Merge,
-    EideOwnedFields_Normalize,
-    EideOwnedFingerprint_Get,
-)
-from silverstar_fccg.generator.hardware_preparation import (
-    HardwareResourceBindingFingerprint_Get,
-)
+from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+from silverstar_fccg.plugins.catalog import PluginCatalog
+from silverstar_fccg.plugins.manifest import PayloadCachePath_Is
 from silverstar_fccg.project.generation_state import (
     ProjectGenerationFingerprint_Get,
 )
-from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
-from silverstar_fccg.generator.kf6_identity import Kf6Identity_Validate
-from silverstar_fccg.plugins.catalog import PluginCatalog
-from silverstar_fccg.plugins.manifest import PayloadCachePath_Is
 from silverstar_fccg.project.model import ProjectModel
-from silverstar_fccg.project.validation import ProjectValidationResult, Project_Validate
+from silverstar_fccg.project.validation import Project_Validate, ProjectValidationResult
 
 
 class ProjectAssemblerError(FccgError):
@@ -374,15 +374,6 @@ class ProjectAssembler:
         if "silverstar.algorithm.estimator.kf6" in model.ComponentIds_Get():
             Kf6Identity_Validate(project_root, previous, ComponentProvenance_Get(
                 self.catalog, "silverstar.algorithm.estimator.kf6"))
-        self._Progress_Report(progress_callback, 4, "generate_glue", False)
-        graph = SourceGraph_Resolve(model, self.catalog)
-        desired = GeneratedFiles_Render(model, self.catalog, graph)
-        self._Progress_Report(progress_callback, 4, "generate_glue", True)
-
-        self._Progress_Report(
-            progress_callback, 5, "generate_environments", False
-        )
-        previous = self._Ownership_Load(project_root)
         components = dict(previous.get("components", {}))
         upstream_components = {}
         for component_id in model.ComponentIds_Get():
@@ -407,9 +398,20 @@ class ProjectAssembler:
                 components[component_id] = preserved
             else:
                 components[component_id] = current
-        desired.update(MetadataFiles_Render(model, self.catalog, graph,
-            component_provenance={component_id: components[component_id]
-                                  for component_id in model.ComponentIds_Get()}))
+        # Glue, Descriptor, package and saved project describe the same
+        # materialized sources, including an old model exported to a new root.
+        render_model = deepcopy(model)
+        render_model.component_provenance = {
+            component_id: components[component_id]
+            for component_id in model.ComponentIds_Get()
+        }
+        self._Progress_Report(progress_callback, 4, "generate_glue", False)
+        graph = SourceGraph_Resolve(render_model, self.catalog)
+        desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+        self._Progress_Report(progress_callback, 4, "generate_glue", True)
+        self._Progress_Report(progress_callback, 5, "generate_environments", False)
+        desired.update(MetadataFiles_Render(render_model, self.catalog, graph,
+            component_provenance=render_model.component_provenance))
         eide_relative = ".eide/eide.yml"
         eide_target = project_root / ".eide" / "eide.yml"
         desired_eide = desired[eide_relative].decode("utf-8")

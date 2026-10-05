@@ -760,8 +760,10 @@ class MainWindow(QMainWindow):
                     input_source=configuration["input_source"],
                     parameters=configuration["actual_values"],
                     quality_policy_revision=configuration.get("quality_policy_revision"),
+                    process_model_revision=configuration.get("process_model_revision"),
                 )
                 plugin.Parameters_Resolve(result.dataset, request)
+                plugin.ProcessModelRevision_Resolve(result.dataset, request)
                 provenance = plugin.ParameterAudit_Get(result.dataset, request)["config_source"]
                 if configuration["provenance"] != provenance:
                     raise ValueError("project_parameter_provenance_invalid")
@@ -1081,6 +1083,7 @@ class MainWindow(QMainWindow):
                 input_source=configuration["input_source"],
                 parameters=configuration["actual_values"],
                 quality_policy_revision=configuration.get("quality_policy_revision"),
+                process_model_revision=configuration.get("process_model_revision"),
             )
             self._Replay_Start(configuration["algorithm_id"], request)
         except (ValueError, KeyError) as exc:
@@ -1216,6 +1219,10 @@ class MainWindow(QMainWindow):
                     "parameter_schema_identity": entry.diagnostics["parameter_schema_identity"],
                     "provenance": entry.diagnostics["config_source"],
                 }
+                if entry.diagnostics.get("process_model_revision") is not None:
+                    self._project.replay_configurations[entry.result_id]["process_model_revision"] = (
+                        entry.diagnostics["process_model_revision"]
+                    )
                 if entry.diagnostics.get("quality_policy_override") is not None:
                     saved_configuration = self._project.replay_configurations[entry.result_id]
                     saved_configuration["quality_policy_revision"] = entry.diagnostics[
