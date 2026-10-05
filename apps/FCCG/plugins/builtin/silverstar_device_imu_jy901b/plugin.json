@@ -1,7 +1,7 @@
 {
   "schema_version": 0,
   "id": "silverstar.device.imu.jy901b",
-  "name": "JY901B",
+  "name": "JY901",
   "type": "device",
   "class": "imu",
   "version": "0.1.0",
@@ -88,8 +88,8 @@
       "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942"
     },
     "display_names": {
-      "zh_CN": "JY901B",
-      "en_US": "JY901B"
+      "zh_CN": "JY901",
+      "en_US": "JY901"
     },
     "device_descriptors": [
       {

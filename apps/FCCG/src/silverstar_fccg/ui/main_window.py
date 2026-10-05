@@ -143,7 +143,7 @@ from silverstar_fccg.ui.pages import (
 )
 from silverstar_fccg.ui.pages.algorithm_parameters import NavigationConfigurationPage
 from silverstar_fccg.ui.pages.build import DefaultTools_Get
-from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage
+from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage, GroundIssues_PresentationGet
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
@@ -2607,8 +2607,12 @@ class MainWindow(QMainWindow):
             source_bytes = descriptor.read_bytes()
             loaded = self._service.Project_Open(path)
             # Keep legacy navigation until the user deliberately creates a copy.
-            reconciled = (loaded if ReleaseCompatibilityIssues_Get(loaded) else
-                          self._service.ProjectConfiguration_Reconcile(loaded).model)
+            if ReleaseCompatibilityIssues_Get(loaded):
+                reconciled = loaded
+            else:
+                opening = deepcopy(loaded)
+                opening.ground_target = replace(opening.ground_target, enabled=True)
+                reconciled = self._service.ProjectConfiguration_Reconcile(opening).model
             changed_during_open = (
                 loaded.Dictionary_Get() != reconciled.Dictionary_Get()
             )
@@ -2661,6 +2665,7 @@ class MainWindow(QMainWindow):
             return
         try:
             candidate = ReleaseMigrationModel_Create(self._model)
+            candidate.ground_target = replace(candidate.ground_target, enabled=True)
             candidate = self._service.ProjectConfiguration_Reconcile(candidate).model
             ReleaseMigrationCopy_Save(self._model, candidate, Path(selected), self._legacy_source_bytes,
                                       self._project_root)
@@ -3095,6 +3100,12 @@ class MainWindow(QMainWindow):
             "generate_all": TargetScope.ALL,
         }[action_text]
         model = deepcopy(self._model)
+        if scope in {TargetScope.GROUND, TargetScope.ALL}:
+            issues = GroundTargetIssues_Get(model, self._service.catalog)
+            if issues:
+                summary, details = GroundIssues_PresentationGet(issues, self._translator)
+                self._Error_Show(summary, details)
+                return
         destination = self._project_root
         try:
             self._service.ProjectRoot_Save(model, destination)

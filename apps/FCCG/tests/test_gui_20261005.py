@@ -14,6 +14,9 @@ from silverstar_fccg.project.model import (GroundRadioConfiguration,
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.resources import BoardResourceProvisions_Get
 from silverstar_fccg.ui.pages.build import BuildPage
+from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+from silverstar_fccg.ui.pages.targets import GroundIssues_PresentationGet
+from silverstar_fccg.project.air_link import AirLinkIssue
 
 
 def test_capability_source_editor_is_removed_on_reorder_and_language(qapp):
@@ -85,6 +88,53 @@ def test_ground_pc_page_omits_baud_row_while_model_keeps_it(qapp, tmp_path,
                     if item.resource_id == ground.pc_resource)
     assert ground.baudrate == selected.metadata["baud_rate"]
     assert ProjectModel_Parse(window._model.Dictionary_Get()).ground_target.baudrate == ground.baudrate
+    window.close()
+
+
+def test_old_disabled_ground_opens_as_configurable_target(qapp, tmp_path,
+                                                           workspace_root):
+    service = FccgService(workspace_root)
+    old = service.ProjectDraft_Create("OldGround")
+    old.ground_target = replace(old.ground_target, enabled=False)
+    root = tmp_path / "old_ground"
+    service.ProjectRoot_Save(old, root, create_new=True)
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"), service=service)
+    window._Project_Open(root)
+    assert window._model.ground_target.enabled
+    assert not service.Project_Open(root).ground_target.enabled
+    window._GroundBoard_Change("silverstar.board.ground_station_0_5")
+    assert window.ground_target_page.generate_button.isEnabled()
+    result = TargetGeneration_Apply(window._model, service.catalog, service.policy,
+                                    root, TargetScope.GROUND)
+    assert result.targets == ("Ground_Station",)
+    assert (root / "Ground_Station/Makefile").is_file()
+    assert service.Project_Open(root).ground_target.enabled
+    window.close()
+
+
+def test_ground_errors_are_localized_and_block_only_ground_generation(
+    qapp, tmp_path, workspace_root,
+):
+    issues = (
+        AirLinkIssue("GROUND_HARDWARE_UNBOUND", "Ground hardware is not selected"),
+        AirLinkIssue("GROUND_UART_UNBOUND", "Ground UART resource is unavailable"),
+        AirLinkIssue("GROUND_RADIO_RESOURCE_UNBOUND", "Ground radio0 spi needs a spi resource"),
+        AirLinkIssue("GROUND_RADIO_RESOURCE_UNBOUND", "Ground radio0 reset needs a gpio resource"),
+        AirLinkIssue("GROUND_LED_OUTPUT_UNBOUND", "TX LED needs a writable GPIO output"),
+    )
+    summary, details = GroundIssues_PresentationGet(issues, Translator("zh_CN"))
+    assert "地面站" in summary and "5" in summary
+    assert "UART" in details and "SPI" in details and "GPIO" in details
+    assert "GROUND_" not in summary + details and "Ground radio0" not in details
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"),
+                        service=FccgService(workspace_root))
+    window._project_root = tmp_path / "not_generated"
+    shown = []
+    window._Error_Show = lambda message, detail="": shown.append((message, detail))
+    window._Targets_Generate("generate_ground")
+    assert len(shown) == 1 and "地面站" in shown[0][0]
+    assert "GROUND_" not in shown[0][0] + shown[0][1]
+    assert not window._project_root.exists()
     window.close()
 
 

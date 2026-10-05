@@ -923,6 +923,12 @@
   "ground.uart_missing_binding": "The saved UART binding is absent from this hardware inventory. Select an available UART before generating.",
   "ground.uart_unavailable": "{resource} · unavailable",
   "status.ground_configuration_required": "Fix Ground configuration and pass validation before generating.",
+  "ground.issue.summary": "Ground has {count} configuration checks to complete. Review the details before generating.",
+  "ground.issue.hardware": "Select a Ground board or import a generated CubeMX hardware project.",
+  "ground.issue.uart": "Bind the PC interface to an available UART with matching baud and 8N1 settings.",
+  "ground.issue.radio": "Complete the radio SPI, GPIO and time resource bindings in the Ground resource table.",
+  "ground.issue.led": "Bind enabled TX/RX activity LEDs to writable GPIO outputs.",
+  "ground.issue.other": "Check the Ground radio module, AIR link and hardware configuration.",
   "ground.activity_led_enable": "Enable shared TX/RX activity LED",
   "ground.activity_led_hint": "Toggle TX/RX activity LEDs. Turning them off retains their saved binding, polarity and pulse for later use.",
   "ground.activity_led_unavailable": "No unique board-declared activity LED output and polarity are available.",
@@ -949,6 +955,6 @@
   "device.raw_imu.mount.x_negative": "-X toward nose",
   "device.raw_imu.mount.y_positive": "+Y toward nose",
   "device.raw_imu.mount.y_negative": "-Y toward nose",
-  "device.raw_imu.mount.z_positive": "+Z toward nose (legacy)",
+  "device.raw_imu.mount.z_positive": "+Z toward nose",
   "device.raw_imu.mount.z_negative": "-Z toward nose"
 }

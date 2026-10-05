@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import re
 
 from PySide6.QtCore import QSignalBlocker, Signal
 from PySide6.QtGui import QPalette
@@ -20,6 +21,34 @@ from silverstar_fccg.project.ground_activity import (
 )
 from silverstar_fccg.ui.ground_radio_instances import GroundRadioInstancesEditor
 from silverstar_fccg.core.view_models import BoardCompatibilityView, ResourceRequirementView, PlatformMatchView
+
+
+def GroundIssues_PresentationGet(issues, translator: Translator) -> tuple[str, str]:
+    if not issues:
+        return translator.Text_Get("status.ground_ready"), ""
+    groups = (
+        ("ground.issue.hardware", {"GROUND_HARDWARE_UNBOUND", "GROUND_CUBEMX_GENERATION_REQUIRED"}),
+        ("ground.issue.uart", {"GROUND_UART_UNBOUND", "GROUND_PC_INTERFACE_UNBOUND"}),
+        ("ground.issue.radio", {"GROUND_RADIO_RESOURCE_UNBOUND"}),
+        ("ground.issue.led", {"GROUND_LED_OUTPUT_UNBOUND"}),
+    )
+    details = []
+    handled = set()
+    for key, codes in groups:
+        matching = [issue for issue in issues if issue.code in codes]
+        if not matching:
+            continue
+        handled.update(codes)
+        guidance = translator.Text_Get(key)
+        if key == "ground.issue.radio":
+            kinds = sorted({match.group(1).upper() for issue in matching
+                            if (match := re.search(r"needs a ([a-z_]+) resource", issue.message))})
+            if kinds:
+                guidance += " (" + ", ".join(kinds) + ")"
+        details.append(guidance)
+    if any(issue.code not in handled for issue in issues):
+        details.append(translator.Text_Get("ground.issue.other"))
+    return translator.Text_Get("ground.issue.summary", count=len(issues)), "\n".join(details)
 
 
 class AirLinkPage(ScrollableLocalizedPage):
@@ -478,15 +507,14 @@ class GroundTargetPage(BoardHardwarePage):
         self.prepare_button.setEnabled(bool(boards))
         self.prepare_button.setToolTip("" if boards else self._translator.Text_Get("board.no_provider"))
         self.i2c_pullup_group.setVisible(False)
-        self.status.setText(
-            self._translator.Text_Get("status.ground_disabled") if not ground.enabled else
-            "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
-            if issues else self._translator.Text_Get("status.ground_ready")
-        )
+        issue_summary, issue_details = GroundIssues_PresentationGet(issues, self._translator)
+        self.status.setText(self._translator.Text_Get("status.ground_disabled")
+                            if not ground.enabled else issue_summary)
         self.status.setToolTip(
-            self._translator.Text_Get("ground.unused_resources",
-                                      resources=", ".join(unused_resources))
-            if unused_resources else "")
+            "\n".join(filter(None, (issue_details,
+                self._translator.Text_Get("ground.unused_resources",
+                                          resources=", ".join(unused_resources))
+                if unused_resources else ""))))
         self.generate_button.setToolTip(self._translator.Text_Get(
             "status.ground_disabled" if not ground.enabled else
             "status.ground_configuration_required" if issues else "status.ground_ready"))
