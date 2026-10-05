@@ -161,6 +161,18 @@ static uint8_t FlightTask_AlignmentEvidenceRetry(void)
     return 1U;
 }
 
+static void FlightTask_AlignmentEvidenceCapture(
+    const FlightLogAlignmentEvidenceRecord *record)
+{
+    SILVERSTAR_ASSERT(record != NULL,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_alignment_log.pending == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    s_alignment_log.record = *record;
+    s_alignment_log.timestamp_us = SystemTime_GetMonotonicUs();
+    s_alignment_log.pending = 1U;
+}
+
 static void FlightTask_AlignmentEvidenceWrite(
     const SystemAlignmentStatus *status,
     const InsAlignmentSnapshot *snapshot, uint8_t snapshot_valid)
@@ -173,8 +185,6 @@ static void FlightTask_AlignmentEvidenceWrite(
         SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT_OBJECT(snapshot, InsAlignmentSnapshot,
         SILVERSTAR_ASSERT_MODULE_APP);
-    SILVERSTAR_ASSERT(s_alignment_log.pending == 0U,
-        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     (void)memset(&record, 0, sizeof(record));
     record.alignment_algorithm = (uint8_t)SYSTEM_ALIGNMENT_ALGORITHM;
     record.constraint_count = SYSTEM_ALIGNMENT_CONSTRAINT_COUNT;
@@ -220,9 +230,7 @@ static void FlightTask_AlignmentEvidenceWrite(
     if (status->ready != 0U) { record.flags |= 8U; }
     record.mag_calibration_set_hash =
         SystemMagCalibration_GenerationHashGet();
-    s_alignment_log.record = record;
-    s_alignment_log.timestamp_us = SystemTime_GetMonotonicUs();
-    s_alignment_log.pending = 1U;
+    FlightTask_AlignmentEvidenceCapture(&record);
 }
 
 static void FlightTask_AlignmentResultWrite(
@@ -344,6 +352,7 @@ static void FlightTask_AlignmentEventsProcess(uint64_t now_us)
     if (alignment.start_sequence != s_alignment_start_sequence)
     {
         s_alignment_start_sequence = alignment.start_sequence;
+        s_alignment_state_known = 0U;
         (void)LoggerBus_EventPush(now_us,
             FLIGHT_LOG_EVENT_ALIGNMENT_START, 0U, 0U);
     }

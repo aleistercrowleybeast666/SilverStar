@@ -18,11 +18,20 @@ fix does not claim reliable delivery of every preflight event or every historica
 alignment transition. Disabled-no-storage boot retains intentional suppression
 and nonblocking startup.
 
+A changed alignment start_sequence invalidates only the logging state marker,
+so a second READY generation emits its evidence even if the preceding generation
+also ended READY. A retained older evidence is admitted before processing that
+new generation. Lifecycle/alignment readiness and algorithms are unaffected.
+
 Queue OK means admission, not durable storage. Evidence now uses the existing
 critical aggregate flush deadline and empty-queue flush. The deadline is not
 extended by ordinary traffic. Actual write/sync errors latch logger io_fault and
 close the session; no uncertain partial write is replayed and no durable-success
 acknowledgement is fabricated. Existing storage readiness checks reject io_fault.
+Admission to a latched failed writer is rejected specifically for evidence under
+the queue lock; the FlightTask retry copy remains pending. A test-only quiescent
+Reset can clear the logger fault to check retained ownership; this is not target
+firmware I/O recovery or permission to replay uncertain writes.
 The bounded host tests cover both successful flush and failed sync. Hardware
 storage latency, main/MSP/ISR stack bounds and flight qualification remain
 NOT PROVEN. Preserve the existing Debug28B budget FAIL and original gate rules.
