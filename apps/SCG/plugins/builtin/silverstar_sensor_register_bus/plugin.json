@@ -26,15 +26,15 @@
     "sources": [
       "Devices/SensorBus/Src/sensor_register_bus.c",
       "Devices/SensorBus/Src/sensor_imu.c",
-      "Devices/SensorBus/Src/sensor_imu_adapter.c",
-      "Devices/SensorBus/Src/sensor_imu_spi_adapter.c",
+      "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c",
+      "Devices/SensorBus/Adapter/Src/sensor_imu_spi_adapter.c",
       "Devices/SensorBus/Src/sensor_high_g.c",
       "Devices/SensorBus/Src/sensor_bmi088_fifo.c",
       "Devices/SensorBus/Src/sensor_bmi088_sync.c"
     ],
     "asm_sources": [],
     "include_dirs": [
-      "Devices/SensorBus/Inc"
+      "Devices/SensorBus/Inc", "Devices/SensorBus/Adapter/Inc"
     ],
     "defines": []
   },
@@ -44,6 +44,11 @@
     ]
   },
   "metadata": {
+    "payload_relocations": {
+          "Devices/SensorBus/Inc/sensor_imu_adapter.h": "Devices/SensorBus/Adapter/Inc/sensor_imu_adapter.h",
+          "Devices/SensorBus/Src/sensor_imu_adapter.c": "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c",
+          "Devices/SensorBus/Src/sensor_imu_spi_adapter.c": "Devices/SensorBus/Adapter/Src/sensor_imu_spi_adapter.c"
+    },
     "internal": true,
     "source_origins": {
       "default": "fccg_joint_sensor_library"

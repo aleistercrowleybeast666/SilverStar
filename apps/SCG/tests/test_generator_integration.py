@@ -200,3 +200,27 @@ def test_component_cannot_claim_generated_namespace(
         and operation.target == "Generated/component_owned.c"
         for operation in plan.operations
     )
+
+
+def test_relocated_adapter_rejects_silent_project_source_retirement(tmp_path, builtin_catalog):
+    root = tmp_path / "OwnedAdapter"
+    assembler = ProjectAssembler(WorkspacePolicy(tmp_path), builtin_catalog)
+    model = ReferenceProject_Create("OwnedAdapter", catalog=builtin_catalog)
+    assembler.Apply(model, assembler.Plan(model, root))
+    ownership_path = root / ".fccg/ownership.json"
+    ownership = json.loads(ownership_path.read_text())
+    component = "silverstar.device.storage.sd_sdio_fatfs"
+    old_path = "Devices/Storage/SdSdioFatFs/Src/storage_service.c"
+    new_path = "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c"
+    files = ownership["components"][component]["files"]
+    original = (root / new_path).read_bytes()
+    files[old_path] = files.pop(new_path)
+    (root / old_path).write_bytes(original + b"\n/* local owner modification */\n")
+    (root / new_path).unlink()
+    ownership_path.write_text(json.dumps(ownership))
+    before = (root / old_path).read_bytes()
+    plan = assembler.Plan(model, root)
+    assert not plan.valid
+    assert any(op.operation == "CONFLICT" and op.target == old_path for op in plan.operations)
+    assert (root / old_path).read_bytes() == before
+    assert not (root / new_path).exists()

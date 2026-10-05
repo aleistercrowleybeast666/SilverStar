@@ -75,11 +75,11 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
         "Generated/Src/project_metadata.c", "Generated/Src/project_log_config.c",
         "Generated/Src/project_mission_parameters.c",
         "Generated/Src/project_log_decoder_profile.c",
-        "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
-        "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
-        "Devices/Storage/SdSdioFatFs/Src/mission_snapshot.c",
-        "Devices/Storage/SdSdioFatFs/Src/mag_calibration_storage.c",
-        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c")]
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c")]
     if sf6_compact:
         selected = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))
         if selected["build"].get("logging_profile") != "sf6_minimal":
@@ -99,7 +99,7 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     logger_includes = includes + [project / relative.replace("\\", "/") for relative in host_includes]
     target_profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))["build"]["target_profile"]
     logger_includes.insert(0, project / "Targets" / target_profile / "Inc")
-    logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Inc")
+    logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Adapter/Inc")
     writer = output / "logger_storage.exe"
     command = flags + ["-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
                        "-include", str(project / "Generated/Inc/project_flight_config.h")]
@@ -107,7 +107,8 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
         command += ["-DSILVERSTAR_TEST_SF6_COMPACT=1", "-DSYSTEM_BUILD_SF6_ENABLED=1U",
                     "-Wl,--wrap=SystemTime_GetMonotonicUs"]
     source_graph = (project / "Generated/project_sources.mk").read_text(encoding="utf-8")
-    for name in ("SYSTEM_BUILD_ESTIMATOR_ENABLED", "SYSTEM_BUILD_FUSION_ALGORITHM"):
+    for name in ("SYSTEM_BUILD_ESTIMATOR_ENABLED", "SYSTEM_BUILD_FUSION_ALGORITHM",
+                 "SYSTEM_ALIGNMENT_BUILD_ALGORITHM", "SYSTEM_ALIGNMENT_BUILD_SOURCE"):
         values = re.findall(r"^\s+" + name + r"=(\w+)\s*\\?\s*$", source_graph, re.MULTILINE)
         if len(values) != 1:
             raise ValueError(f"storage fixture requires one generated {name} definition")

@@ -83,6 +83,12 @@ $includeArgs = @(
     "-I$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Inc",
     "-I$repoRoot\Devices\Telemetry\SX1281\Inc",
     "-I$repoRoot\Devices\Telemetry\SX1281\Adapter\Inc",
+    "-I$repoRoot\Devices\SensorBus\Inc",
+    "-I$repoRoot\Devices\SensorBus\Adapter\Inc",
+    "-I$repoRoot\Devices\Barometer\BMP280\Inc",
+    "-I$repoRoot\Devices\Barometer\BMP280\Adapter\Inc",
+    "-I$repoRoot\Devices\IMU\MPU6050\Inc",
+    "-I$repoRoot\Devices\IMU\MPU6050\Adapter\Inc",
     "-I$repoRoot\Middlewares\Third_Party\SX1280lib"
 )
 
@@ -536,6 +542,10 @@ Invoke-HostTest -Name 'system_alignment' -ExtraCompilerArgs @(
 ) -Sources $alignmentSystemSources
 Invoke-HostTest -Name 'system_alignment_explicit_required_gnss' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
+    # This positive fixture supplies its own GNSS interface, regardless of the
+    # selected project's physical devices. Keep absent-GNSS rejection separate.
+    '-DSYSTEM_USER_GNSS_ENABLE=1U',
+    '-DSYSTEM_SELECTED_GNSS_POSITION_AVAILABLE=1U',
     '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=3U'
 ) -Sources $alignmentSystemSources
 Invoke-HostTest -Name 'system_alignment_pure_ins' -ExtraCompilerArgs @(
@@ -1176,7 +1186,7 @@ foreach ($alignmentSource in @(Get-Content -LiteralPath $projectSourcesPath)) {
     }
 }
 $optionalStartSources = @($optionalStartSources | Select-Object -Unique)
-$optionalStartArgs = @($preparationArgs | Where-Object { $_ -notmatch 'SILVERSTAR_PROTOCOL_LOGGING_ENABLED|^-flto$' }) + @('-flto=2') + @("-I$repoRoot\Devices\Storage\SdSdioFatFs\Inc")
+$optionalStartArgs = @($preparationArgs | Where-Object { $_ -notmatch 'SILVERSTAR_PROTOCOL_LOGGING_ENABLED|^-flto$' }) + @('-flto=2') + @("-I$repoRoot\Devices\Storage\SdSdioFatFs\Adapter\Inc")
 foreach ($alignmentDefine in @(Get-Content -LiteralPath $projectSourcesPath |
     Where-Object { $_ -match '^\s*SYSTEM_ALIGNMENT_BUILD_[A-Z_]+=[A-Z0-9_]+\s*(?:\\)?\s*$' })) {
     $optionalStartArgs += '-D' + $alignmentDefine.Trim().TrimEnd('\').Trim()
@@ -1254,10 +1264,24 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
     )
     Invoke-HostTest -Name 'sf6_backend_actual' -ExtraCompilerArgs @(
         '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        # Native-altitude fixture: retain its exact height/gain expectations.
+        # The separate cold-pressure case uses actual pressure admission.
+        '-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U',
+        '-DSYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE=1U',
+        '-DSYSTEM_SELECTED_BAROMETER_ALIGNMENT_ORIGIN_QUALIFIED=1U',
         '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U',
         '-DSYSTEM_BUILD_SF6_ENABLED=1U',
         '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_SF6'
     ) -Sources $sf6BackendSources
+    Invoke-HostTest -Name 'sf6_backend_cold_pressure_actual' -ExtraCompilerArgs @(
+        '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        '-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=1U',
+        '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U',
+        '-DSYSTEM_BUILD_SF6_ENABLED=1U',
+        '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_SF6'
+    ) -Sources (@($sf6BackendSources | Where-Object {
+        $_ -notmatch 'test_sf6_backend\.c$'
+    }) + @("$repoRoot\Tests\Host\test_sf6_backend_cold_pressure.c"))
 }
 Invoke-HostTest -Name 'logger_estimator_noise_overrides' `
     -ExtraCompilerArgs ($estimatorNoiseOverrideArgs + $estimatorLoggerArgs) `
@@ -1341,9 +1365,12 @@ $storageIntegrityRunner = Join-Path $repoRoot 'Tests\Host\storage_integrity\run_
 $storageSourceGraph = Get-Content -LiteralPath "$repoRoot\Generated\project_sources.mk" -Raw
 $storageFlightConfig = Get-Content -LiteralPath "$repoRoot\Generated\Inc\project_flight_config.h" -Raw
 if (($storageFlightConfig -match '(?m)^#define\s+SILVERSTAR_PROTOCOL_LOGGING_ENABLED\s+1U\s*$') -and
-    ($storageSourceGraph -match '(?m)^\s+Devices/Storage/SdSdioFatFs/Src/storage_service\.c\s*\\?\s*$') -and
+    ($storageSourceGraph -match '(?m)^\s+Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service\.c\s*\\?\s*$') -and
     ($storageSourceGraph -match '(?m)^\s+FATFS/Target/sd_diskio\.c\s*\\?\s*$')) {
-    & python $storageIntegrityRunner --project $repoRoot --compiler $script:hostCompilerPath
+    $storageArguments = @('--project', $repoRoot, '--compiler', $script:hostCompilerPath)
+    $storageModel = Get-Content -LiteralPath "$repoRoot/SilverStar.ssproject" -Raw | ConvertFrom-Json
+    if ($storageModel.build.logging_profile -eq 'sf6_minimal') { $storageArguments += '--sf6-compact' }
+    & python $storageIntegrityRunner @storageArguments
     if ($LASTEXITCODE -ne 0) { throw 'Storage byte-integrity tests failed.' }
 }
 

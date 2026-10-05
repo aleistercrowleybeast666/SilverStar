@@ -1,4 +1,5 @@
 #include "bmp280_core.h"
+#include "system_barometer_if.h" /* Test the native/System field identity. */
 
 #include <assert.h>
 #include <math.h>

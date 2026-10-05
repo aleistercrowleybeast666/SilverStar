@@ -53,11 +53,11 @@
   "build": {
     "sources": [
       "Devices/IMU/MPU6050/Src/mpu6050_device.c",
-      "Devices/IMU/MPU6050/Src/mpu6050_instance.c"
+      "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c"
     ],
     "asm_sources": [],
     "include_dirs": [
-      "Devices/IMU/MPU6050/Inc"
+      "Devices/IMU/MPU6050/Inc", "Devices/IMU/MPU6050/Adapter/Inc"
     ],
     "defines": []
   },
@@ -67,6 +67,10 @@
     ]
   },
   "metadata": {
+    "payload_relocations": {
+          "Devices/IMU/MPU6050/Inc/mpu6050_instance.h": "Devices/IMU/MPU6050/Adapter/Inc/mpu6050_instance.h",
+          "Devices/IMU/MPU6050/Src/mpu6050_instance.c": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c"
+    },
     "display_names": {
       "en_US": "MPU6050",
       "zh_CN": "MPU6050"

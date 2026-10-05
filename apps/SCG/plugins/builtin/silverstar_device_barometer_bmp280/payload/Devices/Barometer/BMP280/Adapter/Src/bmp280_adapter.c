@@ -11,6 +11,13 @@
 #define BMP280_FIXED_RATE_HZ 20U
 #define BMP280_STALE_US 200000ULL
 
+_Static_assert(BMP280_SAMPLE_FIELD_PRESSURE == SYSTEM_BARO_FIELD_PRESSURE,
+    "Native pressure must preserve its System field identity");
+_Static_assert(BMP280_SAMPLE_FIELD_TEMPERATURE == SYSTEM_BARO_FIELD_TEMPERATURE,
+    "Native temperature must preserve its System field identity");
+_Static_assert(sizeof(Bmp280Sample) == sizeof(SystemBarometerSample),
+    "Boundary separation must preserve the existing sample footprint");
+
 Bmp280BusResult Bmp280Bus_Read(void *bus,
     uint8_t register_address, uint8_t *bytes, uint8_t length)
 {
@@ -201,7 +208,20 @@ SystemDeviceResult Bmp280Adapter_LatestSampleGet(
     if ((adapter == NULL) || (sample == NULL))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (adapter->core.sequence == 0U) { return SYSTEM_DEVICE_NOT_READY; }
-    *sample = adapter->core.sample;
+    (void)memset(sample, 0, sizeof(*sample));
+    sample->sample_timestamp_us = adapter->core.sample.sample_timestamp_us;
+    sample->receive_timestamp_us = adapter->core.sample.receive_timestamp_us;
+    sample->measurement_timestamp_trusted = adapter->core.sample.measurement_timestamp_trusted;
+    sample->sequence = adapter->core.sample.sequence;
+    sample->pressure_raw_pa = adapter->core.sample.pressure_raw_pa;
+    sample->altitude_raw_cm = adapter->core.sample.altitude_raw_cm;
+    sample->pressure_pa = adapter->core.sample.pressure_pa;
+    sample->altitude_m = adapter->core.sample.altitude_m;
+    sample->altitude_variance_m2 = adapter->core.sample.altitude_variance_m2;
+    sample->temperature_c = adapter->core.sample.temperature_c;
+    sample->supported_fields = adapter->core.sample.supported_fields;
+    sample->valid_fields = adapter->core.sample.valid_fields;
+    sample->valid_mask = adapter->core.sample.valid_mask;
     return SYSTEM_DEVICE_OK;
 }
 

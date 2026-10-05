@@ -2,6 +2,7 @@
 #define __BMP280_ADAPTER_H
 
 #include "bmp280_core.h"
+#include "system_barometer_if.h"
 #include "platform_gpio.h"
 #include "platform_i2c.h"
 #include "platform_spi.h"

@@ -172,6 +172,30 @@ def _Compiler_Get() -> str:
 
 def _Command_Run(command: list[str], directory: Path, label: str) -> str:
     if "gcc" in Path(command[0]).name:
+        # Explicit adapter paths moved without changing their test contracts.
+        # Keep old fixture builders usable; log the actual canonical command.
+        adapters = {
+            "sensor_imu_adapter.c", "sensor_imu_spi_adapter.c",
+            "bmp280_adapter.c", "bmp280_i2c_instance.c", "bmp280_spi_instance.c",
+            "mpu6050_instance.c", "persistent_storage.c", "storage_service.c",
+            "log_sink_service.c", "mission_snapshot.c", "mag_calibration_storage.c",
+        }
+        relocated = []
+        for arg in command:
+            path = Path(arg)
+            if path.name in adapters and path.parent.name == "Src" and not path.is_file():
+                candidate = path.parent.parent / "Adapter/Src" / path.name
+                assert candidate.is_file(), candidate
+                arg = str(candidate)
+            relocated.append(arg)
+        command = relocated
+        for plugin, relative in (
+            ("silverstar_sensor_register_bus", "Devices/SensorBus"),
+            ("silverstar_device_barometer_bmp280", "Devices/Barometer/BMP280"),
+            ("silverstar_device_imu_mpu6050", "Devices/IMU/MPU6050"),
+            ("silverstar_device_storage_sd_sdio_fatfs", "Devices/Storage/SdSdioFatFs"),
+        ):
+            command += ["-I" + str(BUILTIN / plugin / "payload" / relative / "Adapter/Inc")]
         common = BUILTIN / "silverstar_core_0_1_0/payload/Common"
         command = command + ["-I" + str(common / "Inc")]
         if "-c" in command:

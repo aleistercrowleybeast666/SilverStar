@@ -172,5 +172,5 @@ def test_jy901_variants_keep_barometer_config_source_and_log_consistent(
     graph = SourceGraph_Resolve(model, view)
     assert ("Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c"
             in graph.sources) == ("b" in sources)
-    assert ("Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c"
+    assert ("Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.c"
             in graph.sources) == ("bmp" in sources)

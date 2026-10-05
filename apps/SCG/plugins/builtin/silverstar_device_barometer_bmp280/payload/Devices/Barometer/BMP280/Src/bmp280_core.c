@@ -202,8 +202,8 @@ static Bmp280StepResult Bmp280_SampleStep(Bmp280Context *context, uint64_t now_u
         context->sample.pressure_pa = pressure;
         context->sample.pressure_raw_pa = (int32_t)lroundf(pressure);
         context->sample.temperature_c = temperature;
-        context->sample.supported_fields = SYSTEM_BARO_FIELD_PRESSURE |
-            SYSTEM_BARO_FIELD_TEMPERATURE;
+        context->sample.supported_fields = BMP280_SAMPLE_FIELD_PRESSURE |
+            BMP280_SAMPLE_FIELD_TEMPERATURE;
         context->sample.valid_fields = context->sample.supported_fields;
         context->sample.valid_mask = context->sample.valid_fields;
         context->state = Bmp280StateStartConversion;

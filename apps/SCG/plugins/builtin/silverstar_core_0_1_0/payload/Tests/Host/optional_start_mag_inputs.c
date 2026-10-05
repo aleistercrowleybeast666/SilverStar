@@ -1,4 +1,4 @@
-#include "../../Devices/Storage/SdSdioFatFs/Src/mag_calibration_storage.c"
+#include "../../Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c"
 #include "optional_start_inputs.h"
 
 /* Raw persistent-object input: no saved magnetic calibration in this fixture. */

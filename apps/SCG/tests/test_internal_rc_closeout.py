@@ -363,8 +363,8 @@ def test_reference_storage_device_has_unique_ownership_and_decoder_semantics(
     assert resolution.valid
     graph = SourceGraph_Resolve(model, builtin_catalog)
     for source in (
-        "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
-        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
         "Middlewares/Third_Party/FatFs/src/ff.c",
         "Middlewares/Third_Party/FatFs/src/diskio.c",
         "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c",
@@ -629,10 +629,10 @@ def test_legacy_board_owned_storage_collision_is_rejected(
         if operation.target.startswith("Devices/Storage/SdSdioFatFs/")
     }
     assert storage_operations[
-        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c"
     ] == "ADD"
     assert storage_operations[
-        "Devices/Storage/SdSdioFatFs/Src/storage_service.c"
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c"
     ] == "ADD"
     assert all(storage_operations[target] == "CONFLICT" for target in conflicts)
     assert not any(

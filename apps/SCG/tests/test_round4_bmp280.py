@@ -108,8 +108,8 @@ def test_bmp280_i2c_generated_resource_and_dispatch(builtin_catalog) -> None:
     assert "ProjectBmp280I2cResources_Get" in header
     assert "Bmp280I2cBarometerInstance_Process(0U)" in source
     assert sum(path.endswith("bmp280_core.c") for path in graph.sources) == 1
-    assert "Devices/Barometer/BMP280/Src/bmp280_spi_instance.c" in graph.exclude_sources
-    assert "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c" not in graph.exclude_sources
+    assert "Devices/Barometer/BMP280/Adapter/Src/bmp280_spi_instance.c" in graph.exclude_sources
+    assert "Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.c" not in graph.exclude_sources
 
 
 def test_bmp280_spi_generated_resource_and_dispatch(builtin_catalog) -> None:
@@ -129,8 +129,8 @@ def test_bmp280_spi_generated_resource_and_dispatch(builtin_catalog) -> None:
     }
     assert "Bmp280SpiBarometerInstance_Process(0U)" in source
     assert sum(path.endswith("bmp280_core.c") for path in graph.sources) == 1
-    assert "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c" in graph.exclude_sources
-    assert "Devices/Barometer/BMP280/Src/bmp280_spi_instance.c" not in graph.exclude_sources
+    assert "Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.c" in graph.exclude_sources
+    assert "Devices/Barometer/BMP280/Adapter/Src/bmp280_spi_instance.c" not in graph.exclude_sources
 
 
 def test_bmp280_mixed_variants_keep_distinct_contexts_and_one_core(

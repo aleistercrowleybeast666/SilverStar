@@ -154,6 +154,18 @@ class ProjectAssembler:
                 if isinstance(previous_component, dict)
                 else {}
             )
+            # Relocated adapters must not silently retire project-owned source.
+            # Keep the old bytes untouched and require a separately reviewed
+            # migration, even when the original payload has no local edits.
+            relocations = manifest.metadata.get("payload_relocations", {})
+            if isinstance(relocations, dict):
+                for old_path in sorted(set(relocations) & set(previous_files)):
+                    operations.append(PlanOperation(
+                        "CONFLICT", old_path,
+                        "project-owned adapter path was relocated upstream; "
+                        "use a fresh project or explicitly migrate the retained source",
+                        "component",
+                    ))
             for source in manifest.PayloadFiles_Get():
                 relative = source.relative_to(manifest.payload_root).as_posix()
                 target = destination.joinpath(*relative.split("/"))

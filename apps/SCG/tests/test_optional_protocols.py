@@ -319,7 +319,7 @@ def test_all_protocol_combinations_render_exact_sources_and_artifacts(
     for source in (
         "APP/Src/logger_task.c",
         "System/Src/system_log_policy.c",
-        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
         "Protocol/SSLOG/Src/sslog_protocol.c",
         "Generated/Src/project_log_config.c",
         "Generated/Src/project_log_decoder_profile.c",

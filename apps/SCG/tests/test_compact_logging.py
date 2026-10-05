@@ -22,6 +22,9 @@ def test_profile_roundtrip_preserves_all_stream_choices(builtin_catalog):
     assert loaded.build.logging_profile == "sf6_minimal"
     active = {s.record: s for s in CompactLogStreams_Get(loaded)}
     assert not active["FLIGHT_LOG_RECORD_ESTIMATOR"].enabled
+    # These producer sites are compiled only in the KF6 task branch.
+    assert not active["FLIGHT_LOG_RECORD_ESTIMATOR_STEP"].enabled
+    assert not active["FLIGHT_LOG_RECORD_BARO_MEASUREMENT"].enabled
     assert active["FLIGHT_LOG_RECORD_SF6_STATE"].enabled
     assert active["FLIGHT_LOG_RECORD_SF6_MEASUREMENT"].enabled
     assert loaded.logging_streams == retained

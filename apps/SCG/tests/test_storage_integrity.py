@@ -195,11 +195,11 @@ def test_storage_sources_survive_reference_reimport(monkeypatch, workspace_root)
         if component["manifest"]["id"].startswith("silverstar.device.storage."):
             owned = component["fccg_owned_files"]
             assert set(owned) == {
-                "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
-                "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c",
-                "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.c",
                 "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
-                "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
+                "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h",
             }
             assert all((workspace_root / path).is_file() for path in owned.values())
 

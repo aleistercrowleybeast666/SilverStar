@@ -23,13 +23,20 @@
   "resources": {"provides": [], "roles": [], "conflicts": []},
   "provides": ["device.barometer", "barometer.pressure", "barometer.altitude"],
   "build": {
-    "sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c"],
+    "sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Adapter/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.c"],
     "asm_sources": [],
-    "include_dirs": ["Devices/Barometer/BMP280/Inc"],
+    "include_dirs": ["Devices/Barometer/BMP280/Inc", "Devices/Barometer/BMP280/Adapter/Inc"],
     "defines": []
   },
   "payload": {"roots": ["Devices/Barometer/BMP280"]},
   "metadata": {
+    "payload_relocations": {
+          "Devices/Barometer/BMP280/Inc/bmp280_adapter.h": "Devices/Barometer/BMP280/Adapter/Inc/bmp280_adapter.h",
+          "Devices/Barometer/BMP280/Inc/bmp280_instance.h": "Devices/Barometer/BMP280/Adapter/Inc/bmp280_instance.h",
+          "Devices/Barometer/BMP280/Src/bmp280_adapter.c": "Devices/Barometer/BMP280/Adapter/Src/bmp280_adapter.c",
+          "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c": "Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.c",
+          "Devices/Barometer/BMP280/Src/bmp280_spi_instance.c": "Devices/Barometer/BMP280/Adapter/Src/bmp280_spi_instance.c"
+    },
     "instance_feature_symbols": ["SYSTEM_BUILD_BMP280_I2C_ENABLED", "SYSTEM_BUILD_BMP280_SPI_ENABLED"],
     "active_instance_feature_symbols": ["SYSTEM_BUILD_BMP280_I2C_ENABLED"],
     "display_names": {"zh_CN": "BMP280 · I²C", "en_US": "BMP280 · I²C"},
@@ -96,12 +103,12 @@
   },
   "transports": [],
   "device_variants": {
-    "i2c": {"interface": "i2c", "profile": "forced_20_hz", "overrides": {"build": {"sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c"]}, "metadata": {"active_instance_feature_symbols": ["SYSTEM_BUILD_BMP280_I2C_ENABLED"]}}},
+    "i2c": {"interface": "i2c", "profile": "forced_20_hz", "overrides": {"build": {"sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Adapter/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.c"]}, "metadata": {"active_instance_feature_symbols": ["SYSTEM_BUILD_BMP280_I2C_ENABLED"]}}},
     "spi": {
       "interface": "spi",
       "profile": "forced_20_hz",
       "overrides": {
-        "build": {"sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Src/bmp280_spi_instance.c"]},
+        "build": {"sources": ["Devices/Barometer/BMP280/Src/bmp280_core.c", "Devices/Barometer/BMP280/Adapter/Src/bmp280_adapter.c", "Devices/Barometer/BMP280/Adapter/Src/bmp280_spi_instance.c"]},
         "name": "BMP280 · SPI",
         "requires": {
           "resources": [

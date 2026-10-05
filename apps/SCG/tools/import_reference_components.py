@@ -1424,27 +1424,27 @@ def _Components_Get(
             "device",
             "storage",
             [
-                "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
-                "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.c",
                 "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
-                "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
-                "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
             ],
             description="Single-instance SD/TF physical storage and sequential SSLOG sink using CubeMX SDIO and FatFs glue.",
             provenance=provenance,
             sources=[
-                "Devices/Storage/SdSdioFatFs/Src/storage_service.c",
-                "Devices/Storage/SdSdioFatFs/Src/persistent_storage.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.c",
                 "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
             ],
             build_extra={
                 "protocol_sources": {
                     "logging": [
-                        "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"
+                        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c"
                     ]
                 }
             },
-            includes=["Devices/Storage/SdSdioFatFs/Inc"],
+            includes=["Devices/Storage/SdSdioFatFs/Adapter/Inc"],
             dependencies=[core_id, mcu_id],
             resources_required=[
                 {
@@ -1517,21 +1517,21 @@ def _Components_Get(
             },
             transports=[{"capability": "transport.sequential_file_sink", "kind": "sequential_file_sink", "mtu": 65535, "ordered": True, "bidirectional": False, "reliable": True, "mode": "file"}],
             reference_files={
-                "Devices/Storage/SdSdioFatFs/Src/storage_service.c": "Board/SilverStar_0_5/Services/Src/storage_service.c",
-                "Devices/Storage/SdSdioFatFs/Src/log_sink_service.c": "Board/SilverStar_0_5/Services/Src/log_sink_service.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c": "Board/SilverStar_0_5/Services/Src/storage_service.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c": "Board/SilverStar_0_5/Services/Src/log_sink_service.c",
             },
             fccg_owned_files={
-                f"Devices/Storage/SdSdioFatFs/Src/{name}":
+                f"Devices/Storage/SdSdioFatFs/{'Src' if name == 'fatfs_lfn_ascii.c' else 'Adapter/Src'}/{name}":
                     "plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload/"
-                    f"Devices/Storage/SdSdioFatFs/Src/{name}"
+                    f"Devices/Storage/SdSdioFatFs/{'Src' if name == 'fatfs_lfn_ascii.c' else 'Adapter/Src'}/{name}"
                 for name in (
                     "storage_service.c", "log_sink_service.c",
                     "persistent_storage.c", "fatfs_lfn_ascii.c",
                 )
             } | {
-                "Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h":
+                "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h":
                     "plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/"
-                    "payload/Devices/Storage/SdSdioFatFs/Inc/persistent_storage.h",
+                    "payload/Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h",
             },
             docs=["docs/details/STORAGE_AND_FLIGHT_LOG.md"],
         )
@@ -4160,8 +4160,8 @@ def _StorageDevice_Adapt(
     staged_builtin: Path, policy: WorkspacePolicy
 ) -> None:
     relative_sources = (
-        Path("Devices/Storage/SdSdioFatFs/Src/storage_service.c"),
-        Path("Devices/Storage/SdSdioFatFs/Src/log_sink_service.c"),
+        Path("Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c"),
+        Path("Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c"),
     )
     board_payload = (
         staged_builtin / "silverstar_board_silverstar_0_5" / "payload"
