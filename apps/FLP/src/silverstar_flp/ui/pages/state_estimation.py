@@ -320,6 +320,11 @@ class StateEstimationPage(QWidget):
             self._Content_Clear()
             return
         selected = self._resolver.Source_Get()
+        selected_groups = tuple(
+            (combo, combo.currentData())
+            for combo in (self.state_group_combo, self.innovation_measurement_combo,
+                          self.nis_measurement_combo, self.measurement_group_combo)
+        )
         self._Content_Clear()
         self._comparison_reasons = []
         self._ComparisonNote_Refresh()
@@ -364,6 +369,15 @@ class StateEstimationPage(QWidget):
             windows = NavigationWindows_Get(self._dataset.Records_Get("NAV_QUALITY"))
         self.gnss_integrity.WindowEvidence_Set(windows)
         self._Selectors_Refresh()
+        # Restore only IDs still published by this primary's visualization.
+        # Unavailable sources return above with cleared selectors, so a later
+        # valid source cannot resurrect selections from before that empty state.
+        for combo, group_id in selected_groups:
+            index = combo.findData(group_id)
+            if index >= 0:
+                blocked = combo.blockSignals(True)
+                combo.setCurrentIndex(index)
+                combo.blockSignals(blocked)
         self._Refresh()
 
     def _FirmwareEstimatorDiagnostic_Append(self) -> None:

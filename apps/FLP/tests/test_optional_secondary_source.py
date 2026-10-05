@@ -224,6 +224,59 @@ def test_recorded_legacy_covariance_requires_exact_storage_contract(qtbot,sample
     assert not page.covariance_plot.listDataItems()
 
 
+@pytest.mark.parametrize('refresh',['language','same_primary','secondary_on','secondary_off'])
+def test_state_group_selections_survive_display_refresh(qtbot,sample,refresh):
+    dataset,_,_,result=sample
+    store=ReplayResultStore();primary=store.Result_Add(result());secondary=store.Result_Add(result())
+    store.ActiveSource_Set(primary.source_id);resolver=ChannelResolver(dataset,store)
+    page=StateEstimationPage(Translator('en_US'),builtin_registry());qtbot.addWidget(page)
+    if refresh=='secondary_off':page.SecondarySource_Set(secondary.source_id)
+    page.Dataset_Set(dataset,resolver)
+    combos=(page.state_group_combo,page.innovation_measurement_combo,
+            page.nis_measurement_combo,page.measurement_group_combo)
+    selected=('velocity','barometric_altitude','gnss_velocity_en','barometric_altitude')
+    for combo,group_id in zip(combos,selected):
+        index=combo.findData(group_id);assert index>=0
+        combo.setCurrentIndex(index)
+    if refresh=='language':page.Language_Apply(Translator('zh_CN'))
+    else:
+        if refresh=='secondary_on':page.SecondarySource_Set(secondary.source_id)
+        elif refresh=='secondary_off':page.SecondarySource_Set(None)
+        page.Dataset_Set(dataset,resolver)
+    assert tuple(combo.currentData() for combo in combos)==selected
+    if refresh=='language':
+        page.Language_Apply(Translator('en_US'))
+        assert tuple(combo.currentData() for combo in combos)==selected
+
+
+def test_state_group_restore_rejects_absent_groups_and_does_not_resurrect_empty_source(qtbot,sample):
+    dataset,_,_,result=sample
+    store=ReplayResultStore();kf=store.Result_Add(result())
+    eskf=store.Result_Add(result('silverstar.algorithm.estimator.eskf15'))
+    ins=store.Result_Add(result('pure_ins'))
+    resolver=ChannelResolver(dataset,store)
+    page=StateEstimationPage(Translator('en_US'),builtin_registry());qtbot.addWidget(page)
+    store.ActiveSource_Set(eskf.source_id);page.Dataset_Set(dataset,resolver)
+    page.state_group_combo.setCurrentIndex(page.state_group_combo.findData('attitude_error'))
+    page.innovation_measurement_combo.setCurrentIndex(
+        page.innovation_measurement_combo.findData('barometric_altitude'))
+    store.ActiveSource_Set(kf.source_id);page.Dataset_Set(dataset,resolver)
+    assert page.state_group_combo.currentData()=='position'
+    assert page.state_group_combo.findData('attitude_error')==-1
+    assert page.innovation_measurement_combo.currentData()=='barometric_altitude'
+    page.state_group_combo.setCurrentIndex(page.state_group_combo.findData('velocity'))
+    store.ActiveSource_Set(ins.source_id);page.Dataset_Set(dataset,resolver)
+    combos=(page.state_group_combo,page.innovation_measurement_combo,
+            page.nis_measurement_combo,page.measurement_group_combo)
+    assert all(combo.count()==0 and combo.currentData() is None for combo in combos)
+    assert all(not plot.listDataItems() for plot in page._Plots_Get())
+    page.Language_Apply(Translator('zh_CN'))
+    assert all(combo.count()==0 for combo in combos)
+    store.ActiveSource_Set(kf.source_id);page.Dataset_Set(dataset,resolver)
+    assert page.state_group_combo.currentData()=='position'
+    assert page.innovation_measurement_combo.currentData()=='gnss_position_en'
+
+
 def test_export_click_freezes_only_primary_even_if_follow_ui_has_stale_id(monkeypatch,sample,tmp_path):
     dataset,channels,_,result=sample
     store=ReplayResultStore();a=store.Result_Add(result());b=store.Result_Add(result())
