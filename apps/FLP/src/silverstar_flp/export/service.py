@@ -840,13 +840,13 @@ class FlightExporter:
                 finally:
                     self._plot_page_range = None
             path = plot_directory / "Trajectory2D" / (
-                f"Horizontal_Trajectory_{0.0:010.3f}-{flight_duration:010.3f}{suffix}.png"
+                f"Horizontal_Trajectory_{0.0:010.3f}-{duration:010.3f}{suffix}.png"
             )
             attempt(
-                f"horizontal_trajectory:0-{flight_duration:g}", path,
+                f"horizontal_trajectory:0-{duration:g}", path,
                 lambda: self._HorizontalTrajectory_Write(
                     dataset, resolver.Series_Get("navigation.position_enu"), path,
-                    language, resolved_theme, flight_bounds, (0.0, flight_duration)),
+                    language, resolved_theme, mission_bounds, (0.0, duration)),
                 Translator(language.value).Text_Get("horizontal.title"),
             )
 
@@ -947,7 +947,7 @@ class FlightExporter:
                 tuple(channels),
                 tuple(pages),
                 selected,
-                (0.0, flight_duration),
+                (0.0, duration),
             )
             files.append(manifest_path)
             generated.append(

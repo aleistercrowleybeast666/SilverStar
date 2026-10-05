@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 import numpy as np
 import pytest
 from silverstar_flp.core.context import TaskContext
@@ -12,7 +13,16 @@ from tests.test_project_export import _DisplayDataset_Parse
 @pytest.mark.parametrize('page_mode,expected_pages', [('30', 3), ('Full', 1), ('Current View', 1)])
 def test_2d_is_one_full_task_picture_independent_of_time_pages(tmp_path, monkeypatch, page_mode, expected_pages):
     dataset = _DisplayDataset_Parse(AnalysisFlight_Build(tmp_path / 'SYNTHETIC_long_trajectory.BIN', update_count=4000))
-    bounds = FlightDisplayBounds_Get(dataset, MissionReplayBounds_Get(dataset))
+    bounds = MissionReplayBounds_Get(dataset)
+    # An earlier stillness candidate may shorten flight-only charts. The full
+    # task's spatial picture must retain the real endpoint through LANDING.
+    records = dict(dataset.records)
+    records['LANDING_DIAGNOSTIC'] = (replace(dataset.Records_Get('EVENT')[-1],
+        record_name='LANDING_DIAGNOSTIC', payload={
+            'transition': 3, 'candidate_start_timestamp_us': bounds.start_timestamp_us + 65_000_000,
+            'evaluation_timestamp_us': bounds.end_timestamp_us}),)
+    dataset = replace(dataset, records=records)
+    assert FlightDisplayBounds_Get(dataset, bounds).end_timestamp_us < bounds.end_timestamp_us
     assert bounds.end_timestamp_us - bounds.start_timestamp_us > 60_000_000
     observed = []
     from silverstar_flp.export import service
