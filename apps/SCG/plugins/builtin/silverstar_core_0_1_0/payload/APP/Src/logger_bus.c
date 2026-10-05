@@ -5,6 +5,7 @@
 
 #include "common_spsc_queue.h"
 #include "platform_critical.h"
+#include "platform_memory.h"
 #include "project_log_decoder_profile.h"
 #include "silverstar_assert.h"
 #include "system_descriptor_if.h"
@@ -57,12 +58,14 @@ typedef struct
     uint16_t cursor;
     uint16_t count;
     uint8_t is_start;
+    LoggerRequestPhase phase;
+    uint8_t io_fault;
+    uint32_t next_generation;
+    uint32_t acknowledged_generation;
 } LoggerSnapshotRequest;
-static LoggerSnapshotRequest s_request;
-static LoggerRequestPhase s_request_phase;
-static uint32_t s_request_generation;
-static uint32_t s_start_acknowledged;
-static uint8_t s_request_io_fault;
+/* CPU-only owned copies: never passed to HAL, FatFs, a DMA engine or sink.
+ * Target owns placement; targets without CCM retain ordinary static BSS. */
+static PLATFORM_CPU_FAST_BSS LoggerSnapshotRequest s_request;
 
 static PlatformCriticalState LoggerBus_IrqLock(void)
 {
@@ -194,7 +197,7 @@ LoggerBusResult LoggerBus_StreamingReady(void)
         result = LOGGER_BUS_RESULT_FULL;
         if ((CommonSpscQueue_Count(&s_logger_queue) == 0U) &&
             (CommonSpscQueue_Count(&s_estimator_logger_queue) == 0U) &&
-            (s_request_phase == LOGGER_REQUEST_IDLE))
+            (s_request.phase == LOGGER_REQUEST_IDLE))
         {
             s_diagnostics.startup_state = LOGGER_STREAMING_READY;
             result = LOGGER_BUS_RESULT_OK;
@@ -230,10 +233,10 @@ LoggerBusResult LoggerBus_DisableForBootNoStorage(void)
         s_diagnostics.disabled_discarded_count +=
             (uint32_t)CommonSpscQueue_Count(&s_logger_queue) +
             CommonSpscQueue_Count(&s_estimator_logger_queue);
-        if (s_request_phase == LOGGER_REQUEST_READY)
+        if (s_request.phase == LOGGER_REQUEST_READY)
         { s_diagnostics.disabled_discarded_count += s_request.count - s_request.cursor; }
-        if (s_request_phase != LOGGER_REQUEST_BUILDING)
-        { s_request_phase = LOGGER_REQUEST_IDLE; }
+        if (s_request.phase != LOGGER_REQUEST_BUILDING)
+        { s_request.phase = LOGGER_REQUEST_IDLE; }
         CommonSpscQueue_Reset(&s_logger_queue);
         CommonSpscQueue_Reset(&s_estimator_logger_queue);
         s_diagnostics.startup_state = LOGGER_DISABLED_NO_STORAGE;
@@ -325,11 +328,11 @@ void LoggerBus_Reset(void)
     if (s_initialized != 0U)
     {
         /* Reset is an initialization/test operation with producers quiescent. */
-        SILVERSTAR_ASSERT(s_request_phase != LOGGER_REQUEST_BUILDING,
+        SILVERSTAR_ASSERT(s_request.phase != LOGGER_REQUEST_BUILDING,
             SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-        s_request_phase = LOGGER_REQUEST_IDLE;
-        s_start_acknowledged = 0U;
-        s_request_io_fault = 0U;
+        s_request.phase = LOGGER_REQUEST_IDLE;
+        s_request.acknowledged_generation = 0U;
+        s_request.io_fault = 0U;
         (void)memset(&s_diagnostics, 0, sizeof(s_diagnostics));
         s_diagnostics.startup_state = (s_boot_disabled != 0U) ?
             LOGGER_DISABLED_NO_STORAGE : LOGGER_BOOTSTRAP;
@@ -551,13 +554,13 @@ static LoggerBusResult LoggerBus_RequestClaim(void)
 {
     LoggerBusResult result = LOGGER_BUS_RESULT_OK;
     PlatformCriticalState state = LoggerBus_IrqLock();
-    SILVERSTAR_ASSERT(s_request_phase <= LOGGER_REQUEST_FAULT,
+    SILVERSTAR_ASSERT(s_request.phase <= LOGGER_REQUEST_FAULT,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
-    if ((s_initialized == 0U) || (s_accepting_records == 0U) || (s_request_io_fault != 0U))
+    if ((s_initialized == 0U) || (s_accepting_records == 0U) || (s_request.io_fault != 0U))
     { result = LOGGER_BUS_RESULT_BAD_STATE; }
-    else if (s_request_phase != LOGGER_REQUEST_IDLE)
-    { s_diagnostics.request_busy_count++; result = LOGGER_BUS_RESULT_BUSY; }
-    else { s_request_phase = LOGGER_REQUEST_BUILDING; }
+    else if (s_request.phase != LOGGER_REQUEST_IDLE)
+    { s_diagnostics.capacity_reject_count++; result = LOGGER_BUS_RESULT_BUSY; }
+    else { s_request.phase = LOGGER_REQUEST_BUILDING; }
     /* A busy request is retryable admission, not lost wire records. */
     LoggerBus_IrqUnlock(state);
     return result;
@@ -567,9 +570,9 @@ static LoggerBusResult LoggerBus_RequestPublish(uint8_t is_start)
 {
     LoggerBusResult result = LOGGER_BUS_RESULT_OK;
     PlatformCriticalState state = LoggerBus_IrqLock();
-    SILVERSTAR_ASSERT(s_request_phase == LOGGER_REQUEST_BUILDING,
+    SILVERSTAR_ASSERT(s_request.phase == LOGGER_REQUEST_BUILDING,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    if ((s_accepting_records == 0U) || (s_boot_disabled != 0U) || (s_request_io_fault != 0U))
+    if ((s_accepting_records == 0U) || (s_boot_disabled != 0U) || (s_request.io_fault != 0U))
     { result = LOGGER_BUS_RESULT_BAD_STATE; }
     if (result == LOGGER_BUS_RESULT_OK)
     {
@@ -580,9 +583,9 @@ static LoggerBusResult LoggerBus_RequestPublish(uint8_t is_start)
         if (is_start != 0U)
         { s_request.count = (uint16_t)(s_request.count + 4U + s_request.start.mag_count); }
         s_diagnostics.accepted_count += s_request.count;
-        s_request_phase = LOGGER_REQUEST_READY;
+        s_request.phase = LOGGER_REQUEST_READY;
     }
-    else { s_request_phase = LOGGER_REQUEST_IDLE; }
+    else { s_request.phase = LOGGER_REQUEST_IDLE; }
     LoggerBus_IrqUnlock(state);
     return result;
 }
@@ -602,9 +605,9 @@ static LoggerBusResult LoggerBus_RequestBuild(uint64_t timestamp_us)
 static void LoggerBus_RequestCancel(void)
 {
     PlatformCriticalState state = LoggerBus_IrqLock();
-    SILVERSTAR_ASSERT(s_request_phase == LOGGER_REQUEST_BUILDING,
+    SILVERSTAR_ASSERT(s_request.phase == LOGGER_REQUEST_BUILDING,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    s_request_phase = LOGGER_REQUEST_IDLE;
+    s_request.phase = LOGGER_REQUEST_IDLE;
     LoggerBus_IrqUnlock(state);
 }
 
@@ -634,9 +637,9 @@ LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
     if (*generation != 0U)
     {
         PlatformCriticalState state = LoggerBus_IrqLock();
-        uint8_t known = (uint8_t)((*generation == s_start_acknowledged) ||
+        uint8_t known = (uint8_t)((*generation == s_request.acknowledged_generation) ||
             ((s_request.is_start != 0U) && (*generation == s_request.generation) &&
-             (s_request_phase != LOGGER_REQUEST_IDLE)));
+             (s_request.phase != LOGGER_REQUEST_IDLE)));
         LoggerBus_IrqUnlock(state);
         return (known != 0U) ? LOGGER_BUS_RESULT_OK : LOGGER_BUS_RESULT_BAD_STATE;
     }
@@ -644,12 +647,12 @@ LoggerBusResult LoggerBus_StartRecordsPush(uint64_t timestamp_us,
     { return LOGGER_BUS_RESULT_BAD_PARAM; }
     result = LoggerBus_RequestClaim();
     if (result != LOGGER_BUS_RESULT_OK) { return result; }
-    if (s_request_generation == UINT32_MAX)
+    if (s_request.next_generation == UINT32_MAX)
     { LoggerBus_RequestCancel(); return LOGGER_BUS_RESULT_BAD_STATE; }
     s_request.start = *records;
     result = LoggerBus_RequestBuild(timestamp_us);
     if (result != LOGGER_BUS_RESULT_OK) { LoggerBus_RequestCancel(); return result; }
-    s_request.generation = ++s_request_generation;
+    s_request.generation = ++s_request.next_generation;
     result = LoggerBus_RequestPublish(1U);
     if (result == LOGGER_BUS_RESULT_OK) { *generation = s_request.generation; }
     return result;
@@ -734,7 +737,7 @@ static LoggerBusResult LoggerBus_RequestPop(FlightLogRecord *record)
 {
     LoggerBusResult result;
     PlatformCriticalState state = LoggerBus_IrqLock();
-    uint8_t ready = (uint8_t)(s_request_phase == LOGGER_REQUEST_READY);
+    uint8_t ready = (uint8_t)(s_request.phase == LOGGER_REQUEST_READY);
     LoggerBus_IrqUnlock(state);
     if (ready == 0U) { return LOGGER_BUS_RESULT_EMPTY; }
     /* Only the logger consumer calls pop; immutable construction needs no lock. */
@@ -745,10 +748,10 @@ static LoggerBusResult LoggerBus_RequestPop(FlightLogRecord *record)
         s_request.cursor++;
         s_diagnostics.dequeued_count++;
         if (s_request.cursor == s_request.count)
-        { s_request_phase = (s_request.is_start != 0U) ?
+        { s_request.phase = (s_request.is_start != 0U) ?
             LOGGER_REQUEST_BARRIER : LOGGER_REQUEST_IDLE; }
     }
-    else { s_request_phase = LOGGER_REQUEST_FAULT; }
+    else { s_request.phase = LOGGER_REQUEST_FAULT; }
     LoggerBus_IrqUnlock(state);
     return result;
 }
@@ -756,7 +759,7 @@ static LoggerBusResult LoggerBus_RequestPop(FlightLogRecord *record)
 uint32_t LoggerBus_StartBarrierGet(void)
 {
     PlatformCriticalState state = LoggerBus_IrqLock();
-    uint32_t generation = (s_request_phase == LOGGER_REQUEST_BARRIER) ? s_request.generation : 0U;
+    uint32_t generation = (s_request.phase == LOGGER_REQUEST_BARRIER) ? s_request.generation : 0U;
     LoggerBus_IrqUnlock(state);
     return generation;
 }
@@ -765,9 +768,9 @@ LoggerBusResult LoggerBus_StartDurable(uint32_t generation)
 {
     LoggerBusResult result = LOGGER_BUS_RESULT_BAD_STATE;
     PlatformCriticalState state = LoggerBus_IrqLock();
-    if ((s_request_phase == LOGGER_REQUEST_BARRIER) &&
+    if ((s_request.phase == LOGGER_REQUEST_BARRIER) &&
         (generation != 0U) && (generation == s_request.generation))
-    { s_start_acknowledged = generation; s_request_phase = LOGGER_REQUEST_IDLE;
+    { s_request.acknowledged_generation = generation; s_request.phase = LOGGER_REQUEST_IDLE;
       result = LOGGER_BUS_RESULT_OK; }
     LoggerBus_IrqUnlock(state);
     return result;
@@ -776,7 +779,7 @@ LoggerBusResult LoggerBus_StartDurable(uint32_t generation)
 uint32_t LoggerBus_StartAcknowledgedGet(void)
 {
     PlatformCriticalState state = LoggerBus_IrqLock();
-    uint32_t generation = s_start_acknowledged;
+    uint32_t generation = s_request.acknowledged_generation;
     LoggerBus_IrqUnlock(state);
     return generation;
 }
@@ -784,10 +787,10 @@ uint32_t LoggerBus_StartAcknowledgedGet(void)
 void LoggerBus_StartFault(void)
 {
     PlatformCriticalState state = LoggerBus_IrqLock();
-    s_request_io_fault = 1U;
-    if (((s_request_phase == LOGGER_REQUEST_READY) ||
-         (s_request_phase == LOGGER_REQUEST_BARRIER)) && (s_request.is_start != 0U))
-    { s_request_phase = LOGGER_REQUEST_FAULT; }
+    s_request.io_fault = 1U;
+    if (((s_request.phase == LOGGER_REQUEST_READY) ||
+         (s_request.phase == LOGGER_REQUEST_BARRIER)) && (s_request.is_start != 0U))
+    { s_request.phase = LOGGER_REQUEST_FAULT; }
     LoggerBus_IrqUnlock(state);
 }
 
@@ -1290,9 +1293,9 @@ uint16_t LoggerBus_Count(void)
 
     count = (uint16_t)(CommonSpscQueue_Count(&s_logger_queue) +
                        CommonSpscQueue_Count(&s_estimator_logger_queue));
-    if (s_request_phase == LOGGER_REQUEST_READY)
+    if (s_request.phase == LOGGER_REQUEST_READY)
     { count = (uint16_t)(count + s_request.count - s_request.cursor); }
-    else if (s_request_phase != LOGGER_REQUEST_IDLE) { count++; }
+    else if (s_request.phase != LOGGER_REQUEST_IDLE) { count++; }
     LoggerBus_IrqUnlock(state);
     return count;
 }
