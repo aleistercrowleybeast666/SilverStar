@@ -546,6 +546,7 @@ Invoke-HostTest -Name 'system_alignment_explicit_required_gnss' -ExtraCompilerAr
     # selected project's physical devices. Keep absent-GNSS rejection separate.
     '-DSYSTEM_USER_GNSS_ENABLE=1U',
     '-DSYSTEM_SELECTED_GNSS_POSITION_AVAILABLE=1U',
+    '-DSYSTEM_USER_ALIGNMENT_SELECTED_MASK=3U',
     '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=3U'
 ) -Sources $alignmentSystemSources
 Invoke-HostTest -Name 'system_alignment_pure_ins' -ExtraCompilerArgs @(
