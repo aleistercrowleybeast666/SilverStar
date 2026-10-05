@@ -53,3 +53,9 @@ existing PLATFORM_CPU_FAST_BSS placement. Neither object nor any interior
 pointer goes to HAL/FatFs/DMA/sink interfaces. Targets lacking that section use
 ordinary BSS. This is RAM placement, not a resource-budget exemption; total
 and per-region deltas must remain explicit in the evidence.
+
+The baseline producer hook uses a non-LTO build: LTO can inline the queue push
+and bypass the linker wrapper. START tests use LTO to discard unused RTOS task
+loops and also inject after the first consumed configuration record. Keep these
+two recorded scopes distinct. Final Debug artifact checking preserves the
+baseline's 28-byte main-SRAM budget violation; it is not converted to PASS.

@@ -16,13 +16,13 @@ def run(project, test, output, start=False, compact=False):
                'Generated/Src/project_log_config.c', 'Generated/Src/project_log_decoder_profile.c',
                'Protocol/SSLOG/Src/sslog_records.c', 'Protocol/SSLOG/Src/sslog_protocol.c']
     binary = output / 'logger_snapshot.exe'
-    cmd = ['gcc', '-std=c11', '-O2', '-flto', '-Wall', '-Wextra', '-Werror',
+    cmd = ['gcc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror',
            '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
            '-Wl,--wrap=CommonSpscQueue_Push', '-include',
            str(project / 'Generated/Inc/project_flight_config.h')]
     cmd += ['-I' + str(project / p.replace('\\', '/')) for p in includes]
     if start:
-        cmd += ['-DLOGGER_SNAPSHOT_START_TEST=1']
+        cmd += ['-DLOGGER_SNAPSHOT_START_TEST=1', '-flto']
     if compact:
         # Explicit synthetic capacity fixture; generated production config is untouched.
         config = (project / 'System/User/system_user_config.h').read_text()
