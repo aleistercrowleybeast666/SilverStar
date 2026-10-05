@@ -1167,6 +1167,7 @@ $optionalStartSources = @($preparationSources | Where-Object {
     "$repoRoot\System\Src\system_health.c", "$repoRoot\System\Src\system_capabilities.c",
     "$repoRoot\System\Src\system_profile.c", "$repoRoot\System\Src\system_log_policy.c",
     "$repoRoot\Generated\Src\project_log_config.c",
+    "$repoRoot\Generated\Src\project_metadata.c",
     "$repoRoot\FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c"
 ) + $sslogSources
 foreach ($alignmentSource in @(Get-Content -LiteralPath $projectSourcesPath)) {
