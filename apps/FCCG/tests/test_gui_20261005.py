@@ -1,5 +1,5 @@
 from dataclasses import replace
-from PySide6.QtWidgets import QFormLayout, QWidget
+from PySide6.QtWidgets import QFormLayout, QLabel, QWidget
 
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.app.service import FccgService
@@ -64,6 +64,28 @@ def test_ground_uart_baud_tracks_bound_resource_and_legacy_project(builtin_catal
             resources=(*ground.hardware.resources, replacement)), baudrate=230400)
     switched = ProjectConfiguration_Reconcile(resolved, builtin_catalog).model
     assert switched.ground_target.baudrate == 115200
+
+
+def test_ground_pc_page_omits_baud_row_while_model_keeps_it(qapp, tmp_path,
+                                                              workspace_root):
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"),
+                        service=FccgService(workspace_root))
+    window._GroundBoard_Change("silverstar.board.ground_station_0_5")
+    window._GroundTarget_Change("enabled", True)
+    window._GroundTarget_Change("pc_interface", "uart")
+    page = window.ground_target_page
+    for language in ("zh_CN", "en_US"):
+        window.Language_Apply(language)
+        qapp.processEvents()
+        labels = {label.text() for label in page.pc_group.findChildren(QLabel)}
+        assert "波特率" not in labels and "Baud rate" not in labels
+        assert page.pc_form.rowCount() == 4
+    ground = window._model.ground_target
+    selected = next(item for item in ground.hardware.resources
+                    if item.resource_id == ground.pc_resource)
+    assert ground.baudrate == selected.metadata["baud_rate"]
+    assert ProjectModel_Parse(window._model.Dictionary_Get()).ground_target.baudrate == ground.baudrate
+    window.close()
 
 
 def test_reference_ground_led_contract_uses_pc13_off_level(builtin_catalog):

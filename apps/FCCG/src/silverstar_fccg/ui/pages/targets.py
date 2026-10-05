@@ -306,10 +306,6 @@ class GroundTargetPage(BoardHardwarePage):
         self.pc_resource_notice = QLabel()
         self.pc_resource_notice.setWordWrap(True)
         pc_form.addRow(self.pc_resource_notice)
-        label = QLabel()
-        self.Text_Register(label, "field.ground_baud")
-        self.baudrate = QLabel()
-        pc_form.addRow(label, self.baudrate)
         self.pc_group = self.Group_Create("group.ground_pc", pc_form)
         self.root_layout.addWidget(self.pc_group)
         led_form = QFormLayout()
@@ -349,7 +345,7 @@ class GroundTargetPage(BoardHardwarePage):
 
     def Configuration_Set(self, ground, boards, radios, requirements, issues) -> None:
         for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
-                       self.pc_resource, self.baudrate):
+                       self.pc_resource):
             widget.blockSignals(True)
         self.enabled.setChecked(ground.enabled)
         self.generate_button.setEnabled(ground.enabled)
@@ -449,10 +445,6 @@ class GroundTargetPage(BoardHardwarePage):
             resource=selected_uart.resource_id,
             source=ground.hardware.source_label or ground.board or ground.hardware.source_kind,
         ) if selected_uart is not None else "")
-        selected_baud = selected_uart.metadata.get("baud_rate") if selected_uart is not None else None
-        self.baudrate.setText(f"{selected_baud} baud" if type(selected_baud) is int
-                              and selected_baud > 0 else "—")
-        self.pc_form.setRowVisible(self.baudrate, ground.pc_interface == "uart")
         with QSignalBlocker(self.activity_led_enabled):
             active = GroundActivityLedEnabled_Get(ground)
             self.activity_led_enabled.setChecked(active)
@@ -468,7 +460,7 @@ class GroundTargetPage(BoardHardwarePage):
             f"{ground.build.toolchain_prefix}gcc · Ground_Station.code-workspace"
         )
         for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
-                       self.pc_resource, self.baudrate):
+                       self.pc_resource):
             widget.blockSignals(False)
         required = tuple(requirements.get("resources", ()))
         fixed_resources = requirements.get("fixed_resources", {})
