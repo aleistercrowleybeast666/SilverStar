@@ -638,7 +638,16 @@ $linkerName = if ($TargetKind -eq 'Ground') {
         $match.Groups[1].Value
     }
 } else {
-    'STM32F407XX_FLASH.ld'
+    $profile = [regex]::Match($makefile, '(?m)^TARGET_PROFILE\s*\?=\s*(\S+)')
+    $targetMk = Join-Path $repoRoot ('Targets\' + $profile.Groups[1].Value + '\target.mk')
+    $targetText = if (Test-Path -LiteralPath $targetMk -PathType Leaf) {
+        Get-Content -Raw -LiteralPath $targetMk
+    } else { '' }
+    $match = [regex]::Match($targetText, '(?m)^TARGET_LDSCRIPT\s*:?=\s*(\S+)')
+    if (-not $match.Success) {
+        Add-PowerTenFailure -Message 'Flight target manifest has no linker script.'
+        ''
+    } else { $match.Groups[1].Value }
 }
 $linkerPath = Join-Path $repoRoot $linkerName
 $linker = if (Test-Path -LiteralPath $linkerPath -PathType Leaf) {

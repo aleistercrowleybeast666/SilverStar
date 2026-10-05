@@ -404,7 +404,7 @@
           "Middlewares/Third_Party/FatFs/src/diskio.c",
           "Middlewares/Third_Party/FatFs/src/ff.c",
           "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c",
-          "Middlewares/Third_Party/FatFs/src/drivers/sd_diskio.c"
+          "Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.c"
         ],
         "include_dirs": [
           "Middlewares/Third_Party/FatFs/src",

@@ -5,7 +5,9 @@
 
 #include "system_device_types.h"
 
+#ifndef ESTIMATOR_BUS_DEPTH
 #define ESTIMATOR_BUS_DEPTH 64U
+#endif
 
 typedef SystemInertialIncrement EstimatorPredictionInput;
 

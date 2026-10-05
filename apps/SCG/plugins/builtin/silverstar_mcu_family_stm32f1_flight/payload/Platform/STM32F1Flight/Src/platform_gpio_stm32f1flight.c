@@ -14,14 +14,19 @@ typedef struct
     uint8_t resource_loaded;
 } PlatformGpioContext;
 
-static PlatformGpioContext s_gpio[PLATFORM_GPIO_COUNT];
+#ifndef SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT
+#define SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT PLATFORM_GPIO_COUNT
+#endif
+_Static_assert(SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT <= PLATFORM_GPIO_COUNT,
+               "GPIO context capacity exceeds the platform interface");
+static PlatformGpioContext s_gpio[SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT];
 
 static PlatformGpioContext *PlatformGpio_ContextGet(PlatformGpioId id)
 {
     PlatformStm32f1flightGpioResource resource;
     PlatformGpioContext *context;
 
-    if ((uint32_t)id >= (uint32_t)PLATFORM_GPIO_COUNT) { return NULL; }
+    if ((uint32_t)id >= (uint32_t)SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT) { return NULL; }
     context = &s_gpio[id];
     if (context->resource_loaded == 0U)
     {
@@ -82,7 +87,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t gpio_pin)
     PlatformGpioContext *context;
     uint8_t index;
 
-    for (index = 0U; index < (uint8_t)PLATFORM_GPIO_COUNT; index++)
+    for (index = 0U; index < (uint8_t)SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT; index++)
     {
         context = PlatformGpio_ContextGet((PlatformGpioId)index);
         if ((context != NULL) && (context->irq_enabled != 0U) &&

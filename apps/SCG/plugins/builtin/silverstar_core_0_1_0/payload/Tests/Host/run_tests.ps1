@@ -7,6 +7,14 @@ $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\..')).Path
+$hostTargetProfile = 'SilverStar_F407'
+$projectPath = Join-Path $repoRoot 'SilverStar.ssproject'
+if (Test-Path -LiteralPath $projectPath -PathType Leaf) {
+    $hostTargetProfile = (Get-Content -LiteralPath $projectPath -Raw | ConvertFrom-Json).build.target_profile
+    if ($hostTargetProfile -notmatch '^SilverStar_[A-Za-z0-9_]+$') {
+        throw 'Invalid Host target profile'
+    }
+}
 $outputDir = Join-Path $repoRoot 'build\FCCG\Host\Tests'
 New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
 
@@ -59,7 +67,7 @@ $includeArgs = @(
     "-I$repoRoot\System\Indicator\Inc",
     "-I$repoRoot\System\Inertial\Inc",
     "-I$repoRoot\System\User",
-    "-I$repoRoot\Targets\SilverStar_F407\Inc",
+    "-I$repoRoot\Targets\$hostTargetProfile\Inc",
     "-I$repoRoot\Board\SilverStar_0_5\Services\Inc",
     "-I$repoRoot\Generated\Inc",
     "-I$repoRoot\FlightLogic\Deployment\MultiTrigger\Inc",

@@ -16,10 +16,17 @@ def StorageIntegrity_Run(project: Path, compiler: str) -> Path:
     output.mkdir(parents=True, exist_ok=True)
     fatfs = project / "Middlewares/Third_Party/FatFs/src"
     diskio = project / "FATFS/Target/sd_diskio.c"
+    f1_diskio = project / "Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.c"
+    if f1_diskio.is_file():
+        diskio = f1_diskio
     # Copy byte-for-byte so quoted local vendor includes use the Host facade.
     (output / "sd_diskio.c").write_bytes(diskio.read_bytes())
-    configuration = (project / "FATFS/Target/ffconf.h").read_text(encoding="utf-8")
-    for header in ("main.h", "stm32f4xx_hal.h", "bsp_driver_sd.h"):
+    config_path = project / "FATFS/Target/ffconf.h"
+    imported_config = project / "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h"
+    if f1_diskio.is_file() and imported_config.is_file():
+        config_path = imported_config
+    configuration = config_path.read_text(encoding="utf-8")
+    for header in ("main.h", "stm32f4xx_hal.h", "stm32f1xx_hal.h", "bsp_driver_sd.h"):
         configuration = configuration.replace(f'#include "{header}"', "")
     (output / "ffconf.h").write_text(configuration, encoding="utf-8")
     binary = output / "storage_integrity.exe"

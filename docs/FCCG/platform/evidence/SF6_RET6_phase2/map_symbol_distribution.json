@@ -1,0 +1,343 @@
+{
+  "baseline": {
+    "status": "FAILED_LINK_NO_ELF",
+    "data": 1276,
+    "bss": 94128,
+    "main_msp_reserved": 2048,
+    "ram_required": 97456,
+    "ret6_ram_limit": 65536,
+    "overflow": 31920,
+    "twenty_percent_spare_target": 52428,
+    "groups": {
+      "other": {
+        "bytes": 8385,
+        "percent_of_64k": 12.794
+      },
+      "algorithm_and_origin_state": {
+        "bytes": 12119,
+        "percent_of_64k": 18.492
+      },
+      "platform_vendor_rtos": {
+        "bytes": 5476,
+        "percent_of_64k": 8.356
+      },
+      "device_state": {
+        "bytes": 9604,
+        "percent_of_64k": 14.655
+      },
+      "static_task_stacks_in_bss": {
+        "bytes": 21504,
+        "percent_of_64k": 32.812
+      },
+      "sample_and_log_queues": {
+        "bytes": 33280,
+        "percent_of_64k": 50.781
+      },
+      "other_logging": {
+        "bytes": 4702,
+        "percent_of_64k": 7.175
+      },
+      "alignment_fill_or_unparsed": {
+        "bytes": 338,
+        "percent_of_64k": 0.516
+      },
+      "main_msp_reservation": {
+        "bytes": 2048,
+        "percent_of_64k": 3.125
+      }
+    },
+    "largest_symbols": [
+      {
+        "bytes": 16000,
+        "symbol": ".bss.s_logger_storage",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_bus.o"
+      },
+      {
+        "bytes": 10232,
+        "symbol": ".bss.s_estimator",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_task.o"
+      },
+      {
+        "bytes": 9600,
+        "symbol": ".bss.s_estimator_logger_storage",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_bus.o"
+      },
+      {
+        "bytes": 5120,
+        "symbol": ".bss.s_queue",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/imu_sample_bus.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_telemetry_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_flight_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_estimator_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_aggregate_buffer",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_task.o"
+      },
+      {
+        "bytes": 3072,
+        "symbol": ".bss.s_logger_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 3072,
+        "symbol": ".bss.s_ins_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 3024,
+        "symbol": ".bss.s_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.o"
+      },
+      {
+        "bytes": 2560,
+        "symbol": ".bss.s_queue",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_bus.o"
+      },
+      {
+        "bytes": 2560,
+        "symbol": ".bss.s_device_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 1920,
+        "symbol": ".bss.s_gpio",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_gpio_stm32f1flight.o"
+      },
+      {
+        "bytes": 1436,
+        "symbol": ".bss.s_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Src/sx1281_device.o"
+      },
+      {
+        "bytes": 1280,
+        "symbol": ".bss.s_streams",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_log_policy.o"
+      },
+      {
+        "bytes": 888,
+        "symbol": ".data.s_uart",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_uart_stm32f1flight.o"
+      },
+      {
+        "bytes": 848,
+        "symbol": ".bss.s_status",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Alignment/Src/system_alignment.o"
+      },
+      {
+        "bytes": 728,
+        "symbol": ".bss.s_startup_report",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_startup.o"
+      },
+      {
+        "bytes": 560,
+        "symbol": ".bss.SDFatFS",
+        "object": "build/FCCG/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.o"
+      },
+      {
+        "bytes": 556,
+        "symbol": ".bss.s_object_file",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/storage_service.o"
+      },
+      {
+        "bytes": 556,
+        "symbol": ".bss.s_file",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/storage_service.o"
+      },
+      {
+        "bytes": 530,
+        "symbol": ".bss.s_record",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/persistent_storage.o"
+      },
+      {
+        "bytes": 520,
+        "symbol": ".bss.s_hal_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Middlewares/Third_Party/SX1280lib/sx1280-hal.o"
+      }
+    ]
+  },
+  "compact_queues_dma": {
+    "status": "FAILED_LINK_NO_ELF",
+    "data": 1296,
+    "bss": 71776,
+    "main_msp_reserved": 2048,
+    "ram_required": 75120,
+    "ret6_ram_limit": 65536,
+    "overflow": 9584,
+    "twenty_percent_spare_target": 52428,
+    "groups": {
+      "other": {
+        "bytes": 8384,
+        "percent_of_64k": 12.793
+      },
+      "algorithm_and_origin_state": {
+        "bytes": 12119,
+        "percent_of_64k": 18.492
+      },
+      "platform_vendor_rtos": {
+        "bytes": 4370,
+        "percent_of_64k": 6.668
+      },
+      "device_state": {
+        "bytes": 9604,
+        "percent_of_64k": 14.655
+      },
+      "static_task_stacks_in_bss": {
+        "bytes": 21504,
+        "percent_of_64k": 32.812
+      },
+      "sample_and_log_queues": {
+        "bytes": 15120,
+        "percent_of_64k": 23.071
+      },
+      "other_logging": {
+        "bytes": 1630,
+        "percent_of_64k": 2.487
+      },
+      "alignment_fill_or_unparsed": {
+        "bytes": 341,
+        "percent_of_64k": 0.52
+      },
+      "main_msp_reservation": {
+        "bytes": 2048,
+        "percent_of_64k": 3.125
+      }
+    },
+    "largest_symbols": [
+      {
+        "bytes": 11600,
+        "symbol": ".bss.s_logger_storage",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_bus.o"
+      },
+      {
+        "bytes": 10232,
+        "symbol": ".bss.s_estimator",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_task.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_telemetry_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_flight_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_estimator_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 3072,
+        "symbol": ".bss.s_logger_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 3072,
+        "symbol": ".bss.s_ins_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 3024,
+        "symbol": ".bss.s_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/GNSS/NEO_M9N/Src/neo_m9n_device.o"
+      },
+      {
+        "bytes": 2560,
+        "symbol": ".bss.s_device_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 1600,
+        "symbol": ".bss.s_estimator_logger_storage",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_bus.o"
+      },
+      {
+        "bytes": 1436,
+        "symbol": ".bss.s_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Src/sx1281_device.o"
+      },
+      {
+        "bytes": 1280,
+        "symbol": ".bss.s_streams",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_log_policy.o"
+      },
+      {
+        "bytes": 1280,
+        "symbol": ".bss.s_queue",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/imu_sample_bus.o"
+      },
+      {
+        "bytes": 1024,
+        "symbol": ".bss.s_aggregate_buffer",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_task.o"
+      },
+      {
+        "bytes": 888,
+        "symbol": ".data.s_uart",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_uart_stm32f1flight.o"
+      },
+      {
+        "bytes": 848,
+        "symbol": ".bss.s_status",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Alignment/Src/system_alignment.o"
+      },
+      {
+        "bytes": 728,
+        "symbol": ".bss.s_startup_report",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_startup.o"
+      },
+      {
+        "bytes": 640,
+        "symbol": ".bss.s_queue",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_bus.o"
+      },
+      {
+        "bytes": 560,
+        "symbol": ".bss.SDFatFS",
+        "object": "build/FCCG/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.o"
+      },
+      {
+        "bytes": 556,
+        "symbol": ".bss.s_object_file",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/storage_service.o"
+      },
+      {
+        "bytes": 556,
+        "symbol": ".bss.s_file",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/storage_service.o"
+      },
+      {
+        "bytes": 530,
+        "symbol": ".bss.s_record",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/persistent_storage.o"
+      },
+      {
+        "bytes": 520,
+        "symbol": ".bss.s_hal_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Middlewares/Third_Party/SX1280lib/sx1280-hal.o"
+      },
+      {
+        "bytes": 512,
+        "symbol": ".bss.s_uart1_rx_ring",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_uart_stm32f1flight.o"
+      }
+    ]
+  },
+  "ram_net_reduction": 22336
+}

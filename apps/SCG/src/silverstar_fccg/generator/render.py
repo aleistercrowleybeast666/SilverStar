@@ -764,6 +764,28 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
+    if model.build.compact_mode:
+        descriptors = _DeviceDescriptorEntries_Get(model, catalog)
+        # Metadata emits four algorithm descriptors. The generated table
+        # assertion below ties this value to its actual compiled contents.
+        snapshot_slots = 1 + len(descriptors) + 4 + len(model.logging_streams)
+        definitions.extend((
+            ("PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS", f"{snapshot_slots}U"),
+            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", f"{snapshot_slots + 4}U"),
+            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "8U"),
+            ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "1024U"),
+            ("SYSTEM_IMU_SAMPLE_BUS_DEPTH", "16U"),
+            ("ESTIMATOR_BUS_DEPTH", "16U"),
+            ("SYSTEM_USER_POWER_ENABLE", "1U" if any(
+                entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
+                for entry in descriptors) else "0U"),
+        ))
+        if model.hardware.mode == "custom" and model.mcu_family == "silverstar.mcu_family.stm32f1_flight":
+            gpio_indices = [int(resource.metadata["logical_index"])
+                            for resource in model.hardware.resources
+                            if resource.kind.startswith("gpio_")]
+            definitions.append(("SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT",
+                                f"{max(gpio_indices, default=0) + 1}U"))
     landing_id = model.strategies.get("landing")
     if landing_id:
         landing_defines = [value.partition("=")[2]
@@ -2929,6 +2951,13 @@ _Static_assert((sizeof(s_algorithm_descriptors) /
                 sizeof(s_algorithm_descriptors[0])) <=
                SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX,
                "target algorithm descriptor table exceeds interface bound");
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+#include "sslog_records.h"
+_Static_assert((1U + sizeof(s_device_descriptors) / sizeof(s_device_descriptors[0]) +
+               sizeof(s_algorithm_descriptors) / sizeof(s_algorithm_descriptors[0]) +
+               SSLOG_RECORD_COUNT) <= SYSTEM_LOG_RECORD_QUEUE_DEPTH,
+               "Compact log queue must hold all startup descriptors");
+#endif
 
 uint16_t SystemDescriptor_DeviceCountGet(void)
 {{

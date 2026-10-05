@@ -1,10 +1,14 @@
 from dataclasses import replace
+from pathlib import Path
 import re
 
 import pytest
 
 from silverstar_fccg.generator.render import _DeviceInstancesHeader_Render, _Eide_Render
 from silverstar_fccg.generator.source_graph import SourceGraphError, SourceGraph_Resolve
+from silverstar_fccg.generator.compact_entry import CompactFlightMain_Integrate
+from silverstar_fccg.generator.render import _FlightConfigHeader_Render
+from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
 from silverstar_fccg.project.compact import CompactErrors_Get
 from silverstar_fccg.project.model import DeviceInstance, ProjectModel_Parse
 from silverstar_fccg.project.reference import ReferenceProject_Create
@@ -58,3 +62,44 @@ def test_ret6_eide_uses_cm3_soft_float(builtin_catalog):
     assert "cpuType: Cortex-M3" in text
     assert "floatingPointHardware: none" in text
     assert "$float-abi-type: soft" in text
+
+
+def test_compact_entry_rejects_user_application_code():
+    clean = b"/* USER CODE BEGIN Includes */\n/* USER CODE END Includes */\n/* USER CODE BEGIN 2 */\n/* USER CODE END 2 */"
+    result = CompactFlightMain_Integrate(clean)
+    assert b"SystemStartup_Run()" in result and b"vTaskStartScheduler()" in result
+    assert b"SystemStartup_Run()" not in clean
+    with pytest.raises(ValueError, match="empty CubeMX"):
+        CompactFlightMain_Integrate(result)
+    with pytest.raises(ValueError, match="empty CubeMX"):
+        CompactFlightMain_Integrate(clean.replace(b"BEGIN 2 */", b"BEGIN 2 */\nUserOwned_Init();"))
+
+
+def test_compact_snapshot_capacity_keeps_disabled_stream_descriptors(builtin_catalog):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    normal = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert "PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS" not in normal
+    model.build = replace(model.build, compact_mode=True)
+    before = _FlightConfigHeader_Render(model, builtin_catalog)
+    model.logging_streams = [replace(stream, enabled=False) for stream in model.logging_streams]
+    after = _FlightConfigHeader_Render(model, builtin_catalog)
+    slots = lambda text: int(re.search(r"#define PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS\s+(\d+)U", text)[1])
+    depth = int(re.search(r"#define SYSTEM_LOG_RECORD_QUEUE_DEPTH\s+(\d+)U", before)[1])
+    assert slots(before) == slots(after)
+    assert depth >= slots(before) + 4
+
+
+def test_f1_shared_sdio_dma_requires_both_actual_handle_bindings():
+    repository = Path(__file__).resolve().parents[3]
+    ioc = (repository / "docs/FCCG/platform/evidence/SF6_RET6_phase1/SF6_RET6_Hardware.ioc").read_text()
+    binding = """
+    hdma_sdio.Instance = DMA2_Channel4;
+    __HAL_LINKDMA(sdHandle, hdmarx, hdma_sdio);
+    __HAL_LINKDMA(sdHandle, hdmatx, hdma_sdio);
+    """
+    parse = lambda text: CubeMxInventory_Parse(ioc, generated_files={"Core/Src/sdio.c": text})
+    assert parse(binding).sdio_shared_dma_bound
+    assert not parse("").sdio_shared_dma_bound
+    assert not parse(binding.replace("hdmatx", "other_field")).sdio_shared_dma_bound
+    assert not parse(binding.replace("hdmatx, hdma_sdio", "hdmatx, other_dma")).sdio_shared_dma_bound
+    assert not parse(binding.replace("DMA2_Channel4", "DMA1_Channel4")).sdio_shared_dma_bound

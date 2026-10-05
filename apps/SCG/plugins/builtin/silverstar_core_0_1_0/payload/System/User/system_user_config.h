@@ -247,14 +247,22 @@
 #define SYSTEM_LOG_SYNC_PERIOD_US                   250000ULL
 #define SYSTEM_LOG_RETRY_PERIOD_US                 1000000ULL
 #define SYSTEM_LOG_POST_LANDING_GRACE_MS              1000U
+#ifndef SYSTEM_LOG_AGGREGATION_BUFFER_SIZE
 #define SYSTEM_LOG_AGGREGATION_BUFFER_SIZE            4096U
+#endif
+#ifndef SYSTEM_LOG_RECORD_QUEUE_DEPTH
 #define SYSTEM_LOG_RECORD_QUEUE_DEPTH                   80U
+#endif
+#ifndef SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH
 #define SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH                48U
+#endif
 #define SYSTEM_LOG_FILE_INDEX_MAX                     9999U
 #define SYSTEM_LOG_PROFILE_ID                             0U
 
 /* System/module queue sizing kept here because it changes static RAM use. */
+#ifndef SYSTEM_IMU_SAMPLE_BUS_DEPTH
 #define SYSTEM_IMU_SAMPLE_BUS_DEPTH                       64U
+#endif
 #define SYSTEM_IMU_DRAIN_MAX_SAMPLES_PER_CYCLE            32U
 #define SYSTEM_LIFECYCLE_QUEUE_DEPTH                       4U
 #define SYSTEM_TELEMETRY_STATUS_QUEUE_DEPTH                8U
