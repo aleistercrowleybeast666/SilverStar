@@ -177,7 +177,8 @@ static void Test_StartNoFix(void)
     EstimatorOutputSnapshot output = {0};
     SystemAlignmentSummary alignment = {0};
     uint8_t required = (uint8_t)((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK & SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN) != 0U);
-    Test_Reset(0U, 1U);
+    uint8_t barometer_configured = (uint8_t)((SYSTEM_FUSION_CONFIGURED_MASK & 0x10U) != 0U);
+    Test_Reset(0U, barometer_configured);
     TEST_CHECK(SystemAlignment_SummaryGet(&alignment) == SYSTEM_DEVICE_OK);
     TEST_CHECK(alignment.required_mask == SYSTEM_USER_ALIGNMENT_REQUIRED_MASK);
     TEST_CHECK(alignment.ready == (uint8_t)!required);
@@ -195,7 +196,10 @@ static void Test_StartNoFix(void)
     TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_OK);
     TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_FLIGHT);
     TEST_CHECK(Estimator_GetLatestSnapshot(&output) != 0U);
-    TEST_CHECK(output.mission_running == 1U && output.gnss_origin_valid == 0U && output.baro_origin_valid == 1U);
+    TEST_CHECK(output.mission_running == 1U && output.gnss_origin_valid == 0U &&
+               output.baro_origin_valid == barometer_configured);
+    if (barometer_configured == 0U)
+    { TEST_CHECK((output.health_flags & ESTIMATOR_HEALTH_BARO_ORIGIN_UNAVAILABLE) != 0U); }
     TEST_CHECK(s_estimator.gnss_fusion_enabled == 0U && s_estimator.origin_collection_frozen == 1U);
     TEST_CHECK(s_estimator.gnss_frame.valid == 0U && s_estimator.frozen_gnss.position_usable == 0U);
     Test_Collect(1U); /* A late stationary fix must not establish an origin. */

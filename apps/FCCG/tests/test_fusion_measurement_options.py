@@ -5,9 +5,16 @@ from dataclasses import replace
 import pytest
 import re
 
-from silverstar_fccg.generator.render import _FlightConfigHeader_Render
+from silverstar_fccg.generator.render import (
+    _DeviceBuildCapabilitiesHeader_Render, _DeviceDescriptorEntries_Get,
+    _FlightConfigHeader_Render, _LogSource_Render,
+)
+from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 from silverstar_fccg.project.algorithm_parameters import AlgorithmParameters_Reconcile
-from silverstar_fccg.project.logging import LoggingProfile_Reconcile
+from silverstar_fccg.project.logging import (
+    LoggingProfile_Reconcile, ProjectRecordableOutputs_Get,
+)
+from silverstar_fccg.project.model import DeviceInstance
 from silverstar_fccg.project.validation import Project_Validate
 from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
 from silverstar_fccg.project.configuration import StrategyAvailabilities_Get
@@ -64,7 +71,7 @@ def test_estimator_requires_one_configured_measurement(
     required = re.search(r"#define\s+SYSTEM_USER_ALIGNMENT_REQUIRED_MASK\s+([^\n]+)", header)
     assert required is not None
     if observations == "gnss":
-        assert "SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN" in required.group(1)
+        assert "SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN" not in required.group(1)
         assert "SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN" not in required.group(1)
     elif observations in {"both", "baro"}:
         assert "SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN" in required.group(1)
@@ -128,3 +135,53 @@ def test_raw_imu_mount_is_right_handed_and_serialized(
     declaration = _InstanceResourceDeclarations_Render(
         model, builtin_catalog.ProjectView_Get(model))
     assert "int8_t axis_map[3];" in declaration
+
+
+@pytest.mark.parametrize("sources,barometer_count", (
+    (("s",), 0), (("b",), 1), (("s", "b"), 1),
+    (("b", "s"), 1), (("s", "bmp"), 1),
+))
+def test_jy901_variants_keep_barometer_config_source_and_log_consistent(
+    builtin_catalog, sources: tuple[str, ...], barometer_count: int,
+) -> None:
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    first = model.device_instances[0]
+    model.device_instances[0] = replace(first, profile="jy901s" if sources[0] == "s" else "jy901b")
+    if len(sources) == 2:
+        if sources[1] == "bmp":
+            model.device_instances.append(DeviceInstance(
+                "baro1", "silverstar.device.barometer.bmp280", "i2c", "forced_20_hz"))
+        else:
+            model.device_instances.append(replace(
+                first, instance_id="imu1", profile="jy901s" if sources[1] == "s" else "jy901b"))
+    if barometer_count == 0:
+        model.strategies["landing"] = "silverstar.flight_logic.landing.stillness"
+    view = builtin_catalog.ProjectView_Get(model)
+    config = _FlightConfigHeader_Render(model, view)
+    enabled = f"{barometer_count}U"
+    assert re.search(r"#define\s+SYSTEM_USER_BAROMETER_ENABLE\s+" + enabled, config)
+    assert ("SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN" in config.split(
+        "#define SYSTEM_USER_ALIGNMENT_REQUIRED_MASK", 1)[1].split("#endif", 1)[0]) == bool(barometer_count)
+    entries = _DeviceDescriptorEntries_Get(model, view)
+    baro_sources = [entry["_source_instance_id"] for entry in entries
+                    if entry["class"] == "SYSTEM_DEVICE_CLASS_BAROMETER"]
+    assert len(baro_sources) == barometer_count
+    assert ("imu0" in baro_sources) == (sources[0] == "b")
+    assert ("imu1" in baro_sources) == (len(sources) == 2 and sources[1] == "b")
+    capabilities = _DeviceBuildCapabilitiesHeader_Render(model, view)
+    assert re.search(
+        r"#define\s+SYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE\s+" + enabled,
+        capabilities,
+    )
+    recordable, _disabled = ProjectRecordableOutputs_Get(model, builtin_catalog)
+    assert ("barometer.altitude" in recordable) == bool(barometer_count)
+    LoggingProfile_Reconcile(model, builtin_catalog)
+    baro_log = next(stream for stream in model.logging_streams
+                    if stream.record == "FLIGHT_LOG_RECORD_BARO_NATIVE")
+    assert baro_log.enabled == bool(barometer_count)
+    assert f"{{FLIGHT_LOG_RECORD_BARO_NATIVE, {enabled}" in _LogSource_Render(model)
+    graph = SourceGraph_Resolve(model, view)
+    assert ("Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c"
+            in graph.sources) == ("b" in sources)
+    assert ("Devices/Barometer/BMP280/Src/bmp280_i2c_instance.c"
+            in graph.sources) == ("bmp" in sources)

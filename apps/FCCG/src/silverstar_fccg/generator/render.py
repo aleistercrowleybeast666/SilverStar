@@ -786,8 +786,6 @@ def _FlightConfigHeader_Render(
     alignment_required = ["SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE"]
     if observation_mask & 0x10:
         alignment_required.append("SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN")
-    elif observation_mask & 0x03:
-        alignment_required.append("SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN")
     definitions.append(("SYSTEM_USER_ALIGNMENT_REQUIRED_MASK",
                         "(" + " | ".join(alignment_required) + ")"))
     # A sole independent barometer also needs bounded runtime recovery. A
@@ -867,6 +865,21 @@ def _FlightConfigHeader_Render(
             feature_symbols[symbol] = feature_symbols.get(symbol, False) or (
                 manifest.component_id in selected_components
             )
+    # A project view merges source sets for repeated device plugins, while
+    # retaining the first instance's metadata. Enable global features from
+    # every concrete variant so S->B and B->S have identical feature flags.
+    for instance in model.device_instances:
+        manifest = catalog.InstanceComponent_Get(instance)
+        raw_symbols = manifest.metadata.get("build_feature_symbols", [])
+        if not isinstance(raw_symbols, list) or not all(
+            isinstance(symbol, str) and re.fullmatch(r"[A-Z][A-Z0-9_]*", symbol)
+            for symbol in raw_symbols
+        ):
+            raise ValueError(
+                f"Device {manifest.component_id} build_feature_symbols is invalid"
+            )
+        for symbol in raw_symbols:
+            feature_symbols[symbol] = True
     definitions.extend(
         (symbol, "1U" if enabled else "0U")
         for symbol, enabled in sorted(feature_symbols.items())

@@ -366,10 +366,11 @@ def ProjectRecordableOutputs_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> tuple[set[str], dict[str, str]]:
     """Return enabled raw outputs and explicit device-output disable reasons."""
+    catalog = catalog.ProjectView_Get(model)
     enabled: set[str] = set()
     disabled_reasons: dict[str, str] = {}
     for instance in model.device_instances:
-        manifest = catalog.Component_Get(instance.plugin)
+        manifest = catalog.InstanceComponent_Get(instance)
         values = manifest.metadata.get("recordable_outputs", {})
         if not isinstance(values, dict):
             continue
