@@ -3430,10 +3430,12 @@ SystemDeviceResult EstimatorTask_FreezeOrigins(void)
         s_estimator.origin_collection_frozen = 0U;
         return SYSTEM_DEVICE_NOT_READY;
     }
-#if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
-    if ((SYSTEM_FUSION_CONFIGURED_MASK & 0x10U) == 0U)
+    /* The observation mask applies to every selected backend, including
+       SF6/ESKF15 whose KF6 task-kernel build flag is disabled. */
+    if (((SYSTEM_FUSION_CONFIGURED_MASK & 0x10U) == 0U) &&
+        ((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &
+          SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN) == 0U))
     { return SYSTEM_DEVICE_OK; }
-#endif
     return (s_estimator.baro_origin_valid != 0U) ?
         SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY;
 }

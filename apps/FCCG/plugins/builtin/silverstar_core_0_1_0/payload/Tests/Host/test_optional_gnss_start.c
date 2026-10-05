@@ -258,7 +258,9 @@ static void Test_RequiredFailures(void)
     else
     {
         TEST_CHECK(SystemAlignment_IsReady() == 1U);
-        TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_OK);
+        TEST_CHECK(EstimatorTask_FreezeOrigins() ==
+            (((SYSTEM_FUSION_CONFIGURED_MASK & 0x10U) != 0U) ?
+             SYSTEM_DEVICE_NOT_READY : SYSTEM_DEVICE_OK));
     }
     Test_Reset(1U, 1U);
     TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
@@ -271,7 +273,8 @@ static void Test_RequiredFailures(void)
 static void Test_StartWithOrigin(void)
 {
     EstimatorOutputSnapshot output = {0};
-    Test_Reset(1U, 1U);
+    uint8_t barometer_configured = (uint8_t)((SYSTEM_FUSION_CONFIGURED_MASK & 0x10U) != 0U);
+    Test_Reset(1U, barometer_configured);
     TEST_CHECK(SystemAlignment_IsReady() == 1U);
     TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemLifecycleBackend_StorageReadyGet() == 1U);
@@ -279,6 +282,7 @@ static void Test_StartWithOrigin(void)
     TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_OK);
     TEST_CHECK(Estimator_GetLatestSnapshot(&output) != 0U);
     TEST_CHECK(output.gnss_origin_valid == 1U && output.mission_running == 1U);
+    TEST_CHECK(output.baro_origin_valid == barometer_configured);
     TEST_CHECK(s_estimator.gnss_fusion_enabled == (uint8_t)(SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE));
     EstimatorTask_AbortMission();
     /* Lost freshness after a successful preflight preparation must clear its
