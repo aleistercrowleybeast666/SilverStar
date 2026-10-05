@@ -87,6 +87,21 @@ covariance, innovation, NIS, measurement diagnostics, and a generic update-event
 `StateGroupSpec`/`MeasurementGroupSpec`. Pure INS has no estimator visualization spec. Future
 ESKF_15/24 state or sensor groups are plugin metadata changes, not page changes.
 
+Recorded KF6 barometer diagnostics use independent `BARO_MEASUREMENT` operations,
+ordered at `estimator_present_timestamp_us`. Innovation/NIS require the recorded valid
+bit and an accepted, soft-weighted or NIS-rejected result; invalid/numeric-error outcomes
+remain visible as result codes without inventing computed diagnostics. This operation
+stream takes precedence over legacy `KF6_DIAGNOSTIC` and `ESTIMATOR` last-value snapshots,
+including when a current field is missing or invalid. Older measurement layouts without
+diagnostic fields retain their legacy diagnostic roles. Input R remains recorded variance;
+effective R and scale are reconstructed only for accepted updates with exact firmware
+parameters. Unknown effective R remains unavailable.
+
+Revision3 retired-parameter checks retain the original type/range/finite validation and
+reject substantive changes. The three retired floating fields compare exactly in binary32
+only when the matched decoder declares `float32`; missing/unknown declarations and integer
+fields retain exact comparisons. This does not change replay modes or algorithm numerics.
+
 `ReplayResultStore` assigns a unique result/source ID to every run and never replaces a prior
 Recorded-configuration, Offline, or What-if result. `ChannelResolver` is the single
 Recorded/replay lookup layer used
