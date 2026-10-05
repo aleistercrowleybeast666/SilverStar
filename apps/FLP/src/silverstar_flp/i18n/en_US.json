@@ -735,7 +735,7 @@
   "state.fixed_lag_latency": "Fixed-lag Latency",
   "state.measurement_timing": "Measurement Timing",
   "state.measurement_unavailable": "Unavailable: {values}. Recorded effective σ requires group NIS, result, input R, and firmware parameters.",
-  "state.selected_no_estimator": "Selected replay algorithm has no estimator diagnostic channel. Showing recorded estimator diagnostics.",
+  "state.selected_no_estimator": "The primary source has no published estimator diagnostics. Unavailable plots remain empty.",
   "flight.trajectory_two_sources": "Muted gray: {recorded} · Colored path: {selected}",
   "integrity.vertical": "Height and vertical velocity comparison",
   "integrity.satellites": "Satellites and fix status",

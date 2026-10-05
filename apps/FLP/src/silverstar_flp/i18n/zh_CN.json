@@ -735,7 +735,7 @@
   "state.fixed_lag_latency": "固定滞后延迟",
   "state.measurement_timing": "量测时序",
   "state.measurement_unavailable": "不可用：{values}。记录的生效 σ 需要组级 NIS、结果、输入 R 和固件参数。",
-  "state.selected_no_estimator": "当前回放算法没有状态估计诊断通道；显示记录的估计器诊断。",
+  "state.selected_no_estimator": "主数据源没有已发布的状态估计诊断；不可用图表保持空白。",
   "flight.trajectory_two_sources": "淡灰轨迹：{recorded} · 彩色轨迹：{selected}",
   "integrity.vertical": "高度与垂直速度对照",
   "integrity.satellites": "卫星与定位状态",

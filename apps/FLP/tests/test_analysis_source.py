@@ -116,7 +116,7 @@ def test_recomputed_and_what_if_results_coexist_and_resolve_independently(
         (recorded_export / "Export_Manifest_ZH.json").read_text(encoding="utf-8")
     )
     assert recorded_manifest["requested_source_mode"] == "explicit"
-    assert recorded_manifest["resolved_source_id"] == "recorded"
+    assert recorded_manifest["resolved_source_id"] == "recorded:pure_ins"
     assert recorded_manifest["resolved_result_id"] is None
     assert recorded_manifest["replay_results"] == []
     assert recorded_manifest["requested_time_range"]["page_mode"] == "30"

@@ -308,46 +308,34 @@ class StateEstimationPage(QWidget):
         if self._dataset is None or self._resolver is None:
             self._Content_Clear()
             return
-        algorithm_ids = tuple(
-            plugin.metadata.plugin_id
-            for plugin in self._registry.algorithms
-            if plugin.metadata.estimator_visualization is not None
+        selected = self._resolver.Source_Get()
+        self._Content_Clear()
+        self.source_value_label.setText(
+            _Source_Label(self._translator, self._resolver, selected.source_id)
         )
-        sources = self._resolver.EstimatorSources_Get(algorithm_ids)
-        active = self._resolver.store.ActiveSource_Get()
-        selected = next(
-            (source for source in sources if source.source_id == active.source_id), None
-        )
-        selected_without_estimator = selected is None and active.kind != AnalysisSourceKind.RECORDED
-        if selected_without_estimator:
-            selected = next(
-                (source for source in sources if source.kind == AnalysisSourceKind.RECORDED),
-                None,
-            )
-        if selected is None:
-            self._Content_Clear()
-            self._FirmwareEstimatorDiagnostic_Append()
+        if not selected.available or selected.algorithm_id is None:
             return
         try:
             plugin = self._registry.Algorithm_Get(str(selected.algorithm_id))
         except KeyError:
-            self._Content_Clear()
+            self.diagnostic_label.setText(self._translator.Text_Get("state.no_estimator_metadata"))
             return
         visualization = plugin.metadata.estimator_visualization
         if visualization is None:
-            self._Content_Clear()
+            self.diagnostic_label.setText(self._translator.Text_Get("state.selected_no_estimator"))
             return
         self._estimator_source = selected
         self._visualization = visualization
         if selected.kind == AnalysisSourceKind.RECORDED:
-            self._source_parameters = plugin.recorded_parameters(self._dataset)
+            try:
+                self._source_parameters = plugin.recorded_parameters(self._dataset)
+            except (KeyError, TypeError, ValueError):
+                self._source_parameters = {}
             self.diagnostic_label.setText(self._translator.Text_Get("state.recorded_diagnostic"))
         else:
             entry = self._resolver.store.SourceEntry_Get(selected.source_id)
             self._source_parameters = entry.parameters if entry is not None else {}
             self.diagnostic_label.setText(self._translator.Text_Get("state.recomputed_diagnostic"))
-        if selected_without_estimator:
-            self.diagnostic_label.setText(self._translator.Text_Get("state.selected_no_estimator"))
         self._FirmwareEstimatorDiagnostic_Append()
         self.source_value_label.setText(
             _Source_Label(self._translator, self._resolver, selected.source_id)
@@ -357,7 +345,7 @@ class StateEstimationPage(QWidget):
         from silverstar_flp.decoder_profiles.eskf15_records import NavigationWindows_Get
 
         windows = entry.diagnostics.get("window_evidence") if entry is not None else None
-        if entry is None and self._dataset.Records_Get("NAV_QUALITY"):
+        if selected.recorded_solution_id == "eskf15" and self._dataset.Records_Get("NAV_QUALITY"):
             windows = NavigationWindows_Get(self._dataset.Records_Get("NAV_QUALITY"))
         self.gnss_integrity.WindowEvidence_Set(windows)
         self._Selectors_Refresh()
@@ -430,6 +418,10 @@ class StateEstimationPage(QWidget):
             combo.clear()
         _Plot_Reset(self._Plots_Get())
         self.nis_summary.clearContents()
+        self.navigation_health_label.clear()
+        self.navigation_health_label.hide()
+        self.measurement_unavailable_label.clear()
+        self.gnss_integrity.SourceUnavailable_Set()
 
     def _Selectors_Refresh(self) -> None:
         if self._visualization is None:
@@ -916,7 +908,8 @@ class StateEstimationPage(QWidget):
             latest = self._UpdateResult_Text(values[-1]) if values.size else "—"
             cells = (
                 self._translator.Text_Get(group.label_key),
-                *(str(value) for value in counts),
+                *(str(value) if results is not None and np.any(results.valid) else "—"
+                  for value in counts),
                 self._Number_Text(p95),
                 latest,
             )
@@ -1028,25 +1021,4 @@ class StateEstimationPage(QWidget):
                 translator.Text_Get("state.latest"),
             ]
         )
-        if self._visualization is not None:
-            self._Selectors_Refresh()
-            self._Refresh()
-            if self._resolver is not None and self._estimator_source is not None:
-                self.source_value_label.setText(
-                    _Source_Label(
-                        self._translator,
-                        self._resolver,
-                        self._estimator_source.source_id,
-                    )
-                )
-                active = self._resolver.store.ActiveSource_Get()
-                code = (
-                    "state.selected_no_estimator"
-                    if active.kind != AnalysisSourceKind.RECORDED
-                    and self._estimator_source.kind == AnalysisSourceKind.RECORDED
-                    else "state.recorded_diagnostic"
-                    if self._estimator_source.kind == AnalysisSourceKind.RECORDED
-                    else "state.recomputed_diagnostic"
-                )
-                self.diagnostic_label.setText(self._translator.Text_Get(code))
-                self._FirmwareEstimatorDiagnostic_Append()
+        self._Estimator_Select()

@@ -936,6 +936,11 @@ class MainWindow(QMainWindow):
                           current_range=(self.time_range.controller.model.start,
                                          self.time_range.controller.model.end))
         source_id = options.source_id or self._replay_store.ActiveSource_Get().source_id
+        source = self._channel_resolver.Source_Get(source_id)
+        if not source.available:
+            self.export_dialog.Result_Error(f"export_source_unavailable:{source_id}")
+            return
+        source_id = source.source_id
         try:
             export_store = self._replay_store.Snapshot_Create(source_id)
         except ValueError as error:

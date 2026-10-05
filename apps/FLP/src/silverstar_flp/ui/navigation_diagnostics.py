@@ -236,12 +236,11 @@ class NavigationDiagnostics(QWidget):
                 self._rows = []
                 self._source_note = self.translator.Text_Get('diagnostic.gnss_replay_missing')
             else:
-                self._rows = recorded
-                self._source_note = self.translator.Text_Get('diagnostic.gnss_recorded_source')
-                if entry is not None:
-                    self._source_note += ' · ' + self.translator.Text_Get(
-                        'diagnostic.gnss_fallback_recorded',
-                    )
+                self._rows = recorded if entry is None else []
+                self._source_note = self.translator.Text_Get(
+                    'diagnostic.gnss_recorded_source' if entry is None
+                    else 'diagnostic.gnss_replay_missing'
+                )
             self._empty_reason = (
                 'diagnostic.gnss_mapping_failed' if unmapped and not recorded
                 else 'diagnostic.gnss_no_record' if not recorded and not entry

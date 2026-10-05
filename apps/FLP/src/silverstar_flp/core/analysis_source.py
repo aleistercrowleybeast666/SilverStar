@@ -33,6 +33,8 @@ class AnalysisSource:
     algorithm_id: str | None = None
     result_id: str | None = None
     analysis_only: bool = False
+    recorded_solution_id: str | None = None
+    available: bool = True
 
 
 @dataclass(frozen=True, slots=True)
@@ -118,6 +120,23 @@ class ReplayStoredResult:
 
 class ReplayResultStore:
     RECORDED_SOURCE_ID = "recorded"
+    RECORDED_ALGORITHMS = {
+        "pure_ins": "silverstar.algorithm.pure_ins",
+        "kf6": "silverstar.algorithm.kf6",
+        "eskf15": "silverstar.algorithm.estimator.eskf15",
+        "sf6": "silverstar.algorithm.sf6",
+    }
+
+    @classmethod
+    def RecordedSource_Get(cls, source_id: str) -> AnalysisSource | None:
+        if source_id == cls.RECORDED_SOURCE_ID:
+            return AnalysisSource(source_id, AnalysisSourceKind.RECORDED)
+        solution = source_id.removeprefix("recorded:")
+        if source_id.startswith("recorded:") and solution in cls.RECORDED_ALGORITHMS:
+            return AnalysisSource(source_id, AnalysisSourceKind.RECORDED,
+                                  cls.RECORDED_ALGORITHMS[solution],
+                                  recorded_solution_id=solution)
+        return None
 
     def __init__(self) -> None:
         self._entries: list[ReplayStoredResult] = []
@@ -196,7 +215,8 @@ class ReplayResultStore:
 
     def Snapshot_Create(self, source_id: str) -> ReplayResultStore:
         snapshot = ReplayResultStore()
-        if source_id == self.RECORDED_SOURCE_ID:
+        if self.RecordedSource_Get(source_id) is not None:
+            snapshot._active_source_id = source_id
             return snapshot
         entry = self.SourceEntry_Get(source_id)
         if entry is None or not entry.analysis_ready:
@@ -223,18 +243,19 @@ class ReplayResultStore:
         return tuple(sources)
 
     def ActiveSource_Get(self) -> AnalysisSource:
-        if self._active_source_id == self.RECORDED_SOURCE_ID:
-            return AnalysisSource(self.RECORDED_SOURCE_ID, AnalysisSourceKind.RECORDED)
+        recorded = self.RecordedSource_Get(self._active_source_id)
+        if recorded is not None:
+            return recorded
         entry = self._by_source_id.get(self._active_source_id)
         if entry is None or not entry.analysis_ready:
-            self._active_source_id = self.RECORDED_SOURCE_ID
-            return AnalysisSource(self.RECORDED_SOURCE_ID, AnalysisSourceKind.RECORDED)
+            return AnalysisSource(self._active_source_id, AnalysisSourceKind.RECOMPUTED,
+                                  available=False)
         return AnalysisSource(
             entry.source_id, entry.kind, entry.algorithm_id, entry.result_id, entry.analysis_only
         )
 
     def ActiveSource_Set(self, source_id: str) -> bool:
-        if source_id != self.RECORDED_SOURCE_ID:
+        if self.RecordedSource_Get(source_id) is None:
             entry = self._by_source_id.get(source_id)
             if entry is None or not entry.analysis_ready:
                 return False
@@ -287,7 +308,7 @@ class ChannelResolver:
         source = self.Source_Get(source_id)
         if source.kind != AnalysisSourceKind.RECORDED:
             return source.source_id, source, None
-        resolved_solution = solution or self._RecordedPositionSolution_Get()
+        resolved_solution = solution or source.recorded_solution_id or self._RecordedPositionSolution_Get()
         cache_suffix = resolved_solution or "unavailable"
         return f"recorded:{cache_suffix}", source, resolved_solution
 
@@ -307,7 +328,7 @@ class ChannelResolver:
                     "navigation.position_enu",
                     solution=resolved_solution,
                 ),
-                self.RecordedSeries_Get("attitude.q_nb"),
+                self.RecordedSeries_Get("attitude.q_nb", solution=resolved_solution),
             )
         else:
             candidates = (
@@ -377,29 +398,45 @@ class ChannelResolver:
             if entry.analysis_ready:
                 self.TrajectoryBounds_Get(entry.source_id)
 
-    def Source_Get(self, source_id: str | None = None) -> AnalysisSource:
-        if source_id is None:
-            return self.store.ActiveSource_Get()
-        if source_id == ReplayResultStore.RECORDED_SOURCE_ID:
-            return AnalysisSource(source_id, AnalysisSourceKind.RECORDED)
-        entry = self.store.SourceEntry_Get(source_id)
-        if entry is None:
-            return AnalysisSource(
-                ReplayResultStore.RECORDED_SOURCE_ID,
-                AnalysisSourceKind.RECORDED,
-            )
-        return AnalysisSource(
-            entry.source_id, entry.kind, entry.algorithm_id, entry.result_id, entry.analysis_only
+    def Sources_Get(self) -> tuple[AnalysisSource, ...]:
+        recorded = tuple(
+            source for solution in self.store.RECORDED_ALGORITHMS
+            if (source := self.Source_Get(f"recorded:{solution}")).available
         )
+        replay = tuple(source for source in self.store.Sources_Get()
+                       if source.kind != AnalysisSourceKind.RECORDED)
+        return (*recorded, *replay)
+
+    def Source_Get(self, source_id: str | None = None) -> AnalysisSource:
+        selected_id = source_id if source_id is not None else self.store.ActiveSource_Get().source_id
+        if selected_id == self.store.RECORDED_SOURCE_ID:
+            solution = self._RecordedPositionSolution_Get()
+            if solution is None:
+                return AnalysisSource(selected_id, AnalysisSourceKind.RECORDED, available=False)
+            selected_id = f"recorded:{solution}"
+        recorded = self.store.RecordedSource_Get(selected_id)
+        if recorded is not None:
+            present = any(name.startswith(f"{recorded.recorded_solution_id}.recorded.")
+                          for name in self.dataset.series)
+            return replace(recorded, available=present)
+        entry = self.store.SourceEntry_Get(selected_id)
+        if entry is None or not entry.analysis_ready:
+            return AnalysisSource(selected_id, AnalysisSourceKind.RECOMPUTED, available=False)
+        return AnalysisSource(entry.source_id, entry.kind, entry.algorithm_id,
+                              entry.result_id, entry.analysis_only)
 
     def Series_Get(self, channel_id: str, source_id: str | None = None) -> TimeSeries | None:
         source = self.Source_Get(source_id)
-        if source.kind == AnalysisSourceKind.RECORDED:
-            return self.RecordedSeries_Get(channel_id)
-        entry = self.store.SourceEntry_Get(source.source_id)
-        if entry is None:
+        if not source.available:
             return None
-        return entry.channels.get(channel_id)
+        if source.kind == AnalysisSourceKind.RECORDED:
+            solution = source.recorded_solution_id
+            namespace = channel_id.partition(".")[0]
+            if namespace in self.store.RECORDED_ALGORITHMS and namespace != solution:
+                return None
+            return self.RecordedSeries_Get(channel_id, solution=solution)
+        entry = self.store.SourceEntry_Get(source.source_id)
+        return entry.channels.get(channel_id) if entry is not None else None
 
     def RecordedSeries_Get(
         self,
@@ -563,9 +600,10 @@ class ChannelResolver:
             ):
                 sources.append(
                     AnalysisSource(
-                        ReplayResultStore.RECORDED_SOURCE_ID,
+                        f"recorded:{namespace}",
                         AnalysisSourceKind.RECORDED,
                         algorithm_id,
+                        recorded_solution_id=namespace,
                     )
                 )
         for entry in self.store.Entries_Get():

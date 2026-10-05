@@ -252,10 +252,12 @@ def _Source_Label(
     source_id: str,
 ) -> str:
     source = resolver.Source_Get(source_id)
+    if not source.available:
+        return translator.Text_Get("status.na") + " · " + source_id
     if source.kind == AnalysisSourceKind.RECORDED:
-        return (
-            translator.Text_Get("status.recorded") + " · " + AlgorithmName_Display(resolver.RecordedNavigationSource_Get())
-        )
+        names = {"pure_ins": "Pure INS", "kf6": "KF_6", "eskf15": "ESKF_15", "sf6": "SF6"}
+        return translator.Text_Get("status.recorded") + " · " + AlgorithmName_Display(
+            names.get(source.recorded_solution_id, "N/A"))
     entry = resolver.store.SourceEntry_Get(source.source_id)
     if entry is None:
         return translator.Text_Get("status.recorded")

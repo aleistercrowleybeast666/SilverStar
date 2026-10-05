@@ -27,6 +27,7 @@ class GnssIntegrityPage(QWidget):
         self._theme = "light"
         self._dataset = None
         self._parameters = {}
+        self._source_available = True
         self._result = None
         self._vertical = None
         self._window_evidence = None
@@ -102,7 +103,20 @@ class GnssIntegrityPage(QWidget):
         self._origin = dataset.start_timestamp_us or dataset.diagnostics.first_timestamp_us or 0
         self._Rebuild()
 
+    def SourceUnavailable_Set(self):
+        self._parameters = {}
+        self._source_available = False
+        self._window_evidence = None
+        self._result = None
+        self._vertical = None
+        _Plot_Reset(self.plots)
+        self._speed_view.clear()
+        self.horizontal_note.setText(self._translator.Text_Get("state.selected_no_estimator"))
+        self.vertical_note.setText(self._translator.Text_Get("state.selected_no_estimator"))
+        self.status_label.clear()
+
     def Parameters_Set(self, parameters):
+        self._source_available = True
         self._parameters = dict(parameters or {})
         # Display evidence from old logs even when their firmware lacked the policy.
         self._parameters["gnss_integrity_enable"] = 1
@@ -136,7 +150,7 @@ class GnssIntegrityPage(QWidget):
         self._Status_Refresh()
 
     def _Rebuild(self):
-        if self._dataset is None:
+        if self._dataset is None or not self._source_available:
             return
         try:
             self._result = GnssIntegrityStream_Build(self._dataset, self._parameters)
