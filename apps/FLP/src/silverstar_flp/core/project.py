@@ -552,6 +552,14 @@ def ProjectResults_Load(document: ProjectDocument, context=None):
         verified_sources[entry.result_id] = RunRecovery_SourceCreate(entry,
             {"project_reference": None, "artifact_reference": document.result_artifact})
     store.IdentityState_Restore(document.run_identity_state)
-    document.recovery_sources.update(verified_sources)
+    from silverstar_flp.core.run_history import RunHistory_Validate
+    admitted_state = store.IdentityState_Get()
+    admitted_sources = {**document.recovery_sources, **verified_sources}
+    RunHistory_Validate(replace(document, run_identity_state=admitted_state,
+                                recovery_sources=admitted_sources))
+    # Publish all validated metadata together. Legacy artifacts may reserve
+    # indices not present in the original v3 document's optional state fields.
+    document.run_identity_state = admitted_state
+    document.recovery_sources = admitted_sources
     document.saved_result_ids = tuple(verified_sources)
     return store
