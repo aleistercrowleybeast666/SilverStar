@@ -20,6 +20,19 @@ static uint32_t s_frozen, s_masked_polls;
 static uint32_t s_context_corrupt_mode;
 static uint16_t s_mem_size;
 static int s_read;
+static uint32_t s_tick_phase[2], s_tick_pending[2], s_tick_serviced[2];
+static uint32_t s_tick_expired[2], s_tick_merged[2], s_tick_delayed;
+static uint32_t s_mask_since, s_mask_max, s_read_index, s_initial_size;
+static uint32_t s_last_rxne, s_stop_stuck, s_tail_model, s_strict_order;
+
+static void TickService(void)
+{
+    if (s_irq == 0U && s_tick_delayed == 0U)
+    {
+        for (unsigned i=0U;i<2U;i++)
+        { s_tick_serviced[i]+=s_tick_pending[i];s_tick_pending[i]=0U; }
+    }
+}
 
 static void Check(int condition, unsigned line)
 { if (!condition) { fprintf(stderr,"FAIL line=%u phase=%lu time_us=%lu err=%lu\n",
@@ -36,7 +49,17 @@ void SilverStarAssert_Check(uint8_t condition,SilverStarAssertModuleId module,
 
 static void Advance(void)
 {
+    for (unsigned i=0U;i<2U;i++)
+    {
+        if ((s_time_us+s_tick_phase[i])/1000U != (s_time_us+2U+s_tick_phase[i])/1000U)
+        {
+            s_tick_expired[i]++;
+            if (s_tick_pending[i] != 0U) { s_tick_merged[i]++; }
+            s_tick_pending[i]=1U;
+        }
+    }
     s_time_us += 2U;
+    TickService();
     if ((s_frozen == 0U) && ((s_dwt.CTRL & DWT_CTRL_CYCCNTENA_Msk) != 0U))
     { s_dwt.CYCCNT = s_seed_cycles + s_time_us * 64U; }
     if ((s_error_flag != 0U) && (s_phase == s_fault_phase))
@@ -47,14 +70,34 @@ static void Advance(void)
         if (s_context_corrupt_mode == 2U) { s_handle.BlockingMemoryOwner=0U; }
         if (s_context_corrupt_mode == 3U) { s_handle.Lock=HAL_UNLOCKED; }
     }
+    /* Model STOP completion on the wire after IRQs are released, rather
+       than declaring the HAL state to be evidence of bus completion. */
+    if (s_irq == 0U && s_stop_stuck == 0U &&
+        (s_registers.CR1 & I2C_CR1_STOP) != 0U)
+    { s_registers.CR1 &= ~I2C_CR1_STOP;s_registers.SR2=0U; }
 }
 DWT_Type *HostDwt_Get(void) { Advance(); return &s_dwt; }
 CoreDebug_Type *HostCoreDebug_Get(void) { return &s_debug; }
-void HostIrq_Disable(void) { CHECK(s_irq == 0U); s_irq = 1U; }
-void HostIrq_Enable(void) { CHECK(s_irq == 1U); s_irq = 0U; }
+void HostIrq_Disable(void)
+{
+    CHECK(s_irq == 0U);
+    if (s_tail_model != 0U && s_handle.XferSize == 3U)
+    {
+        s_tick_phase[0]=(940U+1000U-s_time_us%1000U)%1000U;
+        s_tick_phase[1]=(970U+1000U-s_time_us%1000U)%1000U;
+        s_tick_pending[0]=1U;s_tick_expired[0]++;s_tick_delayed=1U;
+    }
+    s_irq=1U;s_mask_since=s_time_us;Advance();
+}
+void HostIrq_Enable(void)
+{
+    CHECK(s_irq == 1U);Advance();
+    if (s_time_us-s_mask_since > s_mask_max) { s_mask_max=s_time_us-s_mask_since; }
+    s_irq=0U;s_tick_delayed=0U;TickService();
+}
 uint32_t HostIrq_MaskGet(void) { return s_irq; }
 uint32_t HostIrq_ExceptionGet(void) { return s_exception; }
-uint32_t HAL_GetTick(void) { Advance(); return s_time_us / 1000U; }
+uint32_t HAL_GetTick(void) { Advance();return s_tick_serviced[0]; }
 uint32_t HAL_RCC_GetHCLKFreq(void) { return 64000000U; }
 uint32_t HAL_RCC_GetPCLK1Freq(void) { return 32000000U; }
 uint32_t SystemCoreClock = 64000000U;
@@ -108,7 +151,8 @@ uint32_t HostI2c_FlagGet(I2C_HandleTypeDef *h,uint32_t flag)
         if (s_read && s_irq != 0U) { phase=DATA_BTF_MASKED;s_masked_polls++; }
         PhaseSet(phase);
     }
-    else if (flag == I2C_FLAG_RXNE) { phase=DATA_RXNE;PhaseSet(phase); }
+    else if (flag == I2C_FLAG_RXNE)
+    { phase=DATA_RXNE;PhaseSet(phase);s_last_rxne=s_read_index; }
     else { CHECK(0);return RESET; }
     if ((s_error_flag != 0U) && (phase == s_fault_phase))
     { s_registers.SR1 |= s_error_flag;return RESET; }
@@ -121,6 +165,20 @@ uint32_t HostI2c_FlagGet(I2C_HandleTypeDef *h,uint32_t flag)
     if (s_read && s_start_count == 2U && ((flag == I2C_FLAG_RXNE) || (flag == I2C_FLAG_BTF)))
     { s_registers.DR=0xAAU; }
     return SET;
+}
+uint8_t HostI2c_DataRead(I2C_HandleTypeDef *h)
+{
+    CHECK(h == &s_handle);Advance();
+    if (s_strict_order != 0U && s_initial_size > 2U)
+    {
+        if (h->XferSize == 3U)
+        { CHECK(s_irq == 1U);CHECK((s_registers.CR1 & (I2C_CR1_ACK|I2C_CR1_POS|I2C_CR1_STOP)) == 0U); }
+        if (h->XferSize == 2U)
+        { CHECK(s_irq == 1U);CHECK((s_registers.CR1 & I2C_CR1_STOP) != 0U); }
+        if (h->XferSize == 1U)
+        { CHECK(s_irq == 0U);CHECK(s_last_rxne == s_read_index); }
+    }
+    return (uint8_t)(0x80U+s_read_index++);
 }
 void HostI2c_AddressClear(I2C_HandleTypeDef *h)
 { CHECK(h == &s_handle);s_clear_count++;h->Instance->SR1 &= ~I2C_SR1_ADDR; }
@@ -135,32 +193,50 @@ static void Reset(int read)
     s_phase_since=0U;s_fault_phase=NONE;s_error_flag=0U;s_busy_delay_us=0U;
     s_data_delay_us=0U;s_start_count=0U;s_clear_count=0U;s_frozen=0U;
     s_masked_polls=0U;s_context_corrupt_mode=0U;s_read=read;s_mem_size=I2C_MEMADD_SIZE_16BIT;
+    memset(s_tick_phase,0,sizeof(s_tick_phase));memset(s_tick_pending,0,sizeof(s_tick_pending));
+    memset(s_tick_serviced,0,sizeof(s_tick_serviced));memset(s_tick_expired,0,sizeof(s_tick_expired));
+    memset(s_tick_merged,0,sizeof(s_tick_merged));s_tick_delayed=0U;s_mask_since=0U;s_mask_max=0U;
+    s_read_index=0U;s_initial_size=0U;s_last_rxne=UINT32_MAX;s_stop_stuck=0U;
+    s_tail_model=0U;s_strict_order=1U;
 }
 static HAL_StatusTypeDef Run(uint16_t size)
 {
     uint8_t guarded[66];HAL_StatusTypeDef result;
     CHECK(size <= 64U);memset(guarded,0x55,sizeof(guarded));
+    s_initial_size=size;s_read_index=0U;s_last_rxne=UINT32_MAX;
     if (s_read) { result=HAL_I2C_Mem_Read(&s_handle,0xD0U,0x1234U,
         s_mem_size,&guarded[1],size,2U); }
     else { result=HAL_I2C_Mem_Write(&s_handle,0xD0U,0x1234U,
         s_mem_size,&guarded[1],size,2U); }
-    printf("I2C_CASE read=%d size=%u fault_phase=%lu error_flag=%lu result=%u model_us=%lu irq=%lu\n",
+    printf("I2C_CASE read=%d size=%u fault_phase=%lu error_flag=%lu result=%u model_us=%lu irq=%lu mask_max_us=%lu merged=%lu/%lu\n",
         s_read,size,(unsigned long)s_fault_phase,(unsigned long)s_error_flag,
-        result,(unsigned long)s_time_us,(unsigned long)s_irq);fflush(stdout);
+        result,(unsigned long)s_time_us,(unsigned long)s_irq,(unsigned long)s_mask_max,
+        (unsigned long)s_tick_merged[0],(unsigned long)s_tick_merged[1]);fflush(stdout);
     CHECK(guarded[0] == 0x55U && guarded[size+1U] == 0x55U);
     if (result == HAL_OK && s_read)
-    { for (unsigned i=1U;i<=size;i++) { CHECK(guarded[i] == 0xAAU); } }
+    { for (unsigned i=1U;i<=size;i++) { CHECK(guarded[i] == (uint8_t)(0x7FU+i)); } }
     CHECK(s_irq == 0U && s_handle.Lock == HAL_UNLOCKED);
     CHECK(s_handle.State == HAL_I2C_STATE_READY && s_handle.Mode == HAL_I2C_MODE_NONE);
     CHECK(s_handle.MemoryDeadline.active == 0U);
     CHECK(s_handle.BlockingMemoryOwner == 0U);
-    CHECK((s_registers.CR1 & (I2C_CR1_ACK | I2C_CR1_POS)) == I2C_CR1_ACK);
+    if ((s_registers.CR1 & I2C_CR1_STOP) == 0U)
+    { CHECK((s_registers.CR1 & (I2C_CR1_ACK | I2C_CR1_POS)) == I2C_CR1_ACK); }
     return result;
 }
 int main(int argc,char **argv)
 {
     if (argc == 2)
     {
+        if (strcmp(argv[1],"--tick-tail") == 0)
+        {
+            Reset(1);s_fault_phase=DATA_BTF_MASKED;s_strict_order=0U;
+            s_tail_model=1U;
+            HAL_StatusTypeDef result=Run(3U);
+            CHECK(s_tick_merged[0] == 0U && s_tick_merged[1] == 0U);
+            CHECK(result == HAL_OK);CHECK(s_masked_polls == 0U);
+            puts("TICK_TAIL PASS; TIM6/SysTick single pending bits, pre-existing TIM6 pending, independent phase");
+            return 0;
+        }
         Reset(1);
         if (strcmp(argv[1],"--lost-active") == 0) { s_context_corrupt_mode=1U; }
         if (strcmp(argv[1],"--lost-owner") == 0) { s_context_corrupt_mode=2U; }
@@ -180,10 +256,11 @@ int main(int argc,char **argv)
         (void)PlatformI2cDeadline_Expired(&s_handle.MemoryDeadline);CHECK(0);
     }
     const uint32_t read_faults[]={BUSY,START1,ADDR1,MEM_HIGH,MEM_LOW,MEM_END,
-        START2,ADDR2,DATA_RXNE,DATA_BTF,DATA_BTF_MASKED};
+        START2,ADDR2,DATA_RXNE,DATA_BTF};
     const uint32_t write_faults[]={BUSY,START1,ADDR1,MEM_HIGH,MEM_LOW,DATA_TXE,DATA_BTF};
     const uint16_t sizes[]={1U,2U,3U,4U,6U,14U,24U};
     const uint32_t errors[]={I2C_SR1_AF,I2C_SR1_BERR,I2C_SR1_ARLO,I2C_SR1_OVR};
+    const uint32_t hal_errors[]={HAL_I2C_ERROR_AF,HAL_I2C_ERROR_BERR,HAL_I2C_ERROR_ARLO,HAL_I2C_ERROR_OVR};
     Reset(1);s_handle.State=HAL_I2C_STATE_RESET;
     s_handle.Init.ClockSpeed=350000U;s_handle.Init.DutyCycle=I2C_DUTYCYCLE_2;
     s_handle.Init.AddressingMode=I2C_ADDRESSINGMODE_7BIT;
@@ -207,6 +284,14 @@ int main(int argc,char **argv)
     { Reset(0);s_fault_phase=write_faults[i];CHECK(Run(1U) == HAL_TIMEOUT);CHECK(s_time_us <= 2000U); }
     for (unsigned i=0;i<sizeof(sizes)/sizeof(sizes[0]);i++)
     { Reset(1);CHECK(Run(sizes[i]) == HAL_OK);CHECK(s_start_count == 2U && s_clear_count == 2U); }
+    for (unsigned phase=0U;phase<1000U;phase++)
+    {
+        Reset(1);s_tick_phase[0]=phase;s_tick_phase[1]=(phase+317U)%1000U;
+        CHECK(Run(3U) == HAL_OK);CHECK(s_masked_polls == 0U);
+        CHECK(s_tick_merged[0] == 0U && s_tick_merged[1] == 0U);
+        CHECK(s_tick_expired[0] == s_tick_serviced[0]);
+        CHECK(s_tick_expired[1] == s_tick_serviced[1]);
+    }
     Reset(0);CHECK(Run(6U) == HAL_OK);CHECK(s_start_count == 1U);
     Reset(1);s_mem_size=I2C_MEMADD_SIZE_8BIT;CHECK(Run(14U) == HAL_OK);
     Reset(1);s_mem_size=I2C_MEMADD_SIZE_8BIT;CHECK(Run(24U) == HAL_OK);
@@ -217,7 +302,7 @@ int main(int argc,char **argv)
         CHECK((s_handle.ErrorCode & HAL_I2C_ERROR_TIMEOUT) == 0U);
         if (errors[i] == I2C_SR1_ARLO) { CHECK((s_registers.CR1 & I2C_CR1_STOP) == 0U); }
     }
-    const uint32_t nack_read_phases[]={MEM_HIGH,MEM_LOW,START2,ADDR2,DATA_RXNE,DATA_BTF_MASKED};
+    const uint32_t nack_read_phases[]={MEM_HIGH,MEM_LOW,START2,ADDR2,DATA_RXNE};
     for (unsigned i=0;i<sizeof(nack_read_phases)/sizeof(nack_read_phases[0]);i++)
     {
         Reset(1);s_fault_phase=nack_read_phases[i];s_error_flag=I2C_SR1_AF;
@@ -227,6 +312,17 @@ int main(int argc,char **argv)
     }
     Reset(0);s_fault_phase=DATA_TXE;s_error_flag=I2C_SR1_AF;
     CHECK(Run(1U) == HAL_ERROR);CHECK(s_handle.ErrorCode == HAL_I2C_ERROR_AF);
+    Reset(1);s_fault_phase=DATA_RXNE;CHECK(Run(3U) == HAL_TIMEOUT);
+    CHECK(s_read_index == 2U && s_masked_polls == 0U);
+    Reset(1);s_data_delay_us=900U;CHECK(Run(3U) == HAL_OK);
+    for (unsigned i=0U;i<sizeof(errors)/sizeof(errors[0]);i++)
+    {
+        Reset(1);s_fault_phase=DATA_RXNE;s_error_flag=errors[i];
+        CHECK(Run(3U) == HAL_ERROR);CHECK(s_read_index == 2U);
+        CHECK((s_handle.ErrorCode & hal_errors[i]) != 0U);CHECK(s_masked_polls == 0U);
+    }
+    Reset(1);s_stop_stuck=1U;CHECK(Run(3U) == HAL_TIMEOUT);
+    CHECK((s_registers.CR1 & I2C_CR1_STOP) != 0U);
     Reset(1);s_busy_delay_us=1000U;s_data_delay_us=900U;
     CHECK(Run(1U) == HAL_TIMEOUT);CHECK(s_time_us <= 2000U);
     Reset(0);s_busy_delay_us=800U;s_data_delay_us=1100U;

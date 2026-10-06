@@ -7,6 +7,7 @@
 DWT_Type *HostDwt_Get(void);
 CoreDebug_Type *HostCoreDebug_Get(void);
 uint32_t HostI2c_FlagGet(I2C_HandleTypeDef *handle, uint32_t flag);
+uint8_t HostI2c_DataRead(I2C_HandleTypeDef *handle);
 void HostI2c_AddressClear(I2C_HandleTypeDef *handle);
 void HostIrq_Disable(void);
 void HostIrq_Enable(void);

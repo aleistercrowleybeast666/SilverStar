@@ -2634,7 +2634,23 @@ static HAL_StatusTypeDef I2C_MemoryFinish(I2C_HandleTypeDef *hi2c,
     if ((hi2c->ErrorCode & HAL_I2C_ERROR_TIMEOUT) != 0U)
     { result = HAL_TIMEOUT; }
   }
-  MODIFY_REG(hi2c->Instance->CR1, I2C_CR1_ACK | I2C_CR1_POS, original_ack_pos);
+  /* AN2824 figures 1/2 restore ACK only after hardware clears STOP.
+     Observe completion outside PRIMASK, using the remaining transaction
+     budget even after an ordinary bus error. A stuck STOP is a failure;
+     releasing the HAL owner never proves bus or device recovery. */
+  while ((hi2c->Instance->CR1 & I2C_CR1_STOP) != 0U)
+  {
+    if (PlatformI2cDeadline_Expired(&hi2c->MemoryDeadline) != 0U)
+    {
+      hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT;
+      result = HAL_TIMEOUT;
+      break;
+    }
+  }
+  if ((hi2c->Instance->CR1 & I2C_CR1_STOP) == 0U)
+  { MODIFY_REG(hi2c->Instance->CR1, I2C_CR1_ACK | I2C_CR1_POS, original_ack_pos); }
+  if ((result == HAL_OK) && (I2C_MemoryPollCheck(hi2c) != HAL_OK))
+  { result = ((hi2c->ErrorCode & HAL_I2C_ERROR_TIMEOUT) != 0U) ? HAL_TIMEOUT : HAL_ERROR; }
   hi2c->PreviousState = I2C_STATE_NONE;
   hi2c->State = HAL_I2C_STATE_READY; /* HAL available; not controller/device READY. */
   hi2c->Mode = HAL_I2C_MODE_NONE;
@@ -2769,8 +2785,6 @@ static HAL_StatusTypeDef I2C_MemoryWriteTransaction(I2C_HandleTypeDef *hi2c, uin
   */
 static HAL_StatusTypeDef I2C_MemoryReadTransaction(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 {
-  __IO uint32_t count = 0U;
-
   /* Init tickstart for timeout management*/
   uint32_t tickstart = HAL_GetTick();
 
@@ -2898,8 +2912,7 @@ static HAL_StatusTypeDef I2C_MemoryReadTransaction(I2C_HandleTypeDef *hi2c, uint
             return HAL_ERROR;
           }
 
-          /* Disable all active IRQs around ADDR clearing and STOP programming because the EV6_3
-             software sequence must complete before the current byte end of transfer */
+          /* ES0340/ES0346 section 2.9.2: protect STOP / N-1 read. */
           __disable_irq();
 
           /* Generate Stop */
@@ -2940,8 +2953,10 @@ static HAL_StatusTypeDef I2C_MemoryReadTransaction(I2C_HandleTypeDef *hi2c, uint
           /* Disable Acknowledge */
           CLEAR_BIT(hi2c->Instance->CR1, I2C_CR1_ACK);
 
-          /* Disable all active IRQs around ADDR clearing and STOP programming because the EV6_3
-             software sequence must complete before the current byte end of transfer */
+          /* AN2824 rev 4, section 1.2.1: BTF holds N-2 in DR and N-1
+             in the shift register. ES0340/ES0346 section 2.9.2 workaround 2
+             requires one uninterrupted N-2 read / STOP / N-1 read sequence.
+             No peripheral or deadline wait belongs in this critical section. */
           __disable_irq();
 
           /* Read data from DR */
@@ -2953,29 +2968,6 @@ static HAL_StatusTypeDef I2C_MemoryReadTransaction(I2C_HandleTypeDef *hi2c, uint
           /* Update counter */
           hi2c->XferSize--;
           hi2c->XferCount--;
-
-          /* Wait until BTF flag is set */
-          count = I2C_TIMEOUT_FLAG * (SystemCoreClock / 25U / 1000U);
-          do
-          {
-            count--;
-            if ((count == 0U) || (I2C_MemoryPollCheck(hi2c) != HAL_OK))
-            {
-              hi2c->PreviousState       = I2C_STATE_NONE;
-              hi2c->State               = HAL_I2C_STATE_READY;
-              hi2c->Mode                = HAL_I2C_MODE_NONE;
-              if (count == 0U) { hi2c->ErrorCode |= HAL_I2C_ERROR_TIMEOUT; }
-
-              /* Re-enable IRQs */
-              __enable_irq();
-
-              /* Process Unlocked */
-              /* Outer wrapper retains lock through deadline cleanup. */
-
-              return HAL_ERROR;
-            }
-          }
-          while (__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_BTF) == RESET);
 
           /* Generate Stop */
           SET_BIT(hi2c->Instance->CR1, I2C_CR1_STOP);
@@ -2993,15 +2985,8 @@ static HAL_StatusTypeDef I2C_MemoryReadTransaction(I2C_HandleTypeDef *hi2c, uint
           /* Re-enable IRQs */
           __enable_irq();
 
-          /* Read data from DR */
-          *hi2c->pBuffPtr = (uint8_t)hi2c->Instance->DR;
-
-          /* Increment Buffer pointer */
-          hi2c->pBuffPtr++;
-
-          /* Update counter */
-          hi2c->XferSize--;
-          hi2c->XferCount--;
+          /* N remains in flight. The next loop iteration waits for RXNE
+             with IRQs enabled, under the original whole-transaction deadline. */
         }
       }
       else
@@ -3022,13 +3007,9 @@ static HAL_StatusTypeDef I2C_MemoryReadTransaction(I2C_HandleTypeDef *hi2c, uint
         hi2c->XferSize--;
         hi2c->XferCount--;
 
-        if (__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_BTF) == SET)
+        /* Leave the final three bytes for the protected AN2824 tail. */
+        if ((hi2c->XferSize > 3U) && (__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_BTF) == SET))
         {
-          if (hi2c->XferSize == 3U)
-          {
-            /* Disable Acknowledge */
-            CLEAR_BIT(hi2c->Instance->CR1, I2C_CR1_ACK);
-          }
           /* Read data from DR */
           *hi2c->pBuffPtr = (uint8_t)hi2c->Instance->DR;
 
