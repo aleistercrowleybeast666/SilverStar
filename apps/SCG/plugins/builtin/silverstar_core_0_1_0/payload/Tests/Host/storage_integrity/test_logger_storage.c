@@ -19,6 +19,8 @@
 #include "system_storage_if.h"
 #include "system_log_sink_if.h"
 #include "persistent_storage.h"
+#include "mission_radio_profile.h"
+#include "air_link_config.h"
 #include "system_calibration.h"
 #include "system_flight_recovery.h"
 #include "system_health.h"
@@ -635,16 +637,30 @@ static int Test_PersistentObjects(void)
             &generation) == PERSISTENT_STORAGE_OK);
         CHECK(length >= 8U);
         CHECK(memcmp(snapshot_readback, "SSMS", 4U) == 0);
+        #if defined(AIR_LINK_NRF24_CHANNEL)
+        CHECK(snapshot_readback[4] == 3U);
+#else
         CHECK(snapshot_readback[4] == 2U);
+#endif
         CHECK(snapshot_readback[5] == section);
         if (section == 0U)
         {
             /* Header fields after the fixed AIR PHY profile. */
             CHECK(length > 83U);
-            CHECK(snapshot_readback[82] ==
-                SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
-            CHECK(snapshot_readback[83] ==
-                SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
+            MissionRadioProfile profile;
+            CHECK(MissionRadioProfile_Read(snapshot_readback,length,&profile) == MissionRadioProfileResult_Ok);
+#if defined(AIR_LINK_NRF24_CHANNEL)
+            CHECK(profile.backend == MissionRadioBackend_Nrf24 && profile.schema == 3U);
+            CHECK(profile.length == 14U && profile.version == 1U);
+            CHECK(profile.bytes[0] == AIR_LINK_NRF24_CHANNEL && profile.bytes[11] == 32U);
+            CHECK(profile.bytes[12] == AIR_LINK_PACKET_MTU && profile.bytes[13] == 1U);
+            CHECK(snapshot_readback[85] == SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
+            CHECK(snapshot_readback[86] == SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
+#else
+            CHECK(profile.backend == MissionRadioBackend_Sx128x && profile.schema == 2U && profile.length == 15U);
+            CHECK(snapshot_readback[82] == SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
+            CHECK(snapshot_readback[83] == SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
+#endif
         }
     }
     CHECK(SystemMissionSnapshot_Create(&snapshot_status) ==

@@ -1195,7 +1195,7 @@ BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister
 # Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
 # variants supplement the historical V2 sets. No generic acceptance, source
 # coverage exclusion, callback exception or stack threshold is added.
-BINDING_REVIEW_REVISION = "logger_final_projection_20261006_v4"
+BINDING_REVIEW_REVISION = "nrf_ret6_pair_20261006_v5"
 BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
  'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
  'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
@@ -1289,9 +1289,42 @@ BINDING_SOURCE_LOGGER_V4 = {'APP/Src/logger_task.c': ['7ac58b7f478151bb4a90473e1
  'FlightLogic/FlightCycle/Src/silverstar_flight_recovery.c': ['be5ad9635c6a4177c79e260ba38d92806afa550b42ee203813f574a755e6bb22'],
  'System/Inc/system_flight_recovery.h': ['b156136c608a092b2c1edb8ec54e48f64cb072f003f069036b99ebe1bb989d76']}
 
+# Exact reviewed RET6 NRF pair inputs from official CubeMX F1 V1.8.7.
+# NRF driver/profile bytes match reviewed 193ba4c; Logger projection/ownership
+# and the MPU epoch contracts remain. No callback or coverage exception and no
+# threshold change. See docs/FCCG/NRF24_RET6_INTEGRATION.md.
+BINDING_SOURCE_NRF_V5 = {'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c': ['99dd7da212143d9118e235f2118bb42fd1e9325cc90d46e470e468db745076d4'],
+ 'Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h': ['6d7a653a77cb596a1fd7cf7aad895fa7b487e9c5f92eeeadbb1b906ebbd880f6'],
+ 'Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c': ['f61c6e6341e054ac4d871b332532f0590b46dc24e63a63da8ed601e3e9cdc3e0'],
+ 'Devices/Telemetry/NRF24L01P/Adapter/Inc/nrf24_instance.h': ['9caa5b94044846c78ba7335188b2fa21f2fd15aa60271b92939b5336378b2baa'],
+ 'Devices/Telemetry/NRF24L01P/Adapter/Src/nrf24_telemetry_adapter.c': ['155b03cb3e0d30b3924b30594414ba5caee8c7535d08fb08724e5fd17eaef07a'],
+ 'Devices/Telemetry/NRF24L01P/Inc/nrf24_device.h': ['2365543f78d5c3ee3b44d5fba4033002907a14a091b910088ede99138f94b659'],
+ 'Devices/Telemetry/NRF24L01P/Inc/nrf24_fragment.h': ['37c563acb24aada9e463dd3bedb2fe24346f5cc775b71b134974fa167cfd6791'],
+ 'Devices/Telemetry/NRF24L01P/Src/nrf24_device.c': ['b79ab031047134b4d1b2ec8c3fabdbdcc12639633a74276b8481a7837e68a6b2'],
+ 'Devices/Telemetry/NRF24L01P/Src/nrf24_fragment.c': ['0069bf6676749bf58b84bb10f771b8b3ec1a31cb9e29adc41d996b6bff6a6cd8'],
+ 'Generated/Inc/air_link_config.h': ['ff4d4603751facbfa4ed15867461d3248febe21cf823343628e05ac3902b5f9c'],
+ 'Generated/Inc/project_device_instances.h': ['664d7220314f3c472e52fb636c094f2285c72f43499998fe9900914ea11c14c8'],
+ 'Generated/Inc/project_resources.h': ['f22690d9df61e355acea7165adcddf6ef536c3b388221a478e2ff3a6cb38962c'],
+ 'Generated/Inc/project_storage_binding.h': ['8f64ef48f0cf7dd6a4482ec41e1059ef8f21be5b631caf51cbedb14f1ff882b3'],
+ 'Generated/Src/platform_resources.c': ['45ec326dea074fa81add09c63faf618771fd32a8a27f8158580a5d3677b0f84b'],
+ 'Generated/Src/project_device_instances.c': ['34732aeb0b8ad57062cc7d4e3c3da529e2a7a1f617626993ef308b0aadde11c3'],
+ 'Generated/Src/project_log_decoder_profile.c': ['7c009bf90a89987fba8cb1a26fb79e84b7408a23618e3ccc02eab9a1f18e6dc5'],
+ 'Generated/Src/project_metadata.c': ['133e2cc92ebac7a03fc3809fb548fad8be35f7ab40291358af8eb18f37745e4d'],
+ 'Generated/Src/project_resources.c': ['8872f6f6763935fa05e44d6f32e68b62733125a97a724143a74b2d47a0a18053'],
+ 'HardwareGenerated/STM32CubeMX/Core/Inc/stm32f1xx_it.h': ['943d173dc5df64bd0b72f9306e52a5cfb5b293f066fac6d6f2d3c2882671c000'],
+ 'HardwareGenerated/STM32CubeMX/Core/Src/gpio.c': ['09c52690c726fb243141e00ca64e7827de7aa51b32ce152c5d62f0fb504e1ea3'],
+ 'HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_it.c': ['86af185cead8f077b6455e89a1a747828c25268067d14b49d9445acefbebba6d']}
+
+BINDING_DEPENDENCIES_NRF_V5 = {'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c': ['eabdd31418e98a05b2dd16db9cc0a6fba73458bc4bc08583abd00faa747e6c96'],
+ 'Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c': ['4717236750a353bd3265adfccb52f07d4353027e58c46c1f9554868754beeb50'],
+ 'Devices/Telemetry/NRF24L01P/Adapter/Src/nrf24_telemetry_adapter.c': ['0acda6af79d1195e4c8f7bbc91a76952a41a004ceb719653810ccb99bb5b82db'],
+ 'Devices/Telemetry/NRF24L01P/Src/nrf24_device.c': ['82da67daad9a3fccacb59a3cb0bd15432afcc50f59672330c30082071a0d9a0a'],
+ 'Devices/Telemetry/NRF24L01P/Src/nrf24_fragment.c': ['8112748e472b0e6c42b63ea7080bea49118632d7d611bc2ab063d4ad9c11df27'],
+ 'Generated/Src/project_device_instances.c': ['3adac9864ceeeb0e33b82eb000949db35aa2d101e612c43c26161006919d3b71']}
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
-            BINDING_SOURCE_LOGGER_V4.get(path, []))
+            BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []))
 
 
 def BindingSourceHash_Get(text):
@@ -1313,7 +1346,8 @@ def BindingSources_Verify(root, sources, build):
         # GCC -MMD output: first continued rule, followed by -MP phony rules.
         dependencies = dependency.read_text(encoding="utf-8").split(":", 1)[1].replace("\\\n", " ").split("\n", 1)[0].split()
         expected_graph = (BINDING_DEPENDENCIES_V2.get(path, []) +
-                          BINDING_DEPENDENCIES_EPOCH_V3.get(path, []))
+                          BINDING_DEPENDENCIES_EPOCH_V3.get(path, []) +
+                          BINDING_DEPENDENCIES_NRF_V5.get(path, []))
         graph_hash = hashlib.sha256("\n".join(dependencies).encode()).hexdigest()
         if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)

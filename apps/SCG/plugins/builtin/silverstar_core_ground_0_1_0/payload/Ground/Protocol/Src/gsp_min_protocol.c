@@ -281,3 +281,17 @@ uint16_t GspMin_BuildAirRxFrame(int8_t rssi_dbm,
 
     return GspMin_BuildFrame(GSP_TYPE_AIR_RX, payload, payload_len, out_buf, out_size);
 }
+
+uint16_t GspMin_BuildNrf24AirRxFrame(const uint8_t *air_frame,
+    uint8_t air_len, uint8_t *out_buf, uint16_t out_size)
+{
+    uint8_t payload[GSP_MIN_MAX_PAYLOAD_LEN];
+    if ((air_frame == NULL) || (air_len == 0U) ||
+        (air_len > GSP_MIN_MAX_PAYLOAD_LEN - 3U)) { return 0U; }
+    payload[0] = GSP_RADIO_BACKEND_NRF24L01P;
+    payload[1] = GSP_RADIO_METRICS_UNSUPPORTED;
+    payload[2] = air_len;
+    (void)memcpy(&payload[3], air_frame, air_len);
+    return GspMin_BuildFrame(GSP_TYPE_AIR_RX_RADIO_V1, payload,
+        (uint8_t)(air_len + 3U), out_buf, out_size);
+}

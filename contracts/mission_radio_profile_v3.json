@@ -1,0 +1,81 @@
+{
+  "schema": "silverstar.ssms.radio-profile.v3",
+  "ssms_schema": 3,
+  "scope": "NRF snapshots only; historical SX SSMS schema2 and all its bytes remain supported and unchanged",
+  "location": {
+    "section": 0,
+    "offset": 66
+  },
+  "header": [
+    [
+      "backend",
+      "u8",
+      1
+    ],
+    [
+      "version",
+      "u8",
+      1
+    ],
+    [
+      "length",
+      "u16le",
+      14
+    ]
+  ],
+  "payload": [
+    [
+      "channel",
+      "u8",
+      "0..125"
+    ],
+    [
+      "rate",
+      "u8",
+      "0=250kbps,1=1Mbps,2=2Mbps"
+    ],
+    [
+      "power_dbm",
+      "i8",
+      "-18,-12,-6,0"
+    ],
+    [
+      "address",
+      "bytes5",
+      "not all zero or all FF"
+    ],
+    [
+      "ard",
+      "u8",
+      "1..15; (ARD+1)*250us"
+    ],
+    [
+      "arc",
+      "u8",
+      "0..15"
+    ],
+    [
+      "crc",
+      "u8",
+      2
+    ],
+    [
+      "physical_mtu",
+      "u8",
+      32
+    ],
+    [
+      "logical_mtu",
+      "u8",
+      "50..61"
+    ],
+    [
+      "fragment_version",
+      "u8",
+      1
+    ]
+  ],
+  "validation": "PersistentStorage_ObjectRead must accept the outer CRC32/generation/length first. MissionRadioProfile_Read validates header/tag/version/length/ranges into a private candidate and publishes only once on success. This parser alone does not validate the other sections or their hashes.",
+  "integrity": "Unmodified bounded PersistentStorage atomic slot/bank mechanism; outer CRC32 over object header prefix and payload; section FNV hashes remain in section0.",
+  "legacy": "Reader schema2 returns the exact historical 15-byte SX profile without reinterpretation. Unknown schema/backend/version are explicit errors. No fallback LoRa defaults."
+}

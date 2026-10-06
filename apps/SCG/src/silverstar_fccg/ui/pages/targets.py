@@ -8,7 +8,7 @@ from PySide6.QtGui import QPalette
 from silverstar_fccg.ui.widgets import CollapsibleSection, StandardCheckBox, StandardComboBox
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QHBoxLayout, QLabel,
-    QPushButton, QSpinBox,
+    QPushButton, QSpinBox, QLineEdit,
 )
 
 from silverstar_fccg.core.i18n import Translator
@@ -58,6 +58,8 @@ class AirLinkPage(ScrollableLocalizedPage):
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, "page.telemetry_configuration", "page.telemetry_configuration.description")
         form = QFormLayout()
+        self._air_form = form
+        self._nrf24_parameters = None
         self.fields: dict[str, object] = {}
         self._radio_choices: dict[str, tuple[tuple[str, str], ...]] = {}
         self._radio_technologies: set[str] = set()
@@ -158,6 +160,23 @@ class AirLinkPage(ScrollableLocalizedPage):
             lambda checked: self.configurationChanged.emit("crc_enabled", checked)
         )
         form.addRow(crc_label, self.crc)
+        self.nrf24_fields = {}
+        for name, key in (("data_rate_kbps", "field.nrf24_rate"), ("address", "field.nrf24_address"),
+                          ("retry_delay_us", "field.nrf24_delay"), ("retry_count", "field.nrf24_retries")):
+            label = QLabel()
+            self.Text_Register(label, key)
+            widget = QLineEdit() if name == "address" else QComboBox()
+            if isinstance(widget, QComboBox):
+                options = {"data_rate_kbps": (250, 1000, 2000), "retry_delay_us": range(500, 4001, 250), "retry_count": range(16)}[name]
+                for value in options:
+                    widget.addItem(str(value), value)
+                widget.currentIndexChanged.connect(lambda _index, field=name, combo=widget: self._Nrf24_Change(field, combo.currentData()))
+            else:
+                widget.setMaxLength(10)
+                widget.editingFinished.connect(lambda field=name, line=widget: self._Nrf24_Change(field, line.text()))
+            form.addRow(label, widget)
+            form.setRowVisible(widget, False)
+            self.nrf24_fields[name] = widget
         self.air_link_group = CollapsibleSection(translator.Text_Get("group.air_link"))
         self.air_link_group.BodyLayout_Set(form)
         self.root_layout.addWidget(self.air_link_group)
@@ -191,6 +210,18 @@ class AirLinkPage(ScrollableLocalizedPage):
         return tuple((titles.get(identity, identity), identity) for identity in sorted(values))
 
     def Configuration_Set(self, link, issues) -> None:
+        nrf24 = link.radio_family == "nrf24"
+        self._nrf24_parameters = dict(link.nrf24) if link.nrf24 else None
+        for name in ("spreading_factor", "bandwidth_hz", "coding_rate", "preamble_symbols", "header_mode", "iq_mode"):
+            self._air_form.setRowVisible(self.fields[name], not nrf24)
+        for name, widget in self.nrf24_fields.items():
+            self._air_form.setRowVisible(widget, nrf24)
+            with QSignalBlocker(widget):
+                value = (link.nrf24 or {}).get(name)
+                if isinstance(widget, QComboBox):
+                    widget.setCurrentIndex(widget.findData(value))
+                else:
+                    widget.setText(value or "")
         for name, widget in self.fields.items():
             widget.blockSignals(True)
             if isinstance(widget, QDoubleSpinBox):
@@ -222,6 +253,18 @@ class AirLinkPage(ScrollableLocalizedPage):
             "\n".join(f"{issue.code}: {issue.message}" for issue in issues)
             if issues else self._translator.Text_Get("status.air_link_ready")
         )
+
+    def _Nrf24_Change(self, field, value):
+        if self._nrf24_parameters is None:
+            return
+        parameters = {**self._nrf24_parameters, field: value}
+        from silverstar_fccg.project.nrf24 import Nrf24Parameters_Validate
+        try:
+            Nrf24Parameters_Validate(parameters)
+        except ValueError as error:
+            self.status.setText(str(error))
+            return
+        self.configurationChanged.emit("nrf24", parameters)
 
     def EndpointPowers_Set(self, flight_power: int, ground_power: int, ground_enabled: bool) -> None:
         self.flight_tx_power.CommittedValue_Set(flight_power)

@@ -788,9 +788,9 @@ class MainWindow(QMainWindow):
                 display.device_availability,
                 {manifest.component_id: manifest.radio.modules
                  for manifest in self._service.catalog.Type_Get("device")
-                 if manifest.component_id == RADIO_PLUGIN and manifest.radio is not None},
+                 if manifest.radio is not None},
                 {instance.instance_id: FlightRadioConfiguration_Get(display.model, instance)
-                 for instance in display.model.device_instances if instance.plugin == RADIO_PLUGIN},
+                 for instance in display.model.device_instances if instance.plugin in {RADIO_PLUGIN, "silverstar.device.telemetry.nrf24l01p"}},
             )
             self.flight_configuration_page.Configuration_Set(
                 display.selectable_components,
@@ -1263,7 +1263,7 @@ class MainWindow(QMainWindow):
         self._ProjectConfiguration_Change(change)
 
     def _FlightRadioSelection_Change(self, identity: str, plugin: str, module: str) -> None:
-        if not plugin or plugin != RADIO_PLUGIN:
+        if not plugin or plugin not in {RADIO_PLUGIN, "silverstar.device.telemetry.nrf24l01p"}:
             self._DeviceInstance_Change(identity, plugin)
             return
         manifest = self._service.catalog.Component_Get(plugin)
@@ -1814,7 +1814,7 @@ class MainWindow(QMainWindow):
         except ValueError:
             flight_manifest = None
         flight_module_id, flight_power = (FlightRadioConfiguration_Get(model, flight_instance)
-                                        if flight_instance is not None and flight_instance.plugin == RADIO_PLUGIN
+                                        if flight_instance is not None and flight_instance.plugin in {RADIO_PLUGIN, "silverstar.device.telemetry.nrf24l01p"}
                                         else ("", model.flight_tx_power_dbm))
         flight_module = (flight_manifest.radio.modules.get(flight_module_id)
                          if flight_manifest is not None and flight_manifest.radio is not None else None)
@@ -1858,6 +1858,15 @@ class MainWindow(QMainWindow):
         self.ground_target_page.Platform_Set(platform)
 
     def _AirLink_Change(self, field: str, value: object) -> None:
+        if field == "radio_family" and value == "nrf24":
+            self._ProjectConfiguration_Change(lambda candidate: setattr(candidate, "air_link",
+                replace(candidate.air_link, radio_family="nrf24", radio_technology="esb", phy_mode="esb",
+                    nrf24={"data_rate_kbps": 1000, "address": "E7E7E7E701", "retry_delay_us": 1000, "retry_count": 3})))
+            return
+        if field == "radio_family" and value == "sx128x":
+            self._ProjectConfiguration_Change(lambda candidate: setattr(candidate, "air_link",
+                replace(candidate.air_link, radio_family="sx128x", radio_technology="lora", phy_mode="lora", nrf24=None)))
+            return
         self._ProjectConfiguration_Change(
             lambda candidate: setattr(
                 candidate, "air_link", replace(candidate.air_link, **{field: value})

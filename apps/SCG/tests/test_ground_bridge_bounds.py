@@ -29,6 +29,7 @@ static uint32_t s_pc_write_calls;
 static uint8_t s_invalid_packets = 1U;
 static PcByteStreamWriteResult s_write_result = PC_BYTE_STREAM_WRITE_OK;
 
+uint8_t GroundRadio_MetricsSupportedGet(void) { return 1U; }
 GroundRadioResult GroundRadio_Init(void) { return GROUND_RADIO_OK; }
 void GroundRadio_Process(void) { }
 GroundRadioResult GroundRadio_TxEnqueue(const uint8_t *data, uint8_t length)

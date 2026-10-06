@@ -55,7 +55,7 @@ class TargetGenerationResult:
 def _PayloadFiles_Add(files: dict[str, bytes], manifest, *, skip_adapter: bool = False) -> None:
     for source in manifest.PayloadFiles_Get():
         relative = source.relative_to(manifest.payload_root).as_posix()
-        if skip_adapter and relative.startswith("Devices/Telemetry/SX1281/Adapter/"):
+        if skip_adapter and relative.startswith("Devices/Telemetry/") and "/Adapter/" in relative:
             continue
         content = source.read_bytes()
         previous = files.setdefault(relative, content)
@@ -412,6 +412,17 @@ def GroundFiles_Render(
     mcu = catalog.Component_Get(ground.mcu)
     files: dict[str, bytes] = {}
     _PayloadFiles_Add(files, core)
+    nrf24 = model.air_link.radio_family == "nrf24"
+    backend_adapters = core.metadata.get("ground_radio_backends", {})
+    if set(backend_adapters) != {"sx128x", "nrf24"}:
+        raise ValueError("Ground core must declare both supported backend adapters")
+    for path in backend_adapters.values():
+        if not isinstance(path, str) or not path.startswith("Ground/Radio/Src/") or ".." in path.split("/") or path not in files:
+            raise ValueError("Ground backend adapter must be an owned declared payload")
+    radio_adapter = backend_adapters[model.air_link.radio_family]
+    for backend, path in backend_adapters.items():
+        if backend != model.air_link.radio_family:
+            files.pop(path)
     _PayloadFiles_Add(files, radio, skip_adapter=True)
     family = catalog.Component_Get(ground_model.mcu_family)
     platform_api = catalog.Component_Get("silverstar.platform.api")
@@ -474,7 +485,8 @@ def GroundFiles_Render(
     sources = tuple(dict.fromkeys([
         *(source for source in base_graph.sources
           if not source.startswith(("Generated/", "FATFS/", "Middlewares/Third_Party/FatFs/"))
-          and "/Adapter/" not in source),
+          and "/Adapter/" not in source and (not nrf24 or source != backend_adapters["sx128x"])),
+        *([radio_adapter] if nrf24 else []),
         "Common/Src/silverstar_assert.c", "Generated/Src/project_resources.c",
         "Generated/Src/platform_resources.c", "Generated/Src/pc_byte_stream.c",
         main_path,
@@ -543,6 +555,10 @@ def GroundFiles_Render(
         "pc_interface": ground.pc_interface,
         "hardware_fingerprint": hardware_fingerprint,
     }
+    if nrf24:
+        metadata["phy"] = {"mode": "esb", **model.air_link.nrf24,
+            "physical_mtu": 32, "logical_mtu": model.air_link.packet_mtu,
+            "fragment_version": 1, "metrics_supported": False}
     files["Generated/ground_target_metadata.json"] = (
         json.dumps(metadata, indent=2, ensure_ascii=False) + "\n"
     ).encode("utf-8")

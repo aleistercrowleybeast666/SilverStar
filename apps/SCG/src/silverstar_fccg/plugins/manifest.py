@@ -171,6 +171,9 @@ class RadioContribution:
     maximum_tx_power_dbm: int
     datasheet_capabilities: dict[str, Any]
     modules: dict[str, dict[str, Any]]
+    data_rates_kbps: tuple[int, ...] = ()
+    logical_mtu: int = 0
+    fragmentation: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -2935,20 +2938,30 @@ def PluginManifest_Parse(
             "coding_rates", "maximum_payload", "maximum_tx_power_dbm",
             "datasheet_capabilities", "modules",
         }
+        nrf24 = isinstance(radio_data, dict) and radio_data.get("family") == "nrf24"
+        if nrf24:
+            expected_radio -= {"bandwidths_hz", "spreading_factors", "coding_rates"}
+            expected_radio |= {"data_rates_kbps", "logical_mtu", "fragmentation"}
         if component_type != "device" or not isinstance(radio_data, dict) or set(radio_data) != expected_radio:
             raise PluginManifestError("radio metadata requires a Device and complete fields")
         for field_name in ("technology", "family"):
             if not isinstance(radio_data[field_name], str) or not PLUGIN_ID_PATTERN.fullmatch(radio_data[field_name]):
                 raise PluginManifestError(f"radio.{field_name} is invalid")
-        for field_name in ("phy_modes", "coding_rates"):
+        for field_name in (("phy_modes",) if nrf24 else ("phy_modes", "coding_rates")):
             if not isinstance(radio_data[field_name], list) or not radio_data[field_name] or any(not isinstance(item, str) or not item for item in radio_data[field_name]):
                 raise PluginManifestError(f"radio.{field_name} is invalid")
         for field_name in ("frequency_min_hz", "frequency_max_hz", "maximum_payload", "maximum_tx_power_dbm"):
             if type(radio_data[field_name]) is not int:
                 raise PluginManifestError(f"radio.{field_name} must be integer")
-        for field_name in ("bandwidths_hz", "spreading_factors"):
+        for field_name in (() if nrf24 else ("bandwidths_hz", "spreading_factors")):
             if not isinstance(radio_data[field_name], list) or not radio_data[field_name] or any(type(item) is not int or item <= 0 for item in radio_data[field_name]):
                 raise PluginManifestError(f"radio.{field_name} is invalid")
+        if nrf24 and (radio_data["technology"] != "esb" or radio_data["phy_modes"] != ["esb"]
+                or radio_data["data_rates_kbps"] != [250, 1000, 2000]
+                or type(radio_data["logical_mtu"]) is not int or radio_data["logical_mtu"] != 61
+                or radio_data["maximum_payload"] != 32
+                or radio_data["fragmentation"] != "nrf24.fragment.v1"):
+            raise PluginManifestError("NRF24 requires the bounded v1 fragment transport contract")
         if (radio_data["frequency_min_hz"] <= 0 or radio_data["frequency_max_hz"] < radio_data["frequency_min_hz"] or radio_data["maximum_payload"] <= 0):
             raise PluginManifestError("radio frequency range or payload is invalid")
         datasheet = radio_data["datasheet_capabilities"]
@@ -3019,13 +3032,16 @@ def PluginManifest_Parse(
             phy_modes=tuple(radio_data["phy_modes"]),
             frequency_min_hz=radio_data["frequency_min_hz"],
             frequency_max_hz=radio_data["frequency_max_hz"],
-            bandwidths_hz=tuple(radio_data["bandwidths_hz"]),
-            spreading_factors=tuple(radio_data["spreading_factors"]),
-            coding_rates=tuple(radio_data["coding_rates"]),
+            bandwidths_hz=tuple(radio_data.get("bandwidths_hz", ())),
+            spreading_factors=tuple(radio_data.get("spreading_factors", ())),
+            coding_rates=tuple(radio_data.get("coding_rates", ())),
             maximum_payload=radio_data["maximum_payload"],
             maximum_tx_power_dbm=radio_data["maximum_tx_power_dbm"],
             datasheet_capabilities=dict(datasheet),
             modules=dict(modules),
+            data_rates_kbps=tuple(radio_data.get("data_rates_kbps", ())),
+            logical_mtu=radio_data.get("logical_mtu", 0),
+            fragmentation=radio_data.get("fragmentation", ""),
         )
 
     if (component_type == "board") != (board is not None):

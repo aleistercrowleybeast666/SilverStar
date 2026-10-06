@@ -13,10 +13,15 @@ def GroundRadioConfig_Render(ground) -> str:
         raise ValueError("Ground requires 1–4 distinct radio instances")
     if ground.active_radio_instance not in identities:
         raise ValueError("Ground initial active radio is not configured")
-    if any(radio.plugin != "silverstar.device.telemetry.sx1281" for radio in radios):
-        raise ValueError("Ground runtime requires the existing SX1281 driver")
-    for radio in radios:
-        RadioVariant_Get(radio.module_variant, radio.tx_power_dbm)
+    nrf24 = radios[0].plugin == "silverstar.device.telemetry.nrf24l01p"
+    if nrf24:
+        if len(radios) != 1 or radios[0].module_variant != "nrf24l01p" or type(radios[0].tx_power_dbm) is not int or radios[0].tx_power_dbm not in (-18, -12, -6, 0):
+            raise ValueError("Ground NRF24 requires one paired module and documented power")
+    else:
+        if any(radio.plugin != "silverstar.device.telemetry.sx1281" for radio in radios):
+            raise ValueError("Ground runtime requires a supported homogeneous radio family")
+        for radio in radios:
+            RadioVariant_Get(radio.module_variant, radio.tx_power_dbm)
     pulse = getattr(ground, "activity_led_pulse_ms", 40)
     if isinstance(pulse, bool) or not isinstance(pulse, int) or not 1 <= pulse <= 200:
         raise ValueError("Ground activity LED pulse must be 1–200 ms")
@@ -47,6 +52,7 @@ def GroundRadioConfig_Render(ground) -> str:
     if values[0][0] == values[1][0] != 96 and values[0][1] != values[1][1]:
         raise ValueError("Shared TX/RX LED requires the same active polarity")
     owner = identities.index(ground.active_radio_instance)
+    backend = '#define GROUND_RADIO_BACKEND_NRF24 1U\n' if nrf24 else ''
     return f"""#ifndef __GROUND_RADIO_CONFIG_H
 #define __GROUND_RADIO_CONFIG_H
 #include "platform_gpio.h"
@@ -60,13 +66,15 @@ def GroundRadioConfig_Render(ground) -> str:
 #define GROUND_ACTIVITY_TX_ACTIVE_HIGH {values[0][1]}U
 #define GROUND_ACTIVITY_RX_ACTIVE_HIGH {values[1][1]}U
 #define GROUND_ACTIVITY_PULSE_MS {pulse}U
-#endif /* __GROUND_RADIO_CONFIG_H */
+{backend}#endif /* __GROUND_RADIO_CONFIG_H */
 """
 
 
 def GroundRadioAirHeader_Render(ground, legacy_header: str) -> str:
     GroundRadioConfig_Render(ground)  # Validate values before inserting C tokens.
     radios = GroundRadioConfigurations_Get(ground)
+    if radios[0].plugin == "silverstar.device.telemetry.nrf24l01p":
+        return legacy_header
     variant_macros = RadioInstanceMacros_Render([(radio.module_variant, radio.tx_power_dbm) for radio in radios])
     legacy_header = legacy_header.replace("#endif /* __AIR_LINK_CONFIG_H */",
         variant_macros + "#endif /* __AIR_LINK_CONFIG_H */")

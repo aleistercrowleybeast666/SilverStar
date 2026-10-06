@@ -8,6 +8,12 @@
 #include "system_lifecycle.h"
 #include "system_mission_snapshot_if.h"
 
+/* SX snapshots retain schema2; the approved NRF typed profile uses schema3
+ * for every SSMS section. Each build checks one exact expected version. */
+#ifndef TEST_MISSION_SCHEMA
+#define TEST_MISSION_SCHEMA 2U
+#endif
+
 static unsigned s_case;
 static uint32_t s_writes;
 static uint8_t s_written[512];
@@ -88,6 +94,8 @@ int main(int argc, char **argv)
 {
     SystemMissionSnapshotResult result;
     unsigned i;
+    const uint8_t expected_header[8] =
+        {'S', 'S', 'M', 'S', TEST_MISSION_SCHEMA, 7U, 1U, 0U};
     if (argc != 2) { return 2; }
     s_case = (unsigned)strtoul(argv[1], NULL, 10);
     result = SystemMissionSnapshot_FinalStatusWrite(0x123456789ABCDEF0ULL,
@@ -97,7 +105,7 @@ int main(int argc, char **argv)
     if (result != ((s_case == 7U) ? SystemMissionSnapshotResult_StorageError :
         SystemMissionSnapshotResult_Ok) || s_writes != 1U || s_length != 48U)
     { return 4; }
-    if (memcmp(s_written, "SSMS\002\007\001\000", 8) != 0 ||
+    if (memcmp(s_written, expected_header, sizeof(expected_header)) != 0 ||
         Read32(8) != 0x12345678U || Read32(12) != 0x9ABCDEF0U ||
         Read32(16) != 0x12345678U || s_written[20] != SYSTEM_STATE_LANDED ||
         s_written[21] != (s_case != 2U) ||

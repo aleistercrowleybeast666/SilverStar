@@ -20,6 +20,42 @@ def Command_Run(command: list[str], root: Path) -> str:
     return result.stdout
 
 
+def ResourceIndex_Get(root: Path, expression: str, kind: str) -> int:
+    """Resolve only generated enum names or exact typed unsigned constants."""
+    type_name = {'spi': 'PlatformSpiId', 'gpio': 'PlatformGpioId', 'time': 'PlatformTimeId'}[kind]
+    header = (root / f'Platform/Inc/platform_{kind}.h').read_text(encoding='utf-8')
+    declaration = re.search(r'typedef\s+enum\s*\{([^{}]+)\}\s*' + type_name + r'\s*;', header)
+    if declaration is None:
+        raise ValueError('Resource enum declaration missing: ' + kind)
+    values = {}; value = -1
+    for entry in declaration[1].split(','):
+        match = re.fullmatch(r'\s*(\w+)\s*(?:=\s*(\d+)U?)?\s*', entry)
+        if match is None:
+            raise ValueError('Unsupported resource enum declaration: ' + kind)
+        value = int(match[2]) if match[2] is not None else value + 1
+        values[match[1]] = value
+    expression = expression.strip()
+    typed = re.fullmatch(r'\(\(\s*' + type_name + r'\s*\)\s*(\d+)U\s*\)', expression)
+    if expression in values and expression != 'PLATFORM_' + kind.upper() + '_COUNT':
+        index = values[expression]
+    elif typed is not None:
+        index = int(typed[1])
+    else:
+        raise ValueError('Unsupported resource binding expression: ' + expression)
+    if not 0 <= index < values['PLATFORM_' + kind.upper() + '_COUNT']:
+        raise ValueError('Resource binding outside enum capacity: ' + expression)
+    platform = (root / 'Generated/Src/platform_resources.c').read_text(encoding='utf-8')
+    table_name = {'spi': 's_spi_handles', 'gpio': 's_gpio_resources', 'time': 's_time_resources'}[kind]
+    table = re.search(r'\b' + table_name + r'\s*\[[^\]]+\]\s*=\s*\{(.*?)\n\};', platform, re.S)
+    if table is None:
+        raise ValueError('Generated resource table missing: ' + kind)
+    selectors = re.findall(r'\[\s*(\w+)\s*\]\s*=', table[1])
+    configured = {int(token[:-1]) if re.fullmatch(r'\d+U', token) else values.get(token, -1) for token in selectors}
+    if index not in configured:
+        raise ValueError('Resource binding has no configured platform row: ' + expression)
+    return index
+
+
 def Architecture_Check(root: Path) -> dict:
     graph = json.loads((root / 'Generated/ground_source_graph.json').read_text(encoding='utf-8'))
     make = (root / 'Makefile').read_text(encoding='utf-8').replace('\\\n', ' ')
@@ -54,6 +90,43 @@ def Architecture_Check(root: Path) -> dict:
     metadata = json.loads((root / 'Generated/ground_target_metadata.json').read_text(encoding='utf-8'))
     if metadata['target_role'] != 'ground_station':
         raise ValueError('wrong target role')
+    family = metadata.get('radio_family')
+    adapters = {'sx128x': 'Ground/Radio/Src/ground_radio_sx1281.c',
+                'nrf24': 'Ground/Radio/Src/ground_radio_nrf24.c'}
+    if family not in adapters or adapters[family] not in graph['sources']:
+        raise ValueError('selected backend adapter missing')
+    for other, path in adapters.items():
+        if other != family and (path in graph['sources'] or (root / path).exists()):
+            raise ValueError('unselected backend adapter present')
+    air = (root / 'Generated/Inc/air_link_config.h').read_text(encoding='utf-8')
+    resource = (root / 'Generated/Inc/project_resources.h').read_text(encoding='utf-8')
+    if family == 'nrf24':
+        required = ('Devices/Telemetry/NRF24L01P/Src/nrf24_device.c',
+                    'Devices/Telemetry/NRF24L01P/Src/nrf24_fragment.c')
+        if any(path not in graph['sources'] for path in required):
+            raise ValueError('NRF backend implementation missing')
+        if any('/SX128' in path for path in graph['sources']):
+            raise ValueError('SX implementation in NRF graph')
+        if 'AIR_LINK_NRF24_CHANNEL' not in air or 'AIR_LINK_SX128' in air:
+            raise ValueError('NRF backend header mismatch')
+        for macro in ('PROJECT_NRF24_INSTANCE_COUNT', 'PROJECT_NRF24_INSTANCE_COUNT_MAX'):
+            if not re.search(r'#define\s+' + macro + r'\s+1U\b', resource):
+                raise ValueError('NRF instance bound mismatch')
+        if any(' ' + field + ';' not in resource for field in ('spi', 'csn', 'ce', 'time')):
+            raise ValueError('NRF resource binding missing')
+        bindings = (root / 'Generated/Src/project_resources.c').read_text(encoding='utf-8')
+        rows = re.findall(r'\{\s*\.spi\s*=\s*([^,{}]+)\s*,\s*\.csn\s*=\s*([^,{}]+)\s*,\s*\.ce\s*=\s*([^,{}]+)\s*,\s*\.time\s*=\s*([^,{}]+)\s*\}', bindings)
+        if len(rows) != 1:
+            raise ValueError('NRF resource ownership collision or missing row')
+        indices = [ResourceIndex_Get(root, expression, kind) for expression, kind in zip(rows[0], ('spi', 'gpio', 'gpio', 'time'))]
+        if indices[1] == indices[2]:
+            raise ValueError('NRF resource ownership collision or missing row')
+        ground_header = (root / 'Generated/Inc/ground_radio_config.h').read_text(encoding='utf-8')
+        if not re.search(r'#define\s+GROUND_RADIO_BACKEND_NRF24\s+1U\b', ground_header):
+            raise ValueError('NRF metric capability dispatch missing')
+    else:
+        if 'AIR_LINK_NRF24' in air or any('/NRF24' in path for path in graph['sources']):
+            raise ValueError('NRF implementation in SX graph')
     print(f'PASS Ground declared source graph ({len(sources)} sources), ownership and startup')
     print('Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN')
     return graph
@@ -64,7 +137,7 @@ def Host_Check(root: Path, compiler: str) -> None:
     build = root / 'build/ground-host'
     build.mkdir(parents=True, exist_ok=True)
     tests = root / 'Tests/Host'
-    includes = [build, root / 'Ground/Core/Inc', root / 'Ground/Protocol/Inc', root / 'Common/Inc']
+    includes = [build, root / 'Ground/Core/Inc', root / 'Ground/Protocol/Inc', root / 'Common/Inc', root / 'Generated/Inc', root / 'Platform/Inc']
     common = [compiler, '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wvla',
               *['-I' + str(path) for path in includes]]
     bridge = [str(root / path) for path in (

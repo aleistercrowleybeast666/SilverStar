@@ -15,16 +15,19 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     output = project / "build/FCCG/Host/Tests/StorageIntegrity"
     output.mkdir(parents=True, exist_ok=True)
     fatfs = project / "Middlewares/Third_Party/FatFs/src"
-    diskio = project / "FATFS/Target/sd_diskio.c"
-    f1_diskio = project / "Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.c"
-    if f1_diskio.is_file():
-        diskio = f1_diskio
+    graph = (project / "Generated/project_sources.mk").read_text(encoding="utf-8")
+    diskio_paths = re.findall(r"^\s+(\S*FATFS/Target/sd_diskio\.c|Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight\.c)\s*\\?\s*$", graph, re.MULTILINE)
+    if len(diskio_paths) != 1:
+        raise ValueError("storage fixture requires one authoritative diskio source")
+    diskio = (project / diskio_paths[0]).resolve()
+    if not diskio.is_relative_to(project.resolve()) or not diskio.is_file():
+        raise ValueError("declared diskio source is missing or escaped")
     # Copy byte-for-byte so quoted local vendor includes use the Host facade.
     (output / "sd_diskio.c").write_bytes(diskio.read_bytes())
-    config_path = project / "FATFS/Target/ffconf.h"
-    imported_config = project / "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h"
-    if f1_diskio.is_file() and imported_config.is_file():
-        config_path = imported_config
+    f1_diskio = project / "Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.c"
+    config_path = diskio.parent / "ffconf.h"
+    if diskio == f1_diskio.resolve():
+        config_path = project / "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h"
     configuration = config_path.read_text(encoding="utf-8")
     for header in ("main.h", "stm32f4xx_hal.h", "stm32f1xx_hal.h", "bsp_driver_sd.h"):
         configuration = configuration.replace(f'#include "{header}"', "")
@@ -78,6 +81,7 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
         "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c",
         "Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.c",
         "Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c",
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c",
         "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c",
         "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c")]
     if sf6_compact:

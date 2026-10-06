@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ground_bridge.h"
 #include "ground_radio.h"
+#include "ground_radio_config.h"
 #include "gsp_min_protocol.h"
 #include "pc_byte_stream.h"
 
@@ -12,6 +13,14 @@ static uint32_t s_pc_write_calls;
 static uint8_t s_invalid_packets = 1U;
 static PcByteStreamWriteResult s_write_result = PC_BYTE_STREAM_WRITE_OK;
 
+uint8_t GroundRadio_MetricsSupportedGet(void)
+{
+#if defined(GROUND_RADIO_BACKEND_NRF24)
+    return 0U;
+#else
+    return 1U;
+#endif
+}
 GroundRadioResult GroundRadio_Init(void) { return GROUND_RADIO_OK; }
 void GroundRadio_Process(void) { }
 GroundRadioResult GroundRadio_TxEnqueue(const uint8_t *data, uint8_t length)
@@ -33,7 +42,16 @@ PcByteStreamInitResult PcByteStream_Init(void)
 uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
 { (void)buffer; (void)capacity; return 0U; }
 PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data, uint16_t length)
-{ assert(data != 0 && length != 0U); s_pc_write_calls++; return s_write_result; }
+{ assert(data != 0 && length != 0U); s_pc_write_calls++;
+#if defined(GROUND_RADIO_BACKEND_NRF24)
+  if (data[2] == GSP_TYPE_AIR_RX_RADIO_V1)
+  { assert(data[3] == 4U && data[4] == 1U && data[5] == 0U && data[6] == 1U && data[7] == 0xAAU); }
+  else { assert(data[2] != GSP_TYPE_AIR_RX); }
+#else
+  if (data[2] == GSP_TYPE_AIR_RX) { assert(data[4] == (uint8_t)-70 && data[5] == 16U); }
+  else { assert(data[2] != GSP_TYPE_AIR_RX_RADIO_V1); }
+#endif
+  return s_write_result; }
 uint32_t PcByteStream_OverflowCount_Get(void) { return 0U; }
 
 int main(void)

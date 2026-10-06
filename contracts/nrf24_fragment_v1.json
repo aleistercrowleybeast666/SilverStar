@@ -1,0 +1,81 @@
+{
+  "name": "SilverStar NRF24 fragment envelope",
+  "version": 1,
+  "scope": "one configured Flight/Ground NRF24L01+ pair",
+  "physical_payload_max": 32,
+  "logical_payload_max": 61,
+  "fragment_data_max": 22,
+  "fragments_max": 3,
+  "byte_order": "little",
+  "header": [
+    {
+      "offset": 0,
+      "name": "magic",
+      "type": "u8",
+      "value": 214
+    },
+    {
+      "offset": 1,
+      "name": "version",
+      "type": "u8",
+      "value": 1
+    },
+    {
+      "offset": 2,
+      "name": "session",
+      "type": "u16"
+    },
+    {
+      "offset": 4,
+      "name": "sequence",
+      "type": "u16"
+    },
+    {
+      "offset": 6,
+      "name": "logical_length",
+      "type": "u8",
+      "range": [
+        1,
+        61
+      ]
+    },
+    {
+      "offset": 7,
+      "name": "fragment_index",
+      "type": "u8",
+      "range": [
+        0,
+        2
+      ]
+    },
+    {
+      "offset": 8,
+      "name": "logical_crc",
+      "type": "u16"
+    }
+  ],
+  "crc": {
+    "name": "CRC-16/CCITT-FALSE",
+    "polynomial": 4129,
+    "initial": 65535,
+    "input": "complete original logical datagram, without envelope"
+  },
+  "hardware_crc": "Nordic 16-bit CRC protects each physical packet address/control/payload",
+  "offset": "fragment_index * 22",
+  "packet_length": "10 + min(22, logical_length - offset)",
+  "duplicate_history_timeout_ms": 250,
+  "ordering": "out-of-order fragments allowed; interleaving replacement requires fragment zero",
+  "sequence_wrap": "sender increments volatile session when u16 sequence wraps; no identity rollover",
+  "restart": "local recovery flushes hardware FIFOs, drops pending TX and incomplete RX; peer duplicate history expires",
+  "publication": "complete length and metadata agree, every fragment present and logical CRC verified",
+  "receipt": "all physical fragments completed TX_DS; not proof of logical peer consumption or business ACK",
+  "security": "no authentication; CRC collisions and complete stale datagram replay across history expiry are NOT PROVEN",
+  "cross_restart_partial_isolation": "NOT PROVEN: volatile session1 repeats. Complete CRC can collide for old/new/mixed frames. FIFO order and bounded prompt owner service are assumptions; no successful isolation claim follows from CRC16 or 250ms history alone.",
+  "application": "AIR M0 bytes unchanged; no automatic replay of business commands",
+  "assembly_expiry": {
+    "inactivity_ms": 250,
+    "total_ms": 750,
+    "refresh": "Only a previously absent valid fragment refreshes inactivity; duplicates never extend either deadline.",
+    "clock": "uint32 millisecond subtraction; caller services within half the counter range."
+  }
+}

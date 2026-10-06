@@ -62,6 +62,8 @@ static GroundRadioResult GroundRadio_ColdStart(void)
     return GroundRadio_StartFrom(GROUND_RADIO_INITIAL_INSTANCE);
 }
 
+uint8_t GroundRadio_MetricsSupportedGet(void) { return 1U; }
+
 GroundRadioResult GroundRadio_Init(void)
 {
     s_active = GROUND_RADIO_INITIAL_INSTANCE;

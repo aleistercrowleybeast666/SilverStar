@@ -21,6 +21,13 @@ def RadioLinkCompatible_Get(link, radio: RadioContribution) -> bool:
 
 
 def _AirLinkProfileIssues_Get(link) -> list[AirLinkIssue]:
+    if link.radio_family == "nrf24":
+        from silverstar_fccg.project.nrf24 import Nrf24Link_Validate
+        try:
+            Nrf24Link_Validate(link)
+        except ValueError as error:
+            return [AirLinkIssue("AIR_LINK_PHY_INCOMPATIBLE", str(error))]
+        return []
     if link.radio_family != "sx128x":
         return []
     if (
@@ -55,6 +62,12 @@ def _Radio_Get(
 
 def _PhyIssues_Get(link, radio: RadioContribution, endpoint: str) -> list[AirLinkIssue]:
     issues = []
+    if radio.family == "nrf24":
+        parameters = getattr(link, "nrf24", None)
+        if (link.phy_mode not in radio.phy_modes or not isinstance(parameters, dict)
+                or parameters.get("data_rate_kbps") not in radio.data_rates_kbps):
+            issues.append(AirLinkIssue("AIR_LINK_PHY_INCOMPATIBLE", f"{endpoint} NRF24 PHY is incompatible"))
+        return issues
     if (
         link.phy_mode not in radio.phy_modes
         or link.bandwidth_hz not in radio.bandwidths_hz
@@ -85,9 +98,10 @@ def RadioCandidateIssues_Get(
         issues.append(AirLinkIssue("AIR_LINK_FREQUENCY_OUT_OF_RANGE",
                                    f"{endpoint} frequency is outside the qualified module range"))
     issues.extend(_PhyIssues_Get(link, radio, endpoint))
-    if link.packet_mtu > radio.maximum_payload:
+    logical_mtu = radio.logical_mtu or radio.maximum_payload
+    if link.packet_mtu > logical_mtu:
         issues.append(AirLinkIssue("AIR_LINK_MTU_TOO_SMALL",
-                                   f"{endpoint} maximum payload is {radio.maximum_payload}"))
+                                   f"{endpoint} logical MTU is {logical_mtu}, physical payload is {radio.maximum_payload}"))
     return tuple(issues)
 
 
@@ -95,6 +109,17 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
     """Validate one shared AIR snapshot against both physical radio endpoints."""
     link = model.air_link
     issues = _AirLinkProfileIssues_Get(link)
+    if link.radio_family == "nrf24":
+        from silverstar_fccg.project.nrf24 import NRF24_PLUGIN
+        from silverstar_fccg.project.model import GroundRadioConfigurations_Get
+        telemetry = [instance for instance in model.device_instances
+                     if "device.telemetry" in catalog.Component_Get(instance.plugin).provides]
+        if len(telemetry) != 1 or telemetry[0].plugin != NRF24_PLUGIN:
+            issues.append(AirLinkIssue("NRF24_ONE_PAIR_REQUIRED", "NRF24 supports exactly one Flight radio and no mixed-family failover"))
+        if model.ground_target.enabled:
+            ground_radios = GroundRadioConfigurations_Get(model.ground_target)
+            if len(ground_radios) != 1 or ground_radios[0].plugin != NRF24_PLUGIN:
+                issues.append(AirLinkIssue("NRF24_ONE_PAIR_REQUIRED", "NRF24 requires exactly one matching Ground radio"))
     flight_instance = model.DeviceInstance_Get(link.flight_radio_instance)
     flight, flight_error = _Radio_Get(
         catalog, flight_instance.plugin if flight_instance else "", "Flight"
@@ -117,7 +142,7 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
         issues.extend(RadioCandidateIssues_Get(link, radio, module_id, endpoint))
     if flight is not None and flight.radio is not None:
         for instance in model.device_instances:
-            if instance.plugin != RADIO_PLUGIN:
+            if instance.plugin != flight.component_id:
                 continue
             module_id, power = FlightRadioConfiguration_Get(model, instance)
             module = flight.radio.modules.get(module_id)
@@ -149,7 +174,7 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
         ))
     # GSP AIR_RX has three wrapper bytes; the GS reference has a 64-byte payload.
     usable_mtu = min(
-        (radio.maximum_payload for _endpoint, radio in radios), default=0
+        (radio.logical_mtu or radio.maximum_payload for _endpoint, radio in radios), default=0
     )
     if model.ground_target.enabled:
         usable_mtu = min(usable_mtu, 61)

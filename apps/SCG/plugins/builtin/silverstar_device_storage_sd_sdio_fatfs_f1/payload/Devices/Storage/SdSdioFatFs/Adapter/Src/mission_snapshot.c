@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "air_link_config.h"
+#include "project_storage_binding.h"
 #include "alignment_strategy_types.h"
 #include "persistent_storage.h"
 #include "project_device_instances.h"
@@ -20,7 +20,7 @@
 #include "system_storage_if.h"
 #include "system_user_config.h"
 
-#define MISSION_SNAPSHOT_SCHEMA 2U
+#define MISSION_SNAPSHOT_SCHEMA MISSION_RADIO_SNAPSHOT_SCHEMA
 #define MISSION_SNAPSHOT_DEVICE_CHUNK_COUNT 16U
 #define MISSION_SNAPSHOT_PARAMETER_CHUNK_COUNT 48U
 #define MISSION_SNAPSHOT_OBJECT_COUNT 6U
@@ -328,13 +328,13 @@ static SystemMissionSnapshotResult MissionSnapshot_CalibrationWrite(
 
 static void MissionSnapshot_AirProfileWrite(MissionSnapshotWriter *writer)
 {
-    MissionSnapshot_U32Write(writer, AIR_LINK_FREQUENCY_HZ);
-    MissionSnapshot_U8Write(writer, AIR_LINK_SPREADING_FACTOR);
-    MissionSnapshot_U32Write(writer, AIR_LINK_BANDWIDTH_HZ);
-    MissionSnapshot_U8Write(writer, AIR_LINK_CODING_RATE_DENOMINATOR);
-    MissionSnapshot_U16Write(writer, AIR_LINK_PREAMBLE_SYMBOLS);
-    MissionSnapshot_U16Write(writer, AIR_LINK_PACKET_MTU);
-    MissionSnapshot_U8Write(writer, (uint8_t)AIR_LINK_TX_POWER_DBM);
+    static const uint8_t profile[MISSION_RADIO_PROFILE_BYTE_COUNT] =
+        MISSION_RADIO_PROFILE_BYTES;
+    uint8_t index;
+    /* Generator serializes the selected backend. SX schema2 remains byte-exact.
+     * No unused LoRa fields are manufactured for an NRF profile. */
+    for (index = 0U; index < MISSION_RADIO_PROFILE_BYTE_COUNT; index++)
+    { MissionSnapshot_U8Write(writer, profile[index]); }
 }
 
 static void MissionSnapshot_AlignmentWrite(MissionSnapshotWriter *writer)

@@ -23,6 +23,7 @@ typedef struct
     uint32_t rx_dropped;
 } GroundRadioStats;
 
+uint8_t GroundRadio_MetricsSupportedGet(void);
 GroundRadioResult GroundRadio_Init(void);
 void GroundRadio_Process(void);
 /* Runtime index only; this adds no GSP wire field. */

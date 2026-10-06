@@ -256,9 +256,10 @@ static GroundBridgeResult GroundBridge_RadioInputProcess(void)
             { s_bridge_crc_error_count++; }
             continue;
         }
-        output_length = GspMin_BuildAirRxFrame(
-            rssi_dbm, (int8_t)(snr_db * 4), air_bytes, air_length,
-            output, sizeof(output));
+        if (GroundRadio_MetricsSupportedGet() == 0U)
+        { output_length = GspMin_BuildNrf24AirRxFrame(air_bytes, air_length, output, sizeof(output)); }
+        else
+        { output_length = GspMin_BuildAirRxFrame(rssi_dbm, (int8_t)(snr_db * 4), air_bytes, air_length, output, sizeof(output)); }
         if (GroundBridge_FrameWrite(output, output_length) != GROUND_BRIDGE_OK)
         {
             bridge_result = GROUND_BRIDGE_PC_ERROR;

@@ -14,8 +14,13 @@ typedef enum
     GSP_TYPE_GS_STATUS = 0x01U,
     GSP_TYPE_AIR_RX    = 0x02U,
     GSP_TYPE_AIR_TX    = 0x03U,
-    GSP_TYPE_ACK       = 0x04U
+    GSP_TYPE_ACK       = 0x04U,
+    /* Version is part of this type. Payload: backend, flags, length, AIR. */
+    GSP_TYPE_AIR_RX_RADIO_V1 = 0x05U
 } GspMinType;
+
+#define GSP_RADIO_BACKEND_NRF24L01P 1U
+#define GSP_RADIO_METRICS_UNSUPPORTED 0U
 
 typedef enum
 {
@@ -107,5 +112,8 @@ uint16_t GspMin_BuildAirRxFrame(int8_t rssi_dbm,
                                 uint8_t air_len,
                                 uint8_t *out_buf,
                                 uint16_t out_size);
+
+uint16_t GspMin_BuildNrf24AirRxFrame(const uint8_t *air_frame,
+    uint8_t air_len, uint8_t *out_buf, uint16_t out_size);
 
 #endif

@@ -233,6 +233,8 @@ class AirLinkConfiguration:
     iq_mode: str = "normal"
     packet_mtu: int = 61
     flight_radio_instance: str = "telemetry0"
+    # Optional family-specific parameters; legacy LoRa snapshots remain readable.
+    nrf24: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -488,7 +490,8 @@ class ProjectModel:
                 "risk_acknowledged": self.hardware.risk_acknowledged,
                 "assignment_fingerprint": self.hardware.assignment_fingerprint,
             },
-            "air_link": asdict(self.air_link),
+            "air_link": {key: value for key, value in asdict(self.air_link).items()
+                         if key != "nrf24" or value is not None},
             "flight_tx_power_dbm": self.flight_tx_power_dbm,
             "ground_target": {
                 "enabled": self.ground_target.enabled,
@@ -1663,8 +1666,8 @@ def _Build_Parse(value: Any) -> BuildOptions:
 
 def _AirLink_Parse(value: Any) -> AirLinkConfiguration:
     data = _Object_Require(value, "air_link")
-    expected = set(AirLinkConfiguration.__dataclass_fields__)
-    if set(data) != expected:
+    expected = set(AirLinkConfiguration.__dataclass_fields__) - {"nrf24"}
+    if not expected.issubset(data) or set(data) - expected - {"nrf24"}:
         raise ProjectModelError("air_link has missing or unknown fields")
     for key in (
         "protocol_profile", "radio_technology", "radio_family", "phy_mode",
@@ -1679,6 +1682,12 @@ def _AirLink_Parse(value: Any) -> AirLinkConfiguration:
         raise ProjectModelError("air_link.crc_enabled must be boolean")
     if data["flight_radio_instance"] and not DEVICE_INSTANCE_ID_PATTERN.fullmatch(data["flight_radio_instance"]):
         raise ProjectModelError("air_link.flight_radio_instance is invalid")
+    if "nrf24" in data:
+        from silverstar_fccg.project.nrf24 import Nrf24Parameters_Validate
+        try:
+            Nrf24Parameters_Validate(data["nrf24"])
+        except ValueError as error:
+            raise ProjectModelError(str(error)) from error
     return AirLinkConfiguration(**data)
 
 

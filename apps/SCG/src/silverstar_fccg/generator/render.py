@@ -345,7 +345,32 @@ def GeneratedFiles_Render(
     }
 
 
+def MissionRadioProfileMacros_Render(model: ProjectModel) -> str:
+    import struct
+    from silverstar_fccg.project.radio_variants import FlightRadioConfiguration_Get
+    active = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
+    power = FlightRadioConfiguration_Get(model, active)[1] if active is not None else model.flight_tx_power_dbm
+    link = model.air_link
+    if link.radio_family == "nrf24":
+        from silverstar_fccg.project.nrf24 import Nrf24Link_Validate
+        config = Nrf24Link_Validate(link)
+        profile = bytes([1, 1, 14, 0, (link.frequency_hz - 2400000000) // 1000000,
+            {250: 0, 1000: 1, 2000: 2}[config["data_rate_kbps"]], power & 255]) + bytes.fromhex(config["address"]) + bytes([
+            config["retry_delay_us"] // 250 - 1, config["retry_count"], 2, 32, link.packet_mtu, 1])
+        schema = 3
+    else:
+        # Historical little-endian SX schema2 profile, exactly15 bytes.
+        profile = struct.pack("<IBIBHHb", link.frequency_hz, link.spreading_factor,
+            link.bandwidth_hz, int(link.coding_rate[-1]), link.preamble_symbols, link.packet_mtu, power)
+        schema = 2
+    values = ",".join(f"0x{value:02X}U" for value in profile)
+    return f"#define MISSION_RADIO_SNAPSHOT_SCHEMA {schema}U\n#define MISSION_RADIO_PROFILE_BYTE_COUNT {len(profile)}U\n#define MISSION_RADIO_PROFILE_BYTES {{{values}}}\n"
+
+
 def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
+    if model.air_link.radio_family == "nrf24":
+        from silverstar_fccg.project.nrf24 import Nrf24Header_Render
+        return Nrf24Header_Render(model, target)
     from silverstar_fccg.project.radio_variants import (
         RADIO_PLUGIN, FlightRadioConfiguration_Get, RadioInstanceMacros_Render,
     )
@@ -1307,6 +1332,7 @@ def _StorageBindingHeader_Render(
 #define PROJECT_STORAGE_FATFS_PATH   {path_symbol}
 #define PROJECT_STORAGE_FATFS_DRIVER {driver_symbol}
 
+{MissionRadioProfileMacros_Render(model)}
 #endif /* __PROJECT_STORAGE_BINDING_H */
 """
 
