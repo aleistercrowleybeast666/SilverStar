@@ -5,6 +5,7 @@
 
 #include "debug_log.h"
 #include "silverstar_assert.h"
+#include "silverstar_build_mode.h"
 #include "system_barometer_if.h"
 #if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U)
 #include "system_console.h"
@@ -254,17 +255,12 @@ static void SystemStartup_JyLogicalStart(void)
         device->init_result = SystemImu_Init();
         SystemStartup_InfoCapture(device, SystemImu_NameGet(),
                                   SystemImu_InfoGet(&info), &info);
-        if (SystemStartup_DeviceResultIsSuccessful(device->init_result) != 0U)
+        /* Compact start intent retains the real, possibly failed Init result. */
+        if ((SystemStartup_DeviceResultIsSuccessful(device->init_result) != 0U) ||
+            (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U))
         {
             device->start_result = SystemImu_Start();
         }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-        else
-        {
-            /* Start intent for a prepared recoverable context, retaining failed Init. */
-            device->start_result = SystemImu_Start();
-        }
-#endif
     }
 
     device = &s_startup_report.devices[

@@ -5,6 +5,7 @@
 #include "platform_critical.h"
 #include "platform_time.h"
 #include "silverstar_assert.h"
+#include "silverstar_build_mode.h"
 #include <limits.h>
 #include <stddef.h>
 #include <string.h>
@@ -12,7 +13,6 @@
 static SensorImuAdapter s_contexts[PROJECT_MPU6050_INSTANCE_COUNT];
 _Static_assert(PROJECT_MPU6050_INSTANCE_COUNT <= 4U, "IMU context bound exceeded");
 
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
 /* DeviceTask is the sole retry owner. No retry reconstructs driver/selector. */
 typedef struct
 {
@@ -116,19 +116,18 @@ static SystemDeviceResult Mpu6050Recovery_Process(uint8_t instance)
     }
     return result;
 }
-#endif
 
 SystemDeviceResult Mpu6050ImuInstance_RecoveryPreparedGet(uint8_t instance, uint8_t *prepared)
 {
     if ((instance >= PROJECT_MPU6050_INSTANCE_COUNT) || (prepared == NULL))
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     *prepared = 0U;
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    *prepared = s_recovery[instance].prepared;
-    return SYSTEM_DEVICE_OK;
-#else
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        *prepared = s_recovery[instance].prepared;
+        return SYSTEM_DEVICE_OK;
+    }
     return SYSTEM_DEVICE_UNSUPPORTED;
-#endif
 }
 
 const char * Mpu6050ImuInstance_NameGet(uint8_t instance)
@@ -142,45 +141,46 @@ SystemDeviceResult Mpu6050ImuInstance_Init(uint8_t instance)
     SystemDeviceResult result;
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectMpu6050Resources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    if (s_recovery[instance].prepared != 0U) { return SYSTEM_DEVICE_BUSY; }
-    result = SensorImuAdapter_PrepareI2c(&s_contexts[instance], Mpu6050_ProfileGet(),
-        resources.i2c, resources.i2c, 0x68U, instance);
-    if (result != SYSTEM_DEVICE_OK) { return result; }
-    if (SensorImu_AxisMapSet(&s_contexts[instance].driver, resources.axis_map, 0U) != SENSOR_IMU_OK)
-    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    s_recovery[instance].prepared = 1U;
-    return Mpu6050Recovery_Begin(instance);
-#else
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        if (s_recovery[instance].prepared != 0U) { return SYSTEM_DEVICE_BUSY; }
+        result = SensorImuAdapter_PrepareI2c(&s_contexts[instance], Mpu6050_ProfileGet(),
+            resources.i2c, resources.i2c, 0x68U, instance);
+        if (result != SYSTEM_DEVICE_OK) { return result; }
+        if (SensorImu_AxisMapSet(&s_contexts[instance].driver, resources.axis_map, 0U) != SENSOR_IMU_OK)
+        { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+        s_recovery[instance].prepared = 1U;
+        return Mpu6050Recovery_Begin(instance);
+    }
     result = SensorImuAdapter_Init(&s_contexts[instance], Mpu6050_ProfileGet(),
         resources.i2c, 0x68U, instance);
     if (result != SYSTEM_DEVICE_OK) { return result; }
     return SensorImuAdapter_MountSet(&s_contexts[instance], resources.axis_map);
-#endif
 }
 
 SystemDeviceResult Mpu6050ImuInstance_Start(uint8_t instance)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    if (s_recovery[instance].prepared == 0U) { return SYSTEM_DEVICE_NOT_READY; }
-    s_recovery[instance].start_intent = 1U;
-    s_contexts[instance].started = 1U;
-    if (s_contexts[instance].driver.state == SENSOR_IMU_STOPPED)
-    { return Mpu6050Recovery_Begin(instance); }
-    return (s_contexts[instance].health.initialized != 0U) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_CONFIG_DELEGATED;
-#else
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        if (s_recovery[instance].prepared == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+        s_recovery[instance].start_intent = 1U;
+        s_contexts[instance].started = 1U;
+        if (s_contexts[instance].driver.state == SENSOR_IMU_STOPPED)
+        { return Mpu6050Recovery_Begin(instance); }
+        return (s_contexts[instance].health.initialized != 0U) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_CONFIG_DELEGATED;
+    }
     return SensorImuAdapter_Start(&s_contexts[instance]);
-#endif
 }
 
 SystemDeviceResult Mpu6050ImuInstance_Stop(uint8_t instance)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    s_recovery[instance].start_intent = 0U;
-    Mpu6050Recovery_Revoke(instance);
-#endif
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        s_recovery[instance].start_intent = 0U;
+        Mpu6050Recovery_Revoke(instance);
+    }
     return SensorImuAdapter_Stop(&s_contexts[instance]);
 }
 
@@ -194,11 +194,11 @@ SystemDeviceResult Mpu6050ImuInstance_RuntimeOwnerActivate(uint8_t instance)
 SystemDeviceResult Mpu6050ImuInstance_Process(uint8_t instance)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    return Mpu6050Recovery_Process(instance);
-#else
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        return Mpu6050Recovery_Process(instance);
+    }
     return SensorImuAdapter_Process(&s_contexts[instance]);
-#endif
 }
 
 SystemDeviceResult Mpu6050ImuInstance_InfoGet(uint8_t instance, SystemDeviceInfo *info)
@@ -224,20 +224,20 @@ SystemDeviceResult Mpu6050ImuInstance_CapabilitiesGet(uint8_t instance, uint32_t
 SystemDeviceResult Mpu6050ImuInstance_HealthGet(uint8_t instance, SystemDeviceHealth *health)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    SystemDeviceResult result = SensorImuAdapter_HealthGet(&s_contexts[instance], health);
-    if (result != SYSTEM_DEVICE_OK) { return result; }
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
     {
-        PlatformCriticalState lock = PlatformCritical_Enter();
-        /* Physical recovery is not calibration/alignment/mission qualification.
-         * This prototype has deliberately no automatic qualification-clear path. */
-        if (s_recovery[instance].qualification_revoked != 0U) { health->healthy = 0U; }
-        PlatformCritical_Exit(lock);
+        SystemDeviceResult result = SensorImuAdapter_HealthGet(&s_contexts[instance], health);
+        if (result != SYSTEM_DEVICE_OK) { return result; }
+        {
+            PlatformCriticalState lock = PlatformCritical_Enter();
+            /* Physical recovery is not calibration/alignment/mission qualification.
+             * This prototype has deliberately no automatic qualification-clear path. */
+            if (s_recovery[instance].qualification_revoked != 0U) { health->healthy = 0U; }
+            PlatformCritical_Exit(lock);
+        }
+        return SYSTEM_DEVICE_OK;
     }
-    return SYSTEM_DEVICE_OK;
-#else
     return SensorImuAdapter_HealthGet(&s_contexts[instance], health);
-#endif
 }
 
 SystemDeviceResult Mpu6050ImuInstance_IoDiagnosticsGet(uint8_t instance, SystemDeviceIoDiagnostics *diagnostics)
@@ -259,38 +259,41 @@ SystemDeviceResult Mpu6050ImuInstance_IoDetailGet(uint8_t instance, SystemImuIoD
     detail->valid_frame_count = s_contexts[instance].driver.sample_count;
     detail->config_generation = s_contexts[instance].driver.config_generation;
     detail->config_generation_valid = s_contexts[instance].driver.profile_verified;
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
     {
-        SystemDeviceHealth health;
-        if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
-            (health.initialized == 0U) || (health.online == 0U))
-        { detail->config_generation_valid = 0U; }
+        {
+            SystemDeviceHealth health;
+            if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
+                (health.initialized == 0U) || (health.online == 0U))
+            { detail->config_generation_valid = 0U; }
+        }
     }
-#endif
     return SYSTEM_DEVICE_OK;
 }
 
 SystemDeviceResult Mpu6050ImuInstance_LatestSampleGet(uint8_t instance, SystemImuSample *sample)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    SystemDeviceHealth health;
-    if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
-        (health.initialized == 0U) || (health.online == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
-#endif
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        SystemDeviceHealth health;
+        if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+        if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
+            (health.initialized == 0U) || (health.online == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
+    }
     return SensorImuAdapter_SampleGet(&s_contexts[instance], sample, 0U);
 }
 
 SystemDeviceResult Mpu6050ImuInstance_NextSampleGet(uint8_t instance, SystemImuSample *sample)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    SystemDeviceHealth health;
-    if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
-        (health.initialized == 0U) || (health.online == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
-#endif
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        SystemDeviceHealth health;
+        if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+        if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
+            (health.initialized == 0U) || (health.online == 0U)) { return SYSTEM_DEVICE_NOT_READY; }
+    }
     return SensorImuAdapter_SampleGet(&s_contexts[instance], sample, 1U);
 }
 
@@ -305,34 +308,36 @@ SystemDeviceResult Mpu6050ImuInstance_SelfTestRun(uint8_t instance, SystemDevice
 SystemDeviceResult Mpu6050ImuInstance_ConfigApply(uint8_t instance, const SystemImuConfig *config, SystemDeviceConfigReport *report)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    return SensorImuAdapter_ConfigRequest(&s_contexts[instance], config, report);
-#else
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        return SensorImuAdapter_ConfigRequest(&s_contexts[instance], config, report);
+    }
     return SensorImuAdapter_ConfigApply(&s_contexts[instance], config, report);
-#endif
 }
 
 SystemDeviceResult Mpu6050ImuInstance_ConfigVerify(uint8_t instance, const SystemImuConfig *config, SystemDeviceConfigReport *report)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    if ((config == NULL) || (report == NULL)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    if (s_contexts[instance].driver.state != SENSOR_IMU_READY)
-    { memset(report, 0, sizeof(*report)); return SYSTEM_DEVICE_BUSY; }
-#endif
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        if ((config == NULL) || (report == NULL)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+        if (s_contexts[instance].driver.state != SENSOR_IMU_READY)
+        { memset(report, 0, sizeof(*report)); return SYSTEM_DEVICE_BUSY; }
+    }
     return SensorImuAdapter_ConfigCheck(&s_contexts[instance], config, report);
 }
 
 SystemDeviceResult Mpu6050ImuInstance_EffectiveConfigGet(uint8_t instance, SystemImuConfig *config)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
-    SystemDeviceHealth health;
-    if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
-        (health.initialized == 0U) || (health.online == 0U))
-    { memset(config, 0, sizeof(*config)); return SYSTEM_DEVICE_NOT_READY; }
-#endif
+    if (SILVERSTAR_BUILD_COMPACT_ENABLED != 0U)
+    {
+        SystemDeviceHealth health;
+        if (config == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+        if ((SensorImuAdapter_HealthGet(&s_contexts[instance], &health) != SYSTEM_DEVICE_OK) ||
+            (health.initialized == 0U) || (health.online == 0U))
+        { memset(config, 0, sizeof(*config)); return SYSTEM_DEVICE_NOT_READY; }
+    }
     return SensorImuAdapter_ConfigGet(&s_contexts[instance], config);
 }
 
