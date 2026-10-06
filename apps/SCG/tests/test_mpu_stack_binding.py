@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 import pytest
-from test_stack_budget import stacks, _ElfFixture_Create
+from test_stack_budget import stacks, _ElfFixture_Create, _DependencyFixture_Write
 
 
 def _MpuFixture(root, monkeypatch, mutation=None):
@@ -20,8 +20,11 @@ def _MpuFixture(root, monkeypatch, mutation=None):
         "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c",
         "Devices/IMU/MPU6050/Src/mpu6050_device.c",
     ]
-    for path in paths + ["Devices/SensorBus/Inc/sensor_imu.h"]:
+    for path in paths + ["Devices/SensorBus/Inc/sensor_imu.h", "Devices/SensorBus/Inc/sensor_register_bus.h", "Devices/SensorBus/Adapter/Inc/sensor_imu_adapter.h"]:
         text = ((mpu if "/MPU6050/" in path else bus) / path).read_text(encoding="utf8")
+        if mutation in ("runtime_bus", "runtime_profile") and path.endswith("mpu6050_instance.c"):
+            write = "driver.bus.read = UnknownCallback" if mutation == "runtime_bus" else "driver.profile = other"
+            text = text.replace("s_contexts[instance].owner_active = 1U;", "s_contexts[instance]." + write + "; s_contexts[instance].owner_active = 1U;")
         if mutation == "body" and path.endswith("sensor_register_bus.c"):
             text = text.replace("bus->read(", "replacement_read(")
         if mutation == "getter" and path.endswith("mpu6050_device.c"):
@@ -44,6 +47,7 @@ def _MpuFixture(root, monkeypatch, mutation=None):
         su = build / Path(path).with_suffix(".su")
         su.parent.mkdir(parents=True, exist_ok=True)
         su.write_text("", encoding="utf8")
+        _DependencyFixture_Write(su.with_suffix(".d"), path, monkeypatch)
     edges = {
         "SensorImu_Verify": ["SensorRegister_Read"],
         "SensorImu_ProcessConfigure": ["SensorRegister_Write"],
@@ -122,4 +126,9 @@ def test_mpu_register_callbacks_include_platform_deadline_subtree(tmp_path, monk
 ])
 def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
     with pytest.raises(ValueError, match=message):
+        stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+
+@pytest.mark.parametrize("mutation", ["runtime_bus", "runtime_profile"])
+def test_mpu_parent_counterexamples_rejected(tmp_path, monkeypatch, mutation):
+    with pytest.raises(ValueError):
         stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")

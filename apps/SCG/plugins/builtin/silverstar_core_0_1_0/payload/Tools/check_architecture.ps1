@@ -48,7 +48,9 @@ function Test-TelemetryDiagnosticLogSelection {
     if (($stream.enabled -isnot [bool]) -or ($stream.policy -ne 'PERIODIC') -or
         ($stream.decimation -lt 1) -or ($stream.period_us -lt 1)) { return $false }
     $enabled = if (($tier -eq 'compact') -or ($tier -eq 'minimal')) { 0 } elseif ($stream.enabled) { 1 } else { 0 }
-    $entries = [regex]::Matches($Configuration,
+    $recordRows = [regex]::Matches($Configuration, '\{\s*FLIGHT_LOG_RECORD_TELEMETRY_DIAG\s*,[^}]*\}')
+    if ($recordRows.Count -ne 1) { return $false }
+    $entries = [regex]::Matches($recordRows[0].Value,
         '\{\s*FLIGHT_LOG_RECORD_TELEMETRY_DIAG\s*,\s*(\d+)U\s*,\s*(\d+)U\s*,\s*(\d+)UL\s*,\s*SSLOG_STREAM_POLICY_PERIODIC\s*\}')
     return ($entries.Count -eq 1) -and
         ([uint64]$entries[0].Groups[1].Value -eq $enabled) -and

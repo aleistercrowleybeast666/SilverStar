@@ -96,3 +96,115 @@ User-selected calibration/alignment and fresh barometer origin remain required.
 GNSS no-fix remains ordinary navigation unavailability. SF6 already excludes
 its unused double-window integrity machinery; the approximately 6936-byte
 GNSS origin/ENU sample storage is not that machinery and is not removed.
+
+
+## 2026-10-06 binding-checker correction (after 84b336e)
+
+The previous F407 task PASS is historical output from an incomplete binding
+checker; it must not be presented as a closed binding proof. Parent review found
+extra startup/disk indirect instructions, a second operations assignment, an
+external FatFs registry write, and MPU RuntimeOwnerActivate bus/profile writes
+that the old checker accepted. The unmodified old checker accepted all six
+initial regression mutations. These are tool trust defects, not observed bad
+bindings in the recorded actual ELF files.
+
+The revised `silverstar.reviewed-callback-bindings/2` contract freezes complete
+selected C translation units and their complete GCC-reported project headers
+and dependency lists from the three recorded builds. Hashes retain macros,
+string whitespace and comments; only CRLF normalization follows Python text
+reading. This deliberately restricts automated binding acceptance to reviewed
+source versions. Unknown builds, changed consumers, headers, write entrances,
+dependency graphs or compiler shapes FAIL and require fresh manual review; the
+checker does not infer arbitrary C alias or callback provenance. This does not
+change algorithm selection, product return contracts, stack allocations, margin
+thresholds, or production firmware. Blank translation units have no writes and
+may be admitted with their exact one-source dependency rule. Injected ELF unit
+fixtures explicitly mock their dependency metadata and are not ARM evidence.
+
+Every reviewed FatFs dispatch function has exactly one linked indirect site,
+including BX ip tail calls. Its actual call-register load must select the expected
+slot. Both F1 and F4 registration/dispatch implementations, consumers and ABI
+headers are checked; the ELF table bytes must identify all five concrete targets.
+F1's table remains writable under the upstream R0.11 ABI: this proves reviewed
+initialization and write entrances, not resistance to arbitrary RAM corruption.
+Startup Release has exactly seven linked Tick callback sites in the reviewed
+slot sequence 4,0,8,12,16,20,24. Each selected read-only 28-byte operations table
+must contain the exact seven linked callback addresses and appear in its owning
+initializer's ELF literal pool. Unsupported Debug/inlining shapes remain NOT
+PROVEN. Existing MPU NULL-profile checks, concrete bus edges and exact one-site
+checks remain, while complete files now include RuntimeOwnerActivate.
+
+Actual emitted gate rechecks use unchanged linked ELF artifacts, their `.su`
+and `.d` files, and the revised owning tools copied byte-for-byte into the three
+explicitly disposable projects. RE/RF task gates still FAIL for Logger margin;
+F407's eight task budgets pass again within the narrower versioned task scope.
+The report explicitly marks whole-program stack acceptance NOT PROVEN for
+main/MSP, ISR nesting and hardware evidence. No full-suite pass is inferred.
+Evidence is `.work/evidence/sf6_binding_v2_final`, with failed exploratory unit
+runs and old-checker escaping counterexamples retained separately in
+`.work/evidence/sf6_followup_attribution`.
+
+## Read-only Logger attribution
+
+RE and RF both report 2816 bytes of nested known frames plus one retained
+256-byte context allowance, giving 3072 bytes against the actual 3072-byte
+Logger allocation. Margin is zero. The 256-byte minimum is a gate threshold,
+not additional linked RAM. No budget, allocation or context allowance was changed.
+The present bound would need at least 3328 allocated bytes to satisfy that
+threshold, conditional on no newly discovered larger paths; this is not a
+recommendation to allocate it or a whole-program stack proof.
+
+The exact chain (frame bytes) is:
+
+`AppTask_Logger(480) -> SystemMissionSnapshot_FinalStatusWrite(456) ->
+MissionSnapshot_SectionCommit(32) -> PersistentStorage_ObjectWriteAtomic(72) ->
+PersistentStorage_LatestGet(64) -> SystemStorage_ObjectSlotRead(136) ->
+f_open(1128) -> dir_register(72) -> dir_find.part.0(48) -> dir_next(40) ->
+create_chain(24) -> get_fat.part.0(32) -> sync_window(16) -> disk_write(8) ->
+SD_write(40) -> SdDiskIo_CompletionWait(24) -> xQueueReceive(40) ->
+xTaskResumeAll(8) -> xTaskResumeAll.part.0(48) -> xTaskIncrementTick.part.0(48)`.
+
+This is a conservative graph path, not a demonstrated simultaneous execution:
+ObjectSlotRead passes FA_READ, while f_open calls dir_register only under create
+mode bits. That named edge combination is infeasible for this caller. Other
+write/dirty-window paths remain reachable; this does not justify deleting the
+write subtree or replacing the gate with an unproved smaller bound. Also,
+xTaskResumeAll restores its 8-byte frame before tail-branching to its part.0
+function; conservative nesting counts both. The context allowance covers more
+than a non-FP CM3 task context but remains unchanged. ISR/MSP proof is absent.
+Full call-site disassembly is saved in the attribution evidence.
+
+The actual f_open prologue saves 36 bytes and reserves 1092, matching GCC's 1128
+frame. The selected F1 FatFs header embeds a 512-byte sector union in local DIR
+when `_FS_TINY==0`; DIR is 552 bytes here. Stack LFN mode 2 adds a separate
+512-byte WCHAR[256], plus short-name and ordinary locals. This is real frame
+allocation, not merely duplicated call-graph accounting. It is not two history
+buffers and must not be described as such.
+
+The lowest-scope candidate is a coherent small recovery-flags getter, leaving
+snapshot section 7's serialized fields unchanged. The current getter copies a
+272-byte SystemFlightRecoveryStatus into a 456-byte FinalStatusWrite frame,
+but this writer uses only three flag bytes and two results. A reviewed 12-byte
+projection could remove about 260 bytes of unnecessary copy capacity without
+moving it to BSS; the actual reduction requires before/after ARM compilation.
+StorageHealth similarly copies 80 bytes for two flags. These are candidates,
+not implemented savings. They need task-owner/coherent snapshot review and F407
+regression. Separating the record-drain lifetime is secondary: FlightLogRecord
+is 200 bytes, not 432; the 480-byte task frame includes additional compiler
+locals/inlining, so no 480-byte saving is promised. `_FS_TINY` or DIR ABI changes
+need a separate upstream/ownership/performance review; moving LFN to a static
+buffer or blindly truncating names is not authorized by this report.
+
+## Same-configuration baseline attribution
+
+F407's InputVoltage architecture violation occurs under the old ec1bfcd checker
+on the same generated configuration and source. Its power_service, log policy,
+writer fixture and generation/feature-tier sources are byte-identical between
+ec1bfcd and 84b336e. The small Host log-policy replay uses the same actual generated
+F407 configuration, repeats the storage fixture's unconditional stream enable,
+and compiles ec1bfcd and current policy sources independently. Both compile and
+both fail identically at record 0x07: unsupported, result 5. This isolates the
+previous StreamConfigure expectation failure; it is not a full storage-suite
+pass or permission to weaken that expectation. Initial fixture compilation
+errors and their corrections are retained. The replay mocks critical sections
+and assertions and does not test their implementation.
