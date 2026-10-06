@@ -43,16 +43,45 @@ in the departed tier snapshot. Queue capacity is at least the complete startup
 descriptor count plus five slots, with a 56-slot floor; stream disablement never
 reduces the descriptor count. Existing task/idle/MSP stack sizes are retained.
 
-The user's subsequent logging policy applies to both Compact and Minimal:
-TELEMETRY_DIAG is disabled. PURE_INS is disabled when SF6 is selected; when the
-estimator is None, PURE_INS is required to retain recorded onboard p/v/q.
-Full and Standard keep both records optional. Effective projection and generated
-runtime support enforce this policy, including legacy configurations, while raw
-choices and tier snapshots remain available for restoration. Disabled records
+The user's latest first-release logging policy applies to all four tiers:
+only the selected algorithm's owned output/replay records are eligible. Other
+algorithm records, including PURE_INS under SF6/KF6/ESKF15, are unavailable;
+there is no extra onboard algorithm comparison or borrowed recorded result.
+PURE_INS remains eligible with estimator None, and mandatory in Compact/Minimal
+to retain recorded onboard p/v/q. TELEMETRY_DIAG stays optional in Full/Standard
+and disabled in Compact/Minimal. Effective projection and generated runtime
+support enforce this policy, including legacy configurations, while raw choices
+and tier snapshots remain available for restoration. Disabled records
 remain in the complete decoder catalog and startup stream descriptors. No queue,
 slot, aggregation or stack sizing changed with this policy. Its effects on FLP
 fallback acceleration and stillness replay require separate review; this policy
 does not establish that those features are unaffected.
+
+Producer ownership was reviewed against the owning payload, rather than inferred
+from record names or the generic `algorithm.estimator` capability:
+
+| Record group | Selected producer | Evidence in owning payload |
+|---|---|---|
+| PURE_INS | None (pure INS) | core `APP/Src/ins_task.c`: both PureRecordWrite call sites require SYSTEM_FUSION_NONE |
+| ESTIMATOR, KF6_DIAGNOSTIC, KF6_FULL_P | KF6 | core `APP/Src/estimator_task.c`: backend dispatch returns before the core prediction/LogPush path; LogPush and NavigationSnapshotPush map these records |
+| SF6_STATE, SF6_MEASUREMENT | SF6 | SF6 `navigation_sf6_backend.c`: Sf6StatePush and Sf6MeasurementPush |
+| ESKF15_STATE, FULL_P_PART, INITIAL_STATE, INITIAL_P_PART, MEASUREMENT, BODY_INPUT | ESKF15 | ESKF15 `navigation_eskf_backend.c`: StateLog/CovarianceLog, MeasurementLog and BodyLog; logger bus maps phase-specific covariance and initial-state IDs |
+
+The backend dispatch evidence above covers normal prediction and initialization.
+Existing core rollback/abort paths still call the KF6-shaped LogPush after backend
+reset. Those calls do not make the records valid SF6/ESKF15 results: this policy
+disables their defaults and runtime support under those algorithms. The common
+cleanup implementation is unchanged; no replacement result is manufactured.
+
+ESKF15 body input, measurement and initial records are its own replay contract,
+not comparison outputs to remove when ESKF15 is selected. Shared ESTIMATOR_STEP,
+GNSS/BARO_MEASUREMENT, GNSS_RECOVERY and NAV_QUALITY retain their existing
+availability/profile contracts; they are not added to the exclusive ownership
+map. Current core replay diagnostics and dedicated backend diagnostics differ,
+so this policy does not certify complete replay availability for every algorithm.
+Sensor native/corrected/increments, calibration/alignment, general initial state,
+events and lifecycle descriptors are not further pruned. Algorithm/tier rejection
+is unchanged: an inactive saved ESKF15 choice never enables it outside Full.
 
 Compact and Minimal retain the earlier reviewed SX128x 260-byte HAL scratch
 capacity and bounded device facade, independent of brand. Full/Standard keep

@@ -30,11 +30,9 @@ def CompactLogStreams_Get(model: ProjectModel) -> list[LogStreamConfig]:
     outputs are deliberately excluded and shown as disabled.
     """
     if model.build.logging_profile == "all_streams":
-        if model.build.feature_tier == "compact":
-            return [replace(stream, enabled=False) if not FeatureTier_LogRecordAllowed(model, stream.record)
-                    else replace(stream, enabled=True) if FeatureTier_LogRecordRequired(model, stream.record) else stream
-                    for stream in model.logging_streams]
-        return model.logging_streams
+        return [replace(stream, enabled=False) if not FeatureTier_LogRecordAllowed(model, stream.record)
+                else replace(stream, enabled=True) if FeatureTier_LogRecordRequired(model, stream.record) else stream
+                for stream in model.logging_streams]
     required = CompactLogRequiredRecords_Get(model)
     return [replace(stream, enabled=(
         FeatureTier_LogRecordAllowed(model, stream.record) and

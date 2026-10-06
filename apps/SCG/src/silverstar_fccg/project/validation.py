@@ -25,8 +25,8 @@ from silverstar_fccg.project.model import (
     ProjectModel_Parse,
     ProjectModelError,
 )
-from silverstar_fccg.project.compact_logging import CompactLogProfileErrors_Get
-from silverstar_fccg.project.feature_tiers import FeatureTier_ErrorsGet
+from silverstar_fccg.project.compact_logging import CompactLogProfileErrors_Get, CompactLogStreams_Get
+from silverstar_fccg.project.feature_tiers import FeatureTier_ErrorsGet, FeatureTier_LogRecordAllowed
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
 from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get,
@@ -1067,7 +1067,9 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
                     "The SSLOG record table must match the selected protocol bundle order",
                 )
             )
-        streams = {stream.record: stream for stream in model.logging_streams}
+        # Raw choices still define the complete ordered catalog above. Active
+        # enablement follows the same projection as generated firmware/decoder.
+        streams = {stream.record: stream for stream in CompactLogStreams_Get(model)}
         for definition in definitions:
             stream = streams.get(definition.record)
             if stream is None:
@@ -1090,7 +1092,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
                     )
                 )
             if (
-                availability.available
+                availability.available and FeatureTier_LogRecordAllowed(model, definition.record)
                 and definition.level == LogPolicyLevel.REQUIRED
                 and not stream.enabled
             ):

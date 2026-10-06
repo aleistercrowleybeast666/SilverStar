@@ -13,14 +13,36 @@ _SF6 = "silverstar.algorithm.estimator.sf6"
 _BAROMETER = "SYSTEM_DEVICE_CLASS_BAROMETER"
 _BOUNDED_CLASSES = frozenset({"SYSTEM_DEVICE_CLASS_IMU", "SYSTEM_DEVICE_CLASS_GNSS",
                              "SYSTEM_DEVICE_CLASS_TELEMETRY", _BAROMETER})
+# Explicit producer ownership, not a name-prefix rule. Shared replay inputs
+# and diagnostics (ESTIMATOR_STEP, GNSS/BARO_MEASUREMENT, NAV_QUALITY) stay out.
+_LOG_ALGORITHM_OWNERS = {
+    "FLIGHT_LOG_RECORD_PURE_INS": None,
+    "FLIGHT_LOG_RECORD_ESTIMATOR": _KF6,
+    "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC": _KF6,
+    "FLIGHT_LOG_RECORD_KF6_FULL_P": _KF6,
+    "FLIGHT_LOG_RECORD_SF6_STATE": _SF6,
+    "FLIGHT_LOG_RECORD_SF6_MEASUREMENT": _SF6,
+    **{"FLIGHT_LOG_RECORD_ESKF15_" + name: _ESKF15 for name in (
+        "STATE", "FULL_P_PART", "INITIAL_STATE", "INITIAL_P_PART", "MEASUREMENT", "BODY_INPUT")},
+}
+
+
+def FeatureTier_LogRecordAlgorithmOwned(record: str) -> bool:
+    return record in _LOG_ALGORITHM_OWNERS
+
+
+def FeatureTier_LogRecordReasonGet(model: ProjectModel, record: str) -> str:
+    if (record in _LOG_ALGORITHM_OWNERS and
+            model.strategies.get("estimator") != _LOG_ALGORITHM_OWNERS[record]):
+        return "logging.algorithm.disabled"
+    if model.build.feature_tier in ("compact", "minimal") and record == "FLIGHT_LOG_RECORD_TELEMETRY_DIAG":
+        return "logging.feature_tier.disabled"
+    return ""
 
 
 def FeatureTier_LogRecordAllowed(model: ProjectModel, record: str) -> bool:
-    """Tier policy projects retained log choices without erasing them."""
-    if model.build.feature_tier not in ("compact", "minimal"):
-        return True
-    return (record != "FLIGHT_LOG_RECORD_TELEMETRY_DIAG" and
-            (record != "FLIGHT_LOG_RECORD_PURE_INS" or model.strategies.get("estimator") != _SF6))
+    """First-release policy projects retained choices onto the selected producer."""
+    return not FeatureTier_LogRecordReasonGet(model, record)
 
 
 def FeatureTier_LogRecordRequired(model: ProjectModel, record: str) -> bool:

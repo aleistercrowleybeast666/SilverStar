@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
 from silverstar_fccg.project.model import LogStreamConfig, ProjectModel
+from silverstar_fccg.project.feature_tiers import FeatureTier_LogRecordAllowed, FeatureTier_LogRecordAlgorithmOwned
 
 if TYPE_CHECKING:
     from silverstar_fccg.plugins.catalog import PluginCatalog
@@ -497,7 +498,11 @@ def LoggingProfile_Reconcile(
         stream = current.get(definition.record, definition.default_stream)
         availability = LogAvailability_Get(definition, model, catalog)
         enabled = stream.enabled
-        if not availability.available:
+        if not FeatureTier_LogRecordAllowed(model, definition.record):
+            # Inactive algorithm choices remain saved; only the effective
+            # projection is disabled, including records without a producer.
+            pass
+        elif not availability.available:
             enabled = False
         elif definition.level == LogPolicyLevel.REQUIRED:
             enabled = True
@@ -544,11 +549,16 @@ def LoggingProfile_AvailabilityTransitionApply(
             ).available
         )
         enabled = stream.enabled
-        if not available:
+        if not FeatureTier_LogRecordAllowed(model, definition.record):
+            pass
+        elif not available:
             enabled = False
         elif definition.level == LogPolicyLevel.REQUIRED:
             enabled = True
-        elif not previously_available:
+        elif not previously_available and (
+            not FeatureTier_LogRecordAlgorithmOwned(definition.record) or
+            previous_model.strategies.get("estimator") == model.strategies.get("estimator")
+        ):
             enabled = definition.default_stream.enabled
         reconciled.append(replace(stream, enabled=enabled))
     model.logging_streams = reconciled
@@ -566,7 +576,8 @@ def LoggingProfile_SelectAllAvailable(
     model.logging_streams = [
         LogStreamConfig(
             record=definition.record,
-            enabled=LogAvailability_Get(definition, model, catalog).available,
+            enabled=(current[definition.record].enabled if not FeatureTier_LogRecordAllowed(model, definition.record)
+                     else LogAvailability_Get(definition, model, catalog).available),
             policy=current[definition.record].policy,
             decimation=current[definition.record].decimation,
             period_us=current[definition.record].period_us,

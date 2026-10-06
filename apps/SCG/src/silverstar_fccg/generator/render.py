@@ -37,7 +37,7 @@ from silverstar_fccg.project.generation_state import (
     ProjectDigest_Get,
 )
 from silverstar_fccg.project.compact_logging import CompactLogStreams_Get, SF6_MINIMAL_RECORDS
-from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive, FeatureTier_LogRecordAllowed
+from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive, FeatureTier_LogRecordAllowed, FeatureTier_LogRecordReasonGet
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
     LogRecordDefinition,
@@ -1937,7 +1937,7 @@ def LogDecoderProfile_Render(
                 "level": definition.level.value,
                 "available": availability.available and FeatureTier_LogRecordAllowed(model, definition.record),
                 "reason_code": (availability.reason_code if FeatureTier_LogRecordAllowed(model, definition.record)
-                                else "logging.feature_tier.disabled"),
+                                else FeatureTier_LogRecordReasonGet(model, definition.record)),
                 "missing": list(availability.missing),
                 "producer_components": list(
                     definition.producer_components

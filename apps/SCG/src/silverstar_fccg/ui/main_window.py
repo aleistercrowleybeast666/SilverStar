@@ -96,7 +96,7 @@ from silverstar_fccg.project.folder_contract import (
     FLIGHT_DIRECTORY,
 )
 from silverstar_fccg.project.lifecycle import ProjectLifecycleState
-from silverstar_fccg.project.feature_tiers import FeatureTier_Apply, FeatureTier_LogRecordAllowed, FeatureTier_LogRecordRequired
+from silverstar_fccg.project.feature_tiers import FeatureTier_Apply, FeatureTier_LogRecordAllowed, FeatureTier_LogRecordRequired, FeatureTier_LogRecordReasonGet
 from silverstar_fccg.project.compact_logging import CompactLogStreams_Get, CompactLogRequiredRecords_Get
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
@@ -934,7 +934,7 @@ class MainWindow(QMainWindow):
                     missing=", ".join(availability.missing),
                 )
             if not tier_allowed:
-                reason = self._translator.Text_Get("logging.feature_tier.disabled")
+                reason = self._translator.Text_Get(FeatureTier_LogRecordReasonGet(model, definition.record))
             description = self._translator.Text_Get(
                 "logging.record_metadata",
                 id=definition.record_id,
