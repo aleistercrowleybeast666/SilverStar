@@ -177,3 +177,39 @@ def test_wide_record_blocks_reduce_rows_before_any_array_publication(tmp_path, m
     assert len(restored) == 4
     for first, second in zip(records, restored):
         np.testing.assert_array_equal(first.payload["array"], second.payload["array"])
+
+
+@pytest.mark.parametrize("bits", [
+    [0x8000000000000000, 0x0000000000000000],
+    [0x0000000000000000, 0x8000000000000000],
+    [0x7ff8000000000042, 0x7ff8000000000042],
+    [0xfff8000000000042, 0x7ff8000000000043],
+])
+def test_python_float_record_payload_preserves_signed_zero_and_nan_bits(tmp_path, bits):
+    values = np.asarray(bits, dtype=np.uint64).view(np.float64)
+    records = tuple(replace(record, payload={"value": float(value)})
+                    for record, value in zip(_Records(2), values))
+    path = tmp_path / "project.ssflp"
+    reference = Artifact_Write(path, records, {})
+    restored = Artifact_Read(path, reference, {})
+    actual = np.asarray([record.payload["value"] for record in restored], dtype=np.float64).view(np.uint64)
+    np.testing.assert_array_equal(actual, np.asarray(bits, dtype=np.uint64))
+
+
+@pytest.mark.parametrize("payloads", [
+    [{"a": 1.0}, {"b": 2.0}],
+    [{"a": 1.0, "b": 2.0}, {"b": 3.0, "a": 4.0}],
+    [{}, {"a": None}],
+    [{"nested": {"a": 1}}, {"nested": {"b": 2}}],
+])
+def test_record_payload_key_set_and_insertion_order_roundtrip(tmp_path, payloads):
+    records = tuple(replace(record, payload=payload) for record, payload in zip(_Records(2), payloads))
+    path = tmp_path / "project.ssflp"
+    reference = Artifact_Write(path, records, {})
+    restored = Artifact_Read(path, reference, {})
+    assert repr(restored) == repr(records)
+    for first, second in zip(records, restored):
+        assert tuple(second.payload) == tuple(first.payload)
+        assert dict(second.payload) == dict(first.payload)
+        for key in set(first.payload) ^ {"a", "b"}:
+            assert (key in second.payload) == (key in first.payload)

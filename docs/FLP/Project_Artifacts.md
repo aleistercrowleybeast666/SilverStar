@@ -130,3 +130,10 @@ decoded datasets beside the original. An explicit reopen still performs the full
 reader and strict coordinator admission. Codec-1 files remain readable; parser,
 math and original input identities are unchanged by this storage-only revision.
 Saved numerical runs and unverified partial generations are never auto-deleted.
+
+The lazy payload mapping preserves keys, order, types and values, including float
+bits (signed zero and non-finite values are not folded using numeric equality).
+It has interface differences from a dict-backed mappingproxy: `copy()` and union
+are not supplied by its backing Mapping, and edits to a materialized nested mutable
+dict/list do not persist into the column store. No production caller of those
+operations has been identified. This is not full Python object-interface equivalence.
