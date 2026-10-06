@@ -1,0 +1,27 @@
+{
+  "source_commit": "1fcf9b20fb5250f27367cf6b71e493d197185f45",
+  "archive_sha256": "2e9d06c3b1527f5b653755a2db7142a8a491a638edc3dbbbd7ea56b087e83dc7",
+  "local_path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_software_fix\\software_fix_evidence.zip",
+  "result": {
+    "operation": "create_library_file",
+    "status": "succeeded",
+    "path": "/software_fix_evidence.zip",
+    "file_id": "file_00000000cb1c8230a7d5deb872eec922",
+    "library_file_id": "libfile_1595c3a3ca508191948d25fb81382fbf",
+    "file_name": "software_fix_evidence.zip",
+    "current_version_number": 0,
+    "restored_from_version_number": null,
+    "xattrs": [
+      {
+        "name": "user.library-file-version",
+        "value": "0"
+      }
+    ],
+    "directory_id": "libdir_8617ff5a838481919d6e4b11ae8721e2",
+    "mime_type": "application/zip",
+    "library_artifact_type": "other",
+    "file_size_bytes": 8157180,
+    "external_connectors_accessed": false
+  },
+  "local_xattrs": "Windows Python has no os.setxattr; cloud upload succeeded, local extended attributes unsupported."
+}

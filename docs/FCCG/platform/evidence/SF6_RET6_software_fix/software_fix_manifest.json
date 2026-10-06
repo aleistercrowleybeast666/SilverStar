@@ -1,0 +1,2096 @@
+{
+  "archive_bytes": 8157180,
+  "archive_sha256": "2e9d06c3b1527f5b653755a2db7142a8a491a638edc3dbbbd7ea56b087e83dc7",
+  "source_commit": "1fcf9b20fb5250f27367cf6b71e493d197185f45",
+  "status": "COMPILE_CANDIDATE_ACCEPTANCE_BLOCKED",
+  "current_run_prefix": "ret6_combined_verified",
+  "historical_logs": "Other labels retain their actual earlier source/failure scope; no stitched suite pass. Conflicted intermediate generation was discarded.",
+  "cube_snapshot_external_library_id": "libfile_b0db328d87d88191b0ec89b1d1b92e23",
+  "files": [
+    {
+      "path": ".work/evidence/SilverStar_SF6_COMBINED_1fcf9b2_SOURCE_BYTES_ADDENDUM.zip",
+      "bytes": 55259,
+      "sha256": "c66febf0092335e21020fc3353e2c8fd4897aac8848df24363cd01365d9343a4"
+    },
+    {
+      "path": ".work/evidence/adapter_fix_corrected_pytest.log",
+      "bytes": 1679,
+      "sha256": "24c76c19d84c0d0db716883b9a2151dc50764f172af3d4438a677651d0c1461b"
+    },
+    {
+      "path": ".work/evidence/combined_final_current_render_SilverStar.ssproject",
+      "bytes": 121999,
+      "sha256": "8c1ff7bad0e04011030dbd44a97daa7b39770cc82b5c653baed180ec3d311867"
+    },
+    {
+      "path": ".work/evidence/combined_final_current_render_ownership.json",
+      "bytes": 332764,
+      "sha256": "bc673e1e38fc480b44fae801195871cff28c83d3a0085f3c55761a7ee1c90ffa"
+    },
+    {
+      "path": ".work/evidence/combined_verified_commands.json",
+      "bytes": 1617,
+      "sha256": "1dc6e851b4c8588ebfe0c65445824fd2695cb3c844087399af94c802bc36d816"
+    },
+    {
+      "path": ".work/evidence/combined_verified_history.txt",
+      "bytes": 1991,
+      "sha256": "d4fcfac3587d7439fa5efc94802c74ba7516dbcc1aa829d9268fe7804ac8e34c"
+    },
+    {
+      "path": ".work/evidence/combined_verified_source_addendum_package.json",
+      "bytes": 375,
+      "sha256": "6d2dbbf5d364144852dc90fc26ddcb13b21101e3e20a91d698e0fa37b16d0617"
+    },
+    {
+      "path": ".work/evidence/combined_verified_tool_versions.json",
+      "bytes": 1141,
+      "sha256": "abe7e601dcaeefcd0c9803e4b91a536b6d11d17bc25168d89f228b3ad09f23b3"
+    },
+    {
+      "path": ".work/evidence/cubemx_clock.log",
+      "bytes": 111670,
+      "sha256": "104b7f4aa89aae89019da50caf21571be3a7ba485194d76190bef9e3ea3fb29a"
+    },
+    {
+      "path": ".work/evidence/cubemx_clock.script",
+      "bytes": 187,
+      "sha256": "e0d5503388250a3a604497b98c5f322dbb08c996ffd64e5662536773d6973f63"
+    },
+    {
+      "path": ".work/evidence/cubemx_complete.log",
+      "bytes": 113038,
+      "sha256": "5118e6849a17e17104da90ad68094577ef338f21b2b074500755556086142313"
+    },
+    {
+      "path": ".work/evidence/cubemx_complete.script",
+      "bytes": 2419,
+      "sha256": "21617e3617421b80f508df5e5ccaceacc405da13b81dea815eb933fcfcef3d15"
+    },
+    {
+      "path": ".work/evidence/cubemx_config_inspect.log",
+      "bytes": 93809,
+      "sha256": "ee9b1069cf131007b88977c413d2b1df099af478aa6ed00bbb50dd601429f6a7"
+    },
+    {
+      "path": ".work/evidence/cubemx_config_inspect.script",
+      "bytes": 458,
+      "sha256": "5f75318f2bd5d5a262b5763ed90124a71b0e5dfe0e5011a0b518fa50fd63b21c"
+    },
+    {
+      "path": ".work/evidence/cubemx_dma_help.log",
+      "bytes": 94371,
+      "sha256": "2d7e4662e1eebb614dadd21326555dbed762f77918c1f59a662a361f92b2c92d"
+    },
+    {
+      "path": ".work/evidence/cubemx_dma_help.script",
+      "bytes": 279,
+      "sha256": "0ffa04f815e045e08005f1adb0c7e52a9a60cf6a3041373d7ab8901d0f12b6ab"
+    },
+    {
+      "path": ".work/evidence/cubemx_dma_help2.log",
+      "bytes": 61714,
+      "sha256": "fab00bca34df5ff5eb3b50026a7fae4ce7331343476a5ddf2753c3d27342ccc0"
+    },
+    {
+      "path": ".work/evidence/cubemx_dma_help2.script",
+      "bytes": 50,
+      "sha256": "6f738eb22df74795e87229b6836f143b926c94323f6aae542fd6368f9649a992"
+    },
+    {
+      "path": ".work/evidence/cubemx_flight.log",
+      "bytes": 74770,
+      "sha256": "1c619894237b031f41ee9151ca42eae981843998b584c2407ffecb0e26481c5b"
+    },
+    {
+      "path": ".work/evidence/cubemx_flight.script",
+      "bytes": 806,
+      "sha256": "e60439aec9b185b1225564a5f30f7afe1bf9bb339079042e223255eb57e7367e"
+    },
+    {
+      "path": ".work/evidence/cubemx_flight_cli.log",
+      "bytes": 106611,
+      "sha256": "61c1fc242c83e849ee4c5ce2e79d92f21702f55971c224a0c8096c4b34f222de"
+    },
+    {
+      "path": ".work/evidence/cubemx_flight_cli.script",
+      "bytes": 798,
+      "sha256": "c46c48750175ebdcf346aa2d7946b2ce6c2c72e0f2784235dc369a63cf2f1d2a"
+    },
+    {
+      "path": ".work/evidence/cubemx_flight_final.log",
+      "bytes": 39412,
+      "sha256": "742551cc88f37d2c292a3f19070a11d7f1f5b84593fcb52d8b26a4c39febf34c"
+    },
+    {
+      "path": ".work/evidence/cubemx_flight_final.script",
+      "bytes": 240,
+      "sha256": "14831bf18d4c379fceb73f6e4af614c588188d14215f2c622279321f1f9aea16"
+    },
+    {
+      "path": ".work/evidence/cubemx_flight_final2.log",
+      "bytes": 39218,
+      "sha256": "0069e8603f3bc89308079bf8c20a9bc5477764a5549921c162fce10192a2f914"
+    },
+    {
+      "path": ".work/evidence/cubemx_generate_final.log",
+      "bytes": 102310,
+      "sha256": "dc87f3aabe510478a7ffb67c7464dad105a39ce4dc78cc4be93048480e19b141"
+    },
+    {
+      "path": ".work/evidence/cubemx_generate_final.script",
+      "bytes": 850,
+      "sha256": "e7fe529d8edd51b9f7c87d46b52ce1fec334d1517a1edf2a04603a915ebcad83"
+    },
+    {
+      "path": ".work/evidence/cubemx_hardware_ready.log",
+      "bytes": 68908,
+      "sha256": "f1c183d07d356fd7d12a8547677298d03b45a8a2caa139e75c161622493f9c52"
+    },
+    {
+      "path": ".work/evidence/cubemx_hardware_ready.script",
+      "bytes": 1707,
+      "sha256": "275f8b61a77d4c11e11a739df9e17481a71f318de465be033cc0a1f8246d7f16"
+    },
+    {
+      "path": ".work/evidence/cubemx_hardware_ready2.log",
+      "bytes": 110991,
+      "sha256": "45612d2e79075b58c448d1fc5198a4a7c35a213d919b63143ed88cb353328f40"
+    },
+    {
+      "path": ".work/evidence/cubemx_hardware_ready2.script",
+      "bytes": 1612,
+      "sha256": "5aab8d476b2f1063e22d969db2c5c720a538893d54c8c2f3a57ef89d018b7c1a"
+    },
+    {
+      "path": ".work/evidence/cubemx_help.log",
+      "bytes": 28105,
+      "sha256": "51adc6d28894dba47970f3e67514d8f7c1eb31b6eca7e41627c00e835ce768d9"
+    },
+    {
+      "path": ".work/evidence/cubemx_help.script",
+      "bytes": 55,
+      "sha256": "47ffa32945b285a7d52c89b2627563ebf8425f94af73d7cfcbb2c25dd0a43aee"
+    },
+    {
+      "path": ".work/evidence/cubemx_i2c_deadline.log",
+      "bytes": 106956,
+      "sha256": "7d51aedb10cab6d685f278a1fb414eb7f80550472ba304b4e74bb2eb4577e027"
+    },
+    {
+      "path": ".work/evidence/cubemx_i2c_deadline.script",
+      "bytes": 254,
+      "sha256": "003f9df4b197ff33329101114ea5eded771bf4682bd2f270f14cc5e3b55cfc25"
+    },
+    {
+      "path": ".work/evidence/cubemx_lfn.log",
+      "bytes": 109630,
+      "sha256": "393fd5ee4b7fac6818a389dc29737957c576f18b3d6fcc1bfd7142cccb8fdc8f"
+    },
+    {
+      "path": ".work/evidence/cubemx_lfn.script",
+      "bytes": 244,
+      "sha256": "daac223148122b7c39fade1b24133dc22035b7e9f5ba31e47ae661395080cba7"
+    },
+    {
+      "path": ".work/evidence/cubemx_minimal.log",
+      "bytes": 98008,
+      "sha256": "d3306d159061a0260f42f09d5428bc02a35e8ec0c2d0f4b216601f2a54fce6bd"
+    },
+    {
+      "path": ".work/evidence/cubemx_minimal.script",
+      "bytes": 324,
+      "sha256": "b0ec08af0e95302f4ba8ed77a21ff4276d70606031f04a148c90c5a80a229508"
+    },
+    {
+      "path": ".work/evidence/cubemx_minimal_authorized.log",
+      "bytes": 66122,
+      "sha256": "68c8613884d1dd4b7a72e6c2dcce6a64ddd509a6d764e4c0bbaa3d5224d65616"
+    },
+    {
+      "path": ".work/evidence/cubemx_no_gnss.log",
+      "bytes": 110012,
+      "sha256": "55fb17419a732ea4eeba0e9294bd04ba75f8edb4fedd39c15cb8ec1ee4be8276"
+    },
+    {
+      "path": ".work/evidence/cubemx_no_gnss.script",
+      "bytes": 425,
+      "sha256": "f09eff7c05abfcecf6e862427e9a6b6b1e6231addfbbcbbbc01cf83405780b4e"
+    },
+    {
+      "path": ".work/evidence/cubemx_no_gnss_final.log",
+      "bytes": 111314,
+      "sha256": "96ca0f378f405529466b040ed3e22434df315985703ea6d7c3d86aa86378758a"
+    },
+    {
+      "path": ".work/evidence/cubemx_no_gnss_final.script",
+      "bytes": 261,
+      "sha256": "051984807fc544429ed68b132b45cf1286dcc9230b73e10f4a7550ef28e0d6a5"
+    },
+    {
+      "path": ".work/evidence/cubemx_params.log",
+      "bytes": 92062,
+      "sha256": "578519d24b97bc92a0e50899505ebc48f40ff99f91c6e200a0513fe35290170e"
+    },
+    {
+      "path": ".work/evidence/cubemx_params.script",
+      "bytes": 210,
+      "sha256": "f858ba09222a17604b0c4dddf447fb33179610aa71771dab82ce9085273c733c"
+    },
+    {
+      "path": ".work/evidence/cubemx_remove_help.log",
+      "bytes": 94576,
+      "sha256": "c594ce6683156d3852427a31f8ef14314dfd7afe3b21ea4cc3af91fad40997e0"
+    },
+    {
+      "path": ".work/evidence/cubemx_remove_help.script",
+      "bytes": 144,
+      "sha256": "d9c66c14179ab579e47fbd0d3bcba2abc8eb8954e1da68e1ae903f7f760bca1b"
+    },
+    {
+      "path": ".work/evidence/cubemx_reset_help.log",
+      "bytes": 91183,
+      "sha256": "dcbca7fdeeb1fd66ca9b711587f62110c6892a8998244a89ad35dd9e01e4611b"
+    },
+    {
+      "path": ".work/evidence/cubemx_reset_help.script",
+      "bytes": 144,
+      "sha256": "e7447073bb5a3416813c38eebd2cb8aaddd2752bce3fbc06686f311385cf5683"
+    },
+    {
+      "path": ".work/evidence/cubemx_safe_outputs.log",
+      "bytes": 110364,
+      "sha256": "0a178d0c6c0b544dfa939be2f387c6bdc9238182cec3c665730525fdfa9ec075"
+    },
+    {
+      "path": ".work/evidence/cubemx_safe_outputs.script",
+      "bytes": 337,
+      "sha256": "c76dcbe2af706f95cd280ddcc23490a421c9a8e3d7f94122b10b957cc3736382"
+    },
+    {
+      "path": ".work/evidence/cubemx_sd_clock_safe.log",
+      "bytes": 106902,
+      "sha256": "a8b533d7a67793b294460557c7a75bbe6b944d9a87168caa8ef2f58eb90a2d1c"
+    },
+    {
+      "path": ".work/evidence/cubemx_sd_clock_safe.script",
+      "bytes": 206,
+      "sha256": "9611cf32779c2d2d90fcae2635ab81bfd9245865073ac76fe5494f31fbf8d84a"
+    },
+    {
+      "path": ".work/evidence/cubemx_storage.log",
+      "bytes": 94219,
+      "sha256": "08dc0f7ad6b862124ccb48765885491626530f23d84aa30234661be35a8fcbf1"
+    },
+    {
+      "path": ".work/evidence/cubemx_storage.script",
+      "bytes": 269,
+      "sha256": "c2a10d664697c0e3c3a7c4dfab17d35949de83679c471602772d91a0e6302d9e"
+    },
+    {
+      "path": ".work/evidence/cubemx_unset_help.log",
+      "bytes": 94666,
+      "sha256": "fba7799e5304210762e9c13ff90475f1d3c0379ede328c6cfc3935cf29880703"
+    },
+    {
+      "path": ".work/evidence/cubemx_unset_help.script",
+      "bytes": 149,
+      "sha256": "64c2c8730033aa2bd95d1bc5213070f14b0f968d863d436a8feb2779c6eedc9d"
+    },
+    {
+      "path": ".work/evidence/current_cube_snapshot_package.json",
+      "bytes": 428,
+      "sha256": "a51fbe5a5cc1d02dc7ecbff90509acb53ec903a42d49c60853252f5b4e7283dc"
+    },
+    {
+      "path": ".work/evidence/flp_open_sf6_combined_final.py",
+      "bytes": 2663,
+      "sha256": "a17e795bded03e8bb3c9522249d7d28bd5c86094e79026c2122b4b1ac950bc91"
+    },
+    {
+      "path": ".work/evidence/flp_reopen/combined_final_postfixed.json",
+      "bytes": 3355304,
+      "sha256": "6c24c861a3ad73dc88a0fb07722de6976db637ea6879e2ea206e95b568b5f8bb"
+    },
+    {
+      "path": ".work/evidence/flp_reopen/postfixed.json",
+      "bytes": 3353089,
+      "sha256": "7354106a741fcd1f61fabe2d97d806f237dfa98bf7b09e002b6a19494ddd92e8"
+    },
+    {
+      "path": ".work/evidence/flp_reopen/prefixed.json",
+      "bytes": 810,
+      "sha256": "cf55e0f19446e7a1b92c34a6738d78aea414b4a35338f904a4303cdc5d765799"
+    },
+    {
+      "path": ".work/evidence/generate_ret6.py",
+      "bytes": 3885,
+      "sha256": "8a5e5cd4797962ed6ec9d1640c22433f6d6e765ef273564a502d49d6111bda1b"
+    },
+    {
+      "path": ".work/evidence/library_cube_snapshot_upload.json",
+      "bytes": 898,
+      "sha256": "df7353d3a1d97073282923d360b844e2db6c439e2049220b6c85fd006a9f38b2"
+    },
+    {
+      "path": ".work/evidence/map_flash_ret6.py",
+      "bytes": 1905,
+      "sha256": "4fa6a2867ec78a98031ac931e719e9ce1f83f0d449c889ab80907d7385ab7969"
+    },
+    {
+      "path": ".work/evidence/map_ret6_combined_verified.py",
+      "bytes": 2800,
+      "sha256": "5294488516ceb5cae944c2a0a6b9b60affdf9a2935b5cd949543022ec6631461"
+    },
+    {
+      "path": ".work/evidence/package_current_cube_snapshot.py",
+      "bytes": 2876,
+      "sha256": "c0f83b2723611210f94ee270cc296b1f978655a8b6c7c393e58a3f1dbc4f8d70"
+    },
+    {
+      "path": ".work/evidence/package_final_software_review.py",
+      "bytes": 6877,
+      "sha256": "36a02bd16c70d387eac8d7469ed883acb2cd30bf19c644feb458ff6e5ed0466b"
+    },
+    {
+      "path": ".work/evidence/regenerate_selected_ret6.ps1",
+      "bytes": 1724,
+      "sha256": "6a403da70e977530c4404903b0d77e628cad6a71685ce2b692abd3c2c886afc2"
+    },
+    {
+      "path": ".work/evidence/ret6_adapter_ownership.log",
+      "bytes": 138,
+      "sha256": "7f80ade7e3a82085e067d69c107da0b31e3fec10be3100a084378378b4666c2b"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_final_generated_source_identity.json",
+      "bytes": 518311,
+      "sha256": "a581689f89f6e33257df722d03eb6437111dd8550ec6bda92c6f6adb1552496e"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_final_host.log",
+      "bytes": 13305,
+      "sha256": "f6659679de96e36a9c48721bec10d60334473d2af8abd3ee471ee614f49618d3"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_final_linked_source_list.log",
+      "bytes": 6883,
+      "sha256": "ffa472db57171d5089789d323099bd1de92f7bb1abf09d337ff0184c297eff0a"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_final_map_symbols.json",
+      "bytes": 6053,
+      "sha256": "713deb342393150adf856c3cb479b0abccf360e40c035a6baaec3a809888ce2d"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_host.log",
+      "bytes": 4981,
+      "sha256": "ea3e13d54caf72b15b15f5a205773dbb4f27095bd7dcbb9892244220da8df437"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_include_host.log",
+      "bytes": 12319,
+      "sha256": "7762ae2425eb64fd2a3004b8512df8c700236249eae4c66ad85c7850e1b9ad52"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_logger_generation.log",
+      "bytes": 800,
+      "sha256": "0b9092ce3646a0305418eb310fa6ace9af0c6dc4f6b938df1119e61b3a08dba5"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_profile_pytest.log",
+      "bytes": 114,
+      "sha256": "1a388a2d569db2d97334cece721d0f72c22c0db51e506f8f2242ff558a9b2184"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_analyzer.log",
+      "bytes": 461875,
+      "sha256": "fe3bc1c2bc3ebb2a438a618be975031b0389b5613ea21faed53ec44bbc70fd68"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_architecture_power10.log",
+      "bytes": 615187,
+      "sha256": "4cd639a665a72793a0bb39a90456400afeed0654d44b0cafb7b8c8a5a997b8ff"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_arm.log",
+      "bytes": 453700,
+      "sha256": "989a21d3bf4fb7764e2f0dd2b23e6dde7d944c02d13a5c89e04e9a319f8fa63b"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_artifact.log",
+      "bytes": 2232,
+      "sha256": "2cbf5696c39b6ce2fb441daa5431626d7eac6b10db8acebe064f0be9980ca87f"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_flash_symbols.json",
+      "bytes": 5728,
+      "sha256": "88ebcd849a93b1c61a6b5e01a138ea70241d80df0c7a3c30647e8fd570983424"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_flp.log",
+      "bytes": 812,
+      "sha256": "094cc3d5c6564177ea5bb202d065fe732409de3eb3cfa63cb5e12246fd8ccdc0"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_generation.log",
+      "bytes": 800,
+      "sha256": "470c7d7486a0eab1b14bcce6b86ee07110cfe05d7f918f52a597b43aa80a341e"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_host.log",
+      "bytes": 12003,
+      "sha256": "8a5eaad8c7c688acc62e07c4b24ba75e6b3676bcdad8497d3bc4a07883d75923"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_slots.log",
+      "bytes": 7364,
+      "sha256": "39fc02b44dd71f89ba22b196b144ac67d9a8bd8e1e6b1cc1bdb718de8e5a3b6b"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_source_identity.log",
+      "bytes": 293,
+      "sha256": "f334700d8b7046144db7e85b2975b4df5ce959972a292ec21ca7519c1bee5956"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_source_identity_retry.log",
+      "bytes": 841,
+      "sha256": "b64c7f7fbaf92740538aab722636393da6fe3fa5570bb0283468873a2989ca7a"
+    },
+    {
+      "path": ".work/evidence/ret6_combined_verified_stack.log",
+      "bytes": 2344,
+      "sha256": "e3b48cddd900ef447c2c826f7afa5bee040150a758c7648fbe8dc2a8aa8b2d86"
+    },
+    {
+      "path": ".work/evidence/ret6_host_selection_full_host.log",
+      "bytes": 14303,
+      "sha256": "eabd0864ef4079ebab6d1460f6af05f863d9ce1ed0cb5f6040c88a7bd0ecc992"
+    },
+    {
+      "path": ".work/evidence/ret6_optional_gui_isolated.log",
+      "bytes": 1660,
+      "sha256": "38ff979024b8efe5036ccb18626df170d3f05b853e9b20ceb2d7d910eaa3d035"
+    },
+    {
+      "path": ".work/evidence/ret6_softwarefix_flp_post.log",
+      "bytes": 2038835,
+      "sha256": "6e04a1a7b9d1cc5b8763352dd0ef5ad7fe076d7f7de9d53ad86103c6912d8218"
+    },
+    {
+      "path": ".work/evidence/ret6_softwarefix_flp_prefix.log",
+      "bytes": 4990,
+      "sha256": "0ec4378dde4830bcbd03e773fd2b0441f6b55c2b3553342e147488d86f9bbbf7"
+    },
+    {
+      "path": ".work/evidence/ret6_storage_dispatch_unresolved_callback_review.json",
+      "bytes": 3067,
+      "sha256": "7968c4728804b52d33a54ca93657b1f054cf84635f248b4e08ce2ad7671e511a"
+    },
+    {
+      "path": ".work/evidence/run_combined_host.ps1",
+      "bytes": 374,
+      "sha256": "0cce989368296f012a64f7f3389f3302de8b093c092703b9563b3b4b74a59a2f"
+    },
+    {
+      "path": ".work/evidence/run_combined_slots.py",
+      "bytes": 508,
+      "sha256": "3e55456b7f040a7ac02246aecdfabe77b2eee29ebd371b90fb1648edad6b564b"
+    },
+    {
+      "path": ".work/evidence/verify_combined_final_source.py",
+      "bytes": 3351,
+      "sha256": "9b99b9942de57dc00bf80f82bd809a3e5d220b9869af0919ebe8291f9b5a44ca"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 12419,
+      "sha256": "3407cb31c6dae44e0365ee7f7ec66bca5a9ed39cf50c86556e0627f786ec7b67"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/app_tasks.su",
+      "bytes": 190,
+      "sha256": "7310ab24a764eafcf0e200bd34890322ad975fff473aa4d12f1c7db31802ea58"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/device_native_log.su",
+      "bytes": 237,
+      "sha256": "c9a92df3936e3828f48e24cf13d30d2374cbc671aca797b865461c3e1f79aa85"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/device_task.su",
+      "bytes": 55,
+      "sha256": "bc65ee79249db028c607b29061ca46caeb1b77b3eeb1b3eba6a2c12e8b7f50af"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/diagnostic_log.su",
+      "bytes": 216,
+      "sha256": "fced694946aabe104f01d3dea34ff2564c38634f191a0630f95d1f18c13b4b20"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/estimator_barometer_pending.su",
+      "bytes": 343,
+      "sha256": "9e2b4b5b955158481fbe0cce42b927e1677d22921b147bfc478a3a6ef6040b0c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/estimator_bus.su",
+      "bytes": 468,
+      "sha256": "2d29b1e3ad0dafd7dfaefdc7a9690ed659de7d5356a6e898b395587d242aff43"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/estimator_task.su",
+      "bytes": 1111,
+      "sha256": "0b0bf7d9e2f51975bbf39a99ece35e21e61ab3fd5080e19d8f968fa7b1cabda3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/flight_task.su",
+      "bytes": 1147,
+      "sha256": "8b2a5aeed9b37e7dfab60fb747493fbd912526c0831011921c3eb7f17ce5c24f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/imu_sample_bus.su",
+      "bytes": 444,
+      "sha256": "b2e0345281c432a40d0c4b6f27e117b16acfafe5580c901a11c44e1c087768e3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/ins_task.su",
+      "bytes": 1042,
+      "sha256": "53ff1c328b5434a19759c3c4c40b0777820e9dbc919fa178252d9f1e819749dd"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/logger_bus.su",
+      "bytes": 4360,
+      "sha256": "256d412504b5b04489e9393deba2269c05f0bb830a4dd0a8aac9ab81f37cb286"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/logger_task.su",
+      "bytes": 425,
+      "sha256": "306262828c488bd92cc92a1396ab32c8c1864ee6a5be691084b3da636bdca923"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/APP/Src/telemetry_task.su",
+      "bytes": 59,
+      "sha256": "60bcaf80788cf7e95bb57aff8418deec549ef76a4739a9fbb8a0867a229baa74"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Alignment/Common/Src/attitude_alignment.su",
+      "bytes": 1023,
+      "sha256": "642d5e271bc0d485a6131b7763b0f57ebe927e95018b9871c1645e5b08a26616"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Alignment/Common/Src/attitude_preflight.su",
+      "bytes": 789,
+      "sha256": "7606f1960a03e63a2327ba294c18d3f48da4a4a128e354965087f0cc42db696a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Alignment/Common/Src/vector_constraints.su",
+      "bytes": 299,
+      "sha256": "5227de4df31230cbe620b32025bd2eef19963a902bde84bff40ddb6c9e0c2637"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Alignment/VectorConstraints/Src/alignment_strategy_binding.su",
+      "bytes": 727,
+      "sha256": "7595e3395e6b4074985ec06ef9fbf7b0461270da951fcb3130694aec3be90698"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Calibration/Src/imu_six_face_calibration.su",
+      "bytes": 101,
+      "sha256": "efffd57cf5efc422dfcbf9e364fdfff64d3c7740254ecd02ff059bc8f19e49fb"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Common/Src/attitude_frame.su",
+      "bytes": 1651,
+      "sha256": "3fe2bb7f4cfd9904381ea223a998d0d9d5fa9f19ce382b4a8d973bcf655c6a82"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Common/Src/geodesy_local.su",
+      "bytes": 145,
+      "sha256": "3dc5a2d87a45fce534c1392d0e909e9eb36a8426acca190db1eb10e0378eab3d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Common/Src/navigation_quality.su",
+      "bytes": 599,
+      "sha256": "96df705f49c01f380ff4067cf3a3607c6aadfc306adcc3f1681b4ffadfe4224c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Estimator/SF6/Src/navigation_sf6.su",
+      "bytes": 523,
+      "sha256": "d5c7d9b3dfc192abfb2e6c5d2b2c678659b5b84a638d517e3974ee7d6c74ce68"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.su",
+      "bytes": 703,
+      "sha256": "9904ec0a42e36fced3a87e53ac7baa662faf2651fcdaf9d4f45080b6aeebfc01"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.su",
+      "bytes": 1325,
+      "sha256": "19efa49b9156d4ea98c2ed979755f58fb85210ffbd8e39fd7790c29ee512feb6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Common/Src/common_format.su",
+      "bytes": 759,
+      "sha256": "fb9e8ee1b9c6e5775ec0fe31a1d3523b15ee1800a82fbab25f7fe94fd0fa0113"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Common/Src/common_ringbuf.su",
+      "bytes": 677,
+      "sha256": "dda2292a4a6674dcdcecb681afda48739e6f1211e3c4c0daa3860ca268cec1f8"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Common/Src/common_spsc_queue.su",
+      "bytes": 345,
+      "sha256": "d90695da87ebcc876d3e9fac95ed104c1a53e8103bfd4f60d5f1bfb46f6c4eea"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Common/Src/debug_log.su",
+      "bytes": 459,
+      "sha256": "ddeaf858efc34e0bbeef8b5d9fb1b1e3da33ea1c48c023d51069e7fcb3495b9c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Common/Src/silverstar_assert.su",
+      "bytes": 452,
+      "sha256": "679b9adab88d3eb7aa2e1f64cf0cfe0d0311630bccff0d9ec9c89676f3965f54"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Barometer/BMP280/Adapter/Src/bmp280_adapter.su",
+      "bytes": 1531,
+      "sha256": "95130e0773d3960aa2a4bba1f178f3c9072495161aea520746e01886d82f51ff"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.su",
+      "bytes": 1480,
+      "sha256": "fc7f6896e347b869487abf3dfa962509df15c2c1b4ff189e540b8512e3e3c477"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Barometer/BMP280/Src/bmp280_core.su",
+      "bytes": 222,
+      "sha256": "a8a10a93642c409b3a1328ef4b7aa942e6394d10ff42466b72c915e9e6e046f1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+      "bytes": 1783,
+      "sha256": "1d23eff369510a0fe23282ab6152e0e4c6adc7d7003c506408cfd5bf56656af4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Src/mpu6050_device.su",
+      "bytes": 156,
+      "sha256": "f079ed67061badf3a3d066d07361bd392209e363be514ee307a6221af55230df"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/SensorBus/Adapter/Src/sensor_imu_adapter.su",
+      "bytes": 1337,
+      "sha256": "756fc49ca141e78f22129f22598e04a39cdb41969a5d0e6a3a31adb3dce92d66"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/SensorBus/Adapter/Src/sensor_imu_spi_adapter.su",
+      "bytes": 374,
+      "sha256": "dec872074e9688853eb58d1007db5f6078320e80f6b5956200ba6faba8686323"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/SensorBus/Src/sensor_bmi088_fifo.su",
+      "bytes": 345,
+      "sha256": "2501fec46b70ea0b0e7b6dd80480185ed16580b128def6c610d66af6bbd1bb01"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/SensorBus/Src/sensor_bmi088_sync.su",
+      "bytes": 348,
+      "sha256": "c7bcdf86cc610e52cbca318c8a959c6603e00167712587af9de32d5acf495a88"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/SensorBus/Src/sensor_high_g.su",
+      "bytes": 83,
+      "sha256": "457b60a554e998aaf1b3cd515db1f2a1139d4a2fa338bcb0bb115dbc4bb67de4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/SensorBus/Src/sensor_imu.su",
+      "bytes": 945,
+      "sha256": "10dbfe771d346f25d4e1c1ec3f07d7836fadc0e4b9d10536f31495001c152c62"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/SensorBus/Src/sensor_register_bus.su",
+      "bytes": 162,
+      "sha256": "9b1b01cab8f80e39797c24ca3614611cef51fb21a805ef9493753baf7001dfc8"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.su",
+      "bytes": 695,
+      "sha256": "7050b60506ba8fafc6a52ecd010496f695dc22d3db3884d401e0ee427c727d36"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.su",
+      "bytes": 243,
+      "sha256": "22f977f851b11bf441db56489d3566708cdea00e823c93c6fba8e07d14cb976f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.su",
+      "bytes": 750,
+      "sha256": "193dfeb3033379a6df8667f588ac855f74a2a8046cc9df660fa6a3229c6cda7e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.su",
+      "bytes": 997,
+      "sha256": "efd2855f444cc77c12b3d5ad6a8cf41a4e2a9a20ad9aa12260060bd9aa404564"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.su",
+      "bytes": 1429,
+      "sha256": "f2933762de15d81bf9f09d26e5797f4753640f32e6583396929b35a688574955"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.su",
+      "bytes": 152,
+      "sha256": "ffc002651103f98450ca0a861c9d7bcc25fa17e7ddc7300b3ea73c9d02599797"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.su",
+      "bytes": 2059,
+      "sha256": "c416ed8ce1f14d73c999374782ad266af0a199f69aa48600bbaeed25a459fd9c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Src/sx1281_bus.su",
+      "bytes": 886,
+      "sha256": "f453c4bd23770b1ad7713f35119355913d2f980b11e500653eb8aad656840ed2"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Src/sx1281_device.su",
+      "bytes": 2877,
+      "sha256": "fc53d580e57490a99f0f53051933cf4c1118bc5a14a3cfe9b93b789aacd6c4fd"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.su",
+      "bytes": 2087,
+      "sha256": "b1279ca14ded1bdc528eee05842404d3729d9edacf99d8fd34f56cf108e0991a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.su",
+      "bytes": 1426,
+      "sha256": "95685e6adbf60926056655f4753efaa60cef0d7c1eedebe23075e124ceda5bf1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.su",
+      "bytes": 1062,
+      "sha256": "bc223ab06066f1d248eef89417f41c1c10f3260abc5be3a319e48433de2772fa"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.su",
+      "bytes": 836,
+      "sha256": "2d5345819a6612cc26307ca65381ce193d430701a3964617142504176648cc02"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.su",
+      "bytes": 1219,
+      "sha256": "31c5175c83c137ed91b825acb268b2b30f5c9a97ad244b0a34624b2adaa2f84e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.su",
+      "bytes": 775,
+      "sha256": "21f3763f0c4d679f924a4ed873174cc4b1e368759901b0234ab56c0dac0c19fc"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.su",
+      "bytes": 714,
+      "sha256": "be6637ce09543fe0353d51c1671ad9f8e3947f54203eb649ceb9d881538438c9"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.su",
+      "bytes": 296,
+      "sha256": "54e7a14f4c696640f8568cd6706af5dbddc5582b69bfacfe7e99a15921f42a58"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.su",
+      "bytes": 6191,
+      "sha256": "76305e9d94f9777a3e85286e75534ced5c3c9a8f9068372e30e5a5c376569966"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.su",
+      "bytes": 1645,
+      "sha256": "0b6ae07b2f0c53d879de41d7476828677b52ade6be16dbbce523da5c96f84014"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.su",
+      "bytes": 1270,
+      "sha256": "32122e91593bc7786728f860364ef4cccdc75aafefb236e8efa4a90256a73364"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.su",
+      "bytes": 300,
+      "sha256": "736e7d3e431d512ae7fd466b4775cf88950e1c255d6f94c465e6f4762559cf2e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_sd.su",
+      "bytes": 2921,
+      "sha256": "139621b508caea8d69c12965f33614537876e73b603a7bf517ceb83dcc00ad3f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.su",
+      "bytes": 5039,
+      "sha256": "a59e7ee16585427d90e9302ba22385444171fc72c3fd12bb88e2bc6191f686ae"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.su",
+      "bytes": 10604,
+      "sha256": "2ab273ba8e8d17dae69362428bf93fb086deeaf86d74e6a8bac3e7b8280c4d2c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.su",
+      "bytes": 4100,
+      "sha256": "29092f75184dc43c2702a1b8247c2efd9f9e48b201885009d275ac63af4c6817"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_sdmmc.su",
+      "bytes": 4093,
+      "sha256": "c36c079350ddb4288ab3a996df4cad12303393971696a72db286e602c6da01f6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/FlightLogic/Deployment/MultiTrigger/Src/flight_deployment.su",
+      "bytes": 444,
+      "sha256": "65230fab412b52085c8c3aea7f9c482c9c50c7e7db0ae813dd15947f394ef909"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/FlightLogic/FlightCycle/Src/silverstar_flight_cycle.su",
+      "bytes": 2243,
+      "sha256": "172039c06c1d3f166c8a963f14b7e4dfdc25f1323638860bb3ed3573631374ee"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/FlightLogic/FlightCycle/Src/silverstar_flight_recovery.su",
+      "bytes": 1354,
+      "sha256": "a28371fbd240fcbbf010abfb161df09f8cc8ee610274171fb8519356aaac7be6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/FlightLogic/Indicator/GpioStatus/Src/indicator_service.su",
+      "bytes": 99,
+      "sha256": "74de17d9602d79895c7610fd8a7ed7ba57db1c955ff36681c9695194b73b2132"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/FlightLogic/Landing/BarometerImuWindow/Src/flight_landing.su",
+      "bytes": 1560,
+      "sha256": "e0b7e744d6f0e7d171498d18e6103f9b1838c0b8737968bed08c6fb3e853afc4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/FlightLogic/MissionAction/GpioOutput/Src/mission_action_service.su",
+      "bytes": 328,
+      "sha256": "5854de529015e70897002b1ca18383db4ad0274d07c9dc77d654b2390287c06c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/FlightLogic/MissionAction/GpioOutput/Src/output_service.su",
+      "bytes": 773,
+      "sha256": "de2f314c415e377cde2f412cc6df88b44abb348322b47ef08f2385a93fc23560"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/platform_resources.su",
+      "bytes": 362,
+      "sha256": "f34fc8cc45f7942cbdc08473df328163d7590a25503acbf7f84fc1488347a9fc"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/project_capability_routes.su",
+      "bytes": 175,
+      "sha256": "7427726a3e9fa9914f5f95cf1c26f23a243da9bc71c747a46c524fffc9ff6fa3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/project_device_instances.su",
+      "bytes": 10141,
+      "sha256": "f0ad4d66c8aff8d93baeaff574507022e2f0e0c6c6892adba90b216366c28ec8"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/project_log_config.su",
+      "bytes": 254,
+      "sha256": "981edeef1e8b50bb70113890bedc29430da41138510aa30a4d88bb03ab2ddffb"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/project_log_decoder_profile.su",
+      "bytes": 89,
+      "sha256": "9bc6e70d4dba3dd24d243312a777e9d4082200369a35b35360ecb7edec2671fc"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/project_metadata.su",
+      "bytes": 580,
+      "sha256": "6cd2d16495c2c365d2ecd9ac4f1cb590f1707ee1b1eb91e798ad6ec420f5f876"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/project_mission_parameters.su",
+      "bytes": 178,
+      "sha256": "b4261a5c7669b086e7de8f837b0363b557d02d00afc98e841beb6ea64190673a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Generated/Src/project_resources.su",
+      "bytes": 235,
+      "sha256": "f0decacd7b1a3f078dadba33674830917cc1254b15c9d18c04c4b9b304587ff3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/dma.su",
+      "bytes": 73,
+      "sha256": "224ff88501135cec43e5bc3f159983081b7068314e80096b09287a6acd43283c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/gpio.su",
+      "bytes": 75,
+      "sha256": "9a15948a4c44c35830642223656fa3490b4fd1dd2e20dccad4e19de63460c446"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/i2c.su",
+      "bytes": 228,
+      "sha256": "d72060fdcbb3ca1b0800b3310b118c9dfc488928fb65aa2440040d168bc3ae80"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/main.su",
+      "bytes": 316,
+      "sha256": "ca8569b15fdca04812de3dc28b7cde9ba9ccb913af0425f223c5d45c900e7ffe"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/sdio.su",
+      "bytes": 233,
+      "sha256": "fba017e7ca135e07760ae5124bd35df0b8ba0536ea4eb5be642ae7ba72d93d98"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/spi.su",
+      "bytes": 228,
+      "sha256": "6641be38d0a6914a82ee82dcaa4e9d7a328f808ecbba17073a678c4742341581"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_hal_msp.su",
+      "bytes": 86,
+      "sha256": "46a990354b6d367596fa96da2f72a2c3c877d33da8c2951b1185bcb7b3950f2a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_hal_timebase_tim.su",
+      "bytes": 297,
+      "sha256": "818f1f547d004c9e642e1413dcef9d8b488ab91a45dbcace65fa9398935bdf9d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_it.su",
+      "bytes": 875,
+      "sha256": "1a8ac9454173a9581f96f90232e7b006f603df4662a089b987a1138acc1bd3e9"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/Core/Src/system_stm32f1xx.su",
+      "bytes": 181,
+      "sha256": "89e91a5aafcba454299763fa0db8314f848aa8368345a2e34e9338b038e36143"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.su",
+      "bytes": 77,
+      "sha256": "73a1acdc1e90364c403d2044742669d03d0adc6be037a4f70d57b95949159ce7"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.su",
+      "bytes": 1619,
+      "sha256": "eb10fea4cb210d4b9625a36c06acfd2f7d4f0a42da56a9b99fe02c9eef632a62"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/FATFS/Target/fatfs_platform.su",
+      "bytes": 98,
+      "sha256": "467e692087eb95219e4a6596b0da3d225fcdc9b523e882f7ce8794f2ae715295"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Middlewares/Third_Party/FatFs/src/diskio.su",
+      "bytes": 425,
+      "sha256": "74e731a4179e6d00de76dc02b2f95f460f26219c77bf674746dca3ecba5edf84"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Middlewares/Third_Party/FatFs/src/ff.su",
+      "bytes": 3291,
+      "sha256": "e86bab2c72bbfecd99ae01b48742b645223d2803da641354acd8b4a481c52fd0"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Middlewares/Third_Party/FatFs/src/ff_gen_drv.su",
+      "bytes": 419,
+      "sha256": "a59447ca08f07770a012d85ff2110d25904342704a359712882d5faab4b96b6f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Middlewares/Third_Party/SX1280lib/sx1280-hal.su",
+      "bytes": 1272,
+      "sha256": "d15702989394f9b369e3b894c58fff692f6e74ad3f31f6080c87436603ffe996"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Middlewares/Third_Party/SX1280lib/sx1280.su",
+      "bytes": 5351,
+      "sha256": "d50ee5878d56cec4525dafdfc7fcc76a6432b600bd10bca68b7bd0eab226f1dd"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Modules/Src/telemetry_service.su",
+      "bytes": 1249,
+      "sha256": "ad9899cef242caccb95e1ea59470f4a1c00bc5f29a37da2c9a2b5ea6e59f82c3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/OS/FreeRTOS/freertos_hooks.su",
+      "bytes": 149,
+      "sha256": "2c1c9862d432da40d13cfb0c33d655874288ff1031905b56c9c6e6ef38c8846b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1/Src/platform_critical_stm32f1.su",
+      "bytes": 173,
+      "sha256": "eda3f03f2c9c6674437ebe288d2d97e7083ffb53a29f2615aa203c863a87fb79"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_gpio_stm32f1flight.su",
+      "bytes": 378,
+      "sha256": "784943dee389c84487861f1a0f2ed51bf3a8208e11e8d81b7ffa2cd4292cd5e1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_i2c_deadline.su",
+      "bytes": 189,
+      "sha256": "a83a9689f33045aff58221db0ecd805a6f3c2d9a75fbf65dc0371a3c176fc740"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_i2c_stm32f1flight.su",
+      "bytes": 375,
+      "sha256": "fc128cd2718b5df6c2da2e4d24ac593f78be9f0e1ac9e608f72556568298c79d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_memory_stm32f1flight.su",
+      "bytes": 104,
+      "sha256": "c78db5c98717b3f5c9930c713921b95cfb57dfffc5abce2866e3fbe9bf1d6960"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_sd_clock.su",
+      "bytes": 205,
+      "sha256": "81ca8afd9cface979c149c3da5dd0751beb52b2dc72711974c017a68015ba206"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_spi_stm32f1flight.su",
+      "bytes": 386,
+      "sha256": "79d72be4f11bbb411c72a3cfa18a8c8cc8497b2fe81ca138a34cd4120c83bf56"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/platform_time_stm32f1flight.su",
+      "bytes": 365,
+      "sha256": "e177ae900822378253ef122dac7ff9c5ce877018bf025349e29b64745e15f84b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.su",
+      "bytes": 776,
+      "sha256": "a875afefb267ac9d986b8c8415531431bd4e66383d065558c2ff07319f892e01"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Protocol/SSLOG/Src/sslog_protocol.su",
+      "bytes": 313,
+      "sha256": "796df0d41a563bf5aea4fad1b086874ae6ed770501c908e08987418cfafb9eef"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Protocol/SSLOG/Src/sslog_records.su",
+      "bytes": 4153,
+      "sha256": "a50b10a163a9abc293f8e86a74208629bef9a13729d7e2ebfb0f82434307c799"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Protocol/Src/air_protocol.su",
+      "bytes": 1841,
+      "sha256": "34ef33761c18274c5c5195ab83ea20035d5850bd10ef6f4a86acd18fcb1f5a89"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/SilverStar_0_1_1.bin",
+      "bytes": 217640,
+      "sha256": "b75f012916f9dd4da171f4b1a16b60c2adb7c53508e41d36d94ac175ff2f3e74"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/SilverStar_0_1_1.elf",
+      "bytes": 2543600,
+      "sha256": "01a2560e2174c9c3571f1b7d558cbd8086f779f41f2d2955ea884a9a3986443d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/SilverStar_0_1_1.hex",
+      "bytes": 612265,
+      "sha256": "6f11a8354019284904a7ab9b5e1dc45ffc50ae3c76d00ea45477f1f4dc3df0f4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/SilverStar_0_1_1.map",
+      "bytes": 1396892,
+      "sha256": "e6c78845b656ec7bd3e53a4b04225d20c0ea2272828ea71b721c6d1e40694357"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Alignment/Src/system_alignment.su",
+      "bytes": 1837,
+      "sha256": "134916647821b4d862bc7a2b8b0bd96bcfe76b5b755d9e4b77f67b7ee182b102"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Alignment/Src/system_alignment_source.su",
+      "bytes": 776,
+      "sha256": "01289a3534d4e4cf3417f6abfb30bf6eed1bf96afd1a9c25ddcd201968668545"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Calibration/Src/system_calibration.su",
+      "bytes": 1812,
+      "sha256": "5ad2ef3e6aa4cc92b117e8ab8680456b19d1f0fcdce5255e43a8ea66613a5c66"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Calibration/Src/system_calibration_correction.su",
+      "bytes": 215,
+      "sha256": "8fb985be2957ac7398091a1827a5945b84349d5253df3c340fd41867c51c7e4b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Calibration/Src/system_mag_calibration.su",
+      "bytes": 1410,
+      "sha256": "8d09e5e940b690e2de61693f45d934feaa533e29203c7a58ddf4ed43ddd85564"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Indicator/Src/system_indicator.su",
+      "bytes": 598,
+      "sha256": "c5402e01f689bf9a15d1ad40d74b15645fbb453b074334cd6c29c99fac784643"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Inertial/Src/system_inertial.su",
+      "bytes": 414,
+      "sha256": "fb83e49e244cca7c0762857703a5cd1b2174ce57cbcf7e378c120659215404b1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_barometer.su",
+      "bytes": 79,
+      "sha256": "733499fcf4781bc593193a35155d209c58a147756c3492a49369d883c72f904c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_barometer_cold.su",
+      "bytes": 928,
+      "sha256": "9ad4bdaac2a7763f37e20af309f4d50baed9b4e66f3a61c65e6cf036d6856aac"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_capabilities.su",
+      "bytes": 238,
+      "sha256": "f838ef428d4a76846b63f56d05106e95cc901ec1cb14e7705dd3e83c264ce37e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_device_startup.su",
+      "bytes": 239,
+      "sha256": "ce5de9fd4d7246f92649dcb2b7bf73251dac94783b02b25258f56914062e6666"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_estimator_diagnostics.su",
+      "bytes": 1576,
+      "sha256": "acba657a285ae475987270549cf7a26cbfa4b06b38f53ca2360265d6134b4d81"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_estimator_profile.su",
+      "bytes": 523,
+      "sha256": "38fb83f3b0668954c46635f9fffdc65b6936aad87f60343c6d65355186941ee3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_gnss_quality.su",
+      "bytes": 161,
+      "sha256": "98562e9b333171e5f7ec4d8a6befed8649d84d4cc40c028ebfea22c33f48fca3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_health.su",
+      "bytes": 480,
+      "sha256": "a5a24b8f773e4761765a336dceaaa85b0d798392f429602c1b35cdcc9d780c3e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_log_policy.su",
+      "bytes": 1069,
+      "sha256": "9114a878dc21908487ed38b2ddc6a472e67032779d3873c00348386c25d745ec"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_navigation_health.su",
+      "bytes": 895,
+      "sha256": "04eee84316a33272d4b99a637a565cfa0374b87fe235e4132b1d0173f0f940ce"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_navigation_profile.su",
+      "bytes": 353,
+      "sha256": "079f90117469f02e3f9a7c1bc5b5ea62b6eef37c4e343a88c78516398bad5386"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_profile.su",
+      "bytes": 269,
+      "sha256": "5265abac565faa355a55102d8e0e27ed64381ffa21f802f1578a7c591f77cb5d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_sensor_status.su",
+      "bytes": 662,
+      "sha256": "d6296f086b59b6270d0bcb820b285f42856e53b7c1b88f64e16cd0eb8a45ad8b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_source_selector.su",
+      "bytes": 9593,
+      "sha256": "1e76e3684ddb299b2d040c19c84f2046c4181ca880e4ee7e54286febd771942c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_startup.su",
+      "bytes": 817,
+      "sha256": "f2d855a34b6a4806af1f61391005858bea9da6d53b05888ec7b8da932bce98f9"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/Src/system_time.su",
+      "bytes": 812,
+      "sha256": "4c127b107548ccba83b4c0a4ab508d3376b832635bf4f29363945ce4befcb4c6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/System/User/system_user_inertial_config.su",
+      "bytes": 87,
+      "sha256": "89f4b932b64b8aca17de21393c3e4785c364c57cd40d170c98cc54f987a08964"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/Targets/SilverStar_F103RE/Src/freertos_target_irq.su",
+      "bytes": 82,
+      "sha256": "abd4356790d14a5b8cb1424ad1a71ca781ba04688dc4ab00b1143c8ee30a6dd2"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/ThirdParty/FreeRTOS-Kernel/list.su",
+      "bytes": 325,
+      "sha256": "c902350301103b8955fa9ca50f39cefd5a3eced80460a9196efd9bf0c13f6914"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM3/port.su",
+      "bytes": 1098,
+      "sha256": "978d56b566da3216a9e03fa2a37f10cfca0ae3aabe9732f58884991487210187"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/ThirdParty/FreeRTOS-Kernel/queue.su",
+      "bytes": 1565,
+      "sha256": "464cc2cc73c25b4e6af6a9e76a85a8d1721533a1f589f4129ba289c7a1415272"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/Release/ThirdParty/FreeRTOS-Kernel/tasks.su",
+      "bytes": 2864,
+      "sha256": "9a827d7d2a33bd096aa2da7c00f0853ede7ff98fa37749b15581c49153fffd50"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/app_tasks.su",
+      "bytes": 190,
+      "sha256": "7310ab24a764eafcf0e200bd34890322ad975fff473aa4d12f1c7db31802ea58"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/device_native_log.su",
+      "bytes": 237,
+      "sha256": "c9a92df3936e3828f48e24cf13d30d2374cbc671aca797b865461c3e1f79aa85"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/device_task.su",
+      "bytes": 55,
+      "sha256": "bc65ee79249db028c607b29061ca46caeb1b77b3eeb1b3eba6a2c12e8b7f50af"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/diagnostic_log.su",
+      "bytes": 216,
+      "sha256": "fced694946aabe104f01d3dea34ff2564c38634f191a0630f95d1f18c13b4b20"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/estimator_barometer_pending.su",
+      "bytes": 343,
+      "sha256": "9e2b4b5b955158481fbe0cce42b927e1677d22921b147bfc478a3a6ef6040b0c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/estimator_bus.su",
+      "bytes": 468,
+      "sha256": "2d29b1e3ad0dafd7dfaefdc7a9690ed659de7d5356a6e898b395587d242aff43"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/estimator_task.su",
+      "bytes": 1111,
+      "sha256": "0b0bf7d9e2f51975bbf39a99ece35e21e61ab3fd5080e19d8f968fa7b1cabda3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/flight_task.su",
+      "bytes": 1147,
+      "sha256": "8b2a5aeed9b37e7dfab60fb747493fbd912526c0831011921c3eb7f17ce5c24f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/imu_sample_bus.su",
+      "bytes": 444,
+      "sha256": "b2e0345281c432a40d0c4b6f27e117b16acfafe5580c901a11c44e1c087768e3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/ins_task.su",
+      "bytes": 1042,
+      "sha256": "53ff1c328b5434a19759c3c4c40b0777820e9dbc919fa178252d9f1e819749dd"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/logger_bus.su",
+      "bytes": 4360,
+      "sha256": "256d412504b5b04489e9393deba2269c05f0bb830a4dd0a8aac9ab81f37cb286"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/logger_task.su",
+      "bytes": 425,
+      "sha256": "306262828c488bd92cc92a1396ab32c8c1864ee6a5be691084b3da636bdca923"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/APP/Src/telemetry_task.su",
+      "bytes": 59,
+      "sha256": "60bcaf80788cf7e95bb57aff8418deec549ef76a4739a9fbb8a0867a229baa74"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Alignment/Common/Src/attitude_alignment.su",
+      "bytes": 1023,
+      "sha256": "642d5e271bc0d485a6131b7763b0f57ebe927e95018b9871c1645e5b08a26616"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Alignment/Common/Src/attitude_preflight.su",
+      "bytes": 789,
+      "sha256": "7606f1960a03e63a2327ba294c18d3f48da4a4a128e354965087f0cc42db696a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Alignment/Common/Src/vector_constraints.su",
+      "bytes": 299,
+      "sha256": "5227de4df31230cbe620b32025bd2eef19963a902bde84bff40ddb6c9e0c2637"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Alignment/VectorConstraints/Src/alignment_strategy_binding.su",
+      "bytes": 727,
+      "sha256": "7595e3395e6b4074985ec06ef9fbf7b0461270da951fcb3130694aec3be90698"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Calibration/Src/imu_six_face_calibration.su",
+      "bytes": 101,
+      "sha256": "efffd57cf5efc422dfcbf9e364fdfff64d3c7740254ecd02ff059bc8f19e49fb"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Common/Src/attitude_frame.su",
+      "bytes": 1651,
+      "sha256": "3fe2bb7f4cfd9904381ea223a998d0d9d5fa9f19ce382b4a8d973bcf655c6a82"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Common/Src/geodesy_local.su",
+      "bytes": 145,
+      "sha256": "3dc5a2d87a45fce534c1392d0e909e9eb36a8426acca190db1eb10e0378eab3d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Common/Src/navigation_quality.su",
+      "bytes": 599,
+      "sha256": "96df705f49c01f380ff4067cf3a3607c6aadfc306adcc3f1681b4ffadfe4224c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Estimator/SF6/Src/navigation_sf6.su",
+      "bytes": 523,
+      "sha256": "d5c7d9b3dfc192abfb2e6c5d2b2c678659b5b84a638d517e3974ee7d6c74ce68"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.su",
+      "bytes": 703,
+      "sha256": "9904ec0a42e36fced3a87e53ac7baa662faf2651fcdaf9d4f45080b6aeebfc01"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.su",
+      "bytes": 1325,
+      "sha256": "19efa49b9156d4ea98c2ed979755f58fb85210ffbd8e39fd7790c29ee512feb6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Common/Src/common_format.su",
+      "bytes": 759,
+      "sha256": "fb9e8ee1b9c6e5775ec0fe31a1d3523b15ee1800a82fbab25f7fe94fd0fa0113"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Common/Src/common_ringbuf.su",
+      "bytes": 677,
+      "sha256": "dda2292a4a6674dcdcecb681afda48739e6f1211e3c4c0daa3860ca268cec1f8"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Common/Src/common_spsc_queue.su",
+      "bytes": 345,
+      "sha256": "d90695da87ebcc876d3e9fac95ed104c1a53e8103bfd4f60d5f1bfb46f6c4eea"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Common/Src/debug_log.su",
+      "bytes": 459,
+      "sha256": "ddeaf858efc34e0bbeef8b5d9fb1b1e3da33ea1c48c023d51069e7fcb3495b9c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Common/Src/silverstar_assert.su",
+      "bytes": 452,
+      "sha256": "679b9adab88d3eb7aa2e1f64cf0cfe0d0311630bccff0d9ec9c89676f3965f54"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Barometer/BMP280/Adapter/Src/bmp280_adapter.su",
+      "bytes": 1531,
+      "sha256": "95130e0773d3960aa2a4bba1f178f3c9072495161aea520746e01886d82f51ff"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Barometer/BMP280/Adapter/Src/bmp280_i2c_instance.su",
+      "bytes": 1480,
+      "sha256": "fc7f6896e347b869487abf3dfa962509df15c2c1b4ff189e540b8512e3e3c477"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Barometer/BMP280/Src/bmp280_core.su",
+      "bytes": 222,
+      "sha256": "a8a10a93642c409b3a1328ef4b7aa942e6394d10ff42466b72c915e9e6e046f1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+      "bytes": 1783,
+      "sha256": "1d23eff369510a0fe23282ab6152e0e4c6adc7d7003c506408cfd5bf56656af4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/IMU/MPU6050/Src/mpu6050_device.su",
+      "bytes": 156,
+      "sha256": "f079ed67061badf3a3d066d07361bd392209e363be514ee307a6221af55230df"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/SensorBus/Adapter/Src/sensor_imu_adapter.su",
+      "bytes": 1337,
+      "sha256": "756fc49ca141e78f22129f22598e04a39cdb41969a5d0e6a3a31adb3dce92d66"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/SensorBus/Adapter/Src/sensor_imu_spi_adapter.su",
+      "bytes": 374,
+      "sha256": "dec872074e9688853eb58d1007db5f6078320e80f6b5956200ba6faba8686323"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/SensorBus/Src/sensor_bmi088_fifo.su",
+      "bytes": 345,
+      "sha256": "2501fec46b70ea0b0e7b6dd80480185ed16580b128def6c610d66af6bbd1bb01"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/SensorBus/Src/sensor_bmi088_sync.su",
+      "bytes": 348,
+      "sha256": "c7bcdf86cc610e52cbca318c8a959c6603e00167712587af9de32d5acf495a88"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/SensorBus/Src/sensor_high_g.su",
+      "bytes": 83,
+      "sha256": "457b60a554e998aaf1b3cd515db1f2a1139d4a2fa338bcb0bb115dbc4bb67de4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/SensorBus/Src/sensor_imu.su",
+      "bytes": 945,
+      "sha256": "10dbfe771d346f25d4e1c1ec3f07d7836fadc0e4b9d10536f31495001c152c62"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/SensorBus/Src/sensor_register_bus.su",
+      "bytes": 162,
+      "sha256": "9b1b01cab8f80e39797c24ca3614611cef51fb21a805ef9493753baf7001dfc8"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.su",
+      "bytes": 695,
+      "sha256": "7050b60506ba8fafc6a52ecd010496f695dc22d3db3884d401e0ee427c727d36"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.su",
+      "bytes": 243,
+      "sha256": "22f977f851b11bf441db56489d3566708cdea00e823c93c6fba8e07d14cb976f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.su",
+      "bytes": 750,
+      "sha256": "193dfeb3033379a6df8667f588ac855f74a2a8046cc9df660fa6a3229c6cda7e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.su",
+      "bytes": 997,
+      "sha256": "efd2855f444cc77c12b3d5ad6a8cf41a4e2a9a20ad9aa12260060bd9aa404564"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.su",
+      "bytes": 1429,
+      "sha256": "f2933762de15d81bf9f09d26e5797f4753640f32e6583396929b35a688574955"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.su",
+      "bytes": 152,
+      "sha256": "ffc002651103f98450ca0a861c9d7bcc25fa17e7ddc7300b3ea73c9d02599797"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.su",
+      "bytes": 2059,
+      "sha256": "c416ed8ce1f14d73c999374782ad266af0a199f69aa48600bbaeed25a459fd9c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Telemetry/SX1281/Src/sx1281_bus.su",
+      "bytes": 886,
+      "sha256": "f453c4bd23770b1ad7713f35119355913d2f980b11e500653eb8aad656840ed2"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Devices/Telemetry/SX1281/Src/sx1281_device.su",
+      "bytes": 2877,
+      "sha256": "fc53d580e57490a99f0f53051933cf4c1118bc5a14a3cfe9b93b789aacd6c4fd"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.su",
+      "bytes": 2087,
+      "sha256": "b1279ca14ded1bdc528eee05842404d3729d9edacf99d8fd34f56cf108e0991a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.su",
+      "bytes": 1426,
+      "sha256": "95685e6adbf60926056655f4753efaa60cef0d7c1eedebe23075e124ceda5bf1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.su",
+      "bytes": 1062,
+      "sha256": "bc223ab06066f1d248eef89417f41c1c10f3260abc5be3a319e48433de2772fa"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.su",
+      "bytes": 836,
+      "sha256": "2d5345819a6612cc26307ca65381ce193d430701a3964617142504176648cc02"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.su",
+      "bytes": 1219,
+      "sha256": "31c5175c83c137ed91b825acb268b2b30f5c9a97ad244b0a34624b2adaa2f84e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.su",
+      "bytes": 775,
+      "sha256": "21f3763f0c4d679f924a4ed873174cc4b1e368759901b0234ab56c0dac0c19fc"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.su",
+      "bytes": 714,
+      "sha256": "be6637ce09543fe0353d51c1671ad9f8e3947f54203eb649ceb9d881538438c9"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.su",
+      "bytes": 296,
+      "sha256": "54e7a14f4c696640f8568cd6706af5dbddc5582b69bfacfe7e99a15921f42a58"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.su",
+      "bytes": 6191,
+      "sha256": "76305e9d94f9777a3e85286e75534ced5c3c9a8f9068372e30e5a5c376569966"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.su",
+      "bytes": 1645,
+      "sha256": "0b6ae07b2f0c53d879de41d7476828677b52ade6be16dbbce523da5c96f84014"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.su",
+      "bytes": 1270,
+      "sha256": "32122e91593bc7786728f860364ef4cccdc75aafefb236e8efa4a90256a73364"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.su",
+      "bytes": 300,
+      "sha256": "736e7d3e431d512ae7fd466b4775cf88950e1c255d6f94c465e6f4762559cf2e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_sd.su",
+      "bytes": 2921,
+      "sha256": "139621b508caea8d69c12965f33614537876e73b603a7bf517ceb83dcc00ad3f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.su",
+      "bytes": 5039,
+      "sha256": "a59e7ee16585427d90e9302ba22385444171fc72c3fd12bb88e2bc6191f686ae"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.su",
+      "bytes": 10604,
+      "sha256": "2ab273ba8e8d17dae69362428bf93fb086deeaf86d74e6a8bac3e7b8280c4d2c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.su",
+      "bytes": 4100,
+      "sha256": "29092f75184dc43c2702a1b8247c2efd9f9e48b201885009d275ac63af4c6817"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_sdmmc.su",
+      "bytes": 4093,
+      "sha256": "c36c079350ddb4288ab3a996df4cad12303393971696a72db286e602c6da01f6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/FlightLogic/Deployment/MultiTrigger/Src/flight_deployment.su",
+      "bytes": 444,
+      "sha256": "65230fab412b52085c8c3aea7f9c482c9c50c7e7db0ae813dd15947f394ef909"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/FlightLogic/FlightCycle/Src/silverstar_flight_cycle.su",
+      "bytes": 2243,
+      "sha256": "172039c06c1d3f166c8a963f14b7e4dfdc25f1323638860bb3ed3573631374ee"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/FlightLogic/FlightCycle/Src/silverstar_flight_recovery.su",
+      "bytes": 1354,
+      "sha256": "a28371fbd240fcbbf010abfb161df09f8cc8ee610274171fb8519356aaac7be6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/FlightLogic/Indicator/GpioStatus/Src/indicator_service.su",
+      "bytes": 99,
+      "sha256": "74de17d9602d79895c7610fd8a7ed7ba57db1c955ff36681c9695194b73b2132"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/FlightLogic/Landing/BarometerImuWindow/Src/flight_landing.su",
+      "bytes": 1560,
+      "sha256": "e0b7e744d6f0e7d171498d18e6103f9b1838c0b8737968bed08c6fb3e853afc4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/FlightLogic/MissionAction/GpioOutput/Src/mission_action_service.su",
+      "bytes": 328,
+      "sha256": "5854de529015e70897002b1ca18383db4ad0274d07c9dc77d654b2390287c06c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/FlightLogic/MissionAction/GpioOutput/Src/output_service.su",
+      "bytes": 773,
+      "sha256": "de2f314c415e377cde2f412cc6df88b44abb348322b47ef08f2385a93fc23560"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/platform_resources.su",
+      "bytes": 362,
+      "sha256": "f34fc8cc45f7942cbdc08473df328163d7590a25503acbf7f84fc1488347a9fc"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/project_capability_routes.su",
+      "bytes": 175,
+      "sha256": "7427726a3e9fa9914f5f95cf1c26f23a243da9bc71c747a46c524fffc9ff6fa3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/project_device_instances.su",
+      "bytes": 10141,
+      "sha256": "f0ad4d66c8aff8d93baeaff574507022e2f0e0c6c6892adba90b216366c28ec8"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/project_log_config.su",
+      "bytes": 254,
+      "sha256": "981edeef1e8b50bb70113890bedc29430da41138510aa30a4d88bb03ab2ddffb"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/project_log_decoder_profile.su",
+      "bytes": 89,
+      "sha256": "9bc6e70d4dba3dd24d243312a777e9d4082200369a35b35360ecb7edec2671fc"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/project_metadata.su",
+      "bytes": 580,
+      "sha256": "6cd2d16495c2c365d2ecd9ac4f1cb590f1707ee1b1eb91e798ad6ec420f5f876"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/project_mission_parameters.su",
+      "bytes": 178,
+      "sha256": "b4261a5c7669b086e7de8f837b0363b557d02d00afc98e841beb6ea64190673a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Generated/Src/project_resources.su",
+      "bytes": 235,
+      "sha256": "f0decacd7b1a3f078dadba33674830917cc1254b15c9d18c04c4b9b304587ff3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/dma.su",
+      "bytes": 73,
+      "sha256": "224ff88501135cec43e5bc3f159983081b7068314e80096b09287a6acd43283c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/gpio.su",
+      "bytes": 75,
+      "sha256": "9a15948a4c44c35830642223656fa3490b4fd1dd2e20dccad4e19de63460c446"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/i2c.su",
+      "bytes": 228,
+      "sha256": "d72060fdcbb3ca1b0800b3310b118c9dfc488928fb65aa2440040d168bc3ae80"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/main.su",
+      "bytes": 316,
+      "sha256": "ca8569b15fdca04812de3dc28b7cde9ba9ccb913af0425f223c5d45c900e7ffe"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/sdio.su",
+      "bytes": 233,
+      "sha256": "fba017e7ca135e07760ae5124bd35df0b8ba0536ea4eb5be642ae7ba72d93d98"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/spi.su",
+      "bytes": 228,
+      "sha256": "6641be38d0a6914a82ee82dcaa4e9d7a328f808ecbba17073a678c4742341581"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_hal_msp.su",
+      "bytes": 86,
+      "sha256": "46a990354b6d367596fa96da2f72a2c3c877d33da8c2951b1185bcb7b3950f2a"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_hal_timebase_tim.su",
+      "bytes": 297,
+      "sha256": "818f1f547d004c9e642e1413dcef9d8b488ab91a45dbcace65fa9398935bdf9d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_it.su",
+      "bytes": 875,
+      "sha256": "1a8ac9454173a9581f96f90232e7b006f603df4662a089b987a1138acc1bd3e9"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/Core/Src/system_stm32f1xx.su",
+      "bytes": 181,
+      "sha256": "89e91a5aafcba454299763fa0db8314f848aa8368345a2e34e9338b038e36143"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.su",
+      "bytes": 77,
+      "sha256": "73a1acdc1e90364c403d2044742669d03d0adc6be037a4f70d57b95949159ce7"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.su",
+      "bytes": 1619,
+      "sha256": "eb10fea4cb210d4b9625a36c06acfd2f7d4f0a42da56a9b99fe02c9eef632a62"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/HardwareGenerated/STM32CubeMX/FATFS/Target/fatfs_platform.su",
+      "bytes": 98,
+      "sha256": "467e692087eb95219e4a6596b0da3d225fcdc9b523e882f7ce8794f2ae715295"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Middlewares/Third_Party/FatFs/src/diskio.su",
+      "bytes": 425,
+      "sha256": "74e731a4179e6d00de76dc02b2f95f460f26219c77bf674746dca3ecba5edf84"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Middlewares/Third_Party/FatFs/src/ff.su",
+      "bytes": 3291,
+      "sha256": "e86bab2c72bbfecd99ae01b48742b645223d2803da641354acd8b4a481c52fd0"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Middlewares/Third_Party/FatFs/src/ff_gen_drv.su",
+      "bytes": 419,
+      "sha256": "a59447ca08f07770a012d85ff2110d25904342704a359712882d5faab4b96b6f"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Middlewares/Third_Party/SX1280lib/sx1280-hal.su",
+      "bytes": 1272,
+      "sha256": "d15702989394f9b369e3b894c58fff692f6e74ad3f31f6080c87436603ffe996"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Middlewares/Third_Party/SX1280lib/sx1280.su",
+      "bytes": 5351,
+      "sha256": "d50ee5878d56cec4525dafdfc7fcc76a6432b600bd10bca68b7bd0eab226f1dd"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Modules/Src/telemetry_service.su",
+      "bytes": 1249,
+      "sha256": "ad9899cef242caccb95e1ea59470f4a1c00bc5f29a37da2c9a2b5ea6e59f82c3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/OS/FreeRTOS/freertos_hooks.su",
+      "bytes": 149,
+      "sha256": "2c1c9862d432da40d13cfb0c33d655874288ff1031905b56c9c6e6ef38c8846b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1/Src/platform_critical_stm32f1.su",
+      "bytes": 173,
+      "sha256": "eda3f03f2c9c6674437ebe288d2d97e7083ffb53a29f2615aa203c863a87fb79"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/platform_gpio_stm32f1flight.su",
+      "bytes": 378,
+      "sha256": "784943dee389c84487861f1a0f2ed51bf3a8208e11e8d81b7ffa2cd4292cd5e1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/platform_i2c_deadline.su",
+      "bytes": 189,
+      "sha256": "a83a9689f33045aff58221db0ecd805a6f3c2d9a75fbf65dc0371a3c176fc740"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/platform_i2c_stm32f1flight.su",
+      "bytes": 375,
+      "sha256": "fc128cd2718b5df6c2da2e4d24ac593f78be9f0e1ac9e608f72556568298c79d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/platform_memory_stm32f1flight.su",
+      "bytes": 104,
+      "sha256": "c78db5c98717b3f5c9930c713921b95cfb57dfffc5abce2866e3fbe9bf1d6960"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/platform_sd_clock.su",
+      "bytes": 205,
+      "sha256": "81ca8afd9cface979c149c3da5dd0751beb52b2dc72711974c017a68015ba206"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/platform_spi_stm32f1flight.su",
+      "bytes": 386,
+      "sha256": "79d72be4f11bbb411c72a3cfa18a8c8cc8497b2fe81ca138a34cd4120c83bf56"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/platform_time_stm32f1flight.su",
+      "bytes": 365,
+      "sha256": "e177ae900822378253ef122dac7ff9c5ce877018bf025349e29b64745e15f84b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.su",
+      "bytes": 776,
+      "sha256": "a875afefb267ac9d986b8c8415531431bd4e66383d065558c2ff07319f892e01"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Protocol/SSLOG/Src/sslog_protocol.su",
+      "bytes": 313,
+      "sha256": "796df0d41a563bf5aea4fad1b086874ae6ed770501c908e08987418cfafb9eef"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Protocol/SSLOG/Src/sslog_records.su",
+      "bytes": 4153,
+      "sha256": "a50b10a163a9abc293f8e86a74208629bef9a13729d7e2ebfb0f82434307c799"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Protocol/Src/air_protocol.su",
+      "bytes": 1841,
+      "sha256": "34ef33761c18274c5c5195ab83ea20035d5850bd10ef6f4a86acd18fcb1f5a89"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/SilverStar_0_1_1.bin",
+      "bytes": 217640,
+      "sha256": "b75f012916f9dd4da171f4b1a16b60c2adb7c53508e41d36d94ac175ff2f3e74"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/SilverStar_0_1_1.elf",
+      "bytes": 2543756,
+      "sha256": "215f0f5dd1070f6f684d640fbd2e58c9904939fddc8f11992056883626ecfb4e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/SilverStar_0_1_1.hex",
+      "bytes": 612265,
+      "sha256": "6f11a8354019284904a7ab9b5e1dc45ffc50ae3c76d00ea45477f1f4dc3df0f4"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/SilverStar_0_1_1.map",
+      "bytes": 1513967,
+      "sha256": "8549bd4dbf7b1debf668e940f32089ff830d066f963db7d11f508cb8ebbe7a7c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Alignment/Src/system_alignment.su",
+      "bytes": 1837,
+      "sha256": "134916647821b4d862bc7a2b8b0bd96bcfe76b5b755d9e4b77f67b7ee182b102"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Alignment/Src/system_alignment_source.su",
+      "bytes": 776,
+      "sha256": "01289a3534d4e4cf3417f6abfb30bf6eed1bf96afd1a9c25ddcd201968668545"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Calibration/Src/system_calibration.su",
+      "bytes": 1812,
+      "sha256": "5ad2ef3e6aa4cc92b117e8ab8680456b19d1f0fcdce5255e43a8ea66613a5c66"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Calibration/Src/system_calibration_correction.su",
+      "bytes": 215,
+      "sha256": "8fb985be2957ac7398091a1827a5945b84349d5253df3c340fd41867c51c7e4b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Calibration/Src/system_mag_calibration.su",
+      "bytes": 1410,
+      "sha256": "8d09e5e940b690e2de61693f45d934feaa533e29203c7a58ddf4ed43ddd85564"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Indicator/Src/system_indicator.su",
+      "bytes": 598,
+      "sha256": "c5402e01f689bf9a15d1ad40d74b15645fbb453b074334cd6c29c99fac784643"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Inertial/Src/system_inertial.su",
+      "bytes": 414,
+      "sha256": "fb83e49e244cca7c0762857703a5cd1b2174ce57cbcf7e378c120659215404b1"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_barometer.su",
+      "bytes": 79,
+      "sha256": "733499fcf4781bc593193a35155d209c58a147756c3492a49369d883c72f904c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_barometer_cold.su",
+      "bytes": 928,
+      "sha256": "9ad4bdaac2a7763f37e20af309f4d50baed9b4e66f3a61c65e6cf036d6856aac"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_capabilities.su",
+      "bytes": 238,
+      "sha256": "f838ef428d4a76846b63f56d05106e95cc901ec1cb14e7705dd3e83c264ce37e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_device_startup.su",
+      "bytes": 239,
+      "sha256": "ce5de9fd4d7246f92649dcb2b7bf73251dac94783b02b25258f56914062e6666"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_estimator_diagnostics.su",
+      "bytes": 1576,
+      "sha256": "acba657a285ae475987270549cf7a26cbfa4b06b38f53ca2360265d6134b4d81"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_estimator_profile.su",
+      "bytes": 523,
+      "sha256": "38fb83f3b0668954c46635f9fffdc65b6936aad87f60343c6d65355186941ee3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_gnss_quality.su",
+      "bytes": 161,
+      "sha256": "98562e9b333171e5f7ec4d8a6befed8649d84d4cc40c028ebfea22c33f48fca3"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_health.su",
+      "bytes": 480,
+      "sha256": "a5a24b8f773e4761765a336dceaaa85b0d798392f429602c1b35cdcc9d780c3e"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_log_policy.su",
+      "bytes": 1069,
+      "sha256": "9114a878dc21908487ed38b2ddc6a472e67032779d3873c00348386c25d745ec"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_navigation_health.su",
+      "bytes": 895,
+      "sha256": "04eee84316a33272d4b99a637a565cfa0374b87fe235e4132b1d0173f0f940ce"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_navigation_profile.su",
+      "bytes": 353,
+      "sha256": "079f90117469f02e3f9a7c1bc5b5ea62b6eef37c4e343a88c78516398bad5386"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_profile.su",
+      "bytes": 269,
+      "sha256": "5265abac565faa355a55102d8e0e27ed64381ffa21f802f1578a7c591f77cb5d"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_sensor_status.su",
+      "bytes": 662,
+      "sha256": "d6296f086b59b6270d0bcb820b285f42856e53b7c1b88f64e16cd0eb8a45ad8b"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_source_selector.su",
+      "bytes": 9593,
+      "sha256": "1e76e3684ddb299b2d040c19c84f2046c4181ca880e4ee7e54286febd771942c"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_startup.su",
+      "bytes": 817,
+      "sha256": "f2d855a34b6a4806af1f61391005858bea9da6d53b05888ec7b8da932bce98f9"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/Src/system_time.su",
+      "bytes": 812,
+      "sha256": "4c127b107548ccba83b4c0a4ab508d3376b832635bf4f29363945ce4befcb4c6"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/System/User/system_user_inertial_config.su",
+      "bytes": 87,
+      "sha256": "89f4b932b64b8aca17de21393c3e4785c364c57cd40d170c98cc54f987a08964"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/Targets/SilverStar_F103RE/Src/freertos_target_irq.su",
+      "bytes": 82,
+      "sha256": "abd4356790d14a5b8cb1424ad1a71ca781ba04688dc4ab00b1143c8ee30a6dd2"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/ThirdParty/FreeRTOS-Kernel/list.su",
+      "bytes": 325,
+      "sha256": "c902350301103b8955fa9ca50f39cefd5a3eced80460a9196efd9bf0c13f6914"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM3/port.su",
+      "bytes": 1098,
+      "sha256": "978d56b566da3216a9e03fa2a37f10cfca0ae3aabe9732f58884991487210187"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/ThirdParty/FreeRTOS-Kernel/queue.su",
+      "bytes": 1565,
+      "sha256": "464cc2cc73c25b4e6af6a9e76a85a8d1721533a1f589f4129ba289c7a1415272"
+    },
+    {
+      "path": "artifacts/SilverStar_F103RE/StaticAnalysis/Release/ThirdParty/FreeRTOS-Kernel/tasks.su",
+      "bytes": 2864,
+      "sha256": "9a827d7d2a33bd096aa2da7c00f0853ede7ff98fa37749b15581c49153fffd50"
+    },
+    {
+      "path": "generated/.fccg/hardware-preparation.json",
+      "bytes": 503,
+      "sha256": "ea8084478bc49bc9e6d236364c9ccd5f60a52e0948226ed09ebc4cec41919117"
+    },
+    {
+      "path": "generated/.fccg/ownership.json",
+      "bytes": 332764,
+      "sha256": "d4d6610d39df555ded89e0c633b3bdb0c78428a82769de2b1e72b14b09a2e92f"
+    },
+    {
+      "path": "generated/Generated/Inc/project_flight_config.h",
+      "bytes": 7447,
+      "sha256": "d2423ad8ec25ff6caff87fd47bd47786cc0061b11524ad60f2149b474c5a6fe0"
+    },
+    {
+      "path": "generated/Generated/Inc/project_log_config.h",
+      "bytes": 439,
+      "sha256": "364e6b29b70366d74d63932c34dd803d9f3f6c6ea7d3e7f6daf4b2731dd4192d"
+    },
+    {
+      "path": "generated/Generated/Src/project_log_config.c",
+      "bytes": 13963,
+      "sha256": "97f2d5d7effc05f53e71412336c2dc8da2ae20f948828079e3d33e817c85348c"
+    },
+    {
+      "path": "generated/Generated/Src/project_log_decoder_profile.c",
+      "bytes": 1578,
+      "sha256": "91ee0a17537d780f45da7228cc0e7e249f6c74a32aa630639fc424744c1585ab"
+    },
+    {
+      "path": "generated/Generated/project_sources.mk",
+      "bytes": 9649,
+      "sha256": "88488eabd9cabfebb9823b6f64baab3085d9d88427d03abe3782c08b71700478"
+    },
+    {
+      "path": "generated/HardwareGenerated/STM32CubeMX/STM32CubeIDE/STM32F103RETX_FLASH.ld",
+      "bytes": 5307,
+      "sha256": "864b12e73c6dffadf5ed0c38fb70962c1369bb0751407399deb36145ce00ee4b"
+    },
+    {
+      "path": "generated/Makefile",
+      "bytes": 9433,
+      "sha256": "f924a18d1d047d3b9055e9e76e66060ee64300405f15a690c43bf7310d0bc7a4"
+    },
+    {
+      "path": "generated/SF6_RET6_Compact.ssdecoder",
+      "bytes": 126916,
+      "sha256": "102d2aaadbed732f49d4eae2dfe6266816191c84ba5e29e8a8511a003fd429a1"
+    },
+    {
+      "path": "generated/STM32F103RE_FLASH.ld",
+      "bytes": 6727,
+      "sha256": "8d7598a86e5bff8b73787da79115a400a7847426b02871b46457c02f2a5e0de8"
+    },
+    {
+      "path": "generated/SilverStar.ssproject",
+      "bytes": 121999,
+      "sha256": "8b3ccb034afcce9b96c168ee52fd0570cfccb4baaf48cb2a36874a3828d34945"
+    },
+    {
+      "path": "generated/Tests/Host/run_tests.ps1",
+      "bytes": 65319,
+      "sha256": "e99b91167552efe0841e545c6d8e2f44b252906aca23c9c2a87894f865c6372b"
+    },
+    {
+      "path": "generated/Tests/Host/storage_integrity/run_storage_integrity.py",
+      "bytes": 12386,
+      "sha256": "945c0b3ccc84ceb1f1d4c27db8a86f3c2057b63f3c60a43f04145b78ba67652f"
+    },
+    {
+      "path": "generated/Tests/Host/storage_integrity/test_sf6_compact_storage.h",
+      "bytes": 9596,
+      "sha256": "eb68470340a1764a551a40eb84160b20c8655d255c8bf403463b72ccc7e3096f"
+    },
+    {
+      "path": "generated/Tests/Host/test_logger_alignment.c",
+      "bytes": 11968,
+      "sha256": "4e57b0338bca36ce51c42d7cf2da6d834bf49d0eb84484775990674db65a797e"
+    },
+    {
+      "path": "generated/Tools/check_architecture.ps1",
+      "bytes": 94908,
+      "sha256": "bd9cddd8b9edb63e329b478901b975973a9197b68844f0bac5f25e4e2f6b59b9"
+    },
+    {
+      "path": "generated/Tools/check_power_of_ten.ps1",
+      "bytes": 29983,
+      "sha256": "3a96853a42363d6e25de216aa0dbf1b805090a322c3cbdd4af566c64466c83aa"
+    },
+    {
+      "path": "generated/Tools/check_task_stacks.py",
+      "bytes": 15702,
+      "sha256": "949ab864b1d6eebc8cc1de1457d46013f30369d720718eefca2b422229095413"
+    },
+    {
+      "path": "immutable_current_logs/mixed.sslog",
+      "bytes": 3596803,
+      "sha256": "b0155a46977e63dcbae05509100c73fc61c7d535179bc0682127886f8c1e718a"
+    },
+    {
+      "path": "immutable_current_logs/sf6-compact-startup-burst-overload.sslog",
+      "bytes": 7392595,
+      "sha256": "dd49247bb460f977f36a04ce384de3cb5d6e4171d9b69e78b5d34b4e5930dd3c"
+    },
+    {
+      "path": "immutable_current_logs/sf6-compact-startup-burst.sslog",
+      "bytes": 7390399,
+      "sha256": "9f471177682744908b19e971c0de866e0a63087e0b09bdade1157ad6594e3c9f"
+    },
+    {
+      "path": "official_cube/SF6_RET6_Hardware.ioc",
+      "bytes": 6818,
+      "sha256": "5f48317ac8d6c44aab73f0494f05ca9067820411f73ae6fdce6d6f9bada75d24"
+    }
+  ]
+}
