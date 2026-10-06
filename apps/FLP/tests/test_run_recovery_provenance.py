@@ -218,3 +218,27 @@ def test_config_only_reopen_does_not_trust_serialized_saved_membership(tmp_path,
     assert entry.result_id in loaded.recovery_sources
     assert loaded.saved_result_ids == () and loaded.result_artifact is None
     assert ProjectResults_Load(loaded).Entries_Get() == () and loaded.saved_result_ids == ()
+
+
+def test_merged_recovery_sources_are_admitted_before_atomic_publication(active_history, monkeypatch):
+    opened, original, entry = active_history
+    document = deepcopy(original)
+    document.save_data_and_results = True
+    store = ReplayResultStore(); store.IdentityState_Restore(document.run_identity_state)
+    store.Result_Add(entry.result); store.Result_Add(entry.result)
+    before = document.project_path.read_bytes()
+    references = deepcopy(document.recovery_sources)
+    calls = []
+    import silverstar_flp.core.run_history as history
+    original_validate = history.RunHistory_Validate
+    def reduced_admission(candidate):
+        # Same resource-admission failure, with only three real small sources.
+        calls.append(tuple(candidate.recovery_sources))
+        if len(candidate.recovery_sources) > 2:
+            raise ValueError('project_run_recovery_sources_invalid')
+        original_validate(candidate)
+    monkeypatch.setattr(history, 'RunHistory_Validate', reduced_admission)
+    with pytest.raises(ValueError, match='recovery_sources_invalid'):
+        Project_Save(document, document.project_path, replay_store=store, dataset=opened.dataset)
+    assert len(calls) == 2 and len(calls[-1]) == 3
+    assert document.project_path.read_bytes() == before and document.recovery_sources == references

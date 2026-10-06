@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -325,6 +325,10 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
     if document.save_data_and_results:
         saved_result_ids = (tuple(entry.result_id for entry in saved_entries) if saved_entries is not None
             else tuple(key for key in document.saved_result_ids if key not in run_state["deleted"]))
+    # Admit the merged/rebased metadata too, before publishing a project that
+    # would otherwise exceed the same limits checked by Project_Load.
+    RunHistory_Validate(replace(document, project_path=project_path,
+        run_identity_state=run_state, removed_results=removed_results, recovery_sources=recovery_sources))
     payload = {
         "format": PROJECT_FORMAT,
         "version": PROJECT_VERSION,

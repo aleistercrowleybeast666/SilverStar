@@ -55,7 +55,8 @@ The first expanded small set reported 19 passes and one wrong test error-code
 expectation: corrupt manifest hashes correctly raised the existing
 artifact_manifest_corrupt, rather than a code containing "hash". Only that test
 expectation was corrected; the verifier was not changed. Its full failure log is
-retained. The final small set passed together: 20 passed, 53.47 seconds, exit 0.
+retained. The b0dbe3d checkpoint small set passed together: 20 passed,
+53.47 seconds, exit 0.
 It covers exact typed result fingerprints/run IDs/parameters/input/engine,
 metadata-only reopen/no artifact read, local/external Save As, unchanged old file
 hashes, wrong hash/input/engine/parameters, metadata identity/path/state admission,
@@ -64,6 +65,17 @@ membership, Chinese/English with both themes, context switch, commit status
 publication, existing i18n consistency and old-v3 index reservation. The old-v3
 fixture explicitly omits the new optional field, which did not exist historically;
 its original reservation expectations are unchanged.
+
+Final review found that separately valid old sources and newly saved members could
+exceed the source-table bound after merging. The pending merged/rebased document
+now passes the same RunHistory_Validate before any project publication; the
+production 4096-source limit and all item rules are unchanged. A three-source
+fixture with a reduced test admission cap reproduced publication without refusal
+before this guard (1 failed, 17 deselected, 31.36 seconds, exit 1). After it, that
+same refusal/unchanged committed-reference test and the two original lifecycle
+cases passed together (3 passed, 15 deselected, 52.45 seconds, exit 0). These final
+three checks do not turn the earlier 20-case checkpoint into an unexecuted final
+21-case/full-suite pass.
 
 These host test durations are not performance, hardware or full-suite acceptance.
 The worker, artifact/record/audit codecs, parse identity and algorithm source are
