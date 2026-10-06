@@ -949,10 +949,15 @@ class ReplayPage(QWidget):
             self.analysis_source_combo.setCurrentIndex(index)
             secondary_index = self.secondary_source_combo.findData(self._secondary_source_id)
             if secondary_index < 0 and self._secondary_source_id is not None:
-                self.secondary_source_combo.addItem(
-                    _Source_Label(self._translator, resolver, self._secondary_source_id),
-                    self._secondary_source_id)
-                secondary_index = self.secondary_source_combo.count() - 1
+                if (self._secondary_source_id == primary.source_id or
+                        resolver.Source_Get(self._secondary_source_id).available):
+                    self._secondary_source_id = None
+                    secondary_index = self.secondary_source_combo.findData(None)
+                else:
+                    self.secondary_source_combo.addItem(
+                        _Source_Label(self._translator, resolver, self._secondary_source_id),
+                        self._secondary_source_id)
+                    secondary_index = self.secondary_source_combo.count() - 1
             self.secondary_source_combo.setCurrentIndex(max(secondary_index, 0))
         for combo in (self.analysis_source_combo, self.secondary_source_combo):
             combo.blockSignals(False)

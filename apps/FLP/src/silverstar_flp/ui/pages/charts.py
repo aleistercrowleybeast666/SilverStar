@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
-from silverstar_flp.ui.source_comparison import ComparisonSeries_Get
+from silverstar_flp.ui.source_comparison import NavigationComparisonSeries_Get
 
 from silverstar_flp.core.analysis_source import (
     AnalysisSourceKind,
@@ -197,11 +197,9 @@ def _Series_Plot(
     positive = cadence[cadence > 0]
     threshold = 3 * np.median(positive) if positive.size else np.inf
     broken = np.zeros(selected.size, dtype=bool)
-    broken[:-1] = (~full_v[:-1]) | (~full_v[1:]) | (cadence > threshold)
+    broken[:-1] = (~full_v[:-1]) | (~full_v[1:]) | (cadence <= 0) | (cadence > threshold)
     for stamp in series.metadata.get("discontinuity_timestamps_us", ()):
-        index = int(np.searchsorted(full_t, stamp)) - 1
-        if 0 <= index < broken.size:
-            broken[index] = True
+        broken[:-1] |= (full_t[:-1] < stamp) & (full_t[1:] >= stamp)
     envelope = DisplayIndices_Get(full_t, series.values[selected], full_v)
     counts = np.r_[0, np.cumsum(broken)]
     connections = np.zeros(envelope.size, dtype=bool)
@@ -722,8 +720,8 @@ class FlightPage(QWidget):
         ):
             raw_secondary = (self._resolver.Series_Get(channel, secondary_id)
                              if secondary_id is not None else None)
-            secondary, reason = ComparisonSeries_Get(selected_series, raw_secondary,
-                                                     self._resolver, secondary_id)
+            secondary, reason = NavigationComparisonSeries_Get(channel, selected_series,
+                raw_secondary, self._resolver, secondary_id)
             if reason:
                 reasons.append(reason)
             _Series_Plot(plot, selected_series, start, end_timestamp_us=end,

@@ -6,7 +6,7 @@ from enum import StrEnum
 
 import numpy as np
 
-from silverstar_flp.core.analysis_source import ChannelResolver
+from silverstar_flp.core.analysis_source import AnalysisSourceKind, ChannelResolver
 from silverstar_flp.core.dataset import TimeSeries
 
 
@@ -18,6 +18,25 @@ class ComparisonResult(StrEnum):
     SECONDARY_MISSING = "comparison.secondary_missing"
     INCOMPATIBLE = "comparison.incompatible"
     NO_OVERLAP = "comparison.no_overlap"
+
+
+def NavigationComparisonSeries_Get(channel_id, primary, secondary, resolver, secondary_source_id):
+    """Normalize only the known recorded standard-role decoder metadata."""
+    def normalize(series, source):
+        if series is None or source.kind != AnalysisSourceKind.RECORDED:
+            return series
+        contract = {
+            "navigation.position_enu": ("length", "position", "m", ("E", "N", "U")),
+            "attitude.q_nb": ("dimensionless", "quaternion", "1", ("W", "X", "Y", "Z")),
+        }.get(channel_id)
+        if contract is not None:
+            old, physical, unit, columns = contract
+            if (series.quantity == old and series.unit == unit and series.columns == columns
+                    and series.values.ndim == 2 and series.values.shape[1] == len(columns)):
+                return replace(series, quantity=physical)
+        return series
+    return ComparisonSeries_Get(normalize(primary, resolver.Source_Get()),
+        normalize(secondary, resolver.Source_Get(secondary_source_id)), resolver, secondary_source_id)
 
 
 def ComparisonSeries_Get(
@@ -69,8 +88,8 @@ def ComparisonSeries_Get(
     second_valid = np.flatnonzero(second_mask)
     if not first_valid.size or not second_valid.size:
         return None, ComparisonResult.NO_OVERLAP
-    start = max(primary.timestamp_us[first_valid[0]], secondary.timestamp_us[second_valid[0]])
-    end = min(primary.timestamp_us[first_valid[-1]], secondary.timestamp_us[second_valid[-1]])
+    start = max(np.min(primary.timestamp_us[first_valid]), np.min(secondary.timestamp_us[second_valid]))
+    end = min(np.max(primary.timestamp_us[first_valid]), np.max(secondary.timestamp_us[second_valid]))
     mask = (secondary.timestamp_us >= start) & (secondary.timestamp_us <= end)
     if start > end or not np.any(mask & second_mask):
         return None, ComparisonResult.NO_OVERLAP

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import replace
 
 import numpy as np
 import pyqtgraph as pg
@@ -603,8 +604,13 @@ class StateEstimationPage(QWidget):
         other = next((item for item in spec.state_groups
                       if (item.group_id, item.unit, item.component_names) ==
                          (group.group_id, group.unit, group.component_names)), None) if spec else None
+        other_source = self._resolver.Source_Get(self._secondary_source_id)
+        other_legacy = bool(other_source.kind == AnalysisSourceKind.RECORDED
+                            and other_source.recorded_solution_id == "kf6"
+                            and other_source.algorithm_id == "silverstar.algorithm.kf6")
         secondary = (self._Covariance_Select(
-            self._resolver.Series_Get(other.covariance_channel, self._secondary_source_id), other)
+            self._resolver.Series_Get(other.covariance_channel, self._secondary_source_id), other,
+            legacy_recorded_kf6=other_legacy)
             if other else None)
         return self._Reference_Check(primary, secondary)
 
@@ -620,7 +626,12 @@ class StateEstimationPage(QWidget):
         legacy = (legacy_recorded_kf6
                   and group.covariance_channel == "kf6.covariance.diagonal"
                   and series.values.ndim == 2 and series.values.shape[1] == 6
-                  and series.quantity == "dimensionless" and series.unit == "1")
+                  and series.quantity == "dimensionless" and series.unit == "1"
+                  and series.columns == ("PxE", "PxN", "PxU", "PvE", "PvN", "PvU")
+                  and (group.group_id, group.unit, group.component_names,
+                       group.covariance_diagonal_indices) in (
+                      ("position", "m", ("E", "N", "U"), (0, 1, 2)),
+                      ("velocity", "m/s", ("E", "N", "U"), (3, 4, 5))))
         if not published and not legacy:
             return None
         # Published diagonal storage is mixed-unit; the plugin group owns the
@@ -742,9 +753,16 @@ class StateEstimationPage(QWidget):
         if not reference or self._resolver is None or self._secondary_source_id is None:
             return primary if not reference else None
         spec = self._SecondaryVisualization_Get()
+        owners = {self._resolver.Source_Get().algorithm_id,
+                  self._resolver.Source_Get(self._secondary_source_id).algorithm_id}
+        builtin_pair = owners <= {"silverstar.algorithm.kf6", "silverstar.algorithm.estimator.eskf15"}
         other = next((item for item in spec.measurement_groups
-                      if (item.measurement_group_id, item.unit, item.component_names, item.dimension) ==
-                         (group.measurement_group_id, group.unit, group.component_names, group.dimension)),
+                      if (item.measurement_group_id, item.unit, item.dimension) ==
+                         (group.measurement_group_id, group.unit, group.dimension)
+                      and (item.component_names == group.component_names or
+                           builtin_pair and group.measurement_group_id == "barometric_altitude"
+                           and group.unit == "m" and group.dimension == 1
+                           and {item.component_names, group.component_names} == {("Baro",), ("U",)})),
                      None) if spec else None
         roles = ("innovation_channel", "nis_channel", "measurement_age_channel",
                  "fixed_lag_latency_channel", "measurement_uncertainty_channel", "effective_r_channel")
@@ -753,9 +771,35 @@ class StateEstimationPage(QWidget):
             self._resolver.Series_Get(getattr(other, role), self._secondary_source_id),
             indices, columns)
             if other is not None and role is not None else None)
+        if builtin_pair and role is not None:
+            primary_normalized = self._MeasurementRole_Normalize(primary, group, role)
+            secondary = self._MeasurementRole_Normalize(secondary, group, role)
+            # Keep the primary display contract; an unknown secondary semantic
+            # variant cannot gain admission through normalization.
+            primary = primary_normalized if primary_normalized is not None else primary
         # Role/group specs prove physical equivalence; units and published
         # quantities still need to agree. Unknown semantic variants stay absent.
         return self._Reference_Check(primary, secondary)
+
+    @staticmethod
+    def _MeasurementRole_Normalize(series, group, role):
+        if series is None:
+            return None
+        quantities = {
+            "measurement_uncertainty_channel": ("variance", "input_variance"),
+            "effective_r_channel": ("variance", "effective_variance"),
+        }.get(role)
+        if quantities is not None:
+            squared = (f"{group.unit}^2", f"({group.unit})2")
+            recognized = (series.quantity == "variance" and series.unit in squared or
+                          series.quantity == quantities[1] and series.unit == "mixed")
+            return (replace(series, quantity=quantities[1], unit=f"({group.unit})2")
+                    if recognized else None)
+        if role == "fixed_lag_latency_channel":
+            if series.quantity not in ("fixed_lag_latency", "latency") or series.unit != "ms":
+                return None
+            return replace(series, quantity="fixed_lag_latency")
+        return series
 
     def _MeasurementScalarReference_Get(self, channel_id: str, group: MeasurementGroupSpec) -> TimeSeries | None:
         # NIS/timing are scalar even when the observation has several components.
