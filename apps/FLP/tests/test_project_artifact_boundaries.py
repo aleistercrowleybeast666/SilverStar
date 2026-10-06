@@ -227,7 +227,7 @@ def test_manual_cache_cleanup_preserves_active_results_and_unknown_files(tmp_pat
     ProjectCache_ParseClear(document.project_path)
     unreferenced=Path(inventory['root'])/parse['generation']
     evidence=unreferenced/'formal-evidence.txt';evidence.write_text('preserve')
-    with pytest.raises(ValueError,match='not_verified'):
+    with pytest.raises(ValueError,match='ownership_unproven'):
         ProjectCache_UnusedRemove(document.project_path,parse['generation'])
     assert evidence.read_text()=='preserve' and len(ProjectResults_Load(Project_Load(document.project_path)).Entries_Get())==1
 

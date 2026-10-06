@@ -77,11 +77,14 @@ Normal Save/Save As compress and validate in a cancellable background task.
 `sslog project-cache PROJECT.ssflp` reports each generation, its logical bytes, physical
 bytes accounting for hardlinks, and whether it contains live saved results, live parsed
 data or unreferenced files. `--clear-parse` drops only the parse reference atomically;
-next open parses strictly. `--remove-generation generation-EXACT_ID` removes only one
-verified unreferenced generation. Active saved results and all unknown/evidence files
-are protected. Partial generations without a verifiable manifest require separate
-manual inspection; they are not silently deleted. No logs or decoder packages are
-removed. Before array writes a conservative free-space reserve is required.
+next open parses strictly. Inventory labels `unreferenced` describe only the current
+project. A configuration-only Save As may still depend on that generation externally.
+`--remove-generation generation-EXACT_ID` therefore refuses physical deletion with
+`project_cache_generation_ownership_unproven` until exclusive ownership can be
+proved; it does not scan unrelated projects to infer ownership. Referenced generations
+remain protected. `--clear-parse` releases a reference, not disk space. Saved results,
+unknown/evidence files, logs and decoder packages are never deleted by these commands.
+Before array writes a conservative free-space reserve is required.
 
 Reader admission rejects symlinks/reparse points and nonregular files before hashing,
 checks cancellation before any read, limits columns even for zero rows, enforces scalar

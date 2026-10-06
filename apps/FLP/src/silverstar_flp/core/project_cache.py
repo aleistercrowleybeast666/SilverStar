@@ -1,10 +1,9 @@
-"""Explicit cache inventory and conservative manual removal of unused generations."""
+"""Local cache inventory; physical removal requires proof of exclusive ownership."""
 from __future__ import annotations
 
 import re
 from pathlib import Path
 
-from silverstar_flp.core.artifacts import Artifact_Read
 from silverstar_flp.core.project import Project_Load, Project_Save
 
 
@@ -38,6 +37,7 @@ def ProjectCache_Inspect(path: Path) -> dict:
                           "role": active.get(directory.name, "unreferenced"),
                           "file_count": len(files)})
     return {"project": str(document.project_path), "root": str(root),
+            "reference_scope": "current_project_only", "physical_removal": "ownership_not_proven",
             "bytes": sum(item["bytes"] for item in items),
             "physical_bytes": sum(physical_files.values()), "generations": items}
 
@@ -50,32 +50,12 @@ def ProjectCache_ParseClear(path: Path) -> None:
 
 
 def ProjectCache_UnusedRemove(path: Path, generation: str) -> None:
-    from silverstar_flp.core.artifacts import FileHash_Get, _Json_Load, RecordFiles_Get
     inventory = ProjectCache_Inspect(path)
     item = next((item for item in inventory["generations"] if item["generation"] == generation), None)
     if item is None or item["role"] != "unreferenced":
         raise ValueError("project_cache_generation_protected")
-    directory = Path(inventory["root"]) / generation
-    manifests = [file for file in directory.iterdir() if file.name in ("manifest.json", "manifest.json.gz")]
-    if len(manifests) != 1:
-        raise ValueError("project_cache_generation_not_verified")
-    manifest = manifests[0]
-    payload = _Json_Load(manifest)
-    expected = set(payload.get("arrays", {})) | {manifest.name} | RecordFiles_Get(payload.get("payload"))
-    files = list(directory.iterdir())
-    if {file.name for file in files} != expected:
-        raise ValueError("project_cache_generation_not_verified")
-    for file in files:
-        if file.is_symlink() or not file.resolve().is_relative_to(directory.resolve()) or not file.is_file():
-            raise ValueError("project_cache_generation_not_verified")
-    reference = {"path": manifest.relative_to(Path(path).resolve().parent).as_posix(),
-                 "sha256": FileHash_Get(manifest)}
-    Artifact_Read(Path(path).resolve(), reference)
-    # Re-read live references immediately before deletion; never remove a live saved generation.
-    refreshed = ProjectCache_Inspect(path)
-    if any(entry["generation"] == generation and entry["role"] != "unreferenced"
-           for entry in refreshed["generations"]):
-        raise ValueError("project_cache_generation_protected")
-    for file in files:
-        file.unlink()
-    directory.rmdir()
+    # Another configuration-only Save As may depend on this generation through
+    # an external recovery reference. Local non-reference and valid contents do
+    # not establish exclusive ownership. No ownership registry exists yet, and
+    # scanning a selected directory cannot prove absence of external dependents.
+    raise ValueError("project_cache_generation_ownership_unproven")

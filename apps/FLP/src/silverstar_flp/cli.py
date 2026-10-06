@@ -327,12 +327,12 @@ def _Parser_Create() -> argparse.ArgumentParser:
     gui_parser.add_argument("path", nargs="?", type=Path)
     _DecoderArguments_Add(gui_parser, required=False)
     gui_parser.set_defaults(handler=_Command_Gui)
-    cache_parser = subparsers.add_parser("project-cache", help="inspect bytes or explicitly clean parsed/unused project caches")
+    cache_parser = subparsers.add_parser("project-cache", help="inspect local cache bytes or drop the reusable parse reference")
     cache_parser.add_argument("path", type=Path)
     actions = cache_parser.add_mutually_exclusive_group()
     actions.add_argument("--clear-parse", action="store_true",
                          help="drop only the reusable parse reference; retain saved result history")
-    actions.add_argument("--remove-generation", help="remove one verified unreferenced generation by exact ID")
+    actions.add_argument("--remove-generation", help="request physical removal by exact ID; refused while exclusive ownership is unproven")
     cache_parser.set_defaults(handler=_Command_ProjectCache)
     return parser
 
