@@ -86,8 +86,8 @@ const SystemStartupReport *SystemStartup_GetReport(void) { return &s_startup; }
 
 uint8_t SystemCalibration_IsReady(void) { return 1U; }
 uint32_t SystemCalibration_GenerationGet(void) { return 1U; }
-SystemDeviceResult SystemFlightRecovery_StatusGet(
-    SystemFlightRecoveryStatus *status)
+SystemDeviceResult SystemFlightRecovery_FinalStatusGet(
+    SystemFlightRecoveryFinalStatus *status)
 {
     if (status == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     (void)memset(status, 0, sizeof(*status));

@@ -152,11 +152,23 @@ typedef struct
     uint32_t last_action_mission_time_ms;
 } SystemFlightRecoveryStatus;
 
+/* Atomic projection consumed by the final persistent mission status. */
+typedef struct
+{
+    uint8_t landing_detected;
+    uint8_t deploy_triggered;
+    uint8_t deploy_completed;
+    SystemDeviceResult deploy_action_result;
+    SystemDeviceResult landing_transition_result;
+} SystemFlightRecoveryFinalStatus;
+
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_Init(void);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_Process(
     const SystemFlightRecoveryInput *input);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_StatusGet(
     SystemFlightRecoveryStatus *status);
+SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_FinalStatusGet(
+    SystemFlightRecoveryFinalStatus *status);
 const char *SystemFlightRecovery_DeployTriggerMaskText(
     SystemDeployTriggerMask mask);
 const char *SystemFlightRecovery_TiltReferenceText(SystemTiltReference mode);

@@ -23,6 +23,24 @@ static SystemDeviceResult s_action_results[2];
 static uint32_t s_action_init_count;
 static uint32_t s_action_counts[2];
 
+static SystemDeviceResult Test_RecoveryStatusGet(
+    SystemFlightRecoveryStatus *status)
+{
+    SystemFlightRecoveryFinalStatus final;
+    SystemDeviceResult result = SystemFlightRecovery_StatusGet(status);
+    TEST_CHECK(SystemFlightRecovery_FinalStatusGet(&final) == SYSTEM_DEVICE_OK);
+    if (result == SYSTEM_DEVICE_OK)
+    {
+        TEST_CHECK(final.landing_detected == status->landing_detected);
+        TEST_CHECK(final.deploy_triggered == status->deploy_triggered);
+        TEST_CHECK(final.deploy_completed == status->deploy_completed);
+        TEST_CHECK(final.deploy_action_result == status->deploy_action_result);
+        TEST_CHECK(final.landing_transition_result ==
+                   status->landing_transition_result);
+    }
+    return result;
+}
+
 static SystemDeviceResult MockAction_Init(void)
 {
     s_action_init_count++;
@@ -170,7 +188,7 @@ static void Test_StartActionOneShot(void)
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_START] == 1U);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_START] == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.mission_start_action_done != 0U);
     TEST_CHECK(status.mission_start_action_result == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.action_event_sequence == 1U);
@@ -182,7 +200,7 @@ static void Test_StartActionOneShot(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_START] == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.mission_start_action_result == SYSTEM_DEVICE_IO_ERROR);
 }
 
@@ -278,7 +296,7 @@ static void Test_AutomaticDeployment(void)
     input.mission_time_ms = SYSTEM_FLIGHT_DEPLOY_DELAY_MS;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_matched_mask == SYSTEM_DEPLOY_TRIGGER_DELAY);
     TEST_CHECK_NEAR(status.deploy_trigger_value,
                     (float)SYSTEM_FLIGHT_DEPLOY_DELAY_MS, 0.1f);
@@ -293,7 +311,7 @@ static void Test_AutomaticDeployment(void)
     input.mission_time_ms = SYSTEM_FLIGHT_DEPLOY_DELAY_MS;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_matched_mask ==
         (SYSTEM_DEPLOY_TRIGGER_TILT |
          SYSTEM_DEPLOY_TRIGGER_APOGEE_VZ |
@@ -309,12 +327,12 @@ static void Test_AutomaticDeployment(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
     TEST_CHECK(s_enter_recovery_count == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_matched_mask == TEST_EXPECTED_DEPLOY_MASK);
     TEST_CHECK(status.deploy_event_sequence == 1U);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_matched_mask == TEST_EXPECTED_DEPLOY_MASK);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
@@ -361,7 +379,7 @@ static void Test_AutomaticDeployment(void)
 #endif
     TEST_CHECK(s_enter_recovery_count == 1U);
     TEST_CHECK(s_lifecycle_state == SYSTEM_STATE_RECOVERY);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_triggered != 0U);
     TEST_CHECK(status.deploy_completed != 0U);
     TEST_CHECK(status.deploy_event_sequence == 1U);
@@ -416,7 +434,7 @@ static void Test_DeploySampleValidityAndReset(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     Test_InputTimeSet(&input, input.now_us + confirm_us + 1ULL);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_triggered == 0U);
 
 #if (SYSTEM_FLIGHT_DEPLOY_CONFIRM_MS > 0U)
@@ -428,14 +446,14 @@ static void Test_DeploySampleValidityAndReset(void)
     Test_InputTimeSet(&input, input.now_us + 1ULL);
     Test_DeployConditionInvalidate(&input);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_confirming != 0U);
     TEST_CHECK(status.deploy_triggered == 0U);
 
     Test_InputTimeSet(&input, input.now_us + 1ULL);
     Test_DeployConditionMakeNonqualifying(&input);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_confirming == 0U);
     TEST_CHECK(status.deploy_triggered == 0U);
 
@@ -444,7 +462,7 @@ static void Test_DeploySampleValidityAndReset(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     input.now_us += confirm_us + 1000000ULL;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_confirming != 0U);
     TEST_CHECK(status.deploy_triggered == 0U);
 #endif
@@ -493,7 +511,7 @@ static void Test_PreflightSnapshotIsNotNewAfterTransition(void)
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 0U);
     Test_InputTimeSet(&input, input.now_us + 1ULL);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
 #if (SYSTEM_FLIGHT_DEPLOY_CONFIRM_MS == 0U)
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
 #else
@@ -530,7 +548,7 @@ static void Test_DeployActionAndTransitionFailuresAreOneShot(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
     TEST_CHECK(s_enter_recovery_count == 0U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_triggered != 0U);
     TEST_CHECK(status.deploy_completed == 0U);
     TEST_CHECK(status.deploy_event_sequence == 0U);
@@ -550,7 +568,7 @@ static void Test_DeployActionAndTransitionFailuresAreOneShot(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
     TEST_CHECK(s_enter_recovery_count == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_completed != 0U);
     TEST_CHECK(status.deploy_event_sequence == 1U);
 #endif
@@ -567,7 +585,7 @@ static void Test_TiltInitialAxisReference(void)
     Test_TiltDeviationSet(&input, 0.0f);
     s_lifecycle_state = SYSTEM_STATE_FLIGHT;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.initial_rocket_axis_valid != 0U);
     TEST_CHECK(status.initial_rocket_axis_n[2] < 0.99f);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 0U);
@@ -581,7 +599,7 @@ static void Test_TiltInitialAxisReference(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
 #endif
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_matched_mask == SYSTEM_DEPLOY_TRIGGER_TILT);
     TEST_CHECK_NEAR(status.deploy_trigger_value,
                     SYSTEM_FLIGHT_TILT_THRESHOLD_DEG + 5.0f, 0.05f);
@@ -604,7 +622,7 @@ static void Test_OrTriggerCase(float vertical_velocity_mps,
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_action_counts[SYSTEM_MISSION_ACTION_PARACHUTE_DEPLOY] == 1U);
     TEST_CHECK(s_enter_recovery_count == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.deploy_matched_mask == expected_mask);
     TEST_CHECK(status.deploy_event_sequence == 1U);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
@@ -666,7 +684,7 @@ static void Test_BaroCandidateStart(SystemFlightRecoveryInput *input,
     TEST_CHECK(SystemFlightRecovery_Process(input) == SYSTEM_DEVICE_OK);
     Test_BaroSampleAdvance(input, 50000ULL, altitude_m);
     TEST_CHECK(SystemFlightRecovery_Process(input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active != 0U);
     TEST_CHECK(status.landing_state ==
                SYSTEM_FLIGHT_LANDING_STATE_BARO_IMU_CANDIDATE);
@@ -699,7 +717,7 @@ static void Test_LandingDetection(void)
     input.linear_accel_n_mps2[0] =
         SYSTEM_FLIGHT_LANDING_ACCEL_THRESHOLD_MPS2 * 2.0f;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_confirming == 0U);
     input.linear_accel_n_mps2[0] = 0.0f;
     Test_InputTimeSet(&input, input.now_us + 1ULL);
@@ -708,7 +726,7 @@ static void Test_LandingDetection(void)
     input.corrected_gyro_b_radps[0] =
         SYSTEM_FLIGHT_LANDING_GYRO_THRESHOLD_RADPS * 2.0f;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_confirming == 0U);
     input.corrected_gyro_b_radps[0] = 0.0f;
     Test_InputTimeSet(&input, input.now_us + 1ULL);
@@ -716,7 +734,7 @@ static void Test_LandingDetection(void)
     Test_InputTimeSet(&input, input.now_us + confirm_us + 1ULL);
     input.linear_accel_valid = 0U;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_confirming == 0U);
     input.linear_accel_valid = 1U;
     Test_InputTimeSet(&input, input.now_us + 1ULL);
@@ -728,7 +746,7 @@ static void Test_LandingDetection(void)
     input.ins_sequence++;
     input.inertial_timestamp_us = input.now_us;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_confirming == 0U);
     Test_InputTimeSet(&input, input.now_us + 1ULL);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
@@ -737,7 +755,7 @@ static void Test_LandingDetection(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_enter_landed_count == 1U);
     TEST_CHECK(s_lifecycle_state == SYSTEM_STATE_LANDED);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_detected != 0U);
     TEST_CHECK(status.landing_event_sequence == 1U);
     TEST_CHECK(status.landing_event_mission_time_ms == 4321U);
@@ -746,7 +764,7 @@ static void Test_LandingDetection(void)
 #else
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_enter_landed_count == 0U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_detected == 0U);
 #endif
 #elif defined(TEST_EXPECT_IMPACT)
@@ -759,20 +777,20 @@ static void Test_LandingDetection(void)
     Test_ImpactAccelerationSet(&input,
         SYSTEM_FLIGHT_LANDING_IMPACT_THRESHOLD_MPS2 * 2.0f);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_state ==
                SYSTEM_FLIGHT_LANDING_STATE_IMPACT_INHIBIT);
     TEST_CHECK(status.impact_event_sequence == 0U);
 
     Test_InputTimeSet(&input, input.now_us + inhibit_us - 1ULL);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.impact_event_sequence == 0U);
 
     Test_InputTimeSet(&input, input.now_us + 2ULL);
     input.mission_time_ms = 5000U;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.impact_event_sequence == 1U);
     TEST_CHECK(status.landing_state ==
                SYSTEM_FLIGHT_LANDING_STATE_GROUND_IMPACT_CAPTURED);
@@ -783,7 +801,7 @@ static void Test_LandingDetection(void)
     Test_InputTimeSet(&input, input.now_us + 1ULL);
     Test_ImpactAccelerationSet(&input, SYSTEM_LOCAL_GRAVITY_MPS2);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_state ==
                SYSTEM_FLIGHT_LANDING_STATE_POST_IMPACT_CONFIRM);
 
@@ -799,7 +817,7 @@ static void Test_LandingDetection(void)
     input.mission_time_ms = 6000U;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_enter_landed_count == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_detected != 0U);
     TEST_CHECK(status.landing_event_sequence == 1U);
     TEST_CHECK(status.landing_event_mission_time_ms == 6000U);
@@ -821,7 +839,7 @@ static void Test_LandingDetection(void)
     input.corrected_gyro_b_radps[0] =
         SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS * 2.0f;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_state ==
                SYSTEM_FLIGHT_LANDING_STATE_IMPACT_ARMED);
     TEST_CHECK(status.landing_detected == 0U);
@@ -840,7 +858,7 @@ static void Test_LandingDetection(void)
     Test_InputTimeSet(&input, input.now_us + confirm_us + 1ULL);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_enter_landed_count == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.impact_event_sequence == 2U);
     TEST_CHECK(status.landing_event_sequence == 1U);
 #elif defined(TEST_EXPECT_BARO)
@@ -857,7 +875,7 @@ static void Test_LandingDetection(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     Test_BaroSampleAdvance(&input, 50000ULL, 99.8f);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active == 0U);
     TEST_CHECK(status.barometer_trigger_rate_mps < -1.0f);
 
@@ -870,7 +888,7 @@ static void Test_LandingDetection(void)
     input.mission_time_ms = 7000U;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     TEST_CHECK(s_enter_landed_count == 1U);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_detected != 0U);
     TEST_CHECK(status.landing_candidate_baro_count >= 3U);
     TEST_CHECK(status.landing_candidate_imu_count >= 3U);
@@ -892,11 +910,11 @@ static void Test_LandingDetection(void)
     input.corrected_gyro_b_radps[0] =
         SYSTEM_FLIGHT_LANDING_STILL_GYRO_THRESHOLD_RADPS * 2.0f;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active != 0U);
     Test_BaroSampleAdvance(&input, 210000ULL, 100.0f);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active == 0U);
     TEST_CHECK(s_enter_landed_count == 0U);
 
@@ -914,11 +932,11 @@ static void Test_LandingDetection(void)
         SYSTEM_LOCAL_GRAVITY_MPS2 +
         (SYSTEM_FLIGHT_LANDING_STILL_ACCEL_TOLERANCE_MPS2 * 2.0f);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active != 0U);
     Test_BaroSampleAdvance(&input, 210000ULL, 100.0f);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active == 0U);
     TEST_CHECK(s_enter_landed_count == 0U);
 
@@ -934,7 +952,7 @@ static void Test_LandingDetection(void)
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
     Test_BaroSampleAdvance(&input, 100000ULL, 101.4f);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active == 0U);
     TEST_CHECK(s_enter_landed_count == 0U);
 
@@ -950,7 +968,7 @@ static void Test_LandingDetection(void)
     input.barometer_timestamp_us = input.now_us;
     input.barometer_sequence++;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.landing_candidate_active == 0U);
     TEST_CHECK(s_enter_landed_count == 0U);
 
@@ -966,7 +984,7 @@ static void Test_LandingDetection(void)
     input.inertial_timestamp_us = input.now_us;
     input.inertial_sequence++;
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.barometer_valid == 0U);
     TEST_CHECK(status.landing_candidate_active == 0U);
     TEST_CHECK(s_enter_landed_count == 0U);
@@ -979,7 +997,7 @@ static void Test_LandingDetection(void)
         ((uint64_t)SYSTEM_FLIGHT_LANDING_IMPACT_INHIBIT_MS * 1000ULL) +
         confirm_us + 1ULL);
     TEST_CHECK(SystemFlightRecovery_Process(&input) == SYSTEM_DEVICE_OK);
-    TEST_CHECK(SystemFlightRecovery_StatusGet(&status) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(Test_RecoveryStatusGet(&status) == SYSTEM_DEVICE_OK);
     TEST_CHECK(status.impact_event_sequence == 0U);
     TEST_CHECK(status.landing_detected == 0U);
 #endif
@@ -987,6 +1005,8 @@ static void Test_LandingDetection(void)
 
 static void Test_InvalidArguments(void)
 {
+    TEST_CHECK(SystemFlightRecovery_FinalStatusGet(NULL) ==
+               SYSTEM_DEVICE_INVALID_ARGUMENT);
     TEST_CHECK(SystemFlightRecovery_Process(NULL) ==
                SYSTEM_DEVICE_INVALID_ARGUMENT);
     TEST_CHECK(SystemFlightRecovery_StatusGet(NULL) ==

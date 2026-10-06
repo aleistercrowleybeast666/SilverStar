@@ -1369,6 +1369,22 @@ SystemDeviceResult SystemFlightRecovery_StatusGet(
     return SYSTEM_DEVICE_OK;
 }
 
+SystemDeviceResult SystemFlightRecovery_FinalStatusGet(
+    SystemFlightRecoveryFinalStatus *status)
+{
+    uint32_t primask;
+
+    if (status == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    primask = SystemFlightRecovery_IrqLock();
+    status->landing_detected = s_status.landing_detected;
+    status->deploy_triggered = s_status.deploy_triggered;
+    status->deploy_completed = s_status.deploy_completed;
+    status->deploy_action_result = s_status.deploy_action_result;
+    status->landing_transition_result = s_status.landing_transition_result;
+    SystemFlightRecovery_IrqUnlock(primask);
+    return SYSTEM_DEVICE_OK;
+}
+
 const char *SystemFlightRecovery_DeployTriggerMaskText(
     SystemDeployTriggerMask mask)
 {

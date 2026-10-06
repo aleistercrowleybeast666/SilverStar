@@ -737,7 +737,6 @@ static uint8_t LoggerTask_SessionUnavailableProcess(
 
 void AppTask_Logger(void *argument)
 {
-    FlightLogRecord record;
     LoggerBusFinalizationState finalization_state;
     uint64_t now_us;
 
@@ -758,20 +757,24 @@ void AppTask_Logger(void *argument)
         if (LoggerTask_SessionUnavailableProcess(now_us, finalization_state) != 0U)
         { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
 
-        if (LoggerBus_NextPop(&record) == LOGGER_BUS_RESULT_OK)
         {
-            s_diagnostics.drain_count++;
-            (void)LoggerTask_DecoderProfileQueue(now_us);
-            if ((LoggerTask_RecordAppend(&record) == 0U) ||
-                (LoggerTask_StartBarrierProcess() == 0U))
+            /* Queue scratch expires before snapshot/finalization I/O. */
+            FlightLogRecord record;
+            if (LoggerBus_NextPop(&record) == LOGGER_BUS_RESULT_OK)
             {
-                LoggerTask_Close();
-                s_logger.next_retry_us = now_us + SYSTEM_LOG_RETRY_PERIOD_US;
+                s_diagnostics.drain_count++;
+                (void)LoggerTask_DecoderProfileQueue(now_us);
+                if ((LoggerTask_RecordAppend(&record) == 0U) ||
+                    (LoggerTask_StartBarrierProcess() == 0U))
+                {
+                    LoggerTask_Close();
+                    s_logger.next_retry_us = now_us + SYSTEM_LOG_RETRY_PERIOD_US;
+                }
             }
-        }
-        else
-        {
-            vTaskDelay(pdMS_TO_TICKS(2U));
+            else
+            {
+                vTaskDelay(pdMS_TO_TICKS(2U));
+            }
         }
 
         now_us = SystemTime_GetMonotonicUs();

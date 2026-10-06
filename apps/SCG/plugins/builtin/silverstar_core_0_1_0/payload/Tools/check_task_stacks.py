@@ -1195,7 +1195,7 @@ BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister
 # Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
 # variants supplement the historical V2 sets. No generic acceptance, source
 # coverage exclusion, callback exception or stack threshold is added.
-BINDING_REVIEW_REVISION = "mpu_epoch_20261006_v3"
+BINDING_REVIEW_REVISION = "logger_final_projection_20261006_v4"
 BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
  'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
  'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
@@ -1282,8 +1282,16 @@ BINDING_DEPENDENCIES_EPOCH_V3 = {'APP/Src/app_tasks.c': ['1051cb567cd811e03c7189
  'System/Src/system_startup.c': ['0fb01b673d88bd874547bef3dd90c526c7789e78212053b9719a29badbd6255b',
                                  'f085bf28d0a728d4b596006b887aa73076630fda27d0650e60da97151ab3c645']}
 
+# Reviewed final-status projection: exact input variants only. All prior
+# versions, compiled dependency graphs, callback restrictions and thresholds remain.
+BINDING_SOURCE_LOGGER_V4 = {'APP/Src/logger_task.c': ['7ac58b7f478151bb4a90473e1509571aca3be80ba18dd520bcd29432c2e1da0c'],
+ 'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c': ['b986a28d23b4f7c77851e935d1f9f7f51529425f4bc3d5a922e3616bdd2ee74e'],
+ 'FlightLogic/FlightCycle/Src/silverstar_flight_recovery.c': ['be5ad9635c6a4177c79e260ba38d92806afa550b42ee203813f574a755e6bb22'],
+ 'System/Inc/system_flight_recovery.h': ['b156136c608a092b2c1edb8ec54e48f64cb072f003f069036b99ebe1bb989d76']}
+
 def BindingSourceVersions_Get(path):
-    return BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, [])
+    return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
+            BINDING_SOURCE_LOGGER_V4.get(path, []))
 
 
 def BindingSourceHash_Get(text):

@@ -530,7 +530,7 @@ SystemMissionSnapshotResult SystemMissionSnapshot_FinalStatusWrite(
     uint64_t timestamp_us, uint8_t logger_fault)
 {
     MissionSnapshotWriter writer;
-    SystemFlightRecoveryStatus recovery;
+    SystemFlightRecoveryFinalStatus recovery;
     SystemHealthSnapshot health;
     SystemStorageHealth storage;
     uint32_t mission_id = 0U;
@@ -548,7 +548,7 @@ SystemMissionSnapshotResult SystemMissionSnapshot_FinalStatusWrite(
     if (SystemStorage_MissionIdGet(&mission_id) != SYSTEM_DEVICE_OK)
     { return SystemMissionSnapshotResult_NotReady; }
     (void)memset(&recovery, 0, sizeof(recovery));
-    recovery_valid = (uint8_t)(SystemFlightRecovery_StatusGet(&recovery) ==
+    recovery_valid = (uint8_t)(SystemFlightRecovery_FinalStatusGet(&recovery) ==
         SYSTEM_DEVICE_OK);
     (void)memset(&health, 0, sizeof(health));
     SystemHealth_GetSnapshot(&health);
