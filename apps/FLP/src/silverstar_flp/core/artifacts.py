@@ -23,7 +23,7 @@ import numpy as np
 
 from silverstar_flp.core.context import TaskContext
 
-ARTIFACT_VERSION = 2
+ARTIFACT_VERSION = 3
 MAX_MANIFEST_BYTES = 256 * 1024 * 1024
 MAX_ARRAY_BYTES = 512 * 1024 * 1024
 MAX_TOTAL_BYTES = 4 * 1024 * 1024 * 1024
@@ -171,6 +171,8 @@ class _Encoder:
         self.record_files = {}
         self.record_rows = 0
         self.record_json_bytes = 0
+        self.in_audit_block = False
+        self.in_record_plan = False
         generations = list(directory.parent.iterdir())
         if len(generations) > 4096:
             raise ValueError("artifact_generation_limit")
@@ -257,9 +259,16 @@ class _Encoder:
         if isinstance(value, (tuple, list)):
             from silverstar_flp.core.dataset import DecodedRecord
             from silverstar_flp.core.record_blocks import RECORD_BLOCK_ROWS
-            if (type(value) is tuple and value
+            if (not self.in_audit_block and type(value) is tuple and value
                     and all(type(item) is DecodedRecord for item in value)):
                 return self.RecordBlocks_Write(value)
+            from silverstar_flp.core.audit_blocks import AUDIT_BLOCK_MIN_ROWS
+            if (not self.in_audit_block and not self.in_record_plan
+                    and len(value) >= AUDIT_BLOCK_MIN_ROWS
+                    and all(isinstance(item, Mapping) and isinstance(item, MappingProxyType)
+                            == isinstance(value[0], MappingProxyType)
+                            and all(type(key) in (str, int) for key in item) for item in value)):
+                return self.AuditBlocks_Write(value)
             return {"tuple" if isinstance(value, tuple) else "list":
                     [self.Encode(item, depth + 1) for item in value]}
         raise ValueError("artifact_type_unsupported:" + type(value).__name__)
@@ -287,7 +296,11 @@ class _Encoder:
                     # Reduce the row window BEFORE publishing arrays/files. This
                     # retains wide/raw decoder records within the same fixed bound.
                     rows = rows[:max(1, len(rows) // 2)]
-            encoded = self.Encode(block)
+            self.in_record_plan = True
+            try:
+                encoded = self.Encode(block)
+            finally:
+                self.in_record_plan = False
             temporary = self.directory / "records.tmp"
             raw_bytes = _Json_Write(temporary, encoded, self.context, RECORD_BLOCK_BYTES)
             self.record_json_bytes += raw_bytes
@@ -308,6 +321,52 @@ class _Encoder:
             references.append(spec)
             start += len(rows)
         return {"record_blocks": references}
+
+    def AuditBlocks_Write(self, rows):
+        from silverstar_flp.core.audit_blocks import AuditBlock_Build
+        from silverstar_flp.core.record_blocks import RECORD_BLOCK_ROWS, RECORD_BLOCK_BYTES
+        references, start = [], 0
+        self.record_rows += len(rows)
+        if self.record_rows > MAX_OBJECTS:
+            raise ValueError("artifact_record_count_limit")
+        while start < len(rows):
+            self.context.Cancel_RaiseIfRequested()
+            if len(references) >= MAX_RECORD_BLOCKS or len(self.record_files) >= MAX_RECORD_BLOCKS:
+                raise ValueError("artifact_record_block_count_limit")
+            window = rows[start:start + RECORD_BLOCK_ROWS]
+            while True:
+                try:
+                    block = AuditBlock_Build(window)
+                    break
+                except ValueError as exc:
+                    if str(exc) != "artifact_record_block_allocation_limit" or len(window) == 1:
+                        raise
+                    window = window[:max(1, len(window) // 2)]
+            self.in_audit_block = True
+            try:
+                encoded = self.Encode(block)
+            finally:
+                self.in_audit_block = False
+            temporary = self.directory / "audit.tmp"
+            raw_bytes = _Json_Write(temporary, encoded, self.context, RECORD_BLOCK_BYTES)
+            self.record_json_bytes += raw_bytes
+            if self.record_json_bytes > MAX_MANIFEST_BYTES:
+                raise ValueError("artifact_manifest_too_large")
+            sha = FileHash_Get(temporary, self.context)
+            name = sha + ".audit.json.gz"
+            spec = {"name": name, "sha256": sha, "bytes": temporary.stat().st_size,
+                    "raw_bytes": raw_bytes, "count": len(window)}
+            if name not in self.record_files:
+                self.total += spec["bytes"]
+                if self.total > MAX_TOTAL_BYTES:
+                    raise ValueError("artifact_size_limit")
+                os.replace(temporary, self.directory / name)
+                self.record_files[name] = spec
+            else:
+                temporary.unlink()
+            references.append(spec)
+            start += len(window)
+        return {"audit_blocks": references, "tuple": isinstance(rows, tuple)}
 
 
 def _Json_Write(path, value, context, limit):
@@ -361,7 +420,8 @@ class _VerifiedWriteReference(dict):
 
 
 class _Decoder:
-    def __init__(self, directory, arrays, context, *, allow_records=False, verify_only=False, json_bytes=0):
+    def __init__(self, directory, arrays, context, *, allow_records=False, allow_audits=False,
+                 verify_only=False, json_bytes=0):
         self.directory, self.arrays, self.context = directory, arrays, context
         self.objects = {}
         self.loaded_arrays = {}
@@ -370,6 +430,7 @@ class _Decoder:
         self.live_bytes = 0
         self.object_count = 0
         self.allow_records, self.verify_only = allow_records, verify_only
+        self.allow_audits = allow_audits
         self.record_files, self.record_rows = {}, 0
         self.record_json_bytes = json_bytes
         self.in_record_block = False
@@ -455,6 +516,55 @@ class _Decoder:
                 self.block_arrays.clear()
         return _VerifiedRecords(count) if self.verify_only else tuple(records)
 
+    def AuditBlocks_Read(self, references, is_tuple):
+        from silverstar_flp.core.audit_blocks import AuditBlock_Read
+        from silverstar_flp.core.record_blocks import RECORD_BLOCK_BYTES, RECORD_BLOCK_ROWS
+        if (not self.allow_audits or self.in_record_block or type(is_tuple) is not bool
+                or not isinstance(references, list) or not 0 < len(references) <= MAX_RECORD_BLOCKS):
+            raise ValueError("artifact_audit_blocks_invalid")
+        rows, count = [], 0
+        for spec in references:
+            self.context.Cancel_RaiseIfRequested()
+            if (not isinstance(spec, dict) or set(spec) != {"name", "sha256", "bytes", "raw_bytes", "count"}
+                    or not isinstance(spec["sha256"], str) or not _HASH.fullmatch(spec["sha256"])
+                    or spec["name"] != spec["sha256"] + ".audit.json.gz"
+                    or any(type(spec[key]) is not int for key in ("bytes", "raw_bytes", "count"))
+                    or not 0 < spec["bytes"] <= RECORD_BLOCK_BYTES
+                    or not 0 < spec["raw_bytes"] <= RECORD_BLOCK_BYTES
+                    or not 0 < spec["count"] <= RECORD_BLOCK_ROWS):
+                raise ValueError("artifact_audit_block_reference_invalid")
+            self.record_rows += spec["count"]
+            self.record_json_bytes += spec["raw_bytes"]
+            if self.record_rows > MAX_OBJECTS or self.record_json_bytes > MAX_MANIFEST_BYTES:
+                raise ValueError("artifact_record_budget_limit")
+            if self.total + self.record_json_bytes > MAX_TOTAL_BYTES:
+                raise ValueError("artifact_size_limit")
+            if len(self.record_files) >= MAX_RECORD_BLOCKS and spec["name"] not in self.record_files:
+                raise ValueError("artifact_record_block_count_limit")
+            if spec["name"] in self.record_files and self.record_files[spec["name"]] != spec:
+                raise ValueError("artifact_audit_block_reference_invalid")
+            self.record_files[spec["name"]] = spec
+            path = self.directory / spec["name"]
+            if _File_Require(path, limit=RECORD_BLOCK_BYTES).st_size != spec["bytes"] or FileHash_Get(path, self.context) != spec["sha256"]:
+                raise ValueError("artifact_audit_block_corrupt")
+            encoded = _Json_Load(path, self.context, byte_limit=RECORD_BLOCK_BYTES,
+                                 expected_bytes=spec["raw_bytes"])
+            self.in_record_block = True
+            try:
+                block = self.Decode(encoded)
+                if not isinstance(block, dict) or block.get("count") != spec["count"]:
+                    raise ValueError("artifact_audit_block_count_invalid")
+                restored = AuditBlock_Read(block, self.Charge, self.context, retain=not self.verify_only)
+                if not self.verify_only:
+                    rows.extend(restored)
+                count += spec["count"]
+            finally:
+                self.in_record_block = False
+                self.block_arrays.clear()
+        if self.verify_only:
+            return _VerifiedRecords(count)
+        return tuple(rows) if is_tuple else rows
+
     def Decode(self, value, depth=0):
         self.nodes += 1
         self.object_count += 1
@@ -528,6 +638,8 @@ class _Decoder:
             return target_arrays[name]
         if set(value) == {"record_blocks"}:
             return self.RecordBlocks_Read(value["record_blocks"])
+        if set(value) == {"audit_blocks", "tuple"}:
+            return self.AuditBlocks_Read(value["audit_blocks"], value["tuple"])
         if set(value) == {"ref"}:
             return self.objects[value["ref"]]
         if set(value) == {"type", "id", "fields"}:
@@ -703,11 +815,12 @@ def _Artifact_Load(project_path, reference, identity, context, *, verify_only):
         raise ValueError("artifact_manifest_corrupt")
     manifest, json_bytes = _Json_Load(path, context, return_size=True)
     if (not isinstance(manifest, dict) or set(manifest) != {"version", "identity", "arrays", "payload"}
-            or type(manifest.get("version")) is not int or manifest["version"] not in (1, ARTIFACT_VERSION)):
+            or type(manifest.get("version")) is not int or manifest["version"] not in (1, 2, ARTIFACT_VERSION)):
         raise ValueError("artifact_version_unsupported")
     if identity is not None and manifest.get("identity") != identity:
         raise ValueError("artifact_identity_mismatch")
     decoder = _Decoder(path.parent, manifest["arrays"], context, allow_records=manifest["version"] >= 2,
+                       allow_audits=manifest["version"] >= 3,
                        verify_only=verify_only, json_bytes=json_bytes)
     try:
         result = decoder.Decode(manifest["payload"])
@@ -761,13 +874,15 @@ def RecordFiles_Get(payload):
         if nodes > MAX_NODES or depth > 64:
             raise ValueError("artifact_structure_limit")
         if isinstance(value, dict):
-            if set(value) == {"record_blocks"}:
-                specs = value["record_blocks"]
+            if set(value) == {"record_blocks"} or set(value) == {"audit_blocks", "tuple"}:
+                audit = "audit_blocks" in value
+                specs = value["audit_blocks" if audit else "record_blocks"]
                 if not isinstance(specs, list) or len(specs) > MAX_RECORD_BLOCKS:
                     raise ValueError("artifact_record_blocks_invalid")
                 for spec in specs:
                     name = spec.get("name") if isinstance(spec, dict) else None
-                    if not isinstance(name, str) or not re.fullmatch(r"[0-9a-f]{64}\.records\.json\.gz", name):
+                    suffix = "audit" if audit else "records"
+                    if not isinstance(name, str) or not re.fullmatch(r"[0-9a-f]{64}\." + suffix + r"\.json\.gz", name):
                         raise ValueError("artifact_record_block_reference_invalid")
                     found.add(name)
             else:
