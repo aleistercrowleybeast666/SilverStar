@@ -36,6 +36,14 @@ sequence has no masked peripheral/deadline polling; normal sizes 1/2/3/4/6/14/24
 1000 independent tick phases, final RXNE timeout/error, stuck STOP, arbitration
 loss, buffer guards and stored-owner corruption checks pass.
 
+The 2026-10-06 follow-up observes every STOP request before the model can
+clear it, rather than relying on its final register value. It rejects STOP
+while ARLO is present or local master ownership is absent. Stuck STOP tests
+retain ACK=0 for the three-byte tail and ACK=0/POS=1 for the two-byte tail.
+Three deliberately unsafe Host-only source mutations (remove ARLO guard,
+remove master guard, restore ACK/POS before STOP clears) each fail; the
+unchanged product passes. These mutations never enter generated firmware.
+
 Model microseconds and instruction counts are not MCU WCET. Prior interrupt
 latency, flash/APB stalls, physical timing and bus noise are not proven. An
 already overdue pending tick can still merge with a subsequent expiration;

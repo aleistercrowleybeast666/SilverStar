@@ -24,6 +24,7 @@ static uint32_t s_tick_phase[2], s_tick_pending[2], s_tick_serviced[2];
 static uint32_t s_tick_expired[2], s_tick_merged[2], s_tick_delayed;
 static uint32_t s_mask_since, s_mask_max, s_read_index, s_initial_size;
 static uint32_t s_last_rxne, s_stop_stuck, s_tail_model, s_strict_order;
+static uint32_t s_stop_requests, s_nonmaster_fault;
 
 static void TickService(void)
 {
@@ -64,6 +65,8 @@ static void Advance(void)
     { s_dwt.CYCCNT = s_seed_cycles + s_time_us * 64U; }
     if ((s_error_flag != 0U) && (s_phase == s_fault_phase))
     { s_registers.SR1 |= s_error_flag; }
+    if (s_nonmaster_fault != 0U && s_phase == s_fault_phase)
+    { s_registers.SR2 &= ~I2C_SR2_MSL; }
     if (s_phase == ADDR1)
     {
         if (s_context_corrupt_mode == 1U) { s_handle.MemoryDeadline.active=0U; }
@@ -182,6 +185,17 @@ uint8_t HostI2c_DataRead(I2C_HandleTypeDef *h)
 }
 void HostI2c_AddressClear(I2C_HandleTypeDef *h)
 { CHECK(h == &s_handle);s_clear_count++;h->Instance->SR1 &= ~I2C_SR1_ADDR; }
+void HostI2c_StopRequest(I2C_HandleTypeDef *h)
+{
+    CHECK(h == &s_handle);
+    /* Observe the request before wire completion can clear STOP. Retain MSL
+       on injected ARLO to independently exercise both ownership conditions. */
+    CHECK((h->Instance->SR1 & I2C_SR1_ARLO) == 0U);
+    CHECK((h->ErrorCode & HAL_I2C_ERROR_ARLO) == 0U);
+    CHECK((h->Instance->SR2 & I2C_SR2_MSL) != 0U);
+    s_stop_requests++;
+    h->Instance->CR1 |= I2C_CR1_STOP;
+}
 
 static void Reset(int read)
 {
@@ -198,6 +212,7 @@ static void Reset(int read)
     memset(s_tick_merged,0,sizeof(s_tick_merged));s_tick_delayed=0U;s_mask_since=0U;s_mask_max=0U;
     s_read_index=0U;s_initial_size=0U;s_last_rxne=UINT32_MAX;s_stop_stuck=0U;
     s_tail_model=0U;s_strict_order=1U;
+    s_stop_requests=0U;s_nonmaster_fault=0U;
 }
 static HAL_StatusTypeDef Run(uint16_t size)
 {
@@ -300,8 +315,10 @@ int main(int argc,char **argv)
     {
         Reset(1);s_fault_phase=ADDR1;s_error_flag=errors[i];CHECK(Run(1U) == HAL_ERROR);
         CHECK((s_handle.ErrorCode & HAL_I2C_ERROR_TIMEOUT) == 0U);
-        if (errors[i] == I2C_SR1_ARLO) { CHECK((s_registers.CR1 & I2C_CR1_STOP) == 0U); }
+        if (errors[i] == I2C_SR1_ARLO) { CHECK(s_stop_requests == 0U); }
     }
+    Reset(1);s_fault_phase=ADDR1;s_error_flag=I2C_SR1_AF;s_nonmaster_fault=1U;
+    CHECK(Run(1U) == HAL_ERROR);CHECK(s_stop_requests == 0U);
     const uint32_t nack_read_phases[]={MEM_HIGH,MEM_LOW,START2,ADDR2,DATA_RXNE};
     for (unsigned i=0;i<sizeof(nack_read_phases)/sizeof(nack_read_phases[0]);i++)
     {
@@ -323,6 +340,10 @@ int main(int argc,char **argv)
     }
     Reset(1);s_stop_stuck=1U;CHECK(Run(3U) == HAL_TIMEOUT);
     CHECK((s_registers.CR1 & I2C_CR1_STOP) != 0U);
+    CHECK((s_registers.CR1 & (I2C_CR1_ACK | I2C_CR1_POS)) == 0U);
+    Reset(1);s_stop_stuck=1U;CHECK(Run(2U) == HAL_TIMEOUT);
+    CHECK((s_registers.CR1 & I2C_CR1_STOP) != 0U);
+    CHECK((s_registers.CR1 & (I2C_CR1_ACK | I2C_CR1_POS)) == I2C_CR1_POS);
     Reset(1);s_busy_delay_us=1000U;s_data_delay_us=900U;
     CHECK(Run(1U) == HAL_TIMEOUT);CHECK(s_time_us <= 2000U);
     Reset(0);s_busy_delay_us=800U;s_data_delay_us=1100U;
