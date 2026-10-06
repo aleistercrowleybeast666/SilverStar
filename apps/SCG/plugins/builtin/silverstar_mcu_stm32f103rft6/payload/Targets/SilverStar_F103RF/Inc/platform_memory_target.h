@@ -2,6 +2,8 @@
 #define __PLATFORM_MEMORY_TARGET_H
 
 /* RFT6 has no CCM. All CPU and DMA state remains in the only SRAM region. */
+#define PLATFORM_MEMORY_DMA_SRAM_START 0x20000000UL
+#define PLATFORM_MEMORY_DMA_SRAM_END   0x20018000UL
 #define PLATFORM_CPU_FAST_DATA
 #define PLATFORM_CPU_FAST_BSS
 #define PLATFORM_DMA_ACCESSIBLE __attribute__((aligned(8)))

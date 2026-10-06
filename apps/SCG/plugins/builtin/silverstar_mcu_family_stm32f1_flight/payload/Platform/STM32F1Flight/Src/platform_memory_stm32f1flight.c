@@ -2,8 +2,10 @@
 
 #include <stdint.h>
 
-#define PLATFORM_MEMORY_DMA_START ((uintptr_t)0x20000000UL)
-#define PLATFORM_MEMORY_DMA_END   ((uintptr_t)0x20010000UL)
+#include "platform_memory_target.h"
+
+#define PLATFORM_MEMORY_DMA_START ((uintptr_t)PLATFORM_MEMORY_DMA_SRAM_START)
+#define PLATFORM_MEMORY_DMA_END   ((uintptr_t)PLATFORM_MEMORY_DMA_SRAM_END)
 
 uint8_t PlatformMemory_IsDmaAccessible(const void *data, size_t length)
 {
