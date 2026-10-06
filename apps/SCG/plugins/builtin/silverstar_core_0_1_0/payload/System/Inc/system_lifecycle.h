@@ -81,6 +81,17 @@ typedef struct
 } SystemLifecycleStartDiagnostic;
 
 void SystemLifecycle_Init(void);
+typedef enum
+{
+    SYSTEM_CONFIGURATION_ACTION_CALIBRATION = 1U,
+    SYSTEM_CONFIGURATION_ACTION_ALIGNMENT = 2U
+} SystemConfigurationAction;
+
+/* Called while the subsystem action lock is held. The lifecycle reservation
+ * shares the IRQ boundary with START admission and remains held until End. */
+SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemLifecycle_ConfigurationBegin(
+    SystemConfigurationAction action);
+void SystemLifecycle_ConfigurationEnd(SystemConfigurationAction action);
 SystemLifecycleState SystemLifecycle_GetState(void);
 SystemDeviceResult SystemLifecycle_EnterSelfTest(void);
 SystemDeviceResult SystemLifecycle_EnterPreflight(void);

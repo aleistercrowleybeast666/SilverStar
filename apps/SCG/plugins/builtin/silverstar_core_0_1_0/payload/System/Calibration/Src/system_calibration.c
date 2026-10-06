@@ -35,6 +35,8 @@ static volatile uint8_t s_sampling_active;
 static volatile uint8_t s_compute_pending;
 static volatile uint8_t s_latest_sample_valid;
 static volatile uint8_t s_action_active;
+static uint32_t s_epoch_revision;
+static uint8_t s_configuration_action;
 
 static PlatformCriticalState SystemCalibration_IrqLock(void)
 {
@@ -70,10 +72,34 @@ static uint8_t SystemCalibration_ActionBegin(void)
     return result;
 }
 
+/* Acquire the module action and lifecycle reservation without a scheduling
+ * gap. Ordinary configurations retain the original module-only ownership. */
+static SystemDeviceResult SystemCalibration_ConfigurationActionBegin(void)
+{
+    uint32_t lock;
+    SystemDeviceResult result;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)
+    { return SystemCalibration_ActionBegin() ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_BUSY; }
+    lock = SystemCalibration_IrqLock();
+    if (SystemCalibration_ActionBegin() == 0U)
+    { SystemCalibration_IrqUnlock(lock); return SYSTEM_DEVICE_BUSY; }
+    result = SystemLifecycle_ConfigurationBegin(SYSTEM_CONFIGURATION_ACTION_CALIBRATION);
+    if (result == SYSTEM_DEVICE_OK) { s_configuration_action = 1U; }
+    else { s_action_active = 0U; }
+    SystemCalibration_IrqUnlock(lock);
+    return result;
+}
+
 static void SystemCalibration_ActionEnd(void)
 {
     uint32_t primask = SystemCalibration_IrqLock();
 
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+        (s_configuration_action != 0U))
+    {
+        SystemLifecycle_ConfigurationEnd(SYSTEM_CONFIGURATION_ACTION_CALIBRATION);
+        s_configuration_action = 0U;
+    }
     s_action_active = 0U;
     SystemCalibration_IrqUnlock(primask);
 }
@@ -467,6 +493,17 @@ void SystemCalibration_Process(void)
     }
     SILVERSTAR_ASSERT_OBJECT(&s_status, SystemCalibrationStatus,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_RevisionIsCurrent(s_epoch_revision) == 0U)
+        {
+            s_sampling_active = 0U;
+            s_compute_pending = 0U;
+            SystemCalibration_StatusReset();
+            SystemCalibration_ActionEnd();
+            return;
+        }
+    }
     if (s_status.mode == SYSTEM_CALIBRATION_MODE_ONE_FACE)
     {
         SystemCalibration_OneFaceCorrectionApply();
@@ -474,6 +511,16 @@ void SystemCalibration_Process(void)
     else if (s_status.mode == SYSTEM_CALIBRATION_MODE_SIX_FACE)
     {
         SystemCalibration_SixFaceCorrectionApply();
+    }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if ((s_status.ready != 0U) &&
+            (SystemImuEpoch_CalibrationCommit(s_epoch_revision,
+                s_status.start_sequence) == 0U))
+        {
+            SystemCalibration_IdentitySet(s_status.mode, 0U);
+            SystemCalibration_StateSet(SYSTEM_CALIBRATION_STATE_FAILED);
+        }
     }
     SystemCalibration_ActionEnd();
 }
@@ -596,11 +643,27 @@ void SystemCalibration_ImuSampleProcess(const SystemInertialSample *sample)
     }
     SILVERSTAR_ASSERT_OBJECT(sample, SystemInertialSample,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_SampleIsCurrent(SystemInertialSample_SourceGet(sample),
+                SystemInertialSample_EpochGet(sample)) == 0U) { return; }
+    }
     SystemCalibration_LatestSampleStore(sample);
     if ((s_sampling_active == 0U) ||
         (SystemCalibration_ActionBegin() == 0U))
     {
         return;
+    }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_RevisionIsCurrent(s_epoch_revision) == 0U)
+        {
+            s_sampling_active = 0U;
+            s_compute_pending = 0U;
+            SystemCalibration_StatusReset();
+            SystemCalibration_ActionEnd();
+            return;
+        }
     }
     if (SystemCalibration_WaitStreamProcess(sample) != 0U)
     {
@@ -699,36 +762,9 @@ static SystemDeviceResult SystemCalibration_ModeValidate(SystemCalibrationMode m
     return SYSTEM_DEVICE_OK;
 }
 
-SystemDeviceResult SystemCalibration_Start(SystemCalibrationMode mode)
+/* Caller holds CAL action and IRQ lock; the epoch reservation is current. */
+static void SystemCalibration_CollectionBegin(SystemCalibrationMode mode)
 {
-    SystemDeviceResult invalidate_result;
-    SystemDeviceResult selector_result;
-    uint32_t primask;
-
-    if (SystemCalibration_ModificationAllowed() == 0U)
-    {
-        return SYSTEM_DEVICE_BAD_STATE;
-    }
-    SILVERSTAR_ASSERT_OBJECT(&s_status, SystemCalibrationStatus,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    selector_result = SystemCalibration_ModeValidate(mode);
-    if (selector_result != SYSTEM_DEVICE_OK) { return selector_result; }
-    selector_result = SystemSourceSelector_ImuSelectAndLock();
-    if (selector_result != SYSTEM_DEVICE_OK)
-    {
-        return selector_result;
-    }
-    if (SystemCalibration_ActionBegin() == 0U)
-    {
-        return SYSTEM_DEVICE_BUSY;
-    }
-    invalidate_result = SystemAlignment_CalibrationInvalidate();
-    if (invalidate_result != SYSTEM_DEVICE_OK)
-    {
-        SystemCalibration_ActionEnd();
-        return invalidate_result;
-    }
-    primask = SystemCalibration_IrqLock();
     SystemCalibration_StatusReset();
     s_status.start_sequence++;
     s_status.mode = mode;
@@ -742,6 +778,12 @@ SystemDeviceResult SystemCalibration_Start(SystemCalibrationMode mode)
             SYSTEM_CALIBRATION_FACE_NONE,
             SYSTEM_CALIBRATION_WAIT_NONE);
         SystemCalibration_StateSet(SYSTEM_CALIBRATION_STATE_READY);
+        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        {
+            if (SystemImuEpoch_CalibrationCommit(s_epoch_revision,
+                    s_status.start_sequence) == 0U)
+            { SystemCalibration_IdentitySet(mode, 0U); }
+        }
     }
     else if (mode == SYSTEM_CALIBRATION_MODE_ONE_FACE)
     {
@@ -754,6 +796,56 @@ SystemDeviceResult SystemCalibration_Start(SystemCalibrationMode mode)
     {
         SystemCalibration_StateSet(SYSTEM_CALIBRATION_STATE_WAIT_FACE);
     }
+}
+
+SystemDeviceResult SystemCalibration_Start(SystemCalibrationMode mode)
+{
+    SystemDeviceResult action_result;
+    SystemDeviceResult invalidate_result;
+    SystemDeviceResult selector_result;
+    uint32_t primask;
+
+    if (SystemCalibration_ModificationAllowed() == 0U)
+    {
+        return SYSTEM_DEVICE_BAD_STATE;
+    }
+    SILVERSTAR_ASSERT_OBJECT(&s_status, SystemCalibrationStatus,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    selector_result = SystemCalibration_ModeValidate(mode);
+    if (selector_result != SYSTEM_DEVICE_OK) { return selector_result; }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)
+    {
+        selector_result = SystemSourceSelector_ImuSelectAndLock();
+        if (selector_result != SYSTEM_DEVICE_OK) { return selector_result; }
+    }
+    action_result = SystemCalibration_ConfigurationActionBegin();
+    if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        selector_result = SystemSourceSelector_ImuSelectAndLock();
+        if (selector_result != SYSTEM_DEVICE_OK)
+        { SystemCalibration_ActionEnd(); return selector_result; }
+    }
+    invalidate_result = SystemAlignment_CalibrationInvalidate();
+    if (invalidate_result != SYSTEM_DEVICE_OK)
+    {
+        SystemCalibration_ActionEnd();
+        return invalidate_result;
+    }
+    primask = SystemCalibration_IrqLock();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if ((s_status.start_sequence == UINT32_MAX) ||
+            (SystemImuEpoch_CalibrationBegin(s_status.start_sequence + 1U,
+                (uint8_t)(mode == SYSTEM_CALIBRATION_MODE_NONE),
+                &s_epoch_revision) != SYSTEM_DEVICE_OK))
+        {
+            SystemCalibration_IrqUnlock(primask);
+            SystemCalibration_ActionEnd();
+            return SYSTEM_DEVICE_NOT_READY;
+        }
+    }
+    SystemCalibration_CollectionBegin(mode);
     SystemCalibration_IrqUnlock(primask);
     SystemCalibration_ActionEnd();
     return SYSTEM_DEVICE_OK;
@@ -761,6 +853,7 @@ SystemDeviceResult SystemCalibration_Start(SystemCalibrationMode mode)
 
 SystemDeviceResult SystemCalibration_FaceCollect(SystemCalibrationFace face)
 {
+    SystemDeviceResult action_result;
     SystemDeviceResult result;
     SystemInertialSample latest_sample;
     uint8_t face_mask;
@@ -775,10 +868,8 @@ SystemDeviceResult SystemCalibration_FaceCollect(SystemCalibrationFace face)
     {
         return SYSTEM_DEVICE_INVALID_ARGUMENT;
     }
-    if (SystemCalibration_ActionBegin() == 0U)
-    {
-        return SYSTEM_DEVICE_BUSY;
-    }
+    action_result = SystemCalibration_ConfigurationActionBegin();
+    if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
     if ((s_status.mode != SYSTEM_CALIBRATION_MODE_SIX_FACE) ||
         ((s_status.state != SYSTEM_CALIBRATION_STATE_WAIT_FACE) &&
          (s_status.state != SYSTEM_CALIBRATION_STATE_READY)))
@@ -816,16 +907,15 @@ SystemDeviceResult SystemCalibration_FaceCollect(SystemCalibrationFace face)
 
 SystemDeviceResult SystemCalibration_Stop(void)
 {
+    SystemDeviceResult action_result;
     SILVERSTAR_ASSERT_OBJECT(&s_status, SystemCalibrationStatus,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
     if (SystemCalibration_ModificationAllowed() == 0U)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
-    if (SystemCalibration_ActionBegin() == 0U)
-    {
-        return SYSTEM_DEVICE_BUSY;
-    }
+    action_result = SystemCalibration_ConfigurationActionBegin();
+    if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
     if (s_status.ready == 0U)
     {
         s_sampling_active = 0U;
@@ -845,6 +935,7 @@ SystemDeviceResult SystemCalibration_Stop(void)
 
 SystemDeviceResult SystemCalibration_Reset(void)
 {
+    SystemDeviceResult action_result;
     SystemDeviceResult invalidate_result;
     uint32_t primask;
 
@@ -854,10 +945,8 @@ SystemDeviceResult SystemCalibration_Reset(void)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
-    if (SystemCalibration_ActionBegin() == 0U)
-    {
-        return SYSTEM_DEVICE_BUSY;
-    }
+    action_result = SystemCalibration_ConfigurationActionBegin();
+    if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
     invalidate_result = SystemAlignment_CalibrationInvalidate();
     if (invalidate_result != SYSTEM_DEVICE_OK)
     {
@@ -868,6 +957,11 @@ SystemDeviceResult SystemCalibration_Reset(void)
     s_sampling_active = 0U;
     s_compute_pending = 0U;
     SystemCalibration_StatusReset();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemImuEpoch_CalibrationInvalidate();
+        s_epoch_revision = 0U;
+    }
     if (SYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK == 0U)
     {
         SystemCalibration_NoneReadySet();
@@ -907,6 +1001,16 @@ SystemDeviceResult SystemCalibration_StatusGet(SystemCalibrationStatus *status)
         return SYSTEM_DEVICE_BUSY;
     }
     *status = s_status;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_CalibrationIsReady(s_status.start_sequence,
+                (uint8_t)(s_status.mode == SYSTEM_CALIBRATION_MODE_NONE)) == 0U)
+        {
+            status->ready = 0U; status->correction.ready = 0U;
+            if (status->state == SYSTEM_CALIBRATION_STATE_READY)
+            { status->state = SYSTEM_CALIBRATION_STATE_IDLE; }
+        }
+    }
     SystemCalibration_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
 }
@@ -933,6 +1037,15 @@ SystemDeviceResult SystemCalibration_ImuCorrectionGet(
         SystemCalibration_IrqUnlock(primask);
         return SYSTEM_DEVICE_BUSY;
     }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_CalibrationIsReady(s_status.start_sequence,
+                (uint8_t)(s_status.mode == SYSTEM_CALIBRATION_MODE_NONE)) == 0U)
+        {
+            SystemCalibration_IrqUnlock(primask);
+            return SYSTEM_DEVICE_NOT_READY;
+        }
+    }
     *correction = s_status.correction;
     SystemCalibration_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
@@ -946,6 +1059,12 @@ uint8_t SystemCalibration_IsReady(void)
     ready = (uint8_t)((s_initialized != 0U) &&
                       (s_action_active == 0U) &&
                       (s_status.ready != 0U));
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        ready = (uint8_t)((ready != 0U) &&
+            (SystemImuEpoch_CalibrationIsReady(s_status.start_sequence,
+                (uint8_t)(s_status.mode == SYSTEM_CALIBRATION_MODE_NONE)) != 0U));
+    }
     SystemCalibration_IrqUnlock(primask);
     return ready;
 }

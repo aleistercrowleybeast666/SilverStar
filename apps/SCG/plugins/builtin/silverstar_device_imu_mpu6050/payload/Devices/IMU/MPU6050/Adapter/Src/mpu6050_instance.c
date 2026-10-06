@@ -33,6 +33,10 @@ static void Mpu6050Recovery_Revoke(uint8_t instance)
 {
     SensorImuAdapter *adapter = &s_contexts[instance];
     PlatformCriticalState lock = PlatformCritical_Enter();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemImuEpoch_Revoke();
+    }
     adapter->driver.profile_verified = 0U;
     adapter->driver.state = SENSOR_IMU_FAULT;
     if (adapter->driver.last_result == SENSOR_IMU_OK)
@@ -230,9 +234,17 @@ SystemDeviceResult Mpu6050ImuInstance_HealthGet(uint8_t instance, SystemDeviceHe
         if (result != SYSTEM_DEVICE_OK) { return result; }
         {
             PlatformCriticalState lock = PlatformCritical_Enter();
-            /* Physical recovery is not calibration/alignment/mission qualification.
-             * This prototype has deliberately no automatic qualification-clear path. */
-            if (s_recovery[instance].qualification_revoked != 0U) { health->healthy = 0U; }
+            if (s_recovery[instance].qualification_revoked != 0U)
+            {
+                if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+                {
+                    if (SystemImuEpoch_IsQualified() == 0U) { health->healthy = 0U; }
+                }
+    else
+    {
+                    health->healthy = 0U;
+    }
+            }
             PlatformCritical_Exit(lock);
         }
         return SYSTEM_DEVICE_OK;

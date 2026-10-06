@@ -33,6 +33,11 @@ static void SystemInertial_DeviceSampleCopy(
     destination->temperature_c = source->temperature_c;
     destination->valid_mask = source->valid_mask;
     destination->quality_flags = source->quality_flags;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemInertialSample_EpochSet(destination,
+            SystemImuSample_SourceGet(source), SystemImuSample_EpochGet(source));
+    }
 }
 
 SystemDeviceResult SystemInertial_Init(void)
@@ -69,6 +74,11 @@ SystemDeviceResult SystemInertial_LatestGet(SystemInertialSample *sample)
         return result;
     }
     SystemInertial_DeviceSampleCopy(&device_sample, sample);
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_SampleIsCurrent(SystemInertialSample_SourceGet(sample),
+                SystemInertialSample_EpochGet(sample)) == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    }
     return SYSTEM_DEVICE_OK;
 }
 
@@ -91,6 +101,11 @@ SystemDeviceResult SystemInertial_NextGet(SystemInertialSample *sample)
         return result;
     }
     SystemInertial_DeviceSampleCopy(&device_sample, sample);
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_SampleIsCurrent(SystemInertialSample_SourceGet(sample),
+                SystemInertialSample_EpochGet(sample)) == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    }
     return SYSTEM_DEVICE_OK;
 }
 

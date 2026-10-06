@@ -114,6 +114,12 @@ static uint32_t SystemHealth_StartupBlockingMaskGet(
         return SYSTEM_HEALTH_BLOCK_STARTUP_INCOMPLETE;
     }
     snapshot->warning_mask = startup_report->warning_mask;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if ((startup_report->required_failure_mask ==
+                (1UL << SYSTEM_STARTUP_DEVICE_IMU)) &&
+            (SystemImuEpoch_RecoveryIsQualified() != 0U)) { return 0U; }
+    }
     return (startup_report->mission_capable == 0U) ?
         SYSTEM_HEALTH_BLOCK_STARTUP_FAILED : 0U;
 }
@@ -201,6 +207,11 @@ void SystemHealth_Process(void)
     next.ready = (blocking_mask == 0U) ? 1U : 0U;
     next.sequence++;
     primask = SystemHealth_IrqLock();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_IsQualified() == 0U)
+        { next.ready = 0U; next.start_blocking_mask |= SYSTEM_HEALTH_BLOCK_PRIMARY_IMU; }
+    }
     s_health = next;
     SystemHealth_IrqUnlock(primask);
 }
@@ -213,6 +224,14 @@ void SystemHealth_GetSnapshot(SystemHealthSnapshot *snapshot)
     {
         primask = SystemHealth_IrqLock();
         *snapshot = s_health;
+        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        {
+            if (SystemImuEpoch_IsQualified() == 0U)
+            {
+                snapshot->ready = 0U;
+                snapshot->start_blocking_mask |= SYSTEM_HEALTH_BLOCK_PRIMARY_IMU;
+            }
+        }
         SystemHealth_IrqUnlock(primask);
     }
 }
@@ -221,6 +240,10 @@ uint8_t SystemHealth_IsReady(void)
 {
     uint32_t primask = SystemHealth_IrqLock();
     uint8_t ready = s_health.ready;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        ready = (uint8_t)((ready != 0U) && (SystemImuEpoch_IsQualified() != 0U));
+    }
 
     SystemHealth_IrqUnlock(primask);
     return ready;

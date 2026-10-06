@@ -138,6 +138,9 @@ int main(int argc, char **argv)
     SystemStartupReport history; SystemHealthSnapshot health_snapshot;
 #endif
     assert(argc == 2); which = (unsigned int)strtoul(argv[1], NULL, 10);
+#if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    SystemImuEpoch_Init();
+#endif
     s_registers[117] = 104U; s_registers[58] = 1U;
     if (which == 15U)
     {
@@ -245,6 +248,17 @@ int main(int argc, char **argv)
             s_report.completed = 1U; s_report.mission_capable = (which == 14U) ? 1U : 0U;
             if (which == 14U)
             {
+#if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+                /* This unit projects CAL/ALIGN booleans. Give their initial
+                 * healthy state a coherent input witness; full-flow tests
+                 * execute the actual CAL/ALIGN collectors separately. */
+                uint32_t revision;
+                SystemImuEpochToken token;
+                assert(SystemImuEpoch_CalibrationBegin(1U, 0U, &revision) == SYSTEM_DEVICE_OK);
+                assert(SystemImuEpoch_CalibrationCommit(revision, 1U) != 0U);
+                assert(SystemImuEpoch_AlignmentBegin(1U, &token) == SYSTEM_DEVICE_OK);
+                assert(SystemImuEpoch_AlignmentCommit(&token, 1U) != 0U);
+#endif
                 SystemHealth_Init(); SystemHealth_SetAttitudeReady(1U); SystemHealth_Process();
                 assert(SystemHealth_IsReady() != 0U);
                 s_cal_ready = 0U; SystemHealth_Process(); assert(SystemHealth_IsReady() == 0U);

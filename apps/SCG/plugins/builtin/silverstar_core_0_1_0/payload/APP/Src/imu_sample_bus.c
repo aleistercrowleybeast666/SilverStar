@@ -198,6 +198,15 @@ ImuSampleBusResult ImuSampleBus_Pop(InsImuSample *sample)
     {
         s_stats.count--;
     }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_SampleIsCurrent(SystemInertialSample_SourceGet(sample),
+                SystemInertialSample_EpochGet(sample)) == 0U)
+        {
+            ImuSampleBus_IrqUnlock(primask);
+            return IMU_SAMPLE_BUS_RESULT_EMPTY;
+        }
+    }
     ImuSampleBus_IrqUnlock(primask);
     return IMU_SAMPLE_BUS_RESULT_OK;
 }

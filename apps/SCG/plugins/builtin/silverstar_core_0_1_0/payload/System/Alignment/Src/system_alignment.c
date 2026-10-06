@@ -45,6 +45,7 @@ static uint8_t s_initialized;
 static volatile uint8_t s_collecting;
 static volatile uint8_t s_frozen;
 static volatile uint8_t s_action_active;
+static uint8_t s_configuration_action;
 
 static void SystemAlignment_GuardReset(void)
 {
@@ -366,6 +367,11 @@ static uint8_t SystemAlignment_StartupDeviceAvailable(
     SystemStartupDeviceId device_id)
 {
     const SystemStartupReport *report = SystemStartup_GetReport();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if ((device_id == SYSTEM_STARTUP_DEVICE_IMU) &&
+            (SystemImuEpoch_PhysicalIsReady() != 0U)) { return 1U; }
+    }
 
     if ((report == NULL) || (report->completed == 0U))
     {
@@ -569,7 +575,7 @@ static uint8_t SystemAlignment_ModificationAllowed(void)
                      (state == SYSTEM_STATE_READY));
 }
 
-static SystemDeviceResult SystemAlignment_ActionBegin(void)
+static SystemDeviceResult SystemAlignment_ActionBegin(uint8_t configuration)
 {
     uint32_t primask;
 
@@ -584,6 +590,15 @@ static SystemDeviceResult SystemAlignment_ActionBegin(void)
         SystemAlignment_IrqUnlock(primask);
         return SYSTEM_DEVICE_BUSY;
     }
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+        (configuration != 0U))
+    {
+        SystemDeviceResult result = SystemLifecycle_ConfigurationBegin(
+            SYSTEM_CONFIGURATION_ACTION_ALIGNMENT);
+        if (result != SYSTEM_DEVICE_OK)
+        { SystemAlignment_IrqUnlock(primask); return result; }
+        s_configuration_action = 1U;
+    }
     s_action_active = 1U;
     SystemAlignment_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
@@ -593,6 +608,12 @@ static void SystemAlignment_ActionEnd(void)
 {
     uint32_t primask = SystemAlignment_IrqLock();
 
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+        (s_configuration_action != 0U))
+    {
+        SystemLifecycle_ConfigurationEnd(SYSTEM_CONFIGURATION_ACTION_ALIGNMENT);
+        s_configuration_action = 0U;
+    }
     s_action_active = 0U;
     SystemAlignment_IrqUnlock(primask);
 }
@@ -602,6 +623,21 @@ static void SystemAlignment_PreflightStateRestore(void)
     if (SystemLifecycle_GetState() == SYSTEM_STATE_READY)
     {
         (void)SystemLifecycle_EnterPreflight();
+    }
+}
+
+static SystemImuEpochToken s_epoch_token;
+
+static void SystemAlignment_EpochStatusProject(SystemAlignmentStatus *status)
+{
+    if (SystemImuEpoch_AlignmentIsReady(status->start_sequence) == 0U)
+    {
+        status->ready = 0U;
+        status->ready_mask = 0U;
+        if (status->state == SYSTEM_ALIGNMENT_STATE_READY)
+        { status->state = SYSTEM_ALIGNMENT_STATE_COLLECTING; }
+        for (uint32_t index = 0U; index < SYSTEM_ALIGNMENT_SOURCE_COUNT; index++)
+        { status->component[index].ready = 0U; }
     }
 }
 
@@ -646,10 +682,22 @@ static SystemDeviceResult SystemAlignment_CalibrationUnavailableReset(void)
         SystemAlignment_IrqUnlock(primask);
         return SYSTEM_DEVICE_BUSY;
     }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemDeviceResult result = SystemLifecycle_ConfigurationBegin(
+            SYSTEM_CONFIGURATION_ACTION_ALIGNMENT);
+        if (result != SYSTEM_DEVICE_OK)
+        { SystemAlignment_IrqUnlock(primask); return result; }
+    }
     s_collecting = 0U;
     s_frozen = 0U;
     SystemAlignment_GuardReset();
     SystemAlignment_StatusReset(SYSTEM_ALIGNMENT_STATE_IDLE);
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemImuEpoch_AlignmentInvalidate();
+        SystemLifecycle_ConfigurationEnd(SYSTEM_CONFIGURATION_ACTION_ALIGNMENT);
+    }
     SystemAlignment_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
 }
@@ -778,10 +826,17 @@ SystemDeviceResult SystemAlignment_Process(void)
 
     if (SystemCalibration_IsReady() == 0U)
     {
+        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        {
+            /* Mission state/origins remain frozen after START. Revocation masks
+             * their qualification, without resetting the running navigation. */
+            if (SystemAlignment_ModificationAllowed() == 0U)
+            { return SYSTEM_DEVICE_NOT_READY; }
+        }
         return SystemAlignment_CalibrationUnavailableReset();
     }
 
-    action_result = SystemAlignment_ActionBegin();
+    action_result = SystemAlignment_ActionBegin(0U);
     if (action_result != SYSTEM_DEVICE_OK)
     {
         return action_result;
@@ -805,6 +860,11 @@ SystemDeviceResult SystemAlignment_Process(void)
 
     primask = SystemAlignment_IrqLock();
     s_status = status;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_AlignmentCommit(&s_epoch_token, status.ready) == 0U)
+        { SystemAlignment_EpochStatusProject(&s_status); }
+    }
     SystemAlignment_IrqUnlock(primask);
     SystemAlignment_ActionEnd();
     if (stale_entered != 0U)
@@ -829,6 +889,10 @@ SystemDeviceResult SystemAlignment_StatusGet(SystemAlignmentStatus *status)
         return SYSTEM_DEVICE_NOT_READY;
     }
     *status = s_status;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemAlignment_EpochStatusProject(status);
+    }
     SystemAlignment_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
 }
@@ -866,6 +930,16 @@ SystemDeviceResult SystemAlignment_SummaryGet(SystemAlignmentSummary *summary)
             SYSTEM_ALIGNMENT_PREFLIGHT_ATTITUDE_ALIGNMENT :
             SYSTEM_ALIGNMENT_PREFLIGHT_ATTITUDE_HARDWARE;
     summary->ready = s_status.ready;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemImuEpoch_AlignmentIsReady(s_status.start_sequence) == 0U)
+        {
+            summary->ready = 0U;
+            summary->ready_mask = 0U;
+            if (summary->state == SYSTEM_ALIGNMENT_STATE_READY)
+            { summary->state = SYSTEM_ALIGNMENT_STATE_COLLECTING; }
+        }
+    }
     SystemAlignment_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
 }
@@ -876,6 +950,11 @@ uint8_t SystemAlignment_IsReady(void)
     uint32_t primask = SystemAlignment_IrqLock();
 
     ready = (s_initialized != 0U) ? s_status.ready : 0U;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        ready = (uint8_t)((ready != 0U) &&
+            (SystemImuEpoch_AlignmentIsReady(s_status.start_sequence) != 0U));
+    }
     SystemAlignment_IrqUnlock(primask);
     return ready;
 }
@@ -917,6 +996,10 @@ SystemDeviceResult SystemAlignment_PreflightQuaternionGet(
     if ((quaternion_wxyz == NULL) || (source == NULL))
     {
         return SYSTEM_DEVICE_INVALID_ARGUMENT;
+    }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (SystemAlignment_IsReady() == 0U) { return SYSTEM_DEVICE_NOT_READY; }
     }
     SILVERSTAR_ASSERT(quaternion_wxyz != NULL,
         SILVERSTAR_ASSERT_MODULE_SYSTEM,
@@ -961,6 +1044,70 @@ SystemDeviceResult SystemAlignment_PreflightQuaternionGet(
     return SystemAlignment_HardwareQuaternionGet(quaternion_wxyz, source);
 }
 
+/* Claim the configuration boundary before any compact source/status change.
+ * Preserve the original source-before-action order in ordinary builds. */
+static SystemDeviceResult SystemAlignment_StartAdmission(void)
+{
+    SystemDeviceResult result;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        uint32_t lock;
+        result = SystemAlignment_ActionBegin(1U);
+        if (result != SYSTEM_DEVICE_OK) { return result; }
+        lock = SystemAlignment_IrqLock();
+        s_status.capability_mask = SystemAlignment_CapabilityDetect();
+        s_status.config_result = SystemAlignment_MasksValidate(
+            s_status.capability_mask, s_status.selected_mask,
+            s_status.required_mask, &s_status.unavailable_mask);
+        SystemAlignment_IrqUnlock(lock);
+    }
+    if (s_status.config_result != SYSTEM_ALIGNMENT_CONFIG_OK)
+    {
+        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        { SystemAlignment_ActionEnd(); }
+        return SYSTEM_DEVICE_UNSUPPORTED;
+    }
+    result = SystemSourceSelector_ImuSelectAndLock();
+    if (result != SYSTEM_DEVICE_OK)
+    {
+        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        { SystemAlignment_ActionEnd(); }
+        return result;
+    }
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)
+    { return SystemAlignment_ActionBegin(1U); }
+    return SYSTEM_DEVICE_OK;
+}
+
+/* Backend reset is outside the IRQ lock; witness and collection publication
+ * occur under the same lock while configuration/START exclusion remains held. */
+static SystemDeviceResult SystemAlignment_CollectionBegin(void)
+{
+    SystemDeviceResult result = SystemAlignmentBackend_Reset();
+    uint32_t primask;
+    primask = SystemAlignment_IrqLock();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        if (result == SYSTEM_DEVICE_OK)
+        {
+            result = (s_status.start_sequence == UINT32_MAX) ? SYSTEM_DEVICE_NOT_READY :
+                SystemImuEpoch_AlignmentBegin(s_status.start_sequence + 1U, &s_epoch_token);
+        }
+    }
+    if (result == SYSTEM_DEVICE_OK)
+    {
+        s_status.start_sequence++;
+        s_collecting = 1U;
+        SystemAlignment_StatusReset(SYSTEM_ALIGNMENT_STATE_COLLECTING);
+    }
+    else
+    {
+        SystemAlignment_StatusReset(SYSTEM_ALIGNMENT_STATE_FAILED);
+    }
+    SystemAlignment_IrqUnlock(primask);
+    return result;
+}
+
 SystemDeviceResult SystemAlignment_Start(void)
 {
     SystemDeviceResult result;
@@ -976,39 +1123,15 @@ SystemDeviceResult SystemAlignment_Start(void)
     {
         return SYSTEM_DEVICE_NOT_READY;
     }
-    if (s_status.config_result != SYSTEM_ALIGNMENT_CONFIG_OK)
-    {
-        return SYSTEM_DEVICE_UNSUPPORTED;
-    }
-    result = SystemSourceSelector_ImuSelectAndLock();
-    if (result != SYSTEM_DEVICE_OK)
-    {
-        return result;
-    }
-    result = SystemAlignment_ActionBegin();
-    if (result != SYSTEM_DEVICE_OK)
-    {
-        return result;
-    }
+    result = SystemAlignment_StartAdmission();
+    if (result != SYSTEM_DEVICE_OK) { return result; }
     primask = SystemAlignment_IrqLock();
     s_collecting = 0U;
     s_frozen = 0U;
     SystemAlignment_GuardReset();
     SystemAlignment_StatusReset(SYSTEM_ALIGNMENT_STATE_CHECKING);
     SystemAlignment_IrqUnlock(primask);
-    result = SystemAlignmentBackend_Reset();
-    primask = SystemAlignment_IrqLock();
-    if (result == SYSTEM_DEVICE_OK)
-    {
-        s_status.start_sequence++;
-        s_collecting = 1U;
-        SystemAlignment_StatusReset(SYSTEM_ALIGNMENT_STATE_COLLECTING);
-    }
-    else
-    {
-        SystemAlignment_StatusReset(SYSTEM_ALIGNMENT_STATE_FAILED);
-    }
-    SystemAlignment_IrqUnlock(primask);
+    result = SystemAlignment_CollectionBegin();
     SystemAlignment_ActionEnd();
     if (result != SYSTEM_DEVICE_OK)
     {
@@ -1031,12 +1154,16 @@ SystemDeviceResult SystemAlignment_Stop(void)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
-    result = SystemAlignment_ActionBegin();
+    result = SystemAlignment_ActionBegin(1U);
     if (result != SYSTEM_DEVICE_OK)
     {
         return result;
     }
     primask = SystemAlignment_IrqLock();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemImuEpoch_AlignmentInvalidate();
+    }
     s_collecting = 0U;
     s_frozen = 0U;
     SystemAlignment_GuardReset();
@@ -1058,12 +1185,16 @@ SystemDeviceResult SystemAlignment_Reset(void)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
-    result = SystemAlignment_ActionBegin();
+    result = SystemAlignment_ActionBegin(1U);
     if (result != SYSTEM_DEVICE_OK)
     {
         return result;
     }
     primask = SystemAlignment_IrqLock();
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemImuEpoch_AlignmentInvalidate();
+    }
     s_collecting = 0U;
     s_frozen = 0U;
     SystemAlignment_GuardReset();
@@ -1093,18 +1224,13 @@ SystemDeviceResult SystemAlignment_CalibrationInvalidate(void)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
+    result = SystemAlignment_ActionBegin(1U);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
     primask = SystemAlignment_IrqLock();
-    if (s_initialized == 0U)
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     {
-        SystemAlignment_IrqUnlock(primask);
-        return SYSTEM_DEVICE_NOT_READY;
+        SystemImuEpoch_AlignmentInvalidate();
     }
-    if (s_action_active != 0U)
-    {
-        SystemAlignment_IrqUnlock(primask);
-        return SYSTEM_DEVICE_BUSY;
-    }
-    s_action_active = 1U;
     s_collecting = 0U;
     s_frozen = 0U;
     SystemAlignment_GuardReset();
@@ -1149,7 +1275,7 @@ SystemDeviceResult SystemAlignment_PrepareMission(void)
     {
         return SYSTEM_DEVICE_NOT_READY;
     }
-    result = SystemAlignment_ActionBegin();
+    result = SystemAlignment_ActionBegin(0U);
     if (result != SYSTEM_DEVICE_OK)
     {
         return result;
@@ -1168,7 +1294,7 @@ SystemDeviceResult SystemAlignment_PrepareMission(void)
 
 SystemDeviceResult SystemAlignment_OriginsFreeze(void)
 {
-    SystemDeviceResult result = SystemAlignment_ActionBegin();
+    SystemDeviceResult result = SystemAlignment_ActionBegin(0U);
     uint32_t primask;
 
     SILVERSTAR_ASSERT_OBJECT(&s_status, SystemAlignmentStatus,
@@ -1181,8 +1307,13 @@ SystemDeviceResult SystemAlignment_OriginsFreeze(void)
     if (result == SYSTEM_DEVICE_OK)
     {
         primask = SystemAlignment_IrqLock();
-        s_collecting = 0U;
-        s_frozen = 1U;
+        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        {
+            if (SystemImuEpoch_OriginsCommit(&s_epoch_token) == 0U)
+            { result = SYSTEM_DEVICE_NOT_READY; }
+        }
+        if (result == SYSTEM_DEVICE_OK)
+        { s_collecting = 0U; s_frozen = 1U; }
         SystemAlignment_IrqUnlock(primask);
     }
     SystemAlignment_ActionEnd();
@@ -1198,7 +1329,7 @@ void SystemAlignment_MissionPreparationAbort(void)
     SystemDeviceResult process_result;
     uint32_t primask;
 
-    if (SystemAlignment_ActionBegin() != SYSTEM_DEVICE_OK)
+    if (SystemAlignment_ActionBegin(0U) != SYSTEM_DEVICE_OK)
     {
         return;
     }

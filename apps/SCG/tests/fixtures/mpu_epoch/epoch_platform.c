@@ -1,0 +1,3 @@
+#define PlatformI2c_MemoryRead Test_UnusedPlatformRead
+#define PlatformI2c_MemoryWrite Test_UnusedPlatformWrite
+#include "host_platform_mock.c"

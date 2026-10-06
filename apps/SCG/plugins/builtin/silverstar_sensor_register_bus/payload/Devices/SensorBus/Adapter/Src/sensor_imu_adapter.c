@@ -153,6 +153,17 @@ static void SensorImuAdapter_Publish(SensorImuAdapter *adapter,
     adapter->latest.sample_timestamp_us = native->sample_timestamp_us;
     adapter->latest.receive_timestamp_us = native->receive_timestamp_us;
     adapter->latest.sequence = native->sequence;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemImuSample_EpochSet(&adapter->latest, native->source_id,
+            native->config_generation);
+        SystemImuEpoch_SamplePublish(native->source_id, native->config_generation,
+            (uint8_t)((adapter->driver.profile_verified != 0U) &&
+            (adapter->driver.state == SENSOR_IMU_READY)),
+            (uint8_t)((adapter->driver.profile_verified != 0U) &&
+            (adapter->driver.state == SENSOR_IMU_READY) &&
+            ((native->quality_flags & SENSOR_IMU_QUALITY_CLIPPED) == 0U)));
+    }
     adapter->latest.temperature_c = native->temperature_c;
     adapter->latest.valid_mask = SYSTEM_IMU_VALID_ACCEL | SYSTEM_IMU_VALID_GYRO |
                                 SYSTEM_IMU_VALID_TEMPERATURE;

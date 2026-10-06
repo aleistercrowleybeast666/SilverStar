@@ -1191,6 +1191,101 @@ BINDING_DEPENDENCIES_V2 = {'APP/Src/app_tasks.c': ['43788606778a7eca77acf32a4183
                                         'ec22d5fe3221580f9162f3373ea4864d8b4b4b930797add3675d7f1489ca632c']}
 BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister\\w*|Mpu6050\\w*|SD_Driver|disk|Diskio_drvTypeDef|Disk_drvTypeDef|FATFS_(?:LinkDriver|UnLinkDriver)\\w*)\\b'
 
+
+# Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
+# variants supplement the historical V2 sets. No generic acceptance, source
+# coverage exclusion, callback exception or stack threshold is added.
+BINDING_REVIEW_REVISION = "mpu_epoch_20261006_v3"
+BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
+ 'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
+ 'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
+ 'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c': ['ccf6921227e4ac4f5dcdff8e83b4ea9aa6a26a1a703b5b539a7cc1632b862a0e'],
+ 'Generated/Inc/project_device_build_capabilities.h': ['735917000047491122185cd40353c2fdb4b0aac4636968f51ea233ba4a180bee',
+                                                       'b1536905635ca1a834d2ccb8e325974c5fc6c5464bd05984565c8cf55b7d7d28'],
+ 'Generated/Src/project_log_decoder_profile.c': ['846e9c62f0bdf67ffe1a2e0d3f356ac2f9c3e5117423236cd6911b98fbbc7157',
+                                                 'da88bc144e2b104a0d33edd94d379a0e02080569fb01b0c61a4a898bf2eda588'],
+ 'Interfaces/Inc/system_imu_epoch_if.h': ['3944143b9c6ee9f33ec285c73898d97f888d4f25ad2f880ae7d5bc8e445e3755'],
+ 'Interfaces/Inc/system_imu_if.h': ['efefd3aedc6fb2251ca3b1d2e4242f880b9ea91c9bb11c5cd0b2c1e9ef2f0fa1'],
+ 'System/Alignment/Src/system_alignment.c': ['2db8da27d84f16828c3c5cb556f1443d1ba747caf3bc83d2155cc7a680cdcf1c'],
+ 'System/Calibration/Src/system_calibration.c': ['4b4c10c67b032e6d41ddc1a89f63cc74e388848419e193d7b9ee46765cd3eb9d'],
+ 'System/Inc/system_lifecycle.h': ['e8b0aaf198029f4dbe5d4bebe8fa773e883b79b55ec8e3fa9d0487dfb3653a54'],
+ 'System/Inertial/Inc/system_inertial_types.h': ['1b91855baa6b5a5661dc0972a90bc1f0b0166fdecac848cc012c90b51ab23150'],
+ 'System/Inertial/Src/system_inertial.c': ['649e2f37444852de691020c8ee4d69da9035f9f28dd82602e1700058d8fc9595'],
+ 'System/Src/system_health.c': ['f62884116ef6c73aeae4bae66fc17dca0c02b0dc325adedc3e7f02bfef12c982'],
+ 'System/Src/system_imu_epoch.c': ['79ebd07987f82bf288794345807125c9f533ec4f62044c1bc302a713067d64f8']}
+BINDING_DEPENDENCIES_EPOCH_V3 = {'APP/Src/app_tasks.c': ['1051cb567cd811e03c7189628b9bf09b6bbf80c060675abd66995123f6474758',
+                         '9d2d194bea0ce0bb19d013bd47c0e7f0605a22d07dfb024c144ea92b290de8c5'],
+ 'APP/Src/device_native_log.c': ['2e8f39d4c025b2bfbd060afd4bdebab433b2c96e0b34f2654d7712028d4b60ff',
+                                 'fdaedaff55d149c7847d23d9e52eabfecbca6dd10d06983d0395e19eb89acb6f'],
+ 'APP/Src/device_task.c': ['4060176ff18c24a217d3fb145661d64a18c1869b6337ebde91b4c9a530d85044',
+                           'e49ba0ceea42788bddfbf3d737ba7763ca4c3f3b8b93755ed3cf14c7dd77fe46'],
+ 'APP/Src/diagnostic_log.c': ['08e8847e93407bc7dfb57e5f83f04a3a69be8c48a4d104713ac94777952d840d',
+                              '66d3e6dc0943689b3133de3b348a0616ff7ae737850adaad4a13a570ca41aeb4'],
+ 'APP/Src/estimator_task.c': ['78d14c9b794bc65bd4c52b07c23c94f9d004bea581ba5cc0e8c5a827d8a869b1',
+                              '881944994807edbc8ba39b11230d593c6e3bfec1e1e3cdd7835b276ab716b415'],
+ 'APP/Src/flight_task.c': ['05175bd2a95bd9410574602376217efec76bf6a0d17f22c1e9b3049c6b370c29',
+                           '70500d2e822dfb289a56ef9b00a74437aa984214b8440e7c268b128d052443ce'],
+ 'APP/Src/imu_sample_bus.c': ['6ff8359d6c69539f070aab10e79572ae841c70a54e5833dcef57ea1af722a52c',
+                              '7ed9fcef9096dd223b08c377682360f8846d346ea74d14a5328ebce4107d7eb4'],
+ 'APP/Src/ins_task.c': ['8dace54a0ed13486d28a26eb4bdcb5fae5871a4f271f2139b6173586375a674f',
+                        '9d1a53f803e7ebb157a0c6d685eecc648838638a518aca75deba7e526511d7da'],
+ 'APP/Src/logger_bus.c': ['08492839826e343554a20aacc8dfc730553f748cf138b27c4fbfd162e88f54e2',
+                          'ff3641c074909d6d2d610905ff613f09f72616b7363133d2bde6641e9c980c6a'],
+ 'APP/Src/logger_task.c': ['07b08fd7ef89f2269004dbbf1d19e0fbf4282382ca0385f65d2a988d3f981098',
+                           'b6e4f154df409c39cf60ab6523ece2e3d9ee6e87ed8341f9248a615f2ad74128'],
+ 'Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c': ['249c80902303ae2b1aef4292d97705ef3704718565939fe1f815e130e2c4f890'],
+ 'Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c': ['811b4eeb5d8ce42db9cbd6ecfd17a3c5fe8ecfc0784ae683b64c4b1a929aa566'],
+ 'Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c': ['109c2a54486588f83d4e38ba16f0996d45ba3c138d1ed9791461e1bfbc56b8f5'],
+ 'Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c': ['478f6f9874ddcb45f8a9a6de2ba7f20957279bad8cc0815efd228fe93dc129ee'],
+ 'Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c': ['0a788908c6647320fe4fc203ef307b9f24696e044d96c0d81421e2107fdd5449'],
+ 'Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c': ['27d8d2629357a0010252fd41922bacfc8259a46552f772546fe9cf9e76fe5ef8'],
+ 'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['718cbde74c90da0ac211abf7d26ab92ea8ddd9b7206bf39439155188463be9c9'],
+ 'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['3bb0ab76e4ea8d22ebb34c12b36cc9438a089dbc1eaedd2805d9fb4d93ea2dca'],
+ 'Devices/SensorBus/Adapter/Src/sensor_imu_spi_adapter.c': ['e892790c2c7a43553ca6f099a37b10fd65482bbee115dd2d309eefe8712e5de5'],
+ 'Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c': ['75988e78ac2f15f441e156d3aacfcce6e4bcf84917411543a9ecc551372f7a06',
+                                                                       'f6792491d0aafc0b375bf6b462a289e59d4f87505367d0923cea9077847c578f'],
+ 'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c': ['1eb7fcab4a6e2ec77cef6d4504e05e37e4290bcf18ec76d5b064b17e233bd21a',
+                                                                'e341f8229535e663fd68a29427c51ce5d8cec55b12391896974860df02ee5ed5'],
+ 'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c': ['3cff9d6e6012b3554e8cb91c0ad81473531175aea1a40bc69bbaafab6c977e03',
+                                                           'f9074032fb4e3f558d49395c3dc0105fbcb98c4b4144a9e09ce27bc0bdd2cc3b'],
+ 'Generated/Src/project_device_instances.c': ['1129c81717c0c4626a63b70e09e0fa52b98c76369b1f6817da92546c97b2c092',
+                                              'b6fb6e74a3f95368085fd5d67e0470c646ad47fcfafe745b26f6cbddbe6e6e73'],
+ 'Generated/Src/project_metadata.c': ['f88993dc45952c3061e006891e2e986977bf740911e9ba51643ca3b7fd8575af',
+                                      'f9d40c8aab3ad551f34dc6919c3489e48771bb30ca985004c0d345bcf98a1e8c'],
+ 'Modules/Src/telemetry_service.c': ['3098b138fbfe0507fd9c77ec6eb7b7916f0180e149e93a3338604b4b2d523d60',
+                                     'c761f60407370a41e18eef24a3cdaaef58fa7e212ad717d961929d4cf394b5bc'],
+ 'System/Alignment/Src/system_alignment.c': ['98f9151fc3f161aaa0079485051d6841a338ed08ab4347fdadffc61b38fd29c5',
+                                             'd9a070e7aa387db8e513aa16f4aa68a49c97da3c17e0e06dfe6fd1cb32cb8457'],
+ 'System/Calibration/Src/system_calibration.c': ['7f0b0f92f78abd13865f48aa7d8137ae6a354f9d484ccc46c5f51efce6446cc6',
+                                                 'e9551f30eca744c94673cca5b6fca39fa126e49a71a55536751ee9afd591a398'],
+ 'System/Calibration/Src/system_calibration_correction.c': ['00e0661d883bda8481c5596c061e148e6c8ea3b3a1f13938b811f85ab160c725',
+                                                            '0c7ebfbb9e4c5f857c8ddb2f3d48c1ecab00cf14e1feeda416c93f6a6fdfe252'],
+ 'System/Calibration/Src/system_mag_calibration.c': ['a47addeb4fd1f4ee4a610ca2b8ed3369d321b8db175fd1c2d7a40579c953775b',
+                                                     'a539ba1c43158d49f93e93f2a7cb7bd4514073b08421455f180762bb3d2df2a4'],
+ 'System/Indicator/Src/system_indicator.c': ['841fa3cf2a7c0babd16ebef395684983b95452fe77dd35f827e788fa8e2690da',
+                                             'b1c40416c5731b8aac8d5084b6b97c6d54f94c1f9a3ad921ec9e49ad543574ff'],
+ 'System/Inertial/Src/system_inertial.c': ['799585d06a6d2145c15284459d81293237bc5080701a1f2c3cc19bd5b30cfff4',
+                                           'd31ca1858e879782ef135eb42752fc39c247178eba8c3f449a1fc6243d17173f'],
+ 'System/Src/system_barometer_cold.c': ['d09d8f014bd8cacc7cbfa1b0af82148cfcb2530ce7326b771323f56f06a56ca6',
+                                        'd13b812191e189e6589b8d51d7d90c3a6037ef473297857fd9c73a7d6751fdbe'],
+ 'System/Src/system_capabilities.c': ['15ac15e925d2ec0348460918fa9e130f0165211ed8ee6eea90fd6d1b27c7029d',
+                                      '17b0a32487dfd89ef8efb57f5cb38c5628039d9fd464173ec2b1df757c71a142'],
+ 'System/Src/system_console.c': ['521f179e6d22df4620813e2c78b262cbee54e3064a7a9d3796567ad48b0ee90d'],
+ 'System/Src/system_health.c': ['3f7a44f0617ba1082fd23598c65de89c5778935725312b29fcce149b8b8aaa5f',
+                                'e69b074f16c070be28940c140e45ebcfee333608d8d88e42a67291245f720ebe'],
+ 'System/Src/system_imu_epoch.c': ['3ab98373ee9f303f1e8301ad053e88cb333287ac3ef5fd8f2e8e15c4a863573c',
+                                   '6c161871ddd1c477b0e3b24576a4c3f63ccdad5ba109c389ccec4005be49576a'],
+ 'System/Src/system_sensor_status.c': ['2e4968e0b903ef1f50fc5faffa92e8a634f1452e72b1a9f4e5acda79d58c3ee1',
+                                       '582ae09612fa2676d3e6510fb17b22551bee6142b6fb71a6ad6a9bd1b8b36d2b'],
+ 'System/Src/system_source_selector.c': ['84d816a4bfd00699f200fe396ff819385cda79480a5cb7d72e3d5c2970fd9521',
+                                         'db152a39a3ee860a8598df726d5b3215f3e329fb058bb4929895be3bd7664d69'],
+ 'System/Src/system_startup.c': ['0fb01b673d88bd874547bef3dd90c526c7789e78212053b9719a29badbd6255b',
+                                 'f085bf28d0a728d4b596006b887aa73076630fda27d0650e60da97151ab3c645']}
+
+def BindingSourceVersions_Get(path):
+    return BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, [])
+
+
 def BindingSourceHash_Get(text):
     # read_text normalizes CRLF; retain every other byte, including macros,
     # string whitespace and comments. Canonical body checks alone are weaker.
@@ -1202,14 +1297,15 @@ def BindingSources_Verify(root, sources, build):
         (root / path).resolve().relative_to(root.resolve())
         text = (root / path).read_text(encoding="utf-8")
         actual = BindingSourceHash_Get(text)
-        if actual not in BINDING_SOURCE_V2.get(path, []):
+        if actual not in BindingSourceVersions_Get(path):
             raise ValueError("Changed or unknown complete callback binding source: " + path)
         dependency = build / Path(path).with_suffix(".d")
         if not dependency.is_file():
             raise ValueError("Missing compiled source dependency report: " + path)
         # GCC -MMD output: first continued rule, followed by -MP phony rules.
         dependencies = dependency.read_text(encoding="utf-8").split(":", 1)[1].replace("\\\n", " ").split("\n", 1)[0].split()
-        expected_graph = BINDING_DEPENDENCIES_V2.get(path, [])
+        expected_graph = (BINDING_DEPENDENCIES_V2.get(path, []) +
+                          BINDING_DEPENDENCIES_EPOCH_V3.get(path, []))
         graph_hash = hashlib.sha256("\n".join(dependencies).encode()).hexdigest()
         if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)
@@ -1222,7 +1318,7 @@ def BindingSources_Verify(root, sources, build):
 
 def BindingHeader_Verify(root, path):
     (root / path).resolve().relative_to(root.resolve())
-    if not (root / path).is_file() or BindingSourceHash_Get((root / path).read_text(encoding="utf-8")) not in BINDING_SOURCE_V2.get(path, []):
+    if not (root / path).is_file() or BindingSourceHash_Get((root / path).read_text(encoding="utf-8")) not in BindingSourceVersions_Get(path):
         raise ValueError("Changed or missing reviewed callback compilation input: " + path)
 
 def IndirectSites_Get(rows):
@@ -1586,6 +1682,7 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
             "su_files": len(su_paths), "minimum_margin_bytes": MIN_MARGIN_BYTES,
             "callback_bindings": callback_bindings,
             "binding_contract": "silverstar.reviewed-callback-bindings/2",
+            "binding_review_revision": BINDING_REVIEW_REVISION,
             "binding_source_proofs": binding_source_proofs,
             "callback_site_bindings": callback_site_bindings,
             "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",

@@ -660,6 +660,11 @@ def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCa
     if not isinstance(bindings, list):
         raise ValueError("Target device build capabilities must be an array")
     definitions: dict[str, str] = {}
+    imu_entries = [entry for entry in entries if entry.get("class") == "SYSTEM_DEVICE_CLASS_IMU"]
+    definitions["SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED"] = (
+        "1U" if model.build.compact_mode and len(imu_entries) == 1
+        and imu_entries[0].get("_component_id") == "silverstar.device.imu.mpu6050" else "0U"
+    )
     if model.build.compact_mode:
         barometer = providers.get("SYSTEM_DEVICE_CLASS_BAROMETER")
         definitions["SYSTEM_SELECTED_BAROMETER_PRESSURE_AVAILABLE"] = (

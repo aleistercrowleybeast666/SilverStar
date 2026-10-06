@@ -2,6 +2,7 @@
 #define __SYSTEM_IMU_IF_H
 
 #include "system_device_types.h"
+#include "system_imu_epoch_if.h"
 
 #define SYSTEM_IMU_VALID_ACCEL       (1UL << 0)
 #define SYSTEM_IMU_VALID_GYRO        (1UL << 1)
@@ -46,7 +47,46 @@ typedef struct
     /* Raw samples retain their actual sign/value even at the ADC rails.
      * A receive-time proxy is never advertised as a hardware sample epoch. */
     uint32_t quality_flags;
+#if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    uint32_t source_id;
+    uint32_t config_epoch;
+#endif
 } SystemImuSample;
+
+/* Layout selection belongs to the typed interface. Disabled builds retain
+ * their original layout; these accessors never evaluate an absent member. */
+static inline uint32_t SystemImuSample_SourceGet(const SystemImuSample *sample)
+{
+#if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    return sample->source_id;
+#else
+    (void)sample;
+    return 0U;
+#endif
+}
+
+static inline uint32_t SystemImuSample_EpochGet(const SystemImuSample *sample)
+{
+#if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    return sample->config_epoch;
+#else
+    (void)sample;
+    return 0U;
+#endif
+}
+
+static inline void SystemImuSample_EpochSet(SystemImuSample *sample,
+    uint32_t source, uint32_t epoch)
+{
+#if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    sample->source_id = source;
+    sample->config_epoch = epoch;
+#else
+    (void)sample;
+    (void)source;
+    (void)epoch;
+#endif
+}
 
 typedef struct
 {

@@ -45,6 +45,7 @@ def compile_fixture(directory: Path, *, compact: bool, baseline: bool = False) -
                CORE / "Common/Src/silverstar_assert.c", FIXTURE / "test_mpu_recovery.c"]
     if compact:
         sources.append(CORE / "System/Src/system_health.c")
+        sources.append(CORE / "System/Src/system_imu_epoch.c")
     includes = [FIXTURE, directory, ROOT / ".work/generated_ret6/Generated/Inc", CORE / "Interfaces/Inc", CORE / "System/Inc", CORE / "System/User", CORE / "Common/Inc"]
     for component in model.ComponentIds_Get():
         manifest = catalog.Component_Get(component)

@@ -10,6 +10,7 @@
 #include "system_calibration.h"
 #include "system_estimator_profile.h"
 #include "system_health.h"
+#include "system_imu_epoch_if.h"
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
 #include "system_log_policy.h"
 #endif
@@ -28,6 +29,7 @@ static volatile uint8_t s_response_head;
 static volatile uint8_t s_response_tail;
 static volatile uint8_t s_start_request_pending;
 static volatile uint8_t s_start_transaction_active;
+static volatile uint8_t s_configuration_actions;
 static SystemLifecycleStartDiagnostic s_start_diagnostics[3];
 static uint32_t s_start_diagnostic_sequence;
 
@@ -39,6 +41,46 @@ static uint32_t SystemLifecycle_IrqLock(void)
 static void SystemLifecycle_IrqUnlock(uint32_t primask)
 {
     PlatformCritical_Exit(primask);
+}
+
+static uint8_t SystemLifecycle_ConfigurationBusy(void)
+{
+    return (uint8_t)((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+        (s_configuration_actions != 0U));
+}
+
+SystemDeviceResult SystemLifecycle_ConfigurationBegin(SystemConfigurationAction action)
+{
+    uint32_t lock;
+    if ((action != SYSTEM_CONFIGURATION_ACTION_CALIBRATION) &&
+        (action != SYSTEM_CONFIGURATION_ACTION_ALIGNMENT))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    lock = SystemLifecycle_IrqLock();
+    SILVERSTAR_ASSERT((s_configuration_actions & (uint8_t)~3U) == 0U,
+        SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((s_lifecycle_state != SYSTEM_STATE_BOOT) &&
+        (s_lifecycle_state != SYSTEM_STATE_SELF_TEST) &&
+        (s_lifecycle_state != SYSTEM_STATE_PREFLIGHT) &&
+        (s_lifecycle_state != SYSTEM_STATE_READY))
+    { SystemLifecycle_IrqUnlock(lock); return SYSTEM_DEVICE_BAD_STATE; }
+    if ((s_start_transaction_active != 0U) || (s_start_request_pending != 0U) ||
+        ((s_configuration_actions & (uint8_t)action) != 0U))
+    { SystemLifecycle_IrqUnlock(lock); return SYSTEM_DEVICE_BUSY; }
+    s_configuration_actions |= (uint8_t)action;
+    SystemLifecycle_IrqUnlock(lock);
+    return SYSTEM_DEVICE_OK;
+}
+
+void SystemLifecycle_ConfigurationEnd(SystemConfigurationAction action)
+{
+    uint32_t lock = SystemLifecycle_IrqLock();
+    SILVERSTAR_ASSERT((action == SYSTEM_CONFIGURATION_ACTION_CALIBRATION) ||
+        (action == SYSTEM_CONFIGURATION_ACTION_ALIGNMENT),
+        SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT((s_configuration_actions & (uint8_t)action) != 0U,
+        SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    s_configuration_actions &= (uint8_t)~(uint8_t)action;
+    SystemLifecycle_IrqUnlock(lock);
 }
 
 static uint8_t SystemLifecycle_QueueNext(uint8_t index)
@@ -57,7 +99,17 @@ static void SystemLifecycle_StartRollback(void)
     SystemLogPolicy_UnfreezeForRollback();
 #endif
     SystemProfile_UnfreezeForRollback();
-    s_lifecycle_state = SYSTEM_STATE_PREFLIGHT;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        uint32_t lock = SystemLifecycle_IrqLock();
+        if (s_lifecycle_state != SYSTEM_STATE_FAULT)
+        { s_lifecycle_state = SYSTEM_STATE_PREFLIGHT; }
+        SystemLifecycle_IrqUnlock(lock);
+    }
+    else
+    {
+        s_lifecycle_state = SYSTEM_STATE_PREFLIGHT;
+    }
 }
 
 static SystemLifecycleStartReason SystemLifecycle_AttitudeReasonMap(
@@ -179,6 +231,10 @@ static void SystemLifecycle_DiagnosticStore(
 
 void SystemLifecycle_Init(void)
 {
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        SystemImuEpoch_Init();
+    }
     s_lifecycle_state = SYSTEM_STATE_BOOT;
     s_fault_reason_mask = 0U;
     s_request_head = 0U;
@@ -187,6 +243,8 @@ void SystemLifecycle_Init(void)
     s_response_tail = 0U;
     s_start_request_pending = 0U;
     s_start_transaction_active = 0U;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    { s_configuration_actions = 0U; }
     s_start_diagnostic_sequence = 0U;
     (void)memset(s_start_diagnostics, 0, sizeof(s_start_diagnostics));
 }
@@ -289,7 +347,8 @@ SystemLifecycleStartResult SystemLifecycle_StartReadinessGet(
     uint32_t primask = SystemLifecycle_IrqLock();
 
     busy = (uint8_t)((s_start_request_pending != 0U) ||
-                     (s_start_transaction_active != 0U));
+                     (s_start_transaction_active != 0U) ||
+                     (SystemLifecycle_ConfigurationBusy() != 0U));
     SystemLifecycle_IrqUnlock(primask);
     if (busy != 0U)
     {
@@ -310,11 +369,65 @@ static void SystemLifecycle_MissionProfilesFreeze(void)
     SystemTime_MissionStart(SystemTime_GetMonotonicUs());
 }
 
+/* The reservation is checked and FLIGHT is published in the same IRQ scope.
+ * Blocking preparation and rollback always execute outside that scope. */
+static SystemLifecycleStartResult SystemLifecycle_FlightPublish(
+    const SystemImuEpochToken *reservation, SystemLifecycleStartReason *reason)
+{
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    {
+        uint32_t publication_lock = SystemLifecycle_IrqLock();
+        if ((SystemImuEpoch_StartIsCurrent(reservation) == 0U) ||
+            (SystemCalibration_IsReady() == 0U) ||
+            (SystemAlignment_IsReady() == 0U) ||
+            (s_lifecycle_state != SYSTEM_STATE_READY))
+        {
+            SystemLifecycle_IrqUnlock(publication_lock);
+            SystemLifecycle_StartRollback();
+            if (reason != NULL) { *reason = SYSTEM_START_REASON_SYSTEM_NOT_READY; }
+            return SYSTEM_LIFECYCLE_START_NOT_READY;
+        }
+        s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+        SystemLifecycle_IrqUnlock(publication_lock);
+    }
+    else
+    {
+        s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+    }
+    return SYSTEM_LIFECYCLE_START_OK;
+}
+
+/* Complete fallible backend preparation before any mission profile is frozen.
+ * Ordinary readiness failures retain their reason; an origin failure aborts
+ * the partially prepared backend without publishing a mission. */
+static SystemLifecycleStartResult SystemLifecycle_MissionPrepare(
+    SystemLifecycleStartReason *reason)
+{
+    SystemDeviceResult prepare_result = SystemLifecycleBackend_PrepareStart();
+    if (prepare_result != SYSTEM_DEVICE_OK)
+    {
+        if (prepare_result == SYSTEM_DEVICE_NOT_READY)
+        {
+            if (reason != NULL) { *reason = SystemLifecycle_AttitudeReasonGet(); }
+            return SYSTEM_LIFECYCLE_START_NOT_READY;
+        }
+        if (reason != NULL) { *reason = SYSTEM_START_REASON_PREPARE_FAILED; }
+        return SYSTEM_LIFECYCLE_START_PREPARE_FAILED;
+    }
+    if (SystemLifecycleBackend_FreezeOrigins() != SYSTEM_DEVICE_OK)
+    {
+        SystemLifecycleBackend_AbortStart();
+        if (reason != NULL) { *reason = SYSTEM_START_REASON_ORIGIN_FAILED; }
+        return SYSTEM_LIFECYCLE_START_ORIGIN_FAILED;
+    }
+    return SYSTEM_LIFECYCLE_START_OK;
+}
+
 static SystemLifecycleStartResult SystemLifecycle_StartExecute(
     SystemLifecycleStartReason *reason)
 {
-    SystemDeviceResult prepare_result;
     SystemLifecycleStartResult readiness_result;
+    SystemImuEpochToken reservation = {0};
 
     SILVERSTAR_ASSERT(s_lifecycle_state <= SYSTEM_STATE_FAULT,
                       SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC,
@@ -327,26 +440,16 @@ static SystemLifecycleStartResult SystemLifecycle_StartExecute(
     {
         return readiness_result;
     }
-    prepare_result = SystemLifecycleBackend_PrepareStart();
-    if (prepare_result != SYSTEM_DEVICE_OK)
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     {
-        if (prepare_result == SYSTEM_DEVICE_NOT_READY)
+        if (SystemImuEpoch_StartReserve(&reservation) != SYSTEM_DEVICE_OK)
         {
-            if (reason != NULL)
-            {
-                *reason = SystemLifecycle_AttitudeReasonGet();
-            }
+            if (reason != NULL) { *reason = SYSTEM_START_REASON_SYSTEM_NOT_READY; }
             return SYSTEM_LIFECYCLE_START_NOT_READY;
         }
-        if (reason != NULL) { *reason = SYSTEM_START_REASON_PREPARE_FAILED; }
-        return SYSTEM_LIFECYCLE_START_PREPARE_FAILED;
     }
-    if (SystemLifecycleBackend_FreezeOrigins() != SYSTEM_DEVICE_OK)
-    {
-        SystemLifecycleBackend_AbortStart();
-        if (reason != NULL) { *reason = SYSTEM_START_REASON_ORIGIN_FAILED; }
-        return SYSTEM_LIFECYCLE_START_ORIGIN_FAILED;
-    }
+    readiness_result = SystemLifecycle_MissionPrepare(reason);
+    if (readiness_result != SYSTEM_LIFECYCLE_START_OK) { return readiness_result; }
 
     SystemLifecycle_MissionProfilesFreeze();
 
@@ -365,8 +468,7 @@ static SystemLifecycleStartResult SystemLifecycle_StartExecute(
         if (reason != NULL) { *reason = SYSTEM_START_REASON_QUEUE_FAILED; }
         return SYSTEM_LIFECYCLE_START_QUEUE_FAILED;
     }
-    s_lifecycle_state = SYSTEM_STATE_FLIGHT;
-    return SYSTEM_LIFECYCLE_START_OK;
+    return SystemLifecycle_FlightPublish(&reservation, reason);
 }
 
 SystemLifecycleStartResult SystemLifecycle_StartTransaction(void)
@@ -381,7 +483,8 @@ SystemLifecycleStartResult SystemLifecycle_StartTransaction(void)
                       SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC,
                       SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((s_start_request_pending != 0U) ||
-        (s_start_transaction_active != 0U))
+        (s_start_transaction_active != 0U) ||
+        (SystemLifecycle_ConfigurationBusy() != 0U))
     {
         SystemLifecycle_IrqUnlock(primask);
         return SYSTEM_LIFECYCLE_START_BUSY;
@@ -421,7 +524,8 @@ SystemDeviceResult SystemLifecycle_SubmitStart(
     response.reason = SYSTEM_START_REASON_REQUEST_PENDING;
     primask = SystemLifecycle_IrqLock();
     if ((s_start_request_pending != 0U) ||
-        (s_start_transaction_active != 0U))
+        (s_start_transaction_active != 0U) ||
+        (SystemLifecycle_ConfigurationBusy() != 0U))
     {
         SystemLifecycle_DiagnosticStore(&response);
         SystemLifecycle_IrqUnlock(primask);
@@ -485,7 +589,8 @@ void SystemLifecycle_Process(void)
                       (s_response_tail < SYSTEM_LIFECYCLE_QUEUE_DEPTH),
                       SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC,
                       SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
-    if (s_request_tail == s_request_head)
+    if ((s_request_tail == s_request_head) ||
+        (SystemLifecycle_ConfigurationBusy() != 0U))
     {
         SystemLifecycle_IrqUnlock(primask);
         return;
