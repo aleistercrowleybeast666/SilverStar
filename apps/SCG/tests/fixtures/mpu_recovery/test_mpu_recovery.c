@@ -168,7 +168,8 @@ int main(int argc, char **argv)
         assert(SystemImu_ConfigVerify(&config, &report) == SYSTEM_DEVICE_BUSY);
         assert(SystemImu_ConfigApply(&config, &report) == SYSTEM_DEVICE_CONFIG_DELEGATED);
         Ready();
-        assert(SystemImu_ConfigVerify(&config, &report) == SYSTEM_DEVICE_OK);
+        assert(SystemImu_ConfigVerify(&config, &report) == SYSTEM_DEVICE_ALREADY_MATCHED);
+        assert(report.success && report.matched_mask == SYSTEM_IMU_CFG_OUTPUT_RATE);
         assert(SystemImu_HealthGet(&health) == SYSTEM_DEVICE_OK && health.healthy);
     }
     else if (which <= 5U || which == 7U)
