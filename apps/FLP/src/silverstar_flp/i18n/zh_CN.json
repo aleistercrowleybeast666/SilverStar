@@ -912,5 +912,9 @@
   "comparison.incompatible": "物理量、单位、分量、坐标、原点或任务不兼容",
   "comparison.no_overlap": "没有重叠的有效时间范围",
   "error.code.project_result_recompute_required": "已保存的数值结果缺失、损坏或不兼容。请选择所需算法并明确执行复算。未自动启动任何复算。",
-  "error.code.project_saved_results_unavailable": "已保存的结果历史未能恢复。为保护历史，本次保存被阻止；请修复结果文件，或明确重建结果后另建工程。"
+  "error.code.project_saved_results_unavailable": "已保存的结果历史未能恢复。为保护历史，本次保存被阻止；请修复结果文件，或明确重建结果后另建工程。",
+  "status.project_artifacts_saved": "工程已保存：{path}（数值文件：{size} MB）",
+  "error.code.artifact_disk_space_insufficient": "可用空间不足，无法安全写入结果文件。现有工程和已保存结果保持不变。",
+  "project.save_data_and_results": "同时保存数据与复算结果",
+  "project.save_data_explanation": "勾选：保存完整解析数据及全部已完成结果，重开无需再次解析或复算。取消：仅保存文件引用、设置和各次复算配置。现有结果文件保留，清理需要另行明确操作。"
 }

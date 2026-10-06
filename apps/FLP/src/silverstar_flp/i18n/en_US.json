@@ -912,5 +912,9 @@
   "comparison.incompatible": "Quantity, units, components, frame, origin or task are incompatible",
   "comparison.no_overlap": "No overlapping valid time coverage",
   "error.code.project_result_recompute_required": "Saved numerical results are missing, damaged or incompatible. Select the desired algorithm and explicitly run Replay to recompute. No replay was started automatically.",
-  "error.code.project_saved_results_unavailable": "Saved result history could not be restored. Save is blocked to protect that history; repair its artifact files or create a new project after explicitly rebuilding the results."
+  "error.code.project_saved_results_unavailable": "Saved result history could not be restored. Save is blocked to protect that history; repair its artifact files or create a new project after explicitly rebuilding the results.",
+  "status.project_artifacts_saved": "Project saved: {path} (numerical artifacts: {size} MB)",
+  "error.code.artifact_disk_space_insufficient": "Not enough free space for a safe artifact transaction. The existing project and saved results were retained.",
+  "project.save_data_and_results": "Save parsed data and completed replay results",
+  "project.save_data_explanation": "Enabled: reopen all completed runs without parsing or replay. Disabled: save references, settings and run configurations only. Existing files are retained; cleanup is a separate explicit action."
 }

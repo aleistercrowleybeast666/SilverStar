@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import logging
 from collections.abc import Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import StrEnum
 from pathlib import Path
 
@@ -49,6 +50,8 @@ class LogOpenRequest:
     auto_find: bool = False
     task_directory: Path | None = None
     source_mode: LogOpenSourceMode = LogOpenSourceMode.MANUAL
+    project_path: Path | None = None
+    dataset_cache_reference: dict | None = None
 
     def __post_init__(self) -> None:
         if isinstance(self.log_path, (list, tuple, set, frozenset)):
@@ -263,6 +266,7 @@ class LogOpenCoordinator:
                 log_path,
                 package_path,
                 task_context,
+                cache_request=request,
             )
 
         containers = self._ContainerPlugins_Get()
@@ -289,6 +293,7 @@ class LogOpenCoordinator:
                 request.cache_reference,
                 cached_package.source_path,
                 task_context,
+                cache_request=request,
             )
         if (
             request.source_mode == LogOpenSourceMode.PROJECT
@@ -321,6 +326,7 @@ class LogOpenCoordinator:
                 log_path,
                 discovery.pairs[0].decoder_package_path,
                 task_context,
+                cache_request=request,
             )
         if request.decoder_package_path is None:
             raise DecoderProfileError("decoder_package_path_required")
@@ -329,6 +335,7 @@ class LogOpenCoordinator:
             log_path,
             package_path,
             task_context,
+            cache_request=request,
         )
 
     def _OpenWithSourcePackage(
@@ -336,6 +343,7 @@ class LogOpenCoordinator:
         log_path: Path,
         package_path: Path,
         context: TaskContext,
+        *, cache_request: LogOpenRequest | None = None,
     ) -> LogOpenResult:
         containers = self._ContainerPlugins_Get()
         source_package = DecoderProfilePackage.Load(
@@ -363,6 +371,7 @@ class LogOpenCoordinator:
             reference,
             package_path,
             context,
+            cache_request=cache_request,
         )
 
     def _OpenWithCachedPackage(
@@ -372,6 +381,7 @@ class LogOpenCoordinator:
         reference: DecoderProfileCacheReference,
         source_package_path: Path,
         context: TaskContext,
+        *, cache_request: LogOpenRequest | None = None,
     ) -> LogOpenResult:
         containers = self._ContainerPlugins_Get()
         LoggingProtocol_Validate(package)
@@ -385,6 +395,7 @@ class LogOpenCoordinator:
             reference,
             source_package_path,
             context,
+            cache_request=cache_request,
         )
 
     def _ParseAndAdapt(
@@ -395,9 +406,27 @@ class LogOpenCoordinator:
         reference: DecoderProfileCacheReference,
         source_package_path: Path,
         context: TaskContext,
+        *, cache_request: LogOpenRequest | None = None,
     ) -> LogOpenResult:
         containers = self._ContainerPlugins_Get()
         container = containers[package.required_container_plugin_id]
+        from silverstar_flp.core.artifacts import FileHash_Get
+        from silverstar_flp.core.parse_cache import ParseIdentity_Get
+        from silverstar_flp.core.project import DecoderNumericalIdentity_Get
+        identity = ParseIdentity_Get(log_path, DecoderNumericalIdentity_Get(package, container), context)
+        # Exact package validation and Descriptor matching have already succeeded.
+        # Cache admission remains inside this coordinator, never a decoder fallback.
+        if cache_request is not None and cache_request.dataset_cache_reference is not None:
+            from silverstar_flp.core.parse_cache import DatasetCache_Read
+            try:
+                dataset = DatasetCache_Read(cache_request.project_path,
+                    cache_request.dataset_cache_reference, identity, log_path, context)
+            except (ValueError, OSError, KeyError, TypeError, EOFError) as exc:
+                logging.warning("Full dataset cache unavailable; strict parse follows: %s", exc)
+            else:
+                context.Progress_Report(1.0, "log_open.complete")
+                return LogOpenResult(dataset, package, descriptor, reference,
+                    Path(source_package_path), dataset.diagnostics, dataset.data_quality)
         context.Progress_Report(0.22, "log_open.parse")
         parser = DecoderProfileParserPlugin(container, package)
         parse_context = TaskContext(
@@ -415,6 +444,12 @@ class LogOpenCoordinator:
         FirmwareMechanizationRecords_Validate(dataset)
         from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_Get
         Sf6Revision_Get(dataset)
+        if (FileHash_Get(log_path, context) != identity["log_sha256"]
+                or log_path.stat().st_size != identity["log_bytes"]):
+            raise ValueError("log_source_changed_during_parse")
+        dataset = replace(dataset, metadata={**dataset.metadata,
+                          "source_log_sha256": identity["log_sha256"],
+                          "parse_identity": identity})
         context.Progress_Report(1.0, "log_open.complete")
         return LogOpenResult(
             dataset=dataset,

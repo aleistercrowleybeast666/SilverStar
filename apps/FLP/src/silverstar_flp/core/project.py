@@ -156,6 +156,7 @@ class ProjectDocument:
     parse_artifact: dict[str, Any] | None = None
     restored_results: tuple = ()
     restoration_issues: tuple[str, ...] = ()
+    save_data_and_results: bool = True
 
     def LogReference_Set(self, log_path: Path) -> None:
         self.log_reference = _Reference_Encode(log_path, self.project_path)
@@ -249,13 +250,36 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         if resolved_source_path is not None
         else None
     )
-    result_artifact = document.result_artifact
-    if replay_store is not None:
+    result_artifact = document.result_artifact if document.save_data_and_results else None
+    parse_artifact = document.parse_artifact if document.save_data_and_results else None
+    if dataset is not None and document.save_data_and_results:
+        from silverstar_flp.core.parse_cache import DatasetCache_Write, ParseIdentity_Get
+        decoder_identity = {key: value for key, value in document.decoder_profile.ToDict().items()
+                            if key not in ("source_reference", "cache_reference")}
+        parse_identity = ParseIdentity_Get(resolved_log_path, decoder_identity, task_context)
+        # Store the complete parsed object once, shared by every result in this project.
+        parse_artifact = DatasetCache_Write(project_path, dataset, parse_identity, task_context)
+    elif parse_artifact is not None and document.project_path != project_path:
+        from silverstar_flp.core.parse_cache import DatasetCache_Read, DatasetCache_Write, ParseIdentity_Get
+        decoder_identity = {key: value for key, value in document.decoder_profile.ToDict().items()
+                            if key not in ("source_reference", "cache_reference")}
+        identity = ParseIdentity_Get(resolved_log_path, decoder_identity, task_context)
+        saved_dataset = DatasetCache_Read(document.project_path, parse_artifact, identity,
+                                         resolved_log_path, task_context)
+        parse_artifact = DatasetCache_Write(project_path, saved_dataset, identity, task_context)
+    if replay_store is not None and document.save_data_and_results:
         if document.restoration_issues:
             # Do not replace unavailable saved history with an incomplete current store.
             raise ValueError("project_saved_results_unavailable")
         identity = ProjectNumericalIdentity_Get(document, task_context)
         entries = replay_store.Entries_Get()
+        if entries and dataset is None:
+            raise ValueError("project_result_input_identity_missing")
+        for entry in entries:
+            if (entry.diagnostics.get("input_identity") != dataset.metadata.get("parse_identity")
+                    or entry.diagnostics.get("input_identity") is None
+                    or entry.diagnostics.get("engine_identity") != identity["engine_identity"]):
+                raise ValueError("project_result_input_identity_mismatch")
         stored = tuple({"result_id": entry.result_id, "source_id": entry.source_id,
                         "run_index": entry.run_index, "algorithm_name": entry.algorithm_name,
                         "result": entry.result} for entry in entries)
@@ -274,7 +298,8 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         "notes": document.notes,
         "ui_state": document.ui_state,
         "result_artifact": result_artifact,
-        "parse_artifact": document.parse_artifact,
+        "parse_artifact": parse_artifact,
+        "save_data_and_results": document.save_data_and_results,
     }
     temporary_path = project_path.parent / (f".{project_path.name}.{uuid.uuid4().hex[:8]}.tmp")
     try:
@@ -284,11 +309,16 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
             target.flush()
             os.fsync(target.fileno())
         task_context.Cancel_RaiseIfRequested()
+        if dataset is not None and document.save_data_and_results:
+            from silverstar_flp.core.artifacts import FileHash_Get
+            if FileHash_Get(resolved_log_path, task_context) != dataset.metadata["parse_identity"]["log_sha256"]:
+                raise ValueError("project_result_input_identity_mismatch")
         os.replace(temporary_path, project_path)
     finally:
         temporary_path.unlink(missing_ok=True)
     document.project_path = project_path
     document.result_artifact = result_artifact
+    document.parse_artifact = parse_artifact
     document.log_reference = encoded_log_reference
     document.decoder_profile = _DecoderProfile_SourceReplace(
         document.decoder_profile,
@@ -337,6 +367,12 @@ def Project_Load(path: Path) -> ProjectDocument:
         raise ValueError("project_state_invalid")
     for configuration in replay.values():
         ReplayConfiguration_Validate(configuration)
+    save_data_and_results = payload.get("save_data_and_results", True)
+    if type(save_data_and_results) is not bool:
+        raise ValueError("project_save_data_option_invalid")
+    if not save_data_and_results and any(payload.get(name) is not None for name in
+                                         ("result_artifact", "parse_artifact")):
+        raise ValueError("project_configuration_only_artifact_invalid")
     from silverstar_flp.core.artifacts import ArtifactPath_Resolve
     for field_name in ("result_artifact", "parse_artifact"):
         reference = payload.get(field_name)
@@ -353,6 +389,7 @@ def Project_Load(path: Path) -> ProjectDocument:
         project_path=project_path,
         result_artifact=payload.get("result_artifact"),
         parse_artifact=payload.get("parse_artifact"),
+        save_data_and_results=save_data_and_results,
     )
 
 
@@ -368,6 +405,7 @@ def Project_ToDict(document: ProjectDocument) -> dict[str, Any]:
         "project_path": (str(document.project_path) if document.project_path is not None else None),
         "result_artifact": document.result_artifact,
         "parse_artifact": document.parse_artifact,
+        "save_data_and_results": document.save_data_and_results,
     }
 
 
@@ -375,10 +413,23 @@ def ProjectNumericalIdentity_Get(document: ProjectDocument, context=None) -> dic
     from silverstar_flp.core.artifacts import EngineIdentity_Get, FileHash_Get
     if document.decoder_profile is None:
         raise ValueError("project_decoder_profile_missing")
+    from silverstar_flp.core.parse_cache import ParserIdentity_Get
     return {"log_sha256": FileHash_Get(document.LogPath_Resolve(), context),
             "decoder": {key: value for key, value in document.decoder_profile.ToDict().items()
                         if key not in ("source_reference", "cache_reference")},
-            "engine_identity": EngineIdentity_Get()}
+            "engine_identity": EngineIdentity_Get(), "parser_identity": ParserIdentity_Get()}
+
+
+def DecoderNumericalIdentity_Get(package, container) -> dict:
+    return {"package_sha256": package.package_sha256,
+            "generation_profile_sha256": package.generation_profile_sha256,
+            "record_catalog_sha256": package.checksums["record_catalog.json"],
+            "record_catalog_hash_128": package.record_catalog_hash_128,
+            "project_semantics_sha256": package.checksums["project_semantics.json"],
+            "project_semantics_hash_128": package.project_semantics_hash_128,
+            "container_plugin_id": container.metadata.plugin_id,
+            "container_plugin_version": container.metadata.version,
+            "exact_match_mode": "exact_generation_profile"}
 
 
 def ProjectResults_Load(document: ProjectDocument, context=None):
@@ -391,6 +442,12 @@ def ProjectResults_Load(document: ProjectDocument, context=None):
         return store
     payload = Artifact_Read(document.project_path, document.result_artifact,
                             ProjectNumericalIdentity_Get(document, context), context)
+    from silverstar_flp.core.parse_cache import ParseIdentity_Get
+    decoder_identity = {key: value for key, value in document.decoder_profile.ToDict().items()
+                        if key not in ("source_reference", "cache_reference")}
+    input_identity = ParseIdentity_Get(document.LogPath_Resolve(), decoder_identity, context)
+    from silverstar_flp.core.artifacts import EngineIdentity_Get
+    engine_identity = EngineIdentity_Get()
     if not isinstance(payload, tuple) or len(payload) > 4096:
         raise ValueError("project_result_table_invalid")
     for item in payload:
@@ -400,6 +457,9 @@ def ProjectResults_Load(document: ProjectDocument, context=None):
                                  restored_run_index=item["run_index"])
         if entry.result_id != item["result_id"] or entry.source_id != item["source_id"]:
             raise ValueError("project_result_identity_mismatch")
+        if (entry.diagnostics.get("input_identity") != input_identity or
+                entry.diagnostics.get("engine_identity") != engine_identity):
+            raise ValueError("project_result_input_identity_mismatch")
         configuration = document.replay_configurations.get(entry.result_id)
         if configuration is not None and (
                 configuration["actual_values"] != dict(entry.parameters)
@@ -407,6 +467,9 @@ def ProjectResults_Load(document: ProjectDocument, context=None):
                 or configuration["algorithm_version"] != entry.algorithm_version
                 or configuration["mode"] != entry.mode.value
                 or configuration["input_source"] != entry.input_source
+                or configuration.get("process_model_revision") != entry.diagnostics.get("process_model_revision")
+                or configuration.get("quality_policy_revision") != entry.diagnostics.get("quality_policy_override")
+                or configuration["provenance"] != entry.diagnostics.get("config_source")
                 or configuration["parameter_schema_identity"] !=
                 entry.diagnostics.get("parameter_schema_identity")):
             raise ValueError("project_result_configuration_mismatch")

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import logging
+from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QSettings, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Slot
+from PySide6.QtCore import QEventLoop, QSettings, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Slot
 from PySide6.QtGui import (
     QAction,
     QCloseEvent,
@@ -15,7 +16,9 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QApplication,
+    QCheckBox,
     QDialog,
+    QDialogButtonBox,
     QFileDialog,
     QFrame,
     QHBoxLayout,
@@ -639,6 +642,8 @@ class MainWindow(QMainWindow):
                     else None
                 ),
                 source_mode=LogOpenSourceMode.PROJECT,
+                project_path=project.project_path,
+                dataset_cache_reference=project.parse_artifact,
             )
         except Exception as exc:
             logging.exception("Project open failed")
@@ -809,12 +814,16 @@ class MainWindow(QMainWindow):
                 if self._replay_store.SourceEntry_Get(selected_source) is not None:
                     self._AnalysisSource_Set(selected_source)
                 else:
+                    self._replay_store.ActiveSource_Restore(selected_source)
+                    self._Pages_Refresh()
                     self._Error_Show("project_result_recompute_required:" + selected_source)
             elif isinstance(selected_source, str) and selected_source.startswith("recorded:"):
                 self._AnalysisSource_Set(selected_source)
             secondary = project.ui_state.get("secondary_source")
             if isinstance(secondary, str):
-                self._SecondarySource_Set(secondary)
+                self._secondary_source_id = secondary
+                self.replay_page.SecondarySource_Set(secondary)
+                self._Pages_Refresh()
             page_index = project.ui_state.get("page_index")
             if isinstance(page_index, int) and 0 <= page_index < self.pages.count():
                 self.navigation_list.setCurrentRow(page_index)
@@ -905,7 +914,8 @@ class MainWindow(QMainWindow):
             return
         plugin = self._registry.Algorithm_Get(algorithm_id)
         dataset = self._dataset
-        worker = FunctionWorker(lambda context: plugin.run(dataset, request, context))
+        from silverstar_flp.core.replay_execution import Replay_Execute
+        worker = FunctionWorker(lambda context: Replay_Execute(plugin, dataset, request, context))
         self._Task_Start(
             worker,
             self._Replay_ResultSet,
@@ -1194,6 +1204,7 @@ class MainWindow(QMainWindow):
             notes=self._project.notes,
             ui_state=dict(self._project.ui_state),
             project_path=self._project.project_path,
+            save_data_and_results=self._project.save_data_and_results,
         )
 
     def _LogOpen_Error(self, message: str) -> None:
@@ -1209,18 +1220,40 @@ class MainWindow(QMainWindow):
         self._Error_Show(message)
 
     def _Project_Save(self) -> None:
+        save_data = self._SaveOptions_Select()
+        if save_data is None:
+            return
         path = self._project.project_path
         if path is None:
             path = self._ProjectPath_Select("action.save_project")
             if path is not None and not self._Overwrite_Confirm(path):
                 return
         if path is not None:
-            self._Project_Write(path)
+            self._Project_Write(path, background=True, save_data=save_data)
 
     def _Project_SaveAs(self) -> None:
+        save_data = self._SaveOptions_Select()
+        if save_data is None:
+            return
         path = self._ProjectPath_Select("action.save_project_as")
         if path is not None and self._Overwrite_Confirm(path):
-            self._Project_Write(path)
+            self._Project_Write(path, background=True, save_data=save_data)
+
+    def _SaveOptions_Select(self) -> bool | None:
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self._translator.Text_Get("action.save_project"))
+        layout = QVBoxLayout(dialog)
+        option = QCheckBox(self._translator.Text_Get("project.save_data_and_results"))
+        option.setChecked(self._project.save_data_and_results)
+        layout.addWidget(option)
+        explanation = QLabel(self._translator.Text_Get("project.save_data_explanation"))
+        explanation.setWordWrap(True)
+        layout.addWidget(explanation)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        return option.isChecked() if dialog.exec() == QDialog.DialogCode.Accepted else None
 
     def _ProjectPath_Select(self, title_key: str) -> Path | None:
         filename = self._project.project_path.name if self._project.project_path else "flight.ssflp"
@@ -1237,19 +1270,21 @@ class MainWindow(QMainWindow):
         path = Path(selected)
         return path if path.suffix.lower() == ".ssflp" else path.with_suffix(".ssflp")
 
-    def _Project_Write(self, path: Path) -> None:
+    def _Project_Write(self, path: Path, *, background: bool = False, save_data: bool | None = None) -> None:
         try:
-            self._project.ui_state["page_index"] = self.navigation_list.currentRow()
-            self._project.ui_state["time_range"] = self.time_range.controller.model.State_Get()
-            self._project.ui_state["analysis_source"] = (
+            project = replace(self._project,
+                replay_configurations=deepcopy(self._project.replay_configurations),
+                ui_state=deepcopy(self._project.ui_state),
+                save_data_and_results=self._project.save_data_and_results if save_data is None else save_data)
+            project.ui_state["page_index"] = self.navigation_list.currentRow()
+            project.ui_state["time_range"] = self.time_range.controller.model.State_Get()
+            project.ui_state["analysis_source"] = (
                 self._replay_store.ActiveSource_Get().source_id
             )
-            self._project.ui_state["secondary_source"] = self._secondary_source_id
-            self._project.replay_configurations["draft"] = self.replay_page.Configuration_Get()
+            project.ui_state["secondary_source"] = self._secondary_source_id
+            project.replay_configurations["draft"] = self.replay_page.Configuration_Get()
             for entry in self._replay_store.Entries_Get():
-                if entry.analysis_only:
-                    continue
-                self._project.replay_configurations[entry.result_id] = {
+                project.replay_configurations[entry.result_id] = {
                     "algorithm_id": entry.algorithm_id,
                     "algorithm_version": entry.algorithm_version,
                     "mode": entry.mode.value,
@@ -1259,16 +1294,29 @@ class MainWindow(QMainWindow):
                     "provenance": entry.diagnostics["config_source"],
                 }
                 if entry.diagnostics.get("process_model_revision") is not None:
-                    self._project.replay_configurations[entry.result_id]["process_model_revision"] = (
+                    project.replay_configurations[entry.result_id]["process_model_revision"] = (
                         entry.diagnostics["process_model_revision"]
                     )
                 if entry.diagnostics.get("quality_policy_override") is not None:
-                    saved_configuration = self._project.replay_configurations[entry.result_id]
+                    saved_configuration = project.replay_configurations[entry.result_id]
                     saved_configuration["quality_policy_revision"] = entry.diagnostics[
                         "quality_policy_override"
                     ]
-            Project_Save(self._project, path, replay_store=self._replay_store,
-                         dataset=self._dataset)
+            entries = self._replay_store.Entries_Get()
+            store = ReplayResultStore()
+            for entry in entries:
+                store.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
+                                  restored_run_index=entry.run_index)
+            dataset = self._dataset
+            edit_serial = getattr(self, "_project_edit_serial", 0)
+            def save(context):
+                Project_Save(project, path, replay_store=store, dataset=dataset, context=context)
+                return project
+            if background:
+                self._Task_Start(FunctionWorker(save),
+                    lambda saved: self._ProjectSave_ResultSet(saved, edit_serial), self._Error_Show)
+                return
+            self._project = save(None)
             self._Project_SetDirty(False)
             self._ProjectHeader_Refresh()
             self.status_label.setText(self._translator.Text_Get("status.project_saved", path=path))
@@ -1276,8 +1324,18 @@ class MainWindow(QMainWindow):
             logging.exception("Project save failed")
             self._Error_Show(str(exc))
 
+    def _ProjectSave_ResultSet(self, project: ProjectDocument, edit_serial: int) -> None:
+        self._project = project
+        self._Project_SetDirty(edit_serial != getattr(self, "_project_edit_serial", 0))
+        self._ProjectHeader_Refresh()
+        size = sum(reference.get("bytes", 0) for reference in
+                   (project.result_artifact, project.parse_artifact) if reference)
+        self.status_label.setText(self._translator.Text_Get("status.project_artifacts_saved",
+                                  path=project.project_path, size=f"{size / 1_000_000:.2f}"))
+
     def _Project_MarkDirty(self) -> None:
         if not self._suspend_dirty and self._dataset is not None:
+            self._project_edit_serial = getattr(self, "_project_edit_serial", 0) + 1
             self._Project_SetDirty(True)
 
     def _Project_SetDirty(self, dirty: bool) -> None:
@@ -1326,6 +1384,13 @@ class MainWindow(QMainWindow):
         if answer == QMessageBox.StandardButton.Discard:
             return True
         self._Project_Save()
+        # A close/open requested from the unsaved-changes dialog waits for the
+        # transaction while still servicing Qt events and the cancel button.
+        worker = self._active_worker
+        if worker is not None:
+            loop = QEventLoop(self)
+            worker.signals.finished.connect(loop.quit)
+            loop.exec()
         return not self._project_dirty
 
     def _Error_Show(self, message: str) -> None:

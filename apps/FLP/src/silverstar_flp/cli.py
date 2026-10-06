@@ -203,7 +203,8 @@ def _Command_Replay(options: argparse.Namespace) -> int:
         if requested_mode == "recorded"
         else ReplayMode.OFFLINE
     )
-    result = plugin.run(
+    from silverstar_flp.core.replay_execution import Replay_Execute
+    result = Replay_Execute(plugin,
         dataset,
         ReplayRequest(mode=mode, input_source=options.source, parameters=parameters),
     )
@@ -263,6 +264,18 @@ def _Command_Gui(options: argparse.Namespace) -> int:
     return gui_main(arguments)
 
 
+def _Command_ProjectCache(options: argparse.Namespace) -> int:
+    from silverstar_flp.core.project_cache import (
+        ProjectCache_Inspect, ProjectCache_ParseClear, ProjectCache_UnusedRemove,
+    )
+    if options.clear_parse:
+        ProjectCache_ParseClear(options.path)
+    if options.remove_generation is not None:
+        ProjectCache_UnusedRemove(options.path, options.remove_generation)
+    print(json.dumps(ProjectCache_Inspect(options.path), ensure_ascii=False, indent=2))
+    return 0
+
+
 def _DecoderArguments_Add(parser: argparse.ArgumentParser, *, required: bool) -> None:
     group = parser.add_mutually_exclusive_group(required=required)
     group.add_argument("--decoder", type=Path, help="exact .ssdecoder package")
@@ -314,6 +327,13 @@ def _Parser_Create() -> argparse.ArgumentParser:
     gui_parser.add_argument("path", nargs="?", type=Path)
     _DecoderArguments_Add(gui_parser, required=False)
     gui_parser.set_defaults(handler=_Command_Gui)
+    cache_parser = subparsers.add_parser("project-cache", help="inspect bytes or explicitly clean parsed/unused project caches")
+    cache_parser.add_argument("path", type=Path)
+    actions = cache_parser.add_mutually_exclusive_group()
+    actions.add_argument("--clear-parse", action="store_true",
+                         help="drop only the reusable parse reference; retain saved result history")
+    actions.add_argument("--remove-generation", help="remove one verified unreferenced generation by exact ID")
+    cache_parser.set_defaults(handler=_Command_ProjectCache)
     return parser
 
 

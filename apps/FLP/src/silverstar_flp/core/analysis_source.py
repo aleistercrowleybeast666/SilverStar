@@ -262,6 +262,12 @@ class ReplayResultStore:
         self._active_source_id = source_id
         return True
 
+    def ActiveSource_Restore(self, source_id: str) -> None:
+        """Retain a saved unavailable selection; only user selection may change it."""
+        if not isinstance(source_id, str) or not source_id.startswith("replay:"):
+            raise ValueError("replay_result_identity_invalid")
+        self._active_source_id = source_id
+
 
 class ChannelResolver:
     _ESTIMATOR_DIAGNOSTIC_QUANTITIES = frozenset(
