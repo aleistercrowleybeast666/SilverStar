@@ -13,7 +13,7 @@
         "optional": false
       },
       {
-        "id": "silverstar.mcu.stm32f103ret6",
+        "id": "silverstar.mcu_family.stm32f1_flight",
         "optional": false
       }
     ],

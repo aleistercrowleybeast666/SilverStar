@@ -13,12 +13,14 @@
         "optional": false
       },
       {
-        "id": "silverstar.mcu.stm32f103ret6",
+        "id": "silverstar.mcu_family.stm32f1_flight",
         "optional": false
       }
     ],
     "resources": [],
-    "capabilities": []
+    "capabilities": [
+      "mcu.cortex_m3"
+    ]
   },
   "resources": {
     "provides": [],
@@ -42,7 +44,8 @@
     "include_dirs": [
       "OS/FreeRTOS",
       "ThirdParty/FreeRTOS-Kernel/include",
-      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM3"
+      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM3",
+      "Targets/SilverStar_F103RE/Inc"
     ],
     "defines": [],
     "virtual_sources": [

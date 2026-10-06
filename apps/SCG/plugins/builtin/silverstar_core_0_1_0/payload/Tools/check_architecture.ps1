@@ -9,6 +9,7 @@ if (Test-Path -LiteralPath $architectureProject -PathType Leaf) {
 $architectureFacts = switch ($architectureTargetProfile) {
     'SilverStar_F407' { @{ Backend='STM32F4'; Cpu='cortex-m4'; EideCpu='Cortex-M4'; Fpu='single'; Abi='hard'; Linker='STM32F407XX_FLASH.ld'; Hal='stm32f4xx'; Tick='TIM1' } }
     'SilverStar_F103RE' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RE_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6' } }
+    'SilverStar_F103RF' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RF_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6' } }
     default { throw "Unsupported Flight architecture target: $architectureTargetProfile" }
 }
 $architectureTargetMk = 'Targets\' + $architectureTargetProfile + '\target.mk'
@@ -829,7 +830,7 @@ if ($makeExitCode -eq 0) {
     } | Sort-Object)
     $expectedKernelSources = @(
         'ThirdParty/FreeRTOS-Kernel/list.c',
-        ('ThirdParty/FreeRTOS-Kernel/portable/GCC/' + $(if ($architectureTargetProfile -eq 'SilverStar_F103RE') { 'ARM_CM3' } else { 'ARM_CM4F' }) + '/port.c'),
+        ('ThirdParty/FreeRTOS-Kernel/portable/GCC/' + $(if ($architectureFacts.Backend -eq 'STM32F1') { 'ARM_CM3' } else { 'ARM_CM4F' }) + '/port.c'),
         'ThirdParty/FreeRTOS-Kernel/queue.c',
         'ThirdParty/FreeRTOS-Kernel/tasks.c'
     ) | Sort-Object
@@ -850,7 +851,7 @@ if ($makeExitCode -eq 0) {
             ($forbiddenSelectedSources -join ', '))
 
     $wrongPlatformSources = @($uniqueSources | Where-Object {
-        ($_ -like 'Platform/*') -and $(if ($architectureTargetProfile -eq 'SilverStar_F103RE') { ($_ -notlike 'Platform/STM32F1/*') -and ($_ -notlike 'Platform/STM32F1Flight/*') } else { $_ -notlike 'Platform/STM32F4/*' })
+        ($_ -like 'Platform/*') -and $(if ($architectureFacts.Backend -eq 'STM32F1') { ($_ -notlike 'Platform/STM32F1/*') -and ($_ -notlike 'Platform/STM32F1Flight/*') } else { $_ -notlike 'Platform/STM32F4/*' })
     })
     Assert-ArchitectureCondition -Condition ($wrongPlatformSources.Count -eq 0) `
         -Message ("Unselected Platform backend entered the build: " +

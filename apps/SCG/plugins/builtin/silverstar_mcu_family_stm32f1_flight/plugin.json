@@ -5,7 +5,7 @@
   "type": "mcu_family",
   "class": "stm32f1",
   "version": "0.1.0",
-  "description": "F103 high-density Flight HAL adapters; compile validation only, no board qualification.",
+  "description": "F103 high/XL-density Flight HAL adapters; compile validation only, no board qualification.",
   "requires": {
     "components": [],
     "resources": [],
@@ -90,6 +90,14 @@
         "specificity": 100,
         "verification": "supported",
         "exact_part": "STM32F103RET6"
+      },
+      {
+        "vendor": "STM32",
+        "family_pattern": "STM32F1*",
+        "priority": 10,
+        "specificity": 100,
+        "verification": "supported",
+        "exact_part": "STM32F103RFT6"
       }
     ],
     "resource_binding": {

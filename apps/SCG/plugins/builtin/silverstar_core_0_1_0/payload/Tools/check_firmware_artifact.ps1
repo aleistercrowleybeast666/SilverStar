@@ -22,6 +22,7 @@ $mapPath = Join-Path $buildRoot ($targetName + '.map')
 $targetFacts = switch ($TargetProfile) {
     'SilverStar_F407' { @{ Linker='STM32F407XX_FLASH.ld'; Sram=131072; Ccm=65536 } }
     'SilverStar_F103RE' { @{ Linker='STM32F103RE_FLASH.ld'; Sram=65536; Ccm=0 } }
+    'SilverStar_F103RF' { @{ Linker='STM32F103RF_FLASH.ld'; Sram=98304; Ccm=0 } }
     default { throw "Unsupported artifact target: $TargetProfile" }
 }
 $linkerPath = Join-Path $repoRoot $targetFacts.Linker
@@ -381,7 +382,7 @@ foreach ($uartNumber in 1..6) {
     }
 }
 if ($loggingEnabled) { $requiredDmaSymbols += 's_aggregate_buffer' }
-if (($TargetProfile -eq 'SilverStar_F103RE') -and $loggingEnabled) {
+if (($TargetProfile -in @('SilverStar_F103RE', 'SilverStar_F103RF')) -and $loggingEnabled) {
     $requiredDmaSymbols += 's_sd_scratch'
 }
 if (-not $loggingEnabled) {
