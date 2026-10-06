@@ -22,6 +22,7 @@ typedef struct
     uint8_t waiting;
     uint8_t failures;
     uint8_t start_intent;
+    uint8_t qualification_revoked;
 } Mpu6050RecoveryState;
 static Mpu6050RecoveryState s_recovery[PROJECT_MPU6050_INSTANCE_COUNT];
 #define MPU6050_RECOVERY_ATTEMPT_MS 2000U
@@ -43,6 +44,7 @@ static void Mpu6050Recovery_Revoke(uint8_t instance)
     adapter->health.started = 0U;
     adapter->health.online = 0U;
     adapter->health.healthy = 0U;
+    s_recovery[instance].qualification_revoked = 1U;
     PlatformCritical_Exit(lock);
 }
 
@@ -222,7 +224,20 @@ SystemDeviceResult Mpu6050ImuInstance_CapabilitiesGet(uint8_t instance, uint32_t
 SystemDeviceResult Mpu6050ImuInstance_HealthGet(uint8_t instance, SystemDeviceHealth *health)
 {
     if (instance >= PROJECT_MPU6050_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+    SystemDeviceResult result = SensorImuAdapter_HealthGet(&s_contexts[instance], health);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    {
+        PlatformCriticalState lock = PlatformCritical_Enter();
+        /* Physical recovery is not calibration/alignment/mission qualification.
+         * This prototype has deliberately no automatic qualification-clear path. */
+        if (s_recovery[instance].qualification_revoked != 0U) { health->healthy = 0U; }
+        PlatformCritical_Exit(lock);
+    }
+    return SYSTEM_DEVICE_OK;
+#else
     return SensorImuAdapter_HealthGet(&s_contexts[instance], health);
+#endif
 }
 
 SystemDeviceResult Mpu6050ImuInstance_IoDiagnosticsGet(uint8_t instance, SystemDeviceIoDiagnostics *diagnostics)

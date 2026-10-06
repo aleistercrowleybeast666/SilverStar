@@ -168,6 +168,7 @@ int main(int argc, char **argv)
         for (index = 0U; index < 180U; index++) { Tick(10U); }
         s_probe_fail = s_reset_fail = s_reset_stuck = s_ignore_write = 0U; s_registers[58] = 1U;
         Ready();
+        assert(SystemImu_HealthGet(&health) == SYSTEM_DEVICE_OK && health.initialized && health.online && !health.healthy);
     }
     else if (which == 6U)
     {
@@ -203,6 +204,7 @@ int main(int argc, char **argv)
                     ((which == 9U) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY));
             }
             s_probe_fail = s_sample_read_fail = 0U; Ready(); assert(SystemImu_LatestSampleGet(&after) == SYSTEM_DEVICE_OK);
+            assert(SystemImu_HealthGet(&health) == SYSTEM_DEVICE_OK && health.initialized && health.online && !health.healthy);
             assert(SystemImu_IoDetailGet(&detail) == SYSTEM_DEVICE_OK && detail.config_generation > old_generation);
             assert(after.sequence > before.sequence && after.receive_timestamp_us > before.receive_timestamp_us);
             assert((after.quality_flags & SYSTEM_IMU_QUALITY_HISTORY_RESET) != 0U);
@@ -225,6 +227,14 @@ int main(int argc, char **argv)
         {
             assert(SystemImu_RuntimeOwnerActivate() == SYSTEM_DEVICE_OK);
             s_report.completed = 1U; s_report.mission_capable = (which == 14U) ? 1U : 0U;
+            if (which == 14U)
+            {
+                SystemHealth_Init(); SystemHealth_SetAttitudeReady(1U); SystemHealth_Process();
+                assert(SystemHealth_IsReady() != 0U);
+                s_cal_ready = 0U; SystemHealth_Process(); assert(SystemHealth_IsReady() == 0U);
+                s_cal_ready = 1U; s_align_ready = 0U; SystemHealth_Process(); assert(SystemHealth_IsReady() == 0U);
+                s_align_ready = 1U;
+            }
             s_report.devices[SYSTEM_STARTUP_DEVICE_IMU].init_result = SYSTEM_DEVICE_VERIFY_FAILED;
             history = s_report;
             s_now += 150000ULL; Tick(1U); Ready();
