@@ -8,7 +8,7 @@ protocol, storage, hardware and resource checks remain applicable.
 |---|---|---|---|---|
 | Full | All already supported, including pure INS | Existing supported counts | Existing configuration | Existing configuration |
 | Standard | SF6, KF6, pure INS; ESKF15 prohibited | Existing supported counts | Existing configuration | Existing configuration |
-| Compact | SF6 or pure INS; KF6/ESKF15 prohibited | At most one IMU, GNSS, telemetry and barometer | Configurable, not forced off | All-stream choices and normal queue defaults |
+| Compact | SF6 or pure INS; KF6/ESKF15 prohibited | At most one IMU, GNSS, telemetry and barometer | Configurable, not forced off | Retained log choices with the bounded-tier policy below; normal queue defaults |
 | Minimal | Same as Compact | Same, with GNSS inactive | Both off | Minimum replayable local SSLOG; compact slots and queues |
 
 An explicit incompatible switch chooses KF6 for Standard or SF6 for
@@ -42,6 +42,17 @@ new protocol profile identity is introduced. Original all-stream choices live
 in the departed tier snapshot. Queue capacity is at least the complete startup
 descriptor count plus five slots, with a 56-slot floor; stream disablement never
 reduces the descriptor count. Existing task/idle/MSP stack sizes are retained.
+
+The user's subsequent logging policy applies to both Compact and Minimal:
+TELEMETRY_DIAG is disabled. PURE_INS is disabled when SF6 is selected; when the
+estimator is None, PURE_INS is required to retain recorded onboard p/v/q.
+Full and Standard keep both records optional. Effective projection and generated
+runtime support enforce this policy, including legacy configurations, while raw
+choices and tier snapshots remain available for restoration. Disabled records
+remain in the complete decoder catalog and startup stream descriptors. No queue,
+slot, aggregation or stack sizing changed with this policy. Its effects on FLP
+fallback acceleration and stillness replay require separate review; this policy
+does not establish that those features are unaffected.
 
 Compact and Minimal retain the earlier reviewed SX128x 260-byte HAL scratch
 capacity and bounded device facade, independent of brand. Full/Standard keep

@@ -3,10 +3,11 @@ from __future__ import annotations
 from dataclasses import replace
 
 from silverstar_fccg.project.model import LogStreamConfig, ProjectModel
+from silverstar_fccg.project.feature_tiers import FeatureTier_LogRecordAllowed, FeatureTier_LogRecordRequired
 
 
 SF6_MINIMAL_RECORDS = frozenset("FLIGHT_LOG_RECORD_" + name for name in (
-    "EVENT", "STATS", "SYSTEM_CONFIG", "HEALTH", "TELEMETRY_DIAG",
+    "EVENT", "STATS", "SYSTEM_CONFIG", "HEALTH",
     "INITIAL_STATE", "BARO_NATIVE", "INERTIAL_INCREMENT",
     "IMU_CORRECTED", "CALIBRATION_RESULT", "ALIGNMENT_RESULT", "MISSION_CONFIG",
     "DEVICE_DESCRIPTOR", "ALGORITHM_DESCRIPTOR", "LOG_STREAM_DESCRIPTOR",
@@ -16,7 +17,6 @@ SF6_MINIMAL_RECORDS = frozenset("FLIGHT_LOG_RECORD_" + name for name in (
 ))
 SF6_MINIMUM_REQUIRED = SF6_MINIMAL_RECORDS - {
     "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY",
-    "FLIGHT_LOG_RECORD_TELEMETRY_DIAG",
 }
 
 
@@ -30,9 +30,14 @@ def CompactLogStreams_Get(model: ProjectModel) -> list[LogStreamConfig]:
     outputs are deliberately excluded and shown as disabled.
     """
     if model.build.logging_profile == "all_streams":
+        if model.build.feature_tier == "compact":
+            return [replace(stream, enabled=False) if not FeatureTier_LogRecordAllowed(model, stream.record)
+                    else replace(stream, enabled=True) if FeatureTier_LogRecordRequired(model, stream.record) else stream
+                    for stream in model.logging_streams]
         return model.logging_streams
     required = CompactLogRequiredRecords_Get(model)
     return [replace(stream, enabled=(
+        FeatureTier_LogRecordAllowed(model, stream.record) and
         stream.record in SF6_MINIMAL_RECORDS and
         (stream.enabled or stream.record in required) and
         (model.strategies.get("estimator") is not None or not stream.record.startswith("FLIGHT_LOG_RECORD_SF6_"))

@@ -15,6 +15,20 @@ _BOUNDED_CLASSES = frozenset({"SYSTEM_DEVICE_CLASS_IMU", "SYSTEM_DEVICE_CLASS_GN
                              "SYSTEM_DEVICE_CLASS_TELEMETRY", _BAROMETER})
 
 
+def FeatureTier_LogRecordAllowed(model: ProjectModel, record: str) -> bool:
+    """Tier policy projects retained log choices without erasing them."""
+    if model.build.feature_tier not in ("compact", "minimal"):
+        return True
+    return (record != "FLIGHT_LOG_RECORD_TELEMETRY_DIAG" and
+            (record != "FLIGHT_LOG_RECORD_PURE_INS" or model.strategies.get("estimator") != _SF6))
+
+
+def FeatureTier_LogRecordRequired(model: ProjectModel, record: str) -> bool:
+    """Pure INS needs its recorded navigation output in both bounded tiers."""
+    return (model.build.feature_tier in ("compact", "minimal") and
+            model.strategies.get("estimator") is None and record == "FLIGHT_LOG_RECORD_PURE_INS")
+
+
 def FeatureTier_StrategyAllowed(model: ProjectModel, component_id: str | None) -> bool:
     tier = model.build.feature_tier
     return not ((tier != "full" and component_id == _ESKF15) or

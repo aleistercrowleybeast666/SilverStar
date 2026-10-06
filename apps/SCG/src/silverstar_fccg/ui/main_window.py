@@ -96,7 +96,7 @@ from silverstar_fccg.project.folder_contract import (
     FLIGHT_DIRECTORY,
 )
 from silverstar_fccg.project.lifecycle import ProjectLifecycleState
-from silverstar_fccg.project.feature_tiers import FeatureTier_Apply
+from silverstar_fccg.project.feature_tiers import FeatureTier_Apply, FeatureTier_LogRecordAllowed, FeatureTier_LogRecordRequired
 from silverstar_fccg.project.compact_logging import CompactLogStreams_Get, CompactLogRequiredRecords_Get
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
@@ -922,6 +922,8 @@ class MainWindow(QMainWindow):
         views: list[LoggingStreamView] = []
         for definition in definitions:
             stream = streams[definition.record]
+            tier_allowed = FeatureTier_LogRecordAllowed(model, definition.record)
+            tier_required = FeatureTier_LogRecordRequired(model, definition.record)
             availability = LogAvailability_Get(
                 definition, model, self._service.catalog
             )
@@ -931,6 +933,8 @@ class MainWindow(QMainWindow):
                     availability.reason_code,
                     missing=", ".join(availability.missing),
                 )
+            if not tier_allowed:
+                reason = self._translator.Text_Get("logging.feature_tier.disabled")
             description = self._translator.Text_Get(
                 "logging.record_metadata",
                 id=definition.record_id,
@@ -961,12 +965,12 @@ class MainWindow(QMainWindow):
                     period_us=stream.period_us,
                     level=definition.level.value,
                     purpose=definition.purpose.value,
-                    required=(definition.level == LogPolicyLevel.REQUIRED or
-                        (model.build.feature_tier == "minimal" and stream.record in CompactLogRequiredRecords_Get(model))),
-                    available=availability.available,
-                    editable=model.build.logging_profile == "all_streams",
+                    required=(tier_allowed and (tier_required or definition.level == LogPolicyLevel.REQUIRED or
+                        (model.build.feature_tier == "minimal" and stream.record in CompactLogRequiredRecords_Get(model)))),
+                    available=availability.available and tier_allowed,
+                    editable=model.build.logging_profile == "all_streams" and tier_allowed and not tier_required,
                     availability_reason=(self._translator.Text_Get("logging.profile.locked")
-                        if availability.available and model.build.logging_profile != "all_streams" else reason),
+                        if tier_allowed and availability.available and model.build.logging_profile != "all_streams" else reason),
                     record_id=definition.record_id,
                     version=definition.version,
                     payload_size=definition.payload_size,
@@ -1048,8 +1052,12 @@ class MainWindow(QMainWindow):
         if model.build.logging_profile != "all_streams":
             return
         if stream_views:
+            retained = {stream.record: stream for stream in model.logging_streams}
             model.logging_streams = [
-                LogStreamConfig(
+                retained[stream.stream_id]
+                if ((not FeatureTier_LogRecordAllowed(model, stream.stream_id) or
+                     FeatureTier_LogRecordRequired(model, stream.stream_id)) and stream.stream_id in retained)
+                else LogStreamConfig(
                     record=stream.stream_id,
                     enabled=stream.enabled,
                     policy=stream.policy,

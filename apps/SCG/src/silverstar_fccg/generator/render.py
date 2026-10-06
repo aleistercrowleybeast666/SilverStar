@@ -37,7 +37,7 @@ from silverstar_fccg.project.generation_state import (
     ProjectDigest_Get,
 )
 from silverstar_fccg.project.compact_logging import CompactLogStreams_Get, SF6_MINIMAL_RECORDS
-from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive
+from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive, FeatureTier_LogRecordAllowed
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
     LogRecordDefinition,
@@ -1935,8 +1935,9 @@ def LogDecoderProfile_Render(
             {
                 "record": definition.record,
                 "level": definition.level.value,
-                "available": availability.available,
-                "reason_code": availability.reason_code,
+                "available": availability.available and FeatureTier_LogRecordAllowed(model, definition.record),
+                "reason_code": (availability.reason_code if FeatureTier_LogRecordAllowed(model, definition.record)
+                                else "logging.feature_tier.disabled"),
                 "missing": list(availability.missing),
                 "producer_components": list(
                     definition.producer_components
@@ -2354,7 +2355,7 @@ def _LogRecordViews_Get(
                         active_producers
                     )
                 ),
-                "available": availability.available,
+                "available": availability.available and FeatureTier_LogRecordAllowed(model, definition.record),
             }
         )
     return views
@@ -2466,6 +2467,7 @@ def _LogSource_Render(model: ProjectModel) -> str:
             proofs.append(f'_Static_assert(offsetof(FlightLogRecord, payload) + sizeof(((FlightLogRecord *)0)->payload.{member}) <= {slot}, "{stream.record} does not fit its queue");')
     proof_text = "\n".join(proofs)
     supported = (sorted(SF6_MINIMAL_RECORDS) if model.build.logging_profile == "sf6_minimal" else sorted(layout))
+    supported = [record for record in supported if FeatureTier_LogRecordAllowed(model, record)]
     cases = "\n".join(
         f"        case {record}: return (uint8_t)(offsetof(FlightLogRecord, payload) + "
         f"sizeof(((FlightLogRecord *)0)->payload.{layout[record][0]}) <= "
