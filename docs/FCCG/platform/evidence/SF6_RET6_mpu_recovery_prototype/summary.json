@@ -1,0 +1,375 @@
+{
+  "source_commit": "018ff76bdb5701541ae7545556a4318bf2203107",
+  "previous_checkpoint": "0a58c4e25909f2e1af5acf641a8b0aec9e507074",
+  "gate_exits": {
+    "arm": 0,
+    "analyzer": 0,
+    "architecture": 0,
+    "power10": 2,
+    "artifact": 0,
+    "stack": 2,
+    "official_host": 2,
+    "linked_sources": 0
+  },
+  "focused_cases": 14,
+  "pre_fail_cases": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    14
+  ],
+  "post_fail_cases": [],
+  "ordinary_cases": 3,
+  "selected_pytest": "4 passed",
+  "generator_pytest": "12 passed",
+  "resources": {
+    "source_commit": "018ff76bdb5701541ae7545556a4318bf2203107",
+    ".text": 207600,
+    ".data": 408,
+    ".bss": 60952,
+    "ram_used": 63408,
+    "ram_spare": 2128,
+    "ram_spare_percent": 3.2470703125,
+    "twenty_percent_goal_used_max": 52428,
+    "twenty_percent_goal_gap": 10980,
+    "flash_load_bytes": 218264,
+    "baseline_source_commit": "1fcf9b20fb5250f27367cf6b71e493d197185f45",
+    "net_ram_delta": 24,
+    "net_flash_delta": 624,
+    "groups": {
+      "other": 8665,
+      "algorithm_and_origin_state": 5383,
+      "platform_vendor_rtos": 2206,
+      "device_state": 5751,
+      "static_task_stacks_already_in_bss": 21504,
+      "sample_and_log_queues": 15168,
+      "other_logging": 2462,
+      "alignment_fill_or_unparsed": 221,
+      "main_msp_reservation": 2048
+    },
+    "baseline_groups": {
+      "other": {
+        "bytes": 8664,
+        "percent_of_ram": 13.22
+      },
+      "algorithm_and_origin_state": {
+        "bytes": 5383,
+        "percent_of_ram": 8.214
+      },
+      "platform_vendor_rtos": {
+        "bytes": 2206,
+        "percent_of_ram": 3.366
+      },
+      "device_state": {
+        "bytes": 5735,
+        "percent_of_ram": 8.751
+      },
+      "static_task_stacks_already_in_bss": {
+        "bytes": 21504,
+        "percent_of_ram": 32.812
+      },
+      "sample_and_log_queues": {
+        "bytes": 15168,
+        "percent_of_ram": 23.145
+      },
+      "other_logging": {
+        "bytes": 2462,
+        "percent_of_ram": 3.757
+      },
+      "alignment_fill_or_unparsed": {
+        "bytes": 214,
+        "percent_of_ram": 0.327
+      },
+      "main_msp_reservation": {
+        "bytes": 2048,
+        "percent_of_ram": 3.125
+      }
+    },
+    "largest_symbols": [
+      {
+        "bytes": 9408,
+        "symbol": ".bss.s_logger_storage",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_bus.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_telemetry_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_flight_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 4096,
+        "symbol": ".bss.s_estimator_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 3840,
+        "symbol": ".bss.s_estimator_logger_storage",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_bus.o"
+      },
+      {
+        "bytes": 3496,
+        "symbol": ".bss.s_estimator",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_task.o"
+      },
+      {
+        "bytes": 3072,
+        "symbol": ".bss.s_logger_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 3072,
+        "symbol": ".bss.s_ins_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 2560,
+        "symbol": ".bss.s_device_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/app_tasks.o"
+      },
+      {
+        "bytes": 1436,
+        "symbol": ".bss.s_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Src/sx1281_device.o"
+      },
+      {
+        "bytes": 1280,
+        "symbol": ".bss.s_streams",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_log_policy.o"
+      },
+      {
+        "bytes": 1280,
+        "symbol": ".bss.s_queue",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/imu_sample_bus.o"
+      },
+      {
+        "bytes": 1024,
+        "symbol": ".bss.s_aggregate_buffer",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_task.o"
+      },
+      {
+        "bytes": 848,
+        "symbol": ".bss.s_status",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Alignment/Src/system_alignment.o"
+      },
+      {
+        "bytes": 832,
+        "symbol": ".bss.s_request",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/logger_bus.o"
+      },
+      {
+        "bytes": 728,
+        "symbol": ".bss.s_startup_report",
+        "object": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_startup.o"
+      },
+      {
+        "bytes": 640,
+        "symbol": ".bss.s_queue",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_bus.o"
+      },
+      {
+        "bytes": 560,
+        "symbol": ".bss.SDFatFS",
+        "object": "build/FCCG/SilverStar_F103RE/Release/HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.o"
+      },
+      {
+        "bytes": 556,
+        "symbol": ".bss.s_object_file",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.o"
+      },
+      {
+        "bytes": 556,
+        "symbol": ".bss.s_file",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.o"
+      },
+      {
+        "bytes": 530,
+        "symbol": ".bss.s_record",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.o"
+      },
+      {
+        "bytes": 520,
+        "symbol": ".bss.s_hal_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Middlewares/Third_Party/SX1280lib/sx1280-hal.o"
+      },
+      {
+        "bytes": 512,
+        "symbol": ".bss.s_sd_scratch",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.o"
+      },
+      {
+        "bytes": 512,
+        "symbol": ".bss.s_payload",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.o"
+      },
+      {
+        "bytes": 512,
+        "symbol": ".bss.s_mag_data",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.o"
+      },
+      {
+        "bytes": 512,
+        "symbol": ".bss.s_latest_payload",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.o"
+      },
+      {
+        "bytes": 512,
+        "symbol": ".bss.s_idle_task_stack",
+        "object": "build/FCCG/SilverStar_F103RE/Release/OS/FreeRTOS/freertos_hooks.o"
+      },
+      {
+        "bytes": 440,
+        "symbol": ".bss.s_snapshot",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_task.o"
+      },
+      {
+        "bytes": 440,
+        "symbol": ".bss.s_published_snapshot",
+        "object": "build/FCCG/SilverStar_F103RE/Release/APP/Src/estimator_task.o"
+      },
+      {
+        "bytes": 344,
+        "symbol": ".bss.s_transport_contexts",
+        "object": "build/FCCG/SilverStar_F103RE/Release/Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.o"
+      }
+    ],
+    "hashes": {
+      "SilverStar_0_1_1.bin": "6343a63fc099d4d590cb27bec52b93d518b9d71104c42e9a03c7b510535dea17",
+      "SilverStar_0_1_1.elf": "d6142a91faa0b66ba8edfb34ab1fe1602d236a6af496db96e5c2954d6d722398",
+      "SilverStar_0_1_1.hex": "c1ccd4b482f7ded4460b71a1f427fc6f61a58dcaa3a381ded72274054239418c",
+      "SilverStar_0_1_1.map": "c87e1efc2f7607cd7eddfcf54c88adf574c56ce4beaf883ffa8a679028bebeb5"
+    },
+    "counting_boundary": "Static task/idle stacks are included once in BSS; MSP separately reserved. No stack/WCET proof inferred.",
+    "recovery_symbols": [
+      "20007fd8 00000009 b s_imu",
+      "2000cd2c 00000010 b s_recovery",
+      "08026bb0 00000018 T SensorImuAdapter_ConfigRequest",
+      "08019e34 00000044 t Mpu6050Recovery_Revoke.constprop.0",
+      "0802668c 00000088 T SensorImuAdapter_PrepareI2c",
+      "08019e78 000000a8 t Mpu6050Recovery_Begin.constprop.0"
+    ],
+    "actual_compiler_stack_frames_not_whole_call_path": [
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/System/Src/system_source_selector.su",
+        "record": "System/Src/system_source_selector.c:690:6:SystemImu_Process\t64\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Generated/Src/project_resources.su",
+        "record": "Generated/Src/project_resources.c:35:20:ProjectMpu6050Resources_Get\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/SensorBus/Adapter/Src/sensor_imu_adapter.su",
+        "record": "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c:61:20:SensorImuAdapter_PrepareI2c\t48\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Src/mpu6050_device.su",
+        "record": "Devices/IMU/MPU6050/Src/mpu6050_device.c:91:25:Mpu6050_ProfileGet\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Src/mpu6050_device.su",
+        "record": "Devices/IMU/MPU6050/Src/mpu6050_device.c:96:25:Mpu6050_FifoProfileGet\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:32:13:Mpu6050Recovery_Revoke.constprop\t8\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:61:27:Mpu6050Recovery_Begin.constprop\t24\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:121:20:Mpu6050ImuInstance_RecoveryPreparedGet\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:134:14:Mpu6050ImuInstance_NameGet\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:139:20:Mpu6050ImuInstance_Init\t32\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:162:20:Mpu6050ImuInstance_Start\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:177:20:Mpu6050ImuInstance_Stop\t8\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:187:20:Mpu6050ImuInstance_RuntimeOwnerActivate\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:194:20:Mpu6050ImuInstance_Process\t32\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:204:20:Mpu6050ImuInstance_InfoGet\t4\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:216:20:Mpu6050ImuInstance_CapabilitiesGet\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:224:20:Mpu6050ImuInstance_HealthGet\t16\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:243:20:Mpu6050ImuInstance_IoDiagnosticsGet\t16\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:254:20:Mpu6050ImuInstance_IoDetailGet\t48\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:273:20:Mpu6050ImuInstance_LatestSampleGet\t48\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:285:20:Mpu6050ImuInstance_NextSampleGet\t48\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:297:20:Mpu6050ImuInstance_SelfTestRun\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:305:20:Mpu6050ImuInstance_ConfigApply\t0\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:315:20:Mpu6050ImuInstance_ConfigVerify\t16\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:326:20:Mpu6050ImuInstance_EffectiveConfigGet\t48\tstatic"
+      },
+      {
+        "file": "build/FCCG/SilverStar_F103RE/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+        "record": "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c:339:20:Mpu6050ImuInstance_NoiseCharacteristicsGet\t8\tstatic"
+      }
+    ]
+  },
+  "input_library_id": "libfile_1ed125f404dc8191b56457eee0986b58",
+  "input_materialization": "download failed; no bytes read",
+  "qualification": "physical retry only; qualification_revoked sticky, no current-ready clear path",
+  "acceptance": "BLOCKED: Power10/stack/official Host FAIL, qualification readmission missing, critical contract/hardware/timing/stack NOT PROVEN, RAM20% missed",
+  "scope": "No hardware/serial/probe, flashing, stable/ordinary GUI/GSHC/FLP edits, merge/push, new gate exceptions or RAM cuts"
+}

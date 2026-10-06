@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\evidence\library_mpu_recovery_20261006\library_file_transfer.py", line 303, in <module>
+    raise SystemExit(main(sys.argv[1:]))
+                     ~~~~^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\evidence\library_mpu_recovery_20261006\library_file_transfer.py", line 288, in main
+    materializer.apply_xattrs(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        include_library_file_id_xattr(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        args.path,
+        ^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\evidence\library_mpu_recovery_20261006\library_file_transfer.py", line 246, in apply_xattrs
+    xattr.apply(path)
+    ~~~~~~~~~~~^^^^^^
+  File "D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\evidence\library_mpu_recovery_20261006\library_file_transfer.py", line 64, in apply
+    os.setxattr(path, self.name, encoded_value)
+    ^^^^^^^^^^^
+AttributeError: module 'os' has no attribute 'setxattr'

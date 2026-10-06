@@ -1,0 +1,31 @@
+{
+  "result": {
+    "operation": "create_library_file",
+    "status": "succeeded",
+    "path": "/mpu_recovery_prototype_evidence.zip",
+    "file_id": "file_00000000215081f890a7379849ef7c51",
+    "library_file_id": "libfile_9f2b075313e481918d2900b8e1ae1f6a",
+    "file_name": "mpu_recovery_prototype_evidence.zip",
+    "current_version_number": 0,
+    "restored_from_version_number": null,
+    "xattrs": [
+      {
+        "name": "user.library-file-version",
+        "value": "0"
+      }
+    ],
+    "directory_id": "libdir_8617ff5a838481919d6e4b11ae8721e2",
+    "mime_type": "application/zip",
+    "library_artifact_type": "other",
+    "file_size_bytes": 3358075,
+    "external_connectors_accessed": false
+  },
+  "archive_sha256": "cdb193b5e292ec0a1d8247f302f75d9308bf7a002cbc52378294a801df7ecd24",
+  "archive_bytes": 3358075,
+  "source_commit": "018ff76bdb5701541ae7545556a4318bf2203107",
+  "local_xattrs": {
+    "log": "library_xattrs.log",
+    "status": "unsupported_windows_python_os_setxattr",
+    "exit_code": 1
+  }
+}
