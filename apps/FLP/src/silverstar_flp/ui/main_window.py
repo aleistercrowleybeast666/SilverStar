@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 from weakref import ref
 
-from PySide6.QtCore import QEventLoop, QSettings, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Slot
+from PySide6.QtCore import QObject, QEventLoop, QSettings, QStandardPaths, Qt, QThread, QThreadPool, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import (
     QAction,
     QCloseEvent,
@@ -83,10 +83,11 @@ from silverstar_flp.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_flp.ui.time_range import TimeRangeBar
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 from silverstar_flp.ui.widgets import ProjectHeaderLabel, StandardComboBox
-from silverstar_flp.ui.workers import FunctionWorker
+from silverstar_flp.ui.workers import FunctionWorker, WorkerRetireResult
 
 
 class MainWindow(QMainWindow):
+    taskSettled = Signal()
     PAGE_CODES = (
         "page.overview",
         "page.replay",
@@ -142,7 +143,15 @@ class MainWindow(QMainWindow):
         self._source_restore_index = None
         self._pending_new_project_path: Path | None = None
         self._suspend_dirty = False
-        self._thread_pool = QThreadPool.globalInstance()
+        self._thread_pool = QThreadPool(self)
+        self._thread_pool.setMaxThreadCount(1)
+        self._worker_connections = []
+        self._worker_finished_seen = False
+        self._worker_publication_depth = 0
+        self._worker_retiring = False
+        self._worker_retire_timer = QTimer(self)
+        self._worker_retire_timer.setInterval(10)
+        self._worker_retire_timer.timeout.connect(self._Task_RetireTry)
         self._active_worker: FunctionWorker | None = None
         self._folder_search_generation = 0
         self._folder_search_worker: FunctionWorker | None = None
@@ -1099,17 +1108,25 @@ class MainWindow(QMainWindow):
         if self._active_worker is not None:
             error_callback("another_background_task_is_running")
             return
+        if QThread.currentThread() != self.thread() or worker.signals.thread() != self.thread():
+            raise RuntimeError("worker_gui_ownership_invalid")
         self._active_worker = worker
+        worker.signals.setParent(self)
+        self._worker_finished_seen = False
+        self._worker_retire_timer.stop()
         self.replay_page.Task_Busy()
         self._worker_error_callback = error_callback
         self._worker_result_callback = result_callback
         self._worker_cancel_callback = cancel_callback
         self._worker_cancelled_published = False
-        worker.signals.progress.connect(self._Task_Progress)
-        worker.signals.result.connect(self._Task_ResultDispatch)
-        worker.signals.error.connect(self._Task_Error)
-        worker.signals.cancelled.connect(self._Task_Cancelled)
-        worker.signals.finished.connect(self._Task_Finish)
+        queued = Qt.ConnectionType.QueuedConnection
+        self._worker_connections = [
+            worker.signals.progress.connect(self._Task_Progress, queued),
+            worker.signals.result.connect(self._Task_ResultDispatch, queued),
+            worker.signals.error.connect(self._Task_Error, queued),
+            worker.signals.cancelled.connect(self._Task_Cancelled, queued),
+            worker.signals.finished.connect(self._Task_Finish, queued),
+        ]
         self.progress_bar.setValue(0)
         self.progress_bar.setVisible(True)
         self.cancel_button.setEnabled(True)
@@ -1128,7 +1145,11 @@ class MainWindow(QMainWindow):
         worker = self._active_worker
         if worker is None or self.sender() is not worker.signals:
             return
-        self._Task_ResultPublish(worker, result, self._worker_result_callback)
+        self._worker_publication_depth += 1
+        try:
+            self._Task_ResultPublish(worker, result, self._worker_result_callback)
+        finally:
+            self._worker_publication_depth -= 1
 
     def _Task_ResultPublish(self, worker, result, result_callback) -> None:
         committed = getattr(worker, "project_committed", False) and isinstance(result, ProjectDocument)
@@ -1137,19 +1158,39 @@ class MainWindow(QMainWindow):
         if result_callback is not None:
             result_callback(result)
 
+    @Slot(float, str)
     def _Task_Progress(self, progress: float, code: str) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
         self.progress_bar.setValue(int(progress * 1000))
         self.status_label.setText(self._translator.Text_Get(code))
 
+    @Slot(str, str)
     def _Task_Error(self, message: str, traceback_text: str) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
         logging.error("Background task failed: %s\n%s", message, traceback_text)
         self.status_label.setText(self._translator.Text_Get("status.failed"))
-        if self._worker_error_callback is not None:
-            self._worker_error_callback(message)
-        else:
-            self._Error_Show(message)
+        self._worker_publication_depth += 1
+        try:
+            if self._worker_error_callback is not None:
+                self._worker_error_callback(message)
+            else:
+                self._Error_Show(message)
+        finally:
+            self._worker_publication_depth -= 1
 
+    @Slot()
     def _Task_Cancelled(self) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
+        self._worker_publication_depth += 1
+        try:
+            self._TaskCancellation_Publish()
+        finally:
+            self._worker_publication_depth -= 1
+
+    def _TaskCancellation_Publish(self) -> None:
         if self._worker_cancelled_published:
             return
         self._worker_cancelled_published = True
@@ -1158,13 +1199,30 @@ class MainWindow(QMainWindow):
         if self._worker_cancel_callback is not None:
             self._worker_cancel_callback(message)
 
+    @Slot()
     def _Task_Finish(self) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
+        self._worker_finished_seen = True
+        self._Task_RetireTry()
+
+    @Slot()
+    def _Task_RetireTry(self) -> None:
+        if self._worker_retiring:
+            return
+        if self._active_worker is None or not self._worker_finished_seen:
+            self._worker_retire_timer.stop()
+            return
+        if self._worker_publication_depth or not self._thread_pool.waitForDone(0):
+            self._worker_retire_timer.start()
+            return
+        self._worker_retire_timer.stop()
+        self._worker_retiring = True
         worker = self._active_worker
         committed = getattr(worker, "project_committed", False)
-        close_after = committed and getattr(worker, "close_after_commit", False)
         if (self._active_worker is not None and
                 self._active_worker.context.cancellation_event.is_set() and not committed):
-            self._Task_Cancelled()
+            self._TaskCancellation_Publish()
         if self._active_worker is self._folder_search_worker:
             self._folder_search_worker = None
         self._source_restore_index = None
@@ -1179,10 +1237,22 @@ class MainWindow(QMainWindow):
         self.new_project_action.setEnabled(True)
         self.export_dialog.Task_Finish()
         self.replay_page.Task_Finish()
+        for connection in self._worker_connections:
+            if not QObject.disconnect(connection):
+                logging.warning("Worker signal connection already disconnected at retirement")
+        self._worker_connections.clear()
+        retirement = worker.Worker_Retire(self._thread_pool)
+        if retirement != WorkerRetireResult.RETIRED:
+            raise RuntimeError("worker_retirement_contract_failed:" + retirement.value)
+        close_after = ((committed and getattr(worker, "close_after_commit", False))
+                       or getattr(worker, "close_after_task", False))
         self._active_worker = None
+        self._worker_finished_seen = False
+        self._worker_retiring = False
         self._worker_error_callback = None
         self._worker_result_callback = None
         self._worker_cancel_callback = None
+        self.taskSettled.emit()
         if self._source_restore_pending is not None:
             QTimer.singleShot(0, self._AnalysisSource_Restore)
         if close_after:
@@ -1471,8 +1541,12 @@ class MainWindow(QMainWindow):
         worker = self._active_worker
         if worker is not None:
             loop = QEventLoop(self)
-            worker.signals.finished.connect(loop.quit)
-            loop.exec()
+            connection = self.taskSettled.connect(loop.quit)
+            try:
+                loop.exec()
+            finally:
+                QObject.disconnect(connection)
+                loop.deleteLater()
         return not self._project_dirty
 
     def _Error_Show(self, message: str) -> None:
@@ -1643,6 +1717,9 @@ class MainWindow(QMainWindow):
         if self._ProjectChanges_Confirm():
             if self._active_worker is not None:
                 self._active_worker.Worker_Cancel()
-            event.accept()
+                self._active_worker.close_after_task = True
+                event.ignore()
+            else:
+                event.accept()
         else:
             event.ignore()
