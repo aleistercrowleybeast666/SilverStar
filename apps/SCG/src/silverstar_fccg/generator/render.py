@@ -297,7 +297,6 @@ def GeneratedFiles_Render(
         "Generated/Inc/project_capability_routes.h": _CapabilityRoutesHeader_Render(),
         "Generated/Inc/project_device_build_capabilities.h": _DeviceBuildCapabilitiesHeader_Render(model, catalog),
         "Generated/Inc/project_algorithm_parameters.h": AlgorithmParametersHeader_Render(model, catalog),
-        "Generated/Inc/project_build_mode.h": _BuildModeHeader_Render(model.build),
         "Generated/Inc/project_flight_config.h": _FlightConfigHeader_Render(
             model, catalog
         ),
@@ -710,6 +709,7 @@ def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCa
 
 {AUTOGEN_C_COMMENT}
 #define SILVERSTAR_PROJECT_DEVICE_CAPABILITIES 1U
+{_BuildModeDefinition_Render(model.build)}
 {rows}
 
 #endif /* __PROJECT_DEVICE_BUILD_CAPABILITIES_H */
@@ -751,16 +751,10 @@ def _AlignmentDefinitions_Get(model: ProjectModel) -> tuple[tuple[str, str], ...
     )
 
 
-def _BuildModeHeader_Render(build: BuildOptions) -> str:
+def _BuildModeDefinition_Render(build: BuildOptions) -> str:
     """Publish a device-layer build contract without application dependencies."""
     value = "1U" if build.compact_mode else "0U"
-    return (
-        "#ifndef __PROJECT_BUILD_MODE_H\n"
-        "#define __PROJECT_BUILD_MODE_H\n\n"
-        "/* Generated from BuildOptions.compact_mode; no inferred default. */\n"
-        f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {value}\n\n"
-        "#endif /* __PROJECT_BUILD_MODE_H */\n"
-    )
+    return f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {value}"
 
 
 def _FlightConfigHeader_Render(

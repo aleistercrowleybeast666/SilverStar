@@ -7,7 +7,7 @@
 #include "platform_critical.h"
 #include "project_device_instances.h"
 #include "silverstar_assert.h"
-#include "project_build_mode.h"
+#include "project_device_build_capabilities.h"
 #include "system_barometer_if.h"
 #include "system_barometer_cold.h"
 #include "system_gnss_if.h"

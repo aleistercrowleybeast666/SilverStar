@@ -8,7 +8,7 @@ import subprocess
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.project.model import ProjectModel_Load
-from silverstar_fccg.generator.render import _BuildModeHeader_Render, _DeviceInstancesHeader_Render, _DeviceInstancesSource_Render, _FlightConfigHeader_Render
+from silverstar_fccg.generator.render import _DeviceBuildCapabilitiesHeader_Render, _DeviceInstancesHeader_Render, _DeviceInstancesSource_Render, _FlightConfigHeader_Render
 
 ROOT = Path(__file__).resolve().parents[3]
 CORE = ROOT / "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload"
@@ -29,8 +29,8 @@ def compile_fixture(directory: Path, *, compact: bool, baseline: bool = False) -
     model = ProjectModel_Load(ROOT / ".work/generated_ret6/SilverStar.ssproject")
     catalog = service.catalog.ProjectView_Get(model)
     model.build = replace(model.build, compact_mode=compact)
-    build_mode = _BuildModeHeader_Render(model.build)
-    (directory / "project_build_mode.h").write_text(build_mode, encoding="utf-8")
+    build_mode = _DeviceBuildCapabilitiesHeader_Render(model, catalog)
+    (directory / "project_device_build_capabilities.h").write_text(build_mode, encoding="utf-8")
     (directory / "project_flight_config.h").write_text(_FlightConfigHeader_Render(model, catalog), encoding="utf-8")
     (directory / "project_device_instances.h").write_text(_DeviceInstancesHeader_Render(model, catalog), encoding="utf-8")
     facade = directory / "project_device_instances.c"
@@ -60,7 +60,7 @@ def compile_fixture(directory: Path, *, compact: bool, baseline: bool = False) -
     result = subprocess.run(command, capture_output=True, text=True, timeout=60)
     (directory / "compile.json").write_text(json.dumps({"argv": command, "exit": result.returncode,
         "build_mode": {"compact_mode": compact, "header": build_mode,
-                       "header_sha256": hashlib.sha256((directory / "project_build_mode.h").read_bytes()).hexdigest()},
+                       "header_sha256": hashlib.sha256((directory / "project_device_build_capabilities.h").read_bytes()).hexdigest()},
         "stdout": result.stdout, "stderr": result.stderr}, indent=2), encoding="utf-8")
     assert result.returncode == 0, result.stderr
     return binary

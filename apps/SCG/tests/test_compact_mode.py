@@ -32,12 +32,12 @@ def test_generated_build_mode_contract_is_explicit_and_device_layer_only(builtin
     model = ReferenceProject_Create(catalog=builtin_catalog)
     model.build = replace(model.build, compact_mode=compact)
     files = GeneratedFiles_Render(model, builtin_catalog, SourceGraph_Resolve(model, builtin_catalog))
-    header = files["Generated/Inc/project_build_mode.h"].decode("utf-8")
+    assert "Generated/Inc/project_build_mode.h" not in files
+    header = files["Generated/Inc/project_device_build_capabilities.h"].decode("utf-8")
     assert f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {int(compact)}U" in header
-    directives = [line for line in header.splitlines() if line.startswith("#")]
-    assert directives == ["#ifndef __PROJECT_BUILD_MODE_H", "#define __PROJECT_BUILD_MODE_H",
-                          f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {int(compact)}U",
-                          "#endif /* __PROJECT_BUILD_MODE_H */"]
+    flag_lines = [line for line in header.splitlines() if "SILVERSTAR_BUILD_COMPACT_ENABLED" in line]
+    assert flag_lines == [f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {int(compact)}U"]
+    assert "#include" not in header
 
 
 @pytest.mark.parametrize("plugin", [

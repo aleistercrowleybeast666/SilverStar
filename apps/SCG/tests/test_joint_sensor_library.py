@@ -269,12 +269,14 @@ def test_joint_sensor_manifest_has_real_sources(name: str) -> None:
 
 
 def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> None:
-    from silverstar_fccg.generator.render import _BuildModeHeader_Render
+    from silverstar_fccg.generator.render import _BuildModeDefinition_Render
     from silverstar_fccg.project.model import BuildOptions
 
     # This independent native adapter matrix explicitly exercises ordinary mode.
-    (tmp_path / "project_build_mode.h").write_text(
-        _BuildModeHeader_Render(BuildOptions(compact_mode=False)), encoding="utf-8"
+    (tmp_path / "project_device_build_capabilities.h").write_text(
+        "#ifndef __PROJECT_DEVICE_BUILD_CAPABILITIES_H\n"
+        "#define __PROJECT_DEVICE_BUILD_CAPABILITIES_H\n\n" +
+        _BuildModeDefinition_Render(BuildOptions(compact_mode=False)) + "\n\n#endif\n", encoding="utf-8"
     )
     folders = ["silverstar_sensor_register_bus", "silverstar_ubx_protocol"]
     imu_names = IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS
@@ -333,7 +335,7 @@ def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> N
     (tmp_path / "missing_build_mode.json").write_text(json.dumps({
         "argv": command, "exit": result.returncode, "stdout": result.stdout, "stderr": result.stderr
     }, indent=2), encoding="utf-8")
-    assert result.returncode != 0 and "project_build_mode.h" in result.stderr
+    assert result.returncode != 0 and "project_device_build_capabilities.h" in result.stderr
 
 
 def test_joint_special_imu_actual_c_mock(tmp_path: Path) -> None:
