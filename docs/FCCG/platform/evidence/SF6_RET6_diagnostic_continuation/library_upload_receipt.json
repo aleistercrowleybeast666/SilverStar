@@ -1,0 +1,31 @@
+{
+  "result": {
+    "operation": "create_library_file",
+    "status": "succeeded",
+    "path": "/diagnostic_continuation_evidence.zip",
+    "file_id": "file_000000004cbc820daee9e2252b419b8c",
+    "library_file_id": "libfile_41e3b7c051a4819182cca418cbfe63bc",
+    "file_name": "diagnostic_continuation_evidence.zip",
+    "current_version_number": 0,
+    "restored_from_version_number": null,
+    "xattrs": [
+      {
+        "name": "user.library-file-version",
+        "value": "0"
+      }
+    ],
+    "directory_id": "libdir_8617ff5a838481919d6e4b11ae8721e2",
+    "mime_type": "application/zip",
+    "library_artifact_type": "other",
+    "file_size_bytes": 220224,
+    "external_connectors_accessed": false
+  },
+  "archive_sha256": "e86ae47b3ab19936c5cb6634a6123847c940c338f9ea3dea7f8f0feec8c225d6",
+  "archive_bytes": 220224,
+  "source_commit": "1bf72f1530f79a04f6dc7ded688d770c421a4072",
+  "local_xattrs": {
+    "exit_code": 1,
+    "log": "library_xattrs.log",
+    "status": "unsupported_windows_python_os_setxattr"
+  }
+}

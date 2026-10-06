@@ -1,0 +1,68 @@
+Index,Name,Kind,Status,DiagnosticExit,CompilerExit,NativeLastExit,Classification,FirstFailureSourceOrInference
+1,capability_jy901b_gravity_known_yaw,HOST_COMPILE_PASS,DIAGNOSTIC_CASE_FAIL,1,1,1,UNSELECTED_JY_HEADER_ASSUMPTION,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_build_capability_contract.c:4:10: fatal error: jy901b_imu_build_capabilities.h: No such file or directory
+2,capability_missing_imu_noise,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_FAIL,1,0,0,NONSELECTED_COVARIANCE_CONTRACT_ASSUMPTION,Tests/Host/run_tests.ps1:337 (negative compile did not occur)
+3,capability_missing_gnss_noise,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_FAIL,1,0,0,NONSELECTED_COVARIANCE_CONTRACT_ASSUMPTION,Tests/Host/run_tests.ps1:337 (negative compile did not occur)
+4,capability_missing_baro_noise,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_FAIL,1,0,0,NONSELECTED_COVARIANCE_CONTRACT_ASSUMPTION,Tests/Host/run_tests.ps1:337 (negative compile did not occur)
+5,capability_noise_overrides,HOST_COMPILE_PASS,DIAGNOSTIC_CASE_PASS,0,0,0,CONFIGURATION_COMPILE_ONLY,
+6,capability_jy901b_gravity_mag_rejected,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Generated\Inc\project_flight_config.h:181:2: error: #error ""Magnetometer selection is deferred in the first SCG release"""
+7,capability_first_release_triad_deferred,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Generated\Inc\project_flight_config.h:181:2: error: #error ""Magnetometer selection is deferred in the first SCG release"""
+8,capability_jy901b_hw_quat_6axis_preflight,HOST_COMPILE_PASS,DIAGNOSTIC_CASE_FAIL,1,1,1,UNSELECTED_HW_QUATERNION_QUALIFICATION_ASSUMPTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:106:1: error: static assertion failed: ""HW 6-axis alignment requires a qualified preflight source"""
+9,capability_jy901b_hw_quat_9axis_preflight,HOST_COMPILE_PASS,DIAGNOSTIC_CASE_FAIL,1,1,1,UNSELECTED_HW_QUATERNION_QUALIFICATION_ASSUMPTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:113:1: error: static assertion failed: ""HW 9-axis alignment requires a qualified preflight source"""
+10,capability_hw_quat_6axis_preflight_unqualified,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:106:1: error: static assertion failed: ""HW 6-axis alignment requires a qualified preflight source"""
+11,capability_hw_quat_9axis_preflight_unqualified,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:113:1: error: static assertion failed: ""HW 9-axis alignment requires a qualified preflight source"""
+12,capability_jy901b_stillness_landing,HOST_COMPILE_PASS,DIAGNOSTIC_CASE_PASS,0,0,0,CONFIGURATION_COMPILE_ONLY,
+13,capability_impact_unqualified,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:163:1: error: static assertion failed: ""Impact landing requires stillness- and impact-qualified IMU data"""
+14,capability_future_impact_qualified,HOST_COMPILE_PASS,DIAGNOSTIC_CASE_PASS,0,0,0,CONFIGURATION_COMPILE_ONLY,
+15,capability_jy901b_baro_imu_window_landing,HOST_COMPILE_PASS,DIAGNOSTIC_CASE_FAIL,1,1,1,UNQUALIFIED_ALTERNATE_LANDING_ASSUMPTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:172:1: error: static assertion failed: ""Baro/IMU landing requires qualified IMU and direct altitude"""
+16,capability_stillness_unqualified,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:156:1: error: static assertion failed: ""Stillness landing requires a stillness-qualified IMU"""
+17,capability_baro_imu_stillness_unqualified,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:172:1: error: static assertion failed: ""Baro/IMU landing requires qualified IMU and direct altitude"""
+18,capability_deploy_without_action,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:199:1: error: static assertion failed: ""The current flight profile requires a START action"""
+19,capability_required_baro_missing,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:133:1: error: static assertion failed: ""Required Barometer origin needs qualified altitude or validated cold pressure"""
+20,capability_required_gnss_missing,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_alignment_config.h:104:2: error: #error ""Alignment required sources must be a subset of selected sources"""
+21,capability_stillness_without_gyro,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:75:1: error: static assertion failed: ""Gravity Known Yaw requires qualified accel/gyro software alignment"""
+22,capability_tilt_without_propagation,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:183:1: error: static assertion failed: ""TILT deploy requires selected gyro software propagation"""
+23,capability_delay_without_time,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:194:1: error: static assertion failed: ""DELAY deploy requires mission monotonic time"""
+24,navigation_sf6,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+25,sx1281_device,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+26,sx1280_hal_multi_instance,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+27,sx1281_multi_instance,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+28,source_selector,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,1,MULTI_INSTANCE_FIXTURE_CONFLICT,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_source_selector.c:559: SystemImu_Init() == SYSTEM_DEVICE_OK
+29,barometer_cold,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,-1073740791,MULTI_INSTANCE_FIXTURE_CONFLICT,"SystemBarometerCold_Init() == SYSTEM_DEVICE_OK, file D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_barometer_cold.c, line 110"
+30,sensor_quality,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+31,estimator_barometer_pending,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+32,navigation_quality_supervisor,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+33,sensor_status,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+34,device_native_log,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,-1,TIMEOUT_WITH_PROVEN_FIXTURE_CAPACITY_CONFLICT,"NOT EMITTED; statically conflicting assertion APP/Src/device_native_log.c:114, not a captured runtime fault location"
+35,lifecycle,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+36,flight_recovery_apogee,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+37,flight_recovery_apogee_immediate,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+38,flight_recovery_tilt,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+39,flight_recovery_tilt_immediate,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+40,flight_recovery_apogee_or_tilt,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+41,flight_recovery_apogee_or_delay,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+42,flight_recovery_tilt_or_delay,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+43,flight_recovery_delay,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+44,flight_recovery_all_triggers,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+45,flight_recovery_none_landing,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+46,flight_recovery_impact_landing,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+47,flight_recovery_baro_imu_landing,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,1,1,UNQUALIFIED_ALTERNATE_LANDING_ASSUMPTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:172:1: error: static assertion failed: ""Baro/IMU landing requires qualified IMU and direct altitude"""
+48,impact_capability_guard,HOST_EXPECTED_FAILURE,DIAGNOSTIC_CASE_PASS,0,1,1,EXPECTED_CONFIGURATION_REJECTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_capability_validation.h:163:1: error: static assertion failed: ""Impact landing requires stillness- and impact-qualified IMU data"""
+49,lifecycle_logging,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+50,system_startup,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,1,UNSELECTED_POWER_PROFILE_ASSUMPTION,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_system_startup.c:505: Test_StartupComplete() == SYSTEM_STARTUP_OK
+51,system_startup_write_verify,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,1,UNSELECTED_POWER_PROFILE_ASSUMPTION,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_system_startup.c:505: Test_StartupComplete() == SYSTEM_STARTUP_OK
+52,system_startup_async_no_explicit_verify,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,1,UNSELECTED_POWER_PROFILE_ASSUMPTION,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_system_startup.c:505: Test_StartupComplete() == SYSTEM_STARTUP_OK
+53,system_startup_no_writes,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,1,UNSELECTED_POWER_PROFILE_ASSUMPTION,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_system_startup.c:505: Test_StartupComplete() == SYSTEM_STARTUP_OK
+54,health,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+55,console,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+56,telemetry,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+57,estimator_preparation_actual,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+58,optional_gnss_start_actual,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+59,optional_gnss_start_explicit_required,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,1,1,REQUIRED_SOURCE_WITHOUT_SELECTED_SOURCE_ASSUMPTION,"D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\System\User/system_user_alignment_config.h:104:2: error: #error ""Alignment required sources must be a subset of selected sources"""
+60,logger,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,1,ALL_STREAM_PROFILE_AND_CAPACITY_ASSUMPTION,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_logger.c:829: SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_OK
+61,logger_snapshot_actual,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+62,logger_alignment_actual,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+63,logger_streaming_actual,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+64,sf6_backend_actual,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+65,sf6_backend_cold_pressure_actual,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
+66,logger_estimator_noise_overrides,HOST_TEST,DIAGNOSTIC_CASE_FAIL,1,0,1,ALL_STREAM_PROFILE_AND_CAPACITY_ASSUMPTION,D:\python_software\SilverStar\.work\sf6_compact_ret6\.work\generated_ret6\Tests\Host\test_logger.c:829: SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_OK
+67,golden_sample,HOST_TEST,DIAGNOSTIC_CASE_PASS,0,0,0,ACTUAL_SOURCE_WITH_HOST_BOUNDARIES,
