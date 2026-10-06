@@ -23,6 +23,8 @@ def _DependencyFixture_Write(path, source, monkeypatch):
 
 def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
     (tmp_path / "test.c").write_text("", encoding="utf8")
+    # Explicit fixture-only reviewed empty source, not a production exemption.
+    monkeypatch.setitem(stacks.BINDING_SOURCE_V2, "test.c", [stacks.BindingSourceHash_Get("")])
     (tmp_path / "SilverStar.ssproject").write_text(
         json.dumps({"build": {"target_profile": "SilverStar_F407"}}), encoding="utf-8")
     build = tmp_path / "build/FCCG/SilverStar_F407/Release"
@@ -125,3 +127,44 @@ def test_complete_compilation_input_contract_fails_closed(tmp_path, monkeypatch,
         dependency.write_text("fixture.o: test.c unknown_header.h\n", encoding="utf8")
     with pytest.raises(ValueError):
         stacks.StackReport_Build(root, "Release", "fixture-")
+
+
+@pytest.mark.parametrize("mutation", ["changed_inc", "missing_inc", "emptied_source"])
+def test_reviewed_compilation_inputs_reject_non_header_and_empty_mutations(tmp_path, monkeypatch, mutation):
+    """Exercise the public source verifier; no ARM or linked-code claim."""
+    source = "Devices/SensorBus/Src/sensor_bmi088_sync.c"
+    included = "Devices/SensorBus/Src/bmi088_sync_image.inc"
+    payload = Path(__file__).resolve().parents[1] / "plugins/builtin/silverstar_sensor_register_bus/payload"
+    build = tmp_path / "build"
+    for name in (source, included):
+        dest = tmp_path / name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes((payload / name).read_bytes())
+    dependencies = [source, included]
+    import hashlib
+    monkeypatch.setitem(stacks.BINDING_DEPENDENCIES_V2, source,
+                        [hashlib.sha256("\n".join(dependencies).encode()).hexdigest()])
+    report = build / Path(source).with_suffix(".d")
+    report.parent.mkdir(parents=True)
+    report.write_text("fixture.o: " + " ".join(dependencies) + "\n", encoding="utf8")
+    assert stacks.BindingSources_Verify(tmp_path, [source], build)
+    if mutation == "changed_inc":
+        original = (tmp_path / included).read_text(encoding="utf8")
+        changed = original.replace("0xc8", "0xc9", 1)
+        assert changed != original
+        (tmp_path / included).write_text(changed, encoding="utf8")
+    elif mutation == "missing_inc":
+        (tmp_path / included).unlink()
+    else:
+        (tmp_path / source).write_text("", encoding="utf8")
+    with pytest.raises(ValueError):
+        stacks.BindingSources_Verify(tmp_path, [source], build)
+
+
+def test_unknown_empty_source_is_not_reviewed(tmp_path):
+    (tmp_path / "unknown.c").write_text("", encoding="utf8")
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / "unknown.d").write_text("fixture.o: unknown.c\n", encoding="utf8")
+    with pytest.raises(ValueError):
+        stacks.BindingSources_Verify(tmp_path, ["unknown.c"], build)

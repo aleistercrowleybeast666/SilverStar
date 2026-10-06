@@ -189,7 +189,7 @@ def MpuCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
 
 
 # Reviewed binding contract v2 freezes all selected translation units and
-# GCC-reported transitive project headers of three recorded builds. This closes
+# GCC-reported transitive project inputs of three recorded builds. This closes
 # writes through other sources/macros without pretending to analyze C aliases.
 # Unknown versions or compiler shapes require explicit evidence and re-review.
 BINDING_SOURCE_V2 = {'APP/Inc/app_task_config.h': ['1ac3a475161ffe967c1c88c22cf5052f575683089b93eb55a66d5b849e58a4c5'],
@@ -1202,7 +1202,7 @@ def BindingSources_Verify(root, sources, build):
         (root / path).resolve().relative_to(root.resolve())
         text = (root / path).read_text(encoding="utf-8")
         actual = BindingSourceHash_Get(text)
-        if actual != hashlib.sha256(b"").hexdigest() and actual not in BINDING_SOURCE_V2.get(path, []):
+        if actual not in BINDING_SOURCE_V2.get(path, []):
             raise ValueError("Changed or unknown complete callback binding source: " + path)
         dependency = build / Path(path).with_suffix(".d")
         if not dependency.is_file():
@@ -1211,18 +1211,19 @@ def BindingSources_Verify(root, sources, build):
         dependencies = dependency.read_text(encoding="utf-8").split(":", 1)[1].replace("\\\n", " ").split("\n", 1)[0].split()
         expected_graph = BINDING_DEPENDENCIES_V2.get(path, [])
         graph_hash = hashlib.sha256("\n".join(dependencies).encode()).hexdigest()
-        if graph_hash not in expected_graph and not (text == "" and dependencies == [path]):
+        if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)
-        for header in dependencies:
-            if header.endswith(".h"):
-                BindingHeader_Verify(root, header)
-        proofs.append({"source": path, "normalized_source_sha256": actual, "headers": dependencies})
+        for dependency_input in dependencies:
+            # Included .inc, .c and other suffixes can change executable code.
+            # The reviewed compiler graph, not a filename extension, is authoritative.
+            BindingHeader_Verify(root, dependency_input)
+        proofs.append({"source": path, "normalized_source_sha256": actual, "dependencies": dependencies})
     return proofs
 
 def BindingHeader_Verify(root, path):
     (root / path).resolve().relative_to(root.resolve())
     if not (root / path).is_file() or BindingSourceHash_Get((root / path).read_text(encoding="utf-8")) not in BINDING_SOURCE_V2.get(path, []):
-        raise ValueError("Changed or missing reviewed callback ABI header: " + path)
+        raise ValueError("Changed or missing reviewed callback compilation input: " + path)
 
 def IndirectSites_Get(rows):
     return [(op, args) for op, args in rows

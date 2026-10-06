@@ -208,3 +208,28 @@ previous StreamConfigure expectation failure; it is not a full storage-suite
 pass or permission to weaken that expectation. Initial fixture compilation
 errors and their corrections are retained. The replay mocks critical sections
 and assertions and does not test their implementation.
+
+## Dependency and empty-source correction after 993a0c5
+
+Independent review found two fail-open paths in the recorded-source contract:
+GCC dependency verification ignored inputs without a `.h` suffix, and a generic
+empty-source exception allowed any selected C translation unit to be erased.
+Four new negative cases demonstrate these failures under the old checker:
+changing or removing the reviewed BMI088 `.inc`, emptying its nonempty C owner,
+and supplying an unknown empty C file. The old checker accepts all four.
+
+The owning checker and reference overlay now verify every reported compiler
+dependency, including the primary C source, against the existing path-specific
+reviewed fingerprints. Both generic empty-source and empty-dependency-graph
+exceptions are removed. A source originally reviewed as empty is allowed only
+when its exact path and empty hash are already in the reviewed contract. The
+synthetic ELF fixture declares its test.c empty hash explicitly in test scope;
+it does not add a production exemption. No fingerprint lists or task thresholds
+were enlarged. All 72 checker/architecture regression cases pass after the fix;
+the recorded RE/RF/F407 input sets verify 143/150/153 selected translation units.
+
+This correction changes tools and tests only. Rechecking their recorded ELF and
+dependency artifacts is not fresh firmware compilation, analyzer execution,
+runtime validation or whole-program stack acceptance. Logger's F1 margin failure,
+the F407 InputVoltage architecture failure and the MPU requalification work remain
+open. The reviewed contract still is not a general C alias or call-graph analyzer.
