@@ -801,7 +801,9 @@ SystemDeviceResult SystemImu_ConfigApply(const SystemImuConfig *config,
 
         if (position >= s_imu.count) { break; }
         instance_id = s_imu.order[position];
-        if (s_imu.initialized[instance_id] == 0U) { continue; }
+        if ((s_imu.initialized[instance_id] == 0U) &&
+            (SystemSourceSelector_ImuPreparedGet(instance_id) == 0U))
+        { continue; }
         (void)memset(&candidate_report, 0, sizeof(candidate_report));
         candidate_result = ProjectImuInstance_ConfigApply(instance_id,
             config, &candidate_report);
@@ -834,7 +836,9 @@ SystemDeviceResult SystemImu_ConfigVerify(const SystemImuConfig *config,
 
         if (position >= s_imu.count) { break; }
         instance_id = s_imu.order[position];
-        if (s_imu.initialized[instance_id] == 0U) { continue; }
+        if ((s_imu.initialized[instance_id] == 0U) &&
+            (SystemSourceSelector_ImuPreparedGet(instance_id) == 0U))
+        { continue; }
         (void)memset(&candidate_report, 0, sizeof(candidate_report));
         candidate_result = ProjectImuInstance_ConfigVerify(instance_id,
             config, &candidate_report);

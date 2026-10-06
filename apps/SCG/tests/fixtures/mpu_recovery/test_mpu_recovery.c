@@ -156,6 +156,21 @@ int main(int argc, char **argv)
         for (index = 0U; index < 200U; index++) { Tick(1000U); }
         assert(s_reads == previous && SystemImu_LatestSampleGet(&after) == SYSTEM_DEVICE_NOT_READY);
     }
+    else if (which == 18U)
+    {
+        SystemImuConfig config = {0}; SystemDeviceConfigReport report = {0};
+        Initial();
+        config.requested_mask = SYSTEM_IMU_CFG_OUTPUT_RATE;
+        config.required_mask = SYSTEM_IMU_CFG_OUTPUT_RATE;
+        config.output_rate_hz = 200U;
+        /* A prepared asynchronous instance must reach the provider while its
+         * health.initialized is still zero. BUSY is pending, never success. */
+        assert(SystemImu_ConfigVerify(&config, &report) == SYSTEM_DEVICE_BUSY);
+        assert(SystemImu_ConfigApply(&config, &report) == SYSTEM_DEVICE_CONFIG_DELEGATED);
+        Ready();
+        assert(SystemImu_ConfigVerify(&config, &report) == SYSTEM_DEVICE_OK);
+        assert(SystemImu_HealthGet(&health) == SYSTEM_DEVICE_OK && health.healthy);
+    }
     else if (which <= 5U || which == 7U)
     {
         if (which == 1U || which == 7U) { s_probe_fail = 1U; }

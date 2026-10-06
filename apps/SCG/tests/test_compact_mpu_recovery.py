@@ -85,3 +85,11 @@ def test_ordinary_mpu_behavior_unchanged(tmp_path: Path) -> None:
         results.append({"number": number, "exit": result.returncode, "stdout": result.stdout, "stderr": result.stderr})
     (tmp_path / "ordinary_sequences.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
     assert all(row["exit"] == 0 for row in results), results
+
+
+def test_compact_mpu_prepared_config_intent(tmp_path: Path) -> None:
+    binary = compile_fixture(tmp_path, compact=True)
+    result = subprocess.run([str(binary), "18"], capture_output=True, text=True, timeout=10)
+    record = {"case": 18, "exit": result.returncode, "stdout": result.stdout, "stderr": result.stderr}
+    (tmp_path / "prepared_config_sequence.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
+    assert result.returncode == 0, record
