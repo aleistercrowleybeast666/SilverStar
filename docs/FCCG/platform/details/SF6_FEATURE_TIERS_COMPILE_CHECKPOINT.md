@@ -71,7 +71,7 @@ across these configurations do not isolate GNSS or algorithm savings.
 | Artifact/linked heap check | 0, heap symbols 0 | 0, heap symbols 0 |
 | Emitted `power10-check` | Text exit 0; critical-contract review NOT PROVEN | Text exit 0; critical-contract review NOT PROVEN |
 | Emitted full Host suite | 2: required JY901B positive compile fails after source pruning | 2: same positive compile failure |
-| Stack report | 2: unreviewed `NeoM9nStartup_Init/Tick` startup operation binding | 2: unresolved `SensorImu_Verify` call path |
+| Stack report | 2: unreviewed `NeoM9nStartup_Init/Tick` startup operation binding | 2: checker discovery/binding gap at `SensorImu_Verify`; its 24 B static frame and ELF symbol exist |
 | Hardware/flight/WCET/accuracy | NOT RUN | NOT RUN |
 
 RFT6 text gate: 5,815 checks, 115 first-party C files, 2,490 functions,
@@ -92,8 +92,25 @@ These scoped results are not stitched into an unexecuted full-suite pass.
 
 DMA SRAM bounds caught a real pre-fix RFT6 failure: the F1 backend had a fixed
 64 KiB end. The provider now uses exact target bounds, RET6 0x20010000 / RFT6
-0x20018000. Boundary/cross-boundary/null/zero/SIZE_MAX Host cases pass and both
-fresh target artifacts include the corrected provider. Hardware DMA is NOT RUN.
+0x20018000. Boundary/cross-boundary/null/zero/SIZE_MAX Host cases pass. Both
+generated/compiled input sets contain the correction. RFT6 retains
+`PlatformMemory_IsDmaAccessible` in its final ELF; RET6 discards that unused
+36-byte function at link time. Hardware DMA is NOT RUN.
+
+RET6's `SensorImu_Verify` has a compiler `.su` entry of 24 B, `static`, and a
+retained ELF symbol. The actual instructions include `blx r3` for the optional
+`profile->extra_verify` callback. The checker has not resolved that binding;
+this is not absence of a compiler frame, and 24 B is not a total call-path budget.
+RFT6's checker also hardcodes a startup caller set containing JY901B; the actual
+pruned caller set contains only M9N Init/Tick. Both binding reviews and full
+task/library/ISR stack proofs remain NOT PROVEN. No exception was added.
+
+Evidence-only correction after independent review: three historical RFT6 failure
+receipts now point to their saved `arm_pre_include.log`, `arm_pre_power.log` and
+`analyzer_pre_power.log`, rather than the subsequently overwritten final logs.
+Their saved log bytes, SHA-256, exit codes, commands and source revisions are
+unchanged. The ZIP manifest is recalculated only for the corrected receipts and
+this report; compiled artifacts and product source remain unchanged.
 
 Initial new-Compact ARM compile failed because a power-capability configuration
 header was missing; commit `184f9ac` adds the existing owning header. Subsequent
@@ -140,6 +157,13 @@ checks stay locked selected; required unavailable checks are unchecked disabled;
 checked/unchecked disabled states remain distinct. Other frozen GUI controls and
 GSHC/FLP were not changed. Screenshot font loading is confined to the evidence
 harness, using existing Windows font files.
+
+The initial light/English global-group screenshot captured an unsettled layout.
+A single replacement observation at the same 1000x550 viewport, after a 350 ms
+Qt event-loop settle, shows the complete two-line description: label height and
+height-for-width are both 32 px. The original capture is preserved; the added
+`global_light_en_US_stable.png` and its state receipt document the stable layout.
+No product layout changes or full GUI rerun were made.
 
 The B configuration-intent checkpoint remains saved at `2745c8f` and fail-closed.
 Readmission was not implemented. Its real CAL/alignment/startup integration
