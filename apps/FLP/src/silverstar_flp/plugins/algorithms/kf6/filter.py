@@ -136,12 +136,15 @@ class Kf6Filter:
         velocity = np.asarray(initial_velocity_enu_mps, dtype=np.float32)
         soft = np.asarray(nis_soft_threshold, dtype=np.float32)
         hard = np.asarray(nis_hard_threshold, dtype=np.float32)
+        max_r_scale = np.float32(nis_max_r_scale)
         if (
             process.shape != (3,)
             or p0.shape != (6,)
             or velocity.shape != (3,)
             or soft.shape != (3,)
             or hard.shape != (3,)
+            or not all(np.isfinite(value).all() for value in (process, p0, velocity, soft, hard))
+            or not np.isfinite(max_r_scale)
             or np.any(process <= 0.0)
             or np.any(p0 < 0.0)
             or np.any(soft <= 0.0)
@@ -155,7 +158,7 @@ class Kf6Filter:
             process_accel_std_mps2=process.copy(),
             nis_soft_threshold=soft.copy(),
             nis_hard_threshold=hard.copy(),
-            nis_max_r_scale=np.float32(nis_max_r_scale),
+            nis_max_r_scale=max_r_scale,
             gnss_reacquire_outage_ms=gnss_reacquire_outage_ms,
             algorithm_revision=algorithm_revision,
         )
@@ -312,6 +315,11 @@ class Kf6Filter:
         nis = np.float32(innovation * innovation / innovation_variance)
         self.last_baro_nis = nis
         self.last_baro_innovation = innovation
+        if not np.isfinite(nis) or nis < 0.0:
+            self.health_flags |= 4
+            result = Kf6UpdateResult.NUMERIC_ERROR
+            self._Counter_Update("baro", result)
+            return result
         if nis >= self.nis_hard_threshold[0]:
             result = Kf6UpdateResult.REJECTED_NIS
             self._Counter_Update("baro", result)
@@ -670,6 +678,8 @@ class Kf6Filter:
         self.covariance = np.asarray(
             np.float32(0.5) * (self.covariance + self.covariance.T), dtype=np.float32
         )
+        if not np.isfinite(self.covariance).all():
+            return False
         diagonal = np.diag(self.covariance).copy()
         if np.any(diagonal < 0.0):
             return False
