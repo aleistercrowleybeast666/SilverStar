@@ -144,6 +144,32 @@ def test_dedicated_barometer_precedes_embedded_endpoint_without_hiding_imu(built
                if route.requirement.capability.startswith('barometer.'))
 
 
+def test_dedicated_priority_reconciles_retained_embedded_source_override(builtin_catalog, monkeypatch):
+    from silverstar_fccg.project.capabilities import CapabilitySourceOverrides_Reconcile
+    # Exercise a declarative multifunction provider that advertises altitude.
+    # Current JY901B has the endpoint descriptor but does not advertise this
+    # capability; it cannot alone exercise a competing-provider override.
+    original = builtin_catalog.InstanceComponent_Get
+    def instance_manifest(instance):
+        manifest = original(instance)
+        if instance.plugin == 'silverstar.device.imu.jy901b':
+            return replace(manifest, provides=(*manifest.provides, 'barometer.altitude'))
+        return manifest
+    monkeypatch.setattr(builtin_catalog, 'InstanceComponent_Get', instance_manifest)
+    monkeypatch.setattr(builtin_catalog, 'ProjectView_Get', lambda model: builtin_catalog)
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.device_instances = [DeviceInstance('barometer0', 'silverstar.device.barometer.bmp280'),
+                              DeviceInstance('imu0', 'silverstar.device.imu.jy901b')]
+    model.capability_source_overrides['barometer.altitude'] = 'imu0'
+    assert 'barometer.altitude' in instance_manifest(model.device_instances[1]).provides
+    FeatureTier_Apply(model, 'compact', builtin_catalog)
+    resolution = CapabilitySourceOverrides_Reconcile(model, builtin_catalog)
+    assert 'barometer.altitude' not in resolution.invalid_overrides
+    assert 'barometer.altitude' not in model.capability_source_overrides
+    assert not any(capability.startswith('barometer.') for capability in
+                   resolution.EnabledCapabilitiesForInstance_Get('imu0'))
+
+
 def test_first_page_control_and_log_states(qapp):
     from silverstar_fccg.core.i18n import Translator
     from silverstar_fccg.core.view_models import LoggingStreamView

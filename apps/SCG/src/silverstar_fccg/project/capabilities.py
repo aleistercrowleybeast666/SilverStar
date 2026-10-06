@@ -248,7 +248,9 @@ def CapabilityResolution_Resolve(
     enabled_by_instance: dict[str, tuple[str, ...]] = {}
     unused_by_instance: dict[str, tuple[str, ...]] = {}
     for instance in model.device_instances:
-        provided = catalog.InstanceComponent_Get(instance).provides
+        provided = tuple(capability for capability in catalog.InstanceComponent_Get(instance).provides
+                         if any(provider.instance_id == instance.instance_id
+                                for provider in providers_by_capability.get(capability, ())))
         required = tuple(
             capability
             for capability in provided
@@ -316,7 +318,7 @@ def CapabilitySourceOverrides_Reconcile(
     model: ProjectModel, catalog: PluginCatalog
 ) -> CapabilityResolution:
     requirements = _Requirements_Get(model, catalog)
-    providers = _Providers_Get(model.device_instances, catalog)
+    providers = _Providers_Get(model.device_instances, catalog, model)
     ambiguous_capabilities = {
         requirement.capability
         for requirement in requirements
