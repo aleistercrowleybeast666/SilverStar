@@ -245,6 +245,7 @@ int main(int argc, char **argv)
                 assert(Mpu6050ImuInstance_ConfigApply(0U, &config, &config_report) == SYSTEM_DEVICE_BUSY);
             }
             SystemHealth_Init(); SystemHealth_SetAttitudeReady(1U); SystemHealth_Process();
+            assert(SystemHealth_IsReady() == 0U);
             assert(memcmp(&history, &s_report, sizeof(history)) == 0);
             if (which == 13U)
             {
