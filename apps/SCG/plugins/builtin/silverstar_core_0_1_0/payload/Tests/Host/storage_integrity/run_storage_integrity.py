@@ -10,6 +10,24 @@ import sys
 from pathlib import Path
 
 
+def StorageContract_DefinitionsGet(graph: str) -> dict[str, str]:
+    blocks = re.findall(r"^C_DEFS \+= \\\r?\n((?:[ \t]+[^\r\n]+\r?\n?)+)", graph, re.MULTILINE)
+    if len(blocks) != 1:
+        raise ValueError("storage Host requires one SourceGraph C_DEFS block")
+    definitions: dict[str, str] = {}
+    for line in blocks[0].splitlines():
+        token = line.strip().rstrip("\\").strip()
+        if not token:
+            continue
+        match = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_]*)(?:=[^\s]+)?", token)
+        if match is None or match[1] in definitions:
+            raise ValueError(f"invalid or duplicate storage Host definition: {token}")
+        definitions[match[1]] = "-D" + token
+    if not definitions:
+        raise ValueError("empty storage Host SourceGraph definitions")
+    return definitions
+
+
 def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False) -> Path:
     fixture = Path(__file__).resolve().parent
     output = project / "build/FCCG/Host/Tests/StorageIntegrity"
@@ -104,25 +122,28 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     target_profile = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))["build"]["target_profile"]
     logger_includes.insert(0, project / "Targets" / target_profile / "Inc")
     logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Adapter/Inc")
+    logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Inc")
     writer = output / "logger_storage.exe"
     command = flags + ["-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
                        "-include", str(project / "Generated/Inc/project_flight_config.h")]
     if sf6_compact:
-        command += ["-DSILVERSTAR_TEST_SF6_COMPACT=1", "-DSYSTEM_BUILD_SF6_ENABLED=1U",
+        command += ["-DSILVERSTAR_TEST_SF6_COMPACT=1",
                     "-Wl,--wrap=SystemTime_GetMonotonicUs"]
     source_graph = (project / "Generated/project_sources.mk").read_text(encoding="utf-8")
+    definitions = StorageContract_DefinitionsGet(source_graph)
     for name in ("SYSTEM_BUILD_ESTIMATOR_ENABLED", "SYSTEM_BUILD_FUSION_ALGORITHM",
                  "SYSTEM_ALIGNMENT_BUILD_ALGORITHM", "SYSTEM_ALIGNMENT_BUILD_SOURCE"):
-        values = re.findall(r"^\s+" + name + r"=(\w+)\s*\\?\s*$", source_graph, re.MULTILINE)
-        if len(values) != 1:
+        if name not in definitions or "=" not in definitions[name]:
             raise ValueError(f"storage fixture requires one generated {name} definition")
-        command.append(f"-D{name}={values[0]}")
-    eskf_values = re.findall(r"^\s+SYSTEM_BUILD_ESKF15_ENABLED=(\w+)\s*\\?\s*$",
-                             source_graph, re.MULTILINE)
-    if len(eskf_values) > 1:
-        raise ValueError("duplicate ESKF15 definition in source graph")
-    if eskf_values:
-        command.append(f"-DSYSTEM_BUILD_ESKF15_ENABLED={eskf_values[0]}")
+    eskf_values = ([definitions["SYSTEM_BUILD_ESKF15_ENABLED"].split("=", 1)[1]]
+                   if "SYSTEM_BUILD_ESKF15_ENABLED" in definitions else [])
+    # This writer stress fixture injects synthetic sensor records, not the MPU
+    # epoch provider. Retain the actual selected algorithm/log/queue definitions.
+    definitions["SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED"] = (
+        "-DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U")
+    print("FCCG_HOST_FIXTURE|storage_writer|logical sensor records; physical epoch path not exercised", flush=True)
+    command += list(definitions.values())
+    print("FCCG_HOST_STORAGE_DEFINITIONS|" + " ".join(definitions.values()), flush=True)
     command += ["-I" + str(path) for path in logger_includes]
     command += [str(path) for path in logger_sources] + ["-lm", "-o", str(writer)]
     writer_command = list(command)

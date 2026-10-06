@@ -30,6 +30,7 @@
 #include "system_source_selector.h"
 #include "system_startup.h"
 #include "system_user_config.h"
+#include "project_log_config.h"
 
 FATFS SDFatFS;
 char SDPath[4];
@@ -371,6 +372,13 @@ static int Test_Writer(const char *output)
         CHECK(SystemLogPolicy_StreamByIndexGet(index, &config) == SYSTEM_DEVICE_OK);
         config.enabled = 1U;
         config.decimation = 1U;
+        if (ProjectLogConfig_RecordSupported(config.record_type) == 0U)
+        {
+            CHECK(SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+            printf("FCCG_HOST_NOT_APPLICABLE|storage_record_positive_%u|record unsupported by selected profile; rejection exercised\n",
+                (unsigned)config.record_type);
+            continue;
+        }
         CHECK(SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_OK);
     }
     if (s_startup_burst_test && s_overflow_test)

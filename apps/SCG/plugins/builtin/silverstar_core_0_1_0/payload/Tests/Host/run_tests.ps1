@@ -41,6 +41,12 @@ if (Test-Path -LiteralPath $detailLogPath) {
     Remove-Item -LiteralPath $detailLogPath -Force
 }
 
+. (Join-Path $PSScriptRoot 'host_contract.ps1')
+$script:hostSourceGraph = Get-Content -Raw -Encoding UTF8 -LiteralPath `
+    (Join-Path $repoRoot 'Generated\project_sources.mk')
+$script:hostGraphDefinitions = HostContract_DefinitionsGet -SourceGraph $script:hostSourceGraph
+$script:hostNotApplicableCount = 0
+
 # FCCG generated configuration is force-included so Host Tests use the same selected-component feature gates as Make.
 $includeArgs = @(
     ('-I' + $repoRoot + '\Targets\' + $hostTargetProfile + '\Inc'),
@@ -283,7 +289,7 @@ function Invoke-HostTest {
     $executable = Join-Path $outputDir ($Name + '.exe')
     $compilerArgs = @(
         '-std=c11', '-Wall', '-Wextra', '-Werror', '-pedantic', '-O2'
-    ) + $ExtraCompilerArgs + $includeArgs + $Sources + @(
+    ) + (HostContract_CompilerArgsGet -Overrides $ExtraCompilerArgs) + $includeArgs + $Sources + @(
         $silverstarAssertSource, '-lm', '-o', $executable)
 
     $compileResult = Invoke-HostCompiler -CompilerArgs $compilerArgs
@@ -297,6 +303,9 @@ function Invoke-HostTest {
     $testExit = $LASTEXITCODE
     $testOutput | Write-Output
     foreach ($line in $testOutput) {
+        if ($line -match '^FCCG_HOST_NOT_APPLICABLE\|') {
+            $script:hostNotApplicableCount++
+        }
         if ($line -match ':\s+(\d+) checks,\s+(\d+) failures$') {
             $script:hostCheckCount += [int]$Matches[1]
             $script:hostFailureCount += [int]$Matches[2]
@@ -330,20 +339,44 @@ function Invoke-ExpectedCompileFailure {
 
     $compilerArgs = @(
         '-std=c11', '-Wall', '-Wextra', '-Werror', '-pedantic', '-fsyntax-only'
-    ) + $ExtraCompilerArgs + $includeArgs + @($Source)
+    ) + (HostContract_CompilerArgsGet -Overrides $ExtraCompilerArgs) + $includeArgs + @($Source)
     $compileResult = Invoke-HostCompiler -CompilerArgs $compilerArgs
     if ($compileResult.ExitCode -eq 0) {
         Write-HostCompileDiagnostic -Name $Name -CompilerArgs $compilerArgs `
             -ExitCode $compileResult.ExitCode -CompilerOutput $compileResult.Output
         throw "Expected host compile failure did not occur: $Name"
     }
+    $expectedDiagnostic = HostContract_ExpectedDiagnosticGet -Name $Name
+    $allowedDiagnostics = @($expectedDiagnostic)
+    if ($Name -eq 'capability_jy901b_gravity_mag_rejected') {
+        $allowedDiagnostics += 'Enabled magnetometer requires a selected physical provider'
+        $allowedDiagnostics += 'Magnetometer selection is deferred in the first SCG release'
+    }
+    if ($Name -eq 'capability_deploy_without_action') {
+        $allowedDiagnostics += 'Automatic deploy requires a parachute-deploy Mission Action'
+    }
+    foreach ($compilerError in @($compileResult.Output | Where-Object {
+        ([string]$_) -match '(?i):\d+(?::\d+)?:\s+(?:fatal\s+)?error:'
+    })) {
+        $known = @($allowedDiagnostics | Where-Object {
+            ([string]$compilerError).Contains($_)
+        }).Count -gt 0
+        if (-not $known) {
+            Write-HostTestDetail -Text ("Undeclared error: {0}; allowed: {1}" -f `
+                ([string]$compilerError), ($allowedDiagnostics -join '; '))
+            Write-HostCompileDiagnostic -Name $Name -CompilerArgs $compilerArgs `
+                -ExitCode $compileResult.ExitCode -CompilerOutput $compileResult.Output
+            throw "Expected rejection also encountered an undeclared compiler error: $Name"
+        }
+    }
     $diagnosticLine = $compileResult.Output | Where-Object {
-        ([string]$_) -match '(?i)(static assertion failed|#error)'
+        (([string]$_) -match '(?i)(static assertion failed|#error)') -and
+        ([string]$_).Contains($expectedDiagnostic)
     } | Select-Object -First 1
     if ($null -eq $diagnosticLine) {
         Write-HostCompileDiagnostic -Name $Name -CompilerArgs $compilerArgs `
             -ExitCode $compileResult.ExitCode -CompilerOutput $compileResult.Output
-        throw "Expected host compile failure did not match a configuration gate: $Name"
+        throw "Expected host compile failure did not match its named configuration gate: $Name ($expectedDiagnostic)"
     }
     $script:expectedCompileFailureCount++
     Write-Output "FCCG_EXPECTED_REJECTION|$Name"
@@ -377,7 +410,7 @@ function Invoke-ExpectedCompileSuccess {
 
     $compilerArgs = @(
         '-std=c11', '-Wall', '-Wextra', '-Werror', '-pedantic', '-fsyntax-only'
-    ) + $ExtraCompilerArgs + $includeArgs + @($Source)
+    ) + (HostContract_CompilerArgsGet -Overrides $ExtraCompilerArgs) + $includeArgs + @($Source)
     $compileResult = Invoke-HostCompiler -CompilerArgs $compilerArgs
     if ($compileResult.ExitCode -ne 0) {
         Write-HostCompileDiagnostic -Name $Name -CompilerArgs $compilerArgs `
@@ -471,17 +504,10 @@ $estimatorNoiseOverrideArgs = @(
 Invoke-HostTest -Name 'profiles_estimator_noise_overrides' `
     -ExtraCompilerArgs $estimatorNoiseOverrideArgs -Sources $profileSources
 
-$pureInsConfigDir = Join-Path $outputDir 'config_pure_ins'
-New-Item -ItemType Directory -Force -Path $pureInsConfigDir | Out-Null
-$pureInsConfigPath = Join-Path $pureInsConfigDir 'system_user_config.h'
-$configText = Get-Content -Raw -LiteralPath `
-    (Join-Path $repoRoot 'System\User\system_user_config.h')
-$configText = $configText.Replace(
-    '#define SYSTEM_BUILD_FUSION_ALGORITHM SYSTEM_FUSION_KF6',
-    '#define SYSTEM_BUILD_FUSION_ALGORITHM SYSTEM_FUSION_NONE')
-Set-Content -LiteralPath $pureInsConfigPath -Value $configText -NoNewline
+# Explicit algorithm variant; use the real configuration header, without a shadow.
 Invoke-HostTest -Name 'profiles_pure_ins' -ExtraCompilerArgs @(
-    "-I$pureInsConfigDir"
+    '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_NONE',
+    '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U'
 ) -Sources $profileSources
 
 Invoke-HostTest -Name 'attitude_alignment' -Sources @(
@@ -538,6 +564,7 @@ $alignmentSystemSources = @(
     "$repoRoot\System\Calibration\Src\system_calibration.c",
     "$repoRoot\Algorithm\Calibration\Src\imu_six_face_calibration.c"
 )
+# Fixture supplies all three interfaces: capability_mask=0x07 even on RET6.
 Invoke-HostTest -Name 'system_alignment' -ExtraCompilerArgs @(
     '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U'
 ) -Sources $alignmentSystemSources
@@ -659,20 +686,33 @@ foreach ($mask in @(0, 2, 4, 6)) {
 }
 
 $capabilitySource = "$repoRoot\Tests\Host\test_build_capability_contract.c"
+Invoke-ExpectedCompileSuccess -Name 'capability_selected_provider' `
+    -ExtraCompilerArgs @('-DTEST_EXPECT_SELECTED_PROVIDER_PROFILE=1') `
+    -Source $capabilitySource
+
 Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_gravity_known_yaw' `
-    -ExtraCompilerArgs @('-DTEST_EXPECT_DEFAULT_JY901B_PROFILE=1') `
+    -ExtraCompilerArgs @('-DTEST_EXPECT_DEFAULT_JY901B_PROFILE=1',
+        '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW') `
     -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_missing_imu_noise' `
-    -ExtraCompilerArgs @(
+    -ExtraCompilerArgs ($estimatorNoiseOverrideArgs + @(
+        '-DTEST_NOISE_MISSING_IMU=1',
+        '-DSYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED=1U',
         '-include', "$repoRoot\Tests\Host\Fixtures\algorithm_noise_absent.h",
         '-DSYSTEM_SELECTED_IMU_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE=0U'
-    ) -Source $capabilitySource
+    )) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_missing_gnss_noise' `
-    -ExtraCompilerArgs @(
+    -ExtraCompilerArgs ($estimatorNoiseOverrideArgs + @(
+        '-DTEST_NOISE_MISSING_GNSS=1',
+        '-DSYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED=1U',
+        '-DSYSTEM_USER_GNSS_ENABLE=1U',
+        '-DSYSTEM_SELECTED_GNSS_POSITION_AVAILABLE=1U',
         '-include', "$repoRoot\Tests\Host\Fixtures\algorithm_noise_absent.h",
         '-DSYSTEM_SELECTED_GNSS_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE=0U'
-    ) -Source $capabilitySource
-$barometerNoiseArgs = @(
+    )) -Source $capabilitySource
+$barometerNoiseArgs = $estimatorNoiseOverrideArgs + @(
+    '-DTEST_NOISE_MISSING_BAROMETER=1',
+    '-DSYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED=1U',
     '-include', "$repoRoot\Tests\Host\Fixtures\algorithm_noise_absent.h",
     '-DSYSTEM_SELECTED_BAROMETER_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE=0U'
 )
@@ -697,13 +737,14 @@ Invoke-ExpectedCompileFailure -Name 'capability_jy901b_gravity_mag_rejected' `
         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
         '-DJY901B_MAGNETOMETER_ADAPTER_ENABLE=1U'
     ) -Source $capabilitySource
-# First release rejects even a fully qualified magnetic provider. Restore this
-# future-feature success case only with the documented December release policy.
+# Declare the complete positive provider prerequisite and check the specific
+# existing generated release-policy rejection, independently of qualification.
 Invoke-ExpectedCompileFailure -Name 'capability_first_release_triad_deferred' `
     -ExtraCompilerArgs @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD',
         '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
         '-DJY901B_MAGNETOMETER_ADAPTER_ENABLE=1U',
+        '-DSYSTEM_SELECTED_MAGNETOMETER_RAW_OUTPUT_AVAILABLE=1U',
         '-DSYSTEM_SELECTED_MAGNETOMETER_PHYSICAL_UNIT_AVAILABLE=1U',
         '-DSYSTEM_SELECTED_MAGNETOMETER_ABSOLUTE_VECTOR_QUALIFIED=1U'
     ) -Source $capabilitySource
@@ -727,20 +768,30 @@ Invoke-ExpectedCompileFailure -Name 'capability_hw_quat_9axis_preflight_unqualif
     ) -Source $capabilitySource
 Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_stillness_landing' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS'
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_impact_unqualified' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_IMPACT_THEN_STILLNESS'
     ) -Source $capabilitySource
 Invoke-ExpectedCompileSuccess -Name 'capability_future_impact_qualified' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_IMPACT_THEN_STILLNESS',
         '-DSYSTEM_SELECTED_IMU_LANDING_IMPACT_QUALIFIED=1U'
     ) -Source $capabilitySource
 $barometerLandingArgs = @(
+    '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
     '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW'
 )
+# The actual pressure provider may be unqualified for native-altitude landing.
+# Keep this rejection independent of brand-specific JY positives.
+Invoke-ExpectedCompileFailure -Name 'capability_selected_baro_imu_window_rejected' `
+    -ExtraCompilerArgs ($barometerLandingArgs + @(
+        '-DSYSTEM_SELECTED_BAROMETER_LANDING_WINDOW_QUALIFIED=0U'
+    )) -Source $capabilitySource
 if ($barometerEnabled) {
     Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_baro_imu_window_landing' `
         -ExtraCompilerArgs $barometerLandingArgs -Source $capabilitySource
@@ -750,11 +801,13 @@ if ($barometerEnabled) {
 }
 Invoke-ExpectedCompileFailure -Name 'capability_stillness_unqualified' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS',
         '-DSYSTEM_SELECTED_IMU_LANDING_STILLNESS_QUALIFIED=0U'
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_baro_imu_stillness_unqualified' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW',
         '-DSYSTEM_SELECTED_IMU_LANDING_STILLNESS_QUALIFIED=0U'
     ) -Source $capabilitySource
@@ -763,18 +816,27 @@ Invoke-ExpectedCompileFailure -Name 'capability_deploy_without_action' `
     -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_required_baro_missing' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS',
+        '-DSYSTEM_USER_ALIGNMENT_SELECTED_MASK=5U',
         '-DSYSTEM_USER_BAROMETER_ENABLE=0U',
         '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=(SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE|SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN)'
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_required_gnss_missing' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_USER_ALIGNMENT_SELECTED_MASK=3U',
         '-DSYSTEM_USER_GNSS_ENABLE=0U',
         '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=(SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE|SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN)'
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_stillness_without_gyro' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS',
-        '-DSYSTEM_SELECTED_IMU_GYRO_AVAILABLE=0U'
+        '-DSYSTEM_SELECTED_IMU_GYRO_AVAILABLE=0U',
+        '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_HW_QUAT_6AXIS_KNOWN_YAW',
+        '-DSYSTEM_USER_HARDWARE_QUATERNION_ENABLE=1U',
+        '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_OUTPUT_AVAILABLE=1U',
+        '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_6AXIS_QUALIFIED=1U',
+        '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_DELAY'
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_tilt_without_propagation' `
     -ExtraCompilerArgs @(
@@ -897,9 +959,11 @@ Invoke-HostTest -Name 'board_power_service' -Sources @(
     $hostPlatformMock,
     "$repoRoot\Devices\Power\InputVoltage\Adapter\Src\power_service.c"
 )
-Invoke-HostTest -Name 'board_mission_action_service' -Sources @(
+Invoke-HostTest -Name 'board_mission_action_service' -ExtraCompilerArgs @(
+    "-I$repoRoot\FlightLogic\MissionAction\GpioOutput\Inc"
+) -Sources @(
     "$repoRoot\Tests\Host\test_board_mission_action_service.c",
-    "$repoRoot\Board\SilverStar_0_5\Services\Src\mission_action_service.c"
+    "$repoRoot\FlightLogic\MissionAction\GpioOutput\Src\mission_action_service.c"
 )
 
 Invoke-HostTest -Name 'sensor_quality' -Sources @(
@@ -1019,6 +1083,9 @@ Invoke-HostTest -Name 'flight_recovery_impact_landing' -ExtraCompilerArgs @(
 if ($barometerEnabled) {
 Invoke-HostTest -Name 'flight_recovery_baro_imu_landing' -ExtraCompilerArgs @(
     '-DTEST_EXPECT_NONE=1', '-DTEST_EXPECT_BARO=1',
+    # This fixture supplies a qualified altitude window; the actual selected
+    # provider's unqualified rejection remains a separate compile contract.
+    '-DSYSTEM_SELECTED_BAROMETER_LANDING_WINDOW_QUALIFIED=1U',
     '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_NONE',
     '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW',
     '-DSYSTEM_FLIGHT_LANDING_BARO_TRIGGER_WINDOW_MS=100U',
@@ -1032,6 +1099,7 @@ Invoke-HostTest -Name 'flight_recovery_baro_imu_landing' -ExtraCompilerArgs @(
 
 Invoke-ExpectedCompileFailure -Name 'impact_capability_guard' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_IMPACT_THEN_STILLNESS',
         '-DSYSTEM_SELECTED_IMU_LANDING_IMPACT_QUALIFIED=0U'
     ) -Source "$repoRoot\Tests\Host\test_flight_config_compile.c"
@@ -1196,7 +1264,13 @@ foreach ($alignmentDefine in @(Get-Content -LiteralPath $projectSourcesPath |
 Invoke-HostTest -Name 'optional_gnss_start_actual' -ExtraCompilerArgs $optionalStartArgs `
     -Sources $optionalStartSources
 Invoke-HostTest -Name 'optional_gnss_start_explicit_required' `
-    -ExtraCompilerArgs ($optionalStartArgs + @('-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=3U')) `
+    -ExtraCompilerArgs ($optionalStartArgs + @(
+        '-DSYSTEM_USER_ALIGNMENT_SELECTED_MASK=7U',
+        '-DSYSTEM_USER_ALIGNMENT_REQUIRED_MASK=3U',
+        '-DSYSTEM_USER_GNSS_ENABLE=1U',
+        '-DSYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE=1U',
+        '-DSYSTEM_BUILD_GNSS_ORIGIN_STORAGE_SAMPLES=SYSTEM_ESTIMATOR_GNSS_ORIGIN_WINDOW_SAMPLES',
+        '-DSYSTEM_SELECTED_GNSS_POSITION_AVAILABLE=1U')) `
     -Sources $optionalStartSources
 
 $loggerSources = @(
@@ -1300,11 +1374,10 @@ Invoke-HostTest -Name 'golden_sample' -Sources (@(
 ) + $sslogSources)
 
 $script:collectHostJobs = $false
-$plannedJobs = @($script:hostJobs | Where-Object {
-    (($_.Kind -eq 'HOST_TEST') -and
-        (@($_.Sources | Where-Object { -not (Test-Path -LiteralPath $_) }).Count -eq 0)) -or
-    (($_.Kind -ne 'HOST_TEST') -and (Test-Path -LiteralPath $_.Source))
-})
+foreach ($contractJob in $script:hostJobs) {
+    HostContract_JobPrepare -Job $contractJob
+}
+$plannedJobs = @($script:hostJobs | Where-Object { $_.MissingInputs.Count -eq 0 })
 if ($Only.Count -ne 0) {
     $availableNames = @($plannedJobs | ForEach-Object { $_.Name })
     foreach ($name in $Only) {
@@ -1324,13 +1397,6 @@ foreach ($taskKind in @(
     if ($total -gt 0) {
         Write-Output "FCCG_PROGRESS|$taskKind|PLAN|$total"
     }
-}
-foreach ($skippedJob in @($script:hostJobs | Where-Object {
-    ($_.Kind -eq 'HOST_TEST') -and
-    (@($_.Sources | Where-Object { -not (Test-Path -LiteralPath $_) }).Count -ne 0)
-})) {
-    Write-Output ("Skipped host test {0}: unselected component sources" -f `
-        $skippedJob.Name)
 }
 foreach ($job in $plannedJobs) {
     switch ($job.Kind) {
@@ -1372,8 +1438,8 @@ $storageIntegrityRunner = Join-Path $repoRoot 'Tests\Host\storage_integrity\run_
 $storageSourceGraph = Get-Content -LiteralPath "$repoRoot\Generated\project_sources.mk" -Raw
 $storageFlightConfig = Get-Content -LiteralPath "$repoRoot\Generated\Inc\project_flight_config.h" -Raw
 if (($storageFlightConfig -match '(?m)^#define\s+SILVERSTAR_PROTOCOL_LOGGING_ENABLED\s+1U\s*$') -and
-    ($storageSourceGraph -match '(?m)^\s+Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service\.c\s*\\?\s*$') -and
-    ($storageSourceGraph -match '(?m)^\s+(?:FATFS/Target/sd_diskio|Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight)\.c\s*\\?\s*$')) {
+    ($storageSourceGraph -match '(?m)^\s+Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service\.c\s*\\?\s*$')) {
+    HostContract_DiskioValidate -SourceGraph $storageSourceGraph
     $storageArguments = @('--project', $repoRoot, '--compiler', $script:hostCompilerPath)
     $storageModel = Get-Content -LiteralPath "$repoRoot/SilverStar.ssproject" -Raw | ConvertFrom-Json
     if ($storageModel.build.logging_profile -eq 'sf6_minimal') { $storageArguments += '--sf6-compact' }
@@ -1382,10 +1448,10 @@ if (($storageFlightConfig -match '(?m)^#define\s+SILVERSTAR_PROTOCOL_LOGGING_ENA
 }
 
 $hostSummary = ("SilverStar host summary: executables={0} checks={1} " +
-    "failures={2} compile_pass_cases={3} expected_compile_failures={4}") -f `
+    "failures={2} compile_pass_cases={3} expected_compile_failures={4} not_applicable={5}") -f `
     $script:hostExecutableCount, $script:hostCheckCount, `
     $script:hostFailureCount, $script:compilePassCaseCount, `
-    $script:expectedCompileFailureCount
+    $script:expectedCompileFailureCount, $script:hostNotApplicableCount
 Write-Output $hostSummary
 if ($Only.Count -eq 0) { Write-Output 'All SilverStar host tests passed.' }
 else { Write-Output 'Selected SilverStar host tests passed; full suite was not executed.' }

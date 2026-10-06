@@ -9,6 +9,10 @@
 #include "target_build_capabilities.h"
 #include "test_common.h"
 
+#ifndef TEST_EXPECT_ALIGNMENT_ALGORITHM
+#error "Profile fixture must declare the expected alignment algorithm"
+#endif
+
 static int FloatClose(float lhs, float rhs)
 {
     return fabsf(lhs - rhs) < 1.0e-6f;
@@ -83,7 +87,7 @@ int main(void)
     TEST_CHECK(navigation->alignment_algorithm ==
                SYSTEM_ALIGNMENT_ALGORITHM);
     TEST_CHECK(SYSTEM_ALIGNMENT_ALGORITHM ==
-               SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW);
+               TEST_EXPECT_ALIGNMENT_ALGORITHM);
     TEST_CHECK(FloatClose(SYSTEM_ALIGNMENT_KNOWN_YAW_DEG, 0.0f));
     TEST_CHECK(navigation->alignment_minimum_samples ==
                SYSTEM_ALIGNMENT_WINDOW_MIN_SAMPLES);

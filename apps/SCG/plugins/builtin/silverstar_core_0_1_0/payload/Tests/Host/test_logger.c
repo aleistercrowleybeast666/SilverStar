@@ -584,6 +584,9 @@ static void Test_StatsProducer(void)
     TEST_CHECK(LoggerBus_Pop(&record) == LOGGER_BUS_RESULT_EMPTY);
 
     s_ins_snapshot_available = 0U;
+    /* This case means no stored context at all. Invalid retained context is
+     * a different public contract and is checked below. */
+    (void)memset(&s_ins_snapshot, 0, sizeof(s_ins_snapshot));
     SystemLogPolicy_EmissionReset();
     DiagnosticLog_StatsProcess(&empty_ins_state, 1000000ULL);
     TEST_CHECK(s_imu_bus_stats_get_count == 2U);
@@ -613,6 +616,14 @@ static void Test_TelemetryDiagnosticProducer(void)
     SystemLogStreamConfig config;
 
     LoggerBus_Reset();
+    if (ProjectLogConfig_RecordSupported(FLIGHT_LOG_RECORD_TELEMETRY_DIAG) == 0U)
+    {
+        TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_TELEMETRY_DIAG, &config) == SYSTEM_DEVICE_OK);
+        config.enabled = 1U;
+        TEST_CHECK(SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+        (void)puts("FCCG_HOST_NOT_APPLICABLE|telemetry_diagnostic_positive|record unsupported by selected log profile; rejection exercised");
+        return;
+    }
     TEST_CHECK(LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_OK);
     s_lifecycle_state = SYSTEM_STATE_RECOVERY;
     (void)memset(&s_telemetry_health, 0, sizeof(s_telemetry_health));
@@ -823,13 +834,13 @@ static void Test_BootstrapAdmission(void)
     LoggerBusDiagnostics diagnostics;
     SystemLogStreamConfig config;
     LoggerBus_Reset();
-    TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_GNSS_NATIVE, &config) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_BARO_NATIVE, &config) == SYSTEM_DEVICE_OK);
     config.enabled = 1U;
     config.decimation = 1U;
     TEST_CHECK(SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_OK);
     for (unsigned index = 0U; index < 1000U; index++)
     {
-        TEST_CHECK(LoggerBus_GnssNativePush(index, 0U, &record.payload.gnss_native) == LOGGER_BUS_RESULT_OK);
+        TEST_CHECK(LoggerBus_BaroNativePush(index, 0U, &record.payload.baro_native) == LOGGER_BUS_RESULT_OK);
     }
     TEST_CHECK(LoggerBus_DiagnosticsGet(&diagnostics) == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(diagnostics.startup_state == LOGGER_BOOTSTRAP);
@@ -843,9 +854,9 @@ static void Test_BootstrapAdmission(void)
     for (unsigned index = 0U; index < 4U; index++)
     { TEST_CHECK(LoggerBus_NextPop(&record) == LOGGER_BUS_RESULT_OK); }
     TEST_CHECK(LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_OK);
-    TEST_CHECK(LoggerBus_GnssNativePush(5U, 0U, &record.payload.gnss_native) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(LoggerBus_BaroNativePush(5U, 0U, &record.payload.baro_native) == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(LoggerBus_NextPop(&record) == LOGGER_BUS_RESULT_OK);
-    TEST_CHECK(record.record_type == FLIGHT_LOG_RECORD_GNSS_NATIVE);
+    TEST_CHECK(record.record_type == FLIGHT_LOG_RECORD_BARO_NATIVE);
     TEST_CHECK(LoggerBus_DiagnosticsGet(&diagnostics) == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(diagnostics.accepted_count == 5U && diagnostics.dequeued_count == 5U);
     TEST_CHECK(diagnostics.normal_high_water == 4U && diagnostics.overflow_count == 0U);
@@ -853,6 +864,29 @@ static void Test_BootstrapAdmission(void)
     LoggerBus_Reset();
     TEST_CHECK(LoggerBus_DiagnosticsGet(&diagnostics) == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(diagnostics.startup_state == LOGGER_BOOTSTRAP);
+}
+
+static void Test_InvalidStatsContext(void)
+{
+    DiagnosticLogPeriodicState state = {0ULL};
+    SystemLogStreamConfig config;
+    FlightLogRecord record;
+    LoggerBus_Reset();
+    s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+    (void)memset(&s_ins_snapshot, 0, sizeof(s_ins_snapshot));
+    s_ins_snapshot.update_sequence = 457U;
+    s_ins_snapshot.health_flags = ESTIMATOR_HEALTH_KF_NUMERIC_ERROR;
+    s_ins_snapshot_available = 0U;
+    TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_STATS, &config) == SYSTEM_DEVICE_OK);
+    config.enabled = 1U; config.period_us = 1000000U; config.decimation = 1U;
+    TEST_CHECK(SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_OK);
+    SystemLogPolicy_EmissionReset();
+    DiagnosticLog_StatsProcess(&state, 1000000ULL);
+    TEST_CHECK(LoggerBus_Pop(&record) == LOGGER_BUS_RESULT_OK);
+    TEST_CHECK(record.record_type == FLIGHT_LOG_RECORD_STATS);
+    TEST_CHECK(record.payload.stats.ins_update_count == 457U);
+    TEST_CHECK(record.payload.stats.health_flags == ESTIMATOR_HEALTH_KF_NUMERIC_ERROR);
+    TEST_CHECK(LoggerBus_Pop(&record) == LOGGER_BUS_RESULT_EMPTY);
 }
 
 static void Test_QueueCounterWrap(void)
@@ -880,36 +914,49 @@ static void Test_QueueCounterWrap(void)
     }
 }
 
+#if SYSTEM_BUILD_SF6_ENABLED != 0U
+typedef FlightLogSf6MeasurementRecord TestFairnessPayload;
+#define TEST_FAIRNESS_RECORD FLIGHT_LOG_RECORD_SF6_MEASUREMENT
+#define TEST_FAIRNESS_PUSH LoggerBus_Sf6MeasurementPush
+#else
+typedef FlightLogNavigationQualityRecord TestFairnessPayload;
+#define TEST_FAIRNESS_RECORD FLIGHT_LOG_RECORD_NAV_QUALITY
+#define TEST_FAIRNESS_PUSH LoggerBus_NavigationQualityPush
+#endif
+
 static void Test_QueuePressureFairness(void)
 {
-    FlightLogEskf15BodyInputRecord body = {0};
+    /* Keep actual selected-profile record sizes and queue capacities. */
+    TestFairnessPayload body = {0};
     FlightLogRecord record;
     SystemLogStreamConfig config;
     for (uint8_t phase = 0U; phase < 2U; ++phase)
     {
         uint8_t run = 0U;
         uint8_t observed_other = 0U;
-        uint16_t normal_depth = (phase == 0U) ? 60U : 5U;
-        uint16_t estimator_depth = (phase == 0U) ? 8U : 40U;
+        uint16_t normal_depth = (phase == 0U) ?
+            (SYSTEM_LOG_RECORD_QUEUE_DEPTH * 3U / 4U) : (SYSTEM_LOG_RECORD_QUEUE_DEPTH / 16U);
+        uint16_t estimator_depth = (phase == 0U) ?
+            (SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH / 6U) : (SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH * 5U / 6U);
         LoggerBus_Reset();
         TEST_CHECK(LoggerBus_StreamingReady() == LOGGER_BUS_RESULT_OK);
-        TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT, &config) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(SystemLogPolicy_StreamGet(TEST_FAIRNESS_RECORD, &config) == SYSTEM_DEVICE_OK);
         config.enabled = 1U; config.decimation = 1U;
         TEST_CHECK(SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_OK);
         for (uint16_t index = 0U; index < normal_depth; ++index)
         { TEST_CHECK(LoggerBus_EventPush(index, FLIGHT_LOG_EVENT_SAMPLE_GAP, index, 0U) == LOGGER_BUS_RESULT_OK); }
         for (uint16_t index = 0U; index < estimator_depth; ++index)
-        { TEST_CHECK(LoggerBus_Eskf15BodyInputPush(index, &body) == LOGGER_BUS_RESULT_OK); }
+        { TEST_CHECK(TEST_FAIRNESS_PUSH(index, &body) == LOGGER_BUS_RESULT_OK); }
         for (uint8_t index = 0U; index < 16U; ++index)
         {
             uint8_t estimator;
             TEST_CHECK(LoggerBus_NextPop(&record) == LOGGER_BUS_RESULT_OK);
-            estimator = (uint8_t)(record.record_type == FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT);
+            estimator = (uint8_t)(record.record_type == TEST_FAIRNESS_RECORD);
             if (index == 0U) { TEST_CHECK(estimator == phase); }
             if (estimator == phase) { run++; }
             else { observed_other++; run = 0U; }
             TEST_CHECK(run <= 3U);
-            TEST_CHECK((estimator ? LoggerBus_Eskf15BodyInputPush(1000ULL + index, &body) :
+            TEST_CHECK((estimator ? TEST_FAIRNESS_PUSH(1000ULL + index, &body) :
                 LoggerBus_EventPush(1000ULL + index, FLIGHT_LOG_EVENT_SAMPLE_GAP, index, 0U)) == LOGGER_BUS_RESULT_OK);
         }
         TEST_CHECK(observed_other >= 4U);
@@ -918,13 +965,16 @@ static void Test_QueuePressureFairness(void)
     LoggerBus_Reset();
 }
 
+#if SYSTEM_BUILD_ESKF15_ENABLED != 0U
 static LoggerBusResult Test_CovariancePop(uint8_t phase, FlightLogRecord *record)
 {
     return (phase == 0U) ? LoggerBus_EstimatorPop(record) : LoggerBus_Pop(record);
 }
+#endif
 
 static void Test_Eskf15CovarianceSnapshot(void)
 {
+#if SYSTEM_BUILD_ESKF15_ENABLED != 0U
     FlightLogEskf15CovariancePartRecord identity = {0};
     FlightLogEskf15StateRecord state_record = {0};
     FlightLogEskf15BodyInputRecord body_record = {0};
@@ -1013,6 +1063,16 @@ static void Test_Eskf15CovarianceSnapshot(void)
         }
         TEST_CHECK(fragments == 2U && Test_CovariancePop(phase, &record) == LOGGER_BUS_RESULT_EMPTY);
     }
+#else
+    SystemLogStreamConfig config;
+    TEST_CHECK(ProjectLogConfig_RecordSupported(
+        FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART) == 0U);
+    TEST_CHECK(SystemLogPolicy_StreamGet(
+        FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART, &config) == SYSTEM_DEVICE_OK);
+    config.enabled = 1U;
+    TEST_CHECK(SystemLogPolicy_StreamConfigure(&config) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+    (void)puts("FCCG_HOST_NOT_APPLICABLE|logger_eskf_covariance_positive|ESKF not selected; unsupported-stream rejection exercised");
+#endif
 }
 
 static void Test_NoStorageBootLatch(void)
@@ -1069,6 +1129,7 @@ int main(void)
     Test_SourceChangeEventPacking();
     Test_StreamConfiguration();
     Test_StatsProducer();
+    Test_InvalidStatsContext();
     Test_TelemetryDiagnosticProducer();
     Test_DescriptorBundle();
     Test_DecoderProfileDescriptor();

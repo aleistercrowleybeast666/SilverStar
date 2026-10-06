@@ -1,5 +1,23 @@
 #include "system_user_config.h"
 
+#if defined(TEST_EXPECT_SELECTED_PROVIDER_PROFILE)
+/* Actual composition; separate from the three-interface runtime mock. */
+_Static_assert(SYSTEM_USER_ALIGNMENT_SELECTED_MASK ==
+    (SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE |
+     ((SYSTEM_USER_GNSS_ENABLE != 0U) ?
+        SYSTEM_ALIGNMENT_SOURCE_MASK_GNSS_ORIGIN : 0U) |
+     ((SYSTEM_USER_BAROMETER_ENABLE != 0U) ?
+        SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN : 0U)),
+    "Selected provider alignment mask must follow its enabled origins");
+_Static_assert(SYSTEM_USER_ALIGNMENT_REQUIRED_MASK ==
+    (SYSTEM_ALIGNMENT_SOURCE_MASK_ATTITUDE |
+     ((SYSTEM_USER_BAROMETER_ENABLE != 0U) ?
+        SYSTEM_ALIGNMENT_SOURCE_MASK_BARO_ORIGIN : 0U)),
+    "Selected provider required mask must preserve attitude/barometer policy");
+_Static_assert(SYSTEM_ALIGNMENT_ALGORITHM == TEST_EXPECT_ALIGNMENT_ALGORITHM,
+    "Selected provider alignment must match SourceGraph");
+#endif
+
 #if defined(TEST_EXPECT_DEFAULT_JY901B_PROFILE)
 #include "jy901b_imu_build_capabilities.h"
 #include "jy901b_magnetometer_build_capabilities.h"

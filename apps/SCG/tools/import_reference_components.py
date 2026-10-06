@@ -3070,7 +3070,13 @@ else {
         "Targets/SilverStar_F407/Inc/platform_memory_target\\.h "
         "-include Generated/Inc/project_flight_config\\.h\\s*$"
     )
-    if flight_eide_flags not in text:
+    target_eide_flags = (
+        "('(?m)^\\s+C_FLAGS:\\s*-include Targets/' + "
+        "[regex]::Escape($architectureTargetProfile) + "
+        "'/Inc/platform_memory_target\\.h -include "
+        "Generated/Inc/project_flight_config\\.h\\s*$')"
+    )
+    if flight_eide_flags not in text and target_eide_flags not in text:
         if legacy_eide_flags not in text:
             raise RuntimeError("Reference architecture checker EIDE flags changed")
         text = text.replace(legacy_eide_flags, flight_eide_flags, 1)
@@ -3099,6 +3105,10 @@ else {
     eide_root_current = (
         "outDir:\\s*build\\\\FCCG\\\\SilverStar_F407\\\\EIDE"
     )
+    target_eide_root = (
+        "('(?m)^outDir:\\s*build\\\\FCCG\\\\' + "
+        "[regex]::Escape($architectureTargetProfile) + '\\\\EIDE\\s*$')"
+    )
     if eide_root_legacy in text:
         text = text.replace(eide_root_legacy, eide_root_current, 1)
         text = text.replace(
@@ -3106,7 +3116,7 @@ else {
             "build\\FCCG\\SilverStar_F407\\EIDE",
         )
         changed = True
-    elif eide_root_current not in text:
+    elif eide_root_current not in text and target_eide_root not in text:
         raise RuntimeError("Reference architecture checker EIDE-root check changed")
 
     # Windows PowerShell 5 interprets UTF-8 JSON without a BOM through the
@@ -3446,6 +3456,21 @@ foreach ($job in $plannedJobs) {
 }
 
 '''
+    if "HostContract_DefinitionsGet" in text:
+        start = replay.index("$plannedJobs = @(")
+        end = replay.index("foreach ($taskKind in", start)
+        replay = (
+            replay[:start]
+            + "foreach ($contractJob in $script:hostJobs) {\n"
+            + "    HostContract_JobPrepare -Job $contractJob\n"
+            + "}\n"
+            + "$plannedJobs = @($script:hostJobs | Where-Object { "
+            + "$_.MissingInputs.Count -eq 0 })\n"
+            + replay[end:]
+        )
+        start = replay.index("foreach ($skippedJob in @(")
+        end = replay.index("foreach ($job in $plannedJobs)", start)
+        replay = replay[:start] + replay[end:]
     return text.replace(replay_anchor, replay + replay_anchor, 1)
 
 
@@ -3780,8 +3805,7 @@ def _PowerTenChecker_Adapt(path: Path, policy: WorkspacePolicy) -> None:
             "foreach ($function in $allFunctions) {\n",
         ),
         (
-            "}\n\n$makefile = Get-Content -Raw -LiteralPath (Join-Path $repoRoot 'Makefile')\n",
-            "}\n"
+            "$makefile = Get-Content -Raw -LiteralPath (Join-Path $repoRoot 'Makefile')\n",
             "Write-Output \"FCCG_PROGRESS|POWER10|DONE|$progressCurrent|$progressTotal|function_rules\"\n\n"
             "$progressCurrent++\n"
             "Write-Output \"FCCG_PROGRESS|POWER10|BEGIN|$progressCurrent|$progressTotal|build_policy\"\n"
