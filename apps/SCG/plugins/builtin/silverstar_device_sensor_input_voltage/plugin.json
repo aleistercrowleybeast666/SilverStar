@@ -46,7 +46,7 @@
   ],
   "build": {
     "sources": [
-      "Devices/Power/InputVoltage/Src/power_service.c"
+      "Devices/Power/InputVoltage/Adapter/Src/power_service.c"
     ],
     "asm_sources": [],
     "include_dirs": [
@@ -56,7 +56,7 @@
   },
   "payload": {
     "roots": [
-      "Devices/Power/InputVoltage/Src/power_service.c",
+      "Devices/Power/InputVoltage/Adapter/Src/power_service.c",
       "Devices/Power/InputVoltage/Inc/adc_power_config.h"
     ]
   },

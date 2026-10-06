@@ -2138,10 +2138,10 @@ def _Components_Get(
         )
         if component_id == "silverstar.device.sensor.input_voltage":
             payload_roots = [
-                "Devices/Power/InputVoltage/Src/power_service.c",
+                "Devices/Power/InputVoltage/Adapter/Src/power_service.c",
                 "Devices/Power/InputVoltage/Inc/adc_power_config.h",
             ]
-            sources = ["Devices/Power/InputVoltage/Src/power_service.c"]
+            sources = ["Devices/Power/InputVoltage/Adapter/Src/power_service.c"]
             includes = ["Devices/Power/InputVoltage/Inc"]
             description = (
                 "ADC input-voltage Device owning the SilverStar power adapter; "
@@ -2172,7 +2172,7 @@ def _Components_Get(
                 physical_device=physical_devices[component_id],
                 reference_files=(
                     {
-                        "Devices/Power/InputVoltage/Src/power_service.c": "Board/SilverStar_0_5/Services/Src/power_service.c",
+                        "Devices/Power/InputVoltage/Adapter/Src/power_service.c": "Board/SilverStar_0_5/Services/Src/power_service.c",
                         "Devices/Power/InputVoltage/Inc/adc_power_config.h": "Board/SilverStar_0_5/Services/Inc/adc_power_config.h",
                     }
                     if component_id == "silverstar.device.sensor.input_voltage"

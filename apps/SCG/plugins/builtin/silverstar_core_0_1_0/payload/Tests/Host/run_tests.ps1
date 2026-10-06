@@ -87,6 +87,7 @@ $includeArgs = @(
     "-I$repoRoot\Devices\SensorBus\Adapter\Inc",
     "-I$repoRoot\Devices\Barometer\BMP280\Inc",
     "-I$repoRoot\Devices\Barometer\BMP280\Adapter\Inc",
+    "-I$repoRoot\Devices\Power\InputVoltage\Inc",
     "-I$repoRoot\Devices\IMU\MPU6050\Inc",
     "-I$repoRoot\Devices\IMU\MPU6050\Adapter\Inc",
     "-I$repoRoot\Middlewares\Third_Party\SX1280lib"
@@ -894,7 +895,7 @@ if ((Get-Content -LiteralPath "$repoRoot\Generated\Inc\project_flight_config.h" 
 Invoke-HostTest -Name 'board_power_service' -Sources @(
     "$repoRoot\Tests\Host\test_board_power_service.c",
     $hostPlatformMock,
-    "$repoRoot\Board\SilverStar_0_5\Services\Src\power_service.c"
+    "$repoRoot\Devices\Power\InputVoltage\Adapter\Src\power_service.c"
 )
 Invoke-HostTest -Name 'board_mission_action_service' -Sources @(
     "$repoRoot\Tests\Host\test_board_mission_action_service.c",

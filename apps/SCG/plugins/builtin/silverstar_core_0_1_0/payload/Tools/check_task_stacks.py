@@ -1195,7 +1195,7 @@ BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister
 # Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
 # variants supplement the historical V2 sets. No generic acceptance, source
 # coverage exclusion, callback exception or stack threshold is added.
-BINDING_REVIEW_REVISION = "kf6_health_f407_20261006_v6"
+BINDING_REVIEW_REVISION = "input_voltage_adapter_20261006_v7"
 BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
  'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
  'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
@@ -1341,10 +1341,22 @@ BINDING_SOURCE_HEALTH_V6 = {'APP/Src/diagnostic_log.c': ['454d6680c2165ab8adcc97
 BINDING_DEPENDENCIES_HEALTH_V6 = {'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c': ['3eb8c2bada34803a77457928ec414d08f262739082857301f2ed9e1b4376cb9f'],
  'Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c': ['3ae2c0b291a6b698c09b90dc1a508329c148f295faae1ec442756bdcd7d0c212']}
 
+# Reviewed InputVoltage System adapter relocation; the complete source bytes,
+# ADC math, locks and assertions are unchanged. Only the compiled source path
+# differs from the verified F407 dependency graph. All prior inputs remain.
+BINDING_SOURCE_POWER_V7 = {'Devices/Power/InputVoltage/Adapter/Src/power_service.c': ['d375930dbb1d1efe7d73640f3e1c9b90b6d862b36b92db39843bade31bc08e6c']}
+
+# The exact generated profile changes only its source-graph identity after the
+# adapter path move; record semantics and the selected F407 configuration stay.
+BINDING_SOURCE_POWER_V7['Generated/Src/project_log_decoder_profile.c'] = [
+    'a281cc86919056bbb6c908fc9ec030844f10e5e4af6dd4ec4125fc0e2d782b0a']
+
+BINDING_DEPENDENCIES_POWER_V7 = {'Devices/Power/InputVoltage/Adapter/Src/power_service.c': ['d067dc025909205d0b9b552e98255781ec94d530c671668321a39cc2aae438cb']}
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
-            BINDING_SOURCE_HEALTH_V6.get(path, []))
+            BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []))
 
 
 def BindingSourceHash_Get(text):
@@ -1368,7 +1380,8 @@ def BindingSources_Verify(root, sources, build):
         expected_graph = (BINDING_DEPENDENCIES_V2.get(path, []) +
                           BINDING_DEPENDENCIES_EPOCH_V3.get(path, []) +
                           BINDING_DEPENDENCIES_NRF_V5.get(path, []) +
-                          BINDING_DEPENDENCIES_HEALTH_V6.get(path, []))
+                          BINDING_DEPENDENCIES_HEALTH_V6.get(path, []) +
+                          BINDING_DEPENDENCIES_POWER_V7.get(path, []))
         graph_hash = hashlib.sha256("\n".join(dependencies).encode()).hexdigest()
         if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)
