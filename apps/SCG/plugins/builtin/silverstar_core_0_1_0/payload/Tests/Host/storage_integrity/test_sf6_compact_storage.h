@@ -17,6 +17,18 @@ static uint8_t s_sf6_started;
 /* Backend mutates owner state just as EstimatorTask's static s_snapshot. */
 static EstimatorOutputSnapshot s_sf6_output;
 
+static void Fixture_Sf6StatsBuild(FlightLogStatsRecord *stats)
+{
+    ImuSampleBusStats imu = {0};
+    ImuSampleBus_StatsGet(&imu);
+    memset(stats, 0, sizeof(*stats));
+    stats->imu_queue_overflow_count = imu.overflow_count;
+    stats->logger_queue_overflow_count = LoggerBus_OverflowCountGet();
+    /* This fixture supplies increments directly, without running AppTask_Ins. */
+    stats->ins_update_count = s_sf6_predict_count;
+    stats->health_flags = s_sf6_output.health_flags;
+}
+
 static void Fixture_Sf6CalibrationBuild(FlightLogCalibrationResultRecord *record)
 {
     record->source_id = FLIGHT_LOG_PRIMARY_INERTIAL_SOURCE_ID;
@@ -167,9 +179,24 @@ static void Fixture_Sf6CompactFrame(uint32_t frame, uint64_t now)
     s_sf6_predict_count++;
     if (frame % 200U == 0U)
     {
-        record.payload.stats.logger_queue_overflow_count = LoggerBus_OverflowCountGet();
+        SystemHealthSnapshot health = {0};
+        SystemHealth_GetSnapshot(&health);
+        memset(&record, 0, sizeof(record));
+        Fixture_Sf6StatsBuild(&record.payload.stats);
         Fixture_ResultCheck(LoggerBus_StatsPush(now, &record.payload.stats));
+        memset(&record, 0, sizeof(record));
+        record.payload.health.timestamp_us = health.timestamp_us;
+        record.payload.health.compiled_mask = health.capabilities.compiled_mask;
+        record.payload.health.enabled_mask = health.capabilities.enabled_mask;
+        record.payload.health.present_mask = health.capabilities.present_mask;
+        record.payload.health.healthy_mask = health.capabilities.healthy_mask;
+        record.payload.health.start_blocking_mask = health.start_blocking_mask;
+        record.payload.health.warning_mask = health.warning_mask;
+        record.payload.health.sequence = health.sequence;
+        record.payload.health.ready = health.ready;
         Fixture_ResultCheck(LoggerBus_HealthPush(now, &record.payload.health));
+        /* No radio transport runs in this storage fixture: offline, zero counts. */
+        memset(&record, 0, sizeof(record));
         Fixture_ResultCheck(LoggerBus_TelemetryDiagnosticPush(now, &record.payload.telemetry_diagnostic));
     }
 }

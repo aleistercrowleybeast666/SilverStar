@@ -297,7 +297,11 @@ static void Fixture_Produce(void)
     if (s_produced == s_frame_limit && LoggerBus_Count() == 0U && !s_final_armed)
     {
         FlightLogStatsRecord stats = {0};
+#ifdef SILVERSTAR_TEST_SF6_COMPACT
+        Fixture_Sf6StatsBuild(&stats);
+#else
         stats.logger_queue_overflow_count = LoggerBus_OverflowCountGet();
+#endif
         if (LoggerBus_StatsPush(now, &stats) != LOGGER_BUS_RESULT_OK) { abort(); }
         /* Time already exceeds the normal landing grace deadline. */
         if (LoggerBus_FinalizationArm(1ULL) != LOGGER_BUS_RESULT_OK) { abort(); }
