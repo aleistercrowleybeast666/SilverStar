@@ -777,6 +777,13 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
+    if model.build.compact_mode:
+        power_available = any(entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
+                              for entry in _DeviceDescriptorEntries_Get(model, catalog))
+        definitions.extend((
+            ("SYSTEM_USER_POWER_ENABLE", "1U" if power_available else "0U"),
+            ("SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE", "1U" if power_available else "0U"),
+        ))
     if model.build.feature_tier == "minimal":
         descriptors = _DeviceDescriptorEntries_Get(model, catalog)
         algorithm_count = sum(len(catalog.Component_Get(component).metadata.get(
@@ -792,12 +799,6 @@ def _FlightConfigHeader_Render(
             ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "1024U" if model.build.logging_profile == "sf6_minimal" else "2048U"),
             ("SYSTEM_IMU_SAMPLE_BUS_DEPTH", "16U"),
             ("ESTIMATOR_BUS_DEPTH", "16U"),
-            ("SYSTEM_USER_POWER_ENABLE", "1U" if any(
-                entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
-                for entry in descriptors) else "0U"),
-            ("SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE", "1U" if any(
-                entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
-                for entry in descriptors) else "0U"),
             ("SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE", "1U" if any(
                 "gnss.position" in catalog.InstanceComponent_Get(instance).provides
                 for instance in model.device_instances) else "0U"),

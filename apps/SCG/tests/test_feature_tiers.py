@@ -102,6 +102,22 @@ def test_malformed_compact_algorithm_blocks_generation(builtin_catalog):
         SourceGraph_Resolve(model, builtin_catalog)
 
 
+def test_compact_power_contract_matches_selected_implementation(builtin_catalog):
+    import re
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    FeatureTier_Apply(model, 'compact', builtin_catalog)
+    model.device_instances = [item for item in model.device_instances if not any(
+        entry.get('class') == 'SYSTEM_DEVICE_CLASS_POWER'
+        for entry in builtin_catalog.InstanceComponent_Get(item).metadata.get('device_descriptors', ()))]
+    header = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert re.search(r'SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE\s+0U', header)
+    assert re.search(r'SYSTEM_USER_POWER_ENABLE\s+0U', header)
+    graph = SourceGraph_Resolve(model, builtin_catalog)
+    assert 'System/Src/system_power.c' not in graph.sources
+    model.build = replace(model.build, feature_tier='full')
+    assert 'SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE' not in _FlightConfigHeader_Render(model, builtin_catalog)
+
+
 def test_preset_recursion_rejected(builtin_catalog):
     data = ReferenceProject_Create(catalog=builtin_catalog).Dictionary_Get()
     data['feature_tier_presets'] = {'full': deepcopy(data)}
