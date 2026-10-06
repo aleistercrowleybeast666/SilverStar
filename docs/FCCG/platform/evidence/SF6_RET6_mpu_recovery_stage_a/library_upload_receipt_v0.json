@@ -1,0 +1,33 @@
+{
+  "result": {
+    "operation": "create_library_file",
+    "status": "succeeded",
+    "path": "/mpu_recovery_stage_a_evidence.zip",
+    "file_id": "file_00000000720c81fd9ed8b5e39049a9c3",
+    "library_file_id": "libfile_0a3f24a1993881918e57740cef242867",
+    "file_name": "mpu_recovery_stage_a_evidence.zip",
+    "current_version_number": 0,
+    "restored_from_version_number": null,
+    "xattrs": [
+      {
+        "name": "user.library-file-version",
+        "value": "0"
+      }
+    ],
+    "directory_id": "libdir_8617ff5a838481919d6e4b11ae8721e2",
+    "mime_type": "application/zip",
+    "library_artifact_type": "other",
+    "file_size_bytes": 3808617,
+    "external_connectors_accessed": false
+  },
+  "archive_sha256": "fa59273039aa185b8e140d98864e3d4866a4efd3493a6b27ba973ab7f837f2a4",
+  "archive_bytes": 3808617,
+  "source_commit": "f76383e966421a9b755b4b29ccab140b573ed95f",
+  "local_xattrs": {
+    "status": "unsupported_windows_python_os_setxattr",
+    "absolute_attempt_exit": 1,
+    "log": "library_xattrs_absolute.log",
+    "initial_relative_path_failure_log": "library_xattrs.log",
+    "cloud_create_status": "succeeded"
+  }
+}
