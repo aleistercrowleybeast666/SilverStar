@@ -790,7 +790,10 @@ class StateEstimationPage(QWidget):
             "effective_r_channel": ("variance", "effective_variance"),
         }.get(role)
         if quantities is not None:
-            squared = (f"{group.unit}^2", f"({group.unit})2")
+            # Use published physical units: appending ^2 to m/s would produce
+            # the acceleration unit m/s^2, not a velocity variance.
+            squared = {"m": ("m^2", "(m)2"),
+                       "m/s": ("m^2/s^2", "(m/s)2")}.get(group.unit, ())
             recognized = (series.quantity == "variance" and series.unit in squared or
                           series.quantity == quantities[1] and series.unit == "mixed")
             return (replace(series, quantity=quantities[1], unit=f"({group.unit})2")

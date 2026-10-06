@@ -12,7 +12,7 @@ use real timestamps relative to dataset START, with no interpolation or gap fill
 | P diagonal / standard deviation | Plugin state groups and own indices | KF6 six states map to ESKF15's common position/velocity blocks. Other ESKF15 groups remain primary-only when no equivalent secondary exists. |
 | Recorded legacy KF6 P | Own KF6 recorded source only | Exact six columns PxE/PxN/PxU/PvE/PvN/PvU, exact group units/indices and recorded KF6 identity are required for both primary and secondary. |
 | Innovation / NIS | Same published measurement group, dimension, axes, units | Different observations never compare by shape alone. Missing attempt/input or nonoverlap yields an unavailable note. Primary thresholds stay primary. |
-| Measurement sigma and effective R | Same observation role | Narrow KF6 variance units `m^2`/`(m)2` and ESKF15 mixed-storage variance roles normalize using the owning group. Unknown units/quantities reject. |
+| Measurement sigma and effective R | Same observation role | Narrow KF6 position variance `m^2`/`(m)2`, velocity variance `m^2/s^2`/`(m/s)2`, and ESKF15 mixed-storage variance roles normalize using the owning group. Acceleration `m/s^2` and unknown units/quantities reject. |
 | Receive age / fixed-lag latency | Same observation role in ms | Narrow `fixed_lag_latency`/`latency` mapping for builtin KF6/ESKF15. |
 | Barometric observation diagnostics | Barometric altitude scalar in metres | Explicit KF6 Baro ↔ ESKF15 U mapping in that group only; it does not map arbitrary equal-width channels. |
 | ESKF15 bias/state estimate | Matching own plugin role, if provided | No KF6/INS/SF6 bias substitute. |
