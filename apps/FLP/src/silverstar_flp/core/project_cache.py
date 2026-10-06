@@ -46,7 +46,7 @@ def ProjectCache_ParseClear(path: Path) -> None:
 
 
 def ProjectCache_UnusedRemove(path: Path, generation: str) -> None:
-    from silverstar_flp.core.artifacts import FileHash_Get, _Json_Load
+    from silverstar_flp.core.artifacts import FileHash_Get, _Json_Load, RecordFiles_Get
     inventory = ProjectCache_Inspect(path)
     item = next((item for item in inventory["generations"] if item["generation"] == generation), None)
     if item is None or item["role"] != "unreferenced":
@@ -57,7 +57,7 @@ def ProjectCache_UnusedRemove(path: Path, generation: str) -> None:
         raise ValueError("project_cache_generation_not_verified")
     manifest = manifests[0]
     payload = _Json_Load(manifest)
-    expected = set(payload.get("arrays", {})) | {manifest.name}
+    expected = set(payload.get("arrays", {})) | {manifest.name} | RecordFiles_Get(payload.get("payload"))
     files = list(directory.iterdir())
     if {file.name for file in files} != expected:
         raise ValueError("project_cache_generation_not_verified")

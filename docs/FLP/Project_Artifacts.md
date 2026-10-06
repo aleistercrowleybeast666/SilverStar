@@ -101,3 +101,32 @@ until successful commit. Cancelling the save-options dialog cancels the close
 request independently of an existing save worker. The worker's save closure uses
 a weak worker reference, avoiding retention of the captured dataset through a
 worker/closure cycle. These targeted tests do not prove every Qt destruction path.
+
+## Storage codec 2: bounded record blocks
+
+Version 2 writes every record group as ordered blocks of at most 4096 rows. Numeric
+payload and header fields use packed non-object NPY columns; byte fields use bounded
+byte/offset arrays. Typed mapping/list/tuple/string/optional/scalar plans preserve
+decoded fields and their order. Each block's gzip JSON is at most 8 MiB; prospective
+column construction/verification working arrays are limited to 16 MiB per block.
+SHA-256, exact compressed/expanded bytes, row count, column offsets, dtype, shape,
+file offsets and timestamps are validated before publication. There are at most
+4096 block files. Expanded block JSON plus the manifest retains the 256 MiB budget.
+
+No reader budget resets between blocks: the existing 8 million structure-node,
+2 million object, 1 GiB live-allocation and numerical-array limits remain cumulative.
+Retained DecodedRecord/header scalars/payload proxy/view/row index and row-reference
+storage are charged too. Numeric payload values remain in readonly columns and are
+materialized on access through mappingproxy; they are not eagerly recreated as
+millions of Python scalar objects. These accounting bounds are not a total RSS proof;
+caller-retained input and caller-materialized payload values are additional memory.
+
+Save streams a verification of every persisted byte, timestamp and block with the
+same prospective full-reader budgets, retaining only a block's working arrays.
+The unchanged dataset validator consumes a one-use in-process receipt after all
+file hashes are rechecked; this releases its input pointer. The receipt cannot be
+reconstructed from a project JSON. Saving no longer constructs two extra full
+decoded datasets beside the original. An explicit reopen still performs the full
+reader and strict coordinator admission. Codec-1 files remain readable; parser,
+math and original input identities are unchanged by this storage-only revision.
+Saved numerical runs and unverified partial generations are never auto-deleted.
