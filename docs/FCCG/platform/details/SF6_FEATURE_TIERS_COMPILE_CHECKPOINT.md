@@ -31,6 +31,10 @@ Both ARM links exit 0 and produce new ELF/map/BIN. These satisfy the linker hard
 limit, not the requested 20% RAM margin or a proven runtime stack margin.
 RFT6 data/BSS/MSP = 1,296/94,144/2,048 B; RET6 = 408/61,280/2,048 B.
 Task/idle stacks are already in BSS and counted exactly once.
+RET6's successful link retains four newlib warnings for unimplemented `_close`,
+`_lseek`, `_read` and `_write`; exit 0 does not establish a warning-free firmware.
+RFT6's final ARM/analyzer logs contain no warnings. The runtime-library warnings
+are preserved, not suppressed or presented as original Rule 10 compliance.
 
 | Disjoint RAM group | RFT6 bytes (% RAM capacity) | RET6 bytes (% RAM capacity) |
 |---|---:|---:|
