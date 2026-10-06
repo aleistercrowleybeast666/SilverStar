@@ -56,11 +56,11 @@ static void DiagnosticLog_StatsRecordBuild(FlightLogStatsRecord *record)
     ImuSampleBus_StatsGet(&imu_bus_stats);
     record->imu_queue_overflow_count = imu_bus_stats.overflow_count;
     record->logger_queue_overflow_count = LoggerBus_OverflowCountGet();
-    if (Estimator_GetLatestSnapshot(&navigation) != 0U)
-    {
-        record->ins_update_count = navigation.update_sequence;
-        record->health_flags = navigation.health_flags;
-    }
+    /* For a non-NULL output the getter always copies the published snapshot;
+     * its return is navigation validity, which must not suppress fault evidence. */
+    (void)Estimator_GetLatestSnapshot(&navigation);
+    record->ins_update_count = navigation.update_sequence;
+    record->health_flags = navigation.health_flags;
 }
 
 static void DiagnosticLog_TelemetryRecordMap(

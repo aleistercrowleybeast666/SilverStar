@@ -2820,11 +2820,55 @@ static void Estimator_BarometerUpdate(uint64_t state_timestamp_us)
     Estimator_BarometerUpdateFinish(&work);
 }
 
+/* Core flags are historical diagnostics, not the application's active-fault
+ * namespace. INVALID_INPUT stays an ordinary rejected-operation result;
+ * MATRIX_NOT_SPD/NUMERIC_ERROR/RECOVERED do not invalidate a successful recovery.
+ * Preserve the complete raw flags in s_estimator.kf.health_flags. Only the
+ * replay engine's terminal fault certificate maps to the application fault. */
+static uint32_t Estimator_CoreHealthFlagsMap(uint32_t core_flags, uint8_t faulted)
+{
+    SILVERSTAR_ASSERT((core_flags & ~(NAV_KF_HEALTH_INVALID_INPUT |
+        NAV_KF_HEALTH_MATRIX_NOT_SPD | NAV_KF_HEALTH_NUMERIC_ERROR |
+        NAV_KF_HEALTH_COVARIANCE_RECOVERED)) == 0U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(faulted <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    return (faulted != 0U) ? ESTIMATOR_HEALTH_KF_NUMERIC_ERROR : ESTIMATOR_HEALTH_NONE;
+}
+
+static void Estimator_FaultSnapshotPublish(void)
+{
+    PlatformCriticalState state = EstimatorTask_IrqLock();
+    uint32_t health = s_snapshot.health_flags | ESTIMATOR_HEALTH_KF_NUMERIC_ERROR;
+
+    SILVERSTAR_ASSERT(s_published_snapshot.initialized <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_published_snapshot.mission_running <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    /* Restore the last published state, never a partially updated measurement
+     * or a new successful timestamp/sequence. All readers see invalid at once. */
+    s_snapshot = s_published_snapshot;
+    s_snapshot.health_flags |= health;
+    s_snapshot.initialized = 0U;
+    s_published_snapshot = s_snapshot;
+    EstimatorTask_IrqUnlock(state);
+}
+
+static uint8_t Estimator_ReplayFaultStop(void)
+{
+    SILVERSTAR_ASSERT(s_replay.faulted <= 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (s_replay.faulted == 0U) { return 0U; }
+    Estimator_FaultSnapshotPublish();
+    return 1U;
+}
+
 static void Estimator_SnapshotPublish(uint64_t timestamp_us)
 {
     EstimatorBusStats bus_stats;
     uint8_t row;
 
+    if (Estimator_ReplayFaultStop() != 0U) { return; }
     SILVERSTAR_ASSERT(s_estimator.output_sequence < UINT32_MAX,
                       SILVERSTAR_ASSERT_MODULE_APP,
                       SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
@@ -2855,7 +2899,8 @@ static void Estimator_SnapshotPublish(uint64_t timestamp_us)
     s_snapshot.predict_count = s_estimator.kf.predict_count;
     s_snapshot.prediction_queue_overflow_count =
         bus_stats.prediction_overflow_count;
-    s_snapshot.health_flags |= s_estimator.kf.health_flags;
+    s_snapshot.health_flags |= Estimator_CoreHealthFlagsMap(
+        s_estimator.kf.health_flags, s_replay.faulted);
     s_snapshot.initialized = s_estimator.initialized;
     s_snapshot.mission_running = s_estimator.mission_running;
     s_snapshot.gnss_origin_valid = s_estimator.gnss_origin_valid;
@@ -3164,6 +3209,41 @@ static NavigationReplayResult Estimator_PredictionApply(
     return result;
 }
 
+/* Keep the attitude/prediction operation and its failure publication together.
+ * The caller may process measurements only after this operation succeeds. */
+static uint8_t Estimator_KfPredictionApply(
+    const SystemInertialIncrement *prediction, float delta_velocity_enu_mps[3])
+{
+    float q_start[4];
+
+    SILVERSTAR_ASSERT_OBJECT(prediction, SystemInertialIncrement,
+                             SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT(delta_velocity_enu_mps != NULL,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    memcpy(q_start, s_estimator.q_nb, sizeof(q_start));
+    Ins_TransformDeltaVelocityToNavigation(
+        q_start, prediction->delta_velocity_b_sculling_corrected,
+        prediction->dt_s, SYSTEM_KF_GRAVITY_MPS2, delta_velocity_enu_mps);
+    if (Attitude_PropagateQuaternionBodyIncrement(
+            q_start, prediction->delta_theta_b_corrected,
+            s_estimator.q_nb) == 0U)
+    {
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+        Estimator_PredictionLogPush(prediction, Estimator_OperationNext(), NAV_REPLAY_INVALID, 0U);
+#endif
+        Estimator_FaultSnapshotPublish();
+        return 0U;
+    }
+    if (Estimator_PredictionApply(prediction, delta_velocity_enu_mps) != NAV_REPLAY_OK)
+    {
+        /* Ordinary invalid input stays rejected; only a terminal replay
+         * certificate invalidates the last successful publication. */
+        (void)Estimator_ReplayFaultStop();
+        return 0U;
+    }
+    return 1U;
+}
+
 #endif
 
 #if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
@@ -3182,7 +3262,6 @@ static void Estimator_PredictionProcess(
 {
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     float delta_velocity_enu_mps[3];
-    float q_start[4];
 #endif
     SystemLifecycleState lifecycle_state = SystemLifecycle_GetState();
 
@@ -3206,29 +3285,13 @@ static void Estimator_PredictionProcess(
     Estimator_PureInsPublish(prediction->timestamp_us);
     Estimator_DiagnosticsPublish(prediction->timestamp_us);
 #else
-    memcpy(q_start, s_estimator.q_nb, sizeof(q_start));
-    Ins_TransformDeltaVelocityToNavigation(
-        q_start,
-        prediction->delta_velocity_b_sculling_corrected,
-        prediction->dt_s,
-        SYSTEM_KF_GRAVITY_MPS2,
-        delta_velocity_enu_mps);
-    if (Attitude_PropagateQuaternionBodyIncrement(
-            q_start,
-            prediction->delta_theta_b_corrected,
-            s_estimator.q_nb) == 0U)
-    {
-#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-        Estimator_PredictionLogPush(prediction, Estimator_OperationNext(), NAV_REPLAY_INVALID, 0U);
-#endif
-        s_snapshot.health_flags |= ESTIMATOR_HEALTH_KF_NUMERIC_ERROR;
-        return;
-    }
-    if (Estimator_PredictionApply(prediction, delta_velocity_enu_mps) != NAV_REPLAY_OK)
-    {
-        s_snapshot.health_flags |= ESTIMATOR_HEALTH_KF_NUMERIC_ERROR;
-        return;
-    }
+    /* An invalidated output remains unavailable until explicit mission reset;
+     * a later packet must not republish it as newly initialized. */
+    if ((s_snapshot.initialized == 0U) &&
+        ((s_snapshot.health_flags & ESTIMATOR_HEALTH_KF_NUMERIC_ERROR) != 0U))
+    { return; }
+    if (Estimator_KfPredictionApply(prediction, delta_velocity_enu_mps) == 0U)
+    { return; }
     Estimator_AccelerationPublish(delta_velocity_enu_mps, prediction->dt_s);
     s_snapshot.measurement_attempt_mask = 0U;
     s_snapshot.position_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
@@ -3239,7 +3302,9 @@ static void Estimator_PredictionProcess(
     s_snapshot.velocity_r_scale = 1.0f;
     s_snapshot.baro_r_scale = 1.0f;
     Estimator_GnssUpdate(prediction->timestamp_us);
+    if (Estimator_ReplayFaultStop() != 0U) { return; }
     Estimator_BarometerUpdate(prediction->timestamp_us);
+    if (Estimator_ReplayFaultStop() != 0U) { return; }
     if (SystemNavigationHealth_DegradedGet(prediction->timestamp_us) != 0U)
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
     else { s_snapshot.health_flags &= ~ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
@@ -3787,6 +3852,10 @@ void EstimatorTask_RollbackMissionStart(void)
     s_estimator.initialized = 0U;
     s_preparation.initialized = 0U;
     s_preparation.generation++;
+    /* Owner fields must be coherent before SnapshotPublish copies them. */
+    s_estimator.gnss_origin_valid = 0U;
+    s_estimator.gnss_fusion_enabled = 0U;
+    s_estimator.baro_origin_valid = 0U;
 #if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
     if (Estimator_NavigationBackendSelected() != 0U)
     { SystemNavigationBackend_Reset(); }
@@ -3811,9 +3880,6 @@ void EstimatorTask_RollbackMissionStart(void)
 #endif
     EstimatorBarometerPending_Reset(&s_estimator.pending_barometer);
 
-    s_estimator.gnss_origin_valid = 0U;
-    s_estimator.gnss_fusion_enabled = 0U;
-    s_estimator.baro_origin_valid = 0U;
     s_estimator.gnss_origin_sample_count = 0U;
     s_estimator.baro_origin_sample_count = 0U;
     s_estimator.baro_diagnostics.origin_sample_count = 0U;

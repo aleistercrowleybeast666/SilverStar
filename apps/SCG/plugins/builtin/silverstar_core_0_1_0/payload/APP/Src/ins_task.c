@@ -79,7 +79,20 @@ static void InsTask_NavigationDiagnosticsApply(SystemInsDiagnostics *diagnostics
     if (diagnostics == NULL) { return; }
     SILVERSTAR_ASSERT_OBJECT(diagnostics, SystemInsDiagnostics,
         SILVERSTAR_ASSERT_MODULE_APP);
-    if (Estimator_GetLatestSnapshot(&navigation) == 0U) { return; }
+    if (Estimator_GetLatestSnapshot(&navigation) == 0U)
+    {
+        /* The getter still copies an invalid snapshot. Do not fall back to
+         * healthy pure-INS diagnostic flags after the selected navigation fails. */
+        if ((navigation.mission_running != 0U) &&
+            ((navigation.health_flags & ESTIMATOR_HEALTH_KF_NUMERIC_ERROR) != 0U))
+        {
+            diagnostics->quaternion_valid = 0U;
+            diagnostics->velocity_valid = 0U;
+            diagnostics->position_valid = 0U;
+            diagnostics->software_attitude_propagation = 0U;
+        }
+        return;
+    }
     diagnostics->last_update_timestamp_us = navigation.timestamp_us;
     diagnostics->quaternion_valid = navigation.initialized;
     diagnostics->velocity_valid = navigation.initialized;

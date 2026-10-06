@@ -1195,7 +1195,7 @@ BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister
 # Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
 # variants supplement the historical V2 sets. No generic acceptance, source
 # coverage exclusion, callback exception or stack threshold is added.
-BINDING_REVIEW_REVISION = "nrf_ret6_pair_20261006_v5"
+BINDING_REVIEW_REVISION = "kf6_health_f407_20261006_v6"
 BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
  'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
  'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
@@ -1322,9 +1322,29 @@ BINDING_DEPENDENCIES_NRF_V5 = {'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_
  'Devices/Telemetry/NRF24L01P/Src/nrf24_fragment.c': ['8112748e472b0e6c42b63ea7080bea49118632d7d611bc2ab063d4ad9c11df27'],
  'Generated/Src/project_device_instances.c': ['3adac9864ceeeb0e33b82eb000949db35aa2d101e612c43c26161006919d3b71']}
 
+# Exact reviewed KF6 health/publication bodies and fresh F407 reference inputs.
+# Historical core flags stay internal; no new callback, ABI, threshold or source
+# coverage exception. F407 generated inputs are identical before/after this fix.
+# See docs/FCCG/KF6_HEALTH_PUBLICATION.md for configuration and remaining limits.
+BINDING_SOURCE_HEALTH_V6 = {'APP/Src/diagnostic_log.c': ['454d6680c2165ab8adcc974dbac9daaf47e93e8cbfdabd8b53628b0f7f6b7cdc'],
+ 'APP/Src/estimator_task.c': ['15d51ac42b7ca17c55f40e8594be995bd16ba4cd033a68d600fd3cc289db8d18'],
+ 'APP/Src/ins_task.c': ['b86c5db02390f31b1833c509b34b8ef3f5740b488870b9bebe038f78b7c65ced'],
+ 'Generated/Inc/project_algorithm_parameters.h': ['a655e7e0964252a959e23e59369da5bb7d94b8fc70500e6211659ce270daf33e'],
+ 'Generated/Inc/project_device_instances.h': ['ae8cf72069c44a53398b4c950d0f6cca4d8550a93507644402b8719b2b5e1f95'],
+ 'Generated/Inc/project_flight_config.h': ['0ed2f76db7ca7b2ca73c7a579008286e1916b2c51cf1418375c93d388722fd52'],
+ 'Generated/Inc/project_storage_binding.h': ['1cac55d35dbd70bc6cf5305dbf9e7c877fa9eded2143a2d2e31f7652c6f5d3f4'],
+ 'Generated/Src/project_capability_routes.c': ['3ac6a4b817c2228cf75b782f8ab3737768e2308b174a3cf9e581287872050f3f'],
+ 'Generated/Src/project_log_decoder_profile.c': ['dec59eb724e22e84329c4ea49e1f569520f592743c903d6e68acf34701449e30'],
+ 'Generated/Src/project_metadata.c': ['e6405ace3f032bb3d669a91b0ed5d5f0fd1d24fbf314171618ecd2d5ff3c5ff2'],
+ 'Generated/Src/project_mission_parameters.c': ['05fd966ad4118ba5993e276368850d60b81fd973752e71ccbee1ea165321785b']}
+
+BINDING_DEPENDENCIES_HEALTH_V6 = {'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c': ['3eb8c2bada34803a77457928ec414d08f262739082857301f2ed9e1b4376cb9f'],
+ 'Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c': ['3ae2c0b291a6b698c09b90dc1a508329c148f295faae1ec442756bdcd7d0c212']}
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
-            BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []))
+            BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
+            BINDING_SOURCE_HEALTH_V6.get(path, []))
 
 
 def BindingSourceHash_Get(text):
@@ -1347,7 +1367,8 @@ def BindingSources_Verify(root, sources, build):
         dependencies = dependency.read_text(encoding="utf-8").split(":", 1)[1].replace("\\\n", " ").split("\n", 1)[0].split()
         expected_graph = (BINDING_DEPENDENCIES_V2.get(path, []) +
                           BINDING_DEPENDENCIES_EPOCH_V3.get(path, []) +
-                          BINDING_DEPENDENCIES_NRF_V5.get(path, []))
+                          BINDING_DEPENDENCIES_NRF_V5.get(path, []) +
+                          BINDING_DEPENDENCIES_HEALTH_V6.get(path, []))
         graph_hash = hashlib.sha256("\n".join(dependencies).encode()).hexdigest()
         if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)
