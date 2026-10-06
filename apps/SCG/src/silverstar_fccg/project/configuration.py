@@ -20,6 +20,7 @@ from silverstar_fccg.project.capabilities import (
     MeasurementAnyOf_Get,
 )
 from silverstar_fccg.project.logging import LoggingProfile_Reconcile
+from silverstar_fccg.project.feature_tiers import FeatureTier_StrategyAllowed
 from silverstar_fccg.project.model import (
     PROTOCOL_CATEGORIES,
     DeviceInstance,
@@ -211,6 +212,8 @@ def StrategyAvailabilities_Get(
             values[manifest.component_id] = _ManifestAvailability_Get(
                 manifest, component_ids, catalog
             )
+            if not FeatureTier_StrategyAllowed(model, manifest.component_id):
+                values[manifest.component_id] = SelectionAvailability(False, reason_code="feature_tier_restricted")
     return values
 
 
@@ -263,6 +266,11 @@ def _Strategies_Reconcile(
             if selected is None and not required:
                 continue
             selected_availability = availability.get(selected)
+            if selected_availability is not None and selected_availability.reason_code == "feature_tier_restricted":
+                # Opening a migrated artifact never destroys its algorithm or
+                # parameter choices. Only an explicit tier switch changes them.
+                notices.append(ConfigurationNotice("configuration.feature_tier_review", slot=slot, component_id=selected))
+                continue
             if selected_availability is not None and selected_availability.available:
                 continue
             legal = [
@@ -701,8 +709,6 @@ def _ResourceAssignments_Reconcile(
 
 
 def _CompactPlatform_Reconcile(model: ProjectModel, catalog: PluginCatalog) -> None:
-    if not model.build.compact_mode:
-        return
     contract = catalog.Component_Get(model.mcu).metadata.get("compact_platform")
     if not isinstance(contract, dict):
         return
@@ -952,10 +958,6 @@ def ProjectConfiguration_Reconcile(
         pending,
     ) = _ResourceAssignments_Reconcile(candidate, catalog)
     _HardwareAssignmentConfirmation_Reconcile(candidate, catalog)
-    if candidate.build.logging_profile == "sf6_minimal" and (
-        not candidate.build.compact_mode or candidate.strategies.get("estimator") != "silverstar.algorithm.estimator.sf6"
-    ):
-        candidate.build = replace(candidate.build, logging_profile="all_streams")
     LoggingProfile_Reconcile(candidate, catalog)
     edit_validation = Project_EditValidate(candidate, catalog)
     return ProjectConfigurationResult(

@@ -579,8 +579,7 @@ class ProjectAssembler:
             self.internal_policy.RelativePath_Validate(target)
             files[target] = source.read_bytes()
         mcu = self.catalog.Component_Get(model.mcu)
-        if (model.build.compact_mode
-                and mcu.metadata.get("compact_entry") == "cubemx_static_tasks"):
+        if mcu.metadata.get("compact_entry") == "cubemx_static_tasks":
             from silverstar_fccg.generator.compact_entry import CompactFlightMain_Integrate
 
             main_path = f"{self.HARDWARE_ROOT}/Core/Src/main.c"

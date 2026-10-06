@@ -37,6 +37,7 @@ from silverstar_fccg.project.generation_state import (
     ProjectDigest_Get,
 )
 from silverstar_fccg.project.compact_logging import CompactLogStreams_Get, SF6_MINIMAL_RECORDS
+from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
     LogRecordDefinition,
@@ -776,7 +777,7 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
-    if model.build.compact_mode:
+    if model.build.feature_tier == "minimal":
         descriptors = _DeviceDescriptorEntries_Get(model, catalog)
         algorithm_count = sum(len(catalog.Component_Get(component).metadata.get(
             "algorithm_descriptors", [])) for component in model.ComponentIds_Get())
@@ -786,7 +787,7 @@ def _FlightConfigHeader_Render(
                                 ("SYSTEM_LOG_ESTIMATOR_SLOT_SIZE", "96U")))
         definitions.extend((
             ("PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS", f"{snapshot_slots}U"),
-            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", "56U" if model.build.logging_profile == "sf6_minimal" else f"{snapshot_slots + 5}U"),
+            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", f"{max(56, snapshot_slots + 5)}U"),
             ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "40U" if model.build.logging_profile == "sf6_minimal" else "16U"),
             ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "1024U" if model.build.logging_profile == "sf6_minimal" else "2048U"),
             ("SYSTEM_IMU_SAMPLE_BUS_DEPTH", "16U"),
@@ -2571,6 +2572,8 @@ def _DeviceDescriptorEntries_Get(
                         f"Component {component_id} device descriptor is invalid"
                     )
                 entry = dict(raw_entry)
+                if not FeatureTier_DescriptorActive(model, catalog, source_instance_id, str(entry.get("class", ""))):
+                    continue
                 # The first release retains implementations and schema, but
                 # exposes no magnetic endpoint, calibration or storage target.
                 if entry.get("class") == "SYSTEM_DEVICE_CLASS_MAGNETOMETER":

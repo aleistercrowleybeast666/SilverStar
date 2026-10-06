@@ -962,5 +962,20 @@
   "field.compact_log_profile": "Compact logging profile",
   "logging.profile.all_streams": "All streams (retained settings)",
   "logging.profile.sf6_minimal": "SF6 minimal (raw IMU/barometer + SF6 + lifecycle)",
-  "logging.profile.locked": "Controlled by the selected compact logging profile; select All streams to edit."
+  "logging.profile.locked": "Controlled by Minimal tier; switch tiers to restore editing.",
+  "group.global_configuration": "Global configuration",
+  "field.feature_tier": "Feature tier",
+  "feature_tier.full": "Full",
+  "feature_tier.standard": "Standard",
+  "feature_tier.compact": "Compact",
+  "feature_tier.minimal": "Minimal",
+  "feature_tier.description.full": "Retain all supported features. Existing safety, resource and first-release visibility constraints apply. The tier is independent of the MCU.",
+  "feature_tier.description.standard": "Disable ESKF15. Retain other supported features. An explicit switch defaults to KF6; pure INS remains available. The tier is independent of the MCU.",
+  "feature_tier.description.compact": "Disable KF6 / ESKF15; at most one IMU, GNSS, telemetry and barometer endpoint. A dedicated barometer takes priority over an embedded one. GNSS, maintenance and logging remain configurable. Pure INS remains available.",
+  "feature_tier.description.minimal": "Compact constraints plus GNSS off, maintenance off, minimum replayable local logging and compact queues. Retain metadata, calibration, alignment and replay inputs; safety stacks remain sized as before.",
+  "feature_tier.changed": "Switched to {tier}.",
+  "feature_tier.saved_choices": "Previous choices are saved and restored when returning to their tier.",
+  "configuration.feature_tier_review": "The retained algorithm conflicts with this tier. Parameters are preserved; explicitly select a compatible tier or algorithm.",
+  "availability.feature_tier_restricted": "This algorithm is prohibited by the feature tier",
+  "feature_tier_restricted": "This algorithm is prohibited by the feature tier"
 }

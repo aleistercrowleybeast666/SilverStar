@@ -163,13 +163,17 @@ def _Requirements_Get(
 
 
 def _Providers_Get(
-    instances: list[DeviceInstance], catalog: PluginCatalog
+    instances: list[DeviceInstance], catalog: PluginCatalog, model: ProjectModel | None = None
 ) -> dict[str, tuple[CapabilityProvider, ...]]:
     values: dict[str, list[CapabilityProvider]] = {}
     for instance in instances:
         manifest = catalog.InstanceComponent_Get(instance)
         provider = CapabilityProvider(instance.instance_id, instance.plugin)
         for capability in manifest.provides:
+            if model is not None and capability.startswith("barometer."):
+                from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive
+                if not FeatureTier_DescriptorActive(model, catalog, instance.instance_id, "SYSTEM_DEVICE_CLASS_BAROMETER"):
+                    continue
             values.setdefault(capability, []).append(provider)
     return {
         capability: tuple(providers)
@@ -182,7 +186,7 @@ def CapabilityResolution_Resolve(
 ) -> CapabilityResolution:
     catalog = catalog.ProjectView_Get(model)
     requirements = _Requirements_Get(model, catalog)
-    providers_by_capability = _Providers_Get(model.device_instances, catalog)
+    providers_by_capability = _Providers_Get(model.device_instances, catalog, model)
     requirements_by_capability: dict[str, list[CapabilityUse]] = {}
     for requirement in requirements:
         requirements_by_capability.setdefault(requirement.capability, []).append(

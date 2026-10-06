@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.project.model import ProjectModel
+from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive
 
 
 COMPACT_DEVICE_CLASSES = frozenset({
@@ -20,7 +21,7 @@ def CompactErrors_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[str,
         manifest = catalog.InstanceComponent_Get(instance)
         for descriptor in manifest.metadata.get("device_descriptors", ()):
             kind = descriptor.get("class")
-            if kind in owners:
+            if kind in owners and FeatureTier_DescriptorActive(model, catalog, instance.instance_id, kind):
                 owners[kind].add(instance.instance_id)
     return tuple(
         f"Compact mode permits at most one {kind}: {', '.join(sorted(instances))}"

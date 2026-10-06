@@ -16,7 +16,7 @@ def test_profile_roundtrip_preserves_all_stream_choices(builtin_catalog):
     original = model.Dictionary_Get()
     assert "logging_profile" not in original["build"]
     retained = list(model.logging_streams)
-    model.build = replace(model.build, compact_mode=True, logging_profile="sf6_minimal")
+    model.build = replace(model.build, feature_tier="minimal")
     model.strategies["estimator"] = "silverstar.algorithm.estimator.sf6"
     loaded = ProjectModel_Parse(model.Dictionary_Get())
     assert loaded.build.logging_profile == "sf6_minimal"
@@ -29,34 +29,33 @@ def test_profile_roundtrip_preserves_all_stream_choices(builtin_catalog):
     assert active["FLIGHT_LOG_RECORD_SF6_MEASUREMENT"].enabled
     assert loaded.logging_streams == retained
     before_digest = ProjectGenerationFingerprint_Get(loaded)
-    loaded.build = replace(loaded.build, logging_profile="all_streams")
+    loaded.build = replace(loaded.build, feature_tier="full")
     assert ProjectGenerationFingerprint_Get(loaded) != before_digest
-    model.build = replace(model.build, compact_mode=False, logging_profile="all_streams")
+    model.build = replace(model.build, feature_tier="full")
     model.strategies = original["components"]["strategies"]
     assert model.Dictionary_Get() == original
 
 
-def test_profile_requires_explicit_compact_sf6_logging_and_releases_other_algorithms(builtin_catalog):
+def test_minimal_rejects_incompatible_algorithm_without_destroying_choices(builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
-    model.build = replace(model.build, logging_profile="sf6_minimal")
+    model.build = replace(model.build, feature_tier="minimal")
+    original_parameters = model.algorithm_parameters.copy()
     assert CompactLogProfileErrors_Get(model)
-    model.build = replace(model.build, compact_mode=True)
+    result = ProjectConfiguration_Reconcile(model, builtin_catalog)
+    assert result.model.build.logging_profile == "sf6_minimal"
+    assert result.model.strategies["estimator"] == model.strategies["estimator"]
+    assert result.model.algorithm_parameters == original_parameters
     model.strategies["estimator"] = "silverstar.algorithm.estimator.sf6"
     assert not CompactLogProfileErrors_Get(model)
     model.protocols["logging"] = None
     assert CompactLogProfileErrors_Get(model)
-    model = ReferenceProject_Create(catalog=builtin_catalog)
-    model.build = replace(model.build, compact_mode=True, logging_profile="sf6_minimal")
-    result = ProjectConfiguration_Reconcile(model, builtin_catalog)
-    assert result.model.build.logging_profile == "all_streams"
-    assert result.model.strategies["estimator"] == model.strategies["estimator"]
 
 
 def test_profile_has_fixed_slots_proven_from_c_object_sizes(builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
     normal = _FlightConfigHeader_Render(model, builtin_catalog)
     assert "SYSTEM_LOG_RECORD_SLOT_SIZE" not in normal
-    model.build = replace(model.build, compact_mode=True, logging_profile="sf6_minimal")
+    model.build = replace(model.build, feature_tier="minimal")
     model.strategies["estimator"] = "silverstar.algorithm.estimator.sf6"
     header = _FlightConfigHeader_Render(model, builtin_catalog)
     assert re.search(r"#define SYSTEM_LOG_RECORD_SLOT_SIZE\s+168U", header)
@@ -93,29 +92,30 @@ def test_manual_gui_profile_preserves_streams_and_restores_other_algorithms(work
         estimator = window.flight_configuration_page.strategy_combos["estimator"]
         estimator.setCurrentIndex(estimator.findData("silverstar.algorithm.estimator.sf6"))
         qapp.processEvents()
-        window.build_page.compact_mode_checkbox.setChecked(True)
-        qapp.processEvents()
         retained = list(window._model.logging_streams)
-        profile = window.build_page.compact_log_profile_combo
-        assert profile.isEnabled()
-        profile.setCurrentIndex(profile.findData("sf6_minimal"))
+        profile = window.devices_page.feature_tier_combo
+        profile.setCurrentIndex(profile.findData("minimal"))
         qapp.processEvents()
         window._ProjectModel_Sync()
-        assert window._model.logging_streams == retained
+        assert ProjectModel_Parse(window._model.feature_tier_presets["full"]).logging_streams == retained
         loaded = ProjectModel_Parse(window._model.Dictionary_Get())
         assert loaded.build.logging_profile == "sf6_minimal"
         views = window.flight_configuration_page.Streams_Get()
         assert not next(view for view in views if view.stream_id == "FLIGHT_LOG_RECORD_ESTIMATOR").enabled
         assert next(view for view in views if view.stream_id == "FLIGHT_LOG_RECORD_SF6_STATE").enabled
-        profile.setCurrentIndex(profile.findData("all_streams"))
+        profile.setCurrentIndex(profile.findData("full"))
         qapp.processEvents()
         assert window._model.logging_streams == retained
-        profile.setCurrentIndex(profile.findData("sf6_minimal"))
-        qapp.processEvents()
+        assert window._model.build.logging_profile == "all_streams"
         estimator = window.flight_configuration_page.strategy_combos["estimator"]
         estimator.setCurrentIndex(estimator.findData("silverstar.algorithm.estimator.kf6"))
         qapp.processEvents()
-        assert window._model.strategies["estimator"] == "silverstar.algorithm.estimator.kf6"
+        profile.setCurrentIndex(profile.findData("compact"))
+        qapp.processEvents()
+        assert window._model.strategies["estimator"] == "silverstar.algorithm.estimator.sf6"
         assert window._model.build.logging_profile == "all_streams"
+        profile.setCurrentIndex(profile.findData("full"))
+        qapp.processEvents()
+        assert window._model.strategies["estimator"] == "silverstar.algorithm.estimator.kf6"
     finally:
         window.close()

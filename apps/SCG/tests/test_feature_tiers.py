@@ -1,0 +1,148 @@
+from copy import deepcopy
+from dataclasses import replace
+
+import pytest
+
+from silverstar_fccg.project.model import BuildOptions, DeviceInstance, ProjectModel_Parse, ProjectModelError
+from silverstar_fccg.project.reference import ReferenceProject_Create
+from silverstar_fccg.project.feature_tiers import FeatureTier_Apply, FeatureTier_StrategyAllowed, FeatureTier_DescriptorActive
+from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
+from silverstar_fccg.generator.render import _FlightConfigHeader_Render, _DeviceDescriptorEntries_Get
+from silverstar_fccg.generator.source_graph import SourceGraph_Resolve, SourceGraphError
+
+PREFIX = 'silverstar.algorithm.estimator.'
+
+
+@pytest.mark.parametrize('tier,allowed', [('full', ('sf6', 'kf6', 'eskf15')), ('standard', ('sf6', 'kf6')),
+                                       ('compact', ('sf6',)), ('minimal', ('sf6',))])
+def test_tier_algorithm_matrix_and_pure_ins(builtin_catalog, tier, allowed):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.build = replace(model.build, feature_tier=tier)
+    assert FeatureTier_StrategyAllowed(model, None)
+    for algorithm in ('sf6', 'kf6', 'eskf15'):
+        assert FeatureTier_StrategyAllowed(model, PREFIX + algorithm) == (algorithm in allowed)
+
+
+def test_legacy_roundtrip_and_single_authority(builtin_catalog):
+    original = ReferenceProject_Create(catalog=builtin_catalog).Dictionary_Get()
+    assert ProjectModel_Parse(original).Dictionary_Get() == original
+    legacy = deepcopy(original)
+    legacy['build']['compact_mode'] = True
+    loaded = ProjectModel_Parse(legacy)
+    assert loaded.build.feature_tier == 'compact'
+    assert loaded.strategies == original['components']['strategies']
+    assert loaded.algorithm_parameters == ProjectModel_Parse(original).algorithm_parameters
+    result = ProjectConfiguration_Reconcile(loaded, builtin_catalog)
+    assert result.model.strategies['estimator'] == loaded.strategies['estimator']
+    canonical = loaded.Dictionary_Get()
+    assert canonical['format_version'] == 17
+    assert 'compact_mode' not in canonical['build']
+    assert ProjectModel_Parse(canonical).Dictionary_Get() == canonical
+    canonical['build']['compact_mode'] = True
+    with pytest.raises(ProjectModelError, match='authoritative'):
+        ProjectModel_Parse(canonical)
+
+
+def test_switch_preserves_algorithms_parameters_devices_and_current_mcu(builtin_catalog):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.strategies['estimator'] = PREFIX + 'eskf15'
+    model.device_instances.append(DeviceInstance('imu_extra', 'silverstar.device.imu.mpu6050'))
+    initial_parameters = deepcopy(model.algorithm_parameters)
+    original_devices = deepcopy(model.device_instances)
+    FeatureTier_Apply(model, 'standard', builtin_catalog)
+    assert model.strategies['estimator'] == PREFIX + 'kf6'
+    notes = FeatureTier_Apply(model, 'compact', builtin_catalog)
+    assert any(note.startswith('suspended:') for note in notes)
+    assert model.strategies['estimator'] == PREFIX + 'sf6'
+    assert len(model.device_instances) < len(original_devices)
+    model.mcu = 'silverstar.mcu.stm32f103rft6'
+    FeatureTier_Apply(model, 'full', builtin_catalog)
+    assert model.strategies['estimator'] == PREFIX + 'eskf15'
+    assert model.algorithm_parameters == initial_parameters
+    assert model.device_instances == original_devices
+    assert model.mcu == 'silverstar.mcu.stm32f103rft6'
+    assert ProjectModel_Parse(model.Dictionary_Get()).Dictionary_Get() == model.Dictionary_Get()
+
+
+def test_compact_keeps_gnss_maintenance_and_full_log_geometry(builtin_catalog):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    original_protocols = deepcopy(model.protocols)
+    original_devices = deepcopy(model.device_instances)
+    FeatureTier_Apply(model, 'compact', builtin_catalog)
+    assert model.protocols == original_protocols
+    assert model.device_instances == original_devices
+    header = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH' not in header
+    assert model.build.logging_profile == 'all_streams'
+    assert 'AIR_LINK_HAL_BUFFER_SIZE=260' in SourceGraph_Resolve(model, builtin_catalog).defines
+
+
+def test_minimal_changes_are_reversible_and_keep_pure_ins(builtin_catalog):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.strategies['estimator'] = None
+    original = deepcopy(model.device_instances)
+    protocols = deepcopy(model.protocols)
+    FeatureTier_Apply(model, 'minimal', builtin_catalog)
+    assert model.strategies['estimator'] is None
+    assert model.protocols['maintenance'] is None
+    assert model.protocols['logging'] is not None
+    assert all(item.plugin != 'silverstar.device.gnss.neo_m9n' for item in model.device_instances)
+    assert model.build.logging_profile == 'sf6_minimal'
+    assert 'SYSTEM_LOG_RECORD_SLOT_SIZE' in _FlightConfigHeader_Render(model, builtin_catalog)
+    FeatureTier_Apply(model, 'full', builtin_catalog)
+    assert model.device_instances == original
+    assert model.protocols == protocols
+
+
+def test_malformed_compact_algorithm_blocks_generation(builtin_catalog):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.build = replace(model.build, feature_tier='compact')
+    assert model.strategies['estimator'] == PREFIX + 'kf6'
+    with pytest.raises(SourceGraphError, match='prohibited'):
+        SourceGraph_Resolve(model, builtin_catalog)
+
+
+def test_preset_recursion_rejected(builtin_catalog):
+    data = ReferenceProject_Create(catalog=builtin_catalog).Dictionary_Get()
+    data['feature_tier_presets'] = {'full': deepcopy(data)}
+    data['feature_tier_presets']['full']['feature_tier_presets'] = {}
+    with pytest.raises(ProjectModelError, match='nonrecursive'):
+        ProjectModel_Parse(data)
+
+
+def test_dedicated_barometer_precedes_embedded_endpoint_without_hiding_imu(builtin_catalog):
+    from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.device_instances = [DeviceInstance('imu0', 'silverstar.device.imu.jy901b'),
+                              DeviceInstance('barometer0', 'silverstar.device.barometer.bmp280')]
+    full_entries = _DeviceDescriptorEntries_Get(model, builtin_catalog)
+    assert sum(entry['class'] == 'SYSTEM_DEVICE_CLASS_BAROMETER' for entry in full_entries) == 2
+    FeatureTier_Apply(model, 'compact', builtin_catalog)
+    entries = _DeviceDescriptorEntries_Get(model, builtin_catalog)
+    barometers = [entry for entry in entries if entry['class'] == 'SYSTEM_DEVICE_CLASS_BAROMETER']
+    assert len(barometers) == 1 and barometers[0]['_source_instance_id'] == 'barometer0'
+    assert any(entry['class'] == 'SYSTEM_DEVICE_CLASS_IMU' for entry in entries)
+    assert not any(entry['class'] == 'SYSTEM_DEVICE_CLASS_MAGNETOMETER' for entry in entries)
+    resolution = CapabilityResolution_Resolve(model, builtin_catalog)
+    assert all(route.provider.instance_id == 'barometer0' for route in resolution.routes
+               if route.requirement.capability.startswith('barometer.'))
+
+
+def test_first_page_control_and_log_states(qapp):
+    from silverstar_fccg.core.i18n import Translator
+    from silverstar_fccg.core.view_models import LoggingStreamView
+    from silverstar_fccg.ui.pages.components import DevicesPage, FlightConfigurationPage
+    from silverstar_fccg.ui.widgets import StandardCheckBox, LockedCheckBox
+    page = DevicesPage(Translator('zh_CN'))
+    assert [page.feature_tier_combo.itemData(i) for i in range(4)] == ['full', 'standard', 'compact', 'minimal']
+    assert page.feature_tier_combo.itemText(3) == '极简'
+    logs = FlightConfigurationPage(Translator('en_US'))
+    logs.Streams_Set([LoggingStreamView('same', 'Selected', True, 'replay', editable=False)])
+    check = logs.logging_table.cellWidget(0, 0).findChild(StandardCheckBox)
+    assert check.isChecked() and not check.isEnabled()
+    logs.Streams_Set([LoggingStreamView('same', 'Required', True, 'replay', required=True)])
+    check = logs.logging_table.cellWidget(0, 0).findChild(StandardCheckBox)
+    assert isinstance(check, LockedCheckBox) and check.isChecked() and check.isEnabled()
+    logs.Streams_Set([LoggingStreamView('same', 'Unavailable', False, 'replay', required=True, available=False)])
+    check = logs.logging_table.cellWidget(0, 0).findChild(StandardCheckBox)
+    assert isinstance(check, LockedCheckBox) and not check.isChecked() and not check.isEnabled()

@@ -46,6 +46,8 @@ RELATIVE_FILE_PATTERN = re.compile(r"^[A-Za-z0-9_./+@ -]+$")
 PROJECT_FORMAT_VERSION = 14
 PROJECT_GROUND_RADIOS_FORMAT_VERSION = 15
 PROJECT_RADIO_VARIANTS_FORMAT_VERSION = 16
+PROJECT_FEATURE_TIERS_FORMAT_VERSION = 17
+FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
     "telemetry": "air.m0",
@@ -135,6 +137,20 @@ class BuildOptions:
     memory_layout: str = "legacy"
     compact_mode: bool = False
     logging_profile: str = "all_streams"
+    feature_tier: str = ""
+
+    def __post_init__(self) -> None:
+        # Legacy flags are constructor/migration inputs only. Once resolved,
+        # immutable feature_tier is authoritative; compact_mode is a cache.
+        tier = self.feature_tier or (
+            "minimal" if self.compact_mode and self.logging_profile == "sf6_minimal"
+            else "compact" if self.compact_mode else "full"
+        )
+        if tier not in FEATURE_TIERS:
+            raise ProjectModelError("build.feature_tier is invalid")
+        object.__setattr__(self, "feature_tier", tier)
+        object.__setattr__(self, "compact_mode", tier in ("compact", "minimal"))
+        object.__setattr__(self, "logging_profile", "sf6_minimal" if tier == "minimal" else "all_streams")
 
 
 @dataclass(frozen=True, slots=True)
@@ -322,6 +338,7 @@ class ProjectModel:
     )
     component_provenance: dict[str, dict[str, Any]] = field(default_factory=dict)
     reference_provenance: dict[str, Any] = field(default_factory=dict)
+    feature_tier_presets: dict[str, dict[str, Any]] = field(default_factory=dict)
     format_version: int = PROJECT_FORMAT_VERSION
 
     def ComponentIds_Get(self) -> tuple[str, ...]:
@@ -371,7 +388,9 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": (PROJECT_RADIO_VARIANTS_FORMAT_VERSION
+            "format_version": (PROJECT_FEATURE_TIERS_FORMAT_VERSION
+                if self.build.feature_tier != "full" or self.feature_tier_presets
+                else PROJECT_RADIO_VARIANTS_FORMAT_VERSION
                 if any(instance.module_variant or instance.tx_power_dbm is not None for instance in self.device_instances)
                 else max(self.format_version, PROJECT_GROUND_RADIOS_FORMAT_VERSION) if self.ground_target.radio_instances else self.format_version),
             "project": {
@@ -537,13 +556,14 @@ class ProjectModel:
                 "eide_mode": self.build.eide_mode,
                 "tool_paths": dict(sorted(self.build.tool_paths.items())),
                 "memory_layout": self.build.memory_layout,
-                **({"compact_mode": True} if self.build.compact_mode else {}),
+                **({"feature_tier": self.build.feature_tier} if self.build.feature_tier != "full" else {}),
                 **({"logging_profile": self.build.logging_profile}
                    if self.build.logging_profile != "all_streams" else {}),
             },
             "generated_glue": list(self.generated_glue),
             "component_provenance": self.component_provenance,
             "reference_provenance": self.reference_provenance,
+            **({"feature_tier_presets": deepcopy(self.feature_tier_presets)} if self.feature_tier_presets else {}),
         }
 
 
@@ -568,8 +588,9 @@ def _Build_Dictionary(build: BuildOptions) -> dict[str, Any]:
     result = asdict(build)
     if build.logging_profile == "all_streams":
         result.pop("logging_profile")
-    if not build.compact_mode:
-        result.pop("compact_mode")
+    result.pop("compact_mode")
+    if build.feature_tier == "full":
+        result.pop("feature_tier")
     return result
 
 
@@ -1569,7 +1590,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
         "eide_mode",
         "tool_paths",
     }
-    if set(data) - {"memory_layout", "compact_mode", "logging_profile"} != expected:
+    if set(data) - {"memory_layout", "compact_mode", "logging_profile", "feature_tier"} != expected:
         raise ProjectModelError("build has missing or unknown fields")
     logging_profile = data.get("logging_profile", "all_streams")
     if logging_profile not in ("all_streams", "sf6_minimal"):
@@ -1577,6 +1598,17 @@ def _Build_Parse(value: Any) -> BuildOptions:
     compact_mode = data.get("compact_mode", False)
     if not isinstance(compact_mode, bool):
         raise ProjectModelError("build.compact_mode must be a boolean")
+    if "feature_tier" not in data and logging_profile == "sf6_minimal" and not compact_mode:
+        raise ProjectModelError("Legacy sf6_minimal logging requires compact_mode")
+    feature_tier = data.get("feature_tier", "")
+    if "feature_tier" in data:
+        if feature_tier not in FEATURE_TIERS:
+            raise ProjectModelError("build.feature_tier is invalid")
+        if "compact_mode" in data:
+            raise ProjectModelError("feature_tier and legacy compact_mode cannot both be authoritative")
+        expected_logging = "sf6_minimal" if feature_tier == "minimal" else "all_streams"
+        if logging_profile != expected_logging:
+            raise ProjectModelError("logging_profile contradicts feature_tier")
     memory_layout = data.get("memory_layout", "legacy")
     if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
         raise ProjectModelError("build.memory_layout is invalid")
@@ -1625,6 +1657,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
         memory_layout=memory_layout,
         compact_mode=compact_mode,
         logging_profile=logging_profile,
+        feature_tier=feature_tier,
     )
 
 
@@ -1868,7 +1901,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     }
     if "flight_tx_power_dbm" not in root:
         root["flight_tx_power_dbm"] = 12
-    if set(root) != required_root:
+    if set(root) - {"feature_tier_presets"} != required_root:
         missing = required_root - set(root)
         unknown = set(root) - required_root
         details = [
@@ -1876,9 +1909,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION):
         raise ProjectModelError(
-            "Only project format_version 14, 15 or 16 is supported"
+            "Only project format_version 14, 15, 16 or 17 is supported"
         )
     project_data = _Object_Require(root.get("project"), "project")
     if set(project_data) != {"name", "firmware_version", "build_target"}:
@@ -1905,7 +1938,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         strategies,
         environment,
     ) = _Components_Parse(root.get("components"))
-    if root["format_version"] != PROJECT_RADIO_VARIANTS_FORMAT_VERSION and any(
+    if root["format_version"] < PROJECT_RADIO_VARIANTS_FORMAT_VERSION and any(
         item.module_variant or item.tx_power_dbm is not None for item in device_instances
     ):
         raise ProjectModelError("Per-instance radio configuration requires project format 16")
@@ -1923,7 +1956,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         raise ProjectModelError("flight_tx_power_dbm must be integer")
     ground_target = _GroundTarget_Parse(root.get("ground_target"),
         radio_instances_allowed=(root["format_version"] == PROJECT_GROUND_RADIOS_FORMAT_VERSION
-            or root["format_version"] == PROJECT_RADIO_VARIANTS_FORMAT_VERSION and
+            or root["format_version"] >= PROJECT_RADIO_VARIANTS_FORMAT_VERSION and
                "radio_instances" in root["ground_target"]))
     resources = _Object_Require(root.get("resources"), "resources")
     if not all(
@@ -1957,6 +1990,15 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     reference_provenance = _Object_Require(
         root.get("reference_provenance"), "reference_provenance"
     )
+    feature_tier_presets = _Object_Require(root.get("feature_tier_presets", {}), "feature_tier_presets")
+    if set(feature_tier_presets) - set(FEATURE_TIERS):
+        raise ProjectModelError("feature_tier_presets contains an unknown tier")
+    for tier, preset in feature_tier_presets.items():
+        if not isinstance(preset, dict) or "feature_tier_presets" in preset:
+            raise ProjectModelError("Feature tier presets must be nonrecursive project snapshots")
+        restored = ProjectModel_Parse(preset)
+        if restored.build.feature_tier != tier:
+            raise ProjectModelError("Feature tier preset identity does not match its key")
     return ProjectModel(
         identity=ProjectIdentity(name, firmware_version, build_target),
         core=core,
@@ -1987,6 +2029,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         generated_glue=generated_glue,
         component_provenance=_Provenance_Parse(root.get("component_provenance")),
         reference_provenance=dict(reference_provenance),
+        feature_tier_presets=deepcopy(feature_tier_presets),
         format_version=root["format_version"],
     )
 

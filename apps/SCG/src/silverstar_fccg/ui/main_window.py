@@ -96,7 +96,8 @@ from silverstar_fccg.project.folder_contract import (
     FLIGHT_DIRECTORY,
 )
 from silverstar_fccg.project.lifecycle import ProjectLifecycleState
-from silverstar_fccg.project.compact_logging import CompactLogStreams_Get
+from silverstar_fccg.project.feature_tiers import FeatureTier_Apply
+from silverstar_fccg.project.compact_logging import CompactLogStreams_Get, CompactLogRequiredRecords_Get
 from silverstar_fccg.project.logging import (
     LogAvailability_Get,
     LogCadenceKind,
@@ -566,8 +567,7 @@ class MainWindow(QMainWindow):
         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
         self.build_page.actionRequested.connect(self._Build_Request)
         self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
-        self.build_page.compactModeChanged.connect(self._CompactMode_Change)
-        self.build_page.compactLogProfileChanged.connect(self._CompactLogProfile_Change)
+        self.devices_page.featureTierChanged.connect(self._FeatureTier_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
             self._PluginInstall_Dialog
         )
@@ -839,9 +839,7 @@ class MainWindow(QMainWindow):
                 display.generated_project
             )
             self.build_page.MemoryLayout_Set(display.model.build.memory_layout)
-            self.build_page.CompactMode_Set(display.model.build.compact_mode)
-            self.build_page.CompactLogProfile_Set(display.model.build.logging_profile,
-                display.model.build.compact_mode and display.model.strategies.get("estimator") == "silverstar.algorithm.estimator.sf6")
+            self.devices_page.FeatureTier_Set(display.model.build.feature_tier)
             if not self._alignment_commit_in_progress:
                 self.algorithm_parameters_page.AlignmentConfiguration_Set(
                     display.model.alignment,
@@ -963,11 +961,12 @@ class MainWindow(QMainWindow):
                     period_us=stream.period_us,
                     level=definition.level.value,
                     purpose=definition.purpose.value,
-                    required=definition.level == LogPolicyLevel.REQUIRED,
+                    required=(definition.level == LogPolicyLevel.REQUIRED or
+                        (model.build.feature_tier == "minimal" and stream.record in CompactLogRequiredRecords_Get(model))),
                     available=availability.available,
                     editable=model.build.logging_profile == "all_streams",
                     availability_reason=(self._translator.Text_Get("logging.profile.locked")
-                        if model.build.logging_profile != "all_streams" else reason),
+                        if availability.available and model.build.logging_profile != "all_streams" else reason),
                     record_id=definition.record_id,
                     version=definition.version,
                     payload_size=definition.payload_size,
@@ -1075,18 +1074,18 @@ class MainWindow(QMainWindow):
             model.build = replace(model.build, memory_layout=layout)
         self._ProjectConfiguration_Change(mutate)
 
-    def _CompactMode_Change(self, enabled: bool) -> None:
+    def _FeatureTier_Change(self, tier: str) -> None:
+        notes = []
         def mutate(model: ProjectModel) -> None:
-            model.build = replace(model.build, compact_mode=enabled,
-                logging_profile=model.build.logging_profile if enabled else "all_streams")
-        self._ProjectConfiguration_Change(mutate)
-
-    def _CompactLogProfile_Change(self, profile: str) -> None:
-        if profile not in ("all_streams", "sf6_minimal"):
-            return
-        def mutate(model: ProjectModel) -> None:
-            model.build = replace(model.build, logging_profile=profile)
-        self._ProjectConfiguration_Change(mutate)
+            notes.extend(FeatureTier_Apply(model, tier, self._service.catalog))
+        result = self._ProjectConfiguration_Change(mutate)
+        if result is not None:
+            text = self._translator.Text_Get("feature_tier.changed",
+                tier=self._translator.Text_Get("feature_tier." + tier))
+            if notes:
+                text += " " + self._translator.Text_Get("feature_tier.saved_choices") + " " + "; ".join(notes)
+            self.devices_page.FeatureTier_NoticeSet(text)
+            self.status_label.setText(text)
 
     def _ProjectConfiguration_Change(
         self,

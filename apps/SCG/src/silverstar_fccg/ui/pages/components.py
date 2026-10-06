@@ -59,6 +59,7 @@ from silverstar_fccg.ui.widgets import (
 
 
 class DevicesPage(ScrollableLocalizedPage):
+    featureTierChanged = Signal(str)
     instanceChanged = Signal(str, str)
     radioSelectionChanged = Signal(str, str, str)
     radioPowerChanged = Signal(str, int)
@@ -77,6 +78,23 @@ class DevicesPage(ScrollableLocalizedPage):
 
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, "page.devices", "page.devices.description")
+        global_form = QFormLayout()
+        self.feature_tier_label = QLabel()
+        self.Text_Register(self.feature_tier_label, "field.feature_tier")
+        self.feature_tier_combo = StandardComboBox()
+        self.feature_tier_combo.setObjectName("featureTierCombo")
+        for tier in ("full", "standard", "compact", "minimal"):
+            self.feature_tier_combo.addItem(translator.Text_Get("feature_tier." + tier), tier)
+        self.feature_tier_combo.currentIndexChanged.connect(
+            lambda _: self.featureTierChanged.emit(self.feature_tier_combo.currentData()))
+        global_form.addRow(self.feature_tier_label, self.feature_tier_combo)
+        self.feature_tier_description = QLabel()
+        self.feature_tier_description.setWordWrap(True)
+        global_form.addRow(self.feature_tier_description)
+        self.feature_tier_notice = QLabel()
+        self.feature_tier_notice.setWordWrap(True)
+        global_form.addRow(self.feature_tier_notice)
+        self.root_layout.addWidget(self.Group_Create("group.global_configuration", global_form))
         self.instance_order_note = QLabel()
         self.instance_order_note.setObjectName("deviceInstanceOrderNote")
         self.instance_order_note.setWordWrap(True)
@@ -177,6 +195,14 @@ class DevicesPage(ScrollableLocalizedPage):
         self._radio_modules = {}
         self._radio_configurations = {}
         self.Language_Apply(translator)
+
+    def FeatureTier_Set(self, tier: str) -> None:
+        with QSignalBlocker(self.feature_tier_combo):
+            self.feature_tier_combo.setCurrentIndex(self.feature_tier_combo.findData(tier))
+        self.feature_tier_description.setText(self._translator.Text_Get("feature_tier.description." + tier))
+
+    def FeatureTier_NoticeSet(self, text: str) -> None:
+        self.feature_tier_notice.setText(text)
 
     @staticmethod
     def _Layout_Clear(layout: QLayout) -> None:
@@ -642,6 +668,10 @@ class DevicesPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        for index in range(self.feature_tier_combo.count()):
+            tier = self.feature_tier_combo.itemData(index)
+            self.feature_tier_combo.setItemText(index, translator.Text_Get("feature_tier." + tier))
+        self.FeatureTier_Set(self.feature_tier_combo.currentData())
         if self._components:
             self.Configuration_Set(
                 self._components,
@@ -2008,11 +2038,13 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             )
             decimation = self.logging_table.cellWidget(row, 4)
             cadence = self.logging_table.cellWidget(row, 5)
-            if not same_records or enabled_check is None:
+            if (not same_records or enabled_check is None
+                    or isinstance(enabled_check, LockedCheckBox) != stream.required):
                 enabled_check = (
                     LockedCheckBox() if stream.required else StandardCheckBox()
                 )
                 enabled_check.setProperty("streamId", stream.stream_id)
+                enabled_check.setProperty("logStreamControl", True)
                 enabled_check.toggled.connect(
                     lambda _checked: self.loggingChanged.emit()
                 )
@@ -2064,6 +2096,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             with QSignalBlocker(enabled_check):
                 if isinstance(enabled_check, LockedCheckBox):
                     enabled_check.LockedState_Set(stream.available)
+                    enabled_check.setEnabled(stream.available)
                 else:
                     enabled_check.setChecked(stream.enabled)
                     enabled_check.setEnabled(stream.available and stream.editable)

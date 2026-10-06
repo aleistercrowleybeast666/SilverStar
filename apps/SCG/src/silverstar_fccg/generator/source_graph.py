@@ -105,7 +105,9 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
     catalog = catalog.ProjectView_Get(model)
     from silverstar_fccg.project.compact import CompactErrors_Get
     from silverstar_fccg.project.compact_logging import CompactLogProfileErrors_Get
-    compact_errors = CompactErrors_Get(model, catalog) + CompactLogProfileErrors_Get(model, catalog)
+    from silverstar_fccg.project.feature_tiers import FeatureTier_ErrorsGet
+    compact_errors = (CompactErrors_Get(model, catalog) + CompactLogProfileErrors_Get(model, catalog)
+                      + FeatureTier_ErrorsGet(model, catalog))
     if compact_errors:
         raise SourceGraphError("; ".join(compact_errors))
     sources: list[str] = []

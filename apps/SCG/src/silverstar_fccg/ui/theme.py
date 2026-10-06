@@ -110,6 +110,15 @@ QCheckBox#standardCheckBox::indicator:disabled {
     background: $surface;
     border-color: $border;
 }
+QCheckBox#standardCheckBox[logStreamControl="true"]::indicator:disabled:unchecked {
+    background: $disabled_surface;
+    border-color: $border_strong;
+}
+QCheckBox#standardCheckBox[logStreamControl="true"]::indicator:disabled:checked {
+    background: $muted;
+    border-color: $muted;
+    image: url("$checkbox_check_image");
+}
 QFrame#headerBar {
     background: $brand;
     border: 0;

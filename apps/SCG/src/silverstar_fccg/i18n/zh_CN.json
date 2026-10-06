@@ -962,5 +962,20 @@
   "field.compact_log_profile": "精简日志配置",
   "logging.profile.all_streams": "全部流（保留用户设置）",
   "logging.profile.sf6_minimal": "SF6 最小（原始 IMU/气压 + SF6 + 生命周期）",
-  "logging.profile.locked": "由精简日志配置控制；选择全部流可恢复编辑。"
+  "logging.profile.locked": "由极简档控制；切换其他档位可恢复编辑。",
+  "group.global_configuration": "全局配置",
+  "field.feature_tier": "功能档位",
+  "feature_tier.full": "完整",
+  "feature_tier.standard": "标准",
+  "feature_tier.compact": "精简",
+  "feature_tier.minimal": "极简",
+  "feature_tier.description.full": "保留全部已支持功能；现有安全、资源和首发隐藏功能约束仍生效。档位独立于 MCU。",
+  "feature_tier.description.standard": "禁用 ESKF15；其他已支持功能保留。显式切换时默认使用 KF6，纯惯导保留。档位独立于 MCU。",
+  "feature_tier.description.compact": "禁用 KF6 / ESKF15；IMU、GNSS、遥测、气压计每类至多一个。独立气压计优先于内置气压计；GNSS、维护和日志可配置。纯惯导保留。",
+  "feature_tier.description.minimal": "精简约束加 GNSS 关闭、维护关闭及最小可回放本地日志和紧凑队列。保留元数据、校准、对准和回放输入；不缩小安全栈。",
+  "feature_tier.changed": "已切换为{tier}。",
+  "feature_tier.saved_choices": "原选择已保存，切回原档可恢复。",
+  "configuration.feature_tier_review": "旧算法与当前档位不兼容；参数已保留，请显式选择兼容档位或算法。",
+  "availability.feature_tier_restricted": "当前功能档位禁止此算法",
+  "feature_tier_restricted": "当前功能档位禁止此算法"
 }

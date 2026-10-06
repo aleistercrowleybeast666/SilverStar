@@ -26,6 +26,7 @@ from silverstar_fccg.project.model import (
     ProjectModelError,
 )
 from silverstar_fccg.project.compact_logging import CompactLogProfileErrors_Get
+from silverstar_fccg.project.feature_tiers import FeatureTier_ErrorsGet
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
 from silverstar_fccg.project.resources import (
     BoardHardwareInventory_Get,
@@ -758,6 +759,8 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
     from silverstar_fccg.project.compact import CompactErrors_Get
     issues.extend(ValidationIssue("error", "COMPACT_DEVICE_LIMIT", message)
                   for message in CompactErrors_Get(model, catalog))
+    issues.extend(ValidationIssue('error', 'FEATURE_TIER', message)
+                  for message in FeatureTier_ErrorsGet(model, catalog))
     if model.core == SILVERSTAR_CORE_COMPONENT_ID and (
         model.identity.firmware_version != SILVERSTAR_PLATFORM_VERSION
         or model.identity.build_target != SILVERSTAR_BUILD_ID
@@ -1164,6 +1167,8 @@ def Project_EditValidate(
     from silverstar_fccg.project.compact import CompactErrors_Get
     issues.extend(ValidationIssue("error", "COMPACT_DEVICE_LIMIT", message)
                   for message in CompactErrors_Get(model, catalog))
+    issues.extend(ValidationIssue('error', 'FEATURE_TIER', message)
+                  for message in FeatureTier_ErrorsGet(model, catalog))
     if model.hardware.mode == "unselected":
         issues.append(
             ValidationIssue(
@@ -1247,3 +1252,4 @@ def Project_EditValidate(
             for error in resources.errors
         )
     return ProjectValidationResult(tuple(issues))
+
