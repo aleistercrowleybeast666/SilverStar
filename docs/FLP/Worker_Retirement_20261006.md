@@ -25,6 +25,12 @@ after the fix with weak-only instrumentation (4 passed, 18.76 seconds, exit 0;
 retained: two sandbox dependency reads and duplicate pytest-qt registration.
 They are not test passes or executions of the four-case set.
 
+An additional existing mock-only declining-close test initially failed both with
+this fix and with the released c8fd closeEvent injected: Mock fabricated a truthy
+is_project_save attribute and routed a non-save fixture into the save path.
+The fixture now explicitly sets is_project_save=False; its no-cancel/ignored-close
+assertions are unchanged. Both failure logs are retained.
+
 The instrumentation holds no strong target references, does not disable/force
 GC, records test boundaries, and patches QSettings only in the test process to
 use private INI files. It recorded 191 GC start/stop pairs, 28 Python finalizers

@@ -95,6 +95,8 @@ def test_cancelled_discovery_result_is_not_published():
 
 def test_declining_close_does_not_cancel_active_task():
     worker, event = Mock(), Mock()
+    # Mock fabricates truthy missing attributes; this case is a non-save task.
+    worker.is_project_save = False
     window = SimpleNamespace(_active_worker=worker, _ProjectChanges_Confirm=lambda: False)
     MainWindow.closeEvent(window, event)
     worker.Worker_Cancel.assert_not_called()
