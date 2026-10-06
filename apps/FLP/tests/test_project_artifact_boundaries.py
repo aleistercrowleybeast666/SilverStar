@@ -67,6 +67,29 @@ def test_file_replacement_before_replay_does_not_relabel_parsed_arrays(tmp_path)
     assert not document.project_path.exists()
 
 
+@pytest.mark.parametrize('change',['append','cancel'])
+def test_cache_hit_rechecks_source_and_cancellation_before_publication(tmp_path,monkeypatch,change):
+    from silverstar_flp.core import parse_cache
+    from silverstar_flp.decoder_profiles.discovery import DecoderProfileCache
+    from silverstar_flp.log_open import LogOpenCoordinator,LogOpenRequest,LogOpenSourceMode
+    opened,document,store=_SmallRun(tmp_path)
+    Project_Save(document,document.project_path,dataset=opened.dataset,replay_store=store)
+    read=parse_cache.DatasetCache_Read;context=TaskContext()
+    def changed(*args,**kwargs):
+        cached=read(*args,**kwargs)
+        if change=='append':
+            with opened.dataset.source_path.open('ab') as f:f.write(b'x')
+        else:context.Cancel_Request()
+        return cached
+    monkeypatch.setattr(parse_cache,'DatasetCache_Read',changed)
+    request=LogOpenRequest(opened.dataset.source_path,opened.source_package_path,
+        source_mode=LogOpenSourceMode.PROJECT,project_path=document.project_path,
+        dataset_cache_reference=document.parse_artifact)
+    with pytest.raises(ValueError if change=='append' else TaskCancelledError,
+                       match='log_source_changed|task_cancelled'):
+        LogOpenCoordinator(builtin_registry(),cache=DecoderProfileCache(tmp_path/'isolated-cache')).Open(request,context)
+
+
 def test_legal_kf6_revision_two_cannot_restore_under_revision_one_config(tmp_path):
     opened, document, store = _SmallRun(tmp_path, 'silverstar.algorithm.kf6')
     Project_Save(document, document.project_path, dataset=opened.dataset, replay_store=store)

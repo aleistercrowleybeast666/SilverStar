@@ -5,6 +5,7 @@ from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
+from weakref import ref
 
 from PySide6.QtCore import QEventLoop, QSettings, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Slot
 from PySide6.QtGui import (
@@ -1075,7 +1076,8 @@ class MainWindow(QMainWindow):
         self._Task_ResultPublish(worker, result, self._worker_result_callback)
 
     def _Task_ResultPublish(self, worker, result, result_callback) -> None:
-        if worker is not self._active_worker or worker.context.cancellation_event.is_set():
+        committed = getattr(worker, "project_committed", False) and isinstance(result, ProjectDocument)
+        if worker is not self._active_worker or worker.context.cancellation_event.is_set() and not committed:
             return
         if result_callback is not None:
             result_callback(result)
@@ -1102,8 +1104,11 @@ class MainWindow(QMainWindow):
             self._worker_cancel_callback(message)
 
     def _Task_Finish(self) -> None:
+        worker = self._active_worker
+        committed = getattr(worker, "project_committed", False)
+        close_after = committed and getattr(worker, "close_after_commit", False)
         if (self._active_worker is not None and
-                self._active_worker.context.cancellation_event.is_set()):
+                self._active_worker.context.cancellation_event.is_set() and not committed):
             self._Task_Cancelled()
         if self._active_worker is self._folder_search_worker:
             self._folder_search_worker = None
@@ -1125,6 +1130,8 @@ class MainWindow(QMainWindow):
         self._worker_cancel_callback = None
         if self._source_restore_pending is not None:
             QTimer.singleShot(0, self._AnalysisSource_Restore)
+        if close_after:
+            QTimer.singleShot(0, self.close)
 
     def _AnalysisSource_Restore(self):
         pending = self._source_restore_pending
@@ -1219,25 +1226,27 @@ class MainWindow(QMainWindow):
             return
         self._Error_Show(message)
 
-    def _Project_Save(self) -> None:
+    def _Project_Save(self) -> bool:
         save_data = self._SaveOptions_Select()
         if save_data is None:
-            return
+            return False
         path = self._project.project_path
         if path is None:
             path = self._ProjectPath_Select("action.save_project")
             if path is not None and not self._Overwrite_Confirm(path):
-                return
+                return False
         if path is not None:
-            self._Project_Write(path, background=True, save_data=save_data)
+            return self._Project_Write(path, background=True, save_data=save_data)
+        return False
 
-    def _Project_SaveAs(self) -> None:
+    def _Project_SaveAs(self) -> bool:
         save_data = self._SaveOptions_Select()
         if save_data is None:
-            return
+            return False
         path = self._ProjectPath_Select("action.save_project_as")
         if path is not None and self._Overwrite_Confirm(path):
-            self._Project_Write(path, background=True, save_data=save_data)
+            return self._Project_Write(path, background=True, save_data=save_data)
+        return False
 
     def _SaveOptions_Select(self) -> bool | None:
         dialog = QDialog(self)
@@ -1270,7 +1279,10 @@ class MainWindow(QMainWindow):
         path = Path(selected)
         return path if path.suffix.lower() == ".ssflp" else path.with_suffix(".ssflp")
 
-    def _Project_Write(self, path: Path, *, background: bool = False, save_data: bool | None = None) -> None:
+    def _Project_Write(self, path: Path, *, background: bool = False, save_data: bool | None = None) -> bool:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return False
         try:
             project = replace(self._project,
                 replay_configurations=deepcopy(self._project.replay_configurations),
@@ -1311,18 +1323,29 @@ class MainWindow(QMainWindow):
             edit_serial = getattr(self, "_project_edit_serial", 0)
             def save(context):
                 Project_Save(project, path, replay_store=store, dataset=dataset, context=context)
+                if background:
+                    # Atomic project replacement has completed. A later Cancel
+                    # must still publish this committed path and remembered option.
+                    worker_ref().project_committed = True
                 return project
             if background:
-                self._Task_Start(FunctionWorker(save),
+                worker = FunctionWorker(save)
+                worker_ref = ref(worker)
+                worker.is_project_save = True
+                worker.project_committed = False
+                worker.close_after_commit = False
+                self._Task_Start(worker,
                     lambda saved: self._ProjectSave_ResultSet(saved, edit_serial), self._Error_Show)
-                return
+                return True
             self._project = save(None)
             self._Project_SetDirty(False)
             self._ProjectHeader_Refresh()
             self.status_label.setText(self._translator.Text_Get("status.project_saved", path=path))
+            return True
         except Exception as exc:
             logging.exception("Project save failed")
             self._Error_Show(str(exc))
+            return False
 
     def _ProjectSave_ResultSet(self, project: ProjectDocument, edit_serial: int) -> None:
         self._project = project
@@ -1383,7 +1406,8 @@ class MainWindow(QMainWindow):
             return False
         if answer == QMessageBox.StandardButton.Discard:
             return True
-        self._Project_Save()
+        if not self._Project_Save():
+            return False
         # A close/open requested from the unsaved-changes dialog waits for the
         # transaction while still servicing Qt events and the cancel button.
         worker = self._active_worker
@@ -1551,6 +1575,13 @@ class MainWindow(QMainWindow):
         event.acceptProposedAction()
 
     def closeEvent(self, event: QCloseEvent) -> None:
+        worker = self._active_worker
+        if getattr(worker, "is_project_save", False):
+            worker.close_after_commit = False
+            if not self._project_dirty or self._ProjectChanges_Confirm():
+                worker.close_after_commit = True
+            event.ignore()
+            return
         if self._ProjectChanges_Confirm():
             if self._active_worker is not None:
                 self._active_worker.Worker_Cancel()

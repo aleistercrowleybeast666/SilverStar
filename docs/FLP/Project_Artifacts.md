@@ -89,3 +89,15 @@ tag types and accounts for loaded arrays plus every TimeSeries copy against a li
 allocation budget. Expanded gzip size, JSON structure nodes and generated column
 objects have independent bounds. Tool tests use small lowered budgets, not large
 allocations or an OOM experiment. These are defensive bounds, not a worst-case RSS proof.
+
+## Publication and cancellation boundary
+
+Cache hits recheck source hash/size and cancellation after artifact loading, just as
+fresh parsing does, before publishing a dataset. Saving completes at the atomic
+project replacement. Cancellation after that point still publishes the committed
+project path and save option; it cannot report an unchanged project while a new
+destination has already committed. Closing during a clean Save As defers closing
+until successful commit. Cancelling the save-options dialog cancels the close
+request independently of an existing save worker. The worker's save closure uses
+a weak worker reference, avoiding retention of the captured dataset through a
+worker/closure cycle. These targeted tests do not prove every Qt destruction path.

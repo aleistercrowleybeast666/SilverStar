@@ -424,6 +424,10 @@ class LogOpenCoordinator:
             except (ValueError, OSError, KeyError, TypeError, EOFError) as exc:
                 logging.warning("Full dataset cache unavailable; strict parse follows: %s", exc)
             else:
+                context.Cancel_RaiseIfRequested()
+                if (FileHash_Get(log_path, context) != identity["log_sha256"]
+                        or log_path.stat().st_size != identity["log_bytes"]):
+                    raise ValueError("log_source_changed_during_parse")
                 context.Progress_Report(1.0, "log_open.complete")
                 return LogOpenResult(dataset, package, descriptor, reference,
                     Path(source_package_path), dataset.diagnostics, dataset.data_quality)
