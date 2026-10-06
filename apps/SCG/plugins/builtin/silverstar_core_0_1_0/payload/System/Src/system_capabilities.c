@@ -17,6 +17,7 @@
 #include "system_power_if.h"
 #include "system_profile.h"
 #include "system_storage_if.h"
+#include "system_user_config.h"
 #if (SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U)
 #include "system_telemetry_transport_if.h"
 #endif
