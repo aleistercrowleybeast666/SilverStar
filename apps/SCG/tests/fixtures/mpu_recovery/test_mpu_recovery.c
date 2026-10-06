@@ -187,7 +187,7 @@ int main(int argc, char **argv)
         Initial(); Ready(); assert(SystemImu_LatestSampleGet(&before) == SYSTEM_DEVICE_OK);
         assert(SystemImu_IoDetailGet(&detail) == SYSTEM_DEVICE_OK);
         old_generation = detail.config_generation;
-        if (which == 8U || which == 9U) { assert(SystemSourceSelector_ImuSelectAndLock() == SYSTEM_DEVICE_OK); }
+        if (which == 9U) { assert(SystemSourceSelector_ImuSelectAndLock() == SYSTEM_DEVICE_OK); }
         if (which == 8U || which == 9U || which == 10U || which == 11U)
         {
             if (which == 10U) { s_sample_read_fail = 1U; }
@@ -197,7 +197,11 @@ int main(int argc, char **argv)
             assert(SystemImu_IoDetailGet(&detail) == SYSTEM_DEVICE_OK && detail.config_generation_valid == 0U);
             assert(SystemImu_HealthGet(&health) == SYSTEM_DEVICE_OK && !health.online && !health.healthy);
             if (which == 8U || which == 9U)
-            { assert(SystemSourceSelector_ImuActiveInstanceGet(&active) == SYSTEM_DEVICE_OK && active == 0U); }
+            {
+                assert(SystemSourceSelector_ImuActiveInstanceGet(&active) == SYSTEM_DEVICE_OK && active == 0U);
+                assert(SystemSourceSelector_ImuSelectAndLock() ==
+                    ((which == 9U) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY));
+            }
             s_probe_fail = s_sample_read_fail = 0U; Ready(); assert(SystemImu_LatestSampleGet(&after) == SYSTEM_DEVICE_OK);
             assert(SystemImu_IoDetailGet(&detail) == SYSTEM_DEVICE_OK && detail.config_generation > old_generation);
             assert(after.sequence > before.sequence && after.receive_timestamp_us > before.receive_timestamp_us);
@@ -208,6 +212,7 @@ int main(int argc, char **argv)
                 assert(Mpu6050ImuInstance_Init(0U) == SYSTEM_DEVICE_BUSY);
                 assert(SystemSourceSelector_ImuActiveInstanceGet(&active) == SYSTEM_DEVICE_OK && active == 0U);
             }
+            if (which == 8U) { assert(SystemSourceSelector_ImuSelectAndLock() == SYSTEM_DEVICE_OK); }
         }
         if (which == 12U)
         {
