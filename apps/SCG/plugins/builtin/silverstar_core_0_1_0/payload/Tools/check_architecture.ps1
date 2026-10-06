@@ -24,6 +24,38 @@ function Add-ArchitectureFailure {
     $script:failures.Add($Message)
 }
 
+function Test-TelemetryDiagnosticLogSelection {
+    param([object]$Project, [string]$Configuration)
+
+    if ($null -eq $Project) { return $false }
+    $tier = $Project.build.feature_tier
+    if ([string]::IsNullOrEmpty($tier)) {
+        if ($Project.build.compact_mode -eq $true) {
+            $tier = if ($Project.build.logging_profile -eq 'sf6_minimal') { 'minimal' } else { 'compact' }
+        } else { $tier = 'full' }
+    } elseif ($Project.build.PSObject.Properties.Name -contains 'compact_mode') {
+        return $false
+    }
+    if (@('full', 'standard', 'compact', 'minimal') -notcontains $tier) { return $false }
+    $profile = if ($tier -eq 'minimal') { 'sf6_minimal' } else { 'all_streams' }
+    $savedProfile = if ($Project.build.PSObject.Properties.Name -contains 'logging_profile') {
+        $Project.build.logging_profile
+    } else { 'all_streams' }
+    if ($savedProfile -ne $profile) { return $false }
+    $streams = @($Project.logging.streams | Where-Object { $_.record -eq 'FLIGHT_LOG_RECORD_TELEMETRY_DIAG' })
+    if ($streams.Count -ne 1) { return $false }
+    $stream = $streams[0]
+    if (($stream.enabled -isnot [bool]) -or ($stream.policy -ne 'PERIODIC') -or
+        ($stream.decimation -lt 1) -or ($stream.period_us -lt 1)) { return $false }
+    $enabled = if (($tier -eq 'compact') -or ($tier -eq 'minimal')) { 0 } elseif ($stream.enabled) { 1 } else { 0 }
+    $entries = [regex]::Matches($Configuration,
+        '\{\s*FLIGHT_LOG_RECORD_TELEMETRY_DIAG\s*,\s*(\d+)U\s*,\s*(\d+)U\s*,\s*(\d+)UL\s*,\s*SSLOG_STREAM_POLICY_PERIODIC\s*\}')
+    return ($entries.Count -eq 1) -and
+        ([uint64]$entries[0].Groups[1].Value -eq $enabled) -and
+        ([uint64]$entries[0].Groups[2].Value -eq $stream.decimation) -and
+        ([uint64]$entries[0].Groups[3].Value -eq $stream.period_us)
+}
+
 function Assert-ArchitectureCondition {
     param(
         [Parameter(Mandatory = $true)][bool]$Condition,
@@ -1169,11 +1201,11 @@ Assert-FileContainsPattern `
     -Pattern ('FLIGHT_LOG_RECORD_STATS\s*,\s*1U\s*,\s*1U\s*,' +
         '\s*1000000UL\s*,\s*SSLOG_STREAM_POLICY_PERIODIC') `
     -Message 'STATS default producer cadence is not enabled at 1000000 us.'
-Assert-FileContainsPattern `
-    -RelativePath 'Generated\Src\project_log_config.c' `
-    -Pattern ('FLIGHT_LOG_RECORD_TELEMETRY_DIAG\s*,\s*1U\s*,\s*1U\s*,' +
-        '\s*1000000UL\s*,\s*SSLOG_STREAM_POLICY_PERIODIC') `
-    -Message 'TELEMETRY_DIAG default producer cadence is not enabled at 1000000 us.'
+Assert-ArchitectureCondition `
+    -Condition (Test-TelemetryDiagnosticLogSelection `
+        -Project (Get-Content -LiteralPath $architectureProject -Raw | ConvertFrom-Json) `
+        -Configuration (Get-Content -LiteralPath (Join-Path $repoRoot 'Generated\Src\project_log_config.c') -Raw)) `
+    -Message 'TELEMETRY_DIAG selection/cadence contradicts the saved stream or feature tier.'
 }
 Assert-FileContainsPattern `
     -RelativePath 'Generated\Src\project_device_instances.c' `

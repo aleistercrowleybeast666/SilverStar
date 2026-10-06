@@ -108,3 +108,19 @@ disabled-surface unchecked indicators, required available items locked checked,
 and unavailable required items unchecked disabled. Disabled palette text stays
 consistent with existing controls. Offscreen Qt needed explicit installed-font
 loading for readable screenshots; this is an evidence harness detail only.
+
+The 2026-10-06 architecture gate revision checks TELEMETRY_DIAG against the
+saved stream plus tier projection: Full/Standard retain the user's enabled
+choice; Compact/Minimal emit disabled without overwriting that choice. Policy,
+decimation and cadence must still match, with exactly one emitted entry. The
+gate recognizes the omitted all_streams serialization default and rejects
+mixed tier/legacy authority or contradictory profiles. It no longer requires
+an enabled default stream in a tier that deliberately excludes it. Protocol
+catalog/schema defaults and the STATS check remain unchanged.
+
+Twenty PowerShell contract cases pass, including incorrect enabled flags,
+cadence, decimation, policy, duplicate entries and contradictory configuration.
+Actual emitted Release architecture-check passes for RET6 and RFT6. The Full
+F407 regression still fails its existing InputVoltage Device-to-System include
+boundary; that failure is retained. See `.work/evidence/f103_stack_closure`
+for complete failure logs and the separate stack/Host limitations.
