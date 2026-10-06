@@ -5,7 +5,7 @@
 
 #include "debug_log.h"
 #include "silverstar_assert.h"
-#include "silverstar_build_mode.h"
+#include "project_build_mode.h"
 #include "system_barometer_if.h"
 #if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U)
 #include "system_console.h"

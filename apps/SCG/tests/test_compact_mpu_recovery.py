@@ -1,5 +1,6 @@
 """Actual C compact MPU recovery against bounded Host I2C/time mocks."""
 import json
+import hashlib
 from dataclasses import replace
 import os
 from pathlib import Path
@@ -7,7 +8,7 @@ import subprocess
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.project.model import ProjectModel_Load
-from silverstar_fccg.generator.render import _DeviceInstancesHeader_Render, _DeviceInstancesSource_Render, _FlightConfigHeader_Render
+from silverstar_fccg.generator.render import _BuildModeHeader_Render, _DeviceInstancesHeader_Render, _DeviceInstancesSource_Render, _FlightConfigHeader_Render
 
 ROOT = Path(__file__).resolve().parents[3]
 CORE = ROOT / "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload"
@@ -28,6 +29,8 @@ def compile_fixture(directory: Path, *, compact: bool, baseline: bool = False) -
     model = ProjectModel_Load(ROOT / ".work/generated_ret6/SilverStar.ssproject")
     catalog = service.catalog.ProjectView_Get(model)
     model.build = replace(model.build, compact_mode=compact)
+    build_mode = _BuildModeHeader_Render(model.build)
+    (directory / "project_build_mode.h").write_text(build_mode, encoding="utf-8")
     (directory / "project_flight_config.h").write_text(_FlightConfigHeader_Render(model, catalog), encoding="utf-8")
     (directory / "project_device_instances.h").write_text(_DeviceInstancesHeader_Render(model, catalog), encoding="utf-8")
     facade = directory / "project_device_instances.c"
@@ -49,15 +52,15 @@ def compile_fixture(directory: Path, *, compact: bool, baseline: bool = False) -
                "-Wall", "-Wextra", "-Werror", "-pedantic", "-ffunction-sections", "-fdata-sections",
                "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0", "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=1", "-Wl,--gc-sections",
                "-include", str(directory / "project_flight_config.h")]
-    if compact:
-        command += ["-DSILVERSTAR_COMPACT_MODE=1"]
-    else:
+    if not compact:
         command += ["-DTEST_ORDINARY=1"]
     if baseline:
         command += ["-DTEST_BASELINE=1"]
     command += ["-I" + str(path) for path in includes] + [str(source) for source in sources] + ["-o", str(binary)]
     result = subprocess.run(command, capture_output=True, text=True, timeout=60)
     (directory / "compile.json").write_text(json.dumps({"argv": command, "exit": result.returncode,
+        "build_mode": {"compact_mode": compact, "header": build_mode,
+                       "header_sha256": hashlib.sha256((directory / "project_build_mode.h").read_bytes()).hexdigest()},
         "stdout": result.stdout, "stderr": result.stderr}, indent=2), encoding="utf-8")
     assert result.returncode == 0, result.stderr
     return binary

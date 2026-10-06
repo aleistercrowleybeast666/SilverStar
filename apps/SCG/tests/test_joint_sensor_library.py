@@ -269,6 +269,13 @@ def test_joint_sensor_manifest_has_real_sources(name: str) -> None:
 
 
 def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> None:
+    from silverstar_fccg.generator.render import _BuildModeHeader_Render
+    from silverstar_fccg.project.model import BuildOptions
+
+    # This independent native adapter matrix explicitly exercises ordinary mode.
+    (tmp_path / "project_build_mode.h").write_text(
+        _BuildModeHeader_Render(BuildOptions(compact_mode=False)), encoding="utf-8"
+    )
     folders = ["silverstar_sensor_register_bus", "silverstar_ubx_protocol"]
     imu_names = IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS
     folders += [_ImuVariant_Get(name)[0] for name in imu_names]
@@ -310,6 +317,23 @@ def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> N
         command.extend("-I" + str(path) for path in includes)
         command += ["-c", str(source), "-o", str(tmp_path / f"sensor_{index}.o")]
         _Command_Run(command, tmp_path, f"adapter_{index}")
+
+    # An unconfigured independent MPU build must fail, never infer normal mode
+    # from an absent compact marker or silently use an application header.
+    mpu = next(source for source in sources if source.name == "mpu6050_instance.c")
+    unconfigured = tmp_path / "unconfigured"
+    unconfigured.mkdir()
+    (unconfigured / "project_resources.h").write_text(
+        (tmp_path / "project_resources.h").read_text(encoding="utf-8"), encoding="utf-8"
+    )
+    command = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+    command += ["-I" + str(unconfigured)] + ["-I" + str(path) for path in includes if path != tmp_path]
+    command += ["-c", str(mpu), "-o", str(unconfigured / "mpu.o")]
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+    (tmp_path / "missing_build_mode.json").write_text(json.dumps({
+        "argv": command, "exit": result.returncode, "stdout": result.stdout, "stderr": result.stderr
+    }, indent=2), encoding="utf-8")
+    assert result.returncode != 0 and "project_build_mode.h" in result.stderr
 
 
 def test_joint_special_imu_actual_c_mock(tmp_path: Path) -> None:

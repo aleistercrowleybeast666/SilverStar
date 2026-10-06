@@ -8,6 +8,7 @@ from silverstar_fccg.generator.render import _DeviceInstancesHeader_Render, _Eid
 from silverstar_fccg.generator.source_graph import SourceGraphError, SourceGraph_Resolve
 from silverstar_fccg.generator.compact_entry import CompactFlightMain_Integrate
 from silverstar_fccg.generator.render import _FlightConfigHeader_Render
+from silverstar_fccg.generator.render import GeneratedFiles_Render
 from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
 from silverstar_fccg.project.compact import CompactErrors_Get
 from silverstar_fccg.project.model import DeviceInstance, ProjectModel_Parse
@@ -24,6 +25,19 @@ def test_compact_setting_roundtrip_and_legacy_dictionary(builtin_catalog):
     assert ProjectModel_Parse(saved).build.compact_mode is True
     model.build = replace(model.build, compact_mode=False)
     assert model.Dictionary_Get() == legacy
+
+
+@pytest.mark.parametrize("compact", [False, True])
+def test_generated_build_mode_contract_is_explicit_and_device_layer_only(builtin_catalog, compact):
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.build = replace(model.build, compact_mode=compact)
+    files = GeneratedFiles_Render(model, builtin_catalog, SourceGraph_Resolve(model, builtin_catalog))
+    header = files["Generated/Inc/project_build_mode.h"].decode("utf-8")
+    assert f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {int(compact)}U" in header
+    directives = [line for line in header.splitlines() if line.startswith("#")]
+    assert directives == ["#ifndef __PROJECT_BUILD_MODE_H", "#define __PROJECT_BUILD_MODE_H",
+                          f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {int(compact)}U",
+                          "#endif /* __PROJECT_BUILD_MODE_H */"]
 
 
 @pytest.mark.parametrize("plugin", [

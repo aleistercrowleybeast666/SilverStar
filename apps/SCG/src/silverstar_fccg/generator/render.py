@@ -45,6 +45,7 @@ from silverstar_fccg.project.logging import (
     ProtocolLogDefinitions_Get,
 )
 from silverstar_fccg.project.model import (
+    BuildOptions,
     DeviceInstance,
     RAW_IMU_MOUNT_PLUGINS,
     RAW_IMU_NOSE_AXIS_MAPS,
@@ -296,6 +297,7 @@ def GeneratedFiles_Render(
         "Generated/Inc/project_capability_routes.h": _CapabilityRoutesHeader_Render(),
         "Generated/Inc/project_device_build_capabilities.h": _DeviceBuildCapabilitiesHeader_Render(model, catalog),
         "Generated/Inc/project_algorithm_parameters.h": AlgorithmParametersHeader_Render(model, catalog),
+        "Generated/Inc/project_build_mode.h": _BuildModeHeader_Render(model.build),
         "Generated/Inc/project_flight_config.h": _FlightConfigHeader_Render(
             model, catalog
         ),
@@ -746,6 +748,18 @@ def _AlignmentDefinitions_Get(model: ProjectModel) -> tuple[tuple[str, str], ...
         ("SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE", "1U" if model.alignment.external_yaw_authoritative else "0U"),
         ("SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT", "1U" if any(item.kind == "magnetic_field" for item in model.alignment.constraints) else "0U"),
         ("SYSTEM_ALIGNMENT_KNOWN_YAW_DEG", _AlignmentFloat_Render(known_yaw)),
+    )
+
+
+def _BuildModeHeader_Render(build: BuildOptions) -> str:
+    """Publish a device-layer build contract without application dependencies."""
+    value = "1U" if build.compact_mode else "0U"
+    return (
+        "#ifndef __PROJECT_BUILD_MODE_H\n"
+        "#define __PROJECT_BUILD_MODE_H\n\n"
+        "/* Generated from BuildOptions.compact_mode; no inferred default. */\n"
+        f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {value}\n\n"
+        "#endif /* __PROJECT_BUILD_MODE_H */\n"
     )
 
 

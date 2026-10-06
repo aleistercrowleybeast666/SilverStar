@@ -5,7 +5,7 @@
 #include "platform_critical.h"
 #include "platform_time.h"
 #include "silverstar_assert.h"
-#include "silverstar_build_mode.h"
+#include "project_build_mode.h"
 #include <limits.h>
 #include <stddef.h>
 #include <string.h>
