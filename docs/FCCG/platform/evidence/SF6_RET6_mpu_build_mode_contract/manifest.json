@@ -1,0 +1,1040 @@
+{
+  "source_commit": "3188bfb33a5e52c2a1d0e5baa7c5ce2b5e5af6a9",
+  "files": [
+    {
+      "path": "artifacts/Release/SilverStar_0_1_1.bin",
+      "bytes": 218336,
+      "sha256": "3df9b8b19f4c9fcdf6b5c789b31b79fe2d59145f1bd4706aebcc57b3563391d4"
+    },
+    {
+      "path": "artifacts/Release/SilverStar_0_1_1.elf",
+      "bytes": 2553608,
+      "sha256": "0142b9ce6dc285891a0a678c87f8ede654560fa91739fda7e42adefb740d084f"
+    },
+    {
+      "path": "artifacts/Release/SilverStar_0_1_1.map",
+      "bytes": 1399665,
+      "sha256": "dfd29f3010e77feca0fe6430d637f8c50f14634173719e8236881a592e734eb2"
+    },
+    {
+      "path": "artifacts/StaticAnalysis/SilverStar_0_1_1.bin",
+      "bytes": 218336,
+      "sha256": "3df9b8b19f4c9fcdf6b5c789b31b79fe2d59145f1bd4706aebcc57b3563391d4"
+    },
+    {
+      "path": "artifacts/StaticAnalysis/SilverStar_0_1_1.elf",
+      "bytes": 2553764,
+      "sha256": "42af2cc0eb01f024005557ced1305dc1ee83011940523f39105fac89d0536257"
+    },
+    {
+      "path": "artifacts/StaticAnalysis/SilverStar_0_1_1.map",
+      "bytes": 1517025,
+      "sha256": "682a988bb684fdf0069757d7498af5679cabef13355dbad94f2f20aa7874f6c8"
+    },
+    {
+      "path": "baseline/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Inc/silverstar_build_mode.h",
+      "bytes": 509,
+      "sha256": "007e5a89897de5b54004a4ce2361a3f1219ee8850fee2e2cf13fdcc682741b80"
+    },
+    {
+      "path": "baseline/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_source_selector.c",
+      "bytes": 100623,
+      "sha256": "96720124fb4414f3f2c3b2fd46ac8d31b8f34c8e73076646adb461aa59863181"
+    },
+    {
+      "path": "baseline/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "bytes": 44693,
+      "sha256": "5bbddb4e8247aa91dbb30a7b64ae1aabf70b0af75cc2e447107595ec95dc0a14"
+    },
+    {
+      "path": "baseline/apps/SCG/plugins/builtin/silverstar_device_imu_mpu6050/payload/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c",
+      "bytes": 15421,
+      "sha256": "55bd4f8557b155b35dafe3ed724daef881d04977df9bd166f61473a37a63ebf1"
+    },
+    {
+      "path": "baseline/apps/SCG/src/silverstar_fccg/generator/render.py",
+      "bytes": 168570,
+      "sha256": "7f63c261ed4fee8f4feebad188fa5c211aaaa0d5259255b78e30853430af69a7"
+    },
+    {
+      "path": "baseline/apps/SCG/tests/test_compact_mode.py",
+      "bytes": 6705,
+      "sha256": "3c3c6aa54f8c431204d6064d434be8f408e0ca823ffb32920ad429b7a1b58aab"
+    },
+    {
+      "path": "baseline/apps/SCG/tests/test_compact_mpu_recovery.py",
+      "bytes": 5055,
+      "sha256": "0c90e81a85abd782165045c06643cd3e2a066a90abb795ae9c29f87038ca6116"
+    },
+    {
+      "path": "baseline/apps/SCG/tests/test_joint_sensor_library.py",
+      "bytes": 21813,
+      "sha256": "7355e1ca58d867e162b98bea03f25cce08859d7b88761e2ac82b1830fc317af2"
+    },
+    {
+      "path": "changed_or_unresolved_frames/Release/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+      "bytes": 2108,
+      "sha256": "336d0c2b7d28b9e1c7e4844495f3eab04aae51503f52c5d86f838254527c59ad"
+    },
+    {
+      "path": "changed_or_unresolved_frames/Release/Devices/SensorBus/Src/sensor_imu.su",
+      "bytes": 945,
+      "sha256": "10dbfe771d346f25d4e1c1ec3f07d7836fadc0e4b9d10536f31495001c152c62"
+    },
+    {
+      "path": "changed_or_unresolved_frames/Release/System/Src/system_source_selector.su",
+      "bytes": 9595,
+      "sha256": "ac62c2de7acbef6b391256df80b3775a9df0763e16772a3cdc5600dc28604866"
+    },
+    {
+      "path": "changed_or_unresolved_frames/Release/System/Src/system_startup.su",
+      "bytes": 817,
+      "sha256": "52fc450ebac16afa85751ab60104da316da67ea68600582a25f30866a14baa41"
+    },
+    {
+      "path": "changed_or_unresolved_frames/StaticAnalysis/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.su",
+      "bytes": 2108,
+      "sha256": "336d0c2b7d28b9e1c7e4844495f3eab04aae51503f52c5d86f838254527c59ad"
+    },
+    {
+      "path": "changed_or_unresolved_frames/StaticAnalysis/Devices/SensorBus/Src/sensor_imu.su",
+      "bytes": 945,
+      "sha256": "10dbfe771d346f25d4e1c1ec3f07d7836fadc0e4b9d10536f31495001c152c62"
+    },
+    {
+      "path": "changed_or_unresolved_frames/StaticAnalysis/System/Src/system_source_selector.su",
+      "bytes": 9595,
+      "sha256": "ac62c2de7acbef6b391256df80b3775a9df0763e16772a3cdc5600dc28604866"
+    },
+    {
+      "path": "changed_or_unresolved_frames/StaticAnalysis/System/Src/system_startup.su",
+      "bytes": 817,
+      "sha256": "52fc450ebac16afa85751ab60104da316da67ea68600582a25f30866a14baa41"
+    },
+    {
+      "path": "commands/audit_mpu_device_build_contract.py",
+      "bytes": 3864,
+      "sha256": "9eeb8d00be18dd84592301de532ed2ce0be65f4521f4a6f636d33ed7c5f2c784"
+    },
+    {
+      "path": "commands/audit_mpu_device_contract_boundaries.py",
+      "bytes": 3046,
+      "sha256": "4bef9dd65cf9dea29783dc1f01e06d5df8a59e742d19778dcee5d57c768f3bc9"
+    },
+    {
+      "path": "commands/compare_mpu_device_contract_arm_ordinary.py",
+      "bytes": 2555,
+      "sha256": "8415ccc20976f9210885e1aed49f7f0dbb274d9c1e8c5a666a158014f14fcf1b"
+    },
+    {
+      "path": "commands/compare_mpu_device_contract_ordinary.py",
+      "bytes": 3826,
+      "sha256": "0817662d67d7a5d0d567e08861c8cbc21af731a0ce5b4696a66b6221c1388809"
+    },
+    {
+      "path": "commands/mpu_map_device_contract.py",
+      "bytes": 3627,
+      "sha256": "f224924b37c6b56927e99e734a15dcbde2a0e3bdeaee2227e2cd5ad0f7283325"
+    },
+    {
+      "path": "commands/package_mpu_device_contract.py",
+      "bytes": 7032,
+      "sha256": "25958eb17a12e733c79633367ddd0fbe85e1492231617ebd9da0a7b1d4f3bf36"
+    },
+    {
+      "path": "commands/refresh_mpu_validation_device_contract.py",
+      "bytes": 2885,
+      "sha256": "e46dae0f20055b75ba39fe78b7441ff7cf71958fa22358306c074c5782b99c48"
+    },
+    {
+      "path": "commands/run_mpu_ret6_device_contract_gates.py",
+      "bytes": 1879,
+      "sha256": "55d01b578cb842d477d26afc59e6739e5b419735a9f12e35f0572c2b71c0a8f3"
+    },
+    {
+      "path": "commands/verify_mpu_device_contract_source.py",
+      "bytes": 3430,
+      "sha256": "7b317784ab57ce61037713085b681fcbb955efd9b41d880072f292cdf79aaae4"
+    },
+    {
+      "path": "final_gates/SensorImu_Verify_actual_elf.log",
+      "bytes": 2618,
+      "sha256": "65dfa53b38e102b1ce2258d3a31ed1ae474f6a977d8426358b65493f162278b0"
+    },
+    {
+      "path": "final_gates/analyzer.log",
+      "bytes": 461936,
+      "sha256": "441307e688ed70281c720d05da56bd4700247c65b0f0a1700403c644314b7ec0"
+    },
+    {
+      "path": "final_gates/architecture.log",
+      "bytes": 1456,
+      "sha256": "4fb36cd7e574472041c2d1e9af45034f5a0147fbc11e30ebd16e064ea2549556"
+    },
+    {
+      "path": "final_gates/arm.log",
+      "bytes": 453749,
+      "sha256": "812816ac6bfbbfc8249ce88e38a019dd07130b3b2d23402f31af1b6ec77ef7c1"
+    },
+    {
+      "path": "final_gates/artifact.log",
+      "bytes": 2279,
+      "sha256": "fd2d1d1883a5cfefa21ff008d257fe1184415af8b57da5ffce5e06366f332200"
+    },
+    {
+      "path": "final_gates/boundary_audit.json",
+      "bytes": 28545,
+      "sha256": "49f0ccc929ba655441208d90721116a7dddd8d810be839f2e51e106c384169ec"
+    },
+    {
+      "path": "final_gates/build_mode_contract_audit.json",
+      "bytes": 12286,
+      "sha256": "d778e5f982b1b898c53ec8b6331d225d78de7b962dcc9e216c5154970142c2cb"
+    },
+    {
+      "path": "final_gates/generated_source_identity.json",
+      "bytes": 518041,
+      "sha256": "bb98447620a463be21dc910c8755ef698a3ac56f2c59bf7b38e40a6960b900c0"
+    },
+    {
+      "path": "final_gates/linked_sources.log",
+      "bytes": 6941,
+      "sha256": "d80691754a3aa5c0d8daccc9357c217d997b6bcea843903243dbbfca5f4301b3"
+    },
+    {
+      "path": "final_gates/map_resources.json",
+      "bytes": 13241,
+      "sha256": "d66b3f3c8249c8aab41a90f0777dec0d250d6348ac245ac639b706b8f035c7e2"
+    },
+    {
+      "path": "final_gates/official_host.log",
+      "bytes": 14328,
+      "sha256": "e12492c9abccad41c7bc820a0a2f64a6b6663faffa559610c0d2ab265ff813cc"
+    },
+    {
+      "path": "final_gates/power10.log",
+      "bytes": 617827,
+      "sha256": "ae25058d523fb284566b09e7f2eb61a4cfd492b1f6fdecca3f0baef6d922cbeb"
+    },
+    {
+      "path": "final_gates/results.json",
+      "bytes": 4752,
+      "sha256": "cceb1740631bd008e9828747fabbb208d0c9296bff7588d0db8a4c4353963678"
+    },
+    {
+      "path": "final_gates/stack.log",
+      "bytes": 2386,
+      "sha256": "1a8a4e17da1f557862c8dc2d7c1f92b6046efd1f6917e2025120d126a8945cef"
+    },
+    {
+      "path": "final_gates/symbols_nm.log",
+      "bytes": 68225,
+      "sha256": "467220a5054b9bbcea56ba8417a5abb30bd4bf5316598059d111fb62a8d0d40b"
+    },
+    {
+      "path": "generated/Generated/Inc/project_device_build_capabilities.h",
+      "bytes": 4915,
+      "sha256": "86225ae13393ebd993e519d453d441b31a4d52e2d38d87f83d7b4bd35807c046"
+    },
+    {
+      "path": "generated/Generated/Inc/project_device_instances.h",
+      "bytes": 14473,
+      "sha256": "c98e3ebcc802f34f76f501da85f58f24fcc6327c9d7bc9f15e69d868db2c25b8"
+    },
+    {
+      "path": "generated/Generated/Inc/project_flight_config.h",
+      "bytes": 7447,
+      "sha256": "d2423ad8ec25ff6caff87fd47bd47786cc0061b11524ad60f2149b474c5a6fe0"
+    },
+    {
+      "path": "generated/Generated/project_sources.mk",
+      "bytes": 9649,
+      "sha256": "88488eabd9cabfebb9823b6f64baab3085d9d88427d03abe3782c08b71700478"
+    },
+    {
+      "path": "generated/SilverStar.ssproject",
+      "bytes": 122113,
+      "sha256": "70678c4bc0783006b1f664f58ff13487626b396a2466a0033a78d2971d801f53"
+    },
+    {
+      "path": "generated/Tools/check_architecture.ps1",
+      "bytes": 94908,
+      "sha256": "bd9cddd8b9edb63e329b478901b975973a9197b68844f0bac5f25e4e2f6b59b9"
+    },
+    {
+      "path": "generated/Tools/check_power_of_ten.ps1",
+      "bytes": 29983,
+      "sha256": "3a96853a42363d6e25de216aa0dbf1b805090a322c3cbdd4af566c64466c83aa"
+    },
+    {
+      "path": "generated/Tools/check_task_stacks.py",
+      "bytes": 15702,
+      "sha256": "949ab864b1d6eebc8cc1de1457d46013f30369d720718eefca2b422229095413"
+    },
+    {
+      "path": "generation/mpu_contract_old_common_header.raw",
+      "bytes": 509,
+      "sha256": "007e5a89897de5b54004a4ce2361a3f1219ee8850fee2e2cf13fdcc682741b80"
+    },
+    {
+      "path": "generation/mpu_validation_refresh_contract.json",
+      "bytes": 394739,
+      "sha256": "71c2139dda802d6ed85b22ad25f2b6ab2a700fd415a7754b1eb6f3009e39e68b"
+    },
+    {
+      "path": "generation/mpu_validation_refresh_device_contract.json",
+      "bytes": 394524,
+      "sha256": "73702a53619a0ade81ac7a73f6ad91a7bac2d3224fe73e91fb3db1ad4457cd81"
+    },
+    {
+      "path": "intermediate_failed_architecture/architecture.log",
+      "bytes": 2161,
+      "sha256": "4b4926d762b7d6ae4f61008c761b0d6eb8b577009b1f318bdeb5778c8ba22b54"
+    },
+    {
+      "path": "intermediate_failed_architecture/change.patch",
+      "bytes": 12194,
+      "sha256": "d0c8b070ec6190bcfa376babe849e2142cea5ed4a3c09be82652ef639a2ec310"
+    },
+    {
+      "path": "intermediate_failed_architecture/generated_source_identity.json",
+      "bytes": 518089,
+      "sha256": "5385d36c81eb1f2567d87c910dab378ab0e3c407dfd9fc493f50d4f828e6290f"
+    },
+    {
+      "path": "intermediate_failed_architecture/map_resources.json",
+      "bytes": 13241,
+      "sha256": "48571ed96031401a40915e5ecd4d639533a2d9f7f1dcdc71a231143e9ff58bf0"
+    },
+    {
+      "path": "intermediate_failed_architecture/results.json",
+      "bytes": 4697,
+      "sha256": "7b8090ca24d2eda6e78361338b3c180020e4065b2c91d8852747610292fd7afa"
+    },
+    {
+      "path": "logs/mpu_device_build_contract_audit.log",
+      "bytes": 843,
+      "sha256": "b346ab1d77267d150e3b17b5c13d2824b92d361eddab15220d0fd5e8a06a8d31"
+    },
+    {
+      "path": "logs/mpu_device_build_contract_audit2.log",
+      "bytes": 1038,
+      "sha256": "5511ecaf43e5ea45029c936b9d34a47e9b55c68e872b85110b5bb8cc855e87df"
+    },
+    {
+      "path": "logs/mpu_device_contract_arm_ordinary.log",
+      "bytes": 2885,
+      "sha256": "383b8ad1cfc694c1751f281b80a21a898165cad290305dcdd4542822cdcf0890"
+    },
+    {
+      "path": "logs/mpu_device_contract_boundary.log",
+      "bytes": 920,
+      "sha256": "8aadd69db13daac8cf0bd3e33702b07bba8f7bf4c33987fd2732d792d3b619db"
+    },
+    {
+      "path": "logs/mpu_device_contract_boundary2.log",
+      "bytes": 1099,
+      "sha256": "267938477a08a231521864bdc813555154adb6657359c49f851bc7e83883eb72"
+    },
+    {
+      "path": "logs/mpu_device_contract_generator.log",
+      "bytes": 102,
+      "sha256": "8a41c8c064d4df92c622b09c57f294f114ca360b9dc599a9ae60127b649d3148"
+    },
+    {
+      "path": "logs/mpu_device_contract_identity.log",
+      "bytes": 368,
+      "sha256": "5fa4d430ce92c21464efdeee74281ba1f87910466e029e38c43181244d4a75dc"
+    },
+    {
+      "path": "logs/mpu_device_contract_map.log",
+      "bytes": 7456,
+      "sha256": "2fe3418da3c2acdaf60160803f3744447400c5dec01b91d33d95149b348da420"
+    },
+    {
+      "path": "logs/mpu_device_contract_ordinary.log",
+      "bytes": 86556,
+      "sha256": "6f5fc8e6fb5e144a68d3f63ecac7ecbe4c1076532a4903a71f02868d75e4de3c"
+    },
+    {
+      "path": "logs/mpu_device_contract_post.log",
+      "bytes": 101,
+      "sha256": "ce8604a5b19673d35512e0294cbd84a2c133610f661f9e007d230203b75c8d0c"
+    },
+    {
+      "path": "logs/mpu_ret6_device_contract_gate_run.log",
+      "bytes": 4147,
+      "sha256": "d9949254c982c5d90ffa23bf083e91117e32ac5923dd64386ee1f1b5eca8b079"
+    },
+    {
+      "path": "logs/mpu_validation_refresh_device_contract.log",
+      "bytes": 310,
+      "sha256": "5ef08cea47a96f52b4399b1eef3b08bb56e3873295f9db19fe7d9942cdde9b63"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_compact_mpu_fault_sequenc0/compile.json",
+      "bytes": 15301,
+      "sha256": "e7e6bbf28f537564d720798c0b95bd71b2497e399899e98b95e2f1848dd3ae01"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_compact_mpu_fault_sequenc0/project_device_build_capabilities.h",
+      "bytes": 5022,
+      "sha256": "9546630d905d1437a4ec587ecb5b15d11e5fd2edfec619121925bd563dbe7a31"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_compact_mpu_fault_sequenc0/project_device_instances.c",
+      "bytes": 39266,
+      "sha256": "ae2ad17e428f82242f79b767b5c4865db7f78da003ce30fcd179258e5fa7682e"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_compact_mpu_fault_sequenc0/project_device_instances.h",
+      "bytes": 14751,
+      "sha256": "233c50b80d2b8cfd234b19e1b43b43b2d822e5edbd3f06277886759fbe870d7e"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_compact_mpu_fault_sequenc0/project_flight_config.h",
+      "bytes": 7643,
+      "sha256": "9575d951a35a51d4c45893f22bf813b289f0becb6398d70e0efcd58451627dbe"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_compact_mpu_fault_sequenc0/sequences.json",
+      "bytes": 2656,
+      "sha256": "47a2d01f217cf4b30ec317238fae1944d8564f7de57168a38334f457b224f200"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_imu_actual_c_mock0/compile.txt",
+      "bytes": 4751,
+      "sha256": "3a2df0a8c8a71f5836999236e9427d43f4f1d110329102e4dea05cd21ccf2c0b"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_imu_actual_c_mock0/run.txt",
+      "bytes": 1128,
+      "sha256": "a5dfdca6f1a19c04af22f72389c9393c29c283fb58447ceeb3f1eba07f5cd39f"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_0.txt",
+      "bytes": 7028,
+      "sha256": "5940396c5c70624903ef677e0d7e957b73938af33453d1da58f6e78c754e210e"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_1.txt",
+      "bytes": 7019,
+      "sha256": "457dd6a834a56708c1f311566688f300e83c14fb864e0a20692067fcd1bc0649"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_10.txt",
+      "bytes": 7028,
+      "sha256": "22caa63da7fc92a77801303b5d724c3da754cf1ca29cac8700d2c65e947c6512"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_11.txt",
+      "bytes": 7026,
+      "sha256": "17d5f7d58943c1504785d563c7b9f6add8a1c22a85b04e9afa58cd97c5cdd7e9"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_12.txt",
+      "bytes": 7037,
+      "sha256": "d718968978001ca55a1a00fc43109015b30732de7a8886da64975a114a7d2a9e"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_13.txt",
+      "bytes": 7026,
+      "sha256": "2cca0a8a493d3e9b422125b7901e420d75a6eb5c73b99e71cb0dde22b4ed5bc4"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_14.txt",
+      "bytes": 7028,
+      "sha256": "d0895ef934063abd2c78d10ebdc87b5fca98aa14a780ae5c262a435811ab6887"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_15.txt",
+      "bytes": 7026,
+      "sha256": "d302140f5314c8925261162c3ff128ca1d6657c685e04a4196a1ca0bcdaa137b"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_16.txt",
+      "bytes": 7028,
+      "sha256": "8df127766f8a30d7244a27f8fec2bc7a78554e3bb420fd19720775281556eb98"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_17.txt",
+      "bytes": 7035,
+      "sha256": "a3ed9616dbba7d672d59eb2e6b58afe35ab1ae509219389d811758834b0ff642"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_18.txt",
+      "bytes": 7037,
+      "sha256": "34852104d55f4fd17189ae0b14c6d7cff14a83d9ab21b3c345c11b16ede2ec1b"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_19.txt",
+      "bytes": 7038,
+      "sha256": "7bc18579e400c7f2c714217e099b864f298c433c79ce428b3fd7ab659d3d02aa"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_2.txt",
+      "bytes": 7036,
+      "sha256": "5387462bb5054d2ad077151bad6573e014a3ea0009f5ef5e8d68492e5c6d7675"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_20.txt",
+      "bytes": 7040,
+      "sha256": "a0f890481f54898591d475a743f35461007bbbcc098b878f2e315d346e6d5146"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_21.txt",
+      "bytes": 7029,
+      "sha256": "e2bcc1f46203c9f06435a802dbb0ecc9a0ac6e9f9bd9fe7a38e23a4364e655c1"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_22.txt",
+      "bytes": 7031,
+      "sha256": "cbc13bb48006a92e80036188f36e834e892473ea15fc9239b6098e78ff2fdb65"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_23.txt",
+      "bytes": 7032,
+      "sha256": "5089e1d866bb8fb1f5c18d35ec00cc25e5eda5e2d3231bebaa33016da3399569"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_24.txt",
+      "bytes": 7034,
+      "sha256": "e080cab41a93c79a33ca818be1d7d7a86f3db8a40b48763ad45b854331322dad"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_25.txt",
+      "bytes": 7023,
+      "sha256": "4bfc39614f53bf9ac1bc93b9a25f07429cda49fdc61771bb998d1eb6f141f18c"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_26.txt",
+      "bytes": 7025,
+      "sha256": "7783ae6f2680bd1dd5d872afe49898e5f0d572ef859e9b273be811e1adf9b9f3"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_27.txt",
+      "bytes": 7023,
+      "sha256": "699a9fa30eb08a308003eb82cf86526460ec31a2c416df7cac492d36cd6f89be"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_28.txt",
+      "bytes": 7025,
+      "sha256": "57521fd612fc97744f99973c4322285b96959922f38260b0aa82ca7bd2267169"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_29.txt",
+      "bytes": 7029,
+      "sha256": "5157c330ffa48274b2db191b63163e582204c3f86589bf39cecf91bbb2b61da0"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_3.txt",
+      "bytes": 7040,
+      "sha256": "ca489f94960bd267b74bb2e09def8d9e7436ebe955ec943425019af04315545a"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_30.txt",
+      "bytes": 7031,
+      "sha256": "e1cdc792a0665ca35334a9bcc638c4348bdc862ddba39be56f7493f6970cc920"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_31.txt",
+      "bytes": 7034,
+      "sha256": "d34e1d48c79b21514530b309d1b1aeec7eb9ac3e0d3747c2eb6d4cb54bd87d40"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_32.txt",
+      "bytes": 7036,
+      "sha256": "c993f60cd9a03a807845a29ec39b175d82209f7a31180d478b0eaae9e82b403a"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_33.txt",
+      "bytes": 7034,
+      "sha256": "83043db73ef102c120fc34783007bd4c08858481ea578e35aac675cd6efd7344"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_34.txt",
+      "bytes": 7036,
+      "sha256": "36b81a0d19c6858e2f9d46a8dc00aa32b426fec0b14c864754b681e88f5ce497"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_35.txt",
+      "bytes": 7034,
+      "sha256": "82d7555483f28111b6e368e7f7d2c989b6014c9ae20bf98194c50cb2cbd0b01e"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_36.txt",
+      "bytes": 7036,
+      "sha256": "bcc63266282d7dace989285eae0ef5354e75ca83f3c2439ffda8f7b833c0c637"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_37.txt",
+      "bytes": 7043,
+      "sha256": "8acaa5857930b03baa938e79a8299e19e3dc81578be9d5e2b00b48d28585ab86"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_38.txt",
+      "bytes": 7045,
+      "sha256": "24c5407145291550e4123da7dd93e2a85acae50deaf138cf96de8ba68ad94f19"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_39.txt",
+      "bytes": 7046,
+      "sha256": "b660265a4c508edf16ddd251f41b724e8c6dca66559b6f047feb34df4a34ccb3"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_4.txt",
+      "bytes": 7022,
+      "sha256": "1cca6dedafc1e4cf58accc8f8bff91a8198d804885b1d397b7890988390f4966"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_40.txt",
+      "bytes": 7048,
+      "sha256": "5d0a36610cd4d5133e39c8a7f7871c06360eaf29b6aab6f941af970ee739fe4e"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_41.txt",
+      "bytes": 7037,
+      "sha256": "e7d1b1cbc5c348306e2a8d5fea3c699a42292c642f050bb79a49dee11bacfeab"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_42.txt",
+      "bytes": 7039,
+      "sha256": "ddda2173291ba5ce1226399fcaab5fe166d1073e473a802801aa8fe1e6b4c984"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_43.txt",
+      "bytes": 7040,
+      "sha256": "bd59c7933deaf23ff0de6a6719a278d492c5cbd7c0481eb3aa707316edb8b065"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_44.txt",
+      "bytes": 7042,
+      "sha256": "f78cb2be56df79ca21fa8eb06f18b2d139581cb0027bb464d8153ddda068e142"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_45.txt",
+      "bytes": 7031,
+      "sha256": "0701ac87959d2eaff15e11bfbd8a7edc5d438f0fad0bb180447ac640dd0830c4"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_46.txt",
+      "bytes": 7033,
+      "sha256": "cfed0d86aa220e9c70caf44410f63ac7ad144bbb6d39522346da52a4e6d6d396"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_47.txt",
+      "bytes": 7031,
+      "sha256": "afd2153bb8bf04a0121805213685b926be7543b8de189e0af82c95b45ed44d6a"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_48.txt",
+      "bytes": 7033,
+      "sha256": "854b86335ff76ba3103cfc7d295226edd76e38cb3eba49c32af7dc713dcdfbf5"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_49.txt",
+      "bytes": 7037,
+      "sha256": "cb866bef5acc308e312b31c4328a14fa363ae1659dfd129a085987eb0b17ade9"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_5.txt",
+      "bytes": 7027,
+      "sha256": "235623c52951beef0489d0659135224a480bbb7299ad57a13f951d83b54b4df9"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_50.txt",
+      "bytes": 7039,
+      "sha256": "c230e86f830aa795f6cdf223b508fb0cd35765e00ab019ae8a46b1c77525ed25"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_51.txt",
+      "bytes": 7039,
+      "sha256": "08f632bf85a890777392eb07725e9396795403046e2a4746368493779eab9dc5"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_52.txt",
+      "bytes": 7041,
+      "sha256": "33c501ecc1af1587852d7dd3bb54914b044ff3946d964f6a237f92ec847551d4"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_53.txt",
+      "bytes": 7047,
+      "sha256": "a1f905ad577af0bb799419b6dfd610220da56ea38bb9d2d2a3e32338abd39a44"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_54.txt",
+      "bytes": 7049,
+      "sha256": "a15a252d7f2c2f13d6ae897890ebe34045fca60495520070b53b3a45b507a950"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_55.txt",
+      "bytes": 7030,
+      "sha256": "7a5b552732890c650fbcea64d22e93b50d73f92289147cd580b1bd39c5935f1a"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_56.txt",
+      "bytes": 7033,
+      "sha256": "e5ea6b65d40ac5717c3d1c4f74d0c61b0afbc1eb366302c4d34899126844b579"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_57.txt",
+      "bytes": 7033,
+      "sha256": "03f4afbed3a94f582e201313fee19ab82c3276af86ace161074274153b72eda2"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_6.txt",
+      "bytes": 7027,
+      "sha256": "f933dc62f2fd9e979480950b68478ec5f1180c71ed575db285871f06067adf45"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_7.txt",
+      "bytes": 7014,
+      "sha256": "39f6b754401f2c37a09c58502fdb7ee0c478378482a59478cc3332c64aacf2d8"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_8.txt",
+      "bytes": 7020,
+      "sha256": "68460dd520e298798f38201789c6a8170a08d49814d1e96e1403a163520e91d5"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/adapter_9.txt",
+      "bytes": 7025,
+      "sha256": "2daa8a0358b5db43e4df1e5ccc3eb69bf60e9bb2e310035e12d8ba0f48a49fd7"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/missing_build_mode.json",
+      "bytes": 6707,
+      "sha256": "b910b86e6f7dde44135ea1960a164e5c19c8423e56a80df1a7900f0f6355bd36"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/project_device_build_capabilities.h",
+      "bytes": 151,
+      "sha256": "6c71803d609186e2d018120b5744672287252877ad1c723ab0b77b4fc14cda08"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/project_resources.h",
+      "bytes": 7638,
+      "sha256": "07f766150eb1c85ef0070c8bd5f2db5d6183feae6ca918d6dfce2afc5b61aa7f"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_joint_sensor_adapters_com0/unconfigured/project_resources.h",
+      "bytes": 7638,
+      "sha256": "07f766150eb1c85ef0070c8bd5f2db5d6183feae6ca918d6dfce2afc5b61aa7f"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_ordinary_mpu_behavior_unc0/compile.json",
+      "bytes": 14932,
+      "sha256": "b3eabeea7632e2fb09a390e13d6a8ec2fa98b93d1cbe1f10219a6adbfeeec021"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_ordinary_mpu_behavior_unc0/ordinary_sequences.json",
+      "bytes": 426,
+      "sha256": "8b6b8a3b2e7b88174a687a80d801ccdecd21c3b003bbfe552132bdfc23de96a1"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_ordinary_mpu_behavior_unc0/project_device_build_capabilities.h",
+      "bytes": 4782,
+      "sha256": "faeb7266697d051cb9b1e6b534e91fa6295544fe55eb513c617fd20f4dab547f"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_ordinary_mpu_behavior_unc0/project_device_instances.c",
+      "bytes": 39266,
+      "sha256": "ae2ad17e428f82242f79b767b5c4865db7f78da003ce30fcd179258e5fa7682e"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_ordinary_mpu_behavior_unc0/project_device_instances.h",
+      "bytes": 14751,
+      "sha256": "0e8d13475266e4d35af3dadc25736d5e3a7e140f86e3f3fe906d1184804bc826"
+    },
+    {
+      "path": "native/mpu_device_contract_post/test_ordinary_mpu_behavior_unc0/project_flight_config.h",
+      "bytes": 6230,
+      "sha256": "c0a90fe57f112ac90973615f1510875fecc01c524c067e9ad7bc6db630229edb"
+    },
+    {
+      "path": "ordinary/arm_report.json",
+      "bytes": 38943,
+      "sha256": "295581d9a82f6216c098b342dbde4df288976bb0a6b1410079c653227230aa91"
+    },
+    {
+      "path": "ordinary/baseline_mpu6050_instance.c",
+      "bytes": 15421,
+      "sha256": "55bd4f8557b155b35dafe3ed724daef881d04977df9bd166f61473a37a63ebf1"
+    },
+    {
+      "path": "ordinary/baseline_ordinary.exe",
+      "bytes": 174365,
+      "sha256": "b99a874a4a3b9b99d341634f7c271e07131de4e2c9443be23a1ab7e38c3b0728"
+    },
+    {
+      "path": "ordinary/baseline_system_source_selector.c",
+      "bytes": 100623,
+      "sha256": "96720124fb4414f3f2c3b2fd46ac8d31b8f34c8e73076646adb461aa59863181"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_O2_after.nm",
+      "bytes": 5814,
+      "sha256": "447f820a42aa12ddc78efd54d5d735b6e25ef7634f44490c8b3d3358bdba2dd6"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_O2_after.o",
+      "bytes": 13634,
+      "sha256": "8f0c4b5c65cb856f2a0810c2d13793fe943e5af2332201ea2c0a86d1cdd035b3"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_O2_before.nm",
+      "bytes": 5814,
+      "sha256": "447f820a42aa12ddc78efd54d5d735b6e25ef7634f44490c8b3d3358bdba2dd6"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_O2_before.o",
+      "bytes": 13662,
+      "sha256": "43026a2cbac11999f149ed1bd17b23c16779a340426443d923c515e7e5508fe0"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_Og_after.nm",
+      "bytes": 5814,
+      "sha256": "83e4a14c0af874bf7f5237adcc749d982318164d260d5d92553bd370bb86feed"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_Og_after.o",
+      "bytes": 13852,
+      "sha256": "5b9103d8c8b267cb78944d21e0fe550e549338d08bb8e3e523a1ebaf047f4aef"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_Og_before.nm",
+      "bytes": 5814,
+      "sha256": "83e4a14c0af874bf7f5237adcc749d982318164d260d5d92553bd370bb86feed"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_Og_before.o",
+      "bytes": 13880,
+      "sha256": "f8aa717226f1942312fc1c0ae15eb760fe81ec3821c747e8ee38604bbd9a1fcc"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_O2_after.nm",
+      "bytes": 1038,
+      "sha256": "2760f3e614b286db2e62b53b2ae515b2ae305207ee427abcb1bcf218a4d8f0d5"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_O2_after.o",
+      "bytes": 29436,
+      "sha256": "29b36033a1b16b9502ed8393db75ae2632c10253a30b969323e70a0c517c3342"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_O2_after.su",
+      "bytes": 4105,
+      "sha256": "f4964715e359d0dc9fb7a83bc26c3f834d87f2d827601c3d0a97ed739524a45d"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_O2_before.nm",
+      "bytes": 1038,
+      "sha256": "2760f3e614b286db2e62b53b2ae515b2ae305207ee427abcb1bcf218a4d8f0d5"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_O2_before.o",
+      "bytes": 29360,
+      "sha256": "f0cef94330bd65ab096079fd031fbc5b4d54995d33dc48102db43c75530e1024"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_O2_before.su",
+      "bytes": 3307,
+      "sha256": "3e88dceb3b0a5d3860e837a9e1ee139ccfb338ab12b0f930c2ae142c82944a84"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_Og_after.nm",
+      "bytes": 1038,
+      "sha256": "78f76e5171b48843b1d4b64b911c53d3735f3f335e377532e67af34218158525"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_Og_after.o",
+      "bytes": 30176,
+      "sha256": "34be53b91e57f0d1d53be1a78aa1ab294cfe7d97034df920b75ee53be7c2714e"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_Og_after.su",
+      "bytes": 4105,
+      "sha256": "9d1d2c35bc8953e5e790981355b9d409516edd6f056def11bfd173ada10015f7"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_Og_before.nm",
+      "bytes": 1038,
+      "sha256": "78f76e5171b48843b1d4b64b911c53d3735f3f335e377532e67af34218158525"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_Og_before.o",
+      "bytes": 30100,
+      "sha256": "8f1f9ee58049a76a12485bdd8edf3c1dba3acfbe37a0038834b9e4a13f4ee7a7"
+    },
+    {
+      "path": "ordinary/mpu6050_instance_arm_Og_before.su",
+      "bytes": 3307,
+      "sha256": "c5b0db66313ecb50d8231c478b95e603dd335b4d893bac2ba0424901ad198c6b"
+    },
+    {
+      "path": "ordinary/report.json",
+      "bytes": 86554,
+      "sha256": "b2566d1d470412c607321fbafc4245d1ab38c1d7115d021692205f469532d493"
+    },
+    {
+      "path": "ordinary/silverstar_build_mode.h",
+      "bytes": 509,
+      "sha256": "007e5a89897de5b54004a4ce2361a3f1219ee8850fee2e2cf13fdcc682741b80"
+    },
+    {
+      "path": "ordinary/system_source_selector_O2_after.nm",
+      "bytes": 32598,
+      "sha256": "55cd4b70e45883af09bce452411451562f3280e0bec3632f81e9a34f7490d569"
+    },
+    {
+      "path": "ordinary/system_source_selector_O2_after.o",
+      "bytes": 92742,
+      "sha256": "9b8ce9a81bf0148035baa93b99b422a4d6876beac8b2b57faea55179b84a4f79"
+    },
+    {
+      "path": "ordinary/system_source_selector_O2_before.nm",
+      "bytes": 32598,
+      "sha256": "55cd4b70e45883af09bce452411451562f3280e0bec3632f81e9a34f7490d569"
+    },
+    {
+      "path": "ordinary/system_source_selector_O2_before.o",
+      "bytes": 92751,
+      "sha256": "c1af2732bef57c2e05209645b47c58af9809d00bbb20fcbb5df2345474b6affd"
+    },
+    {
+      "path": "ordinary/system_source_selector_Og_after.nm",
+      "bytes": 38446,
+      "sha256": "b9f59ce079bc01ab13d183ae3de930d484ba337c5b869ac6fd4b69151efd655e"
+    },
+    {
+      "path": "ordinary/system_source_selector_Og_after.o",
+      "bytes": 105364,
+      "sha256": "5c5964ff6e6ee85ae7d14d35699649c20402e29a8467903a4c06b40872a01f0b"
+    },
+    {
+      "path": "ordinary/system_source_selector_Og_before.nm",
+      "bytes": 38446,
+      "sha256": "b9f59ce079bc01ab13d183ae3de930d484ba337c5b869ac6fd4b69151efd655e"
+    },
+    {
+      "path": "ordinary/system_source_selector_Og_before.o",
+      "bytes": 105373,
+      "sha256": "bfbb97e319f59df2ee66b8642d04e88a0f88f1ab410ef1cae699d3e029342b30"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_O2_after.nm",
+      "bytes": 6007,
+      "sha256": "3b3fb49c6ee62e80f32ebe927c021762c4d0b913e5f62f8737df6dfc2698d1cb"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_O2_after.o",
+      "bytes": 159296,
+      "sha256": "dc8715c2c717d82d09dff8c7ba0365cd04e0a5575729f766417cf133e951eb76"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_O2_after.su",
+      "bytes": 22023,
+      "sha256": "8375b719d1790c275635b7dee30cdae95bedd9fb622c302c42f366bf08b1e45a"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_O2_before.nm",
+      "bytes": 6007,
+      "sha256": "3b3fb49c6ee62e80f32ebe927c021762c4d0b913e5f62f8737df6dfc2698d1cb"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_O2_before.o",
+      "bytes": 159272,
+      "sha256": "b7e4754f83c5e7e290fee196ed4491a126320dc3b9c04ff67d0d92475760ef86"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_O2_before.su",
+      "bytes": 20528,
+      "sha256": "c46e5e85bc5170be018491359d533a8feaaa52a821f1c25f57d7be6f8f753aa3"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_Og_after.nm",
+      "bytes": 7037,
+      "sha256": "799e2201a00298601d13783efc924b4c4608a530bb73f68dd9fb1d07489f8d15"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_Og_after.o",
+      "bytes": 157720,
+      "sha256": "8b9bc8ba31da007e10a5f7052e82a8b62ddf7932527826abd758bd75a08095cc"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_Og_after.su",
+      "bytes": 25449,
+      "sha256": "11a16985f142cf31ca8e1c1c49840cc11901ae0e2fb6e3a930623b311bd068cd"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_Og_before.nm",
+      "bytes": 7037,
+      "sha256": "799e2201a00298601d13783efc924b4c4608a530bb73f68dd9fb1d07489f8d15"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_Og_before.o",
+      "bytes": 157692,
+      "sha256": "fe5d69a894aa849cdee9b6cadcdf3a7c6c79fb08096ff6b1d09879c097622279"
+    },
+    {
+      "path": "ordinary/system_source_selector_arm_Og_before.su",
+      "bytes": 23733,
+      "sha256": "85c8637e30436ba4d3d382398638d5da7cfd1be215efe90f93f6c7f204127555"
+    },
+    {
+      "path": "review/SF6_RET6_MPU_BUILD_MODE_CONTRACT.md",
+      "bytes": 5482,
+      "sha256": "fbaf08a51e1905f683ac9068e5efdb0cefe4110eb35f12ad53b441a001fba06d"
+    },
+    {
+      "path": "source/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_source_selector.c",
+      "bytes": 103242,
+      "sha256": "9e893614fa33f063fa07d989f032ad304b7c2ba528576249b9f7fd9a166a458a"
+    },
+    {
+      "path": "source/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_startup.c",
+      "bytes": 45750,
+      "sha256": "948244b74104f304f2a78ace65cf91f99b72c2ad87eeb112f31981b2ffba085a"
+    },
+    {
+      "path": "source/apps/SCG/plugins/builtin/silverstar_device_imu_mpu6050/payload/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c",
+      "bytes": 15782,
+      "sha256": "23a2fb0f7b49c1a03dc50cfab35f8243aadfe792c593834c927c512152bb5d34"
+    },
+    {
+      "path": "source/apps/SCG/src/silverstar_fccg/generator/render.py",
+      "bytes": 172867,
+      "sha256": "9f8333f46ea03df6884a4a765bfa487a7b2d4f86925251fa7650480c5865e39a"
+    },
+    {
+      "path": "source/apps/SCG/tests/test_compact_mode.py",
+      "bytes": 7605,
+      "sha256": "7d4d083cc1f6b2e19d0378eb748e851f0225794b341e094bf4269951ac10ce28"
+    },
+    {
+      "path": "source/apps/SCG/tests/test_compact_mpu_recovery.py",
+      "bytes": 5425,
+      "sha256": "ea6a39e029c237f14f48474d8fca5e2c8b77bab1cfac4fe6f84f64c26b384aae"
+    },
+    {
+      "path": "source/apps/SCG/tests/test_joint_sensor_library.py",
+      "bytes": 23763,
+      "sha256": "aadabdfa7c8f3e8a70e189b93e57edab60eea37e3b0788ec3ff323611ff075cb"
+    },
+    {
+      "path": "source/change.patch",
+      "bytes": 11932,
+      "sha256": "ef2e398830dc68fce9aa96ecd398ab424e17606e95a5fd01a8d86a07d16cf626"
+    },
+    {
+      "path": "summary.json",
+      "bytes": 15958,
+      "sha256": "30a084ea56e9c03172138754530dfd0704c031d0b3420d2776e77f59f7b36928"
+    },
+    {
+      "path": "tool_versions.json",
+      "bytes": 1649,
+      "sha256": "9406fac342e1f8337da088fb39f19d8923adb1ba993802a413047f160622c526"
+    }
+  ]
+}

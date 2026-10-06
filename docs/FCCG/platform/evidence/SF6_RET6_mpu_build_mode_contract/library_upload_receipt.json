@@ -1,0 +1,32 @@
+{
+  "result": {
+    "operation": "create_library_file",
+    "status": "succeeded",
+    "path": "/mpu_build_mode_contract_increment.zip",
+    "file_id": "file_00000000f02c81fdabd4a37f040c0928",
+    "library_file_id": "libfile_50aa32e0d3548191bf79254ac04156b9",
+    "file_name": "mpu_build_mode_contract_increment.zip",
+    "current_version_number": 0,
+    "restored_from_version_number": null,
+    "xattrs": [
+      {
+        "name": "user.library-file-version",
+        "value": "0"
+      }
+    ],
+    "directory_id": "libdir_8617ff5a838481919d6e4b11ae8721e2",
+    "mime_type": "application/zip",
+    "library_artifact_type": "other",
+    "file_size_bytes": 3766890,
+    "external_connectors_accessed": false
+  },
+  "archive_sha256": "2aebcc93400407ab2d35b09f9c129695df83c7c2f22fd0a1d772caa0798fd297",
+  "archive_bytes": 3766890,
+  "source_commit": "3188bfb33a5e52c2a1d0e5baa7c5ce2b5e5af6a9",
+  "local_xattrs": {
+    "status": "unsupported_windows_python_os_setxattr",
+    "log": "library_xattrs.log",
+    "exit": 1,
+    "cloud_create_status": "succeeded"
+  }
+}
