@@ -13,10 +13,12 @@ def ProjectCache_Inspect(path: Path) -> dict:
     active = {Path(reference["path"]).parts[1]: role for role, reference in
               (("saved_results", document.result_artifact), ("parsed_dataset", document.parse_artifact))
               if reference is not None}
-    for item in document.removed_results.values():
-        backup = item["backup"]
-        if backup is not None and backup["project_reference"] is None:
-            active.setdefault(Path(backup["artifact_reference"]["path"]).parts[1], "deleted_run_backup")
+    for history, role in ((document.removed_results, "deleted_run_backup"),
+                          (document.recovery_sources, "historical_recovery_source")):
+        for item in history.values():
+            backup = item["backup"]
+            if backup is not None and backup["project_reference"] is None:
+                active.setdefault(Path(backup["artifact_reference"]["path"]).parts[1], role)
     items = []
     physical_files = {}
     if root.exists():

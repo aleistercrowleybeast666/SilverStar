@@ -159,6 +159,8 @@ class ProjectDocument:
     save_data_and_results: bool = True
     run_identity_state: dict = field(default_factory=lambda: {"limits": {}, "deleted": []})
     removed_results: dict = field(default_factory=dict)
+    recovery_sources: dict = field(default_factory=dict)
+    saved_result_ids: tuple[str, ...] = ()  # Runtime membership proof; never trusted from project JSON.
 
     def LogReference_Set(self, log_path: Path) -> None:
         self.log_reference = _Reference_Encode(log_path, self.project_path)
@@ -267,6 +269,7 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         if resolved_source_path is not None
         else None
     )
+    saved_entries = None
     result_artifact = document.result_artifact if document.save_data_and_results else None
     parse_artifact = document.parse_artifact if document.save_data_and_results else None
     if dataset is not None and document.save_data_and_results:
@@ -301,6 +304,7 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
                         "run_index": entry.run_index, "algorithm_name": entry.algorithm_name,
                         "result": entry.result} for entry in entries)
         result_artifact = Artifact_Write(project_path, stored, identity, task_context)
+        saved_entries = entries
     elif result_artifact is not None and (document.project_path != project_path or run_state["deleted"]):
         # Save As copies only verified numerical artifacts, never log/decoder payloads.
         identity = ProjectNumericalIdentity_Get(document, task_context)
@@ -310,7 +314,17 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         retained = tuple(item for item in stored if item.get("result_id") not in run_state["deleted"])
         if len(retained) != len(stored) or document.project_path != project_path:
             result_artifact = Artifact_Write(project_path, retained, identity, task_context)
-    removed_results = RunHistory_SaveAs(document, project_path, task_context)
+    removed_results, recovery_sources = RunHistory_SaveAs(document, project_path, task_context,
+        regenerated=tuple(entry.result_id for entry in saved_entries) if saved_entries is not None else ())
+    if saved_entries is not None:
+        from silverstar_flp.core.run_history import RunRecovery_SourceCreate
+        for entry in saved_entries:
+            recovery_sources[entry.result_id] = RunRecovery_SourceCreate(entry,
+                {"project_reference": None, "artifact_reference": result_artifact})
+    saved_result_ids = ()
+    if document.save_data_and_results:
+        saved_result_ids = (tuple(entry.result_id for entry in saved_entries) if saved_entries is not None
+            else tuple(key for key in document.saved_result_ids if key not in run_state["deleted"]))
     payload = {
         "format": PROJECT_FORMAT,
         "version": PROJECT_VERSION,
@@ -324,6 +338,7 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         "save_data_and_results": document.save_data_and_results,
         "run_identity_state": run_state,
         "removed_results": removed_results,
+        "recovery_sources": recovery_sources,
     }
     temporary_path = project_path.parent / (f".{project_path.name}.{uuid.uuid4().hex[:8]}.tmp")
     try:
@@ -346,6 +361,8 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
     document.replay_configurations = replay_configurations
     document.run_identity_state = run_state
     document.removed_results = removed_results
+    document.recovery_sources = recovery_sources
+    document.saved_result_ids = saved_result_ids
     document.log_reference = encoded_log_reference
     document.decoder_profile = _DecoderProfile_SourceReplace(
         document.decoder_profile,
@@ -419,6 +436,7 @@ def Project_Load(path: Path) -> ProjectDocument:
         save_data_and_results=save_data_and_results,
         run_identity_state=payload.get("run_identity_state", {"limits": {}, "deleted": []}),
         removed_results=payload.get("removed_results", {}),
+        recovery_sources=payload.get("recovery_sources", {}),
     )
     from silverstar_flp.core.run_history import RunHistory_Validate
     RunHistory_Validate(document)
@@ -453,6 +471,7 @@ def Project_ToDict(document: ProjectDocument) -> dict[str, Any]:
         "save_data_and_results": document.save_data_and_results,
         "run_identity_state": document.run_identity_state,
         "removed_results": document.removed_results,
+        "recovery_sources": document.recovery_sources,
     }
 
 
@@ -487,6 +506,7 @@ def ProjectResults_Load(document: ProjectDocument, context=None):
     store = ReplayResultStore()
     if document.result_artifact is None:
         store.IdentityState_Restore(document.run_identity_state)
+        document.saved_result_ids = ()
         return store
     payload = Artifact_Read(document.project_path, document.result_artifact,
                             ProjectNumericalIdentity_Get(document, context), context)
@@ -498,6 +518,8 @@ def ProjectResults_Load(document: ProjectDocument, context=None):
     engine_identity = EngineIdentity_Get()
     if not isinstance(payload, tuple) or len(payload) > 4096:
         raise ValueError("project_result_table_invalid")
+    from silverstar_flp.core.run_history import RunRecovery_SourceCreate
+    verified_sources = {}
     for item in payload:
         if not isinstance(item, dict) or not isinstance(item.get("result"), AlgorithmResult):
             raise ValueError("project_result_invalid")
@@ -523,5 +545,9 @@ def ProjectResults_Load(document: ProjectDocument, context=None):
                 or configuration["parameter_schema_identity"] !=
                 entry.diagnostics.get("parameter_schema_identity")):
             raise ValueError("project_result_configuration_mismatch")
+        verified_sources[entry.result_id] = RunRecovery_SourceCreate(entry,
+            {"project_reference": None, "artifact_reference": document.result_artifact})
     store.IdentityState_Restore(document.run_identity_state)
+    document.recovery_sources.update(verified_sources)
+    document.saved_result_ids = tuple(verified_sources)
     return store

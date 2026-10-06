@@ -156,6 +156,7 @@ def test_old_v3_configuration_only_run_indices_are_reserved(tmp_path, small_runs
         'provenance': entry.diagnostics['config_source']}
     payload = json.loads(document.project_path.read_text())
     payload.pop('run_identity_state'); payload.pop('removed_results')
+    payload.pop('recovery_sources', None)  # This field did not exist in the old v3 format.
     payload.update(save_data_and_results=False, result_artifact=None, parse_artifact=None,
                    replay_configurations={entry.result_id: configuration})
     document.project_path.write_text(json.dumps(payload), encoding='utf-8')

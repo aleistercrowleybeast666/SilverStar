@@ -899,6 +899,7 @@ class MainWindow(QMainWindow):
         self.overview_page.Dataset_Set(self._dataset)
         self.replay_page.Dataset_Set(self._dataset, self._replay_store)
         self.replay_page.RemovedResults_Set(self._project.removed_results)
+        self.replay_page.RecoverySources_Set(self._project.recovery_sources, self._project.saved_result_ids)
         self._secondary_source_id = self.replay_page._secondary_source_id
         self.flight_page.SecondarySource_Set(self._secondary_source_id)
         self.state_estimation_page.SecondarySource_Set(self._secondary_source_id)
@@ -942,7 +943,8 @@ class MainWindow(QMainWindow):
         project = replace(self._project, restored_results=(),
             replay_configurations=deepcopy(self._project.replay_configurations),
             run_identity_state=deepcopy(self._project.run_identity_state),
-            removed_results=deepcopy(self._project.removed_results))
+            removed_results=deepcopy(self._project.removed_results),
+            recovery_sources=deepcopy(self._project.recovery_sources))
         self._Task_Start(FunctionWorker(lambda context: ProjectRun_BackupLoad(project, result_id, context)),
                          self._ReplayRun_RestoreSet, self._Error_Show)
 
@@ -1413,7 +1415,8 @@ class MainWindow(QMainWindow):
                 replay_configurations=deepcopy(self._project.replay_configurations),
                 ui_state=deepcopy(self._project.ui_state),
                 run_identity_state=deepcopy(self._project.run_identity_state),
-                removed_results=deepcopy(self._project.removed_results), restored_results=(),
+                removed_results=deepcopy(self._project.removed_results),
+                recovery_sources=deepcopy(self._project.recovery_sources), restored_results=(),
                 save_data_and_results=self._project.save_data_and_results if save_data is None else save_data)
             project.ui_state["page_index"] = self.navigation_list.currentRow()
             project.ui_state["time_range"] = self.time_range.controller.model.State_Get()
@@ -1466,6 +1469,7 @@ class MainWindow(QMainWindow):
                     lambda saved: self._ProjectSave_ResultSet(saved, edit_serial), self._Error_Show)
                 return True
             self._project = save(None)
+            self.replay_page.RecoverySources_Set(self._project.recovery_sources, self._project.saved_result_ids)
             self._Project_SetDirty(False)
             self._ProjectHeader_Refresh()
             self.status_label.setText(self._translator.Text_Get("status.project_saved", path=path))
@@ -1477,6 +1481,7 @@ class MainWindow(QMainWindow):
 
     def _ProjectSave_ResultSet(self, project: ProjectDocument, edit_serial: int) -> None:
         self._project = project
+        self.replay_page.RecoverySources_Set(project.recovery_sources, project.saved_result_ids)
         self._Project_SetDirty(edit_serial != getattr(self, "_project_edit_serial", 0))
         self._ProjectHeader_Refresh()
         size = sum(reference.get("bytes", 0) for reference in

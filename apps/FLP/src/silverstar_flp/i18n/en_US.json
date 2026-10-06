@@ -927,5 +927,8 @@
   "replay.run_restored": "Run restored: {result_id}. Save to persist.",
   "error.code.project_run_deleted": "The selected primary run was removed. Select another source or explicitly restore that run.",
   "error.code.project_run_backup_unavailable": "No saved copy of this exact run is available. Recompute explicitly if needed; no replay was started.",
-  "error.code.project_run_change_failed": "The run could not be changed. Its identity or history conflicts with the project."
+  "error.code.project_run_change_failed": "The run could not be changed. Its identity or history conflicts with the project.",
+  "replay.run_current_saved": "Current numerical result: saved in this project.",
+  "replay.run_memory_only": "Current numerical result: memory only; no historical saved recovery candidate is known.",
+  "replay.run_memory_with_history": "Current numerical result: memory only. A historical saved recovery candidate is retained and requires explicit verification; configuration-only reopening does not load it."
 }

@@ -59,6 +59,8 @@ class ReplayPage(QWidget):
         self._secondary_source_id: str | None = None
         self._last_result: AlgorithmResult | None = None
         self._last_entry: ReplayStoredResult | None = None
+        self._recovery_sources = {}
+        self._saved_result_ids = ()
         self._mode_preferences: dict[str, ReplayMode] = {}
         self._process_model_preferences: dict[tuple[str, ReplayMode], int] = {}
         self._last_error: str | None = None
@@ -173,6 +175,9 @@ class ReplayPage(QWidget):
 
         self.result_information_group = QGroupBox()
         result_information_layout = QVBoxLayout(self.result_information_group)
+        self.result_storage_label = QLabel()
+        self.result_storage_label.setWordWrap(True)
+        result_information_layout.addWidget(self.result_storage_label)
         self.result_information_label = QLabel("—")
         self.result_information_label.setWordWrap(True)
         self.result_information_label.setTextInteractionFlags(
@@ -248,6 +253,9 @@ class ReplayPage(QWidget):
         dataset_changed = self._dataset is not dataset
         self._dataset = dataset
         if dataset_changed:
+            self._recovery_sources = {}
+            self._saved_result_ids = ()
+            self.result_storage_label.clear()
             self._secondary_source_id = None
             self._process_model_preferences.clear()
             self._last_entry = None
@@ -264,6 +272,7 @@ class ReplayPage(QWidget):
         elif self._store is None:
             self._store = ReplayResultStore()
         if self._last_entry is not None and self._store.Entry_Get(self._last_entry.result_id) is None:
+            self.result_storage_label.clear()
             self._last_entry = None
             self._last_result = None
             self.result_label.setText("—")
@@ -810,6 +819,7 @@ class ReplayPage(QWidget):
         parameters = ", ".join(parameter_items)
         warnings = self._Warnings_Text_Get(entry.warnings)
         channels = ", ".join(sorted(entry.channels))
+        self.result_storage_label.setText(self._RunStorage_Text_Get(entry.result_id))
         lines = (
             self._translator.Text_Get(
                 "replay.detail.algorithm", value=AlgorithmName_Display(entry.algorithm_name)
@@ -896,6 +906,8 @@ class ReplayPage(QWidget):
             for column, value in enumerate(values):
                 item = QTableWidgetItem(value)
                 item.setData(Qt.ItemDataRole.UserRole, entry.result_id)
+                if column == 0:
+                    item.setToolTip(self._RunStorage_Text_Get(entry.result_id))
                 self.stored_results_table.setItem(row, column, item)
             if select_result_id == entry.result_id:
                 selected_row = row
@@ -920,6 +932,23 @@ class ReplayPage(QWidget):
             self._ResultInformation_Set(entry)
             self._Comparison_Set(entry.result)
         self._HistoryButtons_Refresh()
+
+    def RecoverySources_Set(self, sources: dict, saved_result_ids: tuple[str, ...]) -> None:
+        self._recovery_sources = sources
+        self._saved_result_ids = saved_result_ids
+        for row in range(self.stored_results_table.rowCount()):
+            item = self.stored_results_table.item(row, 0)
+            if item is not None:
+                item.setToolTip(self._RunStorage_Text_Get(item.data(Qt.ItemDataRole.UserRole)))
+        if self._last_entry is not None:
+            # Saving updates only persistence status, not numerical diagnostics.
+            self.result_storage_label.setText(self._RunStorage_Text_Get(self._last_entry.result_id))
+
+    def _RunStorage_Text_Get(self, result_id: str) -> str:
+        code = ("replay.run_current_saved" if result_id in self._saved_result_ids else
+                "replay.run_memory_with_history" if result_id in self._recovery_sources else
+                "replay.run_memory_only")
+        return self._translator.Text_Get(code)
 
     def RemovedResults_Set(self, history: dict) -> None:
         self._removed_results = history

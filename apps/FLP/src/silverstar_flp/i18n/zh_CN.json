@@ -927,5 +927,8 @@
   "replay.run_restored": "已恢复 run：{result_id}。请保存工程。",
   "error.code.project_run_deleted": "选中的主源 run 已移除。请另选来源，或明确恢复该 run。",
   "error.code.project_run_backup_unavailable": "没有这一确切 run 的可用已保存备份。如有需要，请明确重新复算；未自动启动复算。",
-  "error.code.project_run_change_failed": "无法修改该 run，其身份或历史与工程冲突。"
+  "error.code.project_run_change_failed": "无法修改该 run，其身份或历史与工程冲突。",
+  "replay.run_current_saved": "当前数值结果：已保存在本工程中。",
+  "replay.run_memory_only": "当前数值结果：仅在内存中，尚无已知的历史保存恢复候选。",
+  "replay.run_memory_with_history": "当前数值结果：仅在内存中。已保留历史保存恢复候选，仍需显式校验；仅配置重开不会载入该候选。"
 }
