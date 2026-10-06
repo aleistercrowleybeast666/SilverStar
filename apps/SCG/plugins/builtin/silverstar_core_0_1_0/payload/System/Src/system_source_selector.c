@@ -43,6 +43,9 @@ typedef struct
 {
     uint8_t order[PROJECT_IMU_INSTANCE_COUNT_MAX];
     uint8_t initialized[PROJECT_IMU_INSTANCE_COUNT_MAX];
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+    uint8_t prepared[PROJECT_IMU_INSTANCE_COUNT_MAX];
+#endif
     uint8_t started[PROJECT_IMU_INSTANCE_COUNT_MAX];
     uint8_t count;
     uint8_t configured_primary;
@@ -552,6 +555,21 @@ SystemDeviceResult SystemImu_Init(void)
         result = ProjectImuInstance_Init(instance_id);
         SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
             SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+        {
+            uint8_t prepared = 0U;
+            if ((ProjectImuInstance_RecoveryPreparedGet(instance_id, &prepared) == SYSTEM_DEVICE_OK) &&
+                (prepared != 0U))
+            {
+                s_imu.prepared[instance_id] = 1U;
+                s_imu.active = instance_id;
+                s_imu.active_position = position;
+                /* Preserve real first probe/reset result; do not mark initialized. */
+                first_failure = result;
+                continue;
+            }
+        }
+#endif
         if (SystemSourceSelector_ResultSuccessful(result) != 0U)
         {
             s_imu.initialized[instance_id] = 1U;
@@ -589,7 +607,14 @@ SystemDeviceResult SystemImu_Start(void)
         instance_id = s_imu.order[position];
         SILVERSTAR_ASSERT(instance_id < s_imu.count,
             SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
-        if (s_imu.initialized[instance_id] == 0U) { continue; }
+        if (s_imu.initialized[instance_id] == 0U)
+        {
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+            if (s_imu.prepared[instance_id] == 0U) { continue; }
+#else
+            continue;
+#endif
+        }
         s_imu.started[instance_id] = 0U;
         result = ProjectImuInstance_Start(instance_id);
         SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
@@ -604,6 +629,10 @@ SystemDeviceResult SystemImu_Start(void)
             first_failure = result;
         }
     }
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+    if ((success_count > 0U) && (s_imu.prepared[0] != 0U) && (s_imu.initialized[0] == 0U))
+    { return SYSTEM_DEVICE_CONFIG_DELEGATED; }
+#endif
     return (success_count > 0U) ? SYSTEM_DEVICE_OK : first_failure;
 }
 
@@ -644,7 +673,14 @@ SystemDeviceResult SystemImu_RuntimeOwnerActivate(void)
 
         if (position >= s_imu.count) { break; }
         instance_id = s_imu.order[position];
-        if (s_imu.initialized[instance_id] == 0U) { continue; }
+        if (s_imu.initialized[instance_id] == 0U)
+        {
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+            if (s_imu.prepared[instance_id] == 0U) { continue; }
+#else
+            continue;
+#endif
+        }
         candidate_result = ProjectImuInstance_RuntimeOwnerActivate(instance_id);
         if (instance_id == s_imu.active) { result = candidate_result; }
     }
@@ -663,9 +699,26 @@ void SystemImu_Process(void)
 
         if (position >= s_imu.count) { break; }
         instance_id = s_imu.order[position];
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+        if (instance_id >= PROJECT_IMU_INSTANCE_COUNT_MAX)
+        {
+            SILVERSTAR_ASSERT(instance_id < PROJECT_IMU_INSTANCE_COUNT_MAX,
+                SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+            return;
+        }
+#endif
         if (s_imu.started[instance_id] != 0U)
         {
             (void)ProjectImuInstance_Process(instance_id);
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+            if (s_imu.prepared[instance_id] != 0U)
+            {
+                SystemDeviceHealth health;
+                s_imu.initialized[instance_id] =
+                    (uint8_t)((ProjectImuInstance_HealthGet(instance_id, &health) == SYSTEM_DEVICE_OK) &&
+                    (health.initialized != 0U));
+            }
+#endif
         }
     }
     if (s_imu.locked == 0U) { (void)SystemSourceSelector_ImuFreshSelect(); }

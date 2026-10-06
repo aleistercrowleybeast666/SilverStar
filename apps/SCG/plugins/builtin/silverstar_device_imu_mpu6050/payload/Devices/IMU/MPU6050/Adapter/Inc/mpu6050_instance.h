@@ -5,6 +5,7 @@
 
 const char * Mpu6050ImuInstance_NameGet(uint8_t instance);
 SystemDeviceResult Mpu6050ImuInstance_Init(uint8_t instance);
+SystemDeviceResult Mpu6050ImuInstance_RecoveryPreparedGet(uint8_t instance, uint8_t *prepared);
 SystemDeviceResult Mpu6050ImuInstance_Start(uint8_t instance);
 SystemDeviceResult Mpu6050ImuInstance_Stop(uint8_t instance);
 SystemDeviceResult Mpu6050ImuInstance_RuntimeOwnerActivate(uint8_t instance);

@@ -66,6 +66,8 @@ SystemDeviceResult ProjectDeviceInstance_IoDiagnosticsGet(
 
 uint8_t ProjectImuInstance_CountGet(void);
 SystemDeviceResult ProjectImuInstance_Init(uint8_t instance_id);
+/* Prepared retry context is independent of physical initialized/verified health. */
+SystemDeviceResult ProjectImuInstance_RecoveryPreparedGet(uint8_t instance_id, uint8_t *prepared);
 SystemDeviceResult ProjectImuInstance_Start(uint8_t instance_id);
 SystemDeviceResult ProjectImuInstance_Stop(uint8_t instance_id);
 SystemDeviceResult ProjectImuInstance_RuntimeOwnerActivate(

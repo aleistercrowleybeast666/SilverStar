@@ -2904,9 +2904,9 @@ def _DeviceInstanceFunctionSwitch_Render(
         re.DOTALL,
     )
     if argument_match is None:
-        if (label == "Gnss" and operation == "RecoveryBusyGet" and
+        if ((label, operation) in (("Gnss", "RecoveryBusyGet"), ("Imu", "RecoveryPreparedGet")) and
                 "case 0U: return SYSTEM_DEVICE_UNSUPPORTED;" in original):
-            arguments = "busy"
+            arguments = "busy" if label == "Gnss" else "prepared"
         else:
             raise ValueError(
                 f"Device-instance facade reference case changed: {function_marker}"
@@ -2937,6 +2937,10 @@ def _DeviceInstanceFunctionSwitch_Render(
             cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
             continue
         if (label == "Gnss" and operation == "RecoveryBusyGet"
+                and operation not in overrides):
+            cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
+            continue
+        if (label == "Imu" and operation == "RecoveryPreparedGet"
                 and operation not in overrides):
             cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
             continue

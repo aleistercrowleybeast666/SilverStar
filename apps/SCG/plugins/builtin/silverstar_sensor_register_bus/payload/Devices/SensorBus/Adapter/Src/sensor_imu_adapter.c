@@ -58,7 +58,7 @@ static SensorBusResult SensorImuAdapter_WriteRegister(void *context,
     return (result == PLATFORM_OK) ? SENSOR_BUS_OK : SENSOR_BUS_IO_ERROR;
 }
 
-SystemDeviceResult SensorImuAdapter_InitI2c(SensorImuAdapter *adapter,
+SystemDeviceResult SensorImuAdapter_PrepareI2c(SensorImuAdapter *adapter,
     const SensorImuProfile *profile, PlatformI2cId bus_id,
     PlatformI2cId auxiliary_bus_id, uint16_t address_7bit, uint32_t source_id)
 {
@@ -84,6 +84,17 @@ SystemDeviceResult SensorImuAdapter_InitI2c(SensorImuAdapter *adapter,
     bus.kind = SENSOR_BUS_I2C;
     result = SensorImu_Init(&adapter->driver, &bus, profile, source_id);
     if (result != SENSOR_IMU_OK) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SensorImuAdapter_InitI2c(SensorImuAdapter *adapter,
+    const SensorImuProfile *profile, PlatformI2cId bus_id,
+    PlatformI2cId auxiliary_bus_id, uint16_t address_7bit, uint32_t source_id)
+{
+    SensorImuResult result;
+    SystemDeviceResult prepared = SensorImuAdapter_PrepareI2c(adapter,
+        profile, bus_id, auxiliary_bus_id, address_7bit, source_id);
+    if (prepared != SYSTEM_DEVICE_OK) { return prepared; }
     result = SensorImu_BeginConfigure(&adapter->driver, PlatformTime_Us(), 1U);
     if (result != SENSOR_IMU_BUSY) { return SYSTEM_DEVICE_VERIFY_FAILED; }
     adapter->health.initialized = 1U;
@@ -418,6 +429,15 @@ static SystemDeviceResult SensorImuAdapter_ConfigValidate(SensorImuAdapter *adap
         return SYSTEM_DEVICE_UNSUPPORTED;
     }
     return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SensorImuAdapter_ConfigRequest(SensorImuAdapter *adapter,
+    const SystemImuConfig *config, SystemDeviceConfigReport *report)
+{
+    SystemDeviceResult result = SensorImuAdapter_ConfigValidate(adapter, config, report);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    report->delegated_mask = config->requested_mask & report->supported_mask;
+    return SYSTEM_DEVICE_CONFIG_DELEGATED;
 }
 
 SystemDeviceResult SensorImuAdapter_ConfigCheck(SensorImuAdapter *adapter,

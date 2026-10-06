@@ -240,6 +240,17 @@ SystemDeviceResult ProjectImuInstance_Init(uint8_t instance_id)
     }
 }
 
+SystemDeviceResult ProjectImuInstance_RecoveryPreparedGet(uint8_t instance_id, uint8_t *prepared)
+{
+    if (prepared == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    *prepared = 0U;
+    switch (instance_id)
+    {
+        case 0U: return SYSTEM_DEVICE_UNSUPPORTED;
+        default: return SYSTEM_DEVICE_NOT_PRESENT;
+    }
+}
+
 SystemDeviceResult ProjectImuInstance_Start(uint8_t instance_id)
 {
     switch (instance_id)

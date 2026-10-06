@@ -258,6 +258,13 @@ static void SystemStartup_JyLogicalStart(void)
         {
             device->start_result = SystemImu_Start();
         }
+#if defined(SILVERSTAR_COMPACT_MODE) && (SILVERSTAR_COMPACT_MODE != 0)
+        else
+        {
+            /* Start intent for a prepared recoverable context, retaining failed Init. */
+            device->start_result = SystemImu_Start();
+        }
+#endif
     }
 
     device = &s_startup_report.devices[

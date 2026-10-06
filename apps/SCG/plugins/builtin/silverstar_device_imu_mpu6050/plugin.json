@@ -118,7 +118,10 @@
         "headers": [
           "mpu6050_instance.h"
         ],
-        "pass_instance": true
+        "pass_instance": true,
+        "operations": {
+          "RecoveryPreparedGet": "Mpu6050ImuInstance_RecoveryPreparedGet"
+        }
       }
     },
     "instance_resource_binding": {

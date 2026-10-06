@@ -33,6 +33,13 @@ typedef struct
     SystemDeviceHealth health;
 } SensorImuAdapter;
 
+/* Prepare local transport/context only; no probe, reset or physical readiness. */
+SystemDeviceResult SensorImuAdapter_PrepareI2c(SensorImuAdapter *adapter,
+    const SensorImuProfile *profile, PlatformI2cId bus_id,
+    PlatformI2cId auxiliary_bus_id, uint16_t address_7bit, uint32_t source_id);
+SystemDeviceResult SensorImuAdapter_ConfigRequest(SensorImuAdapter *adapter,
+    const SystemImuConfig *config, SystemDeviceConfigReport *report);
+
 SystemDeviceResult SensorImuAdapter_Init(SensorImuAdapter *adapter,
     const SensorImuProfile *profile, PlatformI2cId bus_id,
     uint16_t address_7bit, uint32_t source_id);
