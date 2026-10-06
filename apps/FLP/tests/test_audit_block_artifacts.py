@@ -176,3 +176,36 @@ def test_v1_and_v2_plain_numerical_artifacts_remain_readable(tmp_path):
         manifest_path.write_bytes(gzip.compress(json.dumps(manifest).encode()))
         reference['sha256'] = FileHash_Get(manifest_path)
         np.testing.assert_array_equal(Artifact_Read(tmp_path/'flight.ssflp', reference)['values'], np.arange(9))
+
+
+@pytest.mark.parametrize('dtype', ['>f8', '>f4', '>i4', '>u2'], ids=['f8','f4','i4','u2'])
+def test_big_endian_audit_ndarrays_roundtrip_across_real_block_boundary(tmp_path, dtype):
+    from silverstar_flp.core.record_blocks import RECORD_BLOCK_ROWS
+    def matrix(i):
+        if dtype == '>f8':
+            value = np.array([0x3ff0000000000000+i, 0x8000000000000000,
+                0x7ff8000000000123+i, 0x7ff0000000000000], dtype='>u8').view(dtype)
+        elif dtype == '>f4':
+            value = np.array([0x3f800000+i, 0x80000000,
+                0x7fc00123+i, 0x7f800000], dtype='>u4').view(dtype)
+        elif dtype == '>i4':
+            value = np.array([-2**31+i, -i, 2**31-1-i, 0], dtype=dtype)
+        else:
+            value = np.array([i, 0, 65535-i, 1], dtype=dtype)
+        return value.reshape(2,2)
+    rows = tuple({'sequence': i, 'matrix': matrix(i)}
+        for i in range(RECORD_BLOCK_ROWS+17))
+    reference = Artifact_Write(tmp_path/'flight.ssflp', rows, {})
+    manifest_path = tmp_path/reference['path']
+    manifest = json.loads(gzip.decompress(manifest_path.read_bytes()))
+    assert len(manifest['payload']['audit_blocks']) == 2
+    assert any(spec['dtype'] == dtype for spec in manifest['arrays'].values())
+    restored = Artifact_Read(tmp_path/'flight.ssflp', reference)
+    assert len(restored) == len(rows)
+    assert _Fingerprint(rows) == _Fingerprint(restored)
+    for before, after in zip(rows, restored):
+        assert before['sequence'] == after['sequence']
+        assert after['matrix'].dtype.str == dtype
+        assert after['matrix'].shape == (2,2)
+        assert after['matrix'].tobytes() == before['matrix'].tobytes()
+        assert not after['matrix'].flags.writeable

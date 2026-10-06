@@ -35,7 +35,8 @@ def AuditBlock_Build(rows):
     plan = columns.Plan(rows)
     if plan["kind"] not in ("mapping", "mapping_layouts"):
         raise ValueError("artifact_audit_layout_unsupported")
-    matrices = {dtype: np.concatenate(parts, axis=1) for dtype, parts in columns.parts.items()}
+    matrices = {dtype: np.concatenate(parts, axis=1, dtype=np.dtype(dtype), casting="no")
+                for dtype, parts in columns.parts.items()}
     return {"count": len(rows), "payload": plan, "matrices": matrices}
 
 
