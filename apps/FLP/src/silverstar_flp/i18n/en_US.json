@@ -916,5 +916,16 @@
   "status.project_artifacts_saved": "Project saved: {path} (numerical artifacts: {size} MB)",
   "error.code.artifact_disk_space_insufficient": "Not enough free space for a safe artifact transaction. The existing project and saved results were retained.",
   "project.save_data_and_results": "Save parsed data and completed replay results",
-  "project.save_data_explanation": "Enabled: reopen all completed runs without parsing or replay. Disabled: save references, settings and run configurations only. Existing files are retained; cleanup is a separate explicit action."
+  "project.save_data_explanation": "Enabled: reopen all completed runs without parsing or replay. Disabled: save references, settings and run configurations only. Existing files are retained; cleanup is a separate explicit action.",
+  "replay.run_delete": "Remove selected run",
+  "replay.run_restore": "Restore selected run",
+  "replay.run_saved_backup": "Saved recovery candidate",
+  "replay.run_window_undo": "Undo in this window only",
+  "replay.run_history_note": "Removal affects only this project’s recomputed run. Raw logs are preserved. Old artifact generations stay in place; no disk space is reclaimed. Undo retains the run in window memory. Unsaved runs cannot be recovered after closing. Configuration-only Save As keeps a dependency on the original backup location.",
+  "replay.run_delete_confirm": "Remove exactly {result_id} from this project?\nRaw logs and saved artifact files will not be deleted. No disk space is reclaimed.\nA removed primary becomes unavailable; a removed secondary is cleared.\nUndo is available in this window. After closing, recovery requires an intact saved copy containing this exact run. Save to persist the removal.",
+  "replay.run_removed": "Run removed: {result_id}. Save to persist; disk files retained.",
+  "replay.run_restored": "Run restored: {result_id}. Save to persist.",
+  "error.code.project_run_deleted": "The selected primary run was removed. Select another source or explicitly restore that run.",
+  "error.code.project_run_backup_unavailable": "No saved copy of this exact run is available. Recompute explicitly if needed; no replay was started.",
+  "error.code.project_run_change_failed": "The run could not be changed. Its identity or history conflicts with the project."
 }

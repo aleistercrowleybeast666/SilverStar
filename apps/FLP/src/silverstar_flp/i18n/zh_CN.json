@@ -916,5 +916,16 @@
   "status.project_artifacts_saved": "工程已保存：{path}（数值文件：{size} MB）",
   "error.code.artifact_disk_space_insufficient": "可用空间不足，无法安全写入结果文件。现有工程和已保存结果保持不变。",
   "project.save_data_and_results": "同时保存数据与复算结果",
-  "project.save_data_explanation": "勾选：保存完整解析数据及全部已完成结果，重开无需再次解析或复算。取消：仅保存文件引用、设置和各次复算配置。现有结果文件保留，清理需要另行明确操作。"
+  "project.save_data_explanation": "勾选：保存完整解析数据及全部已完成结果，重开无需再次解析或复算。取消：仅保存文件引用、设置和各次复算配置。现有结果文件保留，清理需要另行明确操作。",
+  "replay.run_delete": "移除选中 run",
+  "replay.run_restore": "恢复选中 run",
+  "replay.run_saved_backup": "已保存的候选备份",
+  "replay.run_window_undo": "仅本窗口可撤销",
+  "replay.run_history_note": "仅移除本工程的复算 run，保留原始日志。旧 artifact generation 留在原位，不回收磁盘空间。窗口内撤销仍保留该 run 的内存；未保存的 run 关闭后无法恢复。仅配置另存为依赖原备份位置。",
+  "replay.run_delete_confirm": "仅从本工程移除 {result_id}？\n不会删除原始日志或已保存的 artifact 文件，也不回收磁盘空间。\n若是主源，将明确显示不可用；若是副源，将清空副源。\n本窗口内可以撤销。关闭后，恢复需要包含这一 run 的完好已保存备份。保存工程后才持久化移除。",
+  "replay.run_removed": "已移除 run：{result_id}。保存后生效；磁盘文件保留。",
+  "replay.run_restored": "已恢复 run：{result_id}。请保存工程。",
+  "error.code.project_run_deleted": "选中的主源 run 已移除。请另选来源，或明确恢复该 run。",
+  "error.code.project_run_backup_unavailable": "没有这一确切 run 的可用已保存备份。如有需要，请明确重新复算；未自动启动复算。",
+  "error.code.project_run_change_failed": "无法修改该 run，其身份或历史与工程冲突。"
 }

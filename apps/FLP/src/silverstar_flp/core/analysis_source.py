@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
 from enum import StrEnum
+import re
 from types import MappingProxyType
 
 from silverstar_flp.core.dataset import FlightDataset, TimeSeries
@@ -118,6 +119,37 @@ class ReplayStoredResult:
         return f"{self.algorithm_name} / {mode} #{self.run_index}"
 
 
+class ReplayResultChangeResult(StrEnum):
+    REMOVED = "removed"
+    RESTORED = "restored"
+    NOT_FOUND = "not_found"
+    NOT_DELETED = "not_deleted"
+    CONFLICT = "conflict"
+
+
+def RunIdentityState_Validate(state):
+    if not isinstance(state, dict) or set(state) != {"limits", "deleted"}:
+        raise ValueError("project_run_identity_invalid")
+    limits, deleted = state["limits"], state["deleted"]
+    namespace = r"[A-Za-z0-9_-]{1,80}:(?:what_if|offline|recomputed)"
+    if (not isinstance(limits, dict) or len(limits) > 4096
+            or not isinstance(deleted, list) or len(deleted) > 4096):
+        raise ValueError("project_run_identity_invalid")
+    for key, value in limits.items():
+        if (not isinstance(key, str) or not re.fullmatch(namespace, key)
+                or type(value) is not int or not 1 <= value <= 2**31 - 1):
+            raise ValueError("project_run_identity_invalid")
+    seen = set()
+    for result_id in deleted:
+        if (not isinstance(result_id, str)
+                or not re.fullmatch(namespace + r":[1-9][0-9]{0,9}", result_id)):
+            raise ValueError("project_run_identity_invalid")
+        key, _, index = result_id.rpartition(":")
+        if result_id in seen or int(index) > limits.get(key, 0):
+            raise ValueError("project_run_identity_invalid")
+        seen.add(result_id)
+
+
 class ReplayResultStore:
     RECORDED_SOURCE_ID = "recorded"
     RECORDED_ALGORITHMS = {
@@ -143,12 +175,18 @@ class ReplayResultStore:
         self._by_result_id: dict[str, ReplayStoredResult] = {}
         self._by_source_id: dict[str, ReplayStoredResult] = {}
         self._active_source_id = self.RECORDED_SOURCE_ID
+        self._run_limits: dict[str, int] = {}
+        self._deleted: set[str] = set()
+        self._removed_entries: dict[str, ReplayStoredResult] = {}
 
     def Clear(self) -> None:
         self._entries.clear()
         self._by_result_id.clear()
         self._by_source_id.clear()
         self._active_source_id = self.RECORDED_SOURCE_ID
+        self._run_limits.clear()
+        self._deleted.clear()
+        self._removed_entries.clear()
 
     def Result_Add(
         self,
@@ -168,21 +206,23 @@ class ReplayResultStore:
                 else ReplayMode.RECORDED_CONFIGURATION
             )
         )
-        run_index = restored_run_index if restored_run_index is not None else 1 + max(
-            (entry.run_index for entry in self._entries
-             if entry.algorithm_id == result.algorithm_id and entry.mode == mode), default=0)
-        if type(run_index) is not int or run_index <= 0:
-            raise ValueError("replay_result_identity_invalid")
         algorithm_key = result.algorithm_id.rsplit(".", 1)[-1]
         mode_key = {
             ReplayMode.WHAT_IF: "what_if",
             ReplayMode.OFFLINE: "offline",
             ReplayMode.RECORDED_CONFIGURATION: "recomputed",
         }[mode]
+        namespace = f"{algorithm_key}:{mode_key}"
+        run_index = (restored_run_index if restored_run_index is not None
+                     else self._run_limits.get(namespace, 0) + 1)
+        if type(run_index) is not int or not 1 <= run_index <= 2**31 - 1:
+            raise ValueError("replay_result_identity_invalid")
         result_id = f"{algorithm_key}:{mode_key}:{run_index}"
         source_id = f"replay:{result_id}"
         if result_id in self._by_result_id:
             raise ValueError("replay_result_identity_duplicate")
+        if result_id in self._deleted:
+            raise ValueError("replay_result_identity_deleted")
         entry = ReplayStoredResult(
             result_id=result_id,
             source_id=source_id,
@@ -202,7 +242,64 @@ class ReplayResultStore:
         self._entries.append(entry)
         self._by_result_id[result_id] = entry
         self._by_source_id[source_id] = entry
+        self._run_limits[namespace] = max(run_index, self._run_limits.get(namespace, 0))
         return entry
+
+    def IdentityState_Get(self) -> dict:
+        return {"limits": dict(self._run_limits), "deleted": sorted(self._deleted)}
+
+    def IdentityState_Restore(self, state: dict) -> None:
+        RunIdentityState_Validate(state)
+        if set(state["deleted"]) & self._by_result_id.keys():
+            raise ValueError("project_deleted_run_present")
+        limits = dict(self._run_limits)
+        for key, value in state["limits"].items():
+            limits[key] = max(value, limits.get(key, 0))
+        self._run_limits = limits
+        self._deleted = set(state["deleted"])
+
+    def RemovedEntry_Get(self, result_id: str) -> ReplayStoredResult | None:
+        return self._removed_entries.get(result_id)
+
+    def Result_Remove(self, result_id: str) -> ReplayResultChangeResult:
+        entry = self.Entry_Get(result_id)
+        if entry is None:
+            return ReplayResultChangeResult.NOT_FOUND
+        if len(self._deleted) >= 4096:
+            return ReplayResultChangeResult.CONFLICT
+        self._entries = [item for item in self._entries if item.result_id != result_id]
+        del self._by_result_id[result_id]
+        del self._by_source_id[entry.source_id]
+        self._removed_entries[result_id] = entry
+        self._deleted.add(result_id)
+        # A removed primary deliberately remains unavailable until user selection.
+        return ReplayResultChangeResult.REMOVED
+
+    def Result_Restore(self, entry: ReplayStoredResult) -> ReplayResultChangeResult:
+        if entry.result_id not in self._deleted:
+            return ReplayResultChangeResult.NOT_DELETED
+        if entry.result_id in self._by_result_id or entry.source_id in self._by_source_id:
+            return ReplayResultChangeResult.CONFLICT
+        mode_key = {ReplayMode.WHAT_IF: "what_if", ReplayMode.OFFLINE: "offline",
+                    ReplayMode.RECORDED_CONFIGURATION: "recomputed"}[entry.mode]
+        actual_mode = (ReplayMode.WHAT_IF if entry.result.provenance == "What-if" else
+                       ReplayMode.OFFLINE if entry.result.provenance == "Offline" else
+                       ReplayMode.RECORDED_CONFIGURATION)
+        expected = f"{entry.result.algorithm_id.rsplit('.', 1)[-1]}:{mode_key}:{entry.run_index}"
+        if (entry.mode != actual_mode or entry.result_id != expected
+                or entry.source_id != f"replay:{expected}"):
+            return ReplayResultChangeResult.CONFLICT
+        self._deleted.remove(entry.result_id)
+        try:
+            restored = self.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
+                                       restored_run_index=entry.run_index)
+        except Exception:
+            self._deleted.add(entry.result_id)
+            raise
+        if restored.result_id != entry.result_id or restored.source_id != entry.source_id:
+            raise ValueError("replay_result_identity_invalid")
+        self._removed_entries.pop(entry.result_id, None)
+        return ReplayResultChangeResult.RESTORED
 
     def Entries_Get(self) -> tuple[ReplayStoredResult, ...]:
         return tuple(self._entries)

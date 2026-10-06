@@ -48,6 +48,8 @@ class ReplayPage(QWidget):
     analysisSourceRequested = Signal(str)
     secondarySourceRequested = Signal(object)
     configurationChanged = Signal()
+    resultDeleteRequested = Signal(str)
+    resultRestoreRequested = Signal(str)
 
     def __init__(self, translator: Translator, registry: PluginRegistry) -> None:
         super().__init__()
@@ -68,6 +70,8 @@ class ReplayPage(QWidget):
         self._offline_parameter_values: dict[str, float] = {}
         self._parameter_baseline_values: dict[str, float] = {}
         self._parameters_dirty = False
+        self._task_busy = False
+        self._removed_results = {}
 
         page_layout = QVBoxLayout(self)
         page_layout.setContentsMargins(0, 0, 0, 0)
@@ -192,6 +196,21 @@ class ReplayPage(QWidget):
         self.stored_results_table.horizontalHeader().setStretchLastSection(True)
         self.stored_results_table.itemSelectionChanged.connect(self._StoredResult_Selected)
         stored_results_layout.addWidget(self.stored_results_table)
+        history_row = QHBoxLayout()
+        self.result_delete_button = QPushButton()
+        self.result_delete_button.clicked.connect(self._ResultDelete_Request)
+        self.result_restore_combo = StandardComboBox()
+        self.result_restore_combo.currentIndexChanged.connect(self._HistoryButtons_Refresh)
+        self.result_restore_button = QPushButton()
+        self.result_restore_button.clicked.connect(self._ResultRestore_Request)
+        history_row.addWidget(self.result_delete_button)
+        history_row.addWidget(self.result_restore_combo, 1)
+        history_row.addWidget(self.result_restore_button)
+        stored_results_layout.addLayout(history_row)
+        self.result_history_note = QLabel()
+        self.result_history_note.setObjectName("muted")
+        self.result_history_note.setWordWrap(True)
+        stored_results_layout.addWidget(self.result_history_note)
         content_layout.addWidget(self.stored_results_group)
 
         self.comparison_group = QGroupBox()
@@ -244,6 +263,13 @@ class ReplayPage(QWidget):
             self._store = results
         elif self._store is None:
             self._store = ReplayResultStore()
+        if self._last_entry is not None and self._store.Entry_Get(self._last_entry.result_id) is None:
+            self._last_entry = None
+            self._last_result = None
+            self.result_label.setText("—")
+            self.result_information_label.setText("—")
+            self.result_information_label.setToolTip("")
+            self.comparison_table.setRowCount(0)
         self._AlgorithmLabels_Refresh()
         self._AnalysisSources_Refresh()
         self._StoredResults_Refresh()
@@ -877,6 +903,7 @@ class ReplayPage(QWidget):
         if selected_row >= 0:
             self.stored_results_table.selectRow(selected_row)
         self._ActiveSourceLabel_Refresh()
+        self._HistoryButtons_Refresh()
 
     def _InputSource_Text_Get(self, input_source: str) -> str:
         code = {
@@ -892,6 +919,39 @@ class ReplayPage(QWidget):
             self._last_result = entry.result
             self._ResultInformation_Set(entry)
             self._Comparison_Set(entry.result)
+        self._HistoryButtons_Refresh()
+
+    def RemovedResults_Set(self, history: dict) -> None:
+        self._removed_results = history
+        selected = self.result_restore_combo.currentData()
+        self.result_restore_combo.blockSignals(True)
+        self.result_restore_combo.clear()
+        for result_id, item in history.items():
+            label = self._translator.Text_Get("replay.run_saved_backup" if item["backup"] is not None
+                                              else "replay.run_window_undo")
+            self.result_restore_combo.addItem(f"{result_id} / {label}", result_id)
+        index = self.result_restore_combo.findData(selected)
+        if index >= 0:
+            self.result_restore_combo.setCurrentIndex(index)
+        self.result_restore_combo.blockSignals(False)
+        self._HistoryButtons_Refresh()
+
+    def _HistoryButtons_Refresh(self) -> None:
+        self.result_delete_button.setEnabled(not self._task_busy and self._SelectedEntry_Get() is not None)
+        result_id = self.result_restore_combo.currentData()
+        available = (self._store is not None and self._store.RemovedEntry_Get(result_id) is not None)
+        backup = self._removed_results.get(result_id, {}).get("backup")
+        self.result_restore_button.setEnabled(not self._task_busy and (available or backup is not None))
+
+    def _ResultDelete_Request(self) -> None:
+        entry = self._SelectedEntry_Get()
+        if entry is not None and not self._task_busy:
+            self.resultDeleteRequested.emit(entry.result_id)
+
+    def _ResultRestore_Request(self) -> None:
+        result_id = self.result_restore_combo.currentData()
+        if isinstance(result_id, str) and not self._task_busy:
+            self.resultRestoreRequested.emit(result_id)
 
     def _SelectedEntry_Get(self) -> ReplayStoredResult | None:
         if self._store is None:
@@ -1015,11 +1075,15 @@ class ReplayPage(QWidget):
         self._Availability_Refresh()
 
     def Task_Busy(self) -> None:
+        self._task_busy = True
+        self._HistoryButtons_Refresh()
         self.run_button.setEnabled(False)
         self.controls_group.setEnabled(False)
         self.parameters_group.setEnabled(False)
 
     def Task_Finish(self) -> None:
+        self._task_busy = False
+        self._HistoryButtons_Refresh()
         self.controls_group.setEnabled(True)
         self.parameters_group.setEnabled(True)
         self._Availability_Refresh()
@@ -1102,6 +1166,10 @@ class ReplayPage(QWidget):
             self._ActualValues_Get() if self.mode_combo.currentData() == ReplayMode.WHAT_IF else {}
         )
         self._translator = translator
+        self.result_delete_button.setText(translator.Text_Get("replay.run_delete"))
+        self.result_restore_button.setText(translator.Text_Get("replay.run_restore"))
+        self.result_history_note.setText(translator.Text_Get("replay.run_history_note"))
+        self.RemovedResults_Set(self._removed_results)
         self._ComboLabels_Refresh()
         self._AlgorithmLabels_Refresh()
         self.controls_group.setTitle(translator.Text_Get("replay.configuration"))

@@ -40,6 +40,8 @@ from PySide6.QtWidgets import (
 from silverstar_flp.app.version import PRODUCT_NAME, __version__
 from silverstar_flp.core.analysis_source import AnalysisSourceKind, ChannelResolver, ReplayResultStore
 from silverstar_flp.core.dataset import FlightDataset
+from silverstar_flp.core.analysis_source import ReplayResultChangeResult
+from silverstar_flp.core.run_history import ProjectRun_Remove, ProjectRun_Restore, ProjectRun_BackupLoad
 from silverstar_flp.core.i18n import Translator
 from silverstar_flp.core.path_preferences import (
     ExistingDirectory_Get,
@@ -284,6 +286,8 @@ class MainWindow(QMainWindow):
         self.replay_page.analysisSourceRequested.connect(self._AnalysisSource_Set)
         self.replay_page.secondarySourceRequested.connect(self._SecondarySource_Set)
         self.replay_page.configurationChanged.connect(self._Project_MarkDirty)
+        self.replay_page.resultDeleteRequested.connect(self._ReplayRun_Delete)
+        self.replay_page.resultRestoreRequested.connect(self._ReplayRun_Restore)
         self.import_dialog = ImportDialog(self._translator, self)
         self.import_dialog.importRequested.connect(self.LogPair_Open)
         self.import_dialog.folderSearchRequested.connect(self._FolderSearch_Start)
@@ -817,11 +821,13 @@ class MainWindow(QMainWindow):
                 else:
                     self._replay_store.ActiveSource_Restore(selected_source)
                     self._Pages_Refresh()
-                    self._Error_Show("project_result_recompute_required:" + selected_source)
+                    code = ("project_run_deleted" if selected_source.removeprefix("replay:")
+                            in project.removed_results else "project_result_recompute_required")
+                    self._Error_Show(code + ":" + selected_source)
             elif isinstance(selected_source, str) and selected_source.startswith("recorded:"):
                 self._AnalysisSource_Set(selected_source)
             secondary = project.ui_state.get("secondary_source")
-            if isinstance(secondary, str):
+            if isinstance(secondary, str) and secondary.removeprefix("replay:") not in project.removed_results:
                 self._secondary_source_id = secondary
                 self.replay_page.SecondarySource_Set(secondary)
                 self._Pages_Refresh()
@@ -846,6 +852,7 @@ class MainWindow(QMainWindow):
         for entry in restored_results:
             self._replay_store.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
                                           restored_run_index=entry.run_index)
+        self._replay_store.IdentityState_Restore(self._project.run_identity_state)
         self._secondary_source_id = None
         self._channel_resolver = ChannelResolver(dataset, self._replay_store)
         bounds = self._channel_resolver.MissionReplayBounds_Get()
@@ -882,6 +889,7 @@ class MainWindow(QMainWindow):
             return
         self.overview_page.Dataset_Set(self._dataset)
         self.replay_page.Dataset_Set(self._dataset, self._replay_store)
+        self.replay_page.RemovedResults_Set(self._project.removed_results)
         self._secondary_source_id = self.replay_page._secondary_source_id
         self.flight_page.SecondarySource_Set(self._secondary_source_id)
         self.state_estimation_page.SecondarySource_Set(self._secondary_source_id)
@@ -889,6 +897,53 @@ class MainWindow(QMainWindow):
         self.state_estimation_page.Dataset_Set(self._dataset, self._channel_resolver)
         self.explorer_page.Dataset_Set(self._dataset, self._replay_store)
         self._TimeRange_Changed(self.time_range.controller.model)
+
+    def _ReplayRun_Delete(self, result_id: str) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
+        entry = self._replay_store.Entry_Get(result_id)
+        if entry is None:
+            return
+        answer = QMessageBox.warning(self, self._translator.Text_Get("replay.run_delete"),
+            self._translator.Text_Get("replay.run_delete_confirm", result_id=result_id),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel)
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        if ProjectRun_Remove(self._project, self._replay_store, result_id) != ReplayResultChangeResult.REMOVED:
+            self._Error_Show("project_run_change_failed")
+            return
+        if self._secondary_source_id == entry.source_id:
+            self._secondary_source_id = None
+            self.replay_page.SecondarySource_Set(None)
+        self._Pages_Refresh()
+        self._Project_MarkDirty()
+        self.status_label.setText(self._translator.Text_Get("replay.run_removed", result_id=result_id))
+
+    def _ReplayRun_Restore(self, result_id: str) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
+        entry = self._replay_store.RemovedEntry_Get(result_id)
+        if entry is not None:
+            self._ReplayRun_RestoreSet(entry)
+            return
+        # Disk verification and large audit decoding remain off the GUI thread.
+        project = replace(self._project, restored_results=(),
+            replay_configurations=deepcopy(self._project.replay_configurations),
+            run_identity_state=deepcopy(self._project.run_identity_state),
+            removed_results=deepcopy(self._project.removed_results))
+        self._Task_Start(FunctionWorker(lambda context: ProjectRun_BackupLoad(project, result_id, context)),
+                         self._ReplayRun_RestoreSet, self._Error_Show)
+
+    def _ReplayRun_RestoreSet(self, entry) -> None:
+        if ProjectRun_Restore(self._project, self._replay_store, entry) != ReplayResultChangeResult.RESTORED:
+            self._Error_Show("project_run_change_failed")
+            return
+        self._Pages_Refresh()
+        self._Project_MarkDirty()
+        self.status_label.setText(self._translator.Text_Get("replay.run_restored", result_id=entry.result_id))
 
     def _TimeRange_Changed(self, model) -> None:
         import pyqtgraph as pg
@@ -1287,6 +1342,8 @@ class MainWindow(QMainWindow):
             project = replace(self._project,
                 replay_configurations=deepcopy(self._project.replay_configurations),
                 ui_state=deepcopy(self._project.ui_state),
+                run_identity_state=deepcopy(self._project.run_identity_state),
+                removed_results=deepcopy(self._project.removed_results), restored_results=(),
                 save_data_and_results=self._project.save_data_and_results if save_data is None else save_data)
             project.ui_state["page_index"] = self.navigation_list.currentRow()
             project.ui_state["time_range"] = self.time_range.controller.model.State_Get()
@@ -1319,6 +1376,7 @@ class MainWindow(QMainWindow):
             for entry in entries:
                 store.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
                                   restored_run_index=entry.run_index)
+            store.IdentityState_Restore(self._replay_store.IdentityState_Get())
             dataset = self._dataset
             edit_serial = getattr(self, "_project_edit_serial", 0)
             def save(context):
