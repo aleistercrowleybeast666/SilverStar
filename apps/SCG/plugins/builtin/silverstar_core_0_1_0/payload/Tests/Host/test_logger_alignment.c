@@ -87,7 +87,7 @@ static void Test_BootAndSlowStorage(void)
         (unsigned long)diagnostics.bootstrap_suppressed_count);
     TEST_CHECK(result == LOGGER_BUS_RESULT_OK && LoggerBus_Count() == 1U);
     TEST_CHECK(diagnostics.accepted_count == 1U && diagnostics.bootstrap_suppressed_count == 0U);
-    SystemLogStreamConfig raw_config;
+    SystemLogStreamConfig raw_config = {0};
     TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_GNSS_NATIVE, &raw_config) == SYSTEM_DEVICE_OK);
     if (raw_config.enabled != 0U)
     {
