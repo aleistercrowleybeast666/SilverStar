@@ -579,7 +579,8 @@ class MainWindow(QMainWindow):
             source_mode=source_mode,
         )
         self.status_label.setText(self._translator.Text_Get("status.loading"))
-        worker = FunctionWorker(lambda context: self._log_open_coordinator.Open(request, context))
+        worker = FunctionWorker(lambda context: self._LogOpen_Run(request, context))
+        worker.is_staged_io = True
         self._Task_Start(
             worker,
             lambda result: self._LogOpenResult_Set(
@@ -591,13 +592,23 @@ class MainWindow(QMainWindow):
             self._LogOpen_Error,
         )
 
+    def _LogOpen_Run(self, request, context):
+        from silverstar_flp.core.task_progress import TaskProgress
+        progress = TaskProgress(context)
+        result = self._log_open_coordinator.Open(request, progress.Context_Build(0.0, 0.95))
+        progress.Progress_Report(0.98, "progress.open.publish")
+        return result
+
     def _ProjectLogOpen_Run(
         self,
         project: ProjectDocument,
         request: LogOpenRequest,
         context: object,
     ) -> LogOpenResult:
-        result = self._log_open_coordinator.Open(request, context)
+        from silverstar_flp.core.task_progress import TaskProgress
+        progress = TaskProgress(context)
+        result = self._log_open_coordinator.Open(request, progress.Context_Build(0.0, 0.78))
+        progress.Progress_Report(0.80, "progress.open.results")
         expected = project.decoder_profile
         if expected is None:
             raise ValueError("project_decoder_profile_missing")
@@ -625,50 +636,42 @@ class MainWindow(QMainWindow):
         if any(saved != opened for saved, opened in comparisons):
             raise ValueError("project_decoder_identity_mismatch")
         try:
-            project.restored_results = ProjectResults_Load(project, context).Entries_Get()
+            project.restored_results = ProjectResults_Load(project, progress.Context_Build(0.80, 0.95)).Entries_Get()
         except (ValueError, OSError, KeyError, TypeError) as exc:
             logging.exception("Saved project results unavailable")
             project.restoration_issues = (str(exc),)
+        progress.Progress_Report(0.98, "progress.open.publish")
         return result
+
+    def _ProjectOpen_Run(self, path, context):
+        from silverstar_flp.core.task_progress import TaskProgress
+        progress = TaskProgress(context)
+        progress.Progress_Report(0.02, "progress.open.project")
+        project = Project_Load(Path(path))
+        if project.decoder_profile is None:
+            raise ValueError("project_decoder_profile_missing")
+        decoder_path = project.DecoderSourcePath_Resolve()
+        log_path = project.LogPath_Resolve()
+        if not log_path.is_file():
+            raise ValueError(f"project_log_missing:{log_path}")
+        if decoder_path is None or not decoder_path.is_file():
+            raise ValueError(f"project_decoder_missing:{decoder_path}")
+        request = LogOpenRequest(log_path=log_path, decoder_package_path=decoder_path,
+            task_directory=decoder_path.parent, source_mode=LogOpenSourceMode.PROJECT,
+            project_path=project.project_path, dataset_cache_reference=project.parse_artifact)
+        result = self._ProjectLogOpen_Run(project, request, progress.Context_Build(0.04, 0.98))
+        return result, project
 
     def _Project_Open(self, path: Path) -> None:
         if self._active_worker is not None:
             self._Error_Show("another_background_task_is_running")
             return
-        try:
-            project = Project_Load(Path(path))
-            if project.decoder_profile is None:
-                raise ValueError("project_decoder_profile_missing")
-            decoder_source_path = project.DecoderSourcePath_Resolve()
-            log_path = project.LogPath_Resolve()
-            if not log_path.is_file():
-                raise ValueError(f"project_log_missing:{log_path}")
-            if decoder_source_path is None or not decoder_source_path.is_file():
-                raise ValueError(f"project_decoder_missing:{decoder_source_path}")
-            request = LogOpenRequest(
-                log_path=log_path,
-                decoder_package_path=decoder_source_path,
-                task_directory=(
-                    decoder_source_path.parent
-                    if decoder_source_path is not None
-                    else project.project_path.parent
-                    if project.project_path is not None
-                    else None
-                ),
-                source_mode=LogOpenSourceMode.PROJECT,
-                project_path=project.project_path,
-                dataset_cache_reference=project.parse_artifact,
-            )
-        except Exception as exc:
-            logging.exception("Project open failed")
-            self._Error_Show(str(exc))
-            return
         self.status_label.setText(self._translator.Text_Get("status.loading"))
-        worker = FunctionWorker(lambda context: self._ProjectLogOpen_Run(project, request, context))
+        worker = FunctionWorker(lambda context: self._ProjectOpen_Run(Path(path), context))
+        worker.is_staged_io = True
         self._Task_Start(
             worker,
-            lambda result: self._LogOpenResult_Set(result, project, mark_dirty=False,
-                silverstar_root=self._SilverStarRootForPair_Get(log_path, decoder_source_path)),
+            lambda result: self._LogOpenResult_Set(result[0], result[1], mark_dirty=False),
             lambda message: self._Error_Show(message),
         )
 
@@ -774,7 +777,7 @@ class MainWindow(QMainWindow):
         *,
         mark_dirty: bool = False,
         silverstar_root: Path | None = None,
-    ) -> None:
+    ) -> bool:
         try:
             for configuration_name, configuration in project.replay_configurations.items():
                 plugin = self._registry.Algorithm_Get(configuration["algorithm_id"])
@@ -795,7 +798,7 @@ class MainWindow(QMainWindow):
         except (KeyError, ValueError) as exc:
             self._pending_new_project_path = None
             self._Error_Show(str(exc))
-            return
+            return False
         self._last_import_directory = result.dataset.source_path.parent
         project.LogReference_Set(result.dataset.source_path)
         project.decoder_profile = self._DecoderProfile_Build(result)
@@ -807,7 +810,7 @@ class MainWindow(QMainWindow):
                 self._pending_new_project_path = None
                 logging.exception("Initial project save failed")
                 self._Error_Show(str(exc))
-                return
+                return False
             self._pending_new_project_path = None
         self._project = project
         self._silverstar_project_root = silverstar_root or self._SilverStarRootForPair_Get(
@@ -850,6 +853,7 @@ class MainWindow(QMainWindow):
         if project.restoration_issues:
             self._Error_Show("project_result_recompute_required:" +
                              " | ".join(project.restoration_issues))
+        return True
 
     def _Dataset_Set(self, dataset: FlightDataset, *, restored_results=()) -> None:
         was_suspended = self._suspend_dirty
@@ -1130,6 +1134,10 @@ class MainWindow(QMainWindow):
             worker.signals.finished.connect(self._Task_Finish, queued),
         ]
         self.progress_bar.setValue(0)
+        self.progress_bar.setFormat(self._translator.Text_Get("progress.stage_percent")
+            if getattr(worker, "is_staged_io", False) is True else "%p%")
+        self.progress_bar.setToolTip(self._translator.Text_Get("progress.stage_note")
+            if getattr(worker, "is_staged_io", False) is True else "")
         self.progress_bar.setVisible(True)
         self.cancel_button.setEnabled(True)
         self.cancel_button.setVisible(True)
@@ -1158,13 +1166,21 @@ class MainWindow(QMainWindow):
         if worker is not self._active_worker or worker.context.cancellation_event.is_set() and not committed:
             return
         if result_callback is not None:
-            result_callback(result)
+            published = result_callback(result)
+            if (published is not False and worker is self._active_worker
+                    and getattr(worker, "is_staged_io", False) is True):
+                self.progress_bar.setValue(1000)
 
     @Slot(float, str)
     def _Task_Progress(self, progress: float, code: str) -> None:
         if self._active_worker is None or self.sender() is not self._active_worker.signals:
             return
-        self.progress_bar.setValue(int(progress * 1000))
+        value = int(progress * 1000)
+        if getattr(self._active_worker, "is_staged_io", False) is True:
+            if self._active_worker.context.cancellation_event.is_set():
+                return
+            value = max(self.progress_bar.value(), min(990, value))
+        self.progress_bar.setValue(value)
         self.status_label.setText(self._translator.Text_Get(code))
 
     @Slot(str, str)
@@ -1463,6 +1479,7 @@ class MainWindow(QMainWindow):
                 worker = FunctionWorker(save)
                 worker_ref = ref(worker)
                 worker.is_project_save = True
+                worker.is_staged_io = True
                 worker.project_committed = False
                 worker.close_after_commit = False
                 self._Task_Start(worker,
