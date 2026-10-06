@@ -6,7 +6,7 @@ import pytest
 from test_stack_budget import stacks, _ElfFixture_Create
 
 
-def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None):
+def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None, gnss_only=False):
     root = _ElfFixture_Create(root, monkeypatch)
     original_read = stacks.Command_Read
     builtin = Path(__file__).resolve().parents[1] / "plugins/builtin"
@@ -16,7 +16,8 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None):
     }
     callbacks = []
     build = root / "build/FCCG/SilverStar_F407/Release"
-    for source in stacks.STARTUP_CALLBACK_SOURCES:
+    selected = stacks.STARTUP_CALLBACK_SOURCES[1:] if gnss_only else stacks.STARTUP_CALLBACK_SOURCES
+    for source in selected:
         text = (owner[source] / source).read_text(encoding="utf8")
         if source.endswith("neo_m9n_startup.c"):
             if mutation == "operations":
@@ -35,7 +36,7 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None):
         table = re.search(r"static\s+const\s+SystemDeviceStartupOperations\s+s_operations\s*=\s*\{(.*?)\};", text, re.DOTALL)
         callbacks.extend(re.findall(r"\b[A-Za-z]\w*\b", table[1]))
     manifest = root / "Generated/project_sources.mk"
-    manifest.write_text("C_SOURCES += \\\n  test.c \\\n  " + " \\\n  ".join(stacks.STARTUP_CALLBACK_SOURCES) + "\n\n", encoding="utf8")
+    manifest.write_text("C_SOURCES += \\\n  test.c \\\n  " + " \\\n  ".join(selected) + "\n\n", encoding="utf8")
     edges = {
         "SystemDeviceStartup_Init": [],
         "SystemDeviceStartup_Tick": [],
@@ -43,6 +44,8 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None):
         "NeoM9nStartup_Init": ["SystemDeviceStartup_Init"],
         "NeoM9nStartup_Tick": ["SystemDeviceStartup_Tick"],
     }
+    if gnss_only:
+        del edges["Jy901bStartup_Init"]
     caller = "NeoM9nStartup_RecoveryBegin" if separate else "NeoM9nStartup_Tick"
     edges.setdefault(caller, []).append("SystemDeviceStartup_Init")
     if separate:
@@ -53,6 +56,8 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None):
         edges["SystemDeviceStartup_Init"].append("NeoM9nStartup_Tick")
     for name in callbacks:
         edges[name] = []
+    edges["NeoM9nStartup_SamplePoll"] = ["GnssNeoM9n_Process"]
+    edges["GnssNeoM9n_Process"] = []
     extra = ""
     for name, callees in edges.items():
         extra += "08000000 <" + name + ">:\n"
@@ -63,7 +68,8 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None):
         extra += " 8000008: 4770 bx lr\n"
     su = build / "test.su"
     with su.open("a", encoding="utf8") as stream:
-        stream.write("".join("fixture.c:1:1:" + name + "\t16\tstatic\n" for name in edges))
+        frames = {"NeoM9nStartup_SamplePoll": 112, "GnssNeoM9n_Process": 344}
+        stream.write("".join("fixture.c:1:1:" + name + "\t" + str(frames.get(name,16)) + "\tstatic\n" for name in edges))
     def read(command, cwd):
         text = original_read(command, cwd)
         if "objdump" in command[0]:
@@ -76,10 +82,14 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None):
 
 
 @pytest.mark.parametrize("separate", [False, True])
-def test_reviewed_inlined_and_separate_recovery_binding(tmp_path, monkeypatch, separate):
-    root = _StartupFixture(tmp_path, monkeypatch, separate=separate)
+@pytest.mark.parametrize("gnss_only", [False, True])
+def test_reviewed_inlined_and_separate_recovery_binding(tmp_path, monkeypatch, separate, gnss_only):
+    root = _StartupFixture(tmp_path, monkeypatch, separate=separate, gnss_only=gnss_only)
     report = stacks.StackReport_Build(root, "Release", "fixture-")
     assert report["passes"]
+    device = next(row for row in report["tasks"] if row["task"] == "Device")
+    assert device["call_chain_bytes"] >= 64 + 16 + 16 + 112 + 344
+    assert [row["function"] for row in device["chain"]][-2:] == ["NeoM9nStartup_SamplePoll", "GnssNeoM9n_Process"]
 
 
 @pytest.mark.parametrize("mutation,message", [

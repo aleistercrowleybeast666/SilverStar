@@ -28,8 +28,10 @@ def compile_fixture(directory: Path, *, compact: bool, baseline: bool = False) -
     service = FccgService(ROOT / "apps/SCG")
     model = ProjectModel_Load(ROOT / ".work/generated_ret6/SilverStar.ssproject")
     catalog = service.catalog.ProjectView_Get(model)
-    model.build = replace(model.build, compact_mode=compact)
+    model.build = replace(model.build, compact_mode=compact,
+                          feature_tier="minimal" if compact else "full")
     build_mode = _DeviceBuildCapabilitiesHeader_Render(model, catalog)
+    assert f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {int(compact)}U" in build_mode
     (directory / "project_device_build_capabilities.h").write_text(build_mode, encoding="utf-8")
     (directory / "project_flight_config.h").write_text(_FlightConfigHeader_Render(model, catalog), encoding="utf-8")
     (directory / "project_device_instances.h").write_text(_DeviceInstancesHeader_Render(model, catalog), encoding="utf-8")
