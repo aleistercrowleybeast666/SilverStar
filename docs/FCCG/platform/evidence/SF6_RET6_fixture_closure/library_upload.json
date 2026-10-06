@@ -1,0 +1,27 @@
+{
+  "source_commit": "1bf72f1530f79a04f6dc7ded688d770c421a4072",
+  "archive_sha256": "26d01f56540e3416afe58f04e73738e6310144b3768b7902f1b383f2b4b6b74e",
+  "local_path": "D:\\python_software\\SilverStar\\.work\\sf6_compact_ret6\\docs\\FCCG\\platform\\evidence\\SF6_RET6_fixture_closure\\fixture_closure_evidence.zip",
+  "result": {
+    "operation": "create_library_file",
+    "status": "succeeded",
+    "path": "/fixture_closure_evidence.zip",
+    "file_id": "file_00000000e46481fdaec11cefa011928c",
+    "library_file_id": "libfile_1e00e6c1efbc8191a1f054d996f488e2",
+    "file_name": "fixture_closure_evidence.zip",
+    "current_version_number": 0,
+    "restored_from_version_number": null,
+    "xattrs": [
+      {
+        "name": "user.library-file-version",
+        "value": "0"
+      }
+    ],
+    "directory_id": "libdir_8617ff5a838481919d6e4b11ae8721e2",
+    "mime_type": "application/zip",
+    "library_artifact_type": "other",
+    "file_size_bytes": 6261223,
+    "external_connectors_accessed": false
+  },
+  "local_xattrs": "Windows Python lacks os.setxattr; cloud upload succeeds, local xattrs unsupported. Receipt retained."
+}

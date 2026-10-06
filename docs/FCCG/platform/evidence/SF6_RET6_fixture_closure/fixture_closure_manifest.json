@@ -1,0 +1,327 @@
+{
+  "archive_sha256": "26d01f56540e3416afe58f04e73738e6310144b3768b7902f1b383f2b4b6b74e",
+  "archive_bytes": 6261223,
+  "source_commit": "1bf72f1530f79a04f6dc7ded688d770c421a4072",
+  "base_documented_commit": "29f0abdd918f1ae038cea8e722aaf9a0946839f9",
+  "status": "FIXTURE_CLOSURE_PASSED_FULL_HOST_FAIL_ACCEPTANCE_BLOCKED",
+  "raw_source_identity": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/test_logger_storage.c",
+      "bytes": 38050,
+      "raw_sha256": "01c1f55a787130c8d5749660f7b8ce257b357305754c1cebd0ebb3ae1eaece26",
+      "git_blob_oid": "a6dd0cbcd4b997108316f377cfecc06f249effb4",
+      "git_blob_sha256": "3c53670b1657ebbcccf61b74e8dc2e18ebfccee2f9ebc3cf49ef16eba01684cf",
+      "raw_equals_git_blob": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/test_sf6_compact_storage.h",
+      "bytes": 10991,
+      "raw_sha256": "3a0f35fe6ef14085eaa37fb8b92f4bd0ef4598eafdd0668b18bd0dba5cb5446f",
+      "git_blob_oid": "2662c066667086f1f3f15215674a3f5c2309ef2e",
+      "git_blob_sha256": "3a0f35fe6ef14085eaa37fb8b92f4bd0ef4598eafdd0668b18bd0dba5cb5446f",
+      "raw_equals_git_blob": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_logger_alignment.c",
+      "bytes": 12173,
+      "raw_sha256": "ded6b6149d582eff855bcb8369d1f4489eaea24db32e4016b9609f4b7c9e6fd0",
+      "git_blob_oid": "28bc07390887e056189b83884bbebef29fd5f25e",
+      "git_blob_sha256": "8cb915fd69d6408ccae0cded691016cab3466fe9b3fe20344c0f17430d9be76c",
+      "raw_equals_git_blob": false
+    }
+  ],
+  "parent_final_evidence_sha256": "2e9d06c3b1527f5b653755a2db7142a8a491a638edc3dbbbd7ea56b087e83dc7",
+  "parent_final_library_id": "libfile_1595c3a3ca508191948d25fb81382fbf",
+  "files": [
+    {
+      "path": ".work/evidence/SilverStar_SF6_RET6_SNAPSHOT_CANONICAL_IDENTITY_ADDENDUM.zip",
+      "bytes": 54927,
+      "sha256": "07ed55b248b54341ea5b89fac8c7b466a67a7dfabeec6a6cf5ba8d4a19b8f700"
+    },
+    {
+      "path": ".work/evidence/audit_current_stack_callbacks.py",
+      "bytes": 3558,
+      "sha256": "c59b813075f0c675d502cdfa70a5c8194bbd422790567d6f7c4725d8014f60db"
+    },
+    {
+      "path": ".work/evidence/audit_current_stack_callbacks_corrected.py",
+      "bytes": 3559,
+      "sha256": "f040c6d12a23e68c4a707d76cd1a941248bd18d919100bbc59c539648245c6ac"
+    },
+    {
+      "path": ".work/evidence/audit_current_stack_callbacks_final.py",
+      "bytes": 3589,
+      "sha256": "eca81f5f185ce6e737a7cfb732bc72354a26b98494f4be583e7e8f904dc0348f"
+    },
+    {
+      "path": ".work/evidence/audit_snapshot_digest.py",
+      "bytes": 1409,
+      "sha256": "e18419d5fe438297dedf5f029de7cb21c2f9c7ed5f53aa7712f71af6976b032d"
+    },
+    {
+      "path": ".work/evidence/audit_union_stats.py",
+      "bytes": 2942,
+      "sha256": "826d6e308b63bc302a7c6037d5bd7efc05e8f4d02a2ecf31e94a9f2021c9ef13"
+    },
+    {
+      "path": ".work/evidence/current_snapshot_digest_readonly.json",
+      "bytes": 812,
+      "sha256": "ad390eaaa475999fa09ad2cbece90e71440f5a2fb54fc40c866d96686f992fdf"
+    },
+    {
+      "path": ".work/evidence/fixture_closure_complete_host_classification.json",
+      "bytes": 1979,
+      "sha256": "46ad50525263aa9c7b2d7ec2c9cb8858239d76dfb9a3dde40e8e668a3e007bdd"
+    },
+    {
+      "path": ".work/evidence/fixture_closure_stack_callback_review.json",
+      "bytes": 4643,
+      "sha256": "916dbf16e99fa3e6a8acc48f962793356206466801d394138d3cb2478afdf5dc"
+    },
+    {
+      "path": ".work/evidence/library_snapshot_identity_addendum_upload.json",
+      "bytes": 914,
+      "sha256": "ae7004e0ec2c9f3af9ca346dd3249629fa7be1175743b842d9fa388e07c49064"
+    },
+    {
+      "path": ".work/evidence/package_fixture_closure.py",
+      "bytes": 5555,
+      "sha256": "1e2e1dffd7aa88e08196d5512f1cc7bb1ecdb20a173bbeb82eb818cefe472b08"
+    },
+    {
+      "path": ".work/evidence/package_snapshot_identity_addendum.py",
+      "bytes": 1911,
+      "sha256": "e53878ea5983235f8d5fa6bab40b466e9fac1e705d2d6d600f0c020697056b2a"
+    },
+    {
+      "path": ".work/evidence/preserved_fixture_closure.zip",
+      "bytes": 3528494,
+      "sha256": "bf48834557a1deaeab693727023fbb35c0d7fb9583594d370a8a4ab454722f3a"
+    },
+    {
+      "path": ".work/evidence/prove_snapshot_canonical_identity.py",
+      "bytes": 1520,
+      "sha256": "0101d738496130831da7d55b2449621d1acb0e058913bf48d94c25f64da4df69"
+    },
+    {
+      "path": ".work/evidence/restore_official_snapshot_missing.py",
+      "bytes": 1698,
+      "sha256": "382fb3c13077ac53e56592acc6edd946b479aafca1ce67d1bfd807b47b85ea11"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_closure_alignment_storage.log",
+      "bytes": 8825,
+      "sha256": "f25771601f05b39cc4140279a52a843df9ba9e3fd5b4c237b09d973ae54f568a"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_closure_complete_host.log",
+      "bytes": 14303,
+      "sha256": "10c9c093a197800dfac8a8c1d768ff2e6601449f5d534f6c08d024a7a67b0e99"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_closure_generation.log",
+      "bytes": 800,
+      "sha256": "0b9092ce3646a0305418eb310fa6ace9af0c6dc4f6b938df1119e61b3a08dba5"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_closure_stack_readonly.log",
+      "bytes": 1062,
+      "sha256": "d7d04cbebb07929b91010fbcc675c133f0e2093b9e052212c0ab7c82c03d9935"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_closure_stack_readonly_corrected.log",
+      "bytes": 1588,
+      "sha256": "e421fa5532280f31bfe1128e58e0793942e41ad1f6f7b3a41453837446f366f4"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_closure_stack_readonly_final.log",
+      "bytes": 1616,
+      "sha256": "7c34aa9523db7b2222c69866ac761f97dcc2fa060604ebd43eac2c6cb3c54e6f"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_union_after.log",
+      "bytes": 300,
+      "sha256": "94029e3376add6ef2aba7eac20d99acdb47bc251bddb151a371d49dae3c37831"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_union_after_corrected.log",
+      "bytes": 388,
+      "sha256": "c2880d7d954b4b375b2e9aad7579031d67d3683baff872d19bcd2b75330f7a5c"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_union_after_final.log",
+      "bytes": 1607,
+      "sha256": "1c5ed72d1305bf8901cbde54757a6e405988bd0c3069ced7653d8f410ef53247"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_union_before.log",
+      "bytes": 242,
+      "sha256": "60471977f5829fccf098710ce5026f0492911da479b40d9a8a38cdc2d1c34e12"
+    },
+    {
+      "path": ".work/evidence/ret6_fixture_union_before_corrected.log",
+      "bytes": 1554,
+      "sha256": "b0f22e32c6818f5e3a14cd196bd35564bf84f301d2dcb877ed7e1576311aaa7f"
+    },
+    {
+      "path": ".work/evidence/ret6_snapshot_canonical_identity_proof.log",
+      "bytes": 602,
+      "sha256": "ff85052a84dd888fb0c149d2c81ec6a31597fe5f4eb13187def5bb0612bf0a0f"
+    },
+    {
+      "path": ".work/evidence/ret6_snapshot_digest_readonly.log",
+      "bytes": 2919,
+      "sha256": "582020f000de89c32e86ecf3be06ed5250cac69d07dd2abe906bc6ccf9c6e5c1"
+    },
+    {
+      "path": ".work/evidence/ret6_snapshot_digest_readonly_complete.log",
+      "bytes": 812,
+      "sha256": "ad390eaaa475999fa09ad2cbece90e71440f5a2fb54fc40c866d96686f992fdf"
+    },
+    {
+      "path": ".work/evidence/ret6_snapshot_long_path_probe.log",
+      "bytes": 518,
+      "sha256": "8cd79f904fedab89075548256ce7ea4b92b9717856f58123f0d340db156c7352"
+    },
+    {
+      "path": ".work/evidence/ret6_snapshot_restored_identity.log",
+      "bytes": 1167,
+      "sha256": "6d127c196110517a821f506a1d7a5aa0983f7e1c72041ae1a591ad4c2b2d4346"
+    },
+    {
+      "path": ".work/evidence/snapshot_canonical_identity_proof.json",
+      "bytes": 249588,
+      "sha256": "dadf469ee34dac71d06e0f62728db66eda7cd6482ff69437c25a0bb3ca72c894"
+    },
+    {
+      "path": ".work/evidence/snapshot_identity_addendum_package.json",
+      "bytes": 341,
+      "sha256": "4bba87dc2b17af814ee567e8d6fdb8a6096a08f939a70c7b981805da418497ca"
+    },
+    {
+      "path": ".work/evidence/stack_readonly/SensorImuAdapter_InitI2c.asm",
+      "bytes": 3272,
+      "sha256": "9f8a44c6ce007d7887b4e413df5fd2d1dc87b868d7e79ff634e5903afe5c8a2e"
+    },
+    {
+      "path": ".work/evidence/stack_readonly/SensorImuAdapter_ReadRegister.asm",
+      "bytes": 2720,
+      "sha256": "de734147fec33b37bb24ed95e7f7389d333f4eb6649b35648890b4b66fe246d6"
+    },
+    {
+      "path": ".work/evidence/stack_readonly/SensorImuAdapter_WriteRegister.asm",
+      "bytes": 1592,
+      "sha256": "bcdbb96abc16d482710fe1896f203cb6636329c19ef637ebe57e3a7f0b615851"
+    },
+    {
+      "path": ".work/evidence/stack_readonly/SensorRegister_Read.asm",
+      "bytes": 1065,
+      "sha256": "8b3509d7651e83b9c4a8bbf41ad7a6fab5ecd457396c568afcae2e1acdab7335"
+    },
+    {
+      "path": ".work/evidence/stack_readonly/SensorRegister_Write.asm",
+      "bytes": 1070,
+      "sha256": "767d35f32ca302f0e78c596c461e512f29925446080293c49a6f3fce3a3e0da9"
+    },
+    {
+      "path": ".work/evidence/stack_readonly/nm.txt",
+      "bytes": 60981,
+      "sha256": "534b97fa5d49d3cd16d6fd33e93e3a09970d8b7b07f1aa3a5babc14e7547ba94"
+    },
+    {
+      "path": ".work/evidence/union_stats_after.json",
+      "bytes": 3431688,
+      "sha256": "dfe3c7103ba9c7f0e8463d3616d1f371e680578ff9687619d617539e6dd9b5e0"
+    },
+    {
+      "path": ".work/evidence/union_stats_before.json",
+      "bytes": 86338,
+      "sha256": "8389e9abf307871241d9bb9ab6206551dd5f03d6e20fc34bcedf3082da80135a"
+    },
+    {
+      "path": "COMMANDS.json",
+      "bytes": 1816,
+      "sha256": "f18964cc28f45de820c6a14f7cd51545bf718731f41c88dec6116ecb73a53842"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 9705,
+      "sha256": "a89b1353c29a3b195e7a5fc1a30c50673ef313c7cdca76737456d18222de051e"
+    },
+    {
+      "path": "SOURCE_PATCH.diff",
+      "bytes": 5705,
+      "sha256": "0b1aab84603cae796b12a190957a675626d87f60df50368657bc498d1daaffdb"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/test_logger_storage.c",
+      "bytes": 38050,
+      "sha256": "01c1f55a787130c8d5749660f7b8ce257b357305754c1cebd0ebb3ae1eaece26"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/test_sf6_compact_storage.h",
+      "bytes": 10991,
+      "sha256": "3a0f35fe6ef14085eaa37fb8b92f4bd0ef4598eafdd0668b18bd0dba5cb5446f"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_logger_alignment.c",
+      "bytes": 12173,
+      "sha256": "ded6b6149d582eff855bcb8369d1f4489eaea24db32e4016b9609f4b7c9e6fd0"
+    },
+    {
+      "path": "current_decoder/SF6_RET6_Compact.ssdecoder",
+      "bytes": 126916,
+      "sha256": "102d2aaadbed732f49d4eae2dfe6266816191c84ba5e29e8a8511a003fd429a1"
+    },
+    {
+      "path": "generated/Generated/project_sources.mk",
+      "bytes": 9649,
+      "sha256": "88488eabd9cabfebb9823b6f64baab3085d9d88427d03abe3782c08b71700478"
+    },
+    {
+      "path": "generated/SilverStar.ssproject",
+      "bytes": 121999,
+      "sha256": "95ce927114da2ea88cabfb0f499ae70013caf1eb3f9ff6094284e927b8555f15"
+    },
+    {
+      "path": "generated/Tests/Host/run_tests.ps1",
+      "bytes": 65319,
+      "sha256": "e99b91167552efe0841e545c6d8e2f44b252906aca23c9c2a87894f865c6372b"
+    },
+    {
+      "path": "generated/Tests/Host/storage_integrity/run_storage_integrity.py",
+      "bytes": 12386,
+      "sha256": "945c0b3ccc84ceb1f1d4c27db8a86f3c2057b63f3c60a43f04145b78ba67652f"
+    },
+    {
+      "path": "generated/Tests/Host/storage_integrity/test_logger_storage.c",
+      "bytes": 38050,
+      "sha256": "01c1f55a787130c8d5749660f7b8ce257b357305754c1cebd0ebb3ae1eaece26"
+    },
+    {
+      "path": "generated/Tests/Host/storage_integrity/test_sf6_compact_storage.h",
+      "bytes": 10991,
+      "sha256": "3a0f35fe6ef14085eaa37fb8b92f4bd0ef4598eafdd0668b18bd0dba5cb5446f"
+    },
+    {
+      "path": "generated/Tests/Host/test_logger_alignment.c",
+      "bytes": 12173,
+      "sha256": "ded6b6149d582eff855bcb8369d1f4489eaea24db32e4016b9609f4b7c9e6fd0"
+    },
+    {
+      "path": "generated/Tools/check_task_stacks.py",
+      "bytes": 15702,
+      "sha256": "949ab864b1d6eebc8cc1de1457d46013f30369d720718eefca2b422229095413"
+    },
+    {
+      "path": "immutable_current_logs/sf6-compact-startup-burst-overload.sslog",
+      "bytes": 7392595,
+      "sha256": "b5fe03566f487e5191ddf87b7ed45be7a4b0509c1780de92233a57e61fb4a433"
+    },
+    {
+      "path": "immutable_current_logs/sf6-compact-startup-burst.sslog",
+      "bytes": 7390399,
+      "sha256": "19a2f4d3997e06dfdaaf5c3a293a634aaa909eecf75faed728c9d2af23dbd321"
+    }
+  ]
+}
