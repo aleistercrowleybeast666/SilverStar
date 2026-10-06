@@ -86,8 +86,21 @@ static void Test_BootAndSlowStorage(void)
         (unsigned long)diagnostics.bootstrap_suppressed_count);
     TEST_CHECK(result == LOGGER_BUS_RESULT_OK && LoggerBus_Count() == 1U);
     TEST_CHECK(diagnostics.accepted_count == 1U && diagnostics.bootstrap_suppressed_count == 0U);
-    FlightLogGnssNativeRecord raw = {0};
-    TEST_CHECK(LoggerBus_GnssNativePush(100U, 0U, &raw) == LOGGER_BUS_RESULT_OK);
+    SystemLogStreamConfig raw_config;
+    TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_GNSS_NATIVE, &raw_config) == SYSTEM_DEVICE_OK);
+    if (raw_config.enabled != 0U)
+    {
+        FlightLogGnssNativeRecord raw = {0};
+        TEST_CHECK(LoggerBus_GnssNativePush(100U, 0U, &raw) == LOGGER_BUS_RESULT_OK);
+    }
+    else
+    {
+        /* SF6 minimal excludes GNSS; its actual enabled barometer remains raw. */
+        FlightLogBaroNativeRecord raw = {0};
+        TEST_CHECK(SystemLogPolicy_StreamGet(FLIGHT_LOG_RECORD_BARO_NATIVE, &raw_config) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(raw_config.enabled != 0U);
+        TEST_CHECK(LoggerBus_BaroNativePush(100U, 0U, &raw) == LOGGER_BUS_RESULT_OK);
+    }
     TEST_CHECK(LoggerBus_DiagnosticsGet(&diagnostics) == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(LoggerBus_Count() == 1U && diagnostics.accepted_count == 1U);
     TEST_CHECK(diagnostics.bootstrap_suppressed_count == 1U);
