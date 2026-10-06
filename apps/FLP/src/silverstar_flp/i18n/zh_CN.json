@@ -910,5 +910,7 @@
   "comparison.primary_missing": "部分主源曲线没有对应的已发布数据",
   "comparison.secondary_missing": "次源没有兼容的已发布曲线",
   "comparison.incompatible": "物理量、单位、分量、坐标、原点或任务不兼容",
-  "comparison.no_overlap": "没有重叠的有效时间范围"
+  "comparison.no_overlap": "没有重叠的有效时间范围",
+  "error.code.project_result_recompute_required": "已保存的数值结果缺失、损坏或不兼容。请选择所需算法并明确执行复算。未自动启动任何复算。",
+  "error.code.project_saved_results_unavailable": "已保存的结果历史未能恢复。为保护历史，本次保存被阻止；请修复结果文件，或明确重建结果后另建工程。"
 }

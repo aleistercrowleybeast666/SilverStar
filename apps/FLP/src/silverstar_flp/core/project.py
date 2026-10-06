@@ -152,6 +152,10 @@ class ProjectDocument:
     notes: str = ""
     ui_state: dict[str, Any] = field(default_factory=dict)
     project_path: Path | None = None
+    result_artifact: dict[str, Any] | None = None
+    parse_artifact: dict[str, Any] | None = None
+    restored_results: tuple = ()
+    restoration_issues: tuple[str, ...] = ()
 
     def LogReference_Set(self, log_path: Path) -> None:
         self.log_reference = _Reference_Encode(log_path, self.project_path)
@@ -225,7 +229,11 @@ def ReplayConfiguration_Validate(configuration: Any) -> None:
     plugin.metadata.Parameters_Validate(configuration["actual_values"])
 
 
-def Project_Save(document: ProjectDocument, path: Path) -> None:
+def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
+                 dataset=None, context=None) -> None:
+    from silverstar_flp.core.artifacts import Artifact_Read, Artifact_Write
+    from silverstar_flp.core.context import TaskContext
+    task_context = context or TaskContext()
     if document.decoder_profile is None:
         raise ValueError("project_decoder_profile_missing")
     for configuration in document.replay_configurations.values():
@@ -241,6 +249,22 @@ def Project_Save(document: ProjectDocument, path: Path) -> None:
         if resolved_source_path is not None
         else None
     )
+    result_artifact = document.result_artifact
+    if replay_store is not None:
+        if document.restoration_issues:
+            # Do not replace unavailable saved history with an incomplete current store.
+            raise ValueError("project_saved_results_unavailable")
+        identity = ProjectNumericalIdentity_Get(document, task_context)
+        entries = replay_store.Entries_Get()
+        stored = tuple({"result_id": entry.result_id, "source_id": entry.source_id,
+                        "run_index": entry.run_index, "algorithm_name": entry.algorithm_name,
+                        "result": entry.result} for entry in entries)
+        result_artifact = Artifact_Write(project_path, stored, identity, task_context)
+    elif result_artifact is not None and document.project_path != project_path:
+        # Save As copies only verified numerical artifacts, never log/decoder payloads.
+        identity = ProjectNumericalIdentity_Get(document, task_context)
+        stored = Artifact_Read(document.project_path, result_artifact, identity, task_context)
+        result_artifact = Artifact_Write(project_path, stored, identity, task_context)
     payload = {
         "format": PROJECT_FORMAT,
         "version": PROJECT_VERSION,
@@ -249,6 +273,8 @@ def Project_Save(document: ProjectDocument, path: Path) -> None:
         "replay_configurations": document.replay_configurations,
         "notes": document.notes,
         "ui_state": document.ui_state,
+        "result_artifact": result_artifact,
+        "parse_artifact": document.parse_artifact,
     }
     temporary_path = project_path.parent / (f".{project_path.name}.{uuid.uuid4().hex[:8]}.tmp")
     try:
@@ -257,10 +283,12 @@ def Project_Save(document: ProjectDocument, path: Path) -> None:
             target.write("\n")
             target.flush()
             os.fsync(target.fileno())
+        task_context.Cancel_RaiseIfRequested()
         os.replace(temporary_path, project_path)
     finally:
         temporary_path.unlink(missing_ok=True)
     document.project_path = project_path
+    document.result_artifact = result_artifact
     document.log_reference = encoded_log_reference
     document.decoder_profile = _DecoderProfile_SourceReplace(
         document.decoder_profile,
@@ -309,6 +337,13 @@ def Project_Load(path: Path) -> ProjectDocument:
         raise ValueError("project_state_invalid")
     for configuration in replay.values():
         ReplayConfiguration_Validate(configuration)
+    from silverstar_flp.core.artifacts import ArtifactPath_Resolve
+    for field_name in ("result_artifact", "parse_artifact"):
+        reference = payload.get(field_name)
+        if reference is not None:
+            if not isinstance(reference, dict):
+                raise ValueError("project_artifact_reference_invalid")
+            ArtifactPath_Resolve(project_path, reference)
     return ProjectDocument(
         log_reference=log_reference,
         decoder_profile=ProjectDecoderProfile.FromDict(payload.get("decoder_profile")),
@@ -316,6 +351,8 @@ def Project_Load(path: Path) -> ProjectDocument:
         notes=str(payload.get("notes", "")),
         ui_state=dict(ui_state),
         project_path=project_path,
+        result_artifact=payload.get("result_artifact"),
+        parse_artifact=payload.get("parse_artifact"),
     )
 
 
@@ -329,4 +366,48 @@ def Project_ToDict(document: ProjectDocument) -> dict[str, Any]:
         "notes": document.notes,
         "ui_state": document.ui_state,
         "project_path": (str(document.project_path) if document.project_path is not None else None),
+        "result_artifact": document.result_artifact,
+        "parse_artifact": document.parse_artifact,
     }
+
+
+def ProjectNumericalIdentity_Get(document: ProjectDocument, context=None) -> dict:
+    from silverstar_flp.core.artifacts import EngineIdentity_Get, FileHash_Get
+    if document.decoder_profile is None:
+        raise ValueError("project_decoder_profile_missing")
+    return {"log_sha256": FileHash_Get(document.LogPath_Resolve(), context),
+            "decoder": {key: value for key, value in document.decoder_profile.ToDict().items()
+                        if key not in ("source_reference", "cache_reference")},
+            "engine_identity": EngineIdentity_Get()}
+
+
+def ProjectResults_Load(document: ProjectDocument, context=None):
+    """Load every completed run; absence/corruption never launches numerical replay."""
+    from silverstar_flp.core.analysis_source import ReplayResultStore
+    from silverstar_flp.core.artifacts import Artifact_Read
+    from silverstar_flp.plugins.api.algorithm import AlgorithmResult
+    store = ReplayResultStore()
+    if document.result_artifact is None:
+        return store
+    payload = Artifact_Read(document.project_path, document.result_artifact,
+                            ProjectNumericalIdentity_Get(document, context), context)
+    if not isinstance(payload, tuple) or len(payload) > 4096:
+        raise ValueError("project_result_table_invalid")
+    for item in payload:
+        if not isinstance(item, dict) or not isinstance(item.get("result"), AlgorithmResult):
+            raise ValueError("project_result_invalid")
+        entry = store.Result_Add(item["result"], algorithm_name=item["algorithm_name"],
+                                 restored_run_index=item["run_index"])
+        if entry.result_id != item["result_id"] or entry.source_id != item["source_id"]:
+            raise ValueError("project_result_identity_mismatch")
+        configuration = document.replay_configurations.get(entry.result_id)
+        if configuration is not None and (
+                configuration["actual_values"] != dict(entry.parameters)
+                or configuration["algorithm_id"] != entry.algorithm_id
+                or configuration["algorithm_version"] != entry.algorithm_version
+                or configuration["mode"] != entry.mode.value
+                or configuration["input_source"] != entry.input_source
+                or configuration["parameter_schema_identity"] !=
+                entry.diagnostics.get("parameter_schema_identity")):
+            raise ValueError("project_result_configuration_mismatch")
+    return store

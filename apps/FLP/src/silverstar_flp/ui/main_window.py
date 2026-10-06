@@ -46,6 +46,7 @@ from silverstar_flp.core.path_preferences import (
 from silverstar_flp.core.project import (
     Project_Load,
     Project_Save,
+    ProjectResults_Load,
     ProjectDecoderProfile,
     ProjectDocument,
 )
@@ -606,6 +607,11 @@ class MainWindow(QMainWindow):
         )
         if any(saved != opened for saved, opened in comparisons):
             raise ValueError("project_decoder_identity_mismatch")
+        try:
+            project.restored_results = ProjectResults_Load(project, context).Entries_Get()
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            logging.exception("Saved project results unavailable")
+            project.restoration_issues = (str(exc),)
         return result
 
     def _Project_Open(self, path: Path) -> None:
@@ -790,7 +796,7 @@ class MainWindow(QMainWindow):
         self._log_open_result = result
         self._suspend_dirty = True
         try:
-            self._Dataset_Set(result.dataset)
+            self._Dataset_Set(result.dataset, restored_results=project.restored_results)
             if "draft" in project.replay_configurations:
                 try:
                     self.replay_page.Configuration_Set(project.replay_configurations["draft"])
@@ -800,12 +806,15 @@ class MainWindow(QMainWindow):
                 self.time_range.State_Restore(project.ui_state["time_range"])
             selected_source = project.ui_state.get("analysis_source", "recorded")
             if isinstance(selected_source, str) and selected_source.startswith("replay:"):
-                key = selected_source.removeprefix("replay:")
-                configuration = project.replay_configurations.get(key)
-                if configuration is not None:
-                    self._source_restore_pending = (key, configuration)
+                if self._replay_store.SourceEntry_Get(selected_source) is not None:
+                    self._AnalysisSource_Set(selected_source)
+                else:
+                    self._Error_Show("project_result_recompute_required:" + selected_source)
             elif isinstance(selected_source, str) and selected_source.startswith("recorded:"):
                 self._AnalysisSource_Set(selected_source)
+            secondary = project.ui_state.get("secondary_source")
+            if isinstance(secondary, str):
+                self._SecondarySource_Set(secondary)
             page_index = project.ui_state.get("page_index")
             if isinstance(page_index, int) and 0 <= page_index < self.pages.count():
                 self.navigation_list.setCurrentRow(page_index)
@@ -813,14 +822,20 @@ class MainWindow(QMainWindow):
             self._suspend_dirty = False
         self._Project_SetDirty(mark_dirty)
         self._ProjectHeader_Refresh()
+        if project.restoration_issues:
+            self._Error_Show("project_result_recompute_required:" +
+                             " | ".join(project.restoration_issues))
 
-    def _Dataset_Set(self, dataset: FlightDataset) -> None:
+    def _Dataset_Set(self, dataset: FlightDataset, *, restored_results=()) -> None:
         was_suspended = self._suspend_dirty
         self._suspend_dirty = True
         self._dataset = dataset
         self._source_restore_pending = None
         self._source_restore_index = None
         self._replay_store.Clear()
+        for entry in restored_results:
+            self._replay_store.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
+                                          restored_run_index=entry.run_index)
         self._secondary_source_id = None
         self._channel_resolver = ChannelResolver(dataset, self._replay_store)
         bounds = self._channel_resolver.MissionReplayBounds_Get()
@@ -1106,21 +1121,12 @@ class MainWindow(QMainWindow):
         self._source_restore_pending = None
         if pending is None or self._dataset is None:
             return
-        key, configuration = pending
-        try:
-            self.replay_page.Configuration_Set(configuration)
-            self._source_restore_index = int(key.rsplit(":", 1)[1])
-            request = ReplayRequest(
-                mode=configuration["mode"],
-                input_source=configuration["input_source"],
-                parameters=configuration["actual_values"],
-                quality_policy_revision=configuration.get("quality_policy_revision"),
-                process_model_revision=configuration.get("process_model_revision"),
-            )
-            self._Replay_Start(configuration["algorithm_id"], request)
-        except (ValueError, KeyError) as exc:
-            self._source_restore_index = None
-            self._Error_Show(str(exc))
+        key, _configuration = pending
+        source_id = "replay:" + key
+        if self._replay_store.SourceEntry_Get(source_id) is not None:
+            self._AnalysisSource_Set(source_id)
+        else:
+            self._Error_Show("project_result_recompute_required:" + source_id)
 
     def _Task_Cancel(self) -> None:
         if self._active_worker is not None:
@@ -1238,6 +1244,7 @@ class MainWindow(QMainWindow):
             self._project.ui_state["analysis_source"] = (
                 self._replay_store.ActiveSource_Get().source_id
             )
+            self._project.ui_state["secondary_source"] = self._secondary_source_id
             self._project.replay_configurations["draft"] = self.replay_page.Configuration_Get()
             for entry in self._replay_store.Entries_Get():
                 if entry.analysis_only:
@@ -1260,7 +1267,8 @@ class MainWindow(QMainWindow):
                     saved_configuration["quality_policy_revision"] = entry.diagnostics[
                         "quality_policy_override"
                     ]
-            Project_Save(self._project, path)
+            Project_Save(self._project, path, replay_store=self._replay_store,
+                         dataset=self._dataset)
             self._Project_SetDirty(False)
             self._ProjectHeader_Refresh()
             self.status_label.setText(self._translator.Text_Get("status.project_saved", path=path))

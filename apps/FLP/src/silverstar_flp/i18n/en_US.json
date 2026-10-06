@@ -910,5 +910,7 @@
   "comparison.primary_missing": "Some primary curves have no corresponding published data",
   "comparison.secondary_missing": "Secondary has no compatible published curve",
   "comparison.incompatible": "Quantity, units, components, frame, origin or task are incompatible",
-  "comparison.no_overlap": "No overlapping valid time coverage"
+  "comparison.no_overlap": "No overlapping valid time coverage",
+  "error.code.project_result_recompute_required": "Saved numerical results are missing, damaged or incompatible. Select the desired algorithm and explicitly run Replay to recompute. No replay was started automatically.",
+  "error.code.project_saved_results_unavailable": "Saved result history could not be restored. Save is blocked to protect that history; repair its artifact files or create a new project after explicitly rebuilding the results."
 }
