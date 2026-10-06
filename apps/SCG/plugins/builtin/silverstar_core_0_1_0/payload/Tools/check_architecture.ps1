@@ -7,9 +7,9 @@ if (Test-Path -LiteralPath $architectureProject -PathType Leaf) {
     $architectureTargetProfile = (Get-Content -Raw -LiteralPath $architectureProject | ConvertFrom-Json).build.target_profile
 }
 $architectureFacts = switch ($architectureTargetProfile) {
-    'SilverStar_F407' { @{ Backend='STM32F4'; Cpu='cortex-m4'; EideCpu='Cortex-M4'; Fpu='single'; Abi='hard'; Linker='STM32F407XX_FLASH.ld'; Hal='stm32f4xx'; Tick='TIM1' } }
-    'SilverStar_F103RE' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RE_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6' } }
-    'SilverStar_F103RF' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RF_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6' } }
+    'SilverStar_F407' { @{ Backend='STM32F4'; Cpu='cortex-m4'; EideCpu='Cortex-M4'; Fpu='single'; Abi='hard'; Linker='STM32F407XX_FLASH.ld'; Hal='stm32f4xx'; Tick='TIM1'; RtosProfile='SilverStar_F407' } }
+    'SilverStar_F103RE' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RE_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6'; Part='STM32F103RET6'; RtosProfile='SilverStar_F103RE' } }
+    'SilverStar_F103RF' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RF_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6'; Part='STM32F103RFT6'; RtosProfile='SilverStar_F103RE' } }
     default { throw "Unsupported Flight architecture target: $architectureTargetProfile" }
 }
 $architectureTargetMk = 'Targets\' + $architectureTargetProfile + '\target.mk'
@@ -762,8 +762,8 @@ foreach ($iocEntry in $requiredIocEntries) {
 
 } else {
     $iocContent = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $iocPath)
-    Assert-ArchitectureCondition -Condition ($iocContent -match 'Mcu.CPN=STM32F103RET6') `
-        -Message 'RET6 custom hardware must contain the exact official RET6 part.'
+    Assert-ArchitectureCondition -Condition ($iocContent -match ('(?m)^Mcu\.CPN=' + $architectureFacts.Part + '\r?$')) `
+        -Message ('Custom hardware must contain the exact official part: ' + $architectureFacts.Part)
     Assert-ArchitectureCondition -Condition ($iocContent -match 'NVIC.TimeBaseIP=TIM6') `
         -Message 'RET6 HAL timebase must use TIM6 independently of RTOS SysTick.'
     Assert-ArchitectureCondition -Condition ($iocContent.Contains('NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4')) `
@@ -1064,7 +1064,7 @@ Assert-FileContainsPattern -RelativePath 'OS\FreeRTOS\FreeRTOSConfig.h' `
 Assert-FileContainsPattern -RelativePath 'OS\FreeRTOS\freertos_hooks.c' `
     -Pattern '\bvApplicationGetIdleTaskMemory\s*\(' `
     -Message 'Static Idle task storage hook is missing.'
-Assert-FileContainsPattern -RelativePath ('Targets\' + $architectureTargetProfile + '\Src\freertos_target_irq.c') `
+Assert-FileContainsPattern -RelativePath ('Targets\' + $architectureFacts.RtosProfile + '\Src\freertos_target_irq.c') `
     -Pattern '\bxPortSysTickHandler\s*\(' `
     -Message 'STM32F407 SysTick is not routed to the native FreeRTOS port.'
 Assert-FileContainsPattern -RelativePath ($cubeCorePath + '\Src\' + $architectureFacts.Hal + '_hal_timebase_tim.c') `
