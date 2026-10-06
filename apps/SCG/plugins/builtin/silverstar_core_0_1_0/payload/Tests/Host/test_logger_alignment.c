@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "test_common.h"
+#include "system_log_policy.h"
 #include "platform_critical.h"
 #include "../../APP/Src/flight_task.c"
 #include "../../APP/Src/logger_task.c"
