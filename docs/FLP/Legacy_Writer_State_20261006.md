@@ -11,11 +11,12 @@ After all numerical members and declared identity state pass, ProjectResults_Loa
 now obtains the store's merged reservations, merges verified recovery sources into
 temporary metadata, and admits that complete pending document using the unchanged
 RunHistory_Validate. Only then does it publish run_identity_state, recovery_sources
-and runtime saved_result_ids. Failed member or merged-metadata checks publish none
+and runtime saved_result_ids. Saved membership is also constructed before publication.
+Failed member, merged-metadata, or membership-allocation checks publish none
 of those fields. Existing declared limits/deletion checks remain authoritative;
 indices are adopted only from the strictly validated store.
 
-The new four-case file executes the full original project.py module from Git
+The regression file executes the full original project.py module from Git
 commit 1b0b1650d5270a5c904ca31b09ab5b54e0d2b73e, using its original ProjectDocument
 and Project_Save. No project metadata is removed by the test to fabricate an old
 writer. Runtime artifact/parser/engine dependencies are the current, unchanged
@@ -23,12 +24,16 @@ implementation; this is exact old-writer evidence, not a whole old-branch run.
 One 21-sample synthetic Pure INS result is reused. The tests verify old payload
 absence of the optional fields, exact typed numerical fingerprints and run ID,
 configuration-only/data Save As, preserved notes and old project bytes, a late
-invalid member, and failed merged-source admission without partial publication.
+invalid member, failed merged-source admission, and a host-injected membership
+allocation exception without partial publication. The latter is not a measured
+out-of-memory or disk-full result.
 
 Before: 3 failed, 1 passed, 36.99 seconds, exit 1. Both saves reported
 project_run_identity_invalid and the simulated merged admission was not invoked.
-After the eight-line publication change: the identical four tests passed together,
-44.44 seconds, exit 0. Complete logs, exact original-writer bytes/hash, new source
+After the initial publication change (0acbb571): the identical four tests passed
+together, 44.44 seconds, exit 0. After preparing saved membership before publication,
+the five-case final file passed together, 50.92 seconds, exit 0. Complete logs,
+exact original-writer bytes/hash, new source
 hashes, commands and tool versions accompany the independent small delta.
 No large replay, GUI launch, original four lifecycle rerun, full-suite claim,
 validator relaxation, stable merge or user-project modification was performed.

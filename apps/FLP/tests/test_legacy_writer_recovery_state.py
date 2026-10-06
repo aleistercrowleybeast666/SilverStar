@@ -76,7 +76,7 @@ def test_exact_old_writer_strict_load_can_save_with_or_without_data(tmp_path, le
     assert old_path.read_bytes() == committed
 
 
-@pytest.mark.parametrize('fault', ['late_result', 'merged_admission'])
+@pytest.mark.parametrize('fault', ['late_result', 'merged_admission', 'saved_ids_allocation'])
 def test_failed_strict_load_does_not_publish_reservations_or_sources(tmp_path, legacy_writer, small_input, monkeypatch, fault):
     _, document, _ = _LegacyWrite(tmp_path, legacy_writer, small_input, count=2)
     before = (deepcopy(document.run_identity_state), deepcopy(document.recovery_sources), document.saved_result_ids)
@@ -90,7 +90,7 @@ def test_failed_strict_load_does_not_publish_reservations_or_sources(tmp_path, l
             return (items[0], changed)
         monkeypatch.setattr(artifacts, 'Artifact_Read', corrupt_late)
         expected = 'result_identity_mismatch'
-    else:
+    elif fault == 'merged_admission':
         import silverstar_flp.core.run_history as history
         original_validate = history.RunHistory_Validate
         def reject_pending(candidate):
@@ -99,6 +99,18 @@ def test_failed_strict_load_does_not_publish_reservations_or_sources(tmp_path, l
             original_validate(candidate)
         monkeypatch.setattr(history, 'RunHistory_Validate', reject_pending)
         expected = 'recovery_sources_invalid'
-    with pytest.raises(ValueError, match=expected): ProjectResults_Load(document)
+    else:
+        import builtins
+        import silverstar_flp.core.project as module
+        class TupleGate(type):
+            def __instancecheck__(cls, value): return isinstance(value, builtins.tuple)
+        class AllocationFailureTuple(builtins.tuple, metaclass=TupleGate):
+            def __new__(cls, value=()):
+                if isinstance(value, dict): raise MemoryError('saved_ids_allocation_failed')
+                return builtins.tuple(value)
+        monkeypatch.setattr(module, 'tuple', AllocationFailureTuple, raising=False)
+        expected = 'saved_ids_allocation_failed'
+    error = MemoryError if fault == 'saved_ids_allocation' else ValueError
+    with pytest.raises(error, match=expected): ProjectResults_Load(document)
     assert (document.run_identity_state, document.recovery_sources, document.saved_result_ids) == before
     assert document.project_path.read_bytes() == committed
