@@ -14,9 +14,12 @@ RET selected/required origin masks stay 0x05; the existing three-interface
 Alignment mock remains 0x07 and is labeled separately.
 
 Every expected compilation rejection must contain its named existing diagnostic;
-an additional undeclared compiler error fails the case. Noise, landing,
-quaternion and required-origin variants explicitly provide their other positive
-prerequisites. The fully qualified JY magnetic fixture retains the existing
+an additional undeclared compiler error fails the case. The initial batch's claim
+that all landing/quaternion variants isolate their target prerequisite was too
+broad: three RET negatives inherited another false prerequisite. The narrow
+follow-up below corrects their fixtures and verifies predicate isolation. Noise
+and required-origin variants retain their recorded checks. The fully qualified
+JY magnetic fixture retains the existing
 generated first-release policy rejection. The actual provider policy is unchanged.
 
 Legacy CAL/ALIGN/lifecycle/preparation mocks provide logical sensor interfaces,
@@ -75,10 +78,21 @@ maintenance off; this is not an E28/four-module acceptance result.
 
 Final complete emitted wrappers both exited 0, including all four storage stages:
 
-| Configuration | Executables | Checks | Compile positives | Named rejections | NotApplicable |
+| Configuration | Executables | Checks | Compile positives | Named rejections | Wrapper NA counter events |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | F407 KF6 | 80 | 4,446,465 | 8 | 18 | 8 |
 | RET6 SF6 minimal NRF | 71 | 4,402,031 | 3 | 16 | 29 |
+
+These are the historical complete executions for the initial Host batch, not
+full-suite results for the follow-up. The NA column counts wrapper counter events,
+including repeated runtime messages; it excludes storage child messages. F407's
+entire log contains 71 NA output events: wrapper 8 (7 distinct labels), storage
+63 (9 labels, each repeated seven times), total 16 distinct labels. RET's entire
+log contains 29 events (27 labels): wrapper 29, storage 0. F407's ESKF-positive
+label appears twice; RET's ESKF-positive and telemetry-diagnostic-positive labels
+each appear twice. NA output events are neither executable counts nor unique
+coverage cases. Exact lines, labels, frequencies and original log hashes are
+retained in the read-only supplement.
 
 All seven fresh target gates exited 0 in each configuration: actual ARM
 compilation/link, real -fanalyzer compilation, emitted architecture, Power10,
@@ -117,3 +131,53 @@ Critical-contract review and whole main/MSP/ISR stack proof remain NOT PROVEN.
 flight qualification are NOT RUN. NotApplicable is not positive coverage of an
 unselected provider, physical epoch, ESKF or compact instance limit. No daily,
 GSHC, FLP or GUI edits, merge, push or hardware action were performed.
+
+## Narrow review follow-up, 2026-10-07
+
+Base: `2eff7691618ad59c0f2562b67a24eb3391fb892a`. Only the owning Host wrapper and
+this report change. Three shared fixture prerequisite lists explicitly provide
+legal positive inputs for hardware quaternion 6/9-axis preflight and baro/IMU
+stillness. Each new generic positive and its existing negative differ in exactly
+one qualification definition (1U versus 0U). The existing named rejection
+diagnostics remain mandatory. No target capability validation or qualification
+was changed. This corrects RET test isolation; the corresponding F407 negatives
+were already isolated under their selected configuration.
+
+Fresh emitted wrappers in `host_f407_qualifier` and `host_ret_qualifier` each passed
+the selected four compile positives (three pairs plus actual selected-provider)
+and three named rejections. These are selected compile-contract runs, with the
+storage child excluded; they are not full Host executions. Separate isolated
+copies of real RET User headers remove only each named assertion's target
+conjunct. All three old RET negatives still reject with the named diagnostic,
+demonstrating masking. All three corrected negatives instead compile and cause
+the expected-rejection test to fail with `Expected host compile failure did not
+occur`. Mutation headers are test artifacts only. No product gate was weakened.
+
+Read-only comparison uses retained `host_*_complete` versus `host_*_verified`
+projects, not the new qualifier projects. The baseline is 8ce6993 plus the
+auditable dirty Host candidate, not a clean-8ce whole-repository snapshot.
+F407 has 388 distinct actual C dependency paths; RET has 333. All compared bytes
+match, including additional Makefiles, target.mk, startup assembly and linker
+scripts. RET's actual dependency `Devices/SensorBus/Src/bmi088_sync_image.inc` is
+included as bytes in this supplement. Root prefixes alone are normalized when
+comparing recorded compiler argv; flags, definitions, include order, object lists
+and linker choices are retained. F407's 155 C/one ASM commands and auto-layout
+invocation match in each of Release and analyzer logs. RET's 143 C/one ASM/one
+direct-link commands match in each scope. F407's retained auto-layout decisions
+also record four actual candidate link argv per scope, including selected index
+2; all match. The final repetition uses the same command by retained wrapper
+code, but its subprocess argv was not independently logged.
+
+This does not close every compiler input: -MMD omits system/toolchain headers;
+startup assembly has no recorded preprocessor dependency graph; historical
+external archive/specs/toolchain bytes were not saved as baseline pairs. Those
+identities remain NOT PROVEN. Existing newlib `_read`, `_write`, `_close`, `_lseek`
+stub warnings remain recorded; seven exit-zero gates do not establish a
+warning-free whole-firmware build or original Power of Ten compliance.
+
+For this follow-up, full Host, ARM/link, analyzer, Power10, architecture, artifact,
+stack and memory gates are NOT RUN again because production firmware inputs are
+unchanged and the authorized scope is narrow Host fixtures plus read-only
+evidence. Prior recorded passes retain their original revision and scope.
+Whole-system stack, critical-contract review and hardware limitations above
+remain unchanged. No merge or push is authorized by this report.

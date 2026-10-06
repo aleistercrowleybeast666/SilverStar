@@ -756,16 +756,32 @@ Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_hw_quat_9axis_preflight' 
     -ExtraCompilerArgs @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_HW_QUAT_9AXIS'
     ) -Source $capabilitySource
-Invoke-ExpectedCompileFailure -Name 'capability_hw_quat_6axis_preflight_unqualified' `
-    -ExtraCompilerArgs @(
+$hwQuat6CapabilityArgs = @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_HW_QUAT_6AXIS_KNOWN_YAW',
+        '-DSYSTEM_USER_HARDWARE_QUATERNION_ENABLE=1U',
+        '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_OUTPUT_AVAILABLE=1U'
+)
+Invoke-ExpectedCompileSuccess -Name 'capability_hw_quat_6axis_preflight_qualified' `
+    -ExtraCompilerArgs ($hwQuat6CapabilityArgs + @(
+        '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_6AXIS_QUALIFIED=1U'
+    )) -Source $capabilitySource
+Invoke-ExpectedCompileFailure -Name 'capability_hw_quat_6axis_preflight_unqualified' `
+    -ExtraCompilerArgs ($hwQuat6CapabilityArgs + @(
         '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_6AXIS_QUALIFIED=0U'
-    ) -Source $capabilitySource
-Invoke-ExpectedCompileFailure -Name 'capability_hw_quat_9axis_preflight_unqualified' `
-    -ExtraCompilerArgs @(
+    )) -Source $capabilitySource
+$hwQuat9CapabilityArgs = @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_HW_QUAT_9AXIS',
+        '-DSYSTEM_USER_HARDWARE_QUATERNION_ENABLE=1U',
+        '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_OUTPUT_AVAILABLE=1U'
+)
+Invoke-ExpectedCompileSuccess -Name 'capability_hw_quat_9axis_preflight_qualified' `
+    -ExtraCompilerArgs ($hwQuat9CapabilityArgs + @(
+        '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED=1U'
+    )) -Source $capabilitySource
+Invoke-ExpectedCompileFailure -Name 'capability_hw_quat_9axis_preflight_unqualified' `
+    -ExtraCompilerArgs ($hwQuat9CapabilityArgs + @(
         '-DSYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED=0U'
-    ) -Source $capabilitySource
+    )) -Source $capabilitySource
 Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_stillness_landing' `
     -ExtraCompilerArgs @(
         '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
@@ -805,12 +821,25 @@ Invoke-ExpectedCompileFailure -Name 'capability_stillness_unqualified' `
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS',
         '-DSYSTEM_SELECTED_IMU_LANDING_STILLNESS_QUALIFIED=0U'
     ) -Source $capabilitySource
-Invoke-ExpectedCompileFailure -Name 'capability_baro_imu_stillness_unqualified' `
-    -ExtraCompilerArgs @(
+$baroImuStillnessCapabilityArgs = @(
         '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW',
+        '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS',
+        '-DSYSTEM_SELECTED_IMU_ACCEL_AVAILABLE=1U',
+        '-DSYSTEM_SELECTED_IMU_GYRO_AVAILABLE=1U',
+        '-DSYSTEM_SELECTED_IMU_SOFTWARE_ALIGNMENT_QUALIFIED=1U',
+        '-DSYSTEM_USER_BAROMETER_ENABLE=1U',
+        '-DSYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE=1U',
+        '-DSYSTEM_SELECTED_BAROMETER_LANDING_WINDOW_QUALIFIED=1U'
+)
+Invoke-ExpectedCompileSuccess -Name 'capability_baro_imu_stillness_qualified' `
+    -ExtraCompilerArgs ($baroImuStillnessCapabilityArgs + @(
+        '-DSYSTEM_SELECTED_IMU_LANDING_STILLNESS_QUALIFIED=1U'
+    )) -Source $capabilitySource
+Invoke-ExpectedCompileFailure -Name 'capability_baro_imu_stillness_unqualified' `
+    -ExtraCompilerArgs ($baroImuStillnessCapabilityArgs + @(
         '-DSYSTEM_SELECTED_IMU_LANDING_STILLNESS_QUALIFIED=0U'
-    ) -Source $capabilitySource
+    )) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_deploy_without_action' `
     -ExtraCompilerArgs @('-DSYSTEM_USER_MISSION_ACTION_ENABLE=0U') `
     -Source $capabilitySource
