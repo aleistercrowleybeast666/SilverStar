@@ -973,8 +973,8 @@
   "feature_tier.minimal": "最简",
   "feature_tier.description.full": "保留全部已支持功能；现有安全、资源和首发隐藏功能约束仍生效。档位独立于 MCU。",
   "feature_tier.description.standard": "禁用 ESKF15；其他已支持功能保留。显式切换时默认使用 KF6，纯惯导保留。档位独立于 MCU。",
-  "feature_tier.description.compact": "禁用 KF6 / ESKF15；IMU、GNSS、遥测、气压计每类至多一个。独立气压计优先于内置气压计；GNSS、维护和日志可配置。遥测诊断日志关闭；SF6 时关闭纯惯导输出日志，纯惯导时必留。",
-  "feature_tier.description.minimal": "轻量约束加 GNSS 关闭、维护关闭及最小可回放本地日志和紧凑队列。保留元数据、校准、对准和回放输入；不缩小安全栈。",
+  "feature_tier.description.compact": "禁用 KF6 / ESKF15；各传感器类型及遥测各至多一个实例，允许单实例 GNSS。独立气压计优先于内置气压计；GNSS、维护和日志可配置。遥测诊断日志关闭；SF6 时关闭纯惯导输出日志，纯惯导时必留。",
+  "feature_tier.description.minimal": "轻量约束加禁止启用、选择或添加 GNSS，关闭维护，以及最小可回放本地日志和紧凑队列。保留元数据、校准、对准和回放输入；不缩小安全栈。",
   "feature_tier.changed": "已切换为{tier}。",
   "feature_tier.saved_choices": "原选择已保存，切回原档可恢复。",
   "configuration.feature_tier_review": "旧算法与当前档位不兼容；参数已保留，请显式选择兼容档位或算法。",
@@ -983,5 +983,6 @@
   "field.nrf24_rate": "NRF24 数据率 (kbps)",
   "field.nrf24_address": "NRF24 配对地址 (10位十六进制，SPI顺序)",
   "field.nrf24_delay": "NRF24 重试间隔 (us)",
-  "field.nrf24_retries": "NRF24 重试次数"
+  "field.nrf24_retries": "NRF24 重试次数",
+  "configuration.feature_tier_devices_review": "当前档位的设备配置不合格，已保留全部设备；请删除超出单实例限制的设备，最简还需移除 GNSS，或切回完整/标准。生成已阻止。"
 }

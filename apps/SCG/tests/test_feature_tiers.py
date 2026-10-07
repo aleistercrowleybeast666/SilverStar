@@ -52,9 +52,9 @@ def test_switch_preserves_algorithms_parameters_devices_and_current_mcu(builtin_
     FeatureTier_Apply(model, 'standard', builtin_catalog)
     assert model.strategies['estimator'] == PREFIX + 'kf6'
     notes = FeatureTier_Apply(model, 'compact', builtin_catalog)
-    assert any(note.startswith('suspended:') for note in notes)
+    assert any('at most one' in note for note in notes)
     assert model.strategies['estimator'] == PREFIX + 'sf6'
-    assert len(model.device_instances) < len(original_devices)
+    assert model.device_instances == original_devices
     model.mcu = 'silverstar.mcu.stm32f103rft6'
     FeatureTier_Apply(model, 'full', builtin_catalog)
     assert model.strategies['estimator'] == PREFIX + 'eskf15'
@@ -105,7 +105,9 @@ def test_minimal_changes_are_reversible_and_keep_pure_ins(builtin_catalog):
     assert model.strategies['estimator'] is None
     assert model.protocols['maintenance'] is None
     assert model.protocols['logging'] is not None
-    assert all(item.plugin != 'silverstar.device.gnss.neo_m9n' for item in model.device_instances)
+    assert model.device_instances == original
+    with pytest.raises(SourceGraphError, match='GNSS'):
+        SourceGraph_Resolve(model, builtin_catalog)
     assert model.build.logging_profile == 'sf6_minimal'
     assert 'SYSTEM_LOG_RECORD_SLOT_SIZE' in _FlightConfigHeader_Render(model, builtin_catalog)
     FeatureTier_Apply(model, 'full', builtin_catalog)
@@ -118,6 +120,9 @@ def test_minimal_owned_snapshot_keeps_all_descriptors_with_small_queues(builtin_
     import re
     model = ReferenceProject_Create(catalog=builtin_catalog)
     model.strategies['estimator'] = estimator
+    # A valid Minimal generation requires explicit removal of retained GNSS.
+    model.device_instances = [item for item in model.device_instances
+                              if builtin_catalog.InstanceComponent_Get(item).component_class != 'gnss']
     FeatureTier_Apply(model, 'minimal', builtin_catalog)
     header = _FlightConfigHeader_Render(model, builtin_catalog)
     assert re.search(r'SYSTEM_LOG_RECORD_QUEUE_DEPTH\s+24U', header)

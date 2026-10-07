@@ -960,6 +960,8 @@ def ProjectConfiguration_Reconcile(
     _HardwareAssignmentConfirmation_Reconcile(candidate, catalog)
     LoggingProfile_Reconcile(candidate, catalog)
     edit_validation = Project_EditValidate(candidate, catalog)
+    if any(issue.code in ("COMPACT_DEVICE_LIMIT", "FEATURE_TIER") for issue in edit_validation.issues):
+        notices.append(ConfigurationNotice("configuration.feature_tier_devices_review"))
     return ProjectConfigurationResult(
         model=candidate,
         capability_resolution=capability_resolution,

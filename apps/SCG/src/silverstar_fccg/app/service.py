@@ -1215,6 +1215,13 @@ class FccgService:
             and bool(model.hardware.snapshot_id)
         )
         for manifest in self.catalog.Type_Get("device"):
+            if model.build.feature_tier == "minimal" and (
+                    manifest.component_class == "gnss" or any(
+                    entry.get("class") == "SYSTEM_DEVICE_CLASS_GNSS"
+                    for entry in manifest.metadata.get("device_descriptors", ()))):
+                values[manifest.component_id] = SelectionAvailability(False,
+                    reason_code="configuration.feature_tier_devices_review")
+                continue
             if (
                 manifest.radio is not None
                 and not RadioLinkCompatible_Get(model.air_link, manifest.radio)

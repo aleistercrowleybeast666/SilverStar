@@ -973,8 +973,8 @@
   "feature_tier.minimal": "Minimal",
   "feature_tier.description.full": "Retain all supported features. Existing safety, resource and first-release visibility constraints apply. The tier is independent of the MCU.",
   "feature_tier.description.standard": "Disable ESKF15. Retain other supported features. An explicit switch defaults to KF6; pure INS remains available. The tier is independent of the MCU.",
-  "feature_tier.description.compact": "Disable KF6 / ESKF15; at most one IMU, GNSS, telemetry and barometer endpoint. A dedicated barometer takes priority over an embedded one. GNSS, maintenance and logging remain configurable. Telemetry diagnostics logs are off. Pure INS logs are off with SF6 and required for pure INS.",
-  "feature_tier.description.minimal": "Compact constraints plus GNSS off, maintenance off, minimum replayable local logging and compact queues. Retain metadata, calibration, alignment and replay inputs; safety stacks remain sized as before.",
+  "feature_tier.description.compact": "Disable KF6 / ESKF15; at most one instance per sensor type and one telemetry instance, including one GNSS. A dedicated barometer takes priority over an embedded one. GNSS, maintenance and logging remain configurable. Telemetry diagnostics logs are off. Pure INS logs are off with SF6 and required for pure INS.",
+  "feature_tier.description.minimal": "Compact constraints plus GNSS activation, selection and addition prohibited, maintenance off, minimum replayable local logging and compact queues. Retain metadata, calibration, alignment and replay inputs; safety stacks remain sized as before.",
   "feature_tier.changed": "Switched to {tier}.",
   "feature_tier.saved_choices": "Previous choices are saved and restored when returning to their tier.",
   "configuration.feature_tier_review": "The retained algorithm conflicts with this tier. Parameters are preserved; explicitly select a compatible tier or algorithm.",
@@ -983,5 +983,6 @@
   "field.nrf24_rate": "NRF24 data rate (kbps)",
   "field.nrf24_address": "NRF24 pair address (10 hex digits, SPI order)",
   "field.nrf24_delay": "NRF24 retry delay (us)",
-  "field.nrf24_retries": "NRF24 retry count"
+  "field.nrf24_retries": "NRF24 retry count",
+  "configuration.feature_tier_devices_review": "Devices conflict with this tier and are retained. Remove extra instances and, for Minimal, GNSS, or return to Full/Standard. Generation is blocked."
 }

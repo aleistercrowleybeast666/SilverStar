@@ -782,6 +782,11 @@ class MainWindow(QMainWindow):
                       for recommendation in self._service.catalog.Component_Get(component_id).metadata.get(
                           "sensor_recommendations", [])),
             )
+            self.devices_page.FeatureTier_Set(display.model.build.feature_tier)
+            self.devices_page.FeatureTier_NoticeSet(self._translator.Text_Get(
+                "configuration.feature_tier_devices_review") if any(
+                issue.code in ("COMPACT_DEVICE_LIMIT", "FEATURE_TIER")
+                for issue in Project_EditValidate(display.model, self._service.catalog).issues) else "")
             self.devices_page.Configuration_Set(
                 display.devices,
                 display.device_instances,
@@ -1115,6 +1120,14 @@ class MainWindow(QMainWindow):
         try:
             previous_display = self._ProjectDisplayState_Build(self._model)
             mutator(candidate)
+            added = [item for item in candidate.device_instances if item not in self._model.device_instances]
+            if added and candidate.build.feature_tier == self._model.build.feature_tier:
+                from silverstar_fccg.project.compact import CompactErrors_Get
+                from silverstar_fccg.project.feature_tiers import FeatureTier_ErrorsGet
+                errors = CompactErrors_Get(candidate, self._service.catalog) + FeatureTier_ErrorsGet(candidate, self._service.catalog)
+                if errors:
+                    raise ValueError(self._translator.Text_Get("configuration.feature_tier_devices_review")
+                                     + "\n" + "\n".join(errors))
             result = self._service.ProjectConfiguration_Reconcile(candidate)
             restore_project = (self._project_root, self._model.identity.name)
             if self._selection_restore_project != restore_project:
@@ -1323,6 +1336,9 @@ class MainWindow(QMainWindow):
             (component.class_max or component.project_max for component in candidates),
             default=1,
         )
+        from silverstar_fccg.project.feature_tiers import FeatureTier_DeviceClassLimitGet
+        class_max = FeatureTier_DeviceClassLimitGet(self._model.build.feature_tier, component_class,
+            str(candidates[0].options.get("device_category", "")), class_max)
         if len(selected) >= class_max:
             return
         plugin_counts: dict[str, int] = {}

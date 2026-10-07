@@ -40,6 +40,7 @@ from silverstar_fccg.project.capabilities import (
 )
 from silverstar_fccg.project.configuration import SelectionAvailability
 from silverstar_fccg.project.model import RAW_IMU_MOUNT_PLUGINS
+from silverstar_fccg.project.feature_tiers import FeatureTier_DeviceClassLimitGet
 from silverstar_fccg.ui.committed_spin import (
     EnterCommittedDoubleSpinBox,
     EnterCommittedSpinBox,
@@ -197,6 +198,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.Language_Apply(translator)
 
     def FeatureTier_Set(self, tier: str) -> None:
+        self._feature_tier = tier
         with QSignalBlocker(self.feature_tier_combo):
             self.feature_tier_combo.setCurrentIndex(self.feature_tier_combo.findData(tier))
         self.feature_tier_description.setText(self._translator.Text_Get("feature_tier.description." + tier))
@@ -340,7 +342,10 @@ class DevicesPage(ScrollableLocalizedPage):
                     availability = self._device_availability.get(
                         component.component_id, SelectionAvailability(True)
                     )
-                    available = plugin_available and availability.available
+                    tier_limit = FeatureTier_DeviceClassLimitGet(getattr(self, "_feature_tier", "full"),
+                        component_class, category, component.class_max or component.project_max)
+                    available = (plugin_available and availability.available and tier_limit > 0
+                        and (instance is not None or len(selected_instances) < tier_limit))
                     detail = self._PhysicalDetails_Get(component)
                     if not plugin_available:
                         detail = self._translator.Text_Get(
@@ -503,9 +508,10 @@ class DevicesPage(ScrollableLocalizedPage):
                 ),
                 default=1,
             )
+            class_max = FeatureTier_DeviceClassLimitGet(getattr(self, "_feature_tier", "full"),
+                component_class, category, class_max)
             if (
-                class_max > len(selected_instances)
-                and any(
+                any(
                     selected_plugin_counts[item.component_id]
                     < (item.plugin_max or item.project_max)
                     for item in candidates
@@ -518,6 +524,7 @@ class DevicesPage(ScrollableLocalizedPage):
                     )
                 )
                 add_button.setObjectName(f"addDeviceButton_{component_class}")
+                add_button.setEnabled(class_max > len(selected_instances))
                 add_button.clicked.connect(
                     lambda _checked=False, selected_class=component_class: self.instanceAddRequested.emit(
                         selected_class

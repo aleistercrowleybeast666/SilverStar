@@ -8,16 +8,24 @@ protocol, storage, hardware and resource checks remain applicable.
 |---|---|---|---|---|
 | Full | All already supported, including pure INS | Existing supported counts | Existing configuration | Existing configuration |
 | Standard | SF6, KF6, pure INS; ESKF15 prohibited | Existing supported counts | Existing configuration | Existing configuration |
-| Compact | SF6 or pure INS; KF6/ESKF15 prohibited | At most one IMU, GNSS, telemetry and barometer | Configurable, not forced off | Retained log choices with the bounded-tier policy below; normal queue defaults |
+| Compact | SF6 or pure INS; KF6/ESKF15 prohibited | At most one instance per sensor class and one telemetry instance | Configurable, not forced off | Retained log choices with the bounded-tier policy below; normal queue defaults |
 | Minimal | Same as Compact | Same, with GNSS inactive | Both off | Minimum replayable local SSLOG; compact slots and queues |
 
 An explicit incompatible switch chooses KF6 for Standard or SF6 for
 Compact/Minimal. Pure INS remains selected. Each departed tier saves a
-nonrecursive project snapshot; returning restores its device selections,
-algorithms, parameters, modes, protocol selections, log choices and bindings.
+nonrecursive project snapshot; returning restores algorithms, parameters, modes,
+protocol selections and log choices. Device edits, bindings and source overrides
+remain current across switches; saved snapshots retain historical device choices
+without silently replacing the current devices.
 Current MCU/hardware, paths and tools remain current. These snapshots are
-inactive configuration, never source-graph providers. Extra devices are
-suspended with a visible notice and restored by returning to their tier.
+inactive configuration, never source-graph providers. Following the 2026-10-08
+GUI acceptance correction, extra devices and GNSS remain visible on an
+incompatible switch or import. Generation is blocked with a review notice until
+the user removes them or chooses Full/Standard. They are never silently removed
+to satisfy a tier. Compact/Minimal bound each sensor class independently to one
+instance; telemetry is also bounded to one. Minimal prohibits GNSS selection and
+addition. Deleting an instance allows one replacement; Full/Standard restore the
+ordinary declared limits.
 
 Bounded tiers prefer a dedicated barometer over an embedded endpoint in a
 multifunction IMU. The IMU remains active. Two dedicated barometers remain an
