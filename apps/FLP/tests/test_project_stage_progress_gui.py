@@ -155,3 +155,53 @@ def test_original_save_lifecycle_unchanged(qtbot, tmp_path, monkeypatch, private
     # Execute the original four bodies unchanged; private settings and offscreen Qt.
     from tests.test_project_save_lifecycle import test_save_lifecycle_respects_request_cancel_and_commit
     test_save_lifecycle_respects_request_cancel_and_commit(qtbot, tmp_path, monkeypatch, case)
+
+
+@pytest.mark.parametrize('action', ['finish', 'cancel', 'close'])
+def test_slow_array_save_keeps_gui_responsive_and_atomic(qtbot, tmp_path, small_input, window, monkeypatch, action):
+    import numpy as np
+    from PySide6.QtCore import QTimer
+    from silverstar_flp.core.artifacts import _ProgressStream
+    opened, document, store = _Document(small_input)
+    window._LogOpenResult_Set(opened, document)
+    result = store.Entries_Get()[0].result
+    result = replace(result, diagnostics={**result.diagnostics,
+        'slow_write_fixture': np.arange(400000, dtype='float64')})
+    window._replay_store.Result_Add(result)
+    entered, release = Event(), Event()
+    original = _ProgressStream.write
+    gui = get_ident()
+    def held(stream, data):
+        assert get_ident() != gui
+        if len(data) >= 1024 * 1024:
+            entered.set()
+            assert release.wait(5)
+            stream.context.Cancel_RaiseIfRequested()
+        return original(stream, data)
+    monkeypatch.setattr(_ProgressStream, 'write', held)
+    path = tmp_path/'slow.ssflp'
+    previous = b'old user file'; path.write_bytes(previous)
+    try:
+        assert window._Project_Write(path, background=True, save_data=True)
+        qtbot.waitUntil(entered.is_set, timeout=15000)
+        alive = []
+        QTimer.singleShot(0, lambda: alive.append(True))
+        qtbot.waitUntil(lambda: bool(alive), timeout=1000)
+        assert window.progress_bar.value() < 1000
+        assert path.read_bytes() == previous
+        if action == 'cancel':
+            window._Task_Cancel()
+        elif action == 'close':
+            # Established save lifecycle: close waits for this committed save;
+            # cancellation is the separate explicit Cancel action above.
+            window._Project_SetDirty(False)
+            event = QCloseEvent(); window.closeEvent(event)
+            assert not event.isAccepted()
+    finally:
+        release.set()
+    _Finished(qtbot, window, success=action != 'cancel')
+    if action != 'cancel':
+        assert Project_Load(path).save_data_and_results
+        assert any('|' in code for _, code in window.test_reports)
+    else:
+        assert path.read_bytes() == previous

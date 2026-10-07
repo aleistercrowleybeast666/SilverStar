@@ -35,16 +35,60 @@ MAX_LIVE_BYTES = 1024 * 1024 * 1024
 MAX_OBJECTS = 2_000_000
 MAX_RECORD_BLOCKS = 4096
 _HASH = re.compile(r"[0-9a-f]{64}\Z")
+_IO_CHUNK_BYTES = 1024 * 1024
 
 
-def FileHash_Get(path: Path, context: TaskContext | None = None) -> str:
-    _File_Require(Path(path), context=context)
+class _ProgressStream:
+    """Keep NumPy's NPY format, but bound gzip work and cancellation latency."""
+    def __init__(self, stream, context, total, code, *, offset=None):
+        self.stream, self.context, self.total, self.code = stream, context, total, code
+        self.done = 0
+        self.offset = offset
+
+    def _Report(self, count):
+        self.done += count
+        done = self.done if self.offset is None else self.offset + self.done
+        total = self.total if self.offset is None else 0
+        self.context.Progress_Report(min(1, self.done / max(1, self.total)),
+            f"{self.code}|{done}|{total}")
+
+    def write(self, data):
+        view = memoryview(data).cast('B')
+        if self.done == 0 and self.code == "progress.artifact.array_write":
+            # np.save writes the complete NPY header before the array payload.
+            self.total += len(view)
+        for start in range(0, len(view), _IO_CHUNK_BYTES):
+            self.context.Cancel_RaiseIfRequested()
+            chunk = view[start:start + _IO_CHUNK_BYTES]
+            count = self.stream.write(chunk)
+            if count != len(chunk):
+                raise OSError("artifact_short_write")
+            self._Report(count)
+        return len(view)
+
+    def read(self, size=-1):
+        self.context.Cancel_RaiseIfRequested()
+        chunk = self.stream.read(_IO_CHUNK_BYTES if size < 0 else min(size, _IO_CHUNK_BYTES))
+        self._Report(len(chunk))
+        return chunk
+
+    def __getattr__(self, name):
+        return getattr(self.stream, name)
+
+
+def FileHash_Get(path: Path, context: TaskContext | None = None, *, quantified=False) -> str:
+    info = _File_Require(Path(path), context=context)
     digest = hashlib.sha256()
+    done = 0
     with Path(path).open("rb") as source:
         while chunk := source.read(1024 * 1024):
             if context is not None:
                 context.Cancel_RaiseIfRequested()
             digest.update(chunk)
+            done += len(chunk)
+            if context is not None:
+                context.Progress_Report(done / max(1, info.st_size) if quantified else 0,
+                    f"progress.artifact.hash|{done}|{info.st_size}")
     return digest.hexdigest()
 
 
@@ -121,12 +165,18 @@ def _Json_Load(path: Path, context: TaskContext | None = None, *, byte_limit=Non
                 if size > limit:
                     raise ValueError("artifact_manifest_too_large")
                 chunks.append(chunk)
+                if context is not None:
+                    context.Progress_Report(0, f"progress.artifact.json_read|{size}|{expected_bytes or 0}")
     except (zlib.error, EOFError) as exc:
         raise ValueError("artifact_compression_corrupt") from exc
     try:
         if expected_bytes is not None and size != expected_bytes:
             raise ValueError("artifact_record_block_size_invalid")
+        if context is not None:
+            context.Progress_Report(0, f"progress.artifact.json_decode|{size}|0")
         result = json.loads(b"".join(chunks), object_pairs_hook=pairs, parse_constant=invalid)
+        if context is not None:
+            context.Cancel_RaiseIfRequested()
         return (result, size) if return_size else result
     except RecursionError as exc:
         raise ValueError("artifact_structure_limit") from exc
@@ -173,10 +223,12 @@ class _Encoder:
         self.record_json_bytes = 0
         self.in_audit_block = False
         self.in_record_plan = False
+        self.array_bytes_written = 0
         generations = list(directory.parent.iterdir())
         if len(generations) > 4096:
             raise ValueError("artifact_generation_limit")
         for previous in generations:
+            self.context.Progress_Report(0, f"progress.artifact.inventory|{len(self.existing_arrays)}|0")
             if previous == directory or not re.fullmatch(r"generation-[0-9a-f]{32}", previous.name):
                 continue
             info = previous.lstat()
@@ -190,7 +242,7 @@ class _Encoder:
     def Encode(self, value, depth=0):
         self.nodes += 1
         if self.nodes % 4096 == 0:
-            self.context.Cancel_RaiseIfRequested()
+            self.context.Progress_Report(0, f"progress.artifact.objects|{self.nodes}|0")
         if depth > 64 or self.nodes > MAX_NODES:
             raise ValueError("artifact_structure_limit")
         if isinstance(value, Enum):
@@ -216,8 +268,12 @@ class _Encoder:
             with temporary.open("wb") as target:
                 with gzip.GzipFile(filename="", mode="wb", fileobj=target,
                                    compresslevel=3, mtime=0) as compressed:
-                    np.save(compressed, value, allow_pickle=False)
+                    stream = _ProgressStream(compressed, self.context, value.nbytes,
+                                             "progress.artifact.array_write", offset=self.array_bytes_written)
+                    np.save(stream, value, allow_pickle=False)
                     raw_bytes = compressed.tell()
+                    self.array_bytes_written += raw_bytes
+                self.context.Progress_Report(0, "progress.artifact.sync")
                 target.flush()
                 os.fsync(target.fileno())
             sha = FileHash_Get(temporary, self.context)
@@ -320,6 +376,7 @@ class _Encoder:
                 temporary.unlink()
             references.append(spec)
             start += len(rows)
+            self.context.Progress_Report(0, f"progress.artifact.records|{start}|{len(records)}")
         return {"record_blocks": references}
 
     def AuditBlocks_Write(self, rows):
@@ -366,6 +423,7 @@ class _Encoder:
                 temporary.unlink()
             references.append(spec)
             start += len(window)
+            self.context.Progress_Report(0, f"progress.artifact.records|{start}|{len(rows)}")
         return {"audit_blocks": references, "tuple": isinstance(rows, tuple)}
 
 
@@ -383,8 +441,11 @@ def _Json_Write(path, value, context, limit):
                     context.Cancel_RaiseIfRequested()
                     compressed.write(buffer)
                     buffer.clear()
+                    context.Progress_Report(0, f"progress.artifact.json_write|{size}|0")
             context.Cancel_RaiseIfRequested()
             compressed.write(buffer)
+            context.Progress_Report(0, f"progress.artifact.json_write|{size}|0")
+        context.Progress_Report(0, "progress.artifact.sync")
         target.flush()
         os.fsync(target.fileno())
     return size
@@ -436,6 +497,7 @@ class _Decoder:
         self.in_record_block = False
         self.block_arrays = {}
         self.record_file_size = None
+        self.array_bytes_done = 0
         if not isinstance(arrays, dict) or len(arrays) > MAX_ARRAYS:
             raise ValueError("artifact_array_table_invalid")
         for name, spec in arrays.items():
@@ -571,7 +633,8 @@ class _Decoder:
         if self.object_count > MAX_OBJECTS:
             raise ValueError("artifact_object_limit")
         if self.nodes % 4096 == 0:
-            self.context.Cancel_RaiseIfRequested()
+            self.context.Progress_Report(self.array_bytes_done / max(1, self.total),
+                f"progress.artifact.objects|{self.nodes}|0")
         if self.nodes > MAX_NODES or depth > 64:
             raise ValueError("artifact_structure_limit")
         if value is None or type(value) in (str, bool, int, float):
@@ -588,13 +651,19 @@ class _Decoder:
             target_arrays = self.block_arrays if self.verify_only and self.in_record_block else self.loaded_arrays
             if name not in target_arrays:
                 spec = self.arrays[name]
+                from silverstar_flp.core.task_progress import TaskProgress
+                array_progress = TaskProgress(self.context)
+                start = min(1, self.array_bytes_done / max(1, self.total))
+                end = min(1, (self.array_bytes_done + spec.get("raw_bytes", spec["bytes"])) / max(1, self.total))
+                hash_context = array_progress.Context_Build(start, start + (end-start)*0.3)
+                read_context = array_progress.Context_Build(start + (end-start)*0.3, end)
                 unresolved_path = self.directory / name
                 info = _File_Require(unresolved_path, limit=MAX_ARRAY_BYTES + 65536,
                                      context=self.context)
                 path = unresolved_path.resolve()
                 if not path.is_relative_to(self.directory.resolve()):
                     raise ValueError("artifact_array_path_escape")
-                if info.st_size != spec["bytes"] or FileHash_Get(path, self.context) != spec["sha256"]:
+                if info.st_size != spec["bytes"] or FileHash_Get(path, hash_context, quantified=True) != spec["sha256"]:
                     raise ValueError("artifact_array_corrupt")
                 # Inspect the header before allocating; shape may not be trusted from NPY bytes.
                 opener = gzip.open if spec.get("compression") == "gzip" else open
@@ -612,12 +681,14 @@ class _Decoder:
                             spec.get("raw_bytes", spec["bytes"])):
                         raise ValueError("artifact_array_header_invalid")
                     source.seek(0)
+                    stream = _ProgressStream(source, read_context, spec.get("raw_bytes", spec["bytes"]),
+                                             "progress.artifact.array_read")
                     if name not in self.loaded_arrays:
                         self.Charge(0, math.prod(shape) * dtype.itemsize)
                     if self.verify_only and not self.in_record_block:
                         # Validate every expanded byte without allocating the complete
                         # numerical array. The full reader still uses np.load below.
-                        while source.read(65536):
+                        while stream.read(65536):
                             self.context.Cancel_RaiseIfRequested()
                         if source.tell() != spec.get("raw_bytes", spec["bytes"]):
                             raise ValueError("artifact_array_trailing_bytes")
@@ -628,11 +699,13 @@ class _Decoder:
                             working_bytes = sum(item.nbytes for item in self.block_arrays.values())
                             if working_bytes + math.prod(shape) * dtype.itemsize > RECORD_BLOCK_ALLOC_BYTES:
                                 raise ValueError("artifact_record_block_allocation_limit")
-                        array = np.load(source, allow_pickle=False)
+                        array = np.load(stream, allow_pickle=False)
                         if source.read(1):
                             raise ValueError("artifact_array_trailing_bytes")
                         array.setflags(write=False)
                 target_arrays[name] = array
+                if name not in self.loaded_arrays or target_arrays is self.loaded_arrays:
+                    self.array_bytes_done += spec.get("raw_bytes", spec["bytes"])
                 if self.verify_only and self.in_record_block:
                     self.loaded_arrays.setdefault(name, _ArrayDescription(name, spec))
             return target_arrays[name]
@@ -752,16 +825,18 @@ def Artifact_Write(project_path: Path, payload: object, identity: dict,
     directory = root / ("generation-" + uuid.uuid4().hex)
     directory.mkdir()
     # Interrupted generations are deliberately never referenced or auto-deleted.
-    encoder = _Encoder(directory, context)
+    serialize_context = progress.Context_Build(0.05, 0.05)
+    encoder = _Encoder(directory, serialize_context)
     progress.Progress_Report(0.05, "progress.artifact.serialize")
     encoded = encoder.Encode(payload)
     manifest = {"version": ARTIFACT_VERSION, "identity": identity,
                 "arrays": encoder.arrays, "payload": encoded}
     path = directory / "manifest.json.gz"
     progress.Progress_Report(0.62, "progress.artifact.manifest_write")
-    manifest_raw_bytes = _Json_Write(path, manifest, context, MAX_MANIFEST_BYTES - encoder.record_json_bytes)
+    manifest_context = progress.Context_Build(0.62, 0.62)
+    manifest_raw_bytes = _Json_Write(path, manifest, manifest_context, MAX_MANIFEST_BYTES - encoder.record_json_bytes)
     reference = {"path": path.relative_to(parent).as_posix(),
-                 "sha256": FileHash_Get(path, context),
+                 "sha256": FileHash_Get(path, progress.Context_Build(0.65, 0.73), quantified=True),
                  "bytes": encoder.total + path.stat().st_size,
                  "uncompressed_bytes": manifest_raw_bytes +
                      sum(spec["raw_bytes"] for spec in encoder.arrays.values()) + encoder.record_json_bytes}
@@ -821,16 +896,16 @@ def _Artifact_Load(project_path, reference, identity, context, *, verify_only):
     context.Cancel_RaiseIfRequested()
     path = ArtifactPath_Resolve(project_path, reference)
     _File_Require(path, limit=MAX_MANIFEST_BYTES, context=context)
-    if FileHash_Get(path, context) != reference["sha256"]:
+    if FileHash_Get(path, progress.Context_Build(0.0, 0.08), quantified=True) != reference["sha256"]:
         raise ValueError("artifact_manifest_corrupt")
-    manifest, json_bytes = _Json_Load(path, context, return_size=True)
+    manifest, json_bytes = _Json_Load(path, progress.Context_Build(0.08, 0.08), return_size=True)
     if (not isinstance(manifest, dict) or set(manifest) != {"version", "identity", "arrays", "payload"}
             or type(manifest.get("version")) is not int or manifest["version"] not in (1, 2, ARTIFACT_VERSION)):
         raise ValueError("artifact_version_unsupported")
     if identity is not None and manifest.get("identity") != identity:
         raise ValueError("artifact_identity_mismatch")
     progress.Progress_Report(0.20, "progress.artifact.verify" if verify_only else "progress.artifact.read")
-    decoder = _Decoder(path.parent, manifest["arrays"], context, allow_records=manifest["version"] >= 2,
+    decoder = _Decoder(path.parent, manifest["arrays"], progress.Context_Build(0.20, 0.95), allow_records=manifest["version"] >= 2,
                        allow_audits=manifest["version"] >= 3,
                        verify_only=verify_only, json_bytes=json_bytes)
     try:
@@ -872,6 +947,8 @@ def _Timestamp_Verify(directory, array, arrays, context):
                     or timestamps.size > 1 and np.any(timestamps[1:] < timestamps[:-1])):
                 raise ValueError("time-series timestamps must be monotonic")
             previous, remaining = timestamps[-1], remaining - count
+            context.Progress_Report(0,
+                f"progress.artifact.timestamps|{math.prod(shape)-remaining}|{math.prod(shape)}")
         if source.read(1):
             raise ValueError("artifact_array_trailing_bytes")
 

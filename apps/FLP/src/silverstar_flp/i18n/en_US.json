@@ -953,5 +953,21 @@
   "error.code.project_run_change_failed": "The run could not be changed. Its identity or history conflicts with the project.",
   "replay.run_current_saved": "Current numerical result: saved in this project.",
   "replay.run_memory_only": "Current numerical result: memory only; no historical saved recovery candidate is known.",
-  "replay.run_memory_with_history": "Current numerical result: memory only. A historical saved recovery candidate is retained and requires explicit verification; configuration-only reopening does not load it."
+  "replay.run_memory_with_history": "Current numerical result: memory only. A historical saved recovery candidate is retained and requires explicit verification; configuration-only reopening does not load it.",
+  "progress.artifact.array_write": "Compressing array",
+  "progress.artifact.array_read": "Reading and validating array",
+  "progress.artifact.hash": "Checking file hash",
+  "progress.artifact.json_read": "Reading metadata",
+  "progress.artifact.json_decode": "Parsing metadata",
+  "progress.artifact.objects": "Processing objects",
+  "progress.artifact.inventory": "Looking up reusable arrays",
+  "progress.artifact.records": "Processing record blocks",
+  "progress.artifact.json_write": "Writing compressed metadata",
+  "progress.artifact.sync": "Waiting for file sync",
+  "progress.processing": "Processing",
+  "progress.work_bytes": "{done} / {total} B",
+  "progress.work_items": "{done} / {total} items",
+  "progress.work_bytes_done": "{done} B",
+  "progress.work_items_done": "{done} items",
+  "progress.artifact.timestamps": "Validating timestamp order"
 }

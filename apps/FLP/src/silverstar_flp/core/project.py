@@ -280,7 +280,7 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         from silverstar_flp.core.parse_cache import DatasetCache_Write, ParseIdentity_Get
         decoder_identity = {key: value for key, value in document.decoder_profile.ToDict().items()
                             if key not in ("source_reference", "cache_reference")}
-        parse_identity = ParseIdentity_Get(resolved_log_path, decoder_identity, task_context)
+        parse_identity = ParseIdentity_Get(resolved_log_path, decoder_identity, progress.Context_Build(0.04, 0.08))
         # Store the complete parsed object once, shared by every result in this project.
         progress.Progress_Report(0.08, "progress.save.dataset")
         parse_artifact = DatasetCache_Write(project_path, dataset, parse_identity,
@@ -300,7 +300,7 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         if document.restoration_issues:
             # Do not replace unavailable saved history with an incomplete current store.
             raise ValueError("project_saved_results_unavailable")
-        identity = ProjectNumericalIdentity_Get(document, task_context)
+        identity = ProjectNumericalIdentity_Get(document, progress.Context_Build(0.40, 0.44))
         entries = replay_store.Entries_Get()
         if entries and dataset is None:
             raise ValueError("project_result_input_identity_missing")
@@ -317,7 +317,7 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         saved_entries = entries
     elif result_artifact is not None and (document.project_path != project_path or run_state["deleted"]):
         # Save As copies only verified numerical artifacts, never log/decoder payloads.
-        identity = ProjectNumericalIdentity_Get(document, task_context)
+        identity = ProjectNumericalIdentity_Get(document, progress.Context_Build(0.40, 0.44))
         stored = Artifact_Read(document.project_path, result_artifact, identity,
                                progress.Context_Build(0.45, 0.60))
         if not isinstance(stored, tuple) or any(not isinstance(item, dict) for item in stored):
@@ -370,7 +370,7 @@ def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,
         if dataset is not None and document.save_data_and_results:
             progress.Progress_Report(0.95, "progress.save.source_check")
             from silverstar_flp.core.artifacts import FileHash_Get
-            if FileHash_Get(resolved_log_path, task_context) != dataset.metadata["parse_identity"]["log_sha256"]:
+            if FileHash_Get(resolved_log_path, progress.Context_Build(0.95, 0.97), quantified=True) != dataset.metadata["parse_identity"]["log_sha256"]:
                 raise ValueError("project_result_input_identity_mismatch")
         progress.Progress_Report(0.98, "progress.save.commit")
         task_context.Cancel_RaiseIfRequested()

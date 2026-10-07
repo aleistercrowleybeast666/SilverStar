@@ -416,7 +416,8 @@ class LogOpenCoordinator:
         from silverstar_flp.core.parse_cache import ParseIdentity_Get
         from silverstar_flp.core.project import DecoderNumericalIdentity_Get
         progress.Progress_Report(0.22, "progress.open.source_check")
-        identity = ParseIdentity_Get(log_path, DecoderNumericalIdentity_Get(package, container), context)
+        identity = ParseIdentity_Get(log_path, DecoderNumericalIdentity_Get(package, container),
+                                     progress.Context_Build(0.22, 0.28))
         parse_start = 0.28
         # Exact package validation and Descriptor matching have already succeeded.
         # Cache admission remains inside this coordinator, never a decoder fallback.
@@ -433,7 +434,7 @@ class LogOpenCoordinator:
             else:
                 context.Cancel_RaiseIfRequested()
                 progress.Progress_Report(0.96, "progress.open.source_check")
-                if (FileHash_Get(log_path, context) != identity["log_sha256"]
+                if (FileHash_Get(log_path, progress.Context_Build(0.96, 0.99), quantified=True) != identity["log_sha256"]
                         or log_path.stat().st_size != identity["log_bytes"]):
                     raise ValueError("log_source_changed_during_parse")
                 progress.Progress_Report(1.0, "log_open.complete")
@@ -451,7 +452,7 @@ class LogOpenCoordinator:
         from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_Get
         Sf6Revision_Get(dataset)
         progress.Progress_Report(0.96, "progress.open.source_check")
-        if (FileHash_Get(log_path, context) != identity["log_sha256"]
+        if (FileHash_Get(log_path, progress.Context_Build(0.96, 0.99), quantified=True) != identity["log_sha256"]
                 or log_path.stat().st_size != identity["log_bytes"]):
             raise ValueError("log_source_changed_during_parse")
         dataset = replace(dataset, metadata={**dataset.metadata,

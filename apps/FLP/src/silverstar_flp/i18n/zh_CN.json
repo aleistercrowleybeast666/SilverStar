@@ -953,5 +953,21 @@
   "error.code.project_run_change_failed": "无法修改该 run，其身份或历史与工程冲突。",
   "replay.run_current_saved": "当前数值结果：已保存在本工程中。",
   "replay.run_memory_only": "当前数值结果：仅在内存中，尚无已知的历史保存恢复候选。",
-  "replay.run_memory_with_history": "当前数值结果：仅在内存中。已保留历史保存恢复候选，仍需显式校验；仅配置重开不会载入该候选。"
+  "replay.run_memory_with_history": "当前数值结果：仅在内存中。已保留历史保存恢复候选，仍需显式校验；仅配置重开不会载入该候选。",
+  "progress.artifact.array_write": "压缩数组",
+  "progress.artifact.array_read": "读取并验证数组",
+  "progress.artifact.hash": "校验文件哈希",
+  "progress.artifact.json_read": "读取元数据",
+  "progress.artifact.json_decode": "解析元数据",
+  "progress.artifact.objects": "处理对象",
+  "progress.artifact.inventory": "查找可复用数组",
+  "progress.artifact.records": "处理记录块",
+  "progress.artifact.json_write": "写入压缩元数据",
+  "progress.artifact.sync": "等待文件同步",
+  "progress.processing": "处理中",
+  "progress.work_bytes": "{done} / {total} B",
+  "progress.work_items": "{done} / {total} 项",
+  "progress.work_bytes_done": "{done} B",
+  "progress.work_items_done": "{done} 项",
+  "progress.artifact.timestamps": "验证时间戳顺序"
 }

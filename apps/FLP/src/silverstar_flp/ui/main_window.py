@@ -1170,6 +1170,7 @@ class MainWindow(QMainWindow):
             if (published is not False and worker is self._active_worker
                     and getattr(worker, "is_staged_io", False) is True):
                 self.progress_bar.setValue(1000)
+                self.progress_bar.setFormat(self._translator.Text_Get("progress.stage_percent"))
 
     @Slot(float, str)
     def _Task_Progress(self, progress: float, code: str) -> None:
@@ -1181,7 +1182,20 @@ class MainWindow(QMainWindow):
                 return
             value = max(self.progress_bar.value(), min(990, value))
         self.progress_bar.setValue(value)
-        self.status_label.setText(self._translator.Text_Get(code))
+        parts = code.split("|")
+        text = self._translator.Text_Get(parts[0])
+        if (len(parts) == 3 and parts[0].startswith("progress.artifact.")
+                and parts[1].isdigit() and parts[2].isdigit()):
+            done, total = int(parts[1]), int(parts[2])
+            unit = "progress.work_items" if parts[0] in (
+                "progress.artifact.records", "progress.artifact.objects", "progress.artifact.inventory",
+                "progress.artifact.timestamps") else "progress.work_bytes"
+            text += " · " + self._translator.Text_Get(unit if total else unit + "_done",
+                done=f"{done:,}", total=f"{total:,}")
+            self.progress_bar.setFormat(self._translator.Text_Get("progress.processing"))
+        elif getattr(self._active_worker, "is_staged_io", False) is True:
+            self.progress_bar.setFormat(self._translator.Text_Get("progress.stage_percent"))
+        self.status_label.setText(text)
 
     @Slot(str, str)
     def _Task_Error(self, message: str, traceback_text: str) -> None:

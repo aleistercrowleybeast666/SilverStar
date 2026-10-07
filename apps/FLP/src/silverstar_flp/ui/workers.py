@@ -6,6 +6,7 @@ from enum import StrEnum
 from threading import Event
 from typing import Any
 from weakref import ref
+from time import monotonic
 
 from PySide6.QtCore import QObject, QRunnable, QThread, Signal, Slot
 
@@ -29,10 +30,17 @@ class WorkerRetireResult(StrEnum):
 
 def _ProgressEmitter_Build(signals):
     reference = ref(signals)
+    last_detail = 0.0
     def _Progress_Emit(progress, code):
+        nonlocal last_detail
         target = reference()
         if target is None:
             raise RuntimeError("worker_signals_unavailable")
+        if code.startswith("progress.artifact.") and code != "progress.artifact.checked":
+            now = monotonic()
+            if now - last_detail < 0.1:
+                return
+            last_detail = now
         target.progress.emit(progress, code)
     return _Progress_Emit
 
