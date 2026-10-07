@@ -1,0 +1,18 @@
+{
+  "command": [
+    "apps/FLP/.venv/Scripts/python.exe",
+    "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_probe.py",
+    "apps/FLP/tests/test_project_stage_progress_gui.py",
+    "apps/FLP/tests/test_plot_menu_lifetime.py",
+    "-vv",
+    "-s",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=.work/nc08_flp_native_final"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_head": "4b511e566ba31db1fb1294da0e637c8fabb0e54c",
+  "timeout_s": 900,
+  "exit_code": 0,
+  "elapsed_s": 118.32221879999997
+}

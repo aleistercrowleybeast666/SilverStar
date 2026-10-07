@@ -1,5 +1,24 @@
 # SF6 offline replay
 
+## Current revision 2 and historical revision 1
+
+Current SF6 is plugin `0.2.0`, algorithm revision 2. It predicts ENU velocity
+and position, then applies six fixed gains to the latest state. It has no
+prediction history, delayed rewind, covariance or NIS. Source epochs guard
+age/order; receive-only inputs use receive time. Delay parameters are prohibited
+for revision 2. Read [the current-state contract](../FCCG/SF6_CURRENT_STATE.md)
+and [the four-algorithm mathematics and source map](../algorithms/NAVIGATION_IMPLEMENTATION.md).
+
+FLP preserves revision 1 for exact historical decoder identities in recorded
+and What-if modes. Explicit Offline selects revision 2 and reports that semantic
+change on a historical dataset. Revision conflicts are rejected; the source log
+and decoder are unchanged. Both paths retain APPROXIMATE fidelity.
+
+## Preserved revision 1 description
+
+The following describes the historical fixed-lag implementation, including its
+three delay fields and history capacities. It does **not** describe revision 2.
+
 The Replay algorithm order is Pure INS, SF6, KF_6, ESKF_15. SF6's first parameter
 group contains six fixed gains in firmware order `vE,vN,vU,pE,pN,pU`, each with
 offline default 0.2 and allowed range [0,1]. Gains are engineering defaults, not
@@ -9,7 +28,7 @@ confidence parameters. It does not consume magnetometer measurements.
 
 The source authority at the feature base revision is:
 
-- `apps/FCCG/plugins/builtin/silverstar_algorithm_estimator_sf6/plugin.json`
+- `apps/SCG/plugins/builtin/silverstar_algorithm_estimator_sf6/plugin.json` (current location; historical revision must be selected explicitly)
 - `.../payload/Algorithm/Estimator/SF6/Src/navigation_sf6.c` and its header
 - `.../payload/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c`
 - the existing INS mechanization and `system_time.c` measurement timestamp resolver

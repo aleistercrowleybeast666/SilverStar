@@ -1,0 +1,551 @@
+{
+  "documents": [
+    "README.md",
+    "docs/README.md",
+    "docs/USER_WORKFLOW.md",
+    "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+    "docs/FLP/SF6_Replay.md",
+    "docs/SilverStar_Recommended_Configurations.md",
+    "docs/NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md"
+  ],
+  "links": [
+    {
+      "source": "README.md",
+      "target": "docs\\architecture\\AIR_LINK.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\architecture\\TARGET_MODEL.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\architecture\\GROUND_STATION.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\architecture\\DEVICE_VARIANTS.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\architecture\\PROJECT_FOLDER_CONTRACT.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\USER_WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\algorithms\\NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\field\\FIELD_TEST_REFERENCE.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\field\\FIELD_TEST_CHECKLIST_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\field\\FIELD_QUALIFICATION_RECORD_TEMPLATE.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\architecture\\ROUND5_FIELD_QUALIFICATION_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs\\architecture\\SOURCE_LICENSE_AUDIT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\USER_WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\SilverStar_Recommended_Configurations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FCCG\\USER_GUIDE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\GSHC\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FLP\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\algorithms\\NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": false
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FCCG\\README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FCCG\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FCCG\\VALIDATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\GSHC\\README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\GSHC\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\GSHC\\VALIDATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FLP\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FLP\\Architecture.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\FLP\\VALIDATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\SilverStar_Recommended_Configurations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\RELEASE_GUI_CLOSEOUT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\MONOREPO_ARCHITECTURE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\TARGET_MODEL.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\AIR_LINK.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\GROUND_STATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\DEVICE_VARIANTS.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\PROJECT_FOLDER_CONTRACT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\MISSION_SNAPSHOT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\ROUND4_DEVICE_NAVIGATION_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\ROUND5_FIELD_QUALIFICATION_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\field\\FIELD_TEST_REFERENCE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\field\\FIELD_TEST_CHECKLIST_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\ROUND2_MULTI_TARGET_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "docs\\architecture\\MIGRATION_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "contracts\\navigation_v1.json",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": false
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\architecture\\PROJECT_FOLDER_CONTRACT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\architecture\\TARGET_MODEL.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\architecture\\AIR_LINK.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\SilverStar_Recommended_Configurations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FCCG\\platform\\details\\FEATURE_TIERS_20261006.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FCCG\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FCCG\\USER_GUIDE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FCCG\\README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FCCG\\BUILD.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\algorithms\\NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\GSHC\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\GSHC\\UPPER_COMPUTER_ARCHITECTURE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\GSHC\\AIR_PROTOCOL.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FLP\\APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FLP\\Decoder_Profile_Package.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FLP\\Project_Artifacts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FLP\\Architecture.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\algorithms\\NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": false
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\RELEASE_GUI_CLOSEOUT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\FCCG\\platform\\details\\RUNTIME_SAFETY.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "docs\\field\\FIELD_TEST_CHECKLIST_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": false
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\platform\\details\\NAVIGATION_AND_ESTIMATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\platform\\details\\CALIBRATION_AND_ALIGNMENT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_ins_coning2_sculling2\\payload\\Algorithm\\INS\\Coning2Sculling2\\Src\\ins_mechanization.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\pure_ins\\mechanization.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\core\\math.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\pure_ins\\plugin.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Algorithm\\Estimator\\SF6\\Src\\navigation_sf6.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_sf6\\payload\\Algorithm\\Estimator\\SF6\\Src\\navigation_sf6_backend.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\sf6\\current_state.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\sf6\\plugin.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\SF6_CURRENT_STATE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FLP\\SF6_Replay.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\ALGORITHM_PARAMETERS.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\KF6_OUTAGE_RECOVERY.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\KF6_CONTINUOUS_GNSS_REJECTION_REVIEW_20261003.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Src\\navigation_kf.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_kf6\\payload\\Algorithm\\Estimator\\KF6\\Src\\navigation_kf_replay.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\kf6\\filter.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\kf6\\fixed_lag.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\kf6\\plugin.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\KF6_FIXED_LAG_REPLAY.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\ALGORITHM_PARAMETERS.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_replay.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf_backend.c",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\eskf15\\filter.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\eskf15\\inputs.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\eskf15\\replay.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\eskf15\\plugin.py",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\platform\\details\\RUNTIME_SAFETY.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "docs\\FCCG\\ARCHITECTURE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "target": "apps\\FLP\\src\\silverstar_flp\\plugins\\algorithms\\eskf15\\verification.py",
+      "exists": true
+    },
+    {
+      "source": "docs/FLP/SF6_Replay.md",
+      "target": "docs\\FCCG\\SF6_CURRENT_STATE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/FLP/SF6_Replay.md",
+      "target": "docs\\algorithms\\NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/SilverStar_Recommended_Configurations.md",
+      "target": "docs\\NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": false
+    },
+    {
+      "source": "docs/SilverStar_Recommended_Configurations.md",
+      "target": "docs\\FCCG\\platform\\details\\SF6_RET6_LOGGER_STACK.md",
+      "exists": true
+    }
+  ],
+  "missing": [
+    "docs/README.md -> NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+    "docs/USER_WORKFLOW.md -> NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+    "docs/USER_WORKFLOW.md -> NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+    "docs/algorithms/NAVIGATION_IMPLEMENTATION.md -> ../NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+    "docs/SilverStar_Recommended_Configurations.md -> NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+    "docs/NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md"
+  ]
+}

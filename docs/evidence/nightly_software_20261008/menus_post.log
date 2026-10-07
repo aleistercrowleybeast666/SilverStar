@@ -1,0 +1,11 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 1 item
+
+apps\FLP\tests\test_plot_menu_lifetime.py::test_plot_menus_are_native_owned_and_destroyed_in_gui_thread PASSED
+
+============================== 1 passed in 2.35s ==============================

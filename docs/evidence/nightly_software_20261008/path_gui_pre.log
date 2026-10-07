@@ -1,0 +1,197 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 2 items
+
+apps\FLP\tests\test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[False] OLD_PROJECT_REOPEN_AND_SOURCE_IDENTITY_PRESERVED False
+SAVE_FAILURE_STATUS 宸ョ▼宸蹭繚瀛橈細D:\python_software\SilverStar\.work\p4_pre\test_long_artifact_path_failur_a330dba5\old.ssflp
+FAILED
+apps\FLP\tests\test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[True] OLD_PROJECT_REOPEN_AND_SOURCE_IDENTITY_PRESERVED True
+SAVE_FAILURE_STATUS 澶辫触
+FAILED
+
+================================== FAILURES ===================================
+_ test_long_artifact_path_failure_is_actionable_and_preserves_old_project[False] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x000001E843E62BA0>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/p4_pre/test_long_artifact_path_failur_a330dba5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E843F3A9E0>
+background = False
+
+    @pytest.mark.skipif(os.name != 'nt', reason='Windows filesystem access boundary')
+    @pytest.mark.parametrize('background', [False, True])
+    def test_long_artifact_path_failure_is_actionable_and_preserves_old_project(
+            qtbot, tmp_path, monkeypatch, background):
+        opened, document, store = _SmallRun(tmp_path)
+        window = MainWindow(builtin_registry())
+        qtbot.addWidget(window)
+        window.Language_Apply('zh_CN')
+        window._LogOpenResult_Set(opened, document)
+        entry = window._replay_store.Result_Add(store.Entries_Get()[0].result)
+        messages = []
+        monkeypatch.setattr(QMessageBox, 'critical', lambda *args: messages.append(args[2]))
+        old = tmp_path/'old.ssflp'
+        assert window._Project_Write(old, save_data=True)
+        saved = window._project
+        before = old.read_bytes()
+        references = deepcopy((saved.parse_artifact, saved.result_artifact))
+        source_bytes = opened.dataset.source_path.read_bytes()
+        # A legal user-selected project directory/file can still produce an
+        # overlong SHA256-named artifact. Do not alter the process/system policy.
+        target_dir = tmp_path/('d' * max(5, 145-len(str(tmp_path))-1))
+        target_dir.mkdir()
+        target = target_dir/'retry.ssflp'
+        window._Project_SetDirty(True)
+        values = []
+        window.progress_bar.valueChanged.connect(values.append)
+        scheduled = window._Project_Write(target, background=background, save_data=True)
+        if background:
+            assert scheduled
+            qtbot.waitUntil(lambda: window._active_worker is None, timeout=15000)
+        if not messages:
+            window._Project_SetDirty(False)
+            window.close()
+            pytest.skip('Ordinary long paths are supported on this Windows host')
+        assert window._project is saved and saved.project_path == old
+        assert old.read_bytes() == before
+        assert (saved.parse_artifact, saved.result_artifact) == references
+        restored = ProjectResults_Load(Project_Load(old))
+        assert len(restored.Entries_Get()) == 1
+        assert restored.Entries_Get()[0].result_id == entry.result_id
+        assert opened.dataset.source_path.read_bytes() == source_bytes
+        assert not target.exists() and window._project_dirty
+        assert window.progress_bar.value() < 1000
+        assert all(value < 1000 for value in values)
+        print('OLD_PROJECT_REOPEN_AND_SOURCE_IDENTITY_PRESERVED', background, flush=True)
+        failure_status = window.status_label.text()
+        print('SAVE_FAILURE_STATUS', failure_status, flush=True)
+        window._Project_SetDirty(False)
+        window.close()
+>       assert '缂╃煭' in messages[0] and '鏈畬鎴? in messages[0]
+E       assert ('\u7f29\u77ed' in "[WinError 3] \u7cfb\u7edf\u627e\u4e0d\u5230\u6307\u5b9a\u7684\u8def\u5f84\u3002: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_a330dba5\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-dadd3f54bb524f75a7ebab3a9c0e30e5\\\\records.tmp' -> 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_a330dba5\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-dadd3f54bb524f75a7ebab3a9c0e30e5\\\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'\n\n\u8be6\u7ec6\u4fe1\u606f\u5df2\u5199\u5165\u5e94\u7528\u65e5\u5fd7\u3002")
+
+apps\FLP\tests\test_project_save_path_boundary.py:63: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:1509 Project save failed
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 1502, in _Project_Write
+    self._project = save(None)
+                    ~~~~^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 1486, in save
+    Project_Save(project, path, replay_store=store, dataset=dataset, context=context)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\project.py", line 286, in Project_Save
+    parse_artifact = DatasetCache_Write(project_path, dataset, parse_identity,
+                                       progress.Context_Build(0.08, 0.40))
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\parse_cache.py", line 71, in DatasetCache_Write
+    reference = Artifact_Write(project_path, dataset, identity, context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 831, in Artifact_Write
+    encoded = encoder.Encode(payload)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 309, in Encode
+    "fields": {f.name: self.Encode(getattr(value, f.name), depth + 1)
+                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 313, in Encode
+    return {key: [[self.Encode(k, depth + 1), self.Encode(v, depth + 1)]
+                                              ~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 320, in Encode
+    return self.RecordBlocks_Write(value)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 373, in RecordBlocks_Write
+    os.replace(temporary, self.directory / name)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] 绯荤粺鎵句笉鍒版寚瀹氱殑璺緞銆? 'D:\\python_software\\SilverStar\\.work\\p4_pre\\test_long_artifact_path_failur_a330dba5\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\retry.ssflp.artifacts\\generation-dadd3f54bb524f75a7ebab3a9c0e30e5\\records.tmp' -> 'D:\\python_software\\SilverStar\\.work\\p4_pre\\test_long_artifact_path_failur_a330dba5\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\retry.ssflp.artifacts\\generation-dadd3f54bb524f75a7ebab3a9c0e30e5\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'
+_ test_long_artifact_path_failure_is_actionable_and_preserves_old_project[True] _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x000001E8466D3750>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/p4_pre/test_long_artifact_path_failur_abf1aff7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E847BA83E0>
+background = True
+
+    @pytest.mark.skipif(os.name != 'nt', reason='Windows filesystem access boundary')
+    @pytest.mark.parametrize('background', [False, True])
+    def test_long_artifact_path_failure_is_actionable_and_preserves_old_project(
+            qtbot, tmp_path, monkeypatch, background):
+        opened, document, store = _SmallRun(tmp_path)
+        window = MainWindow(builtin_registry())
+        qtbot.addWidget(window)
+        window.Language_Apply('zh_CN')
+        window._LogOpenResult_Set(opened, document)
+        entry = window._replay_store.Result_Add(store.Entries_Get()[0].result)
+        messages = []
+        monkeypatch.setattr(QMessageBox, 'critical', lambda *args: messages.append(args[2]))
+        old = tmp_path/'old.ssflp'
+        assert window._Project_Write(old, save_data=True)
+        saved = window._project
+        before = old.read_bytes()
+        references = deepcopy((saved.parse_artifact, saved.result_artifact))
+        source_bytes = opened.dataset.source_path.read_bytes()
+        # A legal user-selected project directory/file can still produce an
+        # overlong SHA256-named artifact. Do not alter the process/system policy.
+        target_dir = tmp_path/('d' * max(5, 145-len(str(tmp_path))-1))
+        target_dir.mkdir()
+        target = target_dir/'retry.ssflp'
+        window._Project_SetDirty(True)
+        values = []
+        window.progress_bar.valueChanged.connect(values.append)
+        scheduled = window._Project_Write(target, background=background, save_data=True)
+        if background:
+            assert scheduled
+            qtbot.waitUntil(lambda: window._active_worker is None, timeout=15000)
+        if not messages:
+            window._Project_SetDirty(False)
+            window.close()
+            pytest.skip('Ordinary long paths are supported on this Windows host')
+        assert window._project is saved and saved.project_path == old
+        assert old.read_bytes() == before
+        assert (saved.parse_artifact, saved.result_artifact) == references
+        restored = ProjectResults_Load(Project_Load(old))
+        assert len(restored.Entries_Get()) == 1
+        assert restored.Entries_Get()[0].result_id == entry.result_id
+        assert opened.dataset.source_path.read_bytes() == source_bytes
+        assert not target.exists() and window._project_dirty
+        assert window.progress_bar.value() < 1000
+        assert all(value < 1000 for value in values)
+        print('OLD_PROJECT_REOPEN_AND_SOURCE_IDENTITY_PRESERVED', background, flush=True)
+        failure_status = window.status_label.text()
+        print('SAVE_FAILURE_STATUS', failure_status, flush=True)
+        window._Project_SetDirty(False)
+        window.close()
+>       assert '缂╃煭' in messages[0] and '鏈畬鎴? in messages[0]
+E       assert ('\u7f29\u77ed' in "[WinError 3] \u7cfb\u7edf\u627e\u4e0d\u5230\u6307\u5b9a\u7684\u8def\u5f84\u3002: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_abf1aff7\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-a351ce7c8f884ced9a160189b5ed466f\\\\records.tmp' -> 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_abf1aff7\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-a351ce7c8f884ced9a160189b5ed466f\\\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'\n\n\u8be6\u7ec6\u4fe1\u606f\u5df2\u5199\u5165\u5e94\u7528\u65e5\u5fd7\u3002")
+
+apps\FLP\tests\test_project_save_path_boundary.py:63: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:1204 Background task failed: [WinError 3] 绯荤粺鎵句笉鍒版寚瀹氱殑璺緞銆? 'D:\\python_software\\SilverStar\\.work\\p4_pre\\test_long_artifact_path_failur_abf1aff7\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\retry.ssflp.artifacts\\generation-a351ce7c8f884ced9a160189b5ed466f\\records.tmp' -> 'D:\\python_software\\SilverStar\\.work\\p4_pre\\test_long_artifact_path_failur_abf1aff7\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\retry.ssflp.artifacts\\generation-a351ce7c8f884ced9a160189b5ed466f\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 63, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 1486, in save
+    Project_Save(project, path, replay_store=store, dataset=dataset, context=context)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\project.py", line 286, in Project_Save
+    parse_artifact = DatasetCache_Write(project_path, dataset, parse_identity,
+                                       progress.Context_Build(0.08, 0.40))
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\parse_cache.py", line 71, in DatasetCache_Write
+    reference = Artifact_Write(project_path, dataset, identity, context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 831, in Artifact_Write
+    encoded = encoder.Encode(payload)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 309, in Encode
+    "fields": {f.name: self.Encode(getattr(value, f.name), depth + 1)
+                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 313, in Encode
+    return {key: [[self.Encode(k, depth + 1), self.Encode(v, depth + 1)]
+                                              ~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 320, in Encode
+    return self.RecordBlocks_Write(value)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 373, in RecordBlocks_Write
+    os.replace(temporary, self.directory / name)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] 绯荤粺鎵句笉鍒版寚瀹氱殑璺緞銆? 'D:\\python_software\\SilverStar\\.work\\p4_pre\\test_long_artifact_path_failur_abf1aff7\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\retry.ssflp.artifacts\\generation-a351ce7c8f884ced9a160189b5ed466f\\records.tmp' -> 'D:\\python_software\\SilverStar\\.work\\p4_pre\\test_long_artifact_path_failur_abf1aff7\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\retry.ssflp.artifacts\\generation-a351ce7c8f884ced9a160189b5ed466f\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[False] - assert ('\u7f29\u77ed' in "[WinError 3] \u7cfb\u7edf\u627e\u4e0d\u5230\u6307\u5b9a\u7684\u8def\u5f84\u3002: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_a330dba5\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-dadd3f54bb524f75a7ebab3a9c0e30e5\\\\records.tmp' -> 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_a330dba5\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-dadd3f54bb524f75a7ebab3a9c0e30e5\\\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'\n\n\u8be6\u7ec6\u4fe1\u606f\u5df2\u5199\u5165\u5e94\u7528\u65e5\u5fd7\u3002")
+FAILED apps\FLP\tests\test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[True] - assert ('\u7f29\u77ed' in "[WinError 3] \u7cfb\u7edf\u627e\u4e0d\u5230\u6307\u5b9a\u7684\u8def\u5f84\u3002: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_abf1aff7\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-a351ce7c8f884ced9a160189b5ed466f\\\\records.tmp' -> 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\p4_pre\\\\test_long_artifact_path_failur_abf1aff7\\\\dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\retry.ssflp.artifacts\\\\generation-a351ce7c8f884ced9a160189b5ed466f\\\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'\n\n\u8be6\u7ec6\u4fe1\u606f\u5df2\u5199\u5165\u5e94\u7528\u65e5\u5fd7\u3002")
+============================= 2 failed in 20.67s ==============================

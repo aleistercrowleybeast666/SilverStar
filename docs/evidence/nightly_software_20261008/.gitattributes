@@ -1,0 +1,2 @@
+# Preserve the original diagnostic bytes bound by manifest.json.
+* -text

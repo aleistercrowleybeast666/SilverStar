@@ -1,0 +1,633 @@
+{
+  "base_head": "a2617964bfdb1c062f4265776c3c15fc23e63597",
+  "source_commit": "0a2a56146e99282fd2aa62f9873a2d13bfb74b13",
+  "branch": "fix/nightly-user-ready-20261003",
+  "checks": {
+    "flp_final": {
+      "command": [
+        "apps/FLP/.venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_flp_plain.py",
+        "apps/FLP/tests/test_project_stage_progress_gui.py",
+        "apps/FLP/tests/test_plot_menu_lifetime.py",
+        "apps/FLP/tests/test_artifact_byte_progress.py",
+        "apps/FLP/tests/test_project_stage_progress.py",
+        "apps/FLP/tests/test_record_block_artifacts.py",
+        "apps/FLP/tests/test_audit_block_artifacts.py",
+        "apps/FLP/tests/test_project_artifact_boundaries.py",
+        "apps/FLP/tests/test_project_artifacts.py",
+        "apps/FLP/tests/test_run_deletion.py",
+        "-vv",
+        "-s",
+        "--basetemp=.work/nc08_flp_final"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "4b511e566ba31db1fb1294da0e637c8fabb0e54c",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 471.4072089000001
+    },
+    "flp_native_final": {
+      "command": [
+        "apps/FLP/.venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_probe.py",
+        "apps/FLP/tests/test_project_stage_progress_gui.py",
+        "apps/FLP/tests/test_plot_menu_lifetime.py",
+        "-vv",
+        "-s",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=.work/nc08_flp_native_final"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "4b511e566ba31db1fb1294da0e637c8fabb0e54c",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 118.32221879999997
+    },
+    "flp_worker_final": {
+      "command": [
+        "apps/FLP/.venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_probe.py",
+        "apps/FLP/tests/test_worker_retirement.py",
+        "apps/FLP/tests/test_task_publication_thread_affinity.py",
+        "-vv",
+        "-s",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=.work/nc08_flp_worker_final_1d857406"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "4b511e566ba31db1fb1294da0e637c8fabb0e54c",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 19.45972620000066
+    },
+    "gshc_final": {
+      "command": [
+        ".venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_gshc.py",
+        "apps/GSHC/tests/test_air_protocol.py",
+        "apps/GSHC/tests/test_navigation_readiness.py",
+        "apps/GSHC/tests/test_nrf24_transport.py",
+        "-vv",
+        "-s",
+        "--basetemp=.work/nc08_gshc_final"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "4b511e566ba31db1fb1294da0e637c8fabb0e54c",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 6.263113299999532
+    },
+    "scg_final": {
+      "command": [
+        ".venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_scg.py",
+        "apps/SCG/tests/test_feature_tiers.py",
+        "apps/SCG/tests/test_feature_tier_logging_policy.py",
+        "apps/SCG/tests/test_tier_device_boundaries.py",
+        "apps/SCG/tests/test_tier_device_gui.py",
+        "-vv",
+        "-s",
+        "--basetemp=apps/SCG/.work/nc08_final_d7f04b16"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "4b511e566ba31db1fb1294da0e637c8fabb0e54c",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 307.6919973999993
+    },
+    "flp_combined_v2": {
+      "command": [
+        "apps/FLP/.venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_probe.py",
+        "apps/FLP/tests/test_project_stage_progress_gui.py",
+        "apps/FLP/tests/test_plot_menu_lifetime.py",
+        "apps/FLP/tests/test_artifact_byte_progress.py",
+        "apps/FLP/tests/test_project_stage_progress.py",
+        "apps/FLP/tests/test_record_block_artifacts.py",
+        "apps/FLP/tests/test_audit_block_artifacts.py",
+        "apps/FLP/tests/test_project_artifact_boundaries.py",
+        "apps/FLP/tests/test_project_artifacts.py",
+        "apps/FLP/tests/test_run_deletion.py",
+        "apps/FLP/tests/test_worker_retirement.py",
+        "apps/FLP/tests/test_task_publication_thread_affinity.py",
+        "-vv",
+        "-s",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=.work/nc08_flp_combined_v2_48eaa929"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "2716d6ca727eceed327f5a0bc9478f1a65dcebfb",
+      "timeout_s": 900,
+      "exit_code": 1,
+      "elapsed_s": 476.9830539000013
+    },
+    "flp_combined_v3": {
+      "command": [
+        "apps/FLP/.venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_probe.py",
+        "apps/FLP/tests/test_project_stage_progress_gui.py",
+        "apps/FLP/tests/test_plot_menu_lifetime.py",
+        "apps/FLP/tests/test_artifact_byte_progress.py",
+        "apps/FLP/tests/test_project_stage_progress.py",
+        "apps/FLP/tests/test_record_block_artifacts.py",
+        "apps/FLP/tests/test_audit_block_artifacts.py",
+        "apps/FLP/tests/test_project_artifact_boundaries.py",
+        "apps/FLP/tests/test_project_artifacts.py",
+        "apps/FLP/tests/test_run_deletion.py",
+        "apps/FLP/tests/test_worker_retirement.py",
+        "apps/FLP/tests/test_task_publication_thread_affinity.py",
+        "-vv",
+        "-s",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=.work/v3_13fa3d92"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "2716d6ca727eceed327f5a0bc9478f1a65dcebfb",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 500.58282899999904
+    },
+    "flp_combined_v4": {
+      "command": [
+        "apps/FLP/.venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_probe.py",
+        "apps/FLP/tests/test_project_stage_progress_gui.py",
+        "apps/FLP/tests/test_plot_menu_lifetime.py",
+        "apps/FLP/tests/test_artifact_byte_progress.py",
+        "apps/FLP/tests/test_project_stage_progress.py",
+        "apps/FLP/tests/test_record_block_artifacts.py",
+        "apps/FLP/tests/test_audit_block_artifacts.py",
+        "apps/FLP/tests/test_project_artifact_boundaries.py",
+        "apps/FLP/tests/test_project_artifacts.py",
+        "apps/FLP/tests/test_run_deletion.py",
+        "apps/FLP/tests/test_worker_retirement.py",
+        "apps/FLP/tests/test_task_publication_thread_affinity.py",
+        "apps/FLP/tests/test_project_save_path_boundary.py",
+        "apps/FLP/tests/test_i18n_consistency.py",
+        "-vv",
+        "-s",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=.work/v4_a8253a7e"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "0a2a56146e99282fd2aa62f9873a2d13bfb74b13",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 527.8232487000005
+    },
+    "gnss_views_v2": {
+      "command": [
+        "apps/FLP/.venv/Scripts/python.exe",
+        "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_flp_plain.py",
+        "apps/FLP/tests/test_gnss_integrity.py",
+        "-vv",
+        "-s",
+        "--basetemp=.work/nc08_gnss_views_v2_90043ddb"
+      ],
+      "cwd": "D:\\python_software\\SilverStar",
+      "source_head": "2716d6ca727eceed327f5a0bc9478f1a65dcebfb",
+      "timeout_s": 900,
+      "exit_code": 0,
+      "elapsed_s": 9.495157900000777
+    }
+  },
+  "source_hash_mismatches": [],
+  "unchanged_scg_gshc_since_4b511e5": true,
+  "git_version": "git version 2.51.0.windows.1",
+  "hardware_actions": false,
+  "firmware_generated_or_modified": false,
+  "diagnostic_limitations": {
+    "pre4": "INTERRUPTED: online symbol/CRT diagnostic stalled; no completed test result",
+    "trace5": "exit 1; 13 passed, 2 failed, 2 errors; observer timing perturbation; no native attribution",
+    "flp_matrix1": "INTERRUPTED/NOT COMPLETED; no final exit or summary; reason unknown",
+    "pre_and_pre2": "pytest temporary directory access errors; no permission changes",
+    "pre3": "exit 0, 15 passed but cross-thread QBasicTimer warnings, not clean native lifecycle acceptance",
+    "native_abort": "NOT PROVEN: historical Aborted has no captured crash dump",
+    "windows_long_path": "v2 exit1: 117 passed/3 failed at 260-character record targets; ordinary replace/read/stat fail. v3 shorter root is separate, not a replacement. No system or identity/path-prefix changes.",
+    "portable_runners": "repository discovery/private-path import/UUID output handling adapted after initial runs; per-run JSON preserves actual executed argv. Assertions and test scopes unchanged."
+  },
+  "files": {
+    "add_path_message.py": {
+      "bytes": 688,
+      "sha256": "62578b61b6e55c688356eefc6b03eb57a59f41c92371a3264b91949ba72a9aa6"
+    },
+    "check_docs.py": {
+      "bytes": 1183,
+      "sha256": "57febdaf07b75f9a66866efa8b2deb63307968ce7717ce10987f387e3dae0322"
+    },
+    "closeout_test_paths.py": {
+      "bytes": 620,
+      "sha256": "109f192d10f065921f47216a69600b7ab1310345e109abb25aef90e952c4d403"
+    },
+    "doc_links.json": {
+      "bytes": 16837,
+      "sha256": "ce16b73079bb60a3bd34c5185eb0f5333325d02dae2f4c378ea9819200953742"
+    },
+    "env_dump.py": {
+      "bytes": 424,
+      "sha256": "04d4c99af5fcb87f7de5db764e71f1685ffc6c189b584a135d8d09bafcbe72b3"
+    },
+    "env_flp.json": {
+      "bytes": 441,
+      "sha256": "85ca9c1c18ea8855f6d46aed638d152d489c4cb63cf171356296e7b94f13655c"
+    },
+    "env_scg_gshc.json": {
+      "bytes": 433,
+      "sha256": "fa2d18fa649171d37d7417f3c19a993a9250a63722be17b23245ed2f2fa26628"
+    },
+    "final_driver.log": {
+      "bytes": 868,
+      "sha256": "15cd79ce8fed31853deb0d5abe1885ada732315806a9e37cb461fffe9e1a3dda"
+    },
+    "final_driver2.log": {
+      "bytes": 1776,
+      "sha256": "8a1f8ddb58b0483bf7b8a686e5d9c6aa23ce8969a9fe07b763296a41d8d62f75"
+    },
+    "final_driver3.log": {
+      "bytes": 1060,
+      "sha256": "3d51c6b083b40bdb3c4d336e4662aa9c537c5dfbff31068529f54d9f8ae2e8fa"
+    },
+    "flp_combined_v2.json": {
+      "bytes": 1038,
+      "sha256": "5d5dd313f7ae03a1de75bbd550d41aae229f6c4511cfe587910d4d7d0f25a238"
+    },
+    "flp_combined_v2.log": {
+      "bytes": 38328,
+      "sha256": "1afcd48483279628d853240d0ec95b676212c1184e684a4c2f819730d673d233"
+    },
+    "flp_combined_v3.json": {
+      "bytes": 1021,
+      "sha256": "d25bf3111bc070e36421527b6efafc85ac321ff90710de85e2efbdb56d54b3c4"
+    },
+    "flp_combined_v3.log": {
+      "bytes": 19363,
+      "sha256": "6a088c0d1dda9cd3b6a6aa1b2853f2ba1c52ea5f7f4a1132121f3255b895fd45"
+    },
+    "flp_combined_v4.json": {
+      "bytes": 1126,
+      "sha256": "f62d07824534f9f8e6441754a5a5e58c5fa054746e98395851a336caaf033cc5"
+    },
+    "flp_combined_v4.log": {
+      "bytes": 20281,
+      "sha256": "0ca8db9e42642b3324850909e3d22b0338faa18af6197742a8b55f13f34249d1"
+    },
+    "flp_final.json": {
+      "bytes": 878,
+      "sha256": "f25dd583583653d163d73b2faf99936d65458599883c30850db841d86a16b5a5"
+    },
+    "flp_final.log": {
+      "bytes": 14087,
+      "sha256": "9a2c2f476bdcbb416a0522ce25a0a6dda494f90aaa551d687431569bee88250c"
+    },
+    "flp_matrix1.log": {
+      "bytes": 12286,
+      "sha256": "b84d598fb977c831c0de946c4f3a1e32e3ef8116ca789704951b20ad83762445"
+    },
+    "flp_native_final.json": {
+      "bytes": 551,
+      "sha256": "27e39de98535fed69a229e5a40d3bec16894b666d33a82c0ee615aa2d5f85a74"
+    },
+    "flp_native_final.log": {
+      "bytes": 221051,
+      "sha256": "0cbe84a702ee69f367155796f32da3d359909b461c4622f6f7524fef99b62c93"
+    },
+    "flp_worker_final.json": {
+      "bytes": 564,
+      "sha256": "5053186a6ee1b67c51d21a8896cfc6969bfe9e1028ca0a778510e77e6571b410"
+    },
+    "flp_worker_final.log": {
+      "bytes": 2584,
+      "sha256": "345c321774fbf5e950da73d945b39aa73462763f30a2b56e07592873e383b22a"
+    },
+    "gnss_menu_pre.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "gnss_menu_pre.log": {
+      "bytes": 2578,
+      "sha256": "64c1d6d00acd2ea8878cc08845206bb601ded387ea9d774d2b225c8408ca979b"
+    },
+    "gnss_menus_post.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "gnss_menus_post.log": {
+      "bytes": 1125,
+      "sha256": "a42cbe04565e426b5c6bf0af01591400c15ad21e936cd5b7f3d8f5e67b3a55b7"
+    },
+    "gnss_views_v2.json": {
+      "bytes": 462,
+      "sha256": "395085451ca47ceb39e80b0e1d0ec6ad828c1c438075de4ec5b17660ab35310c"
+    },
+    "gnss_views_v2.log": {
+      "bytes": 2248,
+      "sha256": "d16506cc7443e0d32670960770bd41b9598663b336c5ce30ed26dac767b07bbf"
+    },
+    "gshc_final.json": {
+      "bytes": 536,
+      "sha256": "3b667e9f9f65bd0d530244bc91f9a05713303645b6745eab982ca3592b1d12cf"
+    },
+    "gshc_final.log": {
+      "bytes": 7272,
+      "sha256": "513959fb73112f047cca5979047175334119cb9e30192989c8b016a216866aa7"
+    },
+    "lifetime.jsonl": {
+      "bytes": 3357,
+      "sha256": "252d888c597e51fd41d5be778753b1ad2ed79f116164a8446f978de733c1a3da"
+    },
+    "lifetime_trace.py": {
+      "bytes": 1305,
+      "sha256": "39b288434c033cac2f7a9c3d1fb364febb7a78e0874a08311df8e11cf0bfd451"
+    },
+    "matrix_driver1.log": {
+      "bytes": 536,
+      "sha256": "67d16954e4939c2b7c6bb1d665fb49fe666c6e7cc517cf5de20f0f78d81fc335"
+    },
+    "menu_native_post.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "menu_native_post.jsonl": {
+      "bytes": 993,
+      "sha256": "8de732906e06b631af2a84944889db3e65c19ffa72359735f303e974b4539a83"
+    },
+    "menu_native_post.log": {
+      "bytes": 116,
+      "sha256": "567a9a741acd6c601ed4d7f1a3341985041fba2e550db68e7c49b8d0c1e680d4"
+    },
+    "menu_native_pre.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "menu_native_pre.log": {
+      "bytes": 268,
+      "sha256": "83a993383722b9317f47840424723d6922925824b9cf388212ebe8e1e709c5de"
+    },
+    "menu_native_pre2.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "menu_native_pre2.jsonl": {
+      "bytes": 971,
+      "sha256": "5a8576866fc4e508fd2d7b145e43e67a65cbca408412408cb0fb0d4c0d748439"
+    },
+    "menu_native_pre2.log": {
+      "bytes": 114,
+      "sha256": "b018975541d61147d27a146a79dfc496673acf0117e46759e105e4c2ad111f91"
+    },
+    "menu_native_probe.py": {
+      "bytes": 2097,
+      "sha256": "dd39d18b153b2d2020eb5edf11fb93d17c6fc9de5110e8a12752278c4288d6de"
+    },
+    "menus_post.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "menus_post.log": {
+      "bytes": 594,
+      "sha256": "699fc2a28ac80d19723e334101f7b52ca1588b97438edaa7d21373c44a8942e7"
+    },
+    "menus_pre.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "menus_pre.log": {
+      "bytes": 2457,
+      "sha256": "5484e4550cc3ce170552b7ef4c04a1e5c51536900a5e56c9ebe960ccc0a7c78d"
+    },
+    "native_hashes.json": {
+      "bytes": 1329,
+      "sha256": "7442545d1b4dba9eec4bd21506e9d299ad41bfa058b48f36f6d29df7265c1fd7"
+    },
+    "native_hashes.py": {
+      "bytes": 497,
+      "sha256": "7c11f6814e459e39646599103da4bca9b608934eb4564d27796f0d29a840d95b"
+    },
+    "normal_test_paths.py": {
+      "bytes": 896,
+      "sha256": "98525ae940fd5e735b9671f3ec593af4a47fad1798573283fc7fea9697fd6a81"
+    },
+    "owner1.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "owner1.log": {
+      "bytes": 9464,
+      "sha256": "8f8689f3fe333ae7c981acee8ae56c32ff99f487c0082a59ee5f4fa33a0eb7c9"
+    },
+    "owner2.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "owner2.log": {
+      "bytes": 1505,
+      "sha256": "910739221cb0a1fd5234132b0afe27eb69cc3aac7dac4a1c69a8d0362a4d0d9b"
+    },
+    "owner3.exit.txt": {
+      "bytes": 3,
+      "sha256": "df4e26a04a444901b95afef44e4a96cfae34690fff2ad2c66389c70079cdff2b"
+    },
+    "owner3.log": {
+      "bytes": 2330,
+      "sha256": "76c589c3973bb056e2fa9b222a04a9395039e8452cd6ec1b77d65cfc7daae8fd"
+    },
+    "owner4.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "owner4.log": {
+      "bytes": 1818,
+      "sha256": "7ae74458c1ded5d6edcac4ac5277b05067b609d24dade32ba96f4c5aaebfc9d9"
+    },
+    "path_gui_post.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "path_gui_post.log": {
+      "bytes": 1837,
+      "sha256": "ef346a4ff27a77e691c7622cb825b65169dcad26f90ba8c4b827b267d68332d6"
+    },
+    "path_gui_pre.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "path_gui_pre.log": {
+      "bytes": 17185,
+      "sha256": "506b1aaea9e1f80d252faf1b5d7ce33d38b7aa081d2914e2173068e0f5a38f4a"
+    },
+    "path_limits.json": {
+      "bytes": 1722,
+      "sha256": "108e0204044a9e75de4e0a74954c754fa7e50492e38ae8b05122fde71debd0b3"
+    },
+    "path_limits.py": {
+      "bytes": 596,
+      "sha256": "b3550151b853db6b4f006137d7b77706d82936a1de607d8b9c3d1d8a73e4f00d"
+    },
+    "path_probe.json": {
+      "bytes": 2194,
+      "sha256": "ab1c5434f70866683fc4e88298a1c7b9ed6c13a23ae2e64a4c7988cb9cd7b3ab"
+    },
+    "path_probe.py": {
+      "bytes": 1259,
+      "sha256": "2a123f8801d26ea6dd79b34795fbf97f83f46df8d14ff0a0e4940e04e6a1724a"
+    },
+    "pre.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "pre.log": {
+      "bytes": 7211,
+      "sha256": "7d70fffa04cd8a6ede6536e6324d5f935f71660b6cc076d82bfa6972275e618d"
+    },
+    "pre2.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "pre2.log": {
+      "bytes": 7219,
+      "sha256": "ecb2870807623425e255d18db500acac8601c92f5f931cc6293d01b9509f00a8"
+    },
+    "pre3.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "pre3.log": {
+      "bytes": 677624,
+      "sha256": "88bfc0dd4c4de86334c485f24f87a1acb2b44f1d2d88e488ee18fc2e7c8c243a"
+    },
+    "pre4.log": {
+      "bytes": 156,
+      "sha256": "2b87c144ab4e466c721213273f53538eac6272c1ec69e288900ab4e89d42f7d0"
+    },
+    "process_continuity_175109Z.txt": {
+      "bytes": 698,
+      "sha256": "cd305517fd1135cefb011196d709ea4afc711fa8545aa5d3bfabc89f5f25a05c"
+    },
+    "qt_messages.json": {
+      "bytes": 4590,
+      "sha256": "0a3596e644172933cd38ac8943b4380a13663237146a76267566325010b4504c"
+    },
+    "run_final.py": {
+      "bytes": 3485,
+      "sha256": "0dd1540248846900d97fe5f972af723f935e77ef960893065e118b374f3e9422"
+    },
+    "run_flp_plain.py": {
+      "bytes": 539,
+      "sha256": "2c5608725beb58c301b51b74f6ae3f58b6c8432c04ae24ae27f4ed4140604ed8"
+    },
+    "run_gshc.py": {
+      "bytes": 289,
+      "sha256": "6845eb004b84dbdbf3eaf04dfa7a2a352224126b312bdb1ba8dcd78569cd4191"
+    },
+    "run_matrix.py": {
+      "bytes": 2016,
+      "sha256": "b336e8974ab56cccfe8e7dbe2bfcd682def4e6726e976e65fe5ac0bef3a46df6"
+    },
+    "run_probe.py": {
+      "bytes": 3479,
+      "sha256": "295ec633317b2ee424dea1ce70d65537898f89b14c09c5d4931f62b4cb4f71c5"
+    },
+    "run_scg.py": {
+      "bytes": 214,
+      "sha256": "b7475bba9f21f56b8cbfc3cf20e4cdbdaedb65b8ac53cbae664dd5e4df2f9ddc"
+    },
+    "run_v2.py": {
+      "bytes": 2758,
+      "sha256": "87d27f455a49a9650699a08ea0c976d1b30515117f05d06a244da858f84be273"
+    },
+    "scg_final.json": {
+      "bytes": 607,
+      "sha256": "569391ba0b59eac655726f4106c2449bc449fe11cf79cd1951647222de19c794"
+    },
+    "scg_final.log": {
+      "bytes": 13090,
+      "sha256": "df2c596c09148f9db99a1243b50845e7820bbec4570258e8eb1688c1d45e4936"
+    },
+    "scg_matrix1.json": {
+      "bytes": 601,
+      "sha256": "3501bfc551dcc338117b5b7409be2d54e676f47f86080250ea6e488f143fe9d8"
+    },
+    "scg_matrix1.log": {
+      "bytes": 13090,
+      "sha256": "cd4e0c4fdaece4a6070293ab2b39d3bc4bda4a5e78b20c0a56f730c92182f83c"
+    },
+    "source_hashes_final.json": {
+      "bytes": 356978,
+      "sha256": "24416acd08043577cfae9fcee8d1d29ae04dec8ec2d5acacdd845285732cf126"
+    },
+    "source_hashes_v2.json": {
+      "bytes": 356978,
+      "sha256": "636792170fe0caf5b9504f3af5102c146d2339c51cb4a9b0419c2dfd79afbbe7"
+    },
+    "source_hashes_v4.json": {
+      "bytes": 357102,
+      "sha256": "4433b1b9cb03003297a4008fa60116f4b8d784f5bde8a639b6a22b988ccc4cde"
+    },
+    "summarize_qt.py": {
+      "bytes": 1001,
+      "sha256": "67e2cac704ccd6ceed7e28e2759e5bb410edd408f042cd596306d0a9ad1da17c"
+    },
+    "symbolize.log": {
+      "bytes": 633,
+      "sha256": "f2db64219b00f35b4f792aa6034804fb4c02a9a15bba72cbdd6ce0d33a9fdaeb"
+    },
+    "symbolize.py": {
+      "bytes": 1806,
+      "sha256": "c14c551fd657103cd1d022fad8321dc1132df06c4b08c54f3b6b8bbbcfbeecfc"
+    },
+    "symbolize2.log": {
+      "bytes": 1116,
+      "sha256": "673ca7502a39023361cbc2a00255b71d404be84cdb155503f6dd060850e80ffa"
+    },
+    "test_ownership_probe.py": {
+      "bytes": 1296,
+      "sha256": "399af80b72c2c3aad53fc2a6258fbd1552517a408af3a1324735b0d0a26b484c"
+    },
+    "trace5.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "trace5.log": {
+      "bytes": 13786,
+      "sha256": "58fb8992fd2daf09a33cf13b05f85131514b896b5286091dd1d7744f029ccd6a"
+    },
+    "v2_driver.log": {
+      "bytes": 1362,
+      "sha256": "0ad450e8ce9aa40e9e09a182b3c570679ca58722d0d82da0e5640bad0c1365c5"
+    },
+    "v3_driver.log": {
+      "bytes": 923,
+      "sha256": "508c67f5a9311b2a2bb77e87104321d07fec965bf0f658bba5c35a256568dcc2"
+    },
+    "v4_driver.log": {
+      "bytes": 1018,
+      "sha256": "26b6aac43f97a6ab92daa588c732f2e4739bdcd397e7f4515e62a1c0194440cf"
+    },
+    "verify_snapshot.py": {
+      "bytes": 1134,
+      "sha256": "af9dd682d7101d216b88d8cc91ac30a6bc94580bc030b02ee722bbe8c7dd6fd3"
+    },
+    "doc_links_pre_archive.json": {
+      "bytes": 17880,
+      "sha256": "dbdb0b1f1891268c26dc9761942fa61d21840408d16e6db9cb09f75e08c03188"
+    },
+    "doc_links_final.json": {
+      "bytes": 17975,
+      "sha256": "fb14b9ab51d0d70a1dc08ef091fdcdc16700fc4a47eaee6736866b7cdf76e614"
+    },
+    ".gitattributes": {
+      "bytes": 73,
+      "sha256": "bf669f16c2c8ff433318de9a0898b82b48810d5e6a21943be62e5b206f50861d"
+    }
+  },
+  "inventory_files": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  }
+}

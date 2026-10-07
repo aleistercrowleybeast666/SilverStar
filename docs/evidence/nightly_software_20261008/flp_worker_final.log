@@ -1,0 +1,30 @@
+ENV 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)] D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe 2.4.1
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 5 items
+
+apps\FLP\tests\test_worker_retirement.py::test_finished_does_not_retire_or_allow_close_until_actual_return QT QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_worker_retirement.py::test_old_sender_cannot_finish_cancel_or_publish_into_active_task QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_worker_retirement.py::test_nested_result_event_loop_keeps_callbacks_until_publication_returns QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_task_publication_thread_affinity.py::test_real_qthreadpool_result_publication_runs_on_gui_thread QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+Actual QThreadPool affinity: {'work_qt_gui': False, 'work_python_thread': 22916, 'callback_qt_gui': True, 'callback_python_thread': 25340, 'result': 'thread-affinity-result', 'dispatch_frames': ['_Task_ResultPublish', '_Task_ResultDispatch'], 'publish_qt_gui': True, 'publish_python_thread': 25340} gui_python_thread: 25340
+PASSED
+apps\FLP\tests\test_task_publication_thread_affinity.py::test_completed_worker_releases_its_payload_after_gc QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+Completed worker after GC: worker alive= True , captured payload alive= False
+PASSED
+
+============================= 5 passed in 17.44s ==============================

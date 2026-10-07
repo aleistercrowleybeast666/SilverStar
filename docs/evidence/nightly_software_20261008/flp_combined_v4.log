@@ -1,0 +1,203 @@
+ENV 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)] D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe 2.4.1
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 124 items
+
+apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False] QT QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_failed_open_never_reports_complete QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_repeated_save_open_and_import_preserve_active_transaction QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[clean_close] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_close_option] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_after_commit] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[snapshot_removed] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_plot_menu_lifetime.py::test_plot_menus_are_native_owned_and_destroyed_in_gui_thread PASSED
+apps\FLP\tests\test_plot_menu_lifetime.py::test_gnss_secondary_view_menu_is_native_owned PASSED
+apps\FLP\tests\test_artifact_byte_progress.py::test_hash_reports_actual_bytes PASSED
+apps\FLP\tests\test_artifact_byte_progress.py::test_array_compression_reports_chunks_and_cancels_before_publication PASSED
+apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[C] PASSED
+apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[F] PASSED
+apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[strided] PASSED
+apps\FLP\tests\test_project_stage_progress.py::test_save_reports_real_stages_and_never_publishes_worker_complete[False] PASSED
+apps\FLP\tests\test_project_stage_progress.py::test_save_reports_real_stages_and_never_publishes_worker_complete[True] PASSED
+apps\FLP\tests\test_project_stage_progress.py::test_cancel_at_reported_commit_keeps_old_project PASSED
+apps\FLP\tests\test_project_stage_progress.py::test_commit_failure_never_reports_complete PASSED
+apps\FLP\tests\test_project_stage_progress.py::test_cancel_after_atomic_commit_cannot_become_cancelled_save PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_flat_limit_failure_then_column_blocks_preserve_all_typed_frozen_records PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_multiple_blocks_cannot_reset_cumulative_budgets[MAX_OBJECTS] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_multiple_blocks_cannot_reset_cumulative_budgets[MAX_LIVE_BYTES] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_multiple_blocks_cannot_reset_cumulative_budgets[MAX_MANIFEST_BYTES] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_multiple_blocks_cannot_reset_cumulative_budgets[MAX_RECORD_BLOCKS] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_block_admission_rejects_damage_and_hostile_references[missing] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_block_admission_rejects_damage_and_hostile_references[corrupt] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_block_admission_rejects_damage_and_hostile_references[traversal] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_block_admission_rejects_damage_and_hostile_references[expanded_size] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_block_admission_rejects_damage_and_hostile_references[count] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_storage_version_one_remains_readable PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_save_verifies_without_full_reader_and_explicit_reopen_uses_reader PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_one_use_verified_write_receipt_cannot_mask_corruption[array] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_one_use_verified_write_receipt_cannot_mask_corruption[block] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_one_use_verified_write_receipt_cannot_mask_corruption[reference] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_wide_record_blocks_reduce_rows_before_any_array_publication PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_python_float_record_payload_preserves_signed_zero_and_nan_bits[bits0] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_python_float_record_payload_preserves_signed_zero_and_nan_bits[bits1] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_python_float_record_payload_preserves_signed_zero_and_nan_bits[bits2] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_python_float_record_payload_preserves_signed_zero_and_nan_bits[bits3] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_payload_key_set_and_insertion_order_roundtrip[payloads0] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_payload_key_set_and_insertion_order_roundtrip[payloads1] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_payload_key_set_and_insertion_order_roundtrip[payloads2] PASSED
+apps\FLP\tests\test_record_block_artifacts.py::test_record_payload_key_set_and_insertion_order_roundtrip[payloads3] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_diagnostics_shaped_collections_fit_original_cumulative_budget PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_audit_admission_keeps_cumulative_caps[objects] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_audit_admission_keeps_cumulative_caps[memory] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_audit_admission_keeps_cumulative_caps[blocks] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_audit_block_hash_path_expanded_size_and_version_are_strict[corrupt] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_audit_block_hash_path_expanded_size_and_version_are_strict[size] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_audit_block_hash_path_expanded_size_and_version_are_strict[path] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_audit_block_hash_path_expanded_size_and_version_are_strict[version] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_full_synthetic_algorithm_result_preserves_all_fields PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_changed_empty_layouts_big_integers_bytes_and_dict_read_interface[list] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_changed_empty_layouts_big_integers_bytes_and_dict_read_interface[tuple] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_changed_empty_layouts_big_integers_bytes_and_dict_read_interface[frozen] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_v1_and_v2_plain_numerical_artifacts_remain_readable PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_big_endian_audit_ndarrays_roundtrip_across_real_block_boundary[f8] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_big_endian_audit_ndarrays_roundtrip_across_real_block_boundary[f4] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_big_endian_audit_ndarrays_roundtrip_across_real_block_boundary[i4] PASSED
+apps\FLP\tests\test_audit_block_artifacts.py::test_big_endian_audit_ndarrays_roundtrip_across_real_block_boundary[u2] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_save_cannot_rebind_old_computation_to_changed_log PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_file_replacement_before_replay_does_not_relabel_parsed_arrays PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_cache_hit_rechecks_source_and_cancellation_before_publication[append] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_cache_hit_rechecks_source_and_cancellation_before_publication[cancel] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_legal_kf6_revision_two_cannot_restore_under_revision_one_config PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_save_data_toggle_retains_files_configurations_and_can_enable_again PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_low_space_precheck_preserves_previous_document PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_scalar_tag_cannot_allocate_or_expand_an_array PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_live_budget_counts_every_timeseries_copy_and_rejects_zero_row_width PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_precancel_does_not_stat_or_hash_any_file PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[fifo] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[reparse] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_configuration_only_missing_primary_stays_unavailable QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[corrupt] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[parser_revision] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[changed_log] PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_manual_cache_cleanup_preserves_active_results_and_unknown_files PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_background_save_captures_option_and_keeps_gui_responsive QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_artifact_boundaries.py::test_unsaved_close_save_waits_for_background_transaction QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_artifacts.py::test_four_completed_algorithms_and_two_distinct_runs_roundtrip PASSED
+apps\FLP\tests\test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[cancel] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[disk_full] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[array_corrupt] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[manifest_corrupt] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_artifact_failures_leave_committed_project_intact[path_escape] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[log] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[decoder] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[engine] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_numerical_identity_mismatch_does_not_recompute[parameters] PASSED
+apps\FLP\tests\test_project_artifacts.py::test_object_arrays_and_hostile_npy_shape_are_rejected_before_allocation PASSED
+apps\FLP\tests\test_project_artifacts.py::test_gui_reopen_restores_every_run_and_two_sources_without_replay QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_project_artifacts.py::test_valid_full_parse_cache_never_calls_parser_and_preserves_explorer PASSED
+apps\FLP\tests\test_run_deletion.py::test_removed_highest_index_is_never_reused_and_undo_is_exact PASSED
+apps\FLP\tests\test_run_deletion.py::test_delete_save_reopen_recover_and_reserved_index[True] PASSED
+apps\FLP\tests\test_run_deletion.py::test_delete_save_reopen_recover_and_reserved_index[False] PASSED
+apps\FLP\tests\test_run_deletion.py::test_failed_save_keeps_committed_references_and_window_undo[cancel] PASSED
+apps\FLP\tests\test_run_deletion.py::test_failed_save_keeps_committed_references_and_window_undo[disk_full] PASSED
+apps\FLP\tests\test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[True] PASSED
+apps\FLP\tests\test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[False] PASSED
+apps\FLP\tests\test_run_deletion.py::test_missing_recovery_candidate_never_substitutes_another_run PASSED
+apps\FLP\tests\test_run_deletion.py::test_old_v3_configuration_only_run_indices_are_reserved PASSED
+apps\FLP\tests\test_run_deletion.py::test_gui_cancel_delete_primary_secondary_busy_and_undo QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_run_deletion.py::test_gui_saved_recovery_runs_off_gui_thread_and_reopen_retains_missing_primary QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_run_deletion.py::test_hostile_recovery_history_is_rejected[traversal] PASSED
+apps\FLP\tests\test_run_deletion.py::test_hostile_recovery_history_is_rejected[identity] PASSED
+apps\FLP\tests\test_run_deletion.py::test_hostile_recovery_history_is_rejected[deleted_configuration] PASSED
+apps\FLP\tests\test_worker_retirement.py::test_finished_does_not_retire_or_allow_close_until_actual_return QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_worker_retirement.py::test_old_sender_cannot_finish_cancel_or_publish_into_active_task QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_worker_retirement.py::test_nested_result_event_loop_keeps_callbacks_until_publication_returns QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+PASSED
+apps\FLP\tests\test_task_publication_thread_affinity.py::test_real_qthreadpool_result_publication_runs_on_gui_thread QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+Actual QThreadPool affinity: {'work_qt_gui': False, 'work_python_thread': 9956, 'callback_qt_gui': True, 'callback_python_thread': 14100, 'result': 'thread-affinity-result', 'dispatch_frames': ['_Task_ResultPublish', '_Task_ResultDispatch'], 'publish_qt_gui': True, 'publish_python_thread': 14100} gui_python_thread: 14100
+PASSED
+apps\FLP\tests\test_task_publication_thread_affinity.py::test_completed_worker_releases_its_payload_after_gc QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+Completed worker after GC: worker alive= True , captured payload alive= False
+PASSED
+apps\FLP\tests\test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[False] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+OLD_PROJECT_REOPEN_AND_SOURCE_IDENTITY_PRESERVED False
+SAVE_FAILURE_STATUS 失败
+PASSED
+apps\FLP\tests\test_project_save_path_boundary.py::test_long_artifact_path_failure_is_actionable_and_preserves_old_project[True] QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QT QtWarningMsg: QOpenGLWidget is not supported on this platform.
+OLD_PROJECT_REOPEN_AND_SOURCE_IDENTITY_PRESERVED True
+SAVE_FAILURE_STATUS 失败
+PASSED
+apps\FLP\tests\test_i18n_consistency.py::test_catalogs_match_and_literal_translation_calls_resolve PASSED
+apps\FLP\tests\test_i18n_consistency.py::test_retired_diagnostic_product_paths_are_absent PASSED
+
+======================= 124 passed in 525.41s (0:08:45) =======================

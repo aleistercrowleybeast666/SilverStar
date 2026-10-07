@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\nightly_closeout_20261008\run_final.py", line 30, in <module>
+    source_hash = {p: hashlib.sha256((repo/p).read_bytes()).hexdigest() for p in files}
+                                     ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 782, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument: 'D:\\python_software\\SilverStar\\"apps\\FLP\\346\\211\\223\\345\\214\\205.bat"'

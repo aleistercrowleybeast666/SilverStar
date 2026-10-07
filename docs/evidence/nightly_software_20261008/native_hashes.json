@@ -1,0 +1,26 @@
+{
+  "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\PySide6\\QtCore.pyd": {
+    "bytes": 3270368,
+    "sha256": "d2bd091416eb60b1fd051cc65a42f3efd4db5521b1f1479bba11d44c4d537125"
+  },
+  "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\PySide6\\QtWidgets.pyd": {
+    "bytes": 4805344,
+    "sha256": "e09a727f70d027c5dcef08e4bb1c2016d47550104e3ebf3cc1fb36787b1403e7"
+  },
+  "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\PySide6\\Qt6Core.dll": {
+    "bytes": 10098912,
+    "sha256": "c7f6a8b9f2f4e67e50f37662102be9e987a7a061f882112a4982a2446d83662f"
+  },
+  "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\PySide6\\Qt6Widgets.dll": {
+    "bytes": 6572768,
+    "sha256": "1ada9f5b3ca6828f1301ce56cf7fc95eb240b53bfdea15a9cef0cfa6b2077389"
+  },
+  "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\shiboken6\\shiboken6.abi3.dll": {
+    "bytes": 382688,
+    "sha256": "0fe96e805a6001efde58818a1ce6cb425227f74be72f3b10d7c06c7435fefa5a"
+  },
+  "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python314.dll": {
+    "bytes": 6760280,
+    "sha256": "f1722bd369d79fecbc85f3ed2790c30c330b9413fd74332f95b086e60dfacc2a"
+  }
+}

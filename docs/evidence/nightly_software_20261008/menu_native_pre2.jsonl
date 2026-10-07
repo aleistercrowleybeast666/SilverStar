@@ -1,0 +1,9 @@
+{"kind": "qt", "thread": 4260, "gui": 4260, "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig."}
+{"kind": "menu", "thread": 4260, "gui": 4260, "index": 0, "parentless": true, "python_owned": true}
+{"kind": "menu", "thread": 4260, "gui": 4260, "index": 1, "parentless": true, "python_owned": true}
+{"kind": "after_native_window_delete", "thread": 4260, "gui": 4260, "menu_valid": [true, true]}
+{"kind": "destroyed", "thread": 4260, "gui": 4260, "index": 1}
+{"kind": "destroyed", "thread": 4260, "gui": 4260, "index": 0}
+{"kind": "gc_start", "thread": 20156, "gui": 4260}
+{"kind": "gc_done", "thread": 20156, "gui": 4260, "count": 0}
+{"kind": "summary", "thread": 4260, "gui": 4260, "worker_alive": false, "wrong": 0, "remaining": [false, false]}

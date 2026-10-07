@@ -1,0 +1,25 @@
+
+Id         : 9548
+CPU        : 0
+StartTime  : 2026/10/8 1:47:57
+WorkingSet : 4194304
+Path       : D:\python_software\SilverStar\.venv\Scripts\python.exe
+
+Id         : 22140
+CPU        : 137.1875
+StartTime  : 2026/10/8 1:47:58
+WorkingSet : 292806656
+Path       : C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+
+Id         : 22552
+CPU        : 0.03125
+StartTime  : 2026/10/8 1:47:58
+WorkingSet : 4190208
+Path       : D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+
+Id         : 27444
+CPU        : 0.71875
+StartTime  : 2026/10/8 1:47:57
+WorkingSet : 19779584
+Path       : C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+

@@ -1,0 +1,103 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 86 items
+
+apps\SCG\tests\test_feature_tiers.py::test_tier_algorithm_matrix_and_pure_ins[full-allowed0] PASSED
+apps\SCG\tests\test_feature_tiers.py::test_tier_algorithm_matrix_and_pure_ins[standard-allowed1] PASSED
+apps\SCG\tests\test_feature_tiers.py::test_tier_algorithm_matrix_and_pure_ins[compact-allowed2] PASSED
+apps\SCG\tests\test_feature_tiers.py::test_tier_algorithm_matrix_and_pure_ins[minimal-allowed3] PASSED
+apps\SCG\tests\test_feature_tiers.py::test_legacy_roundtrip_and_single_authority PASSED
+apps\SCG\tests\test_feature_tiers.py::test_switch_preserves_algorithms_parameters_devices_and_current_mcu PASSED
+apps\SCG\tests\test_feature_tiers.py::test_compact_keeps_gnss_maintenance_and_reviewed_log_geometry PASSED
+apps\SCG\tests\test_feature_tiers.py::test_minimal_changes_are_reversible_and_keep_pure_ins PASSED
+apps\SCG\tests\test_feature_tiers.py::test_minimal_owned_snapshot_keeps_all_descriptors_with_small_queues[None] PASSED
+apps\SCG\tests\test_feature_tiers.py::test_minimal_owned_snapshot_keeps_all_descriptors_with_small_queues[silverstar.algorithm.estimator.sf6] PASSED
+apps\SCG\tests\test_feature_tiers.py::test_malformed_compact_algorithm_blocks_generation PASSED
+apps\SCG\tests\test_feature_tiers.py::test_compact_power_contract_matches_selected_implementation PASSED
+apps\SCG\tests\test_feature_tiers.py::test_preset_recursion_rejected PASSED
+apps\SCG\tests\test_feature_tiers.py::test_dedicated_barometer_precedes_embedded_endpoint_without_hiding_imu PASSED
+apps\SCG\tests\test_feature_tiers.py::test_dedicated_priority_reconciles_retained_embedded_source_override PASSED
+apps\SCG\tests\test_feature_tiers.py::test_first_page_control_and_log_states PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-None-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-None-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-None-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-None-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-silverstar.algorithm.estimator.sf6-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-silverstar.algorithm.estimator.sf6-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-silverstar.algorithm.estimator.sf6-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[False-silverstar.algorithm.estimator.sf6-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-None-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-None-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-None-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-None-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-silverstar.algorithm.estimator.sf6-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-silverstar.algorithm.estimator.sf6-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-silverstar.algorithm.estimator.sf6-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_effective_tier_logging_policy_keeps_retained_choices[True-silverstar.algorithm.estimator.sf6-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_legacy_load_and_save_preserve_choices_under_new_policy[None-compact-all_streams] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_legacy_load_and_save_preserve_choices_under_new_policy[None-minimal-sf6_minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_legacy_load_and_save_preserve_choices_under_new_policy[silverstar.algorithm.estimator.sf6-compact-all_streams] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_legacy_load_and_save_preserve_choices_under_new_policy[silverstar.algorithm.estimator.sf6-minimal-sf6_minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_generated_decoder_matches_effective_policy_and_keeps_catalog[None-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_generated_decoder_matches_effective_policy_and_keeps_catalog[None-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_generated_decoder_matches_effective_policy_and_keeps_catalog[silverstar.algorithm.estimator.sf6-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_generated_decoder_matches_effective_policy_and_keeps_catalog[silverstar.algorithm.estimator.sf6-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_gui_sf6_pure_ins_switch_and_full_standard_restore[compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_gui_sf6_pure_ins_switch_and_full_standard_restore[minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[None-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[None-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[None-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[None-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.kf6-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.kf6-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.kf6-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.kf6-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.sf6-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.sf6-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.sf6-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.sf6-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.eskf15-full] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.eskf15-standard] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.eskf15-compact] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_first_release_four_algorithm_tier_generation_matrix[silverstar.algorithm.estimator.eskf15-minimal] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_algorithm_switch_roundtrip_preserves_owned_choices[False] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_algorithm_switch_roundtrip_preserves_owned_choices[True] PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_active_logging_validation_keeps_unavailable_and_cadence_errors PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_logging_protocol_restore_keeps_selected_algorithm_defaults PASSED
+apps\SCG\tests\test_feature_tier_logging_policy.py::test_full_gui_views_follow_algorithm_ownership_without_enabling_new_strategies PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_switch_import_and_service_preserve_invalid_devices_and_block_generation[compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_switch_import_and_service_preserve_invalid_devices_and_block_generation[minimal] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_each_sensor_class_is_bounded_even_without_endpoint_descriptors PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_return_to_saved_tier_does_not_hide_new_full_devices PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.imu.mpu6050-compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.imu.mpu6050-minimal] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.gnss.neo_m9n-compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.gnss.neo_m9n-minimal] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.barometer.bmp280-compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.barometer.bmp280-minimal] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.magnetometer.mmc5983ma-compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.magnetometer.mmc5983ma-minimal] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.sensor.input_voltage-compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.sensor.input_voltage-minimal] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.telemetry.sx1281-compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph[silverstar.device.telemetry.sx1281-minimal] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_single_gnss_rule_is_shared_by_reconcile_and_graph[full] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_single_gnss_rule_is_shared_by_reconcile_and_graph[standard] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_single_gnss_rule_is_shared_by_reconcile_and_graph[compact] PASSED
+apps\SCG\tests\test_tier_device_boundaries.py::test_single_gnss_rule_is_shared_by_reconcile_and_graph[minimal] PASSED
+apps\SCG\tests\test_tier_device_gui.py::test_switch_delete_add_restore_and_minimal_gnss_entrypoints PASSED
+apps\SCG\tests\test_tier_device_gui.py::test_import_save_reopen_retains_conflicts_and_notice[compact] PASSED
+apps\SCG\tests\test_tier_device_gui.py::test_import_save_reopen_retains_conflicts_and_notice[minimal] PASSED
+
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 86 passed, 1 warning in 317.94s (0:05:17) ==================

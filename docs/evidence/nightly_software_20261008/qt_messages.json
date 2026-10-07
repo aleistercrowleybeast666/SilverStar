@@ -1,0 +1,148 @@
+{
+  "pre3": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QBasicTimer::start: Timers cannot be started from another thread",
+        "count": 102
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QOpenGLWidget is not supported on this platform.",
+        "count": 30
+      }
+    ],
+    "basic_timer_warning_count": 102,
+    "fatal_message_count": 0,
+    "native_frame_count": 6528
+  },
+  "flp_native_final": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QBasicTimer::start: QBasicTimer can only be used with threads started with QThread",
+        "count": 8
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QBasicTimer::start: Timers cannot be started from another thread",
+        "count": 10
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QOpenGLWidget is not supported on this platform.",
+        "count": 32
+      }
+    ],
+    "basic_timer_warning_count": 18,
+    "fatal_message_count": 0,
+    "native_frame_count": 1152
+  },
+  "flp_worker_final": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QOpenGLWidget is not supported on this platform.",
+        "count": 10
+      }
+    ],
+    "basic_timer_warning_count": 0,
+    "fatal_message_count": 0,
+    "native_frame_count": 0
+  },
+  "gnss_menus_post": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      }
+    ],
+    "basic_timer_warning_count": 0,
+    "fatal_message_count": 0,
+    "native_frame_count": 0
+  },
+  "flp_combined_v2": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QOpenGLWidget is not supported on this platform.",
+        "count": 56
+      }
+    ],
+    "basic_timer_warning_count": 0,
+    "fatal_message_count": 0,
+    "native_frame_count": 0
+  },
+  "flp_combined_v3": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QOpenGLWidget is not supported on this platform.",
+        "count": 56
+      }
+    ],
+    "basic_timer_warning_count": 0,
+    "fatal_message_count": 0,
+    "native_frame_count": 0
+  },
+  "path_gui_post": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QOpenGLWidget is not supported on this platform.",
+        "count": 4
+      }
+    ],
+    "basic_timer_warning_count": 0,
+    "fatal_message_count": 0,
+    "native_frame_count": 0
+  },
+  "flp_combined_v4": {
+    "messages": [
+      {
+        "severity": "QtWarningMsg",
+        "text": "QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.",
+        "count": 1
+      },
+      {
+        "severity": "QtWarningMsg",
+        "text": "QOpenGLWidget is not supported on this platform.",
+        "count": 60
+      }
+    ],
+    "basic_timer_warning_count": 0,
+    "fatal_message_count": 0,
+    "native_frame_count": 0
+  }
+}

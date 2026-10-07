@@ -1,0 +1,34 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 1 item
+
+apps\FLP\tests\test_plot_menu_lifetime.py::test_gnss_secondary_view_menu_is_native_owned FAILED
+
+================================== FAILURES ===================================
+________________ test_gnss_secondary_view_menu_is_native_owned ________________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x0000017F78B90EC0>
+
+    def test_gnss_secondary_view_menu_is_native_owned(qtbot):
+        from silverstar_flp.core.i18n import Translator
+        from silverstar_flp.ui.gnss_integrity import GnssIntegrityPage
+        page = GnssIntegrityPage(Translator('zh_CN'))
+        qtbot.addWidget(page)
+        menu = page._speed_view.menu
+>       assert menu.parent() is page.quality_plot
+E       assert None is <pyqtgraph.widgets.PlotWidget.PlotWidget(0x17f77ead2b0) at 0x0000017F78C2DC80>
+E        +  where None = <built-in method parent of ViewBoxMenu object at 0x0000017F78C58B00>()
+E        +    where <built-in method parent of ViewBoxMenu object at 0x0000017F78C58B00> = <pyqtgraph.graphicsItems.ViewBox.ViewBoxMenu.ViewBoxMenu(0x17f780b94c0) at 0x0000017F78C58B00>.parent
+E        +  and   <pyqtgraph.widgets.PlotWidget.PlotWidget(0x17f77ead2b0) at 0x0000017F78C2DC80> = <silverstar_flp.ui.gnss_integrity.GnssIntegrityPage(0x17f77d709b0) at 0x0000017F78BC8C40>.quality_plot
+
+apps\FLP\tests\test_plot_menu_lifetime.py:48: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_plot_menu_lifetime.py::test_gnss_secondary_view_menu_is_native_owned - assert None is <pyqtgraph.widgets.PlotWidget.PlotWidget(0x17f77ead2b0) at 0x0000017F78C2DC80>
+ +  where None = <built-in method parent of ViewBoxMenu object at 0x0000017F78C58B00>()
+ +    where <built-in method parent of ViewBoxMenu object at 0x0000017F78C58B00> = <pyqtgraph.graphicsItems.ViewBox.ViewBoxMenu.ViewBoxMenu(0x17f780b94c0) at 0x0000017F78C58B00>.parent
+ +  and   <pyqtgraph.widgets.PlotWidget.PlotWidget(0x17f77ead2b0) at 0x0000017F78C2DC80> = <silverstar_flp.ui.gnss_integrity.GnssIntegrityPage(0x17f77d709b0) at 0x0000017F78BC8C40>.quality_plot
+============================== 1 failed in 4.10s ==============================

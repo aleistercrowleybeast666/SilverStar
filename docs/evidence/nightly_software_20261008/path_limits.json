@@ -1,0 +1,32 @@
+[
+  {
+    "paths": [
+      "D:\\python_software\\SilverStar\\.work\\nc08_flp_combined_v2_48eaa929\\test_save_data_toggle_retains__5ebc37bc\\save-as\\again.ssflp.artifacts\\generation-2b04f5f923224c2bb9abe26a465d52fc\\records.tmp",
+      "D:\\python_software\\SilverStar\\.work\\nc08_flp_combined_v2_48eaa929\\test_save_data_toggle_retains__5ebc37bc\\save-as\\again.ssflp.artifacts\\generation-2b04f5f923224c2bb9abe26a465d52fc\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz"
+    ],
+    "lengths": [
+      191,
+      260
+    ]
+  },
+  {
+    "paths": [
+      "D:\\python_software\\SilverStar\\.work\\nc08_flp_combined_v2_48eaa929\\test_save_as_recovery_dependen_04f2c540\\origin\\flight.ssflp.artifacts\\generation-17b53a6ad8f5411dbb1c4c4a6f098282\\records.tmp",
+      "D:\\python_software\\SilverStar\\.work\\nc08_flp_combined_v2_48eaa929\\test_save_as_recovery_dependen_04f2c540\\origin\\flight.ssflp.artifacts\\generation-17b53a6ad8f5411dbb1c4c4a6f098282\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz"
+    ],
+    "lengths": [
+      191,
+      260
+    ]
+  },
+  {
+    "paths": [
+      "D:\\python_software\\SilverStar\\.work\\nc08_flp_combined_v2_48eaa929\\test_save_as_recovery_dependen_977b2279\\origin\\flight.ssflp.artifacts\\generation-0b2d6f104064472a8695dbc56632a2ff\\records.tmp",
+      "D:\\python_software\\SilverStar\\.work\\nc08_flp_combined_v2_48eaa929\\test_save_as_recovery_dependen_977b2279\\origin\\flight.ssflp.artifacts\\generation-0b2d6f104064472a8695dbc56632a2ff\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz"
+    ],
+    "lengths": [
+      191,
+      260
+    ]
+  }
+]

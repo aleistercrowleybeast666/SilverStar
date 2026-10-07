@@ -1,0 +1,24 @@
+{
+  "source_length": 219,
+  "destination_length": 288,
+  "ordinary_replace": {
+    "winerror": 3,
+    "error": "[WinError 3] \u7cfb\u7edf\u627e\u4e0d\u5230\u6307\u5b9a\u7684\u8def\u5f84\u3002: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\path_probe_nc08\\\\ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\records.tmp' -> 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\path_probe_nc08\\\\ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.records.json.gz'"
+  },
+  "extended_replace": "PASS",
+  "stat": {
+    "winerror": 3,
+    "error": "[WinError 3] \u7cfb\u7edf\u627e\u4e0d\u5230\u6307\u5b9a\u7684\u8def\u5f84\u3002: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\path_probe_nc08\\\\ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.records.json.gz'"
+  },
+  "read": {
+    "winerror": null,
+    "error": "[Errno 2] No such file or directory: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\path_probe_nc08\\\\ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.records.json.gz'"
+  },
+  "glob": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.records.json.gz"
+  ],
+  "unlink": {
+    "winerror": 3,
+    "error": "[WinError 3] \u7cfb\u7edf\u627e\u4e0d\u5230\u6307\u5b9a\u7684\u8def\u5f84\u3002: 'D:\\\\python_software\\\\SilverStar\\\\.work\\\\path_probe_nc08\\\\ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\\\\aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.records.json.gz'"
+  }
+}

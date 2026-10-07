@@ -1,0 +1,25 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 15 items
+
+apps\FLP\tests\test_gnss_integrity.py::test_horizontal_and_vertical_native_consistency_have_independent_evidence PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_vertical_signed_error_and_short_position_loss_preserve_reference PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_vertical_velocity_chain_gap_resets_reference_without_changing_horizontal PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_invalid_origin_is_rejected_by_both_diagnostics PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_export_has_exactly_three_current_pages[en_US] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_export_has_exactly_three_current_pages[zh_CN] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[1-en_US-light] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[1-en_US-dark] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[1-zh_CN-light] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[1-zh_CN-dark] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[2-en_US-light] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[2-en_US-dark] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[2-zh_CN-light] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_gui_three_combo_views_and_shared_time_range[2-zh_CN-dark] PASSED
+apps\FLP\tests\test_gnss_integrity.py::test_integrity_status_labels_recorded_event_separately_from_offline_replay PASSED
+
+============================= 15 passed in 7.05s ==============================

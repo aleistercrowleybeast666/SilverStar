@@ -1,0 +1,70 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 53 items
+
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_alignment_stale_status_value_is_preserved PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_all_calibration_diagnostic_reasons_parse_canonically PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_all_fixed_lengths_are_strict PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_capability_fixed_vector PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_capability_scales_are_the_only_physical_conversion_source PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_gsp_air_rx_still_starts_air_frame_at_payload_three PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_preflight_and_flight_share_exact_prefix_parser PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_preflight_status_bit_fields PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_preflight_status_restores_not_selected_mode PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_sensor_status_known_registry_and_generic_fields PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_sensor_status_length_and_index_total_are_strict PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_sensor_status_preserves_unknown_ids_details_and_instances PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_status_and_command_lengths_remain_nine_bytes PASSED
+apps/GSHC/tests/test_air_protocol.py::AirProtocolTests::test_unknown_profile_is_reported_without_guessing_compatibility PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_navigation_golden_and_gsp_log_roundtrip[15223412070001021f-AirNavigationCapabilityMessage] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_navigation_golden_and_gsp_log_roundtrip[1623341207007f0f11-AirNavigationPreparationMessage] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_navigation_golden_and_gsp_log_roundtrip[172434120700090c00-AirNavigationHealthMessage] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_navigation_subscribe_golden PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_declared_sf6_preserves_preparation_and_capability_start_gates[0-True] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_declared_sf6_preserves_preparation_and_capability_start_gates[1-True] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_declared_sf6_preserves_preparation_and_capability_start_gates[2-True] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_declared_sf6_preserves_preparation_and_capability_start_gates[3-True] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_declared_sf6_preserves_preparation_and_capability_start_gates[4-False] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_declared_sf6_preserves_preparation_and_capability_start_gates[255-False] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_bad_navigation_length_or_zero_session_rejected[\x15\x15\x15\x15\x15\x15\x15\x15] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_bad_navigation_length_or_zero_session_rejected[\x16\x16\x16\x16\x16\x16\x16\x16\x16\x16] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_bad_navigation_length_or_zero_session_rejected[\x17$\x00\x00\x07\x00\t\x0c\x00] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_ss0002_prepare_ack_and_alignment_ready_cannot_allow_start PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_release_does_not_offer_navigation_subscription PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_stale_wrong_session_out_of_order_duplicate_and_generation PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_health_fields_independent_expiry_unknown_selector_and_seq_wrap PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_start_retry_uses_board_admission_not_navigation_display_expiry PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_required_mask_supports_explicit_pure_ins_without_inventing_gnss_origin PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_local_reprepare_still_waits_for_real_board_alignment PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_connection_loss_or_boot_immediately_forgets_ready_and_old_nonce[disconnect] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_connection_loss_or_boot_immediately_forgets_ready_and_old_nonce[boot] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_detail_selectors_and_ttl_cannot_refresh_primary_health PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_sparse_detail_sequence_unwrap_uses_intervening_navigation_frames PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_optional_gnss_origin_does_not_block_start[0] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_optional_gnss_origin_does_not_block_start[1] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_optional_gnss_origin_does_not_block_start[2] PASSED
+apps/GSHC/tests/test_navigation_readiness.py::test_optional_gnss_origin_does_not_block_start[3] PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_typed_envelope_rejects_incomplete_unknown[] PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_typed_envelope_rejects_incomplete_unknown[\x01\x00\x00] PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_typed_envelope_rejects_incomplete_unknown[\x02\x00\x01x] PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_typed_envelope_rejects_incomplete_unknown[\x01\x01\x01x] PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_typed_envelope_rejects_incomplete_unknown[\x01\x00\x02x] PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_typed_envelope_rejects_incomplete_unknown[\x01\x00>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_metric_capability_and_legacy_negative_value PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_controller_clears_sx_metrics_and_rejects_stale_session PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_pipeline_parsed_and_raw_export_has_no_fake_measurements PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_old_actual_parser_ignores_new_type PASSED
+apps/GSHC/tests/test_nrf24_transport.py::test_parsed_unsupported_flag_suppresses_numeric_placeholder PASSED
+
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 53 passed, 1 warning in 4.22s ========================

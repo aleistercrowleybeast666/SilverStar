@@ -1,0 +1,37 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 1 item
+
+apps\FLP\tests\test_plot_menu_lifetime.py::test_plot_menus_are_native_owned_and_destroyed_in_gui_thread FAILED
+
+================================== FAILURES ===================================
+________ test_plot_menus_are_native_owned_and_destroyed_in_gui_thread _________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x000002372E6E8980>
+
+    def test_plot_menus_are_native_owned_and_destroyed_in_gui_thread(qtbot):
+        gui = get_ident()
+        plot = pg.PlotWidget()
+        qtbot.addWidget(plot)
+        _Plot_Prepare(plot, 'light')
+        item = plot.getPlotItem()
+        menus = (item.ctrlMenu, item.getViewBox().menu)
+        destroyed = []
+        for index, menu in enumerate(menus):
+>           assert menu.parent() is plot, 'Plot menus must not await arbitrary-thread Python GC'
+E           AssertionError: Plot menus must not await arbitrary-thread Python GC
+E           assert None is <pyqtgraph.widgets.PlotWidget.PlotWidget(0x2372aed81d0) at 0x000002372E641540>
+E            +  where None = <built-in method parent of PySide6.QtWidgets.QMenu object at 0x000002372E73D440>()
+E            +    where <built-in method parent of PySide6.QtWidgets.QMenu object at 0x000002372E73D440> = <PySide6.QtWidgets.QMenu(0x2372d965160) at 0x000002372E73D440>.parent
+
+apps\FLP\tests\test_plot_menu_lifetime.py:21: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_plot_menu_lifetime.py::test_plot_menus_are_native_owned_and_destroyed_in_gui_thread - AssertionError: Plot menus must not await arbitrary-thread Python GC
+assert None is <pyqtgraph.widgets.PlotWidget.PlotWidget(0x2372aed81d0) at 0x000002372E641540>
+ +  where None = <built-in method parent of PySide6.QtWidgets.QMenu object at 0x000002372E73D440>()
+ +    where <built-in method parent of PySide6.QtWidgets.QMenu object at 0x000002372E73D440> = <PySide6.QtWidgets.QMenu(0x2372d965160) at 0x000002372E73D440>.parent
+============================== 1 failed in 4.20s ==============================

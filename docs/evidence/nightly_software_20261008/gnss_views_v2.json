@@ -1,0 +1,15 @@
+{
+  "command": [
+    "apps/FLP/.venv/Scripts/python.exe",
+    "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_flp_plain.py",
+    "apps/FLP/tests/test_gnss_integrity.py",
+    "-vv",
+    "-s",
+    "--basetemp=.work/nc08_gnss_views_v2_90043ddb"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_head": "2716d6ca727eceed327f5a0bc9478f1a65dcebfb",
+  "timeout_s": 900,
+  "exit_code": 0,
+  "elapsed_s": 9.495157900000777
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/Scripts/python.exe",
+    "D:\\python_software\\SilverStar\\.work\\nightly_closeout_20261008\\run_gshc.py",
+    "apps/GSHC/tests/test_air_protocol.py",
+    "apps/GSHC/tests/test_navigation_readiness.py",
+    "apps/GSHC/tests/test_nrf24_transport.py",
+    "-vv",
+    "-s",
+    "--basetemp=.work/nc08_gshc_final"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_head": "4b511e566ba31db1fb1294da0e637c8fabb0e54c",
+  "timeout_s": 900,
+  "exit_code": 0,
+  "elapsed_s": 6.263113299999532
+}

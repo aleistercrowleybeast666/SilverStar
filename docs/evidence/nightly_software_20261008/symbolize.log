@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\nightly_closeout_20261008\symbolize.py", line 23, in <module>
+    for path, offset in re.findall(r'NATIVE (.+?)\+0x([0-9a-f]+)', (Path(__file__).parent/'pre3.log').read_text()):
+                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 793, in read_text
+    return f.read()
+           ~~~~~~^^
+UnicodeDecodeError: 'gbk' codec can't decode byte 0x80 in position 677325: illegal multibyte sequence
