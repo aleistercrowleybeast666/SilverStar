@@ -34,10 +34,18 @@ def test_one_release_version_and_independent_freertos_version() -> None:
     assert _Python_Run("from config import APP_VERSION; print(APP_VERSION)", ROOT / "apps/GSHC") == VERSION
     manifests = sorted((ROOT / "apps/SCG/plugins/builtin").glob("*/plugin.json"))
     assert manifests
+    independent_versions = {
+        "silverstar.os.freertos_11_3_0": "11.3.0",
+        "silverstar.os.freertos_11_3_0_cm3": "11.3.0",
+        "silverstar.algorithm.estimator.kf6": "0.2.0",
+        "silverstar.algorithm.estimator.sf6": "0.2.0",
+        "silverstar.device.barometer.bmp280": "0.1.1",
+        "silverstar.device.barometer.ms5611": "0.1.1",
+    }
     for path in manifests:
         manifest = json.loads(path.read_text(encoding="utf-8"))
         # Plugin identities remain independent of the product patch release.
-        expected = "11.3.0" if manifest["id"] == "silverstar.os.freertos_11_3_0" else "0.1.0"
+        expected = independent_versions.get(manifest["id"], "0.1.0")
         assert manifest["version"] == expected, path
     core = ROOT / "apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json"
     assert json.loads(core.read_text(encoding="utf-8"))["id"] == "silverstar.core.0_1_0"
