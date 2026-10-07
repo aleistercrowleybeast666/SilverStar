@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import logging
+from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
+from weakref import ref
 
-from PySide6.QtCore import QSettings, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Slot
+from PySide6.QtCore import QObject, QEventLoop, QSettings, QStandardPaths, Qt, QThread, QThreadPool, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import (
     QAction,
     QCloseEvent,
@@ -15,7 +17,9 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QApplication,
+    QCheckBox,
     QDialog,
+    QDialogButtonBox,
     QFileDialog,
     QFrame,
     QHBoxLayout,
@@ -34,8 +38,10 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_flp.app.version import PRODUCT_NAME, __version__
-from silverstar_flp.core.analysis_source import ChannelResolver, ReplayResultStore
+from silverstar_flp.core.analysis_source import AnalysisSourceKind, ChannelResolver, ReplayResultStore
 from silverstar_flp.core.dataset import FlightDataset
+from silverstar_flp.core.analysis_source import ReplayResultChangeResult
+from silverstar_flp.core.run_history import ProjectRun_Remove, ProjectRun_Restore, ProjectRun_BackupLoad
 from silverstar_flp.core.i18n import Translator
 from silverstar_flp.core.path_preferences import (
     ExistingDirectory_Get,
@@ -46,6 +52,7 @@ from silverstar_flp.core.path_preferences import (
 from silverstar_flp.core.project import (
     Project_Load,
     Project_Save,
+    ProjectResults_Load,
     ProjectDecoderProfile,
     ProjectDocument,
 )
@@ -76,10 +83,11 @@ from silverstar_flp.ui.theme import Theme_Apply, WindowCaption_Apply
 from silverstar_flp.ui.time_range import TimeRangeBar
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 from silverstar_flp.ui.widgets import ProjectHeaderLabel, StandardComboBox
-from silverstar_flp.ui.workers import FunctionWorker
+from silverstar_flp.ui.workers import FunctionWorker, WorkerRetireResult
 
 
 class MainWindow(QMainWindow):
+    taskSettled = Signal()
     PAGE_CODES = (
         "page.overview",
         "page.replay",
@@ -127,6 +135,7 @@ class MainWindow(QMainWindow):
         self._dataset: FlightDataset | None = None
         self._log_open_result: LogOpenResult | None = None
         self._replay_store = ReplayResultStore()
+        self._secondary_source_id: str | None = None
         self._channel_resolver: ChannelResolver | None = None
         self._project = ProjectDocument()
         self._project_dirty = False
@@ -134,7 +143,15 @@ class MainWindow(QMainWindow):
         self._source_restore_index = None
         self._pending_new_project_path: Path | None = None
         self._suspend_dirty = False
-        self._thread_pool = QThreadPool.globalInstance()
+        self._thread_pool = QThreadPool(self)
+        self._thread_pool.setMaxThreadCount(1)
+        self._worker_connections = []
+        self._worker_finished_seen = False
+        self._worker_publication_depth = 0
+        self._worker_retiring = False
+        self._worker_retire_timer = QTimer(self)
+        self._worker_retire_timer.setInterval(10)
+        self._worker_retire_timer.timeout.connect(self._Task_RetireTry)
         self._active_worker: FunctionWorker | None = None
         self._folder_search_generation = 0
         self._folder_search_worker: FunctionWorker | None = None
@@ -276,7 +293,10 @@ class MainWindow(QMainWindow):
 
         self.replay_page.replayRequested.connect(self._Replay_Start)
         self.replay_page.analysisSourceRequested.connect(self._AnalysisSource_Set)
+        self.replay_page.secondarySourceRequested.connect(self._SecondarySource_Set)
         self.replay_page.configurationChanged.connect(self._Project_MarkDirty)
+        self.replay_page.resultDeleteRequested.connect(self._ReplayRun_Delete)
+        self.replay_page.resultRestoreRequested.connect(self._ReplayRun_Restore)
         self.import_dialog = ImportDialog(self._translator, self)
         self.import_dialog.importRequested.connect(self.LogPair_Open)
         self.import_dialog.folderSearchRequested.connect(self._FolderSearch_Start)
@@ -446,17 +466,13 @@ class MainWindow(QMainWindow):
         if self._dataset is None:
             return
         self.export_dialog.OutputDirectory_Set(self._ExportDirectory_Default())
-        recorded_name = (
-            self._channel_resolver.RecordedNavigationSource_Get()
-            if self._channel_resolver is not None else "N/A"
-        )
-        recorded_name = AlgorithmName_Display(recorded_name)
-        sources = [(
-            self._replay_store.RECORDED_SOURCE_ID,
-            self._translator.Text_Get(
-                "export.source_recorded", algorithm=recorded_name
-            ),
-        )]
+        from silverstar_flp.ui.pages.charts import _Source_Label
+        sources = [
+            (source.source_id, _Source_Label(self._translator, self._channel_resolver,
+                                             source.source_id))
+            for source in self._channel_resolver.Sources_Get()
+            if source.kind == AnalysisSourceKind.RECORDED
+        ]
         sources.extend((
             entry.source_id,
             self._translator.Text_Get(
@@ -608,6 +624,11 @@ class MainWindow(QMainWindow):
         )
         if any(saved != opened for saved, opened in comparisons):
             raise ValueError("project_decoder_identity_mismatch")
+        try:
+            project.restored_results = ProjectResults_Load(project, context).Entries_Get()
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            logging.exception("Saved project results unavailable")
+            project.restoration_issues = (str(exc),)
         return result
 
     def _Project_Open(self, path: Path) -> None:
@@ -635,6 +656,8 @@ class MainWindow(QMainWindow):
                     else None
                 ),
                 source_mode=LogOpenSourceMode.PROJECT,
+                project_path=project.project_path,
+                dataset_cache_reference=project.parse_artifact,
             )
         except Exception as exc:
             logging.exception("Project open failed")
@@ -792,7 +815,7 @@ class MainWindow(QMainWindow):
         self._log_open_result = result
         self._suspend_dirty = True
         try:
-            self._Dataset_Set(result.dataset)
+            self._Dataset_Set(result.dataset, restored_results=project.restored_results)
             if "draft" in project.replay_configurations:
                 try:
                     self.replay_page.Configuration_Set(project.replay_configurations["draft"])
@@ -802,10 +825,21 @@ class MainWindow(QMainWindow):
                 self.time_range.State_Restore(project.ui_state["time_range"])
             selected_source = project.ui_state.get("analysis_source", "recorded")
             if isinstance(selected_source, str) and selected_source.startswith("replay:"):
-                key = selected_source.removeprefix("replay:")
-                configuration = project.replay_configurations.get(key)
-                if configuration is not None:
-                    self._source_restore_pending = (key, configuration)
+                if self._replay_store.SourceEntry_Get(selected_source) is not None:
+                    self._AnalysisSource_Set(selected_source)
+                else:
+                    self._replay_store.ActiveSource_Restore(selected_source)
+                    self._Pages_Refresh()
+                    code = ("project_run_deleted" if selected_source.removeprefix("replay:")
+                            in project.removed_results else "project_result_recompute_required")
+                    self._Error_Show(code + ":" + selected_source)
+            elif isinstance(selected_source, str) and selected_source.startswith("recorded:"):
+                self._AnalysisSource_Set(selected_source)
+            secondary = project.ui_state.get("secondary_source")
+            if isinstance(secondary, str) and secondary.removeprefix("replay:") not in project.removed_results:
+                self._secondary_source_id = secondary
+                self.replay_page.SecondarySource_Set(secondary)
+                self._Pages_Refresh()
             page_index = project.ui_state.get("page_index")
             if isinstance(page_index, int) and 0 <= page_index < self.pages.count():
                 self.navigation_list.setCurrentRow(page_index)
@@ -813,14 +847,22 @@ class MainWindow(QMainWindow):
             self._suspend_dirty = False
         self._Project_SetDirty(mark_dirty)
         self._ProjectHeader_Refresh()
+        if project.restoration_issues:
+            self._Error_Show("project_result_recompute_required:" +
+                             " | ".join(project.restoration_issues))
 
-    def _Dataset_Set(self, dataset: FlightDataset) -> None:
+    def _Dataset_Set(self, dataset: FlightDataset, *, restored_results=()) -> None:
         was_suspended = self._suspend_dirty
         self._suspend_dirty = True
         self._dataset = dataset
         self._source_restore_pending = None
         self._source_restore_index = None
         self._replay_store.Clear()
+        for entry in restored_results:
+            self._replay_store.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
+                                          restored_run_index=entry.run_index)
+        self._replay_store.IdentityState_Restore(self._project.run_identity_state)
+        self._secondary_source_id = None
         self._channel_resolver = ChannelResolver(dataset, self._replay_store)
         bounds = self._channel_resolver.MissionReplayBounds_Get()
         self.time_range.Mission_Set((bounds.end_timestamp_us - bounds.start_timestamp_us) * 1e-6)
@@ -856,10 +898,63 @@ class MainWindow(QMainWindow):
             return
         self.overview_page.Dataset_Set(self._dataset)
         self.replay_page.Dataset_Set(self._dataset, self._replay_store)
+        self.replay_page.RemovedResults_Set(self._project.removed_results)
+        self.replay_page.RecoverySources_Set(self._project.recovery_sources, self._project.saved_result_ids)
+        self._secondary_source_id = self.replay_page._secondary_source_id
+        self.flight_page.SecondarySource_Set(self._secondary_source_id)
+        self.state_estimation_page.SecondarySource_Set(self._secondary_source_id)
         self.flight_page.Dataset_Set(self._dataset, self._channel_resolver)
         self.state_estimation_page.Dataset_Set(self._dataset, self._channel_resolver)
         self.explorer_page.Dataset_Set(self._dataset, self._replay_store)
         self._TimeRange_Changed(self.time_range.controller.model)
+
+    def _ReplayRun_Delete(self, result_id: str) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
+        entry = self._replay_store.Entry_Get(result_id)
+        if entry is None:
+            return
+        answer = QMessageBox.warning(self, self._translator.Text_Get("replay.run_delete"),
+            self._translator.Text_Get("replay.run_delete_confirm", result_id=result_id),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel)
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        if ProjectRun_Remove(self._project, self._replay_store, result_id) != ReplayResultChangeResult.REMOVED:
+            self._Error_Show("project_run_change_failed")
+            return
+        if self._secondary_source_id == entry.source_id:
+            self._secondary_source_id = None
+            self.replay_page.SecondarySource_Set(None)
+        self._Pages_Refresh()
+        self._Project_MarkDirty()
+        self.status_label.setText(self._translator.Text_Get("replay.run_removed", result_id=result_id))
+
+    def _ReplayRun_Restore(self, result_id: str) -> None:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return
+        entry = self._replay_store.RemovedEntry_Get(result_id)
+        if entry is not None:
+            self._ReplayRun_RestoreSet(entry)
+            return
+        # Disk verification and large audit decoding remain off the GUI thread.
+        project = replace(self._project, restored_results=(),
+            replay_configurations=deepcopy(self._project.replay_configurations),
+            run_identity_state=deepcopy(self._project.run_identity_state),
+            removed_results=deepcopy(self._project.removed_results),
+            recovery_sources=deepcopy(self._project.recovery_sources))
+        self._Task_Start(FunctionWorker(lambda context: ProjectRun_BackupLoad(project, result_id, context)),
+                         self._ReplayRun_RestoreSet, self._Error_Show)
+
+    def _ReplayRun_RestoreSet(self, entry) -> None:
+        if ProjectRun_Restore(self._project, self._replay_store, entry) != ReplayResultChangeResult.RESTORED:
+            self._Error_Show("project_run_change_failed")
+            return
+        self._Pages_Refresh()
+        self._Project_MarkDirty()
+        self.status_label.setText(self._translator.Text_Get("replay.run_restored", result_id=entry.result_id))
 
     def _TimeRange_Changed(self, model) -> None:
         import pyqtgraph as pg
@@ -886,7 +981,8 @@ class MainWindow(QMainWindow):
             return
         plugin = self._registry.Algorithm_Get(algorithm_id)
         dataset = self._dataset
-        worker = FunctionWorker(lambda context: plugin.run(dataset, request, context))
+        from silverstar_flp.core.replay_execution import Replay_Execute
+        worker = FunctionWorker(lambda context: Replay_Execute(plugin, dataset, request, context))
         self._Task_Start(
             worker,
             self._Replay_ResultSet,
@@ -913,8 +1009,27 @@ class MainWindow(QMainWindow):
             )
         )
 
+    def _SecondarySource_Set(self, source_id: str | None) -> None:
+        if self._channel_resolver is None:
+            return
+        if source_id is not None:
+            selected = self._channel_resolver.Source_Get(source_id)
+            if (not selected.available or
+                    selected.source_id == self._channel_resolver.Source_Get().source_id):
+                source_id = None
+        self._secondary_source_id = source_id
+        self.replay_page.SecondarySource_Set(source_id)
+        self.flight_page.SecondarySource_Set(source_id)
+        self.state_estimation_page.SecondarySource_Set(source_id)
+        self.flight_page.Dataset_Set(self._dataset, self._channel_resolver)
+        self.state_estimation_page.Dataset_Set(self._dataset, self._channel_resolver)
+        self._TimeRange_Changed(self.time_range.controller.model)
+
     def _AnalysisSource_Set(self, source_id: str) -> None:
-        if not self._replay_store.ActiveSource_Set(source_id):
+        if (self._channel_resolver is None or
+                not self._channel_resolver.Source_Get(source_id).available or
+                not self._replay_store.ActiveSource_Set(source_id)):
+            self.status_label.setText(self._translator.Text_Get("comparison.unavailable"))
             return
         self._Pages_Refresh()
         self._Project_MarkDirty()
@@ -935,7 +1050,14 @@ class MainWindow(QMainWindow):
         options = replace(options, selected_channels=selected, ui_theme=self._theme,
                           current_range=(self.time_range.controller.model.start,
                                          self.time_range.controller.model.end))
-        source_id = options.source_id or self._replay_store.ActiveSource_Get().source_id
+        source_id = (self._replay_store.ActiveSource_Get().source_id
+                     if options.source_mode == "follow_ui" else options.source_id)
+        source_id = source_id or self._replay_store.ActiveSource_Get().source_id
+        source = self._channel_resolver.Source_Get(source_id)
+        if not source.available:
+            self.export_dialog.Result_Error(f"export_source_unavailable:{source_id}")
+            return
+        source_id = source.source_id
         try:
             export_store = self._replay_store.Snapshot_Create(source_id)
         except ValueError as error:
@@ -988,17 +1110,25 @@ class MainWindow(QMainWindow):
         if self._active_worker is not None:
             error_callback("another_background_task_is_running")
             return
+        if QThread.currentThread() != self.thread() or worker.signals.thread() != self.thread():
+            raise RuntimeError("worker_gui_ownership_invalid")
         self._active_worker = worker
+        worker.signals.setParent(self)
+        self._worker_finished_seen = False
+        self._worker_retire_timer.stop()
         self.replay_page.Task_Busy()
         self._worker_error_callback = error_callback
         self._worker_result_callback = result_callback
         self._worker_cancel_callback = cancel_callback
         self._worker_cancelled_published = False
-        worker.signals.progress.connect(self._Task_Progress)
-        worker.signals.result.connect(self._Task_ResultDispatch)
-        worker.signals.error.connect(self._Task_Error)
-        worker.signals.cancelled.connect(self._Task_Cancelled)
-        worker.signals.finished.connect(self._Task_Finish)
+        queued = Qt.ConnectionType.QueuedConnection
+        self._worker_connections = [
+            worker.signals.progress.connect(self._Task_Progress, queued),
+            worker.signals.result.connect(self._Task_ResultDispatch, queued),
+            worker.signals.error.connect(self._Task_Error, queued),
+            worker.signals.cancelled.connect(self._Task_Cancelled, queued),
+            worker.signals.finished.connect(self._Task_Finish, queued),
+        ]
         self.progress_bar.setValue(0)
         self.progress_bar.setVisible(True)
         self.cancel_button.setEnabled(True)
@@ -1017,27 +1147,52 @@ class MainWindow(QMainWindow):
         worker = self._active_worker
         if worker is None or self.sender() is not worker.signals:
             return
-        self._Task_ResultPublish(worker, result, self._worker_result_callback)
+        self._worker_publication_depth += 1
+        try:
+            self._Task_ResultPublish(worker, result, self._worker_result_callback)
+        finally:
+            self._worker_publication_depth -= 1
 
     def _Task_ResultPublish(self, worker, result, result_callback) -> None:
-        if worker is not self._active_worker or worker.context.cancellation_event.is_set():
+        committed = getattr(worker, "project_committed", False) and isinstance(result, ProjectDocument)
+        if worker is not self._active_worker or worker.context.cancellation_event.is_set() and not committed:
             return
         if result_callback is not None:
             result_callback(result)
 
+    @Slot(float, str)
     def _Task_Progress(self, progress: float, code: str) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
         self.progress_bar.setValue(int(progress * 1000))
         self.status_label.setText(self._translator.Text_Get(code))
 
+    @Slot(str, str)
     def _Task_Error(self, message: str, traceback_text: str) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
         logging.error("Background task failed: %s\n%s", message, traceback_text)
         self.status_label.setText(self._translator.Text_Get("status.failed"))
-        if self._worker_error_callback is not None:
-            self._worker_error_callback(message)
-        else:
-            self._Error_Show(message)
+        self._worker_publication_depth += 1
+        try:
+            if self._worker_error_callback is not None:
+                self._worker_error_callback(message)
+            else:
+                self._Error_Show(message)
+        finally:
+            self._worker_publication_depth -= 1
 
+    @Slot()
     def _Task_Cancelled(self) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
+        self._worker_publication_depth += 1
+        try:
+            self._TaskCancellation_Publish()
+        finally:
+            self._worker_publication_depth -= 1
+
+    def _TaskCancellation_Publish(self) -> None:
         if self._worker_cancelled_published:
             return
         self._worker_cancelled_published = True
@@ -1046,10 +1201,30 @@ class MainWindow(QMainWindow):
         if self._worker_cancel_callback is not None:
             self._worker_cancel_callback(message)
 
+    @Slot()
     def _Task_Finish(self) -> None:
+        if self._active_worker is None or self.sender() is not self._active_worker.signals:
+            return
+        self._worker_finished_seen = True
+        self._Task_RetireTry()
+
+    @Slot()
+    def _Task_RetireTry(self) -> None:
+        if self._worker_retiring:
+            return
+        if self._active_worker is None or not self._worker_finished_seen:
+            self._worker_retire_timer.stop()
+            return
+        if self._worker_publication_depth or not self._thread_pool.waitForDone(0):
+            self._worker_retire_timer.start()
+            return
+        self._worker_retire_timer.stop()
+        self._worker_retiring = True
+        worker = self._active_worker
+        committed = getattr(worker, "project_committed", False)
         if (self._active_worker is not None and
-                self._active_worker.context.cancellation_event.is_set()):
-            self._Task_Cancelled()
+                self._active_worker.context.cancellation_event.is_set() and not committed):
+            self._TaskCancellation_Publish()
         if self._active_worker is self._folder_search_worker:
             self._folder_search_worker = None
         self._source_restore_index = None
@@ -1064,33 +1239,38 @@ class MainWindow(QMainWindow):
         self.new_project_action.setEnabled(True)
         self.export_dialog.Task_Finish()
         self.replay_page.Task_Finish()
+        for connection in self._worker_connections:
+            if not QObject.disconnect(connection):
+                logging.warning("Worker signal connection already disconnected at retirement")
+        self._worker_connections.clear()
+        retirement = worker.Worker_Retire(self._thread_pool)
+        if retirement != WorkerRetireResult.RETIRED:
+            raise RuntimeError("worker_retirement_contract_failed:" + retirement.value)
+        close_after = ((committed and getattr(worker, "close_after_commit", False))
+                       or getattr(worker, "close_after_task", False))
         self._active_worker = None
+        self._worker_finished_seen = False
+        self._worker_retiring = False
         self._worker_error_callback = None
         self._worker_result_callback = None
         self._worker_cancel_callback = None
+        self.taskSettled.emit()
         if self._source_restore_pending is not None:
             QTimer.singleShot(0, self._AnalysisSource_Restore)
+        if close_after:
+            QTimer.singleShot(0, self.close)
 
     def _AnalysisSource_Restore(self):
         pending = self._source_restore_pending
         self._source_restore_pending = None
         if pending is None or self._dataset is None:
             return
-        key, configuration = pending
-        try:
-            self.replay_page.Configuration_Set(configuration)
-            self._source_restore_index = int(key.rsplit(":", 1)[1])
-            request = ReplayRequest(
-                mode=configuration["mode"],
-                input_source=configuration["input_source"],
-                parameters=configuration["actual_values"],
-                quality_policy_revision=configuration.get("quality_policy_revision"),
-                process_model_revision=configuration.get("process_model_revision"),
-            )
-            self._Replay_Start(configuration["algorithm_id"], request)
-        except (ValueError, KeyError) as exc:
-            self._source_restore_index = None
-            self._Error_Show(str(exc))
+        key, _configuration = pending
+        source_id = "replay:" + key
+        if self._replay_store.SourceEntry_Get(source_id) is not None:
+            self._AnalysisSource_Set(source_id)
+        else:
+            self._Error_Show("project_result_recompute_required:" + source_id)
 
     def _Task_Cancel(self) -> None:
         if self._active_worker is not None:
@@ -1158,6 +1338,7 @@ class MainWindow(QMainWindow):
             notes=self._project.notes,
             ui_state=dict(self._project.ui_state),
             project_path=self._project.project_path,
+            save_data_and_results=self._project.save_data_and_results,
         )
 
     def _LogOpen_Error(self, message: str) -> None:
@@ -1172,19 +1353,43 @@ class MainWindow(QMainWindow):
             return
         self._Error_Show(message)
 
-    def _Project_Save(self) -> None:
+    def _Project_Save(self) -> bool:
+        save_data = self._SaveOptions_Select()
+        if save_data is None:
+            return False
         path = self._project.project_path
         if path is None:
             path = self._ProjectPath_Select("action.save_project")
             if path is not None and not self._Overwrite_Confirm(path):
-                return
+                return False
         if path is not None:
-            self._Project_Write(path)
+            return self._Project_Write(path, background=True, save_data=save_data)
+        return False
 
-    def _Project_SaveAs(self) -> None:
+    def _Project_SaveAs(self) -> bool:
+        save_data = self._SaveOptions_Select()
+        if save_data is None:
+            return False
         path = self._ProjectPath_Select("action.save_project_as")
         if path is not None and self._Overwrite_Confirm(path):
-            self._Project_Write(path)
+            return self._Project_Write(path, background=True, save_data=save_data)
+        return False
+
+    def _SaveOptions_Select(self) -> bool | None:
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self._translator.Text_Get("action.save_project"))
+        layout = QVBoxLayout(dialog)
+        option = QCheckBox(self._translator.Text_Get("project.save_data_and_results"))
+        option.setChecked(self._project.save_data_and_results)
+        layout.addWidget(option)
+        explanation = QLabel(self._translator.Text_Get("project.save_data_explanation"))
+        explanation.setWordWrap(True)
+        layout.addWidget(explanation)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        return option.isChecked() if dialog.exec() == QDialog.DialogCode.Accepted else None
 
     def _ProjectPath_Select(self, title_key: str) -> Path | None:
         filename = self._project.project_path.name if self._project.project_path else "flight.ssflp"
@@ -1201,18 +1406,27 @@ class MainWindow(QMainWindow):
         path = Path(selected)
         return path if path.suffix.lower() == ".ssflp" else path.with_suffix(".ssflp")
 
-    def _Project_Write(self, path: Path) -> None:
+    def _Project_Write(self, path: Path, *, background: bool = False, save_data: bool | None = None) -> bool:
+        if self._active_worker is not None:
+            self._Error_Show("another_background_task_is_running")
+            return False
         try:
-            self._project.ui_state["page_index"] = self.navigation_list.currentRow()
-            self._project.ui_state["time_range"] = self.time_range.controller.model.State_Get()
-            self._project.ui_state["analysis_source"] = (
+            project = replace(self._project,
+                replay_configurations=deepcopy(self._project.replay_configurations),
+                ui_state=deepcopy(self._project.ui_state),
+                run_identity_state=deepcopy(self._project.run_identity_state),
+                removed_results=deepcopy(self._project.removed_results),
+                recovery_sources=deepcopy(self._project.recovery_sources), restored_results=(),
+                save_data_and_results=self._project.save_data_and_results if save_data is None else save_data)
+            project.ui_state["page_index"] = self.navigation_list.currentRow()
+            project.ui_state["time_range"] = self.time_range.controller.model.State_Get()
+            project.ui_state["analysis_source"] = (
                 self._replay_store.ActiveSource_Get().source_id
             )
-            self._project.replay_configurations["draft"] = self.replay_page.Configuration_Get()
+            project.ui_state["secondary_source"] = self._secondary_source_id
+            project.replay_configurations["draft"] = self.replay_page.Configuration_Get()
             for entry in self._replay_store.Entries_Get():
-                if entry.analysis_only:
-                    continue
-                self._project.replay_configurations[entry.result_id] = {
+                project.replay_configurations[entry.result_id] = {
                     "algorithm_id": entry.algorithm_id,
                     "algorithm_version": entry.algorithm_version,
                     "mode": entry.mode.value,
@@ -1222,24 +1436,62 @@ class MainWindow(QMainWindow):
                     "provenance": entry.diagnostics["config_source"],
                 }
                 if entry.diagnostics.get("process_model_revision") is not None:
-                    self._project.replay_configurations[entry.result_id]["process_model_revision"] = (
+                    project.replay_configurations[entry.result_id]["process_model_revision"] = (
                         entry.diagnostics["process_model_revision"]
                     )
                 if entry.diagnostics.get("quality_policy_override") is not None:
-                    saved_configuration = self._project.replay_configurations[entry.result_id]
+                    saved_configuration = project.replay_configurations[entry.result_id]
                     saved_configuration["quality_policy_revision"] = entry.diagnostics[
                         "quality_policy_override"
                     ]
-            Project_Save(self._project, path)
+            entries = self._replay_store.Entries_Get()
+            store = ReplayResultStore()
+            for entry in entries:
+                store.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
+                                  restored_run_index=entry.run_index)
+            store.IdentityState_Restore(self._replay_store.IdentityState_Get())
+            dataset = self._dataset
+            edit_serial = getattr(self, "_project_edit_serial", 0)
+            def save(context):
+                Project_Save(project, path, replay_store=store, dataset=dataset, context=context)
+                if background:
+                    # Atomic project replacement has completed. A later Cancel
+                    # must still publish this committed path and remembered option.
+                    worker_ref().project_committed = True
+                return project
+            if background:
+                worker = FunctionWorker(save)
+                worker_ref = ref(worker)
+                worker.is_project_save = True
+                worker.project_committed = False
+                worker.close_after_commit = False
+                self._Task_Start(worker,
+                    lambda saved: self._ProjectSave_ResultSet(saved, edit_serial), self._Error_Show)
+                return True
+            self._project = save(None)
+            self.replay_page.RecoverySources_Set(self._project.recovery_sources, self._project.saved_result_ids)
             self._Project_SetDirty(False)
             self._ProjectHeader_Refresh()
             self.status_label.setText(self._translator.Text_Get("status.project_saved", path=path))
+            return True
         except Exception as exc:
             logging.exception("Project save failed")
             self._Error_Show(str(exc))
+            return False
+
+    def _ProjectSave_ResultSet(self, project: ProjectDocument, edit_serial: int) -> None:
+        self._project = project
+        self.replay_page.RecoverySources_Set(project.recovery_sources, project.saved_result_ids)
+        self._Project_SetDirty(edit_serial != getattr(self, "_project_edit_serial", 0))
+        self._ProjectHeader_Refresh()
+        size = sum(reference.get("bytes", 0) for reference in
+                   (project.result_artifact, project.parse_artifact) if reference)
+        self.status_label.setText(self._translator.Text_Get("status.project_artifacts_saved",
+                                  path=project.project_path, size=f"{size / 1_000_000:.2f}"))
 
     def _Project_MarkDirty(self) -> None:
         if not self._suspend_dirty and self._dataset is not None:
+            self._project_edit_serial = getattr(self, "_project_edit_serial", 0) + 1
             self._Project_SetDirty(True)
 
     def _Project_SetDirty(self, dirty: bool) -> None:
@@ -1287,7 +1539,19 @@ class MainWindow(QMainWindow):
             return False
         if answer == QMessageBox.StandardButton.Discard:
             return True
-        self._Project_Save()
+        if not self._Project_Save():
+            return False
+        # A close/open requested from the unsaved-changes dialog waits for the
+        # transaction while still servicing Qt events and the cancel button.
+        worker = self._active_worker
+        if worker is not None:
+            loop = QEventLoop(self)
+            connection = self.taskSettled.connect(loop.quit)
+            try:
+                loop.exec()
+            finally:
+                QObject.disconnect(connection)
+                loop.deleteLater()
         return not self._project_dirty
 
     def _Error_Show(self, message: str) -> None:
@@ -1448,9 +1712,19 @@ class MainWindow(QMainWindow):
         event.acceptProposedAction()
 
     def closeEvent(self, event: QCloseEvent) -> None:
+        worker = self._active_worker
+        if getattr(worker, "is_project_save", False):
+            worker.close_after_commit = False
+            if not self._project_dirty or self._ProjectChanges_Confirm():
+                worker.close_after_commit = True
+            event.ignore()
+            return
         if self._ProjectChanges_Confirm():
             if self._active_worker is not None:
                 self._active_worker.Worker_Cancel()
-            event.accept()
+                self._active_worker.close_after_task = True
+                event.ignore()
+            else:
+                event.accept()
         else:
             event.ignore()

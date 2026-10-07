@@ -66,8 +66,8 @@ def test_gnss_diagnostics_route_recorded_pure_ins_and_kf6() -> None:
         diagnostics={},
     )
     page.Dataset_Set(dataset, _Resolver_Build(pure_ins))
-    assert page.model.rowCount() == 4
-    assert "no GNSS fusion" in page.note.text()
+    assert page.model.rowCount() == 0
+    assert "missing" in page.note.text().lower() or "no gnss" in page.note.text().lower()
 
     kf6 = SimpleNamespace(
         algorithm_id="silverstar.algorithm.kf6", run_index=3,

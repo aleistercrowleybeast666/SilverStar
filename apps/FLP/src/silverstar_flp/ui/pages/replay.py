@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 
 from silverstar_flp.core.analysis_source import (
     AnalysisSourceKind,
+    ChannelResolver,
     ReplayResultStore,
     ReplayStoredResult,
 )
@@ -37,6 +38,7 @@ from silverstar_flp.plugins.api.algorithm import (
 )
 from silverstar_flp.plugins.registry import PluginRegistry
 from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
+from silverstar_flp.ui.pages.charts import _Source_Label
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 from silverstar_flp.ui.widgets import StandardComboBox
 
@@ -44,15 +46,21 @@ from silverstar_flp.ui.widgets import StandardComboBox
 class ReplayPage(QWidget):
     replayRequested = Signal(str, object)
     analysisSourceRequested = Signal(str)
+    secondarySourceRequested = Signal(object)
     configurationChanged = Signal()
+    resultDeleteRequested = Signal(str)
+    resultRestoreRequested = Signal(str)
 
     def __init__(self, translator: Translator, registry: PluginRegistry) -> None:
         super().__init__()
         self._translator = translator
         self._registry = registry
         self._dataset: FlightDataset | None = None
+        self._secondary_source_id: str | None = None
         self._last_result: AlgorithmResult | None = None
         self._last_entry: ReplayStoredResult | None = None
+        self._recovery_sources = {}
+        self._saved_result_ids = ()
         self._mode_preferences: dict[str, ReplayMode] = {}
         self._process_model_preferences: dict[tuple[str, ReplayMode], int] = {}
         self._last_error: str | None = None
@@ -64,6 +72,8 @@ class ReplayPage(QWidget):
         self._offline_parameter_values: dict[str, float] = {}
         self._parameter_baseline_values: dict[str, float] = {}
         self._parameters_dirty = False
+        self._task_busy = False
+        self._removed_results = {}
 
         page_layout = QVBoxLayout(self)
         page_layout.setContentsMargins(0, 0, 0, 0)
@@ -105,14 +115,29 @@ class ReplayPage(QWidget):
         content_layout.addWidget(self.controls_group)
 
         self.analysis_source_group = QGroupBox()
-        analysis_source_layout = QHBoxLayout(self.analysis_source_group)
+        analysis_source_layout = QVBoxLayout(self.analysis_source_group)
+        primary_row = QHBoxLayout()
+        self.primary_source_label = QLabel()
+        primary_row.addWidget(self.primary_source_label)
         self.analysis_source_combo = StandardComboBox()
         self.analysis_source_combo.currentIndexChanged.connect(self._AnalysisSource_Selected)
         self.active_source_label = QLabel("—")
         self.active_source_label.setObjectName("muted")
         self.active_source_label.setWordWrap(True)
-        analysis_source_layout.addWidget(self.analysis_source_combo, 1)
-        analysis_source_layout.addWidget(self.active_source_label, 2)
+        primary_row.addWidget(self.analysis_source_combo, 1)
+        primary_row.addWidget(self.active_source_label, 2)
+        analysis_source_layout.addLayout(primary_row)
+        secondary_row = QHBoxLayout()
+        self.secondary_source_label = QLabel()
+        self.secondary_source_combo = StandardComboBox()
+        self.secondary_source_combo.currentIndexChanged.connect(self._SecondarySource_Selected)
+        self.secondary_source_note = QLabel()
+        self.secondary_source_note.setObjectName("muted")
+        self.secondary_source_note.setWordWrap(True)
+        secondary_row.addWidget(self.secondary_source_label)
+        secondary_row.addWidget(self.secondary_source_combo, 1)
+        secondary_row.addWidget(self.secondary_source_note, 2)
+        analysis_source_layout.addLayout(secondary_row)
         content_layout.addWidget(self.analysis_source_group)
 
         self.parameters_group = QGroupBox()
@@ -150,6 +175,9 @@ class ReplayPage(QWidget):
 
         self.result_information_group = QGroupBox()
         result_information_layout = QVBoxLayout(self.result_information_group)
+        self.result_storage_label = QLabel()
+        self.result_storage_label.setWordWrap(True)
+        result_information_layout.addWidget(self.result_storage_label)
         self.result_information_label = QLabel("—")
         self.result_information_label.setWordWrap(True)
         self.result_information_label.setTextInteractionFlags(
@@ -173,6 +201,21 @@ class ReplayPage(QWidget):
         self.stored_results_table.horizontalHeader().setStretchLastSection(True)
         self.stored_results_table.itemSelectionChanged.connect(self._StoredResult_Selected)
         stored_results_layout.addWidget(self.stored_results_table)
+        history_row = QHBoxLayout()
+        self.result_delete_button = QPushButton()
+        self.result_delete_button.clicked.connect(self._ResultDelete_Request)
+        self.result_restore_combo = StandardComboBox()
+        self.result_restore_combo.currentIndexChanged.connect(self._HistoryButtons_Refresh)
+        self.result_restore_button = QPushButton()
+        self.result_restore_button.clicked.connect(self._ResultRestore_Request)
+        history_row.addWidget(self.result_delete_button)
+        history_row.addWidget(self.result_restore_combo, 1)
+        history_row.addWidget(self.result_restore_button)
+        stored_results_layout.addLayout(history_row)
+        self.result_history_note = QLabel()
+        self.result_history_note.setObjectName("muted")
+        self.result_history_note.setWordWrap(True)
+        stored_results_layout.addWidget(self.result_history_note)
         content_layout.addWidget(self.stored_results_group)
 
         self.comparison_group = QGroupBox()
@@ -210,6 +253,10 @@ class ReplayPage(QWidget):
         dataset_changed = self._dataset is not dataset
         self._dataset = dataset
         if dataset_changed:
+            self._recovery_sources = {}
+            self._saved_result_ids = ()
+            self.result_storage_label.clear()
+            self._secondary_source_id = None
             self._process_model_preferences.clear()
             self._last_entry = None
             self._last_result = None
@@ -224,6 +271,14 @@ class ReplayPage(QWidget):
             self._store = results
         elif self._store is None:
             self._store = ReplayResultStore()
+        if self._last_entry is not None and self._store.Entry_Get(self._last_entry.result_id) is None:
+            self.result_storage_label.clear()
+            self._last_entry = None
+            self._last_result = None
+            self.result_label.setText("—")
+            self.result_information_label.setText("—")
+            self.result_information_label.setToolTip("")
+            self.comparison_table.setRowCount(0)
         self._AlgorithmLabels_Refresh()
         self._AnalysisSources_Refresh()
         self._StoredResults_Refresh()
@@ -764,6 +819,7 @@ class ReplayPage(QWidget):
         parameters = ", ".join(parameter_items)
         warnings = self._Warnings_Text_Get(entry.warnings)
         channels = ", ".join(sorted(entry.channels))
+        self.result_storage_label.setText(self._RunStorage_Text_Get(entry.result_id))
         lines = (
             self._translator.Text_Get(
                 "replay.detail.algorithm", value=AlgorithmName_Display(entry.algorithm_name)
@@ -850,6 +906,8 @@ class ReplayPage(QWidget):
             for column, value in enumerate(values):
                 item = QTableWidgetItem(value)
                 item.setData(Qt.ItemDataRole.UserRole, entry.result_id)
+                if column == 0:
+                    item.setToolTip(self._RunStorage_Text_Get(entry.result_id))
                 self.stored_results_table.setItem(row, column, item)
             if select_result_id == entry.result_id:
                 selected_row = row
@@ -857,6 +915,7 @@ class ReplayPage(QWidget):
         if selected_row >= 0:
             self.stored_results_table.selectRow(selected_row)
         self._ActiveSourceLabel_Refresh()
+        self._HistoryButtons_Refresh()
 
     def _InputSource_Text_Get(self, input_source: str) -> str:
         code = {
@@ -872,6 +931,56 @@ class ReplayPage(QWidget):
             self._last_result = entry.result
             self._ResultInformation_Set(entry)
             self._Comparison_Set(entry.result)
+        self._HistoryButtons_Refresh()
+
+    def RecoverySources_Set(self, sources: dict, saved_result_ids: tuple[str, ...]) -> None:
+        self._recovery_sources = sources
+        self._saved_result_ids = saved_result_ids
+        for row in range(self.stored_results_table.rowCount()):
+            item = self.stored_results_table.item(row, 0)
+            if item is not None:
+                item.setToolTip(self._RunStorage_Text_Get(item.data(Qt.ItemDataRole.UserRole)))
+        if self._last_entry is not None:
+            # Saving updates only persistence status, not numerical diagnostics.
+            self.result_storage_label.setText(self._RunStorage_Text_Get(self._last_entry.result_id))
+
+    def _RunStorage_Text_Get(self, result_id: str) -> str:
+        code = ("replay.run_current_saved" if result_id in self._saved_result_ids else
+                "replay.run_memory_with_history" if result_id in self._recovery_sources else
+                "replay.run_memory_only")
+        return self._translator.Text_Get(code)
+
+    def RemovedResults_Set(self, history: dict) -> None:
+        self._removed_results = history
+        selected = self.result_restore_combo.currentData()
+        self.result_restore_combo.blockSignals(True)
+        self.result_restore_combo.clear()
+        for result_id, item in history.items():
+            label = self._translator.Text_Get("replay.run_saved_backup" if item["backup"] is not None
+                                              else "replay.run_window_undo")
+            self.result_restore_combo.addItem(f"{result_id} / {label}", result_id)
+        index = self.result_restore_combo.findData(selected)
+        if index >= 0:
+            self.result_restore_combo.setCurrentIndex(index)
+        self.result_restore_combo.blockSignals(False)
+        self._HistoryButtons_Refresh()
+
+    def _HistoryButtons_Refresh(self) -> None:
+        self.result_delete_button.setEnabled(not self._task_busy and self._SelectedEntry_Get() is not None)
+        result_id = self.result_restore_combo.currentData()
+        available = (self._store is not None and self._store.RemovedEntry_Get(result_id) is not None)
+        backup = self._removed_results.get(result_id, {}).get("backup")
+        self.result_restore_button.setEnabled(not self._task_busy and (available or backup is not None))
+
+    def _ResultDelete_Request(self) -> None:
+        entry = self._SelectedEntry_Get()
+        if entry is not None and not self._task_busy:
+            self.resultDeleteRequested.emit(entry.result_id)
+
+    def _ResultRestore_Request(self) -> None:
+        result_id = self.result_restore_combo.currentData()
+        if isinstance(result_id, str) and not self._task_busy:
+            self.resultRestoreRequested.emit(result_id)
 
     def _SelectedEntry_Get(self) -> ReplayStoredResult | None:
         if self._store is None:
@@ -902,73 +1011,83 @@ class ReplayPage(QWidget):
             label += " · " + solution
         return label
 
+    def SecondarySource_Set(self, source_id: str | None) -> None:
+        self._secondary_source_id = source_id
+        self._AnalysisSources_Refresh()
+
     def _AnalysisSources_Refresh(self) -> None:
-        if self._store is None:
-            self.analysis_source_combo.clear()
+        for combo in (self.analysis_source_combo, self.secondary_source_combo):
+            combo.blockSignals(True)
+            combo.clear()
+        if self._store is None or self._dataset is None:
             self.active_source_label.setText("—")
-            return
-        active_source_id = self._store.ActiveSource_Get().source_id
-        self.analysis_source_combo.blockSignals(True)
-        self.analysis_source_combo.clear()
-        self.analysis_source_combo.addItem(
-            self._RecordedSourceLabel_Get(),
-            ReplayResultStore.RECORDED_SOURCE_ID,
-        )
-        for source in self._store.Sources_Get():
-            if source.kind == AnalysisSourceKind.RECORDED:
-                continue
-            entry = self._store.SourceEntry_Get(source.source_id)
-            if entry is None:
-                continue
-            mode_code = (
-                "status.what_if"
-                if entry.kind == AnalysisSourceKind.WHAT_IF
-                else "status.recomputed"
-            )
-            self.analysis_source_combo.addItem(
-                f"{AlgorithmName_Display(entry.algorithm_name)} · "
-                f"{self._EntryMode_Text(entry, mode_code)} #{entry.run_index}",
-                entry.source_id,
-            )
-        index = self.analysis_source_combo.findData(active_source_id)
-        self.analysis_source_combo.setCurrentIndex(max(index, 0))
-        self.analysis_source_combo.blockSignals(False)
+        else:
+            resolver = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False)
+            primary = resolver.Source_Get()
+            self.secondary_source_combo.addItem(self._translator.Text_Get("comparison.none"), None)
+            for source in resolver.Sources_Get():
+                label = _Source_Label(self._translator, resolver, source.source_id)
+                self.analysis_source_combo.addItem(label, source.source_id)
+                if source.source_id != primary.source_id:
+                    self.secondary_source_combo.addItem(label, source.source_id)
+            index = self.analysis_source_combo.findData(primary.source_id)
+            if index < 0:
+                self.analysis_source_combo.addItem(
+                    _Source_Label(self._translator, resolver, primary.source_id), primary.source_id)
+                index = self.analysis_source_combo.count() - 1
+            self.analysis_source_combo.setCurrentIndex(index)
+            secondary_index = self.secondary_source_combo.findData(self._secondary_source_id)
+            if secondary_index < 0 and self._secondary_source_id is not None:
+                if (self._secondary_source_id == primary.source_id or
+                        resolver.Source_Get(self._secondary_source_id).available):
+                    self._secondary_source_id = None
+                    secondary_index = self.secondary_source_combo.findData(None)
+                else:
+                    self.secondary_source_combo.addItem(
+                        _Source_Label(self._translator, resolver, self._secondary_source_id),
+                        self._secondary_source_id)
+                    secondary_index = self.secondary_source_combo.count() - 1
+            self.secondary_source_combo.setCurrentIndex(max(secondary_index, 0))
+        for combo in (self.analysis_source_combo, self.secondary_source_combo):
+            combo.blockSignals(False)
         self._ActiveSourceLabel_Refresh()
 
     def _AnalysisSource_Selected(self) -> None:
-        if self._store is None:
+        if self._store is None or self._dataset is None:
             return
-        source_id = str(
-            self.analysis_source_combo.currentData() or ReplayResultStore.RECORDED_SOURCE_ID
-        )
-        if self._store.ActiveSource_Set(source_id):
-            self.analysisSourceRequested.emit(source_id)
-            self._ActiveSourceLabel_Refresh()
+        source_id = self.analysis_source_combo.currentData()
+        if source_id is None:
+            return
+        source = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False).Source_Get(str(source_id))
+        if not source.available or not self._store.ActiveSource_Set(source.source_id):
+            self.active_source_label.setText(self._translator.Text_Get("comparison.unavailable"))
+            return
+        self.analysisSourceRequested.emit(source.source_id)
+        self._AnalysisSources_Refresh()
+
+    def _SecondarySource_Selected(self) -> None:
+        selected = self.secondary_source_combo.currentData()
+        if self._dataset is None or self._store is None:
+            selected = None
+        elif selected is not None:
+            resolver = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False)
+            source = resolver.Source_Get(str(selected))
+            if not source.available or source.source_id == resolver.Source_Get().source_id:
+                selected = None
+        self._secondary_source_id = str(selected) if selected is not None else None
+        self.secondarySourceRequested.emit(self._secondary_source_id)
+        self._ActiveSourceLabel_Refresh()
 
     def _ActiveSourceLabel_Refresh(self) -> None:
-        if self._store is None:
+        if self._store is None or self._dataset is None:
             self.active_source_label.setText("—")
             return
-        source = self._store.ActiveSource_Get()
-        if source.kind.value == "recorded":
-            value = self._RecordedSourceLabel_Get()
-        else:
-            entry = self._store.SourceEntry_Get(source.source_id)
-            if entry is None:
-                value = self._RecordedSourceLabel_Get()
-            else:
-                mode_code = (
-                    "status.what_if"
-                    if entry.kind == AnalysisSourceKind.WHAT_IF
-                    else "status.recomputed"
-                )
-                value = (
-                    f"{AlgorithmName_Display(entry.algorithm_name)} · "
-                    f"{self._EntryMode_Text(entry, mode_code)} #{entry.run_index}"
-                )
-        self.active_source_label.setText(
-            self._translator.Text_Get("replay.active_source", value=value)
-        )
+        resolver = ChannelResolver(self._dataset, self._store, prime_trajectory_bounds=False)
+        self.active_source_label.setText(self._translator.Text_Get(
+            "replay.active_source", value=_Source_Label(self._translator, resolver,
+                                                        resolver.Source_Get().source_id)))
+        self.secondary_source_note.setText(self._translator.Text_Get("comparison.compatible")
+            if self._secondary_source_id is not None else "")
 
     def Result_Error(self, message: str) -> None:
         self._last_error = message
@@ -985,11 +1104,15 @@ class ReplayPage(QWidget):
         self._Availability_Refresh()
 
     def Task_Busy(self) -> None:
+        self._task_busy = True
+        self._HistoryButtons_Refresh()
         self.run_button.setEnabled(False)
         self.controls_group.setEnabled(False)
         self.parameters_group.setEnabled(False)
 
     def Task_Finish(self) -> None:
+        self._task_busy = False
+        self._HistoryButtons_Refresh()
         self.controls_group.setEnabled(True)
         self.parameters_group.setEnabled(True)
         self._Availability_Refresh()
@@ -1072,6 +1195,10 @@ class ReplayPage(QWidget):
             self._ActualValues_Get() if self.mode_combo.currentData() == ReplayMode.WHAT_IF else {}
         )
         self._translator = translator
+        self.result_delete_button.setText(translator.Text_Get("replay.run_delete"))
+        self.result_restore_button.setText(translator.Text_Get("replay.run_restore"))
+        self.result_history_note.setText(translator.Text_Get("replay.run_history_note"))
+        self.RemovedResults_Set(self._removed_results)
         self._ComboLabels_Refresh()
         self._AlgorithmLabels_Refresh()
         self.controls_group.setTitle(translator.Text_Get("replay.configuration"))
@@ -1089,6 +1216,8 @@ class ReplayPage(QWidget):
             )
         self.fidelity_label.setText(translator.Text_Get("label.fidelity"))
         self.analysis_source_group.setTitle(translator.Text_Get("replay.analysis_data_source"))
+        self.primary_source_label.setText(translator.Text_Get("comparison.primary"))
+        self.secondary_source_label.setText(translator.Text_Get("comparison.secondary"))
         self.parameters_group.setTitle(translator.Text_Get("replay.what_if_parameters"))
         self.parameter_group_label.setText(translator.Text_Get("replay.parameter_group"))
         self.parameter_reset_button.setText(translator.Text_Get("action.reset_parameters"))

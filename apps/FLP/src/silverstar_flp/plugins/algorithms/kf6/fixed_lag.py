@@ -36,6 +36,17 @@ class ReplayResult(IntEnum):
     WORK_LIMIT = 7
 
 
+def ReplayResult_IsFatal(result, faulted):
+    return faulted or result in (ReplayResult.EPOCH_MISMATCH, ReplayResult.DISCONTINUITY,
+                                ReplayResult.NUMERIC_ERROR, ReplayResult.WORK_LIMIT)
+
+
+def _Outcome_Invalid():
+    return {'results': [3]*4, 'baro': 3, 'nis': np.full(4, np.nan, dtype=np.float32),
+            'position_innovation': np.full(3, np.nan, dtype=np.float32),
+            'velocity_innovation': np.full(3, np.nan, dtype=np.float32)}
+
+
 def Filter_Clone(state):
     result = copy(state)
     for key, value in vars(state).items() if hasattr(state, '__dict__') else (
@@ -335,6 +346,9 @@ class FixedLagReplay:
             self.state = working
         else:
             self.faulted = True
+            # Outcomes from a working clone are meaningful only after its commit.
+            # This also clears an earlier success if a later historical event failed.
+            self.last_outcome = {}
         return result
 
 
@@ -445,6 +459,7 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
     snapshots = []
     group_updates = []
     measurement_events = []
+    measurement_operations = []
     analysis_events = []
     quality_evidence = {(r.payload['replay_epoch'], r.payload['source_sequence']): r.payload
                         for r in dataset.Records_Get('GNSS_RECOVERY')}
@@ -569,6 +584,7 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                                     else event.valid_mask & ~1),
                     )
             previous_reanchors = tuple(history.state.reanchor_counts)
+            parts = [event]
             if (
                 event.kind == 3
                 and p["position_measurement_timestamp_us"] != p["velocity_measurement_timestamp_us"]
@@ -583,27 +599,37 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                     )
                 ]
                 parts.sort(key=lambda part: part.Order_Get())
-                result = ReplayResult.OK
-                combined_outcome = {}
-                for part in parts:
-                    result = history.Insert(part)
-                    if history.last_outcome:
-                        current = history.last_outcome
-                        if not combined_outcome:
-                            combined_outcome = deepcopy(current)
-                        else:
-                            groups = (0, 1) if part.kind == 1 else (2, 3)
-                            for g in groups:
-                                combined_outcome['results'][g] = current['results'][g]
-                                combined_outcome['nis'][g] = current['nis'][g]
-                            key = 'position_innovation' if part.kind == 1 else 'velocity_innovation'
-                            combined_outcome[key] = current[key]
-                    if result != ReplayResult.OK:
-                        break
-                history.last_outcome = combined_outcome
-            else:
-                result = history.Insert(event)
-            outcome = history.last_outcome
+            result = ReplayResult.OK
+            outcome = _Outcome_Invalid()
+            part_results = {}
+            stopped = False
+            for part in parts:
+                part_result = None if stopped else history.Insert(part)
+                committed = part_result == ReplayResult.OK
+                current = history.last_outcome if committed else _Outcome_Invalid()
+                fatal = part_result is not None and ReplayResult_IsFatal(part_result, history.faulted)
+                measurement_operations.append(dict(operation_sequence=order, source_sequence=event.sequence,
+                    kind=part.kind, receive_timestamp_us=part.receive_us,
+                    resolved_measurement_timestamp_us=part.measurement_us,
+                    replay_result=None if part_result is None else int(part_result),
+                    attempted=part_result is not None, committed=committed))
+                for operation in (1, 2, 4):
+                    if not part.kind & operation:
+                        continue
+                    part_results[operation] = (part_result, committed, fatal)
+                    if operation == 4:
+                        outcome['baro'] = current['baro']
+                    else:
+                        groups = (0, 1) if operation == 1 else (2, 3)
+                        for g in groups:
+                            outcome['results'][g] = current['results'][g]
+                            outcome['nis'][g] = current['nis'][g]
+                        key = 'position_innovation' if operation == 1 else 'velocity_innovation'
+                        outcome[key] = current[key]
+                if part_result is not None and part_result != ReplayResult.OK:
+                    if result == ReplayResult.OK or fatal:
+                        result = part_result
+                    stopped = fatal
             if (assistance is not None and decision is not None
                     and decision.reanchor_ready and result == ReplayResult.OK
                     and bool(event.valid_mask & 1)):
@@ -631,7 +657,8 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
             if event.kind != 4 and outcome:
                 for g in range(4):
                     if event.kind & (1 if g < 2 else 2):
-                        group_result[g] = int(outcome['results'][g])
+                        committed = part_results[1 if g < 2 else 2][1]
+                        group_result[g] = int(outcome['results'][g]) if committed else 5
                 for g, name in enumerate(("Pos EN", "Pos U", "Vel EN", "Vel U")):
                     if not event.kind & (1 if g < 2 else 2):
                         continue
@@ -648,7 +675,8 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                         [float(effective_source[a]) for a in axes], dtype=np.float64
                     )
                     base = np.asarray([float(variance[a]) for a in axes], dtype=np.float64)
-                    accepted = outcome["results"][g] in (0, 1)
+                    group_replay_result, committed, _ = part_results[1 if g < 2 else 2]
+                    accepted = committed and outcome["results"][g] in (0, 1)
                     resolved = int(p[
                         "position_measurement_timestamp_us"
                         if g < 2 else "velocity_measurement_timestamp_us"
@@ -660,6 +688,9 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                         source_id=p.get("_quality_source_id"),
                         resolved_measurement_timestamp_us=resolved,
                         operation_sequence=order,
+                        replay_result=None if group_replay_result is None else int(group_replay_result),
+                        operation_attempted=group_replay_result is not None,
+                        committed=committed,
                         valid=bool(int(p["valid_group_mask"]) & (1 << g)),
                         result=int(outcome["results"][g]),
                         variance_scale=(
@@ -684,6 +715,9 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                             source="Recomputed",
                             source_id=p.get("_quality_source_id"),
                             group=name,
+                            replay_result=None if group_replay_result is None else int(group_replay_result),
+                            operation_attempted=group_replay_result is not None,
+                            committed=committed,
                             valid=bool(event.valid_mask & (1 << g))
                             and not (g == 1 and history.state.analysis_position_vertical_disabled),
                             result=outcome["results"][g],
@@ -706,12 +740,14 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                 baro_result = outcome.get('baro', 3)
                 base = float(p["variance_m2"])
                 effective = float(history.state.last_baro_effective_variance)
-                accepted = baro_result in (0, 1)
+                baro_replay_result, committed, fatal = part_results[4]
+                accepted = committed and baro_result in (0, 1)
                 measurement_events.append(dict(
                     group="baro", timestamp_us=history.present,
                     receive_timestamp_us=event.receive_us,
                     resolved_measurement_timestamp_us=event.measurement_us,
                     operation_sequence=order,
+                    replay_result=int(baro_replay_result), operation_attempted=True, committed=committed,
                     valid=bool(p.get("valid_mask", 1) & 1),
                     result=int(baro_result),
                     variance_scale=effective / base if int(baro_result) == 1 and base > 0 else 1.0,
@@ -721,12 +757,13 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                     fixed_lag_latency=(history.present - event.measurement_us) * .001,
                     r_scale=effective / base if accepted and base > 0 else np.nan,
                 ))
-                results[2] = baro_result
+                results[2] = int(Kf6UpdateResult.NUMERIC_ERROR) if fatal else baro_result
             elif outcome:
                 for group in range(2):
                     if event.kind & (1 << group):
                         group_results = outcome['results'][group * 2:group * 2 + 2]
-                        results[group] = min(group_results)
+                        _, _, fatal = part_results[1 << group]
+                        results[group] = int(Kf6UpdateResult.NUMERIC_ERROR) if fatal else min(group_results)
             final_group = kind == "baro" or order == max(
                 int(p["position_operation_sequence"]), int(p["velocity_operation_sequence"]))
             if final_group and history.replays != int(p['replay_generation']):
@@ -758,5 +795,6 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
         'replay_count': history.replays, 'execution_mismatches': mismatches,
         'measurement_timing_inferred': False, 'reanchor_counts': history.state.reanchor_counts,
         'gnss_group_updates': group_updates, 'measurement_events': measurement_events,
+        'measurement_operations': measurement_operations,
         'integrity_analysis_events': analysis_events,
         'reanchor_timestamps_us': reanchor_times}

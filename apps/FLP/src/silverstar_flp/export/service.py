@@ -517,7 +517,10 @@ class FlightExporter:
         failures: list[ExportFailure] = []
         source_store = self._Store_Prepare(replay_store, algorithm_results or {})
         resolved_source_id = requested.source_id or source_store.ActiveSource_Get().source_id
-        store = source_store.Snapshot_Create(resolved_source_id)
+        selected_source = ChannelResolver(dataset, source_store, prime_trajectory_bounds=False).Source_Get(resolved_source_id)
+        if not selected_source.available:
+            raise ValueError(f"export_source_unavailable:{resolved_source_id}")
+        store = source_store.Snapshot_Create(selected_source.source_id)
         resolver = ChannelResolver(dataset, store)
         mission_bounds = resolver.MissionReplayBounds_Get()
         flight_bounds = FlightDisplayBounds_Get(dataset, mission_bounds)
@@ -561,15 +564,11 @@ class FlightExporter:
         vertical_result = None
         integrity_error = None
         integrity_parameters = {}
-        if requested.include_plots and dataset.Records_Get("GNSS_NATIVE"):
+        if (requested.include_plots and dataset.Records_Get("GNSS_NATIVE")
+                and self._EstimatorSelection_Get(resolver) is not None):
             try:
-                source = store.ActiveSource_Get()
-                entry = store.SourceEntry_Get(source.source_id)
-                integrity_parameters = dict(
-                    entry.parameters if entry is not None else
-                    self._registry.Algorithm_Get("silverstar.algorithm.kf6")
-                    .recorded_parameters(dataset)
-                )
+                source = resolver.Source_Get()
+                integrity_parameters = dict(self._SourceParameters_Get(dataset, resolver, source))
                 integrity_parameters["gnss_integrity_enable"] = 1
                 integrity_result = GnssIntegrityStream_Build(
                     dataset, integrity_parameters)
@@ -971,24 +970,23 @@ class FlightExporter:
 
     @staticmethod
     def _SourceChannels_Get(resolver: ChannelResolver) -> dict[str, TimeSeries]:
-        source = resolver.store.ActiveSource_Get()
-        channels = resolver.ExplorerChannels_Get()
-        if source.kind != AnalysisSourceKind.RECORDED:
-            return {
-                name: series for name, series in channels.items()
-                if ".recorded." not in name
-            }
-        recorded_namespace = resolver.RecordedNavigationSource_Get()
-        if recorded_namespace == "KF_6":
-            excluded = "pure_ins.recorded."
-        elif recorded_namespace == "Pure INS":
-            excluded = "kf6.recorded."
+        source = resolver.Source_Get()
+        channels = dict(resolver.dataset.series)
+        # Raw receiver/task data remain separately exportable. Algorithm data
+        # are restricted to the frozen primary solution/result.
+        raw = {name: series for name, series in channels.items()
+               if ".recorded." not in name
+               and name.partition(".")[0] not in resolver.store.RECORDED_ALGORITHMS}
+        if source.kind == AnalysisSourceKind.RECORDED:
+            prefix = f"{source.recorded_solution_id}.recorded."
+            raw.update((name, series) for name, series in channels.items()
+                       if name.startswith(prefix))
         else:
-            excluded = ""
-        return {
-            name: series for name, series in channels.items()
-            if not excluded or not name.startswith(excluded)
-        }
+            entry = resolver.store.SourceEntry_Get(source.source_id)
+            if entry is not None:
+                raw.update((f"{entry.StableName_Get()} / {name}", series)
+                           for name, series in entry.channels.items())
+        return raw
 
     @staticmethod
     def _Language_Resolve(language: ExportLanguage, ui_language: str) -> ExportLanguage:
@@ -1346,6 +1344,7 @@ class FlightExporter:
             "resolved_source_id": active.source_id,
             "resolved_result_id": active.result_id,
             "active_analysis_source": active.source_id,
+            "active_recorded_solution": active.recorded_solution_id,
             "active_source_kind": active.kind.value,
             "generated": generated_payload,
             "skipped": skipped_payload,
@@ -1561,7 +1560,7 @@ class FlightExporter:
             for metadata, specification in specifications
         }
         sources = resolver.EstimatorSources_Get(tuple(by_algorithm))
-        active = resolver.store.ActiveSource_Get()
+        active = resolver.Source_Get()
         ordered: list[AnalysisSource] = []
         ordered.extend(
             source for source in sources if source.source_id == active.source_id
@@ -1782,8 +1781,8 @@ class FlightExporter:
         }
         sources = resolver.EstimatorSources_Get(tuple(metadata_by_id))
         sources = tuple(source for source in sources
-                        if source.source_id == resolver.store.ActiveSource_Get().source_id)
-        active_id = resolver.store.ActiveSource_Get().source_id
+                        if source.source_id == resolver.Source_Get().source_id)
+        active_id = resolver.Source_Get().source_id
 
         def source_score(source: AnalysisSource) -> int:
             if source.algorithm_id is None:
@@ -2412,7 +2411,7 @@ class FlightExporter:
         skip: Callable[[str, str, str], None],
     ) -> None:
         labels = _LABELS[language]
-        active = resolver.store.ActiveSource_Get()
+        active = resolver.Source_Get()
         mission_bounds = FlightDisplayBounds_Get(
             dataset, resolver.MissionReplayBounds_Get(active.source_id)
         )

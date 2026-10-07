@@ -95,6 +95,8 @@ def test_cancelled_discovery_result_is_not_published():
 
 def test_declining_close_does_not_cancel_active_task():
     worker, event = Mock(), Mock()
+    # Mock fabricates truthy missing attributes; this case is a non-save task.
+    worker.is_project_save = False
     window = SimpleNamespace(_active_worker=worker, _ProjectChanges_Confirm=lambda: False)
     MainWindow.closeEvent(window, event)
     worker.Worker_Cancel.assert_not_called()
@@ -110,7 +112,9 @@ def test_cancellation_updates_local_and_global_status():
         status_label=global_status, _worker_cancel_callback=local,
         _worker_cancelled_published=False,
     )
-    MainWindow._Task_Cancelled(window)
+    # Exercise the extracted status publisher; the signal dispatcher now requires
+    # a live QObject sender belonging to the active task.
+    MainWindow._TaskCancellation_Publish(window)
     global_status.setText.assert_called_once_with("cancelled")
     local.assert_called_once_with("cancelled")
 

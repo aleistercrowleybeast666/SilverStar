@@ -17,7 +17,8 @@ Unknown fields/IDs, missing values, invalid types/ranges, non-finite numbers, ol
 identities and invalid modes are rejected. Recorded values cannot override the package.
 Restore checks every saved configuration against the opened dataset and validates provenance
 before publishing it. The `draft` entry preserves unsubmitted What-if edits; historical run
-configurations remain available in the document, while result arrays are recomputed when requested.
+configurations remain available. Optional verified numerical sidecars now retain results;
+missing historical arrays require explicit replay and are never recomputed automatically.
 Saves flush a temporary UTF-8 JSON file and atomically replace the target.
 
 ## Desktop workflow and path authority
@@ -33,11 +34,13 @@ Log and decoder references in the project directory or descendants are stored re
 `SilverStar.ssproject` is an inert sidecar: FLP does not parse it, infer parameters from it, or use
 it for matching. The authoritative chain remains log Descriptor ↔ exact `.ssdecoder` 1.2.
 
-The format remains **version 3**. These interactions add no fields and define no second project
-model.
+The format remains **version 3**. Optional result_artifact, parse_artifact and
+save_data_and_results fields extend the same project model; earlier v3 files remain readable.
+See [Project Artifacts](Project_Artifacts.md).
 
 ## Analysis source and range state
 
 Version 3 ui_state stores analysis_source and time_range (start/end/preset/custom_duration).
-The selected normal replay/What-if configuration is re-executed on reopen and retains its run ID.
-No result arrays are embedded; source log and decoder identity checks precede restoration.
+The selected primary and optional secondary retain source/run IDs. Completed runs restore
+from verified sidecars after source-log/exact-decoder checks. Missing results stay unavailable
+until explicit user replay. No automatic numerical replay is started on reopen.

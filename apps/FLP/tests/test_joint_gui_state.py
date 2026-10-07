@@ -4,7 +4,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication
 
-from silverstar_flp.core.project import Project_Load, ProjectDocument
+from silverstar_flp.core.project import Project_Load, ProjectDocument, ProjectResults_Load
+from silverstar_flp.core.replay_execution import Replay_Execute
 from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
@@ -81,15 +82,24 @@ def test_range_shell_1000_700_language_theme_and_pointer(qtbot, tmp_path, langua
     window.close()
 
 
-def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, tmp_path):
+def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, tmp_path, monkeypatch):
+    from PySide6.QtWidgets import QMessageBox
+    # An assertion failure must not leave teardown waiting on a native dialog.
+    monkeypatch.setattr(QMessageBox, 'warning', lambda *_: QMessageBox.StandardButton.Discard)
     registry = builtin_registry()
     opened = NavigationPair_Open(tmp_path/'pair', flight_samples=101)
     first = MainWindow(registry)
     qtbot.addWidget(first)
     first._LogOpenResult_Set(opened, ProjectDocument())
     plugin = registry.Algorithm_Get('silverstar.algorithm.kf6')
-    result = plugin.run(opened.dataset, ReplayRequest(mode=ReplayMode.WHAT_IF,
-                                                    parameters={'baro_std_m':6}))
+    # This legacy synthetic pair has no recorded process revision. An
+    # executable What-if must choose one explicitly; preserve that rejection.
+    with pytest.raises(ValueError, match='kf6_algorithm_revision_missing'):
+        plugin.run(opened.dataset, ReplayRequest(mode=ReplayMode.WHAT_IF,
+                                                parameters={'baro_std_m':6}))
+    result = Replay_Execute(plugin, opened.dataset, ReplayRequest(mode=ReplayMode.WHAT_IF,
+                                                    parameters={'baro_std_m':6},
+                                                    process_model_revision=2))
     entry = first._replay_store.Result_Add(result, algorithm_name='KF6', restored_run_index=3)
     first._AnalysisSource_Set(entry.source_id)
     first.time_range.controller.Range_Set(.123,.876)
@@ -100,11 +110,13 @@ def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, t
     saved = Project_Load(project)
     assert saved.ui_state['analysis_source'] == entry.source_id
     assert saved.ui_state['time_range']['start'] == .123
+    assert saved.replay_configurations[entry.result_id]['process_model_revision'] == 2
     first.close()
     second = MainWindow(registry)
     qtbot.addWidget(second)
     errors=[]
     second._Error_Show = errors.append
+    saved.restored_results = ProjectResults_Load(saved).Entries_Get()
     second._LogOpenResult_Set(opened, saved)
     second._AnalysisSource_Restore()
     qtbot.waitUntil(lambda: second._active_worker is None, timeout=30000)

@@ -72,6 +72,7 @@ def test_flight_tabs_start_crop_complete_vectors_and_active_source(
     resolver = ChannelResolver(dataset, store)
 
     page = FlightPage(Translator("en_US"))
+    page.SecondarySource_Set(resolver.Source_Get("recorded").source_id)
     page.Dataset_Set(dataset, resolver)
     page.show()
     application.processEvents()
@@ -109,8 +110,8 @@ def test_flight_tabs_start_crop_complete_vectors_and_active_source(
     assert sum("Recorded" in name for name in velocity_names) == 3
     assert sum("Pure INS" in name for name in velocity_names) >= 3
     styles = [item.opts["pen"].style() for item in page.velocity_plot.listDataItems()]
-    assert styles[:3] == [Qt.PenStyle.DashLine] * 3
-    assert styles[3:] == [Qt.PenStyle.SolidLine] * 3
+    assert styles[:3] == [Qt.PenStyle.SolidLine] * 3
+    assert styles[3:] == [Qt.PenStyle.DashLine] * 3
     assert np.allclose(
         page._trajectory_origin,
         _TrajectoryOrigin_Get(page._position, START_TIMESTAMP_US),

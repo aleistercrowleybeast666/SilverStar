@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
 from enum import StrEnum
+import re
 from types import MappingProxyType
 
 from silverstar_flp.core.dataset import FlightDataset, TimeSeries
@@ -33,6 +34,8 @@ class AnalysisSource:
     algorithm_id: str | None = None
     result_id: str | None = None
     analysis_only: bool = False
+    recorded_solution_id: str | None = None
+    available: bool = True
 
 
 @dataclass(frozen=True, slots=True)
@@ -116,20 +119,74 @@ class ReplayStoredResult:
         return f"{self.algorithm_name} / {mode} #{self.run_index}"
 
 
+class ReplayResultChangeResult(StrEnum):
+    REMOVED = "removed"
+    RESTORED = "restored"
+    NOT_FOUND = "not_found"
+    NOT_DELETED = "not_deleted"
+    CONFLICT = "conflict"
+
+
+def RunIdentityState_Validate(state):
+    if not isinstance(state, dict) or set(state) != {"limits", "deleted"}:
+        raise ValueError("project_run_identity_invalid")
+    limits, deleted = state["limits"], state["deleted"]
+    namespace = r"[A-Za-z0-9_-]{1,80}:(?:what_if|offline|recomputed)"
+    if (not isinstance(limits, dict) or len(limits) > 4096
+            or not isinstance(deleted, list) or len(deleted) > 4096):
+        raise ValueError("project_run_identity_invalid")
+    for key, value in limits.items():
+        if (not isinstance(key, str) or not re.fullmatch(namespace, key)
+                or type(value) is not int or not 1 <= value <= 2**31 - 1):
+            raise ValueError("project_run_identity_invalid")
+    seen = set()
+    for result_id in deleted:
+        if (not isinstance(result_id, str)
+                or not re.fullmatch(namespace + r":[1-9][0-9]{0,9}", result_id)):
+            raise ValueError("project_run_identity_invalid")
+        key, _, index = result_id.rpartition(":")
+        if result_id in seen or int(index) > limits.get(key, 0):
+            raise ValueError("project_run_identity_invalid")
+        seen.add(result_id)
+
+
 class ReplayResultStore:
     RECORDED_SOURCE_ID = "recorded"
+    RECORDED_ALGORITHMS = {
+        "pure_ins": "silverstar.algorithm.pure_ins",
+        "kf6": "silverstar.algorithm.kf6",
+        "eskf15": "silverstar.algorithm.estimator.eskf15",
+        "sf6": "silverstar.algorithm.sf6",
+    }
+
+    @classmethod
+    def RecordedSource_Get(cls, source_id: str) -> AnalysisSource | None:
+        if source_id == cls.RECORDED_SOURCE_ID:
+            return AnalysisSource(source_id, AnalysisSourceKind.RECORDED)
+        solution = source_id.removeprefix("recorded:")
+        if source_id.startswith("recorded:") and solution in cls.RECORDED_ALGORITHMS:
+            return AnalysisSource(source_id, AnalysisSourceKind.RECORDED,
+                                  cls.RECORDED_ALGORITHMS[solution],
+                                  recorded_solution_id=solution)
+        return None
 
     def __init__(self) -> None:
         self._entries: list[ReplayStoredResult] = []
         self._by_result_id: dict[str, ReplayStoredResult] = {}
         self._by_source_id: dict[str, ReplayStoredResult] = {}
         self._active_source_id = self.RECORDED_SOURCE_ID
+        self._run_limits: dict[str, int] = {}
+        self._deleted: set[str] = set()
+        self._removed_entries: dict[str, ReplayStoredResult] = {}
 
     def Clear(self) -> None:
         self._entries.clear()
         self._by_result_id.clear()
         self._by_source_id.clear()
         self._active_source_id = self.RECORDED_SOURCE_ID
+        self._run_limits.clear()
+        self._deleted.clear()
+        self._removed_entries.clear()
 
     def Result_Add(
         self,
@@ -149,21 +206,23 @@ class ReplayResultStore:
                 else ReplayMode.RECORDED_CONFIGURATION
             )
         )
-        run_index = restored_run_index if restored_run_index is not None else 1 + max(
-            (entry.run_index for entry in self._entries
-             if entry.algorithm_id == result.algorithm_id and entry.mode == mode), default=0)
-        if type(run_index) is not int or run_index <= 0:
-            raise ValueError("replay_result_identity_invalid")
         algorithm_key = result.algorithm_id.rsplit(".", 1)[-1]
         mode_key = {
             ReplayMode.WHAT_IF: "what_if",
             ReplayMode.OFFLINE: "offline",
             ReplayMode.RECORDED_CONFIGURATION: "recomputed",
         }[mode]
+        namespace = f"{algorithm_key}:{mode_key}"
+        run_index = (restored_run_index if restored_run_index is not None
+                     else self._run_limits.get(namespace, 0) + 1)
+        if type(run_index) is not int or not 1 <= run_index <= 2**31 - 1:
+            raise ValueError("replay_result_identity_invalid")
         result_id = f"{algorithm_key}:{mode_key}:{run_index}"
         source_id = f"replay:{result_id}"
         if result_id in self._by_result_id:
             raise ValueError("replay_result_identity_duplicate")
+        if result_id in self._deleted:
+            raise ValueError("replay_result_identity_deleted")
         entry = ReplayStoredResult(
             result_id=result_id,
             source_id=source_id,
@@ -183,7 +242,64 @@ class ReplayResultStore:
         self._entries.append(entry)
         self._by_result_id[result_id] = entry
         self._by_source_id[source_id] = entry
+        self._run_limits[namespace] = max(run_index, self._run_limits.get(namespace, 0))
         return entry
+
+    def IdentityState_Get(self) -> dict:
+        return {"limits": dict(self._run_limits), "deleted": sorted(self._deleted)}
+
+    def IdentityState_Restore(self, state: dict) -> None:
+        RunIdentityState_Validate(state)
+        if set(state["deleted"]) & self._by_result_id.keys():
+            raise ValueError("project_deleted_run_present")
+        limits = dict(self._run_limits)
+        for key, value in state["limits"].items():
+            limits[key] = max(value, limits.get(key, 0))
+        self._run_limits = limits
+        self._deleted = set(state["deleted"])
+
+    def RemovedEntry_Get(self, result_id: str) -> ReplayStoredResult | None:
+        return self._removed_entries.get(result_id)
+
+    def Result_Remove(self, result_id: str) -> ReplayResultChangeResult:
+        entry = self.Entry_Get(result_id)
+        if entry is None:
+            return ReplayResultChangeResult.NOT_FOUND
+        if len(self._deleted) >= 4096:
+            return ReplayResultChangeResult.CONFLICT
+        self._entries = [item for item in self._entries if item.result_id != result_id]
+        del self._by_result_id[result_id]
+        del self._by_source_id[entry.source_id]
+        self._removed_entries[result_id] = entry
+        self._deleted.add(result_id)
+        # A removed primary deliberately remains unavailable until user selection.
+        return ReplayResultChangeResult.REMOVED
+
+    def Result_Restore(self, entry: ReplayStoredResult) -> ReplayResultChangeResult:
+        if entry.result_id not in self._deleted:
+            return ReplayResultChangeResult.NOT_DELETED
+        if entry.result_id in self._by_result_id or entry.source_id in self._by_source_id:
+            return ReplayResultChangeResult.CONFLICT
+        mode_key = {ReplayMode.WHAT_IF: "what_if", ReplayMode.OFFLINE: "offline",
+                    ReplayMode.RECORDED_CONFIGURATION: "recomputed"}[entry.mode]
+        actual_mode = (ReplayMode.WHAT_IF if entry.result.provenance == "What-if" else
+                       ReplayMode.OFFLINE if entry.result.provenance == "Offline" else
+                       ReplayMode.RECORDED_CONFIGURATION)
+        expected = f"{entry.result.algorithm_id.rsplit('.', 1)[-1]}:{mode_key}:{entry.run_index}"
+        if (entry.mode != actual_mode or entry.result_id != expected
+                or entry.source_id != f"replay:{expected}"):
+            return ReplayResultChangeResult.CONFLICT
+        self._deleted.remove(entry.result_id)
+        try:
+            restored = self.Result_Add(entry.result, algorithm_name=entry.algorithm_name,
+                                       restored_run_index=entry.run_index)
+        except Exception:
+            self._deleted.add(entry.result_id)
+            raise
+        if restored.result_id != entry.result_id or restored.source_id != entry.source_id:
+            raise ValueError("replay_result_identity_invalid")
+        self._removed_entries.pop(entry.result_id, None)
+        return ReplayResultChangeResult.RESTORED
 
     def Entries_Get(self) -> tuple[ReplayStoredResult, ...]:
         return tuple(self._entries)
@@ -196,7 +312,8 @@ class ReplayResultStore:
 
     def Snapshot_Create(self, source_id: str) -> ReplayResultStore:
         snapshot = ReplayResultStore()
-        if source_id == self.RECORDED_SOURCE_ID:
+        if self.RecordedSource_Get(source_id) is not None:
+            snapshot._active_source_id = source_id
             return snapshot
         entry = self.SourceEntry_Get(source_id)
         if entry is None or not entry.analysis_ready:
@@ -223,23 +340,30 @@ class ReplayResultStore:
         return tuple(sources)
 
     def ActiveSource_Get(self) -> AnalysisSource:
-        if self._active_source_id == self.RECORDED_SOURCE_ID:
-            return AnalysisSource(self.RECORDED_SOURCE_ID, AnalysisSourceKind.RECORDED)
+        recorded = self.RecordedSource_Get(self._active_source_id)
+        if recorded is not None:
+            return recorded
         entry = self._by_source_id.get(self._active_source_id)
         if entry is None or not entry.analysis_ready:
-            self._active_source_id = self.RECORDED_SOURCE_ID
-            return AnalysisSource(self.RECORDED_SOURCE_ID, AnalysisSourceKind.RECORDED)
+            return AnalysisSource(self._active_source_id, AnalysisSourceKind.RECOMPUTED,
+                                  available=False)
         return AnalysisSource(
             entry.source_id, entry.kind, entry.algorithm_id, entry.result_id, entry.analysis_only
         )
 
     def ActiveSource_Set(self, source_id: str) -> bool:
-        if source_id != self.RECORDED_SOURCE_ID:
+        if self.RecordedSource_Get(source_id) is None:
             entry = self._by_source_id.get(source_id)
             if entry is None or not entry.analysis_ready:
                 return False
         self._active_source_id = source_id
         return True
+
+    def ActiveSource_Restore(self, source_id: str) -> None:
+        """Retain a saved unavailable selection; only user selection may change it."""
+        if not isinstance(source_id, str) or not source_id.startswith("replay:"):
+            raise ValueError("replay_result_identity_invalid")
+        self._active_source_id = source_id
 
 
 class ChannelResolver:
@@ -253,13 +377,15 @@ class ChannelResolver:
         "imu.corrected.gyro_b": "imu.corrected.gyro_b",
     }
 
-    def __init__(self, dataset: FlightDataset, store: ReplayResultStore) -> None:
+    def __init__(self, dataset: FlightDataset, store: ReplayResultStore, *,
+                 prime_trajectory_bounds: bool = True) -> None:
         self.dataset = dataset
         self.store = store
         self._mission_bounds_cache: dict[str, MissionReplayBounds] = {}
         self._trajectory_bounds_cache: dict[str, TrajectoryBounds] = {}
         self._trajectory_bounds_calculation_count: dict[str, int] = {}
-        self._TrajectoryBounds_Prime()
+        if prime_trajectory_bounds:
+            self._TrajectoryBounds_Prime()
 
     @staticmethod
     def _SeriesValidEndTimestamp_Get(series: TimeSeries | None) -> int | None:
@@ -287,7 +413,7 @@ class ChannelResolver:
         source = self.Source_Get(source_id)
         if source.kind != AnalysisSourceKind.RECORDED:
             return source.source_id, source, None
-        resolved_solution = solution or self._RecordedPositionSolution_Get()
+        resolved_solution = solution or source.recorded_solution_id or self._RecordedPositionSolution_Get()
         cache_suffix = resolved_solution or "unavailable"
         return f"recorded:{cache_suffix}", source, resolved_solution
 
@@ -307,7 +433,7 @@ class ChannelResolver:
                     "navigation.position_enu",
                     solution=resolved_solution,
                 ),
-                self.RecordedSeries_Get("attitude.q_nb"),
+                self.RecordedSeries_Get("attitude.q_nb", solution=resolved_solution),
             )
         else:
             candidates = (
@@ -377,29 +503,45 @@ class ChannelResolver:
             if entry.analysis_ready:
                 self.TrajectoryBounds_Get(entry.source_id)
 
-    def Source_Get(self, source_id: str | None = None) -> AnalysisSource:
-        if source_id is None:
-            return self.store.ActiveSource_Get()
-        if source_id == ReplayResultStore.RECORDED_SOURCE_ID:
-            return AnalysisSource(source_id, AnalysisSourceKind.RECORDED)
-        entry = self.store.SourceEntry_Get(source_id)
-        if entry is None:
-            return AnalysisSource(
-                ReplayResultStore.RECORDED_SOURCE_ID,
-                AnalysisSourceKind.RECORDED,
-            )
-        return AnalysisSource(
-            entry.source_id, entry.kind, entry.algorithm_id, entry.result_id, entry.analysis_only
+    def Sources_Get(self) -> tuple[AnalysisSource, ...]:
+        recorded = tuple(
+            source for solution in self.store.RECORDED_ALGORITHMS
+            if (source := self.Source_Get(f"recorded:{solution}")).available
         )
+        replay = tuple(source for source in self.store.Sources_Get()
+                       if source.kind != AnalysisSourceKind.RECORDED)
+        return (*recorded, *replay)
+
+    def Source_Get(self, source_id: str | None = None) -> AnalysisSource:
+        selected_id = source_id if source_id is not None else self.store.ActiveSource_Get().source_id
+        if selected_id == self.store.RECORDED_SOURCE_ID:
+            solution = self._RecordedPositionSolution_Get()
+            if solution is None:
+                return AnalysisSource(selected_id, AnalysisSourceKind.RECORDED, available=False)
+            selected_id = f"recorded:{solution}"
+        recorded = self.store.RecordedSource_Get(selected_id)
+        if recorded is not None:
+            present = any(name.startswith(f"{recorded.recorded_solution_id}.recorded.")
+                          for name in self.dataset.series)
+            return replace(recorded, available=present)
+        entry = self.store.SourceEntry_Get(selected_id)
+        if entry is None or not entry.analysis_ready:
+            return AnalysisSource(selected_id, AnalysisSourceKind.RECOMPUTED, available=False)
+        return AnalysisSource(entry.source_id, entry.kind, entry.algorithm_id,
+                              entry.result_id, entry.analysis_only)
 
     def Series_Get(self, channel_id: str, source_id: str | None = None) -> TimeSeries | None:
         source = self.Source_Get(source_id)
-        if source.kind == AnalysisSourceKind.RECORDED:
-            return self.RecordedSeries_Get(channel_id)
-        entry = self.store.SourceEntry_Get(source.source_id)
-        if entry is None:
+        if not source.available:
             return None
-        return entry.channels.get(channel_id)
+        if source.kind == AnalysisSourceKind.RECORDED:
+            solution = source.recorded_solution_id
+            namespace = channel_id.partition(".")[0]
+            if namespace in self.store.RECORDED_ALGORITHMS and namespace != solution:
+                return None
+            return self.RecordedSeries_Get(channel_id, solution=solution)
+        entry = self.store.SourceEntry_Get(source.source_id)
+        return entry.channels.get(channel_id) if entry is not None else None
 
     def RecordedSeries_Get(
         self,
@@ -563,9 +705,10 @@ class ChannelResolver:
             ):
                 sources.append(
                     AnalysisSource(
-                        ReplayResultStore.RECORDED_SOURCE_ID,
+                        f"recorded:{namespace}",
                         AnalysisSourceKind.RECORDED,
                         algorithm_id,
+                        recorded_solution_id=namespace,
                     )
                 )
         for entry in self.store.Entries_Get():
