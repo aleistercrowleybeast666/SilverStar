@@ -150,6 +150,37 @@ def test_failed_open_never_reports_complete(qtbot, tmp_path, window):
     assert window.test_errors
 
 
+def test_repeated_save_open_and_import_preserve_active_transaction(
+        qtbot, tmp_path, small_input, window, monkeypatch):
+    import silverstar_flp.ui.main_window as module
+    opened, document, store = _Document(small_input)
+    window._LogOpenResult_Set(opened, document)
+    window._replay_store.Result_Add(store.Entries_Get()[0].result)
+    entered, release = Event(), Event()
+    original = module.Project_Save
+    def held(*args, **kwargs):
+        entered.set()
+        assert release.wait(5)
+        return original(*args, **kwargs)
+    monkeypatch.setattr(module, 'Project_Save', held)
+    path = tmp_path / 'transaction.ssflp'
+    try:
+        assert window._Project_Write(path, background=True, save_data=True)
+        qtbot.waitUntil(entered.is_set, timeout=5000)
+        active = window._active_worker
+        assert not window._Project_Write(tmp_path / 'duplicate.ssflp', background=True)
+        window._Project_Open(tmp_path / 'other.ssflp')
+        window.Log_Open(opened.dataset.source_path, decoder_path=opened.source_package_path)
+        assert window._active_worker is active
+        assert window._project is document
+        assert window.test_errors == ['another_background_task_is_running'] * 3
+        assert not path.exists() and not (tmp_path / 'duplicate.ssflp').exists()
+    finally:
+        release.set()
+    _Finished(qtbot, window, success=True)
+    assert Project_Load(path).save_data_and_results
+
+
 @pytest.mark.parametrize('case', ['clean_close','cancel_close_option','cancel_after_commit','snapshot_removed'])
 def test_original_save_lifecycle_unchanged(qtbot, tmp_path, monkeypatch, private_settings, case):
     # Execute the original four bodies unchanged; private settings and offscreen Qt.
