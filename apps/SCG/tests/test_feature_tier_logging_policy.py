@@ -47,7 +47,8 @@ def test_effective_tier_logging_policy_keeps_retained_choices(builtin_catalog, t
         assert (f'case {record}: return 0U;' in source) == prohibited
     if tier == 'compact':
         header = _FlightConfigHeader_Render(loaded, builtin_catalog)
-        assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH' not in header
+        assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH                    56U' in header
+        assert 'SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH                 16U' in header
         assert 'SYSTEM_LOG_RECORD_SLOT_SIZE' not in header
     if tier == 'minimal':
         assert (PURE_INS in CompactLogRequiredRecords_Get(loaded)) == (estimator is None)

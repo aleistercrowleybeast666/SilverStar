@@ -7,7 +7,7 @@ from silverstar_fccg.project.model import BuildOptions, DeviceInstance, ProjectM
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.feature_tiers import FeatureTier_Apply, FeatureTier_StrategyAllowed, FeatureTier_DescriptorActive
 from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
-from silverstar_fccg.generator.render import _FlightConfigHeader_Render, _DeviceDescriptorEntries_Get
+from silverstar_fccg.generator.render import _FlightConfigHeader_Render, _DeviceDescriptorEntries_Get, _MetadataSource_Render
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve, SourceGraphError
 
 PREFIX = 'silverstar.algorithm.estimator.'
@@ -64,7 +64,7 @@ def test_switch_preserves_algorithms_parameters_devices_and_current_mcu(builtin_
     assert ProjectModel_Parse(model.Dictionary_Get()).Dictionary_Get() == model.Dictionary_Get()
 
 
-def test_compact_keeps_gnss_maintenance_and_full_log_geometry(builtin_catalog):
+def test_compact_keeps_gnss_maintenance_and_reviewed_log_geometry(builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
     original_protocols = deepcopy(model.protocols)
     original_devices = deepcopy(model.device_instances)
@@ -72,9 +72,28 @@ def test_compact_keeps_gnss_maintenance_and_full_log_geometry(builtin_catalog):
     assert model.protocols == original_protocols
     assert model.device_instances == original_devices
     header = _FlightConfigHeader_Render(model, builtin_catalog)
-    assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH' not in header
+    import re
+    assert re.search(r'SYSTEM_LOG_RECORD_QUEUE_DEPTH\s+56U', header)
+    assert re.search(r'SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH\s+16U', header)
+    assert 'SYSTEM_LOG_RECORD_SLOT_SIZE' not in header
+    assert 'SYSTEM_LOG_ESTIMATOR_SLOT_SIZE' not in header
+    assert 'SYSTEM_LOG_AGGREGATION_BUFFER_SIZE' not in header
+    assert len(model.logging_streams) == 40
+    descriptors = _DeviceDescriptorEntries_Get(model, builtin_catalog)
+    algorithm_count = sum(len(builtin_catalog.Component_Get(component).metadata.get(
+        'algorithm_descriptors', [])) for component in model.ComponentIds_Get())
+    # The independent snapshot must retain records beyond ordinary queue depth.
+    assert 1 + len(descriptors) + algorithm_count + len(model.logging_streams) > 56
+    profile_source = _MetadataSource_Render(model, builtin_catalog)
+    assert 'SSLOG_RECORD_COUNT + 4U + PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX) <= 65535U' in profile_source
+    assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH' not in profile_source
     assert model.build.logging_profile == 'all_streams'
     assert 'AIR_LINK_HAL_BUFFER_SIZE=260' in SourceGraph_Resolve(model, builtin_catalog).defines
+    for tier in ('standard', 'full'):
+        FeatureTier_Apply(model, tier, builtin_catalog)
+        restored = _FlightConfigHeader_Render(model, builtin_catalog)
+        assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH' not in restored
+        assert 'SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH' not in restored
 
 
 def test_minimal_changes_are_reversible_and_keep_pure_ins(builtin_catalog):
@@ -197,7 +216,7 @@ def test_first_page_control_and_log_states(qapp):
     from silverstar_fccg.ui.widgets import StandardCheckBox, LockedCheckBox
     page = DevicesPage(Translator('zh_CN'))
     assert [page.feature_tier_combo.itemData(i) for i in range(4)] == ['full', 'standard', 'compact', 'minimal']
-    assert page.feature_tier_combo.itemText(3) == '极简'
+    assert [page.feature_tier_combo.itemText(i) for i in range(4)] == ['完整', '标准', '轻量', '最简']
     logs = FlightConfigurationPage(Translator('en_US'))
     logs.Streams_Set([LoggingStreamView('same', 'Selected', True, 'replay', editable=False)])
     check = logs.logging_table.cellWidget(0, 0).findChild(StandardCheckBox)

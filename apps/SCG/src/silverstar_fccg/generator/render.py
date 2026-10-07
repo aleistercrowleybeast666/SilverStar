@@ -814,6 +814,11 @@ def _FlightConfigHeader_Render(
             ("SYSTEM_USER_POWER_ENABLE", "1U" if power_available else "0U"),
             ("SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE", "1U" if power_available else "0U"),
         ))
+    if model.build.feature_tier == "compact":
+        # Reviewed lightweight default; owned START records retain full geometry.
+        # Ordinary queue loss remains diagnosed and is not a durability ACK.
+        definitions.extend((("SYSTEM_LOG_RECORD_QUEUE_DEPTH", "56U"),
+                            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "16U")))
     if model.build.feature_tier == "minimal":
         descriptors = _DeviceDescriptorEntries_Get(model, catalog)
         algorithm_count = sum(len(catalog.Component_Get(component).metadata.get(
@@ -3063,7 +3068,7 @@ def _MetadataSource_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
     snapshot_assert = f"""#include "sslog_records.h"
 _Static_assert((1U + sizeof(s_device_descriptors) / sizeof(s_device_descriptors[0]) +
                sizeof(s_algorithm_descriptors) / sizeof(s_algorithm_descriptors[0]) +
-               SSLOG_RECORD_COUNT{" + 4U + PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX" if model.build.logging_profile == "sf6_minimal" else ""}) <= {"65535U" if model.build.logging_profile == "sf6_minimal" else "SYSTEM_LOG_RECORD_QUEUE_DEPTH"},
+               SSLOG_RECORD_COUNT + 4U + PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX) <= 65535U,
                "Snapshot descriptor count exceeds its owner cursor capacity");""" if model.build.compact_mode and model.protocols.get("logging") is not None else ""
     return f"""#include "system_descriptor_if.h"
 

@@ -112,7 +112,13 @@ def test_compact_snapshot_capacity_keeps_disabled_stream_descriptors(builtin_cat
     slots = lambda text: int(re.search(r"#define PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS\s+(\d+)U", text)[1])
     depth = int(re.search(r"#define SYSTEM_LOG_RECORD_QUEUE_DEPTH\s+(\d+)U", before)[1])
     assert slots(before) == slots(after)
-    assert depth >= slots(before) + 4
+    # Owned snapshot traversal preserves every descriptor independently of the
+    # ordinary queue. This Reference configuration exceeds its 24-slot queue.
+    assert depth == 24 and slots(before) + 4 > depth
+    from silverstar_fccg.generator.render import _MetadataSource_Render
+    profile = _MetadataSource_Render(model, builtin_catalog)
+    assert 'SSLOG_RECORD_COUNT + 4U + PROJECT_MAGNETOMETER_INSTANCE_COUNT_MAX) <= 65535U' in profile
+    assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH' not in profile
 
 
 def test_f1_shared_sdio_dma_requires_both_actual_handle_bindings():
