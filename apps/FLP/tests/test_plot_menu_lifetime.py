@@ -37,3 +37,24 @@ def test_plot_menus_are_native_owned_and_destroyed_in_gui_thread(qtbot):
     assert not worker.is_alive()
     assert sorted(destroyed) == [(0, gui), (1, gui)]
     assert gc.isenabled()
+
+
+def test_gnss_secondary_view_menu_is_native_owned(qtbot):
+    from silverstar_flp.core.i18n import Translator
+    from silverstar_flp.ui.gnss_integrity import GnssIntegrityPage
+    page = GnssIntegrityPage(Translator('zh_CN'))
+    qtbot.addWidget(page)
+    menu = page._speed_view.menu
+    assert menu.parent() is page.quality_plot
+    assert not shiboken6.ownedByPython(menu)
+    assert menu.isWindow() and menu.windowFlags() & Qt.WindowType.Popup == Qt.WindowType.Popup
+    gui, destroyed = get_ident(), []
+    menu.destroyed.connect(lambda *_: destroyed.append(get_ident()), Qt.ConnectionType.DirectConnection)
+    page.deleteLater()
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    assert not shiboken6.isValid(menu)
+    worker = Thread(target=gc.collect)
+    worker.start()
+    worker.join(timeout=5)
+    assert not worker.is_alive() and destroyed == [gui]
+    assert gc.isenabled()

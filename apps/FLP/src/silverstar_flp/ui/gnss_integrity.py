@@ -71,6 +71,11 @@ class GnssIntegrityPage(QWidget):
         self.satellite_plot = pg.PlotWidget()
         self.quality_plot.showAxis("right")
         self._speed_view = pg.ViewBox()
+        # The secondary ViewBox has its own popup outside PlotWidget's menus.
+        # Bind its native lifetime to the GUI plot as well.
+        speed_menu = self._speed_view.menu
+        if speed_menu is not None:
+            speed_menu.setParent(self.quality_plot, speed_menu.windowFlags())
         self.quality_plot.scene().addItem(self._speed_view)
         self.quality_plot.getAxis("right").linkToView(self._speed_view)
         self._speed_view.setXLink(self.quality_plot)
