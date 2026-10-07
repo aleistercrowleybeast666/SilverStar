@@ -969,5 +969,6 @@
   "progress.work_items": "{done} / {total} items",
   "progress.work_bytes_done": "{done} B",
   "progress.work_items_done": "{done} items",
-  "progress.artifact.timestamps": "Validating timestamp order"
+  "progress.artifact.timestamps": "Validating timestamp order",
+  "error.code.project_save_path_too_long": "Windows could not access the long project/artifact path. Save to a shorter folder or use a shorter project filename, then retry. This save has not completed."
 }

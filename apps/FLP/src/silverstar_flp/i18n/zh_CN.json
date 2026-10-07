@@ -969,5 +969,6 @@
   "progress.work_items": "{done} / {total} 项",
   "progress.work_bytes_done": "{done} B",
   "progress.work_items_done": "{done} 项",
-  "progress.artifact.timestamps": "验证时间戳顺序"
+  "progress.artifact.timestamps": "验证时间戳顺序",
+  "error.code.project_save_path_too_long": "Windows无法访问过长的工程/工件路径。请缩短保存目录或工程文件名后重试；本次保存未完成。"
 }

@@ -86,6 +86,16 @@ from silverstar_flp.ui.widgets import ProjectHeaderLabel, StandardComboBox
 from silverstar_flp.ui.workers import FunctionWorker, WorkerRetireResult
 
 
+def _ProjectSave_ErrorMessage(error: OSError) -> str:
+    # Report an observed Windows access failure, rather than forbidding paths
+    # that a long-path-aware host may support. Preserve all ordinary IO errors.
+    if getattr(error, "winerror", None) in (3, 206):
+        for path in (error.filename2, error.filename):
+            if path is not None and len(str(path).encode("utf-16-le", errors="surrogatepass")) // 2 >= 260:
+                return f"project_save_path_too_long: {path}"
+    return str(error)
+
+
 class MainWindow(QMainWindow):
     taskSettled = Signal()
     PAGE_CODES = (
@@ -1483,7 +1493,13 @@ class MainWindow(QMainWindow):
             dataset = self._dataset
             edit_serial = getattr(self, "_project_edit_serial", 0)
             def save(context):
-                Project_Save(project, path, replay_store=store, dataset=dataset, context=context)
+                try:
+                    Project_Save(project, path, replay_store=store, dataset=dataset, context=context)
+                except OSError as exc:
+                    message = _ProjectSave_ErrorMessage(exc)
+                    if message != str(exc):
+                        raise OSError(message) from exc
+                    raise
                 if background:
                     # Atomic project replacement has completed. A later Cancel
                     # must still publish this committed path and remembered option.
@@ -1507,6 +1523,7 @@ class MainWindow(QMainWindow):
             return True
         except Exception as exc:
             logging.exception("Project save failed")
+            self.status_label.setText(self._translator.Text_Get("status.failed"))
             self._Error_Show(str(exc))
             return False
 
