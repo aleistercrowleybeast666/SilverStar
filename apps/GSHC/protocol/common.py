@@ -240,6 +240,7 @@ class GspType(IntEnum):
     AIR_RX = 0x02
     AIR_TX = 0x03
     ACK = 0x04
+    AIR_RX_RADIO_V1 = 0x05
 
 
 class GspAckResult(IntEnum):

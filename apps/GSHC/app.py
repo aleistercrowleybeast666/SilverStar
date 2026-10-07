@@ -58,7 +58,7 @@ from protocol.common import (
     AirStatusId,
     enum_name,
 )
-from protocol.gsp_min import GsStatus, GspAck, build_pc_to_gs_air_frame
+from protocol.gsp_min import GsStatus, GsToPcAirFrame, GspAck, build_pc_to_gs_air_frame
 from protocol.receive_pipeline import ProtocolEvent
 from services.data_migration import DataMigrationConflictPolicy
 from services.i18n import EnumParam, I18n
@@ -1358,9 +1358,11 @@ class Controller(QObject):
         if batch.session_generation != self._connection_generation:
             return
         for event in batch.events:
-            if event.rssi_dbm is not None:
+            if isinstance(event.parsed_gsp, GsToPcAirFrame):
                 self.state.rssi_dbm = event.rssi_dbm
                 self.state.snr_db = event.snr_db
+                self.state.radio_backend = event.parsed_gsp.radio_backend
+                self.state.radio_metrics_supported = event.parsed_gsp.metrics_supported
             if isinstance(event.parsed_gsp, GsStatus):
                 self._handle_gs_status(event.parsed_gsp)
             elif isinstance(event.parsed_gsp, GspAck):

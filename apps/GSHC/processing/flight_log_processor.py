@@ -40,6 +40,7 @@ from .flight_plotter import FlightPlotter, PlotterConfig
 from .time_ranges import GifPlan_Build, PageName_Build, Pages_Build
 
 GSP_TYPE_AIR_RX = 0x02
+GSP_TYPE_AIR_RX_RADIO_V1 = 0x05
 
 STATUS_BOOT = int(AirStatusId.BOOT)
 STATUS_SELFTEST_OK = int(AirStatusId.SELFTEST_COMPLETE)
@@ -808,6 +809,7 @@ class FlightLogProcessor:
             r.get("dir") == "RX"
             and r.get("layer") == "AIR_PARSED"
             and r.get("kind") == "FLIGHT_STATE"
+            and r.get("radio_metrics_supported") is not False
             and r.get("rssi_dbm") is not None
             and r.get("snr_db") is not None
             for r in records
@@ -842,6 +844,7 @@ class FlightLogProcessor:
                     final_preflight_status = r
                 elif (
                     r.get("kind") == "FLIGHT_STATE"
+                    and r.get("radio_metrics_supported") is not False
                     and r.get("rssi_dbm") is not None
                     and r.get("snr_db") is not None
                 ):
@@ -967,7 +970,7 @@ class FlightLogProcessor:
 
     def _is_gsp_air_rx(self, r: dict) -> bool:
         try:
-            return int(r.get("gsp_type", r.get("msg_type", -1))) == GSP_TYPE_AIR_RX
+            return int(r.get("gsp_type", r.get("msg_type", -1))) in (GSP_TYPE_AIR_RX, GSP_TYPE_AIR_RX_RADIO_V1)
         except (TypeError, ValueError):
             return False
 
@@ -1064,6 +1067,10 @@ class FlightLogProcessor:
         r: dict,
         capability: AirCapabilityMessage | None = None,
     ) -> tuple[int, float, float] | None:
+        # The typed NRF envelope has no metric bytes. An old AIR_RX SNR=-128
+        # remains an ordinary valid SX value; no numeric sentinel is used.
+        if self._optional_int(r, "gsp_type" if "gsp_type" in r else "msg_type") == GSP_TYPE_AIR_RX_RADIO_V1:
+            return None
         payload = self._gsp_payload_bytes(r)
         if payload is None or len(payload) < 3:
             return None
@@ -1098,6 +1105,9 @@ class FlightLogProcessor:
         if payload is None or len(payload) < 3:
             return None
         air_len = payload[2]
+        if self._optional_int(r, "gsp_type" if "gsp_type" in r else "msg_type") == GSP_TYPE_AIR_RX_RADIO_V1:
+            if payload[0] != 1 or payload[1] != 0 or not 1 <= air_len <= 61 or len(payload) != 3 + air_len:
+                return None
         air_frame = payload[3:3 + air_len]
         return parse_air_frame(air_frame, capability)
 

@@ -508,6 +508,8 @@ class FlightControllerState:
     gs_crc_error_count: int = 0
     rssi_dbm: int | None = None
     snr_db: float | None = None
+    radio_backend: str | None = None
+    radio_metrics_supported: bool | None = None
     received_flight_packets: int = 0
     estimated_lost_packets: int = 0
     expected_flight_packets: int = 0

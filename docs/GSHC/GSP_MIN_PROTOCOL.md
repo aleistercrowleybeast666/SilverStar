@@ -50,3 +50,10 @@ GSP只检查封装长度并交给无线层，AIR命令语义不属于GSP。
 
 ## ACK
 固定3字节：`ACK_GSP_TYPE, RESULT, DETAIL`。RESULT：OK/BAD_CRC/BAD_LEN/BAD_TYPE/BAD_PARAM/BUSY。GSP ACK只确认串口封装，不替代AIR ACK。
+
+
+## AIR_RX_RADIO_V1 (0x05, GS to PC)
+
+NRF uses the exact contract in [gsp_air_rx_radio_v1.json](../../contracts/gsp_air_rx_radio_v1.json): offset0 backend=1, offset1 metrics_flags=0, offset2 AIR_LEN=1..61, then exactly AIR_LEN original AIR bytes. Payload length is exactly3+AIR_LEN and remains at most64 bytes. Unknown backend/flags and invalid lengths are rejected.
+
+This envelope has no numeric RSSI/SNR fields. Live GSHC clears old SX measurements; raw and parsed logs carry absent values, and exports contain no fabricated link metrics. Legacy AIR_RX0x02 signed metrics and bytes, AIR_TX, ACK and AIR M0/CMD/ACK are unchanged. Both Ground and GSHC need the paired implementation; old clients ignore0x05 and cannot display its AIR data. Physical radio completion is not application ACK or READY.

@@ -99,6 +99,7 @@ class ReceivePipeline:
             if parsed_gsp is None and frame.msg_type in {
                 int(GspType.GS_STATUS),
                 int(GspType.AIR_RX),
+                int(GspType.AIR_RX_RADIO_V1),
                 int(GspType.ACK),
             }:
                 self.gsp_parse_errors += 1
@@ -291,6 +292,7 @@ def protocol_event_log_records(event: ProtocolEvent) -> list[dict[str, Any]]:
         if frame.msg_type in {
             int(GspType.GS_STATUS),
             int(GspType.AIR_RX),
+            int(GspType.AIR_RX_RADIO_V1),
             int(GspType.ACK),
         }:
             records.append(
@@ -335,11 +337,16 @@ def protocol_event_log_records(event: ProtocolEvent) -> list[dict[str, Any]]:
         return records
 
     air_bytes = event.parsed_gsp.air_frame
+    radio_metadata = {
+        "radio_backend": event.parsed_gsp.radio_backend,
+        "radio_metrics_supported": event.parsed_gsp.metrics_supported,
+    }
     records.append(
         {
             **base,
             "layer": "AIR",
             "kind": "AIR_RAW",
+            **radio_metadata,
             "air_hex": air_bytes.hex(),
             "air_type": int(air_bytes[0]) if air_bytes else None,
             "air_len": len(air_bytes),
@@ -354,6 +361,7 @@ def protocol_event_log_records(event: ProtocolEvent) -> list[dict[str, Any]]:
                 **base,
                 "layer": "AIR_PARSED",
                 "kind": "AIR_PARSE_ERROR",
+                **radio_metadata,
                 "error": event.air_error,
                 "air_hex": air_bytes.hex(),
                 "rssi_dbm": event.rssi_dbm,
@@ -365,6 +373,7 @@ def protocol_event_log_records(event: ProtocolEvent) -> list[dict[str, Any]]:
     message = event.air_message
     common = {
         **base,
+        **radio_metadata,
         "layer": "AIR_PARSED",
         "rssi_dbm": event.rssi_dbm,
         "snr_db": event.snr_db,

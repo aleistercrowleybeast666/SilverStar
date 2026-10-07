@@ -1090,3 +1090,27 @@ SPI status, raw IRQ and payload reads are accepted only when the owner's bus-res
 Ground GSP_ACK_OK confirms enqueue acceptance. It does not confirm Ground TX_DONE, Flight reception, business execution, AIR ACK or READY. Both new endpoints must be installed for the role policy: an actual-driver trace with new Flight and frozen Ground50 still fails the noncollision/ACK expectation. Their wire format remains compatible; that mixed scheduling pair is not accepted as reliable. The prior0b98 full software gates did not establish RF acceptance and its free-running hardware failure is preserved separately.
 
 Capability uses one outstanding transport token, with a four-second pending timeout. Only TX_DONE receipts enter the advertisement window; TX_TIMEOUT, lost receipts or expired pending work do not. The receipt age is wrap-safe transport milliseconds, and the service converts that age to its 64-bit monotonic microsecond clock epoch. Both the advertisement window and pending lifetime use that 64-bit clock; a complete 32-bit millisecond cycle cannot revive an expired advertisement or pending receipt. Internal 32-bit tokens encode an instance byte and a nonzero 24-bit counter; bounded allocation avoids the eight queued and one active tokens when that counter wraps. Reused completed tokens lose their old receipt. Untracked ACK/status completion never overwrites the latest tracked receipt. The API retains only the latest tracked receipt, so another caller must tolerate NOT_PRESENT; the service itself tracks only one Capability at a time. CPU-only Capability metadata uses the existing CPU-fast BSS target mapping; no wireless payload or DMA object moves with it.
+
+
+### NRF24L01+ transport extension (2026-10-06)
+
+AIR M0 frame bytes, Capability handshake and CMD/ACK semantics remain unchanged.
+NRF physical payloads are at most32 bytes; version1 fragments are reassembled below AIR
+into complete logical datagrams of at most61 bytes. A physical TX_DS receipt is never
+a business ACK or proof that the peer application consumed a datagram.
+
+GSP type`0x05` (`AIR_RX_RADIO_V1`) carries `[backend=1, flags=0, air_length]`
+followed by the original AIR frame. These three header bytes fit the existing64-byte
+GSP payload limit. NRF has no RSSI/SNR measurements in this envelope. GSHC clears
+previous SX measurements and records absent values; link export graphs contain no
+measurement curves. Existing type`0x02` signed RSSI/SNR fields remain unchanged,
+including valid negative values. GS_STATUS and AIR_TX/ACK keep their existing bytes.
+Unknown backend, flags, length and malformed envelopes are rejected ordinarily.
+
+Old GSHC parsers safely ignore type0x05 but cannot display NRF telemetry: both Ground
+firmware and GSHC must be upgraded together. This is an extension, not a claim that
+old clients functionally support NRF. See [machine-readable GSP contract](../../contracts/gsp_air_rx_radio_v1.json)
+and [fragment contract](../../contracts/nrf24_fragment_v1.json). CRC16 detects many
+corruptions but is not authentication or a cross-reboot identity proof. Complete
+stale frames after the finite duplicate window and mixed-frame CRC collisions remain
+NOT PROVEN; the transport does not automatically replay application commands.

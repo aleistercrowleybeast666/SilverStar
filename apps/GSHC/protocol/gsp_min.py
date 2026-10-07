@@ -36,9 +36,11 @@ class GsStatus:
 
 @dataclass(frozen=True)
 class GsToPcAirFrame:
-    rssi_dbm: int
-    snr_db: float
+    rssi_dbm: int | None
+    snr_db: float | None
     air_frame: bytes
+    radio_backend: str = "sx128x"
+    metrics_supported: bool = True
 
 
 @dataclass(frozen=True)
@@ -152,6 +154,14 @@ def parse_gsp_frame(frame: GspFrame):
             rx_cnt=int.from_bytes(p[6:10], "little"),
             crc_err_cnt=int.from_bytes(p[10:12], "little"),
         )
+
+    if frame.msg_type == GspType.AIR_RX_RADIO_V1:
+        # V1 has no numeric metrics for NRF. Reject unknown backend/flags and
+        # length rather than interpreting them as legacy signed measurements.
+        if len(p) < 4 or p[0] != 1 or p[1] != 0 or not 1 <= p[2] <= 61 or len(p) != 3 + p[2]:
+            return None
+        return GsToPcAirFrame(rssi_dbm=None, snr_db=None, air_frame=bytes(p[3:]),
+            radio_backend="nrf24l01p", metrics_supported=False)
 
     if frame.msg_type == GspType.AIR_RX:
         if len(p) < 3:
