@@ -112,6 +112,14 @@ It aborts at non-overflow startup-burst; subsequent overload/preflight/diagnosti
 modes are NOT_RUN for56. Successful80 runs do not substitute for them. Complete
 failure traces and all recorded software-generated logs remain preserved.
 
+The unchanged startup-burst assertion fails before the writer exports its
+`.sslog`. Neither failed56 nor failed64 produces that file. The existing
+`StorageIntegrity/logger-startup-burst.sslog`, startup-burst-overload and
+preflight/diagnostic logs belong to the earlier successful80/48 run; they are
+preserved and explicitly inventoried with that origin, never attributed to56.
+The failed-run evidence is the complete raw failure trace. The small parent
+package does not include those older binary logs as failed-run artifacts.
+
 Static task estimates / reservations / margins (bytes): Device2112/2560/448;
 INS2224/3072/848; Estimator1504/4096/2592; Flight3480/4096/616;
 Logger2736/3072/336; Telemetry2168/4096/1928; Idle256/512/256. This actual RF
