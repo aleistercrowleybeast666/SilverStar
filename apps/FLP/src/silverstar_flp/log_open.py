@@ -410,51 +410,54 @@ class LogOpenCoordinator:
     ) -> LogOpenResult:
         containers = self._ContainerPlugins_Get()
         container = containers[package.required_container_plugin_id]
+        from silverstar_flp.core.task_progress import TaskProgress
+        progress = TaskProgress(context)
         from silverstar_flp.core.artifacts import FileHash_Get
         from silverstar_flp.core.parse_cache import ParseIdentity_Get
         from silverstar_flp.core.project import DecoderNumericalIdentity_Get
+        progress.Progress_Report(0.22, "progress.open.source_check")
         identity = ParseIdentity_Get(log_path, DecoderNumericalIdentity_Get(package, container), context)
+        parse_start = 0.28
         # Exact package validation and Descriptor matching have already succeeded.
         # Cache admission remains inside this coordinator, never a decoder fallback.
         if cache_request is not None and cache_request.dataset_cache_reference is not None:
             from silverstar_flp.core.parse_cache import DatasetCache_Read
+            progress.Progress_Report(0.28, "progress.open.dataset_cache")
+            parse_start = 0.50
             try:
                 dataset = DatasetCache_Read(cache_request.project_path,
-                    cache_request.dataset_cache_reference, identity, log_path, context)
+                    cache_request.dataset_cache_reference, identity, log_path,
+                    progress.Context_Build(0.28, 0.50))
             except (ValueError, OSError, KeyError, TypeError, EOFError) as exc:
                 logging.warning("Full dataset cache unavailable; strict parse follows: %s", exc)
             else:
                 context.Cancel_RaiseIfRequested()
+                progress.Progress_Report(0.96, "progress.open.source_check")
                 if (FileHash_Get(log_path, context) != identity["log_sha256"]
                         or log_path.stat().st_size != identity["log_bytes"]):
                     raise ValueError("log_source_changed_during_parse")
-                context.Progress_Report(1.0, "log_open.complete")
+                progress.Progress_Report(1.0, "log_open.complete")
                 return LogOpenResult(dataset, package, descriptor, reference,
                     Path(source_package_path), dataset.diagnostics, dataset.data_quality)
-        context.Progress_Report(0.22, "log_open.parse")
+        progress.Progress_Report(parse_start, "log_open.parse")
         parser = DecoderProfileParserPlugin(container, package)
-        parse_context = TaskContext(
-            cancellation_event=context.cancellation_event,
-            progress_callback=lambda progress, code: context.Progress_Report(
-                0.22 + 0.72 * progress,
-                code,
-            ),
-        )
+        parse_context = progress.Context_Build(parse_start, 0.94)
         dataset = parser.parse(log_path, parse_context)
         context.Cancel_RaiseIfRequested()
-        context.Progress_Report(0.96, "log_open.semantics")
+        progress.Progress_Report(0.94, "log_open.semantics")
         dataset = SilverStarSslog0SemanticAdapter(package).Apply(dataset)
         from silverstar_flp.decoder_profiles.algorithm_parameters import FirmwareMechanizationRecords_Validate
         FirmwareMechanizationRecords_Validate(dataset)
         from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_Get
         Sf6Revision_Get(dataset)
+        progress.Progress_Report(0.96, "progress.open.source_check")
         if (FileHash_Get(log_path, context) != identity["log_sha256"]
                 or log_path.stat().st_size != identity["log_bytes"]):
             raise ValueError("log_source_changed_during_parse")
         dataset = replace(dataset, metadata={**dataset.metadata,
                           "source_log_sha256": identity["log_sha256"],
                           "parse_identity": identity})
-        context.Progress_Report(1.0, "log_open.complete")
+        progress.Progress_Report(1.0, "log_open.complete")
         return LogOpenResult(
             dataset=dataset,
             package=package,

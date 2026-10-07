@@ -74,7 +74,20 @@ if gl is not None:
 
         def __init__(self, parent: QWidget | None = None) -> None:
             super().__init__(parent)
+            # Qt ownership keeps GUI-affine timers out of worker-thread GC.
+            self.keyTimer.setParent(self)
             self._camera_locked = True
+
+        def addItem(self, item):
+            super().addItem(item)
+            # The GL scenegraph parentItem is separate from QObject ownership.
+            # Removed/cleared items remain owned until re-added to another view
+            # or destroyed with this view; scene removal stays nondestructive.
+            pending = [(item, self)]
+            while pending:
+                current, owner = pending.pop()
+                current.setParent(owner)
+                pending.extend((child, current) for child in current.childItems())
 
         def CameraLocked_Set(self, locked: bool) -> None:
             self._camera_locked = bool(locked)

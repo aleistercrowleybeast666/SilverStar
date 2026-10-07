@@ -733,6 +733,9 @@ class _Decoder:
 def Artifact_Write(project_path: Path, payload: object, identity: dict,
                    context: TaskContext | None = None) -> dict:
     context = context or TaskContext()
+    from silverstar_flp.core.task_progress import TaskProgress
+    progress = TaskProgress(context)
+    progress.Progress_Report(0.0, "progress.artifact.prepare")
     context.Cancel_RaiseIfRequested()
     parent = Path(project_path).resolve().parent
     root = parent / (Path(project_path).name + ".artifacts")
@@ -750,18 +753,22 @@ def Artifact_Write(project_path: Path, payload: object, identity: dict,
     directory.mkdir()
     # Interrupted generations are deliberately never referenced or auto-deleted.
     encoder = _Encoder(directory, context)
+    progress.Progress_Report(0.05, "progress.artifact.serialize")
     encoded = encoder.Encode(payload)
     manifest = {"version": ARTIFACT_VERSION, "identity": identity,
                 "arrays": encoder.arrays, "payload": encoded}
     path = directory / "manifest.json.gz"
+    progress.Progress_Report(0.62, "progress.artifact.manifest_write")
     manifest_raw_bytes = _Json_Write(path, manifest, context, MAX_MANIFEST_BYTES - encoder.record_json_bytes)
     reference = {"path": path.relative_to(parent).as_posix(),
                  "sha256": FileHash_Get(path, context),
                  "bytes": encoder.total + path.stat().st_size,
                  "uncompressed_bytes": manifest_raw_bytes +
                      sum(spec["raw_bytes"] for spec in encoder.arrays.values()) + encoder.record_json_bytes}
-    Artifact_Verify(project_path, reference, identity, context)
+    progress.Progress_Report(0.75, "progress.artifact.verify")
+    Artifact_Verify(project_path, reference, identity, progress.Context_Build(0.75, 0.97))
     context.Cancel_RaiseIfRequested()
+    progress.Progress_Report(0.98, "progress.artifact.checked")
     from silverstar_flp.core.dataset import FlightDataset
     if type(payload) is FlightDataset:
         files = [(path, reference["sha256"], path.stat().st_size)]
@@ -808,6 +815,9 @@ def Artifact_Verify(project_path: Path, reference: Mapping, identity: dict | Non
 
 def _Artifact_Load(project_path, reference, identity, context, *, verify_only):
     context = context or TaskContext()
+    from silverstar_flp.core.task_progress import TaskProgress
+    progress = TaskProgress(context)
+    progress.Progress_Report(0.0, "progress.artifact.manifest_read")
     context.Cancel_RaiseIfRequested()
     path = ArtifactPath_Resolve(project_path, reference)
     _File_Require(path, limit=MAX_MANIFEST_BYTES, context=context)
@@ -819,6 +829,7 @@ def _Artifact_Load(project_path, reference, identity, context, *, verify_only):
         raise ValueError("artifact_version_unsupported")
     if identity is not None and manifest.get("identity") != identity:
         raise ValueError("artifact_identity_mismatch")
+    progress.Progress_Report(0.20, "progress.artifact.verify" if verify_only else "progress.artifact.read")
     decoder = _Decoder(path.parent, manifest["arrays"], context, allow_records=manifest["version"] >= 2,
                        allow_audits=manifest["version"] >= 3,
                        verify_only=verify_only, json_bytes=json_bytes)
@@ -828,6 +839,7 @@ def _Artifact_Load(project_path, reference, identity, context, *, verify_only):
         raise ValueError("artifact_payload_corrupt") from exc
     if set(decoder.loaded_arrays) != set(decoder.arrays):
         raise ValueError("artifact_unreferenced_arrays")
+    progress.Progress_Report(0.98, "progress.artifact.checked")
     return result
 
 
