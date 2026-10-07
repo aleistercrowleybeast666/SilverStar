@@ -24,9 +24,9 @@
 #define TEST_FAILURE_KEY 0x30210002UL
 #define TEST_FRAME_CAPACITY 128U
 #define TEST_RX_CAPACITY 8192U
-#ifndef PROJECT_RESOURCE_GNSS_UART
-#define PROJECT_RESOURCE_GNSS_UART PLATFORM_UART_2
-#endif
+/* The single-receiver fixture must bind the actual generated instance zero. */
+static PlatformUartId s_test_gnss_uart = PLATFORM_UART_COUNT;
+#define TEST_GNSS_UART s_test_gnss_uart
 
 /* Exercise instance zero in the legacy single-receiver scenarios. */
 #define GnssNeoM9n_Init() GnssNeoM9n_Init(0U)
@@ -451,7 +451,7 @@ static void Test_MonRfRespond(void)
 
 PlatformResult PlatformUart_Init(PlatformUartId id)
 {
-    if (id != PROJECT_RESOURCE_GNSS_UART)
+    if (id != TEST_GNSS_UART)
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
@@ -468,7 +468,7 @@ PlatformResult PlatformUart_Write(PlatformUartId id,
     uint8_t contains_failure;
 
     (void)timeout_ms;
-    if (id != PROJECT_RESOURCE_GNSS_UART)
+    if (id != TEST_GNSS_UART)
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
@@ -648,7 +648,7 @@ PlatformResult PlatformUart_Read(PlatformUartId id,
 {
     uint16_t count = 0U;
 
-    if ((id != PROJECT_RESOURCE_GNSS_UART) || (data == NULL) ||
+    if ((id != TEST_GNSS_UART) || (data == NULL) ||
         (read_length == NULL))
     {
         return PLATFORM_INVALID_ARGUMENT;
@@ -674,7 +674,7 @@ PlatformResult PlatformUart_Read(PlatformUartId id,
 
 PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
 {
-    if ((id != PROJECT_RESOURCE_GNSS_UART) || (baudrate == 0U))
+    if ((id != TEST_GNSS_UART) || (baudrate == 0U))
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
@@ -700,7 +700,7 @@ PlatformResult PlatformUart_BaudSet(PlatformUartId id, uint32_t baudrate)
 
 PlatformResult PlatformUart_BaudGet(PlatformUartId id, uint32_t *baudrate)
 {
-    if ((id != PROJECT_RESOURCE_GNSS_UART) || (baudrate == NULL))
+    if ((id != TEST_GNSS_UART) || (baudrate == NULL))
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
@@ -711,7 +711,7 @@ PlatformResult PlatformUart_BaudGet(PlatformUartId id, uint32_t *baudrate)
 PlatformResult PlatformUart_DiagnosticsGet(
     PlatformUartId id, PlatformUartDiagnostics *diagnostics)
 {
-    if ((id != PROJECT_RESOURCE_GNSS_UART) || (diagnostics == NULL))
+    if ((id != TEST_GNSS_UART) || (diagnostics == NULL))
     {
         return PLATFORM_INVALID_ARGUMENT;
     }
@@ -1693,8 +1693,22 @@ static void Test_StartupRecoveryFault(uint8_t scenario)
     s_tick_ms = 100U;
 }
 
+static uint8_t Test_GeneratedResourcesBind(void)
+{
+    ProjectNeoM9nResources resources;
+    SystemDeviceResult result = ProjectNeoM9nResources_Get(0U, &resources);
+    TEST_CHECK(result == SYSTEM_DEVICE_OK);
+    if (result != SYSTEM_DEVICE_OK) { return 0U; }
+    TEST_CHECK((uint32_t)resources.uart < (uint32_t)PLATFORM_UART_COUNT);
+    if ((uint32_t)resources.uart >= (uint32_t)PLATFORM_UART_COUNT) { return 0U; }
+    s_test_gnss_uart = resources.uart;
+    return 1U;
+}
+
 int main(void)
 {
+    if (!Test_GeneratedResourcesBind())
+    { return Test_Finish("neo_m9n_device"); }
     (void)memset(&s_uart_diagnostics, 0, sizeof(s_uart_diagnostics));
     s_uart_baudrate = GNSS_DEFAULT_BAUDRATE;
     TEST_CHECK(GnssNeoM9n_Init() == GnssNeoM9n_InitOk);

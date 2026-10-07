@@ -19,9 +19,9 @@ void DebugLog_Print(const char *fmt, ...)
 #define TEST_NAV_PVT_PAYLOAD_SIZE 92U
 #define TEST_NAV_PVT_FRAME_SIZE   (TEST_NAV_PVT_PAYLOAD_SIZE + 8U)
 
-#ifndef PROJECT_RESOURCE_GNSS_UART
-#define PROJECT_RESOURCE_GNSS_UART PLATFORM_UART_2
-#endif
+/* The single-receiver fixture must bind the actual generated instance zero. */
+static PlatformUartId s_test_gnss_uart = PLATFORM_UART_COUNT;
+#define TEST_GNSS_UART s_test_gnss_uart
 #define SystemGnss_Init() NeoM9nGnssInstance_Init(0U)
 #define SystemGnss_Start() NeoM9nGnssInstance_Start(0U)
 #define SystemGnss_Stop() NeoM9nGnssInstance_Stop(0U)
@@ -89,7 +89,7 @@ static void Test_DeviceSampleConvertsToSystemInterface(void)
     TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
     Test_NavPvtFrameBuild(frame);
     TEST_CHECK(HostPlatformMock_UartRxInject(
-        PROJECT_RESOURCE_GNSS_UART, frame, sizeof(frame)) == sizeof(frame));
+        TEST_GNSS_UART, frame, sizeof(frame)) == sizeof(frame));
     SystemGnss_Process();
     TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_OK);
     TEST_CHECK(sample.latitude_e7 == 231234567L);
@@ -139,11 +139,11 @@ static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
     for (cycle = 0U; cycle < 4500U; cycle++)
     {
         HostPlatformMock_TimeAdvanceUs(10000ULL);
-        TEST_CHECK(PlatformUart_BaudGet(PROJECT_RESOURCE_GNSS_UART,
+        TEST_CHECK(PlatformUart_BaudGet(TEST_GNSS_UART,
             &baudrate) == PLATFORM_OK);
         if (baudrate == GNSS_DEFAULT_BAUDRATE)
         {
-            TEST_CHECK(HostPlatformMock_UartRxInject(PROJECT_RESOURCE_GNSS_UART,
+            TEST_CHECK(HostPlatformMock_UartRxInject(TEST_GNSS_UART,
                 frame, sizeof(frame)) == sizeof(frame));
         }
         SystemGnss_Process();
@@ -174,10 +174,10 @@ static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
         SYSTEM_DEVICE_INVALID_ARGUMENT);
     TEST_CHECK(NeoM9nGnssInstance_RecoveryBusyGet(0U, NULL) ==
         SYSTEM_DEVICE_INVALID_ARGUMENT);
-    TEST_CHECK(PlatformUart_BaudGet(PROJECT_RESOURCE_GNSS_UART,
+    TEST_CHECK(PlatformUart_BaudGet(TEST_GNSS_UART,
         &baudrate) == PLATFORM_OK);
     TEST_CHECK(baudrate == GNSS_DEFAULT_BAUDRATE);
-    TEST_CHECK(HostPlatformMock_UartRxInject(PROJECT_RESOURCE_GNSS_UART,
+    TEST_CHECK(HostPlatformMock_UartRxInject(TEST_GNSS_UART,
         frame, sizeof(frame)) == sizeof(frame));
     SystemGnss_Process();
     TEST_CHECK(NeoM9nGnssInstance_HealthGet(0U, &health) == SYSTEM_DEVICE_OK);
@@ -189,8 +189,22 @@ static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
     TEST_CHECK(SystemGnss_Stop() == SYSTEM_DEVICE_OK);
 }
 
+static uint8_t Test_GeneratedResourcesBind(void)
+{
+    ProjectNeoM9nResources resources;
+    SystemDeviceResult result = ProjectNeoM9nResources_Get(0U, &resources);
+    TEST_CHECK(result == SYSTEM_DEVICE_OK);
+    if (result != SYSTEM_DEVICE_OK) { return 0U; }
+    TEST_CHECK((uint32_t)resources.uart < (uint32_t)PLATFORM_UART_COUNT);
+    if ((uint32_t)resources.uart >= (uint32_t)PLATFORM_UART_COUNT) { return 0U; }
+    s_test_gnss_uart = resources.uart;
+    return 1U;
+}
+
 int main(void)
 {
+    if (!Test_GeneratedResourcesBind())
+    { return Test_Finish("neo_m9n_adapter"); }
     Test_DeviceSampleConvertsToSystemInterface();
     Test_UnidentifiedRecoveryCannotSupplyNavigation();
     return Test_Finish("neo_m9n_adapter");

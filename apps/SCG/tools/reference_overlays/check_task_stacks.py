@@ -1195,7 +1195,7 @@ BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister
 # Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
 # variants supplement the historical V2 sets. No generic acceptance, source
 # coverage exclusion, callback exception or stack threshold is added.
-BINDING_REVIEW_REVISION = "input_voltage_adapter_20261006_v7"
+BINDING_REVIEW_REVISION = "rf_four_provider_queue_20261007_v9"
 BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
  'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
  'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
@@ -1360,11 +1360,58 @@ BINDING_SOURCE_MINIMAL_QUEUE_V8 = {'Generated/Inc/project_flight_config.h': [
     'afca623011a2d5e7b7adc28d580adca0925b9b701ad0f38d23c71b05c08c281b']}
 
 
+# RF four-provider queue probe review v9 (2026-10-07). Exact generated
+# metadata/log-selection variants and real compiler dependency graphs only.
+# All 152 C units and 375 project inputs stay covered; existing callback
+# resolution, unknown-input failure behavior and stack limits are unchanged.
+BINDING_SOURCE_RF_QUEUE_V9 = {'Generated/Inc/project_device_build_capabilities.h': ['7f969a1acedf4a1eca351a60ee41c8d6630567454f70fc6db1118b15802d5472'],
+ 'Generated/Inc/project_device_instances.h': ['72df121af9a40f4c619983d20383e613e633daf977cf60a8460b838492391bae'],
+ 'Generated/Src/project_log_config.c': ['c1c22002eb4ccfebbbd96ac196874700191576fe4b1343811d7e80a3f729a0d2'],
+ 'Generated/Src/project_log_decoder_profile.c': ['5615b5e0064dbe62054eb54022259de25e7d223a175e3398856ce46682f04e7e'],
+ 'Generated/Src/project_metadata.c': ['003574201c66f5474734afeeff92701336b186998aa4553b181beec4d2a65547']}
+
+BINDING_DEPENDENCIES_RF_QUEUE_V9 = {'APP/Src/app_tasks.c': ['842fd609200005b6e998abf103f2ebaa9cedf4bb0cb48ca9150899f12f274194'],
+ 'APP/Src/device_native_log.c': ['fc9a72aaf3a9f48b15c67c7d65e272fe2979bb6aecf1b87c3f2e4ead52457f25'],
+ 'APP/Src/device_task.c': ['0cee95a265b2cce818a9ddd89997a76c38fd48fe9e8a31384740e2deffa85928'],
+ 'APP/Src/diagnostic_log.c': ['099cbb888789201c5c0e5f1f9af5acf8a51bd2c4968e6a344c72b505405f8e35'],
+ 'APP/Src/estimator_task.c': ['fab3463755af1183d0d1342fafd9457824fc9eda073b4a194a5b50b23c0d30ba'],
+ 'APP/Src/flight_task.c': ['3851d7e319c910ad414e1e969680c1a72cf90cee45c67238d3ced7bc7c37a7e7'],
+ 'APP/Src/imu_sample_bus.c': ['8d135a1b8d7aaac5e6ff7c1c12147c006789096e4f4c6a827cb8e384043b7bc2'],
+ 'APP/Src/ins_task.c': ['1aeef8923c93e66e26d6f6e61c97eb58ea036364c5b777a2dc3474d3d8d9080d'],
+ 'APP/Src/logger_bus.c': ['8befefa13c0bef09d16ad73a7bf2a884018c37d49cc84b281751cfec12e23441'],
+ 'APP/Src/logger_task.c': ['eab6279364c4a7ec234dc0a836bfc43ac60a5db04295477b2fd065eff6f27636'],
+ 'Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c': ['936daa462864418ec5c7040a0c632300be3d461031acd320cc0adf944def3693'],
+ 'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['41f2fff2ee0e96a1525a5ee6c090939051909e8fea943e643e4a66f6d7d99bc9'],
+ 'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['fa2a3f64658e88bab96124a28ca992492fd4b87d62cfd8dd25d3ef6fc4484555'],
+ 'Devices/SensorBus/Adapter/Src/sensor_imu_spi_adapter.c': ['340b2fbc0df37d2015293a524745216189d29b3da61bc1432897aba61aa7b761'],
+ 'Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c': ['10a0443b8e725093ad56f0300c460236cbaae5f50bf7cc76c7cdfa0c1a29ea7c'],
+ 'Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c': ['713a40c075335951db6114459e5ab7997f8b8517ad37f4cd473ed2257151c7fc'],
+ 'Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c': ['46afd7878e6e8dc21916c5e24472084c3b83a4fcefe57debf8cd308f6104f70a'],
+ 'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c': ['13884e7e0e22b7e0f13b724a398539233b5f75fd6d2f44fa6412c88e39dc06a9'],
+ 'Generated/Src/project_device_instances.c': ['b77022733feb3ea5e34290a7dc0a61090b8a324f26e9a379b8d0b7a2a8b77f40'],
+ 'Generated/Src/project_metadata.c': ['bb9378e2619fba3e6165d29d63b88d9be35678ba879f396cd7f67c9402188033'],
+ 'Modules/Src/telemetry_service.c': ['5e6ceb7e0870d7283c7d5792f7484e6312b2460ada2b730e49ff7680c70617e3'],
+ 'System/Alignment/Src/system_alignment.c': ['df16a01572354b57b80c5f0b58deb954fa3b43b784e04768ff99f5a6ce344808'],
+ 'System/Calibration/Src/system_calibration.c': ['3261e3db6e416eab70ff66c407ded27774505dfb1d483b9f7ea70510424752e5'],
+ 'System/Calibration/Src/system_calibration_correction.c': ['79aa948d9df6f9537e8e6ca4980a7a767976600ff91d3ccef1405bacbac67a19'],
+ 'System/Calibration/Src/system_mag_calibration.c': ['68056caa7118c6ec587f3e67b66019202a3d3cb097dd75986c2d52517383db64'],
+ 'System/Indicator/Src/system_indicator.c': ['21bfd559f81a23da671031d26b7d2e4cf55555286444a9fa486dc9e9838085ab'],
+ 'System/Inertial/Src/system_inertial.c': ['a29dbfc78374643b06f345dbd9c2db36bb06bc67305f124f01b5879caa51b95b'],
+ 'System/Src/system_barometer_cold.c': ['eb3789ecbfdd816e897b93e35c8eb0e949ef5331f9ae923642ac899fa4322a20'],
+ 'System/Src/system_capabilities.c': ['53d26d70e52cb7a4687079816e0d40dda6f8293405aa6c4874472a98761ff99e'],
+ 'System/Src/system_health.c': ['68ca7fa310bfa6db792de47cdb221d84be5652e0aba1d9c503f204c732b447be'],
+ 'System/Src/system_imu_epoch.c': ['7b554c18d71e7cea2306aef5a512da445393afe965abb21a9f7aea77d52af92f'],
+ 'System/Src/system_sensor_status.c': ['f3b25f0d902dc41ca099646c7ab651008ed0703660150c36ea031643015c3b87'],
+ 'System/Src/system_source_selector.c': ['eae6c5d03c70dd07d0acab9477c35f76dc982fae5c76f6c54dbda754504e94d0'],
+ 'System/Src/system_startup.c': ['306f41f9b584d3fc51c7e1f82ca6b300736db37e96a5a390820330a01799ecb7']}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
             BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []) +
-            BINDING_SOURCE_MINIMAL_QUEUE_V8.get(path, []))
+            BINDING_SOURCE_MINIMAL_QUEUE_V8.get(path, []) +
+            BINDING_SOURCE_RF_QUEUE_V9.get(path, []))
 
 
 def BindingSourceHash_Get(text):
@@ -1389,7 +1436,8 @@ def BindingSources_Verify(root, sources, build):
                           BINDING_DEPENDENCIES_EPOCH_V3.get(path, []) +
                           BINDING_DEPENDENCIES_NRF_V5.get(path, []) +
                           BINDING_DEPENDENCIES_HEALTH_V6.get(path, []) +
-                          BINDING_DEPENDENCIES_POWER_V7.get(path, []))
+                          BINDING_DEPENDENCIES_POWER_V7.get(path, []) +
+                          BINDING_DEPENDENCIES_RF_QUEUE_V9.get(path, []))
         graph_hash = hashlib.sha256("\n".join(dependencies).encode()).hexdigest()
         if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)
