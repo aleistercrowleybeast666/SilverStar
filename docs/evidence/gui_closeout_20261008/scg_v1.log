@@ -1,0 +1,29 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+.F................................................................       [100%]
+================================== FAILURES ===================================
+_ test_switch_import_and_service_preserve_invalid_devices_and_block_generation[minimal] _
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024213D74D70>
+tier = 'minimal'
+
+    @pytest.mark.parametrize('tier', ['compact', 'minimal'])
+    def test_switch_import_and_service_preserve_invalid_devices_and_block_generation(builtin_catalog, tier):
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        model.device_instances.append(DeviceInstance('imu_extra', 'silverstar.device.imu.mpu6050'))
+        original = deepcopy(model.device_instances)
+        FeatureTier_Apply(model, tier, builtin_catalog)
+        assert model.device_instances == original, 'Tier switch must not remove user devices'
+        loaded = ProjectModel_Parse(model.Dictionary_Get())
+        reconciled = ProjectConfiguration_Reconcile(loaded, builtin_catalog)
+>       assert reconciled.model.device_instances == original
+E       AssertionError: assert [DeviceInstan...sitive'), ...] == [DeviceInstan...sitive'), ...]
+E         
+E         At index 3 diff: DeviceInstance(instance_id='storage0', plugin='silverstar.device.storage.sd_sdio_fatfs', interface='', profile='', module_variant='', tx_power_dbm=None, installation_orientation='vertical', mount_nose_axis='z_positive') != DeviceInstance(instance_id='maintenance0', plugin='silverstar.device.console.uart', interface='', profile='', module_variant='', tx_power_dbm=None, installation_orientation='vertical', mount_nose_axis='z_positive')
+E         Right contains one more item: DeviceInstance(instance_id='imu_extra', plugin='silverstar.device.imu.mpu6050', interface=''...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+apps\SCG\tests\test_tier_device_boundaries.py:22: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_tier_device_boundaries.py::test_switch_import_and_service_preserve_invalid_devices_and_block_generation[minimal]
+1 failed, 65 passed in 420.82s (0:07:00)

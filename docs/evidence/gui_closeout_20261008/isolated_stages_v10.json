@@ -1,0 +1,170 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs100"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 6.155049300000428,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_0.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs101"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 12.54778940000051,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_1.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs102"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 13.105480600000192,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_2.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs103"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 12.686307299999498,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_3.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs104"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 12.47090449999996,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_4.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs105"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 6.4919991999995545,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_5.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs106"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 6.285460400000375,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_6.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_failed_open_never_reports_complete",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs107"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 5.514653100000032,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_7.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[clean_close]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs108"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 6.00028359999942,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_8.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_close_option]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs109"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 5.4314008000001195,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_9.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_after_commit]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs1010"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 5.348741800000425,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_10.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[snapshot_removed]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fs1011"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 11.435991899999863,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_stage_v10_11.log"
+  }
+]

@@ -1,0 +1,95 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_ test_switch_import_and_service_preserve_invalid_devices_and_block_generation[compact] _
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001895E4B4D70>
+tier = 'compact'
+
+    @pytest.mark.parametrize('tier', ['compact', 'minimal'])
+    def test_switch_import_and_service_preserve_invalid_devices_and_block_generation(builtin_catalog, tier):
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        model.device_instances.append(DeviceInstance('imu_extra', 'silverstar.device.imu.mpu6050'))
+        original = deepcopy(model.device_instances)
+        FeatureTier_Apply(model, tier, builtin_catalog)
+>       assert model.device_instances == original, 'Tier switch must not remove user devices'
+E       AssertionError: Tier switch must not remove user devices
+E       assert [DeviceInstan...sitive'), ...] == [DeviceInstan...sitive'), ...]
+E         
+E         Right contains one more item: DeviceInstance(instance_id='imu_extra', plugin='silverstar.device.imu.mpu6050', interface='', profile='', module_variant='', tx_power_dbm=None, installation_orientation='vertical', mount_nose_axis='z_positive')
+E         Use -v to get more diff
+
+apps\SCG\tests\test_tier_device_boundaries.py:19: AssertionError
+_ test_switch_import_and_service_preserve_invalid_devices_and_block_generation[minimal] _
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001895E4B4D70>
+tier = 'minimal'
+
+    @pytest.mark.parametrize('tier', ['compact', 'minimal'])
+    def test_switch_import_and_service_preserve_invalid_devices_and_block_generation(builtin_catalog, tier):
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        model.device_instances.append(DeviceInstance('imu_extra', 'silverstar.device.imu.mpu6050'))
+        original = deepcopy(model.device_instances)
+        FeatureTier_Apply(model, tier, builtin_catalog)
+>       assert model.device_instances == original, 'Tier switch must not remove user devices'
+E       AssertionError: Tier switch must not remove user devices
+E       assert [DeviceInstan...sitive'), ...] == [DeviceInstan...sitive'), ...]
+E         
+E         At index 1 diff: DeviceInstance(instance_id='telemetry0', plugin='silverstar.device.telemetry.sx1281', interface='', profile='', module_variant='', tx_power_dbm=None, installation_orientation='vertical', mount_nose_axis='z_positive') != DeviceInstance(instance_id='gnss0', plugin='silverstar.device.gnss.neo_m9n', interface='', profile='', module_variant='', tx_power_dbm=None, installation_orientation='vertical', mount_nose_axis='z_positive')
+E         Right contains 2 more items, first extra item: DeviceInstance(instance_id='system_indicator0', plugin='silverstar.device.indicator.s...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+apps\SCG\tests\test_tier_device_boundaries.py:19: AssertionError
+_____ test_each_sensor_class_is_bounded_even_without_endpoint_descriptors _____
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001895E4B4D70>
+component_id = 'silverstar.device.temperature.ds18b20'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+>           return self._components[component_id]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'silverstar.device.temperature.ds18b20'
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:348: KeyError
+
+The above exception was the direct cause of the following exception:
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001895E4B4D70>
+
+    def test_each_sensor_class_is_bounded_even_without_endpoint_descriptors(builtin_catalog):
+        from silverstar_fccg.project.compact import CompactErrors_Get
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        model.build = replace(model.build, feature_tier='compact')
+        model.device_instances += [DeviceInstance('temperature0', 'silverstar.device.temperature.ds18b20'),
+                                   DeviceInstance('temperature1', 'silverstar.device.temperature.ds18b20')]
+>       assert any('temperature' in error for error in CompactErrors_Get(model, builtin_catalog))
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_tier_device_boundaries.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\project\compact.py:18: in CompactErrors_Get
+    catalog = catalog.ProjectView_Get(model)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:52: in ProjectView_Get
+    manifest = RadioManifest_Resolve(self.Component_Get(instance.plugin), instance)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001895E4B4D70>
+component_id = 'silverstar.device.temperature.ds18b20'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+            return self._components[component_id]
+        except KeyError as error:
+>           raise PluginCatalogError(f"Unknown component: {component_id}") from error
+E           silverstar_fccg.plugins.catalog.PluginCatalogError: Unknown component: silverstar.device.temperature.ds18b20
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:350: PluginCatalogError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_tier_device_boundaries.py::test_switch_import_and_service_preserve_invalid_devices_and_block_generation[compact]
+FAILED apps\SCG\tests\test_tier_device_boundaries.py::test_switch_import_and_service_preserve_invalid_devices_and_block_generation[minimal]
+FAILED apps\SCG\tests\test_tier_device_boundaries.py::test_each_sensor_class_is_bounded_even_without_endpoint_descriptors
+3 failed in 12.92s

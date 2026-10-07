@@ -5,6 +5,8 @@ Current application implementation: `apps/SCG`. The Python package and plugin ID
 - [FCCG documentation](FCCG/README.md), [application guide](FCCG/APP_README.md), [historical validation](FCCG/VALIDATION.md)
 - [GSHC documentation](GSHC/README.md), [application guide](GSHC/APP_README.md), [historical validation](GSHC/VALIDATION.md)
 - [FLP documentation](FLP/APP_README.md), [architecture](FLP/Architecture.md), [historical validation](FLP/VALIDATION.md)
+- [推荐组合与验证范围](SilverStar_Recommended_Configurations.md)
+- [2026-10-08 GUI 收尾、文档核对与未通过项](RELEASE_GUI_CLOSEOUT_20261008.md)
 - [Monorepo architecture](architecture/MONOREPO_ARCHITECTURE.md)
 - [Flight and Ground target model](architecture/TARGET_MODEL.md), [AIR Link](architecture/AIR_LINK.md), [Ground Station firmware](architecture/GROUND_STATION.md), [Device variants](architecture/DEVICE_VARIANTS.md)
 - [Project folder contract](architecture/PROJECT_FOLDER_CONTRACT.md)

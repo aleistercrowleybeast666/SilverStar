@@ -1,0 +1,759 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+NumPy 2.4.1 Python D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+.....F.......FFF........FF.............................................. [ 69%]
+...................F..........FF                                         [100%]
+================================== FAILURES ===================================
+___ test_save_data_toggle_retains_files_configurations_and_can_enable_again ___
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_save_data_toggle_retains_0')
+
+    def test_save_data_toggle_retains_files_configurations_and_can_enable_again(tmp_path):
+        opened, document, store = _SmallRun(tmp_path)
+        Project_Save(document, document.project_path, dataset=opened.dataset, replay_store=store)
+        old_files = {p:p.read_bytes() for p in document.project_path.parent.glob('*.artifacts/**/*') if p.is_file()}
+        document.save_data_and_results = False
+        Project_Save(document, document.project_path, dataset=opened.dataset, replay_store=store)
+        loaded = Project_Load(document.project_path)
+        assert not loaded.save_data_and_results
+        assert loaded.result_artifact is None and loaded.parse_artifact is None
+        assert loaded.replay_configurations == document.replay_configurations
+        assert all(p.read_bytes() == value for p,value in old_files.items())
+        assert not ProjectResults_Load(loaded).Entries_Get()
+        loaded.save_data_and_results = True
+>       Project_Save(loaded, tmp_path/'save-as'/'again.ssflp', dataset=opened.dataset, replay_store=store)
+
+apps\FLP\tests\test_project_artifact_boundaries.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\src\silverstar_flp\core\project.py:286: in Project_Save
+    parse_artifact = DatasetCache_Write(project_path, dataset, parse_identity,
+apps\FLP\src\silverstar_flp\core\parse_cache.py:71: in DatasetCache_Write
+    reference = Artifact_Write(project_path, dataset, identity, context)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:826: in Artifact_Write
+    encoded = encoder.Encode(payload)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:304: in Encode
+    "fields": {f.name: self.Encode(getattr(value, f.name), depth + 1)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:308: in Encode
+    return {key: [[self.Encode(k, depth + 1), self.Encode(v, depth + 1)]
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:315: in Encode
+    return self.RecordBlocks_Write(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.core.artifacts._Encoder object at 0x0000020C2634E120>
+records = (DecodedRecord(record_type=29, record_name='DECODER_PROFILE_DESCRIPTOR', record_version=0, payload_length=64, record_s...41, 158, 196, 230, 81, 76, 128, 21, 200, 185, 185, 163, 168), 'reserved': (0, 0, 0, 0, 0, 0, 0, 0)}), file_offset=64),)
+
+    def RecordBlocks_Write(self, records):
+        from silverstar_flp.core.record_blocks import RecordBlock_Build, RECORD_BLOCK_ROWS, RECORD_BLOCK_BYTES
+        self.record_rows += len(records)
+        if self.record_rows > MAX_OBJECTS:
+            raise ValueError("artifact_record_count_limit")
+        references = []
+        start = 0
+        while start < len(records):
+            self.context.Cancel_RaiseIfRequested()
+            if len(references) >= MAX_RECORD_BLOCKS or len(self.record_files) >= MAX_RECORD_BLOCKS:
+                raise ValueError("artifact_record_block_count_limit")
+            rows = records[start:start + RECORD_BLOCK_ROWS]
+            while True:
+                self.context.Cancel_RaiseIfRequested()
+                try:
+                    block = RecordBlock_Build(rows)
+                    break
+                except ValueError as exc:
+                    if str(exc) != "artifact_record_block_allocation_limit" or len(rows) == 1:
+                        raise
+                    # Reduce the row window BEFORE publishing arrays/files. This
+                    # retains wide/raw decoder records within the same fixed bound.
+                    rows = rows[:max(1, len(rows) // 2)]
+            self.in_record_plan = True
+            try:
+                encoded = self.Encode(block)
+            finally:
+                self.in_record_plan = False
+            temporary = self.directory / "records.tmp"
+            raw_bytes = _Json_Write(temporary, encoded, self.context, RECORD_BLOCK_BYTES)
+            self.record_json_bytes += raw_bytes
+            if self.record_json_bytes > MAX_MANIFEST_BYTES:
+                raise ValueError("artifact_manifest_too_large")
+            sha = FileHash_Get(temporary, self.context)
+            name = sha + ".records.json.gz"
+            spec = {"name": name, "sha256": sha, "bytes": temporary.stat().st_size,
+                    "raw_bytes": raw_bytes, "count": len(rows)}
+            if name not in self.record_files:
+                self.total += spec["bytes"]
+                if self.total > MAX_TOTAL_BYTES:
+                    raise ValueError("artifact_size_limit")
+>               os.replace(temporary, self.directory / name)
+E               FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_save_data_toggle_retains_0\\save-as\\again.ssflp.artifacts\\generation-ea5ca450745c4fdfaca5c75f9fbf998c\\records.tmp' -> 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_save_data_toggle_retains_0\\save-as\\again.ssflp.artifacts\\generation-ea5ca450745c4fdfaca5c75f9fbf998c\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'
+
+apps\FLP\src\silverstar_flp\core\artifacts.py:368: FileNotFoundError
+____ test_parse_cache_faults_fall_back_only_to_strict_coordinator[corrupt] ____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_parse_cache_faults_fall_b0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020C2634FA70>
+fault = 'corrupt'
+
+    @pytest.mark.parametrize('fault',['corrupt','parser_revision','changed_log'])
+    def test_parse_cache_faults_fall_back_only_to_strict_coordinator(tmp_path,monkeypatch,fault):
+        from silverstar_flp.decoder_profiles.parser import DecoderProfileParserPlugin
+        from silverstar_flp.core import parse_cache
+        from silverstar_flp.log_open import LogOpenCoordinator, LogOpenRequest, LogOpenSourceMode
+        opened,document,store=_SmallRun(tmp_path)
+        Project_Save(document,document.project_path,dataset=opened.dataset,replay_store=store)
+        if fault=='corrupt':
+            (document.project_path.parent/document.parse_artifact['path']).write_bytes(b'broken')
+        elif fault=='parser_revision':
+            monkeypatch.setattr(parse_cache,'ParserIdentity_Get',lambda:'a'*64)
+        else:
+            with opened.dataset.source_path.open('ab') as target:target.write(b'\x01')
+        calls=[];original=DecoderProfileParserPlugin.parse
+        def parse(self,*args,**kwargs):
+            calls.append(1);return original(self,*args,**kwargs)
+        monkeypatch.setattr(DecoderProfileParserPlugin,'parse',parse)
+>       result=LogOpenCoordinator(builtin_registry()).Open(LogOpenRequest(opened.dataset.source_path,
+            opened.source_package_path,source_mode=LogOpenSourceMode.PROJECT,
+            project_path=document.project_path,dataset_cache_reference=document.parse_artifact))
+
+apps\FLP\tests\test_project_artifact_boundaries.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\src\silverstar_flp\log_open.py:334: in Open
+    return self._OpenWithSourcePackage(
+apps\FLP\src\silverstar_flp\log_open.py:361: in _OpenWithSourcePackage
+    cached_package, reference = self.cache.Package_Import(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.decoder_profiles.discovery.DecoderProfileCache object at 0x0000020C21BDFD90>
+source_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_parse_cache_faults_fall_b0/pair/SYNTHETIC_navigation.ssdecoder')
+container_plugins = {'silverstar.flight_log.container.0_0': <silverstar_flp.plugins.log_containers.sslog0.plugin.Sslog0ContainerPlugin object at 0x0000020C2C1EBF70>}
+limits = None
+
+    def Package_Import(
+        self,
+        source_path: Path,
+        *,
+        container_plugins: Mapping[str, LogContainerPlugin],
+        limits: DecoderPackageLimits | None = None,
+    ) -> tuple[DecoderProfilePackage, DecoderProfileCacheReference]:
+        package = DecoderProfilePackage.Load(
+            Path(source_path),
+            limits=limits,
+            container_plugins=container_plugins,
+        )
+        generation_directory = self.root / package.generation_profile_sha256[:32]
+        target_path = generation_directory / (
+            f"{package.package_sha256[:32]}.ssdecoder"
+        )
+        self._Target_Validate(target_path)
+        generation_directory.mkdir(parents=True, exist_ok=True)
+        if target_path.exists():
+            cached = DecoderProfilePackage.Load(
+                target_path,
+                limits=limits,
+                container_plugins=container_plugins,
+            )
+            if cached.package_sha256 != package.package_sha256:
+                raise DecoderProfileError("decoder_cache_hash_conflict")
+        else:
+            temporary_path = generation_directory / f".import-{uuid.uuid4().hex[:8]}.tmp"
+            self._Target_Validate(temporary_path)
+            try:
+                shutil.copyfile(package.source_path, temporary_path)
+                copied_hash = _FileSha256_Get(temporary_path)
+                if copied_hash != package.package_sha256:
+                    raise DecoderProfileError("decoder_cache_copy_hash_mismatch")
+>               os.replace(temporary_path, target_path)
+E               PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\.import-07ef7a94.tmp' -> 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\f520332b35e3916f2286cfd078f52c92.ssdecoder'
+
+apps\FLP\src\silverstar_flp\decoder_profiles\discovery.py:347: PermissionError
+_ test_parse_cache_faults_fall_back_only_to_strict_coordinator[parser_revision] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_parse_cache_faults_fall_b1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020C21C03310>
+fault = 'parser_revision'
+
+    @pytest.mark.parametrize('fault',['corrupt','parser_revision','changed_log'])
+    def test_parse_cache_faults_fall_back_only_to_strict_coordinator(tmp_path,monkeypatch,fault):
+        from silverstar_flp.decoder_profiles.parser import DecoderProfileParserPlugin
+        from silverstar_flp.core import parse_cache
+        from silverstar_flp.log_open import LogOpenCoordinator, LogOpenRequest, LogOpenSourceMode
+        opened,document,store=_SmallRun(tmp_path)
+        Project_Save(document,document.project_path,dataset=opened.dataset,replay_store=store)
+        if fault=='corrupt':
+            (document.project_path.parent/document.parse_artifact['path']).write_bytes(b'broken')
+        elif fault=='parser_revision':
+            monkeypatch.setattr(parse_cache,'ParserIdentity_Get',lambda:'a'*64)
+        else:
+            with opened.dataset.source_path.open('ab') as target:target.write(b'\x01')
+        calls=[];original=DecoderProfileParserPlugin.parse
+        def parse(self,*args,**kwargs):
+            calls.append(1);return original(self,*args,**kwargs)
+        monkeypatch.setattr(DecoderProfileParserPlugin,'parse',parse)
+>       result=LogOpenCoordinator(builtin_registry()).Open(LogOpenRequest(opened.dataset.source_path,
+            opened.source_package_path,source_mode=LogOpenSourceMode.PROJECT,
+            project_path=document.project_path,dataset_cache_reference=document.parse_artifact))
+
+apps\FLP\tests\test_project_artifact_boundaries.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\src\silverstar_flp\log_open.py:334: in Open
+    return self._OpenWithSourcePackage(
+apps\FLP\src\silverstar_flp\log_open.py:361: in _OpenWithSourcePackage
+    cached_package, reference = self.cache.Package_Import(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.decoder_profiles.discovery.DecoderProfileCache object at 0x0000020C26629190>
+source_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_parse_cache_faults_fall_b1/pair/SYNTHETIC_navigation.ssdecoder')
+container_plugins = {'silverstar.flight_log.container.0_0': <silverstar_flp.plugins.log_containers.sslog0.plugin.Sslog0ContainerPlugin object at 0x0000020C263C7610>}
+limits = None
+
+    def Package_Import(
+        self,
+        source_path: Path,
+        *,
+        container_plugins: Mapping[str, LogContainerPlugin],
+        limits: DecoderPackageLimits | None = None,
+    ) -> tuple[DecoderProfilePackage, DecoderProfileCacheReference]:
+        package = DecoderProfilePackage.Load(
+            Path(source_path),
+            limits=limits,
+            container_plugins=container_plugins,
+        )
+        generation_directory = self.root / package.generation_profile_sha256[:32]
+        target_path = generation_directory / (
+            f"{package.package_sha256[:32]}.ssdecoder"
+        )
+        self._Target_Validate(target_path)
+        generation_directory.mkdir(parents=True, exist_ok=True)
+        if target_path.exists():
+            cached = DecoderProfilePackage.Load(
+                target_path,
+                limits=limits,
+                container_plugins=container_plugins,
+            )
+            if cached.package_sha256 != package.package_sha256:
+                raise DecoderProfileError("decoder_cache_hash_conflict")
+        else:
+            temporary_path = generation_directory / f".import-{uuid.uuid4().hex[:8]}.tmp"
+            self._Target_Validate(temporary_path)
+            try:
+                shutil.copyfile(package.source_path, temporary_path)
+                copied_hash = _FileSha256_Get(temporary_path)
+                if copied_hash != package.package_sha256:
+                    raise DecoderProfileError("decoder_cache_copy_hash_mismatch")
+>               os.replace(temporary_path, target_path)
+E               PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\.import-68bbcce0.tmp' -> 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\6cde211c0c9417a64f8356cf50133229.ssdecoder'
+
+apps\FLP\src\silverstar_flp\decoder_profiles\discovery.py:347: PermissionError
+__ test_parse_cache_faults_fall_back_only_to_strict_coordinator[changed_log] __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_parse_cache_faults_fall_b2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020C21C203D0>
+fault = 'changed_log'
+
+    @pytest.mark.parametrize('fault',['corrupt','parser_revision','changed_log'])
+    def test_parse_cache_faults_fall_back_only_to_strict_coordinator(tmp_path,monkeypatch,fault):
+        from silverstar_flp.decoder_profiles.parser import DecoderProfileParserPlugin
+        from silverstar_flp.core import parse_cache
+        from silverstar_flp.log_open import LogOpenCoordinator, LogOpenRequest, LogOpenSourceMode
+        opened,document,store=_SmallRun(tmp_path)
+        Project_Save(document,document.project_path,dataset=opened.dataset,replay_store=store)
+        if fault=='corrupt':
+            (document.project_path.parent/document.parse_artifact['path']).write_bytes(b'broken')
+        elif fault=='parser_revision':
+            monkeypatch.setattr(parse_cache,'ParserIdentity_Get',lambda:'a'*64)
+        else:
+            with opened.dataset.source_path.open('ab') as target:target.write(b'\x01')
+        calls=[];original=DecoderProfileParserPlugin.parse
+        def parse(self,*args,**kwargs):
+            calls.append(1);return original(self,*args,**kwargs)
+        monkeypatch.setattr(DecoderProfileParserPlugin,'parse',parse)
+>       result=LogOpenCoordinator(builtin_registry()).Open(LogOpenRequest(opened.dataset.source_path,
+            opened.source_package_path,source_mode=LogOpenSourceMode.PROJECT,
+            project_path=document.project_path,dataset_cache_reference=document.parse_artifact))
+
+apps\FLP\tests\test_project_artifact_boundaries.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\src\silverstar_flp\log_open.py:334: in Open
+    return self._OpenWithSourcePackage(
+apps\FLP\src\silverstar_flp\log_open.py:361: in _OpenWithSourcePackage
+    cached_package, reference = self.cache.Package_Import(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.decoder_profiles.discovery.DecoderProfileCache object at 0x0000020C26B82DB0>
+source_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_parse_cache_faults_fall_b2/pair/SYNTHETIC_navigation.ssdecoder')
+container_plugins = {'silverstar.flight_log.container.0_0': <silverstar_flp.plugins.log_containers.sslog0.plugin.Sslog0ContainerPlugin object at 0x0000020C2C4C0230>}
+limits = None
+
+    def Package_Import(
+        self,
+        source_path: Path,
+        *,
+        container_plugins: Mapping[str, LogContainerPlugin],
+        limits: DecoderPackageLimits | None = None,
+    ) -> tuple[DecoderProfilePackage, DecoderProfileCacheReference]:
+        package = DecoderProfilePackage.Load(
+            Path(source_path),
+            limits=limits,
+            container_plugins=container_plugins,
+        )
+        generation_directory = self.root / package.generation_profile_sha256[:32]
+        target_path = generation_directory / (
+            f"{package.package_sha256[:32]}.ssdecoder"
+        )
+        self._Target_Validate(target_path)
+        generation_directory.mkdir(parents=True, exist_ok=True)
+        if target_path.exists():
+            cached = DecoderProfilePackage.Load(
+                target_path,
+                limits=limits,
+                container_plugins=container_plugins,
+            )
+            if cached.package_sha256 != package.package_sha256:
+                raise DecoderProfileError("decoder_cache_hash_conflict")
+        else:
+            temporary_path = generation_directory / f".import-{uuid.uuid4().hex[:8]}.tmp"
+            self._Target_Validate(temporary_path)
+            try:
+                shutil.copyfile(package.source_path, temporary_path)
+                copied_hash = _FileSha256_Get(temporary_path)
+                if copied_hash != package.package_sha256:
+                    raise DecoderProfileError("decoder_cache_copy_hash_mismatch")
+>               os.replace(temporary_path, target_path)
+E               PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\.import-5d8ee927.tmp' -> 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\7e752574f3626b4486258557af3307d2.ssdecoder'
+
+apps\FLP\src\silverstar_flp\decoder_profiles\discovery.py:347: PermissionError
+____________ test_save_as_recovery_dependency_and_local_move[True] ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_save_as_recovery_dependen0')
+small_runs = (LogOpenResult(dataset=FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/release_closeout_202...t_source': 'corrected_imu', 'quality_policy_revision': None, 'process_model_revision': None}}), provenance='What-if')))
+save_data = True
+
+    @pytest.mark.parametrize('save_data', [True, False])
+    def test_save_as_recovery_dependency_and_local_move(tmp_path, small_runs, save_data):
+        opened, _ = small_runs
+        origin = tmp_path / 'origin'; origin.mkdir()
+>       document, store, entries = _Saved(origin, small_runs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FLP\tests\test_run_deletion.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\tests\test_run_deletion.py:39: in _Saved
+    Project_Save(document, document.project_path, replay_store=store, dataset=opened.dataset)
+apps\FLP\src\silverstar_flp\core\project.py:286: in Project_Save
+    parse_artifact = DatasetCache_Write(project_path, dataset, parse_identity,
+apps\FLP\src\silverstar_flp\core\parse_cache.py:71: in DatasetCache_Write
+    reference = Artifact_Write(project_path, dataset, identity, context)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:826: in Artifact_Write
+    encoded = encoder.Encode(payload)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:304: in Encode
+    "fields": {f.name: self.Encode(getattr(value, f.name), depth + 1)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:308: in Encode
+    return {key: [[self.Encode(k, depth + 1), self.Encode(v, depth + 1)]
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:315: in Encode
+    return self.RecordBlocks_Write(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.core.artifacts._Encoder object at 0x0000020C26B83960>
+records = (DecodedRecord(record_type=29, record_name='DECODER_PROFILE_DESCRIPTOR', record_version=0, payload_length=64, record_s...41, 158, 196, 230, 81, 76, 128, 21, 200, 185, 185, 163, 168), 'reserved': (0, 0, 0, 0, 0, 0, 0, 0)}), file_offset=64),)
+
+    def RecordBlocks_Write(self, records):
+        from silverstar_flp.core.record_blocks import RecordBlock_Build, RECORD_BLOCK_ROWS, RECORD_BLOCK_BYTES
+        self.record_rows += len(records)
+        if self.record_rows > MAX_OBJECTS:
+            raise ValueError("artifact_record_count_limit")
+        references = []
+        start = 0
+        while start < len(records):
+            self.context.Cancel_RaiseIfRequested()
+            if len(references) >= MAX_RECORD_BLOCKS or len(self.record_files) >= MAX_RECORD_BLOCKS:
+                raise ValueError("artifact_record_block_count_limit")
+            rows = records[start:start + RECORD_BLOCK_ROWS]
+            while True:
+                self.context.Cancel_RaiseIfRequested()
+                try:
+                    block = RecordBlock_Build(rows)
+                    break
+                except ValueError as exc:
+                    if str(exc) != "artifact_record_block_allocation_limit" or len(rows) == 1:
+                        raise
+                    # Reduce the row window BEFORE publishing arrays/files. This
+                    # retains wide/raw decoder records within the same fixed bound.
+                    rows = rows[:max(1, len(rows) // 2)]
+            self.in_record_plan = True
+            try:
+                encoded = self.Encode(block)
+            finally:
+                self.in_record_plan = False
+            temporary = self.directory / "records.tmp"
+            raw_bytes = _Json_Write(temporary, encoded, self.context, RECORD_BLOCK_BYTES)
+            self.record_json_bytes += raw_bytes
+            if self.record_json_bytes > MAX_MANIFEST_BYTES:
+                raise ValueError("artifact_manifest_too_large")
+            sha = FileHash_Get(temporary, self.context)
+            name = sha + ".records.json.gz"
+            spec = {"name": name, "sha256": sha, "bytes": temporary.stat().st_size,
+                    "raw_bytes": raw_bytes, "count": len(rows)}
+            if name not in self.record_files:
+                self.total += spec["bytes"]
+                if self.total > MAX_TOTAL_BYTES:
+                    raise ValueError("artifact_size_limit")
+>               os.replace(temporary, self.directory / name)
+E               FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_save_as_recovery_dependen0\\origin\\flight.ssflp.artifacts\\generation-7f613d1f817a4cb4b59d43fe02e8e07e\\records.tmp' -> 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_save_as_recovery_dependen0\\origin\\flight.ssflp.artifacts\\generation-7f613d1f817a4cb4b59d43fe02e8e07e\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'
+
+apps\FLP\src\silverstar_flp\core\artifacts.py:368: FileNotFoundError
+___________ test_save_as_recovery_dependency_and_local_move[False] ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_save_as_recovery_dependen1')
+small_runs = (LogOpenResult(dataset=FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/release_closeout_202...t_source': 'corrected_imu', 'quality_policy_revision': None, 'process_model_revision': None}}), provenance='What-if')))
+save_data = False
+
+    @pytest.mark.parametrize('save_data', [True, False])
+    def test_save_as_recovery_dependency_and_local_move(tmp_path, small_runs, save_data):
+        opened, _ = small_runs
+        origin = tmp_path / 'origin'; origin.mkdir()
+>       document, store, entries = _Saved(origin, small_runs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\FLP\tests\test_run_deletion.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\tests\test_run_deletion.py:39: in _Saved
+    Project_Save(document, document.project_path, replay_store=store, dataset=opened.dataset)
+apps\FLP\src\silverstar_flp\core\project.py:286: in Project_Save
+    parse_artifact = DatasetCache_Write(project_path, dataset, parse_identity,
+apps\FLP\src\silverstar_flp\core\parse_cache.py:71: in DatasetCache_Write
+    reference = Artifact_Write(project_path, dataset, identity, context)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:826: in Artifact_Write
+    encoded = encoder.Encode(payload)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:304: in Encode
+    "fields": {f.name: self.Encode(getattr(value, f.name), depth + 1)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:308: in Encode
+    return {key: [[self.Encode(k, depth + 1), self.Encode(v, depth + 1)]
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:315: in Encode
+    return self.RecordBlocks_Write(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.core.artifacts._Encoder object at 0x0000020C2C6899C0>
+records = (DecodedRecord(record_type=29, record_name='DECODER_PROFILE_DESCRIPTOR', record_version=0, payload_length=64, record_s...41, 158, 196, 230, 81, 76, 128, 21, 200, 185, 185, 163, 168), 'reserved': (0, 0, 0, 0, 0, 0, 0, 0)}), file_offset=64),)
+
+    def RecordBlocks_Write(self, records):
+        from silverstar_flp.core.record_blocks import RecordBlock_Build, RECORD_BLOCK_ROWS, RECORD_BLOCK_BYTES
+        self.record_rows += len(records)
+        if self.record_rows > MAX_OBJECTS:
+            raise ValueError("artifact_record_count_limit")
+        references = []
+        start = 0
+        while start < len(records):
+            self.context.Cancel_RaiseIfRequested()
+            if len(references) >= MAX_RECORD_BLOCKS or len(self.record_files) >= MAX_RECORD_BLOCKS:
+                raise ValueError("artifact_record_block_count_limit")
+            rows = records[start:start + RECORD_BLOCK_ROWS]
+            while True:
+                self.context.Cancel_RaiseIfRequested()
+                try:
+                    block = RecordBlock_Build(rows)
+                    break
+                except ValueError as exc:
+                    if str(exc) != "artifact_record_block_allocation_limit" or len(rows) == 1:
+                        raise
+                    # Reduce the row window BEFORE publishing arrays/files. This
+                    # retains wide/raw decoder records within the same fixed bound.
+                    rows = rows[:max(1, len(rows) // 2)]
+            self.in_record_plan = True
+            try:
+                encoded = self.Encode(block)
+            finally:
+                self.in_record_plan = False
+            temporary = self.directory / "records.tmp"
+            raw_bytes = _Json_Write(temporary, encoded, self.context, RECORD_BLOCK_BYTES)
+            self.record_json_bytes += raw_bytes
+            if self.record_json_bytes > MAX_MANIFEST_BYTES:
+                raise ValueError("artifact_manifest_too_large")
+            sha = FileHash_Get(temporary, self.context)
+            name = sha + ".records.json.gz"
+            spec = {"name": name, "sha256": sha, "bytes": temporary.stat().st_size,
+                    "raw_bytes": raw_bytes, "count": len(rows)}
+            if name not in self.record_files:
+                self.total += spec["bytes"]
+                if self.total > MAX_TOTAL_BYTES:
+                    raise ValueError("artifact_size_limit")
+>               os.replace(temporary, self.directory / name)
+E               FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_save_as_recovery_dependen1\\origin\\flight.ssflp.artifacts\\generation-fbc76db115664ecebcfac6bd8b571ee6\\records.tmp' -> 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_save_as_recovery_dependen1\\origin\\flight.ssflp.artifacts\\generation-fbc76db115664ecebcfac6bd8b571ee6\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'
+
+apps\FLP\src\silverstar_flp\core\artifacts.py:368: FileNotFoundError
+_______ test_four_completed_algorithms_and_two_distinct_runs_roundtrip ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_four_completed_algorithms0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020C40FFA9E0>
+
+    def test_four_completed_algorithms_and_two_distinct_runs_roundtrip(tmp_path, monkeypatch):
+        opened = NavigationPair_Open(tmp_path / 'pair', flight_samples=41)
+        store = ReplayResultStore()
+        registry = builtin_registry()
+        for plugin in registry.algorithms:
+            request = ReplayRequest(mode=ReplayMode.WHAT_IF,
+                                    process_model_revision=2 if plugin.metadata.plugin_id.endswith('kf6') else None)
+            result = Replay_Execute(plugin, opened.dataset, request)
+            assert result.channels and not result.missing_inputs
+            store.Result_Add(result, algorithm_name=plugin.metadata.display_name)
+        plugin = registry.Algorithm_Get('silverstar.algorithm.pure_ins')
+        store.Result_Add(Replay_Execute(plugin, opened.dataset, ReplayRequest(mode=ReplayMode.WHAT_IF,
+                                                                parameters={'gravity_mps2':9.81})))
+        path = tmp_path / 'project.ssflp'
+        document = _Document_Build(opened, path)
+        document.notes = 'Keep history'
+        document.ui_state = {'analysis_source': store.Entries_Get()[3].source_id,
+                             'secondary_source': store.Entries_Get()[0].source_id}
+        Project_Save(document, path, replay_store=store, dataset=opened.dataset)
+        for cls in {type(plugin) for plugin in registry.algorithms}:
+            monkeypatch.setattr(cls, 'run', lambda *args: pytest.fail('Reopen must not recompute'))
+        loaded = Project_Load(path)
+        restored = ProjectResults_Load(loaded)
+        assert len(restored.Entries_Get()) == 5
+        assert loaded.ui_state == document.ui_state and loaded.notes == 'Keep history'
+        for a, b in zip(store.Entries_Get(), restored.Entries_Get()):
+            assert (a.result_id, a.source_id, a.run_index) == (b.result_id, b.source_id, b.run_index)
+            _Assert_Result(a.result, b.result)
+        copied = tmp_path / 'copy' / 'other.ssflp'
+>       Project_Save(loaded, copied)
+
+apps\FLP\tests\test_project_artifacts.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\src\silverstar_flp\core\project.py:295: in Project_Save
+    parse_artifact = DatasetCache_Write(project_path, saved_dataset, identity,
+apps\FLP\src\silverstar_flp\core\parse_cache.py:71: in DatasetCache_Write
+    reference = Artifact_Write(project_path, dataset, identity, context)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:826: in Artifact_Write
+    directory.mkdir()
+              ^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:304: in Encode
+    if key in self.objects:
+                            
+apps\FLP\src\silverstar_flp\core\artifacts.py:308: in Encode
+    return {"type": type(value).__name__, "id": index,
+                                              ^^^^^^^^^
+apps\FLP\src\silverstar_flp\core\artifacts.py:315: in Encode
+    if isinstance(value, (tuple, list)):
+                   ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.core.artifacts._Encoder object at 0x0000020C3D3C0310>
+records = (DecodedRecord(record_type=29, record_name='DECODER_PROFILE_DESCRIPTOR', record_version=0, payload_length=64, record_s...41, 158, 196, 230, 81, 76, 128, 21, 200, 185, 185, 163, 168), 'reserved': (0, 0, 0, 0, 0, 0, 0, 0)}), file_offset=64),)
+
+                return self.AuditBlocks_Write(value)
+            return {"tuple" if isinstance(value, tuple) else "list":
+                    [self.Encode(item, depth + 1) for item in value]}
+        raise ValueError("artifact_type_unsupported:" + type(value).__name__)
+    
+    def RecordBlocks_Write(self, records):
+        from silverstar_flp.core.record_blocks import RecordBlock_Build, RECORD_BLOCK_ROWS, RECORD_BLOCK_BYTES
+        self.record_rows += len(records)
+        if self.record_rows > MAX_OBJECTS:
+            raise ValueError("artifact_record_count_limit")
+        references = []
+        start = 0
+        while start < len(records):
+            self.context.Cancel_RaiseIfRequested()
+            if len(references) >= MAX_RECORD_BLOCKS or len(self.record_files) >= MAX_RECORD_BLOCKS:
+                raise ValueError("artifact_record_block_count_limit")
+            rows = records[start:start + RECORD_BLOCK_ROWS]
+            while True:
+                self.context.Cancel_RaiseIfRequested()
+                try:
+                    block = RecordBlock_Build(rows)
+                    break
+                except ValueError as exc:
+                    if str(exc) != "artifact_record_block_allocation_limit" or len(rows) == 1:
+                        raise
+                    # Reduce the row window BEFORE publishing arrays/files. This
+                    # retains wide/raw decoder records within the same fixed bound.
+                    rows = rows[:max(1, len(rows) // 2)]
+            self.in_record_plan = True
+            try:
+                encoded = self.Encode(block)
+            finally:
+                self.in_record_plan = False
+            temporary = self.directory / "records.tmp"
+            raw_bytes = _Json_Write(temporary, encoded, self.context, RECORD_BLOCK_BYTES)
+            self.record_json_bytes += raw_bytes
+            if self.record_json_bytes > MAX_MANIFEST_BYTES:
+                raise ValueError("artifact_manifest_too_large")
+            sha = FileHash_Get(temporary, self.context)
+            name = sha + ".records.json.gz"
+            spec = {"name": name, "sha256": sha, "bytes": temporary.stat().st_size,
+>                   "raw_bytes": raw_bytes, "count": len(rows)}
+E                   FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_four_completed_algorithms0\\copy\\other.ssflp.artifacts\\generation-e03c025750c8455fab3d829d1fd1f4f5\\records.tmp' -> 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\flp_artifacts_v5\\test_four_completed_algorithms0\\copy\\other.ssflp.artifacts\\generation-e03c025750c8455fab3d829d1fd1f4f5\\3544bd5d21129e80b4da52cc02a950c80631cec55a12ff3cd4767dc1f1b4d31f.records.json.gz'
+
+apps\FLP\src\silverstar_flp\core\artifacts.py:368: FileNotFoundError
+______ test_gui_reopen_restores_every_run_and_two_sources_without_replay ______
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x0000020C3AF5F960>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_gui_reopen_restores_every0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020C40FFB1C0>
+
+    def test_gui_reopen_restores_every_run_and_two_sources_without_replay(qtbot, tmp_path, monkeypatch):
+        from silverstar_flp.core.project import ProjectDocument
+        from silverstar_flp.ui.main_window import MainWindow
+        opened = NavigationPair_Open(tmp_path / 'pair', flight_samples=41)
+        registry = builtin_registry()
+        first = MainWindow(registry); qtbot.addWidget(first)
+        errors = []; monkeypatch.setattr(first, '_Error_Show', errors.append)
+        first._LogOpenResult_Set(opened, ProjectDocument())
+        for plugin in registry.algorithms:
+            request = ReplayRequest(mode=ReplayMode.WHAT_IF,
+                process_model_revision=2 if plugin.metadata.plugin_id.endswith('kf6') else None)
+            first._replay_store.Result_Add(Replay_Execute(plugin, opened.dataset, request),
+                                          algorithm_name=plugin.metadata.display_name)
+        entries = first._replay_store.Entries_Get()
+        first._AnalysisSource_Set(entries[3].source_id)
+        first._SecondarySource_Set(entries[0].source_id)
+        path = tmp_path / 'flight.ssflp'
+        first._Project_Write(path)
+        assert not errors and path.is_file()
+        first._project_dirty = False; first.close()
+        for cls in {type(plugin) for plugin in registry.algorithms}:
+            monkeypatch.setattr(cls, 'run', lambda *args: pytest.fail('GUI reopen must not replay'))
+        second = MainWindow(registry); qtbot.addWidget(second)
+        monkeypatch.setattr(second, '_Error_Show', errors.append)
+        second._Project_Open(path)
+        qtbot.waitUntil(lambda: second._active_worker is None, timeout=15000)
+>       assert not errors
+E       assert not ["[WinError 5] �ܾ����ʡ�: 'C:\\\\Users\\\\chdxm\\\\AppData\\\\Local\\\\Packages\\\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4...verStar\\\\FLP\\\\decoder_profiles\\\\04df108d9ec4e6514c8015c8b9b9a3a8\\\\637a43f444f3d55ab2b3842f59c317a8.ssdecoder'"]
+
+apps\FLP\tests\test_project_artifacts.py:197: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:1202 Background task failed: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\.import-ce485bd6.tmp' -> 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\637a43f444f3d55ab2b3842f59c317a8.ssdecoder'
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 63, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 670, in <lambda>
+    worker = FunctionWorker(lambda context: self._ProjectOpen_Run(Path(path), context))
+                                            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 662, in _ProjectOpen_Run
+    result = self._ProjectLogOpen_Run(project, request, progress.Context_Build(0.04, 0.98))
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 610, in _ProjectLogOpen_Run
+    result = self._log_open_coordinator.Open(request, progress.Context_Build(0.0, 0.78))
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\log_open.py", line 334, in Open
+    return self._OpenWithSourcePackage(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        log_path,
+        ^^^^^^^^^
+    ...<2 lines>...
+        cache_request=request,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\log_open.py", line 361, in _OpenWithSourcePackage
+    cached_package, reference = self.cache.Package_Import(
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        package_path,
+        ^^^^^^^^^^^^^
+        container_plugins=containers,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        limits=self.package_limits,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\decoder_profiles\discovery.py", line 347, in Package_Import
+    os.replace(temporary_path, target_path)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\.import-ce485bd6.tmp' -> 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\637a43f444f3d55ab2b3842f59c317a8.ssdecoder'
+____ test_valid_full_parse_cache_never_calls_parser_and_preserves_explorer ____
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x0000020C26A11230>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_valid_full_parse_cache_ne0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020C2CF94FA0>
+
+    def test_valid_full_parse_cache_never_calls_parser_and_preserves_explorer(qtbot, tmp_path, monkeypatch):
+        from silverstar_flp.decoder_profiles.parser import DecoderProfileParserPlugin
+        from silverstar_flp.log_open import LogOpenCoordinator, LogOpenRequest, LogOpenSourceMode
+        opened = NavigationPair_Open(tmp_path / 'pair', flight_samples=41)
+        path = tmp_path / 'flight.ssflp'; document = _Document_Build(opened, path)
+        Project_Save(document, path, dataset=opened.dataset, replay_store=ReplayResultStore())
+        monkeypatch.setattr(DecoderProfileParserPlugin, 'parse',
+                            lambda *args: pytest.fail('Valid full cache must not parse'))
+        coordinator = LogOpenCoordinator(builtin_registry())
+>       restored = coordinator.Open(LogOpenRequest(opened.dataset.source_path,
+            opened.source_package_path, source_mode=LogOpenSourceMode.PROJECT,
+            project_path=path, dataset_cache_reference=document.parse_artifact)).dataset
+
+apps\FLP\tests\test_project_artifacts.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\FLP\src\silverstar_flp\log_open.py:334: in Open
+    return self._OpenWithSourcePackage(
+apps\FLP\src\silverstar_flp\log_open.py:361: in _OpenWithSourcePackage
+    cached_package, reference = self.cache.Package_Import(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_flp.decoder_profiles.discovery.DecoderProfileCache object at 0x0000020C2C72D950>
+source_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_artifacts_v5/test_valid_full_parse_cache_ne0/pair/SYNTHETIC_navigation.ssdecoder')
+container_plugins = {'silverstar.flight_log.container.0_0': <silverstar_flp.plugins.log_containers.sslog0.plugin.Sslog0ContainerPlugin object at 0x0000020C2C72EE40>}
+limits = None
+
+    def Package_Import(
+        self,
+        source_path: Path,
+        *,
+        container_plugins: Mapping[str, LogContainerPlugin],
+        limits: DecoderPackageLimits | None = None,
+    ) -> tuple[DecoderProfilePackage, DecoderProfileCacheReference]:
+        package = DecoderProfilePackage.Load(
+            Path(source_path),
+            limits=limits,
+            container_plugins=container_plugins,
+        )
+        generation_directory = self.root / package.generation_profile_sha256[:32]
+        target_path = generation_directory / (
+            f"{package.package_sha256[:32]}.ssdecoder"
+        )
+        self._Target_Validate(target_path)
+        generation_directory.mkdir(parents=True, exist_ok=True)
+        if target_path.exists():
+            cached = DecoderProfilePackage.Load(
+                target_path,
+                limits=limits,
+                container_plugins=container_plugins,
+            )
+            if cached.package_sha256 != package.package_sha256:
+                raise DecoderProfileError("decoder_cache_hash_conflict")
+        else:
+            temporary_path = generation_directory / f".import-{uuid.uuid4().hex[:8]}.tmp"
+            self._Target_Validate(temporary_path)
+            try:
+                shutil.copyfile(package.source_path, temporary_path)
+                copied_hash = _FileSha256_Get(temporary_path)
+                if copied_hash != package.package_sha256:
+                    raise DecoderProfileError("decoder_cache_copy_hash_mismatch")
+>               os.replace(temporary_path, target_path)
+E               PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\.import-eaec8bdd.tmp' -> 'C:\\Users\\chdxm\\AppData\\Local\\Packages\\sandbox.{a31c70ad-ad08-4c7c-9ac2-7308e4790f43}\\AC\\SilverStar\\FLP\\decoder_profiles\\04df108d9ec4e6514c8015c8b9b9a3a8\\182191478535d88dd1831589ef03aba6.ssdecoder'
+
+apps\FLP\src\silverstar_flp\decoder_profiles\discovery.py:347: PermissionError
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_project_artifact_boundaries.py::test_save_data_toggle_retains_files_configurations_and_can_enable_again
+FAILED apps\FLP\tests\test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[corrupt]
+FAILED apps\FLP\tests\test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[parser_revision]
+FAILED apps\FLP\tests\test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[changed_log]
+FAILED apps\FLP\tests\test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[True]
+FAILED apps\FLP\tests\test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[False]
+FAILED apps\FLP\tests\test_project_artifacts.py::test_four_completed_algorithms_and_two_distinct_runs_roundtrip
+FAILED apps\FLP\tests\test_project_artifacts.py::test_gui_reopen_restores_every_run_and_two_sources_without_replay
+FAILED apps\FLP\tests\test_project_artifacts.py::test_valid_full_parse_cache_never_calls_parser_and_preserves_explorer
+9 failed, 95 passed in 407.66s (0:06:47)

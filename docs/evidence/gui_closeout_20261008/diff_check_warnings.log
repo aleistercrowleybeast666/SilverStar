@@ -1,0 +1,17 @@
+warning: in the working copy of 'apps/FLP/src/silverstar_flp/core/artifacts.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/FLP/src/silverstar_flp/core/project.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/FLP/src/silverstar_flp/log_open.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/FLP/src/silverstar_flp/ui/main_window.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/FLP/src/silverstar_flp/ui/workers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/FLP/tests/test_project_stage_progress_gui.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/app/service.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/i18n/en_US.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/i18n/zh_CN.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/compact.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/configuration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/feature_tiers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/ui/main_window.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/ui/pages/components.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_feature_tiers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/FCCG/platform/details/FEATURE_TIERS_20261006.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/README.md', LF will be replaced by CRLF the next time Git touches it

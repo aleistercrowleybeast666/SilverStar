@@ -1,0 +1,47 @@
+[
+  {
+    "node": "apps/FLP/tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish]",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\slow_finish_v6",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\cache_slow_finish_v6"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 13.337148000000525,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\slow_finish_v6.log"
+  },
+  {
+    "node": "apps/FLP/tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel]",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\slow_cancel_v6",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\cache_slow_cancel_v6"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 15.777277400000457,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\slow_cancel_v6.log"
+  },
+  {
+    "node": "apps/FLP/tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close]",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "apps/FLP/tests/test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\slow_close_v6",
+      "-o",
+      "cache_dir=D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\cache_slow_close_v6"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 36.837090799999714,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\slow_close_v6.log"
+  }
+]

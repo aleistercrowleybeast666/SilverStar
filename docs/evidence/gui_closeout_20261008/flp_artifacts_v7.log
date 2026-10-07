@@ -1,0 +1,62 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+NumPy 2.4.1 Python D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+Windows fatal exception: access violation
+
+Thread 0x00004148 (most recent call first):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 148 in pairs
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py", line 361 in raw_decode
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py", line 345 in decode
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py", line 359 in loads
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 177 in _Json_Load
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 901 in _Artifact_Load
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\artifacts.py", line 881 in Artifact_Read
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\parse_cache.py", line 31 in DatasetCache_Read
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\log_open.py", line 429 in _ParseAndAdapt
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\log_open.py", line 367 in _OpenWithSourcePackage
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\log_open.py", line 334 in Open
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 610 in _ProjectLogOpen_Run
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 662 in _ProjectOpen_Run
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 670 in <lambda>
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 63 in run
+
+Current thread 0x0000425c (most recent call first):
+  Garbage-collecting
+  File "D:\python_software\SilverStar\.venv\Lib\site-packages\pytestqt\qt_compat.py", line 160 in exec
+  File "D:\python_software\SilverStar\.venv\Lib\site-packages\pytestqt\wait_signal.py", line 58 in wait
+  File "D:\python_software\SilverStar\.venv\Lib\site-packages\pytestqt\qtbot.py", line 503 in wait
+  File "D:\python_software\SilverStar\.venv\Lib\site-packages\pytestqt\qtbot.py", line 600 in waitUntil
+  File "D:\python_software\SilverStar\apps\FLP\tests\test_project_artifacts.py", line 196 in test_gui_reopen_restores_every_run_and_two_sources_without_replay
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 167 in pytest_pyfunc_call
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\python.py", line 1707 in runtest
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 184 in pytest_runtest_call
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 250 in <lambda>
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 361 in from_call
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 249 in call_and_report
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 139 in runtestprotocol
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\runner.py", line 118 in pytest_runtest_protocol
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 408 in pytest_runtestloop
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 384 in _main
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 330 in wrap_session
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377 in pytest_cmdline_main
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229 in _main
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 201 in main
+  File "D:\python_software\SilverStar\.work\release_closeout_20261007\run_flp_tests.py", line 9 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+.................................................

@@ -1,0 +1,110 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+_______________________ test_hash_reports_actual_bytes ________________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp_v2/test_hash_reports_actual_bytes0')
+
+    def test_hash_reports_actual_bytes(tmp_path):
+        path = tmp_path / 'input.bin'
+        path.write_bytes(b'x' * (3 * 1024 * 1024 + 7))
+        reports = []
+        FileHash_Get(path, TaskContext(progress_callback=lambda value, code: reports.append((value, code))))
+>       assert len(reports) >= 4
+E       assert 0 >= 4
+E        +  where 0 = len([])
+
+apps\FLP\tests\test_artifact_byte_progress.py:13: AssertionError
+____ test_array_compression_reports_chunks_and_cancels_before_publication _____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp_v2/test_array_compression_reports0')
+
+    def test_array_compression_reports_chunks_and_cancels_before_publication(tmp_path):
+        context = TaskContext()
+        reports = []
+        def report(value, code):
+            reports.append((value, code))
+            if code.startswith('progress.artifact.array_write|'):
+                context.Cancel_Request()
+        context.progress_callback = report
+>       with pytest.raises(TaskCancelledError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE TaskCancelledError
+
+apps\FLP\tests\test_artifact_byte_progress.py:26: Failed
+______ test_chunked_save_read_preserves_npy_layout_and_fine_progress[C] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp_v2/test_chunked_save_read_preserv0')
+order = 'C'
+
+    @pytest.mark.parametrize('order', ['C', 'F', 'strided'])
+    def test_chunked_save_read_preserves_npy_layout_and_fine_progress(tmp_path, order):
+        value = np.arange(800000, dtype='float64').reshape(400000, 2)
+        if order == 'F':
+            value = np.asfortranarray(value)
+        elif order == 'strided':
+            value = value[::2]
+        reports = []
+        context = TaskContext(progress_callback=lambda number, code: reports.append((number, code)))
+        path = tmp_path / 'array.ssflp'
+        ref = Artifact_Write(path, value, {}, context)
+        np.testing.assert_array_equal(Artifact_Read(path, ref, {}), value)
+        writes = [code for _, code in reports if code.startswith('progress.artifact.array_write|')]
+>       assert len(writes) >= 3
+E       assert 0 >= 3
+E        +  where 0 = len([])
+
+apps\FLP\tests\test_artifact_byte_progress.py:44: AssertionError
+______ test_chunked_save_read_preserves_npy_layout_and_fine_progress[F] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp_v2/test_chunked_save_read_preserv1')
+order = 'F'
+
+    @pytest.mark.parametrize('order', ['C', 'F', 'strided'])
+    def test_chunked_save_read_preserves_npy_layout_and_fine_progress(tmp_path, order):
+        value = np.arange(800000, dtype='float64').reshape(400000, 2)
+        if order == 'F':
+            value = np.asfortranarray(value)
+        elif order == 'strided':
+            value = value[::2]
+        reports = []
+        context = TaskContext(progress_callback=lambda number, code: reports.append((number, code)))
+        path = tmp_path / 'array.ssflp'
+        ref = Artifact_Write(path, value, {}, context)
+        np.testing.assert_array_equal(Artifact_Read(path, ref, {}), value)
+        writes = [code for _, code in reports if code.startswith('progress.artifact.array_write|')]
+>       assert len(writes) >= 3
+E       assert 0 >= 3
+E        +  where 0 = len([])
+
+apps\FLP\tests\test_artifact_byte_progress.py:44: AssertionError
+___ test_chunked_save_read_preserves_npy_layout_and_fine_progress[strided] ____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp_v2/test_chunked_save_read_preserv2')
+order = 'strided'
+
+    @pytest.mark.parametrize('order', ['C', 'F', 'strided'])
+    def test_chunked_save_read_preserves_npy_layout_and_fine_progress(tmp_path, order):
+        value = np.arange(800000, dtype='float64').reshape(400000, 2)
+        if order == 'F':
+            value = np.asfortranarray(value)
+        elif order == 'strided':
+            value = value[::2]
+        reports = []
+        context = TaskContext(progress_callback=lambda number, code: reports.append((number, code)))
+        path = tmp_path / 'array.ssflp'
+        ref = Artifact_Write(path, value, {}, context)
+        np.testing.assert_array_equal(Artifact_Read(path, ref, {}), value)
+        writes = [code for _, code in reports if code.startswith('progress.artifact.array_write|')]
+>       assert len(writes) >= 3
+E       assert 0 >= 3
+E        +  where 0 = len([])
+
+apps\FLP\tests\test_artifact_byte_progress.py:44: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_artifact_byte_progress.py::test_hash_reports_actual_bytes
+FAILED apps\FLP\tests\test_artifact_byte_progress.py::test_array_compression_reports_chunks_and_cancels_before_publication
+FAILED apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[C]
+FAILED apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[F]
+FAILED apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[strided]
+5 failed in 8.23s

@@ -1,0 +1,149 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+......F...EEEEEEEEEEEE                                                   [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_background_save_stages_finish_only_after_gui_publication[False] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 69
+  @pytest.mark.parametrize('save_data', [False, True])
+  def test_background_save_stages_finish_only_after_gui_publication(qtbot, tmp_path, small_input, window, monkeypatch, save_data):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:69
+_ ERROR at setup of test_background_save_stages_finish_only_after_gui_publication[True] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 69
+  @pytest.mark.parametrize('save_data', [False, True])
+  def test_background_save_stages_finish_only_after_gui_publication(qtbot, tmp_path, small_input, window, monkeypatch, save_data):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:69
+_ ERROR at setup of test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 88
+  @pytest.mark.parametrize('cache', ['valid', 'missing', 'corrupt'])
+  def test_project_open_reads_in_worker_and_reports_cache_or_parse(qtbot, tmp_path, small_input, window, monkeypatch, cache):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:88
+_ ERROR at setup of test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 88
+  @pytest.mark.parametrize('cache', ['valid', 'missing', 'corrupt'])
+  def test_project_open_reads_in_worker_and_reports_cache_or_parse(qtbot, tmp_path, small_input, window, monkeypatch, cache):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:88
+_ ERROR at setup of test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 88
+  @pytest.mark.parametrize('cache', ['valid', 'missing', 'corrupt'])
+  def test_project_open_reads_in_worker_and_reports_cache_or_parse(qtbot, tmp_path, small_input, window, monkeypatch, cache):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:88
+_ ERROR at setup of test_cancelled_or_closed_open_never_publishes_complete[cancel] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 126
+  @pytest.mark.parametrize('action', ['cancel', 'close'])
+  def test_cancelled_or_closed_open_never_publishes_complete(qtbot, tmp_path, small_input, window, monkeypatch, action):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:126
+_ ERROR at setup of test_cancelled_or_closed_open_never_publishes_complete[close] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 126
+  @pytest.mark.parametrize('action', ['cancel', 'close'])
+  def test_cancelled_or_closed_open_never_publishes_complete(qtbot, tmp_path, small_input, window, monkeypatch, action):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:126
+__________ ERROR at setup of test_failed_open_never_reports_complete __________
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 147
+  def test_failed_open_never_reports_complete(qtbot, tmp_path, window):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:147
+____ ERROR at setup of test_original_save_lifecycle_unchanged[clean_close] ____
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 153
+  @pytest.mark.parametrize('case', ['clean_close','cancel_close_option','cancel_after_commit','snapshot_removed'])
+  def test_original_save_lifecycle_unchanged(qtbot, tmp_path, monkeypatch, private_settings, case):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:153
+_ ERROR at setup of test_original_save_lifecycle_unchanged[cancel_close_option] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 153
+  @pytest.mark.parametrize('case', ['clean_close','cancel_close_option','cancel_after_commit','snapshot_removed'])
+  def test_original_save_lifecycle_unchanged(qtbot, tmp_path, monkeypatch, private_settings, case):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:153
+_ ERROR at setup of test_original_save_lifecycle_unchanged[cancel_after_commit] _
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 153
+  @pytest.mark.parametrize('case', ['clean_close','cancel_close_option','cancel_after_commit','snapshot_removed'])
+  def test_original_save_lifecycle_unchanged(qtbot, tmp_path, monkeypatch, private_settings, case):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:153
+_ ERROR at setup of test_original_save_lifecycle_unchanged[snapshot_removed] __
+file D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py, line 153
+  @pytest.mark.parametrize('case', ['clean_close','cancel_close_option','cancel_after_commit','snapshot_removed'])
+  def test_original_save_lifecycle_unchanged(qtbot, tmp_path, monkeypatch, private_settings, case):
+E       fixture 'qtbot' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, private_settings, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, small_input, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\apps\FLP\tests\test_project_stage_progress_gui.py:153
+================================== FAILURES ===================================
+___ test_save_reports_real_stages_and_never_publishes_worker_complete[True] ___
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/flp_v1/test_save_reports_real_stages_1')
+small_input = (LogOpenResult(dataset=FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/release_closeout_202...sources={}, saved_result_ids=()), <silverstar_flp.core.analysis_source.ReplayResultStore object at 0x000001DB8802BE00>)
+save_data = True
+
+    @pytest.mark.parametrize('save_data', [False, True])
+    def test_save_reports_real_stages_and_never_publishes_worker_complete(tmp_path, small_input, save_data):
+        path = tmp_path/'saved.ssflp'
+        opened, document, store = _Copy(small_input, path)
+        document.save_data_and_results = save_data
+        reports = []
+        Project_Save(document, path, dataset=opened.dataset, replay_store=store,
+            context=TaskContext(progress_callback=lambda value, code: reports.append((value, code))))
+        assert len(reports) >= 3, 'Saving must report actual stages'
+        assert all(0 <= value < 1 for value, _ in reports)
+>       assert [value for value, _ in reports] == sorted(value for value, _ in reports)
+E       assert [0.02, 0.04, ...8, 0.096, ...] == [0.0, 0.0, 0....04, 0.08, ...]
+E         
+E         At index 0 diff: 0.02 != 0.0
+E         Use -v to get more diff
+
+apps\FLP\tests\test_project_stage_progress.py:35: AssertionError
+=========================== short test summary info ===========================
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_failed_open_never_reports_complete
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[clean_close]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_close_option]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_after_commit]
+ERROR apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[snapshot_removed]
+FAILED apps\FLP\tests\test_project_stage_progress.py::test_save_reports_real_stages_and_never_publishes_worker_complete[True]
+1 failed, 9 passed, 12 errors in 26.53s

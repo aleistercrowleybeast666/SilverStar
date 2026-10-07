@@ -24,3 +24,7 @@ docs/FCCG/post_field_ground_radios_20261001_v1/** -text
 docs/FCCG/sf6_stage3_20261002/SecondEvidence/** -text
 docs/FCCG/sf6_stage3_20261002/ThirdCheckpointEvidence/** -text
 docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8/** -text
+
+# GUI closeout evidence and the supplied recommendation retain exact bytes.
+docs/evidence/gui_closeout_20261008/** -text
+docs/SilverStar_Recommended_Configurations.md -text

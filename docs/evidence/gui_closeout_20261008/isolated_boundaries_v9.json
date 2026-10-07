@@ -1,0 +1,128 @@
+[
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_artifact_boundaries.py::test_save_data_toggle_retains_files_configurations_and_can_enable_again",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi90"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 17.54857770000035,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_0.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[corrupt]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi91"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 10.753130299999611,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_1.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[parser_revision]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi92"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 9.793101900000693,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_2.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_artifact_boundaries.py::test_parse_cache_faults_fall_back_only_to_strict_coordinator[changed_log]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi93"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 10.182295800000247,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_3.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[True]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi94"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 15.764316899999358,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_4.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_run_deletion.py::test_save_as_recovery_dependency_and_local_move[False]",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi95"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 11.247571899999457,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_5.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_artifacts.py::test_four_completed_algorithms_and_two_distinct_runs_roundtrip",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi96"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 29.743695600000137,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_6.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_artifacts.py::test_gui_reopen_restores_every_run_and_two_sources_without_replay",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi97"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 16.66215420000026,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_7.log"
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\run_flp_tests.py",
+      "-p",
+      "closeout_test_paths",
+      "apps/FLP/tests/test_project_artifacts.py::test_valid_full_parse_cache_never_calls_parser_and_preserves_explorer",
+      "-q",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\fi98"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 11.917135900000176,
+    "log": "D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\isolated_boundary_v9_8.log"
+  }
+]

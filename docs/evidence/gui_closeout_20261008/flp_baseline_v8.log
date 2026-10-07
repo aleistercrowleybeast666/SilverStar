@@ -1,0 +1,3 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+Baseline fd1954b NumPy 2.4.1 Python D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+INCOMPLETE: interrupted with Ctrl-C after prolonged absence of test results. Exit 1 is interruption, not a test outcome; no baseline attribution.

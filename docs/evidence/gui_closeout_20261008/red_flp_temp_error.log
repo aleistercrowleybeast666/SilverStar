@@ -1,0 +1,80 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+EEEEE                                                                    [100%]
+=================================== ERRORS ====================================
+______________ ERROR at setup of test_hash_reports_actual_bytes _______________
+
+self = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\red_flp'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_array_compression_reports_chunks_and_cancels_before_publication _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\red_flp'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_chunked_save_read_preserves_npy_layout_and_fine_progress[C] _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\red_flp'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_chunked_save_read_preserves_npy_layout_and_fine_progress[F] _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\red_flp'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_ ERROR at setup of test_chunked_save_read_preserves_npy_layout_and_fine_progress[strided] _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/red_flp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\release_closeout_20261007\\red_flp'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR apps\FLP\tests\test_artifact_byte_progress.py::test_hash_reports_actual_bytes
+ERROR apps\FLP\tests\test_artifact_byte_progress.py::test_array_compression_reports_chunks_and_cancels_before_publication
+ERROR apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[C]
+ERROR apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[F]
+ERROR apps\FLP\tests\test_artifact_byte_progress.py::test_chunked_save_read_preserves_npy_layout_and_fine_progress[strided]
+5 errors in 9.94s

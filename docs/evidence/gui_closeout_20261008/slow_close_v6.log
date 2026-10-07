@@ -1,0 +1,78 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+NumPy 2.4.1 Python D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_slow_array_save_keeps_gui_responsive_and_atomic[close] _________
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x000001B52942F620>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release_closeout_20261007/slow_close_v6/test_slow_array_save_keeps_gui0')
+small_input = (LogOpenResult(dataset=FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/release_closeout_202...sources={}, saved_result_ids=()), <silverstar_flp.core.analysis_source.ReplayResultStore object at 0x000001B52942D6A0>)
+window = <silverstar_flp.ui.main_window.MainWindow(0x1b52852ec80) at 0x000001B52953E100>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B5294823F0>
+action = 'close'
+
+    @pytest.mark.parametrize('action', ['finish', 'cancel', 'close'])
+    def test_slow_array_save_keeps_gui_responsive_and_atomic(qtbot, tmp_path, small_input, window, monkeypatch, action):
+        import numpy as np
+        from PySide6.QtCore import QTimer
+        from silverstar_flp.core.artifacts import _ProgressStream
+        opened, document, store = _Document(small_input)
+        window._LogOpenResult_Set(opened, document)
+        result = store.Entries_Get()[0].result
+        result = replace(result, diagnostics={**result.diagnostics,
+            'slow_write_fixture': np.arange(400000, dtype='float64')})
+        window._replay_store.Result_Add(result)
+        entered, release = Event(), Event()
+        original = _ProgressStream.write
+        gui = get_ident()
+        def held(stream, data):
+            assert get_ident() != gui
+            if len(data) >= 1024 * 1024:
+                entered.set()
+                assert release.wait(5)
+                stream.context.Cancel_RaiseIfRequested()
+            return original(stream, data)
+        monkeypatch.setattr(_ProgressStream, 'write', held)
+        path = tmp_path/'slow.ssflp'
+        previous = b'old user file'; path.write_bytes(previous)
+        try:
+            assert window._Project_Write(path, background=True, save_data=True)
+            qtbot.waitUntil(entered.is_set, timeout=15000)
+            alive = []
+            QTimer.singleShot(0, lambda: alive.append(True))
+            qtbot.waitUntil(lambda: bool(alive), timeout=1000)
+            assert window.progress_bar.value() < 1000
+            assert path.read_bytes() == previous
+            if action == 'cancel':
+                window._Task_Cancel()
+            elif action == 'close':
+                event = QCloseEvent(); window.closeEvent(event)
+                assert not event.isAccepted()
+        finally:
+            release.set()
+>       _Finished(qtbot, window, success=action == 'finish')
+
+apps\FLP\tests\test_project_stage_progress_gui.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qtbot = <pytestqt.qtbot.QtBot object at 0x000001B52942F620>
+window = <silverstar_flp.ui.main_window.MainWindow(0x1b52852ec80) at 0x000001B52953E100>
+success = False
+
+    def _Finished(qtbot, window, *, success):
+        qtbot.waitUntil(lambda: window._active_worker is None, timeout=15000)
+        assert window.test_values == sorted(window.test_values)
+        assert all(0 <= value <= 1000 for value in window.test_values)
+        assert all(value < 1 for value, _ in window.test_reports)
+>       assert window.progress_bar.value() == 1000 if success else window.progress_bar.value() < 1000
+E       assert False
+
+apps\FLP\tests\test_project_stage_progress_gui.py:65: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close]
+1 failed in 33.79s

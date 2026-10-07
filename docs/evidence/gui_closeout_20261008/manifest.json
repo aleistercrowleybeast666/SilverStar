@@ -1,0 +1,334 @@
+{
+  "baseline": "fd1954b3652d638e773be21b7553e3ac78c7f060",
+  "flp_commit": "cc5fb5259b0f7f2266037be6f0907e02308385b7",
+  "scg_commit": "5821058dff7b976cb4abed5cd1db5949990fe104",
+  "branch": "fix/nightly-user-ready-20261003",
+  "environment": {
+    "python": "3.14.0",
+    "numpy_flp": "2.4.1",
+    "pyside6": "6.10.1",
+    "pytest": "9.1.1",
+    "qt_platform": "offscreen"
+  },
+  "source_file_sha256": {
+    "apps/FLP/src/silverstar_flp/core/artifacts.py": "66b70d19fb305ce8c1d0484ccbb56dd3dcd31135ba9451a04c9e9f19a68eef41",
+    "apps/FLP/src/silverstar_flp/core/project.py": "839abf5df310355f2bcdfc3e1f1b348fcbb64fc60752ec9c81f30b4ec452cff5",
+    "apps/FLP/src/silverstar_flp/i18n/en_US.json": "cb03d36c83867c35a6fa88b466aea7394844287c973017dce4241418601165ec",
+    "apps/FLP/src/silverstar_flp/i18n/zh_CN.json": "d24f0555ee2fae6c250fb3c2534b6187562afaa894dcb3553113e85640219f35",
+    "apps/FLP/src/silverstar_flp/log_open.py": "e6f940e715f996aae87e5ea0c929774ce71f9665f9d6fdc6e3d68475d85072a7",
+    "apps/FLP/src/silverstar_flp/ui/main_window.py": "bcd7c59319d485b393eab4990eb7700f1fbcdcc2e1891f53bed5b65475916115",
+    "apps/FLP/src/silverstar_flp/ui/workers.py": "f7467730a6ca4911ed6108cb865166753569eb19a9e82d9c9c356770ea4d423e",
+    "apps/FLP/tests/test_artifact_byte_progress.py": "221c14d491680ee3c2d8e87f2e8b905ff33624b71812eb2a7226737bfd542a14",
+    "apps/FLP/tests/test_project_stage_progress_gui.py": "e112a8a38a7f8585fec4f7d43eeb27875bf1b9559bd407c48d7a6c0196c922b3",
+    "apps/SCG/src/silverstar_fccg/app/service.py": "ed6d96d5fdd15512c47986652c3815073a0badce823c33c96cf89743bccc4dc1",
+    "apps/SCG/src/silverstar_fccg/i18n/en_US.json": "fe4380ba33966993825dd1e3f5c6ae1d1ff5129684ae920f7e9d3c50b445e06e",
+    "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": "21fbb25d782c6742d37495d682ba116cbca58e2d8e562613d23dc794a0cc4fcb",
+    "apps/SCG/src/silverstar_fccg/project/compact.py": "ad93017d2ac4a1d69f0f14664bd8e53128013aec86f486452af2d4caeb3744e7",
+    "apps/SCG/src/silverstar_fccg/project/configuration.py": "0e11a77025de59615e5b4e131c09bc1ff941a20c0efa629f5dbe6d24b998dfb2",
+    "apps/SCG/src/silverstar_fccg/project/feature_tiers.py": "001e5d118358e4cce8930acc8431bf963c1dd87d01824622fe2de54aa51adcc8",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "ea3dbf8bac98d2a23cac50edd6fde6c6b4793bbacfe2aedd6d297142cd2a35d8",
+    "apps/SCG/src/silverstar_fccg/ui/pages/components.py": "593f8ac2308d152fa28fa81159683ac3a4f80b14d9701e1074c99e5280c01fc6",
+    "apps/SCG/tests/test_feature_tiers.py": "d8ea487003b06e6a9a82809f62044a29dbe72c401c52ed9f88805339fcabbb1a",
+    "apps/SCG/tests/test_tier_device_boundaries.py": "24593bd835324e75753f43be43ac0075cc2c82f283e348f568e06529844b74c4",
+    "apps/SCG/tests/test_tier_device_gui.py": "a8c7d4384a53e26507becc2e493a99114cfcbd3a63ff87e85ccf51e2d9bbac43",
+    "docs/FCCG/platform/details/FEATURE_TIERS_20261006.md": "69df36691c0f6661ffbae6d2f360e01ce1a04d5ce8824136dd2b139c4f4d3eb8",
+    "apps/FLP/tests/test_project_artifact_boundaries.py": "4b436de0f7a5205fa0eceb1ca0f74e62ae94562406c40e47b99326863e80e705",
+    "apps/FLP/tests/test_project_artifacts.py": "5833f9f1084202b8e07efb2cdbd21052adba11379040f4214a29d22db703ee77",
+    "apps/FLP/tests/test_run_deletion.py": "06a2b460f92776666134063def0059492c58916383c31e8713be36c7c31ef0f7",
+    "apps/FLP/tests/test_record_block_artifacts.py": "aef4a822671a9b63c5609a7b4b2297bbeedef89b5dbf69910e84dbe2f2ea4707",
+    "apps/FLP/tests/test_audit_block_artifacts.py": "3e145958556461af35ca30a39cc3840ad9606e05d5d7d858ad4f28978151f507",
+    "apps/FLP/tests/test_project_stage_progress.py": "5eee6aea7b95bca0868a093c2f9c95ffc7d857e26a9af4d94e7bcc6f8f436249",
+    "apps/FLP/tests/test_project_save_lifecycle.py": "3d4ba3264db59943cfcc36df5a09c3375effaa5c370a43f23c7d90d06971f764",
+    "apps/SCG/tests/test_feature_tier_logging_policy.py": "18bdd15ad6bd3a29ac7892abe52d6aca6c0e4548f1a6d2eda275f859a744763e"
+  },
+  "preserved_inventory_sha256": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  },
+  "evidence": {
+    "diff_check_warnings.log": {
+      "bytes": 2343,
+      "sha256": "92ad7f923e1ba9d31671f4d441eb8fb4ed275fa961f199ad77d58033fed481f4"
+    },
+    "flp_artifacts_v5.log": {
+      "bytes": 49914,
+      "sha256": "7ee024c7b93e1bd8db3f4516d63c002918328232c02d533c73fc051f36272b1c"
+    },
+    "flp_artifacts_v7.log": {
+      "bytes": 6488,
+      "sha256": "ad1a131ecd68dd168338a4a7e10ecb0db08a9a26616975ae7ed2b22dec273f10"
+    },
+    "flp_baseline_v8.log": {
+      "bytes": 347,
+      "sha256": "faf061f9c53b350dce5d6172c35b5e95b323f8dd0947a3942955351495324026"
+    },
+    "flp_codec_v6.log": {
+      "bytes": 295,
+      "sha256": "5de8cf86786ac0927eee9f37a7f601685916af9ae50095336fa7cb67c2690cb9"
+    },
+    "flp_final_v4.log": {
+      "bytes": 7370,
+      "sha256": "8256f948ad2211d25ec9b46dafb6e1c7ebcb8ab9a3472fecab4cdf7468ff525f"
+    },
+    "flp_gui_v5.log": {
+      "bytes": 6676,
+      "sha256": "906774b0320ec2fd618f7a4306fc03a83ba40febcc981a547d17d874fe0e7e85"
+    },
+    "flp_stage_gui_v8.log": {
+      "bytes": 6913,
+      "sha256": "7c781c1bc1f75b39adea23fed57e287c9a6fc65a6f9741257b18cb9ad6948b8e"
+    },
+    "flp_v1.log": {
+      "bytes": 13970,
+      "sha256": "0c8357a61d91061023a1caeeee99273e6ea2d83b0802d0baeeb3c52fea24faf8"
+    },
+    "flp_v2.log": {
+      "bytes": 8635,
+      "sha256": "e9236f0994c5e091433af79ea48120c660156d4f21c7b7c1b7e5497db2331e5d"
+    },
+    "flp_v3.log": {
+      "bytes": 295,
+      "sha256": "a857b2c8569ce829377fcc419b4723cde4649d5efbdaa0de281ffaeb03a333e1"
+    },
+    "isolated_boundary_v9_0.log": {
+      "bytes": 283,
+      "sha256": "0557a18db2a9f3c6d5690a5db14e9299e7ffd58c66bc38ca22c449287067cd35"
+    },
+    "isolated_boundary_v9_1.log": {
+      "bytes": 282,
+      "sha256": "b2726ecf588b01e27c630a6c498ecb802adbf03badeb704690c46bce3b1d9605"
+    },
+    "isolated_boundary_v9_2.log": {
+      "bytes": 282,
+      "sha256": "b4f8b257059cd268619dbe47a78c92caded26d2cf840be9172bfd24af9cef728"
+    },
+    "isolated_boundary_v9_3.log": {
+      "bytes": 282,
+      "sha256": "520cd20fb0c2f69be4627f43982b6a7f00027d0168d07c700f8b5d7b28764741"
+    },
+    "isolated_boundary_v9_4.log": {
+      "bytes": 283,
+      "sha256": "668dd094a673f0db16eb84768a6b25eba296687a800b05b7c9d83619a8ae630b"
+    },
+    "isolated_boundary_v9_5.log": {
+      "bytes": 282,
+      "sha256": "9f4106e59c495e93e1a5d138b9425454a573f0e53db9380e0dd2144e3797bc39"
+    },
+    "isolated_boundary_v9_6.log": {
+      "bytes": 283,
+      "sha256": "ec06471906904219168fb24269808c56c7afb7eb11e0f7be102dd835c61109ce"
+    },
+    "isolated_boundary_v9_7.log": {
+      "bytes": 283,
+      "sha256": "71d3e0ce1bf94e6927cf7247336628f66741d75f5558e97f5fba1d86cf2178c4"
+    },
+    "isolated_boundary_v9_8.log": {
+      "bytes": 282,
+      "sha256": "a2d76de9ca90bb08187b611be895a305c6dc7bf4a8f76932d93fd89c5606bdb6"
+    },
+    "isolated_stage_v10_0.log": {
+      "bytes": 282,
+      "sha256": "c5a3c9072de83294a1223fe8ed5539fca73486a6a1f828a18ad47b651563397a"
+    },
+    "isolated_stage_v10_1.log": {
+      "bytes": 283,
+      "sha256": "d4c25f20d7182c1b0ded423366d96e591492031d3896a3a84ebd912c3a5eb786"
+    },
+    "isolated_stage_v10_10.log": {
+      "bytes": 282,
+      "sha256": "0d5a45a0b8d6b90998fdda1c4e147f98db3ce1b5637f1d5dc6967d401dc87e8d"
+    },
+    "isolated_stage_v10_11.log": {
+      "bytes": 282,
+      "sha256": "51d2d1489cc6e127fa4111ca88ad2cdd18ea5ac60dd26ec8cd166dd6908fa445"
+    },
+    "isolated_stage_v10_2.log": {
+      "bytes": 283,
+      "sha256": "3615b7fd447ac7799395f18ed1978f51690a5ed4838d457f220dd6a855d62384"
+    },
+    "isolated_stage_v10_3.log": {
+      "bytes": 283,
+      "sha256": "7f7ea38cfcb491daed3cc823f3d6a59dfb0f249ca38626a373168be42405c17b"
+    },
+    "isolated_stage_v10_4.log": {
+      "bytes": 283,
+      "sha256": "d8977da00509801e0e43cfecd49e835a4dd8fea8832ef10581bbaaaca73ea96c"
+    },
+    "isolated_stage_v10_5.log": {
+      "bytes": 282,
+      "sha256": "04e20db89c2540124d3feb295c790d0036a46a1753ebb26f7036b65090f31135"
+    },
+    "isolated_stage_v10_6.log": {
+      "bytes": 282,
+      "sha256": "fe5615a81e241cbb8e56203de74ded440c5c8c2625d458819c2400a6c6497505"
+    },
+    "isolated_stage_v10_7.log": {
+      "bytes": 282,
+      "sha256": "b6a046f07e55e4e19b233f9733ef45a60b9d364c06a3992191006339e6c006d8"
+    },
+    "isolated_stage_v10_8.log": {
+      "bytes": 282,
+      "sha256": "3cd5a39d2a62cae9561ecea44c2dd11f2cfeb7230c3091206253c2916d458b08"
+    },
+    "isolated_stage_v10_9.log": {
+      "bytes": 282,
+      "sha256": "0cda8c3782a241295672b656c0d64b95c7511297f00c7f89008b998a9f3cdb68"
+    },
+    "red_flp_temp_error.log": {
+      "bytes": 4430,
+      "sha256": "03038163ad82147bc95281f264685b2a99043a55ac8ee7aedc3308aeba4ae0eb"
+    },
+    "red_flp_v2.log": {
+      "bytes": 5821,
+      "sha256": "e91938fb56db0e53b542f0609dc72b9d588b853494a700bce79f519e4965c634"
+    },
+    "red_scg_initial.log": {
+      "bytes": 6334,
+      "sha256": "2168186d6ed1034e5197746298b65296250724ce48add2a2c3613d7ad6741124"
+    },
+    "scg_final_v6.log": {
+      "bytes": 212,
+      "sha256": "5a1a68045f3ece567803342d678fd69a67aa82b2ae488379419da316bd02dceb"
+    },
+    "scg_gui_v4.log": {
+      "bytes": 14793,
+      "sha256": "9bc19b6bb174547c29ba7486e502c3e8fc38686e1224d6fbc1fe30f34c0163d0"
+    },
+    "scg_gui_v5.log": {
+      "bytes": 5597,
+      "sha256": "f7f7a8a23a9192045185ecfa47ef0dce6fee57b8ed68586c3b81d553ffa33c84"
+    },
+    "scg_localization_final.log": {
+      "bytes": 146,
+      "sha256": "ec54ef2da59b07082b6f112856d1fa034dea6b9bc2a7ca3f67e49e9eaba4eff7"
+    },
+    "scg_trace_v3.log": {
+      "bytes": 3151,
+      "sha256": "0efd9a54418fcd2f0d05b417a2d82a5f79d969d915292bf8c93b490083ad7fcd"
+    },
+    "scg_v1.log": {
+      "bytes": 2343,
+      "sha256": "d700d0450acffdd80f750ac6fbe6bc727fbf7cb3a2afe4ee65bbf57584c9ae50"
+    },
+    "slow_cancel_v6.log": {
+      "bytes": 283,
+      "sha256": "dfaa42e517de44f0addbe790f1e6e631a635247553b0ea029078366beeb30584"
+    },
+    "slow_close_v6.log": {
+      "bytes": 4594,
+      "sha256": "58112b9c6c610d6810b2219eb966392527ab1d1b85376a859b85a719a2769dd7"
+    },
+    "slow_close_v7.log": {
+      "bytes": 284,
+      "sha256": "8b2b569178ad70586cbe55ec9cec003ee36141b1e4af162fc567d5e4d466e2c7"
+    },
+    "slow_finish_v6.log": {
+      "bytes": 283,
+      "sha256": "fc7f9f759b8d54faafc830d2a4383948e19f3d0ccded853dd4d9a3246f20e8b8"
+    },
+    "diff_check.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "flp_artifacts_v5.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "flp_artifacts_v7.exit.txt": {
+      "bytes": 13,
+      "sha256": "0065eb2859d3d8935a9b67baade22b7fec608935486ce046841c2b5ab8133241"
+    },
+    "flp_baseline_v8.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "flp_codec_v6.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "flp_final_v4.exit.txt": {
+      "bytes": 3,
+      "sha256": "24ba1e99dc06b19351323aae0d7370243d586475a634b7f6ff7927fbc72cfaed"
+    },
+    "flp_gui_v5.exit.txt": {
+      "bytes": 3,
+      "sha256": "24ba1e99dc06b19351323aae0d7370243d586475a634b7f6ff7927fbc72cfaed"
+    },
+    "flp_stage_gui_v8.exit.txt": {
+      "bytes": 3,
+      "sha256": "24ba1e99dc06b19351323aae0d7370243d586475a634b7f6ff7927fbc72cfaed"
+    },
+    "scg_final_v6.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "scg_gui_v4.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "scg_gui_v5.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "scg_localization_final.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "slow_close_v7.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "isolated_boundaries_v9.json": {
+      "bytes": 5654,
+      "sha256": "f998c2c54c3d619458667a973e27217759f6bedd785a966fc046d21dec33c2cf"
+    },
+    "isolated_gui_v6.json": {
+      "bytes": 2587,
+      "sha256": "61a9f76a39ae6001aec14884e5022bd1844f0bf5c554b588baca1d8bcf8a853c"
+    },
+    "isolated_stages_v10.json": {
+      "bytes": 7530,
+      "sha256": "94313e168df1a1da9309755012f6345379d87b833508ae1dad9fc1c735e3261e"
+    },
+    "run_flp_baseline.py": {
+      "bytes": 1289,
+      "sha256": "129474dd73d55e6aa2b571fdd4320aceb9563de5f39b8ed4587ce98d27b51131"
+    },
+    "run_flp_tests.py": {
+      "bytes": 267,
+      "sha256": "e89a8ba752e94b57f24d3b05598974f9774625a5c388b0e03e8d7f192b09beb9"
+    },
+    "run_isolated_boundaries.py": {
+      "bytes": 1923,
+      "sha256": "7b7e9ad06e6f9737461c3aafce29ec8f362bfe2db6833d8f8c2e74bb3ba2d1b7"
+    },
+    "run_isolated_gui.py": {
+      "bytes": 1258,
+      "sha256": "b6b8ff151cbddf8e3f56c5a49d90152ed2cbfc9025bb431cba18cac1f69a9e74"
+    },
+    "run_isolated_stages.py": {
+      "bytes": 1725,
+      "sha256": "0b86a8bb494d176cfc737fdd50d5511747effab4405b0ce173fde89f4b3194dc"
+    },
+    "closeout_test_paths.py": {
+      "bytes": 620,
+      "sha256": "109f192d10f065921f47216a69600b7ab1310345e109abb25aef90e952c4d403"
+    }
+  },
+  "boundaries": [
+    "SCG 70-pass batch preceded final bilingual description wording edits; final JSON/label check exit 0.",
+    "FLP isolated 9 and 12 cases are independent processes, not a stitched full-suite pass.",
+    "FLP GUI batches v4/v5/v8 exit 3 and v7 access violation exit -1073741819 remain FAIL.",
+    "Baseline overlay v8 interrupted with Ctrl-C, exit 1, no baseline test result or attribution.",
+    "Firmware generation and ARM/Power10/architecture/static analysis/stack/firmware Host gates NOT RUN per user deferral.",
+    "Earlier setup failures and incorrect slow-close test expectation are preserved, not production fixes."
+  ],
+  "reproduction_commands": [
+    ".venv/Scripts/python.exe -m pytest apps/SCG/tests/test_feature_tiers.py apps/SCG/tests/test_feature_tier_logging_policy.py apps/SCG/tests/test_tier_device_boundaries.py apps/SCG/tests/test_tier_device_gui.py -q --basetemp=apps/SCG/.work/release_closeout_20261008/scg_reproduce",
+    "apps/FLP/.venv/Scripts/python.exe .work/release_closeout_20261007/run_flp_tests.py apps/FLP/tests/test_artifact_byte_progress.py apps/FLP/tests/test_project_stage_progress.py apps/FLP/tests/test_record_block_artifacts.py apps/FLP/tests/test_audit_block_artifacts.py -q --basetemp=.work/flp_codec_reproduce",
+    "python .work/release_closeout_20261007/run_isolated_boundaries.py",
+    "python .work/release_closeout_20261007/run_isolated_stages.py"
+  ],
+  "command_notes": "Isolated JSON files retain actual full commands, exits and durations. Reproduction commands for earlier batches specify recorded suites; incidental options were not logged. Set QT_QPA_PLATFORM=offscreen. Archived runners use original .work placement: copy back there to reproduce. No all-suite PASS claim."
+}
