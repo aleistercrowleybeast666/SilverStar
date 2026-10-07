@@ -94,6 +94,26 @@ def test_minimal_changes_are_reversible_and_keep_pure_ins(builtin_catalog):
     assert model.protocols == protocols
 
 
+@pytest.mark.parametrize('estimator', (None, PREFIX + 'sf6'))
+def test_minimal_owned_snapshot_keeps_all_descriptors_with_small_queues(builtin_catalog, estimator):
+    import re
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.strategies['estimator'] = estimator
+    FeatureTier_Apply(model, 'minimal', builtin_catalog)
+    header = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert re.search(r'SYSTEM_LOG_RECORD_QUEUE_DEPTH\s+24U', header)
+    assert re.search(r'SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH\s+16U', header)
+    snapshot = int(re.search(r'PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS\s+(\d+)U', header)[1])
+    assert snapshot > 24
+    assert len(model.logging_streams) == 40
+    assert re.search(r'SYSTEM_IMU_SAMPLE_BUS_DEPTH\s+16U', header)
+    assert re.search(r'ESTIMATOR_BUS_DEPTH\s+16U', header)
+    FeatureTier_Apply(model, 'full', builtin_catalog)
+    restored = _FlightConfigHeader_Render(model, builtin_catalog)
+    assert 'SYSTEM_LOG_RECORD_QUEUE_DEPTH' not in restored
+    assert 'SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH' not in restored
+
+
 def test_malformed_compact_algorithm_blocks_generation(builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
     model.build = replace(model.build, feature_tier='compact')

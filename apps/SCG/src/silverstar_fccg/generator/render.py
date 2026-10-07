@@ -824,8 +824,10 @@ def _FlightConfigHeader_Render(
                                 ("SYSTEM_LOG_ESTIMATOR_SLOT_SIZE", "96U")))
         definitions.extend((
             ("PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS", f"{snapshot_slots}U"),
-            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", f"{max(56, snapshot_slots + 5)}U"),
-            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "40U" if model.build.logging_profile == "sf6_minimal" else "16U"),
+            # Owned startup snapshots drain independently of the ordinary queue.
+            # This is the authorized Minimal-tier default, independent of MCU.
+            ("SYSTEM_LOG_RECORD_QUEUE_DEPTH", "24U"),
+            ("SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH", "16U"),
             ("SYSTEM_LOG_AGGREGATION_BUFFER_SIZE", "1024U" if model.build.logging_profile == "sf6_minimal" else "2048U"),
             ("SYSTEM_IMU_SAMPLE_BUS_DEPTH", "16U"),
             ("ESTIMATOR_BUS_DEPTH", "16U"),

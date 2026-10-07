@@ -1353,10 +1353,18 @@ BINDING_SOURCE_POWER_V7['Generated/Src/project_log_decoder_profile.c'] = [
 
 BINDING_DEPENDENCIES_POWER_V7 = {'Devices/Power/InputVoltage/Adapter/Src/power_service.c': ['d067dc025909205d0b9b552e98255781ec94d530c671668321a39cc2aae438cb']}
 
+# Minimal queue configuration review v8 (2026-10-07): the RET header differs
+# from reviewed v6 only in the authorized 58/40 -> 24/16 queue constants.
+# Callback bodies, compiler dependency coverage and stack limits are unchanged.
+BINDING_SOURCE_MINIMAL_QUEUE_V8 = {'Generated/Inc/project_flight_config.h': [
+    'afca623011a2d5e7b7adc28d580adca0925b9b701ad0f38d23c71b05c08c281b']}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
-            BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []))
+            BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []) +
+            BINDING_SOURCE_MINIMAL_QUEUE_V8.get(path, []))
 
 
 def BindingSourceHash_Get(text):

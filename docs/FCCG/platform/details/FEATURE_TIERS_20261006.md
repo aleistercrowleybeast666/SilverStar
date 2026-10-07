@@ -39,9 +39,14 @@ all stream descriptors, calibration, alignment evidence/results, initial state,
 inertial increments, corrected IMU and native barometer records remain; the
 selected SF6 or pure-INS output is included. No fictitious native IMU record or
 new protocol profile identity is introduced. Original all-stream choices live
-in the departed tier snapshot. Queue capacity is at least the complete startup
-descriptor count plus five slots, with a 56-slot floor; stream disablement never
-reduces the descriptor count. Existing task/idle/MSP stack sizes are retained.
+in the departed tier snapshot. Following the user's 2026-10-07 decision, Minimal
+uses normal/estimator queue depths 24/16 for all MCUs. Its owned startup snapshot
+cursor retains every descriptor independently of the ordinary queue, whose FULL
+remains an ordinary error. Stream disablement never reduces the descriptor count.
+This supersedes the earlier descriptor-count-plus-five / 56-slot-floor default;
+the earlier compiled results retain their original queue configuration and scope.
+Compact keeps the existing all-stream snapshot capacity contract and normal queue
+defaults. Existing navigation queues and task/idle/MSP stack sizes are retained.
 
 The user's latest first-release logging policy applies to all four tiers:
 only the selected algorithm's owned output/replay records are eligible. Other
