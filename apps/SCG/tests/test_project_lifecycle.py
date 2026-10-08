@@ -432,6 +432,7 @@ def test_advanced_build_defaults_release_and_generated_debug_remains_available(
         / "Devices"
         / "Power"
         / "InputVoltage"
+        / "Adapter"
         / "Src"
         / "power_service.c"
     ).read_text(encoding="utf-8")
@@ -573,6 +574,7 @@ def test_power_of_ten_estimator_conditional_is_scoped(
         encoding="utf-8",
     )
     (root / "Makefile").write_text(
+        "TARGET_PROFILE ?= SilverStar_F407\n"
         f"FIRST_PARTY_C_SOURCES := {relative}\n"
         "FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror "
         "-Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 "
@@ -583,6 +585,11 @@ def test_power_of_ten_estimator_conditional_is_scoped(
     )
     (root / "STM32F407XX_FLASH.ld").write_text(
         "_Min_Heap_Size = 0x0;\n", encoding="utf-8"
+    )
+    target_manifest = root / "Targets/SilverStar_F407/target.mk"
+    target_manifest.parent.mkdir(parents=True)
+    target_manifest.write_text(
+        "TARGET_LDSCRIPT := STM32F407XX_FLASH.ld\n", encoding="utf-8"
     )
     completed = subprocess.run(
         ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",

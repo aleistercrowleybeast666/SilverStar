@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import os
 import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -14,7 +13,6 @@ from silverstar_fccg.core.workspace import (
     PortableRelativePath_Validate,
     WorkspacePolicy,
     WorkspacePolicyError,
-    _WindowsDirectoryInheritance_Enable,
 )
 from silverstar_fccg.plugins.manifest import (
     PluginManifestError,
@@ -198,41 +196,51 @@ def test_workspace_replace_retries_a_transient_windows_lock(
     assert (target / "value.txt").read_text(encoding="utf-8") == "stable\n"
 
 
-def test_windows_staging_permission_fix_enables_parent_inheritance(
+@pytest.mark.skipif(os.name != "nt", reason="Windows inherited staging access")
+def test_windows_staging_inherits_access_without_acl_commands(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    captured: dict[str, object] = {}
-
-    def run_stub(
-        arguments: list[str], **options: object
-    ) -> subprocess.CompletedProcess[str]:
-        captured["arguments"] = arguments
-        captured["options"] = options
-        return subprocess.CompletedProcess(arguments, 0, "processed", "")
-
-    monkeypatch.setattr(workspace_module.subprocess, "run", run_stub)
-    staging = tmp_path / "staging"
-    _WindowsDirectoryInheritance_Enable(staging)
-
-    assert captured["arguments"] == [
-        "icacls",
-        str(staging),
-        "/inheritance:e",
-    ]
-    options = captured["options"]
-    assert isinstance(options, dict)
-    assert options["check"] is False
-    assert options["capture_output"] is True
+    def forbidden_private_temp(*args, **kwargs):
+        raise AssertionError("Windows staging must not create a mode0700 directory")
+    monkeypatch.setattr(workspace_module.tempfile, "mkdtemp", forbidden_private_temp)
+    policy = WorkspacePolicy(tmp_path)
+    staging = policy.StagingDirectory_Create("test-")
+    assert staging.parent == (tmp_path / ".staging").resolve()
+    policy.Text_AtomicWrite(staging / "state.txt", "verified")
+    assert (staging / "state.txt").read_text(encoding="utf-8") == "verified"
+    assert list(staging.iterdir()) == [staging / "state.txt"]
 
 
-def test_windows_staging_permission_fix_reports_icacls_failure(
+@pytest.mark.skipif(os.name != "nt", reason="Windows staging failure handling")
+def test_windows_staging_collision_is_bounded_and_preserves_existing_input(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    def run_stub(
-        arguments: list[str], **_options: object
-    ) -> subprocess.CompletedProcess[str]:
-        return subprocess.CompletedProcess(arguments, 5, "", "access denied")
+    monkeypatch.setattr(workspace_module.secrets, "token_hex", lambda _size: "collision")
+    policy = WorkspacePolicy(tmp_path)
+    existing = policy.Directory_Ensure(".staging/test-collision")
+    (existing / "input.bin").write_bytes(b"user input")
+    with pytest.raises(WorkspacePolicyError, match="unique staging"):
+        policy.StagingDirectory_Create("test-")
+    assert (existing / "input.bin").read_bytes() == b"user input"
 
-    monkeypatch.setattr(workspace_module.subprocess, "run", run_stub)
-    with pytest.raises(WorkspacePolicyError, match="access denied"):
-        _WindowsDirectoryInheritance_Enable(tmp_path / "staging")
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows staging failure handling")
+def test_windows_staging_access_denial_propagates_without_permission_repair(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    original = Path.mkdir
+    def denied(path, *args, **kwargs):
+        if path.parent.name == ".staging":
+            raise PermissionError("fixture creation denied")
+        return original(path, *args, **kwargs)
+    monkeypatch.setattr(Path, "mkdir", denied)
+    with pytest.raises(PermissionError, match="creation denied"):
+        WorkspacePolicy(tmp_path).StagingDirectory_Create()
+    assert list((tmp_path / ".staging").iterdir()) == []
+
+
+@pytest.mark.parametrize("prefix", ["../escape-", "nested/path-", "nested\\path-", "C:/escape-", "/escape-"])
+def test_staging_prefix_cannot_escape_or_create_nested_directories(tmp_path, prefix):
+    with pytest.raises(WorkspacePolicyError):
+        WorkspacePolicy(tmp_path).StagingDirectory_Create(prefix)
+    assert not (tmp_path / ".staging").exists()

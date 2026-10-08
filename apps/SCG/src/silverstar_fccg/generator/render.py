@@ -435,8 +435,16 @@ def MetadataFiles_Render(
         if decoder_profile is not None
         else LogDecoderProfileReference()
     )
+    project_data = render_model.Dictionary_Get()
+    # Ownership is serialized with sorted keys. A preserved provenance entry
+    # therefore has a different insertion order from a new catalog entry.
+    # Canonicalize this nested field on the first save too, so an unchanged
+    # second generation preserves both the descriptor and its ownership hash.
+    project_data["component_provenance"] = json.loads(json.dumps(
+        project_data["component_provenance"], sort_keys=True
+    ))
     project_json = json.dumps(
-        render_model.Dictionary_Get(), ensure_ascii=False, indent=2, sort_keys=False
+        project_data, ensure_ascii=False, indent=2, sort_keys=False
     ) + "\n"
     files = {
         "SilverStar.ssproject": project_json,

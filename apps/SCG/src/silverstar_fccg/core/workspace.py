@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
-import subprocess
+import secrets
 import tempfile
 import time
 from dataclasses import dataclass
@@ -52,24 +52,6 @@ def PortableRelativePath_Validate(value: str) -> PurePosixPath:
     return path
 
 
-def _WindowsDirectoryInheritance_Enable(path: Path) -> None:
-    result = subprocess.run(
-        ["icacls", str(path), "/inheritance:e"],
-        check=False,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-    )
-    if result.returncode != 0:
-        detail = (result.stderr or result.stdout).strip()
-        raise WorkspacePolicyError(
-            f"Cannot enable inherited permissions for staging directory {path}: "
-            f"{detail or f'icacls exited with {result.returncode}'}"
-        )
-
-
 @dataclass(frozen=True, slots=True)
 class WorkspacePolicy:
     root: Path
@@ -104,15 +86,25 @@ class WorkspacePolicy:
         return resolved
 
     def StagingDirectory_Create(self, prefix: str = "fccg-") -> Path:
+        # A prefix is one portable segment, never a path into another root.
+        if len(PortableRelativePath_Validate(prefix + "stage").parts) != 1:
+            raise WorkspacePolicyError("Staging prefix must be one path segment")
         staging_root = self.Directory_Ensure(".staging")
-        staging = Path(tempfile.mkdtemp(prefix=prefix, dir=staging_root)).resolve()
         if os.name == "nt":
-            try:
-                _WindowsDirectoryInheritance_Enable(staging)
-            except Exception:
-                self.Tree_Remove(staging)
-                raise
-        return staging
+            # Python 3.13+ mkdtemp uses mode0700 on Windows, replacing inherited
+            # access with a restricted ACL. Create with normal parent inheritance
+            # from the outset; never repair permissions using an external command.
+            for _attempt in range(16):
+                staging = self.Path_Resolve(
+                    staging_root / (prefix + secrets.token_hex(8)), allow_root=False
+                )
+                try:
+                    staging.mkdir()
+                except FileExistsError:
+                    continue
+                return staging
+            raise WorkspacePolicyError("Could not create a unique staging directory")
+        return self.Path_Resolve(tempfile.mkdtemp(prefix=prefix, dir=staging_root))
 
     def Text_AtomicWrite(self, path: str | Path, text: str) -> Path:
         target = self.Path_Resolve(path, allow_root=False)
