@@ -1,0 +1,55 @@
+{
+  "started_utc": "2026-10-08T03:32:34.198123+00:00",
+  "source_head": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "source_descriptor": "D:\\python_software\\SilverStar\\.work\\Q2F407_7fa06c4\\SilverStar.ssproject",
+  "source_descriptor_sha256": "92fa295afa7c97325f85a5be9fef6756b84393355b5a5e16604949cafb5333d6",
+  "target": "D:\\python_software\\SilverStar\\.work\\bench08c_f407",
+  "platform_lock_before": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+  "platform_lock_current": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+  "model_feature_tier": "full",
+  "plan_valid": true,
+  "dangerous": false,
+  "validation": "ProjectValidationResult(issues=())",
+  "configuration_changes": "New display name; schema migration/default full tier; equal-parsed MCU lock only if required. Preserve devices/resources, ORIENT, calibration/alignment, mathematical parameters, Delay10 and queue policy."
+}
+{
+  "started_utc": "2026-10-08T03:32:34.198123+00:00",
+  "source_head": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "source_descriptor": "D:\\python_software\\SilverStar\\.work\\Q2F407_7fa06c4\\SilverStar.ssproject",
+  "source_descriptor_sha256": "92fa295afa7c97325f85a5be9fef6756b84393355b5a5e16604949cafb5333d6",
+  "target": "D:\\python_software\\SilverStar\\.work\\bench08c_f407",
+  "platform_lock_before": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+  "platform_lock_current": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+  "model_feature_tier": "full",
+  "plan_valid": true,
+  "dangerous": false,
+  "validation": "ProjectValidationResult(issues=())",
+  "configuration_changes": "New display name; schema migration/default full tier; equal-parsed MCU lock only if required. Preserve devices/resources, ORIENT, calibration/alignment, mathematical parameters, Delay10 and queue policy.",
+  "generated": true,
+  "resources_unchanged": true,
+  "configuration_keys_unchanged": true,
+  "files": {
+    "Core/Src/main.c": {
+      "old_sha256": "69ba52fbab7aa725e836ea923148624732f14f66b23df7e83e302f23815c2825",
+      "new_sha256": "69ba52fbab7aa725e836ea923148624732f14f66b23df7e83e302f23815c2825",
+      "identical": true
+    },
+    "Core/Inc/main.h": {
+      "old_sha256": "5974fca3d96695de84acce6ff7bbdece9fe2db159b432998a2da43d5131db24a",
+      "new_sha256": "5974fca3d96695de84acce6ff7bbdece9fe2db159b432998a2da43d5131db24a",
+      "identical": true
+    },
+    "Flight_Controller0.5.ioc": {
+      "old_sha256": "00aaacfc1dc7eaff250a7f0773a1b63cc44856fd5aed7aa9f6109a08d3d0eba5",
+      "new_sha256": "00aaacfc1dc7eaff250a7f0773a1b63cc44856fd5aed7aa9f6109a08d3d0eba5",
+      "identical": true
+    },
+    "APP/Inc/app_task_config.h": {
+      "old_sha256": "6a1be0fd9637d373bb71c19a577e9d6138c67ea4fa48115aff7acaf05f507403",
+      "new_sha256": "6a1be0fd9637d373bb71c19a577e9d6138c67ea4fa48115aff7acaf05f507403",
+      "identical": true
+    }
+  },
+  "finished_utc": "2026-10-08T03:32:43.019776+00:00"
+}
+AUTHORIZED EXACT SOURCE INVENTORY VERIFIED 155

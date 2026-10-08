@@ -1,0 +1,36 @@
+
+--- STDERR ---
+Open On-Chip Debugger 0.12.0 (2025-07-10) [https://github.com/sysprogs/openocd]
+Licensed under GNU GPL v2
+libusb1 d52e355daa09f17ce64819122cb067b8a2ee0d4b
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none separate
+DEPRECATED! use 'gdb port', not 'gdb_port'
+DEPRECATED! use 'tcl port' not 'tcl_port'
+DEPRECATED! use 'telnet port', not 'telnet_port'
+Info : Using CMSIS-DAPv2 interface with VID:PID=0xfaed:0x4870, serial=132765403520
+Info : CMSIS-DAP: SWD supported
+Info : CMSIS-DAP: JTAG supported
+Info : CMSIS-DAP: Atomic commands supported
+Info : CMSIS-DAP: UART via USB COM port supported
+Info : CMSIS-DAP: FW Version = Horco v0.2
+Info : CMSIS-DAP: Interface Initialised (SWD)
+Info : SWCLK/TCK = 1 SWDIO/TMS = 1 TDI = 1 TDO = 1 nTRST = 0 nRESET = 1
+Info : CMSIS-DAP: Interface ready
+Info : clock speed 2000 kHz
+Info : SWD DPIDR 0x2ba01477
+Info : [stm32f4x.cpu] Cortex-M4 r0p1 processor detected
+Info : [stm32f4x.cpu] target has 6 breakpoints, 4 watchpoints
+Info : [stm32f4x.cpu] Examination succeed
+Info : [stm32f4x.cpu] gdb port disabled
+[stm32f4x.cpu] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x08045334 msp: 0x20020000
+** Programming Started **
+Info : device id = 0x10076413
+Info : flash size = 512 KiB
+** Programming Finished **
+** Verify Started **
+** Verified OK **
+** Resetting Target **
+shutdown command invoked

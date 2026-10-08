@@ -1,0 +1,18 @@
+{
+  "step": "host",
+  "utc_start": "2026-10-08T03:37:57.407995+00:00",
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+    "host-tests",
+    "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller",
+  "source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "tracked_status": "",
+  "compiler_jobs_max": 2,
+  "timeout_s": 900,
+  "exit_code": 0,
+  "utc_end": "2026-10-08T03:43:07.117552+00:00",
+  "elapsed_s": 309.475,
+  "log_sha256": "30e1707151092f055a38de69a5d94585b9a34e4088076bfb42bf6f3b41130bf8"
+}

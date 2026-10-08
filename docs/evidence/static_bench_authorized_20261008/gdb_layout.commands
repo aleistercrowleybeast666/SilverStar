@@ -1,0 +1,88 @@
+set pagination off
+set print pretty on
+file D:/python_software/SilverStar/.work/bench08c_f407/Flight_Controller/build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.elf
+echo LAYOUT_timing\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_estimator_task_timing),(unsigned)sizeof(s_estimator_task_timing)
+ptype /o s_estimator_task_timing
+echo LAYOUT_navigation\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_published_snapshot),(unsigned)sizeof(s_published_snapshot)
+ptype /o s_published_snapshot
+echo LAYOUT_task\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_tasks[0]),(unsigned)sizeof(s_tasks[0])
+ptype /o s_tasks[0]
+echo LAYOUT_assert_fault\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_assert_fault),(unsigned)sizeof(s_assert_fault)
+ptype /o s_assert_fault
+echo LAYOUT_radio_stats\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('sx1281_device.c'::s_contexts[0].stats),(unsigned)sizeof('sx1281_device.c'::s_contexts[0].stats)
+ptype /o 'sx1281_device.c'::s_contexts[0].stats
+echo LAYOUT_radio_bus\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_bus_status[0]),(unsigned)sizeof(s_bus_status[0])
+ptype /o s_bus_status[0]
+echo LAYOUT_health\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('system_health.c'::s_health),(unsigned)sizeof('system_health.c'::s_health)
+ptype /o 'system_health.c'::s_health
+echo LAYOUT_alignment_retry\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('flight_task.c'::s_alignment_log),(unsigned)sizeof('flight_task.c'::s_alignment_log)
+ptype /o 'flight_task.c'::s_alignment_log
+echo LAYOUT_lifecycle\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_lifecycle_state),(unsigned)sizeof(s_lifecycle_state)
+ptype /o s_lifecycle_state
+echo LAYOUT_logger\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('logger_task.c'::s_diagnostics),(unsigned)sizeof('logger_task.c'::s_diagnostics)
+ptype /o 'logger_task.c'::s_diagnostics
+echo LAYOUT_logger_runtime\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('logger_task.c'::s_logger),(unsigned)sizeof('logger_task.c'::s_logger)
+ptype /o 'logger_task.c'::s_logger
+echo LAYOUT_logger_bus\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('logger_bus.c'::s_diagnostics),(unsigned)sizeof('logger_bus.c'::s_diagnostics)
+ptype /o 'logger_bus.c'::s_diagnostics
+echo LAYOUT_logger_request\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('logger_bus.c'::s_request),(unsigned)sizeof('logger_bus.c'::s_request)
+ptype /o 'logger_bus.c'::s_request
+echo LAYOUT_storage\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('storage_service.c'::s_health),(unsigned)sizeof('storage_service.c'::s_health)
+ptype /o 'storage_service.c'::s_health
+echo LAYOUT_file_open\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('storage_service.c'::s_file_open),(unsigned)sizeof('storage_service.c'::s_file_open)
+ptype /o 'storage_service.c'::s_file_open
+echo LAYOUT_mission_id\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('storage_service.c'::s_mission_id),(unsigned)sizeof('storage_service.c'::s_mission_id)
+ptype /o 'storage_service.c'::s_mission_id
+echo LAYOUT_sink\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('log_sink_service.c'::s_sink.health),(unsigned)sizeof('log_sink_service.c'::s_sink.health)
+ptype /o 'log_sink_service.c'::s_sink.health
+echo LAYOUT_file_path\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('log_sink_service.c'::s_sink.path),(unsigned)sizeof('log_sink_service.c'::s_sink.path)
+ptype /o 'log_sink_service.c'::s_sink.path
+echo LAYOUT_first_mount\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('storage_service.c'::s_first_mount_fresult),(unsigned)sizeof('storage_service.c'::s_first_mount_fresult)
+ptype /o 'storage_service.c'::s_first_mount_fresult
+echo LAYOUT_normal_queue\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('logger_bus.c'::s_logger_queue),(unsigned)sizeof('logger_bus.c'::s_logger_queue)
+ptype /o 'logger_bus.c'::s_logger_queue
+echo LAYOUT_estimator_queue\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&('logger_bus.c'::s_estimator_logger_queue),(unsigned)sizeof('logger_bus.c'::s_estimator_logger_queue)
+ptype /o 'logger_bus.c'::s_estimator_logger_queue
+echo LAYOUT_stack_Device\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_device_stack),(unsigned)sizeof(s_device_stack)
+ptype /o s_device_stack
+echo LAYOUT_stack_INS\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_ins_stack),(unsigned)sizeof(s_ins_stack)
+ptype /o s_ins_stack
+echo LAYOUT_stack_Estimator\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_estimator_stack),(unsigned)sizeof(s_estimator_stack)
+ptype /o s_estimator_stack
+echo LAYOUT_stack_Flight\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_flight_stack),(unsigned)sizeof(s_flight_stack)
+ptype /o s_flight_stack
+echo LAYOUT_stack_Logger\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_logger_stack),(unsigned)sizeof(s_logger_stack)
+ptype /o s_logger_stack
+echo LAYOUT_stack_Serial\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_serial_stack),(unsigned)sizeof(s_serial_stack)
+ptype /o s_serial_stack
+echo LAYOUT_stack_Telemetry\n
+printf "ADDR=0x%x SIZE=%u\n",(unsigned)&(s_telemetry_stack),(unsigned)sizeof(s_telemetry_stack)
+ptype /o s_telemetry_stack
+quit

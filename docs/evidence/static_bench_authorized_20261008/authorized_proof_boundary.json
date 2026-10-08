@@ -1,0 +1,19 @@
+{
+  "authorized_hashes": {
+    "Generated/Src/project_metadata.c": "ae4706ff828b966e517972f147eee2d5ca938a144ff437ef3b71d32a9f186181",
+    "Generated/Src/project_log_decoder_profile.c": "e66c2a4581505fdb114a88f7ff65c866c0e2c0b9b4c99186d0922960bbe98da4"
+  },
+  "old_head": "1c900df49e1f216c012d66d44093372b58ebdf02",
+  "unknown_source_boundary": [
+    {
+      "source": "Generated/Src/project_metadata.c",
+      "result": "PASS_REJECTED",
+      "error": "Changed or unknown complete callback binding source: Generated/Src/project_metadata.c"
+    },
+    {
+      "source": "Generated/Src/project_log_decoder_profile.c",
+      "result": "PASS_REJECTED",
+      "error": "Changed or unknown complete callback binding source: Generated/Src/project_log_decoder_profile.c"
+    }
+  ]
+}

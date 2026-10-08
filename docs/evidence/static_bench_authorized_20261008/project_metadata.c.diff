@@ -1,0 +1,19 @@
+--- old28/Generated/Src/project_metadata.c
++++ current/Generated/Src/project_metadata.c
+@@ -9,7 +9,7 @@
+ #include "system_capabilities.h"
+ #include "system_user_config.h"
+ 
+-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x6E6BDB8DUL
++#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0xA79E2E92UL
+ 
+ static const SystemDeviceDescriptor s_device_descriptors[] =
+ {
+@@ -104,6 +104,7 @@
+                SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX,
+                "target algorithm descriptor table exceeds interface bound");
+ 
++
+ uint16_t SystemDescriptor_DeviceCountGet(void)
+ {
+     uint16_t count = 0U;

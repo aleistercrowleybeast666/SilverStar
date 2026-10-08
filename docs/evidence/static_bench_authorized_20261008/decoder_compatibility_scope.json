@@ -1,0 +1,192 @@
+{
+  "record_catalog.json": {
+    "old_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+    "new_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+    "identical_bytes": true
+  },
+  "project_semantics.json": {
+    "old_sha256": "25f575e8fdf84502f97efc34d73a544532d5e72aa94f2cca2acc65115a03cad1",
+    "new_sha256": "3ccbafd3475a4ed8ebaa343307447651b31d1b17fb0a1c17ce75e578a9c5a2a9",
+    "identical_bytes": false
+  },
+  "manifest_old": {
+    "container_plugin": {
+      "id": "silverstar.sslog.container/0.0",
+      "version_range": {
+        "maximum_inclusive": "0.0",
+        "minimum_inclusive": "0.0"
+      }
+    },
+    "contains_executable_code": false,
+    "created_at_utc": "2026-08-28T02:07:29+08:00",
+    "entries": [
+      "README.md",
+      "checksums.sha256",
+      "manifest.json",
+      "project_semantics.json",
+      "record_catalog.json"
+    ],
+    "fccg_version": "0.1.1",
+    "firmware_commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+    "firmware_components": {
+      "board": "silverstar.board.silverstar_0_5",
+      "core": "silverstar.core.0_1_0",
+      "mcu_platform": "silverstar.mcu.stm32f407vet6"
+    },
+    "firmware_version": "0.1.1",
+    "format": "SilverStar.ssdecoder",
+    "generation_profile_sha256": "5de0b03eaf063d46d2ccc8fdde7d488169998ae0ef3057d3c6db0cc9d56a9cd3",
+    "hardware": {
+      "assignment_fingerprint": "",
+      "cubemx_version": "6.15.0",
+      "detected_mcu": "STM32F407VET6",
+      "firmware_package": "STM32Cube FW_F4 V1.28.3",
+      "hal_cmsis_source_policy": "plugin_payload_authoritative",
+      "inventory": {
+        "core": "STM32F407VETx",
+        "mcu_family": "STM32F4",
+        "mcu_part": "STM32F407VET6",
+        "package": "LQFP100"
+      },
+      "platform_lock": {
+        "component": "silverstar.mcu.stm32f407vet6",
+        "manifest_sha256": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+        "version": "0.1.0"
+      },
+      "snapshot_id": "",
+      "source_digest": ""
+    },
+    "package_schema": {
+      "id": "silverstar.ssdecoder.package-schema/1.2",
+      "major": 1,
+      "minor": 2
+    },
+    "project_generation_fingerprint": "6e6bdb8d",
+    "project_name": "KF6_Logger7000_F407_20261005",
+    "project_semantics_sha256": "25f575e8fdf84502f97efc34d73a544532d5e72aa94f2cca2acc65115a03cad1",
+    "protocols": {
+      "logging": {
+        "component": "silverstar.protocol.logging.sslog_0_0",
+        "manifest_sha256": "2fddaeef8d1e03e68b874b42ea7f02fb90ed64b6562f8b823b1c3ccf0d3c13ca",
+        "profile": "flight_log.0_0",
+        "version": "0.1.0"
+      },
+      "maintenance": {
+        "component": "silverstar.protocol.maintenance.serial_0_0",
+        "manifest_sha256": "6fef72f81ada0ded41b1634eefe4696921f67d1ad3e197ff7ec9e2cdaa55e553",
+        "profile": "maintenance.serial.0_0",
+        "version": "0.1.0"
+      },
+      "telemetry": {
+        "component": "silverstar.protocol.telemetry.air_m0",
+        "manifest_sha256": "3787f900f6dbaabebfdd3d82bc693a725c91d2e7e5df52ad5c2b8bb38515de60",
+        "profile": "air.m0",
+        "version": "0.1.0"
+      }
+    },
+    "record_catalog_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+    "required_flp_minimum_version": "0.1.0",
+    "selected_log_format_profile": "flight_log.0_0",
+    "supported_primitive_types": [
+      "f32",
+      "i16",
+      "i32",
+      "i8",
+      "pad",
+      "u16",
+      "u32",
+      "u64",
+      "u8"
+    ]
+  },
+  "manifest_new": {
+    "container_plugin": {
+      "id": "silverstar.sslog.container/0.0",
+      "version_range": {
+        "maximum_inclusive": "0.0",
+        "minimum_inclusive": "0.0"
+      }
+    },
+    "contains_executable_code": false,
+    "created_at_utc": "2026-08-28T02:07:29+08:00",
+    "entries": [
+      "README.md",
+      "checksums.sha256",
+      "manifest.json",
+      "project_semantics.json",
+      "record_catalog.json"
+    ],
+    "fccg_version": "0.1.1",
+    "firmware_commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+    "firmware_components": {
+      "board": "silverstar.board.silverstar_0_5",
+      "core": "silverstar.core.0_1_0",
+      "mcu_platform": "silverstar.mcu.stm32f407vet6"
+    },
+    "firmware_version": "0.1.1",
+    "format": "SilverStar.ssdecoder",
+    "generation_profile_sha256": "c449dcc18ba6e22774fb32038152c81014760840c877aa6677415d59c5b999d9",
+    "hardware": {
+      "assignment_fingerprint": "",
+      "cubemx_version": "6.15.0",
+      "detected_mcu": "STM32F407VET6",
+      "firmware_package": "STM32Cube FW_F4 V1.28.3",
+      "hal_cmsis_source_policy": "plugin_payload_authoritative",
+      "inventory": {
+        "core": "STM32F407VETx",
+        "mcu_family": "STM32F4",
+        "mcu_part": "STM32F407VET6",
+        "package": "LQFP100"
+      },
+      "platform_lock": {
+        "component": "silverstar.mcu.stm32f407vet6",
+        "manifest_sha256": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+        "version": "0.1.0"
+      },
+      "snapshot_id": "",
+      "source_digest": ""
+    },
+    "package_schema": {
+      "id": "silverstar.ssdecoder.package-schema/1.2",
+      "major": 1,
+      "minor": 2
+    },
+    "project_generation_fingerprint": "a79e2e92",
+    "project_name": "KF6_Static_20261008_f045d8c",
+    "project_semantics_sha256": "3ccbafd3475a4ed8ebaa343307447651b31d1b17fb0a1c17ce75e578a9c5a2a9",
+    "protocols": {
+      "logging": {
+        "component": "silverstar.protocol.logging.sslog_0_0",
+        "manifest_sha256": "2fddaeef8d1e03e68b874b42ea7f02fb90ed64b6562f8b823b1c3ccf0d3c13ca",
+        "profile": "flight_log.0_0",
+        "version": "0.1.0"
+      },
+      "maintenance": {
+        "component": "silverstar.protocol.maintenance.serial_0_0",
+        "manifest_sha256": "6fef72f81ada0ded41b1634eefe4696921f67d1ad3e197ff7ec9e2cdaa55e553",
+        "profile": "maintenance.serial.0_0",
+        "version": "0.1.0"
+      },
+      "telemetry": {
+        "component": "silverstar.protocol.telemetry.air_m0",
+        "manifest_sha256": "3787f900f6dbaabebfdd3d82bc693a725c91d2e7e5df52ad5c2b8bb38515de60",
+        "profile": "air.m0",
+        "version": "0.1.0"
+      }
+    },
+    "record_catalog_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+    "required_flp_minimum_version": "0.1.0",
+    "selected_log_format_profile": "flight_log.0_0",
+    "supported_primitive_types": [
+      "f32",
+      "i16",
+      "i32",
+      "i8",
+      "pad",
+      "u16",
+      "u32",
+      "u64",
+      "u8"
+    ]
+  }
+}

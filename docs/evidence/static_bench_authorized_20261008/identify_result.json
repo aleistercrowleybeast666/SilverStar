@@ -1,0 +1,49 @@
+{
+  "command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set actual_id [lindex [read_memory 0xE0042000 32 1] 0]; set actual_flash [lindex [read_memory 0x1FFF7A22 16 1] 0]; echo [format \"TARGET_ID=0x%08x\" $actual_id]; echo [format \"FLASH_KIB=%u\" $actual_flash]; if {($actual_id != 0x10076413) || ($actual_flash != 512)} {error \"Target identity mismatch\"}; dump_image {D:/python_software/SilverStar/.work/static_bench_authorized_20261008/current_F407_before_test_fullflash.bin} 0x08000000 0x80000; shutdown"
+  ],
+  "started_utc": "2026-10-08T03:44:13.929919+00:00",
+  "source_head": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "probe": "132765403520",
+  "timeout_s": 60,
+  "no_halt_reset_flash_protection_change": true,
+  "exit_code": 0,
+  "timed_out": false,
+  "finished_utc": "2026-10-08T03:44:25.158611+00:00",
+  "elapsed_s": 11.158678400002827,
+  "log_sha256": "373720ab4b713977793261b57600b5a21a7196d9613f105d300465e782bd9795",
+  "flash_bytes": 524288,
+  "flash_sha256": "e72caaa5adbb92d69854d824ce05ee086a2a1deb83f2e79a3d70ed01aebe8aa1",
+  "known_image_matches": {
+    "28b168f": {
+      "bin": "D:\\python_software\\SilverStar\\.work\\Q2F407_7fa06c4\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.bin",
+      "bytes": 330132,
+      "sha256": "dcd7c68eced49c0cf2e6a9654ac99738aeebbad24f10b7ad6ee5ec6c5cd9bd7e",
+      "exact_flash_prefix_match": true
+    },
+    "recovery_20261004": {
+      "bin": "D:\\stm32_project\\SS_0_5_RELEASE_KF6_RECOVERY\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.bin",
+      "bytes": 328076,
+      "sha256": "42c98d08a2f982e695cd062c0edfad85bd49e6460a90e5193b9fac51c5be0513",
+      "exact_flash_prefix_match": false
+    }
+  }
+}

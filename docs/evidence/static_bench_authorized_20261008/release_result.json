@@ -1,0 +1,22 @@
+{
+  "step": "release",
+  "utc_start": "2026-10-08T03:34:14.829823+00:00",
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+    "-j2",
+    "all",
+    "artifact-check",
+    "stack-report",
+    "memory-report",
+    "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller",
+  "source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "tracked_status": "",
+  "compiler_jobs_max": 2,
+  "timeout_s": 900,
+  "exit_code": 0,
+  "utc_end": "2026-10-08T03:36:01.861551+00:00",
+  "elapsed_s": 106.852,
+  "log_sha256": "9fc0cce86e82f72954ec896047ea769b3112672e77ef41bf109027d91bb0e9f5"
+}

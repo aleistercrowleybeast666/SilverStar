@@ -1,0 +1,142 @@
+{
+  "timing": {
+    "address": "0x2000a7f0",
+    "bytes": 80,
+    "fields": 14
+  },
+  "navigation": {
+    "address": "0x10006bd8",
+    "bytes": 440,
+    "fields": 48
+  },
+  "task": {
+    "address": "0x20000000",
+    "bytes": 16,
+    "fields": 4
+  },
+  "assert_fault": {
+    "address": "0x2000bec8",
+    "bytes": 72,
+    "fields": 16
+  },
+  "radio_stats": {
+    "address": "0x20016c44",
+    "bytes": 60,
+    "fields": 18
+  },
+  "radio_bus": {
+    "address": "0x20017164",
+    "bytes": 60,
+    "fields": 21
+  },
+  "health": {
+    "address": "0x2000c140",
+    "bytes": 40,
+    "fields": 7
+  },
+  "alignment_retry": {
+    "address": "0x10009ac0",
+    "bytes": 72,
+    "fields": 3
+  },
+  "lifecycle": {
+    "address": "0x2001a214",
+    "bytes": 1,
+    "fields": 0
+  },
+  "logger": {
+    "address": "0x20013648",
+    "bytes": 112,
+    "fields": 27
+  },
+  "logger_runtime": {
+    "address": "0x200136b8",
+    "bytes": 96,
+    "fields": 16
+  },
+  "logger_bus": {
+    "address": "0x2000d0c8",
+    "bytes": 44,
+    "fields": 13
+  },
+  "logger_request": {
+    "address": "0x10009ca8",
+    "bytes": 880,
+    "fields": 12
+  },
+  "storage": {
+    "address": "0x20019330",
+    "bytes": 80,
+    "fields": 16
+  },
+  "file_open": {
+    "address": "0x20019380",
+    "bytes": 1,
+    "fields": 0
+  },
+  "mission_id": {
+    "address": "0x2001932c",
+    "bytes": 4,
+    "fields": 0
+  },
+  "sink": {
+    "address": "0x2001a090",
+    "bytes": 40,
+    "fields": 9
+  },
+  "file_path": {
+    "address": "0x2001a05c",
+    "bytes": 48,
+    "fields": 0
+  },
+  "first_mount": {
+    "address": "0x20000404",
+    "bytes": 4,
+    "fields": 0
+  },
+  "normal_queue": {
+    "address": "0x20013510",
+    "bytes": 28,
+    "fields": 10
+  },
+  "estimator_queue": {
+    "address": "0x2000f674",
+    "bytes": 28,
+    "fields": 10
+  },
+  "stack_Device": {
+    "address": "0x10006140",
+    "bytes": 2560,
+    "fields": 0
+  },
+  "stack_INS": {
+    "address": "0x10005540",
+    "bytes": 3072,
+    "fields": 0
+  },
+  "stack_Estimator": {
+    "address": "0x10004540",
+    "bytes": 4096,
+    "fields": 0
+  },
+  "stack_Flight": {
+    "address": "0x10003540",
+    "bytes": 4096,
+    "fields": 0
+  },
+  "stack_Logger": {
+    "address": "0x10002940",
+    "bytes": 3072,
+    "fields": 0
+  },
+  "stack_Serial": {
+    "address": "0x10001140",
+    "bytes": 6144,
+    "fields": 0
+  },
+  "stack_Telemetry": {
+    "address": "0x10000140",
+    "bytes": 4096,
+    "fields": 0
+  }
+}

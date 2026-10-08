@@ -1,0 +1,68 @@
+{
+  "source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "probe": "132765403520",
+  "expected_id": "0x10076413",
+  "expected_flash_kib": 512,
+  "board_configuration": "SS0.5/F407VET6; actual silicon ID identifies F407 family/revision and size, not package suffix",
+  "configuration": "Full KF6 / JY901B vertical ORIENT / M9N / SX1281 / SD_SDIO / OneFace / Delay10; actuators physically disconnected by user",
+  "artifacts": {
+    "elf": {
+      "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf",
+      "bytes": 3326520,
+      "sha256": "14637f20ac2b83bc4b169b232a364d037013e494444aa23ad246070148ae4cfd"
+    },
+    "bin": {
+      "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.bin",
+      "bytes": 331020,
+      "sha256": "5c4e8e2bba538eceefc981b7687cd157e4ce14c39fa4076b8c731319b92288f3"
+    },
+    "generated_semantics": {
+      "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\Generated\\project_semantics.json",
+      "bytes": 96485,
+      "sha256": "3ccbafd3475a4ed8ebaa343307447651b31d1b17fb0a1c17ce75e578a9c5a2a9"
+    },
+    "configuration": {
+      "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\SilverStar.ssproject",
+      "bytes": 77769,
+      "sha256": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5"
+    },
+    "decoder": {
+      "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\KF6_Static_20261008_f045d8c.ssdecoder",
+      "bytes": 144321,
+      "sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+    }
+  },
+  "prior_image_backup": "D:\\python_software\\SilverStar\\.work\\static_bench_authorized_20261008\\current_F407_before_test_fullflash.bin",
+  "ground_reflash": false,
+  "safety_scope": "Software gate exits passed. Manual critical-contract review, whole-stack/WCET and flight qualification remain NOT PROVEN.",
+  "flash_operation": "One program+verify+reset of Flight main image; no option-byte/protection/mass erase or Ground operation.",
+  "command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set flash [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($flash != 512)} {error {Target mismatch; no flash}}; program {D:/python_software/SilverStar/.work/bench08c_f407/Flight_Controller/build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.bin} 0x08000000 verify reset; dump_image {D:/python_software/SilverStar/.work/static_bench_authorized_20261008/flashed_image_readback.bin} 0x08000000 331020; shutdown"
+  ],
+  "utc_start": "2026-10-08T03:46:51.542798+00:00",
+  "timeout_s": 90,
+  "exit_code": 0,
+  "utc_end": "2026-10-08T03:47:08.712002+00:00",
+  "elapsed_s": 17.1683170000033,
+  "log_sha256": "d05c03bbc5b9a4b03f7121395b9eb460326494a8f01b62c71920861bceb43150",
+  "exact_readback_match": true,
+  "readback_sha256": "5c4e8e2bba538eceefc981b7687cd157e4ce14c39fa4076b8c731319b92288f3"
+}

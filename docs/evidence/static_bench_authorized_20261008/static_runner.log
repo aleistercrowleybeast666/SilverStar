@@ -1,0 +1,60 @@
+WAIT CAPABILITY
+PASS CAPABILITY
+WAIT AIR ACK CAPABILITY_ACK
+PASS AIR ACK CAPABILITY_ACK
+WAIT selftest and capability
+PASS selftest and capability
+WAIT AIR ACK CAL_START
+PASS AIR ACK CAL_START
+WAIT OneFace authoritative READY
+PASS OneFace authoritative READY
+WAIT AIR ACK ALIGN_START
+PASS AIR ACK ALIGN_START
+WAIT alignment authoritative READY
+PASS alignment authoritative READY
+WAIT AIR ACK UNLOCK
+PASS AIR ACK UNLOCK
+WAIT fresh authoritative READY after diagnostics
+PASS fresh authoritative READY after diagnostics
+WAIT AIR ACK START_MISSION
+PASS AIR ACK START_MISSION
+WAIT actual mission transition
+PASS actual mission transition
+{
+  "mission_result": "COMPLETED_OBSERVED_SEQUENCE",
+  "air_events": {
+    "3": [
+      {
+        "air_time_ms": 3,
+        "host_after_start_s": 1.824,
+        "arg0": 0,
+        "arg1": 0
+      }
+    ],
+    "5": [
+      {
+        "air_time_ms": 10001,
+        "host_after_start_s": 10.353,
+        "arg0": 0,
+        "arg1": 0
+      }
+    ],
+    "6": [
+      {
+        "air_time_ms": 14004,
+        "host_after_start_s": 14.331,
+        "arg0": 0,
+        "arg1": 0
+      }
+    ]
+  },
+  "flight_frames": 53,
+  "max_flight_gap_s": 0.5828199000025052,
+  "gsp_diagnostics": {
+    "frames": 178,
+    "crc_errors": 0,
+    "resyncs": 0,
+    "discarded_bytes": 0,
+    "buffer_size": 0
+  }
+}

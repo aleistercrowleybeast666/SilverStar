@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-08T03:44:13.542339+00:00",
+  "ports": [
+    {
+      "device": "COM3",
+      "vid": 6790,
+      "pid": 29987,
+      "serial_number": "",
+      "location": "1-1",
+      "description": "USB-SERIAL CH340 (COM3)"
+    },
+    {
+      "device": "COM8",
+      "vid": null,
+      "pid": null,
+      "serial_number": null,
+      "location": null,
+      "description": "\u84dd\u7259\u94fe\u63a5\u4e0a\u7684\u6807\u51c6\u4e32\u884c (COM8)"
+    },
+    {
+      "device": "COM9",
+      "vid": 64237,
+      "pid": 18544,
+      "serial_number": "132765403520",
+      "location": "1-10:x.2",
+      "description": "USB \u4e32\u884c\u8bbe\u5907 (COM9)"
+    },
+    {
+      "device": "COM7",
+      "vid": null,
+      "pid": null,
+      "serial_number": null,
+      "location": null,
+      "description": "\u84dd\u7259\u94fe\u63a5\u4e0a\u7684\u6807\u51c6\u4e32\u884c (COM7)"
+    }
+  ],
+  "COM3_expected": true,
+  "DAP_expected": true,
+  "physical_wiring": "Confirmed existing project/pin configuration; actuators disconnected per user. USB/MCU identities cannot independently inspect wiring.",
+  "source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953"
+}

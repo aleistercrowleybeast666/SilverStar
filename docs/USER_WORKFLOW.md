@@ -51,4 +51,6 @@ Windows保存时若提示工程/工件路径过长，请选择较短保存目录
 
 依次核对[当前软件收尾](NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md)、[前次 GUI 记录](RELEASE_GUI_CLOSEOUT_20261008.md)、[运行安全](FCCG/platform/details/RUNTIME_SAFETY.md)和[实物验收清单](field/FIELD_TEST_CHECKLIST_0_1_0.md)。PASS 只覆盖记录的命令/源码/配置。FAIL 或 NOT PROVEN 不得拼接成全面通过。
 
-明日先做用户接好硬件后的最小静态验收：核对板件与实际镜像/decoder 身份；无执行器动作地观察启动、权威 READY 和故障诊断；采集一段静止日志；离线核对 CRC、丢样/overflow、校准/初始状态、最新保存重开。旧 `28b168f/mission000041` 仍只是旧镜像证据。今晚没有硬件操作或新的最终外场工程。
+软件收尾报告截止时没有硬件操作。随后用户接好硬件并另行授权；[准备阶段](STATIC_BENCH_PROGRESS_20261008.md)保留原门禁失败，[授权后的静态任务记录](STATIC_BENCH_ACCEPTANCE_20261008.md)记录新源码、一次 Flight 烧录读回、权威 READY 和任务 `000044`。执行机构全部物理断开，观察的是 Delay10 逻辑展开；没有生成最终外场工程。
+
+下一项最小验收是取回完整 `missions/000044/` 原始 TF 目录及本次精确 decoder，经 FLP 严格入口核对 Descriptor、CRC、丢样/overflow、校准/初始状态、主副数据源和全部 run 的保存重开。两次 logger state rejection、遥测发送拒绝及累计调度最大间隔尚未归因；实际 TF 内容和零丢样结论仍未证明。旧 `28b168f/mission000041` 不替代本次证据，后续硬件动作不自动重跑。

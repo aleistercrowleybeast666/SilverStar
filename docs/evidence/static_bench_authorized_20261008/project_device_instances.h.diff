@@ -1,0 +1,25 @@
+--- old28/Generated/Inc/project_device_instances.h
++++ current/Generated/Inc/project_device_instances.h
+@@ -39,9 +39,10 @@
+ #define PROJECT_PHYSICAL_DEVICE_ID_MS5611       22U
+ #define PROJECT_PHYSICAL_DEVICE_ID_E28_SX1281   23U
+ #define PROJECT_PHYSICAL_DEVICE_ID_CONSOLE      24U
+-#define PROJECT_PHYSICAL_DEVICE_ID_POWER_ADC    25U
+-#define PROJECT_PHYSICAL_DEVICE_ID_STORAGE      26U
+-#define PROJECT_PHYSICAL_DEVICE_ID_OUTPUT       27U
++#define PROJECT_PHYSICAL_DEVICE_ID_NRF24L01P    25U
++#define PROJECT_PHYSICAL_DEVICE_ID_POWER_ADC    26U
++#define PROJECT_PHYSICAL_DEVICE_ID_STORAGE      27U
++#define PROJECT_PHYSICAL_DEVICE_ID_OUTPUT       28U
+ 
+ #define PROJECT_DESCRIPTOR_ID_IMU_0       1U
+ #define PROJECT_DESCRIPTOR_ID_GNSS_0      2U
+@@ -85,6 +86,8 @@
+ 
+ uint8_t ProjectImuInstance_CountGet(void);
+ SystemDeviceResult ProjectImuInstance_Init(uint8_t instance_id);
++/* Prepared retry context is independent of physical initialized/verified health. */
++SystemDeviceResult ProjectImuInstance_RecoveryPreparedGet(uint8_t instance_id, uint8_t *prepared);
+ SystemDeviceResult ProjectImuInstance_Start(uint8_t instance_id);
+ SystemDeviceResult ProjectImuInstance_Stop(uint8_t instance_id);
+ SystemDeviceResult ProjectImuInstance_RuntimeOwnerActivate(

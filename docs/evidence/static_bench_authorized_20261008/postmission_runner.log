@@ -1,0 +1,99 @@
+{
+  "tag": "postmission",
+  "exit_code": 0,
+  "elapsed_s": 0.825,
+  "timing_coherent": true,
+  "timing": {
+    "sequence": 1827684,
+    "last_start_us": 305555248,
+    "last_end_us": 305555268,
+    "max_duration_end_us": 262470358,
+    "first_long_duration_end_us": 0,
+    "last_long_duration_end_us": 0,
+    "last_interval_us": 995,
+    "max_interval_us": 94308,
+    "last_duration_us": 20,
+    "max_duration_us": 1864,
+    "duration_over_20ms_count": 0,
+    "last_prediction_count": 0,
+    "max_prediction_count": 1,
+    "prediction_cap_count": 0
+  },
+  "fault": {
+    "file_name": 0,
+    "timestamp_us": 0,
+    "line": 0,
+    "sequence": 0,
+    "module_id": 0,
+    "reason_id": 0,
+    "fault_type": 0,
+    "task_handle": 0,
+    "task_name_address": 0,
+    "task_id": 0,
+    "system_state": 0,
+    "high_water_mark_words": 0,
+    "task_name": "",
+    "high_water_mark_valid": 0,
+    "timestamp_valid": 0,
+    "active": 0
+  },
+  "SCB_FAULT": [
+    0,
+    0,
+    1,
+    3758157304,
+    3758157304,
+    0
+  ],
+  "stacks": {
+    "Device": {
+      "allocation_bytes": 2560,
+      "untouched_low_fill_bytes": 724,
+      "equivalent_words_floor": 181,
+      "raw_sha256": "e01ef9f3a991b345ce48bb9c2273847552d6384be4827fe174dcd78b8c46e065",
+      "scope": "Halted postmission FreeRTOS 0xA5 fill prefix; not scheduler API snapshot or safe stack proof"
+    },
+    "INS": {
+      "allocation_bytes": 3072,
+      "untouched_low_fill_bytes": 1000,
+      "equivalent_words_floor": 250,
+      "raw_sha256": "fe02a3d9fe928f10e52743fe892357d5091e966c3c4e480281562f0d0f181b65",
+      "scope": "Halted postmission FreeRTOS 0xA5 fill prefix; not scheduler API snapshot or safe stack proof"
+    },
+    "Estimator": {
+      "allocation_bytes": 4096,
+      "untouched_low_fill_bytes": 1948,
+      "equivalent_words_floor": 487,
+      "raw_sha256": "9a2824214537fd63cd3ee248f57a400318e33effc89e067f960aaa88aa587c9a",
+      "scope": "Halted postmission FreeRTOS 0xA5 fill prefix; not scheduler API snapshot or safe stack proof"
+    },
+    "Flight": {
+      "allocation_bytes": 4096,
+      "untouched_low_fill_bytes": 872,
+      "equivalent_words_floor": 218,
+      "raw_sha256": "3891e2c73bfb0981e01bfb10746a489702666df6d316fb12c6f4e64dd6d9d12e",
+      "scope": "Halted postmission FreeRTOS 0xA5 fill prefix; not scheduler API snapshot or safe stack proof"
+    },
+    "Logger": {
+      "allocation_bytes": 3072,
+      "untouched_low_fill_bytes": 1612,
+      "equivalent_words_floor": 403,
+      "raw_sha256": "0b5284d65a8afb14a0aa665bc1cf4335c83b49abca8128129080cfa78c839641",
+      "scope": "Halted postmission FreeRTOS 0xA5 fill prefix; not scheduler API snapshot or safe stack proof"
+    },
+    "Serial": {
+      "allocation_bytes": 6144,
+      "untouched_low_fill_bytes": 4448,
+      "equivalent_words_floor": 1112,
+      "raw_sha256": "177c062c4192e6d3136fe43042668048e7129b1af78d93c3e1e70136c254b8a8",
+      "scope": "Halted postmission FreeRTOS 0xA5 fill prefix; not scheduler API snapshot or safe stack proof"
+    },
+    "Telemetry": {
+      "allocation_bytes": 4096,
+      "untouched_low_fill_bytes": 2556,
+      "equivalent_words_floor": 639,
+      "raw_sha256": "993faa648a5bfb0848201ce26489f120175d59674bdbc3736cd187383b2a15cf",
+      "scope": "Halted postmission FreeRTOS 0xA5 fill prefix; not scheduler API snapshot or safe stack proof"
+    }
+  }
+}

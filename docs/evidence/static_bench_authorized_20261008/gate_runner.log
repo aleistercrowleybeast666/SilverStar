@@ -1,0 +1,150 @@
+START versions 2026-10-08T03:33:40.328661+00:00
+END versions 0 0.055
+arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+START architecture 2026-10-08T03:33:40.581792+00:00
+END architecture 0 15.338
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1
+FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+SilverStar architecture check passed: checks=356 failures=0
+SSLOG codecs are ordinary endian-aware protocol source; only explicit auto linking requires Python.
+Record Catalog, decoder profile, and static instance facade contracts are valid.
+Authoritative target source graph and FreeRTOS source set are valid.
+FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary
+
+START power10 2026-10-08T03:33:56.152523+00:00
+END power10 0 18.488
+tem\Src\system_time.c|227|SystemTime_GetUtc|17|0
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|227|245|SystemTime_GetUtc
+POWER10_RULE5_RECOMMENDATION|System\Src\system_time.c|227|SystemTime_GetUtc|17|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Flight|System\Src\system_time.c|247|SystemTime_MeasurementTimestampResolve|20|0
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|247|266|SystemTime_MeasurementTimestampResolve
+POWER10_RULE5_RECOMMENDATION|System\Src\system_time.c|247|SystemTime_MeasurementTimestampResolve|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Flight|System\User\system_user_inertial_config.c|43|SystemUserInertial_ConfigGet|4|0
+POWER10_FUNCTION_SCOPE|Flight|System\User\system_user_inertial_config.c|43|46|SystemUserInertial_ConfigGet
+POWER10_RULE5_FUNCTION|Flight|Targets\SilverStar_F407\Src\freertos_target_irq.c|8|SysTick_Handler|7|0
+POWER10_FUNCTION_SCOPE|Flight|Targets\SilverStar_F407\Src\freertos_target_irq.c|8|14|SysTick_Handler
+POWER10_RULE5|Flight|files=111|functions=2761|eligible_assertions=1675|average=0.606664|informational|policy=fprime_inspired_c|semantic_review=required
+POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+FCCG_PROGRESS|POWER10|DONE|112|113|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|113|113|build_policy
+Power of Ten project text checks passed: 6329 checks, 111 first-party C files, 2761 functions; 815 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending.
+FCCG_PROGRESS|POWER10|DONE|113|113|build_policy
+
+START release 2026-10-08T03:34:14.829823+00:00
+END release 0 106.852
+dress=0x20005C88 main SRAM
+    s_logger_storage                 bytes= 16000 address=0x2000F690 main SRAM
+    s_estimator                      bytes= 10944 address=0x10007000 CCMRAM
+    s_replay_storage                 bytes= 10368 address=0x20002740 main SRAM
+    s_estimator_logger_storage       bytes=  9600 address=0x2000D0F4 main SRAM
+    s_hal_contexts                   bytes=  8190 address=0x200172FC main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10001140 CCMRAM
+    s_io_baselines                   bytes=  4864 address=0x1000A3A8 CCMRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000478 main SRAM
+    s_estimator_stack                bytes=  4096 address=0x10004540 CCMRAM
+SilverStar artifact check passed: target=SilverStar_F407 config=Release elf_bytes=3326520 bin_bytes=331020 heap_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|8|8|summary
+mingw32-make: Nothing to be done for 'memory-report'.
+Device: configured=2560 estimate=2144 margin=416
+INS: configured=3072 estimate=2240 margin=832
+Estimator: configured=4096 estimate=3260 margin=836
+Flight: configured=4096 estimate=3648 margin=448
+Logger: configured=3072 estimate=1768 margin=1304
+Serial: configured=6144 estimate=4944 margin=1200
+Telemetry: configured=4096 estimate=2152 margin=1944
+Idle: configured=512 estimate=256 margin=256
+{
+  "indicator_in_production_init": true,
+  "alignment_start_deferred": true,
+  "flight_processes_alignment": true,
+  "communication_does_not_process_alignment": true,
+  "all_enabled_tasks_budgeted": true
+}
+FCCG_PROGRESS|STACK_REPORT|DONE|1|1|ELF and stack budget
+
+START analyzer 2026-10-08T03:36:01.878207+00:00
+END analyzer 0 115.341
+Spare bytes are not a stack/timing proof.
+"FCCG_PROGRESS|LINK_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.elf"
+"FCCG_PROGRESS|SIZE_BEGIN|build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.elf"
+"D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-size" build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.elf
+   text	   data	    bss	    dec	    hex	filename
+ 329868	   1140	 158376	 489384	  777a8	build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.elf
+"FCCG_PROGRESS|SIZE_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.elf"
+"FCCG_PROGRESS|HEX_BEGIN|build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.hex"
+"D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objcopy" -O ihex build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.elf build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.hex
+"FCCG_PROGRESS|BIN_BEGIN|build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.bin"
+"D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objcopy" -O binary -S build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.elf build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.bin
+"FCCG_PROGRESS|HEX_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.hex"
+"FCCG_PROGRESS|BIN_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/auto/SilverStar_0_1_1.bin"
+mingw32-make[1]: Leaving directory 'D:/python_software/SilverStar/.work/bench08c_f407/Flight_Controller'
+
+START host 2026-10-08T03:37:57.407995+00:00
+END host 0 309.475
+ER_RATE pre_steps=1000 pre_us=120001120 post_steps=39000 post_us=20990540 pre_accepted=16861
+LOGGER_BOOTSTRAP suppressed=60 ready_us=995980 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=14622 steps=14100/14100
+{
+  "file_bytes": 2203895,
+  "header_crc_ok": true,
+  "records": 23275,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 141,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 80,
+    "IMU_CORRECTED": 14059,
+    "BARO_NATIVE": 3514,
+    "GNSS_NATIVE": 1757,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 140,
+    "HEALTH": 140,
+    "MISSION_CONFIG": 1,
+    "INITIAL_STATE": 1,
+    "ESTIMATOR": 500,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "INERTIAL_INCREMENT": 1000,
+    "GNSS_MEASUREMENT": 250
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2203895,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|4|4|logger-integrity
+SilverStar host summary: executables=80 checks=4446469 failures=0 compile_pass_cases=11 expected_compile_failures=18 not_applicable=8
+All SilverStar host tests passed.
+

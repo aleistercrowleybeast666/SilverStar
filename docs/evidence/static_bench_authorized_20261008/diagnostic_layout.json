@@ -1,0 +1,1650 @@
+{
+  "timing": {
+    "expression": "s_estimator_task_timing",
+    "address": 536913904,
+    "bytes": 80,
+    "fields": [
+      {
+        "name": "sequence",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "uint32_t sequence"
+      },
+      {
+        "name": "last_start_us",
+        "offset": 8,
+        "bytes": 8,
+        "declaration": "uint64_t last_start_us"
+      },
+      {
+        "name": "last_end_us",
+        "offset": 16,
+        "bytes": 8,
+        "declaration": "uint64_t last_end_us"
+      },
+      {
+        "name": "max_duration_end_us",
+        "offset": 24,
+        "bytes": 8,
+        "declaration": "uint64_t max_duration_end_us"
+      },
+      {
+        "name": "first_long_duration_end_us",
+        "offset": 32,
+        "bytes": 8,
+        "declaration": "uint64_t first_long_duration_end_us"
+      },
+      {
+        "name": "last_long_duration_end_us",
+        "offset": 40,
+        "bytes": 8,
+        "declaration": "uint64_t last_long_duration_end_us"
+      },
+      {
+        "name": "last_interval_us",
+        "offset": 48,
+        "bytes": 4,
+        "declaration": "uint32_t last_interval_us"
+      },
+      {
+        "name": "max_interval_us",
+        "offset": 52,
+        "bytes": 4,
+        "declaration": "uint32_t max_interval_us"
+      },
+      {
+        "name": "last_duration_us",
+        "offset": 56,
+        "bytes": 4,
+        "declaration": "uint32_t last_duration_us"
+      },
+      {
+        "name": "max_duration_us",
+        "offset": 60,
+        "bytes": 4,
+        "declaration": "uint32_t max_duration_us"
+      },
+      {
+        "name": "duration_over_20ms_count",
+        "offset": 64,
+        "bytes": 4,
+        "declaration": "uint32_t duration_over_20ms_count"
+      },
+      {
+        "name": "last_prediction_count",
+        "offset": 68,
+        "bytes": 4,
+        "declaration": "uint32_t last_prediction_count"
+      },
+      {
+        "name": "max_prediction_count",
+        "offset": 72,
+        "bytes": 4,
+        "declaration": "uint32_t max_prediction_count"
+      },
+      {
+        "name": "prediction_cap_count",
+        "offset": 76,
+        "bytes": 4,
+        "declaration": "uint32_t prediction_cap_count"
+      }
+    ]
+  },
+  "navigation": {
+    "expression": "s_published_snapshot",
+    "address": 268463064,
+    "bytes": 440,
+    "fields": [
+      {
+        "name": "timestamp_us",
+        "offset": 0,
+        "bytes": 8,
+        "declaration": "uint64_t timestamp_us"
+      },
+      {
+        "name": "update_sequence",
+        "offset": 8,
+        "bytes": 4,
+        "declaration": "uint32_t update_sequence"
+      },
+      {
+        "name": "position_enu_m",
+        "offset": 12,
+        "bytes": 12,
+        "declaration": "float position_enu_m[3]"
+      },
+      {
+        "name": "velocity_enu_mps",
+        "offset": 24,
+        "bytes": 12,
+        "declaration": "float velocity_enu_mps[3]"
+      },
+      {
+        "name": "q_nb",
+        "offset": 36,
+        "bytes": 16,
+        "declaration": "float q_nb[4]"
+      },
+      {
+        "name": "acceleration_enu_mps2",
+        "offset": 52,
+        "bytes": 12,
+        "declaration": "float acceleration_enu_mps2[3]"
+      },
+      {
+        "name": "covariance_diagonal",
+        "offset": 64,
+        "bytes": 24,
+        "declaration": "float covariance_diagonal[6]"
+      },
+      {
+        "name": "gnss_position_enu_m",
+        "offset": 232,
+        "bytes": 12,
+        "declaration": "float gnss_position_enu_m[3]"
+      },
+      {
+        "name": "gnss_velocity_enu_mps",
+        "offset": 244,
+        "bytes": 12,
+        "declaration": "float gnss_velocity_enu_mps[3]"
+      },
+      {
+        "name": "baro_relative_altitude_m",
+        "offset": 256,
+        "bytes": 4,
+        "declaration": "float baro_relative_altitude_m"
+      },
+      {
+        "name": "position_innovation",
+        "offset": 260,
+        "bytes": 12,
+        "declaration": "float position_innovation[3]"
+      },
+      {
+        "name": "velocity_innovation",
+        "offset": 272,
+        "bytes": 12,
+        "declaration": "float velocity_innovation[3]"
+      },
+      {
+        "name": "baro_innovation",
+        "offset": 284,
+        "bytes": 4,
+        "declaration": "float baro_innovation"
+      },
+      {
+        "name": "position_variance_r",
+        "offset": 288,
+        "bytes": 12,
+        "declaration": "float position_variance_r[3]"
+      },
+      {
+        "name": "velocity_variance_r",
+        "offset": 300,
+        "bytes": 12,
+        "declaration": "float velocity_variance_r[3]"
+      },
+      {
+        "name": "baro_variance_r",
+        "offset": 312,
+        "bytes": 4,
+        "declaration": "float baro_variance_r"
+      },
+      {
+        "name": "last_position_nis",
+        "offset": 316,
+        "bytes": 4,
+        "declaration": "float last_position_nis"
+      },
+      {
+        "name": "last_velocity_nis",
+        "offset": 320,
+        "bytes": 4,
+        "declaration": "float last_velocity_nis"
+      },
+      {
+        "name": "last_baro_nis",
+        "offset": 324,
+        "bytes": 4,
+        "declaration": "float last_baro_nis"
+      },
+      {
+        "name": "position_r_scale",
+        "offset": 328,
+        "bytes": 4,
+        "declaration": "float position_r_scale"
+      },
+      {
+        "name": "velocity_r_scale",
+        "offset": 332,
+        "bytes": 4,
+        "declaration": "float velocity_r_scale"
+      },
+      {
+        "name": "baro_r_scale",
+        "offset": 336,
+        "bytes": 4,
+        "declaration": "float baro_r_scale"
+      },
+      {
+        "name": "process_accel_std_mps2",
+        "offset": 340,
+        "bytes": 12,
+        "declaration": "float process_accel_std_mps2[3]"
+      },
+      {
+        "name": "predict_count",
+        "offset": 352,
+        "bytes": 4,
+        "declaration": "uint32_t predict_count"
+      },
+      {
+        "name": "gnss_position_update_count",
+        "offset": 356,
+        "bytes": 4,
+        "declaration": "uint32_t gnss_position_update_count"
+      },
+      {
+        "name": "gnss_velocity_update_count",
+        "offset": 360,
+        "bytes": 4,
+        "declaration": "uint32_t gnss_velocity_update_count"
+      },
+      {
+        "name": "baro_update_count",
+        "offset": 364,
+        "bytes": 4,
+        "declaration": "uint32_t baro_update_count"
+      },
+      {
+        "name": "position_reject_count",
+        "offset": 368,
+        "bytes": 4,
+        "declaration": "uint32_t position_reject_count"
+      },
+      {
+        "name": "velocity_reject_count",
+        "offset": 372,
+        "bytes": 4,
+        "declaration": "uint32_t velocity_reject_count"
+      },
+      {
+        "name": "baro_reject_count",
+        "offset": 376,
+        "bytes": 4,
+        "declaration": "uint32_t baro_reject_count"
+      },
+      {
+        "name": "prediction_queue_overflow_count",
+        "offset": 380,
+        "bytes": 4,
+        "declaration": "uint32_t prediction_queue_overflow_count"
+      },
+      {
+        "name": "health_flags",
+        "offset": 384,
+        "bytes": 4,
+        "declaration": "uint32_t health_flags"
+      },
+      {
+        "name": "measurement_attempt_mask",
+        "offset": 388,
+        "bytes": 4,
+        "declaration": "uint32_t measurement_attempt_mask"
+      },
+      {
+        "name": "last_gnss_timestamp_us",
+        "offset": 392,
+        "bytes": 8,
+        "declaration": "uint64_t last_gnss_timestamp_us"
+      },
+      {
+        "name": "last_baro_timestamp_us",
+        "offset": 400,
+        "bytes": 8,
+        "declaration": "uint64_t last_baro_timestamp_us"
+      },
+      {
+        "name": "last_gnss_sequence",
+        "offset": 408,
+        "bytes": 4,
+        "declaration": "uint32_t last_gnss_sequence"
+      },
+      {
+        "name": "last_baro_sequence",
+        "offset": 412,
+        "bytes": 4,
+        "declaration": "uint32_t last_baro_sequence"
+      },
+      {
+        "name": "last_gnss_age_us",
+        "offset": 416,
+        "bytes": 4,
+        "declaration": "uint32_t last_gnss_age_us"
+      },
+      {
+        "name": "last_baro_age_us",
+        "offset": 420,
+        "bytes": 4,
+        "declaration": "uint32_t last_baro_age_us"
+      },
+      {
+        "name": "initialized",
+        "offset": 424,
+        "bytes": 1,
+        "declaration": "uint8_t initialized"
+      },
+      {
+        "name": "mission_running",
+        "offset": 425,
+        "bytes": 1,
+        "declaration": "uint8_t mission_running"
+      },
+      {
+        "name": "gnss_origin_valid",
+        "offset": 426,
+        "bytes": 1,
+        "declaration": "uint8_t gnss_origin_valid"
+      },
+      {
+        "name": "baro_origin_valid",
+        "offset": 427,
+        "bytes": 1,
+        "declaration": "uint8_t baro_origin_valid"
+      },
+      {
+        "name": "gnss_velocity_valid_mask",
+        "offset": 428,
+        "bytes": 1,
+        "declaration": "uint8_t gnss_velocity_valid_mask"
+      },
+      {
+        "name": "velocity_update_dimension",
+        "offset": 429,
+        "bytes": 1,
+        "declaration": "uint8_t velocity_update_dimension"
+      },
+      {
+        "name": "position_update_result",
+        "offset": 430,
+        "bytes": 1,
+        "declaration": "SystemEstimatorMeasurementResult position_update_result"
+      },
+      {
+        "name": "velocity_update_result",
+        "offset": 431,
+        "bytes": 1,
+        "declaration": "SystemEstimatorMeasurementResult velocity_update_result"
+      },
+      {
+        "name": "baro_update_result",
+        "offset": 432,
+        "bytes": 1,
+        "declaration": "SystemEstimatorMeasurementResult baro_update_result"
+      }
+    ]
+  },
+  "task": {
+    "expression": "s_tasks[0]",
+    "address": 536870912,
+    "bytes": 16,
+    "fields": [
+      {
+        "name": "stack_words",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "uint32_t stack_words"
+      },
+      {
+        "name": "handle",
+        "offset": 4,
+        "bytes": 4,
+        "declaration": "TaskHandle_t handle"
+      },
+      {
+        "name": "high_water_mark_words",
+        "offset": 8,
+        "bytes": 4,
+        "declaration": "volatile uint32_t high_water_mark_words"
+      },
+      {
+        "name": "high_water_mark_valid",
+        "offset": 12,
+        "bytes": 1,
+        "declaration": "volatile uint8_t high_water_mark_valid"
+      }
+    ]
+  },
+  "assert_fault": {
+    "expression": "s_assert_fault",
+    "address": 536919752,
+    "bytes": 72,
+    "fields": [
+      {
+        "name": "file_name",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "const char *file_name"
+      },
+      {
+        "name": "timestamp_us",
+        "offset": 8,
+        "bytes": 8,
+        "declaration": "uint64_t timestamp_us"
+      },
+      {
+        "name": "line",
+        "offset": 16,
+        "bytes": 4,
+        "declaration": "uint32_t line"
+      },
+      {
+        "name": "sequence",
+        "offset": 20,
+        "bytes": 4,
+        "declaration": "uint32_t sequence"
+      },
+      {
+        "name": "module_id",
+        "offset": 24,
+        "bytes": 1,
+        "declaration": "SilverStarAssertModuleId module_id"
+      },
+      {
+        "name": "reason_id",
+        "offset": 25,
+        "bytes": 1,
+        "declaration": "SilverStarAssertReasonId reason_id"
+      },
+      {
+        "name": "fault_type",
+        "offset": 26,
+        "bytes": 1,
+        "declaration": "SilverStarFaultType fault_type"
+      },
+      {
+        "name": "task_handle",
+        "offset": 28,
+        "bytes": 4,
+        "declaration": "uintptr_t task_handle"
+      },
+      {
+        "name": "task_name_address",
+        "offset": 32,
+        "bytes": 4,
+        "declaration": "uintptr_t task_name_address"
+      },
+      {
+        "name": "task_id",
+        "offset": 36,
+        "bytes": 4,
+        "declaration": "uint32_t task_id"
+      },
+      {
+        "name": "system_state",
+        "offset": 40,
+        "bytes": 4,
+        "declaration": "uint32_t system_state"
+      },
+      {
+        "name": "high_water_mark_words",
+        "offset": 44,
+        "bytes": 4,
+        "declaration": "uint32_t high_water_mark_words"
+      },
+      {
+        "name": "task_name",
+        "offset": 48,
+        "bytes": 16,
+        "declaration": "char task_name[16]"
+      },
+      {
+        "name": "high_water_mark_valid",
+        "offset": 64,
+        "bytes": 1,
+        "declaration": "uint8_t high_water_mark_valid"
+      },
+      {
+        "name": "timestamp_valid",
+        "offset": 65,
+        "bytes": 1,
+        "declaration": "uint8_t timestamp_valid"
+      },
+      {
+        "name": "active",
+        "offset": 66,
+        "bytes": 1,
+        "declaration": "uint8_t active"
+      }
+    ]
+  },
+  "radio_stats": {
+    "expression": "'sx1281_device.c'::s_contexts[0].stats",
+    "address": 536964164,
+    "bytes": 60,
+    "fields": [
+      {
+        "name": "tx_ok",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "uint32_t tx_ok"
+      },
+      {
+        "name": "tx_dropped",
+        "offset": 4,
+        "bytes": 4,
+        "declaration": "uint32_t tx_dropped"
+      },
+      {
+        "name": "tx_timeout",
+        "offset": 8,
+        "bytes": 4,
+        "declaration": "uint32_t tx_timeout"
+      },
+      {
+        "name": "rx_ok",
+        "offset": 12,
+        "bytes": 4,
+        "declaration": "uint32_t rx_ok"
+      },
+      {
+        "name": "rx_dropped",
+        "offset": 16,
+        "bytes": 4,
+        "declaration": "uint32_t rx_dropped"
+      },
+      {
+        "name": "rx_timeout",
+        "offset": 20,
+        "bytes": 4,
+        "declaration": "uint32_t rx_timeout"
+      },
+      {
+        "name": "rx_error",
+        "offset": 24,
+        "bytes": 4,
+        "declaration": "uint32_t rx_error"
+      },
+      {
+        "name": "rx_crc_error",
+        "offset": 28,
+        "bytes": 4,
+        "declaration": "uint32_t rx_crc_error"
+      },
+      {
+        "name": "last_rx_len",
+        "offset": 32,
+        "bytes": 1,
+        "declaration": "uint8_t last_rx_len"
+      },
+      {
+        "name": "last_rx_rssi",
+        "offset": 33,
+        "bytes": 1,
+        "declaration": "int8_t last_rx_rssi"
+      },
+      {
+        "name": "last_rx_snr",
+        "offset": 34,
+        "bytes": 1,
+        "declaration": "int8_t last_rx_snr"
+      },
+      {
+        "name": "last_rx_type",
+        "offset": 35,
+        "bytes": 1,
+        "declaration": "uint8_t last_rx_type"
+      },
+      {
+        "name": "rx_irq_count",
+        "offset": 36,
+        "bytes": 4,
+        "declaration": "uint32_t rx_irq_count"
+      },
+      {
+        "name": "tx_irq_count",
+        "offset": 40,
+        "bytes": 4,
+        "declaration": "uint32_t tx_irq_count"
+      },
+      {
+        "name": "rx_error_irq_count",
+        "offset": 44,
+        "bytes": 4,
+        "declaration": "uint32_t rx_error_irq_count"
+      },
+      {
+        "name": "tx_timeout_irq_count",
+        "offset": 48,
+        "bytes": 4,
+        "declaration": "uint32_t tx_timeout_irq_count"
+      },
+      {
+        "name": "rx_timeout_irq_count",
+        "offset": 52,
+        "bytes": 4,
+        "declaration": "uint32_t rx_timeout_irq_count"
+      },
+      {
+        "name": "radio_state",
+        "offset": 56,
+        "bytes": 1,
+        "declaration": "LoraRadioState radio_state"
+      }
+    ]
+  },
+  "radio_bus": {
+    "expression": "s_bus_status[0]",
+    "address": 536965476,
+    "bytes": 60,
+    "fields": [
+      {
+        "name": "last_result",
+        "offset": 0,
+        "bytes": 1,
+        "declaration": "Sx1281BusResult last_result"
+      },
+      {
+        "name": "spi_error_count",
+        "offset": 4,
+        "bytes": 4,
+        "declaration": "uint32_t spi_error_count"
+      },
+      {
+        "name": "spi_timeout_count",
+        "offset": 8,
+        "bytes": 4,
+        "declaration": "uint32_t spi_timeout_count"
+      },
+      {
+        "name": "busy_timeout_count",
+        "offset": 12,
+        "bytes": 4,
+        "declaration": "uint32_t busy_timeout_count"
+      },
+      {
+        "name": "first_failure_at_ms",
+        "offset": 16,
+        "bytes": 4,
+        "declaration": "uint32_t first_failure_at_ms"
+      },
+      {
+        "name": "first_failure_elapsed_ms",
+        "offset": 20,
+        "bytes": 4,
+        "declaration": "uint32_t first_failure_elapsed_ms"
+      },
+      {
+        "name": "first_failure_platform_result",
+        "offset": 24,
+        "bytes": 1,
+        "declaration": "PlatformResult first_failure_platform_result"
+      },
+      {
+        "name": "first_failure_result",
+        "offset": 25,
+        "bytes": 1,
+        "declaration": "Sx1281BusResult first_failure_result"
+      },
+      {
+        "name": "first_failure_length",
+        "offset": 26,
+        "bytes": 2,
+        "declaration": "uint16_t first_failure_length"
+      },
+      {
+        "name": "first_failure_opcode",
+        "offset": 28,
+        "bytes": 1,
+        "declaration": "uint8_t first_failure_opcode"
+      },
+      {
+        "name": "first_failure_valid",
+        "offset": 29,
+        "bytes": 1,
+        "declaration": "uint8_t first_failure_valid"
+      },
+      {
+        "name": "first_failure_opcode_valid",
+        "offset": 30,
+        "bytes": 1,
+        "declaration": "uint8_t first_failure_opcode_valid"
+      },
+      {
+        "name": "first_failure_platform_result_valid",
+        "offset": 31,
+        "bytes": 1,
+        "declaration": "uint8_t first_failure_platform_result_valid"
+      },
+      {
+        "name": "first_failure_driver_valid",
+        "offset": 32,
+        "bytes": 1,
+        "declaration": "uint8_t first_failure_driver_valid"
+      },
+      {
+        "name": "first_failure_driver_status",
+        "offset": 36,
+        "bytes": 4,
+        "declaration": "uint32_t first_failure_driver_status"
+      },
+      {
+        "name": "first_failure_driver_error_code",
+        "offset": 40,
+        "bytes": 4,
+        "declaration": "uint32_t first_failure_driver_error_code"
+      },
+      {
+        "name": "first_failure_driver_state",
+        "offset": 44,
+        "bytes": 4,
+        "declaration": "uint32_t first_failure_driver_state"
+      },
+      {
+        "name": "first_failure_spi_sr",
+        "offset": 48,
+        "bytes": 4,
+        "declaration": "uint32_t first_failure_spi_sr"
+      },
+      {
+        "name": "first_failure_driver_elapsed_ms",
+        "offset": 52,
+        "bytes": 4,
+        "declaration": "uint32_t first_failure_driver_elapsed_ms"
+      },
+      {
+        "name": "first_failure_tx_remaining",
+        "offset": 56,
+        "bytes": 2,
+        "declaration": "uint16_t first_failure_tx_remaining"
+      },
+      {
+        "name": "first_failure_rx_remaining",
+        "offset": 58,
+        "bytes": 2,
+        "declaration": "uint16_t first_failure_rx_remaining"
+      }
+    ]
+  },
+  "health": {
+    "expression": "'system_health.c'::s_health",
+    "address": 536920384,
+    "bytes": 40,
+    "fields": [
+      {
+        "name": "timestamp_us",
+        "offset": 0,
+        "bytes": 8,
+        "declaration": "uint64_t timestamp_us"
+      },
+      {
+        "name": "capabilities",
+        "offset": 8,
+        "bytes": 16,
+        "declaration": "SystemCapabilities capabilities"
+      },
+      {
+        "name": "start_blocking_mask",
+        "offset": 24,
+        "bytes": 4,
+        "declaration": "uint32_t start_blocking_mask"
+      },
+      {
+        "name": "warning_mask",
+        "offset": 28,
+        "bytes": 4,
+        "declaration": "uint32_t warning_mask"
+      },
+      {
+        "name": "sequence",
+        "offset": 32,
+        "bytes": 4,
+        "declaration": "uint32_t sequence"
+      },
+      {
+        "name": "attitude_status",
+        "offset": 36,
+        "bytes": 1,
+        "declaration": "SystemHealthAttitudeStatus attitude_status"
+      },
+      {
+        "name": "ready",
+        "offset": 37,
+        "bytes": 1,
+        "declaration": "uint8_t ready"
+      }
+    ]
+  },
+  "alignment_retry": {
+    "expression": "'flight_task.c'::s_alignment_log",
+    "address": 268475072,
+    "bytes": 72,
+    "fields": [
+      {
+        "name": "record",
+        "offset": 0,
+        "bytes": 56,
+        "declaration": "FlightLogAlignmentEvidenceRecord record"
+      },
+      {
+        "name": "timestamp_us",
+        "offset": 56,
+        "bytes": 8,
+        "declaration": "uint64_t timestamp_us"
+      },
+      {
+        "name": "pending",
+        "offset": 64,
+        "bytes": 1,
+        "declaration": "uint8_t pending"
+      }
+    ]
+  },
+  "lifecycle": {
+    "expression": "s_lifecycle_state",
+    "address": 536977940,
+    "bytes": 1,
+    "fields": []
+  },
+  "logger": {
+    "expression": "'logger_task.c'::s_diagnostics",
+    "address": 536950344,
+    "bytes": 112,
+    "fields": [
+      {
+        "name": "max_iteration_us",
+        "offset": 0,
+        "bytes": 8,
+        "declaration": "uint64_t max_iteration_us"
+      },
+      {
+        "name": "total_write_us",
+        "offset": 8,
+        "bytes": 8,
+        "declaration": "uint64_t total_write_us"
+      },
+      {
+        "name": "max_write_us",
+        "offset": 16,
+        "bytes": 8,
+        "declaration": "uint64_t max_write_us"
+      },
+      {
+        "name": "streaming_ready_us",
+        "offset": 24,
+        "bytes": 8,
+        "declaration": "uint64_t streaming_ready_us"
+      },
+      {
+        "name": "serialized_count",
+        "offset": 32,
+        "bytes": 4,
+        "declaration": "uint32_t serialized_count"
+      },
+      {
+        "name": "iteration_count",
+        "offset": 36,
+        "bytes": 4,
+        "declaration": "uint32_t iteration_count"
+      },
+      {
+        "name": "drain_count",
+        "offset": 40,
+        "bytes": 4,
+        "declaration": "uint32_t drain_count"
+      },
+      {
+        "name": "write_count",
+        "offset": 44,
+        "bytes": 4,
+        "declaration": "uint32_t write_count"
+      },
+      {
+        "name": "append_failure_count",
+        "offset": 48,
+        "bytes": 4,
+        "declaration": "uint32_t append_failure_count"
+      },
+      {
+        "name": "flush_failure_count",
+        "offset": 52,
+        "bytes": 4,
+        "declaration": "uint32_t flush_failure_count"
+      },
+      {
+        "name": "serialize_failure_count",
+        "offset": 56,
+        "bytes": 4,
+        "declaration": "uint32_t serialize_failure_count"
+      },
+      {
+        "name": "open_attempt_count",
+        "offset": 60,
+        "bytes": 4,
+        "declaration": "uint32_t open_attempt_count"
+      },
+      {
+        "name": "open_failure_count",
+        "offset": 64,
+        "bytes": 4,
+        "declaration": "uint32_t open_failure_count"
+      },
+      {
+        "name": "session_count",
+        "offset": 68,
+        "bytes": 4,
+        "declaration": "uint32_t session_count"
+      },
+      {
+        "name": "discarded_bytes",
+        "offset": 72,
+        "bytes": 4,
+        "declaration": "uint32_t discarded_bytes"
+      },
+      {
+        "name": "close_failure_count",
+        "offset": 76,
+        "bytes": 4,
+        "declaration": "uint32_t close_failure_count"
+      },
+      {
+        "name": "snapshot_mission_id",
+        "offset": 80,
+        "bytes": 4,
+        "declaration": "uint32_t snapshot_mission_id"
+      },
+      {
+        "name": "snapshot_commit_generation",
+        "offset": 84,
+        "bytes": 4,
+        "declaration": "uint32_t snapshot_commit_generation"
+      },
+      {
+        "name": "snapshot_sequence",
+        "offset": 88,
+        "bytes": 4,
+        "declaration": "uint32_t snapshot_sequence"
+      },
+      {
+        "name": "snapshot_calibration_generation",
+        "offset": 92,
+        "bytes": 4,
+        "declaration": "uint32_t snapshot_calibration_generation"
+      },
+      {
+        "name": "snapshot_mag_calibration_set_hash",
+        "offset": 96,
+        "bytes": 4,
+        "declaration": "uint32_t snapshot_mag_calibration_set_hash"
+      },
+      {
+        "name": "snapshot_ready",
+        "offset": 100,
+        "bytes": 1,
+        "declaration": "uint8_t snapshot_ready"
+      },
+      {
+        "name": "snapshot_base_instance",
+        "offset": 101,
+        "bytes": 1,
+        "declaration": "uint8_t snapshot_base_instance"
+      },
+      {
+        "name": "final_status_write_failed",
+        "offset": 102,
+        "bytes": 1,
+        "declaration": "uint8_t final_status_write_failed"
+      },
+      {
+        "name": "io_fault",
+        "offset": 103,
+        "bytes": 1,
+        "declaration": "uint8_t io_fault"
+      },
+      {
+        "name": "boot_logging_disabled",
+        "offset": 104,
+        "bytes": 1,
+        "declaration": "uint8_t boot_logging_disabled"
+      },
+      {
+        "name": "no_storage_warning_delivered",
+        "offset": 105,
+        "bytes": 1,
+        "declaration": "uint8_t no_storage_warning_delivered"
+      }
+    ]
+  },
+  "logger_runtime": {
+    "expression": "'logger_task.c'::s_logger",
+    "address": 536950456,
+    "bytes": 96,
+    "fields": [
+      {
+        "name": "record_sequence",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "uint32_t record_sequence"
+      },
+      {
+        "name": "aggregate_length",
+        "offset": 4,
+        "bytes": 4,
+        "declaration": "uint32_t aggregate_length"
+      },
+      {
+        "name": "observed_drop_count",
+        "offset": 8,
+        "bytes": 4,
+        "declaration": "uint32_t observed_drop_count"
+      },
+      {
+        "name": "critical_deadline_us",
+        "offset": 16,
+        "bytes": 8,
+        "declaration": "uint64_t critical_deadline_us"
+      },
+      {
+        "name": "last_iteration_us",
+        "offset": 24,
+        "bytes": 8,
+        "declaration": "uint64_t last_iteration_us"
+      },
+      {
+        "name": "critical_pending",
+        "offset": 32,
+        "bytes": 1,
+        "declaration": "uint8_t critical_pending"
+      },
+      {
+        "name": "last_flush_us",
+        "offset": 40,
+        "bytes": 8,
+        "declaration": "uint64_t last_flush_us"
+      },
+      {
+        "name": "next_retry_us",
+        "offset": 48,
+        "bytes": 8,
+        "declaration": "uint64_t next_retry_us"
+      },
+      {
+        "name": "session_active",
+        "offset": 56,
+        "bytes": 1,
+        "declaration": "uint8_t session_active"
+      },
+      {
+        "name": "session_finalized",
+        "offset": 57,
+        "bytes": 1,
+        "declaration": "uint8_t session_finalized"
+      },
+      {
+        "name": "header_written",
+        "offset": 58,
+        "bytes": 1,
+        "declaration": "uint8_t header_written"
+      },
+      {
+        "name": "startup_report_written",
+        "offset": 59,
+        "bytes": 1,
+        "declaration": "uint8_t startup_report_written"
+      },
+      {
+        "name": "decoder_profile_queued",
+        "offset": 60,
+        "bytes": 1,
+        "declaration": "uint8_t decoder_profile_queued"
+      },
+      {
+        "name": "bootstrap_config_queued",
+        "offset": 61,
+        "bytes": 1,
+        "declaration": "uint8_t bootstrap_config_queued"
+      },
+      {
+        "name": "sink_offset_mod_quantum",
+        "offset": 62,
+        "bytes": 2,
+        "declaration": "uint16_t sink_offset_mod_quantum"
+      },
+      {
+        "name": "snapshot",
+        "offset": 64,
+        "bytes": 32,
+        "declaration": "SystemMissionSnapshotStatus snapshot"
+      }
+    ]
+  },
+  "logger_bus": {
+    "expression": "'logger_bus.c'::s_diagnostics",
+    "address": 536924360,
+    "bytes": 44,
+    "fields": [
+      {
+        "name": "accepted_count",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "uint32_t accepted_count"
+      },
+      {
+        "name": "dequeued_count",
+        "offset": 4,
+        "bytes": 4,
+        "declaration": "uint32_t dequeued_count"
+      },
+      {
+        "name": "overflow_count",
+        "offset": 8,
+        "bytes": 4,
+        "declaration": "uint32_t overflow_count"
+      },
+      {
+        "name": "bootstrap_suppressed_count",
+        "offset": 12,
+        "bytes": 4,
+        "declaration": "uint32_t bootstrap_suppressed_count"
+      },
+      {
+        "name": "state_reject_count",
+        "offset": 16,
+        "bytes": 4,
+        "declaration": "uint32_t state_reject_count"
+      },
+      {
+        "name": "capacity_reject_count",
+        "offset": 20,
+        "bytes": 4,
+        "declaration": "uint32_t capacity_reject_count"
+      },
+      {
+        "name": "disabled_suppressed_count",
+        "offset": 24,
+        "bytes": 4,
+        "declaration": "uint32_t disabled_suppressed_count"
+      },
+      {
+        "name": "disabled_discarded_count",
+        "offset": 28,
+        "bytes": 4,
+        "declaration": "uint32_t disabled_discarded_count"
+      },
+      {
+        "name": "startup_state",
+        "offset": 32,
+        "bytes": 1,
+        "declaration": "LoggerBusStartupState startup_state"
+      },
+      {
+        "name": "normal_count",
+        "offset": 34,
+        "bytes": 2,
+        "declaration": "uint16_t normal_count"
+      },
+      {
+        "name": "estimator_count",
+        "offset": 36,
+        "bytes": 2,
+        "declaration": "uint16_t estimator_count"
+      },
+      {
+        "name": "normal_high_water",
+        "offset": 38,
+        "bytes": 2,
+        "declaration": "uint16_t normal_high_water"
+      },
+      {
+        "name": "estimator_high_water",
+        "offset": 40,
+        "bytes": 2,
+        "declaration": "uint16_t estimator_high_water"
+      }
+    ]
+  },
+  "logger_request": {
+    "expression": "'logger_bus.c'::s_request",
+    "address": 268475560,
+    "bytes": 880,
+    "fields": [
+      {
+        "name": "config",
+        "offset": 0,
+        "bytes": 132,
+        "declaration": "FlightLogSystemConfigRecord config"
+      },
+      {
+        "name": "streams",
+        "offset": 132,
+        "bytes": 480,
+        "declaration": "SystemLogStreamConfig streams[40]"
+      },
+      {
+        "name": "start",
+        "offset": 612,
+        "bytes": 236,
+        "declaration": "LoggerBusStartRecords start"
+      },
+      {
+        "name": "timestamp_us",
+        "offset": 848,
+        "bytes": 8,
+        "declaration": "uint64_t timestamp_us"
+      },
+      {
+        "name": "generation",
+        "offset": 856,
+        "bytes": 4,
+        "declaration": "uint32_t generation"
+      },
+      {
+        "name": "cursor",
+        "offset": 860,
+        "bytes": 2,
+        "declaration": "uint16_t cursor"
+      },
+      {
+        "name": "count",
+        "offset": 862,
+        "bytes": 2,
+        "declaration": "uint16_t count"
+      },
+      {
+        "name": "is_start",
+        "offset": 864,
+        "bytes": 1,
+        "declaration": "uint8_t is_start"
+      },
+      {
+        "name": "phase",
+        "offset": 865,
+        "bytes": 1,
+        "declaration": "LoggerRequestPhase phase"
+      },
+      {
+        "name": "io_fault",
+        "offset": 866,
+        "bytes": 1,
+        "declaration": "uint8_t io_fault"
+      },
+      {
+        "name": "next_generation",
+        "offset": 868,
+        "bytes": 4,
+        "declaration": "uint32_t next_generation"
+      },
+      {
+        "name": "acknowledged_generation",
+        "offset": 872,
+        "bytes": 4,
+        "declaration": "uint32_t acknowledged_generation"
+      }
+    ]
+  },
+  "storage": {
+    "expression": "'storage_service.c'::s_health",
+    "address": 536974128,
+    "bytes": 80,
+    "fields": [
+      {
+        "name": "last_write_timestamp_us",
+        "offset": 0,
+        "bytes": 8,
+        "declaration": "uint64_t last_write_timestamp_us"
+      },
+      {
+        "name": "last_sync_timestamp_us",
+        "offset": 8,
+        "bytes": 8,
+        "declaration": "uint64_t last_sync_timestamp_us"
+      },
+      {
+        "name": "capacity_bytes",
+        "offset": 16,
+        "bytes": 8,
+        "declaration": "uint64_t capacity_bytes"
+      },
+      {
+        "name": "free_bytes",
+        "offset": 24,
+        "bytes": 8,
+        "declaration": "uint64_t free_bytes"
+      },
+      {
+        "name": "write_count",
+        "offset": 32,
+        "bytes": 4,
+        "declaration": "uint32_t write_count"
+      },
+      {
+        "name": "sync_count",
+        "offset": 36,
+        "bytes": 4,
+        "declaration": "uint32_t sync_count"
+      },
+      {
+        "name": "error_count",
+        "offset": 40,
+        "bytes": 4,
+        "declaration": "uint32_t error_count"
+      },
+      {
+        "name": "bytes_written",
+        "offset": 48,
+        "bytes": 8,
+        "declaration": "uint64_t bytes_written"
+      },
+      {
+        "name": "max_write_latency_us",
+        "offset": 56,
+        "bytes": 8,
+        "declaration": "uint64_t max_write_latency_us"
+      },
+      {
+        "name": "max_sync_latency_us",
+        "offset": 64,
+        "bytes": 8,
+        "declaration": "uint64_t max_sync_latency_us"
+      },
+      {
+        "name": "initialized",
+        "offset": 72,
+        "bytes": 1,
+        "declaration": "uint8_t initialized"
+      },
+      {
+        "name": "mounted",
+        "offset": 73,
+        "bytes": 1,
+        "declaration": "uint8_t mounted"
+      },
+      {
+        "name": "file_open",
+        "offset": 74,
+        "bytes": 1,
+        "declaration": "uint8_t file_open"
+      },
+      {
+        "name": "healthy",
+        "offset": 75,
+        "bytes": 1,
+        "declaration": "uint8_t healthy"
+      },
+      {
+        "name": "initial_probe_complete",
+        "offset": 76,
+        "bytes": 1,
+        "declaration": "uint8_t initial_probe_complete"
+      },
+      {
+        "name": "initial_medium_unavailable",
+        "offset": 77,
+        "bytes": 1,
+        "declaration": "uint8_t initial_medium_unavailable"
+      }
+    ]
+  },
+  "file_open": {
+    "expression": "'storage_service.c'::s_file_open",
+    "address": 536974208,
+    "bytes": 1,
+    "fields": []
+  },
+  "mission_id": {
+    "expression": "'storage_service.c'::s_mission_id",
+    "address": 536974124,
+    "bytes": 4,
+    "fields": []
+  },
+  "sink": {
+    "expression": "'log_sink_service.c'::s_sink.health",
+    "address": 536977552,
+    "bytes": 40,
+    "fields": [
+      {
+        "name": "bytes_written",
+        "offset": 0,
+        "bytes": 8,
+        "declaration": "uint64_t bytes_written"
+      },
+      {
+        "name": "last_write_timestamp_us",
+        "offset": 8,
+        "bytes": 8,
+        "declaration": "uint64_t last_write_timestamp_us"
+      },
+      {
+        "name": "last_flush_timestamp_us",
+        "offset": 16,
+        "bytes": 8,
+        "declaration": "uint64_t last_flush_timestamp_us"
+      },
+      {
+        "name": "write_count",
+        "offset": 24,
+        "bytes": 4,
+        "declaration": "uint32_t write_count"
+      },
+      {
+        "name": "flush_count",
+        "offset": 28,
+        "bytes": 4,
+        "declaration": "uint32_t flush_count"
+      },
+      {
+        "name": "error_count",
+        "offset": 32,
+        "bytes": 4,
+        "declaration": "uint32_t error_count"
+      },
+      {
+        "name": "initialized",
+        "offset": 36,
+        "bytes": 1,
+        "declaration": "uint8_t initialized"
+      },
+      {
+        "name": "session_active",
+        "offset": 37,
+        "bytes": 1,
+        "declaration": "uint8_t session_active"
+      },
+      {
+        "name": "healthy",
+        "offset": 38,
+        "bytes": 1,
+        "declaration": "uint8_t healthy"
+      }
+    ]
+  },
+  "file_path": {
+    "expression": "'log_sink_service.c'::s_sink.path",
+    "address": 536977500,
+    "bytes": 48,
+    "fields": []
+  },
+  "first_mount": {
+    "expression": "'storage_service.c'::s_first_mount_fresult",
+    "address": 536871940,
+    "bytes": 4,
+    "fields": []
+  },
+  "normal_queue": {
+    "expression": "'logger_bus.c'::s_logger_queue",
+    "address": 536950032,
+    "bytes": 28,
+    "fields": [
+      {
+        "name": "storage",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "uint8_t *storage"
+      },
+      {
+        "name": "capacity",
+        "offset": 4,
+        "bytes": 2,
+        "declaration": "uint16_t capacity"
+      },
+      {
+        "name": "item_size",
+        "offset": 6,
+        "bytes": 2,
+        "declaration": "uint16_t item_size"
+      },
+      {
+        "name": "head",
+        "offset": 8,
+        "bytes": 2,
+        "declaration": "volatile uint16_t head"
+      },
+      {
+        "name": "tail",
+        "offset": 10,
+        "bytes": 2,
+        "declaration": "volatile uint16_t tail"
+      },
+      {
+        "name": "head_index",
+        "offset": 12,
+        "bytes": 2,
+        "declaration": "uint16_t head_index"
+      },
+      {
+        "name": "tail_index",
+        "offset": 14,
+        "bytes": 2,
+        "declaration": "uint16_t tail_index"
+      },
+      {
+        "name": "push_count",
+        "offset": 16,
+        "bytes": 4,
+        "declaration": "volatile uint32_t push_count"
+      },
+      {
+        "name": "pop_count",
+        "offset": 20,
+        "bytes": 4,
+        "declaration": "volatile uint32_t pop_count"
+      },
+      {
+        "name": "overflow_count",
+        "offset": 24,
+        "bytes": 4,
+        "declaration": "volatile uint32_t overflow_count"
+      }
+    ]
+  },
+  "estimator_queue": {
+    "expression": "'logger_bus.c'::s_estimator_logger_queue",
+    "address": 536934004,
+    "bytes": 28,
+    "fields": [
+      {
+        "name": "storage",
+        "offset": 0,
+        "bytes": 4,
+        "declaration": "uint8_t *storage"
+      },
+      {
+        "name": "capacity",
+        "offset": 4,
+        "bytes": 2,
+        "declaration": "uint16_t capacity"
+      },
+      {
+        "name": "item_size",
+        "offset": 6,
+        "bytes": 2,
+        "declaration": "uint16_t item_size"
+      },
+      {
+        "name": "head",
+        "offset": 8,
+        "bytes": 2,
+        "declaration": "volatile uint16_t head"
+      },
+      {
+        "name": "tail",
+        "offset": 10,
+        "bytes": 2,
+        "declaration": "volatile uint16_t tail"
+      },
+      {
+        "name": "head_index",
+        "offset": 12,
+        "bytes": 2,
+        "declaration": "uint16_t head_index"
+      },
+      {
+        "name": "tail_index",
+        "offset": 14,
+        "bytes": 2,
+        "declaration": "uint16_t tail_index"
+      },
+      {
+        "name": "push_count",
+        "offset": 16,
+        "bytes": 4,
+        "declaration": "volatile uint32_t push_count"
+      },
+      {
+        "name": "pop_count",
+        "offset": 20,
+        "bytes": 4,
+        "declaration": "volatile uint32_t pop_count"
+      },
+      {
+        "name": "overflow_count",
+        "offset": 24,
+        "bytes": 4,
+        "declaration": "volatile uint32_t overflow_count"
+      }
+    ]
+  },
+  "stack_Device": {
+    "expression": "s_device_stack",
+    "address": 268460352,
+    "bytes": 2560,
+    "fields": []
+  },
+  "stack_INS": {
+    "expression": "s_ins_stack",
+    "address": 268457280,
+    "bytes": 3072,
+    "fields": []
+  },
+  "stack_Estimator": {
+    "expression": "s_estimator_stack",
+    "address": 268453184,
+    "bytes": 4096,
+    "fields": []
+  },
+  "stack_Flight": {
+    "expression": "s_flight_stack",
+    "address": 268449088,
+    "bytes": 4096,
+    "fields": []
+  },
+  "stack_Logger": {
+    "expression": "s_logger_stack",
+    "address": 268446016,
+    "bytes": 3072,
+    "fields": []
+  },
+  "stack_Serial": {
+    "expression": "s_serial_stack",
+    "address": 268439872,
+    "bytes": 6144,
+    "fields": []
+  },
+  "stack_Telemetry": {
+    "expression": "s_telemetry_stack",
+    "address": 268435776,
+    "bytes": 4096,
+    "fields": []
+  }
+}

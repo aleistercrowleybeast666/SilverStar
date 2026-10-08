@@ -1,0 +1,402 @@
+LAYOUT_timing
+ADDR=0x2000a7f0 SIZE=80
+type = volatile struct {
+/*      0      |       4 */    uint32_t sequence;
+/* XXX  4-byte hole      */
+/*      8      |       8 */    uint64_t last_start_us;
+/*     16      |       8 */    uint64_t last_end_us;
+/*     24      |       8 */    uint64_t max_duration_end_us;
+/*     32      |       8 */    uint64_t first_long_duration_end_us;
+/*     40      |       8 */    uint64_t last_long_duration_end_us;
+/*     48      |       4 */    uint32_t last_interval_us;
+/*     52      |       4 */    uint32_t max_interval_us;
+/*     56      |       4 */    uint32_t last_duration_us;
+/*     60      |       4 */    uint32_t max_duration_us;
+/*     64      |       4 */    uint32_t duration_over_20ms_count;
+/*     68      |       4 */    uint32_t last_prediction_count;
+/*     72      |       4 */    uint32_t max_prediction_count;
+/*     76      |       4 */    uint32_t prediction_cap_count;
+
+                               /* total size (bytes):   80 */
+                             }
+LAYOUT_navigation
+ADDR=0x10006bd8 SIZE=440
+type = struct {
+/*      0      |       8 */    uint64_t timestamp_us;
+/*      8      |       4 */    uint32_t update_sequence;
+/*     12      |      12 */    float position_enu_m[3];
+/*     24      |      12 */    float velocity_enu_mps[3];
+/*     36      |      16 */    float q_nb[4];
+/*     52      |      12 */    float acceleration_enu_mps2[3];
+/*     64      |      24 */    float covariance_diagonal[6];
+/*     88      |     144 */    float covariance[6][6];
+/*    232      |      12 */    float gnss_position_enu_m[3];
+/*    244      |      12 */    float gnss_velocity_enu_mps[3];
+/*    256      |       4 */    float baro_relative_altitude_m;
+/*    260      |      12 */    float position_innovation[3];
+/*    272      |      12 */    float velocity_innovation[3];
+/*    284      |       4 */    float baro_innovation;
+/*    288      |      12 */    float position_variance_r[3];
+/*    300      |      12 */    float velocity_variance_r[3];
+/*    312      |       4 */    float baro_variance_r;
+/*    316      |       4 */    float last_position_nis;
+/*    320      |       4 */    float last_velocity_nis;
+/*    324      |       4 */    float last_baro_nis;
+/*    328      |       4 */    float position_r_scale;
+/*    332      |       4 */    float velocity_r_scale;
+/*    336      |       4 */    float baro_r_scale;
+/*    340      |      12 */    float process_accel_std_mps2[3];
+/*    352      |       4 */    uint32_t predict_count;
+/*    356      |       4 */    uint32_t gnss_position_update_count;
+/*    360      |       4 */    uint32_t gnss_velocity_update_count;
+/*    364      |       4 */    uint32_t baro_update_count;
+/*    368      |       4 */    uint32_t position_reject_count;
+/*    372      |       4 */    uint32_t velocity_reject_count;
+/*    376      |       4 */    uint32_t baro_reject_count;
+/*    380      |       4 */    uint32_t prediction_queue_overflow_count;
+/*    384      |       4 */    uint32_t health_flags;
+/*    388      |       4 */    uint32_t measurement_attempt_mask;
+/*    392      |       8 */    uint64_t last_gnss_timestamp_us;
+/*    400      |       8 */    uint64_t last_baro_timestamp_us;
+/*    408      |       4 */    uint32_t last_gnss_sequence;
+/*    412      |       4 */    uint32_t last_baro_sequence;
+/*    416      |       4 */    uint32_t last_gnss_age_us;
+/*    420      |       4 */    uint32_t last_baro_age_us;
+/*    424      |       1 */    uint8_t initialized;
+/*    425      |       1 */    uint8_t mission_running;
+/*    426      |       1 */    uint8_t gnss_origin_valid;
+/*    427      |       1 */    uint8_t baro_origin_valid;
+/*    428      |       1 */    uint8_t gnss_velocity_valid_mask;
+/*    429      |       1 */    uint8_t velocity_update_dimension;
+/*    430      |       1 */    SystemEstimatorMeasurementResult position_update_result;
+/*    431      |       1 */    SystemEstimatorMeasurementResult velocity_update_result;
+/*    432      |       1 */    SystemEstimatorMeasurementResult baro_update_result;
+/* XXX  7-byte padding   */
+
+                               /* total size (bytes):  440 */
+                             }
+LAYOUT_task
+ADDR=0x20000000 SIZE=16
+type = struct {
+/*      0      |       4 */    uint32_t stack_words;
+/*      4      |       4 */    TaskHandle_t handle;
+/*      8      |       4 */    volatile uint32_t high_water_mark_words;
+/*     12      |       1 */    volatile uint8_t high_water_mark_valid;
+/* XXX  3-byte padding   */
+
+                               /* total size (bytes):   16 */
+                             }
+LAYOUT_assert_fault
+ADDR=0x2000bec8 SIZE=72
+type = volatile struct {
+/*      0      |       4 */    const char *file_name;
+/* XXX  4-byte hole      */
+/*      8      |       8 */    uint64_t timestamp_us;
+/*     16      |       4 */    uint32_t line;
+/*     20      |       4 */    uint32_t sequence;
+/*     24      |       1 */    SilverStarAssertModuleId module_id;
+/*     25      |       1 */    SilverStarAssertReasonId reason_id;
+/*     26      |       1 */    SilverStarFaultType fault_type;
+/* XXX  1-byte hole      */
+/*     28      |       4 */    uintptr_t task_handle;
+/*     32      |       4 */    uintptr_t task_name_address;
+/*     36      |       4 */    uint32_t task_id;
+/*     40      |       4 */    uint32_t system_state;
+/*     44      |       4 */    uint32_t high_water_mark_words;
+/*     48      |      16 */    char task_name[16];
+/*     64      |       1 */    uint8_t high_water_mark_valid;
+/*     65      |       1 */    uint8_t timestamp_valid;
+/*     66      |       1 */    uint8_t active;
+/* XXX  5-byte padding   */
+
+                               /* total size (bytes):   72 */
+                             }
+LAYOUT_radio_stats
+ADDR=0x20016c44 SIZE=60
+type = struct {
+/*      0      |       4 */    uint32_t tx_ok;
+/*      4      |       4 */    uint32_t tx_dropped;
+/*      8      |       4 */    uint32_t tx_timeout;
+/*     12      |       4 */    uint32_t rx_ok;
+/*     16      |       4 */    uint32_t rx_dropped;
+/*     20      |       4 */    uint32_t rx_timeout;
+/*     24      |       4 */    uint32_t rx_error;
+/*     28      |       4 */    uint32_t rx_crc_error;
+/*     32      |       1 */    uint8_t last_rx_len;
+/*     33      |       1 */    int8_t last_rx_rssi;
+/*     34      |       1 */    int8_t last_rx_snr;
+/*     35      |       1 */    uint8_t last_rx_type;
+/*     36      |       4 */    uint32_t rx_irq_count;
+/*     40      |       4 */    uint32_t tx_irq_count;
+/*     44      |       4 */    uint32_t rx_error_irq_count;
+/*     48      |       4 */    uint32_t tx_timeout_irq_count;
+/*     52      |       4 */    uint32_t rx_timeout_irq_count;
+/*     56      |       1 */    LoraRadioState radio_state;
+/* XXX  3-byte padding   */
+
+                               /* total size (bytes):   60 */
+                             }
+LAYOUT_radio_bus
+ADDR=0x20017164 SIZE=60
+type = struct {
+/*      0      |       1 */    Sx1281BusResult last_result;
+/* XXX  3-byte hole      */
+/*      4      |       4 */    uint32_t spi_error_count;
+/*      8      |       4 */    uint32_t spi_timeout_count;
+/*     12      |       4 */    uint32_t busy_timeout_count;
+/*     16      |       4 */    uint32_t first_failure_at_ms;
+/*     20      |       4 */    uint32_t first_failure_elapsed_ms;
+/*     24      |       1 */    PlatformResult first_failure_platform_result;
+/*     25      |       1 */    Sx1281BusResult first_failure_result;
+/*     26      |       2 */    uint16_t first_failure_length;
+/*     28      |       1 */    uint8_t first_failure_opcode;
+/*     29      |       1 */    uint8_t first_failure_valid;
+/*     30      |       1 */    uint8_t first_failure_opcode_valid;
+/*     31      |       1 */    uint8_t first_failure_platform_result_valid;
+/*     32      |       1 */    uint8_t first_failure_driver_valid;
+/* XXX  3-byte hole      */
+/*     36      |       4 */    uint32_t first_failure_driver_status;
+/*     40      |       4 */    uint32_t first_failure_driver_error_code;
+/*     44      |       4 */    uint32_t first_failure_driver_state;
+/*     48      |       4 */    uint32_t first_failure_spi_sr;
+/*     52      |       4 */    uint32_t first_failure_driver_elapsed_ms;
+/*     56      |       2 */    uint16_t first_failure_tx_remaining;
+/*     58      |       2 */    uint16_t first_failure_rx_remaining;
+
+                               /* total size (bytes):   60 */
+                             }
+LAYOUT_health
+ADDR=0x2000c140 SIZE=40
+type = struct {
+/*      0      |       8 */    uint64_t timestamp_us;
+/*      8      |      16 */    SystemCapabilities capabilities;
+/*     24      |       4 */    uint32_t start_blocking_mask;
+/*     28      |       4 */    uint32_t warning_mask;
+/*     32      |       4 */    uint32_t sequence;
+/*     36      |       1 */    SystemHealthAttitudeStatus attitude_status;
+/*     37      |       1 */    uint8_t ready;
+/* XXX  2-byte padding   */
+
+                               /* total size (bytes):   40 */
+                             }
+LAYOUT_alignment_retry
+ADDR=0x10009ac0 SIZE=72
+type = struct {
+/*      0      |      56 */    FlightLogAlignmentEvidenceRecord record;
+/*     56      |       8 */    uint64_t timestamp_us;
+/*     64      |       1 */    uint8_t pending;
+/* XXX  7-byte padding   */
+
+                               /* total size (bytes):   72 */
+                             }
+LAYOUT_lifecycle
+ADDR=0x2001a214 SIZE=1
+type = volatile enum {SYSTEM_STATE_BOOT, SYSTEM_STATE_SELF_TEST, SYSTEM_STATE_PREFLIGHT, SYSTEM_STATE_READY, SYSTEM_STATE_FLIGHT, SYSTEM_STATE_RECOVERY, SYSTEM_STATE_LANDED, SYSTEM_STATE_POSTFLIGHT, SYSTEM_STATE_FAULT}
+LAYOUT_logger
+ADDR=0x20013648 SIZE=112
+type = struct {
+/*      0      |       8 */    uint64_t max_iteration_us;
+/*      8      |       8 */    uint64_t total_write_us;
+/*     16      |       8 */    uint64_t max_write_us;
+/*     24      |       8 */    uint64_t streaming_ready_us;
+/*     32      |       4 */    uint32_t serialized_count;
+/*     36      |       4 */    uint32_t iteration_count;
+/*     40      |       4 */    uint32_t drain_count;
+/*     44      |       4 */    uint32_t write_count;
+/*     48      |       4 */    uint32_t append_failure_count;
+/*     52      |       4 */    uint32_t flush_failure_count;
+/*     56      |       4 */    uint32_t serialize_failure_count;
+/*     60      |       4 */    uint32_t open_attempt_count;
+/*     64      |       4 */    uint32_t open_failure_count;
+/*     68      |       4 */    uint32_t session_count;
+/*     72      |       4 */    uint32_t discarded_bytes;
+/*     76      |       4 */    uint32_t close_failure_count;
+/*     80      |       4 */    uint32_t snapshot_mission_id;
+/*     84      |       4 */    uint32_t snapshot_commit_generation;
+/*     88      |       4 */    uint32_t snapshot_sequence;
+/*     92      |       4 */    uint32_t snapshot_calibration_generation;
+/*     96      |       4 */    uint32_t snapshot_mag_calibration_set_hash;
+/*    100      |       1 */    uint8_t snapshot_ready;
+/*    101      |       1 */    uint8_t snapshot_base_instance;
+/*    102      |       1 */    uint8_t final_status_write_failed;
+/*    103      |       1 */    uint8_t io_fault;
+/*    104      |       1 */    uint8_t boot_logging_disabled;
+/*    105      |       1 */    uint8_t no_storage_warning_delivered;
+/* XXX  6-byte padding   */
+
+                               /* total size (bytes):  112 */
+                             }
+LAYOUT_logger_runtime
+ADDR=0x200136b8 SIZE=96
+type = struct {
+/*      0      |       4 */    uint32_t record_sequence;
+/*      4      |       4 */    uint32_t aggregate_length;
+/*      8      |       4 */    uint32_t observed_drop_count;
+/* XXX  4-byte hole      */
+/*     16      |       8 */    uint64_t critical_deadline_us;
+/*     24      |       8 */    uint64_t last_iteration_us;
+/*     32      |       1 */    uint8_t critical_pending;
+/* XXX  7-byte hole      */
+/*     40      |       8 */    uint64_t last_flush_us;
+/*     48      |       8 */    uint64_t next_retry_us;
+/*     56      |       1 */    uint8_t session_active;
+/*     57      |       1 */    uint8_t session_finalized;
+/*     58      |       1 */    uint8_t header_written;
+/*     59      |       1 */    uint8_t startup_report_written;
+/*     60      |       1 */    uint8_t decoder_profile_queued;
+/*     61      |       1 */    uint8_t bootstrap_config_queued;
+/*     62      |       2 */    uint16_t sink_offset_mod_quantum;
+/*     64      |      32 */    SystemMissionSnapshotStatus snapshot;
+
+                               /* total size (bytes):   96 */
+                             }
+LAYOUT_logger_bus
+ADDR=0x2000d0c8 SIZE=44
+type = struct {
+/*      0      |       4 */    uint32_t accepted_count;
+/*      4      |       4 */    uint32_t dequeued_count;
+/*      8      |       4 */    uint32_t overflow_count;
+/*     12      |       4 */    uint32_t bootstrap_suppressed_count;
+/*     16      |       4 */    uint32_t state_reject_count;
+/*     20      |       4 */    uint32_t capacity_reject_count;
+/*     24      |       4 */    uint32_t disabled_suppressed_count;
+/*     28      |       4 */    uint32_t disabled_discarded_count;
+/*     32      |       1 */    LoggerBusStartupState startup_state;
+/* XXX  1-byte hole      */
+/*     34      |       2 */    uint16_t normal_count;
+/*     36      |       2 */    uint16_t estimator_count;
+/*     38      |       2 */    uint16_t normal_high_water;
+/*     40      |       2 */    uint16_t estimator_high_water;
+/* XXX  2-byte padding   */
+
+                               /* total size (bytes):   44 */
+                             }
+LAYOUT_logger_request
+ADDR=0x10009ca8 SIZE=880
+type = struct {
+/*      0      |     132 */    FlightLogSystemConfigRecord config;
+/*    132      |     480 */    SystemLogStreamConfig streams[40];
+/*    612      |     236 */    LoggerBusStartRecords start;
+/*    848      |       8 */    uint64_t timestamp_us;
+/*    856      |       4 */    uint32_t generation;
+/*    860      |       2 */    uint16_t cursor;
+/*    862      |       2 */    uint16_t count;
+/*    864      |       1 */    uint8_t is_start;
+/*    865      |       1 */    LoggerRequestPhase phase;
+/*    866      |       1 */    uint8_t io_fault;
+/* XXX  1-byte hole      */
+/*    868      |       4 */    uint32_t next_generation;
+/*    872      |       4 */    uint32_t acknowledged_generation;
+/* XXX  4-byte padding   */
+
+                               /* total size (bytes):  880 */
+                             }
+LAYOUT_storage
+ADDR=0x20019330 SIZE=80
+type = struct {
+/*      0      |       8 */    uint64_t last_write_timestamp_us;
+/*      8      |       8 */    uint64_t last_sync_timestamp_us;
+/*     16      |       8 */    uint64_t capacity_bytes;
+/*     24      |       8 */    uint64_t free_bytes;
+/*     32      |       4 */    uint32_t write_count;
+/*     36      |       4 */    uint32_t sync_count;
+/*     40      |       4 */    uint32_t error_count;
+/* XXX  4-byte hole      */
+/*     48      |       8 */    uint64_t bytes_written;
+/*     56      |       8 */    uint64_t max_write_latency_us;
+/*     64      |       8 */    uint64_t max_sync_latency_us;
+/*     72      |       1 */    uint8_t initialized;
+/*     73      |       1 */    uint8_t mounted;
+/*     74      |       1 */    uint8_t file_open;
+/*     75      |       1 */    uint8_t healthy;
+/*     76      |       1 */    uint8_t initial_probe_complete;
+/*     77      |       1 */    uint8_t initial_medium_unavailable;
+/* XXX  2-byte padding   */
+
+                               /* total size (bytes):   80 */
+                             }
+LAYOUT_file_open
+ADDR=0x20019380 SIZE=1
+type = unsigned char
+LAYOUT_mission_id
+ADDR=0x2001932c SIZE=4
+type = unsigned long
+LAYOUT_sink
+ADDR=0x2001a090 SIZE=40
+type = struct {
+/*      0      |       8 */    uint64_t bytes_written;
+/*      8      |       8 */    uint64_t last_write_timestamp_us;
+/*     16      |       8 */    uint64_t last_flush_timestamp_us;
+/*     24      |       4 */    uint32_t write_count;
+/*     28      |       4 */    uint32_t flush_count;
+/*     32      |       4 */    uint32_t error_count;
+/*     36      |       1 */    uint8_t initialized;
+/*     37      |       1 */    uint8_t session_active;
+/*     38      |       1 */    uint8_t healthy;
+/* XXX  1-byte padding   */
+
+                               /* total size (bytes):   40 */
+                             }
+LAYOUT_file_path
+ADDR=0x2001a05c SIZE=48
+type = char [48]
+LAYOUT_first_mount
+ADDR=0x20000404 SIZE=4
+type = volatile unsigned long
+LAYOUT_normal_queue
+ADDR=0x20013510 SIZE=28
+type = struct {
+/*      0      |       4 */    uint8_t *storage;
+/*      4      |       2 */    uint16_t capacity;
+/*      6      |       2 */    uint16_t item_size;
+/*      8      |       2 */    volatile uint16_t head;
+/*     10      |       2 */    volatile uint16_t tail;
+/*     12      |       2 */    uint16_t head_index;
+/*     14      |       2 */    uint16_t tail_index;
+/*     16      |       4 */    volatile uint32_t push_count;
+/*     20      |       4 */    volatile uint32_t pop_count;
+/*     24      |       4 */    volatile uint32_t overflow_count;
+
+                               /* total size (bytes):   28 */
+                             }
+LAYOUT_estimator_queue
+ADDR=0x2000f674 SIZE=28
+type = struct {
+/*      0      |       4 */    uint8_t *storage;
+/*      4      |       2 */    uint16_t capacity;
+/*      6      |       2 */    uint16_t item_size;
+/*      8      |       2 */    volatile uint16_t head;
+/*     10      |       2 */    volatile uint16_t tail;
+/*     12      |       2 */    uint16_t head_index;
+/*     14      |       2 */    uint16_t tail_index;
+/*     16      |       4 */    volatile uint32_t push_count;
+/*     20      |       4 */    volatile uint32_t pop_count;
+/*     24      |       4 */    volatile uint32_t overflow_count;
+
+                               /* total size (bytes):   28 */
+                             }
+LAYOUT_stack_Device
+ADDR=0x10006140 SIZE=2560
+type = unsigned long [640]
+LAYOUT_stack_INS
+ADDR=0x10005540 SIZE=3072
+type = unsigned long [768]
+LAYOUT_stack_Estimator
+ADDR=0x10004540 SIZE=4096
+type = unsigned long [1024]
+LAYOUT_stack_Flight
+ADDR=0x10003540 SIZE=4096
+type = unsigned long [1024]
+LAYOUT_stack_Logger
+ADDR=0x10002940 SIZE=3072
+type = unsigned long [768]
+LAYOUT_stack_Serial
+ADDR=0x10001140 SIZE=6144
+type = unsigned long [1536]
+LAYOUT_stack_Telemetry
+ADDR=0x10000140 SIZE=4096
+type = unsigned long [1024]
+
+--- STDERR ---
+warning: could not convert 's_estimator_task_timing' from the host encoding (CP1252) to UTF-32.
+This normally should not happen, please file a bug report.
