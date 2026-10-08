@@ -662,18 +662,6 @@ class DevicesPage(ScrollableLocalizedPage):
                     )
                 layout.addWidget(check)
                 self.device_checks[component.component_id] = check
-                if component.component_class == "storage":
-                    for selected_instance in self._instances:
-                        if selected_instance.plugin_id != component.component_id:
-                            continue
-                        remove_button = QPushButton(self._translator.Text_Get("action.remove_device")
-                            + " " + selected_instance.instance_id)
-                        remove_button.setObjectName(f"removeDeviceButton_{selected_instance.instance_id}")
-                        remove_button.clicked.connect(
-                            lambda _checked=False, identity=selected_instance.instance_id:
-                                self.instanceChanged.emit(identity, ""))
-                        layout.addWidget(remove_button)
-                        self.remove_buttons[selected_instance.instance_id] = remove_button
         other_populated = bool(other_components) or (
             "other_sensors" in populated_groups
         )

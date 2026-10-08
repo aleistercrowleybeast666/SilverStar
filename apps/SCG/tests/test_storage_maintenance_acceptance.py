@@ -121,7 +121,7 @@ def test_storage_direct_entrypoint_rejects_wrong_platform_and_second_card(window
     assert len(errors) == 2 and window._model.device_instances == original
 
 
-def test_duplicate_import_has_individual_storage_removal(window, tmp_path):
+def test_duplicate_import_retained_without_storage_delete_buttons(window, tmp_path):
     model = ReferenceProject_Create(catalog=window._service.catalog)
     model.device_instances.append(DeviceInstance('extra_card', _F4_STORAGE))
     path = tmp_path / 'SilverStar.ssproject'
@@ -130,13 +130,15 @@ def test_duplicate_import_has_individual_storage_removal(window, tmp_path):
     window._Error_Show = errors.append
     window._Project_Open(path)
     assert len([item for item in window._model.device_instances if item.plugin == _F4_STORAGE]) == 2
-    assert 'storage0' in window.devices_page.remove_buttons
-    assert 'extra_card' in window.devices_page.remove_buttons
-    window.devices_page.remove_buttons['extra_card'].click()
+    assert 'storage0' not in window.devices_page.remove_buttons
+    assert 'extra_card' not in window.devices_page.remove_buttons
+    assert StorageBinding_Resolve(window._model, window._service.catalog).issues[0].code == 'STORAGE_DEVICE_AMBIGUOUS'
+    original = path.read_bytes()
+    window.devices_page.device_checks[_F4_STORAGE].click()
     assert not errors
     assert window._model.DeviceInstance_Get('extra_card') is None
-    assert window._model.DeviceInstance_Get('storage0') is not None
-    SourceGraph_Resolve(window._model, window._service.catalog)
+    assert window._model.DeviceInstance_Get('storage0') is None
+    assert path.read_bytes() == original
 
 
 def test_old_official_project_open_does_not_inject_storage(window, tmp_path, workspace_root):

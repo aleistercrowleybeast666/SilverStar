@@ -1,0 +1,206 @@
+{
+  "utc": "2026-10-08T16:55:11.294723+00:00",
+  "base_head": "999b5417818ac74c51caf2ff3abf51b8c7f1339e",
+  "source_sha256": {
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "d1087f2b397ecebb5713273bceda85c4f2eee63486fa0e897398bbec9a24568b",
+    "apps/SCG/src/silverstar_fccg/ui/pages/components.py": "50a6f11a09b33120961e92154fdaa49683208f1cec1c4d3e3412e2013e159776",
+    "apps/SCG/tests/test_storage_maintenance_acceptance.py": "40e348791c595d0f260e79cf0f5bce53f73b47a470ca5edbac42d203f2018220",
+    "apps/SCG/tests/test_compact_logging_user_acceptance.py": "08ad5c0a2e2b84c4f5c844fefe5a5a9b45126f341607fe32012736782295caaa",
+    "docs/SCG_COMPACT_LOGGING_GUI_20261008.md": "e54e5aa54e369030c26f4d122c9a3db2768805f49438b7e2a2cf531064f5af46"
+  },
+  "dirty_snapshot_sha256": "9e0e087d6595392d70672436e8f3e9ea4d4d6c3266941f9787d39be1b3012e5f",
+  "final_test": {
+    "head": "999b5417818ac74c51caf2ff3abf51b8c7f1339e",
+    "source_sha256": {
+      "apps/SCG/src/silverstar_fccg/ui/main_window.py": "d1087f2b397ecebb5713273bceda85c4f2eee63486fa0e897398bbec9a24568b",
+      "apps/SCG/src/silverstar_fccg/ui/pages/components.py": "50a6f11a09b33120961e92154fdaa49683208f1cec1c4d3e3412e2013e159776",
+      "apps/SCG/tests/test_storage_maintenance_acceptance.py": "40e348791c595d0f260e79cf0f5bce53f73b47a470ca5edbac42d203f2018220",
+      "apps/SCG/tests/test_compact_logging_user_acceptance.py": "08ad5c0a2e2b84c4f5c844fefe5a5a9b45126f341607fe32012736782295caaa"
+    },
+    "dirty_snapshot_sha256": "9e0e087d6595392d70672436e8f3e9ea4d4d6c3266941f9787d39be1b3012e5f",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "D:\\python_software\\SilverStar\\.work\\gui012_20261008\\run_pytest.py",
+      "tests/test_compact_logging_user_acceptance.py",
+      "tests/test_storage_maintenance_acceptance.py",
+      "tests/test_feature_tiers.py",
+      "tests/test_optional_protocols.py",
+      "-k",
+      "not protocol_combos_and_logging_disabled_state_are_stable",
+      "-q",
+      "--basetemp=.work/cl_final",
+      "--tb=short"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\SCG",
+    "env": {
+      "QT_QPA_PLATFORM": "offscreen",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "utc_start": "2026-10-08T16:49:49.391309+00:00",
+    "exit_code": 0,
+    "elapsed_s": 127.62011820000771,
+    "utc_end": "2026-10-08T16:51:57.011456+00:00",
+    "log_sha256": "999d9fbe52256bfa9495f1f405343aeebb83b1644ebc4340c7492454d2ebc9b0",
+    "sources_unchanged": {
+      "apps/SCG/src/silverstar_fccg/ui/main_window.py": true,
+      "apps/SCG/src/silverstar_fccg/ui/pages/components.py": true,
+      "apps/SCG/tests/test_storage_maintenance_acceptance.py": true,
+      "apps/SCG/tests/test_compact_logging_user_acceptance.py": true
+    }
+  },
+  "pre_test": {
+    "command": [
+      "../../apps/FLP/.venv/Scripts/python.exe",
+      "-B",
+      "../../.work/gui012_20261008/run_pytest.py",
+      "tests/test_compact_logging_user_acceptance.py",
+      "-q",
+      "--basetemp=.work/cl_pre",
+      "--tb=short"
+    ],
+    "cwd": "D:\\python_software\\SilverStar\\apps\\SCG",
+    "exit_code": 1,
+    "result": "4 failed / 2 passed; delete-button expectation in 3 source paths and auto-disabled logging restoration failed.",
+    "scope": "Original 6 new cases before additional SF6-stream assertion and reopen isolation test. Production source exactly base HEAD; baseline Git blobs archived."
+  },
+  "intermediate_test": {
+    "result": "49 passed / 1 deselected / exit0",
+    "credit_for_final": false,
+    "note": "Product source was further refined during this preliminary run. Final unchanged-source run separately executed and recorded."
+  },
+  "first_probe_error": "Wrong diagnostic import CompactLogStreams_Get in first attempt; log retained; not a product failure.",
+  "render_comparison": {
+    "input_sha256": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5",
+    "input_unchanged": true,
+    "generated_count": 22,
+    "all_generated_bytes_equal_prior_verified_sample": true,
+    "generated": {
+      "Generated/project_sources.mk": "155db275669fc8b21f021ca6c853ee92444c57a892ac6a6bd7b27e9f29c653b0",
+      "Generated/memory_audit.py": "646734e8f268be524e5f888c865af7b63e2ea00de9e6af71dc2839466b13869f",
+      "Generated/module.mk": "e6ab9444d0d785a9d126755e6c1d6ea32ddb33054722de8c5675e460d20c8e2e",
+      "Generated/project_semantics.json": "ae60d9e78009d6f99a97dfaad458255f9eedaeac828e93b041ee2f3fe210dde9",
+      "Generated/Inc/project_capability_routes.h": "68e8d297cba2418e3e9d54ed16906e999ec2defefcd908888fa83bf5354cb5b2",
+      "Generated/Inc/project_device_build_capabilities.h": "735917000047491122185cd40353c2fdb4b0aac4636968f51ea233ba4a180bee",
+      "Generated/Inc/project_algorithm_parameters.h": "a655e7e0964252a959e23e59369da5bb7d94b8fc70500e6211659ce270daf33e",
+      "Generated/Inc/project_flight_config.h": "0ed2f76db7ca7b2ca73c7a579008286e1916b2c51cf1418375c93d388722fd52",
+      "Generated/Inc/air_link_config.h": "f0ccc4b3380f7dab45d259862dceff135a1b798f23b69e1eb592230d10cff1b9",
+      "Generated/Inc/project_device_instances.h": "ae8cf72069c44a53398b4c950d0f6cca4d8550a93507644402b8719b2b5e1f95",
+      "Generated/Inc/project_resources.h": "ec162a07c17211145f62bcf2308e5beb81a8abc0ae508c0c5f1e4d61120e3ce2",
+      "Generated/Inc/project_storage_binding.h": "1cac55d35dbd70bc6cf5305dbf9e7c877fa9eded2143a2d2e31f7652c6f5d3f4",
+      "Generated/Src/platform_resources.c": "3d429b5ff33993edade52600923dfa8ba524d1a85f55943a604d4f3e3c1e657b",
+      "Generated/Src/project_capability_routes.c": "3ac6a4b817c2228cf75b782f8ab3737768e2308b174a3cf9e581287872050f3f",
+      "Generated/Src/project_device_instances.c": "051f2e55df2faeb9bf0973c64ae4a5c6709643b8c89a2b621ed2f935855be6bf",
+      "Generated/Src/project_resources.c": "6e713c8d4e41ae835a6b7654834287c4310cf16adafda9093bc64289296dca98",
+      "Generated/Src/project_metadata.c": "bba3aed1cc73043a10cfd126a7759728a10de53e3769e2563fb209a4b12feadf",
+      "Generated/Src/project_mission_parameters.c": "05fd966ad4118ba5993e276368850d60b81fd973752e71ccbee1ea165321785b",
+      "Generated/Inc/project_log_config.h": "364e6b29b70366d74d63932c34dd803d9f3f6c6ea7d3e7f6daf4b2731dd4192d",
+      "Generated/Inc/project_log_decoder_profile.h": "dd91708d50aab35355a7d04a0739fb07a60fe6839456cb7b4ae0467603a92bf2",
+      "Generated/Src/project_log_config.c": "f642124cd04fb1e8155a682d2eb894310fdbd2bc0de1da0571c50887020c7753",
+      "Generated/Src/project_log_decoder_profile.c": "ee5baec0a73077cdafee252ba8715045db8ee39e4b894c6846be3cd059392616"
+    },
+    "scope": "Normal unchanged saved sample. New GUI restoration can enable logging for a previously auto-disabled edited configuration; that intentional configuration change is not claimed byte-identical.",
+    "prior_verified_bin_sha256": "eac468a93aff1a7602e92f5088a2cab597b3275ccda8b45e2c0dc14ba4c3ccc7"
+  },
+  "visual_qa": [
+    {
+      "tier": "compact",
+      "storage_instances": [
+        "storage0"
+      ],
+      "storage_remove_buttons": [],
+      "logging_entries": [
+        {
+          "text": "\u4e0d\u4f7f\u7528",
+          "selected": false,
+          "enabled": true
+        },
+        {
+          "text": "\u98de\u884c\u65e5\u5fd7\u683c\u5f0f 0.0",
+          "selected": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "tier": "minimal",
+      "storage_instances": [
+        "storage0"
+      ],
+      "storage_remove_buttons": [],
+      "logging_entries": [
+        {
+          "text": "\u4e0d\u4f7f\u7528",
+          "selected": false,
+          "enabled": true
+        },
+        {
+          "text": "\u98de\u884c\u65e5\u5fd7\u683c\u5f0f 0.0",
+          "selected": true,
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "tools": {
+    "python": "Python 3.14.0",
+    "qt": "6.10.1",
+    "pytest": "9.1.1"
+  },
+  "frozen_owner_files_unchanged": {
+    "apps/SCG/src/silverstar_fccg/generator/render.py": "6a75a0480cc0a84f44b70f898a3d7cad9b4dc56b01c3ff54b5e60cedb3576c19",
+    "apps/SCG/src/silverstar_fccg/project/feature_tiers.py": "4982548ffec96bc36c652967e3777ed3f702fab14480fd777288b2069ea5be8d",
+    "apps/SCG/src/silverstar_fccg/project/protocols.py": "d5d3d8675ce1e65cf6ebe77c13dd0d70fb076eda330a377d33f35489162f4ba5",
+    "apps/SCG/src/silverstar_fccg/project/configuration.py": "2ef39206ef8c96de906a7785f5e65e758a11a5a4d38b6fa7064fdea502e2f154",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py": "166ded59c129517d10c016720ed405092cae37b474d6b82d59fb36b4d6a4ec95",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1": "8ebc4ffd23f556cbfc0840b4260c4b692cc0a6a749bbc1d46da3d5a0c295e323"
+  },
+  "behavior": "Remove new TF/SD per-instance delete buttons. Only explicit Compact switch can restore same-session transport-cleared logging choice/streams after availability becomes valid. Explicit None and imported/off settings preserved; new/open clears session cache.",
+  "uncertainty": "User current unsaved project was not inspected. Reproduced one storage-toggle path; no universal Compact logging-off default found. Saved None has no trustworthy automatic/manual provenance and is preserved.",
+  "expected_configuration_effect": "Restoring an auto-cleared logging choice enables its firmware logging contract for that edited model; cannot claim its new bytes equal a logging-disabled model.",
+  "firmware_checks": "No new ARM/Host/analyzer/stack run; no firmware payload/generator/checker modification. Prior 999b541 gate evidence retains its exact scope.",
+  "critical_contract_review": "NOT_PROVEN, unchanged",
+  "hardware": "NOT RUN",
+  "user_project": "Not touched",
+  "push": "Not performed",
+  "archive_sha256": "fd8949ddcf37c8adbfabe866c251c8fe1d9aeef4c4f32c164841e7546fc31849",
+  "members": {
+    ".work/CompactLoggingDefault_20261008/before_probe.json": "2abfaf9be79d9cd34ab6249547bb44385228f5313f0d78e3c42b3a138e692f5f",
+    ".work/CompactLoggingDefault_20261008/before_probe.log": "71b0aa0b4194dd61e5d2d6afb5c20d7a8831832ad9568e25502e6ba0900d7636",
+    ".work/CompactLoggingDefault_20261008/before_probe2.log": "4e7ecfc9b951277193eff41cd99f920fb2ae90853624cdbda02c526094108647",
+    ".work/CompactLoggingDefault_20261008/delivery_dirty_snapshot.patch": "9e0e087d6595392d70672436e8f3e9ea4d4d6c3266941f9787d39be1b3012e5f",
+    ".work/CompactLoggingDefault_20261008/final.log": "999d9fbe52256bfa9495f1f405343aeebb83b1644ebc4340c7492454d2ebc9b0",
+    ".work/CompactLoggingDefault_20261008/final_dirty_snapshot.patch": "9e0e087d6595392d70672436e8f3e9ea4d4d6c3266941f9787d39be1b3012e5f",
+    ".work/CompactLoggingDefault_20261008/final_result.json": "e36aee4c888104d80ba3f5fb4ac2fba34a4d1c132671e8d3bd7123210d83a945",
+    ".work/CompactLoggingDefault_20261008/package_evidence.py": "eb7fd887a52a39563e5bd51cb6b8fbc354cc15810ea84ddd9b112db2c08905bd",
+    ".work/CompactLoggingDefault_20261008/post.exit.txt": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    ".work/CompactLoggingDefault_20261008/post.log": "ff31c2ff0adaa46acbefdc2cf469119d596c489ab7fb9a64997945297c793925",
+    ".work/CompactLoggingDefault_20261008/pre.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    ".work/CompactLoggingDefault_20261008/pre.log": "0a27a28a45352904c4b4e7e4b6827cd7079485987f1b88f80375e3379a148772",
+    ".work/CompactLoggingDefault_20261008/probe.py": "e4ff81d504bd656c1535f6bc9556614e5f8072cea89a419769b8dc85a5f80937",
+    ".work/CompactLoggingDefault_20261008/render_compare.py": "ac504393f21fdfb8ea734492b423090597dc99708915cb09eaa4163c842eef42",
+    ".work/CompactLoggingDefault_20261008/render_comparison.json": "73f3bdb57e680a8a4bdd6f54bd605739c82292fec2cc9e893c35906d9802d8e2",
+    ".work/CompactLoggingDefault_20261008/run_final.py": "0db8dee4f960e4ef876ec6d991858889c3dc695a554bfb47f9daf2b3257826de",
+    ".work/CompactLoggingDefault_20261008/visual_qa.exit.txt": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    ".work/CompactLoggingDefault_20261008/visual_qa.log": "4866dca008426a899f54cff1f1f8579f612b70b1fa1c75835659320529150891",
+    ".work/CompactLoggingDefault_20261008/visual_qa.py": "cc95133422e822340933ed451cf6fea37dc29712e755c97959bb145342429b77",
+    ".work/CompactLoggingDefault_20261008/visual/compact_logging.png": "4249cfcb368a20e2a5a7c894d888e4609244d5ffcff85cc1a1187ed0ed086ca6",
+    ".work/CompactLoggingDefault_20261008/visual/compact_storage.png": "77ec757abf99cffc70fc400b2ad252019e0b8880e6344b48d77d7c9ed6d409d1",
+    ".work/CompactLoggingDefault_20261008/visual/minimal_logging.png": "bef012a5cd0bd537248432fc2433d7d8da1a6336dae155e8e8a778d70b04be16",
+    ".work/CompactLoggingDefault_20261008/visual/minimal_storage.png": "77ec757abf99cffc70fc400b2ad252019e0b8880e6344b48d77d7c9ed6d409d1",
+    ".work/CompactLoggingDefault_20261008/visual/result.json": "9d55ac91fc3c5d8b5cd5b71eaf466505caae05a2c4df38dc68944beaa763d41d",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "d1087f2b397ecebb5713273bceda85c4f2eee63486fa0e897398bbec9a24568b",
+    "apps/SCG/src/silverstar_fccg/ui/pages/components.py": "50a6f11a09b33120961e92154fdaa49683208f1cec1c4d3e3412e2013e159776",
+    "apps/SCG/tests/test_storage_maintenance_acceptance.py": "40e348791c595d0f260e79cf0f5bce53f73b47a470ca5edbac42d203f2018220",
+    "apps/SCG/tests/test_compact_logging_user_acceptance.py": "08ad5c0a2e2b84c4f5c844fefe5a5a9b45126f341607fe32012736782295caaa",
+    "docs/SCG_COMPACT_LOGGING_GUI_20261008.md": "e54e5aa54e369030c26f4d122c9a3db2768805f49438b7e2a2cf531064f5af46",
+    ".work/gui012_20261008/run_pytest.py": "8d97e7ff614032739364afe4488c57054ebb6d7d725512f73b3d9df341395c81",
+    "docs/evidence/nightly_software_20261008/normal_test_paths.py": "98525ae940fd5e735b9671f3ec593af4a47fad1798573283fc7fea9697fd6a81",
+    "docs/evidence/nightly_software_20261008/closeout_test_paths.py": "109f192d10f065921f47216a69600b7ab1310345e109abb25aef90e952c4d403",
+    "docs/evidence/logger_health_retest_20261008/generated_config.ssproject": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5",
+    "docs/evidence/scg_decoder_binding_20261008/manifest.json": "926afbde13fcb954d46bbef2d8ece821fa92a050014bc16ce76d69f71221e8ed",
+    "baseline_999b541/apps/SCG/src/silverstar_fccg/ui/main_window.py": "e6c807bae982d035cdc7db488b491845c40575a57c47843e00f6951f0833fc93",
+    "baseline_999b541/apps/SCG/src/silverstar_fccg/ui/pages/components.py": "5db53fb738ae360585a530be07b4ad911055b172a30b9d9ad27d3b549d574f89",
+    "baseline_999b541/apps/SCG/tests/test_storage_maintenance_acceptance.py": "fd7a61754c1a422bb1c32dee6060f437d5762c78362bf660a0b5d6286bd15dc6"
+  }
+}

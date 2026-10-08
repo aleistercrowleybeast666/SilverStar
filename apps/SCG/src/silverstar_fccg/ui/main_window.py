@@ -228,6 +228,8 @@ class MainWindow(QMainWindow):
         self._disabled_strategy_choices: set[str] = set()
         self._disabled_mode_choices: set[tuple[str, str]] = set()
         self._selection_restore_project = None
+        self._logging_transport_choice: ProtocolSelection | None = None
+        self._logging_transport_streams: list[LogStreamConfig] | None = None
         self._retired_workers: list[FunctionWorker] = []
         self._progress_hide_timer = QTimer(self)
         self._progress_hide_timer.setSingleShot(True)
@@ -1096,6 +1098,16 @@ class MainWindow(QMainWindow):
         notes = []
         def mutate(model: ProjectModel) -> None:
             notes.extend(FeatureTier_Apply(model, tier, self._service.catalog))
+            choice = self._logging_transport_choice
+            if (tier == "compact" and model.protocols.get("logging") is None and choice is not None
+                    and self._selection_restore_project == (self._project_root, self._model.identity.name)):
+                availability = ProtocolProfileAvailabilities_Get(model, self._service.catalog).get(
+                    ("logging", choice.component, choice.profile))
+                if availability is not None and availability.available:
+                    model.protocols["logging"] = deepcopy(choice)
+                    if self._logging_transport_streams is not None:
+                        model.logging_streams = deepcopy(self._logging_transport_streams)
+                    notes.append("logging:restored_transport_choice")
         result = self._ProjectConfiguration_Change(mutate)
         if result is not None:
             text = self._translator.Text_Get("feature_tier.changed",
@@ -1117,6 +1129,11 @@ class MainWindow(QMainWindow):
         if self._displaying_model:
             return None
         candidate = deepcopy(self._model)
+        restore_project = (self._project_root, self._model.identity.name)
+        logging_transport_choice = (self._logging_transport_choice
+            if self._selection_restore_project == restore_project else None)
+        logging_transport_streams = (self._logging_transport_streams
+            if self._selection_restore_project == restore_project else None)
         if logging_snapshot is None:
             self._LoggingState_Apply(candidate)
         else:
@@ -1147,6 +1164,10 @@ class MainWindow(QMainWindow):
                     raise ValueError(self._translator.Text_Get("configuration.feature_tier_devices_review")
                                      + "\n" + "\n".join(errors))
             result = self._service.ProjectConfiguration_Reconcile(candidate)
+            if any(notice.code == "configuration.protocol_transport_removed" and notice.slot == "logging"
+                   for notice in result.notices):
+                logging_transport_choice = deepcopy(candidate.protocols.get("logging"))
+                logging_transport_streams = deepcopy(candidate.logging_streams)
             restore_project = (self._project_root, self._model.identity.name)
             if self._selection_restore_project != restore_project:
                 self._disabled_strategy_choices.clear()
@@ -1184,6 +1205,8 @@ class MainWindow(QMainWindow):
             self._Error_Show(error)
             return None
         self._model = result.model
+        self._logging_transport_choice = logging_transport_choice
+        self._logging_transport_streams = logging_transport_streams
         self._generation_plan = None
         if result.notices:
             self.status_label.setText(
@@ -2361,12 +2384,15 @@ class MainWindow(QMainWindow):
             self._Project_Refresh()
             return
         if selection is None:
-            self._ProjectConfiguration_Change(
+            result = self._ProjectConfiguration_Change(
                 lambda candidate: candidate.protocols.__setitem__(
                     category, None
                 ),
                 logging_availability_changed=category == "logging",
             )
+            if category == "logging" and result is not None:
+                self._logging_transport_choice = None
+                self._logging_transport_streams = None
             return
         if not isinstance(selection, tuple) or len(selection) != 2:
             return
@@ -2684,6 +2710,8 @@ class MainWindow(QMainWindow):
         self._pending_strategy_changes.clear()
         self.algorithm_parameters_page.alignment_editor.Draft_Discard()
         self._model = model
+        self._logging_transport_choice = None
+        self._logging_transport_streams = None
         self._project_root = project_root
         self._legacy_source_bytes = None
         self._generation_plan = None
@@ -2721,6 +2749,8 @@ class MainWindow(QMainWindow):
             self._pending_strategy_changes.clear()
             self.algorithm_parameters_page.alignment_editor.Draft_Discard()
             self._model = reconciled
+            self._logging_transport_choice = None
+            self._logging_transport_streams = None
             self._legacy_source_bytes = source_bytes
             self._project_root = (
                 path.resolve() if path.is_dir() else path.resolve().parent
