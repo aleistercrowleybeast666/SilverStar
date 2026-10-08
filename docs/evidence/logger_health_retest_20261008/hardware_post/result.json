@@ -1,0 +1,224 @@
+{
+  "stage": "post",
+  "argv": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set size [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($size != 512)} {error {Target mismatch; stop}}; echo \"TARGET_ID=$id FLASH_KIB=$size\"; echo \"UID=[read_memory 0x1FFF7A10 32 3]\"; echo \"CORE_BEFORE=[read_memory 0xE000EDF0 32 1]\"; echo \"FIELD_lifecycle=[read_memory 0x2001a214 8 1]\"; echo \"FIELD_initialized=[read_memory 0x2000d0c5 8 1]\"; echo \"FIELD_accepting=[read_memory 0x2000d0c2 8 1]\"; echo \"FIELD_finalization=[read_memory 0x2000d0c0 8 1]\"; echo \"FIELD_bus=[read_memory 0x2000d0c8 8 44]\"; echo \"FIELD_task=[read_memory 0x20013648 8 112]\"; echo \"FIELD_mission_id=[read_memory 0x200136f8 8 4]\"; echo \"FIELD_calibration_generation=[read_memory 0x20013704 8 4]\"; echo \"FIELD_mag_hash=[read_memory 0x20013710 8 4]\"; echo \"FIELD_snapshot_sequence=[read_memory 0x20013700 8 4]\"; echo \"FIELD_snapshot_ready=[read_memory 0x200136ac 8 1]\"; echo \"FIELD_session_active=[read_memory 0x200136f0 8 1]\"; echo \"FIELD_session_finalized=[read_memory 0x200136f1 8 1]\"; echo \"FIELD_path=[read_memory 0x2001a05c 8 48]\"; echo \"FIELD_sink_health=[read_memory 0x2001a090 8 40]\"; echo \"FIELD_assert_fault=[read_memory 0x2000bec8 8 72]\"; echo \"FIELD_estimator_running=[read_memory 0x10009ab9 8 1]\"; echo \"FIELD_nav_timestamp=[read_memory 0x10006bd8 8 8]\"; echo \"FIELD_nav_sequence=[read_memory 0x10006be0 8 4]\"; echo \"FIELD_nav_health_flags=[read_memory 0x10006d58 8 4]\"; echo \"FIELD_monotonic_end_us=[read_memory 0x2000a800 8 8]\"; echo \"FIELD_health_groups=[read_memory 0x10000000 8 320]\"; echo \"FIELD_previous_health_state=[read_memory 0x2000cde4 8 5]\"; echo \"FIELD_group0_last_successful_fusion_us=[read_memory 0x10000018 8 8]\"; echo \"FIELD_group0_has_success=[read_memory 0x1000003b 8 1]\"; echo \"FIELD_group0_state=[read_memory 0x10000038 8 1]\"; echo \"FIELD_group0_reason=[read_memory 0x1000003a 8 1]\"; echo \"FIELD_group1_last_successful_fusion_us=[read_memory 0x10000058 8 8]\"; echo \"FIELD_group1_has_success=[read_memory 0x1000007b 8 1]\"; echo \"FIELD_group1_state=[read_memory 0x10000078 8 1]\"; echo \"FIELD_group1_reason=[read_memory 0x1000007a 8 1]\"; echo \"FIELD_group2_last_successful_fusion_us=[read_memory 0x10000098 8 8]\"; echo \"FIELD_group2_has_success=[read_memory 0x100000bb 8 1]\"; echo \"FIELD_group2_state=[read_memory 0x100000b8 8 1]\"; echo \"FIELD_group2_reason=[read_memory 0x100000ba 8 1]\"; echo \"FIELD_group3_last_successful_fusion_us=[read_memory 0x100000d8 8 8]\"; echo \"FIELD_group3_has_success=[read_memory 0x100000fb 8 1]\"; echo \"FIELD_group3_state=[read_memory 0x100000f8 8 1]\"; echo \"FIELD_group3_reason=[read_memory 0x100000fa 8 1]\"; echo \"FIELD_group4_last_successful_fusion_us=[read_memory 0x10000118 8 8]\"; echo \"FIELD_group4_has_success=[read_memory 0x1000013b 8 1]\"; echo \"FIELD_group4_state=[read_memory 0x10000138 8 1]\"; echo \"FIELD_group4_reason=[read_memory 0x1000013a 8 1]\"; echo \"CORE_AFTER=[read_memory 0xE000EDF0 32 1]\"; shutdown"
+  ],
+  "utc_start": "2026-10-08T09:27:04.508997+00:00",
+  "image_sha256": "cf1a359c9212354b63b4af8b83f0db4008897eb333d35d220d8eec4a2f33da4c",
+  "elf_sha256": "bb57ae0d8d04c53048bf19d44d54b97ec4fcebec11875c8a4bfc76f963a077f4",
+  "flash": false,
+  "reset": false,
+  "halt": false,
+  "active_mission_halt": false,
+  "calibration_command": false,
+  "ground_flash": false,
+  "mass_erase": false,
+  "options": false,
+  "timeout_s": 60,
+  "exit_code": 0,
+  "utc_end": "2026-10-08T09:27:04.712312+00:00",
+  "log_sha256": "4279ca92b1bda10582d1071ec1ab634f55607572074184600fccf44ae40ae190",
+  "uid_words": [
+    4653137,
+    1110593540,
+    540095289
+  ],
+  "core_values": [
+    16842753,
+    16842753
+  ],
+  "running_after": true,
+  "fields": {
+    "lifecycle": {
+      "hex": "06",
+      "value": 6
+    },
+    "initialized": {
+      "hex": "01",
+      "value": 1
+    },
+    "accepting": {
+      "hex": "00",
+      "value": 0
+    },
+    "finalization": {
+      "hex": "03",
+      "value": 3
+    },
+    "bus": {
+      "hex": "8427000084270000000000000000000000000000000000000000000000000000010000000000170007000000",
+      "value": 14952658880685661667760690820437515648805769581874126362022795339106541056822254342119971117606788
+    },
+    "task": {
+      "hex": "0af3030000000000c106220000000000165a000000000000cf7c0a0f00000000b82700006e4502008427000019010000000000000000000000000000010000000000000001000000000000000000000033000000010000000100000001000000311d4806010000000000000000000000",
+      "value": 6831633322568365008963666965611241827958004171903033924556646705319464119388198164676022686310348539309190353649306221207492039380990154621268935562691755070388898020110169785367333975808921244443004824881548803155592974018963784500867494666
+    },
+    "mission_id": {
+      "hex": "33000000",
+      "value": 51
+    },
+    "calibration_generation": {
+      "hex": "01000000",
+      "value": 1
+    },
+    "mag_hash": {
+      "hex": "311d4806",
+      "value": 105389361
+    },
+    "snapshot_sequence": {
+      "hex": "01000000",
+      "value": 1
+    },
+    "snapshot_ready": {
+      "hex": "01",
+      "value": 1
+    },
+    "session_active": {
+      "hex": "00",
+      "value": 0
+    },
+    "session_finalized": {
+      "hex": "01",
+      "value": 1
+    },
+    "path": {
+      "hex": "303a2f6d697373696f6e732f3030303035312f666c696768742e73736c6f670000000000000000000000000000000000",
+      "value": 182754265349203838557458550529755824395329614999008015805215442062757804592,
+      "text": "0:/missions/000051/flight.sslog"
+    },
+    "sink_health": {
+      "hex": "df680d0000000000f703291000000000902b38100000000019010000dbeb01000000000001000100",
+      "value": 32593072944588187170331948081394234072996735709378980904249679642276305562397487073418111199
+    },
+    "assert_fault": {
+      "hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "value": 0
+    },
+    "estimator_running": {
+      "hex": "01",
+      "value": 1
+    },
+    "nav_timestamp": {
+      "hex": "7fcf281000000000",
+      "value": 271110015
+    },
+    "nav_sequence": {
+      "hex": "79050000",
+      "value": 1401
+    },
+    "nav_health_flags": {
+      "hex": "82000000",
+      "value": 130
+    },
+    "monotonic_end_us": {
+      "hex": "ea869c1300000000",
+      "value": 329025258
+    },
+    "health_groups": {
+      "hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007681281000000000768128100000000073a828100000000073a82810000000000000000000000000eed30000000000002b36b9320000803f0101000101010000",
+      "value": 25927984771680828124316706858374232159292365170467009272728298926386131668132104719643238848755887942930814007890996927040496363872368816094397843664468363279856844984096772122983449365978714033809482483363683038328493424701413367618666936327989572691836789142991913366439930426571183042847904869449743841971505879975466269641821301138661894785311792686127458908501966980368821767440358915370578021126878432062364305899889692295994669628411031057135570483208981474201919521381561833198999109072715217326099221159846537216578493205448695843926553209127385889581571916140348368527033556415154991014573003418314493538593910092289885346714207002176016783538524268445866110951199382705313241910310469142363076353364763111139237277139025430530497458719701774691830071296
+    },
+    "previous_health_state": {
+      "hex": "0606060601",
+      "value": 4396025350
+    },
+    "group0_last_successful_fusion_us": {
+      "hex": "0000000000000000",
+      "value": 0
+    },
+    "group0_has_success": {
+      "hex": "00",
+      "value": 0
+    },
+    "group0_state": {
+      "hex": "00",
+      "value": 0
+    },
+    "group0_reason": {
+      "hex": "00",
+      "value": 0
+    },
+    "group1_last_successful_fusion_us": {
+      "hex": "0000000000000000",
+      "value": 0
+    },
+    "group1_has_success": {
+      "hex": "00",
+      "value": 0
+    },
+    "group1_state": {
+      "hex": "00",
+      "value": 0
+    },
+    "group1_reason": {
+      "hex": "00",
+      "value": 0
+    },
+    "group2_last_successful_fusion_us": {
+      "hex": "0000000000000000",
+      "value": 0
+    },
+    "group2_has_success": {
+      "hex": "00",
+      "value": 0
+    },
+    "group2_state": {
+      "hex": "00",
+      "value": 0
+    },
+    "group2_reason": {
+      "hex": "00",
+      "value": 0
+    },
+    "group3_last_successful_fusion_us": {
+      "hex": "0000000000000000",
+      "value": 0
+    },
+    "group3_has_success": {
+      "hex": "00",
+      "value": 0
+    },
+    "group3_state": {
+      "hex": "00",
+      "value": 0
+    },
+    "group3_reason": {
+      "hex": "00",
+      "value": 0
+    },
+    "group4_last_successful_fusion_us": {
+      "hex": "73a8281000000000",
+      "value": 271100019
+    },
+    "group4_has_success": {
+      "hex": "01",
+      "value": 1
+    },
+    "group4_state": {
+      "hex": "01",
+      "value": 1
+    },
+    "group4_reason": {
+      "hex": "00",
+      "value": 0
+    }
+  }
+}

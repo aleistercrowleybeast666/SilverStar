@@ -14,6 +14,7 @@ Current application implementation: `apps/SCG`. The Python package and plugin ID
 - [Monorepo architecture](architecture/MONOREPO_ARCHITECTURE.md)
 - [2026-10-08 TEST_5 与生产 GSHC 对比、DAP 拒绝现场](TEST5_GSHC_DAP_COMPARISON_20261008.md)
 - [2026-10-08 健康事件终结边界修复：红绿回归、完整软件检查及栈来源阻塞](LOGGER_HEALTH_FINALIZATION_20261008.md)
+- [2026-10-08 精确来源授权后完整复验与 mission 000051 静态运行](LOGGER_HEALTH_RETEST_20261008.md)
 - [Flight and Ground target model](architecture/TARGET_MODEL.md), [AIR Link](architecture/AIR_LINK.md), [Ground Station firmware](architecture/GROUND_STATION.md), [Device variants](architecture/DEVICE_VARIANTS.md)
 - [Project folder contract](architecture/PROJECT_FOLDER_CONTRACT.md)
 - [Mission snapshot and final status](architecture/MISSION_SNAPSHOT.md)

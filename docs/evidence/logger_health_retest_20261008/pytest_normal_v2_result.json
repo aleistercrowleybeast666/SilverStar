@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "apps/SCG/tests/test_logger_health_boundary.py",
+    "apps/SCG/tests/test_estimator_health_publication.py",
+    "-q",
+    "-p",
+    "normal_test_paths",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\pytest_normal_v2",
+    "--junitxml=D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\pytest_normal_v2.xml"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "hardware": false,
+  "utc_start": "2026-10-08T09:18:34.774645+00:00",
+  "base_head": "6bfd678cbde9a7b10ef8f8b03be7c9607fc88077",
+  "source_sha256": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+  "private_directory_plugin": "docs/evidence/nightly_software_20261008/normal_test_paths.py",
+  "initial_attempt": "v1 default-0700 failure is preserved historically; v2 proactively reuses ordinary-directory plugin",
+  "exit_code": 0,
+  "utc_end": "2026-10-08T09:18:50.840603+00:00",
+  "log_sha256": "ff0cee6ae4e2f778c2143dba349c71e476acc31d5a602b4e53f0a57c655eb55f"
+}

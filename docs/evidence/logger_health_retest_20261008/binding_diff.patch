@@ -1,0 +1,30 @@
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py
+index 5add901..fb3f8b5 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py
+@@ -1418,13 +1418,24 @@ BINDING_SOURCE_STATIC_BENCH_V10 = {
+ }
+ 
+ 
++# Exact-source review v11, explicitly authorized by the user on 2026-10-08.
++# Only the finalized health-publisher boundary in estimator_task.c changes.
++# Linked indirect sites and the other 154 compiled sources match the reviewed
++# bench. The new direct getter restores IRQ state before return; push races
++# retain their checked error path. Limits and unknown-input rejection stay.
++BINDING_SOURCE_HEALTH_FINALIZATION_V11 = {
++    'APP/Src/estimator_task.c': ['98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610'],
++}
++
++
+ def BindingSourceVersions_Get(path):
+     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
+             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
+             BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []) +
+             BINDING_SOURCE_MINIMAL_QUEUE_V8.get(path, []) +
+             BINDING_SOURCE_RF_QUEUE_V9.get(path, []) +
+-            BINDING_SOURCE_STATIC_BENCH_V10.get(path, []))
++            BINDING_SOURCE_STATIC_BENCH_V10.get(path, []) +
++            BINDING_SOURCE_HEALTH_FINALIZATION_V11.get(path, []))
+ 
+ 
+ def BindingSourceHash_Get(text):

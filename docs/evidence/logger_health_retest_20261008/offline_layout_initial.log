@@ -1,0 +1,112 @@
+FIELD|lifecycle|536977940|1
+FIELD|initialized|536924357|1
+FIELD|accepting|536924354|1
+FIELD|finalization|536924352|1
+FIELD|bus|536924360|44
+FIELD|task|536950344|112
+FIELD|mission_id|536950520|4
+FIELD|calibration_generation|536950532|4
+FIELD|mag_hash|536950544|4
+FIELD|snapshot_sequence|536950528|4
+FIELD|snapshot_ready|536950444|1
+FIELD|session_active|536950512|1
+FIELD|session_finalized|536950513|1
+FIELD|path|536977500|48
+FIELD|sink_health|536977552|40
+FIELD|assert_fault|536919752|72
+FIELD|estimator_running|268475065|1
+FIELD|nav_timestamp|268463064|8
+FIELD|nav_sequence|268463072|4
+FIELD|nav_health_flags|268463448|4
+FIELD|monotonic_end_us|536913920|8
+FIELD|health_groups|268435456|320
+FIELD|previous_health_state|536923620|5
+FIELD|group0_last_successful_fusion_us|268435480|8
+FIELD|group0_has_success|268435515|1
+FIELD|group0_state|268435512|1
+FIELD|group0_reason|268435514|1
+FIELD|group1_last_successful_fusion_us|268435544|8
+FIELD|group1_has_success|268435579|1
+FIELD|group1_state|268435576|1
+FIELD|group1_reason|268435578|1
+FIELD|group2_last_successful_fusion_us|268435608|8
+FIELD|group2_has_success|268435643|1
+FIELD|group2_state|268435640|1
+FIELD|group2_reason|268435642|1
+FIELD|group3_last_successful_fusion_us|268435672|8
+FIELD|group3_has_success|268435707|1
+FIELD|group3_state|268435704|1
+FIELD|group3_reason|268435706|1
+FIELD|group4_last_successful_fusion_us|268435736|8
+FIELD|group4_has_success|268435771|1
+FIELD|group4_state|268435768|1
+FIELD|group4_reason|268435770|1
+type = struct {
+/*      0      |       4 */    uint32_t accepted_count;
+/*      4      |       4 */    uint32_t dequeued_count;
+/*      8      |       4 */    uint32_t overflow_count;
+/*     12      |       4 */    uint32_t bootstrap_suppressed_count;
+/*     16      |       4 */    uint32_t state_reject_count;
+/*     20      |       4 */    uint32_t capacity_reject_count;
+/*     24      |       4 */    uint32_t disabled_suppressed_count;
+/*     28      |       4 */    uint32_t disabled_discarded_count;
+/*     32      |       1 */    LoggerBusStartupState startup_state;
+/* XXX  1-byte hole      */
+/*     34      |       2 */    uint16_t normal_count;
+/*     36      |       2 */    uint16_t estimator_count;
+/*     38      |       2 */    uint16_t normal_high_water;
+/*     40      |       2 */    uint16_t estimator_high_water;
+/* XXX  2-byte padding   */
+
+                               /* total size (bytes):   44 */
+                             }
+type = struct {
+/*      0      |       8 */    uint64_t max_iteration_us;
+/*      8      |       8 */    uint64_t total_write_us;
+/*     16      |       8 */    uint64_t max_write_us;
+/*     24      |       8 */    uint64_t streaming_ready_us;
+/*     32      |       4 */    uint32_t serialized_count;
+/*     36      |       4 */    uint32_t iteration_count;
+/*     40      |       4 */    uint32_t drain_count;
+/*     44      |       4 */    uint32_t write_count;
+/*     48      |       4 */    uint32_t append_failure_count;
+/*     52      |       4 */    uint32_t flush_failure_count;
+/*     56      |       4 */    uint32_t serialize_failure_count;
+/*     60      |       4 */    uint32_t open_attempt_count;
+/*     64      |       4 */    uint32_t open_failure_count;
+/*     68      |       4 */    uint32_t session_count;
+/*     72      |       4 */    uint32_t discarded_bytes;
+/*     76      |       4 */    uint32_t close_failure_count;
+/*     80      |       4 */    uint32_t snapshot_mission_id;
+/*     84      |       4 */    uint32_t snapshot_commit_generation;
+/*     88      |       4 */    uint32_t snapshot_sequence;
+/*     92      |       4 */    uint32_t snapshot_calibration_generation;
+/*     96      |       4 */    uint32_t snapshot_mag_calibration_set_hash;
+/*    100      |       1 */    uint8_t snapshot_ready;
+/*    101      |       1 */    uint8_t snapshot_base_instance;
+/*    102      |       1 */    uint8_t final_status_write_failed;
+/*    103      |       1 */    uint8_t io_fault;
+/*    104      |       1 */    uint8_t boot_logging_disabled;
+/*    105      |       1 */    uint8_t no_storage_warning_delivered;
+/* XXX  6-byte padding   */
+
+                               /* total size (bytes):  112 */
+                             }
+type = struct {
+/*      0      |       8 */    uint64_t bytes_written;
+/*      8      |       8 */    uint64_t last_write_timestamp_us;
+/*     16      |       8 */    uint64_t last_flush_timestamp_us;
+/*     24      |       4 */    uint32_t write_count;
+/*     28      |       4 */    uint32_t flush_count;
+/*     32      |       4 */    uint32_t error_count;
+/*     36      |       1 */    uint8_t initialized;
+/*     37      |       1 */    uint8_t session_active;
+/*     38      |       1 */    uint8_t healthy;
+/* XXX  1-byte padding   */
+
+                               /* total size (bytes):   40 */
+                             }
+warning: could not convert 'silverstar_flight_cycle.c' from the host encoding (CP1252) to UTF-32.
+This normally should not happen, please file a bug report.
+D:\python_software\SilverStar\.work\finalized_health_20261008_v2\offline_layout.gdb:49: Error in sourced command file:
+No symbol "SilverStarAssertFault" in current context.

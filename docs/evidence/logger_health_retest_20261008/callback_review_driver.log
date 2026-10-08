@@ -1,0 +1,81 @@
+{
+  "compiled_sources": 155,
+  "changed_compiled_source_text": [
+    "APP/Src/estimator_task.c"
+  ],
+  "direct_edge_delta": {
+    "AppTask_Estimator": {
+      "added": [
+        "LoggerBus_FinalizationStateGet"
+      ],
+      "removed": []
+    },
+    "LoggerBus_FinalizationStateGet": {
+      "added": [
+        "PlatformCritical_Enter",
+        "PlatformCritical_Exit"
+      ],
+      "removed": []
+    }
+  },
+  "indirect_sites_changed": false,
+  "focus_direct_calls": {
+    "AppTask_Estimator": [
+      "Attitude_PropagateQuaternionBodyIncrement",
+      "EstimatorBarometerPending_Consume",
+      "EstimatorBarometerPending_Get",
+      "EstimatorBarometerPending_TryLatch",
+      "EstimatorBus_PredictionPop",
+      "EstimatorBus_PressureGetLatest",
+      "Estimator_BarometerUpdateStateSet",
+      "Estimator_DiagnosticsPublish",
+      "Estimator_FaultSnapshotPublish",
+      "Estimator_GnssOriginSampleValid",
+      "Estimator_GnssUpdate",
+      "Estimator_LogPush",
+      "Estimator_MeasurementResultConvert",
+      "Estimator_OriginWindowReset",
+      "Estimator_PredictionLogPush",
+      "Estimator_SnapshotPublish.part.0",
+      "Ins_TransformDeltaVelocityToNavigation",
+      "LoggerBus_BaroMeasurementPush",
+      "LoggerBus_EventPush",
+      "LoggerBus_FinalizationStateGet",
+      "NavigationKf_Init",
+      "NavigationReplay_Insert",
+      "NavigationReplay_Predict",
+      "NavigationReplay_RuntimeRecord",
+      "PlatformCritical_Enter",
+      "PlatformCritical_Exit",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_ObjectCheck",
+      "SystemAlignment_IsCollecting",
+      "SystemBarometer_AltitudeResolve",
+      "SystemEstimatorBaroDiagnostics_Publish",
+      "SystemEstimatorBaroDiagnostics_Reset",
+      "SystemEstimatorGnssDiagnostics_Reset",
+      "SystemEstimatorProfile_Get",
+      "SystemEstimatorStatusDiagnostics_Reset",
+      "SystemGnss_LatestSampleGet",
+      "SystemKfDiagnostics_Reset",
+      "SystemLifecycle_GetState",
+      "SystemNavigationHealth_ChangesGet",
+      "SystemNavigationHealth_DegradedGet",
+      "SystemNavigationHealth_GroupGet",
+      "SystemNavigationHealth_Observe",
+      "SystemTime_GetMonotonicUs",
+      "SystemTime_MeasurementTimestampResolve",
+      "__aeabi_uldivmod",
+      "memcpy",
+      "memset",
+      "vTaskDelay"
+    ],
+    "Estimator_HealthEventsPublish": [],
+    "LoggerBus_FinalizationStateGet": [
+      "PlatformCritical_Enter",
+      "PlatformCritical_Exit"
+    ],
+    "PlatformCritical_Enter": [],
+    "PlatformCritical_Exit": []
+  }
+}

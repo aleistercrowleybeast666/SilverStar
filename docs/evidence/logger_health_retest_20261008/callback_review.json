@@ -1,0 +1,327 @@
+{
+  "scope": "Independent read-only raw linked graph/source comparison. No binding override, callback resolution or task-stack acceptance.",
+  "old": {
+    "argv": [
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objdump.exe",
+      "-d",
+      "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf"
+    ],
+    "exit_code": 0,
+    "elf_sha256": "14637f20ac2b83bc4b169b232a364d037013e494444aa23ad246070148ae4cfd"
+  },
+  "candidate": {
+    "argv": [
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objdump.exe",
+      "-d",
+      "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf"
+    ],
+    "exit_code": 0,
+    "elf_sha256": "bb57ae0d8d04c53048bf19d44d54b97ec4fcebec11875c8a4bfc76f963a077f4"
+  },
+  "compiled_sources": 155,
+  "changed_compiled_source_text": [
+    "APP/Src/estimator_task.c"
+  ],
+  "direct_edge_delta": {
+    "AppTask_Estimator": {
+      "added": [
+        "LoggerBus_FinalizationStateGet"
+      ],
+      "removed": []
+    },
+    "LoggerBus_FinalizationStateGet": {
+      "added": [
+        "PlatformCritical_Enter",
+        "PlatformCritical_Exit"
+      ],
+      "removed": []
+    }
+  },
+  "indirect_sites_changed": false,
+  "indirect_sites_baseline": {
+    "deregister_tm_clones": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "register_tm_clones": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "SystemDeviceStartup_Tick": [
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ]
+    ],
+    "HAL_DMA_IRQHandler": [
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "bx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r2"
+      ],
+      [
+        "bx",
+        "r1"
+      ]
+    ],
+    "HAL_UART_IRQHandler": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "disk_status": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "disk_initialize": [
+      [
+        "blx",
+        "r3"
+      ]
+    ],
+    "disk_read": [
+      [
+        "bx",
+        "ip"
+      ]
+    ],
+    "disk_write": [
+      [
+        "bx",
+        "ip"
+      ]
+    ],
+    "disk_ioctl": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "__libc_init_array": [
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ]
+    ]
+  },
+  "indirect_sites_candidate": {
+    "deregister_tm_clones": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "register_tm_clones": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "SystemDeviceStartup_Tick": [
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ]
+    ],
+    "HAL_DMA_IRQHandler": [
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "bx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r2"
+      ],
+      [
+        "bx",
+        "r1"
+      ]
+    ],
+    "HAL_UART_IRQHandler": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "disk_status": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "disk_initialize": [
+      [
+        "blx",
+        "r3"
+      ]
+    ],
+    "disk_read": [
+      [
+        "bx",
+        "ip"
+      ]
+    ],
+    "disk_write": [
+      [
+        "bx",
+        "ip"
+      ]
+    ],
+    "disk_ioctl": [
+      [
+        "bx",
+        "r3"
+      ]
+    ],
+    "__libc_init_array": [
+      [
+        "blx",
+        "r3"
+      ],
+      [
+        "blx",
+        "r3"
+      ]
+    ]
+  },
+  "focus_direct_calls": {
+    "AppTask_Estimator": [
+      "Attitude_PropagateQuaternionBodyIncrement",
+      "EstimatorBarometerPending_Consume",
+      "EstimatorBarometerPending_Get",
+      "EstimatorBarometerPending_TryLatch",
+      "EstimatorBus_PredictionPop",
+      "EstimatorBus_PressureGetLatest",
+      "Estimator_BarometerUpdateStateSet",
+      "Estimator_DiagnosticsPublish",
+      "Estimator_FaultSnapshotPublish",
+      "Estimator_GnssOriginSampleValid",
+      "Estimator_GnssUpdate",
+      "Estimator_LogPush",
+      "Estimator_MeasurementResultConvert",
+      "Estimator_OriginWindowReset",
+      "Estimator_PredictionLogPush",
+      "Estimator_SnapshotPublish.part.0",
+      "Ins_TransformDeltaVelocityToNavigation",
+      "LoggerBus_BaroMeasurementPush",
+      "LoggerBus_EventPush",
+      "LoggerBus_FinalizationStateGet",
+      "NavigationKf_Init",
+      "NavigationReplay_Insert",
+      "NavigationReplay_Predict",
+      "NavigationReplay_RuntimeRecord",
+      "PlatformCritical_Enter",
+      "PlatformCritical_Exit",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_ObjectCheck",
+      "SystemAlignment_IsCollecting",
+      "SystemBarometer_AltitudeResolve",
+      "SystemEstimatorBaroDiagnostics_Publish",
+      "SystemEstimatorBaroDiagnostics_Reset",
+      "SystemEstimatorGnssDiagnostics_Reset",
+      "SystemEstimatorProfile_Get",
+      "SystemEstimatorStatusDiagnostics_Reset",
+      "SystemGnss_LatestSampleGet",
+      "SystemKfDiagnostics_Reset",
+      "SystemLifecycle_GetState",
+      "SystemNavigationHealth_ChangesGet",
+      "SystemNavigationHealth_DegradedGet",
+      "SystemNavigationHealth_GroupGet",
+      "SystemNavigationHealth_Observe",
+      "SystemTime_GetMonotonicUs",
+      "SystemTime_MeasurementTimestampResolve",
+      "__aeabi_uldivmod",
+      "memcpy",
+      "memset",
+      "vTaskDelay"
+    ],
+    "Estimator_HealthEventsPublish": [],
+    "LoggerBus_FinalizationStateGet": [
+      "PlatformCritical_Enter",
+      "PlatformCritical_Exit"
+    ],
+    "PlatformCritical_Enter": [],
+    "PlatformCritical_Exit": []
+  },
+  "focus_indirect": {
+    "AppTask_Estimator": [],
+    "Estimator_HealthEventsPublish": [],
+    "LoggerBus_FinalizationStateGet": [],
+    "PlatformCritical_Enter": [],
+    "PlatformCritical_Exit": []
+  },
+  "review": "Only four added source lines. No callback table, function-pointer assignment, recursion or allocation added. New getter restores IRQ state before returning; snapshot-to-push race remains ordinary failure. Full task/library/ISR bounds remain NOT_PROVEN until unmodified gate is legitimately run.",
+  "stack_gate_exit": 0,
+  "binding_authorized": true,
+  "review_boundary": "Raw graph comparison does not substitute for original stack gate; see stack_result.json for executed gate"
+}

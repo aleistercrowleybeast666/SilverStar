@@ -1,0 +1,31 @@
+{
+  "base_head": "6bfd678cbde9a7b10ef8f8b03be7c9607fc88077",
+  "compiled_dirty_patch_sha256": "68f86a368943a3c022de69cd9d7f156eb417bf3188f580d0eaab432a98b6283c",
+  "owner_and_test_inputs": {
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c": {
+      "raw_sha256": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+      "normalized_sha256": "98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610"
+    },
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py": {
+      "raw_sha256": "d7b83ea5b7c969e14f90b784010dc39b41c0c01e47d77c894d61f15f0c48496a",
+      "normalized_sha256": "2671f5e29a510b1c68d576840fc504900003d799ee3c1f9355ead50d4cb5cbe7"
+    },
+    "apps/SCG/tests/fixtures/logger_health_boundary.c": {
+      "raw_sha256": "a8f63f2303c97b1f97d6f8445cb591fe869155b7435616cd08c10eaf2968c607",
+      "normalized_sha256": "a8f63f2303c97b1f97d6f8445cb591fe869155b7435616cd08c10eaf2968c607"
+    },
+    "apps/SCG/tests/logger_health_boundary_support.py": {
+      "raw_sha256": "605b3aa6848869ce0ab5041db73fa9eca25d27730536413ddc1f95c699eecb34",
+      "normalized_sha256": "605b3aa6848869ce0ab5041db73fa9eca25d27730536413ddc1f95c699eecb34"
+    },
+    "apps/SCG/tests/test_logger_health_boundary.py": {
+      "raw_sha256": "a3d5a71389709413d6fce850bb1b95f4776ccf5504731f47399ce0ca323f08c9",
+      "normalized_sha256": "a3d5a71389709413d6fce850bb1b95f4776ccf5504731f47399ce0ca323f08c9"
+    },
+    "apps/GSHC/app.py": {
+      "raw_sha256": "8a9e2f616157a6b6a62e9c36d5630d493a0f3cc1c4fd28c484781b50f8d1f254",
+      "normalized_sha256": "c1b667c60119b95f01c8e69ac2834a6f7f2f1c8001e613fdbeb869fee6d78571"
+    }
+  },
+  "scope": "Only authorized exact V11 binding added to baseline four-line fix. Final commit source verified by normalized hash; formal evidence uses -text."
+}

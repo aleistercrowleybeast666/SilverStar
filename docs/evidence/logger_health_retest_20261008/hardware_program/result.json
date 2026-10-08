@@ -1,0 +1,52 @@
+{
+  "stage": "program",
+  "argv": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set size [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($size != 512)} {error {Target mismatch; stop}}; echo \"TARGET_ID=$id FLASH_KIB=$size\"; echo \"UID=[read_memory 0x1FFF7A10 32 3]\"; echo \"CORE_BEFORE=[read_memory 0xE000EDF0 32 1]\"; set uid [read_memory 0x1FFF7A10 32 3]; set expected_uid {4653137 1110593540 540095289}; for {set i 0} {$i < 3} {incr i} {if {[lindex $uid $i] != [lindex $expected_uid $i]} {error {Device UID changed; no flash}}}; set phase [lindex [read_memory 0x2001a214 8 1] 0]; if {$phase != 2} {error {Expected old verified PREFLIGHT; no flash}}; program {D:/python_software/SilverStar/.work/finalized_health_20261008_v2/project/Flight_Controller/build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.bin} 0x08000000 verify reset; dump_image {D:/python_software/SilverStar/.work/finalized_health_20261008_v2/hardware_program/readback.bin} 0x08000000 331052; dump_image {D:/python_software/SilverStar/.work/finalized_health_20261008_v2/hardware_program/sector7.bin} 0x08060000 131072; echo \"CORE_AFTER=[read_memory 0xE000EDF0 32 1]\"; shutdown"
+  ],
+  "utc_start": "2026-10-08T09:21:26.645447+00:00",
+  "image_sha256": "cf1a359c9212354b63b4af8b83f0db4008897eb333d35d220d8eec4a2f33da4c",
+  "elf_sha256": "bb57ae0d8d04c53048bf19d44d54b97ec4fcebec11875c8a4bfc76f963a077f4",
+  "flash": true,
+  "reset": true,
+  "halt": true,
+  "active_mission_halt": false,
+  "calibration_command": false,
+  "ground_flash": false,
+  "mass_erase": false,
+  "options": false,
+  "timeout_s": 60,
+  "exit_code": 0,
+  "utc_end": "2026-10-08T09:21:46.607826+00:00",
+  "log_sha256": "472b07a35fca4aa5d93e49770076ccad5818ac571a7f5851ba3a2bf00a472ebc",
+  "uid_words": [
+    4653137,
+    1110593540,
+    540095289
+  ],
+  "core_values": [
+    16842753,
+    16842753
+  ],
+  "running_after": true,
+  "readback_verified": true,
+  "readback_sha256": "cf1a359c9212354b63b4af8b83f0db4008897eb333d35d220d8eec4a2f33da4c",
+  "untouched_sector7": true
+}

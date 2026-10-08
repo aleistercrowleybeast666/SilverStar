@@ -1,0 +1,230 @@
+{
+  "argv": [
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gdb.exe",
+    "-batch",
+    "-nx",
+    "-x",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\offline_layout.gdb"
+  ],
+  "exit_code": 1,
+  "target_connection": false,
+  "elf": "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf",
+  "elf_sha256": "bb57ae0d8d04c53048bf19d44d54b97ec4fcebec11875c8a4bfc76f963a077f4",
+  "fields": {
+    "lifecycle": {
+      "expression": "'silverstar_flight_cycle.c'::s_lifecycle_state",
+      "address": 536977940,
+      "bytes": 1
+    },
+    "initialized": {
+      "expression": "'logger_bus.c'::s_initialized",
+      "address": 536924357,
+      "bytes": 1
+    },
+    "accepting": {
+      "expression": "'logger_bus.c'::s_accepting_records",
+      "address": 536924354,
+      "bytes": 1
+    },
+    "finalization": {
+      "expression": "'logger_bus.c'::s_finalization_state",
+      "address": 536924352,
+      "bytes": 1
+    },
+    "bus": {
+      "expression": "'logger_bus.c'::s_diagnostics",
+      "address": 536924360,
+      "bytes": 44
+    },
+    "task": {
+      "expression": "'logger_task.c'::s_diagnostics",
+      "address": 536950344,
+      "bytes": 112
+    },
+    "mission_id": {
+      "expression": "'logger_task.c'::s_logger.snapshot.mission_id",
+      "address": 536950520,
+      "bytes": 4
+    },
+    "calibration_generation": {
+      "expression": "'logger_task.c'::s_logger.snapshot.calibration_generation",
+      "address": 536950532,
+      "bytes": 4
+    },
+    "mag_hash": {
+      "expression": "'logger_task.c'::s_logger.snapshot.mag_calibration_set_hash",
+      "address": 536950544,
+      "bytes": 4
+    },
+    "snapshot_sequence": {
+      "expression": "'logger_task.c'::s_logger.snapshot.snapshot_sequence",
+      "address": 536950528,
+      "bytes": 4
+    },
+    "snapshot_ready": {
+      "expression": "'logger_task.c'::s_diagnostics.snapshot_ready",
+      "address": 536950444,
+      "bytes": 1
+    },
+    "session_active": {
+      "expression": "'logger_task.c'::s_logger.session_active",
+      "address": 536950512,
+      "bytes": 1
+    },
+    "session_finalized": {
+      "expression": "'logger_task.c'::s_logger.session_finalized",
+      "address": 536950513,
+      "bytes": 1
+    },
+    "path": {
+      "expression": "'log_sink_service.c'::s_sink.path",
+      "address": 536977500,
+      "bytes": 48
+    },
+    "sink_health": {
+      "expression": "'log_sink_service.c'::s_sink.health",
+      "address": 536977552,
+      "bytes": 40
+    },
+    "assert_fault": {
+      "expression": "'silverstar_assert.c'::s_assert_fault",
+      "address": 536919752,
+      "bytes": 72
+    },
+    "estimator_running": {
+      "expression": "'estimator_task.c'::s_estimator.mission_running",
+      "address": 268475065,
+      "bytes": 1
+    },
+    "nav_timestamp": {
+      "expression": "'estimator_task.c'::s_published_snapshot.timestamp_us",
+      "address": 268463064,
+      "bytes": 8
+    },
+    "nav_sequence": {
+      "expression": "'estimator_task.c'::s_published_snapshot.update_sequence",
+      "address": 268463072,
+      "bytes": 4
+    },
+    "nav_health_flags": {
+      "expression": "'estimator_task.c'::s_published_snapshot.health_flags",
+      "address": 268463448,
+      "bytes": 4
+    },
+    "monotonic_end_us": {
+      "expression": "s_estimator_task_timing.last_end_us",
+      "address": 536913920,
+      "bytes": 8
+    },
+    "health_groups": {
+      "expression": "'system_navigation_health.c'::s_groups",
+      "address": 268435456,
+      "bytes": 320
+    },
+    "previous_health_state": {
+      "expression": "'system_navigation_health.c'::s_previous_state",
+      "address": 536923620,
+      "bytes": 5
+    },
+    "group0_last_successful_fusion_us": {
+      "expression": "'system_navigation_health.c'::s_groups[0].last_successful_fusion_us",
+      "address": 268435480,
+      "bytes": 8
+    },
+    "group0_has_success": {
+      "expression": "'system_navigation_health.c'::s_groups[0].has_success",
+      "address": 268435515,
+      "bytes": 1
+    },
+    "group0_state": {
+      "expression": "'system_navigation_health.c'::s_groups[0].state",
+      "address": 268435512,
+      "bytes": 1
+    },
+    "group0_reason": {
+      "expression": "'system_navigation_health.c'::s_groups[0].reason",
+      "address": 268435514,
+      "bytes": 1
+    },
+    "group1_last_successful_fusion_us": {
+      "expression": "'system_navigation_health.c'::s_groups[1].last_successful_fusion_us",
+      "address": 268435544,
+      "bytes": 8
+    },
+    "group1_has_success": {
+      "expression": "'system_navigation_health.c'::s_groups[1].has_success",
+      "address": 268435579,
+      "bytes": 1
+    },
+    "group1_state": {
+      "expression": "'system_navigation_health.c'::s_groups[1].state",
+      "address": 268435576,
+      "bytes": 1
+    },
+    "group1_reason": {
+      "expression": "'system_navigation_health.c'::s_groups[1].reason",
+      "address": 268435578,
+      "bytes": 1
+    },
+    "group2_last_successful_fusion_us": {
+      "expression": "'system_navigation_health.c'::s_groups[2].last_successful_fusion_us",
+      "address": 268435608,
+      "bytes": 8
+    },
+    "group2_has_success": {
+      "expression": "'system_navigation_health.c'::s_groups[2].has_success",
+      "address": 268435643,
+      "bytes": 1
+    },
+    "group2_state": {
+      "expression": "'system_navigation_health.c'::s_groups[2].state",
+      "address": 268435640,
+      "bytes": 1
+    },
+    "group2_reason": {
+      "expression": "'system_navigation_health.c'::s_groups[2].reason",
+      "address": 268435642,
+      "bytes": 1
+    },
+    "group3_last_successful_fusion_us": {
+      "expression": "'system_navigation_health.c'::s_groups[3].last_successful_fusion_us",
+      "address": 268435672,
+      "bytes": 8
+    },
+    "group3_has_success": {
+      "expression": "'system_navigation_health.c'::s_groups[3].has_success",
+      "address": 268435707,
+      "bytes": 1
+    },
+    "group3_state": {
+      "expression": "'system_navigation_health.c'::s_groups[3].state",
+      "address": 268435704,
+      "bytes": 1
+    },
+    "group3_reason": {
+      "expression": "'system_navigation_health.c'::s_groups[3].reason",
+      "address": 268435706,
+      "bytes": 1
+    },
+    "group4_last_successful_fusion_us": {
+      "expression": "'system_navigation_health.c'::s_groups[4].last_successful_fusion_us",
+      "address": 268435736,
+      "bytes": 8
+    },
+    "group4_has_success": {
+      "expression": "'system_navigation_health.c'::s_groups[4].has_success",
+      "address": 268435771,
+      "bytes": 1
+    },
+    "group4_state": {
+      "expression": "'system_navigation_health.c'::s_groups[4].state",
+      "address": 268435768,
+      "bytes": 1
+    },
+    "group4_reason": {
+      "expression": "'system_navigation_health.c'::s_groups[4].reason",
+      "address": 268435770,
+      "bytes": 1
+    }
+  }
+}

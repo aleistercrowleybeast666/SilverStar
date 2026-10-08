@@ -1,0 +1,243 @@
+{
+  "argv": [
+    "D:/msys64/ucrt64/bin/gcc.exe",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-include",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Generated\\Inc\\project_flight_config.h",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Tests\\Host\\Fixtures\\MultiInstance\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Tests\\Host",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\APP\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Common\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Calibration\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\Common\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\GravityKnownYaw\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\GravityMagTriad\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\VectorConstraints\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\ExternalAttitude\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\INS\\Coning2Sculling2\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Estimator\\KF6\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Estimator\\SF6\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Common\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Modules\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Protocol\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Protocol\\SSLOG\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Interfaces\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\Alignment\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\Calibration\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\Indicator\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\Inertial\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\User",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Targets\\SilverStar_F407\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Board\\SilverStar_0_5\\Services\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Generated\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\FlightLogic\\Deployment\\MultiTrigger\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\FlightLogic\\Landing\\BarometerImuWindow\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Platform\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Platform\\STM32F4\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Platform\\STM32F1Flight\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\IMU\\JY901B\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\IMU\\JY901B\\Adapter\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Adapter\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\SensorBus\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\SensorBus\\Adapter\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\Barometer\\BMP280\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\Barometer\\BMP280\\Adapter\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\Power\\InputVoltage\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\IMU\\MPU6050\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\IMU\\MPU6050\\Adapter\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Middlewares\\Third_Party\\SX1280lib",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\GravityKnownYaw\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\GravityMagTriad\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\HardwareQuat6AxisKnownYaw\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Alignment\\HardwareQuat9Axis\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\FlightLogic\\MissionAction\\GpioOutput\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc",
+    "-ID:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Platform\\Inc",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Estimator\\KF6\\Src\\navigation_kf.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Estimator\\KF6\\Src\\navigation_kf_replay.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\Common\\Src\\attitude_frame.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Algorithm\\INS\\Coning2Sculling2\\Src\\ins_mechanization.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\APP\\Src\\estimator_barometer_pending.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\Src\\system_navigation_health.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\System\\Src\\system_time.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\Common\\Src\\silverstar_assert.c",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\pytest_normal_v2\\test_kf6_health_and_fault_publ_7f580e6b\\health\\actual_app_health.c",
+    "-lm",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\pytest_normal_v2\\test_kf6_health_and_fault_publ_7f580e6b\\health\\health.exe"
+  ],
+  "compile_exit": 0,
+  "extracted_body_hashes": {
+    "EstimatorTask_IrqLock": "07dcb31b5fdaa8dac10463f5fb9ac50dceea7ba20f6113bf3af78731f76d38e5",
+    "EstimatorTask_IrqUnlock": "27956b3cde27e388c2ecb43629f0d002cc6da02d667a25231a5b3403f4eb0603",
+    "EstimatorTask_SnapshotCommit": "47eb955b70dd0b05de95cd429ee27f39c10d5fbcae47011be3f843fb65327ea8",
+    "Estimator_OperationNext": "0ed708b8f20e16ad7fdffda0309d868098ae25ff3685bb6718cb040a3f0137a1",
+    "Estimator_CoreHealthFlagsMap": "73dfd143435d8bb10a1a25e4d58f5d61ed158cdf51e483fff3d7e726b778a730",
+    "Estimator_FaultSnapshotPublish": "2a659fd4b340c090dd0014cc03f9c5bcf54323f6698aa8cdaf7730f5cdb69bed",
+    "Estimator_ReplayFaultStop": "eacdff14347fb71228050b141de44f8c382a81b78cb6df8d97118f5d34072774",
+    "Estimator_SnapshotPublish": "aa2aa2587b318f00da45eb835e1268ccb4eec6205289664cb63d6e7d183f34d6",
+    "Estimator_AccelerationPublish": "8aa99934ffec1caf8497f56d0fb9c8153a35aaf5c5ba4249b5d34c2ef1539020",
+    "Estimator_PredictionApply": "94bc0c699b8f5ab2b099f888bc909f37616ebacaf54103165bc834167cd45c4f",
+    "Estimator_KfPredictionApply": "9300d0f2f2a60d3572764823a492337435fb6d953dcd72f8cba0d56e1f2532c4",
+    "Estimator_PredictionProcess": "3c6fd9af6f11c5ab75e0099aeaabbb4eefac555674bea4149a583e9bdce0e5b4",
+    "EstimatorTask_RollbackMissionStart": "2923cc4a2dd07c3b75f3c19abfd624003191dd2ed2d44da67b9cb91e3a737b66",
+    "Estimator_GetLatestSnapshot": "72f008698923ec32fe2ea647cb6e545d23b2e5b67cf858f5f2bf9b900aa62cd7",
+    "InsTask_NavigationDiagnosticsApply": "d72d7b4f9b4aaab3a0dcac855a152aa49cafad25a5c4b63c1dd23f1981a18c62",
+    "DiagnosticLog_StatsRecordBuild": "5f9a56fce6dd7a84dd7360ee2cce40cd2b5caa52b591ddd4b9d95c17c68b15f7"
+  },
+  "fixture_sha256": "66ddd88bc2fa3d8487ab620893fa76e8a37a380689d79cb2c4b50709207ab38f",
+  "scope": "Actual extracted application bodies, linked actual KF6/replay/attitude/mechanization; Host locks/sensor absence/log sinks. No full task scheduler or MCU proof.",
+  "cases": [
+    {
+      "case": 0,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 1,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 2,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 3,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 4,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 5,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 6,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 7,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 8,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 9,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 10,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 11,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 12,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 13,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 14,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 15,
+      "exit": 0,
+      "stdout": "estimator_health: 12 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 16,
+      "exit": 0,
+      "stdout": "estimator_health: 7 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 17,
+      "exit": 0,
+      "stdout": "estimator_health: 7 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 18,
+      "exit": 0,
+      "stdout": "estimator_health: 6 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 19,
+      "exit": 0,
+      "stdout": "estimator_health: 11 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 20,
+      "exit": 0,
+      "stdout": "estimator_health: 11 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 21,
+      "exit": 0,
+      "stdout": "estimator_health: 5 checks, 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "case": 22,
+      "exit": 0,
+      "stdout": "estimator_health: 3 checks, 0 failures\n",
+      "stderr": ""
+    }
+  ]
+}

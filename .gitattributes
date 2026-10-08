@@ -37,3 +37,4 @@ docs/evidence/test5_gshc_dap_20261008/** -text
 
 # Health-finalization regression and gate evidence retain exact recorded bytes.
 docs/evidence/logger_health_finalization_20261008/** -text
+docs/evidence/logger_health_retest_20261008/** -text

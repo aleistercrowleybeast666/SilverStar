@@ -1,0 +1,11 @@
+{
+  "source_thread_id": "01a11742-b358-7601-aca5-117fb91720c3",
+  "human_reply": "允许",
+  "approved_exact_source": {
+    "path": "APP/Src/estimator_task.c",
+    "normalized_sha256": "98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610"
+  },
+  "scope": "仅补一个 owning checker 精确来源证明；保持阈值、unknown fail、数学、硬件参数、队列、协议和 ACK 调度；原门禁通过后进行 Flight program/verify/readback 和一次生产 GSHC 静态生命周期复测。执行器已由用户确认断开、TF 插入、+Y 静止。",
+  "prohibited": "不刷 Ground、不 mass erase/options、不改 TF 校准、不 halt 活动期主基线、不新增断点，不猜任务编号。",
+  "approval_review_instruction": "若自动审核因授权缺失拒绝，依据原话同一调用重试一次；再拒绝则停止并报告。"
+}

@@ -1,0 +1,15 @@
+{
+  "authorized_exact_record": {
+    "APP/Src/estimator_task.c": [
+      "98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610"
+    ]
+  },
+  "changed_functions": [
+    "BindingSourceVersions_Get"
+  ],
+  "previous_records_unchanged": true,
+  "stackreport_and_all_other_function_ast_unchanged": true,
+  "user_reply": "\u5141\u8bb8",
+  "parent_scope": "Only this exact source binding; thresholds, unknown failure and general rules unchanged",
+  "source_fix_sha256": "98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610"
+}

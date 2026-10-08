@@ -1,0 +1,21 @@
+{
+  "step": "stack",
+  "utc_start": "2026-10-08T09:08:21.836663+00:00",
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "-j2",
+    "stack-report",
+    "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller",
+  "base_head": "6bfd678cbde9a7b10ef8f8b03be7c9607fc88077",
+  "dirty_patch_sha256": "68f86a368943a3c022de69cd9d7f156eb417bf3188f580d0eaab432a98b6283c",
+  "source_owner_sha256": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+  "timeout_s": 180,
+  "max_make_jobs": 2,
+  "hardware": false,
+  "exit_code": 0,
+  "utc_end": "2026-10-08T09:08:32.073610+00:00",
+  "elapsed_s": 10.161181100003887,
+  "log_sha256": "f1dc4da6476cf4fc65476c91007b85c410f171481603bd01dd8b25b0905dbce7"
+}

@@ -1,0 +1,17 @@
+{
+  "initial_offline_gdb": "Wrong guessed assertion type name failed after field query; retrying UTF-8 charset failed because this Windows GDB does not support it. Both full logs/scripts retained. Final layout query exit 0, 43 fields, CP1252 conversion warning retained.",
+  "preflight_recorder_failure": "Python initial hardware_stage.py exit 1 at line 69: assert len(record['uid_words']) == 3. OpenOCD itself returned 0 and finished backup/reads; its hex words were incorrectly matched by decimal-only regex. Exact log, backup and initial script preserved. reparse_preflight.py derives corrected result offline with recorder_python_exit=1; no repeat hardware read.",
+  "premature_ready_assertion": "The START-before snapshot was mission 51 but snapshot_ready=0 and generation/hash zero. An offboard assertion erroneously expected READY before production calibration/alignment. No START was sent; source review established OneFace is RAM-only. Initial strict no-CAL harness/plan preserved, then original selected +Y OneFace RAM operation restored. TF calibration-object writes remain forbidden.",
+  "shell_construction_failures": "Two offboard python -c construction attempts in this phase had SyntaxError '(' was never closed due to PowerShell nested quote handling; neither reached Python actions/hardware. Saved prepare_hardware.py and update_hardware_plan.py replace those constructions.",
+  "copied_runner_metadata": "V1 generation runner's allowlist_updated=False and callback review's FAIL/unauthorized literals were stale for V2. Original scripts/records preserved; corrected metadata names actual V11 authorization and executed stack exit 0, without changing generated sources or gate results.",
+  "ram_calibration": "OneFace changes RAM status/correction/generation and new mission snapshot/log identity. Initial unready snapshot's zero mag hash cannot be used as an authoritative pre-calibration TF identity. No TF calibration-object writer/command was used; media byte equivalence NOT_PROVEN without extraction.",
+  "ui_input": "Actual visible production GSHC driven by Qt APIs, no mouse/tool-driven native input claim. Final screenshot visually inspected; it retains nonzero loss estimate 10/63.",
+  "hardware_after": "One public START, no active mission halt/debug connection/breakpoint, Ground unchanged, new BIN remains on Flight in LANDED with core running; own serial/protocol/OpenOCD sessions closed.",
+  "manual_critical_contract_review": "NOT_PROVEN for whole project despite original text gates exit 0.",
+  "tf_actual_file_acceptance": "NOT_RUN; exact actual mission directory 0:/missions/000051/ with flight.sslog and all manifest/snapshot/final-status objects must be extracted by user.",
+  "user_preserved_inputs": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  }
+}

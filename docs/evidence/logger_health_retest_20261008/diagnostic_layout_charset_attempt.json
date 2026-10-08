@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gdb.exe",
+    "-batch",
+    "-nx",
+    "-x",
+    "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\offline_layout.gdb"
+  ],
+  "exit_code": 1,
+  "target_connection": false,
+  "elf": "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v2\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf",
+  "elf_sha256": "bb57ae0d8d04c53048bf19d44d54b97ec4fcebec11875c8a4bfc76f963a077f4",
+  "fields": {}
+}
