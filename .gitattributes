@@ -28,3 +28,6 @@ docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8/** -text
 # GUI closeout evidence and the supplied recommendation retain exact bytes.
 docs/evidence/gui_closeout_20261008/** -text
 docs/SilverStar_Recommended_Configurations.md -text
+
+# Actual TF inputs and offline acceptance evidence must retain recorded hashes.
+docs/evidence/static_log_file_20261008/** -text

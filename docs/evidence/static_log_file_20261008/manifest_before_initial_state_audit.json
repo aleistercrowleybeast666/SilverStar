@@ -1,0 +1,428 @@
+{
+  "starting_document_HEAD": "684026533bc779f795c5ca5e19d20150394efa19",
+  "source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "branch": "fix/nightly-user-ready-20261003",
+  "recorded_utc": "2026-10-08T05:26:31.523598+00:00",
+  "source_files": 2233,
+  "source_matches_previous_snapshot": true,
+  "root_inventory_inputs_preserved": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  },
+  "archive": "D:\\stm32_project\\missions.zip",
+  "archive_sha256": "6a71fed719424e392c7335dec18af46d74cb840f38147c9f64e4dc9b18c06381",
+  "archive_bytes": 54152267,
+  "selected_members": 20,
+  "selected_inputs_and_decoder_preserved": true,
+  "commands": [
+    {
+      "command": ".venv/Scripts/python.exe .work/flp08tf/inspect_logs.py",
+      "exit": 0,
+      "scope": "Selected 20 ZIP members + strict production parse"
+    },
+    {
+      "command": ".venv/Scripts/python.exe .work/flp08tf/audit_sidecars.py 44",
+      "exit": 0
+    },
+    {
+      "command": ".venv/Scripts/python.exe .work/flp08tf/audit_sidecars.py 45",
+      "exit": 0
+    },
+    {
+      "command": ".venv/Scripts/python.exe -X faulthandler .work/flp08tf/gui_roundtrip.py",
+      "exit": 1,
+      "scope": "NumPy 2.4.0 safety rejection, zero runs; not native crash"
+    },
+    {
+      "command": "apps/FLP/.venv/Scripts/python.exe -X faulthandler .work/flp08tf/gui_roundtrip_v2.py",
+      "exit": 0,
+      "scope": "Same native Windows process actual 44/45, all 2+2 runs and strict GUI reopen"
+    },
+    {
+      "command": "apps/FLP/.venv/Scripts/python.exe .work/flp08tf/continuity_audit.py",
+      "exit": 0
+    },
+    {
+      "command": "apps/FLP/.venv/Scripts/python.exe -X faulthandler .work/flp08tf/focused_regressions.py",
+      "exit": 1,
+      "scope": "38 fixture setup errors, pytest mode0700 directory unreadable"
+    },
+    {
+      "command": "apps/FLP/.venv/Scripts/python.exe -X faulthandler .work/flp08tf/focused_regressions_v2.py",
+      "exit": 1,
+      "scope": "17 pass / 21 missing qtbot fixture errors"
+    },
+    {
+      "command": "apps/FLP/.venv/Scripts/python.exe -X faulthandler .work/flp08tf/focused_regressions_v3.py",
+      "exit": 1,
+      "scope": "Duplicate pytest-qt registration before collection"
+    },
+    {
+      "command": "apps/FLP/.venv/Scripts/python.exe -X faulthandler .work/flp08tf/focused_regressions_v4.py",
+      "exit": 0,
+      "scope": "One complete same-process 38 pass, 151.88s; tiny fixtures"
+    }
+  ],
+  "test_environment": {
+    "started_utc": "2026-10-08T05:22:20.849961+00:00",
+    "finished_utc": "2026-10-08T05:24:53.457272+00:00",
+    "exit": 0,
+    "args": [
+      "-ra",
+      "-p",
+      "normal_test_paths",
+      "-p",
+      "no:cacheprovider",
+      "-v",
+      "-ra",
+      "--basetemp=D:\\python_software\\SilverStar\\.work\\flp08tf\\pytest_v4",
+      "--junitxml=D:\\python_software\\SilverStar\\.work\\flp08tf\\pytest_v4.xml",
+      "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_project_stage_progress.py",
+      "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_project_stage_progress_gui.py",
+      "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_optional_secondary_source.py::test_secondary_default_none_and_full_run_identity",
+      "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary",
+      "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh"
+    ],
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.4.1",
+    "pyside": "6.10.1",
+    "platform": "windows",
+    "settings_isolated": true,
+    "scope": "Tiny deterministic fixtures; not actual TF fault injection"
+  },
+  "gui_qt_messages": [],
+  "projects_retained_at": [
+    "D:\\python_software\\SilverStar\\.work\\flp08tf\\p44_v2\\mission44.ssflp",
+    "D:\\python_software\\SilverStar\\.work\\flp08tf\\p45_v2\\mission45.ssflp"
+  ],
+  "source_hardware_identity": "Prior authorized bench 44/45 actual cac7bd2 BIN/readback; no hardware in this stage",
+  "remaining_NOT_PROVEN": [
+    "Rejected push call identity and safety impact",
+    "End-to-end radio delivery",
+    "Boot maximum interval attribution",
+    "Navigation accuracy / MCU WCET / full stack proof / critical manual review"
+  ],
+  "historical_FAIL_preserved": [
+    "Unattributed Qt/Shiboken native abort in earlier combined suite"
+  ],
+  "NOT_RUN": [
+    "Unrelated archive member scan",
+    "Long log/ESKF15/full prior suite rerun",
+    "Any hardware action"
+  ],
+  "files": {
+    "project_artifact_hashes.json": {
+      "bytes": 194090,
+      "sha256": "ff8f3043e403e485b14921fa10d8d52273471eff494504ce2408b32d550acd74"
+    },
+    "source_apps_sha256.json": {
+      "bytes": 357092,
+      "sha256": "73aec4d05742bcdc6a9eb88b53871beae29c0c8f82ce304c829835b1e03ec9ac"
+    },
+    "execution\\audit_sidecars.py": {
+      "bytes": 4539,
+      "sha256": "83559c58ae86cb5b489c837019db3080bdb3257503b4c06b46c6b9f78cf28d92"
+    },
+    "execution\\continuity_audit.py": {
+      "bytes": 3952,
+      "sha256": "d788930a0d7a32bb928ea49eba98bea88157bf09186207e370ae0512ff7e09a0"
+    },
+    "execution\\continuity_runner.log": {
+      "bytes": 7858,
+      "sha256": "18b29a8edf5b0011c8c96f2e4db2d504b5f2a6ea72366f90059a019050007418"
+    },
+    "execution\\focused_regressions.log": {
+      "bytes": 10132,
+      "sha256": "86ad36255993f55949c73fc8bba1136e6ce3b3016f0d4e386991e41ded0fd266"
+    },
+    "execution\\focused_regressions.py": {
+      "bytes": 2731,
+      "sha256": "5e335f480adab3fad16963d2fd398a071a933a69a6a307538d97280dd60046b8"
+    },
+    "execution\\focused_regressions_v2.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "execution\\focused_regressions_v2.log": {
+      "bytes": 26215,
+      "sha256": "7840bc7756ed86edd699b748fbd1400022bb01364249051a20284712be4253dd"
+    },
+    "execution\\focused_regressions_v2.py": {
+      "bytes": 2850,
+      "sha256": "9fc06b6e9acde983be818dd3812b3fa56726b7625d26f75cc9929b0b5dd0135e"
+    },
+    "execution\\focused_regressions_v3.exit.txt": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "execution\\focused_regressions_v3.log": {
+      "bytes": 8355,
+      "sha256": "d5f823a77c06e7ab8b6e6bbd1dd87ba7fc0b88c4aa465378256d81c95667119e"
+    },
+    "execution\\focused_regressions_v3.py": {
+      "bytes": 2928,
+      "sha256": "c6145fc086f70e0b922efc210c15f8d193b5f9ad51f8f657164f588784e16a8f"
+    },
+    "execution\\focused_regressions_v4.exit.txt": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "execution\\focused_regressions_v4.log": {
+      "bytes": 5647,
+      "sha256": "a86c4fc834ee4d1a5372dbacce21b557f4b9b91ad1a1d7d5bc1d2da20e90bdab"
+    },
+    "execution\\focused_regressions_v4.py": {
+      "bytes": 2903,
+      "sha256": "285ec743e6b4358d7501b183d7d91d5798adb1fcbc535ddaa65c491229fad133"
+    },
+    "execution\\focused_test_result_v2.json": {
+      "bytes": 1302,
+      "sha256": "38d114bcf5a3878f3b182fa6dbea24a25e74602810ecc87b04b60ce342996ad5"
+    },
+    "execution\\focused_test_result_v4.json": {
+      "bytes": 1302,
+      "sha256": "a3f7743a58c300688914d9a6f39827c557bf73aed718f846af377c0a25bb85dc"
+    },
+    "execution\\gui_failure.json": {
+      "bytes": 339,
+      "sha256": "c1cbc180bf8afc6d97ab192e3e00d45cc0a70423f6b3da6219b000ed7f479ef9"
+    },
+    "execution\\gui_progress.json": {
+      "bytes": 6003,
+      "sha256": "bda437110344f8f7dfcdf55b142f6cd54d00c01ec6e66aa9920e9e1cc8c22965"
+    },
+    "execution\\gui_progress_v2.json": {
+      "bytes": 66433,
+      "sha256": "656f07b58f274d227d4e9cef1cae875352fa42f80268473f59451f799db73bbc"
+    },
+    "execution\\gui_roundtrip.py": {
+      "bytes": 8762,
+      "sha256": "60faf7a4f8854a63985654732f9e3ff525c69df4de559ad1e8f6517d4f42938c"
+    },
+    "execution\\gui_roundtrip_v2.py": {
+      "bytes": 8780,
+      "sha256": "2c495e676922b7ece8c89e4894d641c761340280fc8ca7593f0de35c9cabd561"
+    },
+    "execution\\gui_runner.log": {
+      "bytes": 1956,
+      "sha256": "11f99f79327ab248974b6eab3759a8d953ee1e072aa8f8d54ef83104726658d8"
+    },
+    "execution\\gui_runner_v2.log": {
+      "bytes": 339,
+      "sha256": "5bbf7d80c254f9c252aeb3aea8e5768c40f6aea44239bbc57248fb04119a9649"
+    },
+    "execution\\input_inventory.json": {
+      "bytes": 9795,
+      "sha256": "9b53c00c887cb4f3b4aedb70af6372eff4390f67e24318a59648a9d7f58f5251"
+    },
+    "execution\\inspect_logs.py": {
+      "bytes": 5966,
+      "sha256": "d720c75b2ae6aba81a3f4217d0659b29ff0a883898b5a2689b86b87418093bd4"
+    },
+    "execution\\inspect_runner.log": {
+      "bytes": 2804,
+      "sha256": "331defc4726d8494782a470d0c8731ffabb647358f9028762d6a0c19fa3224bd"
+    },
+    "execution\\normal_test_paths.py": {
+      "bytes": 896,
+      "sha256": "98525ae940fd5e735b9671f3ec593af4a47fad1798573283fc7fea9697fd6a81"
+    },
+    "execution\\package_evidence.py": {
+      "bytes": 6920,
+      "sha256": "5609c21c3baa2b6422109aa25e73e2d31f6371b709293bd72c075044ac9ffb2e"
+    },
+    "execution\\prepare_sidecar_audit.py": {
+      "bytes": 954,
+      "sha256": "ecb6e2d21a46506d7fd033356fa341418311b76e89a90a0f86414c5448d7657f"
+    },
+    "execution\\pytest_v2.xml": {
+      "bytes": 40329,
+      "sha256": "468edfe712edaa33c42d3638137941b5cc25bb2191109da4899fff55de48a992"
+    },
+    "execution\\pytest_v4.xml": {
+      "bytes": 5939,
+      "sha256": "774f9fb2d3c603b1935a3a51d2933f2523577fc99f26c6b8ee289e30fa0646bf"
+    },
+    "execution\\qt_messages.json": {
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "execution\\qt_messages_v2.json": {
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inputs\\KF6_Static_20261008_f045d8c.ssdecoder": {
+      "bytes": 144321,
+      "sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+    },
+    "results\\m44\\continuity_audit.json": {
+      "bytes": 9962,
+      "sha256": "bdebbdd1690a6cb2ec8e2f8621d65309b0a4a49afdc8633285e1090ae4c3b669"
+    },
+    "results\\m44\\critical_records.json": {
+      "bytes": 60789,
+      "sha256": "667b5345c69c44c811147f1a5eaf815e366886fa6e8a6b6b58662b548770e256"
+    },
+    "results\\m44\\health_field_summary.json": {
+      "bytes": 41119,
+      "sha256": "7e8c7a6be3e212153c377c0d8009fea4a6f66cfb478bfea36107ea58db96c2fe"
+    },
+    "results\\m44\\parse_summary.json": {
+      "bytes": 25507,
+      "sha256": "09245a44b85e37f6b91d0ed4385cf19bd8d20fa29262db8aea1b476fa48494f8"
+    },
+    "results\\m44\\record_samples.json": {
+      "bytes": 49353,
+      "sha256": "773aa31f898af9671a448c8f056c1bf4c8def3c5dba946bf6de00a6e96b78d38"
+    },
+    "results\\m44\\sidecar_audit.json": {
+      "bytes": 4211,
+      "sha256": "76855305a9cba3bbad6c1d641422fb4d93a8bb0b60dcd73813ee8a0dc850b70d"
+    },
+    "results\\m44\\sidecar_runner.log": {
+      "bytes": 908,
+      "sha256": "3d64264411a97232c1219b0894eb06ea6879f18681f24ea06f23c6eada2c26ba"
+    },
+    "results\\m45\\continuity_audit.json": {
+      "bytes": 9871,
+      "sha256": "22314e23a6036151b80a354e7487bbce111e144c752d669b175673f007452b05"
+    },
+    "results\\m45\\critical_records.json": {
+      "bytes": 61249,
+      "sha256": "97a8f51dc5a5f071d42e91d698d36a425fcc12429c5fccc75bf0cd4c689e55a6"
+    },
+    "results\\m45\\health_field_summary.json": {
+      "bytes": 40990,
+      "sha256": "5325fde638726096b98f9931c74275752b44eafdf6ebb81d62082c7fe90d585b"
+    },
+    "results\\m45\\parse_summary.json": {
+      "bytes": 25640,
+      "sha256": "6f0839422cadaff75d570ef80b9aec4be2ba372f621394f68c41e5c32b10243e"
+    },
+    "results\\m45\\record_samples.json": {
+      "bytes": 49281,
+      "sha256": "9b9776d35602ddaee76cb08913e27685468844bc356a04a2c8bb5a60a582065b"
+    },
+    "results\\m45\\sidecar_audit.json": {
+      "bytes": 4205,
+      "sha256": "27917b21283d811930ea8ea57f790158985c3a1d64d04cfd75454bacac3485cc"
+    },
+    "results\\m45\\sidecar_runner.log": {
+      "bytes": 905,
+      "sha256": "cb6ddb2a9c7cc6cd8d857b00c8231a0aaa8a7601a37c6427a2f63461f785027e"
+    },
+    "results\\p44\\estimation.png": {
+      "bytes": 99391,
+      "sha256": "2cee6997dd707603e6dbc8b0a462aacb8bdb9b732881b05e3552d4d91c5407f8"
+    },
+    "results\\p44\\flight.png": {
+      "bytes": 99595,
+      "sha256": "45f2ac14ac4093a8ff2761af07b95378486676ab01e62ff0c03ff976b7a12e0a"
+    },
+    "results\\p44\\gui_result.json": {
+      "bytes": 32912,
+      "sha256": "95b1ffe1ed6aa491a908d7eb2f309f6e8b6d6c410a456dfe7bd8747d68b5c277"
+    },
+    "results\\p44\\overview.png": {
+      "bytes": 117208,
+      "sha256": "9db441a23b7f9d7cf01d9535e972c471919d0af2bf805a264b0033a038104008"
+    },
+    "results\\p45\\estimation.png": {
+      "bytes": 100375,
+      "sha256": "59bd3e72fda27d0344a0d063a24c9b9a2477105e7762c72edebf95b0d2db6693"
+    },
+    "results\\p45\\flight.png": {
+      "bytes": 98194,
+      "sha256": "f34c4b569152fd877cb0da7c235a5cdc7a1e350ccc1818b0bcd3ede8a9d74730"
+    },
+    "results\\p45\\gui_result.json": {
+      "bytes": 32876,
+      "sha256": "68e55a8d3ff9aabe3703cfd8441c5880ce4fc564032817c115ea017ca46d63df"
+    },
+    "results\\p45\\overview.png": {
+      "bytes": 116981,
+      "sha256": "e9b1923bd012334aa55dda870cb0272fe194f86d3ad508de9c8a17881f0e3c7b"
+    },
+    "inputs\\missions\\000044\\flight.sslog": {
+      "bytes": 885023,
+      "sha256": "c5f123ccc6b0390b869412f6e0a09d834999f8be621b876f43298bb5028a1fb2"
+    },
+    "inputs\\missions\\000044\\manifest": {
+      "bytes": 20,
+      "sha256": "eb76e9b72eddfd9773844d977e45986bcbe1bcbbca936f4c718456771cb934d9"
+    },
+    "inputs\\missions\\000044\\snap00.0": {
+      "bytes": 190,
+      "sha256": "455a26c4a251ec59ea836b100fcf1e06b30bf62c90e96b251769ef8db254c511"
+    },
+    "inputs\\missions\\000044\\snap01.0": {
+      "bytes": 338,
+      "sha256": "6b32e618d7fea1b251191f0e01b73423b9b1275a7cce0bb304e6034c7958b1b7"
+    },
+    "inputs\\missions\\000044\\snap02.0": {
+      "bytes": 26,
+      "sha256": "979ea2ebe5dbb3fb28e8f8143f656cd2aadb7a9d10448018ea3faa89ba36ad4d"
+    },
+    "inputs\\missions\\000044\\snap03.0": {
+      "bytes": 90,
+      "sha256": "c6e00db6125a8a843249ea0cdd936895eb1c08d05666a5f3b32b611f004ee06d"
+    },
+    "inputs\\missions\\000044\\snap04.0": {
+      "bytes": 368,
+      "sha256": "08762c4c6663ad703ed18684b8c67c7e50ee1d49c817969779513577c75a0035"
+    },
+    "inputs\\missions\\000044\\snap05.0": {
+      "bytes": 26,
+      "sha256": "365477504e3e37238fdc4fc4f090d9f4abff7fcc076d11d6c4ae2f6697814501"
+    },
+    "inputs\\missions\\000044\\snap06.0": {
+      "bytes": 93,
+      "sha256": "d4483c2413412f27663f163b11eb860055ce3ec83c6194e76b72a9b6345281a0"
+    },
+    "inputs\\missions\\000044\\snap07.0": {
+      "bytes": 66,
+      "sha256": "0760336588bac29bd5e590e9b73dbed500a9d45a686d840e5daac5a4ba1978ec"
+    },
+    "inputs\\missions\\000045\\flight.sslog": {
+      "bytes": 878123,
+      "sha256": "b9b6244f0103b02d98e3389c10661043fe7f22aa84f701bd456ea255e425308f"
+    },
+    "inputs\\missions\\000045\\manifest": {
+      "bytes": 20,
+      "sha256": "65dc26b0caab3a7110fad3b0ef3844810f78bf0e27274f0bddfa59fd18836a13"
+    },
+    "inputs\\missions\\000045\\snap00.0": {
+      "bytes": 190,
+      "sha256": "7ab1364b08db5b8f1ffa3cb75152831f7d2726ffb6252357a00c41675e471e63"
+    },
+    "inputs\\missions\\000045\\snap01.0": {
+      "bytes": 338,
+      "sha256": "6b32e618d7fea1b251191f0e01b73423b9b1275a7cce0bb304e6034c7958b1b7"
+    },
+    "inputs\\missions\\000045\\snap02.0": {
+      "bytes": 26,
+      "sha256": "979ea2ebe5dbb3fb28e8f8143f656cd2aadb7a9d10448018ea3faa89ba36ad4d"
+    },
+    "inputs\\missions\\000045\\snap03.0": {
+      "bytes": 90,
+      "sha256": "c6e00db6125a8a843249ea0cdd936895eb1c08d05666a5f3b32b611f004ee06d"
+    },
+    "inputs\\missions\\000045\\snap04.0": {
+      "bytes": 368,
+      "sha256": "08762c4c6663ad703ed18684b8c67c7e50ee1d49c817969779513577c75a0035"
+    },
+    "inputs\\missions\\000045\\snap05.0": {
+      "bytes": 26,
+      "sha256": "365477504e3e37238fdc4fc4f090d9f4abff7fcc076d11d6c4ae2f6697814501"
+    },
+    "inputs\\missions\\000045\\snap06.0": {
+      "bytes": 93,
+      "sha256": "621d414fcc297663fec8538dd4838c29973381a5d18277a5b0b7c2d0e9ed0909"
+    },
+    "inputs\\missions\\000045\\snap07.0": {
+      "bytes": 66,
+      "sha256": "6f4e9ff901ac74a7ceac81ff1a926560f2d78682c3ea05ed1c7b9382177e96c2"
+    }
+  }
+}

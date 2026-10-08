@@ -1,0 +1,27 @@
+{
+  "started_utc": "2026-10-08T05:22:20.849961+00:00",
+  "finished_utc": "2026-10-08T05:24:53.457272+00:00",
+  "exit": 0,
+  "args": [
+    "-ra",
+    "-p",
+    "normal_test_paths",
+    "-p",
+    "no:cacheprovider",
+    "-v",
+    "-ra",
+    "--basetemp=D:\\python_software\\SilverStar\\.work\\flp08tf\\pytest_v4",
+    "--junitxml=D:\\python_software\\SilverStar\\.work\\flp08tf\\pytest_v4.xml",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_project_stage_progress.py",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_project_stage_progress_gui.py",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_optional_secondary_source.py::test_secondary_default_none_and_full_run_identity",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary",
+    "D:\\python_software\\SilverStar\\apps\\FLP\\tests\\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh"
+  ],
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.4.1",
+  "pyside": "6.10.1",
+  "platform": "windows",
+  "settings_isolated": true,
+  "scope": "Tiny deterministic fixtures; not actual TF fault injection"
+}

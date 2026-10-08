@@ -1,0 +1,11 @@
+DONE 44 strict GUI open
+DONE 44 KF6 recorded_configuration
+DONE 44 KF6 what_if
+DONE 44 actual artifact save
+DONE 44 strict GUI reopen
+DONE 45 strict GUI open
+DONE 45 KF6 recorded_configuration
+DONE 45 KF6 what_if
+DONE 45 actual artifact save
+DONE 45 strict GUI reopen
+PASS native same-process actual mission 44/45 GUI roundtrip

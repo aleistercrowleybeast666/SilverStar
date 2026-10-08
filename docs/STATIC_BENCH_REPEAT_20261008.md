@@ -68,3 +68,5 @@ AIR 当前没有这三个内部计数的直接实时下载接口，故使用已�
 本次沿用精确包 `D:\python_software\SilverStar\.work\bench08c_f407\KF6_Static_20261008_f045d8c.ssdecoder`，144321 B，SHA256 `46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2`。仍需FLP LogOpenCoordinator将此包与TF Recorded Descriptor严格匹配，主副数据源、全部run及保存/取消/关闭/原子提交/重开为NOT_RUN。
 
 [证据清单](evidence/static_bench_repeat_20261008/manifest.json)记录原始命令、UTC/exit、脚本、live SWD布局/原始字节、串口字节、对照表及全部应用源哈希。BIN读回留在标明的`.work`路径；未复制vendor或清理旧证据。重跑必须重新获得任务范围并用新证据目录，不能直接覆盖运行这些拒绝重复文件的harness。
+
+后续文件验收：用户原位替换 ZIP 后，[实际 TF 与 FLP 离线报告](STATIC_LOG_FILE_ACCEPTANCE_20261008.md)已完成 000044/45 的严格文件与软件持久化验收，原截止时的 NOT_RUN 不改写为当时已通过。拒绝调用身份、空口完整性和启动最大间隔归因仍为 NOT PROVEN；此后没有新增硬件动作。

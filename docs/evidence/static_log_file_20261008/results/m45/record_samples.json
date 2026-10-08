@@ -1,0 +1,1901 @@
+{
+  "DECODER_PROFILE_DESCRIPTOR": {
+    "count": 1,
+    "first": {
+      "record_type": 29,
+      "record_name": "DECODER_PROFILE_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 64,
+      "record_sequence": 0,
+      "timestamp_us": 245359,
+      "valid_flags": 0,
+      "payload": {
+        "package_schema_major": 1,
+        "package_schema_minor": 2,
+        "container_format_major": 0,
+        "container_format_minor": 0,
+        "record_catalog_hash_128": [
+          122,
+          245,
+          149,
+          242,
+          55,
+          108,
+          34,
+          220,
+          87,
+          205,
+          99,
+          163,
+          67,
+          64,
+          214,
+          133
+        ],
+        "project_semantics_hash_128": [
+          60,
+          203,
+          175,
+          211,
+          71,
+          90,
+          78,
+          216,
+          235,
+          170,
+          52,
+          51,
+          7,
+          68,
+          118,
+          81
+        ],
+        "generation_profile_hash_128": [
+          196,
+          73,
+          220,
+          193,
+          139,
+          166,
+          226,
+          39,
+          116,
+          251,
+          50,
+          3,
+          129,
+          82,
+          200,
+          16
+        ],
+        "reserved": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "file_offset": 64
+    },
+    "last": {
+      "record_type": 29,
+      "record_name": "DECODER_PROFILE_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 64,
+      "record_sequence": 0,
+      "timestamp_us": 245359,
+      "valid_flags": 0,
+      "payload": {
+        "package_schema_major": 1,
+        "package_schema_minor": 2,
+        "container_format_major": 0,
+        "container_format_minor": 0,
+        "record_catalog_hash_128": [
+          122,
+          245,
+          149,
+          242,
+          55,
+          108,
+          34,
+          220,
+          87,
+          205,
+          99,
+          163,
+          67,
+          64,
+          214,
+          133
+        ],
+        "project_semantics_hash_128": [
+          60,
+          203,
+          175,
+          211,
+          71,
+          90,
+          78,
+          216,
+          235,
+          170,
+          52,
+          51,
+          7,
+          68,
+          118,
+          81
+        ],
+        "generation_profile_hash_128": [
+          196,
+          73,
+          220,
+          193,
+          139,
+          166,
+          226,
+          39,
+          116,
+          251,
+          50,
+          3,
+          129,
+          82,
+          200,
+          16
+        ],
+        "reserved": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "file_offset": 64
+    }
+  },
+  "SYSTEM_CONFIG": {
+    "count": 2,
+    "first": {
+      "record_type": 5,
+      "record_name": "SYSTEM_CONFIG",
+      "record_version": 0,
+      "payload_length": 132,
+      "record_sequence": 1,
+      "timestamp_us": 248570,
+      "valid_flags": 0,
+      "payload": {
+        "version": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "profile_id": 12,
+        "device_config_digest": 2812161682,
+        "configured_imu_rate_hz": 200,
+        "configured_gnss_rate_hz": 25,
+        "configured_magnetometer_rate_hz": 200,
+        "configured_barometer_rate_hz": 200,
+        "configured_hardware_quaternion_rate_hz": 200,
+        "mechanization_subsample_count": 2,
+        "expected_ins_rate_hz": 100,
+        "mechanization_min_sample_rate_hz": 50,
+        "mechanization_max_sample_rate_hz": 500,
+        "log_profile_id": 0,
+        "sync_period_us": 250000,
+        "aggregation_buffer_size": 4096,
+        "normal_queue_depth": 80,
+        "estimator_queue_depth": 48,
+        "device_descriptor_count": 12,
+        "algorithm_descriptor_count": 4,
+        "log_stream_descriptor_count": 40,
+        "reserved": 0,
+        "p0_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "process_accel_std_mps2": [
+          1.5,
+          1.5,
+          2.0
+        ],
+        "measurement_profile": [
+          1.25,
+          1.5,
+          2.5,
+          0.15000000596046448,
+          2.5
+        ],
+        "nis_profile": [
+          6.635000228881836,
+          10.82800006866455,
+          9.210000038146973,
+          13.815999984741211,
+          11.345000267028809,
+          16.266000747680664,
+          4.0
+        ]
+      },
+      "file_offset": 156
+    },
+    "last": {
+      "record_type": 5,
+      "record_name": "SYSTEM_CONFIG",
+      "record_version": 0,
+      "payload_length": 132,
+      "record_sequence": 133,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "version": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "profile_id": 12,
+        "device_config_digest": 2812161682,
+        "configured_imu_rate_hz": 200,
+        "configured_gnss_rate_hz": 25,
+        "configured_magnetometer_rate_hz": 200,
+        "configured_barometer_rate_hz": 200,
+        "configured_hardware_quaternion_rate_hz": 200,
+        "mechanization_subsample_count": 2,
+        "expected_ins_rate_hz": 100,
+        "mechanization_min_sample_rate_hz": 50,
+        "mechanization_max_sample_rate_hz": 500,
+        "log_profile_id": 0,
+        "sync_period_us": 250000,
+        "aggregation_buffer_size": 4096,
+        "normal_queue_depth": 80,
+        "estimator_queue_depth": 48,
+        "device_descriptor_count": 12,
+        "algorithm_descriptor_count": 4,
+        "log_stream_descriptor_count": 40,
+        "reserved": 0,
+        "p0_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "process_accel_std_mps2": [
+          1.5,
+          1.5,
+          2.0
+        ],
+        "measurement_profile": [
+          1.25,
+          1.5,
+          2.5,
+          0.15000000596046448,
+          2.5
+        ],
+        "nis_profile": [
+          6.635000228881836,
+          10.82800006866455,
+          9.210000038146973,
+          13.815999984741211,
+          11.345000267028809,
+          16.266000747680664,
+          4.0
+        ]
+      },
+      "file_offset": 5920
+    }
+  },
+  "DEVICE_DESCRIPTOR": {
+    "count": 24,
+    "first": {
+      "record_type": 26,
+      "record_name": "DEVICE_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 26,
+      "record_sequence": 2,
+      "timestamp_us": 248570,
+      "valid_flags": 0,
+      "payload": {
+        "descriptor_id": 1,
+        "physical_device_id": 6,
+        "device_class": 1,
+        "instance_id": 0,
+        "driver_id": 1,
+        "flags": 15,
+        "capability_mask": 1,
+        "configured_rate_hz": 200,
+        "driver_name_hash": 2918196354,
+        "model_name_hash": 1399398777
+      },
+      "file_offset": 316
+    },
+    "last": {
+      "record_type": 26,
+      "record_name": "DEVICE_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 26,
+      "record_sequence": 145,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "descriptor_id": 12,
+        "physical_device_id": 0,
+        "device_class": 13,
+        "instance_id": 0,
+        "driver_id": 1,
+        "flags": 9,
+        "capability_mask": 0,
+        "configured_rate_hz": 1000000,
+        "driver_name_hash": 372190356,
+        "model_name_hash": 2917174658
+      },
+      "file_offset": 6674
+    }
+  },
+  "ALGORITHM_DESCRIPTOR": {
+    "count": 8,
+    "first": {
+      "record_type": 27,
+      "record_name": "ALGORITHM_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 14,
+      "timestamp_us": 248570,
+      "valid_flags": 0,
+      "payload": {
+        "descriptor_id": 1,
+        "algorithm_class": 1,
+        "instance_id": 0,
+        "algorithm_id": 4,
+        "flags": 9,
+        "config_digest": 2812227218,
+        "name_hash": 1905111985
+      },
+      "file_offset": 964
+    },
+    "last": {
+      "record_type": 27,
+      "record_name": "ALGORITHM_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 149,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "descriptor_id": 4,
+        "algorithm_class": 4,
+        "instance_id": 0,
+        "algorithm_id": 1,
+        "flags": 9,
+        "config_digest": 2811899538,
+        "name_hash": 2177099094
+      },
+      "file_offset": 6860
+    }
+  },
+  "LOG_STREAM_DESCRIPTOR": {
+    "count": 80,
+    "first": {
+      "record_type": 28,
+      "record_name": "LOG_STREAM_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 18,
+      "timestamp_us": 248570,
+      "valid_flags": 0,
+      "payload": {
+        "record_type": 2,
+        "record_version": 0,
+        "enabled": 1,
+        "policy": 3,
+        "decimation": 1,
+        "reserved": 0,
+        "period_us": 0
+      },
+      "file_offset": 1140
+    },
+    "last": {
+      "record_type": 28,
+      "record_name": "LOG_STREAM_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 189,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "record_type": 44,
+        "record_version": 1,
+        "enabled": 0,
+        "policy": 0,
+        "decimation": 1,
+        "reserved": 0,
+        "period_us": 0
+      },
+      "file_offset": 8464
+    }
+  },
+  "EVENT": {
+    "count": 86,
+    "first": {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 58,
+      "timestamp_us": 525393,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 17,
+        "arg0": 638,
+        "arg1": 670,
+        "event_name": "GNSS_FIX_LOST",
+        "event_semantics": {},
+        "arg0_float": 8.940284202392333e-43,
+        "arg1_float": 9.388699710976274e-43
+      },
+      "file_offset": 2740
+    },
+    "last": {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 10165,
+      "timestamp_us": 44174724,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 42,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "LANDING",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 878083
+    }
+  },
+  "CALIBRATION_RESULT": {
+    "count": 1,
+    "first": {
+      "record_type": 23,
+      "record_name": "CALIBRATION_RESULT",
+      "record_version": 0,
+      "payload_length": 72,
+      "record_sequence": 115,
+      "timestamp_us": 24357452,
+      "valid_flags": 0,
+      "payload": {
+        "source_id": 0,
+        "virtual_imu_id": 0,
+        "mode": 1,
+        "state": 4,
+        "ready": 1,
+        "completed_face_mask": 0,
+        "samples": 190,
+        "reject_count": 0,
+        "retry_count": 0,
+        "start_sequence": 1,
+        "accel_bias_mps2": [
+          -0.12722645699977875,
+          0.030930519104003906,
+          -0.015783939510583878
+        ],
+        "accel_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "gyro_bias_radps": [
+          5.606655122392112e-06,
+          -5.606655031442642e-05,
+          -0.00042610568925738335
+        ],
+        "gyro_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "file_offset": 5020
+    },
+    "last": {
+      "record_type": 23,
+      "record_name": "CALIBRATION_RESULT",
+      "record_version": 0,
+      "payload_length": 72,
+      "record_sequence": 115,
+      "timestamp_us": 24357452,
+      "valid_flags": 0,
+      "payload": {
+        "source_id": 0,
+        "virtual_imu_id": 0,
+        "mode": 1,
+        "state": 4,
+        "ready": 1,
+        "completed_face_mask": 0,
+        "samples": 190,
+        "reject_count": 0,
+        "retry_count": 0,
+        "start_sequence": 1,
+        "accel_bias_mps2": [
+          -0.12722645699977875,
+          0.030930519104003906,
+          -0.015783939510583878
+        ],
+        "accel_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "gyro_bias_radps": [
+          5.606655122392112e-06,
+          -5.606655031442642e-05,
+          -0.00042610568925738335
+        ],
+        "gyro_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "file_offset": 5020
+    }
+  },
+  "ALIGNMENT_RESULT": {
+    "count": 1,
+    "first": {
+      "record_type": 24,
+      "record_name": "ALIGNMENT_RESULT",
+      "record_version": 0,
+      "payload_length": 96,
+      "record_sequence": 131,
+      "timestamp_us": 25928574,
+      "valid_flags": 0,
+      "payload": {
+        "capability_mask": 7,
+        "selected_mask": 7,
+        "required_mask": 5,
+        "ready_mask": 5,
+        "unavailable_mask": 0,
+        "missing_adapter_mask": 0,
+        "start_sequence": 1,
+        "state": 3,
+        "config_result": 0,
+        "ready": 1,
+        "source_count": 6,
+        "attitude_timestamp_us": 25924019,
+        "q_nb": [
+          0.7070969343185425,
+          0.7071167230606079,
+          1.776254975993652e-05,
+          -1.7793958249967545e-05
+        ],
+        "gnss_origin_lat_e7": 0,
+        "gnss_origin_lon_e7": 0,
+        "gnss_origin_height_mm": 0,
+        "gnss_sample_count": 0,
+        "gnss_horizontal_accuracy_m": 0.0,
+        "gnss_vertical_accuracy_m": 0.0,
+        "barometer_sample_count": 100,
+        "barometer_origin_pressure_pa": 0.0,
+        "barometer_origin_altitude_m": 0.0,
+        "attitude_state": 2,
+        "gnss_state": 0,
+        "barometer_state": 2,
+        "attitude_source": 4
+      },
+      "file_offset": 5720
+    },
+    "last": {
+      "record_type": 24,
+      "record_name": "ALIGNMENT_RESULT",
+      "record_version": 0,
+      "payload_length": 96,
+      "record_sequence": 131,
+      "timestamp_us": 25928574,
+      "valid_flags": 0,
+      "payload": {
+        "capability_mask": 7,
+        "selected_mask": 7,
+        "required_mask": 5,
+        "ready_mask": 5,
+        "unavailable_mask": 0,
+        "missing_adapter_mask": 0,
+        "start_sequence": 1,
+        "state": 3,
+        "config_result": 0,
+        "ready": 1,
+        "source_count": 6,
+        "attitude_timestamp_us": 25924019,
+        "q_nb": [
+          0.7070969343185425,
+          0.7071167230606079,
+          1.776254975993652e-05,
+          -1.7793958249967545e-05
+        ],
+        "gnss_origin_lat_e7": 0,
+        "gnss_origin_lon_e7": 0,
+        "gnss_origin_height_mm": 0,
+        "gnss_sample_count": 0,
+        "gnss_horizontal_accuracy_m": 0.0,
+        "gnss_vertical_accuracy_m": 0.0,
+        "barometer_sample_count": 100,
+        "barometer_origin_pressure_pa": 0.0,
+        "barometer_origin_altitude_m": 0.0,
+        "attitude_state": 2,
+        "gnss_state": 0,
+        "barometer_state": 2,
+        "attitude_source": 4
+      },
+      "file_offset": 5720
+    }
+  },
+  "ALIGNMENT_EVIDENCE": {
+    "count": 1,
+    "first": {
+      "record_type": 40,
+      "record_name": "ALIGNMENT_EVIDENCE",
+      "record_version": 1,
+      "payload_length": 48,
+      "record_sequence": 132,
+      "timestamp_us": 25928612,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "constraint_count": 2,
+        "valid_pair_count": 1,
+        "yaw_authoritative": 0,
+        "imu_source_instance": 0,
+        "magnetometer_instance": 255,
+        "external_source_instance": 255,
+        "failure_reason": 0,
+        "magnetometer_physical_device_id": 0,
+        "flags": 9,
+        "mag_calibration_generation": 0,
+        "mag_calibration_set_hash": 105389361,
+        "first_timestamp_us": 25420019,
+        "last_timestamp_us": 25924019,
+        "minimum_pair_sine": 1.0,
+        "rms_mismatch_rad": 0.0,
+        "max_mismatch_rad": 0.0
+      },
+      "file_offset": 5844
+    },
+    "last": {
+      "record_type": 40,
+      "record_name": "ALIGNMENT_EVIDENCE",
+      "record_version": 1,
+      "payload_length": 48,
+      "record_sequence": 132,
+      "timestamp_us": 25928612,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "constraint_count": 2,
+        "valid_pair_count": 1,
+        "yaw_authoritative": 0,
+        "imu_source_instance": 0,
+        "magnetometer_instance": 255,
+        "external_source_instance": 255,
+        "failure_reason": 0,
+        "magnetometer_physical_device_id": 0,
+        "flags": 9,
+        "mag_calibration_generation": 0,
+        "mag_calibration_set_hash": 105389361,
+        "first_timestamp_us": 25420019,
+        "last_timestamp_us": 25924019,
+        "minimum_pair_sine": 1.0,
+        "rms_mismatch_rad": 0.0,
+        "max_mismatch_rad": 0.0
+      },
+      "file_offset": 5844
+    }
+  },
+  "MISSION_CONFIG": {
+    "count": 1,
+    "first": {
+      "record_type": 25,
+      "record_name": "MISSION_CONFIG",
+      "record_version": 0,
+      "payload_length": 91,
+      "record_sequence": 190,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "rocket_longitudinal_axis": 4,
+        "deploy_trigger_mask": 4,
+        "tilt_reference": 0,
+        "landing_enable": 1,
+        "landing_mode": 2,
+        "impact_capable": 0,
+        "known_yaw_deg": 0.0,
+        "magnetic_declination_deg": 0.0,
+        "tilt_threshold_deg": 90.0,
+        "apogee_vz_threshold_mps": -2.0,
+        "deploy_confirm_ms": 0,
+        "deploy_delay_ms": 10000,
+        "baro_trigger_window_ms": 1000,
+        "baro_trigger_min_samples": 10,
+        "baro_trigger_rate_mps": 1.0,
+        "candidate_duration_ms": 3000,
+        "baro_confirm_rate_mps": 0.30000001192092896,
+        "baro_max_span_m": 1.0,
+        "candidate_baro_min_samples": 20,
+        "candidate_imu_min_samples": 50,
+        "candidate_min_coverage_percent": 80,
+        "impact_inhibit_ms": 3000,
+        "impact_threshold_mps2": 15.0,
+        "still_gyro_threshold_radps": 0.10000000149011612,
+        "still_accel_tolerance_mps2": 0.5,
+        "landing_confirm_ms": 5000,
+        "landing_sample_max_age_ms": 100
+      },
+      "file_offset": 8504
+    },
+    "last": {
+      "record_type": 25,
+      "record_name": "MISSION_CONFIG",
+      "record_version": 0,
+      "payload_length": 91,
+      "record_sequence": 190,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "rocket_longitudinal_axis": 4,
+        "deploy_trigger_mask": 4,
+        "tilt_reference": 0,
+        "landing_enable": 1,
+        "landing_mode": 2,
+        "impact_capable": 0,
+        "known_yaw_deg": 0.0,
+        "magnetic_declination_deg": 0.0,
+        "tilt_threshold_deg": 90.0,
+        "apogee_vz_threshold_mps": -2.0,
+        "deploy_confirm_ms": 0,
+        "deploy_delay_ms": 10000,
+        "baro_trigger_window_ms": 1000,
+        "baro_trigger_min_samples": 10,
+        "baro_trigger_rate_mps": 1.0,
+        "candidate_duration_ms": 3000,
+        "baro_confirm_rate_mps": 0.30000001192092896,
+        "baro_max_span_m": 1.0,
+        "candidate_baro_min_samples": 20,
+        "candidate_imu_min_samples": 50,
+        "candidate_min_coverage_percent": 80,
+        "impact_inhibit_ms": 3000,
+        "impact_threshold_mps2": 15.0,
+        "still_gyro_threshold_radps": 0.10000000149011612,
+        "still_accel_tolerance_mps2": 0.5,
+        "landing_confirm_ms": 5000,
+        "landing_sample_max_age_ms": 100
+      },
+      "file_offset": 8504
+    }
+  },
+  "MISSION_SNAPSHOT_IDENTITY": {
+    "count": 1,
+    "first": {
+      "record_type": 41,
+      "record_name": "MISSION_SNAPSHOT_IDENTITY",
+      "record_version": 1,
+      "payload_length": 24,
+      "record_sequence": 191,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "mission_id": 45,
+        "commit_generation": 1,
+        "snapshot_sequence": 1,
+        "imu_calibration_generation": 1,
+        "mag_calibration_set_hash": 105389361,
+        "base_instance": 0,
+        "ready": 1,
+        "reserved": 0
+      },
+      "file_offset": 8623
+    },
+    "last": {
+      "record_type": 41,
+      "record_name": "MISSION_SNAPSHOT_IDENTITY",
+      "record_version": 1,
+      "payload_length": 24,
+      "record_sequence": 191,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "mission_id": 45,
+        "commit_generation": 1,
+        "snapshot_sequence": 1,
+        "imu_calibration_generation": 1,
+        "mag_calibration_set_hash": 105389361,
+        "base_instance": 0,
+        "ready": 1,
+        "reserved": 0
+      },
+      "file_offset": 8623
+    }
+  },
+  "INITIAL_STATE": {
+    "count": 1,
+    "first": {
+      "record_type": 13,
+      "record_name": "INITIAL_STATE",
+      "record_version": 0,
+      "payload_length": 144,
+      "record_sequence": 192,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "hardware_mode": 0,
+        "mode_verified": 0,
+        "origin_valid_flags": 2,
+        "alignment_sample_count": 102,
+        "gnss_sample_count": 0,
+        "barometer_sample_count": 100,
+        "reserved": 0,
+        "q_nb": [
+          0.7070969343185425,
+          0.7071167230606079,
+          1.776254975993652e-05,
+          -1.7793958249967545e-05
+        ],
+        "acceleration_mean_b_mps2": [
+          -0.0004918323829770088,
+          9.78099536895752,
+          -0.0002744815719779581
+        ],
+        "gyro_mean_b_radps": [
+          -5.606655122392112e-06,
+          3.847704647341743e-06,
+          -2.2976384570938535e-05
+        ],
+        "magnetic_field_mean_b_uT": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gnss_origin_latitude_e7": 0,
+        "gnss_origin_longitude_e7": 0,
+        "gnss_origin_height_mm": 0,
+        "gnss_origin_position_std_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity_std_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "barometer_origin_altitude_m": 53.86000061035156,
+        "barometer_origin_std_m": 0.0,
+        "p0_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "file_offset": 8675
+    },
+    "last": {
+      "record_type": 13,
+      "record_name": "INITIAL_STATE",
+      "record_version": 0,
+      "payload_length": 144,
+      "record_sequence": 192,
+      "timestamp_us": 30170521,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "hardware_mode": 0,
+        "mode_verified": 0,
+        "origin_valid_flags": 2,
+        "alignment_sample_count": 102,
+        "gnss_sample_count": 0,
+        "barometer_sample_count": 100,
+        "reserved": 0,
+        "q_nb": [
+          0.7070969343185425,
+          0.7071167230606079,
+          1.776254975993652e-05,
+          -1.7793958249967545e-05
+        ],
+        "acceleration_mean_b_mps2": [
+          -0.0004918323829770088,
+          9.78099536895752,
+          -0.0002744815719779581
+        ],
+        "gyro_mean_b_radps": [
+          -5.606655122392112e-06,
+          3.847704647341743e-06,
+          -2.2976384570938535e-05
+        ],
+        "magnetic_field_mean_b_uT": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gnss_origin_latitude_e7": 0,
+        "gnss_origin_longitude_e7": 0,
+        "gnss_origin_height_mm": 0,
+        "gnss_origin_position_std_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity_std_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "barometer_origin_altitude_m": 53.86000061035156,
+        "barometer_origin_std_m": 0.0,
+        "p0_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "file_offset": 8675
+    }
+  },
+  "ESTIMATOR": {
+    "count": 318,
+    "first": {
+      "record_type": 4,
+      "record_name": "ESTIMATOR",
+      "record_version": 1,
+      "payload_length": 172,
+      "record_sequence": 194,
+      "timestamp_us": 0,
+      "valid_flags": 0,
+      "payload": {
+        "position_enu_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "covariance_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "gnss_position_enu_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gnss_velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "baro_relative_altitude_m": 0.0,
+        "last_position_nis": 0.0,
+        "last_velocity_nis": 0.0,
+        "last_baro_nis": 0.0,
+        "measurement_result_flags": 0,
+        "health_flags": 2,
+        "prediction_queue_overflow_count": 0,
+        "gnss_sequence": 0,
+        "baro_sequence": 0,
+        "gnss_timestamp_us": 0,
+        "baro_timestamp_us": 0,
+        "gnss_measurement_age_us": 0,
+        "baro_measurement_age_us": 0,
+        "gnss_origin_valid": 0,
+        "baro_origin_valid": 1,
+        "initialized": 1,
+        "mission_running": 1,
+        "q_nb": [
+          0.7070969343185425,
+          0.7071167230606079,
+          1.776254975993652e-05,
+          -1.7793958249967545e-05
+        ],
+        "acceleration_enu_mps2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "operation_sequence": 0,
+        "replay_epoch": 2
+      },
+      "file_offset": 8887
+    },
+    "last": {
+      "record_type": 4,
+      "record_name": "ESTIMATOR",
+      "record_version": 1,
+      "payload_length": 172,
+      "record_sequence": 10144,
+      "timestamp_us": 44144019,
+      "valid_flags": 0,
+      "payload": {
+        "position_enu_m": [
+          -0.1773449331521988,
+          -0.07358267903327942,
+          -0.1735374480485916
+        ],
+        "velocity_enu_mps": [
+          -0.0307362861931324,
+          -0.015474196523427963,
+          0.018993448466062546
+        ],
+        "covariance_diagonal": [
+          73.33972930908203,
+          73.33972930908203,
+          0.13303980231285095,
+          0.5655806064605713,
+          0.5655806064605713,
+          0.0754692554473877
+        ],
+        "gnss_position_enu_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gnss_velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "baro_relative_altitude_m": -0.18000030517578125,
+        "last_position_nis": 0.0,
+        "last_velocity_nis": 0.0,
+        "last_baro_nis": 6.3537668211210985e-06,
+        "measurement_result_flags": 0,
+        "health_flags": 130,
+        "prediction_queue_overflow_count": 0,
+        "gnss_sequence": 0,
+        "baro_sequence": 8794,
+        "gnss_timestamp_us": 0,
+        "baro_timestamp_us": 44124037,
+        "gnss_measurement_age_us": 0,
+        "baro_measurement_age_us": 7979,
+        "gnss_origin_valid": 0,
+        "baro_origin_valid": 1,
+        "initialized": 1,
+        "mission_running": 1,
+        "q_nb": [
+          0.7070445418357849,
+          0.7071689963340759,
+          -0.0002358665515203029,
+          2.176961424993351e-05
+        ],
+        "acceleration_enu_mps2": [
+          0.0010846973164007068,
+          -0.006562941707670689,
+          0.0028963100630789995
+        ],
+        "operation_sequence": 2098,
+        "replay_epoch": 2
+      },
+      "file_offset": 876187
+    }
+  },
+  "TELEMETRY_DIAG": {
+    "count": 14,
+    "first": {
+      "record_type": 12,
+      "record_name": "TELEMETRY_DIAG",
+      "record_version": 0,
+      "payload_length": 48,
+      "record_sequence": 196,
+      "timestamp_us": 30170762,
+      "valid_flags": 0,
+      "payload": {
+        "last_transmit_timestamp_us": 30050959,
+        "last_receive_timestamp_us": 30165406,
+        "transmit_packet_count": 157,
+        "receive_packet_count": 5,
+        "transmit_error_count": 8727,
+        "receive_error_count": 160,
+        "integrity_error_count": 0,
+        "last_rssi_dbm": -30,
+        "last_snr_q4": 28,
+        "online": 1
+      },
+      "file_offset": 9127
+    },
+    "last": {
+      "record_type": 12,
+      "record_name": "TELEMETRY_DIAG",
+      "record_version": 0,
+      "payload_length": 48,
+      "record_sequence": 9461,
+      "timestamp_us": 43181854,
+      "valid_flags": 0,
+      "payload": {
+        "last_transmit_timestamp_us": 43099951,
+        "last_receive_timestamp_us": 30165406,
+        "transmit_packet_count": 217,
+        "receive_packet_count": 5,
+        "transmit_error_count": 11262,
+        "receive_error_count": 216,
+        "integrity_error_count": 0,
+        "last_rssi_dbm": -30,
+        "last_snr_q4": 28,
+        "online": 0
+      },
+      "file_offset": 816679
+    }
+  },
+  "GNSS_NATIVE": {
+    "count": 350,
+    "first": {
+      "record_type": 15,
+      "record_name": "GNSS_NATIVE",
+      "record_version": 1,
+      "payload_length": 112,
+      "record_sequence": 197,
+      "timestamp_us": 30161186,
+      "valid_flags": 0,
+      "payload": {
+        "source_descriptor_id": 2,
+        "instance_id": 0,
+        "reserved": 0,
+        "sample_timestamp_us": 30161186,
+        "receive_timestamp_us": 30161186,
+        "sequence": 752,
+        "latitude_e7": 0,
+        "longitude_e7": 0,
+        "ellipsoid_height_mm": 0,
+        "msl_height_mm": -17000,
+        "velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "velocity_variance_m2ps2": [
+          998001.125,
+          998001.125,
+          998001.125
+        ],
+        "horizontal_accuracy_m": 4294967.5,
+        "vertical_accuracy_m": 4294967.5,
+        "speed_accuracy_mps": 999.0000610351562,
+        "velocity_valid_mask": 0,
+        "fix_type": 0,
+        "position_usable": 0,
+        "course_usable": 0,
+        "online": 1,
+        "fix_ok": 0,
+        "satellite_count": 0,
+        "valid_group_mask": 0,
+        "measurement_timestamp_trusted": 0,
+        "supported_fields": 1023,
+        "valid_fields": 7,
+        "group_reject_mask": [
+          574,
+          606,
+          670,
+          670
+        ]
+      },
+      "file_offset": 9203
+    },
+    "last": {
+      "record_type": 15,
+      "record_name": "GNSS_NATIVE",
+      "record_version": 1,
+      "payload_length": 112,
+      "record_sequence": 10153,
+      "timestamp_us": 44155281,
+      "valid_flags": 0,
+      "payload": {
+        "source_descriptor_id": 2,
+        "instance_id": 0,
+        "reserved": 0,
+        "sample_timestamp_us": 44155281,
+        "receive_timestamp_us": 44155281,
+        "sequence": 1101,
+        "latitude_e7": 0,
+        "longitude_e7": 0,
+        "ellipsoid_height_mm": 0,
+        "msl_height_mm": -17000,
+        "velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "velocity_variance_m2ps2": [
+          998001.125,
+          998001.125,
+          998001.125
+        ],
+        "horizontal_accuracy_m": 4294967.5,
+        "vertical_accuracy_m": 4294967.5,
+        "speed_accuracy_mps": 999.0000610351562,
+        "velocity_valid_mask": 0,
+        "fix_type": 0,
+        "position_usable": 0,
+        "course_usable": 0,
+        "online": 1,
+        "fix_ok": 0,
+        "satellite_count": 0,
+        "valid_group_mask": 0,
+        "measurement_timestamp_trusted": 0,
+        "supported_fields": 1023,
+        "valid_fields": 7,
+        "group_reject_mask": [
+          574,
+          606,
+          670,
+          670
+        ]
+      },
+      "file_offset": 877047
+    }
+  },
+  "GNSS_RECOVERY": {
+    "count": 1,
+    "first": {
+      "record_type": 31,
+      "record_name": "GNSS_RECOVERY",
+      "record_version": 1,
+      "payload_length": 124,
+      "record_sequence": 198,
+      "timestamp_us": 0,
+      "valid_flags": 0,
+      "payload": {
+        "estimator_present_timestamp_us": 0,
+        "source_sequence": 0,
+        "replay_epoch": 2,
+        "quality_reject_mask": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "consistency_count": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "inflation_attempt_count": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "reanchor_count": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "inflation_factor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "valid": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "update_result": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outage": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "recovery_active": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "reanchor_reason": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "operation_sequence": 0,
+        "replay_generation": 0
+      },
+      "file_offset": 9343
+    },
+    "last": {
+      "record_type": 31,
+      "record_name": "GNSS_RECOVERY",
+      "record_version": 1,
+      "payload_length": 124,
+      "record_sequence": 198,
+      "timestamp_us": 0,
+      "valid_flags": 0,
+      "payload": {
+        "estimator_present_timestamp_us": 0,
+        "source_sequence": 0,
+        "replay_epoch": 2,
+        "quality_reject_mask": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "consistency_count": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "inflation_attempt_count": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "reanchor_count": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "inflation_factor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "valid": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "update_result": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outage": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "recovery_active": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "reanchor_reason": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "operation_sequence": 0,
+        "replay_generation": 0
+      },
+      "file_offset": 9343
+    }
+  },
+  "BARO_NATIVE": {
+    "count": 2806,
+    "first": {
+      "record_type": 16,
+      "record_name": "BARO_NATIVE",
+      "record_version": 1,
+      "payload_length": 52,
+      "record_sequence": 199,
+      "timestamp_us": 30167037,
+      "valid_flags": 3,
+      "payload": {
+        "source_descriptor_id": 3,
+        "instance_id": 0,
+        "reserved": 0,
+        "sample_timestamp_us": 30167037,
+        "receive_timestamp_us": 30167037,
+        "sequence": 5999,
+        "pressure_pa": 100693.0,
+        "altitude_m": 53.86000061035156,
+        "altitude_variance_m2": 0.0,
+        "valid_mask": 3,
+        "supported_fields": 3,
+        "valid_fields": 3,
+        "healthy": 1,
+        "measurement_timestamp_trusted": 0,
+        "reserved_quality": 0
+      },
+      "file_offset": 9495
+    },
+    "last": {
+      "record_type": 16,
+      "record_name": "BARO_NATIVE",
+      "record_version": 1,
+      "payload_length": 52,
+      "record_sequence": 10162,
+      "timestamp_us": 44174038,
+      "valid_flags": 3,
+      "payload": {
+        "source_descriptor_id": 3,
+        "instance_id": 0,
+        "reserved": 0,
+        "sample_timestamp_us": 44174038,
+        "receive_timestamp_us": 44174038,
+        "sequence": 8804,
+        "pressure_pa": 100695.0,
+        "altitude_m": 53.68000030517578,
+        "altitude_variance_m2": 0.0,
+        "valid_mask": 3,
+        "supported_fields": 3,
+        "valid_fields": 3,
+        "healthy": 1,
+        "measurement_timestamp_trusted": 0,
+        "reserved_quality": 0
+      },
+      "file_offset": 877835
+    }
+  },
+  "POWER": {
+    "count": 133,
+    "first": {
+      "record_type": 10,
+      "record_name": "POWER",
+      "record_version": 0,
+      "payload_length": 48,
+      "record_sequence": 200,
+      "timestamp_us": 30158108,
+      "valid_flags": 0,
+      "payload": {
+        "source_descriptor_id": 7,
+        "instance_id": 0,
+        "reserved": 0,
+        "sample_timestamp_us": 30158108,
+        "receive_timestamp_us": 30158108,
+        "sequence": 1497,
+        "voltage_v": 4.393552780151367,
+        "current_a": 0.0,
+        "power_w": 0.0,
+        "state_of_charge_percent": 0.0,
+        "temperature_c": 0.0,
+        "valid_mask": 1
+      },
+      "file_offset": 9575
+    },
+    "last": {
+      "record_type": 10,
+      "record_name": "POWER",
+      "record_version": 0,
+      "payload_length": 48,
+      "record_sequence": 10126,
+      "timestamp_us": 44109123,
+      "valid_flags": 0,
+      "payload": {
+        "source_descriptor_id": 7,
+        "instance_id": 0,
+        "reserved": 0,
+        "sample_timestamp_us": 44109123,
+        "receive_timestamp_us": 44109123,
+        "sequence": 2185,
+        "voltage_v": 4.27106237411499,
+        "current_a": 0.0,
+        "power_w": 0.0,
+        "state_of_charge_percent": 0.0,
+        "temperature_c": 0.0,
+        "valid_mask": 1
+      },
+      "file_offset": 874739
+    }
+  },
+  "HEALTH": {
+    "count": 14,
+    "first": {
+      "record_type": 11,
+      "record_name": "HEALTH",
+      "record_version": 0,
+      "payload_length": 40,
+      "record_sequence": 201,
+      "timestamp_us": 30171393,
+      "valid_flags": 0,
+      "payload": {
+        "timestamp_us": 30171386,
+        "compiled_mask": 1019,
+        "enabled_mask": 1019,
+        "present_mask": 1019,
+        "healthy_mask": 1019,
+        "start_blocking_mask": 8,
+        "warning_mask": 0,
+        "sequence": 29648,
+        "ready": 0
+      },
+      "file_offset": 9651
+    },
+    "last": {
+      "record_type": 11,
+      "record_name": "HEALTH",
+      "record_version": 0,
+      "payload_length": 40,
+      "record_sequence": 9456,
+      "timestamp_us": 43177303,
+      "valid_flags": 0,
+      "payload": {
+        "timestamp_us": 43177297,
+        "compiled_mask": 1019,
+        "enabled_mask": 1019,
+        "present_mask": 1019,
+        "healthy_mask": 1019,
+        "start_blocking_mask": 0,
+        "warning_mask": 0,
+        "sequence": 42654,
+        "ready": 1
+      },
+      "file_offset": 816299
+    }
+  },
+  "ESTIMATOR_STEP": {
+    "count": 1401,
+    "first": {
+      "record_type": 30,
+      "record_name": "ESTIMATOR_STEP",
+      "record_version": 0,
+      "payload_length": 36,
+      "record_sequence": 202,
+      "timestamp_us": 30182020,
+      "valid_flags": 0,
+      "payload": {
+        "estimator_present_timestamp_us": 30182020,
+        "interval_end_timestamp_us": 30182020,
+        "operation_sequence": 1,
+        "source_sequence": 1,
+        "replay_epoch": 2,
+        "replay_generation": 0,
+        "replay_result": 0,
+        "attitude_result": 1,
+        "reserved": 0
+      },
+      "file_offset": 9719
+    },
+    "last": {
+      "record_type": 30,
+      "record_name": "ESTIMATOR_STEP",
+      "record_version": 0,
+      "payload_length": 36,
+      "record_sequence": 10156,
+      "timestamp_us": 44164016,
+      "valid_flags": 0,
+      "payload": {
+        "estimator_present_timestamp_us": 44164016,
+        "interval_end_timestamp_us": 44164016,
+        "operation_sequence": 2101,
+        "source_sequence": 1401,
+        "replay_epoch": 2,
+        "replay_generation": 0,
+        "replay_result": 0,
+        "attitude_result": 1,
+        "reserved": 0
+      },
+      "file_offset": 877355
+    }
+  },
+  "STATS": {
+    "count": 14,
+    "first": {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 203,
+      "timestamp_us": 30171393,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 1,
+        "health_flags": 2
+      },
+      "file_offset": 9783
+    },
+    "last": {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 9457,
+      "timestamp_us": 43177303,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 1303,
+        "health_flags": 130
+      },
+      "file_offset": 816367
+    }
+  },
+  "IMU_CORRECTED": {
+    "count": 2805,
+    "first": {
+      "record_type": 22,
+      "record_name": "IMU_CORRECTED",
+      "record_version": 0,
+      "payload_length": 60,
+      "record_sequence": 205,
+      "timestamp_us": 30172020,
+      "valid_flags": 7,
+      "payload": {
+        "sample_timestamp_us": 30172020,
+        "receive_timestamp_us": 30172020,
+        "sequence": 5951,
+        "source_id": 0,
+        "virtual_imu_id": 0,
+        "valid_mask": 7,
+        "accel_b_mps2": [
+          -0.006484478712081909,
+          9.777721405029297,
+          -0.0033176224678754807
+        ],
+        "gyro_b_radps": [
+          -5.606655122392112e-06,
+          5.606655031442642e-05,
+          0.00042610568925738335
+        ],
+        "temperature_c": 35.560001373291016,
+        "calibration_mode": 1,
+        "correction_valid": 1,
+        "reserved": 0
+      },
+      "file_offset": 9907
+    },
+    "last": {
+      "record_type": 22,
+      "record_name": "IMU_CORRECTED",
+      "record_version": 0,
+      "payload_length": 60,
+      "record_sequence": 10163,
+      "timestamp_us": 44174019,
+      "valid_flags": 7,
+      "payload": {
+        "sample_timestamp_us": 44174019,
+        "receive_timestamp_us": 44174019,
+        "sequence": 8755,
+        "source_id": 0,
+        "virtual_imu_id": 0,
+        "valid_mask": 7,
+        "accel_b_mps2": [
+          -0.001709088683128357,
+          9.78249740600586,
+          -0.0033176224678754807
+        ],
+        "gyro_b_radps": [
+          -5.606655122392112e-06,
+          5.606655031442642e-05,
+          -0.0006391587667167187
+        ],
+        "temperature_c": 35.79999923706055,
+        "calibration_mode": 1,
+        "correction_valid": 1,
+        "reserved": 0
+      },
+      "file_offset": 877915
+    }
+  },
+  "INERTIAL_INCREMENT": {
+    "count": 1401,
+    "first": {
+      "record_type": 19,
+      "record_name": "INERTIAL_INCREMENT",
+      "record_version": 0,
+      "payload_length": 52,
+      "record_sequence": 212,
+      "timestamp_us": 30182020,
+      "valid_flags": 7,
+      "payload": {
+        "interval_start_timestamp_us": 30172020,
+        "interval_end_timestamp_us": 30182020,
+        "sequence": 1,
+        "dt_s": 0.009999999776482582,
+        "delta_theta_b_corrected": [
+          -5.60670514460071e-08,
+          5.606654553957924e-07,
+          -3.728959200088866e-06
+        ],
+        "delta_velocity_b_sculling_corrected": [
+          -4.0867489587981254e-05,
+          0.09781304001808167,
+          3.845667379209772e-05
+        ],
+        "health_flags": 0
+      },
+      "file_offset": 10595
+    },
+    "last": {
+      "record_type": 19,
+      "record_name": "INERTIAL_INCREMENT",
+      "record_version": 0,
+      "payload_length": 52,
+      "record_sequence": 10159,
+      "timestamp_us": 44164016,
+      "valid_flags": 7,
+      "payload": {
+        "interval_start_timestamp_us": 44154019,
+        "interval_end_timestamp_us": 44164016,
+        "sequence": 1401,
+        "dt_s": 0.009996999986469746,
+        "delta_theta_b_corrected": [
+          -5.6049731966822947e-08,
+          5.604973125628021e-07,
+          -1.0649457635736326e-06
+        ],
+        "delta_velocity_b_sculling_corrected": [
+          -4.089633148396388e-05,
+          0.09775981307029724,
+          -2.123052217939403e-05
+        ],
+        "health_flags": 0
+      },
+      "file_offset": 877587
+    }
+  },
+  "BARO_MEASUREMENT": {
+    "count": 700,
+    "first": {
+      "record_type": 21,
+      "record_name": "BARO_MEASUREMENT",
+      "record_version": 1,
+      "payload_length": 72,
+      "record_sequence": 214,
+      "timestamp_us": 30182038,
+      "valid_flags": 4,
+      "payload": {
+        "sample_timestamp_us": 30182038,
+        "receive_timestamp_us": 30182038,
+        "sequence": 6002,
+        "relative_altitude_m": 0.0,
+        "variance_m2": 6.25,
+        "valid_mask": 1,
+        "measurement_timestamp_us": 30192020,
+        "estimator_present_timestamp_us": 30192020,
+        "operation_sequence": 3,
+        "replay_epoch": 2,
+        "replay_generation": 0,
+        "update_result": 0,
+        "replay_result": 0,
+        "measurement_timestamp_trusted": 0,
+        "reserved": 0,
+        "innovation_m": -3.208965040357725e-07,
+        "nis": 6.7523874133171985e-15
+      },
+      "file_offset": 10763
+    },
+    "last": {
+      "record_type": 21,
+      "record_name": "BARO_MEASUREMENT",
+      "record_version": 1,
+      "payload_length": 72,
+      "record_sequence": 10152,
+      "timestamp_us": 44144037,
+      "valid_flags": 4,
+      "payload": {
+        "sample_timestamp_us": 44144037,
+        "receive_timestamp_us": 44144037,
+        "sequence": 8798,
+        "relative_altitude_m": -0.18000030517578125,
+        "variance_m2": 6.25,
+        "valid_mask": 1,
+        "measurement_timestamp_us": 44154019,
+        "estimator_present_timestamp_us": 44154019,
+        "operation_sequence": 2100,
+        "replay_epoch": 2,
+        "replay_generation": 0,
+        "update_result": 0,
+        "replay_result": 0,
+        "measurement_timestamp_trusted": 0,
+        "reserved": 0,
+        "innovation_m": -0.006652742624282837,
+        "nis": 6.932293672434753e-06
+      },
+      "file_offset": 876947
+    }
+  },
+  "LANDING_DIAGNOSTIC": {
+    "count": 2,
+    "first": {
+      "record_type": 32,
+      "record_name": "LANDING_DIAGNOSTIC",
+      "record_version": 0,
+      "payload_length": 52,
+      "record_sequence": 8031,
+      "timestamp_us": 41173568,
+      "valid_flags": 0,
+      "payload": {
+        "evaluation_timestamp_us": 41173568,
+        "candidate_start_timestamp_us": 41172037,
+        "sequence": 1,
+        "candidate_elapsed_us": 1531,
+        "valid_coverage": 0.0,
+        "still_ratio": 0.0,
+        "maximum_bad_duration_us": 0,
+        "baro_slope_mps": 0.0,
+        "baro_span_m": 0.0,
+        "baro_coverage": 0.0,
+        "transition": 1,
+        "reset_reason": 0,
+        "reserved": 0
+      },
+      "file_offset": 691963
+    },
+    "last": {
+      "record_type": 32,
+      "record_name": "LANDING_DIAGNOSTIC",
+      "record_version": 0,
+      "payload_length": 52,
+      "record_sequence": 10164,
+      "timestamp_us": 44174724,
+      "valid_flags": 0,
+      "payload": {
+        "evaluation_timestamp_us": 44174724,
+        "candidate_start_timestamp_us": 41172037,
+        "sequence": 2,
+        "candidate_elapsed_us": 3002687,
+        "valid_coverage": 0.9981060028076172,
+        "still_ratio": 1.0,
+        "maximum_bad_duration_us": 4992,
+        "baro_slope_mps": 0.011403633281588554,
+        "baro_span_m": 0.0800018310546875,
+        "baro_coverage": 0.9997715353965759,
+        "transition": 3,
+        "reset_reason": 0,
+        "reserved": 0
+      },
+      "file_offset": 878003
+    }
+  }
+}

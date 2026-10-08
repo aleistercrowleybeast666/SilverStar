@@ -1,0 +1,105 @@
+{
+  "mission": 45,
+  "initial_state_at_recorded_START": true,
+  "alignment_ready_and_success": true,
+  "initial_quaternion_matches_alignment_and_first_estimator": true,
+  "initial_covariance_matches_first_estimator": true,
+  "q_nb_norm": 1.000000067593391,
+  "initial_state": {
+    "alignment_algorithm": 4,
+    "hardware_mode": 0,
+    "mode_verified": 0,
+    "origin_valid_flags": 2,
+    "alignment_sample_count": 102,
+    "gnss_sample_count": 0,
+    "barometer_sample_count": 100,
+    "reserved": 0,
+    "q_nb": [
+      0.7070969343185425,
+      0.7071167230606079,
+      1.776254975993652e-05,
+      -1.7793958249967545e-05
+    ],
+    "acceleration_mean_b_mps2": [
+      -0.0004918323829770088,
+      9.78099536895752,
+      -0.0002744815719779581
+    ],
+    "gyro_mean_b_radps": [
+      -5.606655122392112e-06,
+      3.847704647341743e-06,
+      -2.2976384570938535e-05
+    ],
+    "magnetic_field_mean_b_uT": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gnss_origin_latitude_e7": 0,
+    "gnss_origin_longitude_e7": 0,
+    "gnss_origin_height_mm": 0,
+    "gnss_origin_position_std_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "initial_velocity_enu_mps": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "initial_velocity_std_mps": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "barometer_origin_altitude_m": 53.86000061035156,
+    "barometer_origin_std_m": 0.0,
+    "p0_diagonal": [
+      4.0,
+      4.0,
+      9.0,
+      0.25,
+      0.25,
+      0.25
+    ]
+  },
+  "alignment_result": {
+    "capability_mask": 7,
+    "selected_mask": 7,
+    "required_mask": 5,
+    "ready_mask": 5,
+    "unavailable_mask": 0,
+    "missing_adapter_mask": 0,
+    "start_sequence": 1,
+    "state": 3,
+    "config_result": 0,
+    "ready": 1,
+    "source_count": 6,
+    "attitude_timestamp_us": 25924019,
+    "q_nb": [
+      0.7070969343185425,
+      0.7071167230606079,
+      1.776254975993652e-05,
+      -1.7793958249967545e-05
+    ],
+    "gnss_origin_lat_e7": 0,
+    "gnss_origin_lon_e7": 0,
+    "gnss_origin_height_mm": 0,
+    "gnss_sample_count": 0,
+    "gnss_horizontal_accuracy_m": 0.0,
+    "gnss_vertical_accuracy_m": 0.0,
+    "barometer_sample_count": 100,
+    "barometer_origin_pressure_pa": 0.0,
+    "barometer_origin_altitude_m": 0.0,
+    "attitude_state": 2,
+    "gnss_state": 0,
+    "barometer_state": 2,
+    "attitude_source": 4
+  },
+  "barometer_origin_source": "INITIAL_STATE at START; earlier ALIGNMENT_RESULT origin may be unpopulated",
+  "limitations": [
+    "OneFace readiness is not full six-face calibration or absolute heading proof.",
+    "Snapshot integrity does not verify physical mount or sensor accuracy."
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "archive": "D:\\stm32_project\\missions.zip",
+  "archive_sha256": "6a71fed719424e392c7335dec18af46d74cb840f38147c9f64e4dc9b18c06381",
+  "archive_bytes": 54152267,
+  "archive_mtime_utc": "2026-10-08T05:06:14+00:00",
+  "member_timestamps": "1980 values not acquisition UTC evidence",
+  "unrelated_archive_member_crc_scan": "NOT_RUN",
+  "members": [
+    {
+      "source_member": "missions/000044/manifest",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\manifest",
+      "bytes": 20,
+      "sha256": "eb76e9b72eddfd9773844d977e45986bcbe1bcbbca936f4c718456771cb934d9",
+      "zip_crc32": "2144df1c",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/flight.sslog",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\flight.sslog",
+      "bytes": 885023,
+      "sha256": "c5f123ccc6b0390b869412f6e0a09d834999f8be621b876f43298bb5028a1fb2",
+      "zip_crc32": "50e1fc22",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap01.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap01.0",
+      "bytes": 338,
+      "sha256": "6b32e618d7fea1b251191f0e01b73423b9b1275a7cce0bb304e6034c7958b1b7",
+      "zip_crc32": "bfd22526",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap02.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap02.0",
+      "bytes": 26,
+      "sha256": "979ea2ebe5dbb3fb28e8f8143f656cd2aadb7a9d10448018ea3faa89ba36ad4d",
+      "zip_crc32": "3259d539",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap03.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap03.0",
+      "bytes": 90,
+      "sha256": "c6e00db6125a8a843249ea0cdd936895eb1c08d05666a5f3b32b611f004ee06d",
+      "zip_crc32": "a9404074",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap04.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap04.0",
+      "bytes": 368,
+      "sha256": "08762c4c6663ad703ed18684b8c67c7e50ee1d49c817969779513577c75a0035",
+      "zip_crc32": "50dd88b5",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap05.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap05.0",
+      "bytes": 26,
+      "sha256": "365477504e3e37238fdc4fc4f090d9f4abff7fcc076d11d6c4ae2f6697814501",
+      "zip_crc32": "495a9966",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap06.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap06.0",
+      "bytes": 93,
+      "sha256": "d4483c2413412f27663f163b11eb860055ce3ec83c6194e76b72a9b6345281a0",
+      "zip_crc32": "8a449961",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap00.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap00.0",
+      "bytes": 190,
+      "sha256": "455a26c4a251ec59ea836b100fcf1e06b30bf62c90e96b251769ef8db254c511",
+      "zip_crc32": "e7cd204c",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000044/snap07.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000044\\snap07.0",
+      "bytes": 66,
+      "sha256": "0760336588bac29bd5e590e9b73dbed500a9d45a686d840e5daac5a4ba1978ec",
+      "zip_crc32": "403ef8de",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/manifest",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\manifest",
+      "bytes": 20,
+      "sha256": "65dc26b0caab3a7110fad3b0ef3844810f78bf0e27274f0bddfa59fd18836a13",
+      "zip_crc32": "2144df1c",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/flight.sslog",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\flight.sslog",
+      "bytes": 878123,
+      "sha256": "b9b6244f0103b02d98e3389c10661043fe7f22aa84f701bd456ea255e425308f",
+      "zip_crc32": "7b2464d8",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap01.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap01.0",
+      "bytes": 338,
+      "sha256": "6b32e618d7fea1b251191f0e01b73423b9b1275a7cce0bb304e6034c7958b1b7",
+      "zip_crc32": "bfd22526",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap02.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap02.0",
+      "bytes": 26,
+      "sha256": "979ea2ebe5dbb3fb28e8f8143f656cd2aadb7a9d10448018ea3faa89ba36ad4d",
+      "zip_crc32": "3259d539",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap03.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap03.0",
+      "bytes": 90,
+      "sha256": "c6e00db6125a8a843249ea0cdd936895eb1c08d05666a5f3b32b611f004ee06d",
+      "zip_crc32": "a9404074",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap04.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap04.0",
+      "bytes": 368,
+      "sha256": "08762c4c6663ad703ed18684b8c67c7e50ee1d49c817969779513577c75a0035",
+      "zip_crc32": "50dd88b5",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap05.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap05.0",
+      "bytes": 26,
+      "sha256": "365477504e3e37238fdc4fc4f090d9f4abff7fcc076d11d6c4ae2f6697814501",
+      "zip_crc32": "495a9966",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap06.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap06.0",
+      "bytes": 93,
+      "sha256": "621d414fcc297663fec8538dd4838c29973381a5d18277a5b0b7c2d0e9ed0909",
+      "zip_crc32": "ead80237",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap00.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap00.0",
+      "bytes": 190,
+      "sha256": "7ab1364b08db5b8f1ffa3cb75152831f7d2726ffb6252357a00c41675e471e63",
+      "zip_crc32": "4e751555",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source_member": "missions/000045/snap07.0",
+      "snapshot_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\input\\missions\\000045\\snap07.0",
+      "bytes": 66,
+      "sha256": "6f4e9ff901ac74a7ceac81ff1a926560f2d78682c3ea05ed1c7b9382177e96c2",
+      "zip_crc32": "311db1f2",
+      "zip_crc_verified": true,
+      "zip_timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "decoder": {
+    "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\KF6_Static_20261008_f045d8c.ssdecoder",
+    "sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+  },
+  "repository_HEAD": "684026533bc779f795c5ca5e19d20150394efa19"
+}

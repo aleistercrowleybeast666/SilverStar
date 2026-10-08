@@ -99,3 +99,5 @@ before_unlock 与 after_start_live 为非 halt 观测；仅 timing 用相同偶�
 ```
 
 这些 harness 有拒绝覆盖既有证据的保护。源工程、烧录前全 flash 备份、新 BIN/ELF/decoder、读回镜像留在 manifest 标明的 `.work` 路径，未大规模复制 vendor；formal evidence 保留原始命令、日志、布局、原始 SWD/串口字节及源文件哈希。
+
+后续文件验收：用户原位替换 ZIP 后，[实际 TF 与 FLP 离线报告](STATIC_LOG_FILE_ACCEPTANCE_20261008.md)完成本任务及 000045 的严格解码、snapshot/初始化、已接受导航输入连续性和完整 run 保存重开。本报告原截止时的待取 TF / NOT_RUN 保留原范围；后续 PASS 不消除停收拒绝身份、空口完整性、启动最大间隔和其他未证明边界。

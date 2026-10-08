@@ -1,0 +1,314 @@
+[
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.02,
+    "code": "log_open.package"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.1,
+    "code": "log_open.descriptor"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.18,
+    "code": "log_open.cache"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.22,
+    "code": "progress.open.source_check"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.22,
+    "code": "progress.artifact.hash|885023|885023"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.28,
+    "code": "log_open.parse"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.2866,
+    "code": "parser.header"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.301881048967089,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.3152256784286962,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.32858223978359885,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.34189823270129704,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.3553072943866996,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.3686519238483068,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.38181996128914164,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.39517890902270336,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.40852115210565154,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4218395314020088,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4352509794660704,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4485550404904731,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.46189012443744404,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.47523236752039216,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4885054056222268,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5018715124917658,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.515216141953373,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5285321348710712,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5419435829351328,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5552858260180809,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5685946597998018,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.581939289261409,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5952910778589935,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6085999116407144,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6220089733261169,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6353034888358834,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6486457319188315,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6619903613804388,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6751894217438417,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6885555286133807,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7018929989390106,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7152018327207316,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.728606121648816,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7419579102464005,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7552118573189623,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7685588731592287,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7818605478049723,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.795217109159875,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.8085354884562322,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.9333999999999999,
+    "code": "parser.dataset"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.94,
+    "code": "parser.complete"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.94,
+    "code": "log_open.semantics"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.96,
+    "code": "progress.open.source_check"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.99,
+    "code": "progress.artifact.hash|885023|885023"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 1.0,
+    "code": "log_open.complete"
+  }
+]

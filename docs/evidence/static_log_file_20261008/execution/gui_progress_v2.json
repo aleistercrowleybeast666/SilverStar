@@ -1,0 +1,3308 @@
+[
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.02,
+    "code": "log_open.package"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.1,
+    "code": "log_open.descriptor"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.18,
+    "code": "log_open.cache"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.22,
+    "code": "progress.open.source_check"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.22,
+    "code": "progress.artifact.hash|885023|885023"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.28,
+    "code": "log_open.parse"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.2866,
+    "code": "parser.header"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.301881048967089,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.3152256784286962,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.32858223978359885,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.34189823270129704,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.3553072943866996,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.3686519238483068,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.38181996128914164,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.39517890902270336,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.40852115210565154,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4218395314020088,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4352509794660704,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4485550404904731,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.46189012443744404,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.47523236752039216,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.4885054056222268,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5018715124917658,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.515216141953373,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5285321348710712,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5419435829351328,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5552858260180809,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5685946597998018,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.581939289261409,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.5952910778589935,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6085999116407144,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6220089733261169,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6353034888358834,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6486457319188315,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6619903613804388,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6751894217438417,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.6885555286133807,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7018929989390106,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7152018327207316,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.728606121648816,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7419579102464005,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7552118573189623,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7685588731592287,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.7818605478049723,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.795217109159875,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.8085354884562322,
+    "code": "parser.records"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.9333999999999999,
+    "code": "parser.dataset"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.94,
+    "code": "parser.complete"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.94,
+    "code": "log_open.semantics"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.96,
+    "code": "progress.open.source_check"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 0.99,
+    "code": "progress.artifact.hash|885023|885023"
+  },
+  {
+    "mission": 44,
+    "stage": "open",
+    "value": 1.0,
+    "code": "log_open.complete"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.02,
+    "code": "progress.save.prepare"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.04,
+    "code": "progress.save.references"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.04,
+    "code": "progress.artifact.hash|885023|885023"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.08,
+    "code": "progress.save.dataset"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|574|574"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|491|491"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|12640|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|478|478"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|863|863"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.json_write|1923|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|22455|22455"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|18890|18890"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|146|146"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|92|92"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|146|146"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|99|99"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|903219|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|910001|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|918505|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|921531|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|923179|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|929499|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|931403|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|933867|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|937283|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|940979|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|137|137"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|276|276"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|951558|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|94|94"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|958711|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|962473|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|92|92"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|94|94"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|987206|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|990182|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|990887|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|991689|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|992507|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1005305|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1233|1233"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1233|1233"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|789|789"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|111|111"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|113|113"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|4556|4556"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|92|92"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|161|161"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|96|96"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1418|1418"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1218719|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1231865|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1323|1323"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1271329|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1323|1323"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1299593|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1325407|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1323|1323"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|111|111"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|7606|7606"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|157|157"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1893947|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1902174|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|161|161"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|149|149"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|99|99"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1952320|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|127|127"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|144|144"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|111|111"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|7569|7569"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|7314|7314"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|157|157"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|16130|16130"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1321|1321"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|132|132"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3004761|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|2352|2352"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3059151|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|101|101"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|3475|3475"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3129367|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3176018|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3198324|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3200976|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3202069|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.2784,
+    "code": "progress.artifact.json_write|65539|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.2784,
+    "code": "progress.artifact.json_write|852197|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.33408164766310067,
+    "code": "progress.artifact.array_read|6|176"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.34265518456005656,
+    "code": "progress.artifact.array_read|6|1192"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.35978544640906784,
+    "code": "progress.artifact.array_read|6|192"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.35994262190632037,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3600392212142099,
+    "code": "progress.artifact.timestamps|2|2"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.36032465427598026,
+    "code": "progress.artifact.hash|137|137"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3605204833714463,
+    "code": "progress.artifact.timestamps|1|1"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.36230258999981935,
+    "code": "progress.artifact.array_read|2712|2712"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.36448918346621323,
+    "code": "progress.artifact.timestamps|350|350"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3705134733576884,
+    "code": "progress.artifact.hash|161|161"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.38440610612032167,
+    "code": "progress.artifact.array_read|6280|6280"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3868721374673093,
+    "code": "progress.artifact.array_read|136|136"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.388992,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.hash|116|116"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.hash|96|96"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4,
+    "code": "progress.save.results"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.45,
+    "code": "progress.artifact.prepare"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|15927|15927"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|42100|42100"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|3387|3387"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|3872|3872"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|384|384"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|150|150"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|143|143"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|143|143"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|1210710|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|3960|3960"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|901|901"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|1548461|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|33589|33589"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2149903|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2278492|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2386224|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|150|150"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2765892|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|3960|3960"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|2328|2328"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|132|132"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2990898|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.json_write|1714|0"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.6909000000000001,
+    "code": "progress.artifact.hash|16001|16001"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.7561107678943775,
+    "code": "progress.artifact.hash|7237|7237"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.768648,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.7734000000000001,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.78,
+    "code": "progress.save.history"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.92,
+    "code": "progress.save.project"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.95,
+    "code": "progress.save.source_check"
+  },
+  {
+    "mission": 44,
+    "stage": "save",
+    "value": 0.98,
+    "code": "progress.save.commit"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.02,
+    "code": "log_open.package"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.1,
+    "code": "log_open.descriptor"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.18,
+    "code": "log_open.cache"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.22,
+    "code": "progress.open.source_check"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.22,
+    "code": "progress.artifact.hash|878123|878123"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.28,
+    "code": "log_open.parse"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.2866,
+    "code": "parser.header"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.3019252104773477,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.3153482411917237,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.3287688667760667,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.3421654410600793,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.35558606664442227,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.3690235281389965,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.3822757946210269,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.39577338436642706,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.4092012253408691,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.42259779962488175,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.4360256405993238,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.4494077841031382,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.4628284096874812,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.4762634660520223,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.48966244546606796,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5030758556603119,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5165710402756789,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5299603991695925,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5434026709242328,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5568329170287079,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5702198707925883,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5837150554079553,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.5970731476114395,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.6104528859852207,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.623890347479795,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.6372797063737086,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.6507075473481505,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.6641233626724274,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.6774405676653499,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.6908563829896267,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.7042914393541679,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.7176904187682136,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.7311110443525565,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.7445990135778244,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.757993182731804,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.7714162134461802,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.7848127877301928,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.7982117671442384,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.8116708748091098,
+    "code": "parser.records"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.9333999999999999,
+    "code": "parser.dataset"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.94,
+    "code": "parser.complete"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.94,
+    "code": "log_open.semantics"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.96,
+    "code": "progress.open.source_check"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 0.99,
+    "code": "progress.artifact.hash|878123|878123"
+  },
+  {
+    "mission": 45,
+    "stage": "open",
+    "value": 1.0,
+    "code": "log_open.complete"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.02,
+    "code": "progress.save.prepare"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.04,
+    "code": "progress.save.references"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.04,
+    "code": "progress.artifact.hash|878123|878123"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.08,
+    "code": "progress.save.dataset"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|858|858"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|955|955"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|528|528"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|730|730"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.records|14|14"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|387|387"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|414|414"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.records|14|14"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|94|94"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|887663|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|94|94"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|890589|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|893097|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|895651|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|899697|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|909379|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|913429|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|99|99"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|99|99"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|924135|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|102|102"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|125|125"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|107|107"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|107|107"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|940381|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|954444|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|957781|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|965536|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|969947|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|973821|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|976900|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|92|92"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|115|115"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.objects|28672|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|985257|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|988016|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1009772|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|126|126"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|280|280"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1102148|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|108|108"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1241|1241"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|702|702"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|169|169"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1185832|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|161|161"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|110|110"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1228572|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1323|1323"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1306040|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|95|95"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|90|90"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1361575|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|7698|7698"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|7698|7698"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|157|157"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|629|629"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1898324|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|639|639"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|94|94"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|93|93"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|1928122|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|2044|2044"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|2037791|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|92|92"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|99|99"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|111|111"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|157|157"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|2514924|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|2656198|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|1384|1384"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|128|128"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|131|131"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|2940885|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|121|121"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3035937|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|94|94"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|101|101"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|3276|3276"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|128|128"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|99|99"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|91|91"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.hash|97|97"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.096,
+    "code": "progress.artifact.array_write|3166889|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.2784,
+    "code": "progress.artifact.json_write|196617|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.2784,
+    "code": "progress.artifact.json_write|589909|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.325632,
+    "code": "progress.artifact.json_read|972474|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.33432207453081453,
+    "code": "progress.artifact.json_read|2305|2305"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3427265850717526,
+    "code": "progress.artifact.hash|440|440"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3598538303821063,
+    "code": "progress.artifact.hash|100|100"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.36001651939241086,
+    "code": "progress.artifact.array_read|144|144"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.36014117145090835,
+    "code": "progress.artifact.hash|107|107"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.36044382291754085,
+    "code": "progress.artifact.timestamps|86|86"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.36054900173584276,
+    "code": "progress.artifact.timestamps|1|1"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.36203222130448803,
+    "code": "progress.artifact.hash|1601|1601"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3645115729031859,
+    "code": "progress.artifact.timestamps|350|350"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.37143205929250056,
+    "code": "progress.artifact.hash|2125|2125"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3859521059349921,
+    "code": "progress.artifact.timestamps|700|700"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.388992,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.hash|83316|83316"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.hash|109|109"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.hash|207|207"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.3936,
+    "code": "progress.artifact.hash|353|353"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4,
+    "code": "progress.save.results"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.45,
+    "code": "progress.artifact.prepare"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|103041|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|24506|24506"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|651735|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|128|128"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|223|223"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|151|151"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|128|128"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|1019|1019"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.sync"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|461|461"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|339|339"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|1710559|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2117873|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|104|104"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|4061|4061"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|175|175"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|103|103"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|4061|4061"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|128|128"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2844273|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.array_write|2905907|0"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|145|145"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.4665,
+    "code": "progress.artifact.hash|506|506"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.7457349839146654,
+    "code": "progress.artifact.hash|144|144"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.768648,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.7734000000000001,
+    "code": "progress.artifact.checked"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.78,
+    "code": "progress.save.history"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.92,
+    "code": "progress.save.project"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.95,
+    "code": "progress.save.source_check"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.97,
+    "code": "progress.artifact.hash|878123|878123"
+  },
+  {
+    "mission": 45,
+    "stage": "save",
+    "value": 0.98,
+    "code": "progress.save.commit"
+  }
+]

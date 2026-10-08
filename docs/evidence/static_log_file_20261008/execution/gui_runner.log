@@ -1,0 +1,25 @@
+PASS 44 strict GUI open
+ERROR:root:Background task failed: numpy_version_unsafe:NumPy 2.4.0 has a known memory leak in np.eye/flat assignment. Install a fixed NumPy release in the FLP environment (validated: 2.4.1) before starting replay. Python: D:\python_software\SilverStar\.venv\Scripts\python.exe. https://github.com/numpy/numpy/pull/30512
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\workers.py", line 63, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\ui\main_window.py", line 999, in <lambda>
+    worker = FunctionWorker(lambda context: Replay_Execute(plugin, dataset, request, context))
+                                            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\replay_execution.py", line 11, in Replay_Execute
+    result = plugin.run(dataset, request, context)
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\plugins\algorithms\kf6\plugin.py", line 1008, in run
+    NumericalRuntime_Validate()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\python_software\SilverStar\apps\FLP\src\silverstar_flp\core\runtime.py", line 13, in NumericalRuntime_Validate
+    raise RuntimeError(
+    ...<4 lines>...
+    )
+RuntimeError: numpy_version_unsafe:NumPy 2.4.0 has a known memory leak in np.eye/flat assignment. Install a fixed NumPy release in the FLP environment (validated: 2.4.1) before starting replay. Python: D:\python_software\SilverStar\.venv\Scripts\python.exe. https://github.com/numpy/numpy/pull/30512
+
+PASS 44 KF6 recorded_configuration
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\flp08tf\gui_roundtrip.py", line 65, in <module>
+    assert len(w._replay_store.Entries_Get()) in [1,2]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

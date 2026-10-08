@@ -1,0 +1,19 @@
+warning: in the working copy of 'docs/README.md', LF will be replaced by CRLF the next time Git touches it
+{
+  "utc": "2026-10-08T05:29:40.201593+00:00",
+  "source_files_unchanged": 2233,
+  "original_inventory_files_unchanged": 3,
+  "original_archive_unchanged": true,
+  "saved_project_artifacts_hashes_unchanged": true,
+  "documents_checked": [
+    "docs/STATIC_LOG_FILE_ACCEPTANCE_20261008.md",
+    "docs/USER_WORKFLOW.md",
+    "docs/README.md",
+    "docs/STATIC_BENCH_ACCEPTANCE_20261008.md",
+    "docs/STATIC_BENCH_REPEAT_20261008.md"
+  ],
+  "local_links_checked": 84,
+  "replacement_character_count": 0,
+  "git_diff_check_exit": 0,
+  "hardware_actions": 0
+}

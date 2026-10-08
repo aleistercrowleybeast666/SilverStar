@@ -1,0 +1,49 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 38 items
+
+apps\FLP\tests\test_project_stage_progress.py::test_save_reports_real_stages_and_never_publishes_worker_complete[False] PASSED [  2%]
+apps\FLP\tests\test_project_stage_progress.py::test_save_reports_real_stages_and_never_publishes_worker_complete[True] PASSED [  5%]
+apps\FLP\tests\test_project_stage_progress.py::test_cancel_at_reported_commit_keeps_old_project PASSED [  7%]
+apps\FLP\tests\test_project_stage_progress.py::test_commit_failure_never_reports_complete PASSED [ 10%]
+apps\FLP\tests\test_project_stage_progress.py::test_cancel_after_atomic_commit_cannot_become_cancelled_save PASSED [ 13%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False] PASSED [ 15%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True] PASSED [ 18%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] PASSED [ 21%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] PASSED [ 23%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] PASSED [ 26%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel] PASSED [ 28%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close] PASSED [ 31%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_failed_open_never_reports_complete PASSED [ 34%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_repeated_save_open_and_import_preserve_active_transaction PASSED [ 36%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[clean_close] PASSED [ 39%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_close_option] PASSED [ 42%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_after_commit] PASSED [ 44%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[snapshot_removed] PASSED [ 47%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish] PASSED [ 50%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel] PASSED [ 52%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close] PASSED [ 55%]
+apps\FLP\tests\test_optional_secondary_source.py::test_secondary_default_none_and_full_run_identity PASSED [ 57%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[missing-comparison.secondary_missing] PASSED [ 60%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[primary_missing-comparison.primary_missing] PASSED [ 63%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[unit-comparison.incompatible] PASSED [ 65%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[quantity-comparison.incompatible] PASSED [ 68%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[columns-comparison.incompatible] PASSED [ 71%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[frame-comparison.incompatible] PASSED [ 73%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[origin_id-comparison.incompatible] PASSED [ 76%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[task_id-comparison.incompatible] PASSED [ 78%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[no_overlap-comparison.no_overlap] PASSED [ 81%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[invalid-comparison.no_overlap] PASSED [ 84%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[same-comparison.same_source] PASSED [ 86%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[unknown-comparison.unavailable] PASSED [ 89%]
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[language] PASSED [ 92%]
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[same_primary] PASSED [ 94%]
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[secondary_on] PASSED [ 97%]
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[secondary_off] PASSED [100%]
+
+- generated xml file: D:\python_software\SilverStar\.work\flp08tf\pytest_v4.xml -
+======================= 38 passed in 151.88s (0:02:31) ========================

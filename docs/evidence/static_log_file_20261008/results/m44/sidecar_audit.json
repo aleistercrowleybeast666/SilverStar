@@ -1,0 +1,184 @@
+{
+  "manifest": {
+    "magic": "SSMF",
+    "schema": 1,
+    "firmware_version": [
+      0,
+      1,
+      0
+    ],
+    "mission_id": 44,
+    "profile_id": 12,
+    "crc_expected": 3918372772,
+    "crc_actual": 3918372772
+  },
+  "objects": [
+    {
+      "file": "snap00.0",
+      "generation": 1,
+      "payload_bytes": 172,
+      "section": 0,
+      "count": 6,
+      "crc_expected": 2379200491,
+      "crc_actual": 2379200491,
+      "crc_valid": true,
+      "payload_fnv1a32": 1818409743
+    },
+    {
+      "file": "snap01.0",
+      "generation": 1,
+      "payload_bytes": 320,
+      "section": 1,
+      "count": 12,
+      "crc_expected": 345714581,
+      "crc_actual": 345714581,
+      "crc_valid": true,
+      "payload_fnv1a32": 3117037583
+    },
+    {
+      "file": "snap02.0",
+      "generation": 1,
+      "payload_bytes": 8,
+      "section": 2,
+      "count": 0,
+      "crc_expected": 2137403578,
+      "crc_actual": 2137403578,
+      "crc_valid": true,
+      "payload_fnv1a32": 3143742515
+    },
+    {
+      "file": "snap03.0",
+      "generation": 1,
+      "payload_bytes": 72,
+      "section": 3,
+      "count": 4,
+      "crc_expected": 3451960009,
+      "crc_actual": 3451960009,
+      "crc_valid": true,
+      "payload_fnv1a32": 1963795861
+    },
+    {
+      "file": "snap04.0",
+      "generation": 1,
+      "payload_bytes": 350,
+      "section": 4,
+      "count": 38,
+      "crc_expected": 1832025566,
+      "crc_actual": 1832025566,
+      "crc_valid": true,
+      "payload_fnv1a32": 2122015701
+    },
+    {
+      "file": "snap05.0",
+      "generation": 1,
+      "payload_bytes": 8,
+      "section": 5,
+      "count": 0,
+      "crc_expected": 2278612554,
+      "crc_actual": 2278612554,
+      "crc_valid": true,
+      "payload_fnv1a32": 4125308074
+    },
+    {
+      "file": "snap06.0",
+      "generation": 1,
+      "payload_bytes": 75,
+      "section": 6,
+      "count": 1,
+      "crc_expected": 75998730,
+      "crc_actual": 75998730,
+      "crc_valid": true,
+      "payload_fnv1a32": 3207987361
+    },
+    {
+      "file": "snap07.0",
+      "generation": 1,
+      "payload_bytes": 48,
+      "section": 7,
+      "count": 1,
+      "crc_expected": 1220234872,
+      "crc_actual": 1220234872,
+      "crc_valid": true,
+      "payload_fnv1a32": 69344146
+    }
+  ],
+  "snapshot_identity": {
+    "base_instance": 0,
+    "mission_id": 44,
+    "snapshot_sequence": 1,
+    "profile_id": 12,
+    "device_config_digest": 2812161682,
+    "firmware_version": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "build_tag": "SILV0100",
+    "guidance_plan_present": 0,
+    "imu_rate_hz": 200,
+    "mechanization_subsample_count": 2,
+    "expected_ins_rate_hz": 100,
+    "imu_source_instance": 0,
+    "gnss_source_instance": 0,
+    "imu_calibration_generation": 1,
+    "imu_correction_hash": 2410945351,
+    "mag_calibration_generation": 0,
+    "mag_calibration_set_hash": 105389361
+  },
+  "section_links": [
+    {
+      "section": 1,
+      "generation": 1,
+      "payload_fnv1a32": 3117037583,
+      "match": true
+    },
+    {
+      "section": 2,
+      "generation": 1,
+      "payload_fnv1a32": 3143742515,
+      "match": true
+    },
+    {
+      "section": 3,
+      "generation": 1,
+      "payload_fnv1a32": 1963795861,
+      "match": true
+    },
+    {
+      "section": 4,
+      "generation": 1,
+      "payload_fnv1a32": 2122015701,
+      "match": true
+    },
+    {
+      "section": 5,
+      "generation": 1,
+      "payload_fnv1a32": 4125308074,
+      "match": true
+    },
+    {
+      "section": 6,
+      "generation": 1,
+      "payload_fnv1a32": 3207987361,
+      "match": true
+    }
+  ],
+  "final_snapshot": {
+    "mission_id": 44,
+    "timestamp_us": 273319666,
+    "lifecycle": 6,
+    "recovery_valid": 1,
+    "landing_detected": 1,
+    "deploy_triggered": 1,
+    "deploy_completed": 1,
+    "logger_fault": 0,
+    "storage_valid": 1,
+    "storage_unhealthy_or_unmounted": 0,
+    "start_blocking_mask": 0,
+    "warning_mask": 0,
+    "health_sequence": 272805,
+    "deploy_action_result": 0,
+    "landing_transition_result": 0
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "error": "AssertionError()",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\.work\\flp08tf\\gui_roundtrip.py\", line 65, in <module>\n    assert len(w._replay_store.Entries_Get()) in [1,2]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "completed": []
+}

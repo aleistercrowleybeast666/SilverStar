@@ -1,0 +1,400 @@
+{
+  "mission": 45,
+  "utc": "2026-10-08T05:20:10.585329+00:00",
+  "streams": {
+    "IMU_CORRECTED": {
+      "count": 2805,
+      "first_sequence": 5951,
+      "last_sequence": 8755,
+      "sequence_delta": {
+        "count": 2804,
+        "min": 1,
+        "max": 1,
+        "nonpositive": 0,
+        "distinct": [
+          1
+        ]
+      },
+      "first_timestamp_us": 30172020,
+      "last_timestamp_us": 44174019,
+      "timestamp_delta_us": {
+        "count": 2804,
+        "min": 2988,
+        "max": 7004,
+        "nonpositive": 0,
+        "distinct": [
+          2988,
+          2996,
+          2997,
+          2999,
+          3000,
+          3001,
+          3002,
+          3010,
+          3011,
+          3012,
+          3978,
+          3980,
+          3984,
+          3988,
+          3989,
+          3993,
+          3995,
+          3996,
+          3997,
+          3998,
+          3999,
+          4000,
+          4001,
+          4002,
+          4003,
+          4004,
+          4005,
+          4006,
+          4007,
+          4008,
+          4009,
+          4010
+        ]
+      }
+    },
+    "INERTIAL_INCREMENT": {
+      "count": 1401,
+      "first_sequence": 1,
+      "last_sequence": 1401,
+      "sequence_delta": {
+        "count": 1400,
+        "min": 1,
+        "max": 1,
+        "nonpositive": 0,
+        "distinct": [
+          1
+        ]
+      },
+      "first_timestamp_us": 30182020,
+      "last_timestamp_us": 44164016,
+      "timestamp_delta_us": {
+        "count": 1400,
+        "min": 7995,
+        "max": 12004,
+        "nonpositive": 0,
+        "distinct": [
+          7995,
+          7996,
+          7997,
+          8002,
+          8981,
+          8985,
+          8988,
+          8990,
+          8994,
+          8995,
+          8996,
+          8997,
+          8998,
+          8999,
+          9000,
+          9001,
+          9002,
+          9003,
+          9004,
+          9005,
+          9006,
+          9007,
+          9008,
+          9009,
+          9011,
+          9012,
+          9017,
+          9978,
+          9988,
+          9989,
+          9991,
+          9992
+        ]
+      }
+    },
+    "ESTIMATOR_STEP": {
+      "count": 1401,
+      "first_sequence": 1,
+      "last_sequence": 1401,
+      "sequence_delta": {
+        "count": 1400,
+        "min": 1,
+        "max": 1,
+        "nonpositive": 0,
+        "distinct": [
+          1
+        ]
+      },
+      "first_timestamp_us": 30182020,
+      "last_timestamp_us": 44164016,
+      "timestamp_delta_us": {
+        "count": 1400,
+        "min": 7995,
+        "max": 12004,
+        "nonpositive": 0,
+        "distinct": [
+          7995,
+          7996,
+          7997,
+          8002,
+          8981,
+          8985,
+          8988,
+          8990,
+          8994,
+          8995,
+          8996,
+          8997,
+          8998,
+          8999,
+          9000,
+          9001,
+          9002,
+          9003,
+          9004,
+          9005,
+          9006,
+          9007,
+          9008,
+          9009,
+          9011,
+          9012,
+          9017,
+          9978,
+          9988,
+          9989,
+          9991,
+          9992
+        ]
+      }
+    }
+  },
+  "increment_step_one_to_one": true,
+  "increment_boundary_delta_us": {
+    "count": 1400,
+    "min": 0,
+    "max": 0,
+    "nonpositive": 1400,
+    "distinct": [
+      0
+    ]
+  },
+  "operation_sequence_delta": {
+    "count": 1400,
+    "min": 1,
+    "max": 2,
+    "nonpositive": 0,
+    "distinct": [
+      1,
+      2
+    ]
+  },
+  "replay_epochs": [
+    2
+  ],
+  "navigation_gnss_position_result_flags": [
+    0,
+    64
+  ],
+  "gnss_origin_valid_values": [
+    0
+  ],
+  "gnss_sequence_values": [
+    0
+  ],
+  "estimator_prediction_overflow_values": [
+    0
+  ],
+  "telemetry_records": [
+    {
+      "timestamp_us": 30170762,
+      "last_transmit_timestamp_us": 30050959,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 157,
+      "receive_packet_count": 5,
+      "transmit_error_count": 8727,
+      "receive_error_count": 160,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 1
+    },
+    {
+      "timestamp_us": 31170909,
+      "last_transmit_timestamp_us": 31139967,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 163,
+      "receive_packet_count": 5,
+      "transmit_error_count": 9300,
+      "receive_error_count": 166,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 1
+    },
+    {
+      "timestamp_us": 32174751,
+      "last_transmit_timestamp_us": 32122658,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 168,
+      "receive_packet_count": 5,
+      "transmit_error_count": 9729,
+      "receive_error_count": 171,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 1
+    },
+    {
+      "timestamp_us": 33175955,
+      "last_transmit_timestamp_us": 33158392,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 173,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10069,
+      "receive_error_count": 175,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 34176592,
+      "last_transmit_timestamp_us": 34079707,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 177,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10151,
+      "receive_error_count": 179,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 35176960,
+      "last_transmit_timestamp_us": 35000654,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 181,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10248,
+      "receive_error_count": 184,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 36177916,
+      "last_transmit_timestamp_us": 36148655,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 186,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10331,
+      "receive_error_count": 188,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 37178978,
+      "last_transmit_timestamp_us": 37066666,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 190,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10428,
+      "receive_error_count": 192,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 38179511,
+      "last_transmit_timestamp_us": 37985668,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 194,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10516,
+      "receive_error_count": 197,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 39179856,
+      "last_transmit_timestamp_us": 39133960,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 199,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10595,
+      "receive_error_count": 200,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 40179951,
+      "last_transmit_timestamp_us": 40051961,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 203,
+      "receive_packet_count": 5,
+      "transmit_error_count": 10694,
+      "receive_error_count": 204,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 41180471,
+      "last_transmit_timestamp_us": 41032839,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 208,
+      "receive_packet_count": 5,
+      "transmit_error_count": 11102,
+      "receive_error_count": 209,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 42180689,
+      "last_transmit_timestamp_us": 41952672,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 212,
+      "receive_packet_count": 5,
+      "transmit_error_count": 11186,
+      "receive_error_count": 213,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    },
+    {
+      "timestamp_us": 43181854,
+      "last_transmit_timestamp_us": 43099951,
+      "last_receive_timestamp_us": 30165406,
+      "transmit_packet_count": 217,
+      "receive_packet_count": 5,
+      "transmit_error_count": 11262,
+      "receive_error_count": 216,
+      "integrity_error_count": 0,
+      "last_rssi_dbm": -30,
+      "last_snr_q4": 28,
+      "online": 0
+    }
+  ],
+  "limitations": [
+    "Accepted-record continuity does not identify calls rejected before admission.",
+    "TELEMETRY_DIAG receive_error includes rx_timeout/rx_error/rx_dropped; not the raw radio rx_error field.",
+    "Source timing during recorded mission does not attribute boot-wide historical maximum or establish WCET.",
+    "No external navigation truth or end-to-end radio delivery proof."
+  ]
+}

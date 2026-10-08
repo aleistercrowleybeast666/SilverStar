@@ -1,0 +1,2328 @@
+{
+  "DECODER_PROFILE_DESCRIPTOR": [
+    {
+      "record_type": 29,
+      "record_name": "DECODER_PROFILE_DESCRIPTOR",
+      "record_version": 0,
+      "payload_length": 64,
+      "record_sequence": 0,
+      "timestamp_us": 245357,
+      "valid_flags": 0,
+      "payload": {
+        "package_schema_major": 1,
+        "package_schema_minor": 2,
+        "container_format_major": 0,
+        "container_format_minor": 0,
+        "record_catalog_hash_128": [
+          122,
+          245,
+          149,
+          242,
+          55,
+          108,
+          34,
+          220,
+          87,
+          205,
+          99,
+          163,
+          67,
+          64,
+          214,
+          133
+        ],
+        "project_semantics_hash_128": [
+          60,
+          203,
+          175,
+          211,
+          71,
+          90,
+          78,
+          216,
+          235,
+          170,
+          52,
+          51,
+          7,
+          68,
+          118,
+          81
+        ],
+        "generation_profile_hash_128": [
+          196,
+          73,
+          220,
+          193,
+          139,
+          166,
+          226,
+          39,
+          116,
+          251,
+          50,
+          3,
+          129,
+          82,
+          200,
+          16
+        ],
+        "reserved": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "file_offset": 64
+    }
+  ],
+  "SYSTEM_CONFIG": [
+    {
+      "record_type": 5,
+      "record_name": "SYSTEM_CONFIG",
+      "record_version": 0,
+      "payload_length": 132,
+      "record_sequence": 1,
+      "timestamp_us": 248570,
+      "valid_flags": 0,
+      "payload": {
+        "version": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "profile_id": 12,
+        "device_config_digest": 2812161682,
+        "configured_imu_rate_hz": 200,
+        "configured_gnss_rate_hz": 25,
+        "configured_magnetometer_rate_hz": 200,
+        "configured_barometer_rate_hz": 200,
+        "configured_hardware_quaternion_rate_hz": 200,
+        "mechanization_subsample_count": 2,
+        "expected_ins_rate_hz": 100,
+        "mechanization_min_sample_rate_hz": 50,
+        "mechanization_max_sample_rate_hz": 500,
+        "log_profile_id": 0,
+        "sync_period_us": 250000,
+        "aggregation_buffer_size": 4096,
+        "normal_queue_depth": 80,
+        "estimator_queue_depth": 48,
+        "device_descriptor_count": 12,
+        "algorithm_descriptor_count": 4,
+        "log_stream_descriptor_count": 40,
+        "reserved": 0,
+        "p0_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "process_accel_std_mps2": [
+          1.5,
+          1.5,
+          2.0
+        ],
+        "measurement_profile": [
+          1.25,
+          1.5,
+          2.5,
+          0.15000000596046448,
+          2.5
+        ],
+        "nis_profile": [
+          6.635000228881836,
+          10.82800006866455,
+          9.210000038146973,
+          13.815999984741211,
+          11.345000267028809,
+          16.266000747680664,
+          4.0
+        ]
+      },
+      "file_offset": 156
+    },
+    {
+      "record_type": 5,
+      "record_name": "SYSTEM_CONFIG",
+      "record_version": 0,
+      "payload_length": 132,
+      "record_sequence": 132,
+      "timestamp_us": 258315528,
+      "valid_flags": 0,
+      "payload": {
+        "version": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "profile_id": 12,
+        "device_config_digest": 2812161682,
+        "configured_imu_rate_hz": 200,
+        "configured_gnss_rate_hz": 25,
+        "configured_magnetometer_rate_hz": 200,
+        "configured_barometer_rate_hz": 200,
+        "configured_hardware_quaternion_rate_hz": 200,
+        "mechanization_subsample_count": 2,
+        "expected_ins_rate_hz": 100,
+        "mechanization_min_sample_rate_hz": 50,
+        "mechanization_max_sample_rate_hz": 500,
+        "log_profile_id": 0,
+        "sync_period_us": 250000,
+        "aggregation_buffer_size": 4096,
+        "normal_queue_depth": 80,
+        "estimator_queue_depth": 48,
+        "device_descriptor_count": 12,
+        "algorithm_descriptor_count": 4,
+        "log_stream_descriptor_count": 40,
+        "reserved": 0,
+        "p0_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "process_accel_std_mps2": [
+          1.5,
+          1.5,
+          2.0
+        ],
+        "measurement_profile": [
+          1.25,
+          1.5,
+          2.5,
+          0.15000000596046448,
+          2.5
+        ],
+        "nis_profile": [
+          6.635000228881836,
+          10.82800006866455,
+          9.210000038146973,
+          13.815999984741211,
+          11.345000267028809,
+          16.266000747680664,
+          4.0
+        ]
+      },
+      "file_offset": 5880
+    }
+  ],
+  "EVENT": [
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 58,
+      "timestamp_us": 516354,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 17,
+        "arg0": 638,
+        "arg1": 670,
+        "event_name": "GNSS_FIX_LOST",
+        "event_semantics": {},
+        "arg0_float": 8.940284202392333e-43,
+        "arg1_float": 9.388699710976274e-43
+      },
+      "file_offset": 2740
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 59,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 15,
+        "arg0": 1,
+        "arg1": 0,
+        "event_name": "SELF_TEST_COMPLETE",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 0.0
+      },
+      "file_offset": 2780
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 60,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 33556224,
+        "arg1": 838656,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 9.405963708056756e-38,
+        "arg1_float": 1.1752073648967938e-39
+      },
+      "file_offset": 2820
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 61,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 2860
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 62,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 2900
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 63,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 2940
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 64,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 842973671,
+        "arg1": 3254983579,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": 1.1103543862134302e-08,
+        "arg1_float": -32.77695846557617
+      },
+      "file_offset": 2980
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 65,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 66817,
+        "arg1": 52480,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 9.36305594907913e-41,
+        "arg1_float": 7.35401434077664e-41
+      },
+      "file_offset": 3020
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 66,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 1,
+        "arg1": 1,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 1.401298464324817e-45
+      },
+      "file_offset": 3060
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 67,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 1,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3100
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 68,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3140
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 69,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 1546627692,
+        "arg1": 2918196354,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": 1.9778200703021875e+17,
+        "arg1_float": -2.7301053778794326e-11
+      },
+      "file_offset": 3180
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 70,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 132098,
+        "arg1": 52480,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 1.851087245403797e-40,
+        "arg1_float": 7.35401434077664e-41
+      },
+      "file_offset": 3220
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 71,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 31,
+        "arg1": 31,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 4.344025239406933e-44,
+        "arg1_float": 4.344025239406933e-44
+      },
+      "file_offset": 3260
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 72,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 31,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 4.344025239406933e-44,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3300
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 73,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3340
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 74,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 601606380,
+        "arg1": 3344033936,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": 2.3829121301407102e-17,
+        "arg1_float": -53736.5625
+      },
+      "file_offset": 3380
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 75,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 262147,
+        "arg1": 15658734,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 3.673461885273578e-40,
+        "arg1_float": 2.19425599074708e-38
+      },
+      "file_offset": 3420
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 76,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3460
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 77,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3500
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 78,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3540
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 79,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 1932136219,
+        "arg1": 1932136219,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": 1.3473462543569387e+31,
+        "arg1_float": 1.3473462543569387e+31
+      },
+      "file_offset": 3580
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 80,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 525316,
+        "arg1": 974080,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 7.361245040852556e-40,
+        "arg1_float": 1.3649768081295178e-39
+      },
+      "file_offset": 3620
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 81,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 1,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3660
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 82,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 1,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3700
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 83,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3740
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 84,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 1791031178,
+        "arg1": 2918196354,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": 1.1664136376897989e+26,
+        "arg1_float": -2.7301053778794326e-11
+      },
+      "file_offset": 3780
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 85,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 1049605,
+        "arg1": 974080,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 1.4708098746476496e-39,
+        "arg1_float": 1.3649768081295178e-39
+      },
+      "file_offset": 3820
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 86,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 8,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 1.1210387714598537e-44,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3860
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 87,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 8,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 1.1210387714598537e-44,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3900
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 88,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 3940
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 89,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 2735503977,
+        "arg1": 2918196354,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": -7.615336566254105e-18,
+        "arg1_float": -2.7301053778794326e-11
+      },
+      "file_offset": 3980
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 90,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 2098182,
+        "arg1": 835584,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.9401792144739733e-39,
+        "arg1_float": 1.170902576014388e-39
+      },
+      "file_offset": 4020
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 91,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 1,
+        "arg1": 1,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 1.401298464324817e-45
+      },
+      "file_offset": 4060
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 92,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4100
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 93,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4140
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 94,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 2816139212,
+        "arg1": 3333579783,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": -6.07497959001415e-15,
+        "arg1_float": -22834.013671875
+      },
+      "file_offset": 4180
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 95,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 4195335,
+        "arg1": 838656,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 5.878916492828156e-39,
+        "arg1_float": 1.1752073648967938e-39
+      },
+      "file_offset": 4220
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 96,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4260
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 97,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4300
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 98,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4340
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 99,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 3937673091,
+        "arg1": 3276810489,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": -1.0887772870753793e+26,
+        "arg1_float": -208.16004943847656
+      },
+      "file_offset": 4380
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 100,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 8389640,
+        "arg1": 838656,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 1.1756389648238058e-38,
+        "arg1_float": 1.1752073648967938e-39
+      },
+      "file_offset": 4420
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 101,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4460
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 102,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4500
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 103,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4540
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 104,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 4177969662,
+        "arg1": 3571820918,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": -4.373140050315314e+34,
+        "arg1_float": -7891124748288.0
+      },
+      "file_offset": 4580
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 105,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 19,
+        "arg0": 16778249,
+        "arg1": 838849,
+        "event_name": "STARTUP_DEVICE_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.3512782099073045e-38,
+        "arg1_float": 1.1754778155004085e-39
+      },
+      "file_offset": 4620
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 106,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 20,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_MASKS",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4660
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 107,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 21,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_CONFIG_FAILURES",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4700
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 108,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 22,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "STARTUP_DEVICE_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4740
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 109,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 23,
+        "arg0": 2301207459,
+        "arg1": 2301207459,
+        "event_name": "STARTUP_DEVICE_NAMES",
+        "event_semantics": {},
+        "arg0_float": -2.0419576652981267e-33,
+        "arg1_float": -2.0419576652981267e-33
+      },
+      "file_offset": 4780
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 110,
+      "timestamp_us": 512250,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 28,
+        "arg0": 4008636142,
+        "arg1": 1,
+        "event_name": "GNSS_CONFIG_TRANSACTION",
+        "event_semantics": {},
+        "arg0_float": -3.6973140302885666e+28,
+        "arg1_float": 1.401298464324817e-45
+      },
+      "file_offset": 4820
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 111,
+      "timestamp_us": 250354478,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 24,
+        "arg0": 255,
+        "arg1": 0,
+        "event_name": "IMU_BIAS_WAIT",
+        "event_semantics": {},
+        "arg0_float": 3.5733110840282835e-43,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4860
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 112,
+      "timestamp_us": 250354478,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 33,
+        "arg0": 1,
+        "arg1": 0,
+        "event_name": "CALIBRATION_START",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4900
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 113,
+      "timestamp_us": 252300412,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 35,
+        "arg0": 1,
+        "arg1": 0,
+        "event_name": "CALIBRATION_READY",
+        "event_semantics": {},
+        "arg0_float": 1.401298464324817e-45,
+        "arg1_float": 0.0
+      },
+      "file_offset": 4940
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 115,
+      "timestamp_us": 252300484,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16842752,
+        "arg1": 3187901414,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.369355800876173e-38,
+        "arg1_float": -0.12843284010887146
+      },
+      "file_offset": 5080
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 116,
+      "timestamp_us": 252300512,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16908288,
+        "arg1": 1065353216,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.3877229001077715e-38,
+        "arg1_float": 1.0
+      },
+      "file_offset": 5120
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 117,
+      "timestamp_us": 252300539,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16973824,
+        "arg1": 957544867,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.40608999933937e-38,
+        "arg1_float": 0.00014016641944181174
+      },
+      "file_offset": 5160
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 118,
+      "timestamp_us": 252300567,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 17039360,
+        "arg1": 1065353216,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.424457098570968e-38,
+        "arg1_float": 1.0
+      },
+      "file_offset": 5200
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 119,
+      "timestamp_us": 252300594,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16842753,
+        "arg1": 1021227520,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.369356081135866e-38,
+        "arg1_float": 0.027184486389160156
+      },
+      "file_offset": 5240
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 120,
+      "timestamp_us": 252300622,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16908289,
+        "arg1": 1065353216,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.3877231803674644e-38,
+        "arg1_float": 1.0
+      },
+      "file_offset": 5280
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 121,
+      "timestamp_us": 252300650,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16973825,
+        "arg1": 3111963676,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.4060902795990626e-38,
+        "arg1_float": -0.00024108629440888762
+      },
+      "file_offset": 5320
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 122,
+      "timestamp_us": 252300677,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 17039361,
+        "arg1": 1065353216,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.424457378830661e-38,
+        "arg1_float": 1.0
+      },
+      "file_offset": 5360
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 123,
+      "timestamp_us": 252300705,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16842754,
+        "arg1": 3162792948,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.369356361395559e-38,
+        "arg1_float": -0.01616094261407852
+      },
+      "file_offset": 5400
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 124,
+      "timestamp_us": 252300732,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16908290,
+        "arg1": 1065353216,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.387723460627157e-38,
+        "arg1_float": 1.0
+      },
+      "file_offset": 5440
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 125,
+      "timestamp_us": 252300760,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 16973826,
+        "arg1": 3123443185,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.4060905598587555e-38,
+        "arg1_float": -0.0006559780449606478
+      },
+      "file_offset": 5480
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 126,
+      "timestamp_us": 252300787,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 37,
+        "arg0": 17039362,
+        "arg1": 1065353216,
+        "event_name": "CALIBRATION_RESULT",
+        "event_semantics": {},
+        "arg0_float": 2.4244576590903537e-38,
+        "arg1_float": 1.0
+      },
+      "file_offset": 5520
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 127,
+      "timestamp_us": 253424709,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 38,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "ALIGNMENT_START",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 5560
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 128,
+      "timestamp_us": 253919434,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 18,
+        "arg0": 2,
+        "arg1": 100,
+        "event_name": "ORIGIN_WINDOW_READY",
+        "event_semantics": {},
+        "arg0_float": 2.802596928649634e-45,
+        "arg1_float": 1.401298464324817e-43
+      },
+      "file_offset": 5600
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 129,
+      "timestamp_us": 253933423,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 39,
+        "arg0": 5,
+        "arg1": 5,
+        "event_name": "ALIGNMENT_READY",
+        "event_semantics": {},
+        "arg0_float": 7.006492321624085e-45,
+        "arg1_float": 7.006492321624085e-45
+      },
+      "file_offset": 5640
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 192,
+      "timestamp_us": 258315528,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 3,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "MISSION_START",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 8807
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 193,
+      "timestamp_us": 258311668,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 2,
+        "arg0": 4,
+        "arg1": 1,
+        "event_name": "ALIGNMENT_COMPLETE",
+        "event_semantics": {},
+        "arg0_float": 5.605193857299268e-45,
+        "arg1_float": 1.401298464324817e-45
+      },
+      "file_offset": 8847
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 220,
+      "timestamp_us": 258339452,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 260,
+        "arg1": 1,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 3.643376007244524e-43,
+        "arg1_float": 1.401298464324817e-45
+      },
+      "file_offset": 11491
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 1628,
+      "timestamp_us": 260313311,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 66816,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 9.362915819232698e-41,
+        "arg1_float": NaN
+      },
+      "file_offset": 134507
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 1629,
+      "timestamp_us": 260313311,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 66817,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 9.36305594907913e-41,
+        "arg1_float": NaN
+      },
+      "file_offset": 134547
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 1630,
+      "timestamp_us": 260313311,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 66818,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 9.363196078925563e-41,
+        "arg1_float": NaN
+      },
+      "file_offset": 134587
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 1631,
+      "timestamp_us": 260313311,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 66819,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 9.363336208771995e-41,
+        "arg1_float": NaN
+      },
+      "file_offset": 134627
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 7362,
+      "timestamp_us": 268313513,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 132608,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 1.8582338675718534e-40,
+        "arg1_float": NaN
+      },
+      "file_offset": 635075
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 7363,
+      "timestamp_us": 268313513,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 132609,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 1.8582478805564967e-40,
+        "arg1_float": NaN
+      },
+      "file_offset": 635115
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 7364,
+      "timestamp_us": 268313513,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 132610,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 1.85826189354114e-40,
+        "arg1_float": NaN
+      },
+      "file_offset": 635155
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 7365,
+      "timestamp_us": 268313513,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 47,
+        "arg0": 132611,
+        "arg1": 4294967295,
+        "event_name": "NAV_FUSION_STATE_CHANGE",
+        "event_semantics": {},
+        "arg0_float": 1.858275906525783e-40,
+        "arg1_float": NaN
+      },
+      "file_offset": 635195
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 7366,
+      "timestamp_us": 268313856,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 41,
+        "arg0": 4,
+        "arg1": 1176257536,
+        "event_name": "PARACHUTE_DEPLOY",
+        "event_semantics": {},
+        "arg0_float": 5.605193857299268e-45,
+        "arg1_float": 10001.0
+      },
+      "file_offset": 635235
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 7367,
+      "timestamp_us": 268313856,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 43,
+        "arg0": 4,
+        "arg1": 1176257536,
+        "event_name": "PARACHUTE_DEPLOY_DETAIL",
+        "event_semantics": {},
+        "arg0_float": 5.605193857299268e-45,
+        "arg1_float": 10001.0
+      },
+      "file_offset": 635275
+    },
+    {
+      "record_type": 2,
+      "record_name": "EVENT",
+      "record_version": 0,
+      "payload_length": 12,
+      "record_sequence": 10226,
+      "timestamp_us": 272317722,
+      "valid_flags": 0,
+      "payload": {
+        "event_id": 42,
+        "arg0": 0,
+        "arg1": 0,
+        "event_name": "LANDING",
+        "event_semantics": {},
+        "arg0_float": 0.0,
+        "arg1_float": 0.0
+      },
+      "file_offset": 884983
+    }
+  ],
+  "CALIBRATION_RESULT": [
+    {
+      "record_type": 23,
+      "record_name": "CALIBRATION_RESULT",
+      "record_version": 0,
+      "payload_length": 72,
+      "record_sequence": 114,
+      "timestamp_us": 252300452,
+      "valid_flags": 0,
+      "payload": {
+        "source_id": 0,
+        "virtual_imu_id": 0,
+        "mode": 1,
+        "state": 4,
+        "ready": 1,
+        "completed_face_mask": 0,
+        "samples": 190,
+        "reject_count": 0,
+        "retry_count": 0,
+        "start_sequence": 1,
+        "accel_bias_mps2": [
+          -0.12843284010887146,
+          0.027184486389160156,
+          -0.01616094261407852
+        ],
+        "accel_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "gyro_bias_radps": [
+          0.00014016641944181174,
+          -0.00024108629440888762,
+          -0.0006559780449606478
+        ],
+        "gyro_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "file_offset": 4980
+    }
+  ],
+  "ALIGNMENT_RESULT": [
+    {
+      "record_type": 24,
+      "record_name": "ALIGNMENT_RESULT",
+      "record_version": 0,
+      "payload_length": 96,
+      "record_sequence": 130,
+      "timestamp_us": 253933513,
+      "valid_flags": 0,
+      "payload": {
+        "capability_mask": 7,
+        "selected_mask": 7,
+        "required_mask": 5,
+        "ready_mask": 5,
+        "unavailable_mask": 0,
+        "missing_adapter_mask": 0,
+        "start_sequence": 1,
+        "state": 3,
+        "config_result": 0,
+        "ready": 1,
+        "source_count": 6,
+        "attitude_timestamp_us": 253929014,
+        "q_nb": [
+          0.707098662853241,
+          0.7071148753166199,
+          1.6465683074784465e-05,
+          -1.6496969692525454e-05
+        ],
+        "gnss_origin_lat_e7": 0,
+        "gnss_origin_lon_e7": 0,
+        "gnss_origin_height_mm": 0,
+        "gnss_sample_count": 0,
+        "gnss_horizontal_accuracy_m": 0.0,
+        "gnss_vertical_accuracy_m": 0.0,
+        "barometer_sample_count": 100,
+        "barometer_origin_pressure_pa": 0.0,
+        "barometer_origin_altitude_m": 0.0,
+        "attitude_state": 2,
+        "gnss_state": 0,
+        "barometer_state": 2,
+        "attitude_source": 4
+      },
+      "file_offset": 5680
+    }
+  ],
+  "ALIGNMENT_EVIDENCE": [
+    {
+      "record_type": 40,
+      "record_name": "ALIGNMENT_EVIDENCE",
+      "record_version": 1,
+      "payload_length": 48,
+      "record_sequence": 131,
+      "timestamp_us": 253933551,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "constraint_count": 2,
+        "valid_pair_count": 1,
+        "yaw_authoritative": 0,
+        "imu_source_instance": 0,
+        "magnetometer_instance": 255,
+        "external_source_instance": 255,
+        "failure_reason": 0,
+        "magnetometer_physical_device_id": 0,
+        "flags": 9,
+        "mag_calibration_generation": 0,
+        "mag_calibration_set_hash": 105389361,
+        "first_timestamp_us": 253424018,
+        "last_timestamp_us": 253929014,
+        "minimum_pair_sine": 1.0,
+        "rms_mismatch_rad": 0.0,
+        "max_mismatch_rad": 0.0
+      },
+      "file_offset": 5804
+    }
+  ],
+  "MISSION_SNAPSHOT_IDENTITY": [
+    {
+      "record_type": 41,
+      "record_name": "MISSION_SNAPSHOT_IDENTITY",
+      "record_version": 1,
+      "payload_length": 24,
+      "record_sequence": 190,
+      "timestamp_us": 258315528,
+      "valid_flags": 0,
+      "payload": {
+        "mission_id": 44,
+        "commit_generation": 1,
+        "snapshot_sequence": 1,
+        "imu_calibration_generation": 1,
+        "mag_calibration_set_hash": 105389361,
+        "base_instance": 0,
+        "ready": 1,
+        "reserved": 0
+      },
+      "file_offset": 8583
+    }
+  ],
+  "INITIAL_STATE": [
+    {
+      "record_type": 13,
+      "record_name": "INITIAL_STATE",
+      "record_version": 0,
+      "payload_length": 144,
+      "record_sequence": 191,
+      "timestamp_us": 258315528,
+      "valid_flags": 0,
+      "payload": {
+        "alignment_algorithm": 4,
+        "hardware_mode": 0,
+        "mode_verified": 0,
+        "origin_valid_flags": 2,
+        "alignment_sample_count": 102,
+        "gnss_sample_count": 0,
+        "barometer_sample_count": 100,
+        "reserved": 0,
+        "q_nb": [
+          0.707098662853241,
+          0.7071148753166199,
+          1.6465683074784465e-05,
+          -1.6496969692525454e-05
+        ],
+        "acceleration_mean_b_mps2": [
+          -0.0004558880173135549,
+          9.779598236083984,
+          -0.0002252007689094171
+        ],
+        "gyro_mean_b_radps": [
+          -3.572870627976954e-05,
+          7.398599700536579e-05,
+          7.112693128874525e-05
+        ],
+        "magnetic_field_mean_b_uT": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gnss_origin_latitude_e7": 0,
+        "gnss_origin_longitude_e7": 0,
+        "gnss_origin_height_mm": 0,
+        "gnss_origin_position_std_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity_enu_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_velocity_std_mps": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "barometer_origin_altitude_m": 47.37999725341797,
+        "barometer_origin_std_m": 0.0,
+        "p0_diagonal": [
+          4.0,
+          4.0,
+          9.0,
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "file_offset": 8635
+    }
+  ],
+  "STATS": [
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 201,
+      "timestamp_us": 258316419,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 1,
+        "health_flags": 2
+      },
+      "file_offset": 9679
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 915,
+      "timestamp_us": 259317290,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 100,
+        "health_flags": 2
+      },
+      "file_offset": 72171
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 1635,
+      "timestamp_us": 260317292,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 200,
+        "health_flags": 2
+      },
+      "file_offset": 134903
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 2355,
+      "timestamp_us": 261318502,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 300,
+        "health_flags": 130
+      },
+      "file_offset": 197807
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 3070,
+      "timestamp_us": 262319468,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 400,
+        "health_flags": 130
+      },
+      "file_offset": 260279
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 3787,
+      "timestamp_us": 263319468,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 500,
+        "health_flags": 130
+      },
+      "file_offset": 322827
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 4503,
+      "timestamp_us": 264319709,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 600,
+        "health_flags": 130
+      },
+      "file_offset": 385399
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 5220,
+      "timestamp_us": 265320289,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 701,
+        "health_flags": 130
+      },
+      "file_offset": 447987
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 5937,
+      "timestamp_us": 266320293,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 801,
+        "health_flags": 130
+      },
+      "file_offset": 510623
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 6654,
+      "timestamp_us": 267321304,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 901,
+        "health_flags": 130
+      },
+      "file_offset": 573307
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 7375,
+      "timestamp_us": 268322291,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 1001,
+        "health_flags": 130
+      },
+      "file_offset": 635995
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 8097,
+      "timestamp_us": 269323469,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 1101,
+        "health_flags": 130
+      },
+      "file_offset": 699155
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 8810,
+      "timestamp_us": 270324295,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 1201,
+        "health_flags": 130
+      },
+      "file_offset": 761363
+    },
+    {
+      "record_type": 3,
+      "record_name": "STATS",
+      "record_version": 0,
+      "payload_length": 16,
+      "record_sequence": 9520,
+      "timestamp_us": 271324333,
+      "valid_flags": 0,
+      "payload": {
+        "imu_queue_overflow_count": 0,
+        "logger_queue_overflow_count": 0,
+        "ins_update_count": 1301,
+        "health_flags": 130
+      },
+      "file_offset": 823335
+    }
+  ],
+  "LANDING_DIAGNOSTIC": [
+    {
+      "record_type": 32,
+      "record_name": "LANDING_DIAGNOSTIC",
+      "record_version": 0,
+      "payload_length": 52,
+      "record_sequence": 8087,
+      "timestamp_us": 269313747,
+      "valid_flags": 0,
+      "payload": {
+        "evaluation_timestamp_us": 269313747,
+        "candidate_start_timestamp_us": 269313033,
+        "sequence": 1,
+        "candidate_elapsed_us": 714,
+        "valid_coverage": 0.0,
+        "still_ratio": 0.0,
+        "maximum_bad_duration_us": 0,
+        "baro_slope_mps": 0.0,
+        "baro_span_m": 0.0,
+        "baro_coverage": 0.0,
+        "transition": 1,
+        "reset_reason": 0,
+        "reserved": 0
+      },
+      "file_offset": 698227
+    },
+    {
+      "record_type": 32,
+      "record_name": "LANDING_DIAGNOSTIC",
+      "record_version": 0,
+      "payload_length": 52,
+      "record_sequence": 10225,
+      "timestamp_us": 272317722,
+      "valid_flags": 0,
+      "payload": {
+        "evaluation_timestamp_us": 272317722,
+        "candidate_start_timestamp_us": 269313033,
+        "sequence": 2,
+        "candidate_elapsed_us": 3004689,
+        "valid_coverage": 0.9984411001205444,
+        "still_ratio": 1.0,
+        "maximum_bad_duration_us": 3990,
+        "baro_slope_mps": 8.230472781176751e-14,
+        "baro_span_m": 0.0,
+        "baro_coverage": 0.9997720122337341,
+        "transition": 3,
+        "reset_reason": 0,
+        "reserved": 0
+      },
+      "file_offset": 884903
+    }
+  ]
+}

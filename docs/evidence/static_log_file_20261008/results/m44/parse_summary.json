@@ -1,0 +1,931 @@
+{
+  "mission": 44,
+  "utc": "2026-10-08T05:10:11.512574+00:00",
+  "seconds": 1.9596154000028037,
+  "match_mode": "exact_generation_profile",
+  "descriptor": {
+    "package_schema_major": 1,
+    "package_schema_minor": 2,
+    "container_format_major": 0,
+    "container_format_minor": 0,
+    "record_catalog_hash_128": "7af595f2376c22dc57cd63a34340d685",
+    "project_semantics_hash_128": "3ccbafd3475a4ed8ebaa343307447651",
+    "generation_profile_hash_128": "c449dcc18ba6e22774fb32038152c810"
+  },
+  "package_sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2",
+  "header": {
+    "magic_bytes": "53534c4f47300000",
+    "magic": "SSLOG0",
+    "profile_id": 0,
+    "file_header_size": 64,
+    "record_header_size": 24,
+    "configured_imu_rate_hz": 200,
+    "expected_mechanization_rate_hz": 100,
+    "coordinate_frame": 1,
+    "axis_numbers": [
+      3,
+      1,
+      2
+    ],
+    "quaternion_order": 1,
+    "quaternion_convention": 1,
+    "gravity_mps2": 9.779999732971191,
+    "air_compatibility_tag": "AIR-NCRC",
+    "build_id": "SILV0100",
+    "record_crc_size": 4,
+    "mechanization_subsample_count": 2,
+    "firmware_version": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "maximum_record_size": 284,
+    "header_crc32": 1312920288
+  },
+  "diagnostics": {
+    "header_valid": true,
+    "header_crc_valid": true,
+    "header_crc_expected": 1312920288,
+    "header_crc_actual": 1312920288,
+    "record_count": 10227,
+    "decoded_record_count": 10227,
+    "record_crc_failures": 0,
+    "record_length_failures": 0,
+    "recovered_after_crc": 0,
+    "recovered_after_sync_loss": 0,
+    "resync_count": 0,
+    "resync_candidate_count": 0,
+    "resync_failure_count": 0,
+    "unknown_record_type_count": 0,
+    "unknown_record_version_count": 0,
+    "decoder_failure_count": 0,
+    "sequence_gap_count": 0,
+    "sequence_missing_count": 0,
+    "truncated_tail": false,
+    "trailing_bytes": 0,
+    "first_timestamp_us": 0,
+    "last_timestamp_us": 272317722,
+    "damaged_spans": [],
+    "diagnostics": []
+  },
+  "data_quality": {
+    "status": "clean",
+    "valid_record_count": 10227,
+    "crc_failure_count": 0,
+    "length_failure_count": 0,
+    "resync_count": 0,
+    "sequence_gap_count": 0,
+    "sequence_missing_count": 0,
+    "unknown_record_count": 0,
+    "decoder_failure_count": 0,
+    "damaged_span_count": 0,
+    "logger_overflow_count": 0,
+    "truncated_tail": false,
+    "record_counts": {
+      "DECODER_PROFILE_DESCRIPTOR": 1,
+      "SYSTEM_CONFIG": 2,
+      "DEVICE_DESCRIPTOR": 24,
+      "ALGORITHM_DESCRIPTOR": 8,
+      "LOG_STREAM_DESCRIPTOR": 80,
+      "EVENT": 85,
+      "CALIBRATION_RESULT": 1,
+      "ALIGNMENT_RESULT": 1,
+      "ALIGNMENT_EVIDENCE": 1,
+      "MISSION_CONFIG": 1,
+      "MISSION_SNAPSHOT_IDENTITY": 1,
+      "INITIAL_STATE": 1,
+      "ESTIMATOR": 323,
+      "TELEMETRY_DIAG": 14,
+      "GNSS_NATIVE": 350,
+      "BARO_NATIVE": 2802,
+      "GNSS_RECOVERY": 1,
+      "POWER": 133,
+      "HEALTH": 14,
+      "STATS": 14,
+      "ESTIMATOR_STEP": 1399,
+      "IMU_CORRECTED": 2801,
+      "INERTIAL_INCREMENT": 1399,
+      "BARO_MEASUREMENT": 769,
+      "LANDING_DIAGNOSTIC": 2
+    },
+    "imu_queue_overflow_count": 0,
+    "logger_overflow_event_count": 0,
+    "sequence_gaps": [],
+    "mission_record_continuity": "continuous",
+    "structural_integrity": "normal"
+  },
+  "overview": {
+    "source_name": "KF_6",
+    "mission_start_timestamp_us": 258315528,
+    "start_fallback": false,
+    "duration_s": 14.002194,
+    "maximum_altitude_m": 0.0909813940525055,
+    "maximum_speed_mps": 0.052970422084494456,
+    "maximum_acceleration_mps2": 9.800570637411866,
+    "deploy": {
+      "timestamp_us": 268313856,
+      "altitude_m": 0.0900620796509087,
+      "altitude_source": "KF_6",
+      "actual_reason_recorded": true,
+      "actual_trigger_mask": 4,
+      "enabled_trigger_mask": 4,
+      "trigger_value": 10001.0,
+      "trigger_value_kind": "mission_delay",
+      "trigger_threshold": 10000.0
+    },
+    "calibration": {
+      "present": true,
+      "configured_modes": [
+        "OneFace"
+      ],
+      "timestamp_us": 252300452,
+      "mode": 1,
+      "state": 4,
+      "ready": true,
+      "completed_face_mask": 0,
+      "completed_faces": 0,
+      "required_faces": 1,
+      "samples": 190,
+      "reject_count": 0,
+      "retry_count": 0,
+      "accel_bias_mps2": [
+        -0.12843284010887146,
+        0.027184486389160156,
+        -0.01616094261407852
+      ],
+      "accel_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gyro_bias_radps": [
+        0.00014016641944181174,
+        -0.00024108629440888762,
+        -0.0006559780449606478
+      ],
+      "gyro_scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "alignment": {
+      "present": true,
+      "timestamp_us": 258315528,
+      "mode": 4,
+      "state": 3,
+      "ready": true,
+      "q_nb": [
+        0.707098662853241,
+        0.7071148753166199,
+        1.6465683074784465e-05,
+        -1.6496969692525454e-05
+      ],
+      "quaternion_record": "INITIAL_STATE",
+      "known_yaw_deg": null,
+      "magnetic_declination_deg": null,
+      "sample_count": 102,
+      "selected_mask": 7,
+      "ready_mask": 5,
+      "config_result": 0,
+      "attitude_source": 4,
+      "used_sources": [
+        "attitude",
+        "barometer"
+      ],
+      "historical_mode": false,
+      "history_count": 1,
+      "ready_history_count": 1,
+      "result_timestamp_us": 253933513,
+      "initial_state_timestamp_us": 258315528,
+      "initial_state_authoritative": true
+    },
+    "gnss": {
+      "native_configured": true,
+      "measurement_configured": true,
+      "native_sample_count": 350,
+      "measurement_sample_count": 0,
+      "latest_online": true,
+      "latest_fix_type": 0,
+      "position_usable_count": 0,
+      "velocity_usable_count": 0
+    },
+    "data_quality": {
+      "status": "clean",
+      "valid_record_count": 10227,
+      "crc_failure_count": 0,
+      "length_failure_count": 0,
+      "resync_count": 0,
+      "sequence_gap_count": 0,
+      "sequence_missing_count": 0,
+      "unknown_record_count": 0,
+      "decoder_failure_count": 0,
+      "damaged_span_count": 0,
+      "logger_overflow_count": 0,
+      "truncated_tail": false,
+      "record_counts": {
+        "DECODER_PROFILE_DESCRIPTOR": 1,
+        "SYSTEM_CONFIG": 2,
+        "DEVICE_DESCRIPTOR": 24,
+        "ALGORITHM_DESCRIPTOR": 8,
+        "LOG_STREAM_DESCRIPTOR": 80,
+        "EVENT": 85,
+        "CALIBRATION_RESULT": 1,
+        "ALIGNMENT_RESULT": 1,
+        "ALIGNMENT_EVIDENCE": 1,
+        "MISSION_CONFIG": 1,
+        "MISSION_SNAPSHOT_IDENTITY": 1,
+        "INITIAL_STATE": 1,
+        "ESTIMATOR": 323,
+        "TELEMETRY_DIAG": 14,
+        "GNSS_NATIVE": 350,
+        "BARO_NATIVE": 2802,
+        "GNSS_RECOVERY": 1,
+        "POWER": 133,
+        "HEALTH": 14,
+        "STATS": 14,
+        "ESTIMATOR_STEP": 1399,
+        "IMU_CORRECTED": 2801,
+        "INERTIAL_INCREMENT": 1399,
+        "BARO_MEASUREMENT": 769,
+        "LANDING_DIAGNOSTIC": 2
+      },
+      "imu_queue_overflow_count": 0,
+      "logger_overflow_event_count": 0,
+      "sequence_gaps": [],
+      "mission_record_continuity": "continuous",
+      "structural_integrity": "normal"
+    },
+    "timeline": [
+      {
+        "timestamp_us": 512250,
+        "name": "SELF_TEST_COMPLETE",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 33556224,
+        "arg1": 838656
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 842973671,
+        "arg1": 3254983579
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 66817,
+        "arg1": 52480
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 1
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 1546627692,
+        "arg1": 2918196354
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 132098,
+        "arg1": 52480
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 31,
+        "arg1": 31
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 31,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 601606380,
+        "arg1": 3344033936
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 262147,
+        "arg1": 15658734
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 1932136219,
+        "arg1": 1932136219
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 525316,
+        "arg1": 974080
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 1791031178,
+        "arg1": 2918196354
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 1049605,
+        "arg1": 974080
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 8,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 8,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 2735503977,
+        "arg1": 2918196354
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 2098182,
+        "arg1": 835584
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 1
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 2816139212,
+        "arg1": 3333579783
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 4195335,
+        "arg1": 838656
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 3937673091,
+        "arg1": 3276810489
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 8389640,
+        "arg1": 838656
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 4177969662,
+        "arg1": 3571820918
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_RESULT",
+        "category": "system",
+        "arg0": 16778249,
+        "arg1": 838849
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_MASKS",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_CONFIG_FAILURES",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_DETAIL",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "STARTUP_DEVICE_NAMES",
+        "category": "system",
+        "arg0": 2301207459,
+        "arg1": 2301207459
+      },
+      {
+        "timestamp_us": 512250,
+        "name": "GNSS_CONFIG_TRANSACTION",
+        "category": "system",
+        "arg0": 4008636142,
+        "arg1": 1
+      },
+      {
+        "timestamp_us": 516354,
+        "name": "GNSS_FIX_LOST",
+        "category": "system",
+        "arg0": 638,
+        "arg1": 670
+      },
+      {
+        "timestamp_us": 250354478,
+        "name": "IMU_BIAS_WAIT",
+        "category": "system",
+        "arg0": 255,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 250354478,
+        "name": "CALIBRATION_START",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 252300412,
+        "name": "CALIBRATION_READY",
+        "category": "system",
+        "arg0": 1,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 252300484,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16842752,
+        "arg1": 3187901414
+      },
+      {
+        "timestamp_us": 252300512,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16908288,
+        "arg1": 1065353216
+      },
+      {
+        "timestamp_us": 252300539,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16973824,
+        "arg1": 957544867
+      },
+      {
+        "timestamp_us": 252300567,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 17039360,
+        "arg1": 1065353216
+      },
+      {
+        "timestamp_us": 252300594,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16842753,
+        "arg1": 1021227520
+      },
+      {
+        "timestamp_us": 252300622,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16908289,
+        "arg1": 1065353216
+      },
+      {
+        "timestamp_us": 252300650,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16973825,
+        "arg1": 3111963676
+      },
+      {
+        "timestamp_us": 252300677,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 17039361,
+        "arg1": 1065353216
+      },
+      {
+        "timestamp_us": 252300705,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16842754,
+        "arg1": 3162792948
+      },
+      {
+        "timestamp_us": 252300732,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16908290,
+        "arg1": 1065353216
+      },
+      {
+        "timestamp_us": 252300760,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 16973826,
+        "arg1": 3123443185
+      },
+      {
+        "timestamp_us": 252300787,
+        "name": "CALIBRATION_RESULT",
+        "category": "system",
+        "arg0": 17039362,
+        "arg1": 1065353216
+      },
+      {
+        "timestamp_us": 253424709,
+        "name": "ALIGNMENT_START",
+        "category": "system",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 253919434,
+        "name": "ORIGIN_WINDOW_READY",
+        "category": "system",
+        "arg0": 2,
+        "arg1": 100
+      },
+      {
+        "timestamp_us": 253933423,
+        "name": "ALIGNMENT_READY",
+        "category": "system",
+        "arg0": 5,
+        "arg1": 5
+      },
+      {
+        "timestamp_us": 258311668,
+        "name": "ALIGNMENT_COMPLETE",
+        "category": "system",
+        "arg0": 4,
+        "arg1": 1
+      },
+      {
+        "timestamp_us": 258315528,
+        "name": "MISSION_START",
+        "category": "mission",
+        "arg0": 0,
+        "arg1": 0
+      },
+      {
+        "timestamp_us": 258339452,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 260,
+        "arg1": 1
+      },
+      {
+        "timestamp_us": 260313311,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 66816,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 260313311,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 66817,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 260313311,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 66818,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 260313311,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 66819,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 268313513,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 132608,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 268313513,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 132609,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 268313513,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 132610,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 268313513,
+        "name": "NAV_FUSION_STATE_CHANGE",
+        "category": "system",
+        "arg0": 132611,
+        "arg1": 4294967295
+      },
+      {
+        "timestamp_us": 268313856,
+        "name": "PARACHUTE_DEPLOY",
+        "category": "mission",
+        "arg0": 4,
+        "arg1": 1176257536
+      },
+      {
+        "timestamp_us": 268313856,
+        "name": "PARACHUTE_DEPLOY_DETAIL",
+        "category": "mission",
+        "arg0": 4,
+        "arg1": 1176257536
+      },
+      {
+        "timestamp_us": 272317722,
+        "name": "LANDING",
+        "category": "mission",
+        "arg0": 0,
+        "arg1": 0
+      }
+    ],
+    "decoded_record_count": 10227,
+    "crc_failure_count": 0,
+    "sequence_gap_count": 0,
+    "synthetic": false
+  },
+  "metadata": {
+    "parser_plugin_id": "silverstar.log_parser.decoder_profile",
+    "parser_plugin_version": "1.1.0",
+    "container_plugin_id": "silverstar.flight_log.container.0_0",
+    "container_plugin_version": "0.0",
+    "container_generation": "SSLOG0",
+    "decoder_profile_declared_container_plugin_id": "silverstar.sslog.container/0.0",
+    "decoder_profile_path": "D:\\python_software\\SilverStar\\.work\\flp08tf\\m44\\cache\\c449dcc18ba6e22774fb32038152c810\\46b449244dcfde73baa5faaa795ac496.ssdecoder",
+    "decoder_profile_package_sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2",
+    "decoder_profile_generation_sha256": "c449dcc18ba6e22774fb32038152c81014760840c877aa6677415d59c5b999d9",
+    "decoder_profile_generation_hash_128": "c449dcc18ba6e22774fb32038152c810",
+    "decoder_profile_record_catalog_hash_128": "7af595f2376c22dc57cd63a34340d685",
+    "decoder_profile_project_semantics_hash_128": "3ccbafd3475a4ed8ebaa343307447651",
+    "decoder_profile_project": "KF6_Static_20261008_f045d8c",
+    "decoder_profile_firmware_version": "0.1.1",
+    "decoder_profile_match_mode": "exact_generation_profile",
+    "parse_status": "complete",
+    "synthetic": false,
+    "semantic_adapter_id": "silverstar.sslog0.semantic_adapter/1.1",
+    "stable_alias_count": 54,
+    "calibration_mode": "ONE_FACE",
+    "calibration_ready": true,
+    "eskf15_covariance_diagnostics": [],
+    "source_log_sha256": "c5f123ccc6b0390b869412f6e0a09d834999f8be621b876f43298bb5028a1fb2",
+    "parse_identity": {
+      "schema": "silverstar.flp.full-dataset/1",
+      "log_sha256": "c5f123ccc6b0390b869412f6e0a09d834999f8be621b876f43298bb5028a1fb2",
+      "log_bytes": 885023,
+      "decoder": {
+        "package_sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2",
+        "generation_profile_sha256": "c449dcc18ba6e22774fb32038152c81014760840c877aa6677415d59c5b999d9",
+        "record_catalog_sha256": "7af595f2376c22dc57cd63a34340d685dd8785fc20c5e1ffe88f7bb9a355c74b",
+        "record_catalog_hash_128": "7af595f2376c22dc57cd63a34340d685",
+        "project_semantics_sha256": "3ccbafd3475a4ed8ebaa343307447651b31d1b17fb0a1c17ce75e578a9c5a2a9",
+        "project_semantics_hash_128": "3ccbafd3475a4ed8ebaa343307447651",
+        "container_plugin_id": "silverstar.flight_log.container.0_0",
+        "container_plugin_version": "0.0",
+        "exact_match_mode": "exact_generation_profile"
+      },
+      "parser_identity": "dc04152216a2beb2ee1539c727a2abff92b2c61574245a7a986c28e9a81d0a81"
+    }
+  },
+  "record_counts": {
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 80,
+    "EVENT": 85,
+    "CALIBRATION_RESULT": 1,
+    "ALIGNMENT_RESULT": 1,
+    "ALIGNMENT_EVIDENCE": 1,
+    "MISSION_CONFIG": 1,
+    "MISSION_SNAPSHOT_IDENTITY": 1,
+    "INITIAL_STATE": 1,
+    "ESTIMATOR": 323,
+    "TELEMETRY_DIAG": 14,
+    "GNSS_NATIVE": 350,
+    "BARO_NATIVE": 2802,
+    "GNSS_RECOVERY": 1,
+    "POWER": 133,
+    "HEALTH": 14,
+    "STATS": 14,
+    "ESTIMATOR_STEP": 1399,
+    "IMU_CORRECTED": 2801,
+    "INERTIAL_INCREMENT": 1399,
+    "BARO_MEASUREMENT": 769,
+    "LANDING_DIAGNOSTIC": 2
+  }
+}

@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\flp08tf\final_verify.py", line 11, in <module>
+    assert all(sha(repo/name)==digest for name,digest in source.items())
+           ^^^
+  File "D:\python_software\SilverStar\.work\flp08tf\final_verify.py", line 11, in <genexpr>
+    assert all(sha(repo/name)==digest for name,digest in source.items())
+               ~~~^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\flp08tf\final_verify.py", line 5, in <lambda>
+    sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+                                ~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 782, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\FLP\\鎵撳寘.bat'

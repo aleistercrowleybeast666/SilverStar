@@ -1,0 +1,803 @@
+{
+  "mission": 44,
+  "project": "D:\\python_software\\SilverStar\\.work\\flp08tf\\p44_v2\\mission44.ssflp",
+  "run_count": 2,
+  "run_ids": [
+    "kf6:recomputed:1",
+    "kf6:what_if:1"
+  ],
+  "primary": "replay:kf6:recomputed:1",
+  "secondary": "recorded:kf6",
+  "chart_state": {
+    "position": 6,
+    "velocity": 6,
+    "quaternion": 8,
+    "covariance": 6,
+    "nis": 1
+  },
+  "run_arrays_sha256": {
+    "kf6:recomputed:1": {
+      "attitude.q_nb": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "02add6209e59577f4235101ea90ea0121f351b0b80bd0125ed00b5845aa2d7e3",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "navigation.position_enu": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "2d919c24afe7ebdeda2c463aa677e9a7ff9ea5936c3898b4ca0416c659bc2ef6",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "navigation.velocity_enu": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "ec87d4615b5e3cc3c6ce2762e32d12d31a4bee06ff514390ff4a9d5d6a8a9de2",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.state": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "5ebc0014ce4ee46f7fb61014b716fbb24e59c07e411e6257e784f5c8dad65a21",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.covariance.diagonal": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e4692334bf692697985587ec1fa4ef8280063487749aceb0d0dd7467b9d3ea34",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.covariance.upper_triangle": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "db1f7727f23af26fecdc65475a546bdb46fd976761ea99bbd08c69d83b54dd1c",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.innovation.position": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.innovation.velocity": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.innovation.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "223293f978d742dcbaf4e1ee488cc2c11f5f571b856d297fb4ca7b40467e2f69",
+        "valid": "18f53c92cb765108a6d54ea1a175b233c29d24bf23703d4c78836df1ddacdd60"
+      },
+      "kf6.nis.position": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.nis.velocity": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.nis.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "f53f8e87139cdfaaeb00062107ec5f3c5abaabdf01f1c43adc049a12634b73f0",
+        "valid": "18f53c92cb765108a6d54ea1a175b233c29d24bf23703d4c78836df1ddacdd60"
+      },
+      "kf6.update_result": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "203502cf1342a956e59b386543a2959b381a5b30d9f24e250de1b65a7b20f2e1",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.update_result.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "082676cd15c38b1f60eb7af010e0d1e72ed5617931f6cdd65cea578d5f525166",
+        "valid": "18f53c92cb765108a6d54ea1a175b233c29d24bf23703d4c78836df1ddacdd60"
+      },
+      "kf6.measurement_attempt_mask": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "93c08ca08926fa009a63ba499490c7baf199874044dccf60b11aa57324530c37",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r_scale": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "c4ab24418ee389641ce5fab08877408ec0e9d80e56052d403c194bd37ab4b6cd",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r.position": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r.velocity": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "f9056be2a554242dcb17ab1b038c0bc3fdbf935d3560a7f92b85c17b5b19adbc",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.nis.position_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.position_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.position_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "1e53095549d4dfa021f92cac015ac6971a0dd12bae7d2388d279b898d533acc4",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.nis.position_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.position_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.position_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.nis.velocity_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.velocity_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.velocity_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "1e53095549d4dfa021f92cac015ac6971a0dd12bae7d2388d279b898d533acc4",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.nis.velocity_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.velocity_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.velocity_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.measurement_input_variance.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "ad3e572d40dc2349422758700a0b713ffa1302b188aa8ee8fb3b6def9103f938",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_effective_variance.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "ad3e572d40dc2349422758700a0b713ffa1302b188aa8ee8fb3b6def9103f938",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_receive_age.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "5d6df620247815af203c4478658513dfcbd0315ae6511ca86207c4ca40f6f188",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_fixed_lag_latency.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "a9afea070753d11caed41fabaf9835c3a232abe0e8684c69197c2a75fab4190b",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_r_scale.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "f3a3e6ea0688cff79da76b79db8498a9a27d530109a7771a0e9dad691a7b4797",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.navigation_health": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "9b84b9293e250677d9b1d82b40cb66209bfc6c5e7a6f0e26e09fafc7a293cb6e",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      }
+    },
+    "kf6:what_if:1": {
+      "attitude.q_nb": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "02add6209e59577f4235101ea90ea0121f351b0b80bd0125ed00b5845aa2d7e3",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "navigation.position_enu": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "ece2e4b15c6b46a84cd716973dbef03f7743069b9bebc89626a91f0effb34584",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "navigation.velocity_enu": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "f4f01771f70c797035fd2367cb5340ed742478b7f3ffe6ed2cad6ca3e9f2a514",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.state": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "967aa314f087f94b7039d2446cd3494a71b2e2c138dc8d33e2e5c7b7652dc1e8",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.covariance.diagonal": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e4692334bf692697985587ec1fa4ef8280063487749aceb0d0dd7467b9d3ea34",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.covariance.upper_triangle": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "db1f7727f23af26fecdc65475a546bdb46fd976761ea99bbd08c69d83b54dd1c",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.innovation.position": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.innovation.velocity": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.innovation.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "c43cc4678f83112051edabd2264b9463efd6325495da298a153fbc9d1f085ca7",
+        "valid": "18f53c92cb765108a6d54ea1a175b233c29d24bf23703d4c78836df1ddacdd60"
+      },
+      "kf6.nis.position": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.nis.velocity": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.nis.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a5ea0e0814f8bbd2687b7ccbd7e103f208a118543c9cd480c01ecd621a531df1",
+        "valid": "18f53c92cb765108a6d54ea1a175b233c29d24bf23703d4c78836df1ddacdd60"
+      },
+      "kf6.update_result": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "203502cf1342a956e59b386543a2959b381a5b30d9f24e250de1b65a7b20f2e1",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.update_result.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "082676cd15c38b1f60eb7af010e0d1e72ed5617931f6cdd65cea578d5f525166",
+        "valid": "18f53c92cb765108a6d54ea1a175b233c29d24bf23703d4c78836df1ddacdd60"
+      },
+      "kf6.measurement_attempt_mask": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "93c08ca08926fa009a63ba499490c7baf199874044dccf60b11aa57324530c37",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r_scale": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "c4ab24418ee389641ce5fab08877408ec0e9d80e56052d403c194bd37ab4b6cd",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r.position": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r.velocity": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "71712734bb873607fc6bbca586b02415d7d53f7c1774e418d480e7891b48c581",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.measurement_r.baro": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "f9056be2a554242dcb17ab1b038c0bc3fdbf935d3560a7f92b85c17b5b19adbc",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      },
+      "kf6.nis.position_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.position_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.position_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "1e53095549d4dfa021f92cac015ac6971a0dd12bae7d2388d279b898d533acc4",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.nis.position_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.position_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.position_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.nis.velocity_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.velocity_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.velocity_en": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "1e53095549d4dfa021f92cac015ac6971a0dd12bae7d2388d279b898d533acc4",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.nis.velocity_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.update_result.velocity_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "e8a7d59991625a41ee56525cd4fffad551868340940aa8bec585db93b5bc55d5",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.innovation.velocity_u": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "a0d4e131aaaeab9a7b85848f3b7a46d5cf8eebf156a82690286d5b063505e082",
+        "valid": "905c72438c2d2faec990d8572380bcc506d5f2b4eeabbdd23a84379bb5fd49fd"
+      },
+      "kf6.measurement_input_variance.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "ad3e572d40dc2349422758700a0b713ffa1302b188aa8ee8fb3b6def9103f938",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_effective_variance.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "ad3e572d40dc2349422758700a0b713ffa1302b188aa8ee8fb3b6def9103f938",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_receive_age.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "5d6df620247815af203c4478658513dfcbd0315ae6511ca86207c4ca40f6f188",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_fixed_lag_latency.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "a9afea070753d11caed41fabaf9835c3a232abe0e8684c69197c2a75fab4190b",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.measurement_r_scale.baro": {
+        "timestamp_us": "0c4370cc2fe28469a99f4da7510a9f2761fcf0a92a738f89c8a5989185aed09e",
+        "values": "f3a3e6ea0688cff79da76b79db8498a9a27d530109a7771a0e9dad691a7b4797",
+        "valid": "5f565a31a1ab6808afeaff52fc6c7770cd7a6a7d49703785a749cf84f852bd19"
+      },
+      "kf6.navigation_health": {
+        "timestamp_us": "f15d430a77a132d44c5587ee9521a2b900d0703ff474849853f296d2c29a5f3d",
+        "values": "9b84b9293e250677d9b1d82b40cb66209bfc6c5e7a6f0e26e09fafc7a293cb6e",
+        "valid": "352d22bf07dbfce6a28dc29aead261ba470930c3cef8c7ed90d06d06e84b6e6b"
+      }
+    }
+  },
+  "run_modes": [
+    "recorded_configuration",
+    "what_if"
+  ],
+  "run_fidelity": [
+    "APPROXIMATE",
+    "APPROXIMATE"
+  ],
+  "record_audit": [
+    {
+      "record_type": "IMU_CORRECTED",
+      "count": 2801,
+      "max_interval_us": 7014,
+      "first": 258319015,
+      "last": 272317018,
+      "fields": {
+        "sample_timestamp_us": {
+          "min": 258319015,
+          "max": 272317018,
+          "first": 258319015,
+          "last": 272317018
+        },
+        "receive_timestamp_us": {
+          "min": 258319015,
+          "max": 272317018,
+          "first": 258319015,
+          "last": 272317018
+        },
+        "sequence": {
+          "min": 51590,
+          "max": 54390,
+          "first": 51590,
+          "last": 54390
+        },
+        "source_id": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "virtual_imu_id": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "valid_mask": {
+          "min": 7,
+          "max": 7,
+          "first": 7,
+          "last": 7
+        },
+        "temperature_c": {
+          "min": 36.83000183105469,
+          "max": 37.5,
+          "first": 37.5,
+          "last": 37.06999969482422
+        },
+        "calibration_mode": {
+          "min": 1,
+          "max": 1,
+          "first": 1,
+          "last": 1
+        },
+        "correction_valid": {
+          "min": 1,
+          "max": 1,
+          "first": 1,
+          "last": 1
+        },
+        "reserved": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        }
+      }
+    },
+    {
+      "record_type": "INERTIAL_INCREMENT",
+      "count": 1399,
+      "max_interval_us": 12003,
+      "first": 258329015,
+      "last": 272307020,
+      "fields": {
+        "interval_start_timestamp_us": {
+          "min": 258319015,
+          "max": 272297020,
+          "first": 258319015,
+          "last": 272297020
+        },
+        "interval_end_timestamp_us": {
+          "min": 258329015,
+          "max": 272307020,
+          "first": 258329015,
+          "last": 272307020
+        },
+        "sequence": {
+          "min": 1,
+          "max": 1399,
+          "first": 1,
+          "last": 1399
+        },
+        "dt_s": {
+          "min": 0.0079969996586442,
+          "max": 0.012002999894320965,
+          "first": 0.009999999776482582,
+          "last": 0.009999999776482582
+        },
+        "health_flags": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        }
+      }
+    },
+    {
+      "record_type": "ESTIMATOR_STEP",
+      "count": 1399,
+      "max_interval_us": 12003,
+      "first": 258329015,
+      "last": 272307020,
+      "fields": {
+        "estimator_present_timestamp_us": {
+          "min": 258329015,
+          "max": 272307020,
+          "first": 258329015,
+          "last": 272307020
+        },
+        "interval_end_timestamp_us": {
+          "min": 258329015,
+          "max": 272307020,
+          "first": 258329015,
+          "last": 272307020
+        },
+        "operation_sequence": {
+          "min": 1,
+          "max": 2168,
+          "first": 1,
+          "last": 2168
+        },
+        "source_sequence": {
+          "min": 1,
+          "max": 1399,
+          "first": 1,
+          "last": 1399
+        },
+        "replay_epoch": {
+          "min": 2,
+          "max": 2,
+          "first": 2,
+          "last": 2
+        },
+        "replay_generation": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "replay_result": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "attitude_result": {
+          "min": 1,
+          "max": 1,
+          "first": 1,
+          "last": 1
+        },
+        "reserved": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        }
+      }
+    },
+    {
+      "record_type": "ESTIMATOR",
+      "count": 323,
+      "max_interval_us": 258329015,
+      "first": 0,
+      "last": 272307020,
+      "fields": {
+        "baro_relative_altitude_m": {
+          "min": 0.0,
+          "max": 0.0800018310546875,
+          "first": 0.0,
+          "last": 0.0800018310546875
+        },
+        "last_position_nis": {
+          "min": 0.0,
+          "max": 0.0,
+          "first": 0.0,
+          "last": 0.0
+        },
+        "last_velocity_nis": {
+          "min": 0.0,
+          "max": 0.0,
+          "first": 0.0,
+          "last": 0.0
+        },
+        "last_baro_nis": {
+          "min": 0.0,
+          "max": 0.0010435603326186538,
+          "first": 0.0,
+          "last": 2.1356765955715673e-06
+        },
+        "measurement_result_flags": {
+          "min": 0,
+          "max": 64,
+          "first": 0,
+          "last": 0
+        },
+        "health_flags": {
+          "min": 2,
+          "max": 130,
+          "first": 2,
+          "last": 130
+        },
+        "prediction_queue_overflow_count": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "gnss_sequence": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "baro_sequence": {
+          "min": 0,
+          "max": 54431,
+          "first": 0,
+          "last": 54431
+        },
+        "gnss_timestamp_us": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "baro_timestamp_us": {
+          "min": 0,
+          "max": 272287032,
+          "first": 0,
+          "last": 272287032
+        },
+        "gnss_measurement_age_us": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "baro_measurement_age_us": {
+          "min": 0,
+          "max": 10986,
+          "first": 0,
+          "last": 9988
+        },
+        "gnss_origin_valid": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "baro_origin_valid": {
+          "min": 1,
+          "max": 1,
+          "first": 1,
+          "last": 1
+        },
+        "initialized": {
+          "min": 1,
+          "max": 1,
+          "first": 1,
+          "last": 1
+        },
+        "mission_running": {
+          "min": 1,
+          "max": 1,
+          "first": 1,
+          "last": 1
+        },
+        "operation_sequence": {
+          "min": 0,
+          "max": 2168,
+          "first": 0,
+          "last": 2168
+        },
+        "replay_epoch": {
+          "min": 2,
+          "max": 2,
+          "first": 2,
+          "last": 2
+        }
+      }
+    },
+    {
+      "record_type": "TELEMETRY_DIAG",
+      "count": 14,
+      "max_interval_us": 1002910,
+      "first": 258315831,
+      "last": 271327965,
+      "fields": {
+        "last_transmit_timestamp_us": {
+          "min": 258194475,
+          "max": 271236391,
+          "first": 258194475,
+          "last": 271236391
+        },
+        "last_receive_timestamp_us": {
+          "min": 258310779,
+          "max": 258310779,
+          "first": 258310779,
+          "last": 258310779
+        },
+        "transmit_packet_count": {
+          "min": 1342,
+          "max": 1402,
+          "first": 1342,
+          "last": 1402
+        },
+        "receive_packet_count": {
+          "min": 5,
+          "max": 5,
+          "first": 5,
+          "last": 5
+        },
+        "transmit_error_count": {
+          "min": 44301,
+          "max": 46804,
+          "first": 44301,
+          "last": 46804
+        },
+        "receive_error_count": {
+          "min": 1343,
+          "max": 1402,
+          "first": 1343,
+          "last": 1402
+        },
+        "integrity_error_count": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "last_rssi_dbm": {
+          "min": -30,
+          "max": -30,
+          "first": -30,
+          "last": -30
+        },
+        "last_snr_q4": {
+          "min": 28,
+          "max": 28,
+          "first": 28,
+          "last": 28
+        },
+        "online": {
+          "min": 0,
+          "max": 1,
+          "first": 1,
+          "last": 0
+        }
+      }
+    },
+    {
+      "record_type": "STATS",
+      "count": 14,
+      "max_interval_us": 1001210,
+      "first": 258316419,
+      "last": 271324333,
+      "fields": {
+        "imu_queue_overflow_count": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "logger_queue_overflow_count": {
+          "min": 0,
+          "max": 0,
+          "first": 0,
+          "last": 0
+        },
+        "ins_update_count": {
+          "min": 1,
+          "max": 1301,
+          "first": 1,
+          "last": 1301
+        },
+        "health_flags": {
+          "min": 2,
+          "max": 130,
+          "first": 2,
+          "last": 130
+        }
+      }
+    }
+  ],
+  "progress_count": 281,
+  "platform": "windows",
+  "errors": []
+}

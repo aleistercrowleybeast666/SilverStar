@@ -1,0 +1,110 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\apps\FLP\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\python_software\SilverStar\apps\FLP
+configfile: pyproject.toml
+collecting ... collected 38 items
+
+apps\FLP\tests\test_project_stage_progress.py::test_save_reports_real_stages_and_never_publishes_worker_complete[False] ERROR [  2%]
+apps\FLP\tests\test_project_stage_progress.py::test_save_reports_real_stages_and_never_publishes_worker_complete[True] ERROR [  5%]
+apps\FLP\tests\test_project_stage_progress.py::test_cancel_at_reported_commit_keeps_old_project ERROR [  7%]
+apps\FLP\tests\test_project_stage_progress.py::test_commit_failure_never_reports_complete ERROR [ 10%]
+apps\FLP\tests\test_project_stage_progress.py::test_cancel_after_atomic_commit_cannot_become_cancelled_save ERROR [ 13%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[False] ERROR [ 15%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_background_save_stages_finish_only_after_gui_publication[True] ERROR [ 18%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[valid] ERROR [ 21%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[missing] ERROR [ 23%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_project_open_reads_in_worker_and_reports_cache_or_parse[corrupt] ERROR [ 26%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[cancel] ERROR [ 28%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_cancelled_or_closed_open_never_publishes_complete[close] ERROR [ 31%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_failed_open_never_reports_complete ERROR [ 34%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_repeated_save_open_and_import_preserve_active_transaction ERROR [ 36%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[clean_close] ERROR [ 39%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_close_option] ERROR [ 42%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[cancel_after_commit] ERROR [ 44%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_original_save_lifecycle_unchanged[snapshot_removed] ERROR [ 47%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[finish] ERROR [ 50%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[cancel] ERROR [ 52%]
+apps\FLP\tests\test_project_stage_progress_gui.py::test_slow_array_save_keeps_gui_responsive_and_atomic[close] ERROR [ 55%]
+apps\FLP\tests\test_optional_secondary_source.py::test_secondary_default_none_and_full_run_identity ERROR [ 57%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[missing-comparison.secondary_missing] ERROR [ 60%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[primary_missing-comparison.primary_missing] ERROR [ 63%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[unit-comparison.incompatible] ERROR [ 65%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[quantity-comparison.incompatible] ERROR [ 68%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[columns-comparison.incompatible] ERROR [ 71%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[frame-comparison.incompatible] ERROR [ 73%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[origin_id-comparison.incompatible] ERROR [ 76%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[task_id-comparison.incompatible] ERROR [ 78%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[no_overlap-comparison.no_overlap] ERROR [ 81%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[invalid-comparison.no_overlap] ERROR [ 84%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[same-comparison.same_source] ERROR [ 86%]
+apps\FLP\tests\test_optional_secondary_source.py::test_compatibility_never_fills_or_relabels_primary[unknown-comparison.unavailable] ERROR [ 89%]
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[language] ERROR [ 92%]
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[same_primary] ERROR [ 94%]
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[secondary_on] ERROR [ 97%]
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\flp08tf\focused_regressions.py", line 42, in <module>
+    code = pytest.main(args, plugins=[IsolatedPreferences()])
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 201, in main
+    return _main(args=args, plugins=plugins, prog="pytest.main()")
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 365, in wrap_session
+    config.hook.pytest_sessionfinish(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        session=session, exitstatus=session.exitstatus
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\logging.py", line 888, in pytest_sessionfinish
+    return (yield)
+            ^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\terminal.py", line 961, in pytest_sessionfinish
+    result = yield
+             ^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\warnings.py", line 119, in pytest_sessionfinish
+    return (yield)
+            ^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\tmpdir.py", line 337, in pytest_sessionfinish
+    cleanup_dead_symlinks(basetemp)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\pathlib.py", line 354, in cleanup_dead_symlinks
+    for left_dir in root.iterdir():
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 841, in iterdir
+    with os.scandir(root_dir) as scandir_it:
+         ~~~~~~~~~~^^^^^^^^^^
+PermissionError: [WinError 5] 拒绝访问。: 'D:\\python_software\\SilverStar\\.work\\flp08tf\\pytest_v1'
+apps\FLP\tests\test_optional_secondary_source.py::test_state_group_selections_survive_display_refresh[secondary_off] ERROR [100%]
