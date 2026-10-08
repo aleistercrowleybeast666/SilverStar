@@ -1131,6 +1131,14 @@ class MainWindow(QMainWindow):
                 else self._ProjectDisplayState_Build(self._model))
             mutator(candidate)
             added = [item for item in candidate.device_instances if item not in self._model.device_instances]
+            added_storage = [item for item in added
+                if self._service.Plugin_Get(item.plugin).component_class == "storage"]
+            if added_storage:
+                storage_count = sum(self._service.Plugin_Get(item.plugin).component_class == "storage"
+                    for item in candidate.device_instances)
+                availability = self._service.DeviceSelectionAvailabilities_Get(candidate)
+                if storage_count > 1 or any(availability[item.plugin].missing_components for item in added_storage):
+                    raise ValueError(self._translator.Text_Get("device.storage_single_platform"))
             if added and candidate.build.feature_tier == self._model.build.feature_tier:
                 from silverstar_fccg.project.compact import CompactErrors_Get
                 from silverstar_fccg.project.feature_tiers import FeatureTier_ErrorsGet
@@ -2348,6 +2356,10 @@ class MainWindow(QMainWindow):
     def _ProtocolProfile_Change(
         self, category: str, selection: object
     ) -> None:
+        if category == "maintenance" and selection is not None and self._model.build.feature_tier == "minimal":
+            self._Error_Show(ValueError(self._translator.Text_Get("protocol.unavailable.feature_tier")))
+            self._Project_Refresh()
+            return
         if selection is None:
             self._ProjectConfiguration_Change(
                 lambda candidate: candidate.protocols.__setitem__(

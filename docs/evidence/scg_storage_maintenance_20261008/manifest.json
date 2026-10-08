@@ -1,0 +1,279 @@
+{
+  "utc": "2026-10-08T16:07:18.952690+00:00",
+  "base_head": "e702ffd0fddf2432b22bd4c46fd1a45980d6705d",
+  "source_sha256": {
+    "apps/SCG/src/silverstar_fccg/app/service.py": "8bfb7b672f352170680b0005fcbdf4fecd470f0b0b4b16a405ad98c039ddbedf",
+    "apps/SCG/src/silverstar_fccg/i18n/en_US.json": "0606207127c5638545865c13eaab45fae4f7a790f981db8a2eea3eb6ef767e69",
+    "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": "4c912dd57fd2c5263e64cd6ff5b032eaccc18e7537943ecdfa4df1f03f8aede8",
+    "apps/SCG/src/silverstar_fccg/project/configuration.py": "2ef39206ef8c96de906a7785f5e65e758a11a5a4d38b6fa7064fdea502e2f154",
+    "apps/SCG/src/silverstar_fccg/project/model.py": "a86452b4e35b471b33d43aabd3f5e20f8e882521eb8a65679ba2f4e38a2bf519",
+    "apps/SCG/src/silverstar_fccg/project/protocols.py": "d5d3d8675ce1e65cf6ebe77c13dd0d70fb076eda330a377d33f35489162f4ba5",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "eeee840e7580553855b19d8ee1d7de972d21ea6e15f515a9aa83849e54d832f1",
+    "apps/SCG/src/silverstar_fccg/ui/pages/components.py": "022b7bb0e6252fe042b5eab318698a43bfc2a36603e550986507ee95191e8f48",
+    "apps/SCG/tests/test_storage_maintenance_acceptance.py": "fd7a61754c1a422bb1c32dee6060f437d5762c78362bf660a0b5d6286bd15dc6"
+  },
+  "dirty_snapshot_sha256": "8d7ad44d1f19929b749d5f442b5deb2a6f5ae1bafffe52d3edd2ff61edf37947",
+  "gates": {
+    "architecture": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "architecture-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\StorageMaintenanceAcceptance_20261008\\gates\\project\\Flight_Controller",
+      "utc_start": "2026-10-08T15:50:34.883105+00:00",
+      "source_snapshot_sha256": "72fba136d2f905249ce06e4a8c13e9be82552939e39ce1ae06c10488f6bfec1b",
+      "exit_code": 0,
+      "elapsed_s": 21.88420529999712,
+      "utc_end": "2026-10-08T15:50:56.767315+00:00",
+      "log_sha256": "6a7b4c71e43b14b188b7f987647dde2b1ee1e78cb794861b948488349ae7c0a4"
+    },
+    "power10": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\StorageMaintenanceAcceptance_20261008\\gates\\project\\Flight_Controller",
+      "utc_start": "2026-10-08T15:50:56.770727+00:00",
+      "source_snapshot_sha256": "72fba136d2f905249ce06e4a8c13e9be82552939e39ce1ae06c10488f6bfec1b",
+      "exit_code": 0,
+      "elapsed_s": 23.59673649999604,
+      "utc_end": "2026-10-08T15:51:20.367470+00:00",
+      "log_sha256": "321bdb384fbfff1641cb074ac5c0bb43c89aa1e3700cd35503fd1c631c6be327"
+    },
+    "release": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-j2",
+        "all",
+        "artifact-check",
+        "memory-report",
+        "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\StorageMaintenanceAcceptance_20261008\\gates\\project\\Flight_Controller",
+      "utc_start": "2026-10-08T15:51:20.395575+00:00",
+      "source_snapshot_sha256": "72fba136d2f905249ce06e4a8c13e9be82552939e39ce1ae06c10488f6bfec1b",
+      "exit_code": 0,
+      "elapsed_s": 105.29099189999397,
+      "utc_end": "2026-10-08T15:53:05.686564+00:00",
+      "log_sha256": "e74cec3455bf8a5425cf1789d861e2c7eab1141ae90a80daa0bb3cef8ae4f5b4"
+    },
+    "stack": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-j2",
+        "stack-report",
+        "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\StorageMaintenanceAcceptance_20261008\\gates\\project\\Flight_Controller",
+      "utc_start": "2026-10-08T15:53:05.700334+00:00",
+      "source_snapshot_sha256": "72fba136d2f905249ce06e4a8c13e9be82552939e39ce1ae06c10488f6bfec1b",
+      "exit_code": 2,
+      "elapsed_s": 10.789839699995355,
+      "utc_end": "2026-10-08T15:53:16.490173+00:00",
+      "log_sha256": "5fb1fcca8c290281c0e3b8fa715b00203f6432801ab6a89ed4d8d5c0918e2b8e"
+    },
+    "analyzer": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-j2",
+        "static-analysis",
+        "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\StorageMaintenanceAcceptance_20261008\\gates\\project\\Flight_Controller",
+      "utc_start": "2026-10-08T15:53:16.502718+00:00",
+      "source_snapshot_sha256": "72fba136d2f905249ce06e4a8c13e9be82552939e39ce1ae06c10488f6bfec1b",
+      "exit_code": 0,
+      "elapsed_s": 127.36265049999929,
+      "utc_end": "2026-10-08T15:55:23.865374+00:00",
+      "log_sha256": "e846d77789b3d5cd00838cb69ea2b086a138db64e2d93c770c8a5b05559bc92e"
+    },
+    "host": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "host-tests",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\StorageMaintenanceAcceptance_20261008\\gates\\project\\Flight_Controller",
+      "utc_start": "2026-10-08T15:55:23.875651+00:00",
+      "source_snapshot_sha256": "72fba136d2f905249ce06e4a8c13e9be82552939e39ce1ae06c10488f6bfec1b",
+      "exit_code": 0,
+      "elapsed_s": 380.9804629999999,
+      "utc_end": "2026-10-08T16:01:44.856120+00:00",
+      "log_sha256": "0e6c6fcb9b7565fdf6efce50a57f4ca7307cb36725186e2adc988319759f17b6"
+    }
+  },
+  "tool_versions": {
+    "python": "Python 3.14.0",
+    "make": "GNU Make 4.4.1",
+    "host_gcc": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0",
+    "arm_gcc": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+    "PySide6": "6.10.1",
+    "pytest": "9.1.1"
+  },
+  "gate_tools_sha256": {
+    "Makefile": "ddeb3fafd398a228148d4ad2d1608be8cd54d59a79a7c25643284ae203c4e3c1",
+    "Tools/check_power_of_ten.ps1": "8ebc4ffd23f556cbfc0840b4260c4b692cc0a6a749bbc1d46da3d5a0c295e323",
+    "Tools/check_architecture.ps1": "d46e21ef337799bf93961ed93b9ff11aba851e67c61b516086fe2d90f485cc96",
+    "Tools/check_task_stacks.py": "6d476382bab106a564658f97dfe14c56fcfee494d0a022b9d248bd697ee1ed65",
+    "Tools/check_firmware_artifact.ps1": "eb5c5529e2c6982473cef60ac328e7bb6d17b40c96c0cf589640307d7895baf6",
+    "Tests/Host/run_tests.ps1": "07e565e8bb6824f6114b30750d1e0bf8c74d82a9ec7389c4af054aea9ae5f6b1"
+  },
+  "final_regression": {
+    "passed": 101,
+    "deselected": 3,
+    "exit_code": 0,
+    "cwd": "D:/python_software/SilverStar/apps/SCG",
+    "excluded": [
+      "test_protocol_combos_and_logging_disabled_state_are_stable",
+      "test_legacy_format9_device_shape_rejected_and_current_roundtrip_stable",
+      "test_legacy_board_owned_storage_collision_is_rejected"
+    ],
+    "baseline_same_failures": "baseline_stale3.log: e702ffd extracted Python, same plugin bytes and filesystem anchors; 3 failed/1 passed"
+  },
+  "earlier_failures": {
+    "pre4": "5 failed/2 passed",
+    "pre_entries": "2 failed/7 deselected",
+    "pre_migration": "1 failed/1 passed/10 deselected",
+    "regression1": "4 failed/97 passed",
+    "post1": "2 failed/5 passed; invalid synthetic hardware fixture and newly exposed load-time rewrite",
+    "post2": "7 passed",
+    "regression2": "99 passed/3 deselected",
+    "environment_attempts": "pre_initial, pre2, pre3, baseline_stale, baseline_stale2 are retained harness/path failures; not product evidence"
+  },
+  "generated_file_count": 22,
+  "generated_bytes_equal_before": true,
+  "fixture_bin_equal_previous_0_1_2": true,
+  "artifacts": {
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.bin": {
+      "bytes": 331012,
+      "sha256": "eac468a93aff1a7602e92f5088a2cab597b3275ccda8b45e2c0dc14ba4c3ccc7"
+    },
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.elf": {
+      "bytes": 3326660,
+      "sha256": "d6510491f08d6e9b81f5f871f02e84aae8371123cbbcdf74e33796d8f0edfecf"
+    },
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.hex": {
+      "bytes": 931119,
+      "sha256": "9cfffeef5cb866eadfea993acebfce29b9b2e9b83c833ce885b874d070746fb8"
+    },
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.map": {
+      "bytes": 1564612,
+      "sha256": "2387f94f2d8940078754770a7fc309c2ca16478137d8bede1296009aed652d0a"
+    },
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\auto\\SilverStar_0_1_2.bin": {
+      "bytes": 331012,
+      "sha256": "eac468a93aff1a7602e92f5088a2cab597b3275ccda8b45e2c0dc14ba4c3ccc7"
+    },
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\auto\\SilverStar_0_1_2.elf": {
+      "bytes": 3326836,
+      "sha256": "06b60211825a803112928279f3e3d7957ed2a0cd283168e874910a5865985524"
+    },
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\auto\\SilverStar_0_1_2.hex": {
+      "bytes": 931119,
+      "sha256": "9cfffeef5cb866eadfea993acebfce29b9b2e9b83c833ce885b874d070746fb8"
+    },
+    "gates\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\auto\\SilverStar_0_1_2.map": {
+      "bytes": 1699852,
+      "sha256": "3b11239fc1f36fefc8e4dd05c5f5f6c39369810eed176773933ff5c5783c0acb"
+    }
+  },
+  "user_input_sha256": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675",
+    "docs/evidence/logger_health_retest_20261008/generated_config.ssproject": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5"
+  },
+  "metadata_blocker": {
+    "old_digest": "a79e2e92",
+    "new_digest": "42a4c1c6",
+    "identity_only_migration": {
+      "old": {
+        "firmware_version": "0.1.1",
+        "build_target": "SilverStar_0_1_1"
+      },
+      "new": {
+        "firmware_version": "0.1.2",
+        "build_target": "SilverStar_0_1_2"
+      }
+    },
+    "old_normalized_sha256": "ae4706ff828b966e517972f147eee2d5ca938a144ff437ef3b71d32a9f186181",
+    "new_normalized_sha256": "bba3aed1cc73043a10cfd126a7759728a10de53e3769e2563fb209a4b12feadf",
+    "old_digest_only_substitution_equals_new": true,
+    "new_hash_authorized": false
+  },
+  "hardware": false,
+  "user_current_unsaved_model_inspected": false,
+  "user_window_closed": false,
+  "push": false,
+  "full_suite": false,
+  "original_power10_compliance": false,
+  "archive_sha256": "46bb47cebf0cf26d8bd0b213c5c43606cb657a619e452cb97d44d784a8d00376",
+  "archive_bytes": 201031,
+  "members": {
+    "after.json": "3169595f22e2e4f8840ccf239c9a8d34e3bd45b150f6cda91355d6637809c1ad",
+    "after_final.json": "3169595f22e2e4f8840ccf239c9a8d34e3bd45b150f6cda91355d6637809c1ad",
+    "baseline_stale.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "baseline_stale.log": "3b357a33569efe50668ae9f929d21521aff9807653598bb083b661feebb5b5a7",
+    "baseline_stale2.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "baseline_stale2.log": "fe4f0bc23d980e20a0604fa6dd402dea1c6ae2d2533fd3a7792e5ead3a7326e1",
+    "baseline_stale3.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "baseline_stale3.log": "83078cd1b20a9015191299d4af529c0103d0f42a3c6bb218bf5fdcd21c0e02b1",
+    "baseline_stale_tests.py": "759e62084808803ea294dd5e0f286a4a62810b09793cba283a47daa845f53803",
+    "before.json": "aacd073f53b9254cb59fe55efe20dda512575d99df09d691ed18e8b40b98cb58",
+    "final_dirty_snapshot.patch": "8d7ad44d1f19929b749d5f442b5deb2a6f5ae1bafffe52d3edd2ff61edf37947",
+    "gates.py": "1aa3f5dfb951e35fcf8b29a0e55e6ba1b6e4f462344edea21eda98aea8b9dabb",
+    "gates\\analyzer.log": "e846d77789b3d5cd00838cb69ea2b086a138db64e2d93c770c8a5b05559bc92e",
+    "gates\\analyzer_result.json": "74dae75ddbd6afc9761484dc1857f236e82456041d2478c62396f31f98b23f97",
+    "gates\\architecture.log": "6a7b4c71e43b14b188b7f987647dde2b1ee1e78cb794861b948488349ae7c0a4",
+    "gates\\architecture_result.json": "b8d362233209973d443a04f88a6c4c6d254638d0f8c694db5182000d8bbc198e",
+    "gates\\dirty_snapshot.patch": "04eb0506beb43f3a146b54f9e30b581ab33fa8c7be48273ea13d71aecabd38ad",
+    "gates\\host.log": "0e6c6fcb9b7565fdf6efce50a57f4ca7307cb36725186e2adc988319759f17b6",
+    "gates\\host_result.json": "430c92f388c066d8d5a430502ded734e47513b9aa51d6966f93137d9f39a100b",
+    "gates\\power10.log": "321bdb384fbfff1641cb074ac5c0bb43c89aa1e3700cd35503fd1c631c6be327",
+    "gates\\power10_result.json": "bdc532a54983496816b6af318dccf48ef6316fe9cb5d18f12e75f66da5e68298",
+    "gates\\release.log": "e74cec3455bf8a5425cf1789d861e2c7eab1141ae90a80daa0bb3cef8ae4f5b4",
+    "gates\\release_result.json": "875b2c86b11d10c9b9bb6e8fcb9ce7eb3a1d7ff2e770b87facfaa90e1163df2e",
+    "gates\\source_snapshot.json": "72fba136d2f905249ce06e4a8c13e9be82552939e39ce1ae06c10488f6bfec1b",
+    "gates\\stack.log": "5fb1fcca8c290281c0e3b8fa715b00203f6432801ab6a89ed4d8d5c0918e2b8e",
+    "gates\\stack_result.json": "d3a66bd5a8e6b49cfed265a33556dc189dbeb65d39614ad8ac829fa30320c4c0",
+    "gates_driver.exit.txt": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "gates_driver.log": "980f90799337e758f4ceada96dc5eb394209c58e142f7ddcec771f46c0595d56",
+    "metadata_identity_probe.json": "b52d15c13327f746e7ae2326db041c70497271c689cbdaa3bb4cbb325e30de24",
+    "metadata_identity_probe.py": "168c73d195310333ff5fbeb2afee7a331b550d27344edd7d7fed1044bdf3bf20",
+    "normalized_model_diff.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "package_evidence.log": "9d99943843ea1af71a1a3e624f908e72d839f4c47640897a7f26e1988b25a5b0",
+    "package_evidence.py": "7e8c1d39c871413fa1fb566e4ce70e00c1ca5afa30524281631bdee881287e81",
+    "post1.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "post1.log": "cd347cf6a113d7a9129b57bcf041e18f4c8116248712c1adcdc1f650450ce590",
+    "post2.exit.txt": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "post2.log": "beb74629288fbe9518bd664658b8e14adba239ffa683bf9bc7619c2830d3495a",
+    "pre2.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "pre2.log": "13736b21a9f65e789799d47a31efcf916aef5140e3b735f655d04c66023a112c",
+    "pre3.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "pre3.log": "3fcfc0afe78314fa90b8894d01ea78cadcd0dee7cbef4769f59850e254af23b8",
+    "pre4.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "pre4.log": "81a4509fd909b27de78ec84d25efc85d3e07591fc471f632368ce27ff68b1836",
+    "pre_entries.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "pre_entries.log": "daa485bfa98d1e4b059b579408cbb79f8681c05eeaebeed5c547fdbddd9f1632",
+    "pre_initial.log": "1a31d5b68a82d60a1f37724b94dc69027297573d996ef6c3619c6247b4417f99",
+    "pre_migration.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "pre_migration.log": "ac543b962288163c032a49724f2a50e88338d3f7abc7e070ae90ebba6bb47bef",
+    "regression1.exit.txt": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "regression1.log": "9512fef1805d5e6fcc52dafb8f1b2174ca30c4c83600845453d97974b182f209",
+    "regression2.exit.txt": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "regression2.log": "bfc21546503ca22869dff255f0955df623dcb3193eafc4fec4b0a01fea9c3277",
+    "regression_final.exit.txt": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "regression_final.log": "b63fcb4b2642000a2fb38adcc23bcde93c43d56a44ab7cc02b1ded561cca2c75",
+    "render_after.log": "c2262440847c4584f251c5ae373334ec5348b0ee8bcced2c30f618f7c511722d",
+    "render_after_final.log": "c2262440847c4584f251c5ae373334ec5348b0ee8bcced2c30f618f7c511722d",
+    "render_before.log": "8cbc355a12fe7d3ec72f26649fab414c1d2be1a5b936d564383f777e408c3159",
+    "render_compare.py": "b1779ada36ff5e0df90b4063368bc88a94de6236226aedb84b86a14d19a56295",
+    "visual\\compact_maintenance.png": "5643ffafaf4896ecb0d3aca3fccb48a6e0dc0345afd46042622b77810009c88b",
+    "visual\\compact_storage.png": "52204ef25526067e8838508b0bac0cae72e437df2ab0b3f6b9fdf7d2e1d5d672",
+    "visual\\minimal_maintenance.png": "c54a6aab796810b28db5e56c6607bc46c7a6e2e4ba0a3eef5060252d035c870c",
+    "visual\\minimal_storage.png": "52204ef25526067e8838508b0bac0cae72e437df2ab0b3f6b9fdf7d2e1d5d672",
+    "visual\\result.json": "d2b79da28548137a3c4d1ef7d0d3985203c715f9641ab3005e91a1b0f4271d36",
+    "visual_qa.log": "2b982d495ab8efc1117088cd1b38463c28a943646b715e661c86f1e4b07841f2",
+    "visual_qa.py": "5eb62a7979f5bcfb45db0d976f5d74752ad9a462a93be16c7dc02eb53729e4a2"
+  }
+}

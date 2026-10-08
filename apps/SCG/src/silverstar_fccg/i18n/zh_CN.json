@@ -670,6 +670,8 @@
   "protocol.unavailable.transport_missing": "不可用：当前未选择兼容的传输设备。",
   "protocol.unavailable.transport_ambiguous": "不可用：存在多个兼容传输设备，无法唯一绑定。",
   "protocol.unavailable.hardware": "不可用：当前硬件没有满足该传输设备的连接资源。",
+  "protocol.unavailable.feature_tier": "不可用：最简档禁止维护串口协议。",
+  "device.storage_single_platform": "只能选择一个与当前 MCU 平台匹配的 TF/SD 存储设备；请先删除已有实例。",
   "mode.parameter_range": "合法范围：{minimum} 至 {maximum} {unit}",
   "build.section.verification": "固件构建",
   "build.section.quality": "飞控质量检查",

@@ -872,7 +872,8 @@ def _ProjectV9_Migrate(root: dict[str, Any]) -> dict[str, Any]:
     storage_plugin = "silverstar.device.storage.sd_sdio_fatfs"
     board_plugin = "silverstar.board.silverstar_0_5"
     if components.get("board") == board_plugin and not any(
-        isinstance(device, dict) and device.get("plugin") == storage_plugin
+        isinstance(device, dict) and device.get("plugin") in (
+            storage_plugin, "silverstar.device.storage.sd_sdio_fatfs_f1")
         for device in devices
     ):
         used_ids = {

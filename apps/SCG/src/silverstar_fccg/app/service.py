@@ -1215,6 +1215,17 @@ class FccgService:
             and bool(model.hardware.snapshot_id)
         )
         for manifest in self.catalog.Type_Get("device"):
+            if manifest.component_class == "storage":
+                active_platform = {model.mcu, model.mcu_family}
+                missing_platform = tuple(requirement.component_id
+                    for requirement in manifest.dependencies
+                    if not requirement.optional
+                    and self.catalog.Component_Get(requirement.component_id).component_type in ("mcu", "mcu_family")
+                    and requirement.component_id not in active_platform)
+                if missing_platform:
+                    values[manifest.component_id] = SelectionAvailability(False,
+                        missing_components=missing_platform, reason_code="selection.unavailable.component")
+                    continue
             if model.build.feature_tier == "minimal" and (
                     manifest.component_class == "gnss" or any(
                     entry.get("class") == "SYSTEM_DEVICE_CLASS_GNSS"

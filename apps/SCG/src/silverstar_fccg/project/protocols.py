@@ -247,7 +247,7 @@ def _ProviderHardwareAvailable_Is(
 def ProtocolProfileAvailabilities_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> dict[tuple[str, str, str], ProtocolProfileAvailability]:
-    """Resolve UI availability from manifest transport contracts only."""
+    """Resolve UI availability from transport contracts and the feature tier."""
     result: dict[tuple[str, str, str], ProtocolProfileAvailability] = {}
     for manifest in catalog.Type_Get("protocol"):
         contribution = manifest.protocol
@@ -275,7 +275,9 @@ def ProtocolProfileAvailabilities_Get(
                 )
             )
             reason_code = ""
-            if requirement is None or not compatible:
+            if category == "maintenance" and model.build.feature_tier == "minimal":
+                reason_code = "protocol.unavailable.feature_tier"
+            elif requirement is None or not compatible:
                 reason_code = "protocol.unavailable.transport_missing"
             elif profile.transport_selection == "single" and len(compatible) > 1:
                 reason_code = "protocol.unavailable.transport_ambiguous"

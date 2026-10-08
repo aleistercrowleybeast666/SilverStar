@@ -670,6 +670,8 @@
   "protocol.unavailable.transport_missing": "Unavailable: no compatible transport Device is selected.",
   "protocol.unavailable.transport_ambiguous": "Unavailable: multiple compatible transport Devices prevent a unique binding.",
   "protocol.unavailable.hardware": "Unavailable: the current hardware has no connection resource for this transport Device.",
+  "protocol.unavailable.feature_tier": "Unavailable: Minimal tier prohibits the maintenance serial protocol.",
+  "device.storage_single_platform": "Select only one TF/SD storage device matching the current MCU platform; remove the existing instance first.",
   "mode.parameter_range": "Valid range: {minimum} to {maximum} {unit}",
   "build.section.verification": "Firmware Build",
   "build.section.quality": "Flight Controller Quality Checks",

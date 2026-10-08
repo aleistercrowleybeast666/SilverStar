@@ -495,6 +495,11 @@ def _ProtocolProfiles_Reconcile(
         )
         if selected_availability is not None and selected_availability.available:
             continue
+        if (selected_availability is not None and
+                selected_availability.reason_code == "protocol.unavailable.feature_tier"):
+            # Imported tier conflicts require review; only an explicit tier
+            # switch may rewrite this retained protocol selection.
+            continue
         model.protocols[category] = None
         notices.append(
             ConfigurationNotice(

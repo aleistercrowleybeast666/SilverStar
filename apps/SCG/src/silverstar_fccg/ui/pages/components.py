@@ -594,6 +594,9 @@ class DevicesPage(ScrollableLocalizedPage):
                 and str(component.options.get("device_category", "")).startswith(
                     "storage."
                 )
+                and (component.component_id in selected_plugins or not
+                     self._device_availability.get(component.component_id,
+                         SelectionAvailability(True)).missing_components)
             ),
             key=lambda item: item.name,
         )
@@ -648,7 +651,8 @@ class DevicesPage(ScrollableLocalizedPage):
                             ),
                         )
                     )
-                    check.setEnabled(False)
+                    # An unavailable selected card must still be removable.
+                    check.setEnabled(instance is not None and component.component_class == "storage")
                     check.setToolTip("\n".join(filter(None, (details, reason))))
                 if not required:
                     check.toggled.connect(
@@ -658,6 +662,18 @@ class DevicesPage(ScrollableLocalizedPage):
                     )
                 layout.addWidget(check)
                 self.device_checks[component.component_id] = check
+                if component.component_class == "storage":
+                    for selected_instance in self._instances:
+                        if selected_instance.plugin_id != component.component_id:
+                            continue
+                        remove_button = QPushButton(self._translator.Text_Get("action.remove_device")
+                            + " " + selected_instance.instance_id)
+                        remove_button.setObjectName(f"removeDeviceButton_{selected_instance.instance_id}")
+                        remove_button.clicked.connect(
+                            lambda _checked=False, identity=selected_instance.instance_id:
+                                self.instanceChanged.emit(identity, ""))
+                        layout.addWidget(remove_button)
+                        self.remove_buttons[selected_instance.instance_id] = remove_button
         other_populated = bool(other_components) or (
             "other_sensors" in populated_groups
         )
