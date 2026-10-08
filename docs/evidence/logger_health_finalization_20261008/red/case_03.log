@@ -1,0 +1,11 @@
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:190: diagnostics.state_reject_count == 1U
+logger_health_boundary: 19 checks, 10 failures

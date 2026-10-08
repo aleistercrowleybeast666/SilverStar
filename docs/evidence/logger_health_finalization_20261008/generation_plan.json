@@ -1,0 +1,12 @@
+{
+  "started_utc": "2026-10-08T08:00:40.889462+00:00",
+  "base_head": "8cee75afb0e0a81a8286587986005965adc53005",
+  "source_descriptor": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\SilverStar.ssproject",
+  "source_descriptor_sha256": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5",
+  "target": "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v1\\project",
+  "plan_valid": true,
+  "plan_dangerous": false,
+  "validation": "ProjectValidationResult(issues=())",
+  "configuration_changes": "None; isolated fresh project retains previously approved display label, all devices/resources/math/tier/queue/stack/RF/Delay10/OneFace. Source revision/dirty hash is recorded separately.",
+  "dirty_patch_sha256": "5753d4f5e9f97219fe791db6f328ac5f8d9cc3969aaf2acfea3f475933d853c8"
+}

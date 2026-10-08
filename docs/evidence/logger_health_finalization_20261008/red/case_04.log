@@ -1,0 +1,13 @@
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:197: diagnostics.accepted_count == 0U && diagnostics.state_reject_count == 0U
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:198: s_snapshot.health_flags == 0U
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:204: Test_Diagnostics().state_reject_count == 1U
+logger_health_boundary: 22 checks, 12 failures

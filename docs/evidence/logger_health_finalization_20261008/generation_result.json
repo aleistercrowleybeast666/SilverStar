@@ -1,0 +1,31 @@
+{
+  "started_utc": "2026-10-08T08:00:40.889462+00:00",
+  "base_head": "8cee75afb0e0a81a8286587986005965adc53005",
+  "source_descriptor": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\SilverStar.ssproject",
+  "source_descriptor_sha256": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5",
+  "target": "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v1\\project",
+  "plan_valid": true,
+  "plan_dangerous": false,
+  "validation": "ProjectValidationResult(issues=())",
+  "configuration_changes": "None; isolated fresh project retains previously approved display label, all devices/resources/math/tier/queue/stack/RF/Delay10/OneFace. Source revision/dirty hash is recorded separately.",
+  "dirty_patch_sha256": "5753d4f5e9f97219fe791db6f328ac5f8d9cc3969aaf2acfea3f475933d853c8",
+  "finished_utc": "2026-10-08T08:00:55.816162+00:00",
+  "generated": true,
+  "configuration_keys_unchanged": true,
+  "queue_stack_user_config_and_hardware_files_identical": true,
+  "owner_generated_hashes": {
+    "APP/Src/estimator_task.c": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+    "APP/Src/logger_bus.c": "b8e574e0edd7c95da02d989cbd5d7353043c1ba032d299323d4eb036a6844e1f",
+    "APP/Src/flight_task.c": "65f917c86522bd1002c3deea4200e3f534aad5d177518607e28cd1f82ee8e254",
+    "Tools/check_task_stacks.py": "94a666ddf7ce14bf996da6732f5beae558880381c223296a15e444adef537d1a",
+    "Tools/check_power_of_ten.ps1": "8ebc4ffd23f556cbfc0840b4260c4b692cc0a6a749bbc1d46da3d5a0c295e323"
+  },
+  "compiled_sources": 155,
+  "unknown_stack_source_bindings": [
+    {
+      "path": "APP/Src/estimator_task.c",
+      "normalized_source_sha256": "98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610"
+    }
+  ],
+  "allowlist_updated": false
+}

@@ -1,0 +1,35 @@
+{
+  "pretest_snapshot_mission_id": 46,
+  "source_log_sha256": "fdfeeb1a8281325095898518017ff3b1f48334bd2b9423b6d3d97455df33e30e",
+  "snapshot_offset_bytes": 64,
+  "test5": {
+    "mission_id": "NOT_PROVEN",
+    "utc": [
+      "2026-10-08T07:19:14.641Z",
+      "2026-10-08T07:19:28.373Z"
+    ],
+    "intentional_incomplete": true,
+    "marker": "finite START/6s stationary observation, no induced Tilt90 completion; later program/reset interrupted that firmware session; no TF tail acceptance"
+  },
+  "current": {
+    "mission_id": "NOT_PROVEN",
+    "utc": [
+      "2026-10-08T07:20:53.007Z",
+      "2026-10-08T07:21:23.097Z"
+    ],
+    "air_landing_ms": 14009,
+    "halt": false,
+    "tf_acceptance": "NOT_RUN"
+  },
+  "current_diag": {
+    "mission_id": "NOT_PROVEN",
+    "utc": [
+      "2026-10-08T07:28:15.973Z",
+      "2026-10-08T07:28:48.027Z"
+    ],
+    "air_landing_ms": 14005,
+    "halt": true,
+    "tf_acceptance": "NOT_RUN"
+  },
+  "allocation_warning": "Multiple startup/resets can reserve additional directories without START. Do not infer observed sessions are necessarily 47/48/49. New TF extraction plus header/snapshot/decoder is required for exact association."
+}

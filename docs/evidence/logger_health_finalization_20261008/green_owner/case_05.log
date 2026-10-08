@@ -1,0 +1,2 @@
+Host lifecycle=4 scenario=5
+logger_health_boundary: 96 checks, 0 failures

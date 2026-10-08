@@ -1,0 +1,44 @@
+..F..                                                                    [100%]
+================================== FAILURES ===================================
+____ test_health_stack_binding_rejects_unreviewed_source[estimator_task.c] ____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/finalized_health_20261008_v1/pytest_normal_v2/test_health_stack_binding_reje_84de7b03')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+source = 'estimator_task.c'
+
+    @pytest.mark.parametrize("source", ["estimator_task.c", "ins_task.c", "diagnostic_log.c"])
+    def test_health_stack_binding_rejects_unreviewed_source(tmp_path, workspace_root, source):
+        payload = workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload"
+        spec = importlib.util.spec_from_file_location("health_stack_checker",
+                                                   payload / "Tools/check_task_stacks.py")
+        checker = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(checker)
+        relative = "APP/Src/" + source
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((payload / relative).read_bytes())
+>       checker.BindingHeader_Verify(tmp_path, relative)
+
+apps\SCG\tests\test_estimator_health_publication.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/python_software/SilverStar/.work/finalized_health_20261008_v1/pytest_normal_v2/test_health_stack_binding_reje_84de7b03')
+path = 'APP/Src/estimator_task.c'
+
+    def BindingHeader_Verify(root, path):
+        (root / path).resolve().relative_to(root.resolve())
+        if not (root / path).is_file() or BindingSourceHash_Get((root / path).read_text(encoding="utf-8")) not in BindingSourceVersions_Get(path):
+>           raise ValueError("Changed or missing reviewed callback compilation input: " + path)
+E           ValueError: Changed or missing reviewed callback compilation input: APP/Src/estimator_task.c
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:1467: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_estimator_health_publication.py::test_health_stack_binding_rejects_unreviewed_source[estimator_task.c]
+1 failed, 4 passed, 1 warning in 16.06s

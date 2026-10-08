@@ -1,0 +1,8 @@
+{
+  "path": "APP/Src/estimator_task.c",
+  "raw_sha256": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+  "normalized_source_sha256": "98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610",
+  "already_allowed": false,
+  "requested_allowlist_change_applied": false,
+  "change": "Only HealthEventsPublish returns before publishing when logger session snapshot is FINALIZED; preserve race/draining push failures."
+}

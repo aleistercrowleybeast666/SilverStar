@@ -1,0 +1,27 @@
+{
+  "base_head": "8cee75afb0e0a81a8286587986005965adc53005",
+  "compiled_dirty_patch_sha256": "5753d4f5e9f97219fe791db6f328ac5f8d9cc3969aaf2acfea3f475933d853c8",
+  "owner_and_test_inputs": {
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c": {
+      "raw_sha256": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+      "normalized_sha256": "98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610"
+    },
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py": {
+      "raw_sha256": "94a666ddf7ce14bf996da6732f5beae558880381c223296a15e444adef537d1a",
+      "normalized_sha256": "ad8bbf06cbd9f406322f99014ef255d1f49864dd0b6bebdfbdc2f695265b46e1"
+    },
+    "apps/SCG/tests/fixtures/logger_health_boundary.c": {
+      "raw_sha256": "a8f63f2303c97b1f97d6f8445cb591fe869155b7435616cd08c10eaf2968c607",
+      "normalized_sha256": "a8f63f2303c97b1f97d6f8445cb591fe869155b7435616cd08c10eaf2968c607"
+    },
+    "apps/SCG/tests/logger_health_boundary_support.py": {
+      "raw_sha256": "605b3aa6848869ce0ab5041db73fa9eca25d27730536413ddc1f95c699eecb34",
+      "normalized_sha256": "605b3aa6848869ce0ab5041db73fa9eca25d27730536413ddc1f95c699eecb34"
+    },
+    "apps/SCG/tests/test_logger_health_boundary.py": {
+      "raw_sha256": "a3d5a71389709413d6fce850bb1b95f4776ccf5504731f47399ce0ca323f08c9",
+      "normalized_sha256": "a3d5a71389709413d6fce850bb1b95f4776ccf5504731f47399ce0ca323f08c9"
+    }
+  },
+  "note": "Commit verification compares normalized source text; evidence files remain byte exact via -text. No self-referential commit identity."
+}

@@ -1,0 +1,19 @@
+{
+  "step": "architecture",
+  "utc_start": "2026-10-08T08:02:51.078271+00:00",
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "architecture-check"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v1\\project\\Flight_Controller",
+  "base_head": "8cee75afb0e0a81a8286587986005965adc53005",
+  "dirty_patch_sha256": "5753d4f5e9f97219fe791db6f328ac5f8d9cc3969aaf2acfea3f475933d853c8",
+  "source_owner_sha256": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+  "timeout_s": 120,
+  "max_make_jobs": 2,
+  "hardware": false,
+  "exit_code": 0,
+  "utc_end": "2026-10-08T08:03:13.114929+00:00",
+  "elapsed_s": 21.969561500001873,
+  "log_sha256": "6a7b4c71e43b14b188b7f987647dde2b1ee1e78cb794861b948488349ae7c0a4"
+}

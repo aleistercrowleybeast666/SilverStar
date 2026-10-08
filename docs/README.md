@@ -13,6 +13,7 @@ Current application implementation: `apps/SCG`. The Python package and plugin ID
 - [当前静态任务与一次复查](STATIC_BENCH_ACCEPTANCE_20261008.md)、[000045 复查边界](STATIC_BENCH_REPEAT_20261008.md)、[实际 TF 文件与 FLP 离线验收](STATIC_LOG_FILE_ACCEPTANCE_20261008.md)
 - [Monorepo architecture](architecture/MONOREPO_ARCHITECTURE.md)
 - [2026-10-08 TEST_5 与生产 GSHC 对比、DAP 拒绝现场](TEST5_GSHC_DAP_COMPARISON_20261008.md)
+- [2026-10-08 健康事件终结边界修复：红绿回归、完整软件检查及栈来源阻塞](LOGGER_HEALTH_FINALIZATION_20261008.md)
 - [Flight and Ground target model](architecture/TARGET_MODEL.md), [AIR Link](architecture/AIR_LINK.md), [Ground Station firmware](architecture/GROUND_STATION.md), [Device variants](architecture/DEVICE_VARIANTS.md)
 - [Project folder contract](architecture/PROJECT_FOLDER_CONTRACT.md)
 - [Mission snapshot and final status](architecture/MISSION_SNAPSHOT.md)

@@ -1,0 +1,46 @@
+{
+  "build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.bin": {
+    "bytes": 331052,
+    "sha256": "cf1a359c9212354b63b4af8b83f0db4008897eb333d35d220d8eec4a2f33da4c"
+  },
+  "build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.elf": {
+    "bytes": 3326668,
+    "sha256": "e53e3d97e882be508de3e34e7e86800448bc5884ab3363a03c9ba44f1db1c8a6"
+  },
+  "build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.map": {
+    "bytes": 1564612,
+    "sha256": "f2a52c1c924fefd33ae9726e1e30dfb22b8678d4f6037f99f65d71c0fe94b908"
+  },
+  "Generated/project_sources.mk": {
+    "bytes": 9561,
+    "sha256": "155db275669fc8b21f021ca6c853ee92444c57a892ac6a6bd7b27e9f29c653b0"
+  },
+  "Generated/project_semantics.json": {
+    "bytes": 96485,
+    "sha256": "3ccbafd3475a4ed8ebaa343307447651b31d1b17fb0a1c17ce75e578a9c5a2a9"
+  },
+  "System/User/system_user_config.h": {
+    "bytes": 16233,
+    "sha256": "9a81b9faed9e7ea2a9944fbb7d582802aa423da6dbe903f0964d0d9439a8ed05"
+  },
+  "APP/Inc/app_task_config.h": {
+    "bytes": 979,
+    "sha256": "6a1be0fd9637d373bb71c19a577e9d6138c67ea4fa48115aff7acaf05f507403"
+  },
+  "decoder": {
+    "path": "D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v1\\project\\KF6_Static_20261008_f045d8c.ssdecoder",
+    "bytes": 144321,
+    "sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+  },
+  "estimator_task_su": {
+    "old_sha256": "5c567df817c4e9c2dd43e4f360c56d08b3ddcb1837358a9708407bff8d4ca54a",
+    "new_sha256": "d3f0cff287d52d0edab6dd0424b89caf077ca6309c173e5e32950f5c772f116b",
+    "old_AppTask": [
+      "APP/Src/estimator_task.c:3398:6:AppTask_Estimator\t624\tstatic"
+    ],
+    "new_AppTask": [
+      "APP/Src/estimator_task.c:3402:6:AppTask_Estimator\t616\tstatic"
+    ],
+    "scope": "Per-function compiler frame only, not task-path stack proof."
+  }
+}

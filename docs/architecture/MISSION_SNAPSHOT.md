@@ -63,3 +63,26 @@ final-status failure; the real FatFs Host integrity fixture reads back both
 banks and section 7. The F407 ARM Release build and Power of Ten checker also
 cover the first-party writer. Physical media failure and target WCET remain
 hardware-validation work.
+
+## Health events at session finalization
+
+`Estimator_HealthEventsPublish` publishes changes during Flight, Recovery and
+the logger's landing grace period. Once `LoggerBus_FinalizationStateGet`
+observes `LOGGER_BUS_FINALIZATION_FINALIZED`, that publisher returns before
+consuming health changes or pushing an event. Health age and group/overall
+state evaluation retain their original meaning; finalization does not make a
+timed-out source healthy. The guard uses logger session state, not a blanket
+LANDED filter, so the required landing event and grace-period events remain.
+
+The state snapshot uses the existing IRQ-protected getter. It does not make
+the later push atomic with closing the session. DRAINING, a close after that
+snapshot, and a full queue still follow the checked push result, diagnostics
+and `ESTIMATOR_HEALTH_LOG_EVENT_FAILED` path. A generic push after closure
+still returns BAD_STATE and counts the rejection. This change creates no
+durable acknowledgement and no new LANDED-to-START reopening path. A new
+session requires the existing quiescent bus and health-epoch initialization.
+
+[2026-10-08 focused evidence](../LOGGER_HEALTH_FINALIZATION_20261008.md)
+records red/green Host cases, fresh generated compilation, and the unresolved
+exact-source stack binding. It does not establish complete stack acceptance
+or new target/TF acceptance.

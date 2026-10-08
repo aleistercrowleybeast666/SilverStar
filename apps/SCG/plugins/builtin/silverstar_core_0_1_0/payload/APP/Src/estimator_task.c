@@ -3323,6 +3323,10 @@ static void Estimator_HealthEventsPublish(uint64_t evaluation_us)
     SILVERSTAR_ASSERT_OBJECT(&health, SystemNavigationGroupHealth, SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT(s_estimator.mission_running <= 1U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((s_estimator.mission_running == 0U) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_NONE)) { return; }
+    /* Health ages remain meaningful after navigation stops, but a finalized
+     * logger session has no event publisher. Keep grace/draining failures and
+     * a close racing this snapshot visible through the ordinary push result. */
+    if (LoggerBus_FinalizationStateGet() == LOGGER_BUS_FINALIZATION_FINALIZED) { return; }
     changed = SystemNavigationHealth_ChangesGet(evaluation_us);
     for (group = 0U; group < SYSTEM_NAVIGATION_GROUP_COUNT; group++)
     {

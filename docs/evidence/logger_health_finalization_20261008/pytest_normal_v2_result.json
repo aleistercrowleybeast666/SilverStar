@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "apps/SCG/tests/test_logger_health_boundary.py",
+    "apps/SCG/tests/test_estimator_health_publication.py",
+    "-q",
+    "-p",
+    "normal_test_paths",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v1\\pytest_normal_v2",
+    "--junitxml=D:\\python_software\\SilverStar\\.work\\finalized_health_20261008_v1\\pytest_normal_v2.xml"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "hardware": false,
+  "utc_start": "2026-10-08T08:18:12.782586+00:00",
+  "base_head": "8cee75afb0e0a81a8286587986005965adc53005",
+  "source_sha256": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+  "private_directory_plugin": "docs/evidence/nightly_software_20261008/normal_test_paths.py",
+  "initial_attempt": "pytest.log: EEEEE, cleanup PermissionError; no product-test acceptance",
+  "exit_code": 1,
+  "utc_end": "2026-10-08T08:18:32.974125+00:00",
+  "log_sha256": "00304f8037710a84130c71ecb72673862f3c8561e0f3e60adfd2193f8a2fb1e8"
+}

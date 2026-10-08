@@ -1,0 +1,13 @@
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:99: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:105: SystemNavigationHealth_Observe(group, &evidence) == SYSTEM_DEVICE_OK
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:182: diagnostics.accepted_count == 1U && diagnostics.normal_count == 1U
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:121: record.payload.event.arg0 == 0x00010504U
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red\actual_health_boundary.c:122: record.payload.event.arg1 == 2000U
+logger_health_boundary: 22 checks, 12 failures

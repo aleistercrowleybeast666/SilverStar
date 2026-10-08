@@ -1,0 +1,41 @@
+{
+  "review_utc": "2026-10-08T08:07:20.791559+00:00",
+  "change_scope": "Only Estimator_HealthEventsPublish entry; no LoggerBus/flight/INS/device/telemetry changes.",
+  "contract": {
+    "idle_flight_recovery": "Health changes keep original EVENT pushes and result handling.",
+    "landed_grace": "ARMED still accepts original events; do not filter solely on LANDED.",
+    "draining": "Ordinary BAD_STATE/counter/bit8 propagation retained.",
+    "finalized": "The health publisher stops before ChangesGet/push. GroupGet/Overall age semantics remain intact.",
+    "race": "Finalization snapshot is protected by existing IRQ lock, not atomic with subsequent push. A closure after that snapshot remains a checked BAD_STATE. No extra lengthy IRQ masking, false OK or blanket counter suppression.",
+    "restart": "Only existing quiescent LoggerBus_Reset + health epoch initialization; no new LANDED-to-START reopening."
+  },
+  "timeout_attribution": {
+    "confirmed": "First rejection breakpoint triggered after 2 s barometer fusion age; therefore that breakpoint halt cannot cause its own trigger. No active-flight halt preceded first hit in the captured diagnostic sequence.",
+    "source_path": "INS propagation and Estimator prediction processing accept only FLIGHT/RECOVERY; after LANDED, those fusion updates stop while mission_running flag remains set.",
+    "bounded_inference": "The post-stop 2 s health age is consistent with stopped fusion. This is not proof of a barometer device failure or accurate hardware time under every debug condition."
+  },
+  "peer_review": [
+    {
+      "site": "Estimator_GnssUpdate/recovery/source switch event paths",
+      "scope": "Reached from prediction processing or origin/setup paths; no separate new capture proving the same finalized-loop failure. Preserve semantics."
+    },
+    {
+      "site": "FlightTask deployment/impact/landing events",
+      "scope": "Sequence-based required events; successful LANDING event arms finalization. Do not skip by lifecycle=LANDED or globally make pushes OK."
+    },
+    {
+      "site": "DeviceTask GNSS state/satellite/RF diagnostics",
+      "scope": "Unconditional runtime owner loops can emit on new source sequences after finalization; potential late producers remain unproven in this capture, explicitly not changed."
+    },
+    {
+      "site": "DeviceTask periodic power/health/STATS and INS increments",
+      "scope": "Existing FLIGHT/RECOVERY guards; no guard or schedule changes."
+    }
+  ],
+  "ack_assessment": {
+    "telemetry_priority": "Start response polled before sends; AckSend precedes StatusSend and StreamSend. ACK retries retain command cache/idempotence.",
+    "sx1281_queue": "Control class is prioritized; after two control frames an available normal frame is deliberately selected to prevent starvation.",
+    "decision": "No demonstrated priority defect or low-risk change justifying scheduler/PHY/timeout changes. Keep current behavior and user nonblocking acceptance. No zero-loss guarantee."
+  },
+  "whitelist_changed": false
+}

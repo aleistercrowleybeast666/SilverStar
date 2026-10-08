@@ -1,0 +1,5 @@
+Host lifecycle=6 scenario=4
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red_valid_fixture\actual_health_boundary.c:209: diagnostics.accepted_count == 0U && diagnostics.state_reject_count == 0U
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red_valid_fixture\actual_health_boundary.c:210: s_snapshot.health_flags == 0U
+FAIL D:\python_software\SilverStar\.work\finalized_health_20261008_v1\red_valid_fixture\actual_health_boundary.c:216: Test_Diagnostics().state_reject_count == 1U
+logger_health_boundary: 22 checks, 3 failures

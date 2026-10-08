@@ -1,0 +1,14 @@
+{
+  "hardware_in_this_software_phase": false,
+  "stack_binding_authorization_pending": true,
+  "initial_pytest": "Five setup errors and unreadable mode-0700 basetemp, final cleanup PermissionError. No directory permissions changed. Full pytest.log retained.",
+  "initial_fixture": "red/ used invalid variance scale/sequence input; real supervisor rejected it. Preserve as fixture development failure. Only red_valid_fixture/ establishes pre-fix comparison.",
+  "archive_attempt": "First curation stopped on missing processes_after_gates.json because an empty PowerShell pipeline emitted no file. Resumed with identical-byte-only copying after explicitly recording empty process list. No product result affected.",
+  "pytest_warning": "The no:cacheprovider run retains Unknown config option: cache_dir warning. Tests and binding expectations unchanged.",
+  "readonly_callback_review": "Source and actual linked graph compared without binding override, callback resolution, or substitute stack acceptance.",
+  "user_preserved_inputs": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  }
+}
