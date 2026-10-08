@@ -203,3 +203,21 @@ def test_product_metadata_binding_accepts_only_authorized_complete_source(builti
                else text.replace('return SILVERSTAR_PROJECT_CONFIG_DIGEST;', 'return 0U;'))
     assert changed != text
     assert stacks.BindingSourceHash_Get(changed) not in stacks.BindingSourceVersions_Get(relative)
+
+
+@pytest.mark.parametrize('mutation', ['digest', 'function'])
+def test_product_decoder_binding_accepts_only_authorized_complete_source(builtin_catalog, mutation):
+    from silverstar_fccg.project.model import ProjectModel_Load
+    from silverstar_fccg.generator.render import GeneratedFiles_Render
+    from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+    source = Path(__file__).resolve().parents[3] / 'docs/evidence/logger_health_retest_20261008/generated_config.ssproject'
+    model = ProjectModel_Load(source)
+    relative = 'Generated/Src/project_log_decoder_profile.c'
+    text = GeneratedFiles_Render(model, builtin_catalog, SourceGraph_Resolve(model, builtin_catalog))[relative].decode('utf8')
+    approved = 'ee5baec0a73077cdafee252ba8715045db8ee39e4b894c6846be3cd059392616'
+    assert stacks.BindingSourceHash_Get(text) == approved
+    assert approved in stacks.BindingSourceVersions_Get(relative)
+    changed = (text.replace('0xAEU, 0x60U', '0xAFU, 0x60U') if mutation == 'digest'
+               else text.replace('profile->package_schema_major = 1U;', 'profile->package_schema_major = 2U;'))
+    assert changed != text
+    assert stacks.BindingSourceHash_Get(changed) not in stacks.BindingSourceVersions_Get(relative)

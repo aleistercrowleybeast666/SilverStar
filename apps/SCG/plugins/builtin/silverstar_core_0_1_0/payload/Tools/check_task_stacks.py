@@ -1444,6 +1444,14 @@ BINDING_SOURCE_PRODUCT_METADATA_V13 = {
 }
 
 
+# Exact decoder identity review v14, explicitly authorized on 2026-10-08.
+# Only project-semantics and generation-profile hash constants differ.
+# Restoring the old product identity reproduces the reviewed complete source.
+BINDING_SOURCE_PRODUCT_DECODER_V14 = {
+    'Generated/Src/project_log_decoder_profile.c': ['ee5baec0a73077cdafee252ba8715045db8ee39e4b894c6846be3cd059392616'],
+}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
@@ -1453,7 +1461,8 @@ def BindingSourceVersions_Get(path):
             BINDING_SOURCE_STATIC_BENCH_V10.get(path, []) +
             BINDING_SOURCE_HEALTH_FINALIZATION_V11.get(path, []) +
             BINDING_SOURCE_PRODUCT_PATCH_V12.get(path, []) +
-            BINDING_SOURCE_PRODUCT_METADATA_V13.get(path, []))
+            BINDING_SOURCE_PRODUCT_METADATA_V13.get(path, []) +
+            BINDING_SOURCE_PRODUCT_DECODER_V14.get(path, []))
 
 
 def BindingSourceHash_Get(text):

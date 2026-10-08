@@ -66,3 +66,32 @@
 三项旧测试失败保留为 `test_protocol_combos_and_logging_disabled_state_are_stable`（过时 telemetry combo 查找）、`test_legacy_format9_device_shape_rejected_and_current_roundtrip_stable`（拒绝文案 regex 不匹配）、`test_legacy_board_owned_storage_collision_is_rejected`（旧 Storage payload 路径）。这些已在 e702ffd 隔离基线上复现，没有用这次登记掩盖或改绿。
 
 [本轮单文件授权的完整证据清单](evidence/scg_metadata_binding_20261008/manifest.json) 与 [归档](evidence/scg_metadata_binding_20261008/evidence.zip) 保存精确源码、dirty snapshot、命令、退出码、新旧失败日志及比较结果。本轮未操作用户工程、窗口或硬件，未推送。
+
+## 必要精确来源统一授权后的最终软件结果（2026-10-08）
+
+用户随后明确允许本次外场前必要、逐项审查的精确来源登记。先在 f57abe7 对全部编译身份进行独立预检：**155 个 C 源文件、388 个不同编译输入、全部 .d 依赖图和 .su 栈报告**；唯一未知项为上述 decoder 完整源码，其余输入、图和栈报告均匹配。没有靠跳过失败运行栈计算。追加 `BINDING_SOURCE_PRODUCT_DECODER_V14` 时只登记 `Generated/Src/project_log_decoder_profile.c` 的确切哈希 `ee5baec0a73077cdafee252ba8715045db8ee39e4b894c6846be3cd059392616`；旧产品身份/新身份完整渲染比较证明及两组常量差异见归档。未修改目标源码、算法、限额、依赖图登记或未知来源拒绝。
+
+decoder 登记前隔离测试 **2 FAIL**（未登记）；登记后 owning 与 overlay 栈回归各 **20 PASS / exit 0**，保留错误摘要及函数体变异的拒绝。新版本隔离副本 `.work/DecoderBindingApproval_20261008/project/Flight_Controller` 完整身份预检无未知项。原 Makefile 的 **stack-report 实际 PASS / exit 0**，源证明覆盖 155 项，全部启用任务及五项链路检查通过：
+
+| 任务 | 配置 B | 已知估计 B | 余量 B |
+|---|---:|---:|---:|
+| Device | 2560 | 2144 | 416 |
+| INS | 3072 | 2240 | 832 |
+| Estimator | 4096 | 3252 | 844 |
+| Flight | 4096 | 3648 | 448 |
+| Logger | 3072 | 1760 | 1312 |
+| Serial | 6144 | 4944 | 1200 |
+| Telemetry | 4096 | 2152 | 1944 |
+| Idle | 512 | 256 | 256 |
+
+原 `architecture-check power10-check artifact-check` 再运行 exit 0，计数和产物不变；PoT 关键合同人工审查 **NOT PROVEN** 继续保留。栈报告也明确 `whole_program_stack_acceptance: NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence`，未测硬件高水位。这是该 F407/KF6 Delay10 样本已知任务路径门禁通过，不是整个固件/用户最终配置的完整栈证明或外场合格认证。重新渲染输出、目标 C/头文件/汇编/linker 和 ARM 编译产物与之前已实际编译样本相同，继续明确复用产物，没有声称重新 ARM 编译、Host 或 analyzer。
+
+### 三项历史失败的独立诊断
+
+1. `test_protocol_combos_and_logging_disabled_state_are_stable`：`test_optional_protocols.py:504` 仍用字符串 plugin id 寻找遥测选项；当前 `components.py:707` 的 radio selector 采用 `(plugin_id, module_id)` 元组，所以先发生 StopIteration，尚未执行后续协议/日志预期。本次存储修复没有改 radio selector。现有实际 Qt radio 选择、增删、保存/重开、功率及绑定测试 **6 PASS**；最后一个遥测实例删除后不复活测试 **1 PASS**。支持当前 radio 操作无上述回归，但不能把这些诊断冒称原旧测试已通过或其全部后续预期已重新执行。
+2. `test_legacy_format9_device_shape_rejected_and_current_roundtrip_stable`：**不仅是文案 regex 陈旧**。`PROJECT_FORMAT_VERSION` 基础值仍为 14，但 15/16/17 是正式支持的扩展；测试把 `14+1=15` 当成未知格式，并把格式 14 的 ground_target 形状强行标成 15，实际因缺少格式 15 必需 radio 字段被拒绝。私有只读模型诊断证明：当前 roundtrip 完全相同；缺字段格式 9 被拒绝；真正未知 18 得到原期望的版本拒绝消息。`model.py:46–49, 1848, 1941, 1985`。本次唯一 model 修改是格式 9 存储默认注入识别 F1，与这些格式判定/roundtrip 路径无关。
+3. `test_legacy_board_owned_storage_collision_is_rejected`：`test_internal_rc_closeout.py:607` 建立场景时读取已迁到 `Adapter/Src/` 的文件，尚未调用最终冲突 Plan。私有独立生成夹具仅使用当前 Adapter 路径，**原七项后续安全预期全满足**：计划 invalid，persistent C/头文件冲突，新 adapter 应 ADD，冲突全部位于存储且没有 Board 冲突。现有 plan 拒绝碰撞；此次未改 assembler 或所有权策略。这是单一原测试场景的诊断证据，不是所有历史工程迁移均被证明；原测试仍 FAIL，未修改其路径或预期。
+
+原三项失败与 e702ffd 基线失败均保留，未用诊断“修绿”。若后续维护测试，须按当前格式/控件/路径重建场景并保留安全预期，不能仅删除断言。C071 地面站未纳入本轮代码/发布范围。
+
+[最终来源预检、原栈报告与诊断证据清单](evidence/scg_decoder_binding_20261008/manifest.json) · [归档](evidence/scg_decoder_binding_20261008/evidence.zip)。用户当前工程、窗口及硬件未操作；仅本地提交、不推送。
