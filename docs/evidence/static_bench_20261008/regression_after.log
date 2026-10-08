@@ -1,0 +1,82 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 65 items
+
+apps\SCG\tests\test_workspace_policy.py::test_windows_overlong_copy_rejected_before_io_and_preserves_boundary PASSED
+apps\SCG\tests\test_workspace_policy.py::test_copy_error_is_not_hidden_by_long_path_support PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_policy_rejects_escape_and_unsafe_portable_paths PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[/absolute] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[//server/share] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[C:/drive] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[C:\\drive] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[\\\\server\\share] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[../escape] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a/../b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a/./b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a//b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a\\b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[NUL] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[nul.txt] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[folder/COM1.log] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[trailing.] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[trailing ] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[control\nname] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[delete\x7fname] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[alternate:stream] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_relative_path_validation_and_manifest_load_ignore_root_cwd PASSED
+apps\SCG\tests\test_workspace_policy.py::test_manifest_path_error_reports_field_and_value PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_policy_still_rejects_filesystem_root_authorization PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_staging_and_atomic_write_remain_inside_root PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_replace_retries_a_transient_windows_lock PASSED
+apps\SCG\tests\test_workspace_policy.py::test_windows_staging_inherits_access_without_acl_commands PASSED
+apps\SCG\tests\test_workspace_policy.py::test_windows_staging_collision_is_bounded_and_preserves_existing_input PASSED
+apps\SCG\tests\test_workspace_policy.py::test_windows_staging_access_denial_propagates_without_permission_repair PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[../escape-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[nested/path-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[nested\\path-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[C:/escape-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[/escape-] PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_install_is_declarative_and_id_conflicts_are_rejected <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[traversal] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[symlink] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[duplicate_case] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[special_file] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_missing_dependency_and_bad_schema_are_rejected <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_schema_types_capabilities_and_build_tokens_are_strict <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_first_save_materializes_a_ready_dry_runnable_project PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_generation_fingerprint_ignores_local_tools_and_recovers_after_mode_change PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_readiness_detects_and_save_restores_a_missing_managed_file PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_save_refreshes_managed_output_after_renderer_change PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_verified_board_preparation_is_idempotent PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_first_save_publishes_project_descriptor_last PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_build_auto_saves_dirty_mode_and_logging_configuration PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_all_advanced_actions_use_ensure_buildable_and_project_root PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_build_runner_starts_make_with_explicit_project_cwd PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_advanced_build_defaults_release_and_generated_debug_remains_available PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_violation_fixture_fails PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_repeated_apply_preserves_managed_mtimes_and_build_dependencies PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-True] PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U-True] PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/other.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-False] PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 1U-False] PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_estimator_none_is_absent_from_make_and_eide <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_environment_plugin_renders_one_resolved_source_graph <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_same_mcu_supports_two_board_resource_maps <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_optional_logical_devices_render_safe_disabled_resource_bindings <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_cubemx_import_generate_export_install_and_reuse <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_cubemx_freertos_conflict_is_rejected <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_custom_ground_hardware_exports_local_unverified_pcb_instance <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_windows_generation_path_boundary.py::test_overlong_generation_has_actionable_error_and_no_published_payload <- ..\FCCG\tests\test_windows_generation_path_boundary.py PASSED
+
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 65 passed, 1 warning in 308.46s (0:05:08) ==================

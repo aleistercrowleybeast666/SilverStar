@@ -1,0 +1,24 @@
+{
+  "base_head": "0a2ceb54d5b536997b1464f7c740fa3349f5d595",
+  "patch_sha256": "f8a84a72761494c9255bf2e6b09d66a77a9b6dbded147e636952a2ca300d95e6",
+  "files": {
+    "apps/SCG/src/silverstar_fccg/core/workspace.py": "38c539dd57b646d9f827d26c816210ef5829a88871b486717861fbf2d033f180",
+    "apps/SCG/tests/test_workspace_policy.py": "94aae29bf2fa5c263d4d580fbc08c810136603693eb143a8f762ac65780cee59"
+  },
+  "pre_fix_generation": {
+    "command": [
+      ".venv/Scripts/python.exe",
+      ".work/static_bench_20261008/generate.py",
+      "--apply"
+    ],
+    "exec_session": 73613,
+    "exit_code": 1,
+    "failure": "mkdtemp mode0700 then icacls inheritance:e access denied; cleanup WinError5 masks WorkspacePolicyError. No firmware generated. Failed staging retained; no permission repair."
+  },
+  "workspace_regression": {
+    "exit_code": 0,
+    "passed": 34,
+    "pytest_elapsed_s": 0.5,
+    "log": "workspace_regression.log"
+  }
+}

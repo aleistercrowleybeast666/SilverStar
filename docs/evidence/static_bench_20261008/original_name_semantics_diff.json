@@ -1,0 +1,450 @@
+{
+  "diagnostic_only": true,
+  "changes": [
+    {
+      "path": "$.available_records[4].available",
+      "old": true,
+      "new": false
+    },
+    {
+      "path": "$.available_records[4].reason_code",
+      "old": "",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[28].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[29].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[30].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[31].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[32].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[33].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[38].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.available_records[39].reason_code",
+      "old": "logging.unavailable.producer",
+      "new": "logging.algorithm.disabled"
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities.length",
+      "old": 15,
+      "new": 12
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities[5]",
+      "old": "barometer.altitude",
+      "new": "attitude.external.preflight_alignment_6axis_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities[6]",
+      "old": "attitude.external.preflight_alignment_6axis_qualified",
+      "new": "attitude.external.preflight_alignment_9axis_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities[7]",
+      "old": "attitude.external.preflight_alignment_9axis_qualified",
+      "new": "attitude.external.preflight_fallback_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities[8]",
+      "old": "attitude.external.preflight_fallback_qualified",
+      "new": "imu.software_alignment_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities[9]",
+      "old": "imu.software_alignment_qualified",
+      "new": "imu.software_propagation_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities[10]",
+      "old": "imu.software_propagation_qualified",
+      "new": "imu.landing_stillness_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[0].capabilities[11]",
+      "old": "imu.landing_stillness_qualified",
+      "new": "magnetometer.physical_unit"
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities.length",
+      "old": 15,
+      "new": 12
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities[5]",
+      "old": "barometer.altitude",
+      "new": "attitude.external.preflight_alignment_6axis_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities[6]",
+      "old": "attitude.external.preflight_alignment_6axis_qualified",
+      "new": "attitude.external.preflight_alignment_9axis_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities[7]",
+      "old": "attitude.external.preflight_alignment_9axis_qualified",
+      "new": "attitude.external.preflight_fallback_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities[8]",
+      "old": "attitude.external.preflight_fallback_qualified",
+      "new": "imu.software_alignment_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities[9]",
+      "old": "imu.software_alignment_qualified",
+      "new": "imu.software_propagation_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities[10]",
+      "old": "imu.software_propagation_qualified",
+      "new": "imu.landing_stillness_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[2].capabilities[11]",
+      "old": "imu.landing_stillness_qualified",
+      "new": "magnetometer.physical_unit"
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities.length",
+      "old": 15,
+      "new": 12
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities[5]",
+      "old": "barometer.altitude",
+      "new": "attitude.external.preflight_alignment_6axis_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities[6]",
+      "old": "attitude.external.preflight_alignment_6axis_qualified",
+      "new": "attitude.external.preflight_alignment_9axis_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities[7]",
+      "old": "attitude.external.preflight_alignment_9axis_qualified",
+      "new": "attitude.external.preflight_fallback_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities[8]",
+      "old": "attitude.external.preflight_fallback_qualified",
+      "new": "imu.software_alignment_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities[9]",
+      "old": "imu.software_alignment_qualified",
+      "new": "imu.software_propagation_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities[10]",
+      "old": "imu.software_propagation_qualified",
+      "new": "imu.landing_stillness_qualified"
+    },
+    {
+      "path": "$.capability_endpoints[3].capabilities[11]",
+      "old": "imu.landing_stillness_qualified",
+      "new": "magnetometer.physical_unit"
+    },
+    {
+      "path": "$.capability_endpoints[6].physical_device_id",
+      "old": 25,
+      "new": 26
+    },
+    {
+      "path": "$.capability_endpoints[7].physical_device_id",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.capability_endpoints[8].physical_device_id",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.capability_endpoints[9].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.capability_endpoints[10].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.component_locks[0].manifest_sha256",
+      "old": "2e52f7a6492068144bcf938494f5447a60d347092f5097bea61c9a9f9c5ae822",
+      "new": "c76f49b768f796520fa5d31da391c10127de50c4f44d5b905ba760108b774b39"
+    },
+    {
+      "path": "$.component_locks[10].manifest_sha256",
+      "old": "069f72219f01b5158b898c1aef10aebc83ebc83e5fdb6426cdcf1baaba4398ac",
+      "new": "67075dc32277311ca845adf95c990865208ed038673db8a0e3253647653e8286"
+    },
+    {
+      "path": "$.component_locks[11].manifest_sha256",
+      "old": "b535b43cfd71b8af9861a3cc7971899d9489237ac8c643014a33102badf41dd1",
+      "new": "f14452d5df8239b49be63d2324f7b9daecea06080552eb9a8efeab0c53d1a0a1"
+    },
+    {
+      "path": "$.device_descriptors[6].physical_device_id",
+      "old": 25,
+      "new": 26
+    },
+    {
+      "path": "$.device_descriptors[7].physical_device_id",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.device_descriptors[8].physical_device_id",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.device_descriptors[9].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.device_descriptors[10].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.devices[0].capabilities.length",
+      "old": 15,
+      "new": 12
+    },
+    {
+      "path": "$.devices[0].capabilities[5]",
+      "old": "barometer.altitude",
+      "new": "attitude.external.preflight_alignment_6axis_qualified"
+    },
+    {
+      "path": "$.devices[0].capabilities[6]",
+      "old": "attitude.external.preflight_alignment_6axis_qualified",
+      "new": "attitude.external.preflight_alignment_9axis_qualified"
+    },
+    {
+      "path": "$.devices[0].capabilities[7]",
+      "old": "attitude.external.preflight_alignment_9axis_qualified",
+      "new": "attitude.external.preflight_fallback_qualified"
+    },
+    {
+      "path": "$.devices[0].capabilities[8]",
+      "old": "attitude.external.preflight_fallback_qualified",
+      "new": "imu.software_alignment_qualified"
+    },
+    {
+      "path": "$.devices[0].capabilities[9]",
+      "old": "imu.software_alignment_qualified",
+      "new": "imu.software_propagation_qualified"
+    },
+    {
+      "path": "$.devices[0].capabilities[10]",
+      "old": "imu.software_propagation_qualified",
+      "new": "imu.landing_stillness_qualified"
+    },
+    {
+      "path": "$.devices[0].capabilities[11]",
+      "old": "imu.landing_stillness_qualified",
+      "new": "magnetometer.physical_unit"
+    },
+    {
+      "path": "$.devices[0].recordable_outputs.barometer.altitude",
+      "old": {
+        "enabled": true
+      },
+      "new": null
+    },
+    {
+      "path": "$.devices[4].physical_device_id",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.devices[4].physical_device_ids[0]",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.devices[5].physical_device_id",
+      "old": 25,
+      "new": 26
+    },
+    {
+      "path": "$.devices[5].physical_device_ids[0]",
+      "old": 25,
+      "new": 26
+    },
+    {
+      "path": "$.devices[6].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.devices[6].physical_device_ids[0]",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.devices[7].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.devices[7].physical_device_ids[0]",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.logging_streams[4].enabled",
+      "old": true,
+      "new": false
+    },
+    {
+      "path": "$.physical_device_ids.PROJECT_PHYSICAL_DEVICE_ID_NRF24L01P",
+      "old": null,
+      "new": 25
+    },
+    {
+      "path": "$.physical_device_ids.PROJECT_PHYSICAL_DEVICE_ID_OUTPUT",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.physical_device_ids.PROJECT_PHYSICAL_DEVICE_ID_POWER_ADC",
+      "old": 25,
+      "new": 26
+    },
+    {
+      "path": "$.physical_device_ids.PROJECT_PHYSICAL_DEVICE_ID_STORAGE",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.physical_devices[0].capabilities.length",
+      "old": 15,
+      "new": 12
+    },
+    {
+      "path": "$.physical_devices[0].capabilities[5]",
+      "old": "barometer.altitude",
+      "new": "attitude.external.preflight_alignment_6axis_qualified"
+    },
+    {
+      "path": "$.physical_devices[0].capabilities[6]",
+      "old": "attitude.external.preflight_alignment_6axis_qualified",
+      "new": "attitude.external.preflight_alignment_9axis_qualified"
+    },
+    {
+      "path": "$.physical_devices[0].capabilities[7]",
+      "old": "attitude.external.preflight_alignment_9axis_qualified",
+      "new": "attitude.external.preflight_fallback_qualified"
+    },
+    {
+      "path": "$.physical_devices[0].capabilities[8]",
+      "old": "attitude.external.preflight_fallback_qualified",
+      "new": "imu.software_alignment_qualified"
+    },
+    {
+      "path": "$.physical_devices[0].capabilities[9]",
+      "old": "imu.software_alignment_qualified",
+      "new": "imu.software_propagation_qualified"
+    },
+    {
+      "path": "$.physical_devices[0].capabilities[10]",
+      "old": "imu.software_propagation_qualified",
+      "new": "imu.landing_stillness_qualified"
+    },
+    {
+      "path": "$.physical_devices[0].capabilities[11]",
+      "old": "imu.landing_stillness_qualified",
+      "new": "magnetometer.physical_unit"
+    },
+    {
+      "path": "$.physical_devices[0].recordable_outputs.barometer.altitude",
+      "old": {
+        "enabled": true
+      },
+      "new": null
+    },
+    {
+      "path": "$.physical_devices[4].physical_device_id",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.physical_devices[4].physical_device_ids[0]",
+      "old": 26,
+      "new": 27
+    },
+    {
+      "path": "$.physical_devices[5].physical_device_id",
+      "old": 25,
+      "new": 26
+    },
+    {
+      "path": "$.physical_devices[5].physical_device_ids[0]",
+      "old": 25,
+      "new": 26
+    },
+    {
+      "path": "$.physical_devices[6].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.physical_devices[6].physical_device_ids[0]",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.physical_devices[7].physical_device_id",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.physical_devices[7].physical_device_ids[0]",
+      "old": 27,
+      "new": 28
+    },
+    {
+      "path": "$.record_views[4].available",
+      "old": true,
+      "new": false
+    },
+    {
+      "path": "$.record_views[4].logging.enabled",
+      "old": true,
+      "new": false
+    }
+  ],
+  "scope_correction": "Superseded: used unresolved base catalog; not actual assembler variant resolution. Use original_name_resolved_diagnostic.json."
+}

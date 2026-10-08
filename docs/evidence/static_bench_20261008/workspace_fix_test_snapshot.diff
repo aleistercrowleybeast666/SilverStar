@@ -1,0 +1,177 @@
+diff --git a/apps/SCG/src/silverstar_fccg/core/workspace.py b/apps/SCG/src/silverstar_fccg/core/workspace.py
+index 99ba77f..4552571 100644
+--- a/apps/SCG/src/silverstar_fccg/core/workspace.py
++++ b/apps/SCG/src/silverstar_fccg/core/workspace.py
+@@ -2,7 +2,7 @@ from __future__ import annotations
+ 
+ import os
+ import shutil
+-import subprocess
++import secrets
+ import tempfile
+ import time
+ from dataclasses import dataclass
+@@ -52,24 +52,6 @@ def PortableRelativePath_Validate(value: str) -> PurePosixPath:
+     return path
+ 
+ 
+-def _WindowsDirectoryInheritance_Enable(path: Path) -> None:
+-    result = subprocess.run(
+-        ["icacls", str(path), "/inheritance:e"],
+-        check=False,
+-        capture_output=True,
+-        text=True,
+-        encoding="utf-8",
+-        errors="replace",
+-        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+-    )
+-    if result.returncode != 0:
+-        detail = (result.stderr or result.stdout).strip()
+-        raise WorkspacePolicyError(
+-            f"Cannot enable inherited permissions for staging directory {path}: "
+-            f"{detail or f'icacls exited with {result.returncode}'}"
+-        )
+-
+-
+ @dataclass(frozen=True, slots=True)
+ class WorkspacePolicy:
+     root: Path
+@@ -104,15 +86,25 @@ class WorkspacePolicy:
+         return resolved
+ 
+     def StagingDirectory_Create(self, prefix: str = "fccg-") -> Path:
++        # A prefix is one portable segment, never a path into another root.
++        if len(PortableRelativePath_Validate(prefix + "stage").parts) != 1:
++            raise WorkspacePolicyError("Staging prefix must be one path segment")
+         staging_root = self.Directory_Ensure(".staging")
+-        staging = Path(tempfile.mkdtemp(prefix=prefix, dir=staging_root)).resolve()
+         if os.name == "nt":
+-            try:
+-                _WindowsDirectoryInheritance_Enable(staging)
+-            except Exception:
+-                self.Tree_Remove(staging)
+-                raise
+-        return staging
++            # Python 3.13+ mkdtemp uses mode0700 on Windows, replacing inherited
++            # access with a restricted ACL. Create with normal parent inheritance
++            # from the outset; never repair permissions using an external command.
++            for _attempt in range(16):
++                staging = self.Path_Resolve(
++                    staging_root / (prefix + secrets.token_hex(8)), allow_root=False
++                )
++                try:
++                    staging.mkdir()
++                except FileExistsError:
++                    continue
++                return staging
++            raise WorkspacePolicyError("Could not create a unique staging directory")
++        return self.Path_Resolve(tempfile.mkdtemp(prefix=prefix, dir=staging_root))
+ 
+     def Text_AtomicWrite(self, path: str | Path, text: str) -> Path:
+         target = self.Path_Resolve(path, allow_root=False)
+diff --git a/apps/SCG/tests/test_workspace_policy.py b/apps/SCG/tests/test_workspace_policy.py
+index 110b3cd..1a01d61 100644
+--- a/apps/SCG/tests/test_workspace_policy.py
++++ b/apps/SCG/tests/test_workspace_policy.py
+@@ -3,7 +3,6 @@ from __future__ import annotations
+ import json
+ import os
+ import shutil
+-import subprocess
+ from pathlib import Path
+ 
+ import pytest
+@@ -14,7 +13,6 @@ from silverstar_fccg.core.workspace import (
+     PortableRelativePath_Validate,
+     WorkspacePolicy,
+     WorkspacePolicyError,
+-    _WindowsDirectoryInheritance_Enable,
+ )
+ from silverstar_fccg.plugins.manifest import (
+     PluginManifestError,
+@@ -198,41 +196,51 @@ def test_workspace_replace_retries_a_transient_windows_lock(
+     assert (target / "value.txt").read_text(encoding="utf-8") == "stable\n"
+ 
+ 
+-def test_windows_staging_permission_fix_enables_parent_inheritance(
++@pytest.mark.skipif(os.name != "nt", reason="Windows inherited staging access")
++def test_windows_staging_inherits_access_without_acl_commands(
+     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+ ) -> None:
+-    captured: dict[str, object] = {}
+-
+-    def run_stub(
+-        arguments: list[str], **options: object
+-    ) -> subprocess.CompletedProcess[str]:
+-        captured["arguments"] = arguments
+-        captured["options"] = options
+-        return subprocess.CompletedProcess(arguments, 0, "processed", "")
+-
+-    monkeypatch.setattr(workspace_module.subprocess, "run", run_stub)
+-    staging = tmp_path / "staging"
+-    _WindowsDirectoryInheritance_Enable(staging)
+-
+-    assert captured["arguments"] == [
+-        "icacls",
+-        str(staging),
+-        "/inheritance:e",
+-    ]
+-    options = captured["options"]
+-    assert isinstance(options, dict)
+-    assert options["check"] is False
+-    assert options["capture_output"] is True
+-
+-
+-def test_windows_staging_permission_fix_reports_icacls_failure(
++    def forbidden_private_temp(*args, **kwargs):
++        raise AssertionError("Windows staging must not create a mode0700 directory")
++    monkeypatch.setattr(workspace_module.tempfile, "mkdtemp", forbidden_private_temp)
++    policy = WorkspacePolicy(tmp_path)
++    staging = policy.StagingDirectory_Create("test-")
++    assert staging.parent == (tmp_path / ".staging").resolve()
++    policy.Text_AtomicWrite(staging / "state.txt", "verified")
++    assert (staging / "state.txt").read_text(encoding="utf-8") == "verified"
++    assert list(staging.iterdir()) == [staging / "state.txt"]
++
++
++@pytest.mark.skipif(os.name != "nt", reason="Windows staging failure handling")
++def test_windows_staging_collision_is_bounded_and_preserves_existing_input(
++    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
++) -> None:
++    monkeypatch.setattr(workspace_module.secrets, "token_hex", lambda _size: "collision")
++    policy = WorkspacePolicy(tmp_path)
++    existing = policy.Directory_Ensure(".staging/test-collision")
++    (existing / "input.bin").write_bytes(b"user input")
++    with pytest.raises(WorkspacePolicyError, match="unique staging"):
++        policy.StagingDirectory_Create("test-")
++    assert (existing / "input.bin").read_bytes() == b"user input"
++
++
++@pytest.mark.skipif(os.name != "nt", reason="Windows staging failure handling")
++def test_windows_staging_access_denial_propagates_without_permission_repair(
+     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+ ) -> None:
+-    def run_stub(
+-        arguments: list[str], **_options: object
+-    ) -> subprocess.CompletedProcess[str]:
+-        return subprocess.CompletedProcess(arguments, 5, "", "access denied")
+-
+-    monkeypatch.setattr(workspace_module.subprocess, "run", run_stub)
+-    with pytest.raises(WorkspacePolicyError, match="access denied"):
+-        _WindowsDirectoryInheritance_Enable(tmp_path / "staging")
++    original = Path.mkdir
++    def denied(path, *args, **kwargs):
++        if path.parent.name == ".staging":
++            raise PermissionError("fixture creation denied")
++        return original(path, *args, **kwargs)
++    monkeypatch.setattr(Path, "mkdir", denied)
++    with pytest.raises(PermissionError, match="creation denied"):
++        WorkspacePolicy(tmp_path).StagingDirectory_Create()
++    assert list((tmp_path / ".staging").iterdir()) == []
++
++
++@pytest.mark.parametrize("prefix", ["../escape-", "nested/path-", "nested\\path-", "C:/escape-", "/escape-"])
++def test_staging_prefix_cannot_escape_or_create_nested_directories(tmp_path, prefix):
++    with pytest.raises(WorkspacePolicyError):
++        WorkspacePolicy(tmp_path).StagingDirectory_Create(prefix)
++    assert not (tmp_path / ".staging").exists()

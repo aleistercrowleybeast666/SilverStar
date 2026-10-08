@@ -1,0 +1,24 @@
+{
+  "source_commit": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "capture_utc": "2026-10-08T03:15:58.318281+00:00",
+  "command": [
+    ".venv/Scripts/python.exe",
+    "docs/evidence/nightly_software_20261008/run_scg.py",
+    "apps/SCG/tests/test_feature_tiers.py",
+    "apps/SCG/tests/test_feature_tier_logging_policy.py",
+    "apps/SCG/tests/test_tier_device_boundaries.py",
+    "apps/SCG/tests/test_tier_device_gui.py",
+    "-vv",
+    "-s",
+    "--basetemp=.work/b08_tiers_final"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "exit_code": 1,
+  "passed": 83,
+  "setup_errors": 3,
+  "pytest_elapsed_s": 237.23,
+  "warning_count": 1,
+  "source_files_unchanged_from_committed_snapshot": true,
+  "log_sha256": "91e569c7aa11a3e1217927f9ae54c15d22a5c3ac3b12ad98aecd5defb224e627",
+  "scope": "Complete suite has 83 PASS and 3 setup ERROR caused by basetemp outside SCG app policy. Separate corrected-path GUI run has 3 PASS; never a stitched single 86 PASS suite."
+}

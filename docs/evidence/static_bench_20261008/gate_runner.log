@@ -1,0 +1,72 @@
+START versions 2026-10-08T02:42:50.776701+00:00
+END versions 0 0.218
+arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+START architecture 2026-10-08T02:42:51.248154+00:00
+END architecture 0 17.638
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1
+FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+SilverStar architecture check passed: checks=356 failures=0
+SSLOG codecs are ordinary endian-aware protocol source; only explicit auto linking requires Python.
+Record Catalog, decoder profile, and static instance facade contracts are valid.
+Authoritative target source graph and FreeRTOS source set are valid.
+FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary
+
+START power10 2026-10-08T02:43:09.093383+00:00
+END power10 0 21.082
+tem\Src\system_time.c|227|SystemTime_GetUtc|17|0
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|227|245|SystemTime_GetUtc
+POWER10_RULE5_RECOMMENDATION|System\Src\system_time.c|227|SystemTime_GetUtc|17|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Flight|System\Src\system_time.c|247|SystemTime_MeasurementTimestampResolve|20|0
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|247|266|SystemTime_MeasurementTimestampResolve
+POWER10_RULE5_RECOMMENDATION|System\Src\system_time.c|247|SystemTime_MeasurementTimestampResolve|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Flight|System\User\system_user_inertial_config.c|43|SystemUserInertial_ConfigGet|4|0
+POWER10_FUNCTION_SCOPE|Flight|System\User\system_user_inertial_config.c|43|46|SystemUserInertial_ConfigGet
+POWER10_RULE5_FUNCTION|Flight|Targets\SilverStar_F407\Src\freertos_target_irq.c|8|SysTick_Handler|7|0
+POWER10_FUNCTION_SCOPE|Flight|Targets\SilverStar_F407\Src\freertos_target_irq.c|8|14|SysTick_Handler
+POWER10_RULE5|Flight|files=111|functions=2761|eligible_assertions=1675|average=0.606664|informational|policy=fprime_inspired_c|semantic_review=required
+POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+FCCG_PROGRESS|POWER10|DONE|112|113|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|113|113|build_policy
+Power of Ten project text checks passed: 6329 checks, 111 first-party C files, 2761 functions; 815 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending.
+FCCG_PROGRESS|POWER10|DONE|113|113|build_policy
+
+START release 2026-10-08T02:43:30.408932+00:00
+END release 2 115.879
+     bytes=  8190 address=0x200172FC main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10001140 CCMRAM
+    s_io_baselines                   bytes=  4864 address=0x1000A3A8 CCMRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000478 main SRAM
+    s_estimator_stack                bytes=  4096 address=0x10004540 CCMRAM
+SilverStar artifact check passed: target=SilverStar_F407 config=Release elf_bytes=3326520 bin_bytes=331020 heap_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|8|8|summary
+mingw32-make: Nothing to be done for 'memory-report'.
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\bench08b_f407\Flight_Controller\Tools\check_task_stacks.py", line 1851, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\bench08b_f407\Flight_Controller\Tools\check_task_stacks.py", line 1837, in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+  File "D:\python_software\SilverStar\.work\bench08b_f407\Flight_Controller\Tools\check_task_stacks.py", line 1758, in StackReport_Build
+    binding_source_proofs = BindingSources_Verify(root, sources, build)
+  File "D:\python_software\SilverStar\.work\bench08b_f407\Flight_Controller\Tools\check_task_stacks.py", line 1429, in BindingSources_Verify
+    raise ValueError("Changed or unknown complete callback binding source: " + path)
+ValueError: Changed or unknown complete callback binding source: Generated/Src/project_metadata.c
+mingw32-make: *** [Makefile:217: stack-report] Error 1
+

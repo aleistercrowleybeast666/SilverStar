@@ -1,0 +1,6 @@
+{
+  "sha256": "8f2d00143a8e043a95a5af4816266486bfc988b9abae4c9e64dee7401a29fa7e",
+  "reviewed": false,
+  "difference": "--- candidate_new_name\n+++ original_name\n@@ -9,7 +9,7 @@\n #include \"system_capabilities.h\"\n #include \"system_user_config.h\"\n \n-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0xA79E2E92UL\n+#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x6E6BDB8DUL\n \n static const SystemDeviceDescriptor s_device_descriptors[] =\n {\n",
+  "original_name": "KF6_Logger7000_F407_20261005"
+}

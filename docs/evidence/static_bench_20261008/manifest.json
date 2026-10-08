@@ -1,0 +1,456 @@
+{
+  "source_commit": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "branch": "fix/nightly-user-ready-20261003",
+  "recorded_utc": "2026-10-08T03:01:55.545083+00:00",
+  "source_file_count": 2233,
+  "root_inventory_inputs_preserved": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  },
+  "flashed": false,
+  "UNLOCK_sent": false,
+  "START_sent": false,
+  "stack_checker_modified": false,
+  "approval_pending": "Only two exact source-hash additions; not authorized/applied. See proposal.",
+  "results": {
+    "SCG": {
+      "passed": 65,
+      "exit": 0
+    },
+    "architecture": {
+      "checks": 356,
+      "exit": 0
+    },
+    "power10": {
+      "checks": 6329,
+      "exit": 0,
+      "critical_contract": "NOT_PROVEN"
+    },
+    "release_full_command": {
+      "exit": 2,
+      "stack_report": "FAIL",
+      "ARM_compile_link": "COMPLETED",
+      "artifact_check": "observed PASS"
+    },
+    "analyzer": {
+      "exit": 0,
+      "elapsed_s": 124.31,
+      "fanalyzer_compile_commands": 108,
+      "syntax_only": false
+    },
+    "host": {
+      "exit": 0,
+      "elapsed_s": 354.887,
+      "executables": 80,
+      "checks": 4446469,
+      "failures": 0,
+      "compile_pass_cases": 11,
+      "expected_compile_failures": 18,
+      "not_applicable": 8
+    },
+    "latest_hardware_mission": "NOT_RUN",
+    "actual_TF_file_read_and_FLP_reopen": "NOT_RUN",
+    "FLP_decoder_structural_load": {
+      "result": "PASS",
+      "production_log_open": "NOT_RUN"
+    },
+    "four_tier_full_latest": {
+      "exit": 1,
+      "passed": 83,
+      "setup_errors": 3,
+      "cause": "GUI path_preferences test fixture outside SCG app authorized root; actual product boundary correctly rejected it"
+    },
+    "four_tier_GUI_independent_correct_path": {
+      "exit": 0,
+      "passed": 3,
+      "elapsed_s": 55.69,
+      "merged_86_pass_claim": false
+    }
+  },
+  "files": [
+    {
+      "path": "analyzer.log",
+      "bytes": 469774,
+      "sha256": "548138eb3a6bec2f9bdc41b2830bf50ac204329a74583dd5ac92879c26bd395e",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\analyzer.log"
+    },
+    {
+      "path": "analyzer_result.json",
+      "bytes": 638,
+      "sha256": "a1c1d1d0025030ee1afa58224f27b94d94c54468a05b273ab24ce6c488b2dd05",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\analyzer_result.json"
+    },
+    {
+      "path": "architecture.log",
+      "bytes": 1173,
+      "sha256": "6a7b4c71e43b14b188b7f987647dde2b1ee1e78cb794861b948488349ae7c0a4",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\architecture.log"
+    },
+    {
+      "path": "architecture_result.json",
+      "bytes": 581,
+      "sha256": "552481baeb2a503995ccdef411b82b24c5f578cd11e0091954a5c1623e34533d",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\architecture_result.json"
+    },
+    {
+      "path": "artifact_scope.json",
+      "bytes": 32095,
+      "sha256": "94f3256c3319bd6615d973538acdebe6d136e14724435a8d2b2ad764672858cd",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\artifact_scope.json"
+    },
+    {
+      "path": "candidate_artifacts.json",
+      "bytes": 1538,
+      "sha256": "f2706389455276f1dbb863cabc09e895146118cec6059d49528c9ca821c2408b",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\candidate_artifacts.json"
+    },
+    {
+      "path": "diagnostic_layout.json",
+      "bytes": 41166,
+      "sha256": "a62ed4918973ce606e355d8c4b93048708e84e9e23cdf79746798c65b4d20b5d",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\diagnostic_layout.json"
+    },
+    {
+      "path": "flash_candidate.py",
+      "bytes": 4798,
+      "sha256": "73c539da59c63f0f53420bede617769e9ca429199b79d78bf28af7410f19dea2",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\flash_candidate.py"
+    },
+    {
+      "path": "gate_runner.log",
+      "bytes": 5003,
+      "sha256": "c5cc8f552b6b3c9be5a68923edd6f07c1d46de4555de24b89da576e025af508b",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\gate_runner.log"
+    },
+    {
+      "path": "gdb_layout.commands",
+      "bytes": 5032,
+      "sha256": "d99edb344fdbc68c1289ba415c3e9077341e493fac49cf5eea8bd5c6c390ae9d",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\gdb_layout.commands"
+    },
+    {
+      "path": "gdb_layout.log",
+      "bytes": 19079,
+      "sha256": "424a82b8d582f7018e96937cac68c2ca41f9515a653cd42f98835012496d8a9d",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\gdb_layout.log"
+    },
+    {
+      "path": "generate.py",
+      "bytes": 4808,
+      "sha256": "37965bef6c1e179ca0661d703c689e5bc2b660204fe29a136c9d83e177fd2c1c",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\generate.py"
+    },
+    {
+      "path": "generation.log",
+      "bytes": 953,
+      "sha256": "2de191781b16d5014a9482c7dd02099d120ddee1fba00409d94fe26962014add",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\generation.log"
+    },
+    {
+      "path": "generation_b.log",
+      "bytes": 3044,
+      "sha256": "6be5e4ca56092a550f94c44d89e122cac1e5a1cec5a5aebaaa775d9ad42631a6",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\generation_b.log"
+    },
+    {
+      "path": "generation_b_plan.json",
+      "bytes": 952,
+      "sha256": "b44f00515321f2b5478aad31de0a1255dc691e3143c35b145e7169685cd7a70b",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\generation_b_plan.json"
+    },
+    {
+      "path": "generation_b_result.json",
+      "bytes": 2088,
+      "sha256": "0881fac5838e93a1d6aa0442aef3e53056cf1fddd3c36264a57ce074ec6fcc3c",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\generation_b_result.json"
+    },
+    {
+      "path": "generation_plan.json",
+      "bytes": 951,
+      "sha256": "20b9f8c18f6885059358d956269047047e2f9227d2fbf70a3422ede3d8798cbc",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\generation_plan.json"
+    },
+    {
+      "path": "host.log",
+      "bytes": 73319,
+      "sha256": "3df55dbd33762740172bec606c04f710ed98cef0205d4e575e406690bfe3f589",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\host.log"
+    },
+    {
+      "path": "host_result.json",
+      "bytes": 611,
+      "sha256": "8832853ed42b9760038056169e113e15bd40f9c50e8578242c7d5f717adaf38c",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\host_result.json"
+    },
+    {
+      "path": "idempotence_probe.json",
+      "bytes": 30292,
+      "sha256": "23e7abb87941e46e6d62595c96006dd9ad84855679c7efc26e69dab452d8f483",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\idempotence_probe.json"
+    },
+    {
+      "path": "idempotence_probe.log",
+      "bytes": 30294,
+      "sha256": "c07ac70c4b52650cb5624c2d0ddd2f9ed601d46c09ad629ac4f42fffebd57c21",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\idempotence_probe.log"
+    },
+    {
+      "path": "identify.log",
+      "bytes": 1162,
+      "sha256": "373720ab4b713977793261b57600b5a21a7196d9613f105d300465e782bd9795",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\identify.log"
+    },
+    {
+      "path": "identify.py",
+      "bytes": 2891,
+      "sha256": "372ad41935b48602fe9add78c12bdb2f3ee4e9d0defb2aeabeefbe2837caafa6",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\identify.py"
+    },
+    {
+      "path": "identify_command.json",
+      "bytes": 1173,
+      "sha256": "081f0f05f35432256df531dc7796154c663f7309b7d2f811d3f809b39ebebde6",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\identify_command.json"
+    },
+    {
+      "path": "identify_result.json",
+      "bytes": 2205,
+      "sha256": "e254c6680e0c7ee308d6b1fb4efe21edf01eb0d2e694a72b347c61ab7560fa58",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\identify_result.json"
+    },
+    {
+      "path": "layout_runner.log",
+      "bytes": 2560,
+      "sha256": "13033329540fa75d0719846a13abd0af3118bb1a5fcf1d60bb945cf3b85c2ff8",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\layout_runner.log"
+    },
+    {
+      "path": "metadata_identity_diagnostic.json",
+      "bytes": 497,
+      "sha256": "63e3832e8f82a5f7936657a36b92e672541c7590f1fe142d72c18396928e68ef",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\metadata_identity_diagnostic.json"
+    },
+    {
+      "path": "original_name_full_diagnostic.json",
+      "bytes": 2424,
+      "sha256": "8014c4caaa7a1d4d9b8040aae832eb324e78128e68edddf4bb7d698987781868",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\original_name_full_diagnostic.json"
+    },
+    {
+      "path": "original_name_resolved_diagnostic.json",
+      "bytes": 7969,
+      "sha256": "587060aa9d2523e391df0ece4cf519265a23d0651ecf321599857a72c7e98f3e",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\original_name_resolved_diagnostic.json"
+    },
+    {
+      "path": "original_name_semantics_diff.json",
+      "bytes": 13367,
+      "sha256": "4fc3ecd215f8c642e60778463c8573a6b7432fcda394c830fdcc2cc0984612c9",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\original_name_semantics_diff.json"
+    },
+    {
+      "path": "passive.py",
+      "bytes": 2067,
+      "sha256": "cd8227be9cd6813046031644b804ea17a9cb10483c05ebbeea2f59e3cdeec613",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\passive.py"
+    },
+    {
+      "path": "passive_initial/events.jsonl",
+      "bytes": 143224,
+      "sha256": "f21e10a2c003a705fab3534430ad52fb9e3136f31c22a7048e187b399bd584d9",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\passive_initial\\events.jsonl"
+    },
+    {
+      "path": "passive_initial/raw_rx.bin",
+      "bytes": 5525,
+      "sha256": "a33b5ed61efa4493addb2355f4ee039ce88b8f30bece84deb37dd3a4453d7f41",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\passive_initial\\raw_rx.bin"
+    },
+    {
+      "path": "passive_initial/summary.json",
+      "bytes": 852,
+      "sha256": "f19a1b5e1635caa41cd7244f4ef7e925aa22cd0fc49fb361807f91b201baacfd",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\passive_initial\\summary.json"
+    },
+    {
+      "path": "power10.log",
+      "bytes": 769820,
+      "sha256": "c04f32aaae0a055aba373f2cbbd277604c1fed28cee0b31e0c1e1fc81e87f206",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\power10.log"
+    },
+    {
+      "path": "power10_result.json",
+      "bytes": 571,
+      "sha256": "e27ebf6995bf57ac794a1265e9125e06cb9a121f4d57ece284e4b345c2fa7c26",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\power10_result.json"
+    },
+    {
+      "path": "prepare_diagnostics.py",
+      "bytes": 2955,
+      "sha256": "6231be528467834f8535c28acfbbe193f97a46272c3eceaba6c2cd7108c502c1",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\prepare_diagnostics.py"
+    },
+    {
+      "path": "probe_idempotence.py",
+      "bytes": 1288,
+      "sha256": "a0af43d0f9d30dc07d7c22f57045208104b129dbb779f81c8728cc43fed87bff",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\probe_idempotence.py"
+    },
+    {
+      "path": "read_diagnostics.py",
+      "bytes": 6210,
+      "sha256": "2cc3c8f4c3d7622b62f4b483d49574e560ebfa3876cc73d37e2ec56a84e68da2",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\read_diagnostics.py"
+    },
+    {
+      "path": "regression_after.log",
+      "bytes": 9358,
+      "sha256": "17ffbfd9fce393f3a419d61cb1242f39716238b7a47778dbdf611b77b6a5a9ba",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\regression_after.log"
+    },
+    {
+      "path": "regression_result.json",
+      "bytes": 1606,
+      "sha256": "beaf647ab2dd60ff60fb12a8f8678bae75b97143db08408fce9800579d5639ff",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\regression_result.json"
+    },
+    {
+      "path": "release.log",
+      "bytes": 464819,
+      "sha256": "0d885d94c27a4c015fb6f5c8f039dcac23af4ee94ac86c7f113897ef2fac8757",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\release.log"
+    },
+    {
+      "path": "release_result.json",
+      "bytes": 692,
+      "sha256": "580a46191739472bcb580f89aae7e8e39653ebda24a9deb84ba3eefc18d54144",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\release_result.json"
+    },
+    {
+      "path": "remaining_gate_runner.log",
+      "bytes": 3404,
+      "sha256": "0e0c88b608d9edfcf54f6a5339b311259904dedaeb0b6cda72e191d57ee2ee9b",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\remaining_gate_runner.log"
+    },
+    {
+      "path": "run_gates.py",
+      "bytes": 2431,
+      "sha256": "612a1ff0338516b99f82033c1c47ed1580c81064cb946d130dd06091dc07e03c",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\run_gates.py"
+    },
+    {
+      "path": "run_static.py",
+      "bytes": 9726,
+      "sha256": "7412b7a0433253c4a2d139a1b071812da514c0fadba2fc42fa4506d1f87037b2",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\run_static.py"
+    },
+    {
+      "path": "stack_binding_inventory.json",
+      "bytes": 2317,
+      "sha256": "1c4d6d81e1072d8c532c2429f788fbe5d35db6a2a4bc22ae1f6bb6b528878001",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\stack_binding_inventory.json"
+    },
+    {
+      "path": "stack_gate_exact_hash_proposal.json",
+      "bytes": 2324,
+      "sha256": "836d021e1fc6d91f481356627fd450e1e9bf58455565b896ccc502b4d40ea5d1",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\stack_gate_exact_hash_proposal.json"
+    },
+    {
+      "path": "stack_gate_exact_hash_proposal.patch",
+      "bytes": 1585,
+      "sha256": "c7e5f799c8b0d90f8daa4728c5382d758f8735d88f55e32d09d1c0de4b6ff81e",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\stack_gate_exact_hash_proposal.patch"
+    },
+    {
+      "path": "staging_integration.log",
+      "bytes": 33459,
+      "sha256": "28f7e5883326ba763e6644f98cef061a3518d9576cdff9526c007e33f71b292a",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\staging_integration.log"
+    },
+    {
+      "path": "versions.log",
+      "bytes": 294,
+      "sha256": "26e75a43683d7f12e7a2efeb68e667c5768083139ba2718a5faf13f4088fc19f",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\versions.log"
+    },
+    {
+      "path": "versions_result.json",
+      "bytes": 586,
+      "sha256": "bb270b46cac44ea91b1c0c55938d25e287e112728609cc020f48ce3519bc553b",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\versions_result.json"
+    },
+    {
+      "path": "workspace_fix_test_snapshot.diff",
+      "bytes": 7497,
+      "sha256": "f8a84a72761494c9255bf2e6b09d66a77a9b6dbded147e636952a2ca300d95e6",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\workspace_fix_test_snapshot.diff"
+    },
+    {
+      "path": "workspace_fix_test_snapshot.json",
+      "bytes": 954,
+      "sha256": "5a18a790d04a76c6ec45b83d56b9a3002aef88f09600da608c847ffe04e4b01c",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\workspace_fix_test_snapshot.json"
+    },
+    {
+      "path": "workspace_regression.log",
+      "bytes": 5059,
+      "sha256": "ca90bda091b74d09662e5f1fd7b0d2f38c227a3dc0fefc41e847e6da48de66ca",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\workspace_regression.log"
+    },
+    {
+      "path": "source_apps_sha256.json",
+      "bytes": 357090,
+      "sha256": "8cc34e4ad4321c1543b0b96c1e2840b0aab34301a073fbe4624c5a9e85e1c435"
+    },
+    {
+      "path": "decoder_structural_load.json",
+      "bytes": 352,
+      "sha256": "934bac1ed01ea50bbebac8a681560d38643bfe2edeb5c75d836e001bb7883f90",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\decoder_structural_load.json"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 408,
+      "sha256": "06bc83f45fa66746417fd2912ef134d0be4a9a1829dcb422fb703b4b6785c6b1"
+    },
+    {
+      "path": "four_tier_final.log",
+      "bytes": 28084,
+      "sha256": "91e569c7aa11a3e1217927f9ae54c15d22a5c3ac3b12ad98aecd5defb224e627",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\four_tier_final.log"
+    },
+    {
+      "path": "four_tier_final_result.json",
+      "bytes": 990,
+      "sha256": "dc02625d3438c6e5abe28456365c2cb8476975d437887d5fe5127dd93f476712",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\four_tier_final_result.json"
+    },
+    {
+      "path": "four_tier_gui_correct_path.log",
+      "bytes": 1300,
+      "sha256": "2f053fd6001663025a86605863b30c002ae7339ae0c7d12035b31837fdc51214",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\four_tier_gui_correct_path.log"
+    },
+    {
+      "path": "four_tier_gui_correct_path_result.json",
+      "bytes": 828,
+      "sha256": "83ac7340897ac7aab6fad55a5a9680a860e2493ccdfcf72200424a8b3fdb1a5c",
+      "original_path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\four_tier_gui_correct_path_result.json"
+    }
+  ],
+  "retained_external_work_artifacts": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\static_bench_20261008\\current_F407_before_test_fullflash.bin",
+      "bytes": 524288,
+      "sha256": "e72caaa5adbb92d69854d824ce05ee086a2a1deb83f2e79a3d70ed01aebe8aa1"
+    }
+  ],
+  "reproduction": "Recorded scripts retain original .work-relative cwd assumptions and refuse evidence overwrite. Review exact commands in *_result.json; do not execute hardware scripts without gate success and authorization. Place archived scripts in a new authorized .work directory and adapt only explicit output/configuration references for a new run.",
+  "source_inventory_method": "git ls-files -z apps, UTF-8/NUL paths; all entries are regular files; no skipped files.",
+  "record_limitations": [
+    "Pre-fix generation stdout was captured in generation.log; original stderr traceback was returned by exec session73613 but not saved as a complete local raw stderr file. Summary and exit are in workspace_fix_test_snapshot.json.",
+    "Diagnostic command attempts with wrong default log decoding/unresolved catalog/import path failed before results; corrected resolved-catalog evidence is explicitly named. They were not product gates."
+  ]
+}

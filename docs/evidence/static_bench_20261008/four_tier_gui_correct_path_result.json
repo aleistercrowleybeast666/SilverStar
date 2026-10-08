@@ -1,0 +1,21 @@
+{
+  "source_commit": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "capture_utc": "2026-10-08T03:15:58.327900+00:00",
+  "command": [
+    ".venv/Scripts/python.exe",
+    "docs/evidence/nightly_software_20261008/run_scg.py",
+    "apps/SCG/tests/test_tier_device_gui.py",
+    "-vv",
+    "-s",
+    "--basetemp=apps/SCG/.work/q08g"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "exit_code": 0,
+  "passed": 3,
+  "setup_errors": 0,
+  "pytest_elapsed_s": 55.69,
+  "warning_count": 1,
+  "source_files_unchanged_from_committed_snapshot": true,
+  "log_sha256": "2f053fd6001663025a86605863b30c002ae7339ae0c7d12035b31837fdc51214",
+  "scope": "Complete suite has 83 PASS and 3 setup ERROR caused by basetemp outside SCG app policy. Separate corrected-path GUI run has 3 PASS; never a stitched single 86 PASS suite."
+}

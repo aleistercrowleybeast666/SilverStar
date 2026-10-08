@@ -1,0 +1,37 @@
+{
+  "started_utc": "2026-10-08T02:21:35.410678+00:00",
+  "port": "COM3",
+  "baud": 230400,
+  "transmitted_bytes": 0,
+  "dtr": false,
+  "rts": false,
+  "duration_s": 30,
+  "serial_identity": "USB VID:PID=1A86:7523 SER= LOCATION=1-1",
+  "capability": {
+    "seq": 69,
+    "air_profile_id": 0,
+    "command_policy": 1,
+    "calibration_mode_mask": 3,
+    "sensor_summary_flags": 15,
+    "accel_full_scale_g": 16,
+    "gyro_full_scale_dps": 2000
+  },
+  "preflight": null,
+  "gs_status": {
+    "gs_state": 2,
+    "radio_state": 2,
+    "tx_cnt": 0,
+    "rx_cnt": 1842,
+    "crc_err_cnt": 0
+  },
+  "flight_frames": 0,
+  "gsp_diagnostics": {
+    "frames": 187,
+    "crc_errors": 0,
+    "resyncs": 0,
+    "discarded_bytes": 0,
+    "buffer_size": 0
+  },
+  "exit_code": 0,
+  "finished_utc": "2026-10-08T02:22:05.427069+00:00"
+}

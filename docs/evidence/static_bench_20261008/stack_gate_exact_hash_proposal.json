@@ -1,0 +1,21 @@
+{
+  "applied": false,
+  "source_commit": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "checker_original_sha256": "fff294c75478aa1f1b0fdbbb1029317233b30325e412e1dd3448e0379dd6c847",
+  "proposal_patch_sha256": "7e0f6efb6b3665803e53edb2d86bb1adb6d4342648717146738df24ec5839741",
+  "exact_source_inventory": [
+    {
+      "path": "Generated/Src/project_metadata.c",
+      "sha256": "ae4706ff828b966e517972f147eee2d5ca938a144ff437ef3b71d32a9f186181",
+      "old28_diff": "--- old28/Generated/Src/project_metadata.c\n+++ current/Generated/Src/project_metadata.c\n@@ -9,7 +9,7 @@\n #include \"system_capabilities.h\"\n #include \"system_user_config.h\"\n \n-#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0x6E6BDB8DUL\n+#define SILVERSTAR_PROJECT_CONFIG_DIGEST 0xA79E2E92UL\n \n static const SystemDeviceDescriptor s_device_descriptors[] =\n {\n@@ -104,6 +104,7 @@\n                SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX,\n                \"target algorithm descriptor table exceeds interface bound\");\n \n+\n uint16_t SystemDescriptor_DeviceCountGet(void)\n {\n     uint16_t count = 0U;\n"
+    },
+    {
+      "path": "Generated/Src/project_log_decoder_profile.c",
+      "sha256": "e66c2a4581505fdb114a88f7ff65c866c0e2c0b9b4c99186d0922960bbe98da4",
+      "old28_diff": "--- old28/Generated/Src/project_log_decoder_profile.c\n+++ current/Generated/Src/project_log_decoder_profile.c\n@@ -13,13 +13,13 @@\n };\n static const uint8_t s_project_semantics_hash[PROJECT_LOG_DECODER_HASH_SIZE] =\n {\n-    0x25U, 0xF5U, 0x75U, 0xE8U, 0xFDU, 0xF8U, 0x45U, 0x02U,\n-    0xF9U, 0x7EU, 0xFCU, 0x34U, 0xD7U, 0x3AU, 0x54U, 0x45U\n+    0x3CU, 0xCBU, 0xAFU, 0xD3U, 0x47U, 0x5AU, 0x4EU, 0xD8U,\n+    0xEBU, 0xAAU, 0x34U, 0x33U, 0x07U, 0x44U, 0x76U, 0x51U\n };\n static const uint8_t s_generation_profile_hash[PROJECT_LOG_DECODER_HASH_SIZE] =\n {\n-    0x5DU, 0xE0U, 0xB0U, 0x3EU, 0xAFU, 0x06U, 0x3DU, 0x46U,\n-    0xD2U, 0xCCU, 0xC8U, 0xFDU, 0xDEU, 0x7DU, 0x48U, 0x81U\n+    0xC4U, 0x49U, 0xDCU, 0xC1U, 0x8BU, 0xA6U, 0xE2U, 0x27U,\n+    0x74U, 0xFBU, 0x32U, 0x03U, 0x81U, 0x52U, 0xC8U, 0x10U\n };\n \n void ProjectLogDecoderProfile_Get(ProjectLogDecoderProfile *profile)\n"
+    }
+  ],
+  "source_graph_count": 155,
+  "unknown_dependency_graph_count": 0,
+  "approval_required": "AGENTS.md no broaden allowlists without authorization"
+}

@@ -1,0 +1,14 @@
+{
+  "started_utc": "2026-10-08T02:42:34.885535+00:00",
+  "source_head": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "source_descriptor": "D:\\python_software\\SilverStar\\.work\\Q2F407_7fa06c4\\SilverStar.ssproject",
+  "source_descriptor_sha256": "92fa295afa7c97325f85a5be9fef6756b84393355b5a5e16604949cafb5333d6",
+  "target": "D:\\python_software\\SilverStar\\.work\\bench08b_f407",
+  "platform_lock_before": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+  "platform_lock_current": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+  "model_feature_tier": "full",
+  "plan_valid": true,
+  "dangerous": false,
+  "validation": "ProjectValidationResult(issues=())",
+  "configuration_changes": "New display name; schema migration/default full tier; equal-parsed MCU lock only if required. Preserve devices/resources, ORIENT, calibration/alignment, mathematical parameters, Delay10 and queue policy."
+}

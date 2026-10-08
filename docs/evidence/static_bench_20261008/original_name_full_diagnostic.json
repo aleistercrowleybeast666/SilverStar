@@ -1,0 +1,24 @@
+{
+  "diagnostic_only": true,
+  "source_project_name": "KF6_Logger7000_F407_20261005",
+  "real_project_name_restored_only_in_memory": true,
+  "generated_project_written": false,
+  "checklist_modified": false,
+  "files": {
+    "Generated/Src/project_metadata.c": {
+      "normalized_source_sha256": "8f2d00143a8e043a95a5af4816266486bfc988b9abae4c9e64dee7401a29fa7e",
+      "reviewed_by_current_checker": false,
+      "old28_sha256": "4110036ee4fb02a4077df14ed3511d8d8eaf32fe6cfb508e3fc8eee178f8584f",
+      "old28_reviewed_by_current_checker": false,
+      "current_original_name_vs_old28_diff": "--- old28/Generated/Src/project_metadata.c\n+++ current_original_name/Generated/Src/project_metadata.c\n@@ -104,6 +104,7 @@\n                SYSTEM_DESCRIPTOR_ALGORITHM_COUNT_MAX,\n                \"target algorithm descriptor table exceeds interface bound\");\n \n+\n uint16_t SystemDescriptor_DeviceCountGet(void)\n {\n     uint16_t count = 0U;\n"
+    },
+    "Generated/Src/project_log_decoder_profile.c": {
+      "normalized_source_sha256": "340975ee13d13d1093a206f8d9a55be7481aa9e9cf7fc92e3d14191615e7b983",
+      "reviewed_by_current_checker": false,
+      "old28_sha256": "d359c9f8081d4a370e5c3323201f351d89f1ccba864e22b1317514da6196194e",
+      "old28_reviewed_by_current_checker": false,
+      "current_original_name_vs_old28_diff": "--- old28/Generated/Src/project_log_decoder_profile.c\n+++ current_original_name/Generated/Src/project_log_decoder_profile.c\n@@ -13,13 +13,13 @@\n };\n static const uint8_t s_project_semantics_hash[PROJECT_LOG_DECODER_HASH_SIZE] =\n {\n-    0x25U, 0xF5U, 0x75U, 0xE8U, 0xFDU, 0xF8U, 0x45U, 0x02U,\n-    0xF9U, 0x7EU, 0xFCU, 0x34U, 0xD7U, 0x3AU, 0x54U, 0x45U\n+    0x58U, 0xD8U, 0x6AU, 0x57U, 0xC3U, 0x13U, 0xBDU, 0x49U,\n+    0x79U, 0x61U, 0xABU, 0x51U, 0xBAU, 0xABU, 0xF7U, 0xF2U\n };\n static const uint8_t s_generation_profile_hash[PROJECT_LOG_DECODER_HASH_SIZE] =\n {\n-    0x5DU, 0xE0U, 0xB0U, 0x3EU, 0xAFU, 0x06U, 0x3DU, 0x46U,\n-    0xD2U, 0xCCU, 0xC8U, 0xFDU, 0xDEU, 0x7DU, 0x48U, 0x81U\n+    0x22U, 0xC0U, 0x02U, 0x87U, 0x77U, 0xFCU, 0xB6U, 0xFFU,\n+    0x10U, 0xF8U, 0x12U, 0xA8U, 0x37U, 0x82U, 0xB9U, 0x07U\n };\n \n void ProjectLogDecoderProfile_Get(ProjectLogDecoderProfile *profile)\n"
+    }
+  },
+  "scope_correction": "Superseded: used unresolved base catalog; not actual assembler variant resolution. Use original_name_resolved_diagnostic.json."
+}

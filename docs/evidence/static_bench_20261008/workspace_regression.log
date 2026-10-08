@@ -1,0 +1,51 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 34 items
+
+apps\SCG\tests\test_workspace_policy.py::test_windows_overlong_copy_rejected_before_io_and_preserves_boundary PASSED
+apps\SCG\tests\test_workspace_policy.py::test_copy_error_is_not_hidden_by_long_path_support PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_policy_rejects_escape_and_unsafe_portable_paths PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[/absolute] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[//server/share] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[C:/drive] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[C:\\drive] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[\\\\server\\share] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[../escape] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a/../b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a/./b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a//b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[a\\b] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[NUL] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[nul.txt] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[folder/COM1.log] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[trailing.] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[trailing ] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[control\nname] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[delete\x7fname] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_portable_relative_path_validator_keeps_illegal_corpus[alternate:stream] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_pure_relative_path_validation_and_manifest_load_ignore_root_cwd PASSED
+apps\SCG\tests\test_workspace_policy.py::test_manifest_path_error_reports_field_and_value PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_policy_still_rejects_filesystem_root_authorization PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_staging_and_atomic_write_remain_inside_root PASSED
+apps\SCG\tests\test_workspace_policy.py::test_workspace_replace_retries_a_transient_windows_lock PASSED
+apps\SCG\tests\test_workspace_policy.py::test_windows_staging_inherits_access_without_acl_commands PASSED
+apps\SCG\tests\test_workspace_policy.py::test_windows_staging_collision_is_bounded_and_preserves_existing_input PASSED
+apps\SCG\tests\test_workspace_policy.py::test_windows_staging_access_denial_propagates_without_permission_repair PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[../escape-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[nested/path-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[nested\\path-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[C:/escape-] PASSED
+apps\SCG\tests\test_workspace_policy.py::test_staging_prefix_cannot_escape_or_create_nested_directories[/escape-] PASSED
+
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 34 passed, 1 warning in 0.50s ========================

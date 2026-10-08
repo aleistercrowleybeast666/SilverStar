@@ -1,0 +1,430 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 31 items
+
+apps\SCG\tests\test_plugin_security.py::test_plugin_install_is_declarative_and_id_conflicts_are_rejected <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[traversal] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[symlink] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[duplicate_case] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_zip_path_attacks_are_rejected[special_file] <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_missing_dependency_and_bad_schema_are_rejected <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_plugin_security.py::test_plugin_schema_types_capabilities_and_build_tokens_are_strict <- ..\FCCG\tests\test_plugin_security.py PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_first_save_materializes_a_ready_dry_runnable_project PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_generation_fingerprint_ignores_local_tools_and_recovers_after_mode_change PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_readiness_detects_and_save_restores_a_missing_managed_file PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_save_refreshes_managed_output_after_renderer_change PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_verified_board_preparation_is_idempotent FAILED
+apps\SCG\tests\test_project_lifecycle.py::test_first_save_publishes_project_descriptor_last PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_build_auto_saves_dirty_mode_and_logging_configuration PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_all_advanced_actions_use_ensure_buildable_and_project_root PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_build_runner_starts_make_with_explicit_project_cwd PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_advanced_build_defaults_release_and_generated_debug_remains_available FAILED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_violation_fixture_fails PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_repeated_apply_preserves_managed_mtimes_and_build_dependencies FAILED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-True] FAILED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U-True] FAILED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/other.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-False] PASSED
+apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 1U-False] PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_estimator_none_is_absent_from_make_and_eide <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_environment_plugin_renders_one_resolved_source_graph <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_same_mcu_supports_two_board_resource_maps <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_optional_logical_devices_render_safe_disabled_resource_bindings <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_cubemx_import_generate_export_install_and_reuse <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_cubemx_freertos_conflict_is_rejected <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_hardware_and_variants.py::test_custom_ground_hardware_exports_local_unverified_pcb_instance <- ..\FCCG\tests\test_hardware_and_variants.py PASSED
+apps\SCG\tests\test_windows_generation_path_boundary.py::test_overlong_generation_has_actionable_error_and_no_published_payload <- ..\FCCG\tests\test_windows_generation_path_boundary.py PASSED
+
+================================== FAILURES ===================================
+________________ test_verified_board_preparation_is_idempotent ________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_verified_board_preparatio_775373df')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F820B50640>
+
+    def test_verified_board_preparation_is_idempotent(
+        tmp_path: Path, workspace_root: Path, monkeypatch
+    ) -> None:
+        service = FccgService(workspace_root)
+        project_root = tmp_path / "PreparedBoard"
+        model = service.ReferenceProject_Create("PreparedBoard")
+        monkeypatch.setattr(
+            type(service.hardware_importer),
+            "Project_Import",
+            lambda *_args, **_kwargs: pytest.fail(
+                "verified Board preparation must not invoke CubeMX import/generation"
+            ),
+        )
+    
+        first = service.Project_HardwarePrepare(model, project_root)
+        marker = project_root / ".fccg" / "hardware-preparation.json"
+        marker_content = marker.read_bytes()
+        second = service.Project_HardwarePrepare(model, project_root)
+    
+        assert first.files_added > 0
+        assert second.files_added == 0
+>       assert second.files_modified == 0
+E       AssertionError: assert 2 == 0
+E        +  where 2 = ApplyResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_verified_board_preparatio_775373df/PreparedBoard'), files_added=0, files_modified=2, component_files_preserved=580, hardware_replaced=False).files_modified
+
+apps\SCG\tests\test_project_lifecycle.py:193: AssertionError
+_ test_advanced_build_defaults_release_and_generated_debug_remains_available __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_advanced_build_defaults_r_832d195b')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    def test_advanced_build_defaults_release_and_generated_debug_remains_available(
+        tmp_path: Path, workspace_root: Path
+    ) -> None:
+        service = FccgService(workspace_root)
+        project_root = tmp_path / "BuildConfigurations"
+        model = service.ReferenceProject_Create("BuildConfigurations")
+        service.Project_Save(model, project_root)
+        runner = BuildRunner(WorkspacePolicy(project_root))
+    
+        validation_command = runner.Command_Get(model, BuildAction.BUILD)
+        assert "CONFIG=Release" in validation_command
+    
+        makefile = (project_root / "Makefile").read_text(encoding="utf-8")
+        tasks = (project_root / ".vscode" / "tasks.json").read_text(encoding="utf-8")
+        eide = (project_root / ".eide" / "eide.yml").read_text(encoding="utf-8")
+        assert "CONFIG ?= Release" in makefile
+        assert "OPT := -Og" in makefile
+        assert "DEBUG_FLAGS := -g3 -gdwarf-2" in makefile
+        assert "OPT := -O2" in makefile
+        assert "CONFIG must be Debug or Release" in makefile
+        assert "NDEBUG" not in makefile
+        assert "BUILD_ROOT := build/FCCG/$(TARGET_PROFILE)/StaticAnalysis/$(CONFIG)" in makefile
+        assert "FIRST_PARTY_WARNINGS += -fanalyzer" in makefile
+        assert "powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1" in makefile
+        assert "# FCCG cleanup contract: determinate-v1" in makefile
+        assert "FCCG_PROGRESS|CLEAN|PLAN|1" in makefile
+        assert "FCCG_PROGRESS|CLEAN_ALL|PLAN|3" in makefile
+        assert "$$paths" not in makefile
+        assert "foreach ($$path" not in makefile
+        assert (
+            "Remove-Item -LiteralPath 'build/FCCG' -Recurse -Force "
+            "-ErrorAction Stop"
+        ) in makefile
+        assert tasks.index("SilverStar: Build Release") < tasks.index(
+            "SilverStar: Build Debug"
+        )
+        assert "SilverStar: Clean FCCG Build Outputs" in tasks
+        assert "SilverStar: Clean All Build Outputs" in tasks
+        assert "SilverStar: Clean Release" not in tasks
+        assert "SilverStar: Clean Debug" not in tasks
+        assert '"isDefault": true' in tasks
+        assert eide.index("  Release:") < eide.index("  Debug:")
+        assert "deviceName: null" in eide
+        assert "packDir: null" in eide
+        assert re.search(r"(?m)^  uid: [0-9a-f]{32}$", eide)
+        workspace = (
+            project_root / "Flight_Controller.code-workspace"
+        ).read_text(encoding="utf-8")
+        assert '"path": "."' in workspace
+        configuration = (project_root / "SilverStar_Configuration.md").read_text(
+            encoding="utf-8"
+        )
+        assert "- Board: `SS0.5`" in configuration
+        assert "SilverStar 0.5" not in configuration
+    
+        power_service = (
+            workspace_root
+            / "plugins"
+            / "builtin"
+            / "silverstar_device_sensor_input_voltage"
+            / "payload"
+            / "Devices"
+            / "Power"
+            / "InputVoltage"
+            / "Src"
+            / "power_service.c"
+>       ).read_text(encoding="utf-8")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_project_lifecycle.py:437: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_device_sensor_input_voltage/payload/Devices/Power/InputVoltage/Src/power_service.c')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_device_sensor_input_voltage\\payload\\Devices\\Power\\InputVoltage\\Src\\power_service.c'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_____ test_repeated_apply_preserves_managed_mtimes_and_build_dependencies _____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_repeated_apply_preserves__fc64def2')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+    def test_repeated_apply_preserves_managed_mtimes_and_build_dependencies(
+        tmp_path: Path, workspace_root: Path
+    ) -> None:
+        service = FccgService(workspace_root)
+        project_root = tmp_path / "IncrementalApply"
+        model = service.ReferenceProject_Create("IncrementalApply")
+        service.Project_Save(model, project_root)
+        tracked = (
+            project_root / "Generated" / "Src" / "project_metadata.c",
+            project_root / "Makefile",
+            project_root / ".eide" / "eide.yml",
+        )
+        mtimes = {path: path.stat().st_mtime_ns for path in tracked}
+        dependency = project_root / "build" / "SilverStar_F407" / "Release" / "keep.d"
+        dependency.parent.mkdir(parents=True)
+        dependency.write_text("keep.o: keep.c\n", encoding="utf-8")
+    
+        result = service.Project_Save(model, project_root)
+    
+        assert result.files_added == 0
+>       assert result.files_modified == 0
+E       AssertionError: assert 2 == 0
+E        +  where 2 = ApplyResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_repeated_apply_preserves__fc64def2/IncrementalApply'), files_added=0, files_modified=2, component_files_preserved=580, hardware_replaced=False).files_modified
+
+apps\SCG\tests\test_project_lifecycle.py:536: AssertionError
+_ test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-True] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_power_of_ten_estimator_co_5617745d')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+relative = 'APP/Src/estimator_task.c'
+condition = 'SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U', allowed = True
+
+    @pytest.mark.parametrize(
+        ("relative", "condition", "allowed"),
+        [
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", True),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U", True),
+            ("APP/Src/other.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", False),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 1U", False),
+        ],
+    )
+    def test_power_of_ten_estimator_conditional_is_scoped(
+        tmp_path: Path, workspace_root: Path, relative: str,
+        condition: str, allowed: bool
+    ) -> None:
+        root = tmp_path / "estimator-conditional"
+        script = root / "Tools/check_power_of_ten.ps1"
+        script.parent.mkdir(parents=True)
+        shutil.copy2(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tools"
+            / "check_power_of_ten.ps1", script
+        )
+        source = root / relative
+        source.parent.mkdir(parents=True)
+        source.write_text(
+            f"#if ({condition})\n"
+            "static int Fixture_Value(void) { return 1; }\n"
+            "#else\n"
+                "static int Fixture_Value(void) { return 0; }\n"
+                "#endif\n"
+                # Keep this rule-8 scope fixture independent of the newly authorized
+                # entire-target zero-candidate guard; the conditional expectations stay.
+                "static void Boundary(unsigned capacity)\n{\n"
+                "    SILVERSTAR_ASSERT(capacity > 0U, MODULE, REASON);\n}\n",
+            encoding="utf-8",
+        )
+        (root / "Makefile").write_text(
+            f"FIRST_PARTY_C_SOURCES := {relative}\n"
+            "FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror "
+            "-Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 "
+            "-Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes "
+            "-Wmissing-prototypes -Wswitch-enum -Wvla\n"
+            "power10-check:\n\t@echo check\n",
+            encoding="utf-8",
+        )
+        (root / "STM32F407XX_FLASH.ld").write_text(
+            "_Min_Heap_Size = 0x0;\n", encoding="utf-8"
+        )
+        completed = subprocess.run(
+            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+             str(script)],
+            cwd=root, capture_output=True, text=True, encoding="utf-8",
+            errors="replace", check=False,
+        )
+        output = completed.stdout + completed.stderr
+        if allowed:
+>           assert completed.returncode == 0, output
+E           AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E             FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\Src\estimator_task.c
+E             POWER10_SOURCE|APP\Src\estimator_task.c|3f874b74da72305f921f16f9eda581038104aa62eec1ea91735319b85faf6502
+E             FCCG_PROGRESS|POWER10|DONE|1|3|APP\Src\estimator_task.c
+E             FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|2|Fixture_Value|1|0
+E             POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|2|2|Fixture_Value
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|4|Fixture_Value|1|0
+E             POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|4|4|Fixture_Value
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|6|Boundary|4|1
+E             POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|6|9|Boundary
+E             POWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required
+E             POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+E             FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E             FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E             Power of Ten check FAILED (3 failures).
+E             - Flight target manifest has no linker script.
+E             - Linker script is missing: 
+E             - The authoritative linker script does not keep heap size at zero.
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\SilverStar\\.work\\bench08_staging\\test_power_of_ten_estimator_co_5617745d\\estimator-conditional\\Tools\\check_power_of_ten.ps1'], returncode=1, stdout='FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\Src\\estimator_task.c\nPOWER10_SOURCE|APP\\Src\\estimator_task.c|3f874b74da72305f921f16f9eda581038104aa62eec1ea91735319b85faf6502\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\Src\\estimator_task.c\nFCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|2|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|2|2|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|4|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|4|4|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|6|Boundary|4|1\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|6|9|Boundary\nPOWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required\nPOWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending\nFCCG_PROGRESS|POWER10|DONE|2|3|function_rules\nFCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy\nPower of Ten check FAILED (3 failures).\n- Flight target manifest has no linker script.\n- Linker script is missing: \n- The authoritative linker script does not keep heap size at zero.\n', stderr='').returncode
+
+apps\SCG\tests\test_project_lifecycle.py:595: AssertionError
+_ test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U-True] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_power_of_ten_estimator_co_bc27a9ce')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+relative = 'APP/Src/estimator_task.c'
+condition = 'SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U', allowed = True
+
+    @pytest.mark.parametrize(
+        ("relative", "condition", "allowed"),
+        [
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", True),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U", True),
+            ("APP/Src/other.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U", False),
+            ("APP/Src/estimator_task.c", "SYSTEM_BUILD_ESTIMATOR_ENABLED == 1U", False),
+        ],
+    )
+    def test_power_of_ten_estimator_conditional_is_scoped(
+        tmp_path: Path, workspace_root: Path, relative: str,
+        condition: str, allowed: bool
+    ) -> None:
+        root = tmp_path / "estimator-conditional"
+        script = root / "Tools/check_power_of_ten.ps1"
+        script.parent.mkdir(parents=True)
+        shutil.copy2(
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tools"
+            / "check_power_of_ten.ps1", script
+        )
+        source = root / relative
+        source.parent.mkdir(parents=True)
+        source.write_text(
+            f"#if ({condition})\n"
+            "static int Fixture_Value(void) { return 1; }\n"
+            "#else\n"
+                "static int Fixture_Value(void) { return 0; }\n"
+                "#endif\n"
+                # Keep this rule-8 scope fixture independent of the newly authorized
+                # entire-target zero-candidate guard; the conditional expectations stay.
+                "static void Boundary(unsigned capacity)\n{\n"
+                "    SILVERSTAR_ASSERT(capacity > 0U, MODULE, REASON);\n}\n",
+            encoding="utf-8",
+        )
+        (root / "Makefile").write_text(
+            f"FIRST_PARTY_C_SOURCES := {relative}\n"
+            "FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror "
+            "-Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 "
+            "-Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes "
+            "-Wmissing-prototypes -Wswitch-enum -Wvla\n"
+            "power10-check:\n\t@echo check\n",
+            encoding="utf-8",
+        )
+        (root / "STM32F407XX_FLASH.ld").write_text(
+            "_Min_Heap_Size = 0x0;\n", encoding="utf-8"
+        )
+        completed = subprocess.run(
+            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+             str(script)],
+            cwd=root, capture_output=True, text=True, encoding="utf-8",
+            errors="replace", check=False,
+        )
+        output = completed.stdout + completed.stderr
+        if allowed:
+>           assert completed.returncode == 0, output
+E           AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+E             FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\Src\estimator_task.c
+E             POWER10_SOURCE|APP\Src\estimator_task.c|0eb0d6f383a4a61715a450cc31a2b48b80338f93e1744e9e8f177f26a4e180d9
+E             FCCG_PROGRESS|POWER10|DONE|1|3|APP\Src\estimator_task.c
+E             FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|2|Fixture_Value|1|0
+E             POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|2|2|Fixture_Value
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|4|Fixture_Value|1|0
+E             POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|4|4|Fixture_Value
+E             POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|6|Boundary|4|1
+E             POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|6|9|Boundary
+E             POWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required
+E             POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+E             FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+E             FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+E             Power of Ten check FAILED (3 failures).
+E             - Flight target manifest has no linker script.
+E             - Linker script is missing: 
+E             - The authoritative linker script does not keep heap size at zero.
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\SilverStar\\.work\\bench08_staging\\test_power_of_ten_estimator_co_bc27a9ce\\estimator-conditional\\Tools\\check_power_of_ten.ps1'], returncode=1, stdout='FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\Src\\estimator_task.c\nPOWER10_SOURCE|APP\\Src\\estimator_task.c|0eb0d6f383a4a61715a450cc31a2b48b80338f93e1744e9e8f177f26a4e180d9\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\Src\\estimator_task.c\nFCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|2|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|2|2|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|4|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|4|4|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|6|Boundary|4|1\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|6|9|Boundary\nPOWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required\nPOWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending\nFCCG_PROGRESS|POWER10|DONE|2|3|function_rules\nFCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy\nPower of Ten check FAILED (3 failures).\n- Flight target manifest has no linker script.\n- Linker script is missing: \n- The authoritative linker script does not keep heap size at zero.\n', stderr='').returncode
+
+apps\SCG\tests\test_project_lifecycle.py:595: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_project_lifecycle.py::test_verified_board_preparation_is_idempotent - AssertionError: assert 2 == 0
+ +  where 2 = ApplyResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_verified_board_preparatio_775373df/PreparedBoard'), files_added=0, files_modified=2, component_files_preserved=580, hardware_replaced=False).files_modified
+FAILED apps\SCG\tests\test_project_lifecycle.py::test_advanced_build_defaults_release_and_generated_debug_remains_available - FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_device_sensor_input_voltage\\payload\\Devices\\Power\\InputVoltage\\Src\\power_service.c'
+FAILED apps\SCG\tests\test_project_lifecycle.py::test_repeated_apply_preserves_managed_mtimes_and_build_dependencies - AssertionError: assert 2 == 0
+ +  where 2 = ApplyResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/bench08_staging/test_repeated_apply_preserves__fc64def2/IncrementalApply'), files_added=0, files_modified=2, component_files_preserved=580, hardware_replaced=False).files_modified
+FAILED apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U-True] - AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+  FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\Src\estimator_task.c
+  POWER10_SOURCE|APP\Src\estimator_task.c|3f874b74da72305f921f16f9eda581038104aa62eec1ea91735319b85faf6502
+  FCCG_PROGRESS|POWER10|DONE|1|3|APP\Src\estimator_task.c
+  FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+  POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|2|Fixture_Value|1|0
+  POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|2|2|Fixture_Value
+  POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|4|Fixture_Value|1|0
+  POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|4|4|Fixture_Value
+  POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|6|Boundary|4|1
+  POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|6|9|Boundary
+  POWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required
+  POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+  FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+  FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+  Power of Ten check FAILED (3 failures).
+  - Flight target manifest has no linker script.
+  - Linker script is missing: 
+  - The authoritative linker script does not keep heap size at zero.
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\SilverStar\\.work\\bench08_staging\\test_power_of_ten_estimator_co_5617745d\\estimator-conditional\\Tools\\check_power_of_ten.ps1'], returncode=1, stdout='FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\Src\\estimator_task.c\nPOWER10_SOURCE|APP\\Src\\estimator_task.c|3f874b74da72305f921f16f9eda581038104aa62eec1ea91735319b85faf6502\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\Src\\estimator_task.c\nFCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|2|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|2|2|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|4|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|4|4|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|6|Boundary|4|1\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|6|9|Boundary\nPOWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required\nPOWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending\nFCCG_PROGRESS|POWER10|DONE|2|3|function_rules\nFCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy\nPower of Ten check FAILED (3 failures).\n- Flight target manifest has no linker script.\n- Linker script is missing: \n- The authoritative linker script does not keep heap size at zero.\n', stderr='').returncode
+FAILED apps\SCG\tests\test_project_lifecycle.py::test_power_of_ten_estimator_conditional_is_scoped[APP/Src/estimator_task.c-SYSTEM_BUILD_ESTIMATOR_ENABLED == 0U-True] - AssertionError: FCCG_PROGRESS|POWER10|PLAN|3
+  FCCG_PROGRESS|POWER10|BEGIN|1|3|APP\Src\estimator_task.c
+  POWER10_SOURCE|APP\Src\estimator_task.c|0eb0d6f383a4a61715a450cc31a2b48b80338f93e1744e9e8f177f26a4e180d9
+  FCCG_PROGRESS|POWER10|DONE|1|3|APP\Src\estimator_task.c
+  FCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules
+  POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|2|Fixture_Value|1|0
+  POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|2|2|Fixture_Value
+  POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|4|Fixture_Value|1|0
+  POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|4|4|Fixture_Value
+  POWER10_RULE5_FUNCTION|Flight|APP\Src\estimator_task.c|6|Boundary|4|1
+  POWER10_FUNCTION_SCOPE|Flight|APP\Src\estimator_task.c|6|9|Boundary
+  POWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required
+  POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+  FCCG_PROGRESS|POWER10|DONE|2|3|function_rules
+  FCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy
+  Power of Ten check FAILED (3 failures).
+  - Flight target manifest has no linker script.
+  - Linker script is missing: 
+  - The authoritative linker script does not keep heap size at zero.
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'D:\\python_software\\SilverStar\\.work\\bench08_staging\\test_power_of_ten_estimator_co_bc27a9ce\\estimator-conditional\\Tools\\check_power_of_ten.ps1'], returncode=1, stdout='FCCG_PROGRESS|POWER10|PLAN|3\nFCCG_PROGRESS|POWER10|BEGIN|1|3|APP\\Src\\estimator_task.c\nPOWER10_SOURCE|APP\\Src\\estimator_task.c|0eb0d6f383a4a61715a450cc31a2b48b80338f93e1744e9e8f177f26a4e180d9\nFCCG_PROGRESS|POWER10|DONE|1|3|APP\\Src\\estimator_task.c\nFCCG_PROGRESS|POWER10|BEGIN|2|3|function_rules\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|2|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|2|2|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|4|Fixture_Value|1|0\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|4|4|Fixture_Value\nPOWER10_RULE5_FUNCTION|Flight|APP\\Src\\estimator_task.c|6|Boundary|4|1\nPOWER10_FUNCTION_SCOPE|Flight|APP\\Src\\estimator_task.c|6|9|Boundary\nPOWER10_RULE5|Flight|files=1|functions=3|eligible_assertions=1|average=0.333333|informational|policy=fprime_inspired_c|semantic_review=required\nPOWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending\nFCCG_PROGRESS|POWER10|DONE|2|3|function_rules\nFCCG_PROGRESS|POWER10|BEGIN|3|3|build_policy\nPower of Ten check FAILED (3 failures).\n- Flight target manifest has no linker script.\n- Linker script is missing: \n- The authoritative linker script does not keep heap size at zero.\n', stderr='').returncode
+============= 5 failed, 26 passed, 1 warning in 293.61s (0:04:53) =============

@@ -1,0 +1,37 @@
+{
+  "commit": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "capture_utc": "2026-10-08T02:45:19.054111+00:00",
+  "source_files_sha256": {
+    "apps/SCG/src/silverstar_fccg/core/workspace.py": "38c539dd57b646d9f827d26c816210ef5829a88871b486717861fbf2d033f180",
+    "apps/SCG/src/silverstar_fccg/generator/render.py": "6a75a0480cc0a84f44b70f898a3d7cad9b4dc56b01c3ff54b5e60cedb3576c19",
+    "apps/SCG/tests/test_workspace_policy.py": "94aae29bf2fa5c263d4d580fbc08c810136603693eb143a8f762ac65780cee59",
+    "apps/SCG/tests/test_project_lifecycle.py": "08bf8e3731e65aa75da0676046844296932285ad61d6eaff8570c121bdf4b5e7"
+  },
+  "command": [
+    ".venv/Scripts/python.exe",
+    "docs/evidence/nightly_software_20261008/run_scg.py",
+    "apps/SCG/tests/test_workspace_policy.py",
+    "apps/SCG/tests/test_plugin_security.py",
+    "apps/SCG/tests/test_project_lifecycle.py",
+    "apps/SCG/tests/test_hardware_and_variants.py",
+    "apps/SCG/tests/test_windows_generation_path_boundary.py",
+    "-vv",
+    "-s",
+    "--basetemp=.work/b08_reg2"
+  ],
+  "exit_code": 0,
+  "passed": 65,
+  "warning_count": 1,
+  "pytest_elapsed_s": 308.46,
+  "log_sha256": "17ffbfd9fce393f3a419d61cb1242f39716238b7a47778dbdf611b77b6a5a9ba",
+  "before_integration": {
+    "base_commit": "0a2ceb54d5b536997b1464f7c740fa3349f5d595",
+    "dirty_snapshot": "workspace_fix_test_snapshot.diff",
+    "exit_code": 1,
+    "passed": 26,
+    "failed": 5,
+    "pytest_elapsed_s": 293.61,
+    "log": "staging_integration.log",
+    "log_sha256": "28f7e5883326ba763e6644f98cef061a3518d9576cdff9526c007e33f71b292a"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "source_commit": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "utc": "2026-10-08T03:03:27.124071+00:00",
+  "scope": "Structural declarative decoder Load only; no actual log/Descriptor/production opening, no algorithm recomputation",
+  "result": "PASS",
+  "package_sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+}

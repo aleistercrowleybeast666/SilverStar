@@ -1,0 +1,13 @@
+{
+  "source_commit": "f045d8c3e2b1cafb951702335fe1693b59d72275",
+  "recorded_utc": "2026-10-08T03:17:07.207722+00:00",
+  "archive_files_verified": 62,
+  "archive_failures": [],
+  "source_files_verified": 2233,
+  "source_failures": [],
+  "root_inputs_verified": 3,
+  "root_input_failures": [],
+  "doc_links_checked": 29,
+  "doc_link_failures": [],
+  "checker_unmodified_from_source_commit": true
+}
