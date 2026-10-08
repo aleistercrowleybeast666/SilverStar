@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-08T07:41:10.134154+00:00",
+  "command": [
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-objcopy.exe",
+    "-O",
+    "ihex",
+    "D:\\stm32_project\\SS_0_5_TEST_5\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\EIDE\\Release\\SS_0_5_TEST_5.elf",
+    ".work\\test5_gshc_dap_20261008_v1\\identity_reextract.hex"
+  ],
+  "exit_code": 0,
+  "original_elf_sha256": "48cb98777c9dd9a86489f4e09c895ee5c1192a93de01e06fcd7e36b8b103ab27",
+  "original_hex_sha256": "95f5c58e0c8e99b6d3a181a6eef26e0a157c51480a6f6b4ebd258b4ba35f2b4d",
+  "extracted_hex_sha256": "95f5c58e0c8e99b6d3a181a6eef26e0a157c51480a6f6b4ebd258b4ba35f2b4d",
+  "original_and_extracted_memory_equal": true
+}

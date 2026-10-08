@@ -1,0 +1,65 @@
+{
+  "utc_start": "2026-10-08T07:28:06.906073+00:00",
+  "openocd_command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port 3333; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set size [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($size != 512)} {error {Target mismatch; stop}}"
+  ],
+  "gdb_command": [
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gdb.exe",
+    "-batch",
+    "-x",
+    "D:\\python_software\\SilverStar\\.work\\test5_gshc_dap_20261008_v1\\dap_reject\\capture.gdb"
+  ],
+  "elf_sha256": "14637f20ac2b83bc4b169b232a364d037013e494444aa23ad246070148ae4cfd",
+  "breakpoint": "0x080167e6",
+  "scope": "One diagnostic reset/hardware breakpoint/halt/backtrace/resume. Excluded from latency and maximum-gap baseline. No firmware edits, flash writes or calibration commands.",
+  "gshc_exit_code": 0,
+  "gdb_exit_code": 0,
+  "cleanup_exit_code": 0,
+  "utc_end": "2026-10-08T07:28:48.789619+00:00",
+  "rejection_hit": true,
+  "resume_seen": true,
+  "files": {
+    "capture.gdb": {
+      "bytes": 1096,
+      "sha256": "762d6e3b9bfb0a579bb3624384f1f872899061b3cb4de7df3804f28d0791cfb4"
+    },
+    "cleanup.log": {
+      "bytes": 364,
+      "sha256": "eba9eb0bc2d16d704193490f27ab672c892111f8f2ffee31d8c2520cadfe2a55"
+    },
+    "command.json": {
+      "bytes": 1263,
+      "sha256": "46dfa8cc6a095f3e395c96afd44f893bd6c6595d6e8b0de54fd394d745d3178b"
+    },
+    "gdb.log": {
+      "bytes": 13344,
+      "sha256": "f170df67cb0cd4856c31d37ab9cd0ea14c2a050a5ca60672e61d5e2abc183a05"
+    },
+    "gshc_runner.log": {
+      "bytes": 1109,
+      "sha256": "fe4dd2618101898f81b08017a65e8cd54e550d23086d85eb2ad590652e21b6c8"
+    },
+    "openocd.log": {
+      "bytes": 1984,
+      "sha256": "718476e97c8a32271b1037a1f4be8d65ce63e53a70907b046f92b379c59f770e"
+    }
+  }
+}

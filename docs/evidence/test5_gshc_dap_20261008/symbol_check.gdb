@@ -1,0 +1,12 @@
+file .work/bench08c_f407/Flight_Controller/build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.elf
+p &'logger_bus.c'::s_initialized
+p &'logger_bus.c'::s_accepting_records
+p &'logger_bus.c'::s_boot_disabled
+p &'logger_bus.c'::s_finalization_state
+p &'logger_bus.c'::s_diagnostics
+p &'silverstar_flight_cycle.c'::s_lifecycle_state
+p &pxCurrentTCB
+p &'system_log_policy.c'::s_streams
+p &'estimator_task.c'::s_estimator
+p &'estimator_task.c'::s_snapshot
+p &'silverstar_assert.c'::s_assert_fault

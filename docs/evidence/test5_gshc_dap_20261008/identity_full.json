@@ -1,0 +1,67 @@
+{
+  "original_elf_sha256": "48cb98777c9dd9a86489f4e09c895ee5c1192a93de01e06fcd7e36b8b103ab27",
+  "original_hex_sha256": "95f5c58e0c8e99b6d3a181a6eef26e0a157c51480a6f6b4ebd258b4ba35f2b4d",
+  "elf_hex_memory_match": true,
+  "span": [
+    "0x8000000",
+    "0x804e9d0"
+  ],
+  "explicit_image_bytes": 321988,
+  "mission28_sha256": "ea145d3529bc030fdd82883638935ca245da2c56e8bc2cc3be532b572b9e9e93",
+  "mission28_exact_decoder_matches": [
+    "SS_0_5_TEST_5"
+  ],
+  "source_commit": "NOT_PROVEN; no historical exact ELF source-commit binding located",
+  "oct3_r5_is_test5": false,
+  "hardware_resources_rf_equal_to_current": true,
+  "test5_calibration": "automatic NONE; procedure mask 0",
+  "test5_deploy": "Tilt 90 deg; inactive Delay field 60s",
+  "current_calibration": "OneFace",
+  "current_deploy": "Delay 10s",
+  "input_artifacts": {
+    "D:\\stm32_project\\SS_0_5_TEST_5\\SilverStar.ssproject": {
+      "bytes": 46267,
+      "sha256": "695c9ee9b2e47292764537d560b864e9acf3018ba721ca3074241abc9c7ad5ef"
+    },
+    "D:\\stm32_project\\SS_0_5_TEST_5\\SS_0_5_TEST_5.ssdecoder": {
+      "bytes": 143495,
+      "sha256": "e162b78bb07ae2a436a04f185da86653db838a89d8488959dcf531bc1f24caaf"
+    },
+    "D:\\stm32_project\\SS_0_5_TEST_5\\Flight_Controller\\SilverStar.ssproject": {
+      "bytes": 123027,
+      "sha256": "898dd3714b4343cddedbd8fd64e1da3dd57ba935cab35cbb4a640b0c9e5ede85"
+    },
+    "D:\\stm32_project\\SS_0_5_TEST_5\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\EIDE\\Release\\SS_0_5_TEST_5.elf": {
+      "bytes": 3252136,
+      "sha256": "48cb98777c9dd9a86489f4e09c895ee5c1192a93de01e06fcd7e36b8b103ab27"
+    },
+    "D:\\stm32_project\\SS_0_5_TEST_5\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\EIDE\\Release\\SS_0_5_TEST_5.hex": {
+      "bytes": 905759,
+      "sha256": "95f5c58e0c8e99b6d3a181a6eef26e0a157c51480a6f6b4ebd258b4ba35f2b4d"
+    },
+    "D:\\stm32_project\\SS_0_5_TEST_5\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\EIDE\\Release\\SS_0_5_TEST_5.map": {
+      "bytes": 993025,
+      "sha256": "8a4b5260db6c28690877e98dca704b1b1f355c8f181da41bad42e1332863960b"
+    },
+    "D:\\stm32_project\\SS_0_5_TEST_5\\Log\\000028\\flight.sslog": {
+      "bytes": 24421431,
+      "sha256": "ea145d3529bc030fdd82883638935ca245da2c56e8bc2cc3be532b572b9e9e93"
+    },
+    "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\SilverStar.ssproject": {
+      "bytes": 77769,
+      "sha256": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5"
+    },
+    "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\KF6_Static_20261008_f045d8c.ssdecoder": {
+      "bytes": 144321,
+      "sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+    },
+    "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf": {
+      "bytes": 3326520,
+      "sha256": "14637f20ac2b83bc4b169b232a364d037013e494444aa23ad246070148ae4cfd"
+    },
+    "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.bin": {
+      "bytes": 331020,
+      "sha256": "5c4e8e2bba538eceefc981b7687cd157e4ce14c39fa4076b8c731319b92288f3"
+    }
+  }
+}

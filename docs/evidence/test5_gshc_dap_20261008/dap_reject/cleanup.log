@@ -1,0 +1,9 @@
+0x080457dc in ?? ()
+[Inferior 1 (Remote target) detached]
+
+--- STDERR ---
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.
+[stm32f4x.cpu] no breakpoint at address 0x080167e6 found
+Error during removal of breakpoint at address 0x080167e6
+Protocol error with Rcmd: C0.

@@ -1,0 +1,33 @@
+{
+  "utc_start": "2026-10-08T07:28:06.906073+00:00",
+  "openocd_command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port 3333; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set size [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($size != 512)} {error {Target mismatch; stop}}"
+  ],
+  "gdb_command": [
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gdb.exe",
+    "-batch",
+    "-x",
+    "D:\\python_software\\SilverStar\\.work\\test5_gshc_dap_20261008_v1\\dap_reject\\capture.gdb"
+  ],
+  "elf_sha256": "14637f20ac2b83bc4b169b232a364d037013e494444aa23ad246070148ae4cfd",
+  "breakpoint": "0x080167e6",
+  "scope": "One diagnostic reset/hardware breakpoint/halt/backtrace/resume. Excluded from latency and maximum-gap baseline. No firmware edits, flash writes or calibration commands."
+}

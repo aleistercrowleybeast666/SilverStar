@@ -1,0 +1,127 @@
+{
+  "equals": {
+    "hardware": true,
+    "resources": true,
+    "air_link": true,
+    "flight_tx_power_dbm": true,
+    "alignment": true
+  },
+  "test5": {
+    "modes": {
+      "calibration": [],
+      "deployment": [
+        "Tilt"
+      ]
+    },
+    "mode_parameters": {
+      "deployment": {
+        "ApogeeVerticalVelocity": {
+          "vertical_velocity_threshold": -2.0
+        },
+        "Delay": {
+          "delay": 60.0
+        },
+        "Tilt": {
+          "tilt_threshold": 90.0
+        }
+      }
+    },
+    "air_link": {
+      "protocol_profile": "air.m0",
+      "radio_technology": "lora",
+      "radio_family": "sx128x",
+      "phy_mode": "lora",
+      "frequency_hz": 2473000000,
+      "spreading_factor": 10,
+      "bandwidth_hz": 800000,
+      "coding_rate": "4/5",
+      "preamble_symbols": 16,
+      "header_mode": "explicit",
+      "crc_enabled": true,
+      "iq_mode": "normal",
+      "packet_mtu": 61,
+      "flight_radio_instance": "telemetry0"
+    },
+    "alignment": {
+      "constraints": [
+        {
+          "kind": "gravity",
+          "weight": 1.0,
+          "declination_deg": 0.0,
+          "body_axis": "+X",
+          "nav_azimuth_deg": 90.0
+        },
+        {
+          "kind": "reference_direction",
+          "weight": 1.0,
+          "declination_deg": 0.0,
+          "body_axis": "+X",
+          "nav_azimuth_deg": 90.0
+        }
+      ],
+      "external_source_instance": "",
+      "external_yaw_authoritative": false,
+      "external_known_azimuth_deg": 90.0
+    }
+  },
+  "current": {
+    "modes": {
+      "calibration": [
+        "OneFace"
+      ],
+      "deployment": [
+        "Delay"
+      ]
+    },
+    "mode_parameters": {
+      "deployment": {
+        "ApogeeVerticalVelocity": {
+          "vertical_velocity_threshold": -2.0
+        },
+        "Delay": {
+          "delay": 10.0
+        },
+        "Tilt": {
+          "tilt_threshold": 90.0
+        }
+      }
+    },
+    "air_link": {
+      "protocol_profile": "air.m0",
+      "radio_technology": "lora",
+      "radio_family": "sx128x",
+      "phy_mode": "lora",
+      "frequency_hz": 2473000000,
+      "spreading_factor": 10,
+      "bandwidth_hz": 800000,
+      "coding_rate": "4/5",
+      "preamble_symbols": 16,
+      "header_mode": "explicit",
+      "crc_enabled": true,
+      "iq_mode": "normal",
+      "packet_mtu": 61,
+      "flight_radio_instance": "telemetry0"
+    },
+    "alignment": {
+      "constraints": [
+        {
+          "kind": "gravity",
+          "weight": 1.0,
+          "declination_deg": 0.0,
+          "body_axis": "+X",
+          "nav_azimuth_deg": 90.0
+        },
+        {
+          "kind": "reference_direction",
+          "weight": 1.0,
+          "declination_deg": 0.0,
+          "body_axis": "+X",
+          "nav_azimuth_deg": 90.0
+        }
+      ],
+      "external_source_instance": "",
+      "external_yaw_authoritative": false,
+      "external_known_azimuth_deg": 90.0
+    }
+  }
+}

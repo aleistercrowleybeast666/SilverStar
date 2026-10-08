@@ -1,0 +1,30 @@
+{
+  "version": "current_diag",
+  "scope": "Actual GSHC MainWindow/Controller/SerialWorker/ProtocolWorker; Qt-driven production operations, no mouse/manual UI claim",
+  "utc_start": "2026-10-08T07:28:15.972749+00:00",
+  "start_calls": 1,
+  "operations": [
+    "CONNECT_COM3",
+    "CAL_START_ONE_FACE",
+    "ALIGN_START",
+    "UNLOCK",
+    "START_MISSION"
+  ],
+  "errors": [],
+  "gui_input_tool": "unavailable",
+  "timeout_ack_ms": 800,
+  "max_retries": 3,
+  "halt_instrumented": true,
+  "raw_capture_connected_monotonic_ns": 60606859348400,
+  "success": true,
+  "reason": "finite observation complete; inspect persisted events for lifecycle results",
+  "elapsed_s": 32.040351999996346,
+  "log_path": "D:\\python_software\\SilverStar\\.work\\test5_gshc_dap_20261008_v1\\current_diag\\userdata\\logs\\fc_session_20261008_152816_188121_01.jsonl",
+  "mission_started": true,
+  "mission_start_source": "first_flight_state",
+  "last_start_failure_result": null,
+  "logger_error": "",
+  "serial_closed": true,
+  "protocol_closed": true,
+  "utc_end": "2026-10-08T07:28:48.027236+00:00"
+}

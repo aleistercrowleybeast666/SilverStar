@@ -1,0 +1,37 @@
+{
+  "APP/Src/logger_bus.c": {
+    "owner_sha256": "b8e574e0edd7c95da02d989cbd5d7353043c1ba032d299323d4eb036a6844e1f",
+    "generated_sha256": "b8e574e0edd7c95da02d989cbd5d7353043c1ba032d299323d4eb036a6844e1f",
+    "equal": true
+  },
+  "APP/Src/estimator_task.c": {
+    "owner_sha256": "e3c5b8cc91c6aa20a22019c2452b06c2d38cbd5a2cf94a2ce685b852f76a80f7",
+    "generated_sha256": "e3c5b8cc91c6aa20a22019c2452b06c2d38cbd5a2cf94a2ce685b852f76a80f7",
+    "equal": true
+  },
+  "APP/Src/flight_task.c": {
+    "owner_sha256": "65f917c86522bd1002c3deea4200e3f534aad5d177518607e28cd1f82ee8e254",
+    "generated_sha256": "65f917c86522bd1002c3deea4200e3f534aad5d177518607e28cd1f82ee8e254",
+    "equal": true
+  },
+  "APP/Inc/estimator_task.h": {
+    "owner_sha256": "9e348cf14c32499b563b96904e155bdeb56906dd5d579fd44c4a227cd30e0b70",
+    "generated_sha256": "9e348cf14c32499b563b96904e155bdeb56906dd5d579fd44c4a227cd30e0b70",
+    "equal": true
+  },
+  "System/Src/system_navigation_health.c": {
+    "owner_sha256": "468352a631b3530182571c9714882c1ce0a6ef40a76c612b81e0ebfa30d7a825",
+    "generated_sha256": "468352a631b3530182571c9714882c1ce0a6ef40a76c612b81e0ebfa30d7a825",
+    "equal": true
+  },
+  "System/Inc/system_navigation_health.h": {
+    "owner_sha256": "e4b43afd6b81267e99b60ce066bfb006b4fc37edce6011e9865b9c20630cefd5",
+    "generated_sha256": "e4b43afd6b81267e99b60ce066bfb006b4fc37edce6011e9865b9c20630cefd5",
+    "equal": true
+  },
+  "Common/Src/silverstar_assert.c": {
+    "owner_sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826",
+    "generated_sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826",
+    "equal": true
+  }
+}

@@ -1,0 +1,13 @@
+$1 = (uint8_t *) 0x2000d0c5 <s_initialized> ""
+$2 = (uint8_t *) 0x2000d0c2 <s_accepting_records> ""
+$3 = (uint8_t *) 0x2000d0c1 <s_boot_disabled> ""
+$4 = (LoggerBusFinalizationState *) 0x2000d0c0 <s_finalization_state>
+$5 = (LoggerBusDiagnostics *) 0x2000d0c8 <s_diagnostics>
+$6 = (volatile SystemLifecycleState *) 0x2001a214 <s_lifecycle_state>
+$7 = (TCB_t * volatile *) 0x2001579c <pxCurrentTCB>
+$8 = (SystemLogStreamRuntime (*)[40]) 0x20013720 <s_streams>
+$9 = (EstimatorRuntime *) 0x10007000 <s_estimator>
+$10 = (EstimatorOutputSnapshot *) 0x10006d90 <s_snapshot>
+$11 = (volatile SilverStarAssertFaultRecord *) 0x2000bec8 <s_assert_fault>
+warning: could not convert 'logger_bus.c' from the host encoding (CP1252) to UTF-32.
+This normally should not happen, please file a bug report.

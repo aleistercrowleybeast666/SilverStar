@@ -1,0 +1,164 @@
+Dump of assembler code for function LoggerBus_ConfiguredRecordPush:
+   0x08016718 <+0>:	e92d 41f0	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+   0x0801671c <+4>:	b084    	sub	sp, #16
+   0x0801671e <+6>:	461f    	mov	r7, r3
+   0x08016720 <+8>:	9b0b    	ldr	r3, [sp, #44]	@ 0x2c
+   0x08016722 <+10>:	f89d 8034	ldrb.w	r8, [sp, #52]	@ 0x34
+   0x08016726 <+14>:	2b00    	cmp	r3, #0
+   0x08016728 <+16>:	d069    	beq.n	0x80167fe <LoggerBus_ConfiguredRecordPush+230>
+   0x0801672a <+18>:	2101    	movs	r1, #1
+   0x0801672c <+20>:	2304    	movs	r3, #4
+   0x0801672e <+22>:	9300    	str	r3, [sp, #0]
+   0x08016730 <+24>:	4604    	mov	r4, r0
+   0x08016732 <+26>:	f240 1371	movw	r3, #369	@ 0x171
+   0x08016736 <+30>:	4608    	mov	r0, r1
+   0x08016738 <+32>:	4616    	mov	r6, r2
+   0x0801673a <+34>:	4a33    	ldr	r2, [pc, #204]	@ (0x8016808 <LoggerBus_ConfiguredRecordPush+240>)
+   0x0801673c <+36>:	f7f3 fd36	bl	0x800a1ac <SilverStarAssert_Check>
+   0x08016740 <+40>:	2101    	movs	r1, #1
+   0x08016742 <+42>:	2302    	movs	r3, #2
+   0x08016744 <+44>:	4608    	mov	r0, r1
+   0x08016746 <+46>:	4a30    	ldr	r2, [pc, #192]	@ (0x8016808 <LoggerBus_ConfiguredRecordPush+240>)
+   0x08016748 <+48>:	9300    	str	r3, [sp, #0]
+   0x0801674a <+50>:	f240 1373	movw	r3, #371	@ 0x173
+   0x0801674e <+54>:	f7f3 fd2d	bl	0x800a1ac <SilverStarAssert_Check>
+   0x08016752 <+58>:	f001 fec7	bl	0x80184e4 <PlatformCritical_Enter>
+   0x08016756 <+62>:	4b2d    	ldr	r3, [pc, #180]	@ (0x801680c <LoggerBus_ConfiguredRecordPush+244>)
+   0x08016758 <+64>:	781b    	ldrb	r3, [r3, #0]
+   0x0801675a <+66>:	4601    	mov	r1, r0
+   0x0801675c <+68>:	2b00    	cmp	r3, #0
+   0x0801675e <+70>:	d042    	beq.n	0x80167e6 <LoggerBus_ConfiguredRecordPush+206>
+   0x08016760 <+72>:	4b2b    	ldr	r3, [pc, #172]	@ (0x8016810 <LoggerBus_ConfiguredRecordPush+248>)
+   0x08016762 <+74>:	781b    	ldrb	r3, [r3, #0]
+   0x08016764 <+76>:	b18b    	cbz	r3, 0x801678a <LoggerBus_ConfiguredRecordPush+114>
+   0x08016766 <+78>:	4d2b    	ldr	r5, [pc, #172]	@ (0x8016814 <LoggerBus_ConfiguredRecordPush+252>)
+   0x08016768 <+80>:	f001 fec0	bl	0x80184ec <PlatformCritical_Exit>
+   0x0801676c <+84>:	f001 feba	bl	0x80184e4 <PlatformCritical_Enter>
+   0x08016770 <+88>:	782b    	ldrb	r3, [r5, #0]
+   0x08016772 <+90>:	b1a3    	cbz	r3, 0x801679e <LoggerBus_ConfiguredRecordPush+134>
+   0x08016774 <+92>:	4a28    	ldr	r2, [pc, #160]	@ (0x8016818 <LoggerBus_ConfiguredRecordPush+256>)
+   0x08016776 <+94>:	6993    	ldr	r3, [r2, #24]
+   0x08016778 <+96>:	3301    	adds	r3, #1
+   0x0801677a <+98>:	6193    	str	r3, [r2, #24]
+   0x0801677c <+100>:	f001 feb6	bl	0x80184ec <PlatformCritical_Exit>
+   0x08016780 <+104>:	2500    	movs	r5, #0
+   0x08016782 <+106>:	4628    	mov	r0, r5
+   0x08016784 <+108>:	b004    	add	sp, #16
+   0x08016786 <+110>:	e8bd 81f0	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+   0x0801678a <+114>:	4d22    	ldr	r5, [pc, #136]	@ (0x8016814 <LoggerBus_ConfiguredRecordPush+252>)
+   0x0801678c <+116>:	782b    	ldrb	r3, [r5, #0]
+   0x0801678e <+118>:	b353    	cbz	r3, 0x80167e6 <LoggerBus_ConfiguredRecordPush+206>
+   0x08016790 <+120>:	f001 feac	bl	0x80184ec <PlatformCritical_Exit>
+   0x08016794 <+124>:	f001 fea6	bl	0x80184e4 <PlatformCritical_Enter>
+   0x08016798 <+128>:	782b    	ldrb	r3, [r5, #0]
+   0x0801679a <+130>:	2b00    	cmp	r3, #0
+   0x0801679c <+132>:	d1ea    	bne.n	0x8016774 <LoggerBus_ConfiguredRecordPush+92>
+   0x0801679e <+134>:	f001 fea5	bl	0x80184ec <PlatformCritical_Exit>
+   0x080167a2 <+138>:	4632    	mov	r2, r6
+   0x080167a4 <+140>:	463b    	mov	r3, r7
+   0x080167a6 <+142>:	4620    	mov	r0, r4
+   0x080167a8 <+144>:	f001 fdf8	bl	0x801839c <SystemLogPolicy_ShouldEmitAt>
+   0x080167ac <+148>:	2800    	cmp	r0, #0
+   0x080167ae <+150>:	d0e7    	beq.n	0x8016780 <LoggerBus_ConfiguredRecordPush+104>
+   0x080167b0 <+152>:	4620    	mov	r0, r4
+   0x080167b2 <+154>:	f7ff faed	bl	0x8015d90 <LoggerBus_BootstrapSuppress>
+   0x080167b6 <+158>:	2800    	cmp	r0, #0
+   0x080167b8 <+160>:	d1e2    	bne.n	0x8016780 <LoggerBus_ConfiguredRecordPush+104>
+   0x080167ba <+162>:	9b0c    	ldr	r3, [sp, #48]	@ 0x30
+   0x080167bc <+164>:	9302    	str	r3, [sp, #8]
+   0x080167be <+166>:	9b0b    	ldr	r3, [sp, #44]	@ 0x2c
+   0x080167c0 <+168>:	9301    	str	r3, [sp, #4]
+   0x080167c2 <+170>:	9b0a    	ldr	r3, [sp, #40]	@ 0x28
+   0x080167c4 <+172>:	9300    	str	r3, [sp, #0]
+   0x080167c6 <+174>:	f8cd 800c	str.w	r8, [sp, #12]
+   0x080167ca <+178>:	4632    	mov	r2, r6
+   0x080167cc <+180>:	463b    	mov	r3, r7
+   0x080167ce <+182>:	4620    	mov	r0, r4
+   0x080167d0 <+184>:	f7ff fede	bl	0x8016590 <LoggerBus_RecordPush>
+   0x080167d4 <+188>:	4605    	mov	r5, r0
+   0x080167d6 <+190>:	2800    	cmp	r0, #0
+   0x080167d8 <+192>:	d1d3    	bne.n	0x8016782 <LoggerBus_ConfiguredRecordPush+106>
+   0x080167da <+194>:	4632    	mov	r2, r6
+   0x080167dc <+196>:	463b    	mov	r3, r7
+   0x080167de <+198>:	4620    	mov	r0, r4
+   0x080167e0 <+200>:	f001 fe44	bl	0x801846c <SystemLogPolicy_EmissionTimeRecord>
+   0x080167e4 <+204>:	e7cd    	b.n	0x8016782 <LoggerBus_ConfiguredRecordPush+106>
+   0x080167e6 <+206>:	4a0c    	ldr	r2, [pc, #48]	@ (0x8016818 <LoggerBus_ConfiguredRecordPush+256>)
+   0x080167e8 <+208>:	6913    	ldr	r3, [r2, #16]
+   0x080167ea <+210>:	4608    	mov	r0, r1
+   0x080167ec <+212>:	3301    	adds	r3, #1
+   0x080167ee <+214>:	6113    	str	r3, [r2, #16]
+   0x080167f0 <+216>:	f001 fe7c	bl	0x80184ec <PlatformCritical_Exit>
+   0x080167f4 <+220>:	2504    	movs	r5, #4
+   0x080167f6 <+222>:	4628    	mov	r0, r5
+   0x080167f8 <+224>:	b004    	add	sp, #16
+   0x080167fa <+226>:	e8bd 81f0	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+   0x080167fe <+230>:	2503    	movs	r5, #3
+   0x08016800 <+232>:	4628    	mov	r0, r5
+   0x08016802 <+234>:	b004    	add	sp, #16
+   0x08016804 <+236>:	e8bd 81f0	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+   0x08016808 <+240>:	a888    	add	r0, sp, #544	@ 0x220
+   0x0801680a <+242>:	0804    	lsrs	r4, r0, #32
+   0x0801680c <+244>:	d0c5    	beq.n	0x801679a <LoggerBus_ConfiguredRecordPush+130>
+   0x0801680e <+246>:	2000    	movs	r0, #0
+   0x08016810 <+248>:	d0c2    	beq.n	0x8016798 <LoggerBus_ConfiguredRecordPush+128>
+   0x08016812 <+250>:	2000    	movs	r0, #0
+   0x08016814 <+252>:	d0c1    	beq.n	0x801679a <LoggerBus_ConfiguredRecordPush+130>
+   0x08016816 <+254>:	2000    	movs	r0, #0
+   0x08016818 <+256>:	d0c8    	beq.n	0x80167ac <LoggerBus_ConfiguredRecordPush+148>
+   0x0801681a <+258>:	2000    	movs	r0, #0
+End of assembler dump.
+Dump of assembler code for function LoggerBus_EventPush:
+   0x08016a60 <+0>:	b510    	push	{r4, lr}
+   0x08016a62 <+2>:	1e54    	subs	r4, r2, #1
+   0x08016a64 <+4>:	2c2e    	cmp	r4, #46	@ 0x2e
+   0x08016a66 <+6>:	b088    	sub	sp, #32
+   0x08016a68 <+8>:	d814    	bhi.n	0x8016a94 <LoggerBus_EventPush+52>
+   0x08016a6a <+10>:	2400    	movs	r4, #0
+   0x08016a6c <+12>:	9305    	str	r3, [sp, #20]
+   0x08016a6e <+14>:	ab04    	add	r3, sp, #16
+   0x08016a70 <+16>:	e9cd 4300	strd	r4, r3, [sp]
+   0x08016a74 <+20>:	460b    	mov	r3, r1
+   0x08016a76 <+22>:	210c    	movs	r1, #12
+   0x08016a78 <+24>:	4694    	mov	r12, r2
+   0x08016a7a <+26>:	9102    	str	r1, [sp, #8]
+   0x08016a7c <+28>:	4602    	mov	r2, r0
+   0x08016a7e <+30>:	990a    	ldr	r1, [sp, #40]	@ 0x28
+   0x08016a80 <+32>:	9403    	str	r4, [sp, #12]
+   0x08016a82 <+34>:	2002    	movs	r0, #2
+   0x08016a84 <+36>:	9404    	str	r4, [sp, #16]
+   0x08016a86 <+38>:	9106    	str	r1, [sp, #24]
+   0x08016a88 <+40>:	f88d c010	strb.w	r12, [sp, #16]
+   0x08016a8c <+44>:	f7ff fe44	bl	0x8016718 <LoggerBus_ConfiguredRecordPush>
+   0x08016a90 <+48>:	b008    	add	sp, #32
+   0x08016a92 <+50>:	bd10    	pop	{r4, pc}
+   0x08016a94 <+52>:	2003    	movs	r0, #3
+   0x08016a96 <+54>:	b008    	add	sp, #32
+   0x08016a98 <+56>:	bd10    	pop	{r4, pc}
+End of assembler dump.
+   0x8005230 <AppTask_Estimator+1692>:	strh	r1, [r2, #22]
+   0x8005232 <AppTask_Estimator+1694>:	bl	0x8000f24 <__aeabi_uldivmod>
+   0x8005236 <AppTask_Estimator+1698>:	ldrb.w	r3, [sp, #442]	@ 0x1ba
+   0x800523a <AppTask_Estimator+1702>:	ldrb.w	r1, [sp, #440]	@ 0x1b8
+   0x800523e <AppTask_Estimator+1706>:	str	r0, [sp, #0]
+   0x8005240 <AppTask_Estimator+1708>:	lsls	r3, r3, #16
+   0x8005242 <AppTask_Estimator+1710>:	orr.w	r3, r3, r1, lsl #8
+   0x8005246 <AppTask_Estimator+1714>:	movs	r2, #47	@ 0x2f
+   0x8005248 <AppTask_Estimator+1716>:	ldrd	r0, r1, [sp, #20]
+   0x800524c <AppTask_Estimator+1720>:	orrs	r3, r4
+   0x800524e <AppTask_Estimator+1722>:	bl	0x8016a60 <LoggerBus_EventPush>
+   0x8005252 <AppTask_Estimator+1726>:	cmp	r0, #0
+   0x8005254 <AppTask_Estimator+1728>:	beq.n	0x8005166 <AppTask_Estimator+1490>
+   0x8005256 <AppTask_Estimator+1730>:	ldr.w	r3, [r11, #384]	@ 0x180
+   0x800525a <AppTask_Estimator+1734>:	orr.w	r3, r3, #256	@ 0x100
+   0x800525e <AppTask_Estimator+1738>:	str.w	r3, [r11, #384]	@ 0x180
+   0x8005262 <AppTask_Estimator+1742>:	b.n	0x8005166 <AppTask_Estimator+1490>
+   0x8005264 <AppTask_Estimator+1744>:	ldr	r3, [r6, #0]
+   0x8005266 <AppTask_Estimator+1746>:	adds	r3, #1
+   0x8005268 <AppTask_Estimator+1748>:	str	r3, [r6, #0]
+   0x800526a <AppTask_Estimator+1750>:	movs	r3, #0
+   0x800526c <AppTask_Estimator+1752>:	str	r3, [r6, #56]	@ 0x38
+   0x800526e <AppTask_Estimator+1754>:	ldrd	r3, r4, [sp, #32]
+   0x8005272 <AppTask_Estimator+1758>:	strd	r3, r4, [r6, #16]
+warning: could not convert 'LoggerBus_ConfiguredRecordPush' from the host encoding (CP1252) to UTF-32.
+This normally should not happen, please file a bug report.

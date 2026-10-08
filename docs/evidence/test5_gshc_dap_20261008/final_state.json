@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-08T07:29:52.894843+00:00",
+  "command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; echo \"CORE=[read_memory 0xE000EDF0 32 1]\"; echo \"STATE_lifecycle=[read_memory 0x2001a214 8 1]\"; echo \"STATE_accepting=[read_memory 0x2000d0c2 8 1]\"; echo \"STATE_finalization=[read_memory 0x2000d0c0 8 1]\"; echo \"STATE_assert_fault=[read_memory 0x2000bec8 8 72]\"; shutdown"
+  ],
+  "flash": false,
+  "reset": false,
+  "halt": false,
+  "start_command": false,
+  "exit_code": 0
+}

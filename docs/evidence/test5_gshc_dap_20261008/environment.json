@@ -1,0 +1,32 @@
+{
+  "branch": "fix/nightly-user-ready-20261003",
+  "head_start": "7711ce72deb92894dc9cffd230f3ab5d5ce71011",
+  "application_source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "git_app_diff_exit": 0,
+  "preserved_user_inputs": {
+    "work_build_candidates_20261006.csv": {
+      "bytes": 3243,
+      "sha256": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9"
+    },
+    "work_inventory_20261006.txt": {
+      "bytes": 3723,
+      "sha256": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca"
+    },
+    "work_subtree_classification_20261006.csv": {
+      "bytes": 51584,
+      "sha256": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+    }
+  },
+  "python": {
+    "exit": 0,
+    "output": "Python 3.14.0\r\n"
+  },
+  "openocd": {
+    "exit": 0,
+    "output": "Open On-Chip Debugger 0.12.0 (2025-07-10) [https://github.com/sysprogs/openocd]\r\nLicensed under GNU GPL v2\r\nlibusb1 d52e355daa09f17ce64819122cb067b8a2ee0d4b\r\nFor bug reports, read\r\n\thttp://openocd.org/doc/doxygen/bugs.html\r\n"
+  },
+  "gdb": {
+    "exit": 0,
+    "output": "GNU gdb (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 15.2.90.20241229-git\r\nCopyright (C) 2024 Free Software Foundation, Inc.\r\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\r\nThis is free software: you are free to change and redistribute it.\r\nThere is NO WARRANTY, to the extent permitted by law.\r\n"
+  }
+}

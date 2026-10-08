@@ -1,0 +1,21 @@
+{
+  "original_elf_sha256": "48cb98777c9dd9a86489f4e09c895ee5c1192a93de01e06fcd7e36b8b103ab27",
+  "original_hex_sha256": "95f5c58e0c8e99b6d3a181a6eef26e0a157c51480a6f6b4ebd258b4ba35f2b4d",
+  "elf_hex_memory_match": true,
+  "span": [
+    "0x8000000",
+    "0x804e9d0"
+  ],
+  "explicit_image_bytes": 321988,
+  "mission28_sha256": "ea145d3529bc030fdd82883638935ca245da2c56e8bc2cc3be532b572b9e9e93",
+  "mission28_exact_decoder_matches": [
+    "SS_0_5_TEST_5"
+  ],
+  "source_commit": "NOT_PROVEN; no historical exact ELF source-commit binding located",
+  "oct3_r5_is_test5": false,
+  "hardware_resources_rf_equal_to_current": true,
+  "test5_calibration": "automatic NONE; procedure mask 0",
+  "test5_deploy": "Tilt 90 deg; inactive Delay field 60s",
+  "current_calibration": "OneFace",
+  "current_deploy": "Delay 10s"
+}

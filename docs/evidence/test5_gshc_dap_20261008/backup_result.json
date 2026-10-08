@@ -1,0 +1,50 @@
+{
+  "utc_start": "2026-10-08T07:13:15.859839+00:00",
+  "command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set size [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($size != 512)} {error {Target mismatch; stop}}; echo \"TARGET_ID=$id FLASH_KIB=$size\"; echo \"CORE_BEFORE=[read_memory 0xE000EDF0 32 1]\"; echo \"STATE_lifecycle=[read_memory 0x2001a214 8 1]\"; echo \"STATE_accepting=[read_memory 0x2000d0c2 8 1]\"; echo \"STATE_finalization=[read_memory 0x2000d0c0 8 1]\"; echo \"STATE_logger_bus=[read_memory 0x2000d0c8 8 44]\"; echo \"STATE_logger_runtime=[read_memory 0x200136b8 8 96]\"; echo \"STATE_assert_fault=[read_memory 0x2000bec8 8 72]\"; dump_image {D:/python_software/SilverStar/.work/test5_gshc_dap_20261008_v1/current_fullflash.bin} 0x08000000 524288; dump_image {D:/python_software/SilverStar/.work/test5_gshc_dap_20261008_v1/current_fullflash_confirm.bin} 0x08000000 524288; echo \"CORE_AFTER=[read_memory 0xE000EDF0 32 1]\"; shutdown"
+  ],
+  "timeout_s": 60,
+  "flash": false,
+  "halt": false,
+  "reset": false,
+  "scope": "Flight main flash double read plus live RAM; no option bytes, mass erase, Ground or calibration commands",
+  "exit_code": 0,
+  "elapsed_s": 23.496837700004107,
+  "utc_end": "2026-10-08T07:13:39.358672+00:00",
+  "log_sha256": "fdfeeb1a8281325095898518017ff3b1f48334bd2b9423b6d3d97455df33e30e",
+  "double_read_match": true,
+  "fullflash_sha256": "109a4eee42d2ba9189a1fef26559ec5dfcbc0ae7cda54f7dc6a76d6bdd674fba",
+  "current_candidate_prefix_match": true,
+  "candidate_bytes": 331020,
+  "candidate_sha256": "5c4e8e2bba538eceefc981b7687cd157e4ce14c39fa4076b8c731319b92288f3",
+  "regions": {
+    "application_sector_extent": {
+      "start": "0x8000000",
+      "bytes": 393216,
+      "sha256": "bb9f23cdaeaa1fad32511975c873a494d4ee6300c4bffc1560a66acf50855e42"
+    },
+    "untouched_sector7": {
+      "start": "0x8060000",
+      "bytes": 131072,
+      "sha256": "b5a41c3758763bbec72769fab4a2533bf2db0b6312d93d25a695f9e4b9e02260"
+    }
+  }
+}

@@ -1,0 +1,333 @@
+{
+  "test5": {
+    "log_sha256": "5621e388d7447f92b2a00bdceb66debe037f9a736510432f8e8c50e12141051c",
+    "log_rows": 271,
+    "kinds": {
+      "SESSION_START": 1,
+      "GSP_FRAME": 88,
+      "AIR_RAW": 68,
+      "PREFLIGHT_STATE": 13,
+      "CAPABILITY": 5,
+      "GSP_AIR_TX": 6,
+      "CMD": 6,
+      "CAPABILITY_ACK_TX": 1,
+      "GSP_ACK": 6,
+      "GS_STATUS": 14,
+      "ACK": 5,
+      "CAPABILITY_HANDSHAKE_COMPLETE": 1,
+      "PREFLIGHT_STATUS": 7,
+      "AIR_COMMAND_TRANSACTION_RESOLVED": 3,
+      "STALE_OR_DUPLICATE_CAPABILITY_AFTER_ACK": 4,
+      "SENSOR_STATUS": 4,
+      "STATUS": 7,
+      "SENSOR_SNAPSHOT_TERMINAL": 1,
+      "START_TRANSACTION_SUBMITTED": 1,
+      "STALE_OR_UNMATCHED_AIR_ACK": 2,
+      "FLIGHT_STATE": 27,
+      "MISSION_PACKET_TRACKING_START": 1
+    },
+    "public_start_calls": 1,
+    "start_wire_attempts": 2,
+    "start_retry_interval_ms": [
+      876.6333
+    ],
+    "resolution": [
+      {
+        "dir": "LOCAL",
+        "layer": "AIR_COMMAND_TRANSACTION",
+        "kind": "AIR_COMMAND_TRANSACTION_RESOLVED",
+        "command_seq": 3,
+        "command_id": 1,
+        "command_name": "START_MISSION",
+        "param0": 0,
+        "param1": 0,
+        "target_mode": null,
+        "target_face": null,
+        "attempts": 2,
+        "age_ms": 1394.557799998438,
+        "resolved_by": "FLIGHT_STATE",
+        "result": null,
+        "result_name": null,
+        "detail": "first_flight_state",
+        "ts": 1791443961.3389301,
+        "host_monotonic_ns": 60071997173800
+      }
+    ],
+    "start_ack_count": 1,
+    "start_first_tx_to_ack_rx_ms": [
+      1722.7237
+    ],
+    "ack_rx_to_protocol_ms": [
+      0.1823
+    ],
+    "start_first_tx_to_first_flight_rx_ms": 1384.9834,
+    "statuses": {
+      "ALIGNMENT": 1,
+      "UNLOCKED": 3,
+      "MISSION_START": 3
+    },
+    "status_mcu_times_ms": {
+      "MISSION_START": [
+        6
+      ],
+      "PARACHUTE_DEPLOY": [],
+      "LANDING": []
+    },
+    "flight_packets": 27,
+    "flight_time_range_ms": [
+      270,
+      7549
+    ],
+    "max_flight_mcu_gap_ms": 581,
+    "max_flight_host_rx_gap_ms": 885.4017,
+    "nonmonotonic_flight_time_count": 0,
+    "estimated_loss_last": {
+      "estimated_lost_packets": 8,
+      "expected_flight_packets": 35,
+      "packet_loss_rate": 0.22857142857142856
+    },
+    "valid_logged_gsp_frames": 88,
+    "valid_logged_frame_scope": "Already accepted GSP frames only; rejected/unobserved bytes are not proven absent.",
+    "serial_closed": true,
+    "protocol_closed": true,
+    "logger_error": "",
+    "instrumented": false,
+    "raw_capture": {
+      "scope": "NOT_RUN; original TEST5 run has accepted-frame JSONL but no complete byte-stream observer."
+    }
+  },
+  "current": {
+    "log_sha256": "49d14084877c4a4145db23825e4a459a9ec6e1fde6b99291fd4971d276ec6561",
+    "log_rows": 444,
+    "kinds": {
+      "SESSION_START": 1,
+      "GSP_FRAME": 150,
+      "GS_STATUS": 30,
+      "AIR_RAW": 113,
+      "PREFLIGHT_STATE": 18,
+      "CAPABILITY": 6,
+      "GSP_AIR_TX": 7,
+      "CMD": 7,
+      "CAPABILITY_ACK_TX": 1,
+      "GSP_ACK": 7,
+      "ACK": 6,
+      "CAPABILITY_HANDSHAKE_COMPLETE": 1,
+      "PREFLIGHT_STATUS": 10,
+      "AIR_COMMAND_TRANSACTION_RESOLVED": 4,
+      "STATUS": 17,
+      "STALE_OR_DUPLICATE_CAPABILITY_AFTER_ACK": 5,
+      "SENSOR_STATUS": 4,
+      "SENSOR_SNAPSHOT_TERMINAL": 1,
+      "START_TRANSACTION_SUBMITTED": 1,
+      "STALE_OR_UNMATCHED_AIR_ACK": 2,
+      "FLIGHT_STATE": 52,
+      "MISSION_PACKET_TRACKING_START": 1
+    },
+    "public_start_calls": 1,
+    "start_wire_attempts": 2,
+    "start_retry_interval_ms": [
+      805.8951
+    ],
+    "resolution": [
+      {
+        "dir": "LOCAL",
+        "layer": "AIR_COMMAND_TRANSACTION",
+        "kind": "AIR_COMMAND_TRANSACTION_RESOLVED",
+        "command_seq": 4,
+        "command_id": 1,
+        "command_name": "START_MISSION",
+        "param0": 0,
+        "param1": 0,
+        "target_mode": null,
+        "target_face": null,
+        "attempts": 2,
+        "age_ms": 1424.8262000037357,
+        "resolved_by": "FLIGHT_STATE",
+        "result": null,
+        "result_name": null,
+        "detail": "first_flight_state",
+        "ts": 1791444062.4309247,
+        "host_monotonic_ns": 60173089168800
+      }
+    ],
+    "start_ack_count": 1,
+    "start_first_tx_to_ack_rx_ms": [
+      1740.4309
+    ],
+    "ack_rx_to_protocol_ms": [
+      0.3543
+    ],
+    "start_first_tx_to_first_flight_rx_ms": 1404.5147,
+    "statuses": {
+      "CALIBRATION": 2,
+      "CALIBRATION_DIAGNOSTIC": 2,
+      "ALIGNMENT": 1,
+      "UNLOCKED": 3,
+      "MISSION_START": 3,
+      "PARACHUTE_DEPLOY": 3,
+      "LANDING": 3
+    },
+    "status_mcu_times_ms": {
+      "MISSION_START": [
+        3
+      ],
+      "PARACHUTE_DEPLOY": [
+        10000
+      ],
+      "LANDING": [
+        14009
+      ]
+    },
+    "flight_packets": 52,
+    "flight_time_range_ms": [
+      267,
+      13825
+    ],
+    "max_flight_mcu_gap_ms": 580,
+    "max_flight_host_rx_gap_ms": 581.3054,
+    "nonmonotonic_flight_time_count": 0,
+    "estimated_loss_last": {
+      "estimated_lost_packets": 11,
+      "expected_flight_packets": 63,
+      "packet_loss_rate": 0.1746031746031746
+    },
+    "valid_logged_gsp_frames": 150,
+    "valid_logged_frame_scope": "Already accepted GSP frames only; rejected/unobserved bytes are not proven absent.",
+    "serial_closed": true,
+    "protocol_closed": true,
+    "logger_error": "",
+    "instrumented": false,
+    "raw_capture": {
+      "bytes": 5075,
+      "sha256": "963265033134b2d649026c288d1858ca9c098c873e1ba8db025270097d7bfe65",
+      "diagnostics": {
+        "gsp_frames": 150,
+        "gsp_parse_errors": 0,
+        "gsp_crc_errors": 0,
+        "gsp_resyncs": 0,
+        "parser_buffer_size": 0,
+        "air_frames": 113,
+        "air_parse_errors": 0
+      },
+      "parsed_frames_equal_logged_frames": true,
+      "scope": "Passive worker signal capture from recorded attachment time; offline reparse, not a live acceptance replay."
+    }
+  },
+  "current_diag": {
+    "log_sha256": "f97ee0ec3936e4598de8e557cb8b8d0f58c7bed897e7e8c1861ac7adc48131f5",
+    "log_rows": 440,
+    "kinds": {
+      "SESSION_START": 1,
+      "GSP_FRAME": 149,
+      "GS_STATUS": 31,
+      "AIR_RAW": 111,
+      "PREFLIGHT_STATE": 16,
+      "CAPABILITY": 6,
+      "GSP_AIR_TX": 7,
+      "CMD": 7,
+      "CAPABILITY_ACK_TX": 1,
+      "GSP_ACK": 7,
+      "ACK": 6,
+      "CAPABILITY_HANDSHAKE_COMPLETE": 1,
+      "PREFLIGHT_STATUS": 10,
+      "AIR_COMMAND_TRANSACTION_RESOLVED": 4,
+      "STATUS": 17,
+      "STALE_OR_DUPLICATE_CAPABILITY_AFTER_ACK": 5,
+      "SENSOR_STATUS": 4,
+      "SENSOR_SNAPSHOT_TERMINAL": 1,
+      "START_TRANSACTION_SUBMITTED": 1,
+      "STALE_OR_UNMATCHED_AIR_ACK": 2,
+      "FLIGHT_STATE": 52,
+      "MISSION_PACKET_TRACKING_START": 1
+    },
+    "public_start_calls": 1,
+    "start_wire_attempts": 2,
+    "start_retry_interval_ms": [
+      875.0239
+    ],
+    "resolution": [
+      {
+        "dir": "LOCAL",
+        "layer": "AIR_COMMAND_TRANSACTION",
+        "kind": "AIR_COMMAND_TRANSACTION_RESOLVED",
+        "command_seq": 4,
+        "command_id": 1,
+        "command_name": "START_MISSION",
+        "param0": 0,
+        "param1": 0,
+        "target_mode": null,
+        "target_face": null,
+        "attempts": 2,
+        "age_ms": 1351.2956999984453,
+        "resolved_by": "FLIGHT_STATE",
+        "result": null,
+        "result_name": null,
+        "detail": "first_flight_state",
+        "ts": 1791444505.0144172,
+        "host_monotonic_ns": 60615672661500
+      }
+    ],
+    "start_ack_count": 1,
+    "start_first_tx_to_ack_rx_ms": [
+      1681.9709
+    ],
+    "ack_rx_to_protocol_ms": [
+      0.3439
+    ],
+    "start_first_tx_to_first_flight_rx_ms": 1342.8287,
+    "statuses": {
+      "CALIBRATION": 2,
+      "CALIBRATION_DIAGNOSTIC": 2,
+      "ALIGNMENT": 1,
+      "UNLOCKED": 3,
+      "MISSION_START": 3,
+      "PARACHUTE_DEPLOY": 3,
+      "LANDING": 3
+    },
+    "status_mcu_times_ms": {
+      "MISSION_START": [
+        2
+      ],
+      "PARACHUTE_DEPLOY": [
+        10001
+      ],
+      "LANDING": [
+        14005
+      ]
+    },
+    "flight_packets": 52,
+    "flight_time_range_ms": [
+      233,
+      13787
+    ],
+    "max_flight_mcu_gap_ms": 580,
+    "max_flight_host_rx_gap_ms": 581.9027,
+    "nonmonotonic_flight_time_count": 0,
+    "estimated_loss_last": {
+      "estimated_lost_packets": 11,
+      "expected_flight_packets": 63,
+      "packet_loss_rate": 0.1746031746031746
+    },
+    "valid_logged_gsp_frames": 149,
+    "valid_logged_frame_scope": "Already accepted GSP frames only; rejected/unobserved bytes are not proven absent.",
+    "serial_closed": true,
+    "protocol_closed": true,
+    "logger_error": "",
+    "instrumented": true,
+    "raw_capture": {
+      "bytes": 5023,
+      "sha256": "16d66b9809f12646f4d62a5a17d30c3207ad40affdbfa2b4fe178299d7f43075",
+      "diagnostics": {
+        "gsp_frames": 149,
+        "gsp_parse_errors": 0,
+        "gsp_crc_errors": 0,
+        "gsp_resyncs": 0,
+        "parser_buffer_size": 0,
+        "air_frames": 111,
+        "air_parse_errors": 0
+      },
+      "parsed_frames_equal_logged_frames": true,
+      "scope": "Passive worker signal capture from recorded attachment time; offline reparse, not a live acceptance replay."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gdb.exe",
+    "-batch",
+    "-ex",
+    "file D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf",
+    "-ex",
+    "disassemble /r LoggerBus_ConfiguredRecordPush",
+    "-ex",
+    "disassemble /r LoggerBus_EventPush",
+    "-ex",
+    "disassemble /r Estimator_HealthEventsPublish"
+  ],
+  "exit_code": 1
+}

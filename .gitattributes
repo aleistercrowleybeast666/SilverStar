@@ -31,3 +31,6 @@ docs/SilverStar_Recommended_Configurations.md -text
 
 # Actual TF inputs and offline acceptance evidence must retain recorded hashes.
 docs/evidence/static_log_file_20261008/** -text
+
+# TEST_5 / GSHC / DAP captures and flash backups retain exact evidence bytes.
+docs/evidence/test5_gshc_dap_20261008/** -text
