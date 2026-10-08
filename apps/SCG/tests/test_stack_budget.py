@@ -187,3 +187,19 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
     target.write_text(changed, encoding='utf-8')
     with pytest.raises(ValueError, match='Changed or missing reviewed callback compilation input'):
         stacks.BindingHeader_Verify(tmp_path, relative)
+
+
+@pytest.mark.parametrize('mutation', ['digest', 'function'])
+def test_product_metadata_binding_accepts_only_authorized_complete_source(builtin_catalog, mutation):
+    from silverstar_fccg.project.model import ProjectModel_Load
+    from silverstar_fccg.generator.render import _MetadataSource_Render
+    source = Path(__file__).resolve().parents[3] / 'docs/evidence/logger_health_retest_20261008/generated_config.ssproject'
+    text = _MetadataSource_Render(ProjectModel_Load(source), builtin_catalog)
+    relative = 'Generated/Src/project_metadata.c'
+    approved = 'bba3aed1cc73043a10cfd126a7759728a10de53e3769e2563fb209a4b12feadf'
+    assert stacks.BindingSourceHash_Get(text) == approved
+    assert approved in stacks.BindingSourceVersions_Get(relative)
+    changed = (text.replace('0x42A4C1C6UL', '0x42A4C1C7UL') if mutation == 'digest'
+               else text.replace('return SILVERSTAR_PROJECT_CONFIG_DIGEST;', 'return 0U;'))
+    assert changed != text
+    assert stacks.BindingSourceHash_Get(changed) not in stacks.BindingSourceVersions_Get(relative)

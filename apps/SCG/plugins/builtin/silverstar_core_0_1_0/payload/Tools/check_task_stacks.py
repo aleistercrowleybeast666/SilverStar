@@ -1436,6 +1436,14 @@ BINDING_SOURCE_PRODUCT_PATCH_V12 = {
 }
 
 
+# Exact metadata review v13, explicitly authorized by the user on 2026-10-08.
+# Only CONFIG_DIGEST A79E2E92 -> 42A4C1C6 differs from the reviewed source.
+# Register this complete source only; keep all bounds and unknown-input rejection.
+BINDING_SOURCE_PRODUCT_METADATA_V13 = {
+    'Generated/Src/project_metadata.c': ['bba3aed1cc73043a10cfd126a7759728a10de53e3769e2563fb209a4b12feadf'],
+}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
@@ -1444,7 +1452,8 @@ def BindingSourceVersions_Get(path):
             BINDING_SOURCE_RF_QUEUE_V9.get(path, []) +
             BINDING_SOURCE_STATIC_BENCH_V10.get(path, []) +
             BINDING_SOURCE_HEALTH_FINALIZATION_V11.get(path, []) +
-            BINDING_SOURCE_PRODUCT_PATCH_V12.get(path, []))
+            BINDING_SOURCE_PRODUCT_PATCH_V12.get(path, []) +
+            BINDING_SOURCE_PRODUCT_METADATA_V13.get(path, []))
 
 
 def BindingSourceHash_Get(text):

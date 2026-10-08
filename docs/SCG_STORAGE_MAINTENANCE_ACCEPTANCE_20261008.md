@@ -48,3 +48,21 @@
 仅替换旧文件这一个摘要常量即与新文件全部文本相同。新的完整源码哈希仍未授权、未登记。本次未追加 owning checker 或 reference overlay 白名单；若继续闭合该样本栈门禁，需对这一确切文件、差异和哈希单独明确授权。用户改成自己的最终配置后摘要还可能不同，不能用这一个样本的授权覆盖任意新配置。
 
 用户可开始自行配置；合法配置的普通生成路径已验证，但当前不能声称 0.1.2 已完成全部外场门禁。栈 FAIL、三项原有测试失败、PoT 关键合同 NOT PROVEN 及不可用硬件证据均保留。
+
+## 后续单文件授权登记（2026-10-08 16:21–16:26 UTC）
+
+用户明确允许登记上述 `Generated/Src/project_metadata.c` 的唯一新完整源码哈希 `bba3aed1cc73043a10cfd126a7759728a10de53e3769e2563fb209a4b12feadf`。只在 owning payload 与 reference overlay 中追加 `BINDING_SOURCE_PRODUCT_METADATA_V13`，没有同步两者原本不同的历史登记、扩大范围、修改阈值或修改目标固件源码。上述历史失败记录及旧归档保留。
+
+登记前新增隔离测试为 **2 FAIL**（仅因新哈希未登记）；登记后 owning checker 与 overlay 的整个栈测试各 **18 PASS / exit 0**，包含摘要/函数体变异继续拒绝，以及既有递归、间接调用、缺失栈帧、未知源码和依赖输入拒绝测试。
+
+在新的 `.work/MetadataBindingApproval_20261008/project/Flight_Controller` 副本执行原 Makefile 的 `-j2 stack-report GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin`：**仍 FAIL / exit 2**，已越过获准 metadata，下一处拒绝为 `Generated/Src/project_log_decoder_profile.c`，完整规范化源码哈希 `ee5baec0a73077cdafee252ba8715045db8ee39e4b894c6846be3cd059392616`。它未获本轮授权、未登记；实际栈路径/界限报告尚未完成，不能声称栈证明通过。
+
+该 decoder 文件相对旧 0.1.1 证据只变化 `s_project_semantics_hash` 与 `s_generation_profile_hash` 两组摘要常量，记录目录摘要及函数体相同。把当前样本身份精确恢复为 `0.1.1 / SilverStar_0_1_1` 后重新渲染，旧文件完全匹配；当前身份渲染也与新文件完全匹配。因此这处变化可归因于既有产品身份迁移，而非本次 GUI 修复。它仍需要独立审查及明确授权；本轮不能顺带接受。
+
+新的原 `architecture-check power10-check artifact-check` 组合执行 exit 0：架构 356 checks / 0 failures；PoT 6329 checks / 111 C 文件 / 2761 函数 / 815 建议；产物检查通过。**PoT `POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending` 原有且仍保留**（owning `check_power_of_ten.ps1:611`），文本工具无法证明断言语义、危险访问前的守卫、错误返回及调用方处理、并发快照或故障路径无陈旧 READY/伪成功；这并非新增具体固件缺陷，但阻止宣称关键合同人工验收完成。
+
+此次追加仅 Python checker 和测试变化。重新渲染的 22 项输出全相同，副本的所有 C/头文件/汇编/linker、对象/依赖/栈帧及 ELF/BIN/MAP 逐文件验证与已实际 ARM 编译样本一致；复用该已验证编译产物，**不声称本轮重新编译 C 或重跑 Host/analyzer**。固件 `.bin` 哈希仍为 `eac468a93aff1a7602e92f5088a2cab597b3275ccda8b45e2c0dc14ba4c3ccc7`。
+
+三项旧测试失败保留为 `test_protocol_combos_and_logging_disabled_state_are_stable`（过时 telemetry combo 查找）、`test_legacy_format9_device_shape_rejected_and_current_roundtrip_stable`（拒绝文案 regex 不匹配）、`test_legacy_board_owned_storage_collision_is_rejected`（旧 Storage payload 路径）。这些已在 e702ffd 隔离基线上复现，没有用这次登记掩盖或改绿。
+
+[本轮单文件授权的完整证据清单](evidence/scg_metadata_binding_20261008/manifest.json) 与 [归档](evidence/scg_metadata_binding_20261008/evidence.zip) 保存精确源码、dirty snapshot、命令、退出码、新旧失败日志及比较结果。本轮未操作用户工程、窗口或硬件，未推送。
