@@ -828,7 +828,8 @@ class MainWindow(QMainWindow):
         self._log_open_result = result
         self._suspend_dirty = True
         try:
-            self._Dataset_Set(result.dataset, restored_results=project.restored_results)
+            self._Dataset_Set(result.dataset, restored_results=project.restored_results,
+                              refresh_pages=False)
             if "draft" in project.replay_configurations:
                 try:
                     self.replay_page.Configuration_Set(project.replay_configurations["draft"])
@@ -839,23 +840,22 @@ class MainWindow(QMainWindow):
             selected_source = project.ui_state.get("analysis_source", "recorded")
             if isinstance(selected_source, str) and selected_source.startswith("replay:"):
                 if self._replay_store.SourceEntry_Get(selected_source) is not None:
-                    self._AnalysisSource_Set(selected_source)
+                    self._AnalysisSource_Set(selected_source, refresh_pages=False)
                 else:
                     self._replay_store.ActiveSource_Restore(selected_source)
-                    self._Pages_Refresh()
                     code = ("project_run_deleted" if selected_source.removeprefix("replay:")
                             in project.removed_results else "project_result_recompute_required")
                     self._Error_Show(code + ":" + selected_source)
             elif isinstance(selected_source, str) and selected_source.startswith("recorded:"):
-                self._AnalysisSource_Set(selected_source)
+                self._AnalysisSource_Set(selected_source, refresh_pages=False)
             secondary = project.ui_state.get("secondary_source")
             if isinstance(secondary, str) and secondary.removeprefix("replay:") not in project.removed_results:
                 self._secondary_source_id = secondary
                 self.replay_page.SecondarySource_Set(secondary)
-                self._Pages_Refresh()
             page_index = project.ui_state.get("page_index")
             if isinstance(page_index, int) and 0 <= page_index < self.pages.count():
                 self.navigation_list.setCurrentRow(page_index)
+            self._Pages_Refresh()
         finally:
             self._suspend_dirty = False
         self._Project_SetDirty(mark_dirty)
@@ -865,7 +865,8 @@ class MainWindow(QMainWindow):
                              " | ".join(project.restoration_issues))
         return True
 
-    def _Dataset_Set(self, dataset: FlightDataset, *, restored_results=()) -> None:
+    def _Dataset_Set(self, dataset: FlightDataset, *, restored_results=(),
+                     refresh_pages: bool = True) -> None:
         was_suspended = self._suspend_dirty
         self._suspend_dirty = True
         self._dataset = dataset
@@ -883,7 +884,15 @@ class MainWindow(QMainWindow):
         self.export_action.setEnabled(True)
         self.status_label.setText(self._DatasetStatus_TextGet(dataset))
         try:
-            self._Pages_Refresh()
+            if refresh_pages:
+                self._Pages_Refresh()
+            else:
+                # Prime only the configuration/source controls required while
+                # restoring the project. Render plots/explorer once afterwards.
+                self.replay_page.Dataset_Set(self._dataset, self._replay_store)
+                self.replay_page.RemovedResults_Set(self._project.removed_results)
+                self.replay_page.RecoverySources_Set(self._project.recovery_sources,
+                                                     self._project.saved_result_ids)
         finally:
             self._suspend_dirty = was_suspended
 
@@ -1039,13 +1048,14 @@ class MainWindow(QMainWindow):
         self.state_estimation_page.Dataset_Set(self._dataset, self._channel_resolver)
         self._TimeRange_Changed(self.time_range.controller.model)
 
-    def _AnalysisSource_Set(self, source_id: str) -> None:
+    def _AnalysisSource_Set(self, source_id: str, *, refresh_pages: bool = True) -> None:
         if (self._channel_resolver is None or
                 not self._channel_resolver.Source_Get(source_id).available or
                 not self._replay_store.ActiveSource_Set(source_id)):
             self.status_label.setText(self._translator.Text_Get("comparison.unavailable"))
             return
-        self._Pages_Refresh()
+        if refresh_pages:
+            self._Pages_Refresh()
         self._Project_MarkDirty()
         if self._channel_resolver is not None:
             source = self._channel_resolver.Source_Get(source_id)

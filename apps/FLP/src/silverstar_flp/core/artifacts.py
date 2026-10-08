@@ -256,6 +256,24 @@ class _Encoder:
                 if re.fullmatch(r"[0-9a-f]{64}\.npy\.gz", candidate.name):
                     self.existing_arrays.setdefault(candidate.name, candidate)
 
+    def _Items_Encode(self, values, depth, *, mapping_entries=False):
+        """Completed fields/items, not elapsed time or estimated remaining work."""
+        from silverstar_flp.core.task_progress import TaskProgress
+        progress = TaskProgress(self.context)
+        parent_context = self.context
+        encoded = []
+        count = len(values)
+        for index, value in enumerate(values):
+            self.context = progress.Context_Build(index / count, (index + 1) / count)
+            try:
+                encoded.append([self.Encode(value[0], depth), self.Encode(value[1], depth)]
+                               if mapping_entries else self.Encode(value, depth))
+            finally:
+                self.context = parent_context
+            progress.Progress_Report((index + 1) / count,
+                                     f"progress.artifact.objects|{index + 1}|{count}")
+        return encoded
+
     def Encode(self, value, depth=0):
         self.nodes += 1
         if self.nodes % 4096 == 0:
@@ -329,11 +347,17 @@ class _Encoder:
                 return {"ref": self.objects[key]}
             index = len(self.objects)
             self.objects[key] = index
-            return {"type": type(value).__name__, "id": index,
-                    "fields": {f.name: self.Encode(getattr(value, f.name), depth + 1)
-                               for f in fields(value)}}
+            members = fields(value)
+            if depth <= 2 and not self.in_record_plan and not self.in_audit_block:
+                encoded = self._Items_Encode(tuple(getattr(value, f.name) for f in members), depth + 1)
+                encoded_fields = {f.name: item for f, item in zip(members, encoded)}
+            else:
+                encoded_fields = {f.name: self.Encode(getattr(value, f.name), depth + 1) for f in members}
+            return {"type": type(value).__name__, "id": index, "fields": encoded_fields}
         if isinstance(value, Mapping):
             key = "frozen_map" if isinstance(value, MappingProxyType) else "map"
+            if depth <= 2 and not self.in_record_plan and not self.in_audit_block:
+                return {key: self._Items_Encode(value.items(), depth + 1, mapping_entries=True)}
             return {key: [[self.Encode(k, depth + 1), self.Encode(v, depth + 1)]
                           for k, v in value.items()]}
         if isinstance(value, (tuple, list)):
@@ -349,8 +373,10 @@ class _Encoder:
                             == isinstance(value[0], MappingProxyType)
                             and all(type(key) in (str, int) for key in item) for item in value)):
                 return self.AuditBlocks_Write(value)
-            return {"tuple" if isinstance(value, tuple) else "list":
-                    [self.Encode(item, depth + 1) for item in value]}
+            encoded_items = (self._Items_Encode(value, depth + 1)
+                if depth <= 2 and not self.in_record_plan and not self.in_audit_block
+                else [self.Encode(item, depth + 1) for item in value])
+            return {"tuple" if isinstance(value, tuple) else "list": encoded_items}
         raise ValueError("artifact_type_unsupported:" + type(value).__name__)
 
     def RecordBlocks_Write(self, records):
@@ -400,7 +426,7 @@ class _Encoder:
                 temporary.unlink()
             references.append(spec)
             start += len(rows)
-            self.context.Progress_Report(0, f"progress.artifact.records|{start}|{len(records)}")
+            self.context.Progress_Report(start / len(records), f"progress.artifact.records|{start}|{len(records)}")
         return {"record_blocks": references}
 
     def AuditBlocks_Write(self, rows):
@@ -447,7 +473,7 @@ class _Encoder:
                 temporary.unlink()
             references.append(spec)
             start += len(window)
-            self.context.Progress_Report(0, f"progress.artifact.records|{start}|{len(rows)}")
+            self.context.Progress_Report(start / len(rows), f"progress.artifact.records|{start}|{len(rows)}")
         return {"audit_blocks": references, "tuple": isinstance(rows, tuple)}
 
 
@@ -849,7 +875,7 @@ def Artifact_Write(project_path: Path, payload: object, identity: dict,
     directory = root / ("generation-" + uuid.uuid4().hex)
     directory.mkdir()
     # Interrupted generations are deliberately never referenced or auto-deleted.
-    serialize_context = progress.Context_Build(0.05, 0.05)
+    serialize_context = progress.Context_Build(0.05, 0.60)
     encoder = _Encoder(directory, serialize_context)
     progress.Progress_Report(0.05, "progress.artifact.serialize")
     encoded = encoder.Encode(payload)

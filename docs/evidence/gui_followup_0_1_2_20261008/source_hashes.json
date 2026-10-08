@@ -1,0 +1,34 @@
+{
+  "apps/FLP/src/silverstar_flp/core/artifacts.py": {
+    "sha256_raw": "4b252cc6819adbe7e6d10cb04a9f85a84279988eef64faa65aa97fe300c34f8d",
+    "sha256_lf": "0291e3ef9c1697556b2decd102b1bf1948a77c50bb216519dbd84ef278fd8b91"
+  },
+  "apps/FLP/src/silverstar_flp/ui/main_window.py": {
+    "sha256_raw": "47a9317253e7c51e6260305b8335e1209f2c5dd64bb51c64b0b9d14135c0f415",
+    "sha256_lf": "6d068f96da14cc6404b0c3a8db1b20a07bcb0d8c8087398ca04c65202ca0bd7f"
+  },
+  "apps/FLP/tests/test_open_refresh_once.py": {
+    "sha256_raw": "61dc20ba6688d839003456faae292542a99e89d6d7dd3b18ae2b1ea72db32f37",
+    "sha256_lf": "61dc20ba6688d839003456faae292542a99e89d6d7dd3b18ae2b1ea72db32f37"
+  },
+  "apps/FLP/tests/test_serialization_progress.py": {
+    "sha256_raw": "0cc72bb1a4775fe44e37df45335d6f6afae987c94286f4eef5ea9ef5f5df52f3",
+    "sha256_lf": "0cc72bb1a4775fe44e37df45335d6f6afae987c94286f4eef5ea9ef5f5df52f3"
+  },
+  "tests/integration/test_monorepo_baseline.py": {
+    "sha256_raw": "74e1dcc1254bd33c641f76358caa47e02ce23b0a1fe4f9e371f2f9dd12a11a03",
+    "sha256_lf": "8cb02457d8546afcd7cb56b6e442128684b94c21e101eeebbfc4d2acdd0eb4d1"
+  },
+  "docs/architecture/ARCHIVED_DOCUMENT_ORIGINS.json": {
+    "sha256_raw": "b180c78bc4fc5ef45f1096d0aab9e83579a1790692a07c4c48194ed3be0d69ad",
+    "sha256_lf": "b180c78bc4fc5ef45f1096d0aab9e83579a1790692a07c4c48194ed3be0d69ad"
+  },
+  "docs/GUI_FOLLOWUP_0_1_2_20261008.md": {
+    "sha256_raw": "51cd4342fa22847ffd7ec9fb5455b9af3bcc4a08fea86a5874acb06173c5157e",
+    "sha256_lf": "2814bdb62ed74895763ded4b93e8fc53653c2842f72505d0ccfc7d89b097e8f3"
+  },
+  "docs/README.md": {
+    "sha256_raw": "547387520dff298f100c1a92da2b6a80674dacd6c0864e455617ee25495028b1",
+    "sha256_lf": "7c2d64df2d3d009aa75e27f6cabcf11484b89586428ad82f166ae53f70a1089f"
+  }
+}

@@ -108,6 +108,18 @@ def test_root_launchers_create_offscreen_gui_without_old_source() -> None:
 
 
 def _DocumentLinkDirectory_Get(source: Path, repository_root: Path) -> Path:
+    origins_path = repository_root / 'docs/architecture/ARCHIVED_DOCUMENT_ORIGINS.json'
+    if origins_path.is_file():
+        origins = json.loads(origins_path.read_text(encoding='utf-8'))
+        assert origins['version'] == 1
+        entry = origins['entries'].get(source.relative_to(repository_root).as_posix())
+        if entry is not None:
+            assert hashlib.sha256(source.read_bytes()).hexdigest() == entry['sha256'], source
+            origin = (repository_root / entry['origin']).resolve()
+            origin.relative_to(repository_root.resolve())
+            assert origin.is_file(), origin
+            assert (repository_root / entry['capture_script']).is_file()
+            return origin.parent
     if source.name not in {"AGENTS_SNAPSHOT.md", "REPORT_SNAPSHOT.md"}:
         return source.parent
     index = json.loads((source.parent / "INDEX.json").read_text(encoding="utf-8"))
@@ -169,8 +181,37 @@ def test_disposable_work_is_ignored_and_no_nested_repositories() -> None:
         subtree = ROOT / "apps" / app
         for current, dirs, _files in os.walk(subtree):
             assert ".git" not in dirs, current
-            assert ".venv" not in dirs, current
-            dirs[:] = [name for name in dirs if name not in {".work", "build", "dist"}]
+            if '.venv' in dirs:
+                relative = (Path(current) / '.venv').relative_to(ROOT).as_posix()
+                assert subprocess.run(['git', 'check-ignore', '-q', relative + '/probe.txt'],
+                                      cwd=ROOT, check=False).returncode == 0, current
+                assert not subprocess.check_output(['git', 'ls-files', '--', relative],
+                                                   cwd=ROOT, text=True).strip(), current
+            dirs[:] = [name for name in dirs if name not in {".work", "build", "dist", ".venv"}]
+
+
+def test_registered_archive_keeps_hash_and_checks_origin_links(tmp_path) -> None:
+    root = tmp_path / 'repo'
+    source = root / 'archive/snapshot.md'
+    source.parent.mkdir(parents=True)
+    source.write_text('[link](target.md)', encoding='utf-8')
+    origin = root / 'docs/current/source.md'
+    origin.parent.mkdir(parents=True)
+    origin.write_text('current', encoding='utf-8')
+    capture = root / 'capture.py'
+    capture.write_text('capture', encoding='utf-8')
+    registry = root / 'docs/architecture/ARCHIVED_DOCUMENT_ORIGINS.json'
+    registry.parent.mkdir()
+    registry.write_text(json.dumps({'version': 1, 'entries': {'archive/snapshot.md': {
+        'origin': 'docs/current/source.md', 'capture_script': 'capture.py',
+        'sha256': hashlib.sha256(source.read_bytes()).hexdigest()}}}), encoding='utf-8')
+    with pytest.raises(AssertionError):
+        _DocumentLinks_Validate(source, root)
+    (origin.parent / 'target.md').write_text('target', encoding='utf-8')
+    _DocumentLinks_Validate(source, root)
+    source.write_text('modified archived evidence', encoding='utf-8')
+    with pytest.raises(AssertionError):
+        _DocumentLinks_Validate(source, root)
 
 
 def test_root_has_only_public_launchers_and_legacy_scg_still_starts():

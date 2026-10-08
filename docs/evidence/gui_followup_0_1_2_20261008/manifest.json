@@ -1,0 +1,364 @@
+{
+  "created_utc": "2026-10-08T14:15:01.299657+00:00",
+  "base_head": "d601042b41cb0066f1442d8c82351c44f76fcace",
+  "branch": "fix/nightly-user-ready-20261003",
+  "product_version": "0.1.2",
+  "final_commit_binding": "Local final commit contains byte-equivalent LF-normalized sources in source_hashes.json; base_head is the measured starting revision, not final HEAD. No source edits after successful regression batches except report/index.",
+  "tool_versions": {
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.4.1",
+    "pyside6": "6.10.1",
+    "shiboken6": "6.10.1"
+  },
+  "commands": {
+    "FLP43": "$env:QT_QPA_PLATFORM='offscreen'; apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/run_pytest.py --basetemp=.work/fg9 -q apps/FLP/tests/test_open_refresh_once.py apps/FLP/tests/test_serialization_progress.py apps/FLP/tests/test_progress_visible_counts.py apps/FLP/tests/test_artifact_byte_progress.py apps/FLP/tests/test_project_stage_progress.py apps/FLP/tests/test_project_stage_progress_gui.py apps/FLP/tests/test_project_artifacts.py apps/FLP/tests/test_artifact_alias_reuse.py",
+    "lifecycle7": "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/run_pytest.py --basetemp=.work/fr12 -q apps/FLP/tests/test_worker_retirement.py apps/FLP/tests/test_plot_menu_lifetime.py apps/FLP/tests/test_task_publication_thread_affinity.py",
+    "integration": "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/run_pytest.py --basetemp=.work/mb14 -q tests/integration",
+    "native": [
+      "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/scg_eventloop.py",
+      "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/flp_loop_measure.py before",
+      "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/flp_loop_measure.py after",
+      "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/native_faults.py",
+      "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/native_sources_followup.py"
+    ],
+    "gates": "apps/FLP/.venv/Scripts/python.exe .work/gui012_followup_20261008/gates.py"
+  },
+  "results": {
+    "FLP_combined": {
+      "exit": 0,
+      "passed": 43,
+      "seconds": 262.05
+    },
+    "lifecycle_separate": {
+      "exit": 0,
+      "passed": 7,
+      "seconds": 19.95
+    },
+    "integration": {
+      "exit": 1,
+      "passed": 10,
+      "failed": 1,
+      "seconds": 20.73
+    },
+    "baseline": {
+      "exit": 1,
+      "passed": 7,
+      "failed": 1
+    },
+    "native_faults": {
+      "exit": 0
+    },
+    "native_sources": {
+      "exit": 0
+    },
+    "SCG_eventloop": {
+      "exit": 0,
+      "stages": 14
+    },
+    "architecture": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "architecture-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\gui012_20261008\\software\\project\\Flight_Controller",
+      "start_utc": "2026-10-08T14:10:09.359904+00:00",
+      "fixture_reused": true,
+      "no_generation": true,
+      "base_head": "d601042b41cb0066f1442d8c82351c44f76fcace",
+      "exit_code": 0,
+      "seconds": 22.714248999996926,
+      "log_sha256": "6a7b4c71e43b14b188b7f987647dde2b1ee1e78cb794861b948488349ae7c0a4"
+    },
+    "power10": {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "power10-check"
+      ],
+      "cwd": "D:\\python_software\\SilverStar\\.work\\gui012_20261008\\software\\project\\Flight_Controller",
+      "start_utc": "2026-10-08T14:10:32.083481+00:00",
+      "fixture_reused": true,
+      "no_generation": true,
+      "base_head": "d601042b41cb0066f1442d8c82351c44f76fcace",
+      "exit_code": 0,
+      "seconds": 20.990462400004617,
+      "log_sha256": "321bdb384fbfff1641cb074ac5c0bb43c89aa1e3700cd35503fd1c631c6be327"
+    }
+  },
+  "interruptions": {
+    "status": "INTERRUPTED / NOT COMPLETED",
+    "sessions": [
+      16611,
+      83125
+    ],
+    "owned_python_pids": [
+      33516,
+      7992
+    ],
+    "owned_wrapper_pids": [
+      7136,
+      36040
+    ],
+    "reason": "Observed idle CPU and no fixture progress after long Windows basetemp paths; no native root-cause stack acquired. Only exact owned processes stopped. Short-basetemp run subsequently completed.",
+    "bad_filename_collection": "green_progress1.log",
+    "integration_initial_collection": "monorepo_all.log"
+  },
+  "critical_contract": "NOT PROVEN",
+  "historical_native_abort": "FAIL / NOT PROVEN",
+  "stack_metadata": "FAIL, unauthorized hash not added",
+  "ARM_Host_analyzer_this_phase": "NOT_RUN, unchanged owning C sources; earlier results belong to earlier snapshots",
+  "hardware": false,
+  "field_candidate_generated": false,
+  "no_math_queue_protocol_ack_changes": true,
+  "files": {
+    ".work/gui012_followup_20261008/flp_loop_measure.py": {
+      "sha256": "63f8bdca525d781c0c7d392a252c5ad20feda2217c2a08da2052e4e072745fb3",
+      "size": 3871
+    },
+    ".work/gui012_followup_20261008/gates.py": {
+      "sha256": "7ce01fde298957ec4de8bd19b2bb0f80e01f1407b69b65c8fec783634f3aea1d",
+      "size": 1085
+    },
+    ".work/gui012_followup_20261008/native_faults.py": {
+      "sha256": "c679014c8bb7786ab407cc2f9080e1005db512952d13f35cb6dba37b2a5b9ef0",
+      "size": 7633
+    },
+    ".work/gui012_followup_20261008/native_sources_followup.py": {
+      "sha256": "5bac992050cf6297d0ca42396c19ce271b35d929c68c5f1f534ddde2371a96ac",
+      "size": 3898
+    },
+    ".work/gui012_followup_20261008/package_evidence.py": {
+      "sha256": "9fee4a7ec7f7a35a40385d91c7f2b2172da6652e58448488fc8f4efe1df3e7b1",
+      "size": 5915
+    },
+    ".work/gui012_followup_20261008/prepare_fault_probe.py": {
+      "sha256": "17a06dae5c9b36193b53589c4199e97b05d0ee72eeb83d75efa4b373faeaa002",
+      "size": 1900
+    },
+    ".work/gui012_followup_20261008/run_pytest.py": {
+      "sha256": "a9fc6e49269030c2731b8fa659f64900214557b5848e8bedded5e0bd2180d5b6",
+      "size": 347
+    },
+    ".work/gui012_followup_20261008/scg_eventloop.py": {
+      "sha256": "7c68102aadc56004f2c9081a315e7ed1ce70dacd9c4ba55a334358882d9dcca4",
+      "size": 4879
+    },
+    ".work/gui012_followup_20261008/summarize_measure.py": {
+      "sha256": "ef4ffcbd92e8a28165a322e4d7c4bed1571de52783820943edf7fdc2b69d53ec",
+      "size": 1266
+    },
+    ".work/gui012_followup_20261008/flp1.log": {
+      "sha256": "44f37de39ad466d51e9752ded4c42fd0212be3ed470335f278ad9944671b41fe",
+      "size": 3
+    },
+    ".work/gui012_followup_20261008/flp2.log": {
+      "sha256": "e9a2473a0225ee8d2b12ea0d994f97aa0c8f48fa225e643d3b49fe60b13137e0",
+      "size": 113
+    },
+    ".work/gui012_followup_20261008/flp_after.log": {
+      "sha256": "cfb311ebabf26948c331016897331f352a6d3b04af5b3f2fef048b5a5a951baf",
+      "size": 932
+    },
+    ".work/gui012_followup_20261008/flp_before.log": {
+      "sha256": "c7770cb129719340b52409b524048d9a36061fd95fb027a85979833a769e52e3",
+      "size": 933
+    },
+    ".work/gui012_followup_20261008/flp_lifecycle.log": {
+      "sha256": "13569c20ee636665e117cbe18f839916309c66d1744655f9cc52acafda033c78",
+      "size": 101
+    },
+    ".work/gui012_followup_20261008/gates.log": {
+      "sha256": "90ab66822040526e79d13a9d8e87e05a000a3fa11adc0976c72925e57eea8963",
+      "size": 39
+    },
+    ".work/gui012_followup_20261008/green_progress1.log": {
+      "sha256": "97322dc5db3c83a559b5046a2c6a45637e93b5dd3559859d28c4fa6e63b67817",
+      "size": 107
+    },
+    ".work/gui012_followup_20261008/green_progress2.log": {
+      "sha256": "b273ffc2632dda36f3b63b89ad09cb9c1ee69059eb59cdf4277c6a8728507e25",
+      "size": 100
+    },
+    ".work/gui012_followup_20261008/monorepo.log": {
+      "sha256": "43656415079295335d5241076f40a6accdd4377c7ec4f4fc7eaeec4eeea4aeaa",
+      "size": 3646
+    },
+    ".work/gui012_followup_20261008/monorepo_all.log": {
+      "sha256": "069019f4e2b34ee31b2e4cf283d463b3e71aa67f7c1f685c1b1676f1658acab8",
+      "size": 1557
+    },
+    ".work/gui012_followup_20261008/monorepo_all2.log": {
+      "sha256": "b4f6b1266ceb1103f94882c8b3317289f1d7141a6dc494edd980471338c330c5",
+      "size": 3647
+    },
+    ".work/gui012_followup_20261008/native_faults.log": {
+      "sha256": "8be60a9cf3025bcbfdf7c7df735804675b25b4bfa824871ad3cfbcc3ed650ae9",
+      "size": 5055
+    },
+    ".work/gui012_followup_20261008/native_sources.log": {
+      "sha256": "c4a55e829bcffe0b04279e69b2c7c34a40fd09beaef3966cbc3296c0ba704b78",
+      "size": 421
+    },
+    ".work/gui012_followup_20261008/red_progress.log": {
+      "sha256": "4bc4bd5b0bbc9545d0c99b200a691719308e5dd7a8fd2c587cac1b5ccd7ef7e5",
+      "size": 1407
+    },
+    ".work/gui012_followup_20261008/red_refresh.log": {
+      "sha256": "44f37de39ad466d51e9752ded4c42fd0212be3ed470335f278ad9944671b41fe",
+      "size": 3
+    },
+    ".work/gui012_followup_20261008/scg_eventloop.log": {
+      "sha256": "147907fe0830e8b198e90402296c3478abfeaf6762defd76cac4e05d744ba4b3",
+      "size": 49
+    },
+    ".work/gui012_followup_20261008/measurement_summary.json": {
+      "sha256": "ed266bd32026e9eaeb22963f84bd05880937214ce546c73fbb3866d6918ebd4a",
+      "size": 3698
+    },
+    ".work/gui012_followup_20261008/gates/architecture-check.json": {
+      "sha256": "4280c18d07165244ab25420de2c180a87983567c158b6537a13da8fe1c3fd88a",
+      "size": 507
+    },
+    ".work/gui012_followup_20261008/gates/architecture-check.log": {
+      "sha256": "6a7b4c71e43b14b188b7f987647dde2b1ee1e78cb794861b948488349ae7c0a4",
+      "size": 1173
+    },
+    ".work/gui012_followup_20261008/gates/power10-check.json": {
+      "sha256": "5c54dea7ca6791c0a7d06b5e1c8bcd017837c66178df1c04476a64266e655b5a",
+      "size": 502
+    },
+    ".work/gui012_followup_20261008/gates/power10-check.log": {
+      "sha256": "321bdb384fbfff1641cb074ac5c0bb43c89aa1e3700cd35503fd1c631c6be327",
+      "size": 769820
+    },
+    ".work/gui012_followup_20261008/flp_before/publication_profile.txt": {
+      "sha256": "8262c37e3477d8f534ce84708cf62c7f4ae333bd4037f519787d89b6fde665e7",
+      "size": 5586
+    },
+    ".work/gui012_followup_20261008/flp_before/result.json": {
+      "sha256": "2ececa8a476d7f965fe5501a0bbb87df7c620d52022b42bef9d9a2257961e07b",
+      "size": 4033537
+    },
+    ".work/gui012_followup_20261008/flp_after/publication_profile.txt": {
+      "sha256": "e6a97b593f0d721394745533465fd81584249b51d8bfc8592e3c5cfbd8029e08",
+      "size": 5520
+    },
+    ".work/gui012_followup_20261008/flp_after/result.json": {
+      "sha256": "9ddb5a388867a0f39a00b4133a81bf4fef1f00c04c1a0f0b65920918174285bc",
+      "size": 4728077
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/compact.png": {
+      "sha256": "cce1ad088f8fd2a69a2ec724569b8cd559a143df0ffd66dd0d1842a06429b98e",
+      "size": 84411
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/compact_check.png": {
+      "sha256": "cce1ad088f8fd2a69a2ec724569b8cd559a143df0ffd66dd0d1842a06429b98e",
+      "size": 84411
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/full_check.png": {
+      "sha256": "9949c1fc714c5e070a9ae32d361a16415bc4ebf710f85a54410940c23ded0705",
+      "size": 73385
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/full_return.png": {
+      "sha256": "9949c1fc714c5e070a9ae32d361a16415bc4ebf710f85a54410940c23ded0705",
+      "size": 73385
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/initial.png": {
+      "sha256": "5c78ed09458898295ecbaee1f6f11ef358614c0000a5a4b0283c833ae5cfd125",
+      "size": 102329
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/minimal.png": {
+      "sha256": "87738f420ff8bf07f315035d5ab4b265c59888ae81fdca84b18bfa80cc6b8a8d",
+      "size": 74996
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/minimal_check.png": {
+      "sha256": "87738f420ff8bf07f315035d5ab4b265c59888ae81fdca84b18bfa80cc6b8a8d",
+      "size": 74996
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/rapid_0.png": {
+      "sha256": "b373261f9fec858aedaf2c891f1c305f482bbdd7f98369854afdcd7a92599611",
+      "size": 114044
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/rapid_1.png": {
+      "sha256": "b373261f9fec858aedaf2c891f1c305f482bbdd7f98369854afdcd7a92599611",
+      "size": 114044
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/rapid_2.png": {
+      "sha256": "b373261f9fec858aedaf2c891f1c305f482bbdd7f98369854afdcd7a92599611",
+      "size": 114044
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/reopen.png": {
+      "sha256": "7f4eb072254de7f4531d3ff84c11210fceb43069da78c348fbf46768233cf71f",
+      "size": 100579
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/reopen_check.png": {
+      "sha256": "7f4eb072254de7f4531d3ff84c11210fceb43069da78c348fbf46768233cf71f",
+      "size": 100579
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/result.json": {
+      "sha256": "a03db46936795c075b0c5c741eb9eb58d433ea2828ec4f3ee7ea826fb665de51",
+      "size": 138843
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/save.png": {
+      "sha256": "e5e54d06c7b0be5fcad64ce05e2d171806f54103db43294265b2b69acfec6d86",
+      "size": 100333
+    },
+    ".work/gui012_followup_20261008/scg_eventloop/two_imu.png": {
+      "sha256": "51f807b49f2c2b19adf5f05f110dd68c1854c871dcb98d5c2d48065df339ea81",
+      "size": 89076
+    },
+    ".work/gui012_followup_20261008/native_faults/flp.png": {
+      "sha256": "1bd0676aa535e8e0c3efe832cccd12d2a26519b0bace3777b2fd418138651334",
+      "size": 119253
+    },
+    ".work/gui012_followup_20261008/native_faults/flp_result.json": {
+      "sha256": "e5a9b49c68d6fe0e90c280b8290b6b3db8b14119f729814083c5d0c20b36b899",
+      "size": 6465554
+    },
+    ".work/gui012_followup_20261008/native_sources_followup/result.json": {
+      "sha256": "5f931a50fec64fbe3d469567df11634b981a73b5bd83030bbaeffd5a0d160b58",
+      "size": 419
+    },
+    ".work/gui012_followup_20261008/native_sources_followup/two_sources.png": {
+      "sha256": "d8c2fa69b4c5116d454ed048411e208328feef03f60104c02fd16325958d9209",
+      "size": 116875
+    },
+    ".work/gui012_20261008/run_pytest.py": {
+      "sha256": "8d97e7ff614032739364afe4488c57054ebb6d7d725512f73b3d9df341395c81",
+      "size": 873
+    },
+    "docs/evidence/nightly_software_20261008/normal_test_paths.py": {
+      "sha256": "98525ae940fd5e735b9671f3ec593af4a47fad1798573283fc7fea9697fd6a81",
+      "size": 896
+    },
+    "docs/evidence/nightly_software_20261008/closeout_test_paths.py": {
+      "sha256": "109f192d10f065921f47216a69600b7ab1310345e109abb25aef90e952c4d403",
+      "size": 620
+    }
+  },
+  "inputs": {
+    ".work/gui012_20261008/native3/actual.ssflp": {
+      "sha256": "21ab8524fc4cc3dd9631b2863be4fd6b5ca0f47e4b08464b9cbbd061c0a368e0",
+      "size": 11725,
+      "unchanged_input": true
+    },
+    ".work/gui012_20261008/native3/larger.ssflp": {
+      "sha256": "491cede87fc317d6bdbade914d4ccd553aad0fe18bee6b48bb30c53685d32d36",
+      "size": 47081,
+      "unchanged_input": true
+    },
+    ".work/tf51_release_readonly_20261008/p51_v2/mission51.ssflp": {
+      "sha256": "7d48dc49180fb6024307f4b6ced5bde548b54118a6bb8fa92dc94c67c60de57d",
+      "size": 11737,
+      "unchanged_input": true
+    }
+  },
+  "preserved_inventory": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  },
+  "evidence_zip": {
+    "sha256": "074d864f6f5b5c07c139af73d99260accfec270d375fb60794d04e0759f0c550",
+    "size": 2664145
+  }
+}
