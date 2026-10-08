@@ -1,0 +1,49 @@
+{
+  "tag": "landing_plus_4s",
+  "exit_code": 0,
+  "elapsed_s": 0.216,
+  "timing_coherent": false,
+  "timing": {
+    "sequence": 289014,
+    "last_start_us": 48973336,
+    "last_end_us": 48973356,
+    "max_duration_end_us": 43916336,
+    "first_long_duration_end_us": 0,
+    "last_long_duration_end_us": 0,
+    "last_interval_us": 917,
+    "max_interval_us": 94307,
+    "last_duration_us": 20,
+    "max_duration_us": 1784,
+    "duration_over_20ms_count": 0,
+    "last_prediction_count": 0,
+    "max_prediction_count": 1,
+    "prediction_cap_count": 0
+  },
+  "fault": {
+    "file_name": 0,
+    "timestamp_us": 0,
+    "line": 0,
+    "sequence": 0,
+    "module_id": 0,
+    "reason_id": 0,
+    "fault_type": 0,
+    "task_handle": 0,
+    "task_name_address": 0,
+    "task_id": 0,
+    "system_state": 0,
+    "high_water_mark_words": 0,
+    "task_name": "",
+    "high_water_mark_valid": 0,
+    "timestamp_valid": 0,
+    "active": 0
+  },
+  "SCB_FAULT": [
+    0,
+    0,
+    0,
+    268462587,
+    268462041,
+    0
+  ],
+  "stacks": null
+}

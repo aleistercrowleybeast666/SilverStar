@@ -1,0 +1,21 @@
+{
+  "source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "documents_head": "87d98e598db5706a2d23d09e64ef0d77e1af8f90",
+  "probe": "132765403520",
+  "port": "COM3",
+  "condition": "User confirms stationary +Y and all actuators disconnected, TF inserted. No physical changes requested.",
+  "flash_count": 0,
+  "start_max": 1,
+  "reset_max": 1,
+  "reset_condition": "Only if exact flashed BIN matches, current LANDED, file closed/finalized, no CPU/assert fault. LANDED START locked by current source.",
+  "samples": [
+    "pre-reset identity and finalized state",
+    "preSTART after authoritative calibration/alignment",
+    "active after actual flight transition",
+    "first received LANDING (may already be draining; record observed phase)",
+    "LANDING receive +1.4s",
+    "LANDING receive +4s or finite final deadline"
+  ],
+  "sampling": "Live SWD reads only, no halt, no firmware or parameter mutation; all multi-field live snapshots have coherence limits. Counters are boot cumulative and reset once, compare phase deltas.",
+  "elf_sha256": "14637f20ac2b83bc4b169b232a364d037013e494444aa23ad246070148ae4cfd"
+}

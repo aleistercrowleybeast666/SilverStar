@@ -1,0 +1,8 @@
+set pagination off
+file D:/python_software/SilverStar/.work/bench08c_f407/Flight_Controller/build/FCCG/SilverStar_F407/Release/auto/SilverStar_0_1_1.elf
+printf "accepting=%u,%u\n", (unsigned)&('logger_bus.c'::s_accepting_records), (unsigned)sizeof('logger_bus.c'::s_accepting_records)
+printf "logger_initialized=%u,%u\n", (unsigned)&('logger_bus.c'::s_initialized), (unsigned)sizeof('logger_bus.c'::s_initialized)
+printf "boot_disabled=%u,%u\n", (unsigned)&('logger_bus.c'::s_boot_disabled), (unsigned)sizeof('logger_bus.c'::s_boot_disabled)
+printf "finalization=%u,%u\n", (unsigned)&('logger_bus.c'::s_finalization_state), (unsigned)sizeof('logger_bus.c'::s_finalization_state)
+printf "finalization_deadline=%u,%u\n", (unsigned)&('logger_bus.c'::s_finalization_deadline_us), (unsigned)sizeof('logger_bus.c'::s_finalization_deadline_us)
+quit

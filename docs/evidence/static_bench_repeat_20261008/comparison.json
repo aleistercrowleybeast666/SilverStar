@@ -1,0 +1,174 @@
+{
+  "000044": {
+    "before_unlock": {
+      "mission": 44,
+      "state_reject": 0,
+      "tx_dropped": 43233,
+      "tx_ok": 1333,
+      "max_interval_us_scalar_observation": 94308,
+      "timing_whole_snapshot_coherent": false,
+      "accepting": null,
+      "finalization": null,
+      "state_before": null,
+      "state_after": null
+    },
+    "after_start_live": {
+      "mission": 44,
+      "state_reject": 0,
+      "tx_dropped": 45473,
+      "tx_ok": 1354,
+      "max_interval_us_scalar_observation": 94308,
+      "timing_whole_snapshot_coherent": false,
+      "accepting": null,
+      "finalization": null,
+      "state_before": null,
+      "state_after": null
+    },
+    "postmission": {
+      "mission": 44,
+      "state_reject": 2,
+      "tx_dropped": 46909,
+      "tx_ok": 1412,
+      "max_interval_us_scalar_observation": 94308,
+      "timing_whole_snapshot_coherent": true,
+      "accepting": null,
+      "finalization": null,
+      "state_before": null,
+      "state_after": null
+    }
+  },
+  "000045": {
+    "pre_start": {
+      "mission": 45,
+      "state_reject": 0,
+      "tx_dropped": 7763,
+      "tx_ok": 149,
+      "max_interval_us_scalar_observation": 94307,
+      "timing_whole_snapshot_coherent": false,
+      "accepting": 1,
+      "finalization": 0,
+      "state_before": [
+        3,
+        1,
+        0,
+        0
+      ],
+      "state_after": [
+        3,
+        1,
+        0,
+        0
+      ],
+      "utc_start": "2026-10-08T04:30:35.144139+00:00",
+      "utc_end": "2026-10-08T04:30:35.382667+00:00",
+      "elapsed_s": 0.228
+    },
+    "active": {
+      "mission": 45,
+      "state_reject": 0,
+      "tx_dropped": 9784,
+      "tx_ok": 168,
+      "max_interval_us_scalar_observation": 94307,
+      "timing_whole_snapshot_coherent": false,
+      "accepting": 1,
+      "finalization": 0,
+      "state_before": [
+        4,
+        1,
+        0,
+        0
+      ],
+      "state_after": [
+        4,
+        1,
+        0,
+        0
+      ],
+      "utc_start": "2026-10-08T04:30:38.648141+00:00",
+      "utc_end": "2026-10-08T04:30:38.868160+00:00",
+      "elapsed_s": 0.219
+    },
+    "landing_receive": {
+      "mission": 45,
+      "state_reject": 0,
+      "tx_dropped": 11365,
+      "tx_ok": 225,
+      "max_interval_us_scalar_observation": 94307,
+      "timing_whole_snapshot_coherent": false,
+      "accepting": 1,
+      "finalization": 1,
+      "state_before": [
+        6,
+        1,
+        1,
+        0
+      ],
+      "state_after": [
+        6,
+        1,
+        1,
+        0
+      ],
+      "utc_start": "2026-10-08T04:30:51.338310+00:00",
+      "utc_end": "2026-10-08T04:30:51.546093+00:00",
+      "elapsed_s": 0.198
+    },
+    "landing_plus_1_4s": {
+      "mission": 45,
+      "state_reject": 1,
+      "tx_dropped": 11365,
+      "tx_ok": 227,
+      "max_interval_us_scalar_observation": 94307,
+      "timing_whole_snapshot_coherent": false,
+      "accepting": 0,
+      "finalization": 3,
+      "state_before": [
+        6,
+        0,
+        3,
+        1
+      ],
+      "state_after": [
+        6,
+        0,
+        3,
+        1
+      ],
+      "utc_start": "2026-10-08T04:30:52.718543+00:00",
+      "utc_end": "2026-10-08T04:30:52.945454+00:00",
+      "elapsed_s": 0.226
+    },
+    "landing_plus_4s": {
+      "mission": 45,
+      "state_reject": 1,
+      "tx_dropped": 11365,
+      "tx_ok": 227,
+      "max_interval_us_scalar_observation": 94307,
+      "timing_whole_snapshot_coherent": false,
+      "accepting": 0,
+      "finalization": 3,
+      "state_before": [
+        6,
+        0,
+        3,
+        1
+      ],
+      "state_after": [
+        6,
+        0,
+        3,
+        1
+      ],
+      "utc_start": "2026-10-08T04:30:55.351332+00:00",
+      "utc_end": "2026-10-08T04:30:55.567731+00:00",
+      "elapsed_s": 0.216
+    }
+  },
+  "limitations": [
+    "Counters reset for new boot; compare stage changes, not absolute cross-boot subtraction.",
+    "000044 final uses postmission halt, 000045 final is live and sampled earlier after landing.",
+    "All five 000045 whole timing blocks fail equal-even sequence coherence; report max fields as scalar observations.",
+    "State brackets stable do not make every dynamic field atomic.",
+    "No actual TF bytes or end-to-end wireless delivery proof."
+  ]
+}

@@ -1,0 +1,1087 @@
+{
+  "source_commit": "cac7bd29bf6f6aec5297715ea14893b4b7684953",
+  "starting_document_head": "87d98e598db5706a2d23d09e64ef0d77e1af8f90",
+  "branch": "fix/nightly-user-ready-20261003",
+  "recorded_utc": "2026-10-08T04:34:40.455380+00:00",
+  "source_files": 2233,
+  "root_inventory_inputs_preserved": {
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  },
+  "actual_execution": {
+    "identity_exit": 0,
+    "exact_BIN_match": true,
+    "reset_exit": 0,
+    "reset_count": 1,
+    "flash_count": 0,
+    "START_count": 1,
+    "retry_count": 0,
+    "static_script_exit": 0,
+    "mission": 45,
+    "connections_closed": true,
+    "halts": 0,
+    "all_five_timing_whole_snapshots_coherent": false
+  },
+  "checks": {
+    "finite_lifecycle_and_close": "PASS",
+    "logger_reject_class_recurrence": "REPRODUCED; 1 post-stop, previously 2",
+    "SX1281_enqueue_rejections": "REPRODUCED",
+    "about_94_3ms_preSTART_scalar_max_interval": "OBSERVED_AGAIN; whole timing coherence NOT_PROVEN",
+    "TF_persistent_bytes": "NOT_PROVEN",
+    "FLP_strict_recorded_open_save_reopen": "NOT_RUN",
+    "rejected_record_identity": "NOT_PROVEN",
+    "wireless_end_to_end_delivery": "NOT_PROVEN",
+    "max_interval_cause": "NOT_PROVEN"
+  },
+  "files": [
+    {
+      "path": "active_runner.log",
+      "bytes": 1068,
+      "sha256": "17bff2fa702ad6014b46cb19b58918152fb201f8499834697a5f70b83d353f84"
+    },
+    {
+      "path": "archive_evidence.py",
+      "bytes": 5663,
+      "sha256": "1120f08994aa7840e9898ed0af3481168a5e7129b6e4a32f1438fd815e198d35"
+    },
+    {
+      "path": "comparison.json",
+      "bytes": 4426,
+      "sha256": "b5503b1cfc9b78bc5d8ca73208c359f300c7368528060b24c099d9db333a4404"
+    },
+    {
+      "path": "diag_active/accepting.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_active/alignment_retry.bin",
+      "bytes": 72,
+      "sha256": "f90cb56fc2f3ac56df366909928c16f0f9dc12adfdd21d43fc1da9a88a9c0e28"
+    },
+    {
+      "path": "diag_active/assert_fault.bin",
+      "bytes": 72,
+      "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400"
+    },
+    {
+      "path": "diag_active/boot_disabled.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_active/command.json",
+      "bytes": 3099,
+      "sha256": "99a917a81b4fd8213e4189e0c9d4ff76877271c14f842c2d559bcdbc0fb57638"
+    },
+    {
+      "path": "diag_active/estimator_queue.bin",
+      "bytes": 28,
+      "sha256": "0d5eb36d99516c1446fc628283ab42cbe769da513a846e063626569753e67b67"
+    },
+    {
+      "path": "diag_active/file_open.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_active/file_path.bin",
+      "bytes": 48,
+      "sha256": "48f67d386b5da43a2d9e8484367cd0a2f9caee898ccdb6b60a3b741478880477"
+    },
+    {
+      "path": "diag_active/finalization.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_active/finalization_deadline.bin",
+      "bytes": 8,
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+    },
+    {
+      "path": "diag_active/first_mount.bin",
+      "bytes": 4,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "path": "diag_active/health.bin",
+      "bytes": 40,
+      "sha256": "85c270dd5760adf8c74a0d3193d93b0c1c3e65e782ab15d875bfdca78f5a2a50"
+    },
+    {
+      "path": "diag_active/lifecycle.bin",
+      "bytes": 1,
+      "sha256": "e52d9c508c502347344d8c07ad91cbd6068afc75ff6292f062a09ca381c89e71"
+    },
+    {
+      "path": "diag_active/logger.bin",
+      "bytes": 112,
+      "sha256": "10ecc277bb0d4cbc8115a760610e49b52d13a221589a9bd83fb0cf465bfaddb8"
+    },
+    {
+      "path": "diag_active/logger_bus.bin",
+      "bytes": 44,
+      "sha256": "ebcb13f324ae42e5cc285bebb011eeee695ac54f320b8dcabf318348583a87c9"
+    },
+    {
+      "path": "diag_active/logger_initialized.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_active/logger_request.bin",
+      "bytes": 880,
+      "sha256": "13982a2e0385146d571b3bd413ccee9612f47432c37c5b39481f04c7f862d65f"
+    },
+    {
+      "path": "diag_active/logger_runtime.bin",
+      "bytes": 96,
+      "sha256": "9db8bb9fb236fd903b6a5d9038fd237d63ed8552962b587ba47a6f830add5ed8"
+    },
+    {
+      "path": "diag_active/mission_id.bin",
+      "bytes": 4,
+      "sha256": "28276425d45829d4e6f5e18aefbf1f62862f07260a904532fb6e2106dec973e6"
+    },
+    {
+      "path": "diag_active/navigation.bin",
+      "bytes": 440,
+      "sha256": "d5cbe6aba941cacf8bd61e859f8e48dd9d2c9e195dc33e0e55f342b10faa0fac"
+    },
+    {
+      "path": "diag_active/normal_queue.bin",
+      "bytes": 28,
+      "sha256": "1c28a8512f657ce5657f626d9da8ccdb0e80fe3644c7e5f0c52f343193138ad4"
+    },
+    {
+      "path": "diag_active/openocd.log",
+      "bytes": 5428,
+      "sha256": "c524f8452f921e75ef72d7ee92aa74887b04dacff6a1f27f335dd6c35bb359a5"
+    },
+    {
+      "path": "diag_active/radio_bus.bin",
+      "bytes": 60,
+      "sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "path": "diag_active/radio_stats.bin",
+      "bytes": 60,
+      "sha256": "a0afde63d1ef4b40b7ae77c5b2b959e20ef2d048ea2248a9b4d9ff1287ba25c0"
+    },
+    {
+      "path": "diag_active/result.json",
+      "bytes": 12959,
+      "sha256": "2f6a84a6a0110c080463601ac47e918a1f65dc3d0d757024ec4dabba00f139ce"
+    },
+    {
+      "path": "diag_active/sink.bin",
+      "bytes": 40,
+      "sha256": "dd2004668895d0440df94a54e4941c43294f9db046684a982a98f584b9bcf54f"
+    },
+    {
+      "path": "diag_active/storage.bin",
+      "bytes": 80,
+      "sha256": "36a3786c46a754d640fc2c448c63beec9454191f3ad7c9317371a3a3070c583a"
+    },
+    {
+      "path": "diag_active/task.bin",
+      "bytes": 112,
+      "sha256": "2fe526154a58a5caf2c6f8c0416a544b453e2e3df324926eb2a686b87cbe3ce8"
+    },
+    {
+      "path": "diag_active/timing.bin",
+      "bytes": 80,
+      "sha256": "67b0bbf01f3fa84eebe45a9b0affd4edc1cf4f27fd2eedb1a5b0e0ea8ac7560c"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/accepting.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/alignment_retry.bin",
+      "bytes": 72,
+      "sha256": "f90cb56fc2f3ac56df366909928c16f0f9dc12adfdd21d43fc1da9a88a9c0e28"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/assert_fault.bin",
+      "bytes": 72,
+      "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/boot_disabled.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/command.json",
+      "bytes": 3110,
+      "sha256": "9d64de4d37d9483c193efff5279f7e202b0409a2f0c991ab88d670b9a222fa46"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/estimator_queue.bin",
+      "bytes": 28,
+      "sha256": "0a55f96500dac0f10e4ec6a97884520c5e5d6b8b9ca153d1e12f9603a82fd717"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/file_open.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/file_path.bin",
+      "bytes": 48,
+      "sha256": "48f67d386b5da43a2d9e8484367cd0a2f9caee898ccdb6b60a3b741478880477"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/finalization.bin",
+      "bytes": 1,
+      "sha256": "084fed08b978af4d7d196a7446a86b58009e636b611db16211b65a9aadff29c5"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/finalization_deadline.bin",
+      "bytes": 8,
+      "sha256": "f60aa654613929d6bcbc35090373efefbd55f8bacfb6e703b597870eaff563d9"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/first_mount.bin",
+      "bytes": 4,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/health.bin",
+      "bytes": 40,
+      "sha256": "ae81e2e177cdf927901435fc272d9676bf5a21542c21ccdf2e210ffb44978d8c"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/lifecycle.bin",
+      "bytes": 1,
+      "sha256": "67586e98fad27da0b9968bc039a1ef34c939b9b8e523a8bef89d478608c5ecf6"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/logger.bin",
+      "bytes": 112,
+      "sha256": "75e149aeb4b7ee2e35391f0eda8893e3864e12ab61831bf3cc877cef13960b24"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/logger_bus.bin",
+      "bytes": 44,
+      "sha256": "4d44216b59006b05fddb2777d4ec73e681eaae9c739c5df9d1eeda4cdaf86a70"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/logger_initialized.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/logger_request.bin",
+      "bytes": 880,
+      "sha256": "13982a2e0385146d571b3bd413ccee9612f47432c37c5b39481f04c7f862d65f"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/logger_runtime.bin",
+      "bytes": 96,
+      "sha256": "64f2f69ca0905b2f30459602eb128834ca9e017009ded695aca78607f3baba3b"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/mission_id.bin",
+      "bytes": 4,
+      "sha256": "28276425d45829d4e6f5e18aefbf1f62862f07260a904532fb6e2106dec973e6"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/navigation.bin",
+      "bytes": 440,
+      "sha256": "cda4af5384e2f093a17f1474353762ae8bdad6d41f4bb84e0c21d403f35df02a"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/normal_queue.bin",
+      "bytes": 28,
+      "sha256": "fd4817c10c66f797138500ed31df455cfdec86dc1b6b4af13456659c4905bdd7"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/openocd.log",
+      "bytes": 5457,
+      "sha256": "6da069bc570c51f473a1c5fc620c6241b2dbcb07e8e687933c5a323a4a997881"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/radio_bus.bin",
+      "bytes": 60,
+      "sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/radio_stats.bin",
+      "bytes": 60,
+      "sha256": "29f0d616a4c217d9124612b73ed9820576fc85058e504c0c2c76e133442fcc5d"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/result.json",
+      "bytes": 13007,
+      "sha256": "2d5023d758f2b178e3fac30f89e16c7115d407d98e83e847f63baec1fe93a7c7"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/sink.bin",
+      "bytes": 40,
+      "sha256": "1215b4853cbae47e60255f64835c8cee9adbd1645734ba93633dd4a84c4dc0c2"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/storage.bin",
+      "bytes": 80,
+      "sha256": "583850018831ffaa797ebf7c6bf718319ab786cfca103046bd91e86d65f1eddf"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/task.bin",
+      "bytes": 112,
+      "sha256": "2fe526154a58a5caf2c6f8c0416a544b453e2e3df324926eb2a686b87cbe3ce8"
+    },
+    {
+      "path": "diag_landing_plus_1_4s/timing.bin",
+      "bytes": 80,
+      "sha256": "c7705919d0b590d281dedb578b50c50730586b329c15d368a60aaeb355f5609e"
+    },
+    {
+      "path": "diag_landing_plus_4s/accepting.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_landing_plus_4s/alignment_retry.bin",
+      "bytes": 72,
+      "sha256": "f90cb56fc2f3ac56df366909928c16f0f9dc12adfdd21d43fc1da9a88a9c0e28"
+    },
+    {
+      "path": "diag_landing_plus_4s/assert_fault.bin",
+      "bytes": 72,
+      "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400"
+    },
+    {
+      "path": "diag_landing_plus_4s/boot_disabled.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_landing_plus_4s/command.json",
+      "bytes": 3108,
+      "sha256": "e8d18ad0d3fc48d765adaaa84104693f7c8f66ae2a888510d257602f6cdc6bc8"
+    },
+    {
+      "path": "diag_landing_plus_4s/estimator_queue.bin",
+      "bytes": 28,
+      "sha256": "0a55f96500dac0f10e4ec6a97884520c5e5d6b8b9ca153d1e12f9603a82fd717"
+    },
+    {
+      "path": "diag_landing_plus_4s/file_open.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_landing_plus_4s/file_path.bin",
+      "bytes": 48,
+      "sha256": "48f67d386b5da43a2d9e8484367cd0a2f9caee898ccdb6b60a3b741478880477"
+    },
+    {
+      "path": "diag_landing_plus_4s/finalization.bin",
+      "bytes": 1,
+      "sha256": "084fed08b978af4d7d196a7446a86b58009e636b611db16211b65a9aadff29c5"
+    },
+    {
+      "path": "diag_landing_plus_4s/finalization_deadline.bin",
+      "bytes": 8,
+      "sha256": "f60aa654613929d6bcbc35090373efefbd55f8bacfb6e703b597870eaff563d9"
+    },
+    {
+      "path": "diag_landing_plus_4s/first_mount.bin",
+      "bytes": 4,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "path": "diag_landing_plus_4s/health.bin",
+      "bytes": 40,
+      "sha256": "4091826d2a7f0472ce7bd7c66331bf2bda12c12d51e7e5a35be820c9e0f0e99d"
+    },
+    {
+      "path": "diag_landing_plus_4s/lifecycle.bin",
+      "bytes": 1,
+      "sha256": "67586e98fad27da0b9968bc039a1ef34c939b9b8e523a8bef89d478608c5ecf6"
+    },
+    {
+      "path": "diag_landing_plus_4s/logger.bin",
+      "bytes": 112,
+      "sha256": "99fb499a8afc772dc554a7f05c3c9194051469347be7e42f2594911a86d30e95"
+    },
+    {
+      "path": "diag_landing_plus_4s/logger_bus.bin",
+      "bytes": 44,
+      "sha256": "4d44216b59006b05fddb2777d4ec73e681eaae9c739c5df9d1eeda4cdaf86a70"
+    },
+    {
+      "path": "diag_landing_plus_4s/logger_initialized.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_landing_plus_4s/logger_request.bin",
+      "bytes": 880,
+      "sha256": "13982a2e0385146d571b3bd413ccee9612f47432c37c5b39481f04c7f862d65f"
+    },
+    {
+      "path": "diag_landing_plus_4s/logger_runtime.bin",
+      "bytes": 96,
+      "sha256": "101b47c05a6e216bf061e456aaf06620bd384b2b86f8ec981a25e68b35b349d4"
+    },
+    {
+      "path": "diag_landing_plus_4s/mission_id.bin",
+      "bytes": 4,
+      "sha256": "28276425d45829d4e6f5e18aefbf1f62862f07260a904532fb6e2106dec973e6"
+    },
+    {
+      "path": "diag_landing_plus_4s/navigation.bin",
+      "bytes": 440,
+      "sha256": "cda4af5384e2f093a17f1474353762ae8bdad6d41f4bb84e0c21d403f35df02a"
+    },
+    {
+      "path": "diag_landing_plus_4s/normal_queue.bin",
+      "bytes": 28,
+      "sha256": "fd4817c10c66f797138500ed31df455cfdec86dc1b6b4af13456659c4905bdd7"
+    },
+    {
+      "path": "diag_landing_plus_4s/openocd.log",
+      "bytes": 5459,
+      "sha256": "a6ad50969521788ecf408b1eb584331841de8b95f14a95fce64b3831f650b581"
+    },
+    {
+      "path": "diag_landing_plus_4s/radio_bus.bin",
+      "bytes": 60,
+      "sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "path": "diag_landing_plus_4s/radio_stats.bin",
+      "bytes": 60,
+      "sha256": "68a8b24debae0d2db46ba78035c80d7d48d772154af1d575209b1388a0a477b4"
+    },
+    {
+      "path": "diag_landing_plus_4s/result.json",
+      "bytes": 13005,
+      "sha256": "276b2fc6d39a7a196ea32cd5f09081170f53c0aeb1ffe6287a6ef148e7b431f3"
+    },
+    {
+      "path": "diag_landing_plus_4s/sink.bin",
+      "bytes": 40,
+      "sha256": "1215b4853cbae47e60255f64835c8cee9adbd1645734ba93633dd4a84c4dc0c2"
+    },
+    {
+      "path": "diag_landing_plus_4s/storage.bin",
+      "bytes": 80,
+      "sha256": "583850018831ffaa797ebf7c6bf718319ab786cfca103046bd91e86d65f1eddf"
+    },
+    {
+      "path": "diag_landing_plus_4s/task.bin",
+      "bytes": 112,
+      "sha256": "2fe526154a58a5caf2c6f8c0416a544b453e2e3df324926eb2a686b87cbe3ce8"
+    },
+    {
+      "path": "diag_landing_plus_4s/timing.bin",
+      "bytes": 80,
+      "sha256": "a085ff810ae73d0c2f57e44594fb1945fa9eb942610e68ab46440edfc65ed45f"
+    },
+    {
+      "path": "diag_landing_receive/accepting.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_landing_receive/alignment_retry.bin",
+      "bytes": 72,
+      "sha256": "f90cb56fc2f3ac56df366909928c16f0f9dc12adfdd21d43fc1da9a88a9c0e28"
+    },
+    {
+      "path": "diag_landing_receive/assert_fault.bin",
+      "bytes": 72,
+      "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400"
+    },
+    {
+      "path": "diag_landing_receive/boot_disabled.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_landing_receive/command.json",
+      "bytes": 3108,
+      "sha256": "ec22d0abb924bab45cedfdd623528053f3c9dbc61de4828258a428a6397de933"
+    },
+    {
+      "path": "diag_landing_receive/estimator_queue.bin",
+      "bytes": 28,
+      "sha256": "0a55f96500dac0f10e4ec6a97884520c5e5d6b8b9ca153d1e12f9603a82fd717"
+    },
+    {
+      "path": "diag_landing_receive/file_open.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_landing_receive/file_path.bin",
+      "bytes": 48,
+      "sha256": "48f67d386b5da43a2d9e8484367cd0a2f9caee898ccdb6b60a3b741478880477"
+    },
+    {
+      "path": "diag_landing_receive/finalization.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_landing_receive/finalization_deadline.bin",
+      "bytes": 8,
+      "sha256": "f60aa654613929d6bcbc35090373efefbd55f8bacfb6e703b597870eaff563d9"
+    },
+    {
+      "path": "diag_landing_receive/first_mount.bin",
+      "bytes": 4,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "path": "diag_landing_receive/health.bin",
+      "bytes": 40,
+      "sha256": "6db03a8749f6ce51c1c375022a3d58f2f3608cd010c6cca12bfc703997b7a973"
+    },
+    {
+      "path": "diag_landing_receive/lifecycle.bin",
+      "bytes": 1,
+      "sha256": "67586e98fad27da0b9968bc039a1ef34c939b9b8e523a8bef89d478608c5ecf6"
+    },
+    {
+      "path": "diag_landing_receive/logger.bin",
+      "bytes": 112,
+      "sha256": "1e81860279b78c101ee9f7eb655ab345beddb69ed31adb3746d56f73e6cdf4ed"
+    },
+    {
+      "path": "diag_landing_receive/logger_bus.bin",
+      "bytes": 44,
+      "sha256": "cac7fddc504a3215a69e97aafc309eb446848844c985181b07cb147012874605"
+    },
+    {
+      "path": "diag_landing_receive/logger_initialized.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_landing_receive/logger_request.bin",
+      "bytes": 880,
+      "sha256": "13982a2e0385146d571b3bd413ccee9612f47432c37c5b39481f04c7f862d65f"
+    },
+    {
+      "path": "diag_landing_receive/logger_runtime.bin",
+      "bytes": 96,
+      "sha256": "437b061a0c86d95ab70ff06a21eeace5fb9fa8b88312756ab9d1bb0337804a78"
+    },
+    {
+      "path": "diag_landing_receive/mission_id.bin",
+      "bytes": 4,
+      "sha256": "28276425d45829d4e6f5e18aefbf1f62862f07260a904532fb6e2106dec973e6"
+    },
+    {
+      "path": "diag_landing_receive/navigation.bin",
+      "bytes": 440,
+      "sha256": "cda4af5384e2f093a17f1474353762ae8bdad6d41f4bb84e0c21d403f35df02a"
+    },
+    {
+      "path": "diag_landing_receive/normal_queue.bin",
+      "bytes": 28,
+      "sha256": "fd4817c10c66f797138500ed31df455cfdec86dc1b6b4af13456659c4905bdd7"
+    },
+    {
+      "path": "diag_landing_receive/openocd.log",
+      "bytes": 5457,
+      "sha256": "c46d6b25905eb94d2e1470e9fb12f51e54dbc090102caa6f566e80d5f022c18d"
+    },
+    {
+      "path": "diag_landing_receive/radio_bus.bin",
+      "bytes": 60,
+      "sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "path": "diag_landing_receive/radio_stats.bin",
+      "bytes": 60,
+      "sha256": "7fe13b7c69607465fb309014614cf4a4216116388acce4d6dd63dd2c81206c4f"
+    },
+    {
+      "path": "diag_landing_receive/result.json",
+      "bytes": 13005,
+      "sha256": "535ad52879a4d62141a47d68959a0de5726419b62e663181d4238d3393cda771"
+    },
+    {
+      "path": "diag_landing_receive/sink.bin",
+      "bytes": 40,
+      "sha256": "3780062d0da6eed79f310dea310423dc0f1970688390d123bbe5dcb1d0cf2a38"
+    },
+    {
+      "path": "diag_landing_receive/storage.bin",
+      "bytes": 80,
+      "sha256": "ebe822c61525f4e71acc10d9e7876aa3e018913cc3878b4e8245772c71dfc9d0"
+    },
+    {
+      "path": "diag_landing_receive/task.bin",
+      "bytes": 112,
+      "sha256": "2fe526154a58a5caf2c6f8c0416a544b453e2e3df324926eb2a686b87cbe3ce8"
+    },
+    {
+      "path": "diag_landing_receive/timing.bin",
+      "bytes": 80,
+      "sha256": "59212d2b69e46fa25f0edaa3f5878c7d5ad52707e0720ffccc967be13238d9c3"
+    },
+    {
+      "path": "diag_pre_reset/accepting.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_pre_reset/alignment_retry.bin",
+      "bytes": 72,
+      "sha256": "0fd0744e51cf510dd4bc7dba3d663a51d0339bcf00f0c3103449bbc1c972ac8c"
+    },
+    {
+      "path": "diag_pre_reset/assert_fault.bin",
+      "bytes": 72,
+      "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400"
+    },
+    {
+      "path": "diag_pre_reset/boot_disabled.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_pre_reset/command.json",
+      "bytes": 3102,
+      "sha256": "3dcbc2c990debba1cceaa64d06fef2dc657f404050454fc50c411c5d8271b6c9"
+    },
+    {
+      "path": "diag_pre_reset/estimator_queue.bin",
+      "bytes": 28,
+      "sha256": "c6ffbe4ab59037aa2fcfbd21e655342349e0a773d4f22553f57caba21b6b21eb"
+    },
+    {
+      "path": "diag_pre_reset/file_open.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_pre_reset/file_path.bin",
+      "bytes": 48,
+      "sha256": "ebc48a9d436f501f1f83ed9ae2b04958de7e606de4975fcc582c1b90de92e415"
+    },
+    {
+      "path": "diag_pre_reset/finalization.bin",
+      "bytes": 1,
+      "sha256": "084fed08b978af4d7d196a7446a86b58009e636b611db16211b65a9aadff29c5"
+    },
+    {
+      "path": "diag_pre_reset/finalization_deadline.bin",
+      "bytes": 8,
+      "sha256": "8f286ef500915ef1ee43cee6597aa50aa3fc1c63454105b13f45a85996988509"
+    },
+    {
+      "path": "diag_pre_reset/first_mount.bin",
+      "bytes": 4,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "path": "diag_pre_reset/health.bin",
+      "bytes": 40,
+      "sha256": "3d6a3340cdfff4853bd2c6cf71b7314e57ad1bc5366788c45a5c15ef84426f7f"
+    },
+    {
+      "path": "diag_pre_reset/lifecycle.bin",
+      "bytes": 1,
+      "sha256": "67586e98fad27da0b9968bc039a1ef34c939b9b8e523a8bef89d478608c5ecf6"
+    },
+    {
+      "path": "diag_pre_reset/logger.bin",
+      "bytes": 112,
+      "sha256": "719e5326729b1d6ad12e44f914be33c696f9425dbf135e8c339e11b21141a7f2"
+    },
+    {
+      "path": "diag_pre_reset/logger_bus.bin",
+      "bytes": 44,
+      "sha256": "bb65f486825e807bfcc4137219e65d04d7116e72715e3c25cb8b4892b726c0af"
+    },
+    {
+      "path": "diag_pre_reset/logger_initialized.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_pre_reset/logger_request.bin",
+      "bytes": 880,
+      "sha256": "442455403866871f7de7abc30f6b9f822bc1d7eda9854eb9715522c2d3a670e1"
+    },
+    {
+      "path": "diag_pre_reset/logger_runtime.bin",
+      "bytes": 96,
+      "sha256": "5817814d2690caec44f0ffcc789b7ad37e5288d3c8ea4de09ff0c98b6f65ea4e"
+    },
+    {
+      "path": "diag_pre_reset/mission_id.bin",
+      "bytes": 4,
+      "sha256": "32434dc5b0f72c9b863c24daa5d4e79b9c43bd73b38c469fb65fd13d996b7b32"
+    },
+    {
+      "path": "diag_pre_reset/navigation.bin",
+      "bytes": 440,
+      "sha256": "3d1c28d56c88a1d4bfedc7b933537cb3a7a0ae49a87926a50f6793208b506c4d"
+    },
+    {
+      "path": "diag_pre_reset/normal_queue.bin",
+      "bytes": 28,
+      "sha256": "a17c06c786909c91b9df12c8a1da067ddf5a310ef8d8034b5c978a784fdae572"
+    },
+    {
+      "path": "diag_pre_reset/openocd.log",
+      "bytes": 5486,
+      "sha256": "c8837c3eadd0b44aee94eb2a0fe12fbcaf194e4ed84be3c6d33d1caadf8d06f0"
+    },
+    {
+      "path": "diag_pre_reset/radio_bus.bin",
+      "bytes": 60,
+      "sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "path": "diag_pre_reset/radio_stats.bin",
+      "bytes": 60,
+      "sha256": "5e740b6556adb3f116ed87b10d4a4bd8c2250656d3b7812c07a8a2e735490532"
+    },
+    {
+      "path": "diag_pre_reset/result.json",
+      "bytes": 13038,
+      "sha256": "6201214efba482f03a3936f0fcf29e832fa7154f96a16525e40295b3448a39f1"
+    },
+    {
+      "path": "diag_pre_reset/sink.bin",
+      "bytes": 40,
+      "sha256": "bfa0644e7872819ce9a90d9efe92b78e1cf9b04a27060a3f175b9622894e27cf"
+    },
+    {
+      "path": "diag_pre_reset/storage.bin",
+      "bytes": 80,
+      "sha256": "630413b271c8848c59f94e1bd33092018877999f0da78803c89dbb445006bf6d"
+    },
+    {
+      "path": "diag_pre_reset/task.bin",
+      "bytes": 112,
+      "sha256": "2fe526154a58a5caf2c6f8c0416a544b453e2e3df324926eb2a686b87cbe3ce8"
+    },
+    {
+      "path": "diag_pre_reset/timing.bin",
+      "bytes": 80,
+      "sha256": "5e56879484de02b618c14357b476bb08cc477d3725532ab7d6db0cafb8244398"
+    },
+    {
+      "path": "diag_pre_start/accepting.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_pre_start/alignment_retry.bin",
+      "bytes": 72,
+      "sha256": "f90cb56fc2f3ac56df366909928c16f0f9dc12adfdd21d43fc1da9a88a9c0e28"
+    },
+    {
+      "path": "diag_pre_start/assert_fault.bin",
+      "bytes": 72,
+      "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400"
+    },
+    {
+      "path": "diag_pre_start/boot_disabled.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_pre_start/command.json",
+      "bytes": 3102,
+      "sha256": "a0951527bbd5dd2f901d7a4f08316e564036db5b66c668c6c6a20a5947b42e74"
+    },
+    {
+      "path": "diag_pre_start/estimator_queue.bin",
+      "bytes": 28,
+      "sha256": "7aca2fa7090999e061d12ab2442a76de4624df7a1012b3ae1243a9cfe0f2801a"
+    },
+    {
+      "path": "diag_pre_start/file_open.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_pre_start/file_path.bin",
+      "bytes": 48,
+      "sha256": "48f67d386b5da43a2d9e8484367cd0a2f9caee898ccdb6b60a3b741478880477"
+    },
+    {
+      "path": "diag_pre_start/finalization.bin",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "diag_pre_start/finalization_deadline.bin",
+      "bytes": 8,
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+    },
+    {
+      "path": "diag_pre_start/first_mount.bin",
+      "bytes": 4,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "path": "diag_pre_start/health.bin",
+      "bytes": 40,
+      "sha256": "fa3a7089b1d31851316556b6a36a3da76a782abbe421f465bfa209680361e09d"
+    },
+    {
+      "path": "diag_pre_start/lifecycle.bin",
+      "bytes": 1,
+      "sha256": "084fed08b978af4d7d196a7446a86b58009e636b611db16211b65a9aadff29c5"
+    },
+    {
+      "path": "diag_pre_start/logger.bin",
+      "bytes": 112,
+      "sha256": "b10ae6355939b4aed47f733cdf4cb47564dfe0fb77a6dbdb626ce0ad81b038f6"
+    },
+    {
+      "path": "diag_pre_start/logger_bus.bin",
+      "bytes": 44,
+      "sha256": "8190b17659ac8def753b0f7e0090c4a60de6e0a6a5760f69652016854d40d793"
+    },
+    {
+      "path": "diag_pre_start/logger_initialized.bin",
+      "bytes": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "path": "diag_pre_start/logger_request.bin",
+      "bytes": 880,
+      "sha256": "1f31aa54f899fca0c93a090c908e7764b25884a7db737adaf303d274a5767c4a"
+    },
+    {
+      "path": "diag_pre_start/logger_runtime.bin",
+      "bytes": 96,
+      "sha256": "628675d51ec2531bd3171dfb7797a111aabf46982e8019c0c35d66fc01fbd994"
+    },
+    {
+      "path": "diag_pre_start/mission_id.bin",
+      "bytes": 4,
+      "sha256": "28276425d45829d4e6f5e18aefbf1f62862f07260a904532fb6e2106dec973e6"
+    },
+    {
+      "path": "diag_pre_start/navigation.bin",
+      "bytes": 440,
+      "sha256": "3733047d4e6df251e3c5fecf5b93656c92c8b72b6d4d608ac2681ca1db067a00"
+    },
+    {
+      "path": "diag_pre_start/normal_queue.bin",
+      "bytes": 28,
+      "sha256": "fcadfbf25b927e2e3b0404916753e4079eb0b27b8f7878691d2e88cf8a1fb256"
+    },
+    {
+      "path": "diag_pre_start/openocd.log",
+      "bytes": 5113,
+      "sha256": "e425060bf980a600e6f2bfcf1cdd5efa7d5be8e97f57180e3f3c08ba99ac7b0b"
+    },
+    {
+      "path": "diag_pre_start/radio_bus.bin",
+      "bytes": 60,
+      "sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "path": "diag_pre_start/radio_stats.bin",
+      "bytes": 60,
+      "sha256": "7e6832482f0c1fbe691fba62cda01ceb1efc32ceab65930dfd6e4e5f7a866345"
+    },
+    {
+      "path": "diag_pre_start/result.json",
+      "bytes": 12859,
+      "sha256": "c9377b019bc4ce5abffb3df0ea526e5179976c8e491c950f4df69a869c369fb1"
+    },
+    {
+      "path": "diag_pre_start/sink.bin",
+      "bytes": 40,
+      "sha256": "fb2972d467d98f1b1eaaf91ce364244440812ee05230e67c9d5e8b01addb85fe"
+    },
+    {
+      "path": "diag_pre_start/storage.bin",
+      "bytes": 80,
+      "sha256": "2bbf13486b562b28fd708653717757176b8afd498bbb2a434675f21090510977"
+    },
+    {
+      "path": "diag_pre_start/task.bin",
+      "bytes": 112,
+      "sha256": "2fe526154a58a5caf2c6f8c0416a544b453e2e3df324926eb2a686b87cbe3ce8"
+    },
+    {
+      "path": "diag_pre_start/timing.bin",
+      "bytes": 80,
+      "sha256": "d55b7813fb154951a2054679204212a9d3a940bffb6fb6779b69c7810e27c329"
+    },
+    {
+      "path": "diagnostic_layout.json",
+      "bytes": 41003,
+      "sha256": "a157881d684b4c486e9668979e5c7de56624dafaf4a2399c73f931a9fb723aad"
+    },
+    {
+      "path": "identify.log",
+      "bytes": 1125,
+      "sha256": "5b6b4dfc9e175a28cdedc03cefe67c4895464af32055cdb5a4b8c8afb6d9635b"
+    },
+    {
+      "path": "identify_command.json",
+      "bytes": 1314,
+      "sha256": "1334fd24d7e7ea475496473b0491b5fadb95aa20d4b2ee089376929d112f73b0"
+    },
+    {
+      "path": "identify_reset.py",
+      "bytes": 3710,
+      "sha256": "62aa388a506c0b1c86a1598d7dc70bb7fdb443325bb26156bd1d7c472632d3c7"
+    },
+    {
+      "path": "identify_result.json",
+      "bytes": 1614,
+      "sha256": "b3bbf98a17588823e156044e915aa6f2b99bbd12f0cd2e819c01e0a3e1e41667"
+    },
+    {
+      "path": "identify_runner.log",
+      "bytes": 1616,
+      "sha256": "0dc5d4fda29972306bd1ed509fdec361508ceaecebd266c073fcccd9dc3c8254"
+    },
+    {
+      "path": "landing_plus_1_4s_runner.log",
+      "bytes": 1078,
+      "sha256": "a86854fa50740e9b669f2903695de03e2d547fd4183dd4407d4c078cd8fb30e1"
+    },
+    {
+      "path": "landing_plus_4s_runner.log",
+      "bytes": 1076,
+      "sha256": "acb4253252e5321153a9e887f8dcad16f79356c5b7feb5358996f5024088be4d"
+    },
+    {
+      "path": "landing_receive_runner.log",
+      "bytes": 1076,
+      "sha256": "2e0efab2b006f2c574cedcc306a3b224cf65ba50e8ee3a5150804325b0715592"
+    },
+    {
+      "path": "layout_extra.commands",
+      "bytes": 850,
+      "sha256": "758cd97eb0acf692683453ea3c26cf00fda215ea814263c1f71ffd1074efb27b"
+    },
+    {
+      "path": "layout_extra.log",
+      "bytes": 290,
+      "sha256": "9d668e92798ae3ed0f70352615fadf225186b1eb0b9f68ef72b00277d386b488"
+    },
+    {
+      "path": "mission_repeat_01/events.jsonl",
+      "bytes": 121286,
+      "sha256": "6ec4db20d67307c529ef65bcfb112eb93ffe8cac7e431885c763430b775bdf5f"
+    },
+    {
+      "path": "mission_repeat_01/raw_rx.bin",
+      "bytes": 5099,
+      "sha256": "f55e5fee271000e30a2cd9150d14a38a4203218930cd05de7b37576bc4f62f9d"
+    },
+    {
+      "path": "mission_repeat_01/result.json",
+      "bytes": 74405,
+      "sha256": "099f1d43d2e8d74fde3b6214d965e5bbecbcfc1e7992c144df575d2edf3e7efe"
+    },
+    {
+      "path": "pre_reset_runner.log",
+      "bytes": 1077,
+      "sha256": "a3d370847f118654b6ed7e1c93769ddc82c44b17ed2cff5c37bf628275663b97"
+    },
+    {
+      "path": "pre_start_runner.log",
+      "bytes": 1069,
+      "sha256": "807c65cbf3bbba030d3c18b252a0e6702f87e8e7585363ce95036aeb167ec7f5"
+    },
+    {
+      "path": "prepare.py",
+      "bytes": 3298,
+      "sha256": "d41aaffed0ef7e37982440f54c94ead75db6a6f746af53f1a0b6bd12a5b46a1d"
+    },
+    {
+      "path": "read_diagnostics.py",
+      "bytes": 6887,
+      "sha256": "1818fcb224d6b43b6e24e9b269995da0f59c013f5ad3a73faa5e9b75fbbada97"
+    },
+    {
+      "path": "repeat_runner.log",
+      "bytes": 1671,
+      "sha256": "a4d42b344e50a4bf7ea203fd9476e1846cccb483c825e179144bc2e98ea0f573"
+    },
+    {
+      "path": "reset.log",
+      "bytes": 1125,
+      "sha256": "5b6b4dfc9e175a28cdedc03cefe67c4895464af32055cdb5a4b8c8afb6d9635b"
+    },
+    {
+      "path": "reset_command.json",
+      "bytes": 1234,
+      "sha256": "8d18d4cd4e4aadeb224de388d118693ee0c712fc945b354642cad3c2d090e5b3"
+    },
+    {
+      "path": "reset_result.json",
+      "bytes": 1411,
+      "sha256": "2af7329db9dd6101e1d7fbaf5cb6399017772f3056109241beb761d0e83d72bd"
+    },
+    {
+      "path": "reset_runner.log",
+      "bytes": 1413,
+      "sha256": "bb5de86dd106b24e2b38400f6d99089725d7cb62453b5732316eae0148d56a3e"
+    },
+    {
+      "path": "run_repeat.py",
+      "bytes": 9751,
+      "sha256": "9c7b52a090318d08f4655085ee6fd1f0e3dbdefa291585eade90df36760a8932"
+    },
+    {
+      "path": "sampling_plan.json",
+      "bytes": 1145,
+      "sha256": "2791982f81ac996408ac334f7702b97c563e663f6ce8fcd3c3219131bb6281ca"
+    },
+    {
+      "path": "source_apps_sha256.json",
+      "bytes": 357102,
+      "sha256": "f195e984904564b38bfea46b3c976c9df89c6460995ef6b79fe7fa5bc543d4cb"
+    }
+  ],
+  "retained_readback": {
+    "path": "D:\\python_software\\SilverStar\\.work\\static_bench_repeat_20261008\\current_image_readback.bin",
+    "sha256": "5c4e8e2bba538eceefc981b7687cd157e4ce14c39fa4076b8c731319b92288f3",
+    "bytes": 331020
+  },
+  "exact_decoder": {
+    "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\KF6_Static_20261008_f045d8c.ssdecoder",
+    "bytes": 144321,
+    "sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+  },
+  "links": [
+    {
+      "link": "STATIC_BENCH_ACCEPTANCE_20261008.md",
+      "exists": true
+    },
+    {
+      "link": "../apps/SCG/plugins/builtin/silverstar_flight_logic_cycle_reference/payload/FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c",
+      "exists": true
+    },
+    {
+      "link": "../apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_bus.c",
+      "exists": true
+    },
+    {
+      "link": "evidence/static_bench_repeat_20261008/manifest.json",
+      "exists": true
+    }
+  ],
+  "evidence_limitations": [
+    "Process command line enumeration denied by local environment; name enumeration only found no matching other test processes. No permission changes.",
+    "Static script exit0 independently observed in exec session13489; later manifest creation is not an invented execution timestamp.",
+    "No second repetition, firmware change, test gate relaxation, TF substitution or cleanup."
+  ]
+}

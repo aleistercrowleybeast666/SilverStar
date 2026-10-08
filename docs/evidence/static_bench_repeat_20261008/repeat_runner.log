@@ -1,0 +1,68 @@
+WAIT CAPABILITY
+PASS CAPABILITY
+WAIT AIR ACK CAPABILITY_ACK
+PASS AIR ACK CAPABILITY_ACK
+WAIT authoritative selftest/capability
+PASS authoritative selftest/capability
+WAIT AIR ACK CAL_START
+PASS AIR ACK CAL_START
+WAIT OneFace authoritative READY
+PASS OneFace authoritative READY
+WAIT AIR ACK ALIGN_START
+PASS AIR ACK ALIGN_START
+WAIT alignment authoritative READY
+PASS alignment authoritative READY
+WAIT AIR ACK UNLOCK
+PASS AIR ACK UNLOCK
+WAIT fresh authoritative READY after live admission
+PASS fresh authoritative READY after live admission
+WAIT AIR ACK START_MISSION
+PASS AIR ACK START_MISSION
+WAIT actual flight transition
+PASS actual flight transition
+LIVE SAMPLE active PASS
+LIVE SAMPLE landing_receive PASS
+LIVE SAMPLE landing_plus_1_4s PASS
+LIVE SAMPLE landing_plus_4s PASS
+{
+  "mission_result": "COMPLETED_OBSERVED_SEQUENCE",
+  "error": null,
+  "air_events": {
+    "3": [
+      {
+        "air_time_ms": 2,
+        "host_after_start_s": 2.072,
+        "arg0": 0,
+        "arg1": 0
+      }
+    ],
+    "5": [
+      {
+        "air_time_ms": 10001,
+        "host_after_start_s": 10.169,
+        "arg0": 0,
+        "arg1": 0
+      }
+    ],
+    "6": [
+      {
+        "air_time_ms": 14006,
+        "host_after_start_s": 14.341,
+        "arg0": 0,
+        "arg1": 0
+      }
+    ]
+  },
+  "flight_frames": 53,
+  "max_flight_gap_s": 0.5889568999991752,
+  "functional_checks": {
+    "landed": true,
+    "no_fault": true,
+    "closed_finalized": true,
+    "start_snapshot_ack": true,
+    "queues_empty": true,
+    "no_capacity_loss": true,
+    "no_io_fault": true,
+    "max_flight_gap_within_2s": true
+  }
+}

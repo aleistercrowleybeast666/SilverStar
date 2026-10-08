@@ -1,0 +1,29 @@
+{
+  "utc_start": "2026-10-08T04:30:52.718543+00:00",
+  "command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set flash [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($flash != 512)} {error {Target mismatch}}; echo \"STATE_BEFORE=[read_memory 0x2001a214 8 1] [read_memory 0x2000d0c2 8 1] [read_memory 0x2000d0c0 8 1] [read_memory 0x2000d0d8 32 1]\"; echo \"TIMING_SEQ_BEFORE=[read_memory 0x2000a7f0 32 1]\"; echo \"BLOCK_timing=[read_memory 0x2000a7f0 32 20]\"; echo \"TIMING_SEQ_AFTER=[read_memory 0x2000a7f0 32 1]\"; echo \"BLOCK_navigation=[read_memory 0x10006bd8 32 110]\"; echo \"BLOCK_task=[read_memory 0x20000000 32 28]\"; echo \"BLOCK_assert_fault=[read_memory 0x2000bec8 32 18]\"; echo \"BLOCK_radio_stats=[read_memory 0x20016c44 32 15]\"; echo \"BLOCK_radio_bus=[read_memory 0x20017164 32 15]\"; echo \"BLOCK_health=[read_memory 0x2000c140 32 10]\"; echo \"BLOCK_alignment_retry=[read_memory 0x10009ac0 32 18]\"; echo \"BLOCK_lifecycle=[read_memory 0x2001a214 8 1]\"; echo \"BLOCK_logger=[read_memory 0x20013648 32 28]\"; echo \"BLOCK_logger_runtime=[read_memory 0x200136b8 32 24]\"; echo \"BLOCK_logger_bus=[read_memory 0x2000d0c8 32 11]\"; echo \"BLOCK_logger_request=[read_memory 0x10009ca8 32 220]\"; echo \"BLOCK_storage=[read_memory 0x20019330 32 20]\"; echo \"BLOCK_file_open=[read_memory 0x20019380 8 1]\"; echo \"BLOCK_mission_id=[read_memory 0x2001932c 32 1]\"; echo \"BLOCK_sink=[read_memory 0x2001a090 32 10]\"; echo \"BLOCK_file_path=[read_memory 0x2001a05c 32 12]\"; echo \"BLOCK_first_mount=[read_memory 0x20000404 32 1]\"; echo \"BLOCK_normal_queue=[read_memory 0x20013510 32 7]\"; echo \"BLOCK_estimator_queue=[read_memory 0x2000f674 32 7]\"; echo \"BLOCK_accepting=[read_memory 0x2000d0c2 8 1]\"; echo \"BLOCK_logger_initialized=[read_memory 0x2000d0c5 8 1]\"; echo \"BLOCK_boot_disabled=[read_memory 0x2000d0c1 8 1]\"; echo \"BLOCK_finalization=[read_memory 0x2000d0c0 8 1]\"; echo \"BLOCK_finalization_deadline=[read_memory 0x2000d0b8 32 2]\"; echo \"STATE_AFTER=[read_memory 0x2001a214 8 1] [read_memory 0x2000d0c2 8 1] [read_memory 0x2000d0c0 8 1] [read_memory 0x2000d0d8 32 1]\"; echo \"SCB_FAULT=[read_memory 0xE000ED28 32 6]\"; echo \"ICSR_DHCSR=[read_memory 0xE000ED04 32 1] [read_memory 0xE000EDF0 32 1]\"; echo \"DWT_PCSR_SAMPLE=[read_memory 0xE000101C 32 1]\"; shutdown"
+  ],
+  "tag": "landing_plus_1_4s",
+  "timeout_s": 20,
+  "halt_for_coherent_postmission_capture": false,
+  "no_reset_flash": true,
+  "intrusiveness": "Postmission halt/resume only when freeze enabled. A later interval after resume is instrumentation, not flight timing."
+}

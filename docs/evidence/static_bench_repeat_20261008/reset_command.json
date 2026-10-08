@@ -1,0 +1,45 @@
+{
+  "mode": "reset",
+  "utc_start": "2026-10-08T04:30:06.485299+00:00",
+  "command": [
+    "D:/OpenOCD-20250710-0.12.0/bin/openocd.exe",
+    "-s",
+    "D:/OpenOCD-20250710-0.12.0/share/openocd/scripts",
+    "-f",
+    "interface/cmsis-dap.cfg",
+    "-c",
+    "adapter serial 132765403520",
+    "-c",
+    "transport select swd",
+    "-f",
+    "target/stm32f4x.cfg",
+    "-c",
+    "reset_config none",
+    "-c",
+    "stm32f4x.cpu configure -event examine-end {}",
+    "-c",
+    "gdb_port disabled; tcl_port disabled; telnet_port disabled",
+    "-c",
+    "init; set id [lindex [read_memory 0xE0042000 32 1] 0]; set flash [lindex [read_memory 0x1FFF7A22 16 1] 0]; if {($id != 0x10076413) || ($flash != 512)} {error {Target mismatch}}; reset run; shutdown"
+  ],
+  "ports": [
+    {
+      "device": "COM3",
+      "vid": 6790,
+      "pid": 29987,
+      "location": "1-1",
+      "serial": ""
+    },
+    {
+      "device": "COM9",
+      "vid": 64237,
+      "pid": 18544,
+      "location": "1-10:x.2",
+      "serial": "132765403520"
+    }
+  ],
+  "timeout_s": 45,
+  "flashed": false,
+  "reset_count": 1,
+  "reason": "LANDED cannot admit another START; one reset starts new independent static lifecycle"
+}

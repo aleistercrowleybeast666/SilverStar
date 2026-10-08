@@ -53,4 +53,6 @@ Windows保存时若提示工程/工件路径过长，请选择较短保存目录
 
 软件收尾报告截止时没有硬件操作。随后用户接好硬件并另行授权；[准备阶段](STATIC_BENCH_PROGRESS_20261008.md)保留原门禁失败，[授权后的静态任务记录](STATIC_BENCH_ACCEPTANCE_20261008.md)记录新源码、一次 Flight 烧录读回、权威 READY 和任务 `000044`。执行机构全部物理断开，观察的是 Delay10 逻辑展开；没有生成最终外场工程。
 
-下一项最小验收是取回完整 `missions/000044/` 原始 TF 目录及本次精确 decoder，经 FLP 严格入口核对 Descriptor、CRC、丢样/overflow、校准/初始状态、主副数据源和全部 run 的保存重开。两次 logger state rejection、遥测发送拒绝及累计调度最大间隔尚未归因；实际 TF 内容和零丢样结论仍未证明。旧 `28b168f/mission000041` 不替代本次证据，后续硬件动作不自动重跑。
+用户随后授权[一次静态复查](STATIC_BENCH_REPEAT_20261008.md)，同一BIN在必要的一次启动复位后完成任务 `000045`。落地宽限期拒绝为0，停收/finalized后变为1（000044为2）；SX1281入队拒绝复现。约94.3ms是启动以来单次最大的Estimator循环start-to-start间隔，两轮均在START前读到；本轮完整live timing快照序号不一致，不能扩为全段一致timing验收。
+
+下一项最小验收是取回完整 `missions/000044/` 和 `missions/000045/` 原始 TF 目录及本次精确 decoder，经 FLP 严格入口核对 Descriptor、CRC、丢样/overflow、校准/初始状态、主副数据源和全部 run 的保存重开。拒绝的具体调用/记录身份、空口接收完整性及启动最大间隔的原因尚未证明；实际 TF 内容和零丢样结论仍未证明。旧 `28b168f/mission000041` 不替代本次证据，后续硬件动作不自动重跑。

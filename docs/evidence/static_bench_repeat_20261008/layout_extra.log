@@ -1,0 +1,8 @@
+accepting=536924354,1
+logger_initialized=536924357,1
+boot_disabled=536924353,1
+finalization=536924352,1
+finalization_deadline=536924344,8
+
+warning: could not convert 'logger_bus.c' from the host encoding (CP1252) to UTF-32.
+This normally should not happen, please file a bug report.
