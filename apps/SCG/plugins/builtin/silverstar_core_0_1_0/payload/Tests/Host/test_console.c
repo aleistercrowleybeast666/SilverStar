@@ -24,6 +24,7 @@
 #include "system_storage_if.h"
 #include "system_task_stack.h"
 #include "system_telemetry_transport_if.h"
+#include "system_version.h"
 #include "test_common.h"
 
 void TestFixture_MagEnabledSet(uint8_t enabled);
@@ -1742,7 +1743,7 @@ int main(void)
     s_flight_recovery_status.impact_capable = 0U;
     s_flight_recovery_status.impact_threshold_mps2 = 15.0f;
     Test_Execute("SYSTEM INFO", SYSTEM_CONSOLE_EXECUTE_OK,
-                 "project=SilverStar version=0.1.0");
+                 "project=SilverStar version=" SILVERSTAR_VERSION_STRING);
     Test_Execute("SYSTEM STATUS", SYSTEM_CONSOLE_EXECUTE_OK,
                  "OK SYSTEM STATUS");
     Test_Execute("SYSTEM STACK", SYSTEM_CONSOLE_EXECUTE_OK,

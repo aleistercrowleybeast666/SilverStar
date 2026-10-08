@@ -52,14 +52,15 @@ def test_switch_preserves_algorithms_parameters_devices_and_current_mcu(builtin_
     FeatureTier_Apply(model, 'standard', builtin_catalog)
     assert model.strategies['estimator'] == PREFIX + 'kf6'
     notes = FeatureTier_Apply(model, 'compact', builtin_catalog)
-    assert any('at most one' in note for note in notes)
+    assert 'device:removed:imu_extra' in notes
     assert model.strategies['estimator'] == PREFIX + 'sf6'
-    assert model.device_instances == original_devices
+    expected_devices = [item for item in original_devices if item.instance_id != 'imu_extra']
+    assert model.device_instances == expected_devices
     model.mcu = 'silverstar.mcu.stm32f103rft6'
     FeatureTier_Apply(model, 'full', builtin_catalog)
     assert model.strategies['estimator'] == PREFIX + 'eskf15'
     assert model.algorithm_parameters == initial_parameters
-    assert model.device_instances == original_devices
+    assert model.device_instances == expected_devices
     assert model.mcu == 'silverstar.mcu.stm32f103rft6'
     assert ProjectModel_Parse(model.Dictionary_Get()).Dictionary_Get() == model.Dictionary_Get()
 
@@ -105,13 +106,13 @@ def test_minimal_changes_are_reversible_and_keep_pure_ins(builtin_catalog):
     assert model.strategies['estimator'] is None
     assert model.protocols['maintenance'] is None
     assert model.protocols['logging'] is not None
-    assert model.device_instances == original
-    with pytest.raises(SourceGraphError, match='GNSS'):
-        SourceGraph_Resolve(model, builtin_catalog)
+    expected = [item for item in original if builtin_catalog.InstanceComponent_Get(item).component_class != 'gnss']
+    assert model.device_instances == expected
+    SourceGraph_Resolve(model, builtin_catalog)
     assert model.build.logging_profile == 'sf6_minimal'
     assert 'SYSTEM_LOG_RECORD_SLOT_SIZE' in _FlightConfigHeader_Render(model, builtin_catalog)
     FeatureTier_Apply(model, 'full', builtin_catalog)
-    assert model.device_instances == original
+    assert model.device_instances == expected
     assert model.protocols == protocols
 
 

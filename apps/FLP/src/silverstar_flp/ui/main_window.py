@@ -1202,7 +1202,8 @@ class MainWindow(QMainWindow):
                 "progress.artifact.timestamps") else "progress.work_bytes"
             text += " · " + self._translator.Text_Get(unit if total else unit + "_done",
                 done=f"{done:,}", total=f"{total:,}")
-            self.progress_bar.setFormat(self._translator.Text_Get("progress.processing"))
+            self.progress_bar.setFormat(self._translator.Text_Get("progress.stage_percent")
+                if getattr(self._active_worker, "is_staged_io", False) is True else "%p%")
         elif getattr(self._active_worker, "is_staged_io", False) is True:
             self.progress_bar.setFormat(self._translator.Text_Get("progress.stage_percent"))
         self.status_label.setText(text)

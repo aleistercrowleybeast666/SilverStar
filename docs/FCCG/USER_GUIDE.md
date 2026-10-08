@@ -3,8 +3,8 @@
 ## Algorithm actual parameters / 算法实际参数
 
 新增独立算法参数页面（硬件连接之前），插件声明实际值、单位和 representation。
-Project format 12；`.ssdecoder` / project-semantics 1.2，拒绝 decoder 1.1；
-Platform 仍为 0.0.12，Record Catalog 与协议布局不变。
+产品版本由根 `VERSION` 提供，当前为 0.1.2；project 格式保留 14/15/16/17 各自兼容边界，四档预设使用 17；`.ssdecoder` / project-semantics 1.2，拒绝 decoder 1.1。
+Record Catalog 与协议布局不随产品补丁版本变化；历史证据和旧 decoder 保留原身份。新生成固件的版本头为 0.1.2；普通再生成仍保护用户拥有的旧 payload，不能仅凭新模型版本认定旧工程实际二进制已升级。
 参数清单、生成绑定与 Recorded Configuration / Offline What-if 边界见[参数契约](ALGORITHM_PARAMETERS.md)。
 精确验证结果仅见仓库根 VALIDATION.md。
 
@@ -14,6 +14,8 @@ Platform 仍为 0.0.12，Record Catalog 与协议布局不变。
 
 ## 2. Devices
 选择IMU、GNSS、其他传感器、通信链路、Storage、Actuator、Indicator。支持多实例的官方IMU/GNSS/Telemetry可使用“增加”按钮重复添加，同型号实例后续绑定不同硬件资源。
+
+明确切换轻量/最简时，各传感器类及遥测按列表保留第一个实例和参数，移除后续超额实例；最简还移除并禁用 GNSS。切回完整/标准不会恢复已移除设备。直接载入旧冲突配置不会自动删设备，须修正后生成。详见[当前流程](../USER_WORKFLOW.md)和[0.1.2 验收](../GUI_ACCEPTANCE_0_1_2_20261008.md)。
 
 ## 3. Flight Configuration
 选择Alignment/INS/Estimator/Landing Strategy、Calibration/Deployment Mode、三种协议以及Logging。

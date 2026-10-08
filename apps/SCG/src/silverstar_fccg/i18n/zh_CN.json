@@ -976,7 +976,7 @@
   "feature_tier.description.compact": "禁用 KF6 / ESKF15；各传感器类型及遥测各至多一个实例，允许单实例 GNSS。独立气压计优先于内置气压计；GNSS、维护和日志可配置。遥测诊断日志关闭；SF6 时关闭纯惯导输出日志，纯惯导时必留。",
   "feature_tier.description.minimal": "轻量约束加禁止启用、选择或添加 GNSS，关闭维护，以及最小可回放本地日志和紧凑队列。保留元数据、校准、对准和回放输入；不缩小安全栈。",
   "feature_tier.changed": "已切换为{tier}。",
-  "feature_tier.saved_choices": "原选择已保存，切回原档可恢复。",
+  "feature_tier.saved_choices": "原算法与参数选择已保存；切入轻量/最简按列表保留第一实例，最简移除 GNSS，回切不恢复已移除设备。",
   "configuration.feature_tier_review": "旧算法与当前档位不兼容；参数已保留，请显式选择兼容档位或算法。",
   "availability.feature_tier_restricted": "当前功能档位禁止此算法",
   "feature_tier_restricted": "当前功能档位禁止此算法",
@@ -984,5 +984,5 @@
   "field.nrf24_address": "NRF24 配对地址 (10位十六进制，SPI顺序)",
   "field.nrf24_delay": "NRF24 重试间隔 (us)",
   "field.nrf24_retries": "NRF24 重试次数",
-  "configuration.feature_tier_devices_review": "当前档位的设备配置不合格，已保留全部设备；请删除超出单实例限制的设备，最简还需移除 GNSS，或切回完整/标准。生成已阻止。"
+  "configuration.feature_tier_devices_review": "当前档位的设备配置不合格，生成已阻止。轻量/最简各传感器与遥测只允许一个实例，最简禁止 GNSS；请切换档位规范化当前配置或修正导入配置。"
 }

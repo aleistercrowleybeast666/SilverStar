@@ -11,21 +11,18 @@ from silverstar_fccg.generator.source_graph import SourceGraph_Resolve, SourceGr
 
 
 @pytest.mark.parametrize('tier', ['compact', 'minimal'])
-def test_switch_import_and_service_preserve_invalid_devices_and_block_generation(builtin_catalog, tier):
+def test_switch_import_and_service_keep_normalized_devices(builtin_catalog, tier):
     model = ReferenceProject_Create(catalog=builtin_catalog)
     model.device_instances.append(DeviceInstance('imu_extra', 'silverstar.device.imu.mpu6050'))
-    original = deepcopy(model.device_instances)
     FeatureTier_Apply(model, tier, builtin_catalog)
-    assert model.device_instances == original, 'Tier switch must not remove user devices'
+    expected = deepcopy(model.device_instances)
+    assert model.DeviceInstance_Get('imu_extra') is None
     loaded = ProjectModel_Parse(model.Dictionary_Get())
     reconciled = ProjectConfiguration_Reconcile(loaded, builtin_catalog)
-    # Maintenance is an auto-managed transport for the deliberately disabled
-    # Minimal protocol; every user sensor/radio remains visible for review.
     assert [item for item in reconciled.model.device_instances if item.instance_id != 'maintenance0'] == [
-        item for item in original if item.instance_id != 'maintenance0']
-    assert not reconciled.edit_validation.valid
-    with pytest.raises(SourceGraphError, match='at most one|GNSS'):
-        SourceGraph_Resolve(reconciled.model, builtin_catalog)
+        item for item in expected if item.instance_id != 'maintenance0']
+    assert reconciled.edit_validation.valid
+    SourceGraph_Resolve(reconciled.model, builtin_catalog)
 
 
 def test_each_sensor_class_is_bounded_even_without_endpoint_descriptors(builtin_catalog):
@@ -37,16 +34,15 @@ def test_each_sensor_class_is_bounded_even_without_endpoint_descriptors(builtin_
     assert any('magnetometer' in error for error in CompactErrors_Get(model, builtin_catalog))
 
 
-def test_return_to_saved_tier_does_not_hide_new_full_devices(builtin_catalog):
+def test_return_to_saved_bounded_tier_normalizes_new_full_devices(builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
     FeatureTier_Apply(model, 'compact', builtin_catalog)
     FeatureTier_Apply(model, 'full', builtin_catalog)
     extra = DeviceInstance('imu_extra', 'silverstar.device.imu.mpu6050')
     model.device_instances.append(extra)
     FeatureTier_Apply(model, 'compact', builtin_catalog)
-    assert extra in model.device_instances
-    with pytest.raises(SourceGraphError, match='at most one'):
-        SourceGraph_Resolve(model, builtin_catalog)
+    assert extra not in model.device_instances
+    SourceGraph_Resolve(model, builtin_catalog)
 
 
 @pytest.mark.parametrize('tier', ['compact', 'minimal'])
@@ -58,7 +54,7 @@ def test_return_to_saved_tier_does_not_hide_new_full_devices(builtin_catalog):
     'silverstar.device.sensor.input_voltage',
     'silverstar.device.telemetry.sx1281',
 ])
-def test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph(
+def test_every_sensor_and_radio_switch_normalizes_roundtrip(
         builtin_catalog, tier, plugin):
     from silverstar_fccg.project.compact import CompactErrors_Get
     model = ReferenceProject_Create(catalog=builtin_catalog)
@@ -66,31 +62,24 @@ def test_every_sensor_and_radio_conflict_survives_roundtrip_and_blocks_graph(
     model.device_instances = [item for item in model.device_instances
         if builtin_catalog.InstanceComponent_Get(item).component_class != component_class]
     model.device_instances.extend([DeviceInstance('review0', plugin), DeviceInstance('review1', plugin)])
-    before = deepcopy(model.device_instances)
     FeatureTier_Apply(model, tier, builtin_catalog)
+    before = deepcopy(model.device_instances)
     loaded = ProjectModel_Parse(model.Dictionary_Get())
     reconciled = ProjectConfiguration_Reconcile(loaded, builtin_catalog)
     assert model.device_instances == before
     assert loaded.device_instances == before
-    assert all(reconciled.model.DeviceInstance_Get(key) is not None for key in ('review0', 'review1'))
-    assert any('at most one' in error for error in CompactErrors_Get(reconciled.model, builtin_catalog))
-    assert not reconciled.edit_validation.valid
-    with pytest.raises(SourceGraphError, match='at most one|GNSS'):
-        SourceGraph_Resolve(reconciled.model, builtin_catalog)
+    assert reconciled.model.DeviceInstance_Get('review1') is None
+    assert (reconciled.model.DeviceInstance_Get('review0') is not None) == (tier != 'minimal' or component_class != 'gnss')
+    assert not any('at most one' in error for error in CompactErrors_Get(reconciled.model, builtin_catalog))
 
 
 @pytest.mark.parametrize('tier', ['full', 'standard', 'compact', 'minimal'])
 def test_single_gnss_rule_is_shared_by_reconcile_and_graph(builtin_catalog, tier):
     model = ReferenceProject_Create(catalog=builtin_catalog)
     FeatureTier_Apply(model, tier, builtin_catalog)
-    # The reference has exactly one GNSS and resources for it.
+    # Compact retains one; Minimal removes it at the explicit switch.
     assert sum(builtin_catalog.InstanceComponent_Get(item).component_class == 'gnss'
-               for item in model.device_instances) == 1
+               for item in model.device_instances) == (0 if tier == 'minimal' else 1)
     reconciled = ProjectConfiguration_Reconcile(ProjectModel_Parse(model.Dictionary_Get()), builtin_catalog)
-    if tier == 'minimal':
-        assert any('GNSS' in issue.message for issue in reconciled.edit_validation.issues)
-        with pytest.raises(SourceGraphError, match='GNSS'):
-            SourceGraph_Resolve(reconciled.model, builtin_catalog)
-    else:
-        assert reconciled.edit_validation.valid
-        SourceGraph_Resolve(reconciled.model, builtin_catalog)
+    assert reconciled.edit_validation.valid
+    SourceGraph_Resolve(reconciled.model, builtin_catalog)

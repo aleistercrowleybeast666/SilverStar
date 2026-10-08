@@ -31,16 +31,19 @@ class WorkerRetireResult(StrEnum):
 def _ProgressEmitter_Build(signals):
     reference = ref(signals)
     last_detail = 0.0
+    last_stage = ""
     def _Progress_Emit(progress, code):
-        nonlocal last_detail
+        nonlocal last_detail, last_stage
         target = reference()
         if target is None:
             raise RuntimeError("worker_signals_unavailable")
         if code.startswith("progress.artifact.") and code != "progress.artifact.checked":
             now = monotonic()
-            if now - last_detail < 0.1:
+            stage = code.split("|", 1)[0]
+            if stage == last_stage and now - last_detail < 0.1:
                 return
             last_detail = now
+            last_stage = stage
         target.progress.emit(progress, code)
     return _Progress_Emit
 

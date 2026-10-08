@@ -108,19 +108,51 @@ def FeatureTier_ErrorsGet(model: ProjectModel, catalog) -> tuple[str, ...]:
     return tuple(errors)
 
 
+def _FeatureTier_DevicesNormalize(model: ProjectModel, catalog) -> tuple[str, ...]:
+    """Only an explicit preset switch removes excess active instances, in order."""
+    retained, removed, counts = [], [], {}
+    for instance in model.device_instances:
+        manifest = catalog.InstanceComponent_Get(instance)
+        kind = manifest.component_class
+        limit = FeatureTier_DeviceClassLimitGet(model.build.feature_tier, kind,
+            str(manifest.metadata.get("device_category", "")), 2)
+        if model.build.feature_tier == "minimal" and any(
+                entry.get("class") == "SYSTEM_DEVICE_CLASS_GNSS"
+                for entry in manifest.metadata.get("device_descriptors", ())):
+            limit = 0
+        count = counts.get(kind, 0)
+        if limit <= 1 and count >= limit:
+            removed.append(instance.instance_id)
+        else:
+            retained.append(instance)
+            counts[kind] = count + 1
+    model.device_instances = retained
+    model.capability_source_overrides = {key: value for key, value in
+        model.capability_source_overrides.items() if value not in removed}
+    model.resource_assignments = {key: value for key, value in model.resource_assignments.items()
+        if key.partition(":")[0] not in removed}
+    if model.alignment.external_source_instance in removed:
+        model.alignment = replace(model.alignment, external_source_instance="")
+    if model.air_link.flight_radio_instance in removed:
+        first_radio = next((item.instance_id for item in retained
+            if catalog.InstanceComponent_Get(item).component_class == "telemetry"), "telemetry0")
+        model.air_link = replace(model.air_link, flight_radio_instance=first_radio)
+    return tuple("device:removed:" + identity for identity in removed)
+
+
 def FeatureTier_Apply(model: ProjectModel, tier: str, catalog) -> tuple[str, ...]:
     """An explicit user preset switch saves a reversible, nonrecursive snapshot.
 
     Hardware/MCU, paths and build tools remain current when restoring selections.
-    Snapshots keep original algorithms/parameters/devices/protocol identities;
-    active device edits and their bindings remain current across switches.
+    Snapshots keep original algorithms/parameters/protocol identities; active
+    devices are normalized in list order and never restored from a tier snapshot.
     generation sees only the current active model. No load-time algorithm rewrite.
     """
     if tier not in FEATURE_TIERS:
         raise ValueError("Unknown feature tier")
     previous = model.build.feature_tier
     if tier == previous:
-        return ()
+        return _FeatureTier_DevicesNormalize(model, catalog)
     snapshot = model.Dictionary_Get()
     snapshot.pop("feature_tier_presets", None)
     model.feature_tier_presets[previous] = snapshot
@@ -132,13 +164,13 @@ def FeatureTier_Apply(model: ProjectModel, tier: str, catalog) -> tuple[str, ...
             setattr(model, field, deepcopy(getattr(restored, field)))
         notes.append("restored")
     model.build = replace(model.build, feature_tier=tier)
+    notes.extend(_FeatureTier_DevicesNormalize(model, catalog))
     selected = model.strategies.get("estimator")
     if not FeatureTier_StrategyAllowed(model, selected):
         replacement = _KF6 if tier == "standard" else _SF6
         model.strategies["estimator"] = replacement
         notes.append("estimator:" + str(selected) + "->" + replacement)
     if model.build.compact_mode:
-        # Keep conflicting user devices visible; validation blocks generation.
         from silverstar_fccg.project.compact import CompactErrors_Get
         notes.extend(CompactErrors_Get(model, catalog))
         barometer = FeatureTier_BarometerOwnerGet(model, catalog)

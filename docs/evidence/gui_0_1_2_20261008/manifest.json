@@ -1,0 +1,616 @@
+{
+  "utc": "2026-10-08T12:08:07.175849+00:00",
+  "base_head": "b2fae225155a925dac475a2e95f8b978d76dde99",
+  "branch": "fix/nightly-user-ready-20261003",
+  "checkpoint": true,
+  "release_acceptance": false,
+  "hardware_actions": false,
+  "owned_processes_all_exited": true,
+  "untouched_existing_python_pid": 33432,
+  "evidence_zip_bytes": 948353,
+  "evidence_zip_sha256": "d9789e1bcbecade5582a5d622db6ec94c27b8105368add20c0a43b06a3979243",
+  "evidence_members": [
+    "approved_stack_gate.log",
+    "approved_stack_gate.py",
+    "approved_stack_gate_v2.log",
+    "archive_checkpoint.py",
+    "baseline.log",
+    "baseline.py",
+    "baseline_v2.log",
+    "extra_binding_diff.py",
+    "extra_binding_metadata.json",
+    "extra_binding_metadata.patch",
+    "final_profile\\scg_baseline.json",
+    "final_profile\\scg_baseline_profile.txt",
+    "final_profile.log",
+    "final_profile.py",
+    "finish_validation.log",
+    "finish_validation.py",
+    "flp2.log",
+    "flp3.log",
+    "flp_baseline_progress.json",
+    "flp_save_baseline_profile.txt",
+    "green1.log",
+    "native.log",
+    "native3\\flp.png",
+    "native3\\flp_result.json",
+    "native3\\scg.png",
+    "native3\\scg_result.json",
+    "native_acceptance.py",
+    "native_acceptance_v2.py",
+    "native_acceptance_v3.py",
+    "native_sources\\result.json",
+    "native_sources\\two_sources.png",
+    "native_sources.log",
+    "native_sources_final.py",
+    "native_v2.log",
+    "native_v3.log",
+    "performance_after.json",
+    "performance_after_v2.log",
+    "performance_after_v3.log",
+    "performance_archive.json",
+    "performance_before.json",
+    "performance_before_v2.log",
+    "performance_before_v3.log",
+    "performance_clicks.py",
+    "performance_pair.log",
+    "performance_pair.py",
+    "prepare_final_profile.py",
+    "prepare_native_v2.py",
+    "prepare_native_v3.py",
+    "progress_summary.json",
+    "progress_summary.py",
+    "red.log",
+    "red_cache.log",
+    "red_qt.log",
+    "red_visible_cache_v2.log",
+    "run_pytest.py",
+    "scg2.log",
+    "scg3.log",
+    "scg4.log",
+    "scg5.log",
+    "scg6.log",
+    "scg7.log",
+    "scg_baseline.json",
+    "scg_baseline_profile.txt",
+    "software\\analyzer.log",
+    "software\\analyzer_result.json",
+    "software\\architecture.log",
+    "software\\architecture_result.json",
+    "software\\architecture_v2.log",
+    "software\\architecture_v2_result.json",
+    "software\\dirty_snapshot.patch",
+    "software\\generation.json",
+    "software\\host.log",
+    "software\\host_result.json",
+    "software\\host_v2.log",
+    "software\\host_v2_result.json",
+    "software\\power10.log",
+    "software\\power10_result.json",
+    "software\\power10_v2.log",
+    "software\\power10_v2_result.json",
+    "software\\release.log",
+    "software\\release_result.json",
+    "software\\release_v2.log",
+    "software\\release_v2_result.json",
+    "software\\stack.log",
+    "software\\stack_result.json",
+    "software\\stack_v2.log",
+    "software\\stack_v2_result.json",
+    "software_gates.log",
+    "software_gates.py",
+    "stack8.log",
+    "update_current_docs.py",
+    "version.log",
+    "version2.log"
+  ],
+  "inputs": [
+    {
+      "path": "work_build_candidates_20261006.csv",
+      "bytes": 3243,
+      "sha256": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9"
+    },
+    {
+      "path": "work_inventory_20261006.txt",
+      "bytes": 3723,
+      "sha256": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca"
+    },
+    {
+      "path": "work_subtree_classification_20261006.csv",
+      "bytes": 51584,
+      "sha256": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+    },
+    {
+      "path": "docs/evidence/logger_health_retest_20261008/generated_config.ssproject",
+      "bytes": 77769,
+      "sha256": "067d8d9750c28c41d32b052d161595a6fc44d2b60c8a8ea8e9cb3ea40f941ef5"
+    },
+    {
+      "path": "docs/evidence/logger_health_retest_20261008/candidate.ssdecoder",
+      "bytes": 144321,
+      "sha256": "46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".work\\gui012_20261008\\software\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.bin",
+      "bytes": 331012,
+      "sha256": "eac468a93aff1a7602e92f5088a2cab597b3275ccda8b45e2c0dc14ba4c3ccc7"
+    },
+    {
+      "path": ".work\\gui012_20261008\\software\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.elf",
+      "bytes": 3326620,
+      "sha256": "b7ed0954311bd65cd46e33b5615c126268db035767b9cc9f0e0ed270eb2a1b1e"
+    },
+    {
+      "path": ".work\\gui012_20261008\\software\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.hex",
+      "bytes": 931119,
+      "sha256": "9cfffeef5cb866eadfea993acebfce29b9b2e9b83c833ce885b874d070746fb8"
+    },
+    {
+      "path": ".work\\gui012_20261008\\software\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.map",
+      "bytes": 1564612,
+      "sha256": "4b4a2d377791a86936ccdf65bafcce66c882ae104b28b6ef218c9b1c52ad3096"
+    }
+  ],
+  "current_doc_links": [
+    {
+      "source": "README.md",
+      "target": "docs/architecture/AIR_LINK.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture/TARGET_MODEL.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture/GROUND_STATION.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture/DEVICE_VARIANTS.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture/PROJECT_FOLDER_CONTRACT.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/USER_WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/field/FIELD_TEST_REFERENCE.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/field/FIELD_TEST_CHECKLIST_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/field/FIELD_QUALIFICATION_RECORD_TEMPLATE.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture/ROUND5_FIELD_QUALIFICATION_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture/SOURCE_LICENSE_AUDIT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "USER_WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "SilverStar_Recommended_Configurations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FCCG/USER_GUIDE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "GSHC/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FLP/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FCCG/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FCCG/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FCCG/VALIDATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "GSHC/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "GSHC/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "GSHC/VALIDATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FLP/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FLP/Architecture.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "FLP/VALIDATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "SilverStar_Recommended_Configurations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "RELEASE_GUI_CLOSEOUT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "STATIC_BENCH_ACCEPTANCE_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "STATIC_BENCH_REPEAT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "STATIC_LOG_FILE_ACCEPTANCE_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/MONOREPO_ARCHITECTURE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "TEST5_GSHC_DAP_COMPARISON_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "LOGGER_HEALTH_FINALIZATION_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "LOGGER_HEALTH_RETEST_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/TARGET_MODEL.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/AIR_LINK.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/GROUND_STATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/DEVICE_VARIANTS.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/PROJECT_FOLDER_CONTRACT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/MISSION_SNAPSHOT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/ROUND4_DEVICE_NAVIGATION_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/ROUND5_FIELD_QUALIFICATION_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "field/FIELD_TEST_REFERENCE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "field/FIELD_TEST_CHECKLIST_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/ROUND2_MULTI_TARGET_REPORT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/MIGRATION_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "../contracts/navigation_v1.json",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "LOGGER_HEALTH_RETEST_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "architecture/PROJECT_FOLDER_CONTRACT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "architecture/TARGET_MODEL.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "architecture/AIR_LINK.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "SilverStar_Recommended_Configurations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FCCG/platform/details/FEATURE_TIERS_20261006.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FCCG/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FCCG/USER_GUIDE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FCCG/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FCCG/BUILD.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "GSHC/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "GSHC/UPPER_COMPUTER_ARCHITECTURE.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "GSHC/AIR_PROTOCOL.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FLP/APP_README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FLP/Decoder_Profile_Package.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FLP/Project_Artifacts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FLP/Architecture.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "RELEASE_GUI_CLOSEOUT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "FCCG/platform/details/RUNTIME_SAFETY.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "field/FIELD_TEST_CHECKLIST_0_1_0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "STATIC_BENCH_PROGRESS_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "STATIC_BENCH_ACCEPTANCE_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "STATIC_BENCH_REPEAT_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/USER_WORKFLOW.md",
+      "target": "STATIC_LOG_FILE_ACCEPTANCE_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/FCCG/USER_GUIDE.md",
+      "target": "ALGORITHM_PARAMETERS.md",
+      "exists": true
+    },
+    {
+      "source": "docs/FCCG/USER_GUIDE.md",
+      "target": "../USER_WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "source": "docs/FCCG/USER_GUIDE.md",
+      "target": "../GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "exists": true
+    },
+    {
+      "source": "docs/FCCG/USER_GUIDE.md",
+      "target": "BUILD.md",
+      "exists": true
+    },
+    {
+      "source": "docs/GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "target": "evidence/gui_0_1_2_20261008/manifest.json",
+      "exists": true
+    },
+    {
+      "source": "docs/GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "target": "USER_WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "source": "docs/GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "target": "SilverStar_Recommended_Configurations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/GUI_ACCEPTANCE_0_1_2_20261008.md",
+      "target": "algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "exists": true
+    }
+  ],
+  "current_doc_missing_links": [],
+  "remaining_stack_failure": "Generated/Src/project_metadata.c; bba3aed1cc73043a10cfd126a7759728a10de53e3769e2563fb209a4b12feadf; NOT AUTHORIZED",
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]"
+}

@@ -1406,12 +1406,21 @@ BINDING_DEPENDENCIES_RF_QUEUE_V9 = {'APP/Src/app_tasks.c': ['842fd609200005b6e99
  'System/Src/system_startup.c': ['306f41f9b584d3fc51c7e1f82ca6b300736db37e96a5a390820330a01799ecb7']}
 
 
+# Exact version-header review v12, explicitly authorized on 2026-10-08.
+# Only PATCH 0 -> 2 and LOG_BUILD_TAG SILV0100 -> SILV0102 differ in this input.
+# All runtime settings, callbacks, limits and unknown-input rejection remain.
+BINDING_SOURCE_PRODUCT_PATCH_V12 = {
+    'System/User/system_user_config.h': ['ffb28f9bf8e08e73c80a16c1121e8c37954f7bb7ade95f2aa47a5226787cc840'],
+}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
             BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []) +
             BINDING_SOURCE_MINIMAL_QUEUE_V8.get(path, []) +
-            BINDING_SOURCE_RF_QUEUE_V9.get(path, []))
+            BINDING_SOURCE_RF_QUEUE_V9.get(path, []) +
+            BINDING_SOURCE_PRODUCT_PATCH_V12.get(path, []))
 
 
 def BindingSourceHash_Get(text):

@@ -4,6 +4,7 @@ Current application implementation: `apps/SCG`. The Python package and plugin ID
 
 建议阅读顺序：[用户流程总览](USER_WORKFLOW.md) → [硬件与四档/推荐边界](SilverStar_Recommended_Configurations.md) → [SCG 配置生成](FCCG/USER_GUIDE.md) → [GSHC 采集](GSHC/APP_README.md) → [FLP 分析](FLP/APP_README.md) → [四算法原理与实际实现](algorithms/NAVIGATION_IMPLEMENTATION.md) → [当前验证边界与明日静态清单](NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md)。
 
+- [当前 0.1.2：四档归一化、原生 GUI、真实进度、软件门禁及剩余阻塞](GUI_ACCEPTANCE_0_1_2_20261008.md)
 - [FCCG documentation](FCCG/README.md), [application guide](FCCG/APP_README.md), [historical validation](FCCG/VALIDATION.md)
 - [GSHC documentation](GSHC/README.md), [application guide](GSHC/APP_README.md), [historical validation](GSHC/VALIDATION.md)
 - [FLP documentation](FLP/APP_README.md), [architecture](FLP/Architecture.md), [historical validation](FLP/VALIDATION.md)

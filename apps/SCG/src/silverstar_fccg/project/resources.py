@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 import re
 from collections import Counter
+from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
+from threading import local
 from typing import Any
 
 from silverstar_fccg.core.errors import FccgError
@@ -90,7 +92,32 @@ def ResourceRequirement_Key(component_id: str, requirement_name: str) -> str:
     return f"{component_id}:{requirement_name}"
 
 
+_board_inventory_scope = local()
+
+
+@contextmanager
+def BoardInventory_ReadScope():
+    """Use one hardware snapshot per GUI transaction; never retain it afterwards."""
+    previous = getattr(_board_inventory_scope, "cache", None)
+    _board_inventory_scope.cache = {} if previous is None else previous
+    try:
+        yield
+    finally:
+        _board_inventory_scope.cache = previous
+
+
 def BoardHardwareInventory_Get(manifest: PluginManifest) -> HardwareInventory | None:
+    cache = getattr(_board_inventory_scope, "cache", None)
+    key = id(manifest)
+    if cache is not None and key in cache:
+        return cache[key][1]
+    inventory = _BoardHardwareInventory_Read(manifest)
+    if cache is not None and len(cache) < 16:
+        cache[key] = (manifest, inventory)
+    return inventory
+
+
+def _BoardHardwareInventory_Read(manifest: PluginManifest) -> HardwareInventory | None:
     if manifest.board is None or not manifest.board.ioc_file:
         return None
     ioc_path = manifest.package_root.joinpath(*manifest.board.ioc_file.split("/"))

@@ -168,3 +168,22 @@ def test_unknown_empty_source_is_not_reviewed(tmp_path):
     (build / "unknown.d").write_text("fixture.o: unknown.c\n", encoding="utf8")
     with pytest.raises(ValueError):
         stacks.BindingSources_Verify(tmp_path, ["unknown.c"], build)
+
+
+@pytest.mark.parametrize('mutation', ['patch', 'runtime'])
+def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path, mutation):
+    payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
+    relative = 'System/User/system_user_config.h'
+    text = (payload / relative).read_text(encoding='utf-8')
+    assert stacks.BindingSourceHash_Get(text) == 'ffb28f9bf8e08e73c80a16c1121e8c37954f7bb7ade95f2aa47a5226787cc840'
+    target = tmp_path / relative
+    target.parent.mkdir(parents=True)
+    target.write_text(text, encoding='utf-8')
+    stacks.BindingHeader_Verify(tmp_path, relative)
+    changed = (text.replace('SILVERSTAR_VERSION_PATCH     2', 'SILVERSTAR_VERSION_PATCH     3')
+               if mutation == 'patch' else text.replace('SYSTEM_LOCAL_GRAVITY_MPS2       9.78f',
+                                                       'SYSTEM_LOCAL_GRAVITY_MPS2       9.79f'))
+    assert changed != text
+    target.write_text(changed, encoding='utf-8')
+    with pytest.raises(ValueError, match='Changed or missing reviewed callback compilation input'):
+        stacks.BindingHeader_Verify(tmp_path, relative)

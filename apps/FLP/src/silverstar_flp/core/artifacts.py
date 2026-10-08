@@ -209,6 +209,19 @@ def ArtifactPath_Resolve(project_path: Path, reference: Mapping) -> Path:
     return resolved
 
 
+def _Array_Immutable(array):
+    """Read-only views qualify only when every ndarray base is also read-only."""
+    for _depth in range(8):
+        if type(array) is bytes:
+            return True
+        if not isinstance(array, np.ndarray) or array.flags.writeable:
+            return False
+        if array.base is None:
+            return True
+        array = array.base
+    return False
+
+
 class _Encoder:
     def __init__(self, directory: Path, context: TaskContext):
         self.directory = directory
@@ -224,6 +237,10 @@ class _Encoder:
         self.in_audit_block = False
         self.in_record_plan = False
         self.array_bytes_written = 0
+        # Dataset/channel arrays are immutable. Reuse an exact owned read-only
+        # object within this write, avoiding repeated compression/fsync of aliases.
+        # Keep the object alive so a later block cannot reuse its Python id.
+        self.immutable_arrays = {}
         generations = list(directory.parent.iterdir())
         if len(generations) > 4096:
             raise ValueError("artifact_generation_limit")
@@ -262,6 +279,11 @@ class _Encoder:
             if (value.dtype.kind not in "biuf" or value.ndim > 4 or value.nbytes > MAX_ARRAY_BYTES
                     or any(n > MAX_COLUMNS for n in value.shape[1:])):
                 raise ValueError("artifact_array_invalid")
+            reusable = _Array_Immutable(value)
+            cached = self.immutable_arrays.get(id(value)) if reusable else None
+            if cached is not None and cached[0] is value:
+                self.context.Cancel_RaiseIfRequested()
+                return {"array": cached[1]}
             temporary = self.directory / "array.tmp"
             if shutil.disk_usage(self.directory).free < value.nbytes + 32 * 1024 * 1024:
                 raise ValueError("artifact_disk_space_insufficient")
@@ -298,6 +320,8 @@ class _Encoder:
                     os.replace(temporary, self.directory / name)
             else:
                 temporary.unlink()
+            if reusable and len(self.immutable_arrays) < MAX_ARRAYS:
+                self.immutable_arrays[id(value)] = (value, name)
             return {"array": name}
         if is_dataclass(value) and type(value).__name__ in _Types_Get():
             key = id(value)

@@ -26,11 +26,10 @@ def test_switch_delete_add_restore_and_minimal_gnss_entrypoints(window, tmp_path
             before = _Count(window, kind)
             window._DeviceInstance_Add(kind)
             assert _Count(window, kind) == before
-        # The inactive GNSS choice is visible, yet cannot be enabled anew.
+        # No GNSS instance survives Minimal, including the empty-row entrypoint.
         if tier == 'minimal':
-            combo = window.devices_page.device_combos['gnss0']
+            combo = next(combo for key, combo in window.devices_page.device_combos.items() if key.startswith('gnss'))
             assert all(not combo.model().item(i).isEnabled() for i in range(1, combo.count()))
-            window._DeviceInstance_Change('gnss0', '')
             window._DeviceInstance_Change('gnss0', 'silverstar.device.gnss.neo_m9n')
             assert _Count(window, 'gnss') == 0 and errors
         window._DeviceInstance_Change('imu0', '')

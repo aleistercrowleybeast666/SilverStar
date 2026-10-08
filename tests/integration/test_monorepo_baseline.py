@@ -25,7 +25,7 @@ def _Python_Run(code: str, *paths: Path) -> str:
 
 
 def test_one_release_version_and_independent_freertos_version() -> None:
-    assert VERSION == "0.1.1"
+    assert VERSION == "0.1.2"
     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert package["project"]["dynamic"] == ["version"]
     assert package["tool"]["setuptools"]["dynamic"]["version"]["attr"] == "tools.silverstar_version.__version__"

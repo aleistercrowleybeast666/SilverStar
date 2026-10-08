@@ -963,6 +963,22 @@ def _CurrentPreRelease_Migrate(root: dict[str, Any]) -> dict[str, Any]:
     return migrated
 
 
+def _ProductPatchIdentity_Migrate(root: dict[str, Any]) -> dict[str, Any]:
+    """Upgrade exact official product identities in memory; never write on open."""
+    project, components = root.get("project"), root.get("components")
+    if not isinstance(project, dict) or not isinstance(components, dict):
+        return root
+    version = project.get("firmware_version")
+    if (components.get("core") != SILVERSTAR_CORE_COMPONENT_ID
+            or version not in ("0.1.0", "0.1.1")
+            or project.get("build_target") != "SilverStar_" + version.replace(".", "_")):
+        return root
+    migrated = deepcopy(root)
+    migrated["project"]["firmware_version"] = SILVERSTAR_PLATFORM_VERSION
+    migrated["project"]["build_target"] = SILVERSTAR_BUILD_ID
+    return migrated
+
+
 def _OfficialCoreV10_Migrate(root: dict[str, Any]) -> dict[str, Any]:
     """Move only the exact official 0.0.10 format-12 identity to this release."""
     if root.get("format_version") != PROJECT_FORMAT_VERSION:
@@ -1886,6 +1902,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         root["alignment"] = alignment.Dictionary_Get()
     root = _CurrentPreRelease_Migrate(root)
     root = _OfficialCoreV10_Migrate(root)
+    root = _ProductPatchIdentity_Migrate(root)
     required_root = {
         "format_version",
         "project",

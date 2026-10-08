@@ -126,7 +126,7 @@ from silverstar_fccg.project.power10_report import (
     Power10Report_Current_Is, Power10Report_Csv, Power10TextPassed_Is,
 )
 from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
-from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+from silverstar_fccg.project.resources import BoardInventory_ReadScope, ResourceAssignments_Resolve
 from silverstar_fccg.project.release_policy import (
     ReleaseCompatibilityIssues_Get, ReleaseMigrationModel_Create, ReleaseMigrationCopy_Save,
 )
@@ -177,6 +177,7 @@ class _ProjectDisplayState:
     firmware_output_directory: Path | None
     firmware_artifact_name: str
     quality_results: tuple[QualityResultRecord, ...]
+    tier_device_conflicts: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -581,6 +582,7 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(0, self._Toolchains_Detect)
 
     def _Catalog_Load(self) -> None:
+        self._project_display_state = None
         self._component_views = self._service.ComponentViews_Get(
             self._translator.language
         )
@@ -659,6 +661,9 @@ class MainWindow(QMainWindow):
             self._FirmwareArtifact_Get(model)
         )
         return _ProjectDisplayState(
+            tier_device_conflicts=any(issue.code in ("COMPACT_DEVICE_LIMIT", "FEATURE_TIER")
+                for issue in (configuration.edit_validation if configuration is not None
+                    else Project_EditValidate(model, self._service.catalog)).issues),
             model=model,
             devices=devices,
             device_instances=self._service.DeviceInstanceViews_Get(
@@ -784,9 +789,7 @@ class MainWindow(QMainWindow):
             )
             self.devices_page.FeatureTier_Set(display.model.build.feature_tier)
             self.devices_page.FeatureTier_NoticeSet(self._translator.Text_Get(
-                "configuration.feature_tier_devices_review") if any(
-                issue.code in ("COMPACT_DEVICE_LIMIT", "FEATURE_TIER")
-                for issue in Project_EditValidate(display.model, self._service.catalog).issues) else "")
+                "configuration.feature_tier_devices_review") if display.tier_device_conflicts else "")
             self.devices_page.Configuration_Set(
                 display.devices,
                 display.device_instances,
@@ -887,6 +890,8 @@ class MainWindow(QMainWindow):
             self._HeaderProject_Refresh(display.model)
         finally:
             self._displaying_model = False
+        self._project_display_state = display
+        self._project_display_snapshot = display.model.Dictionary_Get()
 
     def _BoardPage_Refresh(self, display: _ProjectDisplayState) -> None:
         model = display.model
@@ -1100,6 +1105,7 @@ class MainWindow(QMainWindow):
             self.devices_page.FeatureTier_NoticeSet(text)
             self.status_label.setText(text)
 
+    @BoardInventory_ReadScope()
     def _ProjectConfiguration_Change(
         self,
         mutator: Callable[[ProjectModel], None],
@@ -1118,7 +1124,11 @@ class MainWindow(QMainWindow):
         previous_lifecycle = self._project_state
         previous_display: _ProjectDisplayState | None = None
         try:
-            previous_display = self._ProjectDisplayState_Build(self._model)
+            cached_display = getattr(self, "_project_display_state", None)
+            previous_display = (cached_display if cached_display is not None
+                and cached_display.model is self._model
+                and self._project_display_snapshot == self._model.Dictionary_Get()
+                else self._ProjectDisplayState_Build(self._model))
             mutator(candidate)
             added = [item for item in candidate.device_instances if item not in self._model.device_instances]
             if added and candidate.build.feature_tier == self._model.build.feature_tier:

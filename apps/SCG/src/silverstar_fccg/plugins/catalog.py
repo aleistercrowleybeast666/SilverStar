@@ -27,6 +27,7 @@ class PluginCatalog:
         self._components: dict[str, PluginManifest] = {}
         self._project_variant_view = False
         self._instance_components: dict[str, PluginManifest] = {}
+        self._project_views: dict[tuple, PluginCatalog] = {}
 
     def InstanceComponent_Get(self, instance) -> PluginManifest:
         return self._instance_components.get(
@@ -43,6 +44,19 @@ class PluginCatalog:
         """Resolve selected Device variants without registering duplicate chip plugins."""
         if self._project_variant_view:
             return self
+        # Immutable device selections and target identity completely determine
+        # a variant view. Keep a small working set for old/new GUI transactions;
+        # Scan invalidates it after any plugin install, removal or reload.
+        variant_inputs = []
+        for plugin_id in dict.fromkeys(item.plugin for item in model.device_instances):
+            manifest = self.Component_Get(plugin_id)
+            if manifest.device_variants:
+                stamp = manifest.manifest_path.stat()
+                variant_inputs.append((plugin_id, stamp.st_mtime_ns, stamp.st_size))
+        key = (model.core, model.board, tuple(model.device_instances), tuple(variant_inputs))
+        cached = self._project_views.get(key)
+        if cached is not None:
+            return cached
         view = PluginCatalog(self.builtin_root, self.installed_root)
         view._components = dict(self._components)
         view._project_variant_view = True
@@ -126,9 +140,13 @@ class PluginCatalog:
                 replace(role, key=first + ":" + role.key.removeprefix("telemetry:"))
                 if role.key.startswith("telemetry:") else role for role in board.resource_roles
             ))
+        if len(self._project_views) >= 8:
+            self._project_views.pop(next(iter(self._project_views)))
+        self._project_views[key] = view
         return view
 
     def Scan(self) -> tuple[PluginManifest, ...]:
+        self._project_views.clear()
         manifests: dict[str, PluginManifest] = {}
         errors: list[str] = []
         for source, root in (("builtin", self.builtin_root), ("installed", self.installed_root)):

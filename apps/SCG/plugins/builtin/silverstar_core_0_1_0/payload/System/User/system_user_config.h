@@ -23,9 +23,9 @@
 /* -------------------------------------------------------------------------- */
 #define SILVERSTAR_VERSION_MAJOR     0
 #define SILVERSTAR_VERSION_MINOR     1
-#define SILVERSTAR_VERSION_PATCH     0
+#define SILVERSTAR_VERSION_PATCH     2
 #define SILVERSTAR_VERSION_BUILD     0
-#define SILVERSTAR_LOG_BUILD_TAG     "SILV0100"
+#define SILVERSTAR_LOG_BUILD_TAG     "SILV0102"
 #define SYSTEM_PROFILE_ID            0x0000000CUL
 #define SYSTEM_PROFILE_OUTPUT_CHANNEL_COUNT 2U
 

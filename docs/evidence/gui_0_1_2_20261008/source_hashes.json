@@ -1,0 +1,194 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 2958,
+    "sha256": "fee67864da641b7a8e446a5c29a48ef57cced4c2b362d17bcd1d88e442af0514",
+    "normalized_text_sha256": "302e9366929327a0c334978a69f016181a056bbf7c6d8fad9a94a5c95444be11"
+  },
+  {
+    "path": "VERSION",
+    "bytes": 6,
+    "sha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+    "normalized_text_sha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792"
+  },
+  {
+    "path": "apps/FLP/src/silverstar_flp/core/artifacts.py",
+    "bytes": 54502,
+    "sha256": "ccfdb45e44d7e77b1348e3204c0c97c14c8a87a7e3a18fd0753444a27da23dd2",
+    "normalized_text_sha256": "8889f27ee72e333182781ed320d8d89d16db9d8ad8705a26ca8c2380c50dd74e"
+  },
+  {
+    "path": "apps/FLP/src/silverstar_flp/ui/main_window.py",
+    "bytes": 84500,
+    "sha256": "2dedf3a19adc2cfdab81d7624e82e2f68839fc75ba67a640a0b30105e4086a7e",
+    "normalized_text_sha256": "730905e4f0594764e03a6b479e861a85a5c198950a4ccc576d20a484bb1c5e90"
+  },
+  {
+    "path": "apps/FLP/src/silverstar_flp/ui/workers.py",
+    "bytes": 3174,
+    "sha256": "90cd39004fb697526dbacf5ecee96d970188d3d5756e29ec033c428a17c02f0e",
+    "normalized_text_sha256": "525ae77303e62d893d891675ba454ac97c7aa885a8fda86a241549b220dbae6d"
+  },
+  {
+    "path": "apps/FLP/tests/test_artifact_alias_reuse.py",
+    "bytes": 1101,
+    "sha256": "a090d09dc98060138b5e4fb06978533c2226db90b9272c73cfbe6e3dbe1b67ee",
+    "normalized_text_sha256": "a090d09dc98060138b5e4fb06978533c2226db90b9272c73cfbe6e3dbe1b67ee"
+  },
+  {
+    "path": "apps/FLP/tests/test_progress_visible_counts.py",
+    "bytes": 904,
+    "sha256": "f52e86e4548742979243d71ca2b5a71c72c9e9bd6b5e918defe604363da30026",
+    "normalized_text_sha256": "f52e86e4548742979243d71ca2b5a71c72c9e9bd6b5e918defe604363da30026"
+  },
+  {
+    "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/User/system_user_config.h",
+    "bytes": 16233,
+    "sha256": "925548dfea038800ec6ff5df1665560f0e1ab3906dc7f35e748a06a0d48d39d8",
+    "normalized_text_sha256": "ffb28f9bf8e08e73c80a16c1121e8c37954f7bb7ade95f2aa47a5226787cc840"
+  },
+  {
+    "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_console.c",
+    "bytes": 90016,
+    "sha256": "344635bd744374cbcd602aafc4bd45772f74182ead553e606ce2de6d68bc389a",
+    "normalized_text_sha256": "04a39c314a08575c0ca0f5df9fc3445b9e36c3d4b0b6232ccc4588b9d0d6750d"
+  },
+  {
+    "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py",
+    "bytes": 182088,
+    "sha256": "6d476382bab106a564658f97dfe14c56fcfee494d0a022b9d248bd697ee1ed65",
+    "normalized_text_sha256": "2c089d227d10f08b132cc280c1e9ef9ed8cb637766eb7abcd2812326d21a358c"
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/i18n/en_US.json",
+    "bytes": 73138,
+    "sha256": "4c2435ad2b13b5c99768780bf5254c9d138aab6c58c1e50a5147aef79c091e95",
+    "normalized_text_sha256": "0c8ab68f567894af19d36da5b4e4df332f9a092aedf4a15c49799f2e653d5876"
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json",
+    "bytes": 68481,
+    "sha256": "a1c9e121751d6cae74e25b0b13868b3f3d4985fd44aeaff392c581aa17c713cc",
+    "normalized_text_sha256": "a8b73d0f1062c792a5bb3578e6a0724b59d1dd8260db4f68b5e613805a20ba66"
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/plugins/catalog.py",
+    "bytes": 21776,
+    "sha256": "e14cccdc8028d34af15243d421c374ee49eb2caaf610956ac49f993b8a36c347",
+    "normalized_text_sha256": "12c394d9b5dc807980f08468e0a66f7a14f050ee3710559c78caa04a9a002cbb"
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/project/feature_tiers.py",
+    "bytes": 9580,
+    "sha256": "4982548ffec96bc36c652967e3777ed3f702fab14480fd777288b2069ea5be8d",
+    "normalized_text_sha256": "5c070e1741b9f87048c700403cf873a812a03fb485d203ccb3ae9801571bf0be"
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/project/model.py",
+    "bytes": 95675,
+    "sha256": "1799554e8b799c8f816715abb8b030f5ce5354e8df07f2b8d702c9a3b16fad74",
+    "normalized_text_sha256": "f32822239f46966a83dfa48829bc43833b1e463aeb1acd9701b61abc79a2bdab"
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/project/resources.py",
+    "bytes": 59997,
+    "sha256": "44b3e789570ce4415336d1e25657481d89903e5c43fd73997cc2514610099103",
+    "normalized_text_sha256": "de0ca0770cf123ca80125362b97f663a82bf9f77882906f0847459db941662d9"
+  },
+  {
+    "path": "apps/SCG/src/silverstar_fccg/ui/main_window.py",
+    "bytes": 200087,
+    "sha256": "1e1ca0ab4b7c4c0bf18701b349ff64ee1fa73281ebe7f50b967eeaef96e78c82",
+    "normalized_text_sha256": "cc7ab62c48993f6a810c5058443f4536c9a43e2dbc0dede35cb74570c771f570"
+  },
+  {
+    "path": "apps/SCG/tests/test_board_inventory_scope.py",
+    "bytes": 1537,
+    "sha256": "e0bdfc954fb862576b45c634982f3b9c2cd085d7d2a413e71ba43d780e46ad72",
+    "normalized_text_sha256": "e0bdfc954fb862576b45c634982f3b9c2cd085d7d2a413e71ba43d780e46ad72"
+  },
+  {
+    "path": "apps/SCG/tests/test_feature_tiers.py",
+    "bytes": 14284,
+    "sha256": "b881427ca493fc08d94c1371a47b9910a7f0b58cace49da59daa023725263b30",
+    "normalized_text_sha256": "caf3c678399b00f40c3f1734b6552093fc076f922ddaffbc3e31f6a2d7f4c436"
+  },
+  {
+    "path": "apps/SCG/tests/test_final_freeze_0_0_12.py",
+    "bytes": 36760,
+    "sha256": "6ac6df0c5abbffb43d5b4541c2ff08357c604875b00c1b325954e74407e06b38",
+    "normalized_text_sha256": "b1b0d6f5954160f36bc27b86de607bfadb69d9c07cf9938e1afcb7e4a1d49da1"
+  },
+  {
+    "path": "apps/SCG/tests/test_product_patch_identity.py",
+    "bytes": 1091,
+    "sha256": "6faabb050e15ef42af6b23270d8ca57842b7510400370631e23101dd3fc14b47",
+    "normalized_text_sha256": "6faabb050e15ef42af6b23270d8ca57842b7510400370631e23101dd3fc14b47"
+  },
+  {
+    "path": "apps/SCG/tests/test_project_catalog_cache.py",
+    "bytes": 2591,
+    "sha256": "11050adbb2eec9a4a92feab871547b36b7ba35f794a3d685ff9ea2c6869d0910",
+    "normalized_text_sha256": "11050adbb2eec9a4a92feab871547b36b7ba35f794a3d685ff9ea2c6869d0910"
+  },
+  {
+    "path": "apps/SCG/tests/test_stack_budget.py",
+    "bytes": 9665,
+    "sha256": "80da5e5307767af8ec4881c265776301a843348ad810bc5b49fbfc0f24ae45f2",
+    "normalized_text_sha256": "8d4d8574591420e95313f3446d67efe558fd79e66ef2055e96a5a5548f58911b"
+  },
+  {
+    "path": "apps/SCG/tests/test_tier_device_boundaries.py",
+    "bytes": 4692,
+    "sha256": "88a05f561064ac9c2b4baa8c469c0fe62eaa38c49066e646070e860c09190d96",
+    "normalized_text_sha256": "88a05f561064ac9c2b4baa8c469c0fe62eaa38c49066e646070e860c09190d96"
+  },
+  {
+    "path": "apps/SCG/tests/test_tier_device_gui.py",
+    "bytes": 3466,
+    "sha256": "c037521738b60a84db7644c5a5eaa3d7e96ada2c542a2a14b3d24dcf56c0a389",
+    "normalized_text_sha256": "c037521738b60a84db7644c5a5eaa3d7e96ada2c542a2a14b3d24dcf56c0a389"
+  },
+  {
+    "path": "apps/SCG/tests/test_tier_switch_normalization.py",
+    "bytes": 3397,
+    "sha256": "7bd91e84fe95571c6558269319e28cd6ec0fd79e43951f67cfeecab4913f9c0a",
+    "normalized_text_sha256": "7bd91e84fe95571c6558269319e28cd6ec0fd79e43951f67cfeecab4913f9c0a"
+  },
+  {
+    "path": "apps/SCG/tools/reference_overlays/check_task_stacks.py",
+    "bytes": 180672,
+    "sha256": "3af55727a0edda0bc8f5e04153b2c7f1fc34da82d3eb6850bf88b87c1cf2353e",
+    "normalized_text_sha256": "3c8774e1a70f83120604837c7d2675c985ccc1c6bdb017535435cfcac3cc7b66"
+  },
+  {
+    "path": "docs/FCCG/USER_GUIDE.md",
+    "bytes": 4061,
+    "sha256": "7658f77370680422b481c5b04990541f6b0fe7550f8a3311e118567cc44d3d61",
+    "normalized_text_sha256": "c83082f154b87d8ea2a15376740e96cf0214d5d12b8878273c6c90e07e3d04e7"
+  },
+  {
+    "path": "docs/GUI_ACCEPTANCE_0_1_2_20261008.md",
+    "bytes": 11861,
+    "sha256": "c20b0757fcd9fb134ce16f987689cfe9d72d307f534d1028b48afa6368d8b458",
+    "normalized_text_sha256": "c20b0757fcd9fb134ce16f987689cfe9d72d307f534d1028b48afa6368d8b458"
+  },
+  {
+    "path": "docs/README.md",
+    "bytes": 3161,
+    "sha256": "cc30fae6faffd679a7d68ba42e938d21a05532ee80cf36076b4e35d7ab859cdb",
+    "normalized_text_sha256": "c58dd78067d8f9b9e5c019e714fb79747b507bba6bc90e0825029d39c5d74cf8"
+  },
+  {
+    "path": "docs/USER_WORKFLOW.md",
+    "bytes": 7730,
+    "sha256": "1014f564db49e65f4cec462dd8410addf00987cb13392cf8045c3c587a159310",
+    "normalized_text_sha256": "0273d5975bc14c90a058cc57f3faadb8c85b1289a03d7d135dff37c0853e4bf5"
+  },
+  {
+    "path": "tests/integration/test_monorepo_baseline.py",
+    "bytes": 9020,
+    "sha256": "6e3fa0f6e44be28ce130211a5c327ea95a37603e20e69af5e99962adf0cc7adf",
+    "normalized_text_sha256": "0f2bd448f5b94c499e7480fd63dbdac1c70906ba28f639f1b158e1d8f40cc60f"
+  }
+]

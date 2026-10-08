@@ -352,10 +352,10 @@ def _F407ComposedManifestData_Get(workspace_root: Path) -> dict[str, object]:
 def test_platform_release_has_one_runtime_version_truth(
     workspace_root: Path,
 ) -> None:
-    assert __version__ == SILVERSTAR_PLATFORM_VERSION == "0.1.0"
-    assert SILVERSTAR_BUILD_ID == "SilverStar_0_1_0"
+    assert __version__ == SILVERSTAR_PLATFORM_VERSION == "0.1.2"
+    assert SILVERSTAR_BUILD_ID == "SilverStar_0_1_2"
     assert SILVERSTAR_CORE_COMPONENT_ID == "silverstar.core.0_1_0"
-    assert SILVERSTAR_LOG_BUILD_TAG == "SILV0100"
+    assert SILVERSTAR_LOG_BUILD_TAG == "SILV0102"
     assert len(SILVERSTAR_LOG_BUILD_TAG.encode("ascii")) == 8
     assert SILVERSTAR_SYSTEM_PROFILE_ID == 0x0000000C
     packaging = tomllib.loads((workspace_root / "pyproject.toml").read_text(encoding="utf-8"))
@@ -378,12 +378,16 @@ def test_platform_release_has_one_runtime_version_truth(
         "silverstar.algorithm.alignment.vector_constraints",
         "silverstar.algorithm.alignment.external_attitude_source",
     } <= manifest_ids
+    independent_versions = {
+        "silverstar.os.freertos_11_3_0": "11.3.0",
+        "silverstar.os.freertos_11_3_0_cm3": "11.3.0",
+        "silverstar.algorithm.estimator.kf6": "0.2.0",
+        "silverstar.algorithm.estimator.sf6": "0.2.0",
+        "silverstar.device.barometer.bmp280": "0.1.1",
+        "silverstar.device.barometer.ms5611": "0.1.1",
+    }
     for manifest in manifests:
-        expected = (
-            "11.3.0"
-            if manifest["id"] == "silverstar.os.freertos_11_3_0"
-            else "0.1.0"
-        )
+        expected = independent_versions.get(manifest["id"], "0.1.0")
         assert manifest["version"] == expected
         if manifest["type"] == "protocol":
             contribution = manifest["protocol"]
@@ -521,10 +525,10 @@ def test_generated_firmware_version_macros_match_product_version(
     ).read_text(encoding="utf-8")
     assert re.search(r"#define\s+SILVERSTAR_VERSION_MAJOR\s+0\b", config)
     assert re.search(r"#define\s+SILVERSTAR_VERSION_MINOR\s+1\b", config)
-    assert re.search(r"#define\s+SILVERSTAR_VERSION_PATCH\s+0\b", config)
+    assert re.search(r"#define\s+SILVERSTAR_VERSION_PATCH\s+2\b", config)
     assert re.search(r"#define\s+SILVERSTAR_VERSION_BUILD\s+0\b", config)
     assert re.search(
-        r'#define\s+SILVERSTAR_LOG_BUILD_TAG\s+"SILV0100"', config
+        r'#define\s+SILVERSTAR_LOG_BUILD_TAG\s+"SILV0102"', config
     )
     assert re.search(
         r"#define\s+SYSTEM_PROFILE_ID\s+0x0000000CUL\b", config

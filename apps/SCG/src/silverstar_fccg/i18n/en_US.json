@@ -976,7 +976,7 @@
   "feature_tier.description.compact": "Disable KF6 / ESKF15; at most one instance per sensor type and one telemetry instance, including one GNSS. A dedicated barometer takes priority over an embedded one. GNSS, maintenance and logging remain configurable. Telemetry diagnostics logs are off. Pure INS logs are off with SF6 and required for pure INS.",
   "feature_tier.description.minimal": "Compact constraints plus GNSS activation, selection and addition prohibited, maintenance off, minimum replayable local logging and compact queues. Retain metadata, calibration, alignment and replay inputs; safety stacks remain sized as before.",
   "feature_tier.changed": "Switched to {tier}.",
-  "feature_tier.saved_choices": "Previous choices are saved and restored when returning to their tier.",
+  "feature_tier.saved_choices": "Algorithm and parameter choices are saved. Compact/Minimal keep the first device of each bounded class; Minimal removes GNSS. Returning does not restore removed devices.",
   "configuration.feature_tier_review": "The retained algorithm conflicts with this tier. Parameters are preserved; explicitly select a compatible tier or algorithm.",
   "availability.feature_tier_restricted": "This algorithm is prohibited by the feature tier",
   "feature_tier_restricted": "This algorithm is prohibited by the feature tier",
@@ -984,5 +984,5 @@
   "field.nrf24_address": "NRF24 pair address (10 hex digits, SPI order)",
   "field.nrf24_delay": "NRF24 retry delay (us)",
   "field.nrf24_retries": "NRF24 retry count",
-  "configuration.feature_tier_devices_review": "Devices conflict with this tier and are retained. Remove extra instances and, for Minimal, GNSS, or return to Full/Standard. Generation is blocked."
+  "configuration.feature_tier_devices_review": "Devices conflict with this tier; generation is blocked. Compact/Minimal allow one instance per sensor class and one telemetry instance; Minimal prohibits GNSS. Switch tiers to normalize the active configuration or correct the imported configuration."
 }
