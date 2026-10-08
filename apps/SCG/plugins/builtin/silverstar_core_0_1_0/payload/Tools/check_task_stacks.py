@@ -1406,12 +1406,25 @@ BINDING_DEPENDENCIES_RF_QUEUE_V9 = {'APP/Src/app_tasks.c': ['842fd609200005b6e99
  'System/Src/system_startup.c': ['306f41f9b584d3fc51c7e1f82ca6b300736db37e96a5a390820330a01799ecb7']}
 
 
+# Exact-source review v10, explicitly authorized by the user on 2026-10-08.
+# This is the frozen f045d8c static-bench identity, not arbitrary metadata.
+# All 155 compiled dependency graphs match existing reviewed graphs. Metadata
+# differs from the confirmed configuration by an identity digest and blank line;
+# decoder C differs by two identity hash arrays. Callback bodies, targets,
+# compilation-input coverage, stack limits and unknown-input rejection stay.
+BINDING_SOURCE_STATIC_BENCH_V10 = {
+    'Generated/Src/project_metadata.c': ['ae4706ff828b966e517972f147eee2d5ca938a144ff437ef3b71d32a9f186181'],
+    'Generated/Src/project_log_decoder_profile.c': ['e66c2a4581505fdb114a88f7ff65c866c0e2c0b9b4c99186d0922960bbe98da4'],
+}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
             BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []) +
             BINDING_SOURCE_MINIMAL_QUEUE_V8.get(path, []) +
-            BINDING_SOURCE_RF_QUEUE_V9.get(path, []))
+            BINDING_SOURCE_RF_QUEUE_V9.get(path, []) +
+            BINDING_SOURCE_STATIC_BENCH_V10.get(path, []))
 
 
 def BindingSourceHash_Get(text):
