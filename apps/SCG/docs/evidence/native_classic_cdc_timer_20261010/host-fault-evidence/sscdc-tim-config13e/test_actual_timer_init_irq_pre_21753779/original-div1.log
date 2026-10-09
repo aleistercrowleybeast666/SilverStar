@@ -1,0 +1,1 @@
+Assertion failed: htim1.Init.Prescaler==((divider==RCC_HCLK_DIV1 ? pclk : 2U*pclk)/1000000U-1U), file C:\Users\chdxm\AppData\Local\Temp\sscdc-tim-config13e\test_actual_timer_init_irq_pre_21753779\original.c, line 174

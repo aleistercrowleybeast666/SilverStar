@@ -1,0 +1,380 @@
+F......FFFFFF.                                                           [100%]
+================================== FAILURES ===================================
+________________ test_actual_timer_source_and_replay_contract _________________
+
+timer_native = ({'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {...n the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_source_and_r_aa6332db')
+
+    def test_actual_timer_source_and_replay_contract(timer_native,tmp_path):
+        proof,_inventory,files=timer_native
+>       contract=NativeClockTimSourceContract_Inspect(files,proof['build']['sources'],hclk_hz=168000000)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+files = {'.mxproject': b'[PreviousGenFiles]\r\nAdvancedFolderStructure=true\r\nHeaderFileListSize=12\r\nHeaderFiles#0=..\\Core...in the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...}
+sources = ['Core/Src/main.c', 'Core/Src/gpio.c', 'Core/Src/adc.c', 'Core/Src/dma.c', 'Core/Src/spi.c', 'Core/Src/usart.c', ...]
+hclk_hz = 168000000
+
+    def NativeClockTimSourceContract_Inspect(files, sources, *, hclk_hz):
+        for path,digest in _PROFILES.items():
+            if path not in sources or hashlib.sha256(files.get(path,b'')).hexdigest()!=digest:
+                raise ValueError('Native TIM1 source profile requires review: '+path)
+        iocs=[p for p in files if p.endswith('.ioc') and '/' not in p]
+        if len(iocs)!=1:raise ValueError('Native TIM1 requires one native clock inventory')
+        fields=dict(line.split('=',1) for line in files[iocs[0]].decode('utf-8-sig').splitlines() if '=' in line)
+        if fields.get('NVIC.TimeBaseIP')!='TIM1' or fields.get('RCC.HCLKFreq_Value')!=str(hclk_hz):
+            raise ValueError('Native TIM1 clock inventory does not match its actual owner')
+        # The recognized strong callback is in the native main, not the vendor's
+        # weak default. No callback registry, alternate increment or timer owner.
+        callbacks=[]; ticks=[]
+        for path in sources:
+            text=files[path].decode('utf-8-sig')
+            for name,owners in [('HAL_TIM_PeriodElapsedCallback',callbacks),('HAL_GetTick',ticks)]:
+                try:a,o,b=NativeC_FunctionSpanGet(text,name)
+                except ValueError:continue
+                if '__weak' not in NativeC_VisibleGet(text[a:o]):owners.append((path,text[o+1:b-1]))
+            if path!=_TIMEBASE and re.search(r'\bhtim1\s*\.\s*(?:Instance|Init)\b',NativeC_VisibleGet(text)):
+                raise ValueError('Native TIM1 has an additional configuration owner')
+        if len(callbacks)!=1 or re.sub(r'\s+','',NativeC_VisibleGet(callbacks[0][1]))!='if(htim->Instance==TIM1){HAL_IncTick();}':
+            raise ValueError('Native TIM1 period callback/increment owner is unreviewed')
+        # HAL_GetTick is weak but deliberately retained; no strong replacement.
+        hal_paths=[p for p in sources if p.endswith('/stm32f4xx_hal.c')]
+        if len(hal_paths)!=1 or ticks:raise ValueError('Native HAL tick has an unreviewed override')
+        hal=files[hal_paths[0]].decode('utf-8-sig')
+        for name,expected in [('HAL_GetTick','returnuwTick;'),('HAL_IncTick','uwTick+=(uint32_t)uwTickFreq;')]:
+            _a,o,b=NativeC_FunctionSpanGet(hal,name)
+            if re.sub(r'\s+','',NativeC_VisibleGet(hal[o+1:b-1]))!=expected:
+>               raise ValueError('Native TIM1 HAL tick contract changed: '+name)
+E               ValueError: Native TIM1 HAL tick contract changed: HAL_IncTick
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_clock_tim.py:48: ValueError
+_________ test_actual_timer_init_irq_pre_failure_and_derivative[div1] _________
+
+timer_native = ({'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {...n the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_10cd4149')
+scenario = 'div1'
+
+    
+    @pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-priority','base-fail','start-fail'])
+    def test_actual_timer_init_irq_pre_failure_and_derivative(timer_native,tmp_path,scenario):
+        _proof,_inventory,files=timer_native
+        rendered,_replace,_manifest=NativeClockTimDerivatives_Render(files)
+        for label,inputs in [('original',files),('derived',rendered)]:
+            body=''
+            for suffix,name in [('stm32f4xx_hal_timebase_tim.c','HAL_InitTick'),('stm32f4xx_it.c','TIM1_UP_TIM10_IRQHandler')]:
+                text=next(value.decode('utf-8-sig') for path,value in inputs.items() if path.endswith('/'+suffix))
+>               a,_o,b=NativeC_FunctionSpanGet(text,name);body+=text[a:b]+'\n'
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_10cd4149')
+source = 'HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)\r\n{\r\n  RCC_ClkInitTypeDef    clkconfig;\r\n  uint32_t       ...M10_IRQn 0 */\r\n  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */\r\n\r\n  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */\r\n}\n'
+harness = '\nTimerRegisters timer_registers;\nTIM_HandleTypeDef htim1;\nuint32_t SystemCoreClock=168000000U,uwTickPrio;\nstatic ..._HCLK_DIV1 ? pclk : 2U*pclk)/1000000U-1U));\n    TIM1_UP_TIM10_IRQHandler();assert(irq_calls==1U);\n    return 0;\n}\n'
+label = 'original'
+
+    
+    def _Compile(tmp_path,source,harness,label):
+        gcc=shutil.which('gcc')
+        if gcc is None:pytest.skip('Host GCC unavailable')
+        scg=Path(__file__).resolve().parents[1]
+        api=scg/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        (tmp_path/'main.h').write_text(_HEADER)
+        for path,content in NativeClock_FilesRender(hclk_hz=168000000).items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        path=tmp_path/(label+'.c');path.write_text('#include "main.h"\n#include "native_clock.h"\n#include "platform_critical.h"\n#include <assert.h>\n#include <string.h>\n'+source+harness)
+        exe=tmp_path/(label+'.exe')
+        command=[gcc,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion','-Wsign-conversion','-Wundef','-fanalyzer',
+            '-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),str(path),'-o',str(exe)]
+        run=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       (tmp_path/(label+'-command.json')).write_text(json.dumps({'command':command,'exit':run.returncode,'stdout':run.stdout,'stderr':run.stderr},indent=2))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_10cd4149\original.c: In function 'HAL_InitTick':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_10cd4149\original.c:52:3: error: 'htim1' undeclared (first use in this function)
+E            52 |       /* Configure the SysTick IRQ priority */
+E               |   ^   ~
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_10cd4149\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e_10cd4149\\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:115: AssertionError
+_________ test_actual_timer_init_irq_pre_failure_and_derivative[div2] _________
+
+timer_native = ({'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {...n the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_ef038055')
+scenario = 'div2'
+
+    
+    @pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-priority','base-fail','start-fail'])
+    def test_actual_timer_init_irq_pre_failure_and_derivative(timer_native,tmp_path,scenario):
+        _proof,_inventory,files=timer_native
+        rendered,_replace,_manifest=NativeClockTimDerivatives_Render(files)
+        for label,inputs in [('original',files),('derived',rendered)]:
+            body=''
+            for suffix,name in [('stm32f4xx_hal_timebase_tim.c','HAL_InitTick'),('stm32f4xx_it.c','TIM1_UP_TIM10_IRQHandler')]:
+                text=next(value.decode('utf-8-sig') for path,value in inputs.items() if path.endswith('/'+suffix))
+>               a,_o,b=NativeC_FunctionSpanGet(text,name);body+=text[a:b]+'\n'
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_ef038055')
+source = 'HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)\r\n{\r\n  RCC_ClkInitTypeDef    clkconfig;\r\n  uint32_t       ...M10_IRQn 0 */\r\n  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */\r\n\r\n  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */\r\n}\n'
+harness = '\nTimerRegisters timer_registers;\nTIM_HandleTypeDef htim1;\nuint32_t SystemCoreClock=168000000U,uwTickPrio;\nstatic ..._HCLK_DIV1 ? pclk : 2U*pclk)/1000000U-1U));\n    TIM1_UP_TIM10_IRQHandler();assert(irq_calls==1U);\n    return 0;\n}\n'
+label = 'original'
+
+    
+    def _Compile(tmp_path,source,harness,label):
+        gcc=shutil.which('gcc')
+        if gcc is None:pytest.skip('Host GCC unavailable')
+        scg=Path(__file__).resolve().parents[1]
+        api=scg/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        (tmp_path/'main.h').write_text(_HEADER)
+        for path,content in NativeClock_FilesRender(hclk_hz=168000000).items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        path=tmp_path/(label+'.c');path.write_text('#include "main.h"\n#include "native_clock.h"\n#include "platform_critical.h"\n#include <assert.h>\n#include <string.h>\n'+source+harness)
+        exe=tmp_path/(label+'.exe')
+        command=[gcc,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion','-Wsign-conversion','-Wundef','-fanalyzer',
+            '-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),str(path),'-o',str(exe)]
+        run=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       (tmp_path/(label+'-command.json')).write_text(json.dumps({'command':command,'exit':run.returncode,'stdout':run.stdout,'stderr':run.stderr},indent=2))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_ef038055\original.c: In function 'HAL_InitTick':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_ef038055\original.c:52:3: error: 'htim1' undeclared (first use in this function)
+E            52 |       /* Configure the SysTick IRQ priority */
+E               |   ^   ~
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_ef038055\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e_ef038055\\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:115: AssertionError
+______ test_actual_timer_init_irq_pre_failure_and_derivative[bad-clock] _______
+
+timer_native = ({'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {...n the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_b7fa597d')
+scenario = 'bad-clock'
+
+    
+    @pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-priority','base-fail','start-fail'])
+    def test_actual_timer_init_irq_pre_failure_and_derivative(timer_native,tmp_path,scenario):
+        _proof,_inventory,files=timer_native
+        rendered,_replace,_manifest=NativeClockTimDerivatives_Render(files)
+        for label,inputs in [('original',files),('derived',rendered)]:
+            body=''
+            for suffix,name in [('stm32f4xx_hal_timebase_tim.c','HAL_InitTick'),('stm32f4xx_it.c','TIM1_UP_TIM10_IRQHandler')]:
+                text=next(value.decode('utf-8-sig') for path,value in inputs.items() if path.endswith('/'+suffix))
+>               a,_o,b=NativeC_FunctionSpanGet(text,name);body+=text[a:b]+'\n'
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_b7fa597d')
+source = 'HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)\r\n{\r\n  RCC_ClkInitTypeDef    clkconfig;\r\n  uint32_t       ...M10_IRQn 0 */\r\n  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */\r\n\r\n  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */\r\n}\n'
+harness = '\nTimerRegisters timer_registers;\nTIM_HandleTypeDef htim1;\nuint32_t SystemCoreClock=168000000U,uwTickPrio;\nstatic ..._HCLK_DIV1 ? pclk : 2U*pclk)/1000000U-1U));\n    TIM1_UP_TIM10_IRQHandler();assert(irq_calls==1U);\n    return 0;\n}\n'
+label = 'original'
+
+    
+    def _Compile(tmp_path,source,harness,label):
+        gcc=shutil.which('gcc')
+        if gcc is None:pytest.skip('Host GCC unavailable')
+        scg=Path(__file__).resolve().parents[1]
+        api=scg/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        (tmp_path/'main.h').write_text(_HEADER)
+        for path,content in NativeClock_FilesRender(hclk_hz=168000000).items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        path=tmp_path/(label+'.c');path.write_text('#include "main.h"\n#include "native_clock.h"\n#include "platform_critical.h"\n#include <assert.h>\n#include <string.h>\n'+source+harness)
+        exe=tmp_path/(label+'.exe')
+        command=[gcc,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion','-Wsign-conversion','-Wundef','-fanalyzer',
+            '-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),str(path),'-o',str(exe)]
+        run=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       (tmp_path/(label+'-command.json')).write_text(json.dumps({'command':command,'exit':run.returncode,'stdout':run.stdout,'stderr':run.stderr},indent=2))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_b7fa597d\original.c: In function 'HAL_InitTick':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_b7fa597d\original.c:52:3: error: 'htim1' undeclared (first use in this function)
+E            52 |       /* Configure the SysTick IRQ priority */
+E               |   ^   ~
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_b7fa597d\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e_b7fa597d\\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:115: AssertionError
+_____ test_actual_timer_init_irq_pre_failure_and_derivative[bad-priority] _____
+
+timer_native = ({'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {...n the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_1aa536e0')
+scenario = 'bad-priority'
+
+    
+    @pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-priority','base-fail','start-fail'])
+    def test_actual_timer_init_irq_pre_failure_and_derivative(timer_native,tmp_path,scenario):
+        _proof,_inventory,files=timer_native
+        rendered,_replace,_manifest=NativeClockTimDerivatives_Render(files)
+        for label,inputs in [('original',files),('derived',rendered)]:
+            body=''
+            for suffix,name in [('stm32f4xx_hal_timebase_tim.c','HAL_InitTick'),('stm32f4xx_it.c','TIM1_UP_TIM10_IRQHandler')]:
+                text=next(value.decode('utf-8-sig') for path,value in inputs.items() if path.endswith('/'+suffix))
+>               a,_o,b=NativeC_FunctionSpanGet(text,name);body+=text[a:b]+'\n'
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_1aa536e0')
+source = 'HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)\r\n{\r\n  RCC_ClkInitTypeDef    clkconfig;\r\n  uint32_t       ...M10_IRQn 0 */\r\n  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */\r\n\r\n  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */\r\n}\n'
+harness = '\nTimerRegisters timer_registers;\nTIM_HandleTypeDef htim1;\nuint32_t SystemCoreClock=168000000U,uwTickPrio;\nstatic ..._HCLK_DIV1 ? pclk : 2U*pclk)/1000000U-1U));\n    TIM1_UP_TIM10_IRQHandler();assert(irq_calls==1U);\n    return 0;\n}\n'
+label = 'original'
+
+    
+    def _Compile(tmp_path,source,harness,label):
+        gcc=shutil.which('gcc')
+        if gcc is None:pytest.skip('Host GCC unavailable')
+        scg=Path(__file__).resolve().parents[1]
+        api=scg/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        (tmp_path/'main.h').write_text(_HEADER)
+        for path,content in NativeClock_FilesRender(hclk_hz=168000000).items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        path=tmp_path/(label+'.c');path.write_text('#include "main.h"\n#include "native_clock.h"\n#include "platform_critical.h"\n#include <assert.h>\n#include <string.h>\n'+source+harness)
+        exe=tmp_path/(label+'.exe')
+        command=[gcc,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion','-Wsign-conversion','-Wundef','-fanalyzer',
+            '-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),str(path),'-o',str(exe)]
+        run=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       (tmp_path/(label+'-command.json')).write_text(json.dumps({'command':command,'exit':run.returncode,'stdout':run.stdout,'stderr':run.stderr},indent=2))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_1aa536e0\original.c: In function 'HAL_InitTick':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_1aa536e0\original.c:52:3: error: 'htim1' undeclared (first use in this function)
+E            52 |       /* Configure the SysTick IRQ priority */
+E               |   ^   ~
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_1aa536e0\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e_1aa536e0\\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:115: AssertionError
+______ test_actual_timer_init_irq_pre_failure_and_derivative[base-fail] _______
+
+timer_native = ({'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {...n the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_7d6635d2')
+scenario = 'base-fail'
+
+    
+    @pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-priority','base-fail','start-fail'])
+    def test_actual_timer_init_irq_pre_failure_and_derivative(timer_native,tmp_path,scenario):
+        _proof,_inventory,files=timer_native
+        rendered,_replace,_manifest=NativeClockTimDerivatives_Render(files)
+        for label,inputs in [('original',files),('derived',rendered)]:
+            body=''
+            for suffix,name in [('stm32f4xx_hal_timebase_tim.c','HAL_InitTick'),('stm32f4xx_it.c','TIM1_UP_TIM10_IRQHandler')]:
+                text=next(value.decode('utf-8-sig') for path,value in inputs.items() if path.endswith('/'+suffix))
+>               a,_o,b=NativeC_FunctionSpanGet(text,name);body+=text[a:b]+'\n'
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_7d6635d2')
+source = 'HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)\r\n{\r\n  RCC_ClkInitTypeDef    clkconfig;\r\n  uint32_t       ...M10_IRQn 0 */\r\n  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */\r\n\r\n  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */\r\n}\n'
+harness = '\nTimerRegisters timer_registers;\nTIM_HandleTypeDef htim1;\nuint32_t SystemCoreClock=168000000U,uwTickPrio;\nstatic ..._HCLK_DIV1 ? pclk : 2U*pclk)/1000000U-1U));\n    TIM1_UP_TIM10_IRQHandler();assert(irq_calls==1U);\n    return 0;\n}\n'
+label = 'original'
+
+    
+    def _Compile(tmp_path,source,harness,label):
+        gcc=shutil.which('gcc')
+        if gcc is None:pytest.skip('Host GCC unavailable')
+        scg=Path(__file__).resolve().parents[1]
+        api=scg/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        (tmp_path/'main.h').write_text(_HEADER)
+        for path,content in NativeClock_FilesRender(hclk_hz=168000000).items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        path=tmp_path/(label+'.c');path.write_text('#include "main.h"\n#include "native_clock.h"\n#include "platform_critical.h"\n#include <assert.h>\n#include <string.h>\n'+source+harness)
+        exe=tmp_path/(label+'.exe')
+        command=[gcc,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion','-Wsign-conversion','-Wundef','-fanalyzer',
+            '-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),str(path),'-o',str(exe)]
+        run=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       (tmp_path/(label+'-command.json')).write_text(json.dumps({'command':command,'exit':run.returncode,'stdout':run.stdout,'stderr':run.stderr},indent=2))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_7d6635d2\original.c: In function 'HAL_InitTick':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_7d6635d2\original.c:52:3: error: 'htim1' undeclared (first use in this function)
+E            52 |       /* Configure the SysTick IRQ priority */
+E               |   ^   ~
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_7d6635d2\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e_7d6635d2\\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:115: AssertionError
+______ test_actual_timer_init_irq_pre_failure_and_derivative[start-fail] ______
+
+timer_native = ({'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {...n the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_12031955')
+scenario = 'start-fail'
+
+    
+    @pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-priority','base-fail','start-fail'])
+    def test_actual_timer_init_irq_pre_failure_and_derivative(timer_native,tmp_path,scenario):
+        _proof,_inventory,files=timer_native
+        rendered,_replace,_manifest=NativeClockTimDerivatives_Render(files)
+        for label,inputs in [('original',files),('derived',rendered)]:
+            body=''
+            for suffix,name in [('stm32f4xx_hal_timebase_tim.c','HAL_InitTick'),('stm32f4xx_it.c','TIM1_UP_TIM10_IRQHandler')]:
+                text=next(value.decode('utf-8-sig') for path,value in inputs.items() if path.endswith('/'+suffix))
+>               a,_o,b=NativeC_FunctionSpanGet(text,name);body+=text[a:b]+'\n'
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim13a/test_actual_timer_init_irq_pre_12031955')
+source = 'HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)\r\n{\r\n  RCC_ClkInitTypeDef    clkconfig;\r\n  uint32_t       ...M10_IRQn 0 */\r\n  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */\r\n\r\n  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */\r\n}\n'
+harness = '\nTimerRegisters timer_registers;\nTIM_HandleTypeDef htim1;\nuint32_t SystemCoreClock=168000000U,uwTickPrio;\nstatic ..._HCLK_DIV1 ? pclk : 2U*pclk)/1000000U-1U));\n    TIM1_UP_TIM10_IRQHandler();assert(irq_calls==1U);\n    return 0;\n}\n'
+label = 'original'
+
+    
+    def _Compile(tmp_path,source,harness,label):
+        gcc=shutil.which('gcc')
+        if gcc is None:pytest.skip('Host GCC unavailable')
+        scg=Path(__file__).resolve().parents[1]
+        api=scg/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        (tmp_path/'main.h').write_text(_HEADER)
+        for path,content in NativeClock_FilesRender(hclk_hz=168000000).items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        path=tmp_path/(label+'.c');path.write_text('#include "main.h"\n#include "native_clock.h"\n#include "platform_critical.h"\n#include <assert.h>\n#include <string.h>\n'+source+harness)
+        exe=tmp_path/(label+'.exe')
+        command=[gcc,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion','-Wsign-conversion','-Wundef','-fanalyzer',
+            '-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),str(path),'-o',str(exe)]
+        run=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       (tmp_path/(label+'-command.json')).write_text(json.dumps({'command':command,'exit':run.returncode,'stdout':run.stdout,'stderr':run.stderr},indent=2))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_12031955\original.c: In function 'HAL_InitTick':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_12031955\original.c:52:3: error: 'htim1' undeclared (first use in this function)
+E            52 |       /* Configure the SysTick IRQ priority */
+E               |   ^   ~
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-tim13a\test_actual_timer_init_irq_pre_12031955\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e_12031955\\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_clock_tim.py:115: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_clock_tim.py::test_actual_timer_source_and_replay_contract
+FAILED .work\ccdi\apps\SCG\tests\test_native_clock_tim.py::test_actual_timer_init_irq_pre_failure_and_derivative[div1]
+FAILED .work\ccdi\apps\SCG\tests\test_native_clock_tim.py::test_actual_timer_init_irq_pre_failure_and_derivative[div2]
+FAILED .work\ccdi\apps\SCG\tests\test_native_clock_tim.py::test_actual_timer_init_irq_pre_failure_and_derivative[bad-clock]
+FAILED .work\ccdi\apps\SCG\tests\test_native_clock_tim.py::test_actual_timer_init_irq_pre_failure_and_derivative[bad-priority]
+FAILED .work\ccdi\apps\SCG\tests\test_native_clock_tim.py::test_actual_timer_init_irq_pre_failure_and_derivative[base-fail]
+FAILED .work\ccdi\apps\SCG\tests\test_native_clock_tim.py::test_actual_timer_init_irq_pre_failure_and_derivative[start-fail]
+7 failed, 7 passed, 1 warning in 34.48s

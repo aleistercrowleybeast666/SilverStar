@@ -123,8 +123,8 @@ def NativeLinkedLibraries_Inspect(map_text: str, regions: list[dict]) -> list[di
     return records
 
 
-def Artifact_Check(root: Path, prefix: str) -> None:
-    graph = Architecture_Check(root)
+def Artifact_Check(root: Path, prefix: str, *, architecture_check=None) -> None:
+    graph = (Architecture_Check if architecture_check is None else architecture_check)(root)
     receipt = json.loads((root/'receipt.json').read_text())
     if (receipt['status'] != 'NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED' or
             receipt['failure'] is not None or receipt['warning_diagnostics'] or

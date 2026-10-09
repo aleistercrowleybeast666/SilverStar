@@ -1,0 +1,24 @@
+{
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-Wundef",
+    "-fanalyzer",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13a\\test_actual_timer_init_irq_pre_12031955",
+    "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13a\\test_actual_timer_init_irq_pre_12031955\\Generated\\Inc",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13a\\test_actual_timer_init_irq_pre_12031955\\original.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13a\\test_actual_timer_init_irq_pre_12031955\\original.exe"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13a\\test_actual_timer_init_irq_pre_12031955\\original.c: In function 'HAL_InitTick':\nC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13a\\test_actual_timer_init_irq_pre_12031955\\original.c:52:3: error: 'htim1' undeclared (first use in this function)\n   52 |       /* Configure the SysTick IRQ priority */\n      |   ^   ~\nC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13a\\test_actual_timer_init_irq_pre_12031955\\original.c:52:3: note: each undeclared identifier is reported only once for each function it appears in\n"
+}

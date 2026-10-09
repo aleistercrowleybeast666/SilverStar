@@ -1,0 +1,35 @@
+["arm-none-eabi-gcc", "--version"]
+arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-IPlatform/Inc", "-ICommon/Inc", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.d", "-MT", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.o", "-S", "HardwareGenerated/ReviewedNativeEntry/Core/Src/main.c", "-o", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.s", "-o", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0

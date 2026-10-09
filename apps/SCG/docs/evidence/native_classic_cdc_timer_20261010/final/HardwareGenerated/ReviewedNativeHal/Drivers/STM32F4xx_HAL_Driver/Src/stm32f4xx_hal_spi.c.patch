@@ -1,0 +1,104 @@
+--- HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
++++ HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
+@@ -770,6 +770,8 @@
+   */
+ HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, const uint8_t *pData, uint16_t Size, uint32_t Timeout)
+ {
++  uint32_t native_poll_budget = 2000000U;
++
+   uint32_t tickstart;
+   uint16_t initial_TxXferCount;
+ 
+@@ -842,6 +844,15 @@
+     /* Transmit data in 16 Bit mode */
+     while (hspi->TxXferCount > 0U)
+     {
++      /* An ordinary bounded timeout; no successful transfer is published. */
++      if (native_poll_budget == 0U)
++      {
++        hspi->State = HAL_SPI_STATE_READY;
++        __HAL_UNLOCK(hspi);
++        return HAL_TIMEOUT;
++      }
++      native_poll_budget--;
++
+       /* Wait until TXE flag is set to send data */
+       if (__HAL_SPI_GET_FLAG(hspi, SPI_FLAG_TXE))
+       {
+@@ -872,6 +883,15 @@
+     }
+     while (hspi->TxXferCount > 0U)
+     {
++      /* An ordinary bounded timeout; no successful transfer is published. */
++      if (native_poll_budget == 0U)
++      {
++        hspi->State = HAL_SPI_STATE_READY;
++        __HAL_UNLOCK(hspi);
++        return HAL_TIMEOUT;
++      }
++      native_poll_budget--;
++
+       /* Wait until TXE flag is set to send data */
+       if (__HAL_SPI_GET_FLAG(hspi, SPI_FLAG_TXE))
+       {
+@@ -1140,6 +1160,8 @@
+ HAL_StatusTypeDef HAL_SPI_TransmitReceive(SPI_HandleTypeDef *hspi, const uint8_t *pTxData, uint8_t *pRxData,
+                                           uint16_t Size, uint32_t Timeout)
+ {
++  uint32_t native_poll_budget = 2000000U;
++
+   uint16_t             initial_TxXferCount;
+   uint32_t             tmp_mode;
+   HAL_SPI_StateTypeDef tmp_state;
+@@ -1231,6 +1253,15 @@
+     }
+     while ((hspi->TxXferCount > 0U) || (hspi->RxXferCount > 0U))
+     {
++      /* An ordinary bounded timeout; no successful transfer is published. */
++      if (native_poll_budget == 0U)
++      {
++        hspi->State = HAL_SPI_STATE_READY;
++        __HAL_UNLOCK(hspi);
++        return HAL_TIMEOUT;
++      }
++      native_poll_budget--;
++
+       /* Check TXE flag */
+       if ((__HAL_SPI_GET_FLAG(hspi, SPI_FLAG_TXE)) && (hspi->TxXferCount > 0U) && (txallowed == 1U))
+       {
+@@ -1285,6 +1316,15 @@
+     }
+     while ((hspi->TxXferCount > 0U) || (hspi->RxXferCount > 0U))
+     {
++      /* An ordinary bounded timeout; no successful transfer is published. */
++      if (native_poll_budget == 0U)
++      {
++        hspi->State = HAL_SPI_STATE_READY;
++        __HAL_UNLOCK(hspi);
++        return HAL_TIMEOUT;
++      }
++      native_poll_budget--;
++
+       /* Check TXE flag */
+       if ((__HAL_SPI_GET_FLAG(hspi, SPI_FLAG_TXE)) && (hspi->TxXferCount > 0U) && (txallowed == 1U))
+       {
+@@ -3497,6 +3537,8 @@
+ static HAL_StatusTypeDef SPI_WaitFlagStateUntilTimeout(SPI_HandleTypeDef *hspi, uint32_t Flag, FlagStatus State,
+                                                        uint32_t Timeout, uint32_t Tickstart)
+ {
++  uint32_t native_poll_budget = 2000000U;
++
+   __IO uint32_t count;
+   uint32_t tmp_timeout;
+   uint32_t tmp_tickstart;
+@@ -3510,6 +3552,10 @@
+ 
+   while ((__HAL_SPI_GET_FLAG(hspi, Flag) ? SET : RESET) != State)
+   {
++    /* Enter the existing timeout cleanup even when native HAL tick stops. */
++    if (native_poll_budget == 0U) { Timeout = 0U; tmp_timeout = 0U; }
++    else { native_poll_budget--; }
++
+     if (Timeout != HAL_MAX_DELAY)
+     {
+       if (((HAL_GetTick() - tmp_tickstart) >= tmp_timeout) || (tmp_timeout == 0U))

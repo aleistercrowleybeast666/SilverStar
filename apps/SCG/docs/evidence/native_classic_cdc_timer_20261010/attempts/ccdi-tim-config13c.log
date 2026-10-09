@@ -1,0 +1,35 @@
+..............F..                                                        [100%]
+================================== FAILURES ===================================
+________ test_explicit_usb_options_preserve_original_and_patch_replay _________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-tim-config13c/test_explicit_usb_options_pres_bc64c066')
+
+    def test_explicit_usb_options_preserve_original_and_patch_replay(tmp_path):
+        root,args=native.__wrapped__(SimpleNamespace(param='f407-usb'),tmp_path)
+        proof,_inventory,files=NativeClassicCdc_Inspect(root,**args)
+        before={path:hashlib.sha256(value).hexdigest() for path,value in files.items()}
+>       rendered,include,manifest=NativeUsbConfig_FilesRender(files,proof['cdc']['owners'])
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_config.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+files = {'.mxproject': b'[PreviousGenFiles]\r\nAdvancedFolderStructure=true\r\nHeaderFileListSize=12\r\nHeaderFiles#0=..\\Core...in the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...}
+owners = {'usbd_conf.c': 'USB_DEVICE/Target/usbd_conf.c', 'usbd_core.c': 'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd...: 'Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c', 'usbd_desc.c': 'USB_DEVICE/App/usbd_desc.c', ...}
+
+    def NativeUsbConfig_FilesRender(files, owners):
+>       path=owners['usbd_conf.h'];original=files[path]
+             ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'usbd_conf.h'
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_config.py:9: KeyError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_config.py::test_explicit_usb_options_preserve_original_and_patch_replay
+1 failed, 16 passed, 1 warning in 43.31s

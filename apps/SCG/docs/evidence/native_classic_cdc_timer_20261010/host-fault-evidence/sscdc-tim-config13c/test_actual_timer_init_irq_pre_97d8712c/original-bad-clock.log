@@ -1,0 +1,1 @@
+Assertion failed: result==HAL_ERROR && enabled==0U && priority_set==0U, file C:\Users\chdxm\AppData\Local\Temp\sscdc-tim-config13c\test_actual_timer_init_irq_pre_97d8712c\original.c, line 171

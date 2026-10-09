@@ -23,9 +23,13 @@ from silverstar_fccg.hardware.native_machine_contract import NativeAssemblyDirec
 from silverstar_fccg.generator.native_hal import NativeHalDerivatives_Render
 from silverstar_fccg.generator.native_clock import NativeClock_FilesRender, NativeClockSourceContract_Validate
 from silverstar_fccg.generator.native_ground import NativeGroundCandidate_Render
+from silverstar_fccg.generator.native_clock_probe import NativeTimerProbe_FilesRender, NativeTimerProbe_MakeRender
 
 
 def NativeCompile_Run(args):
+    timer_probe=getattr(args,'native_timer_probe',False)
+    if timer_probe and (args.clock_hz is None or args.runtime_project is not None or args.reviewed_hal):
+        raise ValueError('Private timer probe needs --clock-hz, includes HAL once, and is separate from Ground runtime')
     root=args.input.resolve(); output=args.output.absolute()
     if output.exists() or output.resolve()!=output or output.is_relative_to(root) or root.is_relative_to(output):
         raise ValueError("new disjoint validation output required")
@@ -46,6 +50,10 @@ def NativeCompile_Run(args):
         snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio')]
         snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
         snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_ground','check_native_ground')]
+    if timer_probe:
+        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_clock_tim','native_clock_probe','native_usb_config','native_no_heap')]
+        snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
+        snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_native_ground','check_native_probe')]
     (output/"source-snapshot.json").write_text(json.dumps({
         "source_commit":subprocess.check_output(["git","-C",str(SCG),"rev-parse","HEAD"],text=True).strip(),
         "dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True),
@@ -61,7 +69,10 @@ def NativeCompile_Run(args):
            "required_irq_handlers":proof["required_irq_handlers"],"linker_script":NATIVE_PREFIX+proof["build"]["linker_script"]}
     experiments={}
     experimental_files={}
-    if args.runtime_project is not None:
+    if timer_probe:
+        experimental_files,graph,records=NativeTimerProbe_FilesRender(files,proof,hclk_hz=args.clock_hz,scg_root=SCG)
+        experiments['native_timer_probe']=records
+    elif args.runtime_project is not None:
         if args.clock_hz is None or args.reviewed_hal:
             raise ValueError('Private Ground candidate needs --clock-hz; HAL derivatives are included once')
         from silverstar_fccg.plugins.catalog import PluginCatalog
@@ -76,7 +87,7 @@ def NativeCompile_Run(args):
         experimental_files.update(derived)
         graph["sources"]=[replacements.get(p,p) for p in graph["sources"]]
         experiments["reviewed_hal"]=manifest
-    if args.clock_hz is not None and args.runtime_project is None:
+    if args.clock_hz is not None and args.runtime_project is None and not timer_probe:
         experiments["clock"]=NativeClockSourceContract_Validate(files,proof["build"]["sources"],hclk_hz=args.clock_hz)
         experimental_files.update(NativeClock_FilesRender(hclk_hz=args.clock_hz))
         api=SCG/"plugins/builtin/silverstar_platform_api/payload/Platform/Inc"
@@ -142,6 +153,12 @@ uint32_t HAL_GetTick(void);
 uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
 ''',encoding="utf-8")
     graph["sources"].append("Generated/Src/native_abi_probe.c")
+    if timer_probe:
+        experimental_files['Generated/ground_source_graph.json']=json.dumps(graph,indent=2).encode('utf-8')
+        experimental_files['Makefile']=NativeTimerProbe_MakeRender(graph,args.toolchain_prefix).encode()
+        experimental_files['Generated/Src/native_abi_probe.c']=probe.read_bytes()
+        records['compiled_owned_sha256']['Generated/Src/native_abi_probe.c']=hashlib.sha256(probe.read_bytes()).hexdigest()
+        experimental_files['Generated/native_probe_contract.json']=json.dumps(records,indent=2).encode()
     if args.runtime_project is not None:
         # The validation ABI probe is part of the actual compiled graph. Keep
         # emitted Make and its machine-readable graph truthful about that scope.
@@ -161,6 +178,9 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
         experimental_files['Generated/native_ground_contract.json']=json.dumps(records,indent=2).encode('utf-8')
         (output/'Generated/native_ground_contract.json').write_bytes(experimental_files['Generated/native_ground_contract.json'])
         (output/'Makefile').write_bytes(experimental_files['Makefile'])
+    if timer_probe:
+        for path,content in experimental_files.items():
+            dest=output/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
     objects=[]
     started=datetime.now(timezone.utc).isoformat()
     try:
@@ -244,6 +264,8 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
         raise
     finally:
         receipt={"status":status,"started_utc":started,"finished_utc":datetime.now(timezone.utc).isoformat(),
+          "validation_scope":"PRIVATE_NATIVE_TIM1_CLOCK_HAL_USB_CONFIG_PROBE" if timer_probe else
+              ("PRIVATE_NATIVE_GROUND_RUNTIME_CANDIDATE" if args.runtime_project is not None else "PRIVATE_NATIVE_SOURCE_ABI_COMPILE_PROBE"),
           "source_commit":subprocess.check_output(["git","-C",str(SCG),"rev-parse","HEAD"],text=True).strip(),
           "auditable_dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True),
           "new_module_sha256":hashlib.sha256((SCG/"src/silverstar_fccg/hardware/native_classic_cdc.py").read_bytes()).hexdigest(),
@@ -257,7 +279,8 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
                         "src/silverstar_fccg/generator/native_platform.py","src/silverstar_fccg/generator/native_runtime.py",
                         "src/silverstar_fccg/generator/native_ground.py","src/silverstar_fccg/generator/native_no_heap.py",
                         "src/silverstar_fccg/generator/native_pc.py","src/silverstar_fccg/generator/native_usb_data.py",
-                        "src/silverstar_fccg/generator/native_radio.py")},
+                        "src/silverstar_fccg/generator/native_radio.py","src/silverstar_fccg/generator/native_clock_tim.py",
+                        "src/silverstar_fccg/generator/native_clock_probe.py","src/silverstar_fccg/generator/native_usb_config.py")},
           "experimental_files_sha256":{p:hashlib.sha256(b).hexdigest() for p,b in experimental_files.items()},
           "experiments":experiments,
           "toolchain_version":locals().get("version"),
@@ -281,4 +304,5 @@ if __name__=="__main__":
     parser.add_argument("--reviewed-hal",action="store_true",help="Private recognized HAL derivatives, originals preserved; not runtime acceptance")
     parser.add_argument("--clock-hz",type=int,help="Private linked native SysTick clock probe; not a Ground runtime")
     parser.add_argument("--runtime-project",type=Path,help="Read-only isolated candidate configuration; native Ground runtime experiment, not acceptance")
+    parser.add_argument("--native-timer-probe",action="store_true",help="Private actual TIM1 clock/HAL/config probe only; not a Ground runtime")
     NativeCompile_Run(parser.parse_args())
