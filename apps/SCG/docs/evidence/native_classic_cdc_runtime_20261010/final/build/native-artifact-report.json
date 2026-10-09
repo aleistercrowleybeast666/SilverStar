@@ -1,0 +1,150 @@
+[
+  {
+    "build": "build",
+    "elf_sha256": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a",
+    "linked_libraries": [
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-errno.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-findfp.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-impure.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-init.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-memcpy-stub.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-memset.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-strlen.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_aeabi_uldivmod.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_arm_addsubdf3.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_arm_fixunsdfsi.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_arm_muldivdf3.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_dvmd_tls.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_udivmoddi4.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      }
+    ],
+    "stack_usage_files": 106,
+    "dynamic_frames": [],
+    "limits": "NOT PROVEN: library/indirect call graph, whole-program task/MSP/ISR nesting stack and MCU WCET"
+  },
+  {
+    "build": "build/analysis",
+    "elf_sha256": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a",
+    "linked_libraries": [
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-errno.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-findfp.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-impure.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-init.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-memcpy-stub.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-memset.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+        "object": "libc_a-strlen.o",
+        "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_aeabi_uldivmod.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_arm_addsubdf3.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_arm_fixunsdfsi.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_arm_muldivdf3.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_dvmd_tls.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+        "object": "_udivmoddi4.o",
+        "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      }
+    ],
+    "stack_usage_files": 53,
+    "dynamic_frames": [],
+    "limits": "NOT PROVEN: library/indirect call graph, whole-program task/MSP/ISR nesting stack and MCU WCET"
+  }
+]
