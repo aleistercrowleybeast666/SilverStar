@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import importlib.util
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -206,14 +207,12 @@ def test_product_metadata_binding_accepts_only_authorized_complete_source(builti
 
 
 @pytest.mark.parametrize('mutation', ['digest', 'function'])
-def test_product_decoder_binding_accepts_only_authorized_complete_source(builtin_catalog, mutation):
-    from silverstar_fccg.project.model import ProjectModel_Load
-    from silverstar_fccg.generator.render import GeneratedFiles_Render
-    from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
-    source = Path(__file__).resolve().parents[3] / 'docs/evidence/logger_health_retest_20261008/generated_config.ssproject'
-    model = ProjectModel_Load(source)
+def test_product_decoder_binding_accepts_only_authorized_complete_source(mutation):
+    # v14 approves exact archived bytes, not every later renderer's identity.
+    source = Path(__file__).resolve().parents[3] / 'docs/evidence/scg_decoder_binding_20261008/evidence.zip'
     relative = 'Generated/Src/project_log_decoder_profile.c'
-    text = GeneratedFiles_Render(model, builtin_catalog, SourceGraph_Resolve(model, builtin_catalog))[relative].decode('utf8')
+    with zipfile.ZipFile(source) as archive:
+        text = archive.read('.work/DecoderBindingApproval_20261008/project/Flight_Controller/' + relative).decode('utf8').replace('\r\n', '\n')
     approved = 'ee5baec0a73077cdafee252ba8715045db8ee39e4b894c6846be3cd059392616'
     assert stacks.BindingSourceHash_Get(text) == approved
     assert approved in stacks.BindingSourceVersions_Get(relative)
@@ -221,3 +220,41 @@ def test_product_decoder_binding_accepts_only_authorized_complete_source(builtin
                else text.replace('profile->package_schema_major = 1U;', 'profile->package_schema_major = 2U;'))
     assert changed != text
     assert stacks.BindingSourceHash_Get(changed) not in stacks.BindingSourceVersions_Get(relative)
+
+
+INTEGRATION_IDENTITIES = {
+    'Generated/Src/project_metadata.c': '7b76da5ac6c0e615a2c76dabf8bf2a8e674b00ca0c3e4d1b81ecc60a1eaf4d00',
+    'Generated/Src/project_log_decoder_profile.c': 'ec50f2e5db9a0de82b53c77811f99838bb3ecf2b0f7f6dd94ccb632961b09c51',
+}
+
+
+def test_integration_registration_is_exactly_two_complete_sources():
+    assert stacks.BINDING_SOURCE_INTEGRATION_IDENTITIES_V15 == {
+        name: [digest] for name, digest in INTEGRATION_IDENTITIES.items()}
+    assert '414271a0f6546b0b8d251a98b4d0611546fa2f5d572a5c9ba5192a79c43154af' not in stacks.BindingSourceVersions_Get('Generated/Src/project_log_decoder_profile.c')
+
+
+@pytest.mark.parametrize('relative', INTEGRATION_IDENTITIES)
+@pytest.mark.parametrize('mutation', ['identity', 'function', 'unknown_path'])
+def test_integration_identity_binding_accepts_exact_sources_and_rejects_changes(tmp_path, monkeypatch, relative, mutation):
+    fixture = Path(__file__).parent / 'fixtures/stack_integration_identity_20261009' / relative
+    text = fixture.read_text(encoding='utf8')
+    assert stacks.BindingSourceHash_Get(text) == INTEGRATION_IDENTITIES[relative]
+    target = tmp_path / relative; target.parent.mkdir(parents=True)
+    target.write_text(text, encoding='utf8')
+    dependency = tmp_path / 'build' / Path(relative).with_suffix('.d')
+    dependency.parent.mkdir(parents=True)
+    _DependencyFixture_Write(dependency, relative, monkeypatch)
+    assert len(stacks.BindingSources_Verify(tmp_path, [relative], tmp_path / 'build')) == 1
+    if mutation == 'unknown_path':
+        relative = 'Generated/Src/unreviewed_identity.c'
+        target = tmp_path / relative
+        changed = text
+    elif 'metadata' in relative:
+        changed = text.replace('0x871692B0UL', '0x871692B1UL') if mutation == 'identity' else text.replace('return SILVERSTAR_PROJECT_CONFIG_DIGEST;', 'return 0U;')
+    else:
+        changed = text.replace('0x9EU, 0xCAU', '0x9FU, 0xCAU') if mutation == 'identity' else text.replace('profile->package_schema_major = 1U;', 'profile->package_schema_major = 2U;')
+    assert mutation == 'unknown_path' or changed != text
+    target.write_text(changed, encoding='utf8')
+    with pytest.raises(ValueError, match='Changed or unknown complete callback binding source'):
+        stacks.BindingSources_Verify(tmp_path, [relative], tmp_path / 'build')

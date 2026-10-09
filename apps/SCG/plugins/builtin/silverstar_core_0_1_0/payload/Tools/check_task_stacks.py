@@ -1452,6 +1452,16 @@ BINDING_SOURCE_PRODUCT_DECODER_V14 = {
 }
 
 
+# Exact integration identity review v15, 2026-10-09.
+# Complete sources differ from v13/v14 only in the configuration digest and
+# two decoder identity arrays. The current ELF and dependencies are reviewed
+# separately; thresholds, callback contracts and unknown-input rejection stay.
+BINDING_SOURCE_INTEGRATION_IDENTITIES_V15 = {
+    'Generated/Src/project_metadata.c': ['7b76da5ac6c0e615a2c76dabf8bf2a8e674b00ca0c3e4d1b81ecc60a1eaf4d00'],
+    'Generated/Src/project_log_decoder_profile.c': ['ec50f2e5db9a0de82b53c77811f99838bb3ecf2b0f7f6dd94ccb632961b09c51'],
+}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
@@ -1462,7 +1472,8 @@ def BindingSourceVersions_Get(path):
             BINDING_SOURCE_HEALTH_FINALIZATION_V11.get(path, []) +
             BINDING_SOURCE_PRODUCT_PATCH_V12.get(path, []) +
             BINDING_SOURCE_PRODUCT_METADATA_V13.get(path, []) +
-            BINDING_SOURCE_PRODUCT_DECODER_V14.get(path, []))
+            BINDING_SOURCE_PRODUCT_DECODER_V14.get(path, []) +
+            BINDING_SOURCE_INTEGRATION_IDENTITIES_V15.get(path, []))
 
 
 def BindingSourceHash_Get(text):
