@@ -127,6 +127,7 @@ from silverstar_fccg.project.power10_report import (
 )
 from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
 from silverstar_fccg.project.resources import BoardInventory_ReadScope, ResourceAssignments_Resolve
+from silverstar_fccg.project.ground_activity import GroundActivityLedEnabled_Get
 from silverstar_fccg.project.release_policy import (
     ReleaseCompatibilityIssues_Get, ReleaseMigrationModel_Create, ReleaseMigrationCopy_Save,
 )
@@ -2065,14 +2066,17 @@ class MainWindow(QMainWindow):
             ),
             source_digest=str(board.metadata.get("reference", {}).get("snapshot_digest", "")),
         )
-        self._ProjectConfiguration_Change(
-            lambda candidate: setattr(
-                candidate, "ground_target", replace(
-                    candidate.ground_target, board=board_id, mcu=mcu,
-                    hardware=hardware, resource_assignments={}, pc_resource="",
-                )
-            )
-        )
+        def change(candidate: ProjectModel) -> None:
+            ground = replace(candidate.ground_target, board=board_id, mcu=mcu,
+                             hardware=hardware, resource_assignments={}, pc_resource="")
+            if GroundActivityLedEnabled_Get(ground) and not (ground.tx_led_resource or ground.rx_led_resource):
+                binding = self.ground_target_page.ActivityLedCandidate_Get(ground)
+                if binding is not None:
+                    resource, active_high = binding
+                    ground = replace(ground, tx_led_resource=resource, rx_led_resource=resource,
+                                     tx_led_active_high=active_high, rx_led_active_high=active_high)
+            candidate.ground_target = ground
+        self._ProjectConfiguration_Change(change)
 
     def _GroundAssignment_Change(self, requirement: str, resource: str) -> None:
         def change(candidate: ProjectModel) -> None:
@@ -3464,6 +3468,10 @@ class MainWindow(QMainWindow):
                     shutil.rmtree(build_root)
                 return BuildResult(action, ("clean", str(build_root)), 0, "Build directory cleaned")
             runner = BuildRunner(output_policy)
+            context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.PLAN,
+                total=2, subject=target, code="status.build_running")
+            context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.BEGIN,
+                current=1, total=2, subject=f"{target}_compile", code="status.build_running")
             command = runner.Command_Get(selected_model, BuildAction.BUILD)
             environment = runner._Environment_Get(selected_model, action)
             return_code, lines = runner._Process_Run(
@@ -3471,7 +3479,11 @@ class MainWindow(QMainWindow):
                 context.token if hasattr(context, "token") else context,
                 context.Line_Report,
             )
+            context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.DONE,
+                current=1, total=2, subject=f"{target}_compile", code="status.build_running")
             if return_code == 0:
+                context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.BEGIN,
+                    current=2, total=2, subject=f"{target}_artifact_audit", code="status.build_running")
                 try:
                     if target == "ground":
                         elf = target_root / "build/ground.elf"
@@ -3510,6 +3522,8 @@ class MainWindow(QMainWindow):
                     context.Line_Report(f"Target static audit failed: {error}")
                     lines.append(f"Target static audit failed: {error}\n")
                     return_code = 1
+                context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.DONE,
+                    current=2, total=2, subject=f"{target}_artifact_audit", code="status.build_running")
             return BuildResult(action, command, return_code, "".join(lines),
                                live_streamed=True)
 
@@ -3861,9 +3875,11 @@ class MainWindow(QMainWindow):
         else:
             self._Project_Refresh()
             if result.action == BuildAction.POWER10_CHECK:
-                self._MessageBox_Exec(QMessageBox.Icon.Information,
+                # Commit terminal progress before the modal dialog's event loop.
+                QTimer.singleShot(0, self, lambda: self._MessageBox_Exec(
+                    QMessageBox.Icon.Information,
                     self._translator.Text_Get("action.power10_check"),
-                    self._translator.Text_Get("power10.review_pending"), details=raw_output)
+                    self._translator.Text_Get("power10.review_pending"), details=raw_output))
         self._active_build_action = None
 
     def _SystemLog_Show(self) -> None:
@@ -4024,7 +4040,8 @@ class MainWindow(QMainWindow):
     @staticmethod
     def _QualitySummary_Get(result: BuildResult) -> str:
         if result.action == BuildAction.POWER10_CHECK:
-            return "POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending; " + (
+            review_state = "FAIL" if "POWER10_CONTRACT_REVIEW|FAIL|" in result.output else "NOT_PROVEN"
+            return f"POWER10_CONTRACT_REVIEW|{review_state}|manual_acceptance_pending; " + (
                 "text_checks_passed" if Power10TextPassed_Is(result.output, result.return_code)
                 else "text_checks_failed")
         if result.action == BuildAction.ARTIFACT_CHECK:

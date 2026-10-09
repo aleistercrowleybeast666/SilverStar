@@ -117,7 +117,16 @@ class BuildPage(ScrollableLocalizedPage):
             result_label.setWordWrap(True)
             self.quality_result_labels[action_id] = result_label
             quality_grid.addWidget(button, index, 0)
-            quality_grid.addWidget(result_label, index, 1)
+            if action_id == "power10_check":
+                result_layout = QVBoxLayout()
+                result_layout.addWidget(result_label)
+                self.power10_review_label = QLabel()
+                self.power10_review_label.setObjectName("statusPill")
+                self.power10_review_label.setWordWrap(True)
+                result_layout.addWidget(self.power10_review_label)
+                quality_grid.addLayout(result_layout, index, 1)
+            else:
+                quality_grid.addWidget(result_label, index, 1)
         advanced_layout.addLayout(quality_grid)
 
         output_form = QFormLayout()
@@ -355,18 +364,29 @@ class BuildPage(ScrollableLocalizedPage):
             self.memory_margin_value.setToolTip("")
         for task, label in self.quality_result_labels.items():
             record = by_task.get(task)
+            raw_summary = str(getattr(record, "summary", "")).strip()
+            critical_failure = task == "power10_check" and "POWER10_CONTRACT_REVIEW|FAIL|" in raw_summary
+            if task == "power10_check":
+                review = self.power10_review_label
+                review.setVisible(record is not None)
+                review.setText(self._translator.Text_Get(
+                    "power10.contract_review_failed" if critical_failure else "power10.contract_review_pending")
+                    if record is not None else "")
+                review.setProperty("statusLevel", "error" if critical_failure else "warning" if record is not None else "info")
+                review.style().unpolish(review)
+                review.style().polish(review)
             if record is None:
                 label.setText(self._translator.Text_Get("quality.result.not_run"))
                 label.setProperty("statusLevel", "info")
                 label.setToolTip("")
             else:
-                passed = getattr(record, "result", "") == "passed"
+                passed = getattr(record, "result", "") == "passed" and not critical_failure
                 status = self._translator.Text_Get(
                     "quality.result.passed" if passed else "quality.result.failed"
                 )
-                summary = str(getattr(record, "summary", "")).strip()
+                summary = raw_summary
                 if task == "power10_check":
-                    summary = self._translator.Text_Get("power10.review_pending")
+                    summary = self._translator.Text_Get("power10.automatic_checks")
                 if ArtifactMemorySummary_Decode(summary):
                     summary = self._translator.Text_Get(
                         "quality.summary.artifact_validated" if passed else "quality.summary.completed")
@@ -392,7 +412,7 @@ class BuildPage(ScrollableLocalizedPage):
                 label.setText(
                     " · ".join(value for value in (status, summary) if value)
                 )
-                label.setProperty("statusLevel", "info" if passed and task == "power10_check" else "success" if passed else "error")
+                label.setProperty("statusLevel", "success" if passed else "error")
                 label.setToolTip(
                     self._translator.Text_Get(
                         "quality.result.tooltip",

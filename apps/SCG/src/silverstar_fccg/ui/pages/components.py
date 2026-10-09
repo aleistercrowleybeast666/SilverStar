@@ -916,9 +916,12 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         self.import_ioc_button.clicked.connect(
             lambda _checked=False: self.importIocRequested.emit()
         )
+        # Retain the legacy signal/API for existing integrations; the visible
+        # workflow selects one project directory for both targets.
+        self.import_ioc_button.setVisible(False)
         self.import_directory_button = QPushButton()
         self.Text_Register(
-            self.import_directory_button, "action.import_cubemx_directory"
+            self.import_directory_button, "action.import_cubemx_project"
         )
         self.import_directory_button.clicked.connect(
             lambda _checked=False: self.importDirectoryRequested.emit()

@@ -986,5 +986,10 @@
   "field.nrf24_address": "NRF24 pair address (10 hex digits, SPI order)",
   "field.nrf24_delay": "NRF24 retry delay (us)",
   "field.nrf24_retries": "NRF24 retry count",
-  "configuration.feature_tier_devices_review": "Devices conflict with this tier; generation is blocked. Compact/Minimal allow one instance per sensor class and one telemetry instance; Minimal prohibits GNSS. Switch tiers to normalize the active configuration or correct the imported configuration."
+  "configuration.feature_tier_devices_review": "Devices conflict with this tier; generation is blocked. Compact/Minimal allow one instance per sensor class and one telemetry instance; Minimal prohibits GNSS. Switch tiers to normalize the active configuration or correct the imported configuration.",
+  "action.import_cubemx_project": "Import CubeMX project",
+  "ground.resources_scope": "This table covers Ground radio resources. PC interface and activity LED contracts are checked separately.",
+  "power10.automatic_checks": "Automatic project text checks",
+  "power10.contract_review_failed": "Critical contract review FAIL; known failures block manual acceptance. See the system log for details.",
+  "power10.contract_review_pending": "Critical contracts NOT_PROVEN; manual acceptance pending. Automatic results do not establish FIELD READY or NASA certification."
 }

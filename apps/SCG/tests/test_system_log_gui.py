@@ -40,7 +40,10 @@ def test_system_log_shows_current_findings_and_blocks_stale_export(
         # A critical-contract FAIL must remain red even with exit code zero.
         window._Build_Complete(BuildResult(BuildAction.POWER10_CHECK, (), 0, output))
         label = window.build_page.quality_result_labels['power10_check']
-        assert label.property('statusLevel') == ('error' if critical_failure else 'info')
+        assert label.property('statusLevel') == ('error' if critical_failure else 'success')
+        review = window.build_page.power10_review_label
+        assert review.property('statusLevel') == ('error' if critical_failure else 'warning')
+        assert ('FAIL' if critical_failure else 'NOT_PROVEN') in review.text()
         assert bool(errors) is critical_failure
         window.system_log_button.click()
         dialog = window._system_log_dialog

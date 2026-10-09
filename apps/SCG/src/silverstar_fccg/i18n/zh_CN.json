@@ -986,5 +986,10 @@
   "field.nrf24_address": "NRF24 配对地址 (10位十六进制，SPI顺序)",
   "field.nrf24_delay": "NRF24 重试间隔 (us)",
   "field.nrf24_retries": "NRF24 重试次数",
-  "configuration.feature_tier_devices_review": "当前档位的设备配置不合格，生成已阻止。轻量/最简各传感器与遥测只允许一个实例，最简禁止 GNSS；请切换档位规范化当前配置或修正导入配置。"
+  "configuration.feature_tier_devices_review": "当前档位的设备配置不合格，生成已阻止。轻量/最简各传感器与遥测只允许一个实例，最简禁止 GNSS；请切换档位规范化当前配置或修正导入配置。",
+  "action.import_cubemx_project": "导入 CubeMX 工程",
+  "ground.resources_scope": "此表仅检查地面站无线电资源；PC 接口和活动指示灯契约另行检查。",
+  "power10.automatic_checks": "项目自动文本检测",
+  "power10.contract_review_failed": "关键契约审查 FAIL，已知失败阻断人工验收；详情见系统日志。",
+  "power10.contract_review_pending": "关键契约 NOT_PROVEN，人工验收待完成；自动结果不代表 FIELD READY 或 NASA 认证。"
 }

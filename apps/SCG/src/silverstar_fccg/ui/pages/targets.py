@@ -385,8 +385,16 @@ class GroundTargetPage(BoardHardwarePage):
         self.Text_Register(self.activity_led_enabled, "ground.activity_led_enable")
         self.activity_led_enabled.toggled.connect(self.activityLedToggled.emit)
         led_form.addRow(self.activity_led_enabled)
+        self.activity_led_notice = QLabel()
+        self.activity_led_notice.setObjectName("statusPill")
+        self.activity_led_notice.setWordWrap(True)
+        led_form.addRow(self.activity_led_notice)
         self.activity_led_group = self.Group_Create("group.ground_activity_leds", led_form)
         self.root_layout.addWidget(self.activity_led_group)
+        self.resource_scope_notice = QLabel()
+        self.resource_scope_notice.setObjectName("statusPill")
+        self.resource_scope_notice.setWordWrap(True)
+        self.advanced_section.body.layout().addWidget(self.resource_scope_notice)
         build_form = QFormLayout()
         build_label = QLabel()
         self.Text_Register(build_label, "field.ground_build")
@@ -535,12 +543,7 @@ class GroundTargetPage(BoardHardwarePage):
                        self.pc_resource):
             widget.blockSignals(False)
         required = tuple(requirements.get("resources", ()))
-        fixed_resources = requirements.get("fixed_resources", {})
-        resource_views = tuple(ResourceRequirementView(kind=kind, name=name, key=name,
-            fixed=name in fixed_resources,
-            assignment=ground.resource_assignments.get(name if ":" in name else f"radio0:{name}", ""),
-            candidates=tuple(item.resource_id for item in ground.hardware.resources if item.kind == kind))
-            for name, kind in required)
+        resource_views = self.ResourceViews_Get(ground, requirements, issues)
         self.Resources_Set(resource_views, not issues, hardware_selected=ground.hardware.mode != "unselected")
         self.assignments = {name: self.resource_table.cellWidget(row, 3) for row, (name, _kind) in enumerate(required)}
         # Ground generation checks the fixed radio/PC contracts; preparation
@@ -551,6 +554,19 @@ class GroundTargetPage(BoardHardwarePage):
         self.prepare_button.setToolTip("" if boards else self._translator.Text_Get("board.no_provider"))
         self.i2c_pullup_group.setVisible(False)
         issue_summary, issue_details = GroundIssues_PresentationGet(issues, self._translator)
+        self.resource_scope_notice.setText("\n".join(filter(None, (
+            self._translator.Text_Get("ground.resources_scope"),
+            issue_summary if ground.enabled and issues else "",
+            issue_details if ground.enabled and issues else ""))))
+        self.resource_scope_notice.setProperty("statusLevel", "warning" if ground.enabled and issues else "info")
+        led_issues = tuple(issue for issue in issues if issue.code.startswith("GROUND_LED_"))
+        self.activity_led_notice.setVisible(bool(led_issues))
+        self.activity_led_notice.setText(GroundIssues_PresentationGet(led_issues, self._translator)[1])
+        self.activity_led_notice.setToolTip("\n".join(issue.message for issue in led_issues))
+        self.activity_led_notice.setProperty("statusLevel", "error" if led_issues else "info")
+        for notice in (self.resource_scope_notice, self.activity_led_notice):
+            notice.style().unpolish(notice)
+            notice.style().polish(notice)
         self.status.setText(self._translator.Text_Get("status.ground_disabled")
                             if not ground.enabled else issue_summary)
         self.status.setToolTip(
@@ -570,3 +586,30 @@ class GroundTargetPage(BoardHardwarePage):
             ground.hardware.mode == "custom" and bool(ground.hardware.snapshot_id)
             and bool(ground.hardware.build_sources)
         )
+
+    @staticmethod
+    def ResourceViews_Get(ground, requirements, issues):
+        available = {item.resource_id: item for item in ground.hardware.resources}
+        fixed = requirements.get("fixed_resources", {})
+        views = []
+        for name, kind in requirements.get("resources", ()):
+            key = name if ":" in name else f"radio0:{name}"
+            assignment = ground.resource_assignments.get(key, "")
+            resource = available.get(assignment)
+            errors = []
+            if ground.enabled:
+                if resource is None or resource.kind != kind:
+                    errors.append(f"{key}: required {kind} resource is unavailable ({assignment or 'unassigned'})")
+                if name in fixed and assignment != fixed[name]:
+                    errors.append(f"{key}: Ground PCB fixes this resource to {fixed[name]}")
+                errors.extend(issue.message for issue in issues
+                              if issue.code in {"GROUND_RADIO_RESOURCE_CONSTRAINT", "GROUND_RESOURCE_CONFLICT"}
+                              and re.search(r"(?<![A-Za-z0-9_])" + re.escape(key) + r"(?![A-Za-z0-9_])", issue.message))
+            metadata = resource.metadata if resource is not None else {}
+            views.append(ResourceRequirementView(
+                kind=kind, name=name, key=name, fixed=name in fixed,
+                assignment=assignment,
+                candidates=tuple(item.resource_id for item in available.values() if item.kind == kind),
+                physical_resource=str(metadata.get("physical_resource", metadata.get("physical_pin", ""))),
+                validation_error="\n".join(errors)))
+        return tuple(views)

@@ -1,0 +1,224 @@
+{
+  "base_commit": "6fe76d87d05de6b7528e74d9c423df6d9217e47f",
+  "scope": "SCG GUI only; dirty source snapshot in archive; not hardware/firmware acceptance",
+  "versions": {
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "pytest": "9.1.1",
+    "PySide6": "6.10.1",
+    "os": "Windows-11-10.0.26200-SP0"
+  },
+  "runs": [
+    {
+      "log": "logs/probe_final.log",
+      "exit_code": 0,
+      "result": "9 passed; base diagnostic"
+    },
+    {
+      "log": "logs/pre_fix.log",
+      "exit_code": 1,
+      "result": "6 failed; base defects demonstrated"
+    },
+    {
+      "log": "logs/post_fix.log",
+      "exit_code": 0,
+      "result": "6 passed; first fix"
+    },
+    {
+      "log": "logs/regression.log",
+      "exit_code": 1,
+      "result": "75 passed, 1 Windows fixture path failure"
+    },
+    {
+      "log": "logs/path_retry.log",
+      "exit_code": 0,
+      "result": "1 passed; same fixture with short path"
+    },
+    {
+      "log": "logs/final_gui.log",
+      "exit_code": 1,
+      "result": "interrupted; no complete result; no credit"
+    },
+    {
+      "log": "logs/final_gui_small.log",
+      "exit_code": 0,
+      "result": "46 passed; before critical-FAIL guard"
+    },
+    {
+      "log": "logs/critical_guard_pre.log",
+      "exit_code": 1,
+      "result": "1 failed; contradictory pass/FAIL record"
+    },
+    {
+      "log": "logs/final_47.log",
+      "exit_code": 0,
+      "result": "47 passed, 126.78 seconds; final source"
+    }
+  ],
+  "final_command": {
+    "cwd": "D:\\python_software\\SilverStar\\apps\\SCG",
+    "env": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "QT_QPA_PLATFORM": "offscreen"
+    },
+    "argv": [
+      "../FLP/.venv/Scripts/python.exe",
+      "-u",
+      "-B",
+      "../../.work/gui012_20261008/run_pytest.py",
+      "tests/test_ground_gui_acceptance_20261009.py",
+      "tests/test_system_log_gui.py",
+      "tests/test_task_progress_busy.py",
+      "tests/test_cloud_progress_20261005.py",
+      "tests/test_ground_activity_configuration.py",
+      "-q",
+      "--basetemp=.work/g9v",
+      "--tb=short"
+    ]
+  },
+  "source_sha256": {
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "fb1c844894270fb06cf27e020e928b237cf5274122e13e6f886d171d78bbf825",
+    "apps/SCG/src/silverstar_fccg/ui/pages/components.py": "b3790fa3c78e518c74fec7e25d5c6f6acad152d960e00f7744fd4c31afd405fb",
+    "apps/SCG/src/silverstar_fccg/ui/pages/targets.py": "a8d2653b9140689d63a55a2c45a5666713c03076d689d55d6f25f5131480d79b",
+    "apps/SCG/src/silverstar_fccg/ui/pages/build.py": "66eb7a467c4fd12af3a8a2212b4bfa1ec2456e8324a6998969fa1007329de7e2",
+    "apps/SCG/src/silverstar_fccg/i18n/en_US.json": "020858c65786c8e874805640931629e09e5897ae6741911b4f3540902614bd45",
+    "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": "74f827314c9c094efec84ab7c7f640fd271a41ae9e2c9a754125267d313b34e4",
+    "apps/SCG/tests/test_ground_gui_acceptance_20261009.py": "e53f3f3f4097f7fbef27520e1ea3245981ba7b06ff6bc24ef5398dd0f1d4650c",
+    "apps/SCG/tests/test_system_log_gui.py": "eefede9e9ce97f1816700efeee02c225ac690d3c4ae5488ec5247842775c2889"
+  },
+  "user_images": {
+    "pixels_verified": false,
+    "materialization": "HTTP 403; no local bytes",
+    "ids": [
+      "libfile_cfa0ee2a992881919af89db70b2cbf73",
+      "libfile_2b7435ebb524819182ce7605376dace9"
+    ]
+  },
+  "remaining": "Ground full CubeMX/USB backend merge and target=ground caller routing, post-merge tests; original user screenshot pixels; independent field acceptance",
+  "members": {
+    "source/apps/SCG/src/silverstar_fccg/ui/main_window.py": {
+      "size": 204878,
+      "sha256": "fb1c844894270fb06cf27e020e928b237cf5274122e13e6f886d171d78bbf825"
+    },
+    "source/apps/SCG/src/silverstar_fccg/ui/pages/components.py": {
+      "size": 112404,
+      "sha256": "b3790fa3c78e518c74fec7e25d5c6f6acad152d960e00f7744fd4c31afd405fb"
+    },
+    "source/apps/SCG/src/silverstar_fccg/ui/pages/targets.py": {
+      "size": 34138,
+      "sha256": "a8d2653b9140689d63a55a2c45a5666713c03076d689d55d6f25f5131480d79b"
+    },
+    "source/apps/SCG/src/silverstar_fccg/ui/pages/build.py": {
+      "size": 25111,
+      "sha256": "66eb7a467c4fd12af3a8a2212b4bfa1ec2456e8324a6998969fa1007329de7e2"
+    },
+    "source/apps/SCG/src/silverstar_fccg/i18n/en_US.json": {
+      "size": 73972,
+      "sha256": "020858c65786c8e874805640931629e09e5897ae6741911b4f3540902614bd45"
+    },
+    "source/apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": {
+      "size": 69219,
+      "sha256": "74f827314c9c094efec84ab7c7f640fd271a41ae9e2c9a754125267d313b34e4"
+    },
+    "source/apps/SCG/tests/test_ground_gui_acceptance_20261009.py": {
+      "size": 9043,
+      "sha256": "e53f3f3f4097f7fbef27520e1ea3245981ba7b06ff6bc24ef5398dd0f1d4650c"
+    },
+    "source/apps/SCG/tests/test_system_log_gui.py": {
+      "size": 3871,
+      "sha256": "eefede9e9ce97f1816700efeee02c225ac690d3c4ae5488ec5247842775c2889"
+    },
+    "test_runner/run_pytest.py": {
+      "size": 873,
+      "sha256": "8d97e7ff614032739364afe4488c57054ebb6d7d725512f73b3d9df341395c81"
+    },
+    "test_runner/normal_test_paths.py": {
+      "size": 896,
+      "sha256": "98525ae940fd5e735b9671f3ec593af4a47fad1798573283fc7fea9697fd6a81"
+    },
+    "test_runner/closeout_test_paths.py": {
+      "size": 620,
+      "sha256": "109f192d10f065921f47216a69600b7ab1310345e109abb25aef90e952c4d403"
+    },
+    "logs/probe.log": {
+      "size": 1330,
+      "sha256": "5f71e379a0e02c83179ca9a63d96714e61e25846c877d301dd082daaea2e8ef5"
+    },
+    "logs/probe_final.log": {
+      "size": 1460,
+      "sha256": "19bb95205d2b51cbf44d906149828f9dcf66494a8d8a0d65d484016e8bab5a8f"
+    },
+    "logs/pre_fix.log": {
+      "size": 4321,
+      "sha256": "a1b6bbc8d9d3a3f7deb757689ab88c5d332cf692c56247d38e0bfeb532be9ed0"
+    },
+    "logs/post_fix.log": {
+      "size": 610,
+      "sha256": "cd008ec749a784815518629fa92c3970464b2f30a3f88536123d7044bdfd3856"
+    },
+    "logs/regression.log": {
+      "size": 2362,
+      "sha256": "386b58678e881d62a2ab29ccfe131b03e2805508af49d0f7e26957aafaabf103"
+    },
+    "logs/path_retry.log": {
+      "size": 610,
+      "sha256": "e8f9d57ed629ad9e70f37eb97bbbf7403aee37ef4f891ace94dcfe89f44a3ed5"
+    },
+    "logs/final_gui.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/final_gui_small.log": {
+      "size": 622,
+      "sha256": "0ccce1d7f4de23dce2760aafc49af9f62cb8064238ae584964bd70e4292a1b01"
+    },
+    "logs/critical_guard_pre.log": {
+      "size": 1655,
+      "sha256": "800848750450dc6e6e31523788cf508f78e645f2d73f5fba00a5ad38dfdee03c"
+    },
+    "logs/final_47.log": {
+      "size": 622,
+      "sha256": "89dd4914c279cc047568ed86108b6dab364c7509f040f6ab34fb3fd711c59330"
+    },
+    "diagnostic/candidate_inventory.json": {
+      "size": 19040,
+      "sha256": "8d35807a6c8ec03c158cd691ed375476055ef353c480c791c038887602d5e45f"
+    },
+    "diagnostic/inventory.py": {
+      "size": 2677,
+      "sha256": "8d2a3cabdb95d476d80b27a1df08a9c718c88b06bc4faeff44b1f0f6e6dcd302"
+    },
+    "diagnostic/inventory.log": {
+      "size": 3145,
+      "sha256": "b963f5673945a9fb57c65e849e8b924f32a30a41a340935ee1d9e8a1f071e72f"
+    },
+    "diagnostic/visual_qa.py": {
+      "size": 2756,
+      "sha256": "684195d0fd44511cdbe3597f620bbb48a5109cda053325256ce33a6848f9fea3"
+    },
+    "diagnostic/visual_qa_final2.log": {
+      "size": 64,
+      "sha256": "5841ef2e5de56aca5779f3cc5d9461e10e6c4f55eaed4224f4fd104271137644"
+    },
+    "private_offscreen_qa/ground_missing_radio_red.png": {
+      "size": 163515,
+      "sha256": "a47087ae913ecaa20862d194281bc8c8474694c0bb5839c190597159cb13019a"
+    },
+    "private_offscreen_qa/ground_radio_pass_led_pending.png": {
+      "size": 156347,
+      "sha256": "c8aa05febe8dfc3526560aa11371b8cd249eeade780ffbb24a49477bbdfd0402"
+    },
+    "private_offscreen_qa/power10_automatic_pass_manual_pending.png": {
+      "size": 107620,
+      "sha256": "0892ca40b3e18ec887f71852202886e52ae01a2be7b0b748b6e13918b4d6354f"
+    },
+    "source_snapshot.patch": {
+      "size": 20460,
+      "sha256": "379fc76e44d40b08f29cec46ba8fdd87bd6b2ad6d545b8b101db982ac58d0bc9"
+    }
+  },
+  "archive": {
+    "name": "evidence.zip",
+    "size": 544645,
+    "sha256": "80deff30418e3fa277ce4ad4be50857a55ea42bd95749539af91c191717c576b"
+  }
+}
