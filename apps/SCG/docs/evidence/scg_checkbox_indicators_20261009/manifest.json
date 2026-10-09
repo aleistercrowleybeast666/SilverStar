@@ -1,0 +1,89 @@
+{
+  "base": "1534120e02a28d98b83e7d7cdc99849d52189d67",
+  "branch": "fix/scg-checkbox-indicators-20261009",
+  "runtime": {
+    "python": "3.14.0",
+    "PySide6": "6.10.1",
+    "pytest": "9.1.1",
+    "platform": "offscreen"
+  },
+  "sources": {
+    "apps/SCG/src/silverstar_fccg/ui/theme.py": "b1bfc40b0db9fd1650717a8db87e8dfbdedd2f2f628fbcf78b1d7458a9dcc20c",
+    "apps/SCG/src/silverstar_fccg/ui/assets/check_white.svg": "74e6eb8fd1643273c733a2543362f8996ff77904c86788db1776ffa698b8b5eb",
+    "apps/SCG/tests/test_checkbox_indicators.py": "da612d9e97552f9c860fd405fbc2a1e8d274ad4b6ff0107044edf43b305d4fb0",
+    "apps/SCG/tests/test_prompt_acceptance.py": "7b2bb0d28e3d1a0f659be3ee368cb4ecf6580fc53680150604daecd03404c10e"
+  },
+  "archive_entries": {
+    "actual/dark-air-crc.png": "4101da61d6076728956fd18117f76983d07003e327a5a7899d88badcfa8ea238",
+    "actual/dark-alignment.png": "d4c6952564932f24419fa74047427caa091dd30e06802fe7a392b0018da7828e",
+    "actual/dark-build-flight.png": "a8c0338ad6a1983fee22f907d42134c0214bdeede2df9312d2873c3d0262dd21",
+    "actual/dark-build-ground.png": "0b82bce0634b32541b940d0609fa72c096ca51977d2e36653fe941cb0f65c821",
+    "actual/dark-ground-led.png": "75e3e1ca6da165f60b353baa21f1a5371b79f740935b9cd1d3370546f1650deb",
+    "actual/dark-inventory.json": "2ef2053a834424c667047c15b898c08db612794276903617a7305a20a4afb0ca",
+    "actual/dark-logging.png": "f9e735abb6dd3504cda3aa1a653dc6ee0483b126b2d2ef555febf0b1b5e22a8c",
+    "actual/light-air-crc.png": "2c4055b8e6055b38fb96297f072eaf17339c3a9a1bffe08f630a870e48bbb2b5",
+    "actual/light-alignment.png": "1073e2e3a186130dc639af59c54fa83ca45b59be8691b96f633a4ba462c2ff29",
+    "actual/light-build-flight.png": "5e3c0a27ead19f1cbfb209c048b078b5ec3a1785213265a84bdc2f964475d7b0",
+    "actual/light-build-ground.png": "91faeb0bd1a0a8e5ff6cdcf3bf7c318cd18d6af06f2cee866e18cd2254bd2a15",
+    "actual/light-ground-led.png": "ff94d8875bc1273b264025c045de10bedb612a03c428e4a6af83ba5c55c39a67",
+    "actual/light-inventory.json": "2ef2053a834424c667047c15b898c08db612794276903617a7305a20a4afb0ca",
+    "actual/light-logging.png": "90bbcf2b119a04caea4cb8b8865a92f136dd85a53a805541f65e9822abe4767c",
+    "actual-dark.txt": "431ac7c9c5c2fe1599333617b454978ec0ebf540ae9d98f14749facff8910921",
+    "actual-light.txt": "623bde6c5bcea8eca6340fbfd0cdf05b2cb7957e8be3d6b60b4efed05495b27b",
+    "actual_pages.py": "5313d94bd198ff2b172992dc4b1d44e58d61fb1136378c308989711524067d14",
+    "after/dark-1.25.png": "54451c032babb6dbcdd577a585937f7a7c7ee69d1e2a186cda4e7f6b23cbb086",
+    "after/dark-1.5.png": "60a797c7a8f0950d01b88dafea3367684f3f348e54e26a13b8eed3c8f589399b",
+    "after/dark-1.png": "c1ad4085905c19cf23ed2378591657b283204731089c90750dd4e6f68818c6c1",
+    "after/dark-2.png": "7bff3d2bb89d34ca9708eea3ca0d361ae68cf1b896f8d29b76b72972b5b39baa",
+    "after/light-1.25.png": "ee10de33e757e8108f67488825a6df8df678ab492d850f2e09c8d058a95d60cd",
+    "after/light-1.5.png": "79d6dc784328a4de575c69a6116651340534fa3cac25656d39af12b7e75a7649",
+    "after/light-1.png": "13dfbefdbd4a40759ddb4c03b17c5c626db874c27edb0b457da517e7f9258e13",
+    "after/light-2.png": "a1411b5f8a0caa47d92af91b76869d87e9f8c33e014c5a54e5afaad43effdfd6",
+    "baseline.py": "c9fdfc2fbb65d5c3688ab6264678538518a9498d8071c9bb039bebec4f4ba573",
+    "before/dark-1.png": "87c7d965c0503d294ac73c9dc41d9c73f0eb2d910ee6b6ed67e4d05979c97bf0",
+    "before/light-1.png": "a1cee8abb5378b3cdd5036894d0d6424fdd21e0c2a20550991865d462a558672",
+    "preview.py": "4da40f91a4f4478958961bda268765123d682e1d550526bdd240fc70fe2d334d",
+    "tests-baseline.txt": "dd88c350b6b55b09151e2743fa979d3ae03016c06e9e37adc5094df87924e2d3",
+    "tests-behavior-v2.txt": "8b1403b6dbe21cd1870ab6fbee71d94e2b16abb04bf4c42411a8186e935e42a4",
+    "tests-behavior.txt": "e94525cccd43efa59adef82057177fe4456e292113498d4e7b027f66a1726c00",
+    "tests-render.txt": "556073b1553ca56bc20f1247833191506e18370c9ca6afb8ee6b82a122f5f168",
+    "harness/run_pytest.py": "22337175ae7e2700c230373012384a5e01cde2dcd266d1fecf4c496502cde304",
+    "harness/normal_test_paths.py": "98525ae940fd5e735b9671f3ec593af4a47fad1798573283fc7fea9697fd6a81",
+    "harness/closeout_test_paths.py": "109f192d10f065921f47216a69600b7ab1310345e109abb25aef90e952c4d403"
+  },
+  "deliverables": {
+    "dark-states.png": "c1ad4085905c19cf23ed2378591657b283204731089c90750dd4e6f68818c6c1",
+    "evidence.zip": "5786cc2e90ffc1bb5d1b7648344bb2594f64f886514c40a7432aeaf798edaf07",
+    "light-build-flight.png": "5e3c0a27ead19f1cbfb209c048b078b5ec3a1785213265a84bdc2f964475d7b0",
+    "light-build-ground.png": "91faeb0bd1a0a8e5ff6cdcf3bf7c318cd18d6af06f2cee866e18cd2254bd2a15",
+    "light-states.png": "13dfbefdbd4a40759ddb4c03b17c5c626db874c27edb0b457da517e7f9258e13",
+    "REPORT.md": "9a2af73a7c2b9cea9e9bc2b1d3486b09dd330c7099cf1c7eb1042f53694a8a91"
+  },
+  "results": {
+    "base_qss_render": {
+      "failed": 8,
+      "deselected": 3,
+      "exit": 1
+    },
+    "render_theme": {
+      "passed": 13,
+      "exit": 0
+    },
+    "selected_existing": {
+      "passed": 10,
+      "deselected": 42,
+      "exit": 0
+    },
+    "actual_windows": {
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "checkboxes_each": 57,
+      "model_unchanged": true,
+      "default_selection": [
+        "flight"
+      ]
+    }
+  }
+}

@@ -499,7 +499,7 @@ def test_standard_controls_and_collapsible_visibility(qapp) -> None:
     assert locked.isChecked()
     for theme in ("light", "dark"):
         stylesheet = Stylesheet_Get(theme)
-        assert "QCheckBox#standardCheckBox::indicator:checked" in stylesheet
+        assert "QCheckBox::indicator:checked" in stylesheet
         assert "check_white.svg" in stylesheet
         assert "QToolButton#collapsibleHeader" in stylesheet
 

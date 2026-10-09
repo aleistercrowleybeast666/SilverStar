@@ -92,33 +92,30 @@ QScrollArea > QWidget > QWidget {
 }
 QDialog, QMessageBox, QFileDialog, QWizard { background: $surface_alt; color: $text; }
 QLabel, QCheckBox, QRadioButton { background: transparent; }
-QCheckBox#standardCheckBox { spacing: 7px; }
-QCheckBox#standardCheckBox::indicator {
+QCheckBox { spacing: 7px; }
+QCheckBox::indicator {
     width: 16px;
     height: 16px;
-    border: 2px solid $border_strong;
+    border: 2px solid $muted;
     border-radius: 3px;
     background: $surface_input;
 }
-QCheckBox#standardCheckBox::indicator:hover { border-color: $accent; }
-QCheckBox#standardCheckBox::indicator:checked {
+QCheckBox::indicator:hover:enabled { border-color: $accent; }
+QCheckBox::indicator:checked {
     background: $accent;
     border-color: $accent;
     image: url("$checkbox_check_image");
 }
-QCheckBox#standardCheckBox::indicator:disabled {
-    background: $surface;
-    border-color: $border;
-}
-QCheckBox#standardCheckBox[logStreamControl="true"]::indicator:disabled:unchecked {
+QCheckBox::indicator:disabled {
     background: $disabled_surface;
-    border-color: $border_strong;
-}
-QCheckBox#standardCheckBox[logStreamControl="true"]::indicator:disabled:checked {
-    background: $muted;
     border-color: $muted;
+}
+QCheckBox::indicator:disabled:checked {
+    background: $checkbox_disabled_checked;
+    border-color: $checkbox_disabled_checked;
     image: url("$checkbox_check_image");
 }
+QCheckBox::indicator:focus:enabled { border: 2px dashed $text; }
 QFrame#headerBar {
     background: $brand;
     border: 0;
@@ -360,6 +357,8 @@ def ThemeTokens_Get(theme: str) -> ThemeTokens:
 
 def Stylesheet_Get(theme: str) -> str:
     values = asdict(ThemeTokens_Get(theme))
+    # Keep the white tick legible in both disabled themes.
+    values["checkbox_disabled_checked"] = values["border_strong"] if theme == "dark" else values["muted"]
     asset_root = Path(__file__).resolve().parent / "assets"
     values["checkbox_check_image"] = (asset_root / "check_white.svg").as_posix()
     icon_suffix = "dark" if theme == "dark" else "light"
