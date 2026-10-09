@@ -144,6 +144,7 @@ def Host_Check(root: Path, compiler: str) -> None:
         'Ground/Core/Src/ground_bridge.c', 'Ground/Protocol/Src/gsp_min_protocol.c',
         'Ground/Protocol/Src/protocol_crc16.c', 'Common/Src/silverstar_assert.c')]
     cases = [('bridge_bounds', bridge + [str(tests / 'pc_session_uart.c')], tests / 'ground_bridge_bounds.c')]
+    cases.append(('backpressure', bridge, tests / 'ground_backpressure.c'))
     adapter = root / 'Generated/Src/pc_byte_stream.c'
     text = adapter.read_text(encoding='utf-8')
     if 'HAL_UARTEx_ReceiveToIdle_DMA' in text:
@@ -161,14 +162,22 @@ def Host_Check(root: Path, compiler: str) -> None:
         (build / 'usbd_conf.h').write_text('/* Host configuration stub. */\n', encoding='utf-8')
         cases.append(('usb_cdc', [str(adapter), str(root / 'Common/Src/silverstar_assert.c')], tests / 'usb_cdc.c'))
         cases.append(('usb_session', [str(adapter), *bridge], tests / 'usb_session.c'))
+        cases.append(('usb_backpressure', [str(adapter), *bridge], tests / 'ground_backpressure.c'))
     else:
         raise ValueError('No host harness for selected PC transport; acceptance blocked')
     for name, sources, harness in cases:
         if name == 'usb_session':
             shutil.copyfile(tests / 'usb_session_main.h', build / 'main.h')
+        if name == 'usb_backpressure':
+            shutil.copyfile(tests / 'usb_main.h', build / 'main.h')
         executable = build / (name + '.exe')
-        Command_Run(common + sources + [str(harness), '-o', str(executable)], root)
-        Command_Run([str(executable)], root)
+        flags = ['-DGROUND_TEST_USB'] if name == 'usb_backpressure' else []
+        Command_Run(common + flags + sources + [str(harness), '-o', str(executable)], root)
+        if name in ('backpressure', 'usb_backpressure'):
+            for scenario in ('idle', 'burst', 'radio', 'mixed', 'slow', 'sessions', 'queued-reset', 'budget', 'error'):
+                Command_Run([str(executable), scenario], root)
+        else:
+            Command_Run([str(executable)], root)
         if name == 'usb_session':
             for scenario in ('control', 'read-reset', 'delivery-reset', 'normal'):
                 Command_Run([str(executable), scenario], root)

@@ -20,6 +20,8 @@ static uint32_t s_last_status_ms;
 static uint32_t s_bridge_crc_error_count;
 static uint32_t s_pc_write_error_count;
 static uint32_t s_pc_write_busy_count;
+static uint32_t s_pc_input_backpressure_count;
+static uint32_t s_pc_status_deferred_count;
 static uint8_t s_initialized;
 static uint8_t s_pc_frames[GROUND_PC_QUEUE_DEPTH][GSP_MIN_MAX_FRAME_LEN];
 static uint16_t s_pc_frame_lengths[GROUND_PC_QUEUE_DEPTH];
@@ -44,7 +46,7 @@ static GroundBridgeResult GroundBridge_FrameWrite(const uint8_t *frame, uint16_t
     if ((frame == NULL) || (length == 0U) || (length > GSP_MIN_MAX_FRAME_LEN)
         || (s_pc_frame_count >= GROUND_PC_QUEUE_DEPTH))
     {
-        s_pc_write_error_count++;
+        if (s_pc_write_error_count < UINT32_MAX) { s_pc_write_error_count++; }
         return GROUND_BRIDGE_PC_ERROR;
     }
     memcpy(s_pc_frames[s_pc_frame_tail], frame, length);
@@ -129,6 +131,11 @@ static GroundBridgeResult GroundBridge_PcFrameHandle(const GspMinFrame *frame,
         return GroundBridge_AckSend(frame->type, GSP_ACK_BAD_PARAM, air_length);
     }
     /* The AIR bytes are opaque. The Flight Controller and GSHC own semantics. */
+    /* Only the main loop publishes PC frames. Reserve its ACK slot before
+       publishing a command; reset IRQs can invalidate, never consume the slot. */
+    SILVERSTAR_ASSERT(s_pc_frame_count < GROUND_PC_QUEUE_DEPTH,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     /* Both Ground radio backends only copy into bounded static queues here.
        Exclude reset across validation and that publication, not radio I/O. */
     if (PcByteStream_Session_Enter(session, &token) == 0U)
@@ -165,6 +172,11 @@ static GroundBridgeResult GroundBridge_StatusSend(void)
     uint8_t frame[GSP_MIN_MAX_FRAME_LEN];
     uint16_t length;
 
+    if (s_pc_frame_count >= GROUND_PC_QUEUE_DEPTH)
+    {
+        if (s_pc_status_deferred_count < UINT32_MAX) { s_pc_status_deferred_count++; }
+        return GROUND_BRIDGE_OK;
+    }
     memset(&radio, 0, sizeof(radio));
     memset(&status, 0, sizeof(status));
     GroundRadio_StatsGet(&radio);
@@ -198,6 +210,8 @@ static void GroundBridge_StateReset(void)
     s_bridge_crc_error_count = 0U;
     s_pc_write_error_count = 0U;
     s_pc_write_busy_count = 0U;
+    s_pc_input_backpressure_count = 0U;
+    s_pc_status_deferred_count = 0U;
     s_pc_frame_head = 0U;
     s_pc_frame_tail = 0U;
     s_pc_frame_count = 0U;
@@ -226,23 +240,28 @@ GroundBridgeResult GroundBridge_Init(void)
 
 static GroundBridgeResult GroundBridge_PcInputProcess(void)
 {
-    uint8_t pc_bytes[GROUND_PC_CHUNK_SIZE];
+    uint8_t pc_byte;
     GspMinFrame parsed;
     uint16_t count;
     uint16_t index;
     uint32_t session;
     GroundBridgeResult bridge_result = GROUND_BRIDGE_OK;
-    count = PcByteStream_ReadSession(pc_bytes, sizeof(pc_bytes), &session);
-    if (session != s_pc_session) { GroundBridge_PcReset(); }
-    if (count > sizeof(pc_bytes)) { return GROUND_BRIDGE_PC_ERROR; }
-    SILVERSTAR_ASSERT(count <= GROUND_PC_CHUNK_SIZE,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM,
-        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
-    for (index = 0U; index < count; index++)
+    /* Read only while an ACK slot is available. One byte at a time leaves all
+       unconsumed input in the transport's bounded, session-owned buffer. */
+    for (index = 0U; index < GROUND_PC_CHUNK_SIZE; index++)
     {
+        if (s_pc_frame_count >= GROUND_PC_QUEUE_DEPTH)
+        {
+            if (s_pc_input_backpressure_count < UINT32_MAX) { s_pc_input_backpressure_count++; }
+            break;
+        }
+        count = PcByteStream_ReadSession(&pc_byte, sizeof(pc_byte), &session);
+        if (session != s_pc_session) { GroundBridge_PcReset(); }
+        if (count > sizeof(pc_byte)) { return GROUND_BRIDGE_PC_ERROR; }
+        if (count == 0U) { break; }
         if (PcByteStream_Session_Check(session) == 0U)
         { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
-        if (GspMinParser_InputByte(&s_gsp_parser, pc_bytes[index], &parsed)
+        if (GspMinParser_InputByte(&s_gsp_parser, pc_byte, &parsed)
             == GSP_PARSER_FRAME_READY)
         {
             if (GroundBridge_PcFrameHandle(&parsed, session) != GROUND_BRIDGE_OK)
@@ -316,17 +335,19 @@ GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
     { bridge_result = GROUND_BRIDGE_PC_ERROR; }
     if (GroundBridge_PcInputProcess() != GROUND_BRIDGE_OK)
     { bridge_result = GROUND_BRIDGE_PC_ERROR; }
-    radio_result = GroundBridge_RadioInputProcess();
-    if (radio_result != GROUND_BRIDGE_OK)
-    { bridge_result = radio_result; }
     if ((now_ms - s_last_status_ms) >= GROUND_STATUS_PERIOD_MS)
     {
-        s_last_status_ms = now_ms;
+        /* Keep one coalesced status due while full; do not grow a backlog.
+           Status gets a slot before radio RX to avoid radio-only starvation. */
+        if (s_pc_frame_count < GROUND_PC_QUEUE_DEPTH) { s_last_status_ms = now_ms; }
         if (GroundBridge_StatusSend() != GROUND_BRIDGE_OK)
         {
             bridge_result = GROUND_BRIDGE_PC_ERROR;
         }
     }
+    radio_result = GroundBridge_RadioInputProcess();
+    if (radio_result != GROUND_BRIDGE_OK)
+    { bridge_result = radio_result; }
     if (GroundBridge_PcFlush() != GROUND_BRIDGE_OK)
     {
         bridge_result = GROUND_BRIDGE_PC_ERROR;
@@ -341,6 +362,8 @@ GroundBridgeResult GroundBridge_DiagnosticsGet(
     diagnostics->pc_write_busy_count = s_pc_write_busy_count;
     diagnostics->pc_write_error_count = s_pc_write_error_count;
     diagnostics->pc_rx_overflow_count = PcByteStream_OverflowCount_Get();
+    diagnostics->pc_input_backpressure_count = s_pc_input_backpressure_count;
+    diagnostics->pc_status_deferred_count = s_pc_status_deferred_count;
     diagnostics->pc_queued_frames = s_pc_frame_count;
     return GROUND_BRIDGE_OK;
 }

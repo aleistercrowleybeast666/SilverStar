@@ -15,6 +15,8 @@ typedef struct
     uint32_t pc_write_busy_count;
     uint32_t pc_write_error_count;
     uint32_t pc_rx_overflow_count;
+    uint32_t pc_input_backpressure_count;
+    uint32_t pc_status_deferred_count;
     uint8_t pc_queued_frames;
 } GroundBridgeDiagnostics;
 
