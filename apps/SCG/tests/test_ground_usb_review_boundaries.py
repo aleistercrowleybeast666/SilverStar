@@ -238,7 +238,8 @@ def test_real_arm_system_marked_dependencies_cannot_escape(tmp_path, directive):
     hashes = []
     for value in (17, 29):
         outside.write_text('#define EXTERNAL_VALUE ' + str(value) + '\n', encoding="utf8")
-        _Command_Run([compiler, '-std=c11', '-mcpu=cortex-m3', '-mthumb', '-MD', '-MP', '-c',
+        _Command_Run([compiler, '-std=c11', '-mcpu=cortex-m3', '-mthumb', '-save-temps=obj', '-MD', '-MP',
+                      '-Wa,--MD,' + str(target / 'build/main.gas.d'), '-c',
                       str(target / 'main.c'), '-o', str(target / 'build/main.o')], target, "ARM compile")
         dependency = (target / 'build/main.d').read_text(encoding="utf8")
         assert 'outside.h' in dependency and 'marked.h' in dependency
@@ -250,7 +251,8 @@ def test_real_arm_system_marked_dependencies_cannot_escape(tmp_path, directive):
     # the tree-external dependency is refused; genuine default toolchain stdint
     # and its transitive system headers are admitted after canonical resolution.
     (target / 'marked.h').write_text('#pragma GCC system_header\n#define EXTERNAL_VALUE 17\n', encoding="utf8")
-    _Command_Run([compiler, '-std=c11', '-mcpu=cortex-m3', '-mthumb', '-MD', '-MP', '-c',
+    _Command_Run([compiler, '-std=c11', '-mcpu=cortex-m3', '-mthumb', '-save-temps=obj', '-MD', '-MP',
+                  '-Wa,--MD,' + str(target / 'build/main.gas.d'), '-c',
                   str(target / 'main.c'), '-o', str(target / 'build/main.o')], target, "ARM normal compile")
     module.DependencyClosure_Validate(target, {"sources": ["main.c"]}, compiler)
 

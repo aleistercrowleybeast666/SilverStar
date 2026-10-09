@@ -237,15 +237,26 @@ def Artifact_Check(root: Path, prefix: str) -> None:
 
 def Main_Run() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument('gate', choices=('architecture', 'host', 'artifact'))
+    parser.add_argument('gate', choices=('architecture', 'host', 'artifact', 'dependencies', 'assembler-source'))
     parser.add_argument('--host-cc', default='gcc')
     parser.add_argument('--prefix', default='arm-none-eabi-')
+    parser.add_argument('--compiler')
+    parser.add_argument('--build-dir', choices=('build', 'build/analysis'), default='build')
+    parser.add_argument('--source')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     if args.gate == 'architecture':
         Architecture_Check(root)
     elif args.gate == 'host':
         Host_Check(root, args.host_cc)
+    elif args.gate in {'dependencies', 'assembler-source'}:
+        from ground_artifact_contract import DependencyClosure_Validate, AssemblerSource_Prepare
+        graph = json.loads((root / 'Generated/ground_source_graph.json').read_text(encoding='utf8'))
+        if args.gate == 'assembler-source':
+            AssemblerSource_Prepare(root, graph, args.source, args.build_dir)
+        else:
+            DependencyClosure_Validate(root, graph, args.compiler or args.prefix + 'gcc',
+                                       build_dir=args.build_dir, source=args.source)
     else:
         Artifact_Check(root, args.prefix)
 

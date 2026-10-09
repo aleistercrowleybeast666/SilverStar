@@ -5,6 +5,7 @@ import re
 import shutil
 import struct
 import subprocess
+import json
 
 
 def InterruptVectors_Validate(root: Path, graph: dict, symbols: str, vector: bytes) -> None:
@@ -50,29 +51,124 @@ def _ToolchainHeaderRoots_Get(compiler: str, root: Path) -> tuple[Path, ...]:
     return roots
 
 
-def DependencyClosure_Validate(root: Path, graph: dict, compiler: str | None = None) -> None:
+def _MakeWords_Get(text: str) -> tuple[str, ...]:
+    return tuple(token.replace("\\ ", " ").replace("\\#", "#").replace("\\\\", "\\").replace("$$", "$")
+                 for token in re.findall(r"(?:\\.|[^\s])+", text))
+
+
+def _BuildFile_Get(root: Path, relative: Path) -> Path:
+    if relative.is_absolute() or not relative.parts or relative.parts[0] != "build" or ".." in relative.parts:
+        raise ValueError("invalid build evidence path: " + str(relative))
+    candidate = Path(os.path.abspath(root / relative))
+    if not candidate.is_relative_to(root) or candidate.resolve() != candidate:
+        raise ValueError("build evidence path contains an alias or escapes target: " + str(relative))
+    return candidate
+
+
+def AssemblerSource_Prepare(root: Path, graph: dict, source: str, build_dir: str) -> None:
+    """Qualify GCC's basename-only source label before GAS records dependencies.
+
+    GAS includes .file labels in --MD output, although it does not read them.
+    Normalize only GCC's first source label; never discard a GAS dependency.
+    """
+    if build_dir not in {"build", "build/analysis"} or source not in graph["sources"]:
+        raise ValueError("assembler input is not a declared C compilation")
+    root = root.resolve()
+    assembly = _BuildFile_Get(root, Path(build_dir) / Path(source).with_suffix(".s"))
+    text = assembly.read_text(encoding="utf8")
+    label = re.search(r'(?m)^\s*\.file\s+"([^"\r\n]+)"\s*$', text)
+    if label is None or label.group(1) != Path(source).name:
+        raise ValueError("unrecognized GCC assembler source label: " + source)
+    # A qualified label binds to the already declared original source, including
+    # in subdirectories. Later labels from inline assembly remain checked.
+    text = text[:label.start()] + "\t.file " + json.dumps(source) + text[label.end():]
+    assembly.write_text(text, encoding="utf8", newline="\n")
+
+
+def _DependencyPaths_Get(root: Path, manifest: Path, expected_object: Path) -> tuple[Path, ...]:
+    if not manifest.is_file():
+        raise ValueError("compiled dependency evidence missing: " + str(manifest))
+    logical = manifest.read_text(encoding="utf8").replace("\\\n", " ")
+    rules = re.findall(r"(?m)^([^\n]*\.o):[ \t]*([^\n]*)$", logical)
+    if len(rules) != 1:
+        raise ValueError("unrecognized compiled dependency list: " + str(manifest))
+    targets = _MakeWords_Get(rules[0][0])
+    if len(targets) != 1 or Path(os.path.abspath(root / targets[0])) != expected_object:
+        raise ValueError("dependency target differs from declared object: " + str(manifest))
+    return tuple(root / spelling for spelling in _MakeWords_Get(rules[0][1]))
+
+
+def _DependencyPath_Validate(root: Path, candidate: Path, approved: tuple[Path, ...],
+                             intermediate: Path | None) -> Path:
+    path = candidate.resolve()
+    lexical = Path(os.path.abspath(candidate))
+    escaped_alias = lexical.is_relative_to(root) and not path.is_relative_to(root)
+    if escaped_alias or not path.is_file() or not (
+            path.is_relative_to(root) or any(path.is_relative_to(item) for item in approved)):
+        raise ValueError("compiled dependency escaped copied target: " + str(candidate))
+    # There is exactly one compiler-produced assembler input per object. No
+    # other build output, system Temp directory, or aliased spelling is exempt.
+    if path.is_relative_to(root / "build") and (path != intermediate or lexical != intermediate):
+        raise ValueError("unexpected build-output dependency: " + str(candidate))
+    return path
+
+
+def _ObjectDependencies_Get(root: Path, source: str, approved: tuple[Path, ...],
+                            build_dir: str) -> tuple[Path, tuple[Path, ...]]:
+    relative = Path(build_dir) / Path(source).with_suffix(".o")
+    obj = _BuildFile_Get(root, relative)
+    assembly = _BuildFile_Get(root, relative.with_suffix(".s"))
+    cpp = _DependencyPaths_Get(root, _BuildFile_Get(root, relative.with_suffix(".d")), obj)
+    paths = [_DependencyPath_Validate(root, path, approved, None) for path in cpp]
+    if (root / source).resolve() not in paths:
+        raise ValueError("CPP dependencies omit the declared source: " + source)
+    gas = _DependencyPaths_Get(root, _BuildFile_Get(root, relative.with_suffix(".gas.d")), obj)
+    gas_paths = [_DependencyPath_Validate(root, path, approved, assembly) for path in gas]
+    if assembly not in gas_paths:
+        raise ValueError("GAS dependencies omit the exact saved assembler input: " + source)
+    dependencies = tuple(dict.fromkeys([*paths, *gas_paths]))
+    if not obj.is_file() or any(path.stat().st_mtime_ns > obj.stat().st_mtime_ns for path in dependencies):
+        raise ValueError("object is absent or older than its compiled dependencies: " + source)
+    return obj, dependencies
+
+
+def _MakePath_Render(root: Path, path: Path) -> str:
+    value = path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix()
+    # Do not expose raw GAS output to Make expansion. These uncommon filename
+    # forms are outside the first-profile build contract, even if GAS reads them.
+    if any(char in value for char in "\t\r\n#$;|*?[]%") or ":" in value[2:]:
+        raise ValueError("dependency filename cannot be represented safely in Make: " + value)
+    return value.replace(" ", "\\ ")
+
+
+def DependencyClosure_Validate(root: Path, graph: dict, compiler: str | None = None,
+                               *, build_dir: str = "build", source: str | None = None) -> None:
+    if build_dir not in {"build", "build/analysis"}:
+        raise ValueError("unsupported dependency build directory")
+    root = root.resolve()
     approved = _ToolchainHeaderRoots_Get(compiler, root) if compiler else ()
-    canonical_root = root.resolve()
-    for source in (*graph["sources"], *graph.get("asm_sources", ())):
-        dependency = root / "build" / Path(source).with_suffix(".d")
-        if not dependency.is_file():
-            raise ValueError("compiled dependency evidence missing: " + source)
-        logical = dependency.read_text(encoding="utf8").replace("\\\n", " ")
-        match = re.search(r"(?m)^[^\n]*\.o:\s*([^\n]+)", logical)
-        if match is None:
-            raise ValueError("unrecognized compiled dependency list: " + source)
-        for token in re.findall(r"(?:\\.|[^\s])+", match[1]):
-            spelling = token.replace("\\ ", " ").replace("\\#", "#").replace("\\\\", "\\")
-            candidate = root / spelling
-            path = candidate.resolve()
-            # Project aliases must stay inside the copied tree even when their
-            # resolved destination happens to be an approved compiler header.
-            lexical = Path(os.path.abspath(candidate))
-            escaped_alias = lexical.is_relative_to(canonical_root) and not path.is_relative_to(canonical_root)
-            if escaped_alias or not path.is_file() or not (
-                    path.is_relative_to(canonical_root) or any(path.is_relative_to(item) for item in approved)):
-                raise ValueError("compiled dependency escaped copied target: " + token)
-    print("PASS actual compiled C/ASM dependencies including system headers; copied target or selected compiler defaults")
+    sources = (*graph["sources"], *graph.get("asm_sources", ()))
+    if any(not item or "\\" in item or ":" in item or
+           any(part in {"", ".", ".."} for part in item.split("/")) for item in sources):
+        raise ValueError("declared dependency source is not a safe relative path")
+    objects = [str(Path(item).with_suffix(".o")).casefold() for item in sources]
+    if len(objects) != len(set(objects)):
+        raise ValueError("declared C/ASM sources collide on an object path")
+    if source is not None and source not in sources:
+        raise ValueError("dependency source is not in the declared graph: " + source)
+    for item in ((source,) if source is not None else sources):
+        obj, dependencies = _ObjectDependencies_Get(root, item, approved, build_dir)
+        names = [_MakePath_Render(root, path) for path in dependencies]
+        if source is not None:
+            # Publish only validated, safely rendered prerequisites. Include
+            # phony input rules so deletion triggers recompilation and failure.
+            text = _MakePath_Render(root, obj) + ": " + " ".join(names) + "\n"
+            text += "".join(name + ":\n" for name in names)
+            output = _BuildFile_Get(root, obj.relative_to(root).with_suffix(".deps.mk"))
+            temporary = _BuildFile_Get(root, output.relative_to(root).with_suffix(".tmp"))
+            temporary.write_text(text, encoding="utf8", newline="\n")
+            temporary.replace(output)
+    print("PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: " + build_dir)
 
 
 def EffectiveMacros_Validate(root: Path, graph: dict, compiler: str) -> None:

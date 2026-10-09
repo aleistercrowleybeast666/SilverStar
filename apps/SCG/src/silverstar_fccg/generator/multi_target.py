@@ -268,7 +268,7 @@ def _Makefile_Render(
     linker = graph.linker_script
     return f"""# Generated Ground target; source graph is Generated/ground_source_graph.json.
 CC := {toolchain_prefix}gcc
-unexport CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH OBJC_INCLUDE_PATH DEPENDENCIES_OUTPUT SUNPRO_DEPENDENCIES
+unexport CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH OBJC_INCLUDE_PATH DEPENDENCIES_OUTPUT SUNPRO_DEPENDENCIES GCC_EXEC_PREFIX COMPILER_PATH
 OBJCOPY := {toolchain_prefix}objcopy
 SIZE := {toolchain_prefix}size
 PYTHON ?= python
@@ -305,10 +305,17 @@ endif
 
 all: $(BUILD_DIR)/ground.elf $(BUILD_DIR)/ground.bin $(BUILD_DIR)/ground.size
 
-.PHONY: all architecture-check host-tests artifact-check power10-check static-analysis
+.PHONY: all architecture-check host-tests artifact-check power10-check static-analysis dependency-check
+.DELETE_ON_ERROR:
+
+$(OBJECTS): Makefile Generated/ground_source_graph.json Tools/ground_artifact_contract.py Tools/check_ground.py
+
+dependency-check: $(OBJECTS)
+\t$(PYTHON) Tools/check_ground.py dependencies --build-dir $(BUILD_DIR) --compiler "$(CC)"
 
 static-analysis:
 \t$(MAKE) ANALYZE=1 all
+\t$(PYTHON) Tools/check_ground.py dependencies --build-dir build/analysis --compiler "$(CC)"
 
 architecture-check:
 \t$(PYTHON) Tools/check_ground.py architecture
@@ -322,7 +329,7 @@ artifact-check: all
 power10-check:
 \tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1 -TargetKind Ground
 
-$(BUILD_DIR)/ground.elf: $(OBJECTS)
+$(BUILD_DIR)/ground.elf: $(OBJECTS) | dependency-check
 \t$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
 $(BUILD_DIR)/ground.bin: $(BUILD_DIR)/ground.elf
@@ -333,13 +340,18 @@ $(BUILD_DIR)/ground.size: $(BUILD_DIR)/ground.elf
 
 $(BUILD_DIR)/%.o: %.c
 \t@$(MKDIR_P)
-\t$(CC) $(CFLAGS) $(if $(filter $<,$(FIRST_PARTY_C_SOURCES)),$(FIRST_PARTY_WARNINGS),$(VENDOR_WARNINGS)) -MD -MP -c $< -o $@
+\t$(CC) $(CFLAGS) $(if $(filter $<,$(FIRST_PARTY_C_SOURCES)),$(FIRST_PARTY_WARNINGS),$(VENDOR_WARNINGS)) -MD -MP -MF $(@:.o=.d) -MT $@ -S $< -o $(@:.o=.s)
+\t$(PYTHON) Tools/check_ground.py assembler-source --build-dir $(BUILD_DIR) --source $<
+\t$(CC) {flags} -x assembler -Wa,--MD,$(@:.o=.gas.d) -c $(@:.o=.s) -o $@
+\t$(PYTHON) Tools/check_ground.py dependencies --build-dir $(BUILD_DIR) --compiler "$(CC)" --source $<
 
 $(BUILD_DIR)/%.o: %.s
 \t@$(MKDIR_P)
-\t$(CC) $(CFLAGS) -MD -MP -x assembler-with-cpp -c $< -o $@
+\t$(CC) $(CFLAGS) -save-temps=obj -MD -MP -Wa,--MD,$(@:.o=.gas.d) -x assembler-with-cpp -c $< -o $@
+\t$(PYTHON) Tools/check_ground.py dependencies --build-dir $(BUILD_DIR) --compiler "$(CC)" --source $<
 
--include $(OBJECTS:.o=.d)
+# Only gate-produced prerequisites enter Make; raw compiler/GAS manifests are data.
+-include $(OBJECTS:.o=.deps.mk)
 """
 
 
