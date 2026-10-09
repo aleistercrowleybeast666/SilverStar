@@ -1,0 +1,43 @@
+{
+  "baseCommit": "7eba519f64d0a6c9eaa7c64a2f202ea8c9e10bb8",
+  "backendOriginalCommit": "d1eb4bf95a52a192dc750c7a18dd23d8145386cf",
+  "progressCommit": "88fa7a7",
+  "capturedUtc": "2026-10-09T03:10:28.3699703Z",
+  "sourceHashes": {
+    "apps/SCG/src/silverstar_fccg/build/target_progress.py": "164d2a9d0d1d1beb491ef19215c6eceda72a77aa1ee233277b98966e81a95c16",
+    "apps/SCG/src/silverstar_fccg/build/runner.py": "ffa927d96aa9167c43fe0325caf0ed6460a3e314688f846c6a9b428f887fa812",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "064eed19a2d9abb8e7b0b97afcbdcd54b9f3c1e2308be5d5d2d8d5bcfc9f51f0",
+    "apps/SCG/tests/test_ground_gui_cubemx_import.py": "0e77d73768ba54357de80a973ad39c896a78ded078700a0eaeca33768a5ab31a"
+  },
+  "broadSelectedRun": {
+    "failed": 1,
+    "passed": 63,
+    "seconds": 187.02,
+    "log": "regressions.log",
+    "exit": 1
+  },
+  "finalScopedRun": {
+    "deselected": 1,
+    "passed": 67,
+    "seconds": 192.74,
+    "log": "regressions2.log",
+    "exit": 0
+  },
+  "deselected": "test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources",
+  "guiArmFlow": {
+    "log": "gui-arm-final.log",
+    "result": "gui-arm-summary.json",
+    "scope": "real offscreen Qt import/generate/incremental ARM compile/link/artifact audit",
+    "exit": 0
+  },
+  "USB": "CANDIDATE: independent review reports 2 P1 and 4 P2; backend repair pending",
+  "hardware": "NOT EXECUTED",
+  "criticalContractReview": "NOT PROVEN",
+  "versions": {
+    "pytest": "9.1.1",
+    "Make": "4.4.1",
+    "Python": "3.14",
+    "PySide6": "6.10.1",
+    "ARM_GCC": "14.3.1 20250623"
+  }
+}

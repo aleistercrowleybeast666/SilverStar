@@ -1,0 +1,113 @@
+{
+  "status": "GUI flow passed; USB candidate pending independent backend corrections",
+  "reusedValidationRoot": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation",
+  "importedSnapshot": "558114cb7690e8b26fab247ecee5cdd654f2fe92959eed00c6e9051e1262b917",
+  "iocOnlyRejection": [
+    [
+      "Ground requires a generated CubeMX project containing its .ioc and Core/Src/main.c; Generate Code before importing",
+      "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\ui\\workers.py\", line 38, in run\n    result = self._function(self.context)\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\ui\\main_window.py\", line 2123, in <lambda>\n    lambda _context: self._service.CubeMxProject_Import(\n                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        Path(selected), self._model, risk_acknowledged=True, target=\"ground\"\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\app\\service.py\", line 847, in CubeMxProject_Import\n    result = self.hardware_importer.Project_Import(\n        input_path,\n    ...<3 lines>...\n        target=target,\n    )\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\src\\silverstar_fccg\\hardware\\cubemx.py\", line 128, in Project_Import\n    raise CubeMxImportError(\"Ground requires a generated CubeMX project containing its .ioc and Core/Src/main.c; Generate Code before importing\")\nsilverstar_fccg.hardware.cubemx.CubeMxImportError: Ground requires a generated CubeMX project containing its .ioc and Core/Src/main.c; Generate Code before importing\n"
+    ]
+  ],
+  "generationState": "success",
+  "buildCommand": [
+    "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+    "--debug=j",
+    "TARGET_PROFILE=SilverStar_F103",
+    "CONFIG=Release",
+    "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+    "all"
+  ],
+  "returnCode": 0,
+  "incrementalCompileTrigger": "timestamp only: Generated/Src/pc_byte_stream.c; content unchanged",
+  "triggerSourceSha256": "4d33a04e8a0e304c0b7931b1ba60561fa53b9496cb4d69ea09b262866bccbbea",
+  "plan": {
+    "total_steps": 4,
+    "compile_steps": 1,
+    "stage_steps": [
+      [
+        "COMPILE",
+        1
+      ],
+      [
+        "LINK",
+        1
+      ],
+      [
+        "BIN",
+        1
+      ],
+      [
+        "SIZE",
+        1
+      ]
+    ]
+  },
+  "completedSteps": 4,
+  "guiEvents": [
+    {
+      "value": 0.0,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.0,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.2,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.2,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.4,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.4,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.6,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.6,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.8,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.8,
+      "workerActive": true,
+      "code": "status.build_running"
+    },
+    {
+      "value": 0.99,
+      "workerActive": true,
+      "code": "status.build_running"
+    }
+  ],
+  "artifactHashes": {
+    "build/ground.elf": "e7dd36cb4f1685955c01c4464280df7ad79392ee206dac6c8fc5e38ea3d50cbd",
+    "build/ground.bin": "346506ee1843161665ab60815f67b3fde5c916ca93e69372439f288c402abdb0",
+    "build/ground.map": "ea1316501413a31c349b958292dbb6ff71a74ab1b58a7c12adb53bce5bfc0e7c",
+    "Generated/ground_source_graph.json": "67a50ea2304a8ac8a31e30d7cfeab5ece3da4e3365d2afb89bbc7389bf21c41d"
+  },
+  "snapshotsBefore": [],
+  "snapshotsAfter": [],
+  "hardware": "NOT EXECUTED",
+  "criticalContractReview": "NOT PROVEN"
+}

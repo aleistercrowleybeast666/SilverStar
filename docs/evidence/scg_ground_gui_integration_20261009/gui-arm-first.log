@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\core\workspace.py", line 71, in Path_Resolve
+    relative = resolved.relative_to(self.root)
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 495, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: 'D:\\python_software\\SilverStar\\.work\\GroundGuiIntegration_20261009\\path_preferences.json' is not in the subpath of 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\workspace'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\GroundGuiIntegration_20261009\gui_arm_flow.py", line 23, in <module>
+    window=MainWindow(SettingsStore(EVIDENCE/'gui.ini'),service=service)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 216, in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\core\path_preferences.py", line 23, in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\core\workspace.py", line 73, in Path_Resolve
+    raise WorkspacePolicyError(
+        f"Path escapes authorized workspace: {resolved}"
+    ) from error
+silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\GroundGuiIntegration_20261009\path_preferences.json

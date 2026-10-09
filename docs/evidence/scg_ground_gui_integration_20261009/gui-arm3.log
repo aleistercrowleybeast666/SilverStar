@@ -1,0 +1,26 @@
+ERROR:root:Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 2123, in <lambda>
+    lambda _context: self._service.CubeMxProject_Import(
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        Path(selected), self._model, risk_acknowledged=True, target="ground"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 847, in CubeMxProject_Import
+    result = self.hardware_importer.Project_Import(
+        input_path,
+    ...<3 lines>...
+        target=target,
+    )
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\hardware\cubemx.py", line 128, in Project_Import
+    raise CubeMxImportError("Ground requires a generated CubeMX project containing its .ioc and Core/Src/main.c; Generate Code before importing")
+silverstar_fccg.hardware.cubemx.CubeMxImportError: Ground requires a generated CubeMX project containing its .ioc and Core/Src/main.c; Generate Code before importing
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\GroundGuiIntegration_20261009\gui_arm_flow.py", line 87, in <module>
+    assert builds and builds[-1].succeeded and builds[-1].plan.compile_steps>0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

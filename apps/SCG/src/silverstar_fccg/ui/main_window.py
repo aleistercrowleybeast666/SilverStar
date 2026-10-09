@@ -2121,7 +2121,7 @@ class MainWindow(QMainWindow):
             return
         self.Task_Run(
             lambda _context: self._service.CubeMxProject_Import(
-                Path(selected), self._model, risk_acknowledged=True
+                Path(selected), self._model, risk_acknowledged=True, target="ground"
             ),
             self._GroundCubeMxImport_Complete,
         )
@@ -3499,9 +3499,17 @@ class MainWindow(QMainWindow):
                         elf = artifacts[0]
                         mcu_id = selected_model.mcu
                     exact = self._service.catalog.Component_Get(mcu_id)
+                    linker = target_root / exact.build.linker_script
+                    if (target == "ground" and selected_model.ground_target.hardware.hal_cmsis_source_policy
+                            == "imported_tree_authoritative"):
+                        graph = json.loads((target_root / "Generated/ground_source_graph.json").read_text(encoding="utf8"))
+                        if not isinstance(graph, dict) or not isinstance(graph.get("linker_script"), str):
+                            raise ValueError("Imported Ground source graph has no selected linker script")
+                        relative = output_policy.RelativePath_Validate(graph["linker_script"])
+                        linker = WorkspacePolicy(target_root).Path_Resolve(relative.as_posix(), allow_root=False)
                     audit = BuildAudit_Run(
                         elf, elf.with_suffix(".map"),
-                        target_root / exact.build.linker_script,
+                        linker,
                         target_root / "build", exact.metadata,
                         toolchain_prefix=selected_model.build.toolchain_prefix,
                         environment=environment,
