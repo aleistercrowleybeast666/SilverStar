@@ -358,6 +358,10 @@ $(BUILD_DIR)/%.o: %.s
 def GroundFiles_Render(
     model: ProjectModel, catalog: PluginCatalog, internal_policy: WorkspacePolicy,
 ) -> dict[str, bytes]:
+    if "native_complete_classic_cdc" in model.ground_target.hardware.inventory:
+        raise ValueError("Native complete classic CDC admission is experimental; "
+                         "runtime adapter/compiled closure/ABI/radio timing NOT PROVEN. "
+                         "Normal firmware generation is blocked; legacy import is unchanged.")
     issues = GroundTargetIssues_Get(model, catalog)
     if issues:
         raise ValueError("; ".join(f"{issue.code}: {issue.message}" for issue in issues))

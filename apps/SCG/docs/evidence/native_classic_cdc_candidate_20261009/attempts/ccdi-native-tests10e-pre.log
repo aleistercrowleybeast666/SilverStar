@@ -1,0 +1,251 @@
+FF..FF..                                                                 [100%]
+================================== FAILURES ===================================
+___________ test_incompatible_inputs_rejected[f103-usb-make-append] ___________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10e-pre/test_incompatible_inputs_rejec_b8cc924f/native'), {'device_f...2aa59aea3f7c0'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+change = 'make-append'
+
+    @pytest.mark.parametrize("change",["missing-cdc","make-expression","CPU","ABI","memory","device-macro",
+        "startup","USBX","class","RTOS","dynamic-allocation","unknown-hook","spi-owner","tick",
+        "include-escape","linker-dependency","make-append","memory-expression",
+        "spi-unknown-abi","spi-mixed-qualifier"])
+    def test_incompatible_inputs_rejected(native,change):
+        root,args=native; make=root/"Makefile"; text=make.read_text(encoding="utf-8-sig")
+        if change=="missing-cdc": (root/"USB_DEVICE/App/usbd_cdc_if.c").unlink()
+        elif change=="make-expression": make.write_text(text.replace("Core/Src/main.c","$(shell whoami)",1),encoding="utf-8")
+        elif change=="CPU": make.write_text(text.replace("-mcpu="+args["device_facts"].core,"-mcpu=cortex-m7"),encoding="utf-8")
+        elif change=="ABI": make.write_text(text+"\nFLOAT-ABI = -mfloat-abi=hard\n",encoding="utf-8")
+        elif change=="memory": args["device_facts"]=replace(args["device_facts"],regions=(NativeMemoryRegion("FLASH",0x08000000,999),))
+        elif change=="device-macro": make.write_text(text.replace("-D"+args["device_facts"].device_macro,"-DSTM32UNKNOWN"),encoding="utf-8")
+        elif change=="startup": args["device_facts"]=replace(args["device_facts"],startup="startup_stm32unknown.s")
+        elif change in {"USBX","class","RTOS"}:
+            ioc=next(root.glob("*.ioc")); data=ioc.read_text(encoding="utf-8-sig")
+            if change=="USBX": data=data.replace("=USB_DEVICE","=USBX")
+            elif change=="class": data=data.replace("=Cdc","=Hid")
+            else: data+="\nMcu.IP99=FREERTOS\n"
+            ioc.write_text(data,encoding="utf-8")
+        elif change in {"dynamic-allocation","unknown-hook"}:
+            path=root/("USB_DEVICE/Target/usbd_conf.c" if change=="dynamic-allocation" else "USB_DEVICE/App/usbd_cdc_if.c")
+            data=path.read_text(encoding="utf-8-sig")
+            path.write_text(data.replace("USBD_static_malloc","malloc") if change=="dynamic-allocation" else data.replace("USER CODE BEGIN 6","UNKNOWN HOOK"),encoding="utf-8")
+        elif change=="spi-owner":
+            path=root/"Core/Src/spi.c"; path.write_text(path.read_text(encoding="utf-8-sig").replace("SPI_MODE_MASTER","SPI_MODE_SLAVE"),encoding="utf-8")
+        elif change=="tick":
+            for path in (root/"Core/Src").glob("*.c"):
+                data=path.read_text(encoding="utf-8-sig")
+                if "HAL_IncTick" in data: path.write_text(data.replace("HAL_IncTick","Unknown_Tick"),encoding="utf-8")
+        elif change=="include-escape": make.write_text(text.replace("-ICore/Inc","-I../escape"),encoding="utf-8")
+        elif change=="make-append": make.write_text(text+"\nC_SOURCES += Core/Src/extra.c\n",encoding="utf-8")
+        elif change=="memory-expression":
+            script=next(root.glob("*.ld"))
+            script.write_text(script.read_text(encoding="utf-8-sig").replace("MEMORY\n{", "MEMORY\n{\nEXTRA (xrw) : ORIGIN = (0x40000000), LENGTH = 1K"),encoding="utf-8")
+        elif change in {"spi-unknown-abi","spi-mixed-qualifier"}:
+            header=next((root/"Drivers").glob("*_HAL_Driver/Inc/*_hal_spi.h"))
+            data=header.read_text(encoding="utf-8-sig")
+            data=data.replace("const uint8_t *pData", "uint32_t *pData" if change=="spi-unknown-abi" else "uint8_t *pData",1)
+            header.write_text(data,encoding="utf-8")
+        else:
+            script=next(root.glob("*.ld")); script.write_text(script.read_text(encoding="utf-8-sig")+"\nINCLUDE other.ld\n",encoding="utf-8")
+        reasons={"make-append":"literal C_SOURCES", "memory-expression":"Linker memory",
+            "spi-unknown-abi":"blocking SPI ABI", "spi-mixed-qualifier":"SPI transmit buffer qualifiers",
+            "missing-cdc":"Missing or escaping", "make-expression":"expression", "CPU":"Native CPU",
+            "ABI":"ABI|FLOAT-ABI", "memory":"Linker memory", "device-macro":"effective definitions",
+            "startup":"startup", "USBX":"Only complete", "class":"Only complete", "RTOS":"FreeRTOS",
+            "dynamic-allocation":"Dynamic native USB", "unknown-hook":"lifecycle/receive hook",
+            "spi-owner":"real type/init owner", "tick":"tick initialization", "include-escape":"Unsafe native build path",
+            "linker-dependency":"linker file dependencies"}
+>       with pytest.raises(CubeMxImportError,match=reasons[change]): NativeClassicCdc_Inspect(root,**args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:120: Failed
+________ test_incompatible_inputs_rejected[f103-usb-memory-expression] ________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10e-pre/test_incompatible_inputs_rejec_942b279a/native'), {'device_f...2aa59aea3f7c0'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+change = 'memory-expression'
+
+    @pytest.mark.parametrize("change",["missing-cdc","make-expression","CPU","ABI","memory","device-macro",
+        "startup","USBX","class","RTOS","dynamic-allocation","unknown-hook","spi-owner","tick",
+        "include-escape","linker-dependency","make-append","memory-expression",
+        "spi-unknown-abi","spi-mixed-qualifier"])
+    def test_incompatible_inputs_rejected(native,change):
+        root,args=native; make=root/"Makefile"; text=make.read_text(encoding="utf-8-sig")
+        if change=="missing-cdc": (root/"USB_DEVICE/App/usbd_cdc_if.c").unlink()
+        elif change=="make-expression": make.write_text(text.replace("Core/Src/main.c","$(shell whoami)",1),encoding="utf-8")
+        elif change=="CPU": make.write_text(text.replace("-mcpu="+args["device_facts"].core,"-mcpu=cortex-m7"),encoding="utf-8")
+        elif change=="ABI": make.write_text(text+"\nFLOAT-ABI = -mfloat-abi=hard\n",encoding="utf-8")
+        elif change=="memory": args["device_facts"]=replace(args["device_facts"],regions=(NativeMemoryRegion("FLASH",0x08000000,999),))
+        elif change=="device-macro": make.write_text(text.replace("-D"+args["device_facts"].device_macro,"-DSTM32UNKNOWN"),encoding="utf-8")
+        elif change=="startup": args["device_facts"]=replace(args["device_facts"],startup="startup_stm32unknown.s")
+        elif change in {"USBX","class","RTOS"}:
+            ioc=next(root.glob("*.ioc")); data=ioc.read_text(encoding="utf-8-sig")
+            if change=="USBX": data=data.replace("=USB_DEVICE","=USBX")
+            elif change=="class": data=data.replace("=Cdc","=Hid")
+            else: data+="\nMcu.IP99=FREERTOS\n"
+            ioc.write_text(data,encoding="utf-8")
+        elif change in {"dynamic-allocation","unknown-hook"}:
+            path=root/("USB_DEVICE/Target/usbd_conf.c" if change=="dynamic-allocation" else "USB_DEVICE/App/usbd_cdc_if.c")
+            data=path.read_text(encoding="utf-8-sig")
+            path.write_text(data.replace("USBD_static_malloc","malloc") if change=="dynamic-allocation" else data.replace("USER CODE BEGIN 6","UNKNOWN HOOK"),encoding="utf-8")
+        elif change=="spi-owner":
+            path=root/"Core/Src/spi.c"; path.write_text(path.read_text(encoding="utf-8-sig").replace("SPI_MODE_MASTER","SPI_MODE_SLAVE"),encoding="utf-8")
+        elif change=="tick":
+            for path in (root/"Core/Src").glob("*.c"):
+                data=path.read_text(encoding="utf-8-sig")
+                if "HAL_IncTick" in data: path.write_text(data.replace("HAL_IncTick","Unknown_Tick"),encoding="utf-8")
+        elif change=="include-escape": make.write_text(text.replace("-ICore/Inc","-I../escape"),encoding="utf-8")
+        elif change=="make-append": make.write_text(text+"\nC_SOURCES += Core/Src/extra.c\n",encoding="utf-8")
+        elif change=="memory-expression":
+            script=next(root.glob("*.ld"))
+            script.write_text(script.read_text(encoding="utf-8-sig").replace("MEMORY\n{", "MEMORY\n{\nEXTRA (xrw) : ORIGIN = (0x40000000), LENGTH = 1K"),encoding="utf-8")
+        elif change in {"spi-unknown-abi","spi-mixed-qualifier"}:
+            header=next((root/"Drivers").glob("*_HAL_Driver/Inc/*_hal_spi.h"))
+            data=header.read_text(encoding="utf-8-sig")
+            data=data.replace("const uint8_t *pData", "uint32_t *pData" if change=="spi-unknown-abi" else "uint8_t *pData",1)
+            header.write_text(data,encoding="utf-8")
+        else:
+            script=next(root.glob("*.ld")); script.write_text(script.read_text(encoding="utf-8-sig")+"\nINCLUDE other.ld\n",encoding="utf-8")
+        reasons={"make-append":"literal C_SOURCES", "memory-expression":"Linker memory",
+            "spi-unknown-abi":"blocking SPI ABI", "spi-mixed-qualifier":"SPI transmit buffer qualifiers",
+            "missing-cdc":"Missing or escaping", "make-expression":"expression", "CPU":"Native CPU",
+            "ABI":"ABI|FLOAT-ABI", "memory":"Linker memory", "device-macro":"effective definitions",
+            "startup":"startup", "USBX":"Only complete", "class":"Only complete", "RTOS":"FreeRTOS",
+            "dynamic-allocation":"Dynamic native USB", "unknown-hook":"lifecycle/receive hook",
+            "spi-owner":"real type/init owner", "tick":"tick initialization", "include-escape":"Unsafe native build path",
+            "linker-dependency":"linker file dependencies"}
+>       with pytest.raises(CubeMxImportError,match=reasons[change]): NativeClassicCdc_Inspect(root,**args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:120: Failed
+___________ test_incompatible_inputs_rejected[f407-usb-make-append] ___________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10e-pre/test_incompatible_inputs_rejec_4cad4fc2/native'), {'device_f...2b6f163451eb08274'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+change = 'make-append'
+
+    @pytest.mark.parametrize("change",["missing-cdc","make-expression","CPU","ABI","memory","device-macro",
+        "startup","USBX","class","RTOS","dynamic-allocation","unknown-hook","spi-owner","tick",
+        "include-escape","linker-dependency","make-append","memory-expression",
+        "spi-unknown-abi","spi-mixed-qualifier"])
+    def test_incompatible_inputs_rejected(native,change):
+        root,args=native; make=root/"Makefile"; text=make.read_text(encoding="utf-8-sig")
+        if change=="missing-cdc": (root/"USB_DEVICE/App/usbd_cdc_if.c").unlink()
+        elif change=="make-expression": make.write_text(text.replace("Core/Src/main.c","$(shell whoami)",1),encoding="utf-8")
+        elif change=="CPU": make.write_text(text.replace("-mcpu="+args["device_facts"].core,"-mcpu=cortex-m7"),encoding="utf-8")
+        elif change=="ABI": make.write_text(text+"\nFLOAT-ABI = -mfloat-abi=hard\n",encoding="utf-8")
+        elif change=="memory": args["device_facts"]=replace(args["device_facts"],regions=(NativeMemoryRegion("FLASH",0x08000000,999),))
+        elif change=="device-macro": make.write_text(text.replace("-D"+args["device_facts"].device_macro,"-DSTM32UNKNOWN"),encoding="utf-8")
+        elif change=="startup": args["device_facts"]=replace(args["device_facts"],startup="startup_stm32unknown.s")
+        elif change in {"USBX","class","RTOS"}:
+            ioc=next(root.glob("*.ioc")); data=ioc.read_text(encoding="utf-8-sig")
+            if change=="USBX": data=data.replace("=USB_DEVICE","=USBX")
+            elif change=="class": data=data.replace("=Cdc","=Hid")
+            else: data+="\nMcu.IP99=FREERTOS\n"
+            ioc.write_text(data,encoding="utf-8")
+        elif change in {"dynamic-allocation","unknown-hook"}:
+            path=root/("USB_DEVICE/Target/usbd_conf.c" if change=="dynamic-allocation" else "USB_DEVICE/App/usbd_cdc_if.c")
+            data=path.read_text(encoding="utf-8-sig")
+            path.write_text(data.replace("USBD_static_malloc","malloc") if change=="dynamic-allocation" else data.replace("USER CODE BEGIN 6","UNKNOWN HOOK"),encoding="utf-8")
+        elif change=="spi-owner":
+            path=root/"Core/Src/spi.c"; path.write_text(path.read_text(encoding="utf-8-sig").replace("SPI_MODE_MASTER","SPI_MODE_SLAVE"),encoding="utf-8")
+        elif change=="tick":
+            for path in (root/"Core/Src").glob("*.c"):
+                data=path.read_text(encoding="utf-8-sig")
+                if "HAL_IncTick" in data: path.write_text(data.replace("HAL_IncTick","Unknown_Tick"),encoding="utf-8")
+        elif change=="include-escape": make.write_text(text.replace("-ICore/Inc","-I../escape"),encoding="utf-8")
+        elif change=="make-append": make.write_text(text+"\nC_SOURCES += Core/Src/extra.c\n",encoding="utf-8")
+        elif change=="memory-expression":
+            script=next(root.glob("*.ld"))
+            script.write_text(script.read_text(encoding="utf-8-sig").replace("MEMORY\n{", "MEMORY\n{\nEXTRA (xrw) : ORIGIN = (0x40000000), LENGTH = 1K"),encoding="utf-8")
+        elif change in {"spi-unknown-abi","spi-mixed-qualifier"}:
+            header=next((root/"Drivers").glob("*_HAL_Driver/Inc/*_hal_spi.h"))
+            data=header.read_text(encoding="utf-8-sig")
+            data=data.replace("const uint8_t *pData", "uint32_t *pData" if change=="spi-unknown-abi" else "uint8_t *pData",1)
+            header.write_text(data,encoding="utf-8")
+        else:
+            script=next(root.glob("*.ld")); script.write_text(script.read_text(encoding="utf-8-sig")+"\nINCLUDE other.ld\n",encoding="utf-8")
+        reasons={"make-append":"literal C_SOURCES", "memory-expression":"Linker memory",
+            "spi-unknown-abi":"blocking SPI ABI", "spi-mixed-qualifier":"SPI transmit buffer qualifiers",
+            "missing-cdc":"Missing or escaping", "make-expression":"expression", "CPU":"Native CPU",
+            "ABI":"ABI|FLOAT-ABI", "memory":"Linker memory", "device-macro":"effective definitions",
+            "startup":"startup", "USBX":"Only complete", "class":"Only complete", "RTOS":"FreeRTOS",
+            "dynamic-allocation":"Dynamic native USB", "unknown-hook":"lifecycle/receive hook",
+            "spi-owner":"real type/init owner", "tick":"tick initialization", "include-escape":"Unsafe native build path",
+            "linker-dependency":"linker file dependencies"}
+>       with pytest.raises(CubeMxImportError,match=reasons[change]): NativeClassicCdc_Inspect(root,**args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:120: Failed
+________ test_incompatible_inputs_rejected[f407-usb-memory-expression] ________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10e-pre/test_incompatible_inputs_rejec_ddc0ecc8/native'), {'device_f...2b6f163451eb08274'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+change = 'memory-expression'
+
+    @pytest.mark.parametrize("change",["missing-cdc","make-expression","CPU","ABI","memory","device-macro",
+        "startup","USBX","class","RTOS","dynamic-allocation","unknown-hook","spi-owner","tick",
+        "include-escape","linker-dependency","make-append","memory-expression",
+        "spi-unknown-abi","spi-mixed-qualifier"])
+    def test_incompatible_inputs_rejected(native,change):
+        root,args=native; make=root/"Makefile"; text=make.read_text(encoding="utf-8-sig")
+        if change=="missing-cdc": (root/"USB_DEVICE/App/usbd_cdc_if.c").unlink()
+        elif change=="make-expression": make.write_text(text.replace("Core/Src/main.c","$(shell whoami)",1),encoding="utf-8")
+        elif change=="CPU": make.write_text(text.replace("-mcpu="+args["device_facts"].core,"-mcpu=cortex-m7"),encoding="utf-8")
+        elif change=="ABI": make.write_text(text+"\nFLOAT-ABI = -mfloat-abi=hard\n",encoding="utf-8")
+        elif change=="memory": args["device_facts"]=replace(args["device_facts"],regions=(NativeMemoryRegion("FLASH",0x08000000,999),))
+        elif change=="device-macro": make.write_text(text.replace("-D"+args["device_facts"].device_macro,"-DSTM32UNKNOWN"),encoding="utf-8")
+        elif change=="startup": args["device_facts"]=replace(args["device_facts"],startup="startup_stm32unknown.s")
+        elif change in {"USBX","class","RTOS"}:
+            ioc=next(root.glob("*.ioc")); data=ioc.read_text(encoding="utf-8-sig")
+            if change=="USBX": data=data.replace("=USB_DEVICE","=USBX")
+            elif change=="class": data=data.replace("=Cdc","=Hid")
+            else: data+="\nMcu.IP99=FREERTOS\n"
+            ioc.write_text(data,encoding="utf-8")
+        elif change in {"dynamic-allocation","unknown-hook"}:
+            path=root/("USB_DEVICE/Target/usbd_conf.c" if change=="dynamic-allocation" else "USB_DEVICE/App/usbd_cdc_if.c")
+            data=path.read_text(encoding="utf-8-sig")
+            path.write_text(data.replace("USBD_static_malloc","malloc") if change=="dynamic-allocation" else data.replace("USER CODE BEGIN 6","UNKNOWN HOOK"),encoding="utf-8")
+        elif change=="spi-owner":
+            path=root/"Core/Src/spi.c"; path.write_text(path.read_text(encoding="utf-8-sig").replace("SPI_MODE_MASTER","SPI_MODE_SLAVE"),encoding="utf-8")
+        elif change=="tick":
+            for path in (root/"Core/Src").glob("*.c"):
+                data=path.read_text(encoding="utf-8-sig")
+                if "HAL_IncTick" in data: path.write_text(data.replace("HAL_IncTick","Unknown_Tick"),encoding="utf-8")
+        elif change=="include-escape": make.write_text(text.replace("-ICore/Inc","-I../escape"),encoding="utf-8")
+        elif change=="make-append": make.write_text(text+"\nC_SOURCES += Core/Src/extra.c\n",encoding="utf-8")
+        elif change=="memory-expression":
+            script=next(root.glob("*.ld"))
+            script.write_text(script.read_text(encoding="utf-8-sig").replace("MEMORY\n{", "MEMORY\n{\nEXTRA (xrw) : ORIGIN = (0x40000000), LENGTH = 1K"),encoding="utf-8")
+        elif change in {"spi-unknown-abi","spi-mixed-qualifier"}:
+            header=next((root/"Drivers").glob("*_HAL_Driver/Inc/*_hal_spi.h"))
+            data=header.read_text(encoding="utf-8-sig")
+            data=data.replace("const uint8_t *pData", "uint32_t *pData" if change=="spi-unknown-abi" else "uint8_t *pData",1)
+            header.write_text(data,encoding="utf-8")
+        else:
+            script=next(root.glob("*.ld")); script.write_text(script.read_text(encoding="utf-8-sig")+"\nINCLUDE other.ld\n",encoding="utf-8")
+        reasons={"make-append":"literal C_SOURCES", "memory-expression":"Linker memory",
+            "spi-unknown-abi":"blocking SPI ABI", "spi-mixed-qualifier":"SPI transmit buffer qualifiers",
+            "missing-cdc":"Missing or escaping", "make-expression":"expression", "CPU":"Native CPU",
+            "ABI":"ABI|FLOAT-ABI", "memory":"Linker memory", "device-macro":"effective definitions",
+            "startup":"startup", "USBX":"Only complete", "class":"Only complete", "RTOS":"FreeRTOS",
+            "dynamic-allocation":"Dynamic native USB", "unknown-hook":"lifecycle/receive hook",
+            "spi-owner":"real type/init owner", "tick":"tick initialization", "include-escape":"Unsafe native build path",
+            "linker-dependency":"linker file dependencies"}
+>       with pytest.raises(CubeMxImportError,match=reasons[change]): NativeClassicCdc_Inspect(root,**args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:120: Failed
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_incompatible_inputs_rejected[f103-usb-make-append]
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_incompatible_inputs_rejected[f103-usb-memory-expression]
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_incompatible_inputs_rejected[f407-usb-make-append]
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_incompatible_inputs_rejected[f407-usb-memory-expression]
+4 failed, 4 passed, 44 deselected, 1 warning in 28.49s

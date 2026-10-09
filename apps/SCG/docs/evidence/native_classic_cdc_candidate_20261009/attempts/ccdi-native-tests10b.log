@@ -1,0 +1,249 @@
+FF...............F...............F..........                             [100%]
+================================== FAILURES ===================================
+________________ test_import_preservation_and_reload[f103-usb] ________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_import_preservation_and_r_38a92ffa/native'), {'device_facts...2aa59aea3f7c0'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_import_preservation_and_r_38a92ffa')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b'), _trace=<pluggy._tracing.TagTra...CAA060>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b'), _retention_count=3, _retention_policy='all')
+
+    def test_import_preservation_and_reload(native,tmp_path,tmp_path_factory):
+        from silverstar_fccg.plugins.catalog import PluginCatalog
+        from silverstar_fccg.project.folder_contract import ProjectRoot_Save
+        from silverstar_fccg.project.model import ProjectModel_Load
+        from silverstar_fccg.generator.multi_target import GroundFiles_Render
+        from test_round2_targets import _GroundBoardProject_Get
+        root,args=native
+        proof,inventory,files=NativeClassicCdc_Inspect(root,**args)
+        assert proof["static_contract"]=="VALIDATED_TEXT_SCOPE"
+        assert not proof["runtime_adapter_enabled"]
+        assert proof["compiler_abi_closure"]==proof["tick_liveness"]=="NOT_PROVEN"
+        service=FccgService(tmp_path_factory.mktemp("w"))
+        first=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert all((first.snapshot_root/p).read_bytes()==b==(root/p).read_bytes() for p,b in files.items())
+        repeat=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert repeat.hardware==first.hardware and repeat.snapshot_root==first.snapshot_root
+        scg=Path(__file__).resolve().parents[1]
+        catalog=PluginCatalog(scg/"plugins/builtin",scg/"plugins/installed"); catalog.Scan()
+        model=_GroundBoardProject_Get(catalog)
+        model.ground_target=replace(model.ground_target,board="",hardware=first.hardware)
+        output=tmp_path/"project"; ProjectRoot_Save(model,output,create_new=True)
+        loaded=ProjectModel_Load(output/"SilverStar.ssproject")
+>       assert loaded.ground_target.hardware==first.hardware
+E       AssertionError: assert HardwareConfi...ingerprint='') == HardwareConfi...ingerprint='')
+E         
+E         Omitting 23 identical items, use -vv to show
+E         Differing attributes:
+E         ['resources', 'defines']
+E         
+E         Drill down into differing attribute resources:
+E           resources: (HardwareResource(resource_id='USB_CDC', kind='usb_cdc', metadata={'capabilities': ['usb.device', 'usb.cdc'], 'physical_resource': 'USB Device CDC'}), HardwareResource(resource_id='USART1', kind='uart', metadata={'c_id': '((PlatformUartId)0U)', 'header': 'platform_uart.h', 'handle': 'huart1', 'logical_index': 0, 'peripheral': 'USART1', 'physical_resource': 'USART1', 'pins': {'rx': 'PA10', 'tx': 'PA9'}, 'pin_electrical': {'rx...
+E         
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:61: AssertionError
+________________ test_import_preservation_and_reload[f407-usb] ________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_import_preservation_and_r_a3caea10/native'), {'device_facts...2b6f163451eb08274'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_import_preservation_and_r_a3caea10')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b'), _trace=<pluggy._tracing.TagTra...CAA060>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b'), _retention_count=3, _retention_policy='all')
+
+    def test_import_preservation_and_reload(native,tmp_path,tmp_path_factory):
+        from silverstar_fccg.plugins.catalog import PluginCatalog
+        from silverstar_fccg.project.folder_contract import ProjectRoot_Save
+        from silverstar_fccg.project.model import ProjectModel_Load
+        from silverstar_fccg.generator.multi_target import GroundFiles_Render
+        from test_round2_targets import _GroundBoardProject_Get
+        root,args=native
+        proof,inventory,files=NativeClassicCdc_Inspect(root,**args)
+        assert proof["static_contract"]=="VALIDATED_TEXT_SCOPE"
+        assert not proof["runtime_adapter_enabled"]
+        assert proof["compiler_abi_closure"]==proof["tick_liveness"]=="NOT_PROVEN"
+        service=FccgService(tmp_path_factory.mktemp("w"))
+        first=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert all((first.snapshot_root/p).read_bytes()==b==(root/p).read_bytes() for p,b in files.items())
+        repeat=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert repeat.hardware==first.hardware and repeat.snapshot_root==first.snapshot_root
+        scg=Path(__file__).resolve().parents[1]
+        catalog=PluginCatalog(scg/"plugins/builtin",scg/"plugins/installed"); catalog.Scan()
+        model=_GroundBoardProject_Get(catalog)
+        model.ground_target=replace(model.ground_target,board="",hardware=first.hardware)
+        output=tmp_path/"project"; ProjectRoot_Save(model,output,create_new=True)
+        loaded=ProjectModel_Load(output/"SilverStar.ssproject")
+>       assert loaded.ground_target.hardware==first.hardware
+E       AssertionError: assert HardwareConfi...ingerprint='') == HardwareConfi...ingerprint='')
+E         
+E         Omitting 23 identical items, use -vv to show
+E         Differing attributes:
+E         ['resources', 'defines']
+E         
+E         Drill down into differing attribute resources:
+E           resources: (HardwareResource(resource_id='USB_CDC', kind='usb_cdc', metadata={'capabilities': ['usb.device', 'usb.cdc'], 'physical_resource': 'USB Device CDC'}), HardwareResource(resource_id='USART1', kind='uart', metadata={'c_id': '((PlatformUartId)0U)', 'header': 'platform_uart.h', 'handle': 'huart1', 'logical_index': 0, 'peripheral': 'USART1', 'physical_resource': 'USART1', 'pins': {'rx': 'PA10', 'tx': 'PA9'}, 'pin_electrical': {'rx...
+E         
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:61: AssertionError
+________ test_incompatible_inputs_rejected[f103-usb-linker-dependency] ________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_incompatible_inputs_rejec_f1d7efdb/native'), {'device_facts...2aa59aea3f7c0'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+change = 'linker-dependency'
+
+    @pytest.mark.parametrize("change",["missing-cdc","make-expression","CPU","ABI","memory","device-macro",
+        "startup","USBX","class","RTOS","dynamic-allocation","unknown-hook","spi-owner","tick",
+        "include-escape","linker-dependency"])
+    def test_incompatible_inputs_rejected(native,change):
+        root,args=native; make=root/"Makefile"; text=make.read_text(encoding="utf-8-sig")
+        if change=="missing-cdc": (root/"USB_DEVICE/App/usbd_cdc_if.c").unlink()
+        elif change=="make-expression": make.write_text(text.replace("Core/Src/main.c","$(shell whoami)",1),encoding="utf-8")
+        elif change=="CPU": make.write_text(text.replace("-mcpu="+args["device_facts"].core,"-mcpu=cortex-m7"),encoding="utf-8")
+        elif change=="ABI": make.write_text(text+"\nFLOAT-ABI = -mfloat-abi=hard\n",encoding="utf-8")
+        elif change=="memory": args["device_facts"]=replace(args["device_facts"],regions=(NativeMemoryRegion("FLASH",0x08000000,999),))
+        elif change=="device-macro": make.write_text(text.replace("-D"+args["device_facts"].device_macro,"-DSTM32UNKNOWN"),encoding="utf-8")
+        elif change=="startup": args["device_facts"]=replace(args["device_facts"],startup="startup_stm32unknown.s")
+        elif change in {"USBX","class","RTOS"}:
+            ioc=next(root.glob("*.ioc")); data=ioc.read_text(encoding="utf-8-sig")
+            if change=="USBX": data=data.replace("=USB_DEVICE","=USBX")
+            elif change=="class": data=data.replace("=Cdc","=Hid")
+            else: data+="\nMcu.IP99=FREERTOS\n"
+            ioc.write_text(data,encoding="utf-8")
+        elif change in {"dynamic-allocation","unknown-hook"}:
+            path=root/("USB_DEVICE/Target/usbd_conf.c" if change=="dynamic-allocation" else "USB_DEVICE/App/usbd_cdc_if.c")
+            data=path.read_text(encoding="utf-8-sig")
+            path.write_text(data.replace("USBD_static_malloc","malloc") if change=="dynamic-allocation" else data.replace("USER CODE BEGIN 6","UNKNOWN HOOK"),encoding="utf-8")
+        elif change=="spi-owner":
+            path=root/"Core/Src/spi.c"; path.write_text(path.read_text(encoding="utf-8-sig").replace("SPI_MODE_MASTER","SPI_MODE_SLAVE"),encoding="utf-8")
+        elif change=="tick":
+            for path in (root/"Core/Src").glob("*.c"):
+                data=path.read_text(encoding="utf-8-sig")
+                if "HAL_IncTick" in data: path.write_text(data.replace("HAL_IncTick","Unknown_Tick"),encoding="utf-8")
+        elif change=="include-escape": make.write_text(text.replace("-ICore/Inc","-I../escape"),encoding="utf-8")
+        else:
+            script=next(root.glob("*.ld")); script.write_text(script.read_text(encoding="utf-8-sig")+"\nINCLUDE other.ld\n",encoding="utf-8")
+>       with pytest.raises(CubeMxImportError): NativeClassicCdc_Inspect(root,**args)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\native_classic_cdc.py:297: in NativeClassicCdc_Inspect
+    return _NativeClassicCdc_Inspect(root, device_facts=device_facts,
+.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\native_classic_cdc.py:237: in _NativeClassicCdc_Inspect
+    GroundDependencyDirectives_Validate(root)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_incompatible_inputs_rejec_f1d7efdb/native')
+
+    def GroundDependencyDirectives_Validate(root: Path) -> None:
+        virtual_headers = {"CMSIS_NVIC_VIRTUAL_HEADER_FILE", "CMSIS_VECTAB_VIRTUAL_HEADER_FILE"}
+        for path in root.rglob("*"):
+            if any(part.lower() in {"build", ".git", "debug", "release"} for part in path.relative_to(root).parts):
+                continue
+            if not path.is_file() or path.suffix.lower() not in {".c", ".h", ".s", ".ld"}:
+                continue
+            if not path.resolve().is_relative_to(root.resolve()) or path.is_symlink():
+                raise ValueError("Ground dependency escapes the copied project: " + str(path))
+            text = path.read_text(encoding="utf-8-sig")
+            # C11 translates trigraphs before splicing and removing comments. Do
+            # not let an alternate '#' or backslash evade this conservative profile.
+            # Reject these spellings explicitly, including in comments/strings,
+            # rather than approximate another C preprocessing implementation.
+            if "%:" in text or re.search(r"\?\?[=/'()!<>-]", text):
+                raise ValueError("Ground alternate preprocessing tokens are unsupported: " + str(path))
+            text = re.sub(r"\\\r?\n", "", text)
+            if "%:" in text:
+                raise ValueError("Ground alternate preprocessing tokens are unsupported: " + str(path))
+            text = re.sub(r"/\*.*?\*/|//[^\r\n]*", "", text, flags=re.S)
+            if re.search(r"(?m)^\s*#\s*(include_next|import|embed)\b|\.incbin\b|\.include\b", text):
+                raise ValueError("Ground indirect/assembler file dependency is unsupported: " + str(path))
+            if path.suffix.lower() == ".ld" and re.search(r"\b(?:INCLUDE|INPUT|GROUP|STARTUP|SEARCH_DIR|OUTPUT)\b", text):
+>               raise ValueError("Ground linker file dependencies are unsupported; use one self-contained script: " + str(path))
+E               ValueError: Ground linker file dependencies are unsupported; use one self-contained script: C:\Users\chdxm\AppData\Local\Temp\nc10b\test_incompatible_inputs_rejec_f1d7efdb\native\STM32F103XX_FLASH.ld
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\ground_dependencies.py:29: ValueError
+________ test_incompatible_inputs_rejected[f407-usb-linker-dependency] ________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_incompatible_inputs_rejec_8741fb07/native'), {'device_facts...2b6f163451eb08274'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+change = 'linker-dependency'
+
+    @pytest.mark.parametrize("change",["missing-cdc","make-expression","CPU","ABI","memory","device-macro",
+        "startup","USBX","class","RTOS","dynamic-allocation","unknown-hook","spi-owner","tick",
+        "include-escape","linker-dependency"])
+    def test_incompatible_inputs_rejected(native,change):
+        root,args=native; make=root/"Makefile"; text=make.read_text(encoding="utf-8-sig")
+        if change=="missing-cdc": (root/"USB_DEVICE/App/usbd_cdc_if.c").unlink()
+        elif change=="make-expression": make.write_text(text.replace("Core/Src/main.c","$(shell whoami)",1),encoding="utf-8")
+        elif change=="CPU": make.write_text(text.replace("-mcpu="+args["device_facts"].core,"-mcpu=cortex-m7"),encoding="utf-8")
+        elif change=="ABI": make.write_text(text+"\nFLOAT-ABI = -mfloat-abi=hard\n",encoding="utf-8")
+        elif change=="memory": args["device_facts"]=replace(args["device_facts"],regions=(NativeMemoryRegion("FLASH",0x08000000,999),))
+        elif change=="device-macro": make.write_text(text.replace("-D"+args["device_facts"].device_macro,"-DSTM32UNKNOWN"),encoding="utf-8")
+        elif change=="startup": args["device_facts"]=replace(args["device_facts"],startup="startup_stm32unknown.s")
+        elif change in {"USBX","class","RTOS"}:
+            ioc=next(root.glob("*.ioc")); data=ioc.read_text(encoding="utf-8-sig")
+            if change=="USBX": data=data.replace("=USB_DEVICE","=USBX")
+            elif change=="class": data=data.replace("=Cdc","=Hid")
+            else: data+="\nMcu.IP99=FREERTOS\n"
+            ioc.write_text(data,encoding="utf-8")
+        elif change in {"dynamic-allocation","unknown-hook"}:
+            path=root/("USB_DEVICE/Target/usbd_conf.c" if change=="dynamic-allocation" else "USB_DEVICE/App/usbd_cdc_if.c")
+            data=path.read_text(encoding="utf-8-sig")
+            path.write_text(data.replace("USBD_static_malloc","malloc") if change=="dynamic-allocation" else data.replace("USER CODE BEGIN 6","UNKNOWN HOOK"),encoding="utf-8")
+        elif change=="spi-owner":
+            path=root/"Core/Src/spi.c"; path.write_text(path.read_text(encoding="utf-8-sig").replace("SPI_MODE_MASTER","SPI_MODE_SLAVE"),encoding="utf-8")
+        elif change=="tick":
+            for path in (root/"Core/Src").glob("*.c"):
+                data=path.read_text(encoding="utf-8-sig")
+                if "HAL_IncTick" in data: path.write_text(data.replace("HAL_IncTick","Unknown_Tick"),encoding="utf-8")
+        elif change=="include-escape": make.write_text(text.replace("-ICore/Inc","-I../escape"),encoding="utf-8")
+        else:
+            script=next(root.glob("*.ld")); script.write_text(script.read_text(encoding="utf-8-sig")+"\nINCLUDE other.ld\n",encoding="utf-8")
+>       with pytest.raises(CubeMxImportError): NativeClassicCdc_Inspect(root,**args)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\native_classic_cdc.py:297: in NativeClassicCdc_Inspect
+    return _NativeClassicCdc_Inspect(root, device_facts=device_facts,
+.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\native_classic_cdc.py:237: in _NativeClassicCdc_Inspect
+    GroundDependencyDirectives_Validate(root)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10b/test_incompatible_inputs_rejec_8741fb07/native')
+
+    def GroundDependencyDirectives_Validate(root: Path) -> None:
+        virtual_headers = {"CMSIS_NVIC_VIRTUAL_HEADER_FILE", "CMSIS_VECTAB_VIRTUAL_HEADER_FILE"}
+        for path in root.rglob("*"):
+            if any(part.lower() in {"build", ".git", "debug", "release"} for part in path.relative_to(root).parts):
+                continue
+            if not path.is_file() or path.suffix.lower() not in {".c", ".h", ".s", ".ld"}:
+                continue
+            if not path.resolve().is_relative_to(root.resolve()) or path.is_symlink():
+                raise ValueError("Ground dependency escapes the copied project: " + str(path))
+            text = path.read_text(encoding="utf-8-sig")
+            # C11 translates trigraphs before splicing and removing comments. Do
+            # not let an alternate '#' or backslash evade this conservative profile.
+            # Reject these spellings explicitly, including in comments/strings,
+            # rather than approximate another C preprocessing implementation.
+            if "%:" in text or re.search(r"\?\?[=/'()!<>-]", text):
+                raise ValueError("Ground alternate preprocessing tokens are unsupported: " + str(path))
+            text = re.sub(r"\\\r?\n", "", text)
+            if "%:" in text:
+                raise ValueError("Ground alternate preprocessing tokens are unsupported: " + str(path))
+            text = re.sub(r"/\*.*?\*/|//[^\r\n]*", "", text, flags=re.S)
+            if re.search(r"(?m)^\s*#\s*(include_next|import|embed)\b|\.incbin\b|\.include\b", text):
+                raise ValueError("Ground indirect/assembler file dependency is unsupported: " + str(path))
+            if path.suffix.lower() == ".ld" and re.search(r"\b(?:INCLUDE|INPUT|GROUP|STARTUP|SEARCH_DIR|OUTPUT)\b", text):
+>               raise ValueError("Ground linker file dependencies are unsupported; use one self-contained script: " + str(path))
+E               ValueError: Ground linker file dependencies are unsupported; use one self-contained script: C:\Users\chdxm\AppData\Local\Temp\nc10b\test_incompatible_inputs_rejec_8741fb07\native\STM32F407XX_FLASH.ld
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\ground_dependencies.py:29: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_import_preservation_and_reload[f103-usb]
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_import_preservation_and_reload[f407-usb]
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_incompatible_inputs_rejected[f103-usb-linker-dependency]
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_incompatible_inputs_rejected[f407-usb-linker-dependency]
+4 failed, 40 passed, 1 warning in 128.85s (0:02:08)

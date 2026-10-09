@@ -1,0 +1,89 @@
+FF..........................................                             [100%]
+================================== FAILURES ===================================
+________________ test_import_preservation_and_reload[f103-usb] ________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c/test_import_preservation_and_r_bb2d540c/native'), {'device_facts...2aa59aea3f7c0'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c/test_import_preservation_and_r_bb2d540c')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c'), _trace=<pluggy._tracing.TagTra...B0A060>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c'), _retention_count=3, _retention_policy='all')
+
+    def test_import_preservation_and_reload(native,tmp_path,tmp_path_factory):
+        from silverstar_fccg.plugins.catalog import PluginCatalog
+        from silverstar_fccg.project.folder_contract import ProjectRoot_Save
+        from silverstar_fccg.project.model import ProjectModel_Load
+        from silverstar_fccg.generator.multi_target import GroundFiles_Render
+        from test_round2_targets import _GroundBoardProject_Get
+        root,args=native
+        proof,inventory,files=NativeClassicCdc_Inspect(root,**args)
+        assert proof["static_contract"]=="VALIDATED_TEXT_SCOPE"
+        assert not proof["runtime_adapter_enabled"]
+        assert proof["compiler_abi_closure"]==proof["tick_liveness"]=="NOT_PROVEN"
+        service=FccgService(tmp_path_factory.mktemp("w"))
+        first=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert all((first.snapshot_root/p).read_bytes()==b==(root/p).read_bytes() for p,b in files.items())
+        repeat=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert repeat.hardware==first.hardware and repeat.snapshot_root==first.snapshot_root
+        scg=Path(__file__).resolve().parents[1]
+        catalog=PluginCatalog(scg/"plugins/builtin",scg/"plugins/installed"); catalog.Scan()
+        model=_GroundBoardProject_Get(catalog)
+        model.ground_target=replace(model.ground_target,board="",hardware=first.hardware)
+        output=tmp_path/"project"; ProjectRoot_Save(model,output,create_new=True)
+        loaded=ProjectModel_Load(output/"SilverStar.ssproject")
+        assert loaded.ground_target.hardware==first.hardware
+        loaded.ground_target.hardware.inventory["native_complete_classic_cdc"]["runtime_adapter_enabled"]=True
+        with pytest.raises(ValueError,match="runtime adapter.*NOT PROVEN"):
+            GroundFiles_Render(loaded,catalog,WorkspacePolicy(tmp_path/"workspace"))
+>       assert not (output/"Ground_Station").exists()
+E       AssertionError: assert not True
+E        +  where True = exists()
+E        +    where exists = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c/test_import_preservation_and_r_bb2d540c/project') / 'Ground_Station').exists
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:65: AssertionError
+________________ test_import_preservation_and_reload[f407-usb] ________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c/test_import_preservation_and_r_a97d5fe6/native'), {'device_facts...2b6f163451eb08274'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c/test_import_preservation_and_r_a97d5fe6')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c'), _trace=<pluggy._tracing.TagTra...B0A060>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c'), _retention_count=3, _retention_policy='all')
+
+    def test_import_preservation_and_reload(native,tmp_path,tmp_path_factory):
+        from silverstar_fccg.plugins.catalog import PluginCatalog
+        from silverstar_fccg.project.folder_contract import ProjectRoot_Save
+        from silverstar_fccg.project.model import ProjectModel_Load
+        from silverstar_fccg.generator.multi_target import GroundFiles_Render
+        from test_round2_targets import _GroundBoardProject_Get
+        root,args=native
+        proof,inventory,files=NativeClassicCdc_Inspect(root,**args)
+        assert proof["static_contract"]=="VALIDATED_TEXT_SCOPE"
+        assert not proof["runtime_adapter_enabled"]
+        assert proof["compiler_abi_closure"]==proof["tick_liveness"]=="NOT_PROVEN"
+        service=FccgService(tmp_path_factory.mktemp("w"))
+        first=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert all((first.snapshot_root/p).read_bytes()==b==(root/p).read_bytes() for p,b in files.items())
+        repeat=service.NativeClassicCdcProject_Import(root,**args,risk_acknowledged=True)
+        assert repeat.hardware==first.hardware and repeat.snapshot_root==first.snapshot_root
+        scg=Path(__file__).resolve().parents[1]
+        catalog=PluginCatalog(scg/"plugins/builtin",scg/"plugins/installed"); catalog.Scan()
+        model=_GroundBoardProject_Get(catalog)
+        model.ground_target=replace(model.ground_target,board="",hardware=first.hardware)
+        output=tmp_path/"project"; ProjectRoot_Save(model,output,create_new=True)
+        loaded=ProjectModel_Load(output/"SilverStar.ssproject")
+        assert loaded.ground_target.hardware==first.hardware
+        loaded.ground_target.hardware.inventory["native_complete_classic_cdc"]["runtime_adapter_enabled"]=True
+        with pytest.raises(ValueError,match="runtime adapter.*NOT PROVEN"):
+            GroundFiles_Render(loaded,catalog,WorkspacePolicy(tmp_path/"workspace"))
+>       assert not (output/"Ground_Station").exists()
+E       AssertionError: assert not True
+E        +  where True = exists()
+E        +    where exists = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc10c/test_import_preservation_and_r_a97d5fe6/project') / 'Ground_Station').exists
+
+.work\ccdi\apps\SCG\tests\test_native_classic_cdc.py:65: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_import_preservation_and_reload[f103-usb]
+FAILED .work\ccdi\apps\SCG\tests\test_native_classic_cdc.py::test_import_preservation_and_reload[f407-usb]
+2 failed, 42 passed, 1 warning in 133.53s (0:02:13)

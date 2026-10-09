@@ -6,6 +6,10 @@ from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, fields, replace
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from silverstar_fccg.hardware.native_classic_cdc import NativeDeviceFacts
 
 from silverstar_fccg.app.source_export import (
     SourcePackage_Export,
@@ -877,6 +881,20 @@ class FccgService:
         if compatibility_errors:
             raise CubeMxImportError("; ".join(compatibility_errors))
         return result
+
+    def NativeClassicCdcProject_Import(
+        self, input_path: Path, *, device_facts: NativeDeviceFacts, spi_resource: str,
+        gpio_resources: tuple[str, ...], risk_acknowledged: bool,
+    ) -> CubeMxImportResult:
+        """Experimental static admission; does not modify a model or enable firmware.
+
+        device_facts must come from an independently trusted backend descriptor,
+        never the project/IOC/linker being imported. No MCU plugin is selected.
+        """
+        from silverstar_fccg.hardware.native_classic_cdc import NativeClassicCdc_Import
+        return NativeClassicCdc_Import(self.hardware_importer, input_path,
+            device_facts=device_facts, spi_resource=spi_resource,
+            gpio_resources=gpio_resources, risk_acknowledged=risk_acknowledged)
 
     def HardwareProviderForMcu_Get(self, mcu_id: str) -> str:
         mcu = self.catalog.Component_Get(mcu_id)
