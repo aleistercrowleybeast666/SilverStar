@@ -26,6 +26,7 @@ static uint16_t s_pc_frame_lengths[GROUND_PC_QUEUE_DEPTH];
 static uint8_t s_pc_frame_head;
 static uint8_t s_pc_frame_tail;
 static uint8_t s_pc_frame_count;
+static uint32_t s_pc_session;
 
 void GroundBridge_PcReset(void)
 {
@@ -33,10 +34,13 @@ void GroundBridge_PcReset(void)
     s_pc_frame_head = 0U;
     s_pc_frame_tail = 0U;
     s_pc_frame_count = 0U;
+    s_pc_session = PcByteStream_Session_Get();
 }
 
 static GroundBridgeResult GroundBridge_FrameWrite(const uint8_t *frame, uint16_t length)
 {
+    if (PcByteStream_Session_Check(s_pc_session) == 0U)
+    { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
     if ((frame == NULL) || (length == 0U) || (length > GSP_MIN_MAX_FRAME_LEN)
         || (s_pc_frame_count >= GROUND_PC_QUEUE_DEPTH))
     {
@@ -61,10 +65,14 @@ static GroundBridgeResult GroundBridge_PcFlush(void)
         SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     for (flushed = 0U; flushed < GROUND_PC_QUEUE_DEPTH; flushed++)
     {
+        if (PcByteStream_Session_Check(s_pc_session) == 0U)
+        { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
         if (s_pc_frame_count == 0U) { break; }
         uint16_t expected = s_pc_frame_lengths[s_pc_frame_head];
-        PcByteStreamWriteResult write_result = PcByteStream_Write(
-            s_pc_frames[s_pc_frame_head], expected);
+        PcByteStreamWriteResult write_result = PcByteStream_WriteSession(
+            s_pc_frames[s_pc_frame_head], expected, s_pc_session);
+        if (PcByteStream_Session_Check(s_pc_session) == 0U)
+        { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
         if (write_result == PC_BYTE_STREAM_WRITE_BUSY)
         {
             if (s_pc_write_busy_count < UINT32_MAX) { s_pc_write_busy_count++; }
@@ -88,9 +96,12 @@ static GroundBridgeResult GroundBridge_AckSend(uint8_t type, uint8_t result, uin
     return GroundBridge_FrameWrite(frame, length);
 }
 
-static GroundBridgeResult GroundBridge_PcFrameHandle(const GspMinFrame *frame)
+static GroundBridgeResult GroundBridge_PcFrameHandle(const GspMinFrame *frame,
+    uint32_t session)
 {
     uint8_t air_length;
+    uint32_t token;
+    GroundRadioResult radio_result;
     if (frame == NULL)
     {
         return GROUND_BRIDGE_PC_ERROR;
@@ -118,7 +129,15 @@ static GroundBridgeResult GroundBridge_PcFrameHandle(const GspMinFrame *frame)
         return GroundBridge_AckSend(frame->type, GSP_ACK_BAD_PARAM, air_length);
     }
     /* The AIR bytes are opaque. The Flight Controller and GSHC own semantics. */
-    if (GroundRadio_TxEnqueue(&frame->payload[1], air_length) != GROUND_RADIO_OK)
+    /* Both Ground radio backends only copy into bounded static queues here.
+       Exclude reset across validation and that publication, not radio I/O. */
+    if (PcByteStream_Session_Enter(session, &token) == 0U)
+    { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
+    radio_result = GroundRadio_TxEnqueue(&frame->payload[1], air_length);
+    PcByteStream_Session_Exit(token);
+    if (PcByteStream_Session_Check(session) == 0U)
+    { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
+    if (radio_result != GROUND_RADIO_OK)
     {
         return GroundBridge_AckSend(frame->type, GSP_ACK_BUSY, 0U);
     }
@@ -192,6 +211,7 @@ GroundBridgeResult GroundBridge_Init(void)
     {
         return GROUND_BRIDGE_PC_ERROR;
     }
+    s_pc_session = PcByteStream_Session_Get();
     if (GroundRadio_Init() != GROUND_RADIO_OK)
     {
         return GROUND_BRIDGE_RADIO_ERROR;
@@ -210,18 +230,22 @@ static GroundBridgeResult GroundBridge_PcInputProcess(void)
     GspMinFrame parsed;
     uint16_t count;
     uint16_t index;
+    uint32_t session;
     GroundBridgeResult bridge_result = GROUND_BRIDGE_OK;
-    count = PcByteStream_Read(pc_bytes, sizeof(pc_bytes));
+    count = PcByteStream_ReadSession(pc_bytes, sizeof(pc_bytes), &session);
+    if (session != s_pc_session) { GroundBridge_PcReset(); }
     if (count > sizeof(pc_bytes)) { return GROUND_BRIDGE_PC_ERROR; }
     SILVERSTAR_ASSERT(count <= GROUND_PC_CHUNK_SIZE,
         SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     for (index = 0U; index < count; index++)
     {
+        if (PcByteStream_Session_Check(session) == 0U)
+        { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
         if (GspMinParser_InputByte(&s_gsp_parser, pc_bytes[index], &parsed)
             == GSP_PARSER_FRAME_READY)
         {
-            if (GroundBridge_PcFrameHandle(&parsed) != GROUND_BRIDGE_OK)
+            if (GroundBridge_PcFrameHandle(&parsed, session) != GROUND_BRIDGE_OK)
             {
                 bridge_result = GROUND_BRIDGE_PC_ERROR;
             }

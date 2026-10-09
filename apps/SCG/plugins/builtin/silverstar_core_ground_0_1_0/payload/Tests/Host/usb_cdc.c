@@ -80,6 +80,12 @@ int main(void)
     hUsbDeviceFS.dev_state = USBD_STATE_CONFIGURED;
     s_class.TxState = 0U;
     s_transmit_result = USBD_OK;
+    {
+        uint32_t old_session = PcByteStream_Session_Get();
+        PcByteStream_OnUsbReset();
+        assert(PcByteStream_Session_Check(old_session) == 0U);
+        assert(PcByteStream_WriteSession(input, 3U, old_session) == PC_BYTE_STREAM_WRITE_BUSY);
+    }
     usb_test_mask = 1U;
     assert(PcByteStream_Write(input, 3U) == PC_BYTE_STREAM_WRITE_OK);
     assert(usb_test_mask == 1U);

@@ -101,6 +101,7 @@ int main(void)
             str(GROUND / "Protocol/Src/gsp_min_protocol.c"),
             str(GROUND / "Protocol/Src/protocol_crc16.c"),
             str(harness), "-o", str(executable),
+            str(GROUND.parent / "Tests/Host/pc_session_uart.c"),
         ],
         tmp_path,
         "compile",

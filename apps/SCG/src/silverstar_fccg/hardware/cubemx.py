@@ -89,6 +89,11 @@ class CubeMxImporter:
         root, ioc_path = self._Input_Resolve(input_path)
         if target == "ground" and len(tuple(root.glob("*.ioc"))) != 1:
             raise CubeMxImportError("Ground CubeMX project must contain exactly one root .ioc file")
+        if target == "ground":
+            # Reject aliases before inventory readers open generated sources.
+            for path in root.rglob("*"):
+                if path.is_symlink() or not path.resolve().is_relative_to(root):
+                    raise CubeMxImportError("Ground dependency escapes the copied project: " + str(path))
         ioc_text = self._Text_Read(ioc_path)
         progress(1, True)
 
@@ -191,10 +196,12 @@ class CubeMxImporter:
             inventory_data["ground_cubemx_base"] = {
                 "format_version": 1,
                 "mcu_flags": list(ground_inputs.flags),
+                "required_irq_handlers": list(ground_inputs.irq_handlers),
                 "build_manifest": "Makefile",
                 "artifact_hashes": {
-                    path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-                    for path in source_files if path.relative_to(root).as_posix() != "README.md"
+                    "README.md": hashlib.sha256(self._SnapshotReadme_Get().encode("utf8")).hexdigest(),
+                    **{path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                       for path in source_files if path.relative_to(root).as_posix() != "README.md"},
                 },
             }
         hardware = HardwareConfiguration(
@@ -400,14 +407,7 @@ class CubeMxImporter:
                 target = staged_snapshot / relative
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source, target)
-            readme = (
-                "# HardwareGenerated / STM32CubeMX\n\n"
-                "This directory comes from STM32CubeMX. It is not SilverStar generic "
-                "Platform or Device source. Regenerating hardware may replace this directory.\n\n"
-                "After any hardware change, rebuild and repeat clock, DMA, interrupt, GPIO, "
-                "electrical-level and power validation. Vendor-generated code is a controlled "
-                "Power-of-Ten deviation; SilverStar adapters and generated glue remain in scope.\n"
-            )
+            readme = self._SnapshotReadme_Get()
             (staged_snapshot / "README.md").write_text(readme, encoding="utf-8", newline="\n")
             metadata = {
                 "format_version": 0,
@@ -431,6 +431,17 @@ class CubeMxImporter:
             if stage.exists():
                 self.policy.Tree_Remove(stage)
             raise
+
+    @staticmethod
+    def _SnapshotReadme_Get() -> str:
+        return (
+            "# HardwareGenerated / STM32CubeMX\n\n"
+            "This directory comes from STM32CubeMX. It is not SilverStar generic "
+            "Platform or Device source. Regenerating hardware may replace this directory.\n\n"
+            "After any hardware change, rebuild and repeat clock, DMA, interrupt, GPIO, "
+            "electrical-level and power validation. Vendor-generated code is a controlled "
+            "Power-of-Ten deviation; SilverStar adapters and generated glue remain in scope.\n"
+        )
 
     @staticmethod
     def _Peripherals_Get(ioc_text: str) -> tuple[str, ...]:

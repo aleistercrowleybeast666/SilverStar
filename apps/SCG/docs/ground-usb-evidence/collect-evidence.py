@@ -36,7 +36,7 @@ for name in ("f103-usb", "f103-uart", "f407-usb"):
         if function in seen: return (0, [function + " (cycle)"])
         suffix = max((path_sample(child, seen | {function}) for child in calls.get(function, ())), default=(0, []), key=lambda item: item[0])
         return (frames.get(function, {}).get("bytes", 0) + suffix[0], [function] + suffix[1])
-    selected = ["main", "GroundBridge_Process", "PcByteStream_Write", "PcByteStream_Read", "PcByteStream_OnUsbReceive", "USB_LP_CAN1_RX0_IRQHandler", "OTG_FS_IRQHandler"]
+    selected = ["main", "GroundBridge_Process", "GroundBridge_PcReset", "PcByteStream_WriteSession", "PcByteStream_ReadSession", "PcByteStream_Session_Enter", "PcByteStream_Session_Exit", "PcByteStream_OnUsbReceive", "USB_LP_CAN1_RX0_IRQHandler", "OTG_FS_IRQHandler"]
     known_paths = {entry: {"known_frame_sum": path_sample(entry)[0], "path": path_sample(entry)[1]} for entry in selected if entry in calls}
     reserved_stack = 2048
     item = {"case": name, "sources": len(graph["sources"]), "asm_sources": graph["asm_sources"], "linker_script": graph["linker_script"],

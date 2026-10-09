@@ -114,11 +114,9 @@ def _Main_Integrate(content: bytes, *, usb: bool = False) -> bytes:
     )
     if section is None or section.group(1).strip() != "}":
         raise ValueError("Ground CubeMX main.c USER CODE 3 has unsupported application code")
-    usb_process = ("\n    if (PcByteStream_ResetPending_Get() != 0U) { GroundBridge_PcReset(); }"
-                   if usb else "")
     source = source.replace(
         "/* USER CODE BEGIN 3 */",
-        "/* USER CODE BEGIN 3 */" + usb_process + "\n    (void)GroundBridge_Process(HAL_GetTick());",
+        "/* USER CODE BEGIN 3 */\n    (void)GroundBridge_Process(HAL_GetTick());",
         1,
     )
     return source.encode("utf-8")
@@ -181,7 +179,8 @@ def _UsbCallback_Integrate(content: bytes) -> bytes:
         # an unfamiliar template instead of silently losing lifecycle handling.
         if f"/* USER CODE BEGIN {section} */" not in source:
             raise ValueError("CubeMX USB CDC callback lacks a supported Init/DeInit hook")
-        source = _UserSection_Insert(source, section, "  PcByteStream_OnUsbReset();", empty=False)
+        marker = f"/* USER CODE BEGIN {section} */"
+        source = source.replace(marker, marker + "\n  PcByteStream_OnUsbReset();", 1)
     return source.encode("utf-8")
 
 
@@ -214,7 +213,9 @@ def _PcAdapter_Render(model: ProjectModel, family=None) -> str:
             and {"DMA_PERIPH_TO_MEMORY", "DMA_MEMORY_TO_PERIPH"}.issubset(dma_directions)
         ):
             from silverstar_fccg.generator.ground_pc_uart_dma import PcUartDma_Render
-            return PcUartDma_Render(handle)
+            from silverstar_fccg.generator.ground_pc_session_uart import PcUartSession_Render
+            return PcUartDma_Render(handle) + PcUartSession_Render()
+        from silverstar_fccg.generator.ground_pc_session_uart import PcUartSession_Render
         return f"""#include "pc_byte_stream.h"
 #include "main.h"
 #include <stddef.h>
@@ -249,7 +250,7 @@ uint32_t PcByteStream_OverflowCount_Get(void)
 {{
     return 0U;
 }}
-"""
+""" + PcUartSession_Render()
     from silverstar_fccg.generator.ground_pc_usb_cdc import PcUsbCdc_Render
     return PcUsbCdc_Render()
 
@@ -267,6 +268,7 @@ def _Makefile_Render(
     linker = graph.linker_script
     return f"""# Generated Ground target; source graph is Generated/ground_source_graph.json.
 CC := {toolchain_prefix}gcc
+unexport CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH OBJC_INCLUDE_PATH DEPENDENCIES_OUTPUT SUNPRO_DEPENDENCIES
 OBJCOPY := {toolchain_prefix}objcopy
 SIZE := {toolchain_prefix}size
 PYTHON ?= python
@@ -453,13 +455,23 @@ def GroundFiles_Render(
         # accommodates a full 255-byte radio payload plus its command header.
         "AIR_LINK_HAL_BUFFER_SIZE=260",
     ]))
+    if ground.hardware.hal_cmsis_source_policy == "imported_tree_authoritative":
+        from silverstar_fccg.hardware.cubemx_ground import GroundEffectiveDefinitions_Validate
+        GroundEffectiveDefinitions_Validate(defines, ground.hardware.mcu)
     missing_sources = [source for source in sources if source not in files]
     if missing_sources:
         raise ValueError("Ground source graph has missing files: " + ", ".join(missing_sources))
+    required_irqs = ground.hardware.inventory.get("ground_cubemx_base", {}).get("required_irq_handlers", [])
+    if ground.pc_interface == "usb_cdc":
+        required_irqs = list(dict.fromkeys([*required_irqs,
+            "USB_LP_CAN1_RX0_IRQHandler" if family.component_id.endswith("stm32f1") else "OTG_FS_IRQHandler"]))
     graph = {
         "sources": sources, "asm_sources": base_graph.asm_sources,
         "include_dirs": includes, "defines": defines,
         "linker_script": base_graph.linker_script,
+        "required_irq_handlers": required_irqs,
+        "mcu_flags": base_graph.mcu_flags,
+        "complete_cube_import": ground.hardware.hal_cmsis_source_policy == "imported_tree_authoritative",
     }
     files["Generated/ground_source_graph.json"] = (
         json.dumps(graph, indent=2, ensure_ascii=False) + "\n"

@@ -20,6 +20,7 @@ def _Cube_Get(root: Path) -> Path:
     files = {
         "test.ioc": "Mcu.CPN=STM32F103C8T6\nMcu.Family=STM32F1\nMcu.Name=STM32F103C8Tx\nMcu.Package=LQFP48\nMcu.IP0=RCC\nMxCube.Version=6.15.0\nProjectManager.FirmwarePackage=STM32Cube FW_F1 V1.8.7\n",
         "Core/Src/main.c": "int main(void) { return 0; }\n",
+        "Core/Src/stm32f1xx_it.c": "void SysTick_Handler(void) { }\n",
         "Core/Inc/main.h": "#include <stdint.h>\n",
         "Drivers/CMSIS/core_cm3.h": "/* fixture */\n",
         "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c": "/* fixture */\n",
@@ -28,6 +29,8 @@ def _Cube_Get(root: Path) -> Path:
         "STM32F103XX_FLASH.ld": "MEMORY\n{\nFLASH (rx) : ORIGIN = 0x08000000, LENGTH = 64K\nRAM (xrw) : ORIGIN = 0x20000000, LENGTH = 20K\n}\n",
         "Makefile": "C_SOURCES = Core/Src/main.c Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c\nASM_SOURCES = startup_stm32f103xb.s\nLDSCRIPT = STM32F103XX_FLASH.ld\nC_INCLUDES = -ICore/Inc -IDrivers/STM32F1xx_HAL_Driver/Inc -IDrivers/CMSIS\nC_DEFS = -DUSE_HAL_DRIVER -DSTM32F103xB\nCPU = -mcpu=cortex-m3\n",
     }
+    files["Makefile"] = files["Makefile"].replace("\nASM_SOURCES", " Core/Src/stm32f1xx_it.c\nASM_SOURCES")
+    files["test.ioc"] += "NVIC.SysTick_IRQn=true:15:0\n"
     for name, text in files.items():
         path = root / name
         path.parent.mkdir(parents=True, exist_ok=True)

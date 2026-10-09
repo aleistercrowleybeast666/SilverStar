@@ -583,6 +583,11 @@ class ProjectAssembler:
         if model.core == "silverstar.core.ground.0_1_0" and ground_base:
             if not expected_hashes:
                 raise ProjectAssemblerError("Ground CubeMX snapshot has no artifact hashes; reimport the complete project")
+            if not ground_base.get("required_irq_handlers"):
+                raise ProjectAssemblerError("Ground CubeMX snapshot has no compiled IRQ inventory; reimport the complete project")
+            actual_paths = {name.removeprefix(self.HARDWARE_ROOT + "/") for name in files}
+            if actual_paths != set(expected_hashes):
+                raise ProjectAssemblerError("Ground CubeMX snapshot file set changed; reimport the project")
             for relative, expected in expected_hashes.items():
                 data = files.get(f"{self.HARDWARE_ROOT}/{relative}")
                 if data is None or hashlib.sha256(data).hexdigest() != expected:

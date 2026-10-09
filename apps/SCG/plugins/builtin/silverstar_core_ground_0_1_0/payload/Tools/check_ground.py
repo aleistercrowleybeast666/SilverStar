@@ -143,7 +143,7 @@ def Host_Check(root: Path, compiler: str) -> None:
     bridge = [str(root / path) for path in (
         'Ground/Core/Src/ground_bridge.c', 'Ground/Protocol/Src/gsp_min_protocol.c',
         'Ground/Protocol/Src/protocol_crc16.c', 'Common/Src/silverstar_assert.c')]
-    cases = [('bridge_bounds', bridge, tests / 'ground_bridge_bounds.c')]
+    cases = [('bridge_bounds', bridge + [str(tests / 'pc_session_uart.c')], tests / 'ground_bridge_bounds.c')]
     adapter = root / 'Generated/Src/pc_byte_stream.c'
     text = adapter.read_text(encoding='utf-8')
     if 'HAL_UARTEx_ReceiveToIdle_DMA' in text:
@@ -160,12 +160,18 @@ def Host_Check(root: Path, compiler: str) -> None:
         shutil.copyfile(tests / 'usb_main.h', build / 'main.h')
         (build / 'usbd_conf.h').write_text('/* Host configuration stub. */\n', encoding='utf-8')
         cases.append(('usb_cdc', [str(adapter), str(root / 'Common/Src/silverstar_assert.c')], tests / 'usb_cdc.c'))
+        cases.append(('usb_session', [str(adapter), *bridge], tests / 'usb_session.c'))
     else:
         raise ValueError('No host harness for selected PC transport; acceptance blocked')
     for name, sources, harness in cases:
+        if name == 'usb_session':
+            shutil.copyfile(tests / 'usb_session_main.h', build / 'main.h')
         executable = build / (name + '.exe')
         Command_Run(common + sources + [str(harness), '-o', str(executable)], root)
         Command_Run([str(executable)], root)
+        if name == 'usb_session':
+            for scenario in ('control', 'read-reset', 'delivery-reset', 'normal'):
+                Command_Run([str(executable), scenario], root)
         print('PASS host ' + name)
     print(f'PASS {len(cases)} generated-source host executables; HAL/radio are mocks, no MCU recovery proof')
 
@@ -178,6 +184,12 @@ def Artifact_Check(root: Path, prefix: str) -> None:
     if not re.search(r'Machine:\s+ARM\b', header):
         raise ValueError('ELF is not ARM')
     symbols = Command_Run([prefix + 'nm', '-g', str(elf)], root)
+    from ground_artifact_contract import InterruptVectors_Validate, DependencyClosure_Validate, EffectiveMacros_Validate
+    vector_path = root / 'build/ground-vector.bin'
+    Command_Run([prefix + 'objcopy', '-j', '.isr_vector', '-O', 'binary', str(elf), str(vector_path)], root)
+    InterruptVectors_Validate(root, graph, symbols, vector_path.read_bytes())
+    DependencyClosure_Validate(root, graph)
+    EffectiveMacros_Validate(root, graph, prefix + 'gcc')
     for symbol in ('Reset_Handler', 'main', 'GroundBridge_Init', 'GroundBridge_Process',
                    'PcByteStream_Init', 'GroundRadio_Process'):
         if not re.search(r'\b' + symbol + r'$', symbols, re.M):

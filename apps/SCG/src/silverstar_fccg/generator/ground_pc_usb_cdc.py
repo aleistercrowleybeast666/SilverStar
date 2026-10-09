@@ -22,6 +22,8 @@ static volatile uint16_t s_rx_head;
 static volatile uint16_t s_rx_tail;
 static volatile uint32_t s_rx_overflow_count;
 static volatile uint8_t s_reset_pending;
+static volatile uint32_t s_session;
+static volatile uint8_t s_session_exhausted;
 
 PcByteStreamInitResult PcByteStream_Init(void)
 {
@@ -36,6 +38,8 @@ void PcByteStream_OnUsbReset(void)
     s_rx_head = 0U;
     s_rx_tail = 0U;
     s_reset_pending = 1U;
+    if (s_session == UINT32_MAX) { s_session_exhausted = 1U; }
+    else { s_session++; }
     __set_PRIMASK(saved_mask);
 }
 
@@ -76,11 +80,20 @@ void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
 
 uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
 {
+    uint32_t session;
+    return PcByteStream_ReadSession(buffer, capacity, &session);
+}
+
+uint16_t PcByteStream_ReadSession(uint8_t *buffer, uint16_t capacity,
+    uint32_t *session)
+{
     uint32_t saved_mask;
     uint16_t count;
-    if ((buffer == NULL) || (capacity == 0U)) { return 0U; }
+    if ((buffer == NULL) || (capacity == 0U) || (session == NULL)) { return 0U; }
     saved_mask = __get_PRIMASK();
     __disable_irq();
+    *session = s_session;
+    if (s_session_exhausted != 0U) { __set_PRIMASK(saved_mask); return 0U; }
     SILVERSTAR_ASSERT((s_rx_head < PC_USB_RX_CAPACITY) &&
         (s_rx_tail < PC_USB_RX_CAPACITY),
         SILVERSTAR_ASSERT_MODULE_GENERATED,
@@ -99,6 +112,12 @@ uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
 PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
                                           uint16_t length)
 {
+    return PcByteStream_WriteSession(data, length, PcByteStream_Session_Get());
+}
+
+PcByteStreamWriteResult PcByteStream_WriteSession(const uint8_t *data,
+    uint16_t length, uint32_t session)
+{
     uint32_t saved_mask;
     uint8_t result;
     uint16_t index;
@@ -108,6 +127,8 @@ PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
     { return PC_BYTE_STREAM_WRITE_ERROR; }
     saved_mask = __get_PRIMASK();
     __disable_irq();
+    if ((session != s_session) || (s_session_exhausted != 0U))
+    { __set_PRIMASK(saved_mask); return PC_BYTE_STREAM_WRITE_BUSY; }
     if ((hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) ||
         (hUsbDeviceFS.pClassData == NULL))
     {
@@ -137,4 +158,25 @@ uint32_t PcByteStream_OverflowCount_Get(void)
 {
     return s_rx_overflow_count;
 }
+
+uint32_t PcByteStream_Session_Get(void) { return s_session; }
+
+uint8_t PcByteStream_Session_Check(uint32_t session)
+{
+    return ((session == s_session) && (s_session_exhausted == 0U)) ? 1U : 0U;
+}
+
+uint8_t PcByteStream_Session_Enter(uint32_t session, uint32_t *token)
+{
+    uint32_t saved_mask;
+    if (token == NULL) { return 0U; }
+    saved_mask = __get_PRIMASK();
+    __disable_irq();
+    if (PcByteStream_Session_Check(session) == 0U)
+    { __set_PRIMASK(saved_mask); return 0U; }
+    *token = saved_mask;
+    return 1U;
+}
+
+void PcByteStream_Session_Exit(uint32_t token) { __set_PRIMASK(token); }
 '''

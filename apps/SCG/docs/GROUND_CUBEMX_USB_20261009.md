@@ -181,3 +181,12 @@ Measure stack high-water and IRQ latency under worst intended traffic. Use only
 the named Ground board and approved test images; do not flash or start Flight
 or the field project as part of these software gates. Hardware results remain
 pending; no delivery or safety approval is implied by a linked image.
+# Historical implementation record
+
+This document records implementation `d1eb4bf` and its original evidence. Its
+CDC lifecycle/session handling and six import boundaries were subsequently
+found defective in independent review. Do not use its old artifact hashes or
+test counts as evidence for the repair. See
+[the review repair record](GROUND_USB_REVIEW_REPAIR_20261009.md) for the revised
+implementation, fresh outputs, restrictions and remaining acceptance steps.
+

@@ -18,6 +18,7 @@ class GroundCubeInputs:
     defines: tuple[str, ...]
     linker: str
     flags: tuple[str, ...]
+    irq_handlers: tuple[str, ...]
 
 
 def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
@@ -95,6 +96,19 @@ def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
     expected_define, flags = profiles[mcu]
     if "-D" + expected_define not in defines or "-DUSE_HAL_DRIVER" not in defines:
         raise ValueError("CubeMX Makefile MCU definitions do not match its .ioc")
+    if set(defines) != {"-D" + expected_define, "-DUSE_HAL_DRIVER"}:
+        raise ValueError("Ground C_DEFS supports only the exact MCU and USE_HAL_DRIVER; conflicting/custom macro overrides are unsupported")
+    family = "stm32f1xx" if mcu.startswith("STM32F103") else "stm32f4xx"
+    irq_path = "Core/Src/" + family + "_it.c"
+    if irq_path not in source_values:
+        raise ValueError("Ground requires its generated IRQ source in C_SOURCES: " + irq_path)
+    irq_handlers = _IrqHandlers_Get(root, source_values)
+    irq_text = (root / irq_path).read_text(encoding="utf-8-sig")
+    for handler in irq_handlers:
+        if not re.search(r"\bvoid\s+" + handler + r"\s*\(\s*void\s*\)\s*\{", irq_text):
+            raise ValueError("Ground compiled IRQ source is missing handler: " + handler)
+    from silverstar_fccg.hardware.ground_dependencies import GroundDependencyDirectives_Validate
+    GroundDependencyDirectives_Validate(root)
     if values("CPU") != (flags[0],):
         raise ValueError("CubeMX compiler CPU does not match its .ioc")
     if mcu == "STM32F407VET6" and (values("FPU") != (flags[2],) or values("FLOAT-ABI") != (flags[3],)):
@@ -110,7 +124,40 @@ def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
                 defines += ("-D" + name + "=0U",)
     return GroundCubeInputs(sources, tuple(path(value) for value in assembly_values),
                             tuple(path(value[2:], directory=True) for value in includes),
-                            tuple(value[2:] for value in defines), path(linker_values[0]), flags)
+                            tuple(value[2:] for value in defines), path(linker_values[0]), flags, irq_handlers)
+
+
+def _IrqHandlers_Get(root: Path, sources: tuple[str, ...]) -> tuple[str, ...]:
+    iocs = tuple(root.glob("*.ioc"))
+    if len(iocs) != 1:
+        raise ValueError("Ground IRQ inventory requires exactly one IOC")
+    fields = dict(line.split("=", 1) for line in iocs[0].read_text(encoding="utf-8-sig").splitlines() if "=" in line)
+    timer_timebase = fields.get("NVIC.TimeBaseIP", "").startswith("TIM")
+    handlers = [] if timer_timebase else ["SysTick_Handler"]
+    if not timer_timebase and not fields.get("NVIC.SysTick_IRQn", "").startswith("true"):
+        raise ValueError("Ground SysTick timebase requires its enabled interrupt")
+    if timer_timebase:
+        family = "stm32f1xx" if fields.get("Mcu.Family") == "STM32F1" else "stm32f4xx"
+        if "Core/Src/" + family + "_hal_timebase_tim.c" not in sources:
+            raise ValueError("Ground timer timebase source is missing from its build inventory")
+        if not fields.get("NVIC." + fields.get("NVIC.TimeBase", ""), "").startswith("true"):
+            raise ValueError("Ground timer timebase needs its enabled interrupt")
+    for key, value in fields.items():
+        if key.startswith("NVIC.") and key.endswith("_IRQn") and value.startswith("true"):
+            name = key[5:].removesuffix("_IRQn")
+            if name not in {"NonMaskableInt", "HardFault", "MemoryManagement", "BusFault", "UsageFault", "SVCall", "DebugMonitor", "PendSV", "SysTick"}:
+                handlers.append(name + "_IRQHandler")
+    return tuple(dict.fromkeys(handlers))
+
+
+def GroundEffectiveDefinitions_Validate(defines: tuple[str, ...], mcu: str) -> None:
+    expected = {"STM32F103C8T6": "STM32F103xB", "STM32F407VET6": "STM32F407xx"}[mcu]
+    if expected not in defines:
+        raise ValueError("Ground effective MCU definition is missing: " + expected)
+    for item in defines:
+        name = item.split("=", 1)[0]
+        if name == "HSE_VALUE" or (re.fullmatch(r"STM32F[0-9]{3}[A-Za-z0-9_]+", name) and item != expected):
+            raise ValueError("Ground effective macro contradicts its imported MCU/clock contract: " + item)
 
 
 def GroundUsbConfiguration_Validate(root: Path, ioc: str, mcu: str) -> None:
