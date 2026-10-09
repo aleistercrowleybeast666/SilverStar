@@ -1,7 +1,7 @@
 """Main-owned Ground lifecycle; clock faults retire radio and PC publication."""
 
 
-def NativeRuntime_FilesRender() -> dict[str, bytes]:
+def NativeRuntime_FilesRender(*, transport_fault=False) -> dict[str, bytes]:
     header = '''#ifndef __NATIVE_RUNTIME_H
 #define __NATIVE_RUNTIME_H
 #include <stdint.h>
@@ -116,5 +116,27 @@ NativeRuntimeResult NativeRuntime_Process(void)
     return NativeRuntimeResult_Ok;
 }
 '''
+    if transport_fault:
+        header=header.replace('uint8_t NativeRuntime_ReadyGet(void);',
+            'uint8_t NativeRuntime_ReadyGet(void);\nvoid NativeRuntime_TransportFaultRecord(void);')
+        runtime=runtime.replace('static uint8_t s_platform_started;',
+            'static uint8_t s_platform_started;\nstatic volatile uint8_t s_transport_fault;\n'
+            '/* IRQ/main may latch a stored transport fault. Only the main owner\n'
+            ' * retires USB/radio; the latch is never cleared after publication. */\n'
+            'void NativeRuntime_TransportFaultRecord(void) { s_transport_fault = 1U; }')
+        runtime=runtime.replace('(s_state == NativeRuntimeState_Ready) &&',
+            '(s_state == NativeRuntimeState_Ready) && (s_transport_fault == 0U) &&')
+        runtime=runtime.replace('    s_state = NativeRuntimeState_Starting;',
+            '    if (s_transport_fault != 0U) { return NativeRuntime_Abort(NativeRuntimeResult_PcFailure); }\n'
+            '    s_state = NativeRuntimeState_Starting;')
+        runtime=runtime.replace('    if (s_state != NativeRuntimeState_Ready) { return NativeRuntimeResult_NotReady; }',
+            '    if (s_state != NativeRuntimeState_Ready) { return NativeRuntimeResult_NotReady; }\n'
+            '    if (s_transport_fault != 0U) { return NativeRuntime_Abort(NativeRuntimeResult_PcFailure); }')
+        runtime=runtime.replace('    s_state = NativeRuntimeState_Ready;',
+            '    if (s_transport_fault != 0U) { return NativeRuntime_Abort(NativeRuntimeResult_PcFailure); }\n'
+            '    s_state = NativeRuntimeState_Ready;')
+        runtime=runtime.replace('    /* Radio timeouts and PC transport errors',
+            '    if (s_transport_fault != 0U) { return NativeRuntime_Abort(NativeRuntimeResult_PcFailure); }\n'
+            '    /* Radio timeouts and PC transport errors')
     return {'Generated/Inc/native_runtime.h':header.encode('utf-8'),
             'Generated/Src/native_runtime.c':runtime.encode('utf-8')}

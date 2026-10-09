@@ -47,9 +47,9 @@ def NativeCompile_Run(args):
         SCG/"src/silverstar_fccg/hardware/native_machine_contract.py",
         SCG/"src/silverstar_fccg/generator/native_hal.py",SCG/"src/silverstar_fccg/generator/native_clock.py"]
     if args.runtime_project is not None:
-        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio')]
+        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio','native_clock_tim','native_usb_config','native_usb_indexed')]
         snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
-        snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_ground','check_native_ground')]
+        snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_ground','check_native_ground','check_native_probe')]
     if timer_probe:
         snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_clock_tim','native_clock_probe','native_usb_config','native_no_heap')]
         snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
@@ -280,7 +280,8 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
                         "src/silverstar_fccg/generator/native_ground.py","src/silverstar_fccg/generator/native_no_heap.py",
                         "src/silverstar_fccg/generator/native_pc.py","src/silverstar_fccg/generator/native_usb_data.py",
                         "src/silverstar_fccg/generator/native_radio.py","src/silverstar_fccg/generator/native_clock_tim.py",
-                        "src/silverstar_fccg/generator/native_clock_probe.py","src/silverstar_fccg/generator/native_usb_config.py")},
+                        "src/silverstar_fccg/generator/native_clock_probe.py","src/silverstar_fccg/generator/native_usb_config.py",
+                        "src/silverstar_fccg/generator/native_usb_indexed.py")},
           "experimental_files_sha256":{p:hashlib.sha256(b).hexdigest() for p,b in experimental_files.items()},
           "experiments":experiments,
           "toolchain_version":locals().get("version"),

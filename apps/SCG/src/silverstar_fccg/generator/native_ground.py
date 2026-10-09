@@ -16,6 +16,8 @@ from types import SimpleNamespace
 from silverstar_fccg.hardware.native_classic_cdc import NATIVE_PREFIX
 from silverstar_fccg.generator.native_hal import NativeC_FunctionSpanGet, NativeC_VisibleGet, NativeHalDerivatives_Render
 from silverstar_fccg.generator.native_clock import NativeClock_FilesRender, NativeClockSourceContract_Validate
+from silverstar_fccg.generator.native_clock_tim import NativeClockTimSourceContract_Inspect,NativeClockTimDerivatives_Render,NativeClockTimPort_Render,NativeClockTimCallerDerivatives_Render
+from silverstar_fccg.generator.native_usb_config import NativeUsbConfig_FilesRender
 from silverstar_fccg.generator.native_platform import NativePlatformContract_Inspect, NativePlatform_FilesRender
 from silverstar_fccg.generator.native_runtime import NativeRuntime_FilesRender
 from silverstar_fccg.generator.native_no_heap import NativeNoHeap_FilesRender
@@ -38,6 +40,9 @@ def _Callback_Integrate(source: str, indexed: bool) -> str:
     names = ['CDC_Init_FS','CDC_DeInit_FS','CDC_Control_FS','CDC_Receive_FS']
     if indexed:
         names.append('CDC_TransmitCplt_FS')
+        _a,o,b=NativeC_FunctionSpanGet(source,'CDC_TransmitCplt_FS')
+        if re.sub(r'\s+','',NativeC_VisibleGet(source[o+1:b-1]))!='uint8_tresult=USBD_OK;UNUSED(Buf);UNUSED(Len);UNUSED(epnum);returnresult;':
+            raise ValueError('Native CDC completion hook requires its reviewed empty policy')
     initializer = re.findall(r'USBD_CDC_ItfTypeDef\s+USBD_Interface_fops_FS\s*=\s*\{([^{}]*)\}\s*;',visible)
     if (len(initializer) != 1 or re.fullmatch(r'\s*'+r'\s*,\s*'.join(names)+r'\s*,?\s*',initializer[0]) is None or
             re.search(r'(?m)^\s*#\s*(?:define|undef)\b',visible) or '\\\n' in source or '\\\r\n' in source):
@@ -83,6 +88,17 @@ def _Callback_Integrate(source: str, indexed: bool) -> str:
   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
   return (result == USBD_OK) ? USBD_OK : ((result == USBD_BUSY) ? USBD_BUSY : USBD_FAIL);
 }''')
+    if indexed:
+        source = _Function_Replace(source,'CDC_TransmitCplt_FS','''static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
+{
+  (void)Buf; (void)Len; (void)epnum;
+  return (int8_t)USBD_OK;
+}''')
+        marker='  result = USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);'
+        source=source.replace(marker,'  if ((hUsbDeviceFS.classId != 0U) ||\n'
+            '      (hUsbDeviceFS.pClassData != hUsbDeviceFS.pClassDataCmsit[0]))\n'
+            '  { NativeRuntime_TransportFaultRecord(); return USBD_FAIL; }\n'+marker,1)
+        source=source.replace('#include "pc_byte_stream.h"','#include "pc_byte_stream.h"\n#include "native_runtime.h"',1)
     return source
 
 
@@ -94,9 +110,21 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
             radios[0].module_variant != 'e28_2g4m12sx' or model.air_link.radio_family != 'sx128x' or
             ground.tx_led_resource or ground.rx_led_resource or ground.activity_led_enabled is True):
         raise ValueError('Private native candidate currently requires one bare SX1281/M12, FS CDC and no extra LEDs')
-    clock = NativeClockSourceContract_Validate(native_files,proof['build']['sources'],hclk_hz=hclk_hz)
+    class_sha=hashlib.sha256(native_files[proof['cdc']['owners']['usbd_cdc.c']]).hexdigest()
+    indexed=class_sha=='794a6d0df08fc2b777678b99013f61d0a9c93f5fbeacfaa3466c0feeaa9ada39'
+    clock = (NativeClockTimSourceContract_Inspect if indexed else NativeClockSourceContract_Validate)(
+        native_files,proof['build']['sources'],hclk_hz=hclk_hz)
     platform = NativePlatformContract_Inspect(native_files,proof,inventory)
     files, replacements, hal = NativeHalDerivatives_Render(native_files,proof['build']['sources'])
+    timer=None;usb_config=None;config_include=None
+    if indexed:
+        timer_files,timer_replacements,timer=NativeClockTimDerivatives_Render(native_files,runtime=True)
+        files.update(timer_files);replacements.update(timer_replacements)
+        caller_files,caller_replacements,callers=NativeClockTimCallerDerivatives_Render(native_files)
+        files.update(caller_files);replacements.update(caller_replacements)
+        timer['callers']=callers
+        config_files,config_include,usb_config=NativeUsbConfig_FilesRender(native_files,proof['cdc']['owners'])
+        files.update(config_files)
     bulk_files, bulk_replacements, bulk = NativeUsbBulk_FilesRender(native_files,proof['cdc']['owners'])
     files.update(bulk_files); replacements.update(bulk_replacements)
     core = catalog.Component_Get('silverstar.core.ground.0_1_0')
@@ -112,6 +140,19 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
     files[test_path] = text.replace(old, '    calls = s_calls;\n    usb_test_mask = 1U;\n'
         '    assert(PcByteStream_Write(input, 3U) == PC_BYTE_STREAM_WRITE_BUSY);\n'
         '    assert(s_calls == calls);', 1).encode()
+    if indexed:
+        header_path='Tests/Host/usb_device.h'
+        header=files[header_path].decode().replace('void *pClassData;',
+            'void *pClassData; void *pClassDataCmsit[1]; uint8_t classId;')
+        files[header_path]=header.encode()
+        # Model the actual single-class ABI in every already-ready Host case,
+        # including reset/reconnect transitions; retain all test expectations.
+        for name,count in (('usb_cdc.c',3),('usb_session.c',1),('ground_backpressure.c',1)):
+            path='Tests/Host/'+name
+            text,actual=re.subn(r'hUsbDeviceFS\.pClassData\s*=\s*([^;]+);',
+                lambda match:match[0]+' hUsbDeviceFS.pClassDataCmsit[0] = '+match[1]+';',files[path].decode())
+            if actual!=count:raise ValueError('Native indexed Host ABI fixture changed: '+name)
+            files[path]=text.encode()
     files.pop(core.metadata['ground_radio_backends']['nrf24'])
     _PayloadFiles_Add(files,radio,skip_adapter=True)
     radio_original='Middlewares/Third_Party/SX1280lib/sx1280-hal.c'
@@ -134,8 +175,9 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
                  'Interfaces/Inc/system_device_types.h','Tools/check_power_of_ten.ps1'):
         files[path] = (flight_core.payload_root/path).read_bytes()
     files.update(NativeClock_FilesRender(hclk_hz=hclk_hz))
+    if indexed:files['Generated/Src/native_clock_port.c']=NativeClockTimPort_Render()
     files.update(NativePlatform_FilesRender(platform))
-    files.update(NativeRuntime_FilesRender())
+    files.update(NativeRuntime_FilesRender(transport_fault=indexed))
     heap_owners = [path for path in proof['build']['sources'] if path.endswith('/sysmem.c')]
     if len(heap_owners) != 1:
         raise ValueError('Native candidate requires one known libc heap extender to replace')
@@ -210,6 +252,11 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
     if (len(gpio_calls) != 1 or len(spi_calls) != 1 or
             not (gpio_calls[0].start() < spi_calls[0].start() < owner_start)):
         raise ValueError('Native lifecycle requires GPIO and SPI initialization before its owner boundary')
+    if indexed:
+        if hashlib.sha256(native_files[main_path]).hexdigest()!='b29d5f13e084cf835c1845095dc19243f00411d3c6198ca25b3477993923aca8':
+            raise ValueError('Native TIM1 Ground boot/configuration sequence requires reviewed main profile')
+        if not (boot.index('HAL_Init();') < boot.index('SystemClock_Config();') < gpio_calls[0].start()):
+            raise ValueError('Native TIM1 Ground requires both stock boot clock phases before owner initialization')
     main = _UserSection_Insert(main,'Includes','#include "native_runtime.h"',empty=True)
     main = _UserSection_Insert(main,'2','  if (NativeRuntime_Init() != NativeRuntimeResult_Ok) { Error_Handler(); }',empty=True)
     loop = re.findall(r'/\* USER CODE BEGIN 3 \*/(.*?)/\* USER CODE END 3 \*/',main,re.S)
@@ -240,6 +287,7 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
         sources.extend(p for p in owner.build.sources if '/Adapter/' not in p and p in files)
     sources=[radio_derived if path==radio_original else path for path in sources]
     includes = [NATIVE_PREFIX+p for p in proof['build']['include_dirs']]
+    if config_include:includes.insert(0,config_include)
     includes.extend(['Generated/Inc','Common/Inc','Interfaces/Inc','Platform/Inc'])
     includes.extend(p for owner in (core,radio) for p in owner.build.include_dirs if '/Adapter/' not in p)
     graph = {**proof['build'],'sources':list(dict.fromkeys(sources)),
@@ -268,6 +316,12 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
         'ep0_review':'NOT PROVEN: shared owner patch independent review blocked; no EP0 repair integrated',
         'critical_contract_review':'NOT PROVEN: private bulk propagation increment requires manual acceptance; complete EP0/async lifecycle, call graph, stack/WCET/hardware unavailable',
         'publication':'PRIVATE CANDIDATE ONLY; normal generation remains blocked'}
+    if indexed:
+        records.update(timer=timer,usb_config=usb_config,required_symbol_owners={
+            'HAL_InitTick':replacements[NATIVE_PREFIX+'Core/Src/stm32f4xx_hal_timebase_tim.c'],
+            'TIM1_UP_TIM10_IRQHandler':replacements[NATIVE_PREFIX+'Core/Src/stm32f4xx_it.c'],
+            'HAL_TIM_PeriodElapsedCallback':main_owned})
+        records['timer_lifecycle']='Only stock HAL_Init then SystemClock_Config boot phases before PlatformTime_Init; later/masked/ISR InitTick rejected and latched, sole timer IRQ quiesced before boot reconfiguration'
     files['Generated/native_ground_contract.json'] = json.dumps(records,indent=2).encode()
     files['Generated/ground_source_graph.json'] = json.dumps(graph,indent=2).encode()
     make = _Makefile_Render(tuple(graph['sources']),tuple(graph['asm_sources']),tuple(graph['include_dirs']),

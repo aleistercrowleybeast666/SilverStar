@@ -301,8 +301,13 @@ def NativeUsbLl_Derive(original: bytes) -> bytes:
 def NativeUsbBulk_FilesRender(files: dict[str, bytes], owners: dict[str, str]
                               ) -> tuple[dict[str, bytes], dict[str, str], dict]:
     rendered = {}; replacements = {}; entries = []
-    for name, derive in (('usbd_cdc.c',NativeUsbData_Derive),('usbd_core.c',NativeUsbCore_Derive),
-                         ('usbd_conf.c',NativeUsbLl_Derive)):
+    indexed=hashlib.sha256(files[owners['usbd_cdc.c']]).hexdigest()=='794a6d0df08fc2b777678b99013f61d0a9c93f5fbeacfaa3466c0feeaa9ada39'
+    if indexed:
+        from silverstar_fccg.generator.native_usb_indexed import NativeUsbIndexedData_Derive,NativeUsbIndexedCore_Derive,NativeUsbIndexedLl_Derive
+        derivatives=(('usbd_cdc.c',NativeUsbIndexedData_Derive),('usbd_core.c',NativeUsbIndexedCore_Derive),('usbd_conf.c',NativeUsbIndexedLl_Derive))
+    else:
+        derivatives=(('usbd_cdc.c',NativeUsbData_Derive),('usbd_core.c',NativeUsbCore_Derive),('usbd_conf.c',NativeUsbLl_Derive))
+    for name, derive in derivatives:
         path = owners[name]; original = files[path]; derived = derive(original)
         target = 'HardwareGenerated/ReviewedNativeBulk/'+path
         rendered[target] = derived
@@ -314,7 +319,8 @@ def NativeUsbBulk_FilesRender(files: dict[str, bytes], owners: dict[str, str]
             'derived':target,'derived_sha256':hashlib.sha256(derived).hexdigest(),
             'patch':patch,'patch_sha256':hashlib.sha256(rendered[patch]).hexdigest()})
     manifest = {'format_version':1,'entries':entries,
-        'scope':'Private F1 vendor source profile, FS single CDC, 70-byte SCG TX and 64-byte RX; not an MCU admission list',
+        'scope':('Private indexed F407 vendor source profile' if indexed else 'Private F1 vendor source profile')+
+            ', FS single CDC, 70-byte SCG TX and 64-byte RX; not an MCU admission list',
         'ownership':'Keep TX ownership on ambiguous LL failure; failed endpoint closure retains class block and blocks reinitialization',
         'ep0':'No shared EP0 owner patch integrated; EP0 and full async lifecycle acceptance remain NOT PROVEN',
         'exceptions':'Vendor fixed callbacks and one static class allocation retained; no heap/runtime registry introduced'}

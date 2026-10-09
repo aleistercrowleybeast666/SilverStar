@@ -8,11 +8,22 @@ from silverstar_fccg.generator.native_runtime import NativeRuntime_FilesRender
 @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
     'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
     'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
-def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+@pytest.mark.parametrize('transport_fault', [False, True])
+def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario, transport_fault):
+    _ExerciseLifecycle(tmp_path,scenario,transport_fault=transport_fault)
+
+
+@pytest.mark.parametrize('scenario',['transport-before-init','transport-during-init',
+    'transport-before-process','transport-during-process'])
+def test_stored_transport_fault_cancels_successful_initialization_and_publication(tmp_path,scenario):
+    _ExerciseLifecycle(tmp_path,scenario,transport_fault=True)
+
+
+def _ExerciseLifecycle(tmp_path, scenario, *, transport_fault=False):
     compiler=shutil.which('gcc')
     if compiler is None:
         pytest.skip('Host GCC unavailable')
-    for path,content in NativeRuntime_FilesRender().items():
+    for path,content in NativeRuntime_FilesRender(transport_fault=transport_fault).items():
         dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
     headers={
         'native_clock.h':'''#include <stdint.h>
@@ -64,15 +75,16 @@ static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
 static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
 static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
 static uint8_t radio_not_initialized,radio_unverified;
+static uint8_t platform_started;
 static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
 NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
 NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
 NativeClockResult NativeClock_Read(uint64_t *time)
 { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
 PlatformResult PlatformTime_Init(void) { return clock_init; }
-PlatformResult NativePlatform_Init(void) { return platform_init; }
+PlatformResult NativePlatform_Init(void) { if (platform_init==PLATFORM_OK) { platform_started=1U; } return platform_init; }
 void NativePlatform_Quiesce(void)
-{ assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+{ assert(retired==(platform_started!=0U ? 1U : 0U));quiesced++; }
 LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
 {
     assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
@@ -123,7 +135,7 @@ int main(int argc,char **argv)
         if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
         assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
         assert(NativeRuntime_Process()==init && process_calls==0U);
-        assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+        assert(retired==(platform_started!=0U ? 1U : 0U));
         assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
     }
     assert(NativeRuntime_ReadyGet()==1U);
@@ -157,6 +169,26 @@ int main(int argc,char **argv)
     return 0;
 }
 '''
+    if transport_fault:
+        harness=harness.replace('static uint8_t radio_not_initialized,radio_unverified;',
+            'static uint8_t radio_not_initialized,radio_unverified;\nstatic uint8_t transport_bad_init,transport_bad_process;')
+        harness=harness.replace('    return bridge_init;',
+            '    if (transport_bad_init!=0U) { NativeRuntime_TransportFaultRecord(); }\n    return bridge_init;')
+        harness=harness.replace('    if (clock_bad_process!=0U)',
+            '    if (transport_bad_process!=0U) { NativeRuntime_TransportFaultRecord(); }\n    if (clock_bad_process!=0U)')
+        harness=harness.replace('    NativeRuntimeResult init=NativeRuntime_Init();',
+            '    if (strcmp(argv[1],"transport-before-init")==0) { NativeRuntime_TransportFaultRecord(); }\n'
+            '    if (strcmp(argv[1],"transport-during-init")==0) { transport_bad_init=1U; }\n'
+            '    NativeRuntimeResult init=NativeRuntime_Init();\n'
+            '    if (strncmp(argv[1],"transport-",10U)==0 && strstr(argv[1],"init")!=NULL) { assert(init==NativeRuntimeResult_PcFailure); }')
+        harness=harness.replace('    NativeRuntimeResult result=NativeRuntime_Process();',
+            '    if (strcmp(argv[1],"transport-before-process")==0) { NativeRuntime_TransportFaultRecord();assert(NativeRuntime_ReadyGet()==0U); }\n'
+            '    if (strcmp(argv[1],"transport-during-process")==0) { transport_bad_process=1U; }\n'
+            '    NativeRuntimeResult result=NativeRuntime_Process();\n'
+            '    if (strncmp(argv[1],"transport-",10U)==0)\n'
+            '    { assert(result==NativeRuntimeResult_PcFailure && NativeRuntime_ReadyGet()==0U);\n'
+            '      assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);\n'
+            '      uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0; }')
     (tmp_path/'test.c').write_text(harness,encoding='utf-8')
     api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
     command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',

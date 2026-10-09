@@ -94,6 +94,7 @@ uint8_t NativeRuntime_ReadyGet(void) { return 1U; }
 uint8_t NativeClock_ContextAllowedGet(void) { return usb_test_mask == 0U ? 1U : 0U; }
 NativeClockResult NativeClock_DelayUs(uint32_t delay)
 { assert(delay == 1U && usb_test_mask == 0U); return NativeClockResult_Ok; }
+void NativeRuntime_TransportFaultRecord(void) { assert(0 && "Host transport fixtures must not corrupt indexed ownership"); }
 ''')
     LegacyHost_Check(root,compiler,extra_usb_sources=(str(ready_fixture),))
 
@@ -179,6 +180,13 @@ def Artifact_Check(root: Path, prefix: str, *, architecture_check=None) -> None:
             'dynamic_frames':[str(p.relative_to(root)) for p in stack_files if '\tdynamic' in p.read_text()],
             'limits':'NOT PROVEN: library/indirect call graph, whole-program task/MSP/ISR nesting stack and MCU WCET'})
     (root/'build/native-artifact-report.json').write_text(json.dumps(reports,indent=2))
+    contract_path=root/'Generated/native_ground_contract.json'
+    if contract_path.is_file():
+        contract=json.loads(contract_path.read_text())
+        if contract.get('clock',{}).get('port')=='tim1':
+            from check_native_probe import ConfigurationDependencies_Validate, StrongOwners_Validate
+            ConfigurationDependencies_Validate(root,graph,contract)
+            StrongOwners_Validate(root,prefix,contract)
     print('PASS current artifact hashes, real object/ELF ARM attributes, independent IRQ positions, rejecting heap ABI and physical region bounds')
     print('EP0/full async lifecycle, semantic critical-contract review, actual stack margin, MCU timing and hardware: NOT PROVEN')
 

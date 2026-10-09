@@ -66,7 +66,7 @@ def NativeClockTimSourceContract_Inspect(files, sources, *, hclk_hz):
         'limits':'NOT PROVEN: timer IRQ latency, waveform timing, call graph/stack and hardware'}
 
 
-def NativeClockTimDerivatives_Render(files):
+def NativeClockTimDerivatives_Render(files, *, runtime=False):
     for path,digest in _PROFILES.items():
         if hashlib.sha256(files.get(path,b'')).hexdigest()!=digest:
             raise ValueError('Native TIM1 derivative source changed: '+path)
@@ -79,7 +79,9 @@ def NativeClockTimDerivatives_Render(files):
 '''+function[opening:]
     old='uwTimclock = 2*HAL_RCC_GetPCLK2Freq();'
     if function.count(old)!=1:raise ValueError('Native TIM1 APB2 clock expression changed')
-    function=function.replace(old,'''uwTimclock = HAL_RCC_GetPCLK2Freq();
+    function=function.replace(old,'''if ((clkconfig.APB2CLKDivider != RCC_HCLK_DIV1) &&
+      (clkconfig.APB2CLKDivider != RCC_HCLK_DIV2)) { return HAL_ERROR; }
+  uwTimclock = HAL_RCC_GetPCLK2Freq();
   if ((uwTimclock == 0U) || (uwTimclock > 100000000U)) { return HAL_ERROR; }
   if (clkconfig.APB2CLKDivider != RCC_HCLK_DIV1) { uwTimclock *= 2U; }
   if ((uwTimclock < 1000000U) || ((uwTimclock % 1000000U) != 0U)) { return HAL_ERROR; }''',1)
@@ -88,7 +90,30 @@ def NativeClockTimDerivatives_Render(files):
         raise ValueError('Native TIM1 IRQ initialization boundary changed')
     function=function.replace(enable,'',1).replace('uwTickPrio = TickPriority;',
         'uwTickPrio = TickPriority;\n        '+enable,1)
+    if runtime:
+        opening=function.index('{')+1
+        function=function[:opening]+'''
+  /* Only the two stock boot clock phases may configure this timer. Once the
+   * time owner initializes, reconfiguration is a latched internal fault. */
+  if ((__get_IPSR() != 0U) || (__get_PRIMASK() != 0U) ||
+      (NativeClock_StatusGet() != NativeClockResult_NotInitialized))
+  { NativeRuntime_TransportFaultRecord(); return HAL_ERROR; }
+'''+function[opening:]
+        anchor='  /* Initialize TIM1 */'
+        function=function.replace(anchor,'''  /* Quiesce the sole shared-vector owner before replacing its boot setup. */
+  HAL_NVIC_DisableIRQ(TIM1_UP_TIM10_IRQn);
+  TIM1->DIER = 0U;
+  TIM1->CR1 = 0U;
+  TIM1->SR = 0U;
+  NVIC_ClearPendingIRQ(TIM1_UP_TIM10_IRQn);
+'''+anchor,1)
+        function=function.replace('    /* Start the TIM time Base generation in interrupt mode */',
+            '    TIM1->SR = 0U;\n    NVIC_ClearPendingIRQ(TIM1_UP_TIM10_IRQn);\n'
+            '    /* Start the TIM time Base generation in interrupt mode */',1)
     source=source[:a]+function+source[b:]
+    if runtime:
+        source=source.replace('#include "stm32f4xx_hal.h"',
+            '#include "stm32f4xx_hal.h"\n#include "native_clock.h"\n#include "native_runtime.h"',1)
     irq=files[_IRQ].decode('utf-8-sig')
     a,o,b=NativeC_FunctionSpanGet(irq,'TIM1_UP_TIM10_IRQHandler')
     if NativeC_VisibleGet(irq[o+1:b-1]).strip():
@@ -108,6 +133,30 @@ def NativeClockTimDerivatives_Render(files):
             'derived':target,'derived_sha256':hashlib.sha256(derived).hexdigest(),
             'patch':patch,'patch_sha256':hashlib.sha256(rendered[patch]).hexdigest()})
     return rendered,replacements,{'entries':entries,'scope':'Private TIM1 timebase and initially empty shared IRQ; no other shared owner admitted'}
+
+
+def NativeClockTimCallerDerivatives_Render(files):
+    profiles=(('Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c',
+        '97e715cda2a34bd564b59ce4ba9b16bd29651f8f229161105aaec666d76ea91a','HAL_Init','HAL_InitTick(TICK_INT_PRIORITY);'),
+        ('Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c',
+        'f3ac468e2f415adb74281107c0dec1448008950b64a7bb11c14cbe3ee1a936de','HAL_RCC_ClockConfig','HAL_InitTick(uwTickPrio);'))
+    rendered={};replacements={};entries=[]
+    for path,digest,name,call in profiles:
+        original=files[path]
+        if hashlib.sha256(original).hexdigest()!=digest:raise ValueError('Native TIM1 boot caller profile requires review: '+path)
+        source=original.decode('utf-8-sig');a,_o,b=NativeC_FunctionSpanGet(source,name)
+        body=source[a:b]
+        if body.count(call)!=1:raise ValueError('Native TIM1 boot caller changed: '+name)
+        body=body.replace(call,'if ('+call.removesuffix(';')+' != HAL_OK) { return HAL_ERROR; }',1)
+        derived=(source[:a]+body+source[b:]).encode()
+        target='HardwareGenerated/ReviewedNativeTime/'+path;patch=target+'.patch'
+        rendered[target]=derived
+        rendered[patch]=''.join(difflib.unified_diff(original.decode().splitlines(keepends=True),
+            derived.decode().splitlines(keepends=True),fromfile=NATIVE_PREFIX+path,tofile=NATIVE_PREFIX+path)).encode()
+        replacements[NATIVE_PREFIX+path]=target
+        entries.append({'original':NATIVE_PREFIX+path,'original_sha256':digest,'derived':target,
+            'derived_sha256':hashlib.sha256(derived).hexdigest(),'patch':patch,'patch_sha256':hashlib.sha256(rendered[patch]).hexdigest()})
+    return rendered,replacements,{'entries':entries,'scope':'Propagate both actual boot timer initialization returns; no extra timer initialization calls'}
 
 
 def NativeClockTimPort_Render():
@@ -132,6 +181,9 @@ static uint8_t NativeTimer_ConfigurationValidGet(void)
     uint32_t latency;
     uint32_t timer_hz = HAL_RCC_GetPCLK2Freq();
     HAL_RCC_GetClockConfig(&config, &latency);
+    /* This recognized main has only DIV1 reset and DIV2 final clock phases. */
+    if ((config.APB2CLKDivider != RCC_HCLK_DIV1) &&
+        (config.APB2CLKDivider != RCC_HCLK_DIV2)) { return 0U; }
     if (timer_hz > 100000000U) { return 0U; }
     if (config.APB2CLKDivider != RCC_HCLK_DIV1) { timer_hz *= 2U; }
     return ((SystemCoreClock == NATIVE_CLOCK_HCLK_HZ) &&
@@ -164,7 +216,7 @@ NativeClockResult NativeClockPort_SnapshotGet(NativeClockSnapshot *snapshot)
         /* A pending update may hide missed IRQs. Never invent extra HAL ticks.
          * Restore PRIMASK so the actual IRQ can retire it before a retry. */
         if ((pending_before == 0U) && (pending_after == 0U) &&
-            (counter != 0U) && (counter <= 999U))
+            (counter <= 999U))
         {
             snapshot->tick_ms = tick;
             /* Common fractional interval uses HCLK-cycle units; TIM1 itself

@@ -74,6 +74,10 @@ def ProbeArtifact_Check(root,prefix):
     contract=json.loads((root/'Generated/native_probe_contract.json').read_text())
     graph=json.loads((root/'Generated/ground_source_graph.json').read_text())
     ConfigurationDependencies_Validate(root,graph,contract)
+    StrongOwners_Validate(root,prefix,contract)
+
+
+def StrongOwners_Validate(root,prefix,contract):
     for build in ('build','build/analysis'):
         command=[prefix+'nm','-n',str(root/build/'native.elf')]
         result=subprocess.run(command,capture_output=True,text=True,timeout=30)

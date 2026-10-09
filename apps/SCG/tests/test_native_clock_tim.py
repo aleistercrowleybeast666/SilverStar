@@ -157,12 +157,13 @@ int main(int argc,char **argv)
 {
     assert(argc==2);
     if (strcmp(argv[1],"div1")==0) { pclk=16000000U;divider=RCC_HCLK_DIV1; }
+    if (strcmp(argv[1],"bad-divider")==0) { divider=8U; }
     if (strcmp(argv[1],"bad-clock")==0) { pclk=16500000U;divider=RCC_HCLK_DIV1; }
     if (strcmp(argv[1],"base-fail")==0) { base_result=HAL_ERROR; }
     if (strcmp(argv[1],"start-fail")==0) { start_result=HAL_ERROR; }
     uint32_t priority=strcmp(argv[1],"bad-priority")==0 ? 16U : 15U;
     HAL_StatusTypeDef result=HAL_InitTick(priority);
-    if (priority==16U || pclk==16500000U || base_result!=HAL_OK || start_result!=HAL_OK)
+    if (priority==16U || divider==8U || pclk==16500000U || base_result!=HAL_OK || start_result!=HAL_OK)
     { assert(result==HAL_ERROR && enabled==0U && priority_set==0U);return 0; }
     assert(result==HAL_OK && enabled==1U && priority_set==1U && uwTickPrio==15U);
     assert(htim1.Init.Period==999U);
@@ -173,7 +174,7 @@ int main(int argc,char **argv)
 '''
 
 
-@pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-priority','base-fail','start-fail'])
+@pytest.mark.parametrize('scenario',['div1','div2','bad-clock','bad-divider','bad-priority','base-fail','start-fail'])
 def test_actual_timer_init_irq_pre_failure_and_derivative(timer_native,tmp_path,scenario):
     _proof,_inventory,files=timer_native
     rendered,_replace,_manifest=NativeClockTimDerivatives_Render(files)
@@ -221,11 +222,12 @@ int main(void)
     assert(sample.tick_ms==0xDEADU && sample.elapsed_cycles==0xBEEFU && mask==0U);
     retire_pending=1U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_Ok && sample.tick_ms==10U && sample.elapsed_cycles==168U);
     TIM1->CR1=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);TIM1->CR1=1U;
+    divider=8U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);divider=RCC_HCLK_DIV2;
     TIM1->PSC=83U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);TIM1->PSC=167U;
     TIM1->ARR=1000U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);TIM1->ARR=999U;
     TIM1->DIER=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);TIM1->DIER=1U;
     enabled=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);enabled=1U;
-    TIM1->CNT=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_UnstableSnapshot);
+    TIM1->CNT=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_Ok && sample.elapsed_cycles==0U);
     TIM1->CNT=1000U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_UnstableSnapshot);
     return 0;
 }

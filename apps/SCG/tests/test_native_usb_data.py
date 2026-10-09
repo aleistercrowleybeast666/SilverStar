@@ -10,12 +10,19 @@ from silverstar_fccg.generator.native_usb_data import NativeUsbData_Derive
 @pytest.mark.parametrize('scenario', ['normal','open1','open2','open3','app-init','prepare-init',
     'tx-fail','tx-busy','rearm','receive','zlp','close','null-rx','null-out','oversize','bad-ep'])
 def test_real_native_bulk_functions_propagate_failure(tmp_path, scenario):
+    _ExerciseNativeBulk(tmp_path,scenario)
+
+
+def _ExerciseNativeBulk(tmp_path, scenario, *, indexed=False):
     origin = os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT')
     compiler = shutil.which('gcc')
     if not origin or compiler is None:
         pytest.skip('Native source fixture or Host GCC unavailable')
-    original = (Path(origin)/'cube-f103-usb/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c').read_bytes()
-    derived = NativeUsbData_Derive(original).decode('utf-8-sig')
+    original = (Path(origin)/('cube-f407-usb' if indexed else 'cube-f103-usb')/'Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c').read_bytes()
+    if indexed:
+        from silverstar_fccg.generator.native_usb_indexed import NativeUsbIndexedData_Derive
+        derived=NativeUsbIndexedData_Derive(original).decode('utf-8-sig')
+    else:derived = NativeUsbData_Derive(original).decode('utf-8-sig')
     names = ['USBD_CDC_Init','USBD_CDC_DeInit','USBD_CDC_DataIn','USBD_CDC_DataOut',
         'USBD_CDC_TransmitPacket','USBD_CDC_ReceivePacket','USBD_CDC_SetTxBuffer','USBD_CDC_SetRxBuffer']
     if 'NativeCdc_Fault' in derived:
@@ -134,6 +141,20 @@ static int8_t AppReceive(uint8_t *p,uint32_t *length)
     assert(USBD_CDC_DeInit(&dev,1U)==USBD_OK && dev.pClassData==NULL && closed==3U);return 0;
 }
 '''
+    if indexed:
+        header=header.replace('uint8_t is_used;','uint8_t is_used,bInterval;')
+        header=header.replace('void *pClassData,*pUserData,*pData;',
+            'void *pClassData,*pData;void *pClassDataCmsit[1],*pUserData[1];uint8_t classId;')
+        header=header.replace('int8_t (*Receive)(uint8_t *,uint32_t *);',
+            'int8_t (*Receive)(uint8_t *,uint32_t *);int8_t (*TransmitCplt)(uint8_t *,uint32_t *,uint8_t);')
+        header=header.replace('uint8_t *,uint16_t);','uint8_t *,uint32_t);',1)
+        header+='\n#define CDC_FS_BINTERVAL 16U\nstatic unsigned transport_faults;\nstatic void NativeRuntime_TransportFaultRecord(void) { transport_faults++; }\n'
+        harness=harness.replace('itf={AppInit,AppDeInit,AppReceive}',
+            'itf={AppInit,AppDeInit,AppReceive,NULL}').replace('dev.pUserData=&itf','dev.pUserData[0]=&itf')
+        harness=harness.replace('    if (strcmp(argv[1],"tx-fail")',
+            '    if (strcmp(argv[1],"bad-class")==0) { dev.classId=7U;assert(USBD_CDC_TransmitPacket(&dev)!=USBD_OK && transport_faults==1U && resets!=0U);return 0; }\n'
+            '    if (strcmp(argv[1],"mirror")==0) { dev.pClassData=NULL;assert(USBD_CDC_ReceivePacket(&dev)!=USBD_OK && transport_faults==1U);return 0; }\n'
+            '    if (strcmp(argv[1],"tx-fail")',1)
     (tmp_path/'test.c').write_text(header+'\n'+'\n'.join(functions)+'\n'+harness)
     flags = ['-std=c11','-O2','-Wall','-Werror=implicit-function-declaration','-Werror=incompatible-pointer-types']
     if derived.encode() != original:

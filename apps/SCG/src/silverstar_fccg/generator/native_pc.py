@@ -26,8 +26,11 @@ def NativePcAdapter_Render(*, indexed: bool) -> str:
     adapter = adapter[:start]+write+adapter[end:]
     if indexed:
         adapter = adapter.replace('hUsbDeviceFS.pClassData', 'hUsbDeviceFS.pClassDataCmsit[0]')
-        adapter = adapter.replace('    cdc = (USBD_CDC_HandleTypeDef *)',
-            '    if (hUsbDeviceFS.classId != 0U)\n'
-            '    { __set_PRIMASK(saved_mask); return PC_BYTE_STREAM_WRITE_BUSY; }\n'
-            '    cdc = (USBD_CDC_HandleTypeDef *)', 1)
+        marker='    if ((hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) ||'
+        adapter = adapter.replace(marker,
+            '    if ((hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED) &&\n'
+            '        ((hUsbDeviceFS.classId != 0U) || (hUsbDeviceFS.pClassDataCmsit[0] == NULL) ||\n'
+            '         (hUsbDeviceFS.pClassData != hUsbDeviceFS.pClassDataCmsit[0])))\n'
+            '    { NativeRuntime_TransportFaultRecord(); __set_PRIMASK(saved_mask); return PC_BYTE_STREAM_WRITE_ERROR; }\n'
+            +marker, 1)
     return adapter
