@@ -16,6 +16,19 @@ from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.ui.main_window import MainWindow
 
 
+@pytest.fixture
+def private_user_ground_descriptor(tmp_path):
+    source = Path('D:/stm32_project/SS_0_5_TEST_6/SilverStar.ssproject')
+    if not source.is_file():
+        pytest.skip('User Ground descriptor is unavailable on this machine')
+    data = source.read_bytes()
+    descriptor = tmp_path / 'descriptor_copy' / 'SilverStar.ssproject'
+    descriptor.parent.mkdir()
+    descriptor.write_bytes(data)
+    yield descriptor
+    assert source.read_bytes() == data
+
+
 def test_saved_board_without_resources_recovers_declarative_defaults(builtin_catalog):
     model = ReferenceProject_Create('Recovery', catalog=builtin_catalog)
     model.ground_target = replace(model.ground_target, enabled=True,
@@ -154,10 +167,8 @@ def test_fixed_defaults_skip_wrong_resource_kind(builtin_catalog, monkeypatch):
         issue.code for issue in GroundTargetIssues_Get(checked, builtin_catalog)}
 
 
-def test_current_user_ground_descriptor_recovers_bindings_if_available(workspace_root, tmp_path):
-    descriptor = Path('D:/stm32_project/SS_0_5_TEST_6/SilverStar.ssproject')
-    if not descriptor.is_file():
-        pytest.skip('User Ground descriptor is unavailable on this machine')
+def test_current_user_ground_descriptor_recovers_bindings_if_available(workspace_root, tmp_path, private_user_ground_descriptor):
+    descriptor = private_user_ground_descriptor
     service = FccgService(workspace_root)
     loaded = service.Project_Open(descriptor)
     recovered = service.ProjectConfiguration_Reconcile(loaded).model
@@ -189,16 +200,28 @@ def test_current_user_ground_descriptor_recovers_bindings_if_available(workspace
     assert reopened.ground_target.resource_assignments == recovered.ground_target.resource_assignments
 
 
-def test_current_user_gui_open_recovers_ground_bindings_if_available(qapp, workspace_root, tmp_path):
-    descriptor = Path('D:/stm32_project/SS_0_5_TEST_6/SilverStar.ssproject')
-    if not descriptor.is_file():
-        pytest.skip('User Ground descriptor is unavailable on this machine')
+def test_current_user_gui_open_recovers_ground_bindings_if_available(qapp, workspace_root, tmp_path, private_user_ground_descriptor, monkeypatch):
+    descriptor = private_user_ground_descriptor
     window = MainWindow(SettingsStore(workspace_root / '.work' / tmp_path.name / 'settings.ini'),
                         service=FccgService(workspace_root))
     window._Project_Open(descriptor)
     assert window._model.ground_target.resource_assignments['radio0:radio_bus'] == 'PLATFORM_SPI_1'
     assert window._model.ground_target.resource_assignments['radio0:time'] == 'PLATFORM_TIME_1'
-    assert 'GROUND_LED_POLARITY_CONFLICT' in window.ground_target_page.status.text()
+    # 506aafb deliberately localized the body; stable diagnostic identity belongs
+    # in the tooltip and the authoritative issue contract, not untranslated prose.
+    issues = GroundTargetIssues_Get(window._model, window._service.catalog)
+    assert {issue.code for issue in issues} == {'GROUND_LED_POLARITY_CONFLICT'}
+    assert 'GROUND_LED_POLARITY_CONFLICT' in window.ground_target_page.status.toolTip()
+    assert window.ground_target_page.status.text() == window._translator.Text_Get('ground.issue.summary', count=1)
+    assert 'GROUND_' not in window.ground_target_page.status.text()
+    shown = []
+    monkeypatch.setattr(window, '_Error_Show', lambda *args: shown.append(args))
+    monkeypatch.setattr(window._service, 'ProjectRoot_Save', lambda *args, **kwargs: pytest.fail('Invalid Ground must not be saved for generation'))
+    before = descriptor.read_bytes()
+    window._Targets_Generate('generate_ground')
+    assert len(shown) == 1
+    assert descriptor.read_bytes() == before
+    assert not (descriptor.parent / 'Ground_Station' / 'Makefile').exists()
     window.close()
 
 

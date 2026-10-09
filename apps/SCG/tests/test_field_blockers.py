@@ -143,6 +143,12 @@ def test_enabled_ground_without_inventory_does_not_claim_ready(qapp,workspace_ro
         w.Language_Apply(language)
         assert p.generate_button.toolTip()==w._translator.Text_Get('status.ground_ready')
     w._GroundTarget_Change('enabled',False)
+    assert w._model.ground_target.enabled
+    assert p.generate_button.isEnabled()
+    # Explicit stored/API-disabled models still retain the generation gate;
+    # GUI availability must not be implemented by mutating display snapshots.
+    w._model.ground_target=replace(w._model.ground_target,enabled=False)
+    w._Project_Refresh()
     assert not p.generate_button.isEnabled()
     assert p.generate_button.toolTip()==w._translator.Text_Get('status.ground_disabled')
     w.close()

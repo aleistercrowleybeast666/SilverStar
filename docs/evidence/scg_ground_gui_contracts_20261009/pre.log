@@ -1,0 +1,47 @@
+F.FFF                                                                    [100%]
+================================== FAILURES ===================================
+_____ test_gui_disable_request_does_not_change_enabled_draft_or_lifecycle _____
+tests\test_ground_gui_contracts.py:16: in test_gui_disable_request_does_not_change_enabled_draft_or_lifecycle
+    assert json.dumps(window._model.Dictionary_Get(), sort_keys=True) == before
+E   assert '{"air_link":...ORM_TIME_1"}}' == '{"air_link":...ORM_TIME_1"}}'
+E     
+E     Skipping 4934 identical leading characters in diff, use -v to show
+E     - enabled": true, "hardware": {"asm_sources": [], "assignment_fingerprint": "", "build_sources": [], "capabilities": [], "cubemx_version": "", "defines": [], "firmware_package": "", "hal_cmsis_source_policy": "", "i2c_external_pullup_confirmations": {}, "include_dirs": [], "inventory": {"adcs": [], "cans": [], "clocks": {"RCC.ADCFreqValue": 36000000, "RCC.AHBFreq_Value": 72000000, "RCC.APB1CLKDivider": "RCC_HCLK_DIV2", "RCC.APB1Freq_Value": 36000000, "RCC.APB1TimFreq_Value": 72000000, "RCC.APB2Freq_Value"...
+E     
+E     ...Full output truncated (4 lines hidden), use '-vv' to show
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+_ test_localized_status_retains_stable_polarity_diagnostics_across_languages __
+tests\test_ground_gui_contracts.py:49: in test_localized_status_retains_stable_polarity_diagnostics_across_languages
+    assert all(f'{issue.code}: {issue.message}' in status.toolTip() for issue in issues)
+E   assert False
+E    +  where False = all(<generator object test_localized_status_retains_stable_polarity_diagnostics_across_languages.<locals>.<genexpr> at 0x0000024BB618EC00>)
+___________ test_ground_selection_defaults_and_checkbox_visibility ____________
+tests\test_ground_board_recovery.py:77: in test_ground_selection_defaults_and_checkbox_visibility
+    assert window._model.ground_target.enabled
+E   AssertionError: assert False
+E    +  where False = GroundTargetConfiguration(enabled=False, mcu='silverstar.mcu.stm32f103c8t6', board='silverstar.board.ground_station_0_...d_active_high=False, rx_led_resource='', rx_led_active_high=False, activity_led_pulse_ms=40, activity_led_enabled=None).enabled
+E    +    where GroundTargetConfiguration(enabled=False, mcu='silverstar.mcu.stm32f103c8t6', board='silverstar.board.ground_station_0_...d_active_high=False, rx_led_resource='', rx_led_active_high=False, activity_led_pulse_ms=40, activity_led_enabled=None) = ProjectModel(identity=ProjectIdentity(name='SilverStar', firmware_version='0.1.2', build_target='SilverStar_0_1_2'), c...l.c': 'f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4'}}, feature_tier_presets={}, format_version=14).ground_target
+E    +      where ProjectModel(identity=ProjectIdentity(name='SilverStar', firmware_version='0.1.2', build_target='SilverStar_0_1_2'), c...l.c': 'f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4'}}, feature_tier_presets={}, format_version=14) = <silverstar_fccg.ui.main_window.MainWindow(0x24bb9355d50) at 0x0000024BBB0F12C0>._model
+______ test_current_user_gui_open_recovers_ground_bindings_if_available _______
+tests\test_ground_board_recovery.py:214: in test_current_user_gui_open_recovers_ground_bindings_if_available
+    assert 'GROUND_LED_POLARITY_CONFLICT' in window.ground_target_page.status.toolTip()
+E   AssertionError: assert 'GROUND_LED_POLARITY_CONFLICT' in '请检查地面站电台模块、AIR 链路与硬件配置。\n未使用的板载资源（仅提示）：PLATFORM_GPIO_4, PLATFORM_GPIO_5'
+E    +  where '请检查地面站电台模块、AIR 链路与硬件配置。\n未使用的板载资源（仅提示）：PLATFORM_GPIO_4, PLATFORM_GPIO_5' = <built-in method toolTip of PySide6.QtWidgets.QLabel object at 0x0000024BBD6973C0>()
+E    +    where <built-in method toolTip of PySide6.QtWidgets.QLabel object at 0x0000024BBD6973C0> = <PySide6.QtWidgets.QLabel(0x24bb6ba6120) at 0x0000024BBD6973C0>.toolTip
+E    +      where <PySide6.QtWidgets.QLabel(0x24bb6ba6120) at 0x0000024BBD6973C0> = <silverstar_fccg.ui.pages.targets.GroundTargetPage(0x24bba2334b0) at 0x0000024BBC3EE1C0>.status
+E    +        where <silverstar_fccg.ui.pages.targets.GroundTargetPage(0x24bba2334b0) at 0x0000024BBC3EE1C0> = <silverstar_fccg.ui.main_window.MainWindow(0x24bb9354910) at 0x0000024BBC5F2500>.ground_target_page
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_ground_gui_contracts.py::test_gui_disable_request_does_not_change_enabled_draft_or_lifecycle
+FAILED tests/test_ground_gui_contracts.py::test_localized_status_retains_stable_polarity_diagnostics_across_languages
+FAILED tests/test_ground_board_recovery.py::test_ground_selection_defaults_and_checkbox_visibility
+FAILED tests/test_ground_board_recovery.py::test_current_user_gui_open_recovers_ground_bindings_if_available
+4 failed, 1 passed, 1 warning in 40.29s

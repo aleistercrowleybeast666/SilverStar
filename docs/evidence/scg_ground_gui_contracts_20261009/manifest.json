@@ -1,0 +1,55 @@
+{
+  "baseCommit": "8b418943c987e8b12f37e08d90a58032a1e1b89e",
+  "capturedUtc": "2026-10-09T05:01:06.9419748Z",
+  "sourceHashes": {
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "7d863fa2ec4617beb85b6eb444397c23c06e877ade0525d355299b7a8904dc6c",
+    "apps/SCG/tests/test_field_blockers.py": "7458cc49a523e6e59b05e86330288a0102414dcff166a7d8560c40768d0c027f",
+    "apps/SCG/tests/test_ground_gui_contracts.py": "203840838ad1023ac6a8177c8e6d5167ab57b3a55ba40ceac28c363427cad710",
+    "apps/SCG/src/silverstar_fccg/ui/pages/targets.py": "df331f85f6d179a06ccc85e2f515e671857f0df632042fea93c60b1a391333e0",
+    "apps/SCG/tests/test_ground_board_recovery.py": "5c21bac85ec4a776a75283e771b58d0848895fd161e8541a8d776f36a68fceb8",
+    "apps/SCG/tests/test_scg_ui_metadata_hotfix.py": "2799e0e2d9e6ae44072a8daf9acc123cc7cf282ae6b1f46b21692ff0bd31b409"
+  },
+  "historicalContracts": {
+    "readOnlyRefresh": "b26f6be340c9fb72f4efa116fc8574bf9e00d9d3",
+    "guiAvailability": "31541b3cf382c65b80038baf7929cc13a9e6d31e",
+    "localizedGuidance": "506aafba54267d6b973615e0c1eca480b2248a9c"
+  },
+  "before": {
+    "seconds": 40.29,
+    "exit": 1,
+    "log": "pre.log",
+    "failed": 4,
+    "passed": 1
+  },
+  "afterDeclaredEightFileScope": {
+    "seconds": 198.63,
+    "exit": 0,
+    "log": "post.log",
+    "passed": 81
+  },
+  "tempSettingsSubset": {
+    "seconds": 38.69,
+    "exit": 0,
+    "log": "settings-temp.log",
+    "passed": 7
+  },
+  "disabledApiProbe": {
+    "result": "disabled-api-result.json",
+    "exit": 0,
+    "scope": "model/reference/parser false preserved; disabled Ground rejects before output directory creation"
+  },
+  "originalTwoBranchMatrix": "7 passed / 2 failed on each: preserved independently",
+  "notExecuted": [
+    "ARM compilation",
+    "hardware access",
+    "USB repair merge",
+    "full repository suite"
+  ],
+  "userDescriptorSourceSha256": "6f83abab06de6e5c777972953b5610129a099df2afe9d8bc95e77e92856e6966",
+  "USB": "NOT ACCEPTED; b05b370 remains isolated, dependency closure P2 pending repair/re-review",
+  "versions": {
+    "pytest": "9.1.1",
+    "PySide6": "6.10.1",
+    "Python": "3.14"
+  }
+}

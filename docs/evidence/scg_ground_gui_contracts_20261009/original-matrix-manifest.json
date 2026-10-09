@@ -1,0 +1,50 @@
+{
+  "mainHead": "8b418943c987e8b12f37e08d90a58032a1e1b89e",
+  "repairHead": "b05b3705638660cf79dde47bc3fc96b45819f8ec",
+  "capturedUtc": "2026-10-09T04:47:36.8483542Z",
+  "mainResult": {
+    "setupErrors": 0,
+    "passed": 7,
+    "failed": 2,
+    "exit": 1,
+    "log": "main8b.log",
+    "seconds": 50.06
+  },
+  "repairResult": {
+    "setupErrors": 0,
+    "passed": 7,
+    "failed": 2,
+    "exit": 1,
+    "log": "repairb05.log",
+    "seconds": 56.67
+  },
+  "originalExpandedResult": "148 passed, 2 failed, 7 setup errors, 1 deselected: unchanged historical evidence",
+  "sourceHashes": {
+    "D:/python_software/SilverStar": {
+      "apps/SCG/src/silverstar_fccg/core/path_preferences.py": "4e335bc6a2418dbc3d8280de09f26486cb0aca4a5bcd83ee929077495c7123fd",
+      "apps/SCG/tests/test_ground_board_recovery.py": "e2a26db7956e0eb004b9c1f8ab75f6e9462f6ffbb6c2611ac56308cdefa78d99",
+      "apps/SCG/src/silverstar_fccg/ui/main_window.py": "064eed19a2d9abb8e7b0b97afcbdcd54b9f3c1e2308be5d5d2d8d5bcfc9f51f0",
+      "apps/SCG/tests/test_scg_ui_metadata_hotfix.py": "9f82a71231e69e41522267d127909ecefafa76cee933ed3a93e6b362cc0c5e79",
+      "apps/SCG/src/silverstar_fccg/ui/pages/targets.py": "a8d2653b9140689d63a55a2c45a5666713c03076d689d55d6f25f5131480d79b",
+      "apps/SCG/src/silverstar_fccg/core/workspace.py": "38c539dd57b646d9f827d26c816210ef5829a88871b486717861fbf2d033f180"
+    },
+    "C:/Users/chdxm/Documents/Codex/2026-10-08/task/ground-usb-worktree": {
+      "apps/SCG/src/silverstar_fccg/core/path_preferences.py": "2c77694e5ed554c94ef1d5b8d08c2f09276fd4e7598637663676d8479f802d52",
+      "apps/SCG/tests/test_ground_board_recovery.py": "e2a26db7956e0eb004b9c1f8ab75f6e9462f6ffbb6c2611ac56308cdefa78d99",
+      "apps/SCG/src/silverstar_fccg/ui/main_window.py": "593c1a4cf90878b4d485408e599ea8d4ae3a50afefabc2c08f5df4dd237a3fca",
+      "apps/SCG/tests/test_scg_ui_metadata_hotfix.py": "9f82a71231e69e41522267d127909ecefafa76cee933ed3a93e6b362cc0c5e79",
+      "apps/SCG/src/silverstar_fccg/ui/pages/targets.py": "1cb6a68efe56a0dd5603f856cdf867a0ff286a7554cf3f21e6f57b2d979e3f7c",
+      "apps/SCG/src/silverstar_fccg/core/workspace.py": "8fefb3bfad927f3f18b355434d383aea9d13953350676260f92984e6e43306fc"
+    }
+  },
+  "testChange": "Only private setting basetemp within each authorized workspace and same-byte copy of descriptor; original product tests/assertions unchanged",
+  "descriptorCopySha256": "6f83abab06de6e5c777972953b5610129a099df2afe9d8bc95e77e92856e6966",
+  "productChanges": "NONE",
+  "merge": "NOT PERFORMED; Astra review pending",
+  "hardware": "NOT ACCESSED",
+  "versions": {
+    "PySide6": "6.10.1",
+    "pytest": "9.1.1",
+    "Python": "3.14"
+  }
+}

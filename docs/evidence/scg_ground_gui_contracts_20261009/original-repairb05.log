@@ -1,0 +1,31 @@
+FF.......                                                                [100%]
+================================== FAILURES ===================================
+___________ test_ground_selection_defaults_and_checkbox_visibility ____________
+C:\Users\chdxm\Documents\Codex\2026-10-08\task\ground-usb-worktree\apps\SCG\tests\test_ground_board_recovery.py:64: in test_ground_selection_defaults_and_checkbox_visibility
+    assert window._model.ground_target.enabled
+E   AssertionError: assert False
+E    +  where False = GroundTargetConfiguration(enabled=False, mcu='silverstar.mcu.stm32f103c8t6', board='silverstar.board.ground_station_0_...d_active_high=False, rx_led_resource='', rx_led_active_high=False, activity_led_pulse_ms=40, activity_led_enabled=None).enabled
+E    +    where GroundTargetConfiguration(enabled=False, mcu='silverstar.mcu.stm32f103c8t6', board='silverstar.board.ground_station_0_...d_active_high=False, rx_led_resource='', rx_led_active_high=False, activity_led_pulse_ms=40, activity_led_enabled=None) = ProjectModel(identity=ProjectIdentity(name='SilverStar', firmware_version='0.1.2', build_target='SilverStar_0_1_2'), c...l.c': 'f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4'}}, feature_tier_presets={}, format_version=14).ground_target
+E    +      where ProjectModel(identity=ProjectIdentity(name='SilverStar', firmware_version='0.1.2', build_target='SilverStar_0_1_2'), c...l.c': 'f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4'}}, feature_tier_presets={}, format_version=14) = <silverstar_fccg.ui.main_window.MainWindow(0x260797dca60) at 0x0000026014223980>._model
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+______ test_current_user_gui_open_recovers_ground_bindings_if_available _______
+C:\Users\chdxm\Documents\Codex\2026-10-08\task\ground-usb-worktree\apps\SCG\tests\test_ground_board_recovery.py:201: in test_current_user_gui_open_recovers_ground_bindings_if_available
+    assert 'GROUND_LED_POLARITY_CONFLICT' in window.ground_target_page.status.text()
+E   AssertionError: assert 'GROUND_LED_POLARITY_CONFLICT' in '地面站还有 1 项配置待完成，生成前请查看检测详情。'
+E    +  where '地面站还有 1 项配置待完成，生成前请查看检测详情。' = <built-in method text of PySide6.QtWidgets.QLabel object at 0x00000260197D7FC0>()
+E    +    where <built-in method text of PySide6.QtWidgets.QLabel object at 0x00000260197D7FC0> = <PySide6.QtWidgets.QLabel(0x260130a2040) at 0x00000260197D7FC0>.text
+E    +      where <PySide6.QtWidgets.QLabel(0x260130a2040) at 0x00000260197D7FC0> = <silverstar_fccg.ui.pages.targets.GroundTargetPage(0x260134059c0) at 0x00000260197FB3C0>.status
+E    +        where <silverstar_fccg.ui.pages.targets.GroundTargetPage(0x260134059c0) at 0x00000260197FB3C0> = <silverstar_fccg.ui.main_window.MainWindow(0x26015a93150) at 0x00000260142CDC00>.ground_target_page
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED C:\Users\chdxm\Documents\Codex\2026-10-08\task\ground-usb-worktree\apps\SCG\tests\test_ground_board_recovery.py::test_ground_selection_defaults_and_checkbox_visibility
+FAILED C:\Users\chdxm\Documents\Codex\2026-10-08\task\ground-usb-worktree\apps\SCG\tests\test_ground_board_recovery.py::test_current_user_gui_open_recovers_ground_bindings_if_available
+2 failed, 7 passed, 1 warning in 56.67s

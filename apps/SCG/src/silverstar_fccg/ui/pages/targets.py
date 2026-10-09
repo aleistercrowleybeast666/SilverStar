@@ -571,6 +571,7 @@ class GroundTargetPage(BoardHardwarePage):
                             if not ground.enabled else issue_summary)
         self.status.setToolTip(
             "\n".join(filter(None, (issue_details,
+                "\n".join(f"{issue.code}: {issue.message}" for issue in issues),
                 self._translator.Text_Get("ground.unused_resources",
                                           resources=", ".join(unused_resources))
                 if unused_resources else ""))))

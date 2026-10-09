@@ -1,0 +1,120 @@
+{
+  "exit": 1,
+  "selected": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+  "records": [
+    {
+      "test": "test_ground_selection_defaults_and_checkbox_visibility",
+      "enabled": false,
+      "status": "\u5730\u9762\u7ad9 Target \u672a\u542f\u7528\uff1b\u542f\u7528\u540e\u53ef\u751f\u6210 Ground\u3002",
+      "tooltip": "\u672a\u4f7f\u7528\u7684\u677f\u8f7d\u8d44\u6e90\uff08\u4ec5\u63d0\u793a\uff09\uff1aPLATFORM_GPIO_4, PLATFORM_GPIO_5, PLATFORM_GPIO_6",
+      "issueCodes": [],
+      "generateEnabled": false,
+      "privateProjectRoot": "None"
+    },
+    {
+      "descriptorCopySha256": "6f83abab06de6e5c777972953b5610129a099df2afe9d8bc95e77e92856e6966",
+      "bytes": 77533
+    },
+    {
+      "test": "test_current_user_gui_open_recovers_ground_bindings_if_available",
+      "enabled": true,
+      "status": "\u5730\u9762\u7ad9\u8fd8\u6709 1 \u9879\u914d\u7f6e\u5f85\u5b8c\u6210\uff0c\u751f\u6210\u524d\u8bf7\u67e5\u770b\u68c0\u6d4b\u8be6\u60c5\u3002",
+      "tooltip": "\u8bf7\u68c0\u67e5\u5730\u9762\u7ad9\u7535\u53f0\u6a21\u5757\u3001AIR \u94fe\u8def\u4e0e\u786c\u4ef6\u914d\u7f6e\u3002\n\u672a\u4f7f\u7528\u7684\u677f\u8f7d\u8d44\u6e90\uff08\u4ec5\u63d0\u793a\uff09\uff1aPLATFORM_GPIO_4, PLATFORM_GPIO_5",
+      "issueCodes": [
+        "GROUND_LED_POLARITY_CONFLICT"
+      ],
+      "generateEnabled": true,
+      "privateProjectRoot": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\.work\\gui_review_diag_repairb05\\test_current_user_gui_open_rec_e5b49c28\\descriptor_copy"
+    },
+    {
+      "test": "test_led_gui_keeps_defaults_until_explicit_binding",
+      "enabled": true,
+      "status": "Ground Station: READY",
+      "tooltip": "Unused board resources (informational): PLATFORM_GPIO_4, PLATFORM_GPIO_5",
+      "issueCodes": [],
+      "generateEnabled": true,
+      "privateProjectRoot": "None"
+    },
+    {
+      "test": "test_led_gui_restores_legacy_bindings_after_toggle",
+      "enabled": true,
+      "status": "\u5730\u9762\u7ad9\uff1aREADY",
+      "tooltip": "\u672a\u4f7f\u7528\u7684\u677f\u8f7d\u8d44\u6e90\uff08\u4ec5\u63d0\u793a\uff09\uff1aPLATFORM_GPIO_4, PLATFORM_GPIO_5",
+      "issueCodes": [],
+      "generateEnabled": true,
+      "privateProjectRoot": "None"
+    },
+    {
+      "test": "test_led_gui_rejects_ambiguous_board_declarations",
+      "enabled": true,
+      "status": "\u5730\u9762\u7ad9\uff1aREADY",
+      "tooltip": "\u672a\u4f7f\u7528\u7684\u677f\u8f7d\u8d44\u6e90\uff08\u4ec5\u63d0\u793a\uff09\uff1aLED_A, LED_B, PLATFORM_GPIO_4, PLATFORM_GPIO_5, PLATFORM_GPIO_6",
+      "issueCodes": [],
+      "generateEnabled": true,
+      "privateProjectRoot": "None"
+    },
+    {
+      "test": "test_legacy_single_ground_refresh_does_not_promote_or_rebind",
+      "enabled": true,
+      "status": "Ground Station: READY",
+      "tooltip": "Unused board resources (informational): PLATFORM_GPIO_4, PLATFORM_GPIO_5, PLATFORM_GPIO_6",
+      "issueCodes": [],
+      "generateEnabled": true,
+      "privateProjectRoot": "None"
+    },
+    {
+      "test": "test_ground_editor_order_initial_binding_and_reopen",
+      "enabled": true,
+      "status": "Ground Station: READY",
+      "tooltip": "Unused board resources (informational): PLATFORM_GPIO_4, PLATFORM_GPIO_5, PLATFORM_GPIO_6",
+      "issueCodes": [],
+      "generateEnabled": true,
+      "privateProjectRoot": "None"
+    },
+    {
+      "test": "test_ground_editor_caps_instances_at_four",
+      "enabled": true,
+      "status": "\u5730\u9762\u7ad9\u8fd8\u6709 18 \u9879\u914d\u7f6e\u5f85\u5b8c\u6210\uff0c\u751f\u6210\u524d\u8bf7\u67e5\u770b\u68c0\u6d4b\u8be6\u60c5\u3002",
+      "tooltip": "\u8bf7\u5728\u5730\u9762\u7ad9\u8d44\u6e90\u8868\u8865\u9f50\u7535\u53f0 SPI\u3001GPIO \u548c\u65f6\u95f4\u8d44\u6e90\u7ed1\u5b9a\u3002 (GPIO_INPUT, GPIO_INTERRUPT, GPIO_OUTPUT, SPI, TIME)\n\u672a\u4f7f\u7528\u7684\u677f\u8f7d\u8d44\u6e90\uff08\u4ec5\u63d0\u793a\uff09\uff1aPLATFORM_GPIO_4, PLATFORM_GPIO_5, PLATFORM_GPIO_6",
+      "issueCodes": [
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND"
+      ],
+      "generateEnabled": false,
+      "privateProjectRoot": "None"
+    },
+    {
+      "test": "test_ground_power_choices_only_allow_declared_values",
+      "enabled": true,
+      "status": "\u5730\u9762\u7ad9\u8fd8\u6709 7 \u9879\u914d\u7f6e\u5f85\u5b8c\u6210\uff0c\u751f\u6210\u524d\u8bf7\u67e5\u770b\u68c0\u6d4b\u8be6\u60c5\u3002",
+      "tooltip": "\u8bf7\u5728\u5730\u9762\u7ad9\u8d44\u6e90\u8868\u8865\u9f50\u7535\u53f0 SPI\u3001GPIO \u548c\u65f6\u95f4\u8d44\u6e90\u7ed1\u5b9a\u3002 (GPIO_INPUT, GPIO_INTERRUPT, GPIO_OUTPUT, SPI, TIME)\n\u8bf7\u68c0\u67e5\u5730\u9762\u7ad9\u7535\u53f0\u6a21\u5757\u3001AIR \u94fe\u8def\u4e0e\u786c\u4ef6\u914d\u7f6e\u3002\n\u672a\u4f7f\u7528\u7684\u677f\u8f7d\u8d44\u6e90\uff08\u4ec5\u63d0\u793a\uff09\uff1aPLATFORM_GPIO_4, PLATFORM_GPIO_5, PLATFORM_GPIO_6",
+      "issueCodes": [
+        "AIR_LINK_TX_POWER_UNSUPPORTED",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND",
+        "GROUND_RADIO_RESOURCE_UNBOUND"
+      ],
+      "generateEnabled": false,
+      "privateProjectRoot": "None"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+Initial pre-test command created the directory relative to apps/SCG, while redirection targeted the repository root.
+Out-File: Could not find a part of the path D:\python_software\SilverStar\.work\GroundGuiContracts_20261009\pre.log.
+Set-Content: Could not find a part of the path D:\python_software\SilverStar\.work\GroundGuiContracts_20261009\pre.exit.
+No successful test execution or exit-code claim from that shell invocation.

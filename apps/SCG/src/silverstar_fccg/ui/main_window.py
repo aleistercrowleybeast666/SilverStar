@@ -1992,6 +1992,11 @@ class MainWindow(QMainWindow):
         self._ProjectConfiguration_Change(change)
 
     def _GroundTarget_Change(self, field: str, value: object) -> None:
+        if field == "enabled" and value is False:
+            # Current GUI offers both targets; only generation scope is optional.
+            # Do not enable stored/legacy models during a display refresh.
+            self._Project_Refresh()
+            return
         if field == "board":
             self._GroundBoard_Change(str(value or ""))
             return

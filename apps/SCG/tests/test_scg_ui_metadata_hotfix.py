@@ -2,6 +2,7 @@ from dataclasses import replace
 import time
 import json
 import hashlib
+from uuid import uuid4
 import yaml
 
 import pytest
@@ -19,7 +20,10 @@ from test_f103_ground_reference import _GroundF103Model_Get
 
 @pytest.fixture
 def window(qapp, workspace_root, tmp_path):
-    current = MainWindow(SettingsStore(tmp_path / "scg.ini"), service=FccgService(workspace_root))
+    # System Temp is outside the service policy on Windows. Keep settings private
+    # and inside the actual workspace without weakening PathPreferences checks.
+    settings_root = workspace_root / ".work" / "gui_settings" / uuid4().hex[:8]
+    current = MainWindow(SettingsStore(settings_root / "scg.ini"), service=FccgService(workspace_root))
     current._MessageBox_Exec = lambda *args, **kwargs: QMessageBox.StandardButton.Discard
     yield current
     current.close()
