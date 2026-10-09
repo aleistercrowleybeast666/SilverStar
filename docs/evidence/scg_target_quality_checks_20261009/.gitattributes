@@ -1,0 +1,2 @@
+# Retain the exact native log/snapshot bytes referenced by artifact_hashes.json.
+* -text

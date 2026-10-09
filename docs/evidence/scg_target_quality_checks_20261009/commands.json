@@ -1,0 +1,57 @@
+{
+  "cwd": "apps/SCG",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "final": [
+    "../FLP/.venv/Scripts/python.exe",
+    "-u",
+    "-B",
+    "../../.work/gui012_20261008/run_pytest.py",
+    "tests/test_target_quality_checks.py",
+    "tests/test_quality_manual_acceptance.py",
+    "tests/test_build_progress.py",
+    "tests/test_target_compile_progress.py",
+    "tests/test_task_progress_busy.py",
+    "tests/test_ground_gui_acceptance_20261009.py",
+    "tests/test_ground_gui_contracts.py",
+    "-q",
+    "--basetemp=.work/qtarget_approved",
+    "--tb=short"
+  ],
+  "pre_corrected": {
+    "environment_extra": {
+      "SCG_CHECK_PRE3C": "1"
+    },
+    "test": "tests/test_target_quality_checks.py::test_gui_selection_routes_and_saves_per_target[selection1]",
+    "basetemp": ".work/qtarget_pre2"
+  },
+  "retained_runs": {
+    "focused": "32 passed; initial snapshot",
+    "pre": "Invalid probe: incompatible test-double signature; not root-cause evidence",
+    "pre_corrected": "Expected baseline Ground-only routes Flight failure",
+    "regression": "3 failed / 65 passed; renderer-state compatibility failures",
+    "final": "68 passed; interim snapshot before additional identity tests",
+    "final_current": "71 passed; scope text corrected during run; superseded by approved fresh run"
+  },
+  "known_warning": "pytest Unknown config option: cache_dir; captured Qt font warning in baseline logs",
+  "final_result": {
+    "passed": 71,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "duration_seconds": 145.06,
+    "source_snapshot": "source_manifest_approved.json"
+  },
+  "standalone_ground_architecture": {
+    "input": "Retained fresh generated Ground target from approved suite",
+    "command_record": "ground_architecture.json",
+    "result_log": "ground_architecture.log",
+    "exit_code": 0,
+    "input_files_unchanged": 172,
+    "arm_build_executed": false,
+    "setup_note": "First lookup used an overlong pytest directory glob and matched no input; no gate executed. Corrected shortened-prefix lookup succeeded."
+  },
+  "setup_command_error": "Initial catalog-edit command used a repository-relative Python path from apps/SCG and did not execute; it was rerun from repository root. The approved suite started after all final catalog edits."
+}

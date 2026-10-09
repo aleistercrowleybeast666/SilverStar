@@ -18,6 +18,9 @@ class QualityResultRecord:
     timestamp: str
     duration: float
     summary: str
+    input_sha256: str = ""
+    command: tuple[str, ...] = ()
+    details: str = ""
 
     @property
     def manual_acceptance_pending(self) -> bool:
@@ -68,6 +71,9 @@ def QualityResults_Load(project_root: Path) -> tuple[QualityResultRecord, ...]:
                 timestamp=value["timestamp"],
                 duration=float(value["duration"]),
                 summary=QualitySummary_WithContractReview(task, value["summary"]),
+                input_sha256=str(value.get("input_sha256", "")),
+                command=tuple(value.get("command", ())) if isinstance(value.get("command", ()), (list, tuple)) and all(isinstance(item, str) for item in value.get("command", ())) else (),
+                details=value.get("details", "") if isinstance(value.get("details", ""), str) else "",
             )
         )
     return tuple(records)
@@ -80,6 +86,9 @@ def QualityResult_Save(
     succeeded: bool,
     duration: float,
     summary: str,
+    input_sha256: str = "",
+    command: tuple[str, ...] = (),
+    details: str = "",
 ) -> QualityResultRecord:
     policy = WorkspacePolicy(project_root)
     records = {record.task: record for record in QualityResults_Load(project_root)}
@@ -90,6 +99,9 @@ def QualityResult_Save(
         timestamp=datetime.now(timezone.utc).isoformat(timespec="seconds"),
         duration=max(0.0, float(duration)),
         summary=QualitySummary_WithContractReview(task, summary),
+        input_sha256=input_sha256,
+        command=command,
+        details=details,
     )
     records[task] = record
     document = {

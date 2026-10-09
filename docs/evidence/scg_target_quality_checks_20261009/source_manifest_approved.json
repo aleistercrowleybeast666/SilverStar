@@ -1,0 +1,17 @@
+{
+  "base_commit": "3c8cf57ba8d3ec38b1063b69bab555c5b09b948c",
+  "files": {
+    "apps/SCG/src/silverstar_fccg/build/runner.py": "fce46fe8c6ec15380946c204cd9950777c295a5ac0ad4a47c6a71a6f957430f6",
+    "apps/SCG/src/silverstar_fccg/build/quality_batch.py": "082dd8d8769df023febc899ad64db523803a9fa1ac176bb9be02b900ae213bbb",
+    "apps/SCG/src/silverstar_fccg/project/quality_inputs.py": "b2a4c1c4ef57ba30a742624a2bdefe38361a5a16487d5773b2994fb6c521ae30",
+    "apps/SCG/src/silverstar_fccg/project/quality_results.py": "0c3a7821683391d0c64c41e6719dbff65b080bde6384a60156da9d94d431efa1",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "870add2090e7d5d9a5480dfdced7c4fc7f867f8a13f7aad0e8df1eb98aed632e",
+    "apps/SCG/src/silverstar_fccg/ui/pages/build.py": "0e258b8a34fd647b7d12ec7d76cbc5e229ce67a33a9ca23a20c45ff7bf8e0375",
+    "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": "dfb0e6ac9f001e901a2e9d648412ae4cda539b6fe3296338b293ed69f22794de",
+    "apps/SCG/src/silverstar_fccg/i18n/en_US.json": "3013cb6bd2068fc09f7a9ef817eb42bb4d6f03799c5e4c03ee17591a78bd649c",
+    "apps/SCG/tests/test_target_quality_checks.py": "e443defbfff8b551ded93d223f399ece58ef50e8a55e8c88ed5051fb3ea2e310"
+  },
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "win32",
+  "scope": "Final frozen GUI/check implementation before approved suite; no firmware payload/template changes."
+}

@@ -52,6 +52,7 @@ from silverstar_fccg.build.runner import (
     BuildRunner,
 )
 from silverstar_fccg.build.toolchain import ArmGnuSubtoolPaths_Derive
+from silverstar_fccg.build.quality_batch import QualityBatch_Run, QualityBatchResult
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.path_preferences import PathPreferences
@@ -120,7 +121,8 @@ from silverstar_fccg.project.model import (
 )
 from silverstar_fccg.project.ground_radios import GroundRadiosConfiguration_Apply
 from silverstar_fccg.project.protocols import ProtocolProfileAvailabilities_Get
-from silverstar_fccg.project.quality_results import QualityResultRecord
+from silverstar_fccg.project.quality_results import QualityResultRecord, QualityResult_Save
+from silverstar_fccg.project.quality_inputs import QUALITY_TASKS, QualityInputHash_Get, QualityInput_Require
 from silverstar_fccg.project.power10_report import (
     Power10Report_Create, Power10Report_Save, Power10Report_Load,
     Power10Report_Current_Is, Power10Report_Csv, Power10TextPassed_Is,
@@ -885,6 +887,7 @@ class MainWindow(QMainWindow):
                 display.firmware_artifact_name,
             )
             self.build_page.QualityResults_Set(display.quality_results)
+            self._TargetQualityResults_Refresh()
             self.power10_export_button.setEnabled(
                 self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
             self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
@@ -3318,6 +3321,9 @@ class MainWindow(QMainWindow):
         if action_text == "open_firmware_output":
             self._FirmwareOutput_Open()
             return
+        if action_text in QUALITY_TASKS:
+            self._QualityChecks_Request(BuildAction(action_text))
+            return
         if self._project_root is None:
             self._pending_build_action = action_text
             self.status_label.setText(
@@ -3413,6 +3419,159 @@ class MainWindow(QMainWindow):
             indeterminate=False,
             line_callback=self._BuildLine_Append,
         )
+
+    def _TargetQualityInputs_Get(self, target: str):
+        if self._project_root is None:
+            raise ValueError(self._translator.Text_Get("quality.target.unavailable"))
+        root = self._project_root / (FLIGHT_DIRECTORY if target == "flight" else "Ground_Station")
+        WorkspacePolicy(self._project_root).Path_Resolve(root, allow_root=False)
+        if target == "flight":
+            model = self._service.Project_Open(root / "SilverStar.ssproject")
+            # Generated configuration, with the user's current tool locations.
+            model.build = replace(model.build, tool_paths=deepcopy(self._model.build.tool_paths))
+        else:
+            model = deepcopy(self._model)
+            ground_build = model.ground_target.build
+            model.build = replace(ground_build, tool_paths={
+                **self._model.build.tool_paths, **ground_build.tool_paths})
+        return root, model
+
+    def _TargetQualityResults_Refresh(self) -> None:
+        for target in ("flight", "ground"):
+            records = ()
+            states = {}
+            try:
+                root, model = self._TargetQualityInputs_Get(target)
+                records = self._service.QualityResults_Get(root)
+                runner = BuildRunner(WorkspacePolicy(root))
+                by_task = {record.task: record for record in records}
+                for task in QUALITY_TASKS:
+                    try:
+                        QualityInput_Require(root, target, task)
+                        record = by_task.get(task)
+                        if record is not None and (not record.input_sha256 or
+                            record.input_sha256 != QualityInputHash_Get(root, target, task,
+                                runner.Command_Get(model, BuildAction(task)))):
+                            states[task] = "stale"
+                    except (OSError, ValueError):
+                        states[task] = "unavailable"
+                self.build_page.target_quality_status[target].setText(
+                    self._translator.Text_Get("quality.target.generated_input", path=str(root)))
+            except Exception:
+                states = {task: "unavailable" for task in QUALITY_TASKS}
+                self.build_page.target_quality_status[target].setText(
+                    self._translator.Text_Get("quality.target.unavailable"))
+            self.build_page.TargetQualityResults_Set(target, records, states)
+
+    def _QualityChecks_Request(self, action: BuildAction) -> None:
+        if self._active_worker is not None:
+            self._Error_Show(self._translator.Text_Get("error.background_task_active"))
+            return
+        selected = self.build_page.QualityTargets_Get()
+        self._TargetQualityResults_Refresh()
+        if not selected:
+            self.status_label.setText(self._translator.Text_Get("quality.target.none"))
+            return
+        if self._project_root is None:
+            self.status_label.setText(self._translator.Text_Get("quality.target.unavailable"))
+            return
+        inputs = []
+        for target in selected:
+            try:
+                root, model = self._TargetQualityInputs_Get(target)
+            except Exception:
+                root = (self._project_root or Path(".")) / (
+                    FLIGHT_DIRECTORY if target == "flight" else "Ground_Station")
+                model = deepcopy(self._model)
+            # Missing inputs are reported independently by the batch; no SaveAs
+            # or generation is implicitly performed by a quality action.
+            inputs.append((target, root, model))
+            self.build_page.TargetQualityProgress_Set(target, None,
+                self._translator.Text_Get("quality.target.waiting"))
+            states = dict(self.build_page._target_quality_states[target])
+            states[action.value] = "waiting"
+            self.build_page.TargetQualityResults_Set(target,
+                self.build_page._target_quality_records[target], states)
+        self._project_state = ProjectLifecycleState.BUILDING
+        self.build_page.BuildLog_Set("")
+        self.build_page.BuildDetailLog_Set("")
+        self._active_quality_targets = selected
+        self._active_quality_action = action.value
+        self.Task_Run(lambda context: QualityBatch_Run(tuple(inputs), action, context),
+                      self._QualityChecks_Complete, self._QualityChecks_Error,
+                      line_callback=self._QualityLine_Append)
+
+    def _QualityLine_Append(self, line: str) -> None:
+        if not line.startswith("FCCG_QUALITY|"):
+            self._BuildLine_Append(line)
+            return
+        event = json.loads(line.partition("|")[2])
+        target = event["target"]
+        kind = event["kind"]
+        if kind == "line":
+            self.build_page.BuildDetailLog_Append(f"[{target}] {event['line']}")
+            self._BuildLine_Append(f"[{target}] {event['line']}")
+        elif kind == "progress":
+            text = f"{event['stage']} {event['current']}/{event['total']} {event['subject']}"
+            self.build_page.TargetQualityProgress_Set(target, event["fraction"], text)
+            self.build_page.BuildLog_Append(f"[{target}] {text}")
+        else:
+            done = kind == "done"
+            succeeded = event.get("succeeded", False)
+            text = self._translator.Text_Get("quality.target." + (
+                "completed" if succeeded else "failed" if done else "running"))
+            if event.get("error"):
+                text += "\n" + event["error"]
+            bar = self.build_page.target_quality_progress[target]
+            fraction = (0.99 if succeeded else max(0, bar.value()) / 1000) if done else None
+            self.build_page.TargetQualityProgress_Set(target, fraction, text)
+            self.build_page.BuildLog_Append(f"[{target}] {text}")
+
+    def _QualityChecks_Complete(self, batch: QualityBatchResult) -> None:
+        unavailable = {}
+        for outcome in batch.targets:
+            result = outcome.result
+            if result is None:
+                unavailable[outcome.target] = "unavailable"
+                continue
+            details = "> " + " ".join(result.command) + "\n" + result.output
+            if outcome.error:
+                details += "\n" + outcome.error
+            try:
+                if result.action == BuildAction.POWER10_CHECK and not outcome.error:
+                    Power10Report_Save(outcome.root, Power10Report_Create(
+                        outcome.root, outcome.model, result.output, result.return_code))
+                QualityResult_Save(outcome.root, task=result.action.value,
+                    succeeded=outcome.succeeded, duration=outcome.duration,
+                    summary=self._QualitySummary_Get(result) + ("; " + outcome.error if outcome.error else ""),
+                    input_sha256=outcome.input_sha256, command=result.command, details=details)
+            except (OSError, ValueError) as error:
+                # A gate outcome without durable evidence is not displayed green.
+                self.build_page.BuildDetailLog_Append(f"[{outcome.target}] {error}")
+                self.build_page.TargetQualityProgress_Set(outcome.target, 0.99, str(error))
+                batch.evidence_saved = False
+                unavailable[outcome.target] = "unavailable"
+        self._TargetQualityResults_Refresh()
+        for target, state in unavailable.items():
+            states = dict(self.build_page._target_quality_states[target])
+            states[self._active_quality_action] = state
+            self.build_page.TargetQualityResults_Set(target,
+                self.build_page._target_quality_records[target], states)
+        for outcome in batch.targets:
+            if outcome.target not in unavailable and outcome.succeeded:
+                self.build_page.TargetQualityProgress_Set(outcome.target, 1.0,
+                    self._translator.Text_Get("quality.target.completed"), succeeded=True)
+        self._project_state = ProjectLifecycleState.READY if batch.succeeded else ProjectLifecycleState.ERROR
+        self.status_label.setText(self._translator.Text_Get("quality.target.completed" if batch.succeeded else "quality.target.failed"))
+        self.power10_export_button.setEnabled(self._project_root is not None and
+            Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
+        self._active_quality_targets = ()
+
+    def _QualityChecks_Error(self, error: object) -> None:
+        self.build_page.BuildDetailLog_Append(str(error))
+        self._TargetQualityResults_Refresh()
+        self._project_state = ProjectLifecycleState.ERROR
+        self._active_quality_targets = ()
 
     def _TargetAction_Request(self, action_text: str) -> None:
         target, separator, operation = action_text.partition("_")
@@ -4233,6 +4392,20 @@ class MainWindow(QMainWindow):
         self.status_label.setText(
             self._translator.Text_Get("status.task_cancelled")
         )
+        self._QualityChecks_Cancel()
+
+    def _QualityChecks_Cancel(self) -> None:
+        targets = getattr(self, "_active_quality_targets", ())
+        for target in targets:
+            states = dict(self.build_page._target_quality_states[target])
+            states[self._active_quality_action] = "cancelled"
+            self.build_page.TargetQualityResults_Set(target,
+                self.build_page._target_quality_records[target], states)
+            self.build_page.TargetQualityProgress_Set(target, 0.0,
+                self._translator.Text_Get("status.task_cancelled"))
+        self._active_quality_targets = ()
+        if targets:
+            self._project_state = ProjectLifecycleState.ERROR
 
     def _Task_Finish(self) -> None:
         worker = self._active_worker
@@ -4243,6 +4416,7 @@ class MainWindow(QMainWindow):
         if worker is not None and worker.context.cancelled:
             outcome = ("cancelled", None, "")
             self.status_label.setText(self._translator.Text_Get("status.task_cancelled"))
+            self._QualityChecks_Cancel()
         self._active_worker = None
         self._worker_result_callback = None
         self._worker_error_callback = None
@@ -4260,6 +4434,7 @@ class MainWindow(QMainWindow):
         if worker is not None and worker.context.cancelled:
             outcome = ("cancelled", None, "")
             self.status_label.setText(self._translator.Text_Get("status.task_cancelled"))
+            self._QualityChecks_Cancel()
         succeeded = bool(
             dispatched
             and
@@ -4346,6 +4521,7 @@ class MainWindow(QMainWindow):
             self.board_hardware_page.generate_button,
             self.ground_target_page.generate_button,
             *self.build_page.action_buttons.values(),
+            *self.build_page.quality_target_checks.values(),
             self.build_page.detect_button,
         )
         if not enabled:

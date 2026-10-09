@@ -226,8 +226,18 @@ class BuildRunner:
         *,
         line_callback: LineCallback | None = None,
         progress_callback: ProgressCallback | None = None,
+        target_kind: str = "flight",
     ) -> BuildResult:
-        root = self._Project_Validate(project_root, action)
+        if target_kind == "ground":
+            from silverstar_fccg.project.quality_inputs import QualityInput_Require
+            root = self.policy.Path_Resolve(project_root, allow_root=True)
+            QualityInput_Require(root, target_kind, action.value)
+        elif target_kind == "flight":
+            root = self._Project_Validate(project_root, action)
+        else:
+            raise ValueError("Unknown build target kind")
+        if target_kind == "ground" and action in {BuildAction.STATIC_ANALYSIS, BuildAction.ARTIFACT_CHECK}:
+            return self._GroundQuality_Run(model, root, action, token, line_callback, progress_callback)
         command = self.Command_Get(model, action)
         environment = self._Environment_Get(model, action)
         plan = self.Plan_Get(model, root, action, token)
@@ -421,6 +431,37 @@ class BuildRunner:
             tracker.Progress_Report("COMPLETE")
         return BuildResult(BuildAction.BUILD, actual, code, "".join(lines), plan.build_plan,
                            len(tracker.completed), line_callback is not None)
+
+    def _GroundQuality_Run(self, model, root, action, token, line_callback, progress_callback):
+        from silverstar_fccg.build.target_progress import TargetProgressPlan, TargetProgressTracker
+
+        command = self.Command_Get(model, action)
+        environment = self._Environment_Get(model, action)
+        environment.update(LC_ALL="C", LANG="C")
+        code, dry_lines = self._Process_Run((command[0], "-n", *command[1:]),
+                                           root, environment, token)
+        if code:
+            return BuildResult(action, (command[0], "-n", *command[1:]), code, "".join(dry_lines))
+        pending = TargetProgressPlan.FromLines_Get(dry_lines)
+        units = pending.build_plan.total_steps
+
+        def progress(value):
+            if progress_callback is not None:
+                progress_callback(BuildProgress(value.stage, value.completed_steps, units + 1,
+                    value.subject, value.stage_completed, value.stage_total))
+
+        tracker = TargetProgressTracker(pending, progress, line_callback)
+        if progress_callback is not None:
+            progress_callback(BuildProgress("PLAN", 0, units + 1,
+                                           stage_total=pending.build_plan.compile_steps))
+        actual = command if pending.markers else (command[0], "--debug=j", *command[1:])
+        code, lines = self._Process_Run(actual, root, environment, token, tracker.Line_Report)
+        if progress_callback is not None:
+            progress_callback(BuildProgress("COMPLETE", units + 1 if code == 0 else len(tracker.completed),
+                units + 1, stage_completed=1 if code == 0 else 0, stage_total=1))
+        return BuildResult(action, actual, code, "".join(lines),
+            BuildPlan(units + 1, pending.build_plan.compile_steps),
+            units + 1 if code == 0 else len(tracker.completed), line_callback is not None)
 
     def _Project_Validate(
         self, project_root: Path, action: BuildAction

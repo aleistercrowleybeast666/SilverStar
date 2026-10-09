@@ -7,11 +7,13 @@ from PySide6.QtWidgets import (
     QApplication,
     QFormLayout,
     QComboBox,
+    QCheckBox,
     QGridLayout,
     QHBoxLayout,
     QLabel,
     QPlainTextEdit,
     QPushButton,
+    QProgressBar,
     QVBoxLayout,
 )
 
@@ -104,30 +106,57 @@ class BuildPage(ScrollableLocalizedPage):
         quality_help.setProperty("muted", True)
         self.Text_Register(quality_help, "build.help.quality")
         advanced_layout.addWidget(quality_help)
-        quality_grid = QGridLayout()
-        quality_grid.setColumnStretch(0, 0)
-        quality_grid.setColumnStretch(1, 1)
-        self.quality_result_labels: dict[str, QLabel] = {}
-        for index, (action_id, key) in enumerate(self._QUALITY_ACTIONS):
+        quality_actions = QHBoxLayout()
+        for action_id, key in self._QUALITY_ACTIONS:
             button = self._ActionButton_Create(action_id, key)
-            button.setMinimumWidth(180)
-            result_label = QLabel()
-            result_label.setObjectName("statusPill")
-            result_label.setProperty("statusLevel", "info")
-            result_label.setWordWrap(True)
-            self.quality_result_labels[action_id] = result_label
-            quality_grid.addWidget(button, index, 0)
-            if action_id == "power10_check":
-                result_layout = QVBoxLayout()
-                result_layout.addWidget(result_label)
-                self.power10_review_label = QLabel()
-                self.power10_review_label.setObjectName("statusPill")
-                self.power10_review_label.setWordWrap(True)
-                result_layout.addWidget(self.power10_review_label)
-                quality_grid.addLayout(result_layout, index, 1)
-            else:
-                quality_grid.addWidget(result_label, index, 1)
-        advanced_layout.addLayout(quality_grid)
+            quality_actions.addWidget(button)
+        advanced_layout.addLayout(quality_actions)
+        self.quality_target_checks = {}
+        self.target_quality_labels = {}
+        self.target_quality_reviews = {}
+        self.target_quality_progress = {}
+        self.target_quality_status = {}
+        self._target_quality_records = {"flight": (), "ground": ()}
+        self._target_quality_states = {"flight": {}, "ground": {}}
+        for target, key in (("flight", "group.flight_build"), ("ground", "group.ground_build_target")):
+            layout = QVBoxLayout()
+            check = QCheckBox()
+            self.Text_Register(check, "quality.target.include")
+            check.setChecked(target == "flight")
+            self.quality_target_checks[target] = check
+            layout.addWidget(check)
+            status = QLabel()
+            status.setWordWrap(True)
+            self.target_quality_status[target] = status
+            layout.addWidget(status)
+            progress = QProgressBar()
+            progress.setRange(0, 1000)
+            progress.setValue(0)
+            self.target_quality_progress[target] = progress
+            layout.addWidget(progress)
+            grid = QGridLayout()
+            labels = {}
+            for row, (action_id, action_key) in enumerate(self._QUALITY_ACTIONS):
+                name = QLabel()
+                self.Text_Register(name, action_key)
+                grid.addWidget(name, row, 0)
+                label = QLabel()
+                label.setObjectName("statusPill")
+                label.setWordWrap(True)
+                labels[action_id] = label
+                grid.addWidget(label, row, 1)
+            review = QLabel()
+            review.setObjectName("statusPill")
+            review.setWordWrap(True)
+            self.target_quality_reviews[target] = review
+            self.target_quality_labels[target] = labels
+            layout.addLayout(grid)
+            layout.addWidget(review)
+            advanced_layout.addWidget(self.Group_Create(key, layout))
+            check.toggled.connect(lambda _checked, selected=target: self._QualitySelection_Update(selected))
+        # Compatibility aliases denote Flight only; Ground has its own state.
+        self.quality_result_labels = self.target_quality_labels["flight"]
+        self.power10_review_label = self.target_quality_reviews["flight"]
 
         output_form = QFormLayout()
         self.latest_artifact_label = QLabel()
@@ -335,14 +364,46 @@ class BuildPage(ScrollableLocalizedPage):
                 self.action_buttons[f"{target}_{action}"].setEnabled(enabled)
 
     def QualityResults_Set(self, records: Iterable[object]) -> None:
-        self._quality_records = tuple(records)
+        # Explicit presentation API; project input validation is supplied by
+        # MainWindow.TargetQualityResults_Refresh via the target-aware setter.
+        self.TargetQualityResults_Set("flight", records, {})
+
+    def QualityTargets_Get(self) -> tuple[str, ...]:
+        return tuple(target for target, check in self.quality_target_checks.items() if check.isChecked())
+
+    def _QualitySelection_Update(self, target: str) -> None:
+        self.TargetQualityResults_Set(target, self._target_quality_records[target],
+                                     self._target_quality_states[target])
+
+    def TargetQualityProgress_Set(self, target: str, fraction: float | None, text: str,
+                                 *, succeeded: bool = False) -> None:
+        progress = self.target_quality_progress[target]
+        progress.setRange(0, 0 if fraction is None else 1000)
+        if fraction is not None:
+            progress.setValue(1000 if succeeded else min(999, max(0, int(fraction * 1000))))
+        self.target_quality_status[target].setText(text)
+
+    def TargetQualityResults_Set(self, target: str, records: Iterable[object],
+                                 states: dict[str, str] | None = None) -> None:
+        records = tuple(records)
+        self._target_quality_records[target] = records
+        if states is not None:
+            self._target_quality_states[target] = states
+        states = self._target_quality_states[target]
+        selected = self.quality_target_checks[target].isChecked()
+        if not selected:
+            self.TargetQualityProgress_Set(target, 0.0, self._translator.Text_Get("quality.target.not_selected"))
+        labels = self.target_quality_labels[target]
+        review_label = self.target_quality_reviews[target]
+        if target == "flight":
+            self._quality_records = records
         by_task = {
             str(getattr(record, "task", "")): record
-            for record in self._quality_records
+            for record in records
         }
         artifact = by_task.get("artifact_check")
         regions = ArtifactMemorySummary_Decode(str(getattr(artifact, "summary", "")))
-        if regions:
+        if target == "flight" and regions and selected and not states.get("artifact_check"):
             levels = [ArtifactMemoryMarginLevel_Get(remaining, capacity) for _, remaining, capacity in regions]
             application = QApplication.instance()
             theme = application.property("fccgAppliedTheme") if application else "light"
@@ -358,24 +419,30 @@ class BuildPage(ScrollableLocalizedPage):
             self.memory_margin_value.setText(text)
             self.memory_margin_value.setProperty("statusLevel", "error" if "error" in levels else "warning" if "warning" in levels else "success")
             self.memory_margin_value.setToolTip(str(getattr(artifact, "timestamp", "")))
-        else:
+        elif target == "flight":
             self.memory_margin_value.setText(self._translator.Text_Get("memory.not_checked"))
             self.memory_margin_value.setProperty("statusLevel", "info")
             self.memory_margin_value.setToolTip("")
-        for task, label in self.quality_result_labels.items():
+        for task, label in labels.items():
             record = by_task.get(task)
             raw_summary = str(getattr(record, "summary", "")).strip()
             critical_failure = task == "power10_check" and "POWER10_CONTRACT_REVIEW|FAIL|" in raw_summary
             if task == "power10_check":
-                review = self.power10_review_label
-                review.setVisible(record is not None)
+                review = review_label
+                review.setVisible(record is not None and selected)
                 review.setText(self._translator.Text_Get(
                     "power10.contract_review_failed" if critical_failure else "power10.contract_review_pending")
                     if record is not None else "")
                 review.setProperty("statusLevel", "error" if critical_failure else "warning" if record is not None else "info")
                 review.style().unpolish(review)
                 review.style().polish(review)
-            if record is None:
+            if not selected or states.get(task):
+                state = "not_selected" if not selected else states[task]
+                label.setText(self._translator.Text_Get("quality.target." + state))
+                label.setProperty("statusLevel", "warning" if state == "stale" else "info")
+                label.setToolTip("\n".join(str(getattr(record, field, ""))
+                                          for field in ("timestamp", "summary", "details")))
+            elif record is None:
                 label.setText(self._translator.Text_Get("quality.result.not_run"))
                 label.setProperty("statusLevel", "info")
                 label.setToolTip("")
@@ -418,7 +485,8 @@ class BuildPage(ScrollableLocalizedPage):
                         "quality.result.tooltip",
                         timestamp=str(getattr(record, "timestamp", "")),
                         duration=f"{float(getattr(record, 'duration', 0.0)):.2f}",
-                    )
+                    ) + "\n" + str(getattr(record, "summary", ""))
+                    + "\n" + str(getattr(record, "details", ""))
                 )
             label.style().unpolish(label)
             label.style().polish(label)
@@ -504,7 +572,8 @@ class BuildPage(ScrollableLocalizedPage):
         if hasattr(self, "_tools"):
             self.Tools_Set(self._tools)
         if hasattr(self, "quality_result_labels"):
-            self.QualityResults_Set(getattr(self, "_quality_records", ()))
+            for target in ("flight", "ground"):
+                self._QualitySelection_Update(target)
         self._ActionTooltips_Apply()
         self._TargetActions_Update()
 
