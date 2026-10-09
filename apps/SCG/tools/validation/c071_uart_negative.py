@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse,json,subprocess
 from c071_uart_host import HEADER,TRANSPORT,SESSION
+from c071_recovery_host import RECOVERY
 
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('target',type=Path)
@@ -37,6 +38,36 @@ for name,mutant,harness,extra,argv,predicate in cases:
     result=subprocess.run([str(exe),*argv],capture_output=True,text=True)
     if result.returncode==0 or predicate not in result.stderr:
         raise ValueError('negative did not fail at its expected safety predicate: '+name+' '+result.stderr)
+    results.append({'case':name,'exit':result.returncode,'expected_predicate':predicate,'stderr':result.stderr})
+    print('PASS regression rejected:',name,'exit',result.returncode,flush=True)
+(build/'negative-results.json').write_text(json.dumps(results,indent=2),encoding='utf-8')
+
+# The liveness predicate also rejects losing the independent service call.
+bridge_source=(root/'Ground/Core/Src/ground_bridge.c').read_text(encoding='utf-8')
+site='    PcByteStream_Service();\n'
+if bridge_source.count(site)!=1:raise ValueError('unreviewed main-context service site')
+read_guard='''    if (s_rx_armed == 0U)
+    { *session = PcByteStream_Session_Get(); return 0U; }'''
+if source.count(read_guard)!=1:raise ValueError('unreviewed unavailable read guard')
+retry_guard='''    if ((s_rx_armed == 0U) && (PcUart_Recover() != PC_BYTE_STREAM_INIT_OK))
+    { *session = PcByteStream_Session_Get(); return 0U; }'''
+service='''    if (s_rx_armed == 0U) { (void)PcUart_Recover(); }'''
+if source.count(service)!=1:raise ValueError('unreviewed non-consuming service')
+recovery_cases=[
+    ('lost-independent-service',source,bridge_source.replace(site,''),'recovery-full','rx_calls==calls+1U'),
+    ('read-retries-recovery',source.replace(read_guard,retry_guard),bridge_source,'recovery-full','aborts-old_aborts<=1U'),
+    ('service-consumes-rx',source.replace(service,service+'\n    if (s_rx_tail != s_rx_head) { s_rx_tail = (uint16_t)((s_rx_tail + 1U) % PC_UART_RX_CAPACITY); }'),bridge_source,'recovery-nonconsuming','forwarded==8U && acknowledgements==8U'),
+]
+for name,mutant,mutant_bridge,scenario,predicate in recovery_cases:
+    c=build/(name+'.c');c.write_text(mutant,encoding='utf-8')
+    b=build/(name+'-bridge.c');b.write_text(mutant_bridge,encoding='utf-8')
+    h=build/(name+'-test.c');h.write_text(RECOVERY,encoding='utf-8')
+    exe=build/(name+'.exe')
+    command=[args.host_cc,*flags,str(c),*map(str,common),str(b),*map(str,bridge[1:]),str(h),'-o',str(exe)]
+    print('COMMAND',command,flush=True);subprocess.run(command,check=True)
+    result=subprocess.run([str(exe),scenario],capture_output=True,text=True)
+    if result.returncode==0 or predicate not in result.stderr:
+        raise ValueError('negative did not fail at its expected recovery predicate: '+name+' '+result.stderr)
     results.append({'case':name,'exit':result.returncode,'expected_predicate':predicate,'stderr':result.stderr})
     print('PASS regression rejected:',name,'exit',result.returncode,flush=True)
 (build/'negative-results.json').write_text(json.dumps(results,indent=2),encoding='utf-8')

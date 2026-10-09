@@ -84,11 +84,14 @@ int main(void) {
  old=PcByteStream_Session_Get();calls=aborts;HAL_UART_ErrorCallback(&wrong);
  assert(PcByteStream_Session_Check(old)==1U);HAL_UART_ErrorCallback(&huart2);
  assert(PcByteStream_Session_Check(old)==0U && PcByteStream_Write(input,3U)==PC_BYTE_STREAM_WRITE_BUSY && aborts==calls);
+ assert(PcByteStream_Read(output,700U)==0U && aborts==calls && tx_retained!=0);
+ PcByteStream_Service();
  assert(PcByteStream_Read(output,700U)==0U && aborts==calls+1U && tx_retained==0);
  old=PcByteStream_Session_Get();rx_status=HAL_ERROR;feed(input,1U);
  assert(PcByteStream_Session_Check(old)==0U && PcByteStream_WriteSession(input,3U,old)==PC_BYTE_STREAM_WRITE_BUSY);
- assert(PcByteStream_ReadSession(output,700U,&session)==0U && test_mask==0U);
- rx_status=HAL_OK;assert(PcByteStream_Read(output,700U)==0U);feed(input,2U);
+ calls=aborts;assert(PcByteStream_ReadSession(output,700U,&session)==0U && test_mask==0U && aborts==calls);
+ PcByteStream_Service();assert(aborts==calls+1U);
+ rx_status=HAL_OK;PcByteStream_Service();assert(PcByteStream_Read(output,700U)==0U);feed(input,2U);
  assert(PcByteStream_Read(output,700U)==2U && memcmp(output,input,2U)==0);
  old=PcByteStream_Session_Get();test_mask=1U;
  assert(PcByteStream_Session_Enter(old,&token)==1U && token==1U);PcByteStream_Session_Exit(token);
@@ -166,6 +169,8 @@ def main():
         print('PASS C071 UART '+name,flush=True)
     from c071_backpressure_host import Run
     Run(root, args.host_cc)
+    from c071_recovery_host import Run as Recovery_Run
+    Recovery_Run(root, args.host_cc)
     print('HAL/IRQ/radio are Host mocks; UART latency, stack and hardware recovery NOT PROVEN')
 
 if __name__=='__main__':main()

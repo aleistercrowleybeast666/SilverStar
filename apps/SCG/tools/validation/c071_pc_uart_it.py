@@ -22,13 +22,13 @@ static PcByteStreamInitResult PcUart_Recover(void);''')
 }'''
     source, count = re.subn(r'PcByteStreamInitResult PcByteStream_Init\(void\)\n\{.*?\n\}', init, source, flags=re.S)
     if count != 1: raise ValueError('unreviewed byte stream initialization')
-    source = source.replace('    saved_mask = __get_PRIMASK();\n    __disable_irq();\n    *session = s_session;', '''    if (s_rx_armed == 0U) { (void)PcUart_Recover(); }
+    # Recovery belongs to one main-loop service call, independent of ACK space.
+    # Reads never retry recovery or consume unavailable-session bytes.
+    source = source.replace('    saved_mask = __get_PRIMASK();\n    __disable_irq();\n    *session = s_session;', '''    if (s_rx_armed == 0U)
+    { *session = PcByteStream_Session_Get(); return 0U; }
     saved_mask = __get_PRIMASK();
     __disable_irq();
     *session = s_session;''')
-    # A failed recovery is an ordinary unavailable stream; stale data is reset.
-    source = source.replace('    if (s_rx_armed == 0U) { (void)PcUart_Recover(); }', '''    if ((s_rx_armed == 0U) && (PcUart_Recover() != PC_BYTE_STREAM_INIT_OK))
-    { *session = PcByteStream_Session_Get(); return 0U; }''')
     begin = source.index('    if ((hUsbDeviceFS.dev_state')
     end = source.index('    for (index = 0U; (index < length)', begin)
     source = source[:begin]+'''    if ((s_rx_armed == 0U) || (s_tx_busy != 0U))
@@ -47,6 +47,14 @@ static PcByteStreamInitResult PcUart_Recover(void);''')
     return (result == HAL_OK) ? PC_BYTE_STREAM_WRITE_OK : PC_BYTE_STREAM_WRITE_ERROR;
 '''+source[end:]
     source += '''
+/* Exactly one call at the start of GroundBridge_Process. No RX consumption.
+ * Failed recovery leaves the stream unavailable for a later main iteration;
+ * it must not be retried by a read or by either bounded flush pass. */
+void PcByteStream_Service(void)
+{
+    if (s_rx_armed == 0U) { (void)PcUart_Recover(); }
+}
+
 /* Main-context recovery aborts the old TX/RX before releasing fixed storage.
  * IRQ callbacks only invalidate the session and request this bounded recovery.
  * HAL_UART_Abort on this no-DMA profile has no polling or retry loop. */

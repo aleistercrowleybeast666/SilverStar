@@ -1,0 +1,721 @@
+{
+  "recorded_utc": "2026-10-09T10:09:38.415671+00:00",
+  "base_commit": "761a8f42f3f2c2617e01c7ebce95dc6d8a6372a7",
+  "scope": "C071 standalone UART bounded non-consuming recovery and mini bus-powered USB descriptor; GUI/daily/hardware untouched",
+  "validated_snapshot": "raw working bytes saved under local_evidence_root/source-snapshot; base_commit plus exact source_sha256",
+  "source_sha256": {
+    "apps/SCG/tools/validation/c071_artifact_check.py": "cdf7c6304465465738307e376c9b2862a9d03e804e23193623fd0745d215cf8a",
+    "apps/SCG/tools/validation/c071_ground_candidate.py": "f0a93fe4e73428b2a5af131ab4413ca9b51fb7533ef7bcdd15f326cef92dfeb5",
+    "apps/SCG/tools/validation/c071_pc_uart_it.py": "f53b493709c2dc50e8b700f4fbe014cc8f28a5465d5ec236bb19090258d4159c",
+    "apps/SCG/tools/validation/c071_uart_host.py": "9b6a34dbfd4b0507f3b94d24aec112d8cf155c417598fbace9a6d5aa0b43723d",
+    "apps/SCG/tools/validation/c071_uart_negative.py": "b04feb910bfeb95c5c3f382d94e397847203574ed7472223c50cfdf5a611931f",
+    "apps/SCG/tools/validation/c071_recovery_host.py": "b9f58c6bb920009bf01c39fdcbc3bd5dd378e97c4180fce23aec0a702f1fd3b0"
+  },
+  "local_evidence_root": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\uart-recovery-validation",
+  "fresh_outputs": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1",
+  "commands": [
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_ground_candidate.py",
+        "--official",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\c071-official",
+        "--cubemx",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\c071-native-usb-v8\\NativeCubeMX",
+        "--output",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\usb",
+        "--pc-interface",
+        "usb_cdc"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "started_utc": "2026-10-09T09:59:51.642994+00:00",
+      "log": "usb-generate.log",
+      "exit": 0,
+      "finished_utc": "2026-10-09T09:59:58.147423+00:00",
+      "log_sha256": "6e465fdaccf1ee76d093deb98a7eec6852ff40c0b042677fafe7faf79e88aff8"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_ground_candidate.py",
+        "--official",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\c071-official",
+        "--cubemx",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\c071-native-uart-v8\\NativeCubeMX",
+        "--output",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart",
+        "--pc-interface",
+        "uart"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "started_utc": "2026-10-09T09:59:58.164068+00:00",
+      "log": "uart-generate.log",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:00:04.932202+00:00",
+      "log_sha256": "7b3720ee9abe5fe0a16072a01d75314994fd3e971f6255c0d6208cf3d65759cf"
+    },
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "artifact-check",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\generated-f103-usb\\Ground_Station",
+      "log": "f103-usb-full-gates.log",
+      "started_utc": "2026-10-09T10:00:55.587094+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:02:52.724221+00:00",
+      "log_sha256": "39b3d44238eedb8e30201d478f2305f1d965d5f0fb98d4da12a6d7d74dd384aa"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_loop_contract_test.py",
+        "--usb",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\usb",
+        "--uart",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart",
+        "--output",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "log": "loop-contract.log",
+      "started_utc": "2026-10-09T10:02:45.169348+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:03:26.575905+00:00",
+      "log_sha256": "a2ee6db4e5011f3ecf6c74e53fe94ae2b57df214348efcd1cc7afcbe739d974c"
+    },
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\usb",
+      "started_utc": "2026-10-09T10:01:36.500327+00:00",
+      "log": "usb-full-gates.log",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:03:44.900660+00:00",
+      "log_sha256": "f73480032fd4948eddf6516a647c17826dbacadd83aa5c5326edb56be207a36d"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_artifact_check.py",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\usb",
+        "--prefix",
+        "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "started_utc": "2026-10-09T10:03:44.914892+00:00",
+      "log": "usb-artifacts.log",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:03:54.233200+00:00",
+      "log_sha256": "0f68d61ec91805cd2622634ee1470476b9358f6aecca249c959db00a4882ab94"
+    },
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "artifact-check",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\generated-f103-uart\\Ground_Station",
+      "log": "f103-uart-full-gates.log",
+      "started_utc": "2026-10-09T10:02:52.739037+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:04:27.371819+00:00",
+      "log_sha256": "8fae928318cdf4b79b2b4dcc5725add67cd731a0c8509b8359227a39a9064aa9"
+    },
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart",
+      "started_utc": "2026-10-09T10:03:54.248884+00:00",
+      "log": "uart-full-gates.log",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:05:36.844209+00:00",
+      "log_sha256": "bd20af568e24412fa4b149dffb206c57df625425e75cc86fe2877e63221bc25d"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_artifact_check.py",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart",
+        "--prefix",
+        "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "started_utc": "2026-10-09T10:05:36.857344+00:00",
+      "log": "uart-artifacts.log",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:05:44.685083+00:00",
+      "log_sha256": "b1b66f27ee8e835fa9332c0196df7289971b6a710f42cdd19dc395598bac5ff0"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_main_test.py",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\usb\\NativeCubeMX"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "started_utc": "2026-10-09T10:05:44.700464+00:00",
+      "log": "main-contract.log",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:05:45.913826+00:00",
+      "log_sha256": "b6eaa3377820252e20079d2609aa76785dfc6a7179720585f0e77f187e521f37"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_uart_negative.py",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart",
+        "--host-cc",
+        "D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "started_utc": "2026-10-09T10:05:45.926424+00:00",
+      "log": "uart-negative.log",
+      "exit": 1,
+      "finished_utc": "2026-10-09T10:05:56.760245+00:00",
+      "log_sha256": "51d82a92dbbc8ae84ba637241b59c55e60c3ccb4b267c0be59e1edeeda02065e"
+    },
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "artifact-check",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\generated-f407-usb\\Ground_Station",
+      "log": "f407-usb-full-gates.log",
+      "started_utc": "2026-10-09T10:04:27.385299+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:06:46.403521+00:00",
+      "log_sha256": "2190e383ca59495876f70f51d2c89739e4e719bd65409ea02e948160e9a9739c"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tools\\validation\\c071_uart_negative.py",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart",
+        "--host-cc",
+        "D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "log": "uart-negative-final.log",
+      "started_utc": "2026-10-09T10:07:15.717289+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T10:07:28.316846+00:00",
+      "log_sha256": "c26a6d0b722ac1e5254184692a1c64de0c28841af0ccc6a9d4400896a9057a9e"
+    }
+  ],
+  "targets": [
+    {
+      "case": "f103-usb",
+      "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\generated-f103-usb\\Ground_Station",
+      "c_sources": 50,
+      "source_graph_sha256": "a33fb6dfcf96488fe6e9f26da3d28526cc886556226062b16e1f24db6392e0e8",
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "591357cda36ae1330a8a8c22dcc884cdba7d105b18cce314fb718f5d4cec876c",
+          "ground.bin": "dea9a4ae2e67dbfbeb85867e7c2c0e2224eff62dd669e1409ade077c3f750369",
+          "ground.map": "1d62d16fe8fb7ba6141ee52f13663fed597ae49554566d5abf585a0f9e577a49",
+          "ground.size": "a6e441ed56fc0180b88add5ec6da6ff0f0f98875059004a93e45d5537549fd89"
+        },
+        "build/analysis": {
+          "ground.elf": "591357cda36ae1330a8a8c22dcc884cdba7d105b18cce314fb718f5d4cec876c",
+          "ground.bin": "dea9a4ae2e67dbfbeb85867e7c2c0e2224eff62dd669e1409ade077c3f750369",
+          "ground.map": "9bf3154d18628c08bc8d9c0f13490fcca35afa15a0633403d465e6ab839e3735",
+          "ground.size": "6358d53ff2b9c30f9f2bc7cfe6ebb3950c33a254b2a9d0b307dddca3a24f0019"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "text": 36544,
+      "data": 380,
+      "bss": 12008,
+      "warnings": [],
+      "same_binary_as_pre_fix": true
+    },
+    {
+      "case": "f103-uart",
+      "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\generated-f103-uart\\Ground_Station",
+      "c_sources": 39,
+      "source_graph_sha256": "9c3d30d1599fd69a4d6f21b921f3dc95a6aac4ee6cb67e99ebfc491518b0afd1",
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "5814644798e27c8abdbca201742c35e87e0a458a57ec6c6961f1954e708bbb4d",
+          "ground.bin": "3596abacf27bb87a433a1c78599866e7e021cb3d5730b04e161f698f13da5537",
+          "ground.map": "06e7dc7034693fc13a89b454409b0c73cb7619ca4a79936958098cd75fb777ef",
+          "ground.size": "e1147fddb63c61b3381db89cd9a6974a908959ba508869ff11e8543fa48632ba"
+        },
+        "build/analysis": {
+          "ground.elf": "5814644798e27c8abdbca201742c35e87e0a458a57ec6c6961f1954e708bbb4d",
+          "ground.bin": "3596abacf27bb87a433a1c78599866e7e021cb3d5730b04e161f698f13da5537",
+          "ground.map": "8e030bc2629e75c34dc9d9b09b9a00490e120fdc160ab487787ebaa164c52da1",
+          "ground.size": "bb1d55c7501444c2ee32bc3165fe14ca1fd83f59ae766c198c4085714ef6ab7c"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "text": 27640,
+      "data": 12,
+      "bss": 7584,
+      "warnings": [],
+      "same_binary_as_pre_fix": true
+    },
+    {
+      "case": "f407-usb",
+      "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\generated-f407-usb\\Ground_Station",
+      "c_sources": 60,
+      "source_graph_sha256": "fd7741b4bf79795a49c2c50508a9a284f94697436f91e3896230da4e13f6049c",
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "9874d804b754818d533a3159ba35fee7b1e4b6df2d66f1d567895db0c124b0cb",
+          "ground.bin": "45c6c55cd1a9b03d0e66ae11e5ea34d326536d4705331a195d3137abf46e7167",
+          "ground.map": "380de469820f9fac10f2b30bb8a08f163d755af6c6eae2048bce7e9f452af316",
+          "ground.size": "3d3ade32c4d85b8dfa66c8857a7b619d86ba26960da06a32eb32316c514ca129"
+        },
+        "build/analysis": {
+          "ground.elf": "9874d804b754818d533a3159ba35fee7b1e4b6df2d66f1d567895db0c124b0cb",
+          "ground.bin": "45c6c55cd1a9b03d0e66ae11e5ea34d326536d4705331a195d3137abf46e7167",
+          "ground.map": "48a43726137d4c64118d23c75a9439e0531c09c3d8abced6a3bffbc2c5c03915",
+          "ground.size": "9d3cfd6a00d8fd6560c50ee8bb8a657a2643b448f98820c491be58768f6bb267"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "text": 36892,
+      "data": 248,
+      "bss": 14808,
+      "warnings": [],
+      "same_binary_as_pre_fix": true
+    },
+    {
+      "case": "usb",
+      "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\usb",
+      "c_sources": 51,
+      "source_graph_sha256": "4d7bb0fb5fe7d77e9ccc8017864218d252735d53ff95db0467f0f272dba45d12",
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "c5e6940b281a409ce77ca7836368545ac459e313c8aae218fc734e9511a1fc2a",
+          "ground.bin": "f5410d775476152b79bff08e4962dc73f328e6781551f4441d89b11dab66ae7a",
+          "ground.map": "e431593991b3347e7fe78c24c23c974ff0d12ebb28492102a8b8e24a559b02fe",
+          "ground.size": "2dabba47decb297c3771df1ab1e43a1943d4b20ddcb474744e8bdf5d53f1eca7"
+        },
+        "build/analysis": {
+          "ground.elf": "c5e6940b281a409ce77ca7836368545ac459e313c8aae218fc734e9511a1fc2a",
+          "ground.bin": "f5410d775476152b79bff08e4962dc73f328e6781551f4441d89b11dab66ae7a",
+          "ground.map": "ff35349e53e59f166b0e5f44adb4a2574d7237b5b85767b6ab4a4223bf44bb65",
+          "ground.size": "ab3401bf444c78e15fdea16dc88178d74b74bd894eb8aa11ff3460a6c6439216"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "text": 39628,
+      "data": 256,
+      "bss": 9704,
+      "warnings": [
+        "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+        "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+        "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+        "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail",
+        "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+        "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+        "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+        "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+      ],
+      "candidate_manifest_sha256": "ea6551bc1009096027e3fef8e4fbb9308e472b6105dcd39911a0da76a68e14c7",
+      "manifest_files": 446,
+      "main_sha256": "085ac2c877b7263beb6f2b1073a564d505a0822a6d71e25a4134e51622b10da1",
+      "artifact_check": {
+        "mcu": "STM32C071FBP6",
+        "pc_interface": "usb_cdc",
+        "input_kind": "native CubeMX v2 with explicitly selected PC transport",
+        "actual_abi": "Attribute Section: aeabi\nFile Attributes\n  Tag_CPU_name: \"6S-M\"\n  Tag_CPU_arch: v6S-M\n  Tag_CPU_arch_profile: Microcontroller\n  Tag_THUMB_ISA_use: Thumb-1\n  Tag_ABI_PCS_wchar_t: 4\n  Tag_ABI_FP_denormal: Needed\n  Tag_ABI_FP_exceptions: Needed\n  Tag_ABI_FP_number_model: IEEE 754\n  Tag_ABI_align_needed: 8-byte\n  Tag_ABI_enum_size: small\n",
+        "sources": 51,
+        "text": 39628,
+        "data": 256,
+        "bss_including_reserved_stack": 9704,
+        "flash_used": 39884,
+        "ram_unallocated": 14616,
+        "stack_reserved": 2048,
+        "heap_reserved": 0,
+        "effective_macros": {
+          "Platform/STM32C0/Src/main.c": {
+            "STM32C071xx": 1,
+            "HSI_VALUE": 48000000,
+            "HSI48_VALUE": 48000000
+          },
+          "HardwareGenerated/STClassicC071/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc.c": {
+            "STM32C071xx": 1,
+            "HSI_VALUE": 48000000,
+            "HSI48_VALUE": 48000000
+          }
+        },
+        "usb_power_profile": {
+          "supply": "bus-powered VBUS to 3.3V",
+          "self_powered": false,
+          "declared_max_ma": 100,
+          "linked_configuration_header_hex": "090243000201008032",
+          "budget_status": "NOT PROVEN: module maximum, final BOM, inrush and suspend current"
+        },
+        "pma_regions": [
+          [
+            20,
+            64
+          ],
+          [
+            84,
+            64
+          ],
+          [
+            148,
+            64
+          ],
+          [
+            212,
+            64
+          ],
+          [
+            276,
+            8
+          ]
+        ],
+        "artifacts_sha256": {
+          "build/ground.elf": "c5e6940b281a409ce77ca7836368545ac459e313c8aae218fc734e9511a1fc2a",
+          "build/ground.bin": "f5410d775476152b79bff08e4962dc73f328e6781551f4441d89b11dab66ae7a",
+          "build/ground.map": "e431593991b3347e7fe78c24c23c974ff0d12ebb28492102a8b8e24a559b02fe",
+          "Generated/ground_source_graph.json": "4d7bb0fb5fe7d77e9ccc8017864218d252735d53ff95db0467f0f272dba45d12",
+          "candidate-manifest.json": "ea6551bc1009096027e3fef8e4fbb9308e472b6105dcd39911a0da76a68e14c7"
+        },
+        "remaining": "NOT PROVEN: complete critical contracts, C0 callback/board review, whole-program stack/WCET, hardware USB/UART/radio; no full SCG C0/USBX support; permanent main scheduler requires exact authorization"
+      },
+      "full_artifact_evidence": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\uart-recovery-validation\\usb-artifact-evidence.json",
+      "full_artifact_evidence_sha256": "eee7b9d5b0849a244be10ae1aef61bdea83e9d88469e93bd7324da6975982dd9"
+    },
+    {
+      "case": "uart",
+      "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart",
+      "c_sources": 44,
+      "source_graph_sha256": "14bccb13011102d62c05c6301fd7a1dde4e165a6317760930709583ed360ef46",
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "5da6714b93e824144c4f7e771fe43dd280d4fb2c870243ca87a5e6a4bf3edf47",
+          "ground.bin": "92436937bf4664f2ff25548e80158bdb52ede8ac42cc511719b5d4694235f779",
+          "ground.map": "08d81bf7e8711bce5015dc5cf2147d45c7ed7e74d91f1ae04c6c63a84bda7e24",
+          "ground.size": "1de44f658e597d2009c45eccac1c976459515aa7a5f190e25d25ed1a1c19d7d5"
+        },
+        "build/analysis": {
+          "ground.elf": "5da6714b93e824144c4f7e771fe43dd280d4fb2c870243ca87a5e6a4bf3edf47",
+          "ground.bin": "92436937bf4664f2ff25548e80158bdb52ede8ac42cc511719b5d4694235f779",
+          "ground.map": "a60164e7aa5019189a19aef4bff7959629e0053d503e2baa07034f03cc01453d",
+          "ground.size": "04f0212878406a8bea28d8c87b491673510b7df26a5d32c2f6877b2d10dad47c"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "text": 38068,
+      "data": 12,
+      "bss": 8160,
+      "warnings": [
+        "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+        "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+        "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+        "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail",
+        "closer.c:(.text._close_r+0xc): warning: _close is not implemented and will always fail",
+        "lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail",
+        "readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail",
+        "writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail"
+      ],
+      "candidate_manifest_sha256": "3106ed9f0f4b26882594bc0b02c55518e71cb8e222fa1095b242cb6718cc872b",
+      "manifest_files": 448,
+      "main_sha256": "26ce79b8166f3eafef5615fc7e00fb41bb36176809e552aca761d5d77650384d",
+      "artifact_check": {
+        "mcu": "STM32C071FBP6",
+        "pc_interface": "uart",
+        "input_kind": "native CubeMX v2 with explicitly selected PC transport",
+        "actual_abi": "Attribute Section: aeabi\nFile Attributes\n  Tag_CPU_name: \"6S-M\"\n  Tag_CPU_arch: v6S-M\n  Tag_CPU_arch_profile: Microcontroller\n  Tag_THUMB_ISA_use: Thumb-1\n  Tag_ABI_PCS_wchar_t: 4\n  Tag_ABI_FP_denormal: Needed\n  Tag_ABI_FP_exceptions: Needed\n  Tag_ABI_FP_number_model: IEEE 754\n  Tag_ABI_align_needed: 8-byte\n  Tag_ABI_enum_size: small\n",
+        "sources": 44,
+        "text": 38068,
+        "data": 12,
+        "bss_including_reserved_stack": 8160,
+        "flash_used": 38080,
+        "ram_unallocated": 16404,
+        "stack_reserved": 2048,
+        "heap_reserved": 0,
+        "effective_macros": {
+          "Platform/STM32C0/Src/main.c": {
+            "STM32C071xx": 1,
+            "HSI_VALUE": 48000000,
+            "HSI48_VALUE": 48000000
+          },
+          "HardwareGenerated/STClassicC071/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc.c": {
+            "STM32C071xx": 1,
+            "HSI_VALUE": 48000000,
+            "HSI48_VALUE": 48000000
+          }
+        },
+        "usb_power_profile": {
+          "supply": "not a USB PC transport",
+          "budget_status": "NOT PROVEN: final BOM and measured current"
+        },
+        "pma_regions": [],
+        "artifacts_sha256": {
+          "build/ground.elf": "5da6714b93e824144c4f7e771fe43dd280d4fb2c870243ca87a5e6a4bf3edf47",
+          "build/ground.bin": "92436937bf4664f2ff25548e80158bdb52ede8ac42cc511719b5d4694235f779",
+          "build/ground.map": "08d81bf7e8711bce5015dc5cf2147d45c7ed7e74d91f1ae04c6c63a84bda7e24",
+          "Generated/ground_source_graph.json": "14bccb13011102d62c05c6301fd7a1dde4e165a6317760930709583ed360ef46",
+          "candidate-manifest.json": "3106ed9f0f4b26882594bc0b02c55518e71cb8e222fa1095b242cb6718cc872b"
+        },
+        "remaining": "NOT PROVEN: complete critical contracts, C0 callback/board review, whole-program stack/WCET, hardware USB/UART/radio; no full SCG C0/USBX support; permanent main scheduler requires exact authorization"
+      },
+      "full_artifact_evidence": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\uart-recovery-validation\\uart-artifact-evidence.json",
+      "full_artifact_evidence_sha256": "544fa2b147102b294272bce27beb0df057b414de6758b43905a558e2cea13bd0"
+    }
+  ],
+  "loop_tests": [
+    {
+      "case": "usb",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\usb\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "log_sha256": "9fc13ab280e3c5dbdc08f99d0367022d8e50bc55c7cce0436c816efe494921b4"
+    },
+    {
+      "case": "uart",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\uart\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "log_sha256": "c008a48c2fd7da0cebd6beb2f43923075eb4db3f7fc4c26940621904bd01be5e"
+    },
+    {
+      "case": "changed-main",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\changed-main\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log_sha256": "f3057c344e5b76e44544b75f265e8c33695f9d748980fa31fbef1956de2131e1"
+    },
+    {
+      "case": "other-loop",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\other-loop\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log_sha256": "efe8be0e456bc4421e5955717ce7e563957868a753421e8c02e4a4d2b87be351"
+    },
+    {
+      "case": "other-part",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\other-part\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log_sha256": "339fc23fefe24efa62c0a227c52c44ffbcafcd31097aafe0464ffaf64932f0f3"
+    },
+    {
+      "case": "wrong-transport",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\wrong-transport\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log_sha256": "1c791970a2d7d54f575357137a8b8e8750845fd6c04e104352c6471af3ca743e"
+    },
+    {
+      "case": "wrong-cpu",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\wrong-cpu\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log_sha256": "1c791970a2d7d54f575357137a8b8e8750845fd6c04e104352c6471af3ca743e"
+    },
+    {
+      "case": "wrong-define",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\wrong-define\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log_sha256": "339fc23fefe24efa62c0a227c52c44ffbcafcd31097aafe0464ffaf64932f0f3"
+    },
+    {
+      "case": "normal-import",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\loop-contract\\normal-import\\Tools\\check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log_sha256": "339fc23fefe24efa62c0a227c52c44ffbcafcd31097aafe0464ffaf64932f0f3"
+    }
+  ],
+  "uart_negative_tests": [
+    {
+      "case": "lost-error-session",
+      "exit": 3221226505,
+      "expected_predicate": "forwarded==0",
+      "stderr": "Assertion failed: forwarded==0, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart\\build\\c071-uart-negative\\lost-error-session-test.c, line 60\n"
+    },
+    {
+      "case": "released-tx-too-early",
+      "exit": 3221226505,
+      "expected_predicate": "tx_calls==calls",
+      "stderr": "Assertion failed: tx_retained[0]==0U && PcByteStream_Write(input,3U)==PC_BYTE_STREAM_WRITE_BUSY && tx_calls==calls && tx_retained[0]==0U, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart\\build\\c071-uart-negative\\released-tx-too-early-test.c, line 50\n"
+    },
+    {
+      "case": "lost-independent-service",
+      "exit": 3221226505,
+      "expected_predicate": "rx_calls==calls+1U",
+      "stderr": "Assertion failed: rx_calls==calls+1U, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart\\build\\c071-uart-negative\\lost-independent-service-test.c, line 121\n"
+    },
+    {
+      "case": "read-retries-recovery",
+      "exit": 3221226505,
+      "expected_predicate": "aborts-old_aborts<=1U",
+      "stderr": "Assertion failed: aborts-old_aborts<=1U && rx_calls-old_rx_calls<=1U, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart\\build\\c071-uart-negative\\read-retries-recovery-test.c, line 65\n"
+    },
+    {
+      "case": "service-consumes-rx",
+      "exit": 3221226505,
+      "expected_predicate": "forwarded==8U && acknowledgements==8U",
+      "stderr": "Assertion failed: forwarded==8U && acknowledgements==8U, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ss-c071-recovery-run1\\uart\\build\\c071-uart-negative\\service-consumes-rx-test.c, line 95\n"
+    }
+  ],
+  "baseline": {
+    "root": "C:/Users/chdxm/AppData/Local/Temp/ssc071-backpressure-run2/uart",
+    "log": "unchanged-baseline-recovery.log",
+    "log_sha256": "a60c4d4795fb0728f720a031c040b92e7241bbb7b7096e884081fbb8982f24e3",
+    "result": "unchanged actual UART/bridge fails recovery-full rx_calls==calls+1U; compile succeeded, assertion exit 3221226505"
+  },
+  "initial_negative_validator_failure": "uart-negative.log exit 1: consuming-RX mutant correctly failed final forwarded==8U && acknowledgements==8U, but validator expected the earlier capacity assertion. Only expected location was corrected; all harness assertions and production input hashes unchanged. uart-negative-final.log exit 0 rejects all five mutants.",
+  "usb_budget": "descriptor correctness PASS; 100 mA worst-case budget, final BOM/inrush and suspend power NOT PROVEN. low_power_enable=DISABLE and radio remains RX; suspend policy is a known unfinished bus-power acceptance item.",
+  "limits": [
+    "No whole-program stack/WCET or complete critical-contract proof",
+    "UART sessions/reset are mocked; no physical UART disconnect detection",
+    "No USB enumeration/ZLP/power or radio hardware test",
+    "No normal SCG C0 importer or USBX claim",
+    "No merged daily branch or changed GUI"
+  ],
+  "tools": {
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "arm_gcc": "14.3.1",
+    "host_gcc": "16.1.0",
+    "make": "GNU Make 4.4.1"
+  },
+  "evidence_summary_sha256": "028d60336358a8b8a3487c4ed16767f075780fb424ae8b7775da5e58e792304f",
+  "evidence_receipt_sha256": "cf413e9f54481b3e097ed528b0ea9b23388ef777f3a4620bce8977a337aa0c9e"
+}

@@ -74,6 +74,14 @@ main = (official/(app+'Core/Src/main.c')).read_text(encoding='utf-8')
 notice = main[:main.index('/* USER CODE END Header */')+len('/* USER CODE END Header */')]
 files[prefix+'USB_Device/Target/usbd_conf.c'] = _UsbConf_Integrate(files[prefix+'USB_Device/Target/usbd_conf.c'])
 
+# Mini's selected topology is VBUS -> 3.3V regulator, without another supply.
+# Keep the frozen ST demo unchanged; configure only this standalone candidate.
+power_header = files[prefix+'USB_Device/Target/usbd_conf.h'].decode()
+power_header, power_count = re.subn(r'(?m)^#define USBD_SELF_POWERED\s+1U\s*$',
+    '#define USBD_SELF_POWERED              0U\n#define USBD_MAX_POWER                 0x32U /* 100 mA, 2 mA units */', power_header)
+if power_count != 1: raise ValueError('unreviewed ST USB supply configuration')
+files[prefix+'USB_Device/Target/usbd_conf.h'] = power_header.encode()
+
 # Replace the official USB-to-UART/TIM demo callback with a bounded SCG CDC
 # interface. Original source and its notices remain in the frozen input.
 files[prefix+'USB_Device/App/usbd_cdc_if.c'] = (notice+'''
@@ -199,6 +207,19 @@ if args.pc_interface == 'uart':
         del files[path]
         adapter_sources.remove(path)
     files['Generated/Src/pc_byte_stream.c'] = C071PcUartIt_Render(PcUsbCdc_Render()).encode()
+    # This is the owning standalone recipe, not a patch to a generated project.
+    # Keep the reviewed native main unchanged and service recovery once before
+    # queue pressure can prevent reads. USB and normal F1/F4 generation stay as-is.
+    bridge_path = 'Ground/Core/Src/ground_bridge.c'
+    bridge = files[bridge_path].decode()
+    service_site = '    GroundRadio_Process();'
+    if bridge.count(service_site) != 1: raise ValueError('unreviewed bridge service site')
+    files[bridge_path] = bridge.replace(service_site, '    PcByteStream_Service();\n'+service_site).encode()
+    header_path = 'Ground/Core/Inc/pc_byte_stream.h'
+    header = files[header_path].decode()
+    declaration = 'PcByteStreamInitResult PcByteStream_Init(void);'
+    if header.count(declaration) != 1: raise ValueError('unreviewed byte stream declaration')
+    files[header_path] = header.replace(declaration, declaration+'\nvoid PcByteStream_Service(void);').encode()
     files[prefix+'Core/Src/usb.c'] = (native/'Core/Src/usb.c').read_bytes()
 owned = [path for path in files if path.endswith('.c') and path.startswith(('Common/','Devices/','Generated/','Ground/','Platform/','Middlewares/Third_Party/SX1280lib/'))]
 sources = owned + [prefix+'Core/Src/'+name+'.c' for name in ('gpio','spi','usart','system_stm32c0xx','stm32c0xx_it')]
@@ -215,6 +236,8 @@ flags = ['-mcpu=cortex-m0plus','-mthumb','-mfloat-abi=soft']
 graph = {'sources':sources,'asm_sources':[prefix+'startup_stm32c071xx.s'],'include_dirs':includes,'defines':defines,'mcu_flags':flags,'linker_script':prefix+'STM32C071FBP6_FLASH.ld','required_irq_handlers':['SysTick_Handler','USB_DRD_FS_IRQHandler','EXTI2_3_IRQHandler','USART2_IRQHandler'],'complete_cube_import':False,'experimental_standalone_mcu':'STM32C071FBP6','pin_profile_status':'native v2 IOC; hardware unverified','native_files_sha256':native_hashes,'first_party_adapters':adapter_sources,'integration_exception':'native PCD usb.c replaced by pinned classic CDC usbd_conf.c; no normal SCG C0 importer'}
 graph['integration_exception'] = 'native PCD not initialized; standalone no-DMA IT UART transport' if args.pc_interface=='uart' else graph['integration_exception']
 graph.update(pc_interface=args.pc_interface,transport_selection='compile-time alternative, no simultaneous PC transports',uart_implementation='one-byte IT receive and fixed TX, lifecycle/session ring' if args.pc_interface=='uart' else 'disabled; no RX arm or UART init in USB main')
+graph['uart_recovery_service'] = 'once per GroundBridge_Process, non-consuming' if args.pc_interface=='uart' else 'disabled'
+graph['usb_power_profile'] = {'supply':'bus-powered VBUS to 3.3V','self_powered':False,'declared_max_ma':100,'budget_status':'NOT PROVEN: module maximum, final BOM, inrush and suspend current require hardware verification'}
 files['Makefile'] = _Makefile_Render(tuple(sources),tuple(graph['asm_sources']),tuple(includes),tuple(defines),SimpleNamespace(**graph),'arm-none-eabi-').encode()
 if args.pc_interface=='uart':
     makefile=files['Makefile'].decode()
@@ -223,6 +246,7 @@ if args.pc_interface=='uart':
     files['Makefile']=makefile.replace(old,'$(PYTHON) Tools/c071_uart_host.py --host-cc "$(HOST_CC)"').encode()
     files['Tools/c071_uart_host.py']=(Path(__file__).parent/'c071_uart_host.py').read_bytes()
     files['Tools/c071_backpressure_host.py']=(Path(__file__).parent/'c071_backpressure_host.py').read_bytes()
+    files['Tools/c071_recovery_host.py']=(Path(__file__).parent/'c071_recovery_host.py').read_bytes()
 files['Generated/ground_source_graph.json'] = json.dumps(graph,indent=2).encode()
 metadata = json.loads(base['Generated/ground_target_metadata.json'])
 metadata.update(mcu='STM32C071FBP6',pc_interface=args.pc_interface,hardware_fingerprint='native v2 IOC, hardware unverified',input_kind='native CubeMX PCD plus explicitly selected PC transport')
