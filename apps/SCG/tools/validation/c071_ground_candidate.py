@@ -11,13 +11,16 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--official', type=Path, required=True)
 parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--cubemx', type=Path, required=True, help='Complete native CubeMX C071FBP6 PCD project')
+parser.add_argument('--pc-interface', choices=('usb_cdc','uart'), default='usb_cdc')
 args = parser.parse_args()
 SCG = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(SCG/'src'),str(SCG/'tests')]
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.plugins.catalog import PluginCatalog
-from silverstar_fccg.generator.multi_target import GroundFiles_Render, _Makefile_Render, _UsbConf_Integrate
+from silverstar_fccg.generator.multi_target import GroundFiles_Render, _Makefile_Render, _UsbConf_Integrate, _UserSection_Insert
 from silverstar_fccg.generator.ground_pc_usb_cdc import PcUsbCdc_Render
+from c071_pc_uart_it import C071PcUartIt_Render
+from c071_main_integrate import C071Main_Integrate
 from test_round2_targets import _GroundBoardProject_Get
 
 official, output = args.official.resolve(), args.output.resolve()
@@ -66,75 +69,9 @@ linker = (official/(app+'STM32CubeIDE/STM32C071RBTX_FLASH.ld')).read_text(encodi
 linker = linker.replace('_Min_Heap_Size = 0x200','_Min_Heap_Size = 0x0').replace('_Min_Stack_Size = 0x400','_Min_Stack_Size = 0x800')
 files[prefix+'STM32C071FBP6_FLASH.ld'] = linker.encode()
 
-# Preserve the actual official HSI system + HSIUSB48/SOF CRS clock function.
+# Preserve ST's notice on the authored CDC callback adaptation.
 main = (official/(app+'Core/Src/main.c')).read_text(encoding='utf-8')
-clock = main[main.index('void SystemClock_Config(void)\n{'):main.index('/**\n  * @brief TIM17')]
 notice = main[:main.index('/* USER CODE END Header */')+len('/* USER CODE END Header */')]
-files[prefix+'Core/Src/main.c'] = (notice+'''
-/* Experimental FBP6 software pin profile; no physical board has been checked. */
-#include "main.h"
-#include "usb_device.h"
-#include "ground_bridge.h"
-SPI_HandleTypeDef hspi1;
-void SystemClock_Config(void);
-static void CandidatePins_Init(void)
-{
-    GPIO_InitTypeDef gpio = {0};
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_SPI1_CLK_ENABLE();
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_4, GPIO_PIN_SET);
-    gpio.Pin = GPIO_PIN_0 | GPIO_PIN_4;
-    gpio.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOA, &gpio);
-    gpio.Pin = GPIO_PIN_1;
-    gpio.Mode = GPIO_MODE_INPUT;
-    HAL_GPIO_Init(GPIOA, &gpio);
-    gpio.Pin = GPIO_PIN_3;
-    gpio.Mode = GPIO_MODE_IT_RISING;
-    HAL_GPIO_Init(GPIOA, &gpio);
-    HAL_NVIC_SetPriority(EXTI2_3_IRQn, 2, 0);
-    HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);
-    gpio.Pin = GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
-    gpio.Mode = GPIO_MODE_AF_PP;
-    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-    gpio.Alternate = GPIO_AF0_SPI1;
-    HAL_GPIO_Init(GPIOA, &gpio);
-    hspi1.Instance = SPI1;
-    hspi1.Init.Mode = SPI_MODE_MASTER;
-    hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-    hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-    hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-    hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-    hspi1.Init.NSS = SPI_NSS_SOFT;
-    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
-    hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-    hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-    hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-    hspi1.Init.CRCPolynomial = 7;
-    hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-    if (HAL_SPI_Init(&hspi1) != HAL_OK) { Error_Handler(); }
-}
-int main(void)
-{
-    HAL_Init();
-    SystemClock_Config();
-    CandidatePins_Init();
-    MX_USB_Device_Init();
-    if (GroundBridge_Init() != GROUND_BRIDGE_OK) { Error_Handler(); }
-    while (1) { if (GroundBridge_Process(HAL_GetTick()) != GROUND_BRIDGE_OK) { Error_Handler(); } }
-}
-void Error_Handler(void) { __disable_irq(); while (1) { } }
-''' + clock).encode()
-files[prefix+'Core/Src/stm32c0xx_hal_msp.c'] = b'#include "main.h"\nvoid HAL_MspInit(void) { __HAL_RCC_SYSCFG_CLK_ENABLE(); __HAL_RCC_PWR_CLK_ENABLE(); HAL_SYSCFG_DisableRemap(SYSCFG_REMAP_PA11 | SYSCFG_REMAP_PA12); }\n'
-files[prefix+'Core/Src/stm32c0xx_it.c'] = b'''#include "main.h"
-#include "stm32c0xx_it.h"
-extern PCD_HandleTypeDef hpcd_USB_DRD_FS;
-void SysTick_Handler(void) { HAL_IncTick(); }
-void USB_DRD_FS_IRQHandler(void) { HAL_PCD_IRQHandler(&hpcd_USB_DRD_FS); }
-void EXTI2_3_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3); }
-'''
 files[prefix+'USB_Device/Target/usbd_conf.c'] = _UsbConf_Integrate(files[prefix+'USB_Device/Target/usbd_conf.c'])
 
 # Replace the official USB-to-UART/TIM demo callback with a bounded SCG CDC
@@ -194,7 +131,7 @@ static const PlatformStm32c0GpioResource s_gpio_resources[PLATFORM_GPIO_COUNT] =
     [0U] = {GPIOA,GPIO_PIN_4,0U},
     [1U] = {GPIOA,GPIO_PIN_0,0U},
     [2U] = {GPIOA,GPIO_PIN_1,0U},
-    [3U] = {GPIOA,GPIO_PIN_3,1U}
+    [3U] = {GPIOB,GPIO_PIN_3,1U}
 };
 uint8_t PlatformStm32c0Resource_GpioGet(PlatformGpioId id, PlatformStm32c0GpioResource *value)
 {
@@ -229,28 +166,10 @@ for name in ('gpio','spi','usart','system_stm32c0xx','stm32c0xx_it'):
 files[prefix+'startup_stm32c071xx.s'] = (native/'startup_stm32c071xx.s').read_bytes()
 files[prefix+'STM32C071FBP6_FLASH.ld'] = (native/'STM32C071XX_FLASH.ld').read_bytes()
 native_main = (native/'Core/Src/main.c').read_text(encoding='utf-8')
-native_clock = native_main[native_main.index('void SystemClock_Config(void)\n{'):native_main.index('/* USER CODE BEGIN 4 */')]
-main_body = notice+'''\n#include "main.h"
-#include "gpio.h"
-#include "spi.h"
-#include "usart.h"
-#include "usb_device.h"
-#include "ground_bridge.h"
-void SystemClock_Config(void);
-int main(void)
-{
-    if (HAL_Init() != HAL_OK) { Error_Handler(); }
-    SystemClock_Config();
-    MX_GPIO_Init();
-    MX_SPI1_Init();
-    MX_USART2_UART_Init();
-    MX_USB_Device_Init();
-    if (GroundBridge_Init() != GROUND_BRIDGE_OK) { Error_Handler(); }
-    while (1) { if (GroundBridge_Process(HAL_GetTick()) != GROUND_BRIDGE_OK) { Error_Handler(); } }
-}
-void Error_Handler(void) { __disable_irq(); while (1) { } }
-'''+native_clock
-files[prefix+'Core/Src/main.c'] = main_body.encode()
+hal_conf=(native/'Core/Inc/stm32c0xx_hal_conf.h').read_text(encoding='utf-8')
+if re.search(r'#\s*define\s+USE_FULL_ASSERT\b',re.sub(r'/\*.*?\*/','',hal_conf,flags=re.S)):
+    raise ValueError('full assert is outside this reviewed native profile')
+files[prefix+'Core/Src/main.c'] = C071Main_Integrate(native_main,args.pc_interface,_UserSection_Insert).encode()
 msp = (native/'Core/Src/stm32c0xx_hal_msp.c').read_text(encoding='utf-8')
 msp = msp.replace('__HAL_RCC_PWR_CLK_ENABLE();','__HAL_RCC_PWR_CLK_ENABLE();\n  HAL_SYSCFG_DisableRemap(SYSCFG_REMAP_PA11 | SYSCFG_REMAP_PA12);')
 files[prefix+'Core/Src/stm32c0xx_hal_msp.c'] = msp.encode()
@@ -274,21 +193,39 @@ for relative in ('Core/Src/main.c','Core/Src/stm32c0xx_hal_msp.c','USB_Device/Ap
     destination = 'Platform/STM32C0/Src/'+Path(relative).name
     files[destination] = files.pop(prefix+relative)
     adapter_sources.append(destination)
-files['Generated/Src/platform_resources.c'] = files['Generated/Src/platform_resources.c'].replace(b'{GPIOA,GPIO_PIN_3,1U}',b'{GPIOB,GPIO_PIN_3,1U}')
+if args.pc_interface == 'uart':
+    for name in ('usbd_cdc_if.c','usbd_conf.c'):
+        path='Platform/STM32C0/Src/'+name
+        del files[path]
+        adapter_sources.remove(path)
+    files['Generated/Src/pc_byte_stream.c'] = C071PcUartIt_Render(PcUsbCdc_Render()).encode()
+    files[prefix+'Core/Src/usb.c'] = (native/'Core/Src/usb.c').read_bytes()
 owned = [path for path in files if path.endswith('.c') and path.startswith(('Common/','Devices/','Generated/','Ground/','Platform/','Middlewares/Third_Party/SX1280lib/'))]
 sources = owned + [prefix+'Core/Src/'+name+'.c' for name in ('gpio','spi','usart','system_stm32c0xx','stm32c0xx_it')]
 sources += [prefix+'USB_Device/'+name+'.c' for name in ('App/usb_device','App/usbd_desc')]
 sources += [prefix+'Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_'+name+'.c' for name in ('hal','hal_rcc','hal_rcc_ex','hal_cortex','hal_gpio','hal_dma','hal_dma_ex','hal_flash','hal_flash_ex','hal_pwr','hal_pwr_ex','hal_pcd','hal_pcd_ex','hal_spi','hal_spi_ex','hal_uart','hal_uart_ex','hal_exti','ll_usb')]
 sources += [prefix+'Middlewares/ST/STM32_USB_Device_Library/'+name+'.c' for name in ('Core/Src/usbd_core','Core/Src/usbd_ctlreq','Core/Src/usbd_ioreq','Class/CDC/Src/usbd_cdc')]
+if args.pc_interface == 'uart':
+    sources=[p for p in sources if not (p.startswith(prefix+'USB_Device/') or p.startswith(prefix+'Middlewares/ST/STM32_USB_Device_Library/'))]
+    sources.append(prefix+'Core/Src/usb.c')
 includes = ['Ground/Core/Inc','Ground/Protocol/Inc','Platform/Inc','Platform/STM32C0/Inc','Devices/Telemetry/SX1281/Inc','Middlewares/Third_Party/SX1280lib','Generated/Inc','Common/Inc','Interfaces/Inc']
 includes += [prefix+name for name in ('Core/Inc','USB_Device/App','USB_Device/Target','Drivers/STM32C0xx_HAL_Driver/Inc','Drivers/STM32C0xx_HAL_Driver/Inc/Legacy','Drivers/CMSIS/Include','Drivers/CMSIS/Device/ST/STM32C0xx/Include','Middlewares/ST/STM32_USB_Device_Library/Core/Inc','Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc')]
 defines = ['USE_HAL_DRIVER','STM32C071xx','USE_HAL_PCD_REGISTER_CALLBACKS=0','USBD_CLASS_BOS_ENABLED=0','USBD_USER_REGISTER_CALLBACK=0','AIR_LINK_HAL_BUFFER_SIZE=260','SILVERSTAR_AIR_LINK_ENABLED=1']
 flags = ['-mcpu=cortex-m0plus','-mthumb','-mfloat-abi=soft']
 graph = {'sources':sources,'asm_sources':[prefix+'startup_stm32c071xx.s'],'include_dirs':includes,'defines':defines,'mcu_flags':flags,'linker_script':prefix+'STM32C071FBP6_FLASH.ld','required_irq_handlers':['SysTick_Handler','USB_DRD_FS_IRQHandler','EXTI2_3_IRQHandler','USART2_IRQHandler'],'complete_cube_import':False,'experimental_standalone_mcu':'STM32C071FBP6','pin_profile_status':'native v2 IOC; hardware unverified','native_files_sha256':native_hashes,'first_party_adapters':adapter_sources,'integration_exception':'native PCD usb.c replaced by pinned classic CDC usbd_conf.c; no normal SCG C0 importer'}
+graph['integration_exception'] = 'native PCD not initialized; standalone no-DMA IT UART transport' if args.pc_interface=='uart' else graph['integration_exception']
+graph.update(pc_interface=args.pc_interface,transport_selection='compile-time alternative, no simultaneous PC transports',uart_implementation='one-byte IT receive and fixed TX, lifecycle/session ring' if args.pc_interface=='uart' else 'disabled; no RX arm or UART init in USB main')
 files['Makefile'] = _Makefile_Render(tuple(sources),tuple(graph['asm_sources']),tuple(includes),tuple(defines),SimpleNamespace(**graph),'arm-none-eabi-').encode()
+if args.pc_interface=='uart':
+    makefile=files['Makefile'].decode()
+    old='$(PYTHON) Tools/check_ground.py host --host-cc "$(HOST_CC)"'
+    if makefile.count(old)!=1: raise ValueError('unreviewed Host target')
+    files['Makefile']=makefile.replace(old,'$(PYTHON) Tools/c071_uart_host.py --host-cc "$(HOST_CC)"').encode()
+    files['Tools/c071_uart_host.py']=(Path(__file__).parent/'c071_uart_host.py').read_bytes()
+    files['Tools/c071_backpressure_host.py']=(Path(__file__).parent/'c071_backpressure_host.py').read_bytes()
 files['Generated/ground_source_graph.json'] = json.dumps(graph,indent=2).encode()
 metadata = json.loads(base['Generated/ground_target_metadata.json'])
-metadata.update(mcu='STM32C071FBP6',pc_interface='usb_cdc',hardware_fingerprint='native v2 IOC, hardware unverified',input_kind='native CubeMX PCD plus pinned official classic CDC integration')
+metadata.update(mcu='STM32C071FBP6',pc_interface=args.pc_interface,hardware_fingerprint='native v2 IOC, hardware unverified',input_kind='native CubeMX PCD plus explicitly selected PC transport')
 files['Generated/ground_target_metadata.json'] = json.dumps(metadata,indent=2).encode()
 output.mkdir(parents=True,exist_ok=True)
 for path,body in files.items():

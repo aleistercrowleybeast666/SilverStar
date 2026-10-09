@@ -25,8 +25,13 @@ print(attributes)
 if 'Tag_CPU_arch: v6S-M' not in attributes or 'Thumb-1' not in attributes or 'VFP registers' in attributes:
     raise ValueError('linked ABI is not ARMv6-M soft float')
 symbols = command('nm','-g',elf)
-for name in ('main','GroundBridge_Init','GroundBridge_Process','PcByteStream_WriteSession','PcByteStream_ReadSession','USBD_CDC_TransmitPacket','HAL_PCD_IRQHandler','HAL_UART_IRQHandler','MX_USART2_UART_Init','MX_SPI1_Init'):
+mode=graph.get('pc_interface','usb_cdc')
+required=['main','GroundBridge_Init','GroundBridge_Process','PcByteStream_WriteSession','PcByteStream_ReadSession','MX_SPI1_Init','SilverStarAssert_Fail']
+required += ['USBD_CDC_TransmitPacket','HAL_PCD_IRQHandler','MX_USB_Device_Init'] if mode=='usb_cdc' else ['HAL_UART_IRQHandler','MX_USART2_UART_Init','HAL_UART_Receive_IT','HAL_UART_Transmit_IT','HAL_UART_RxCpltCallback','HAL_UART_ErrorCallback']
+for name in required:
     if not re.search(r'(?m)^[0-9a-f]+ T '+name+r'$',symbols): raise ValueError('required real implementation missing: '+name)
+for name in (('MX_USART2_UART_Init','HAL_UART_Receive_IT','HAL_UART_Transmit_IT') if mode=='usb_cdc' else ('MX_USB_Device_Init','USBD_CDC_TransmitPacket','MX_USB_PCD_Init')):
+    if re.search(r'(?m)^[0-9a-f]+ [TW] '+name+r'$',symbols): raise ValueError('disabled PC transport remains linked: '+name)
 if re.search(r'(?m)^[0-9a-f]+ [TW] (_?malloc\w*|_?sbrk\w*|_?printf\w*|_write|_read)$',symbols):
     raise ValueError('unexpected dynamic allocation/stdio implementation linked')
 vector = root/'build/c071-vector.bin'
@@ -53,7 +58,7 @@ if not all(token in linker for token in ('LENGTH = 24K','LENGTH = 128K','_Min_He
     raise ValueError('FBP6 memory/reservation contract changed')
 if text+data>131072 or data+bss>24576: raise ValueError('actual image exceeds FBP6 memory')
 main = (root/next(path for path in graph['sources'] if path.endswith('/main.c'))).read_text(encoding='utf-8')
-config = (root/next(path for path in graph['sources'] if path.endswith('/usbd_conf.c'))).read_text(encoding='utf-8')
+config = (root/(next(path for path in graph['sources'] if path.endswith('/usbd_conf.c')) if mode=='usb_cdc' else 'NativeCubeMX/Core/Src/usb.c')).read_text(encoding='utf-8')
 for token in ('RCC_HSI48_ON','RCC_CRS_SYNC_SOURCE_USB','RCC_SYSCLKSOURCE_HSI','RCC_SYSCLK_DIV1','RCC_HSI_DIV1'):
     if token not in main: raise ValueError('native clock/CRS source contract missing: '+token)
 if 'RCC_USBCLKSOURCE_HSI48' not in config: raise ValueError('USB clock selection missing')
@@ -70,7 +75,7 @@ for relative,tokens in {
 resources=(root/'Generated/Src/platform_resources.c').read_text(encoding='utf-8')
 if '{GPIOB,GPIO_PIN_3,1U}' not in resources: raise ValueError('radio resource no longer uses native PB3 DIO1')
 pma = [(int(address,16),8 if endpoint=='CDC_CMD_EP' else 64) for endpoint,address in re.findall(r'HAL_PCDEx_PMAConfig\([^,]+,\s*(\w+|0x\w+)\s*,\s*PCD_SNG_BUF,\s*(0x\w+)\)',config)]
-if len(pma)!=5 or any(address+length>2048 for address,length in pma): raise ValueError('C071 2KB PMA profile changed')
+if mode=='usb_cdc' and (len(pma)!=5 or any(address+length>2048 for address,length in pma)): raise ValueError('C071 2KB PMA profile changed')
 for left,right in zip(sorted(pma),sorted(pma)[1:]):
     if left[0]+left[1]>right[0]: raise ValueError('overlapping PMA buffers')
 frames = {}
@@ -78,7 +83,7 @@ for path in (root/'build').rglob('*.su'):
     if 'analysis' in path.parts: continue
     for line in path.read_text(encoding='utf-8').splitlines():
         name,usage,kind = line.split('\t'); frames[name.rsplit(':',1)[-1]]={'bytes':int(usage),'kind':kind}
-result = {'mcu':'STM32C071FBP6','input_kind':'native CubeMX v2 PCD plus pinned classic CDC integration','actual_abi':attributes,'sources':len(graph['sources']),'text':text,'data':data,'bss_including_reserved_stack':bss,'flash_used':text+data,'ram_unallocated':24576-data-bss,'stack_reserved':2048,'heap_reserved':0,'effective_macros':macros,'pma_regions':pma,'frames':frames,'artifacts_sha256':{path.relative_to(root).as_posix():hashlib.sha256(path.read_bytes()).hexdigest() for path in (elf,root/'build/ground.bin',root/'build/ground.map',root/'Generated/ground_source_graph.json',root/'candidate-manifest.json')},'remaining':'NOT PROVEN: complete critical contracts, C0 callback/board review, whole-program stack/WCET, hardware USB/radio; no full SCG C0/USBX support; UART230400 initializes but has no SCG receive/session implementation'}
+result = {'mcu':'STM32C071FBP6','pc_interface':mode,'input_kind':'native CubeMX v2 with explicitly selected PC transport','actual_abi':attributes,'sources':len(graph['sources']),'text':text,'data':data,'bss_including_reserved_stack':bss,'flash_used':text+data,'ram_unallocated':24576-data-bss,'stack_reserved':2048,'heap_reserved':0,'effective_macros':macros,'pma_regions':pma,'frames':frames,'artifacts_sha256':{path.relative_to(root).as_posix():hashlib.sha256(path.read_bytes()).hexdigest() for path in (elf,root/'build/ground.bin',root/'build/ground.map',root/'Generated/ground_source_graph.json',root/'candidate-manifest.json')},'remaining':'NOT PROVEN: complete critical contracts, C0 callback/board review, whole-program stack/WCET, hardware USB/UART/radio; no full SCG C0/USBX support; permanent main scheduler requires exact authorization'}
 (root/'build/c071-evidence.json').write_text(json.dumps(result,indent=2))
 print('PASS actual C071 ARM link/vector/dependencies/clock/PMA/memory',text,data,bss,'unallocatedRAM',result['ram_unallocated'])
 print(result['remaining'])

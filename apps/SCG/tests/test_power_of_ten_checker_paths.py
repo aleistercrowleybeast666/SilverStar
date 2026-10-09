@@ -21,6 +21,7 @@ def checker_fixture(tmp_path: Path) -> Path:
     tools.mkdir()
     shutil.copy2(source, tools / source.name)
     (tmp_path / "Makefile").write_text(
+        "TARGET_PROFILE ?= fixture\n"
         "FIRST_PARTY_C_SOURCES := APP/fixture.c\n"
         "FIRST_PARTY_WARNINGS := -Wall -Wextra -Wpedantic -Werror "
         "-Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 "
@@ -31,6 +32,11 @@ def checker_fixture(tmp_path: Path) -> Path:
     )
     (tmp_path / "STM32F407XX_FLASH.ld").write_text(
         "_Min_Heap_Size = 0x0;\n", encoding="utf-8"
+    )
+    target = tmp_path / "Targets/fixture"
+    target.mkdir(parents=True)
+    (target / "target.mk").write_text(
+        "TARGET_LDSCRIPT := STM32F407XX_FLASH.ld\n", encoding="utf-8"
     )
     app = tmp_path / "APP"
     app.mkdir()
@@ -197,6 +203,20 @@ def _Checker_Run(root: Path, target: str = "Flight") -> subprocess.CompletedProc
         cwd=root, capture_output=True, text=True, encoding="utf-8",
         errors="replace", check=False,
     )
+
+
+def test_missing_authoritative_flight_linker_manifest_is_rejected(checker_fixture: Path) -> None:
+    (checker_fixture / "Targets/fixture/target.mk").unlink()
+    result = _Checker_Run(checker_fixture)
+    assert result.returncode == 1
+    assert "Flight target manifest has no linker script." in result.stdout
+
+
+def test_authoritative_flight_linker_heap_contract_is_not_bypassed(checker_fixture: Path) -> None:
+    (checker_fixture / "STM32F407XX_FLASH.ld").write_text("_Min_Heap_Size = 0x200;\n", encoding="utf-8")
+    result = _Checker_Run(checker_fixture)
+    assert result.returncode == 1
+    assert "authoritative linker script does not keep heap size at zero" in result.stdout
 
 
 @pytest.mark.parametrize("counts", ((2, 1), (2, 2), (3, 2), (4, 0), (2, 0)))

@@ -460,6 +460,35 @@ function Test-PowerTenApprovedDoublePointer {
         ($Line -match $idleHookOutput))
 }
 
+# User-approved 2026-10-09: only these two exact C071 scheduler main digests.
+# This finite-loop exception does not prove whole-program stack, WCET or hardware safety.
+function Test-PowerTenReviewedC071SchedulerLine {
+    param([System.IO.FileInfo]$File, [string]$Line, [int]$LineNumber)
+    if (($TargetKind -ne 'Ground') -or
+        ((Get-PowerTenRelativePath $File.FullName) -ne 'Platform/STM32C0/Src/main.c') -or
+        ($Line -notmatch '^\s*while\s*\(\s*1\s*\)\s*$')) { return $false }
+    $graphPath = Join-Path $repoRoot 'Generated/ground_source_graph.json'
+    if (-not (Test-Path -LiteralPath $graphPath -PathType Leaf)) { return $false }
+    $graph = Get-Content -LiteralPath $graphPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    if (($graph.experimental_standalone_mcu -ne 'STM32C071FBP6') -or
+        ($graph.complete_cube_import -ne $false) -or
+        ($graph.defines -notcontains 'STM32C071xx') -or
+        ($graph.mcu_flags -notcontains '-mcpu=cortex-m0plus')) { return $false }
+    $reviewed = @{
+        'usb_cdc' = @{ Line = 103; Sha256 = '085ac2c877b7263beb6f2b1073a564d505a0822a6d71e25a4134e51622b10da1' }
+        'uart' = @{ Line = 102; Sha256 = '26ce79b8166f3eafef5615fc7e00fb41bb36176809e552aca761d5d77650384d' }
+    }
+    if (-not $reviewed.ContainsKey([string]$graph.pc_interface)) { return $false }
+    $contract = $reviewed[[string]$graph.pc_interface]
+    if ($LineNumber -ne $contract.Line) { return $false }
+    $hasher = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $digest = [System.BitConverter]::ToString(
+            $hasher.ComputeHash([System.IO.File]::ReadAllBytes($File.FullName))).Replace('-', '').ToLowerInvariant()
+    } finally { $hasher.Dispose() }
+    return ($digest -eq $contract.Sha256)
+}
+
 $files = Get-FirstPartyCFiles
 $progressTotal = $files.Count + 2
 $progressCurrent = 0
@@ -522,7 +551,11 @@ foreach ($file in $files) {
 
     foreach ($rule in $patternRules) {
         $diagnostics = Get-PatternDiagnostics -File $file -Lines $lines `
-            -Pattern $rule.Pattern
+            -Pattern $rule.Pattern -Approved {
+                param($candidateFile, $line, $lineNumber)
+                return (($rule.Name -eq 'finite while/do loop') -and
+                    (Test-PowerTenReviewedC071SchedulerLine $candidateFile $line $lineNumber))
+            }
         Add-PowerTenCheck -Condition ($diagnostics.Count -eq 0) `
             -Message ($rule.Name + " violation:`n  " +
                 ($diagnostics -join "`n  "))
