@@ -164,7 +164,7 @@ def test_existing_barometer_gui_adds_up_to_four_without_runtime_changes(window, 
     # its disabled click must not add a fifth instance or replace a selection.
     before = tuple(window._model.device_instances)
     page.add_buttons["barometer"].click()
-    assert window._model.device_instances == before
+    assert tuple(window._model.device_instances) == before
     manifest = window._service.Plugin_Get(identity)
     assert manifest.instance_policy.multi_instance_ready
     assert manifest.instance_policy.class_max == 4
