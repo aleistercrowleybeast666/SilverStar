@@ -3538,7 +3538,8 @@ class MainWindow(QMainWindow):
             if outcome.error:
                 details += "\n" + outcome.error
             try:
-                if result.action == BuildAction.POWER10_CHECK and not outcome.error:
+                if (outcome.target == "flight"
+                        and result.action == BuildAction.POWER10_CHECK and not outcome.error):
                     Power10Report_Save(outcome.root, Power10Report_Create(
                         outcome.root, outcome.model, result.output, result.return_code))
                 QualityResult_Save(outcome.root, task=result.action.value,

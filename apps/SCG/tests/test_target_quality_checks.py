@@ -104,6 +104,39 @@ def test_input_changes_during_check_block_current_result(tmp_path, monkeypatch):
     assert "NOT PROVEN" in batch.targets[0].error
 
 
+def test_ground_power10_persists_without_flight_report_inputs(window, tmp_path, monkeypatch):
+    _Inputs_Create(tmp_path)
+    window._project_root = tmp_path
+    window._model = ReferenceProject_Create("CheckRouting")
+    _Runner_Fake(monkeypatch, power10=True)
+    for target, checkbox in window.build_page.quality_target_checks.items():
+        checkbox.setChecked(target == "ground")
+    def task(function, callback, error_callback=None, **kwargs):
+        callback(function(TaskContext(line_callback=kwargs["line_callback"])))
+        return True
+    monkeypatch.setattr(window, "Task_Run", task)
+    window._Build_Request("power10_check")
+    root = tmp_path / "Ground_Station"
+    assert not (root / "SilverStar.ssproject").exists()
+    assert not (root / "Tools/check_power_of_ten.ps1").exists()
+    records = QualityResults_Load(root)
+    assert len(records) == 1 and records[0].result == "passed"
+    assert records[0].input_sha256 and "NOT_PROVEN" in records[0].summary
+    assert "POWER10_CONTRACT_REVIEW|NOT_PROVEN" in records[0].details
+    assert window.build_page.target_quality_reviews["ground"].property("statusLevel") == "warning"
+
+
+def test_source_logs_remain_quality_inputs(tmp_path):
+    target, root, _ = _Inputs_Create(tmp_path)[0]
+    logs = root / "Logs/Golden"
+    logs.mkdir(parents=True)
+    recorded = logs / "recorded.sslog"
+    recorded.write_bytes(b"recorded input")
+    before = QualityInputHash_Get(root, target, "host_tests")
+    recorded.write_bytes(b"modified recorded input")
+    assert before != QualityInputHash_Get(root, target, "host_tests")
+
+
 def test_cancel_stops_following_target(tmp_path, monkeypatch):
     inputs = _Inputs_Create(tmp_path)
     calls = _Runner_Fake(monkeypatch, cancel=True)

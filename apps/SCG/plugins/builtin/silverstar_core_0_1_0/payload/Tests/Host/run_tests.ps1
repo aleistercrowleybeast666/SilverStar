@@ -443,7 +443,7 @@ if ((@($projectDocument.protocols.PSObject.Properties.Name) -notcontains 'loggin
 }
 if ($hostLoggingEnabled) {
     Invoke-RecordCatalogValidator
-    $goldenDirectory = Join-Path $repoRoot 'Logs\Golden'
+    $goldenDirectory = Join-Path $outputDir 'Logs\Golden'
     New-Item -ItemType Directory -Force -Path $goldenDirectory | Out-Null
     $goldenFilename = ([string]$projectDocument.project.name) + '_golden.sslog'
     $env:SILVERSTAR_GOLDEN_OUTPUT = Join-Path $goldenDirectory $goldenFilename

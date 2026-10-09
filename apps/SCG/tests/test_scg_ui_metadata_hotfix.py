@@ -159,7 +159,12 @@ def test_existing_barometer_gui_adds_up_to_four_without_runtime_changes(window, 
     barometers = [item for item in window._model.device_instances if item.plugin == identity]
     assert len(barometers) == 4
     assert len({item.instance_id for item in barometers}) == 4
-    assert "barometer" not in page.add_buttons
+    assert not page.add_buttons["barometer"].isEnabled()
+    # The capacity button remains visible under the current tier UI contract;
+    # its disabled click must not add a fifth instance or replace a selection.
+    before = tuple(window._model.device_instances)
+    page.add_buttons["barometer"].click()
+    assert window._model.device_instances == before
     manifest = window._service.Plugin_Get(identity)
     assert manifest.instance_policy.multi_instance_ready
     assert manifest.instance_policy.class_max == 4
