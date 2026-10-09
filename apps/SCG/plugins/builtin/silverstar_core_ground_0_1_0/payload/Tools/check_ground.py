@@ -188,7 +188,7 @@ def Artifact_Check(root: Path, prefix: str) -> None:
     vector_path = root / 'build/ground-vector.bin'
     Command_Run([prefix + 'objcopy', '-j', '.isr_vector', '-O', 'binary', str(elf), str(vector_path)], root)
     InterruptVectors_Validate(root, graph, symbols, vector_path.read_bytes())
-    DependencyClosure_Validate(root, graph)
+    DependencyClosure_Validate(root, graph, prefix + 'gcc')
     EffectiveMacros_Validate(root, graph, prefix + 'gcc')
     for symbol in ('Reset_Handler', 'main', 'GroundBridge_Init', 'GroundBridge_Process',
                    'PcByteStream_Init', 'GroundRadio_Process'):

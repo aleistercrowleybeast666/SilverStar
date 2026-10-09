@@ -2,6 +2,7 @@ from pathlib import Path
 from dataclasses import replace
 import importlib.util
 import re
+import shutil
 import struct
 
 import pytest
@@ -202,6 +203,66 @@ def test_actual_dependency_gate_rejects_non_system_headers_outside_target(tmp_pa
     dependency.write_text("build/main.o: main.c " + external.as_posix() + "\n", encoding="utf8")
     with pytest.raises(ValueError, match="escaped"):
         _ArtifactModule_Get().DependencyClosure_Validate(tmp_path, {"sources": ["main.c"]})
+
+
+@pytest.mark.parametrize("directive", [
+    '%:include "outside.h"', '??=include "outside.h"',
+    '#inc??/\nlude "outside.h"', '%:inc\\\nlude "outside.h"', '%\\\n:include "outside.h"',
+])
+def test_import_rejects_alternate_preprocessing_before_snapshot(tmp_path, directive):
+    cube = _Cube_Get(tmp_path / "cube")
+    (cube / "Core/Inc/escape.h").write_text('#pragma GCC system_header\n' + directive + '\n', encoding="utf8")
+    with pytest.raises(CubeMxImportError, match="alternate preprocessing"):
+        CubeMxImporter(WorkspacePolicy(tmp_path / "workspace")).Project_Import(cube, target="ground")
+
+
+def _ArmCompiler_Get():
+    compiler = shutil.which("arm-none-eabi-gcc")
+    if compiler is None:
+        candidate = Path("D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe")
+        compiler = str(candidate) if candidate.is_file() else None
+    if compiler is None:
+        pytest.skip("actual ARM GCC unavailable; compiled dependency negative NOT PROVEN")
+    return compiler
+
+
+@pytest.mark.parametrize("directive", ["#include", "%:include", "??=include"])
+def test_real_arm_system_marked_dependencies_cannot_escape(tmp_path, directive):
+    compiler = _ArmCompiler_Get()
+    target = tmp_path / "target"
+    (target / "build").mkdir(parents=True)
+    outside = tmp_path / "outside.h"
+    (target / "marked.h").write_text('#pragma GCC system_header\n' + directive + ' "' + outside.as_posix() + '"\n', encoding="utf8")
+    (target / "main.c").write_text('#include <stdint.h>\n#include "marked.h"\nint Probe(void);\nint Probe(void) {return EXTERNAL_VALUE;}\n', encoding="utf8")
+    module = _ArtifactModule_Get()
+    hashes = []
+    for value in (17, 29):
+        outside.write_text('#define EXTERNAL_VALUE ' + str(value) + '\n', encoding="utf8")
+        _Command_Run([compiler, '-std=c11', '-mcpu=cortex-m3', '-mthumb', '-MD', '-MP', '-c',
+                      str(target / 'main.c'), '-o', str(target / 'build/main.o')], target, "ARM compile")
+        dependency = (target / 'build/main.d').read_text(encoding="utf8")
+        assert 'outside.h' in dependency and 'marked.h' in dependency
+        with pytest.raises(ValueError, match="escaped"):
+            module.DependencyClosure_Validate(target, {"sources": ["main.c"]}, compiler)
+        hashes.append((target / 'build/main.o').read_bytes())
+    assert hashes[0] != hashes[1], "real ARM input mutation must affect the compiled object"
+    # The same system marker on a frozen local header remains supported. Only
+    # the tree-external dependency is refused; genuine default toolchain stdint
+    # and its transitive system headers are admitted after canonical resolution.
+    (target / 'marked.h').write_text('#pragma GCC system_header\n#define EXTERNAL_VALUE 17\n', encoding="utf8")
+    _Command_Run([compiler, '-std=c11', '-mcpu=cortex-m3', '-mthumb', '-MD', '-MP', '-c',
+                  str(target / 'main.c'), '-o', str(target / 'build/main.o')], target, "ARM normal compile")
+    module.DependencyClosure_Validate(target, {"sources": ["main.c"]}, compiler)
+
+
+def test_actual_dependency_gate_covers_preprocessed_assembly(tmp_path):
+    (tmp_path / 'build').mkdir()
+    (tmp_path / 'startup.s').write_text('/* imported assembly */', encoding="utf8")
+    outside = tmp_path.parent / (tmp_path.name + '-assembly-outside.h')
+    outside.write_text('/* external */', encoding="utf8")
+    (tmp_path / 'build/startup.d').write_text('build/startup.o: startup.s ' + outside.as_posix() + '\n', encoding="utf8")
+    with pytest.raises(ValueError, match="escaped"):
+        _ArtifactModule_Get().DependencyClosure_Validate(tmp_path, {"sources": [], "asm_sources": ["startup.s"]})
 
 
 @pytest.mark.parametrize("override", ["HSE_VALUE 16000000U", "STM32F407xx 1"])

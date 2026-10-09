@@ -1,6 +1,8 @@
-"""Linked interrupt identity and actual non-system dependency closure gates."""
+"""Linked interrupt identity and complete compiled dependency closure gates."""
 from pathlib import Path
+import os
 import re
+import shutil
 import struct
 import subprocess
 
@@ -26,8 +28,32 @@ def InterruptVectors_Validate(root: Path, graph: dict, symbols: str, vector: byt
     print("PASS strong linked IRQ handlers and actual vector entries")
 
 
-def DependencyClosure_Validate(root: Path, graph: dict) -> None:
-    for source in graph["sources"]:
+def _ToolchainHeaderRoots_Get(compiler: str, root: Path) -> tuple[Path, ...]:
+    executable = shutil.which(compiler)
+    if executable is None:
+        raise ValueError("dependency compiler is unavailable: " + compiler)
+    installation = Path(executable).resolve().parent.parent
+    environment = os.environ.copy()
+    for name in ("CPATH", "C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH", "OBJC_INCLUDE_PATH",
+                 "GCC_EXEC_PREFIX", "COMPILER_PATH"):
+        environment.pop(name, None)
+    result = subprocess.run([executable, "-E", "-v", "-x", "c", "-"], input="", cwd=root,
+                            env=environment, text=True, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, timeout=60)
+    match = re.search(r'#include <\.\.\.> search starts here:\s*\n(.*?)End of search list\.',
+                      result.stderr, re.S)
+    if result.returncode or match is None:
+        raise ValueError("cannot establish selected compiler default header roots")
+    roots = tuple(Path(line.strip()).resolve() for line in match[1].splitlines() if line.strip())
+    if not roots or any(not path.is_dir() or not path.is_relative_to(installation) for path in roots):
+        raise ValueError("compiler default header root escapes its installation")
+    return roots
+
+
+def DependencyClosure_Validate(root: Path, graph: dict, compiler: str | None = None) -> None:
+    approved = _ToolchainHeaderRoots_Get(compiler, root) if compiler else ()
+    canonical_root = root.resolve()
+    for source in (*graph["sources"], *graph.get("asm_sources", ())):
         dependency = root / "build" / Path(source).with_suffix(".d")
         if not dependency.is_file():
             raise ValueError("compiled dependency evidence missing: " + source)
@@ -36,10 +62,17 @@ def DependencyClosure_Validate(root: Path, graph: dict) -> None:
         if match is None:
             raise ValueError("unrecognized compiled dependency list: " + source)
         for token in re.findall(r"(?:\\.|[^\s])+", match[1]):
-            path = (root / token.replace("\\ ", " ")).resolve()
-            if not path.is_relative_to(root.resolve()) or not path.is_file():
+            spelling = token.replace("\\ ", " ").replace("\\#", "#").replace("\\\\", "\\")
+            candidate = root / spelling
+            path = candidate.resolve()
+            # Project aliases must stay inside the copied tree even when their
+            # resolved destination happens to be an approved compiler header.
+            lexical = Path(os.path.abspath(candidate))
+            escaped_alias = lexical.is_relative_to(canonical_root) and not path.is_relative_to(canonical_root)
+            if escaped_alias or not path.is_file() or not (
+                    path.is_relative_to(canonical_root) or any(path.is_relative_to(item) for item in approved)):
                 raise ValueError("compiled dependency escaped copied target: " + token)
-    print("PASS actual compiled non-system C dependency closure inside target")
+    print("PASS actual compiled C/ASM dependencies including system headers; copied target or selected compiler defaults")
 
 
 def EffectiveMacros_Validate(root: Path, graph: dict, compiler: str) -> None:

@@ -333,11 +333,11 @@ $(BUILD_DIR)/ground.size: $(BUILD_DIR)/ground.elf
 
 $(BUILD_DIR)/%.o: %.c
 \t@$(MKDIR_P)
-\t$(CC) $(CFLAGS) $(if $(filter $<,$(FIRST_PARTY_C_SOURCES)),$(FIRST_PARTY_WARNINGS),$(VENDOR_WARNINGS)) -MMD -MP -c $< -o $@
+\t$(CC) $(CFLAGS) $(if $(filter $<,$(FIRST_PARTY_C_SOURCES)),$(FIRST_PARTY_WARNINGS),$(VENDOR_WARNINGS)) -MD -MP -c $< -o $@
 
 $(BUILD_DIR)/%.o: %.s
 \t@$(MKDIR_P)
-\t$(CC) $(CFLAGS) -x assembler-with-cpp -c $< -o $@
+\t$(CC) $(CFLAGS) -MD -MP -x assembler-with-cpp -c $< -o $@
 
 -include $(OBJECTS:.o=.d)
 """

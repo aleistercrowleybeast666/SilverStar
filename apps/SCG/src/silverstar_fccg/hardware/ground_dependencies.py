@@ -12,7 +12,16 @@ def GroundDependencyDirectives_Validate(root: Path) -> None:
             continue
         if not path.resolve().is_relative_to(root.resolve()) or path.is_symlink():
             raise ValueError("Ground dependency escapes the copied project: " + str(path))
-        text = re.sub(r"\\\r?\n", "", path.read_text(encoding="utf-8-sig"))
+        text = path.read_text(encoding="utf-8-sig")
+        # C11 translates trigraphs before splicing and removing comments. Do
+        # not let an alternate '#' or backslash evade this conservative profile.
+        # Reject these spellings explicitly, including in comments/strings,
+        # rather than approximate another C preprocessing implementation.
+        if "%:" in text or re.search(r"\?\?[=/'()!<>-]", text):
+            raise ValueError("Ground alternate preprocessing tokens are unsupported: " + str(path))
+        text = re.sub(r"\\\r?\n", "", text)
+        if "%:" in text:
+            raise ValueError("Ground alternate preprocessing tokens are unsupported: " + str(path))
         text = re.sub(r"/\*.*?\*/|//[^\r\n]*", "", text, flags=re.S)
         if re.search(r"(?m)^\s*#\s*(include_next|import|embed)\b|\.incbin\b|\.include\b", text):
             raise ValueError("Ground indirect/assembler file dependency is unsupported: " + str(path))
