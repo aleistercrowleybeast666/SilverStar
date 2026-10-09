@@ -1,0 +1,6 @@
+Common/Src/silverstar_assert.c:24:6:SilverStarAssert_StackOverflowContextSet	12	static
+Common/Src/silverstar_assert.c:68:26:SilverStarAssert_Fail	8	static
+Common/Src/silverstar_assert.c:39:6:SilverStarAssert_Check	8	static
+Common/Src/silverstar_assert.c:51:6:SilverStarAssert_ObjectCheck	32	static
+Common/Src/silverstar_assert.c:90:9:SilverStarAssert_FaultedGet	0	static
+Common/Src/silverstar_assert.c:95:9:SilverStarAssert_FaultRecordGet	8	static

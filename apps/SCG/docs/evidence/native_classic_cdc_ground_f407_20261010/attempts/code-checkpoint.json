@@ -1,0 +1,27 @@
+{
+  "code_commit": "9f115f087f12868dd8a5384ca0b1e78edace63e0",
+  "branch": "feature/scg-classic-cdc-contract-20261009",
+  "paths": [
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_probe.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_clock_tim.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_ground.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_pc.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_runtime.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_data.py",
+    "apps/SCG/tests/test_native_clock_tim.py",
+    "apps/SCG/tests/test_native_pc.py",
+    "apps/SCG/tests/test_native_runtime.py",
+    "apps/SCG/tests/test_native_usb_data.py",
+    "apps/SCG/tools/validation/native_classic_cdc_compile.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_indexed.py",
+    "apps/SCG/tests/test_native_clock_tim_callers.py",
+    "apps/SCG/tests/test_native_clock_tim_lifecycle.py",
+    "apps/SCG/tests/test_native_clock_tim_phase.py",
+    "apps/SCG/tests/test_native_ground_data_path.py",
+    "apps/SCG/tests/test_native_usb_indexed.py",
+    "apps/SCG/tests/test_native_usb_indexed_ll.py"
+  ],
+  "tested_snapshot": "Fresh 14e compiled dirty snapshot based on 05e2016; exact source bytes audited before evidence packaging",
+  "daily_head": "56448bd35736221d7885a26704f2f953b0fe5055"
+}

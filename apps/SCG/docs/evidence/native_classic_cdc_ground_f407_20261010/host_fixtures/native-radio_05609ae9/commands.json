@@ -1,0 +1,58 @@
+[
+  {
+    "command": [
+      "D:/msys64/ucrt64/bin\\gcc.EXE",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\native-radio_05609ae9",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib",
+      "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\native-radio_05609ae9\\contract.c",
+      "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\multi_instance_resources.c",
+      "-o",
+      "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\native-radio_05609ae9\\contract.exe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "D:/msys64/ucrt64/bin\\gcc.EXE",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\native-radio_05609ae9",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Devices\\Telemetry\\SX1281\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_device_telemetry_sx1281\\payload\\Middlewares\\Third_Party\\SX1280lib",
+      "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\native-radio_05609ae9\\test_sx1281_device.c",
+      "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\native-radio_05609ae9\\sx1281_device.c",
+      "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\silverstar_assert.c",
+      "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\Fixtures\\MultiInstance\\multi_instance_resources.c",
+      "-o",
+      "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\native-radio_05609ae9\\owner.exe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

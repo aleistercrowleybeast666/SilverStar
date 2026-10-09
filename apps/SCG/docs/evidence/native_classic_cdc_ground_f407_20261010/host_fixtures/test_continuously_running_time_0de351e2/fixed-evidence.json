@@ -1,0 +1,34 @@
+{
+  "source_sha256": "410438f5c22053daee1230bd6400ba92dce87219493a56803f13a9cec0e1a908",
+  "compile_command": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-Wundef",
+    "-fanalyzer",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_continuously_running_time_0de351e2",
+    "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_continuously_running_time_0de351e2\\clock.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_continuously_running_time_0de351e2\\fixed.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_continuously_running_time_0de351e2\\phase.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_continuously_running_time_0de351e2\\fixed.exe"
+  ],
+  "compile_exit": 0,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "run_command": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_continuously_running_time_0de351e2\\fixed.exe",
+    "stopped"
+  ],
+  "run_exit": 0,
+  "stdout": "",
+  "stderr": "",
+  "executable_sha256": "7d9b66cfc796e7d80cf57d9033aaa436570f353b166efec315ed2ce0026ebb1e"
+}

@@ -1,3 +1,28 @@
+2026-10-10 TIM1 普通功能收敛
+
+独审 P2（合法 CNT=0 误拒绝）已修复，代码提交 `9f115f087f12868dd8a5384ca0b1e78edace63e0`。
+UIF 前后清零且 CNT=0..999 均可采样；配置、pending、单调性、停转/进展检查保留。
+独审模型在原输入与相同编译器条件下复放：旧口 first/later/status=5/5/5，
+修复口 0/0/0。模型时间常量不是真实 STM32 采样延迟。
+新增实际原生 HAL boot caller 返回传播与 TIM1 第二次启动/晚期重配测试，保留原失败证据。
+runtime 派生先 quiesce 唯一共享 IRQ，再重建 boot timer；只接受实际 DIV1/DIV2 相位，
+运行时/ISR/已屏蔽 IRQ 的重配拒绝并锁存，普通 HAL InitTick 错误不会被调用者吞掉。
+
+F407 已从历史的私有 timer probe 前进到完整私有 Ground 正常数据路径候选。
+最终 normal/analyzer ARM 构建为 387 条命令、零编译警告；全部四个 emitted gates、
+五个 generated Host 程序及明确普通范围 154 项 suite 通过，无 skips。
+实际对象/ELF、独立 SDK IRQn、TIM1 strong owners 和 CPP config/clock header 依赖保留。
+完整结果及 F103 回归见 [runtime 报告](NATIVE_CLASSIC_CDC_RUNTIME_20261010.md) 与
+[证据清单](evidence/native_classic_cdc_ground_f407_20261010/verification.json)。
+
+普通入口继续阻断；EP0 受阻审查无结果且未重试。语义接受、完整异步生命周期、IRQ
+延迟/丢失 update、library/indirect-call、MSP/ISR 栈、WCET 及物理硬件时序仍 NOT PROVEN。
+本轮没有连接硬件，未改日用/GUI/FINAL，未作正式放行或通用可用声明。
+
+---
+
+以下保留的是 53334df 的历史 probe checkpoint，描述的是其当时范围。
+
 This increment is a private F407 native TIM1 clock/HAL/configuration compilation
 probe. It follows the separate F103 runtime checkpoint
 `179467265ec32ba79f7fb4bef85a4dfad82f8618`; it does not enable F407 Ground runtime

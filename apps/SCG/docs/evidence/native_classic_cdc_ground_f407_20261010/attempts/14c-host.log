@@ -1,0 +1,44 @@
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Tests\\Host\\pc_session_uart.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Tests\\Host\\ground_bridge_bounds.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\bridge_bounds.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\bridge_bounds.exe"]
+PASS host bridge_bounds
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Tests\\Host\\ground_backpressure.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "idle"]
+PASS idle forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "burst"]
+PASS burst forwarded=5 ACK=5 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "radio"]
+PASS radio forwarded=0 ACK=0 radio=4 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "mixed"]
+PASS mixed forwarded=1000 ACK=1000 radio=800 status=201
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "slow"]
+PASS slow forwarded=12 ACK=12 radio=0 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "sessions"]
+PASS sessions forwarded=100 ACK=100 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "queued-reset"]
+PASS queued-reset forwarded=5 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "budget"]
+PASS budget forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "error"]
+PASS error forwarded=0 ACK=0 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\backpressure.exe", "error-reset"]
+PASS error-reset forwarded=0 ACK=0 radio=0 status=1
+PASS host backpressure
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Generated\\Src\\pc_byte_stream.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\native-host\\ready_transport_fixture.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Tests\\Host\\usb_cdc.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\usb_cdc.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\usb_cdc.exe"]
+PASS host usb_cdc
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Generated\\Src\\pc_byte_stream.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\native-host\\ready_transport_fixture.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\Tests\\Host\\usb_session.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\usb_session.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14c\\build\\ground-host\\usb_session.exe"]
+Assertion failed: 0 && "Host transport fixtures must not corrupt indexed ownership", file C:\Users\chdxm\AppData\Local\Temp\ccdi-handoff-ground-f407-14c\build\native-host\ready_transport_fixture.c, line 11
+Traceback (most recent call last):
+  File "C:\Users\chdxm\AppData\Local\Temp\ccdi-handoff-ground-f407-14c\Tools\check_native_ground.py", line 204, in <module>
+    Host_Check(root,args.host_cc)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Temp\ccdi-handoff-ground-f407-14c\Tools\check_native_ground.py", line 99, in Host_Check
+    LegacyHost_Check(root,compiler,extra_usb_sources=(str(ready_fixture),))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Temp\ccdi-handoff-ground-f407-14c\Tools\check_ground.py", line 184, in Host_Check
+    Command_Run([str(executable)], root)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Temp\ccdi-handoff-ground-f407-14c\Tools\check_ground.py", line 19, in Command_Run
+    raise RuntimeError(f'command exit {result.returncode}')
+RuntimeError: command exit 3221226505

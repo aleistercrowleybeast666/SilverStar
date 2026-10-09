@@ -1,0 +1,1420 @@
+["arm-none-eabi-gcc", "--version"]
+arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.d", "-MT", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.o", "-S", "HardwareGenerated/ReviewedNativeEntry/Core/Src/main.c", "-o", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.s", "-o", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/gpio.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/adc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/dma.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/spi.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/usart.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.d", "-MT", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.o", "-S", "HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.c", "-o", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.s", "-o", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.d", "-MT", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.o", "-S", "HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.c", "-o", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.s", "-o", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.d", "-MT", "build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.o", "-S", "HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.c", "-o", "build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.s", "-o", "build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.d", "-MT", "build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.o", "-S", "HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c", "-o", "build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.s", "-o", "build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.d", "-MT", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o", "-S", "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.s", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.d", "-MT", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o", "-S", "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.s", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.d", "-MT", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o", "-S", "HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c", "-o", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.s", "-o", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.d", "-MT", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o", "-S", "HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c", "-o", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.s"]
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:277:16: warning: 'CDCCmdEpAdd' defined but not used [-Wunused-variable]
+  277 | static uint8_t CDCCmdEpAdd = CDC_CMD_EP;
+      |                ^~~~~~~~~~~
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:276:16: warning: 'CDCOutEpAdd' defined but not used [-Wunused-variable]
+  276 | static uint8_t CDCOutEpAdd = CDC_OUT_EP;
+      |                ^~~~~~~~~~~
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:275:16: warning: 'CDCInEpAdd' defined but not used [-Wunused-variable]
+  275 | static uint8_t CDCInEpAdd = CDC_IN_EP;
+      |                ^~~~~~~~~~
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.s", "-o", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_no_heap.d", "-MT", "build/Generated/Src/native_no_heap.o", "-S", "Generated/Src/native_no_heap.c", "-o", "build/Generated/Src/native_no_heap.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_no_heap.gas.d", "-c", "build/Generated/Src/native_no_heap.s", "-o", "build/Generated/Src/native_no_heap.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/native_no_heap.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Common/Src/silverstar_assert.d", "-MT", "build/Common/Src/silverstar_assert.o", "-S", "Common/Src/silverstar_assert.c", "-o", "build/Common/Src/silverstar_assert.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Common/Src/silverstar_assert.gas.d", "-c", "build/Common/Src/silverstar_assert.s", "-o", "build/Common/Src/silverstar_assert.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Common/Src/silverstar_assert.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_clock.d", "-MT", "build/Generated/Src/native_clock.o", "-S", "Generated/Src/native_clock.c", "-o", "build/Generated/Src/native_clock.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_clock.gas.d", "-c", "build/Generated/Src/native_clock.s", "-o", "build/Generated/Src/native_clock.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/native_clock.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_clock_port.d", "-MT", "build/Generated/Src/native_clock_port.o", "-S", "Generated/Src/native_clock_port.c", "-o", "build/Generated/Src/native_clock_port.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_clock_port.gas.d", "-c", "build/Generated/Src/native_clock_port.s", "-o", "build/Generated/Src/native_clock_port.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/native_clock_port.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_critical.d", "-MT", "build/Generated/Src/native_critical.o", "-S", "Generated/Src/native_critical.c", "-o", "build/Generated/Src/native_critical.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_critical.gas.d", "-c", "build/Generated/Src/native_critical.s", "-o", "build/Generated/Src/native_critical.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/native_critical.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_platform.d", "-MT", "build/Generated/Src/native_platform.o", "-S", "Generated/Src/native_platform.c", "-o", "build/Generated/Src/native_platform.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_platform.gas.d", "-c", "build/Generated/Src/native_platform.s", "-o", "build/Generated/Src/native_platform.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/native_platform.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_runtime.d", "-MT", "build/Generated/Src/native_runtime.o", "-S", "Generated/Src/native_runtime.c", "-o", "build/Generated/Src/native_runtime.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_runtime.gas.d", "-c", "build/Generated/Src/native_runtime.s", "-o", "build/Generated/Src/native_runtime.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/native_runtime.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_usb_state.d", "-MT", "build/Generated/Src/native_usb_state.o", "-S", "Generated/Src/native_usb_state.c", "-o", "build/Generated/Src/native_usb_state.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_usb_state.gas.d", "-c", "build/Generated/Src/native_usb_state.s", "-o", "build/Generated/Src/native_usb_state.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/native_usb_state.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/project_resources.d", "-MT", "build/Generated/Src/project_resources.o", "-S", "Generated/Src/project_resources.c", "-o", "build/Generated/Src/project_resources.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/Generated/Src/project_resources.gas.d", "-c", "build/Generated/Src/project_resources.s", "-o", "build/Generated/Src/project_resources.o"]
+
+EXIT 0
+["arm-none-eabi-readelf", "-A", "build/Generated/Src/project_resources.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-IGenerated/Inc", "-ICommon/Inc", "-IInterfaces/Inc", "-IPlatform/Inc", "-IGround/Core/Inc", "-IGround/Protocol/Inc", "-IDevices/Telemetry/SX1281/Inc", "-IMiddlewares/Third_Party/SX1280lib", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DAIR_LINK_HAL_BUFFER_SIZE=260", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/pc_byte_stream.d", "-MT", "build/Generated/Src/pc_byte_stream.o", "-S", "Generated/Src/pc_byte_stream.c", "-o", "build/Generated/Src/pc_byte_stream.s"]
+In file included from HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include/cmsis_compiler.h:54,
+                 from HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include/core_cm4.h:162,
+                 from HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h:166,
+                 from HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:132,
+                 from HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h:29,
+                 from HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:27,
+                 from HardwareGenerated/NativeClassicCdc/Core/Inc/stm32f4xx_hal_conf.h:275,
+                 from HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from HardwareGenerated/NativeClassicCdc/Core/Inc/main.h:30,
+                 from Generated/Src/pc_byte_stream.c:6:
+In function '__set_PRIMASK',
+    inlined from 'PcByteStream_ReadSession' at Generated/Src/pc_byte_stream.c:93:45:
+HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include/cmsis_gcc.h:41:50: error: 'saved_mask' may be used uninitialized [-Werror=maybe-uninitialized]
+   41 |   #define __ASM                                  __asm
+      |                                                  ^~~~~
+HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include/cmsis_gcc.h:1236:3: note: in expansion of macro '__ASM'
+ 1236 |   __ASM volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
+      |   ^~~~~
+Generated/Src/pc_byte_stream.c: In function 'PcByteStream_ReadSession':
+Generated/Src/pc_byte_stream.c:87:14: note: 'saved_mask' was declared here
+   87 |     uint32_t saved_mask;
+      |              ^~~~~~~~~~
+cc1.exe: all warnings being treated as errors
+
+EXIT 1

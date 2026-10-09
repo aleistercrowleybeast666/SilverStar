@@ -1,0 +1,61 @@
+{
+  "head": "05e20169240ec812c988af1017cffc495319ec3c",
+  "files": {
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py": {
+      "sha256": "24200c0c2fd4f0616adc9533ccd21e20dbdb606e73b78d0456bb79e9f27e6293",
+      "bytes": 13226
+    },
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_probe.py": {
+      "sha256": "a503c0dad65f8c2686701fecd7e7791fe2a9eb8e56c685f7980229d7c5928943",
+      "bytes": 6499
+    },
+    "apps/SCG/src/silverstar_fccg/generator/native_clock_tim.py": {
+      "sha256": "62390d29aa0f3c71e9a44db2b0da9df974480143bf176b66a5f7807f5d2f56bf",
+      "bytes": 13356
+    },
+    "apps/SCG/src/silverstar_fccg/generator/native_ground.py": {
+      "sha256": "60d9339072b3eab33f385b4c6a778bf1c35a036a4a4fc93fb02a32d34c666289",
+      "bytes": 22412
+    },
+    "apps/SCG/src/silverstar_fccg/generator/native_pc.py": {
+      "sha256": "ca5b1b34b967979b5fe15fb2ac0138ae76c469777dd3ffec0bfbcf10f1b46f9f",
+      "bytes": 2224
+    },
+    "apps/SCG/src/silverstar_fccg/generator/native_runtime.py": {
+      "sha256": "e1330cc0c90ac8db0a35607a47717dbc116f2ab6a75c17bb275294dc00110f4f",
+      "bytes": 6925
+    },
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_data.py": {
+      "sha256": "c9de837e45949e5ddff40f681cf076515e1a8ba5afd9f4a59455eb35b22c3655",
+      "bytes": 16659
+    },
+    "apps/SCG/tests/test_native_clock_tim.py": {
+      "sha256": "e262ac8bdd8b0699c05fb003c547075a7001f132c2f843139304ab6d6cad033b",
+      "bytes": 13486
+    },
+    "apps/SCG/tests/test_native_usb_data.py": {
+      "sha256": "39262a6a481c83b19f039196290aefa6e1b7502abfb0dde55ea594121185a80e",
+      "bytes": 10303
+    },
+    "apps/SCG/tools/validation/native_classic_cdc_compile.py": {
+      "sha256": "7a66c384376c48da98c8c986aabb389b828a825ce9adbde578cf3c2d1b57ee2e",
+      "bytes": 25407
+    },
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_indexed.py": {
+      "sha256": "ffef2ca0bf5ad1e482c367094fe90c955ebd9274d1352ddbaf9a4b4b48b911d8",
+      "bytes": 9566
+    },
+    "apps/SCG/tests/test_native_clock_tim_lifecycle.py": {
+      "sha256": "39323014e84926180a71c1e49b51d67e9da515af41ba3a62e66b0fc3b36a071c",
+      "bytes": 3515
+    },
+    "apps/SCG/tests/test_native_clock_tim_phase.py": {
+      "sha256": "5bacdb418855fee33aa917403d38d9b7803d6d985594257d412c4ec8227b0f97",
+      "bytes": 4613
+    },
+    "apps/SCG/tests/test_native_usb_indexed.py": {
+      "sha256": "8047f7c8f65c9c18d8e5f26da6c96d97842a3f61c11b3e04f62dc1a82ffc6911",
+      "bytes": 2009
+    }
+  }
+}

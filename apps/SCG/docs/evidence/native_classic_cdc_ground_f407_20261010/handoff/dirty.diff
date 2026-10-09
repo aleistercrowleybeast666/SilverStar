@@ -1,0 +1,415 @@
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py b/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py
+index 25662f0..0375bab 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py
++++ b/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py
+@@ -94,6 +94,7 @@ uint8_t NativeRuntime_ReadyGet(void) { return 1U; }
+ uint8_t NativeClock_ContextAllowedGet(void) { return usb_test_mask == 0U ? 1U : 0U; }
+ NativeClockResult NativeClock_DelayUs(uint32_t delay)
+ { assert(delay == 1U && usb_test_mask == 0U); return NativeClockResult_Ok; }
++void NativeRuntime_TransportFaultRecord(void) { assert(0 && "Host transport fixtures must not corrupt indexed ownership"); }
+ ''')
+     LegacyHost_Check(root,compiler,extra_usb_sources=(str(ready_fixture),))
+ 
+@@ -179,6 +180,13 @@ def Artifact_Check(root: Path, prefix: str, *, architecture_check=None) -> None:
+             'dynamic_frames':[str(p.relative_to(root)) for p in stack_files if '\tdynamic' in p.read_text()],
+             'limits':'NOT PROVEN: library/indirect call graph, whole-program task/MSP/ISR nesting stack and MCU WCET'})
+     (root/'build/native-artifact-report.json').write_text(json.dumps(reports,indent=2))
++    contract_path=root/'Generated/native_ground_contract.json'
++    if contract_path.is_file():
++        contract=json.loads(contract_path.read_text())
++        if contract.get('clock',{}).get('port')=='tim1':
++            from check_native_probe import ConfigurationDependencies_Validate, StrongOwners_Validate
++            ConfigurationDependencies_Validate(root,graph,contract)
++            StrongOwners_Validate(root,prefix,contract)
+     print('PASS current artifact hashes, real object/ELF ARM attributes, independent IRQ positions, rejecting heap ABI and physical region bounds')
+     print('EP0/full async lifecycle, semantic critical-contract review, actual stack margin, MCU timing and hardware: NOT PROVEN')
+ 
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_probe.py b/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_probe.py
+index 6a45219..2069995 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_probe.py
++++ b/apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_probe.py
+@@ -74,6 +74,10 @@ def ProbeArtifact_Check(root,prefix):
+     contract=json.loads((root/'Generated/native_probe_contract.json').read_text())
+     graph=json.loads((root/'Generated/ground_source_graph.json').read_text())
+     ConfigurationDependencies_Validate(root,graph,contract)
++    StrongOwners_Validate(root,prefix,contract)
++
++
++def StrongOwners_Validate(root,prefix,contract):
+     for build in ('build','build/analysis'):
+         command=[prefix+'nm','-n',str(root/build/'native.elf')]
+         result=subprocess.run(command,capture_output=True,text=True,timeout=30)
+diff --git a/apps/SCG/src/silverstar_fccg/generator/native_clock_tim.py b/apps/SCG/src/silverstar_fccg/generator/native_clock_tim.py
+index f1b3257..510b5b3 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/native_clock_tim.py
++++ b/apps/SCG/src/silverstar_fccg/generator/native_clock_tim.py
+@@ -66,7 +66,7 @@ def NativeClockTimSourceContract_Inspect(files, sources, *, hclk_hz):
+         'limits':'NOT PROVEN: timer IRQ latency, waveform timing, call graph/stack and hardware'}
+ 
+ 
+-def NativeClockTimDerivatives_Render(files):
++def NativeClockTimDerivatives_Render(files, *, runtime=False):
+     for path,digest in _PROFILES.items():
+         if hashlib.sha256(files.get(path,b'')).hexdigest()!=digest:
+             raise ValueError('Native TIM1 derivative source changed: '+path)
+@@ -88,7 +88,30 @@ def NativeClockTimDerivatives_Render(files):
+         raise ValueError('Native TIM1 IRQ initialization boundary changed')
+     function=function.replace(enable,'',1).replace('uwTickPrio = TickPriority;',
+         'uwTickPrio = TickPriority;\n        '+enable,1)
++    if runtime:
++        opening=function.index('{')+1
++        function=function[:opening]+'''
++  /* Only the two stock boot clock phases may configure this timer. Once the
++   * time owner initializes, reconfiguration is a latched internal fault. */
++  if ((__get_IPSR() != 0U) || (__get_PRIMASK() != 0U) ||
++      (NativeClock_StatusGet() != NativeClockResult_NotInitialized))
++  { NativeRuntime_TransportFaultRecord(); return HAL_ERROR; }
++'''+function[opening:]
++        anchor='  /* Initialize TIM1 */'
++        function=function.replace(anchor,'''  /* Quiesce the sole shared-vector owner before replacing its boot setup. */
++  HAL_NVIC_DisableIRQ(TIM1_UP_TIM10_IRQn);
++  TIM1->DIER = 0U;
++  TIM1->CR1 = 0U;
++  TIM1->SR = 0U;
++  NVIC_ClearPendingIRQ(TIM1_UP_TIM10_IRQn);
++'''+anchor,1)
++        function=function.replace('    /* Start the TIM time Base generation in interrupt mode */',
++            '    TIM1->SR = 0U;\n    NVIC_ClearPendingIRQ(TIM1_UP_TIM10_IRQn);\n'
++            '    /* Start the TIM time Base generation in interrupt mode */',1)
+     source=source[:a]+function+source[b:]
++    if runtime:
++        source=source.replace('#include "stm32f4xx_hal.h"',
++            '#include "stm32f4xx_hal.h"\n#include "native_clock.h"\n#include "native_runtime.h"',1)
+     irq=files[_IRQ].decode('utf-8-sig')
+     a,o,b=NativeC_FunctionSpanGet(irq,'TIM1_UP_TIM10_IRQHandler')
+     if NativeC_VisibleGet(irq[o+1:b-1]).strip():
+@@ -110,6 +133,30 @@ def NativeClockTimDerivatives_Render(files):
+     return rendered,replacements,{'entries':entries,'scope':'Private TIM1 timebase and initially empty shared IRQ; no other shared owner admitted'}
+ 
+ 
++def NativeClockTimCallerDerivatives_Render(files):
++    profiles=(('Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c',
++        '97e715cda2a34bd564b59ce4ba9b16bd29651f8f229161105aaec666d76ea91a','HAL_Init','HAL_InitTick(TICK_INT_PRIORITY);'),
++        ('Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c',
++        'f3ac468e2f415adb74281107c0dec1448008950b64a7bb11c14cbe3ee1a936de','HAL_RCC_ClockConfig','HAL_InitTick(uwTickPrio);'))
++    rendered={};replacements={};entries=[]
++    for path,digest,name,call in profiles:
++        original=files[path]
++        if hashlib.sha256(original).hexdigest()!=digest:raise ValueError('Native TIM1 boot caller profile requires review: '+path)
++        source=original.decode('utf-8-sig');a,_o,b=NativeC_FunctionSpanGet(source,name)
++        body=source[a:b]
++        if body.count(call)!=1:raise ValueError('Native TIM1 boot caller changed: '+name)
++        body=body.replace(call,'if ('+call.removesuffix(';')+' != HAL_OK) { return HAL_ERROR; }',1)
++        derived=(source[:a]+body+source[b:]).encode()
++        target='HardwareGenerated/ReviewedNativeTime/'+path;patch=target+'.patch'
++        rendered[target]=derived
++        rendered[patch]=''.join(difflib.unified_diff(original.decode().splitlines(keepends=True),
++            derived.decode().splitlines(keepends=True),fromfile=NATIVE_PREFIX+path,tofile=NATIVE_PREFIX+path)).encode()
++        replacements[NATIVE_PREFIX+path]=target
++        entries.append({'original':NATIVE_PREFIX+path,'original_sha256':digest,'derived':target,
++            'derived_sha256':hashlib.sha256(derived).hexdigest(),'patch':patch,'patch_sha256':hashlib.sha256(rendered[patch]).hexdigest()})
++    return rendered,replacements,{'entries':entries,'scope':'Propagate both actual boot timer initialization returns; no extra timer initialization calls'}
++
++
+ def NativeClockTimPort_Render():
+     return '''#include "native_clock.h"
+ #include "platform_critical.h"
+@@ -164,7 +211,7 @@ NativeClockResult NativeClockPort_SnapshotGet(NativeClockSnapshot *snapshot)
+         /* A pending update may hide missed IRQs. Never invent extra HAL ticks.
+          * Restore PRIMASK so the actual IRQ can retire it before a retry. */
+         if ((pending_before == 0U) && (pending_after == 0U) &&
+-            (counter != 0U) && (counter <= 999U))
++            (counter <= 999U))
+         {
+             snapshot->tick_ms = tick;
+             /* Common fractional interval uses HCLK-cycle units; TIM1 itself
+diff --git a/apps/SCG/src/silverstar_fccg/generator/native_ground.py b/apps/SCG/src/silverstar_fccg/generator/native_ground.py
+index 0c5af7a..6ad49e1 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/native_ground.py
++++ b/apps/SCG/src/silverstar_fccg/generator/native_ground.py
+@@ -16,6 +16,8 @@ from types import SimpleNamespace
+ from silverstar_fccg.hardware.native_classic_cdc import NATIVE_PREFIX
+ from silverstar_fccg.generator.native_hal import NativeC_FunctionSpanGet, NativeC_VisibleGet, NativeHalDerivatives_Render
+ from silverstar_fccg.generator.native_clock import NativeClock_FilesRender, NativeClockSourceContract_Validate
++from silverstar_fccg.generator.native_clock_tim import NativeClockTimSourceContract_Inspect,NativeClockTimDerivatives_Render,NativeClockTimPort_Render,NativeClockTimCallerDerivatives_Render
++from silverstar_fccg.generator.native_usb_config import NativeUsbConfig_FilesRender
+ from silverstar_fccg.generator.native_platform import NativePlatformContract_Inspect, NativePlatform_FilesRender
+ from silverstar_fccg.generator.native_runtime import NativeRuntime_FilesRender
+ from silverstar_fccg.generator.native_no_heap import NativeNoHeap_FilesRender
+@@ -38,6 +40,9 @@ def _Callback_Integrate(source: str, indexed: bool) -> str:
+     names = ['CDC_Init_FS','CDC_DeInit_FS','CDC_Control_FS','CDC_Receive_FS']
+     if indexed:
+         names.append('CDC_TransmitCplt_FS')
++        _a,o,b=NativeC_FunctionSpanGet(source,'CDC_TransmitCplt_FS')
++        if re.sub(r'\s+','',NativeC_VisibleGet(source[o+1:b-1]))!='uint8_tresult=USBD_OK;UNUSED(Buf);UNUSED(Len);UNUSED(epnum);returnresult;':
++            raise ValueError('Native CDC completion hook requires its reviewed empty policy')
+     initializer = re.findall(r'USBD_CDC_ItfTypeDef\s+USBD_Interface_fops_FS\s*=\s*\{([^{}]*)\}\s*;',visible)
+     if (len(initializer) != 1 or re.fullmatch(r'\s*'+r'\s*,\s*'.join(names)+r'\s*,?\s*',initializer[0]) is None or
+             re.search(r'(?m)^\s*#\s*(?:define|undef)\b',visible) or '\\\n' in source or '\\\r\n' in source):
+@@ -83,6 +88,12 @@ def _Callback_Integrate(source: str, indexed: bool) -> str:
+   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+   return (result == USBD_OK) ? USBD_OK : ((result == USBD_BUSY) ? USBD_BUSY : USBD_FAIL);
+ }''')
++    if indexed:
++        marker='  result = USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);'
++        source=source.replace(marker,'  if ((hUsbDeviceFS.classId != 0U) ||\n'
++            '      (hUsbDeviceFS.pClassData != hUsbDeviceFS.pClassDataCmsit[0]))\n'
++            '  { NativeRuntime_TransportFaultRecord(); return USBD_FAIL; }\n'+marker,1)
++        source=source.replace('#include "pc_byte_stream.h"','#include "pc_byte_stream.h"\n#include "native_runtime.h"',1)
+     return source
+ 
+ 
+@@ -94,9 +105,21 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
+             radios[0].module_variant != 'e28_2g4m12sx' or model.air_link.radio_family != 'sx128x' or
+             ground.tx_led_resource or ground.rx_led_resource or ground.activity_led_enabled is True):
+         raise ValueError('Private native candidate currently requires one bare SX1281/M12, FS CDC and no extra LEDs')
+-    clock = NativeClockSourceContract_Validate(native_files,proof['build']['sources'],hclk_hz=hclk_hz)
++    class_sha=hashlib.sha256(native_files[proof['cdc']['owners']['usbd_cdc.c']]).hexdigest()
++    indexed=class_sha=='794a6d0df08fc2b777678b99013f61d0a9c93f5fbeacfaa3466c0feeaa9ada39'
++    clock = (NativeClockTimSourceContract_Inspect if indexed else NativeClockSourceContract_Validate)(
++        native_files,proof['build']['sources'],hclk_hz=hclk_hz)
+     platform = NativePlatformContract_Inspect(native_files,proof,inventory)
+     files, replacements, hal = NativeHalDerivatives_Render(native_files,proof['build']['sources'])
++    timer=None;usb_config=None;config_include=None
++    if indexed:
++        timer_files,timer_replacements,timer=NativeClockTimDerivatives_Render(native_files,runtime=True)
++        files.update(timer_files);replacements.update(timer_replacements)
++        caller_files,caller_replacements,callers=NativeClockTimCallerDerivatives_Render(native_files)
++        files.update(caller_files);replacements.update(caller_replacements)
++        timer['callers']=callers
++        config_files,config_include,usb_config=NativeUsbConfig_FilesRender(native_files,proof['cdc']['owners'])
++        files.update(config_files)
+     bulk_files, bulk_replacements, bulk = NativeUsbBulk_FilesRender(native_files,proof['cdc']['owners'])
+     files.update(bulk_files); replacements.update(bulk_replacements)
+     core = catalog.Component_Get('silverstar.core.ground.0_1_0')
+@@ -112,6 +135,15 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
+     files[test_path] = text.replace(old, '    calls = s_calls;\n    usb_test_mask = 1U;\n'
+         '    assert(PcByteStream_Write(input, 3U) == PC_BYTE_STREAM_WRITE_BUSY);\n'
+         '    assert(s_calls == calls);', 1).encode()
++    if indexed:
++        header_path='Tests/Host/usb_device.h'
++        header=files[header_path].decode().replace('void *pClassData;',
++            'void *pClassData; void *pClassDataCmsit[1]; uint8_t classId;')
++        files[header_path]=header.encode()
++        text=files[test_path].decode()
++        text=text.replace('    hUsbDeviceFS.pClassData = &s_class;',
++            '    hUsbDeviceFS.pClassData = &s_class;\n    hUsbDeviceFS.pClassDataCmsit[0] = &s_class;')
++        files[test_path]=text.encode()
+     files.pop(core.metadata['ground_radio_backends']['nrf24'])
+     _PayloadFiles_Add(files,radio,skip_adapter=True)
+     radio_original='Middlewares/Third_Party/SX1280lib/sx1280-hal.c'
+@@ -134,8 +166,9 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
+                  'Interfaces/Inc/system_device_types.h','Tools/check_power_of_ten.ps1'):
+         files[path] = (flight_core.payload_root/path).read_bytes()
+     files.update(NativeClock_FilesRender(hclk_hz=hclk_hz))
++    if indexed:files['Generated/Src/native_clock_port.c']=NativeClockTimPort_Render()
+     files.update(NativePlatform_FilesRender(platform))
+-    files.update(NativeRuntime_FilesRender())
++    files.update(NativeRuntime_FilesRender(transport_fault=indexed))
+     heap_owners = [path for path in proof['build']['sources'] if path.endswith('/sysmem.c')]
+     if len(heap_owners) != 1:
+         raise ValueError('Native candidate requires one known libc heap extender to replace')
+@@ -210,6 +243,11 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
+     if (len(gpio_calls) != 1 or len(spi_calls) != 1 or
+             not (gpio_calls[0].start() < spi_calls[0].start() < owner_start)):
+         raise ValueError('Native lifecycle requires GPIO and SPI initialization before its owner boundary')
++    if indexed:
++        if hashlib.sha256(native_files[main_path]).hexdigest()!='b29d5f13e084cf835c1845095dc19243f00411d3c6198ca25b3477993923aca8':
++            raise ValueError('Native TIM1 Ground boot/configuration sequence requires reviewed main profile')
++        if not (boot.index('HAL_Init();') < boot.index('SystemClock_Config();') < gpio_calls[0].start()):
++            raise ValueError('Native TIM1 Ground requires both stock boot clock phases before owner initialization')
+     main = _UserSection_Insert(main,'Includes','#include "native_runtime.h"',empty=True)
+     main = _UserSection_Insert(main,'2','  if (NativeRuntime_Init() != NativeRuntimeResult_Ok) { Error_Handler(); }',empty=True)
+     loop = re.findall(r'/\* USER CODE BEGIN 3 \*/(.*?)/\* USER CODE END 3 \*/',main,re.S)
+@@ -240,6 +278,7 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
+         sources.extend(p for p in owner.build.sources if '/Adapter/' not in p and p in files)
+     sources=[radio_derived if path==radio_original else path for path in sources]
+     includes = [NATIVE_PREFIX+p for p in proof['build']['include_dirs']]
++    if config_include:includes.insert(0,config_include)
+     includes.extend(['Generated/Inc','Common/Inc','Interfaces/Inc','Platform/Inc'])
+     includes.extend(p for owner in (core,radio) for p in owner.build.include_dirs if '/Adapter/' not in p)
+     graph = {**proof['build'],'sources':list(dict.fromkeys(sources)),
+@@ -268,6 +307,12 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
+         'ep0_review':'NOT PROVEN: shared owner patch independent review blocked; no EP0 repair integrated',
+         'critical_contract_review':'NOT PROVEN: private bulk propagation increment requires manual acceptance; complete EP0/async lifecycle, call graph, stack/WCET/hardware unavailable',
+         'publication':'PRIVATE CANDIDATE ONLY; normal generation remains blocked'}
++    if indexed:
++        records.update(timer=timer,usb_config=usb_config,required_symbol_owners={
++            'HAL_InitTick':replacements[NATIVE_PREFIX+'Core/Src/stm32f4xx_hal_timebase_tim.c'],
++            'TIM1_UP_TIM10_IRQHandler':replacements[NATIVE_PREFIX+'Core/Src/stm32f4xx_it.c'],
++            'HAL_TIM_PeriodElapsedCallback':main_owned})
++        records['timer_lifecycle']='Only stock HAL_Init then SystemClock_Config boot phases before PlatformTime_Init; later/masked/ISR InitTick rejected and latched, sole timer IRQ quiesced before boot reconfiguration'
+     files['Generated/native_ground_contract.json'] = json.dumps(records,indent=2).encode()
+     files['Generated/ground_source_graph.json'] = json.dumps(graph,indent=2).encode()
+     make = _Makefile_Render(tuple(graph['sources']),tuple(graph['asm_sources']),tuple(graph['include_dirs']),
+diff --git a/apps/SCG/src/silverstar_fccg/generator/native_pc.py b/apps/SCG/src/silverstar_fccg/generator/native_pc.py
+index 75f298a..a9e3597 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/native_pc.py
++++ b/apps/SCG/src/silverstar_fccg/generator/native_pc.py
+@@ -26,8 +26,11 @@ def NativePcAdapter_Render(*, indexed: bool) -> str:
+     adapter = adapter[:start]+write+adapter[end:]
+     if indexed:
+         adapter = adapter.replace('hUsbDeviceFS.pClassData', 'hUsbDeviceFS.pClassDataCmsit[0]')
+-        adapter = adapter.replace('    cdc = (USBD_CDC_HandleTypeDef *)',
+-            '    if (hUsbDeviceFS.classId != 0U)\n'
+-            '    { __set_PRIMASK(saved_mask); return PC_BYTE_STREAM_WRITE_BUSY; }\n'
+-            '    cdc = (USBD_CDC_HandleTypeDef *)', 1)
++        marker='    if ((hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) ||'
++        adapter = adapter.replace(marker,
++            '    if ((hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED) &&\n'
++            '        ((hUsbDeviceFS.classId != 0U) || (hUsbDeviceFS.pClassDataCmsit[0] == NULL) ||\n'
++            '         (hUsbDeviceFS.pClassData != hUsbDeviceFS.pClassDataCmsit[0])))\n'
++            '    { NativeRuntime_TransportFaultRecord(); __set_PRIMASK(saved_mask); return PC_BYTE_STREAM_WRITE_ERROR; }\n'
++            +marker, 1)
+     return adapter
+diff --git a/apps/SCG/src/silverstar_fccg/generator/native_runtime.py b/apps/SCG/src/silverstar_fccg/generator/native_runtime.py
+index 2560ec6..a1fdcda 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/native_runtime.py
++++ b/apps/SCG/src/silverstar_fccg/generator/native_runtime.py
+@@ -1,7 +1,7 @@
+ """Main-owned Ground lifecycle; clock faults retire radio and PC publication."""
+ 
+ 
+-def NativeRuntime_FilesRender() -> dict[str, bytes]:
++def NativeRuntime_FilesRender(*, transport_fault=False) -> dict[str, bytes]:
+     header = '''#ifndef __NATIVE_RUNTIME_H
+ #define __NATIVE_RUNTIME_H
+ #include <stdint.h>
+@@ -116,5 +116,24 @@ NativeRuntimeResult NativeRuntime_Process(void)
+     return NativeRuntimeResult_Ok;
+ }
+ '''
++    if transport_fault:
++        header=header.replace('uint8_t NativeRuntime_ReadyGet(void);',
++            'uint8_t NativeRuntime_ReadyGet(void);\nvoid NativeRuntime_TransportFaultRecord(void);')
++        runtime=runtime.replace('static uint8_t s_platform_started;',
++            'static uint8_t s_platform_started;\nstatic volatile uint8_t s_transport_fault;\n'
++            '/* IRQ/main may latch a stored transport fault. Only the main owner\n'
++            ' * retires USB/radio; the latch is never cleared after publication. */\n'
++            'void NativeRuntime_TransportFaultRecord(void) { s_transport_fault = 1U; }')
++        runtime=runtime.replace('(s_state == NativeRuntimeState_Ready) &&',
++            '(s_state == NativeRuntimeState_Ready) && (s_transport_fault == 0U) &&')
++        runtime=runtime.replace('    s_state = NativeRuntimeState_Starting;',
++            '    if (s_transport_fault != 0U) { return NativeRuntime_Abort(NativeRuntimeResult_PcFailure); }\n'
++            '    s_state = NativeRuntimeState_Starting;')
++        runtime=runtime.replace('    if (s_state != NativeRuntimeState_Ready) { return NativeRuntimeResult_NotReady; }',
++            '    if (s_state != NativeRuntimeState_Ready) { return NativeRuntimeResult_NotReady; }\n'
++            '    if (s_transport_fault != 0U) { return NativeRuntime_Abort(NativeRuntimeResult_PcFailure); }')
++        runtime=runtime.replace('    /* Radio timeouts and PC transport errors',
++            '    if (s_transport_fault != 0U) { return NativeRuntime_Abort(NativeRuntimeResult_PcFailure); }\n'
++            '    /* Radio timeouts and PC transport errors')
+     return {'Generated/Inc/native_runtime.h':header.encode('utf-8'),
+             'Generated/Src/native_runtime.c':runtime.encode('utf-8')}
+diff --git a/apps/SCG/src/silverstar_fccg/generator/native_usb_data.py b/apps/SCG/src/silverstar_fccg/generator/native_usb_data.py
+index c2a93bf..df8f1a8 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/native_usb_data.py
++++ b/apps/SCG/src/silverstar_fccg/generator/native_usb_data.py
+@@ -301,8 +301,13 @@ def NativeUsbLl_Derive(original: bytes) -> bytes:
+ def NativeUsbBulk_FilesRender(files: dict[str, bytes], owners: dict[str, str]
+                               ) -> tuple[dict[str, bytes], dict[str, str], dict]:
+     rendered = {}; replacements = {}; entries = []
+-    for name, derive in (('usbd_cdc.c',NativeUsbData_Derive),('usbd_core.c',NativeUsbCore_Derive),
+-                         ('usbd_conf.c',NativeUsbLl_Derive)):
++    indexed=hashlib.sha256(files[owners['usbd_cdc.c']]).hexdigest()=='794a6d0df08fc2b777678b99013f61d0a9c93f5fbeacfaa3466c0feeaa9ada39'
++    if indexed:
++        from silverstar_fccg.generator.native_usb_indexed import NativeUsbIndexedData_Derive,NativeUsbIndexedCore_Derive,NativeUsbIndexedLl_Derive
++        derivatives=(('usbd_cdc.c',NativeUsbIndexedData_Derive),('usbd_core.c',NativeUsbIndexedCore_Derive),('usbd_conf.c',NativeUsbIndexedLl_Derive))
++    else:
++        derivatives=(('usbd_cdc.c',NativeUsbData_Derive),('usbd_core.c',NativeUsbCore_Derive),('usbd_conf.c',NativeUsbLl_Derive))
++    for name, derive in derivatives:
+         path = owners[name]; original = files[path]; derived = derive(original)
+         target = 'HardwareGenerated/ReviewedNativeBulk/'+path
+         rendered[target] = derived
+@@ -314,7 +319,8 @@ def NativeUsbBulk_FilesRender(files: dict[str, bytes], owners: dict[str, str]
+             'derived':target,'derived_sha256':hashlib.sha256(derived).hexdigest(),
+             'patch':patch,'patch_sha256':hashlib.sha256(rendered[patch]).hexdigest()})
+     manifest = {'format_version':1,'entries':entries,
+-        'scope':'Private F1 vendor source profile, FS single CDC, 70-byte SCG TX and 64-byte RX; not an MCU admission list',
++        'scope':('Private indexed F407 vendor source profile' if indexed else 'Private F1 vendor source profile')+
++            ', FS single CDC, 70-byte SCG TX and 64-byte RX; not an MCU admission list',
+         'ownership':'Keep TX ownership on ambiguous LL failure; failed endpoint closure retains class block and blocks reinitialization',
+         'ep0':'No shared EP0 owner patch integrated; EP0 and full async lifecycle acceptance remain NOT PROVEN',
+         'exceptions':'Vendor fixed callbacks and one static class allocation retained; no heap/runtime registry introduced'}
+diff --git a/apps/SCG/tests/test_native_clock_tim.py b/apps/SCG/tests/test_native_clock_tim.py
+index f76e349..6f87d19 100644
+--- a/apps/SCG/tests/test_native_clock_tim.py
++++ b/apps/SCG/tests/test_native_clock_tim.py
+@@ -225,7 +225,7 @@ int main(void)
+     TIM1->ARR=1000U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);TIM1->ARR=999U;
+     TIM1->DIER=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);TIM1->DIER=1U;
+     enabled=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);enabled=1U;
+-    TIM1->CNT=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_UnstableSnapshot);
++    TIM1->CNT=0U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_Ok && sample.elapsed_cycles==0U);
+     TIM1->CNT=1000U;assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_UnstableSnapshot);
+     return 0;
+ }
+diff --git a/apps/SCG/tests/test_native_usb_data.py b/apps/SCG/tests/test_native_usb_data.py
+index 6596e49..ec4263e 100644
+--- a/apps/SCG/tests/test_native_usb_data.py
++++ b/apps/SCG/tests/test_native_usb_data.py
+@@ -10,12 +10,19 @@ from silverstar_fccg.generator.native_usb_data import NativeUsbData_Derive
+ @pytest.mark.parametrize('scenario', ['normal','open1','open2','open3','app-init','prepare-init',
+     'tx-fail','tx-busy','rearm','receive','zlp','close','null-rx','null-out','oversize','bad-ep'])
+ def test_real_native_bulk_functions_propagate_failure(tmp_path, scenario):
++    _ExerciseNativeBulk(tmp_path,scenario)
++
++
++def _ExerciseNativeBulk(tmp_path, scenario, *, indexed=False):
+     origin = os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT')
+     compiler = shutil.which('gcc')
+     if not origin or compiler is None:
+         pytest.skip('Native source fixture or Host GCC unavailable')
+-    original = (Path(origin)/'cube-f103-usb/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c').read_bytes()
+-    derived = NativeUsbData_Derive(original).decode('utf-8-sig')
++    original = (Path(origin)/('cube-f407-usb' if indexed else 'cube-f103-usb')/'Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c').read_bytes()
++    if indexed:
++        from silverstar_fccg.generator.native_usb_indexed import NativeUsbIndexedData_Derive
++        derived=NativeUsbIndexedData_Derive(original).decode('utf-8-sig')
++    else:derived = NativeUsbData_Derive(original).decode('utf-8-sig')
+     names = ['USBD_CDC_Init','USBD_CDC_DeInit','USBD_CDC_DataIn','USBD_CDC_DataOut',
+         'USBD_CDC_TransmitPacket','USBD_CDC_ReceivePacket','USBD_CDC_SetTxBuffer','USBD_CDC_SetRxBuffer']
+     if 'NativeCdc_Fault' in derived:
+@@ -134,6 +141,20 @@ static int8_t AppReceive(uint8_t *p,uint32_t *length)
+     assert(USBD_CDC_DeInit(&dev,1U)==USBD_OK && dev.pClassData==NULL && closed==3U);return 0;
+ }
+ '''
++    if indexed:
++        header=header.replace('uint8_t is_used;','uint8_t is_used,bInterval;')
++        header=header.replace('void *pClassData,*pUserData,*pData;',
++            'void *pClassData,*pData;void *pClassDataCmsit[1],*pUserData[1];uint8_t classId;')
++        header=header.replace('int8_t (*Receive)(uint8_t *,uint32_t *);',
++            'int8_t (*Receive)(uint8_t *,uint32_t *);int8_t (*TransmitCplt)(uint8_t *,uint32_t *,uint8_t);')
++        header=header.replace('uint8_t *,uint16_t);','uint8_t *,uint32_t);',1)
++        header+='\n#define CDC_FS_BINTERVAL 16U\nstatic unsigned transport_faults;\nstatic void NativeRuntime_TransportFaultRecord(void) { transport_faults++; }\n'
++        harness=harness.replace('itf={AppInit,AppDeInit,AppReceive}',
++            'itf={AppInit,AppDeInit,AppReceive,NULL}').replace('dev.pUserData=&itf','dev.pUserData[0]=&itf')
++        harness=harness.replace('    if (strcmp(argv[1],"tx-fail")',
++            '    if (strcmp(argv[1],"bad-class")==0) { dev.classId=7U;assert(USBD_CDC_TransmitPacket(&dev)!=USBD_OK && transport_faults==1U && resets!=0U);return 0; }\n'
++            '    if (strcmp(argv[1],"mirror")==0) { dev.pClassData=NULL;assert(USBD_CDC_ReceivePacket(&dev)!=USBD_OK && transport_faults==1U);return 0; }\n'
++            '    if (strcmp(argv[1],"tx-fail")',1)
+     (tmp_path/'test.c').write_text(header+'\n'+'\n'.join(functions)+'\n'+harness)
+     flags = ['-std=c11','-O2','-Wall','-Werror=implicit-function-declaration','-Werror=incompatible-pointer-types']
+     if derived.encode() != original:
+diff --git a/apps/SCG/tools/validation/native_classic_cdc_compile.py b/apps/SCG/tools/validation/native_classic_cdc_compile.py
+index 624ff6e..36b1c18 100644
+--- a/apps/SCG/tools/validation/native_classic_cdc_compile.py
++++ b/apps/SCG/tools/validation/native_classic_cdc_compile.py
+@@ -47,7 +47,7 @@ def NativeCompile_Run(args):
+         SCG/"src/silverstar_fccg/hardware/native_machine_contract.py",
+         SCG/"src/silverstar_fccg/generator/native_hal.py",SCG/"src/silverstar_fccg/generator/native_clock.py"]
+     if args.runtime_project is not None:
+-        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio')]
++        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio','native_clock_tim','native_usb_config','native_usb_indexed')]
+         snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
+         snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_ground','check_native_ground')]
+     if timer_probe:
+@@ -280,7 +280,8 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
+                         "src/silverstar_fccg/generator/native_ground.py","src/silverstar_fccg/generator/native_no_heap.py",
+                         "src/silverstar_fccg/generator/native_pc.py","src/silverstar_fccg/generator/native_usb_data.py",
+                         "src/silverstar_fccg/generator/native_radio.py","src/silverstar_fccg/generator/native_clock_tim.py",
+-                        "src/silverstar_fccg/generator/native_clock_probe.py","src/silverstar_fccg/generator/native_usb_config.py")},
++                        "src/silverstar_fccg/generator/native_clock_probe.py","src/silverstar_fccg/generator/native_usb_config.py",
++                        "src/silverstar_fccg/generator/native_usb_indexed.py")},
+           "experimental_files_sha256":{p:hashlib.sha256(b).hexdigest() for p,b in experimental_files.items()},
+           "experiments":experiments,
+           "toolchain_version":locals().get("version"),

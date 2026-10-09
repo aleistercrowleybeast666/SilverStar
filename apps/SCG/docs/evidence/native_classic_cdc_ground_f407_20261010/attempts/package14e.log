@@ -1,0 +1,18 @@
+{
+  "code_commit": "9f115f087f12868dd8a5384ca0b1e78edace63e0",
+  "files": 1324,
+  "bytes": 10300247,
+  "host_commands": 294,
+  "families": {
+    "f103": {
+      "compile_commands": 333,
+      "artifact_hashes_checked": 545,
+      "independent_irq_enumerators": 52
+    },
+    "f407": {
+      "compile_commands": 387,
+      "artifact_hashes_checked": 635,
+      "independent_irq_enumerators": 89
+    }
+  }
+}

@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\native_classic_cdc.py", line 367, in NativeClassicCdc_Inspect
+    return _NativeClassicCdc_Inspect(root, device_facts=device_facts,
+        spi_resource=spi_resource, gpio_resources=gpio_resources)
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\native_classic_cdc.py", line 310, in _NativeClassicCdc_Inspect
+    raise CubeMxImportError("Native GPIO mode/pin inventory missing: " + key)
+silverstar_fccg.hardware.cubemx.CubeMxImportError: Native GPIO mode/pin inventory missing: RADIO_NSS
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 309, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 41, in NativeCompile_Run
+    proof,inventory,files=NativeClassicCdc_Inspect(root,device_facts=facts,spi_resource=args.spi,gpio_resources=tuple(args.gpio))
+                          ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\hardware\native_classic_cdc.py", line 370, in NativeClassicCdc_Inspect
+    raise CubeMxImportError("Cannot read strict native CDC source input: " + str(error)) from error
+silverstar_fccg.hardware.cubemx.CubeMxImportError: Cannot read strict native CDC source input: Native GPIO mode/pin inventory missing: RADIO_NSS

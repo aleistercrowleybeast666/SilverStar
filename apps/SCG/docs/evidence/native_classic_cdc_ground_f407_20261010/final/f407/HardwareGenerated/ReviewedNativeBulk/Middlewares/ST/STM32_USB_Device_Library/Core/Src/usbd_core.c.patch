@@ -1,0 +1,125 @@
+--- HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
++++ HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
+@@ -18,6 +18,7 @@
+ 
+ /* Includes ------------------------------------------------------------------*/
+ #include "usbd_core.h"
++#include "native_runtime.h"
+ 
+ #ifdef USE_USBD_COMPOSITE
+ #include "usbd_composite_builder.h"
+@@ -122,6 +123,9 @@
+   pdev->pUserData[0] = NULL;
+ #endif /* USE_USBD_COMPOSITE */
+ 
++  if ((pdev->pClassData != NULL) || (pdev->pClassDataCmsit[0] != NULL)) { return USBD_FAIL; }
++  pdev->classId = 0U;
++  pdev->NumClasses = 0U;
+   pdev->pConfDesc = NULL;
+ 
+   /* Assign USBD Descriptors */
+@@ -399,36 +403,17 @@
+   */
+ USBD_StatusTypeDef USBD_Stop(USBD_HandleTypeDef *pdev)
+ {
+-  /* Disconnect USB Device */
+-  (void)USBD_LL_Stop(pdev);
+-
+-  /* Free Class Resources */
+-#ifdef USE_USBD_COMPOSITE
+-  /* Parse the table of classes in use */
+-  for (uint32_t i = 0U; i < USBD_MAX_SUPPORTED_CLASS; i++)
+-  {
+-    /* Check if current class is in use */
+-    if ((pdev->tclasslist[i].Active) == 1U)
+-    {
+-      if (pdev->pClass[i] != NULL)
+-      {
+-        pdev->classId = i;
+-        /* Free Class Resources */
+-        (void)pdev->pClass[i]->DeInit(pdev, (uint8_t)pdev->dev_config);
+-      }
+-    }
+-  }
+-
+-  /* Reset the class ID */
+-  pdev->classId = 0U;
+-#else
++  USBD_StatusTypeDef result;
++  uint8_t class_result = USBD_OK;
++  if ((pdev == NULL) || (pdev->classId != 0U)) { return USBD_FAIL; }
++  pdev->dev_state = USBD_STATE_DEFAULT;
+   if (pdev->pClass[0] != NULL)
+   {
+-    (void)pdev->pClass[0]->DeInit(pdev, (uint8_t)pdev->dev_config);
+-  }
+-#endif /* USE_USBD_COMPOSITE */
+-
+-  return USBD_OK;
++    if (pdev->pClass[0]->DeInit == NULL) { class_result = USBD_FAIL; }
++    else { class_result = pdev->pClass[0]->DeInit(pdev, (uint8_t)pdev->dev_config); }
++  }
++  result = USBD_LL_Stop(pdev);
++  return ((class_result == USBD_OK) && (result == USBD_OK)) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ /**
+@@ -504,35 +489,9 @@
+   */
+ USBD_StatusTypeDef USBD_ClrClassConfig(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
+ {
+-  USBD_StatusTypeDef ret = USBD_OK;
+-
+-#ifdef USE_USBD_COMPOSITE
+-  /* Parse the table of classes in use */
+-  for (uint32_t i = 0U; i < USBD_MAX_SUPPORTED_CLASS; i++)
+-  {
+-    /* Check if current class is in use */
+-    if ((pdev->tclasslist[i].Active) == 1U)
+-    {
+-      if (pdev->pClass[i] != NULL)
+-      {
+-        pdev->classId = i;
+-        /* Clear configuration  and De-initialize the Class process */
+-        if (pdev->pClass[i]->DeInit(pdev, cfgidx) != 0U)
+-        {
+-          ret = USBD_FAIL;
+-        }
+-      }
+-    }
+-  }
+-#else
+-  /* Clear configuration  and De-initialize the Class process */
+-  if (pdev->pClass[0]->DeInit(pdev, cfgidx) != 0U)
+-  {
+-    ret = USBD_FAIL;
+-  }
+-#endif /* USE_USBD_COMPOSITE */
+-
+-  return ret;
++  if ((pdev == NULL) || (pdev->classId != 0U) || (pdev->pClass[0] == NULL) ||
++      (pdev->pClass[0]->DeInit == NULL)) { return USBD_FAIL; }
++  return (pdev->pClass[0]->DeInit(pdev, cfgidx) == USBD_OK) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ 
+@@ -649,6 +608,9 @@
+   }
+   else
+   {
++    if ((pdev == NULL) || (epnum != 1U)) { return USBD_FAIL; }
++    if ((pdev->classId != 0U) || (pdev->pClass[0] == NULL) || (pdev->pClass[0]->DataOut == NULL))
++    { if (pdev->dev_state == USBD_STATE_CONFIGURED) { NativeRuntime_TransportFaultRecord(); } return USBD_FAIL; }
+     /* Get the class index relative to this interface */
+     idx = USBD_CoreFindEP(pdev, (epnum & 0x7FU));
+ 
+@@ -743,6 +705,9 @@
+   }
+   else
+   {
++    if ((pdev == NULL) || (epnum != 1U)) { return USBD_FAIL; }
++    if ((pdev->classId != 0U) || (pdev->pClass[0] == NULL) || (pdev->pClass[0]->DataIn == NULL))
++    { if (pdev->dev_state == USBD_STATE_CONFIGURED) { NativeRuntime_TransportFaultRecord(); } return USBD_FAIL; }
+     /* Get the class index relative to this interface */
+     idx = USBD_CoreFindEP(pdev, ((uint8_t)epnum | 0x80U));
+ 
