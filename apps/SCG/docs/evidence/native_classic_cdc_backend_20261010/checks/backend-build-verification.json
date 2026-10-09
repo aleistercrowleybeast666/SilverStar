@@ -1,0 +1,677 @@
+{
+  "created_utc": "2026-10-09T21:54:30.699687+00:00",
+  "code_commit": "348784a35ac164dec2a8b0f2b113d7d4fa55e87b",
+  "families": {
+    "f103": {
+      "part": "STM32F103C8T6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+      "project": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\p_cffbefe8",
+      "snapshot": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\w_b2fc7971\\.fccg\\hardware_imports\\ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628\\NativeClassicCdc",
+      "compile_commands": 333,
+      "c_sources": 53,
+      "startup_asm_sources": 1,
+      "compiler_warnings": [],
+      "toolchain_version": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "generated_hashes_checked": 114,
+      "artifact_hashes_checked": 545,
+      "original_native_hashes_checked": 114,
+      "independent_sdk": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h",
+      "independent_sdk_sha256": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+      "independent_irq_enumerators": 52,
+      "fpu_final_enumerator": null,
+      "runtime_model_sha256": "77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b",
+      "backend_model_sha256": "77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b",
+      "elf_sha256": {
+        "build": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a",
+        "build/analysis": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a"
+      },
+      "elf_matches_14e_baseline": true,
+      "facts": {
+        "part": "STM32F103C8T6",
+        "core": "cortex-m3",
+        "device_macro": "STM32F103xB",
+        "startup": "startup_stm32f103xb.s",
+        "regions": [
+          {
+            "name": "FLASH",
+            "origin": 134217728,
+            "length": 65536
+          },
+          {
+            "name": "RAM",
+            "origin": 536870912,
+            "length": 20480
+          }
+        ],
+        "evidence_source": "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f103c8t6\\plugin.json",
+        "evidence_sha256": "aa496ae4ea80316dab19e06b15009b139ba115a7d76fd6a97ef2aa59aea3f7c0",
+        "fpu": "",
+        "irq_numbers": [
+          [
+            "NonMaskableInt_IRQn",
+            -14
+          ],
+          [
+            "HardFault_IRQn",
+            -13
+          ],
+          [
+            "MemoryManagement_IRQn",
+            -12
+          ],
+          [
+            "BusFault_IRQn",
+            -11
+          ],
+          [
+            "UsageFault_IRQn",
+            -10
+          ],
+          [
+            "SVCall_IRQn",
+            -5
+          ],
+          [
+            "DebugMonitor_IRQn",
+            -4
+          ],
+          [
+            "PendSV_IRQn",
+            -2
+          ],
+          [
+            "SysTick_IRQn",
+            -1
+          ],
+          [
+            "WWDG_IRQn",
+            0
+          ],
+          [
+            "PVD_IRQn",
+            1
+          ],
+          [
+            "TAMPER_IRQn",
+            2
+          ],
+          [
+            "RTC_IRQn",
+            3
+          ],
+          [
+            "FLASH_IRQn",
+            4
+          ],
+          [
+            "RCC_IRQn",
+            5
+          ],
+          [
+            "EXTI0_IRQn",
+            6
+          ],
+          [
+            "EXTI1_IRQn",
+            7
+          ],
+          [
+            "EXTI2_IRQn",
+            8
+          ],
+          [
+            "EXTI3_IRQn",
+            9
+          ],
+          [
+            "EXTI4_IRQn",
+            10
+          ],
+          [
+            "DMA1_Channel1_IRQn",
+            11
+          ],
+          [
+            "DMA1_Channel2_IRQn",
+            12
+          ],
+          [
+            "DMA1_Channel3_IRQn",
+            13
+          ],
+          [
+            "DMA1_Channel4_IRQn",
+            14
+          ],
+          [
+            "DMA1_Channel5_IRQn",
+            15
+          ],
+          [
+            "DMA1_Channel6_IRQn",
+            16
+          ],
+          [
+            "DMA1_Channel7_IRQn",
+            17
+          ],
+          [
+            "ADC1_2_IRQn",
+            18
+          ],
+          [
+            "USB_HP_CAN1_TX_IRQn",
+            19
+          ],
+          [
+            "USB_LP_CAN1_RX0_IRQn",
+            20
+          ],
+          [
+            "CAN1_RX1_IRQn",
+            21
+          ],
+          [
+            "CAN1_SCE_IRQn",
+            22
+          ],
+          [
+            "EXTI9_5_IRQn",
+            23
+          ],
+          [
+            "TIM1_BRK_IRQn",
+            24
+          ],
+          [
+            "TIM1_UP_IRQn",
+            25
+          ],
+          [
+            "TIM1_TRG_COM_IRQn",
+            26
+          ],
+          [
+            "TIM1_CC_IRQn",
+            27
+          ],
+          [
+            "TIM2_IRQn",
+            28
+          ],
+          [
+            "TIM3_IRQn",
+            29
+          ],
+          [
+            "TIM4_IRQn",
+            30
+          ],
+          [
+            "I2C1_EV_IRQn",
+            31
+          ],
+          [
+            "I2C1_ER_IRQn",
+            32
+          ],
+          [
+            "I2C2_EV_IRQn",
+            33
+          ],
+          [
+            "I2C2_ER_IRQn",
+            34
+          ],
+          [
+            "SPI1_IRQn",
+            35
+          ],
+          [
+            "SPI2_IRQn",
+            36
+          ],
+          [
+            "USART1_IRQn",
+            37
+          ],
+          [
+            "USART2_IRQn",
+            38
+          ],
+          [
+            "USART3_IRQn",
+            39
+          ],
+          [
+            "EXTI15_10_IRQn",
+            40
+          ],
+          [
+            "RTC_Alarm_IRQn",
+            41
+          ],
+          [
+            "USBWakeUp_IRQn",
+            42
+          ]
+        ],
+        "irq_header_sha256": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+        "irq_evidence_source": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h"
+      },
+      "formal_generation": "BLOCKED"
+    },
+    "f407": {
+      "part": "STM32F407VET6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+      "project": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\p_8fd52b8c",
+      "snapshot": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\w_5f324c64\\.fccg\\hardware_imports\\027cb258b8b32ebc7ebb2aaac00b7ca0f4bf7c5ff02820c5acbcfa0858255f8e\\NativeClassicCdc",
+      "compile_commands": 387,
+      "c_sources": 62,
+      "startup_asm_sources": 1,
+      "compiler_warnings": [],
+      "toolchain_version": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "generated_hashes_checked": 124,
+      "artifact_hashes_checked": 635,
+      "original_native_hashes_checked": 141,
+      "independent_sdk": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h",
+      "independent_sdk_sha256": "bd21220ea8b6858c2d727cca1d2a5f1077f8a81717acdac583a1e9165d858160",
+      "independent_irq_enumerators": 89,
+      "fpu_final_enumerator": 81,
+      "runtime_model_sha256": "1441f4d92d407cf254b467775c59350e84c5993707cd68e87cd5785d1a397cbe",
+      "backend_model_sha256": "1441f4d92d407cf254b467775c59350e84c5993707cd68e87cd5785d1a397cbe",
+      "elf_sha256": {
+        "build": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+        "build/analysis": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8"
+      },
+      "elf_matches_14e_baseline": true,
+      "facts": {
+        "part": "STM32F407VET6",
+        "core": "cortex-m4",
+        "device_macro": "STM32F407xx",
+        "startup": "startup_stm32f407xx.s",
+        "regions": [
+          {
+            "name": "FLASH",
+            "origin": 134217728,
+            "length": 524288
+          },
+          {
+            "name": "RAM",
+            "origin": 536870912,
+            "length": 131072
+          },
+          {
+            "name": "CCMRAM",
+            "origin": 268435456,
+            "length": 65536
+          }
+        ],
+        "evidence_source": "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f407vet6\\plugin.json",
+        "evidence_sha256": "34e238ad7014e3a6d81b8b780cd07642ec64179816995c62b6f163451eb08274",
+        "fpu": "fpv4-sp-d16",
+        "irq_numbers": [
+          [
+            "NonMaskableInt_IRQn",
+            -14
+          ],
+          [
+            "MemoryManagement_IRQn",
+            -12
+          ],
+          [
+            "BusFault_IRQn",
+            -11
+          ],
+          [
+            "UsageFault_IRQn",
+            -10
+          ],
+          [
+            "SVCall_IRQn",
+            -5
+          ],
+          [
+            "DebugMonitor_IRQn",
+            -4
+          ],
+          [
+            "PendSV_IRQn",
+            -2
+          ],
+          [
+            "SysTick_IRQn",
+            -1
+          ],
+          [
+            "WWDG_IRQn",
+            0
+          ],
+          [
+            "PVD_IRQn",
+            1
+          ],
+          [
+            "TAMP_STAMP_IRQn",
+            2
+          ],
+          [
+            "RTC_WKUP_IRQn",
+            3
+          ],
+          [
+            "FLASH_IRQn",
+            4
+          ],
+          [
+            "RCC_IRQn",
+            5
+          ],
+          [
+            "EXTI0_IRQn",
+            6
+          ],
+          [
+            "EXTI1_IRQn",
+            7
+          ],
+          [
+            "EXTI2_IRQn",
+            8
+          ],
+          [
+            "EXTI3_IRQn",
+            9
+          ],
+          [
+            "EXTI4_IRQn",
+            10
+          ],
+          [
+            "DMA1_Stream0_IRQn",
+            11
+          ],
+          [
+            "DMA1_Stream1_IRQn",
+            12
+          ],
+          [
+            "DMA1_Stream2_IRQn",
+            13
+          ],
+          [
+            "DMA1_Stream3_IRQn",
+            14
+          ],
+          [
+            "DMA1_Stream4_IRQn",
+            15
+          ],
+          [
+            "DMA1_Stream5_IRQn",
+            16
+          ],
+          [
+            "DMA1_Stream6_IRQn",
+            17
+          ],
+          [
+            "ADC_IRQn",
+            18
+          ],
+          [
+            "CAN1_TX_IRQn",
+            19
+          ],
+          [
+            "CAN1_RX0_IRQn",
+            20
+          ],
+          [
+            "CAN1_RX1_IRQn",
+            21
+          ],
+          [
+            "CAN1_SCE_IRQn",
+            22
+          ],
+          [
+            "EXTI9_5_IRQn",
+            23
+          ],
+          [
+            "TIM1_BRK_TIM9_IRQn",
+            24
+          ],
+          [
+            "TIM1_UP_TIM10_IRQn",
+            25
+          ],
+          [
+            "TIM1_TRG_COM_TIM11_IRQn",
+            26
+          ],
+          [
+            "TIM1_CC_IRQn",
+            27
+          ],
+          [
+            "TIM2_IRQn",
+            28
+          ],
+          [
+            "TIM3_IRQn",
+            29
+          ],
+          [
+            "TIM4_IRQn",
+            30
+          ],
+          [
+            "I2C1_EV_IRQn",
+            31
+          ],
+          [
+            "I2C1_ER_IRQn",
+            32
+          ],
+          [
+            "I2C2_EV_IRQn",
+            33
+          ],
+          [
+            "I2C2_ER_IRQn",
+            34
+          ],
+          [
+            "SPI1_IRQn",
+            35
+          ],
+          [
+            "SPI2_IRQn",
+            36
+          ],
+          [
+            "USART1_IRQn",
+            37
+          ],
+          [
+            "USART2_IRQn",
+            38
+          ],
+          [
+            "USART3_IRQn",
+            39
+          ],
+          [
+            "EXTI15_10_IRQn",
+            40
+          ],
+          [
+            "RTC_Alarm_IRQn",
+            41
+          ],
+          [
+            "OTG_FS_WKUP_IRQn",
+            42
+          ],
+          [
+            "TIM8_BRK_TIM12_IRQn",
+            43
+          ],
+          [
+            "TIM8_UP_TIM13_IRQn",
+            44
+          ],
+          [
+            "TIM8_TRG_COM_TIM14_IRQn",
+            45
+          ],
+          [
+            "TIM8_CC_IRQn",
+            46
+          ],
+          [
+            "DMA1_Stream7_IRQn",
+            47
+          ],
+          [
+            "FSMC_IRQn",
+            48
+          ],
+          [
+            "SDIO_IRQn",
+            49
+          ],
+          [
+            "TIM5_IRQn",
+            50
+          ],
+          [
+            "SPI3_IRQn",
+            51
+          ],
+          [
+            "UART4_IRQn",
+            52
+          ],
+          [
+            "UART5_IRQn",
+            53
+          ],
+          [
+            "TIM6_DAC_IRQn",
+            54
+          ],
+          [
+            "TIM7_IRQn",
+            55
+          ],
+          [
+            "DMA2_Stream0_IRQn",
+            56
+          ],
+          [
+            "DMA2_Stream1_IRQn",
+            57
+          ],
+          [
+            "DMA2_Stream2_IRQn",
+            58
+          ],
+          [
+            "DMA2_Stream3_IRQn",
+            59
+          ],
+          [
+            "DMA2_Stream4_IRQn",
+            60
+          ],
+          [
+            "ETH_IRQn",
+            61
+          ],
+          [
+            "ETH_WKUP_IRQn",
+            62
+          ],
+          [
+            "CAN2_TX_IRQn",
+            63
+          ],
+          [
+            "CAN2_RX0_IRQn",
+            64
+          ],
+          [
+            "CAN2_RX1_IRQn",
+            65
+          ],
+          [
+            "CAN2_SCE_IRQn",
+            66
+          ],
+          [
+            "OTG_FS_IRQn",
+            67
+          ],
+          [
+            "DMA2_Stream5_IRQn",
+            68
+          ],
+          [
+            "DMA2_Stream6_IRQn",
+            69
+          ],
+          [
+            "DMA2_Stream7_IRQn",
+            70
+          ],
+          [
+            "USART6_IRQn",
+            71
+          ],
+          [
+            "I2C3_EV_IRQn",
+            72
+          ],
+          [
+            "I2C3_ER_IRQn",
+            73
+          ],
+          [
+            "OTG_HS_EP1_OUT_IRQn",
+            74
+          ],
+          [
+            "OTG_HS_EP1_IN_IRQn",
+            75
+          ],
+          [
+            "OTG_HS_WKUP_IRQn",
+            76
+          ],
+          [
+            "OTG_HS_IRQn",
+            77
+          ],
+          [
+            "DCMI_IRQn",
+            78
+          ],
+          [
+            "RNG_IRQn",
+            80
+          ],
+          [
+            "FPU_IRQn",
+            81
+          ]
+        ],
+        "irq_header_sha256": "bd21220ea8b6858c2d727cca1d2a5f1077f8a81717acdac583a1e9165d858160",
+        "irq_evidence_source": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h"
+      },
+      "formal_generation": "BLOCKED"
+    }
+  }
+}

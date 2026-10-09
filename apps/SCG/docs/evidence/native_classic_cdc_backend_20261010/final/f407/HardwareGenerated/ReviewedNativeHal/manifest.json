@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "entries": [
+    {
+      "profile": "ST F4 HAL 1.28.3",
+      "kind": "spi",
+      "original": "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+      "original_sha256": "641ad467e834c17a83c445cf8eea7c8317a71976d7e0c77da740be999251efe4",
+      "derived": "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+      "derived_sha256": "e7c94b6cf21159e1414e8a7a47684a0a3d8c113beed58b03b2a0e72a428e66ca",
+      "patch": "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c.patch",
+      "patch_sha256": "87736f047dbdceb36e700cb643ae96a666a785bf0a03da9ef2a9a7c4fe223171"
+    },
+    {
+      "profile": "ST F4 HAL 1.28.3",
+      "kind": "uart",
+      "original": "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+      "original_sha256": "a74ed3a9a13a4fcbaada9e6f88f7d4fcabe2a75852a6ce4c09f8d4314a2e851a",
+      "derived": "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+      "derived_sha256": "fa1311ea68d2958469d23eed7af0edf067ec89f972d1580f6544cb4ad5d813d1",
+      "patch": "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c.patch",
+      "patch_sha256": "e24d761ba96ff040c73bb881141daf9c07e62b5f87c7990b950715e8bb86bc8a"
+    }
+  ],
+  "patch_policy": "Apply same-path unified patches only to an isolated copy of the original; publish the result at derived and retain original bytes",
+  "spi_scope": "Only SCG-used blocking Transmit/TransmitReceive and their flag waiter; 2000000 polls per function; no time/WCET proof",
+  "uart_scope": "Check alternate 16-bit pointer before dereference; buffer capacity/alignment and caller ownership remain required",
+  "upstream_limits": "Other HAL APIs, internal callbacks and native initialization retain vendor limitations; not whole-firmware original Power-of-Ten compliance"
+}

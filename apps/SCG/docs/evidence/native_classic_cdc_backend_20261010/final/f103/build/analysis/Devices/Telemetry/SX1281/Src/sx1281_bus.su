@@ -1,0 +1,13 @@
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:48:16:Sx1281Bus_ResourcesGet	8	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:18:13:Sx1281Bus_FirstFailureRecord	40	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:59:6:Sx1281Bus_Init	0	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:72:16:Sx1281Bus_NssGet	16	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:80:16:Sx1281Bus_ResetGet	16	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:88:16:Sx1281Bus_BusyGet	16	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:96:16:Sx1281Bus_Dio1Get	16	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:104:6:GpioWrite	0	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:110:9:GpioRead	16	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:119:6:SpiIn	96	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:161:6:SpiInOut	96	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:207:9:GpioWaitLow	48	static
+Devices/Telemetry/SX1281/Src/sx1281_bus.c:242:6:Sx1281Bus_StatusGet	12	static

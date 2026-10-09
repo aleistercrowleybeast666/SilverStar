@@ -1,0 +1,153 @@
+--- HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
++++ HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
+@@ -86,37 +86,35 @@
+ * @param  id: Low level core index
+ * @retval None
+ */
+-USBD_StatusTypeDef USBD_Init(USBD_HandleTypeDef *pdev,
+-                             USBD_DescriptorsTypeDef *pdesc, uint8_t id)
+-{
+-  /* Check whether the USB Host handle is valid */
+-  if (pdev == NULL)
+-  {
+-#if (USBD_DEBUG_LEVEL > 1U)
+-    USBD_ErrLog("Invalid Device handle");
+-#endif
+-    return USBD_FAIL;
+-  }
+-
+-  /* Unlink previous class*/
+-  if (pdev->pClass != NULL)
+-  {
+-    pdev->pClass = NULL;
+-  }
+-
+-  /* Assign USBD Descriptors */
+-  if (pdesc != NULL)
+-  {
+-    pdev->pDesc = pdesc;
+-  }
+-
+-  /* Set Device initial State */
+-  pdev->dev_state = USBD_STATE_DEFAULT;
+-  pdev->id = id;
+-  /* Initialize low level driver */
+-  USBD_LL_Init(pdev);
+-
+-  return USBD_OK;
++USBD_StatusTypeDef USBD_Init(USBD_HandleTypeDef *pdev,
++                             USBD_DescriptorsTypeDef *pdesc, uint8_t id)
++{
++  /* Check whether the USB Host handle is valid */
++  if (pdev == NULL)
++  {
++#if (USBD_DEBUG_LEVEL > 1U)
++    USBD_ErrLog("Invalid Device handle");
++#endif
++    return USBD_FAIL;
++  }
++
++  /* Unlink previous class*/
++  if (pdev->pClass != NULL)
++  {
++    pdev->pClass = NULL;
++  }
++
++  /* Assign USBD Descriptors */
++  if (pdesc != NULL)
++  {
++    pdev->pDesc = pdesc;
++  }
++
++  /* Set Device initial State */
++  pdev->dev_state = USBD_STATE_DEFAULT;
++  pdev->id = id;
++  /* Initialize low level driver */
++  return USBD_LL_Init(pdev);
+ }
+ 
+ /**
+@@ -175,12 +173,11 @@
+   * @param  pdev: Device Handle
+   * @retval USBD Status
+   */
+-USBD_StatusTypeDef  USBD_Start(USBD_HandleTypeDef *pdev)
+-{
+-  /* Start the low level driver  */
+-  USBD_LL_Start(pdev);
+-
+-  return USBD_OK;
++USBD_StatusTypeDef  USBD_Start(USBD_HandleTypeDef *pdev)
++{
++  /* Start the low level driver  */
++  if (pdev == NULL) { return USBD_FAIL; }
++  return USBD_LL_Start(pdev);
+ }
+ 
+ /**
+@@ -189,15 +186,16 @@
+   * @param  pdev: Device Handle
+   * @retval USBD Status
+   */
+-USBD_StatusTypeDef  USBD_Stop(USBD_HandleTypeDef *pdev)
+-{
+-  /* Free Class Resources */
+-  pdev->pClass->DeInit(pdev, (uint8_t)pdev->dev_config);
+-
+-  /* Stop the low level driver */
+-  USBD_LL_Stop(pdev);
+-
+-  return USBD_OK;
++USBD_StatusTypeDef USBD_Stop(USBD_HandleTypeDef *pdev)
++{
++  uint8_t class_result = USBD_OK;
++  USBD_StatusTypeDef result;
++  if (pdev == NULL) { return USBD_FAIL; }
++  pdev->dev_state = USBD_STATE_DEFAULT;
++  if (pdev->pClass != NULL)
++  { class_result = pdev->pClass->DeInit(pdev, (uint8_t)pdev->dev_config); }
++  result = USBD_LL_Stop(pdev);
++  return ((class_result == USBD_OK) && (result == USBD_OK)) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ /**
+@@ -245,12 +243,11 @@
+ * @param  cfgidx: configuration index
+ * @retval status: USBD_StatusTypeDef
+ */
+-USBD_StatusTypeDef USBD_ClrClassConfig(USBD_HandleTypeDef  *pdev, uint8_t cfgidx)
+-{
+-  /* Clear configuration  and De-initialize the Class process*/
+-  pdev->pClass->DeInit(pdev, cfgidx);
+-
+-  return USBD_OK;
++USBD_StatusTypeDef USBD_ClrClassConfig(USBD_HandleTypeDef  *pdev, uint8_t cfgidx)
++{
++  /* Clear configuration  and De-initialize the Class process*/
++  if ((pdev == NULL) || (pdev->pClass == NULL)) { return USBD_FAIL; }
++  return (pdev->pClass->DeInit(pdev, cfgidx) == USBD_OK) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ 
+@@ -340,7 +337,9 @@
+   else if ((pdev->pClass->DataOut != NULL) &&
+            (pdev->dev_state == USBD_STATE_CONFIGURED))
+   {
+-    pdev->pClass->DataOut(pdev, epnum);
++    uint8_t result = pdev->pClass->DataOut(pdev, epnum);
++    return (result == USBD_OK) ? USBD_OK :
++        ((result == USBD_BUSY) ? USBD_BUSY : USBD_FAIL);
+   }
+   else
+   {
+@@ -421,7 +420,9 @@
+   else if ((pdev->pClass->DataIn != NULL) &&
+            (pdev->dev_state == USBD_STATE_CONFIGURED))
+   {
+-    pdev->pClass->DataIn(pdev, epnum);
++    uint8_t result = pdev->pClass->DataIn(pdev, epnum);
++    return (result == USBD_OK) ? USBD_OK :
++        ((result == USBD_BUSY) ? USBD_BUSY : USBD_FAIL);
+   }
+   else
+   {

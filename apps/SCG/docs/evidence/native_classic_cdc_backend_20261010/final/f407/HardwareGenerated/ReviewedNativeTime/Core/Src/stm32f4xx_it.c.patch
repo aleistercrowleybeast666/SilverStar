@@ -1,0 +1,23 @@
+--- HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.c
++++ HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.c
+@@ -19,7 +19,8 @@
+ 
+ /* Includes ------------------------------------------------------------------*/
+ #include "main.h"
+-#include "stm32f4xx_it.h"
++#include "stm32f4xx_it.h"
++extern TIM_HandleTypeDef htim1;
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+ /* USER CODE END Includes */
+@@ -182,7 +183,9 @@
+   * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
+   */
+ void TIM1_UP_TIM10_IRQHandler(void)
+-{
++{
++  HAL_TIM_IRQHandler(&htim1);
++
+   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 0 */
+ 
+   /* USER CODE END TIM1_UP_TIM10_IRQn 0 */

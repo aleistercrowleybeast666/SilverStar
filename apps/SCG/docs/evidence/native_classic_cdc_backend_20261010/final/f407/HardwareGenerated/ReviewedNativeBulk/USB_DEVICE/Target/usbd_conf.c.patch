@@ -1,0 +1,151 @@
+--- HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c
++++ HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c
+@@ -24,7 +24,10 @@
+ #include "usbd_def.h"
+ #include "usbd_core.h"
+ 
+-#include "usbd_cdc.h"
++#include "usbd_cdc.h"
++#include "pc_byte_stream.h"
++#include "native_runtime.h"
++_Static_assert(USE_HAL_PCD_REGISTER_CALLBACKS == 0U, "Private native port requires fixed PCD callbacks");
+ 
+ /* USER CODE BEGIN Includes */
+ 
+@@ -150,7 +153,12 @@
+ void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataOutStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff);
++  USBD_HandleTypeDef *pdev;
++  if ((hpcd == NULL) || (hpcd->pData == NULL)) { return; }
++  pdev = (USBD_HandleTypeDef *)hpcd->pData;
++  if (epnum >= 4U) { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); return; }
++  if (USBD_LL_DataOutStage(pdev, epnum, hpcd->OUT_ep[epnum].xfer_buff) != USBD_OK)
++  { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); }
+ }
+ 
+ /**
+@@ -165,7 +173,12 @@
+ void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataInStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->IN_ep[epnum].xfer_buff);
++  USBD_HandleTypeDef *pdev;
++  if ((hpcd == NULL) || (hpcd->pData == NULL)) { return; }
++  pdev = (USBD_HandleTypeDef *)hpcd->pData;
++  if (epnum >= 4U) { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); return; }
++  if (USBD_LL_DataInStage(pdev, epnum, hpcd->IN_ep[epnum].xfer_buff) != USBD_OK)
++  { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); }
+ }
+ 
+ /**
+@@ -211,7 +224,8 @@
+   USBD_LL_SetSpeed((USBD_HandleTypeDef*)hpcd->pData, speed);
+ 
+   /* Reset Device. */
+-  USBD_LL_Reset((USBD_HandleTypeDef*)hpcd->pData);
++  PcByteStream_OnUsbReset();
++  USBD_LL_Reset((USBD_HandleTypeDef*)hpcd->pData);
+ }
+ 
+ /**
+@@ -227,7 +241,8 @@
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+   /* Inform USB library that core enters in suspend Mode. */
+-  USBD_LL_Suspend((USBD_HandleTypeDef*)hpcd->pData);
++  PcByteStream_OnUsbReset();
++  USBD_LL_Suspend((USBD_HandleTypeDef*)hpcd->pData);
+   __HAL_PCD_GATE_PHYCLOCK(hpcd);
+   /* Enter in STOP mode. */
+   /* USER CODE BEGIN 2 */
+@@ -312,7 +327,8 @@
+ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
++  PcByteStream_OnUsbReset();
++  USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
+ }
+ 
+ /*******************************************************************************
+@@ -324,49 +340,35 @@
+   * @param  pdev: Device handle
+   * @retval USBD status
+   */
+-USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
+-{
+-  /* Init USB Ip. */
+-  if (pdev->id == DEVICE_FS) {
+-  /* Link the driver to the stack. */
+-  hpcd_USB_OTG_FS.pData = pdev;
+-  pdev->pData = &hpcd_USB_OTG_FS;
+-
+-  hpcd_USB_OTG_FS.Instance = USB_OTG_FS;
+-  hpcd_USB_OTG_FS.Init.dev_endpoints = 4;
+-  hpcd_USB_OTG_FS.Init.speed = PCD_SPEED_FULL;
+-  hpcd_USB_OTG_FS.Init.dma_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
+-  hpcd_USB_OTG_FS.Init.Sof_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.low_power_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.lpm_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.vbus_sensing_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.use_dedicated_ep1 = DISABLE;
+-  if (HAL_PCD_Init(&hpcd_USB_OTG_FS) != HAL_OK)
+-  {
+-    Error_Handler( );
+-  }
+-
+-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+-  /* Register USB PCD CallBacks */
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SOF_CB_ID, PCD_SOFCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SETUPSTAGE_CB_ID, PCD_SetupStageCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_RESET_CB_ID, PCD_ResetCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SUSPEND_CB_ID, PCD_SuspendCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_RESUME_CB_ID, PCD_ResumeCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_CONNECT_CB_ID, PCD_ConnectCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_DISCONNECT_CB_ID, PCD_DisconnectCallback);
+-
+-  HAL_PCD_RegisterDataOutStageCallback(&hpcd_USB_OTG_FS, PCD_DataOutStageCallback);
+-  HAL_PCD_RegisterDataInStageCallback(&hpcd_USB_OTG_FS, PCD_DataInStageCallback);
+-  HAL_PCD_RegisterIsoOutIncpltCallback(&hpcd_USB_OTG_FS, PCD_ISOOUTIncompleteCallback);
+-  HAL_PCD_RegisterIsoInIncpltCallback(&hpcd_USB_OTG_FS, PCD_ISOINIncompleteCallback);
+-#endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+-  HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_FS, 0x80);
+-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 0, 0x40);
+-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1, 0x80);
+-  }
+-  return USBD_OK;
++USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
++{
++  if ((pdev == NULL) || (pdev->id != DEVICE_FS)) { return USBD_FAIL; }
++  hpcd_USB_OTG_FS.pData = pdev;
++  pdev->pData = &hpcd_USB_OTG_FS;
++  hpcd_USB_OTG_FS.Instance = USB_OTG_FS;
++  hpcd_USB_OTG_FS.Init.dev_endpoints = 4U;
++  hpcd_USB_OTG_FS.Init.speed = PCD_SPEED_FULL;
++  hpcd_USB_OTG_FS.Init.dma_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
++  hpcd_USB_OTG_FS.Init.Sof_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.low_power_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.lpm_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.vbus_sensing_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.use_dedicated_ep1 = DISABLE;
++  if (HAL_PCD_Init(&hpcd_USB_OTG_FS) != HAL_OK) { return USBD_FAIL; }
++  /* Fixed FS layout: RX=128, EP0=64, EP1=64, EP2=16 words, total 272/320.
++   * EP2 retains its CDC notification endpoint; no alias into EP1's FIFO. */
++  if ((HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_FS, 128U) != HAL_OK) ||
++      (HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 0U, 64U) != HAL_OK) ||
++      (HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1U, 64U) != HAL_OK) ||
++      (HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 2U, 16U) != HAL_OK))
++  {
++    pdev->dev_state = USBD_STATE_DEFAULT;
++    PcByteStream_OnUsbReset();
++    if (HAL_PCD_DeInit(&hpcd_USB_OTG_FS) != HAL_OK) { NativeRuntime_TransportFaultRecord(); }
++    return USBD_FAIL;
++  }
++  return USBD_OK;
+ }
+ 
+ /**

@@ -1,0 +1,11 @@
+--- HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
++++ HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+@@ -719,7 +719,7 @@
+   SystemCoreClock = HAL_RCC_GetSysClockFreq() >> AHBPrescTable[(RCC->CFGR & RCC_CFGR_HPRE) >> RCC_CFGR_HPRE_Pos];
+ 
+   /* Configure the source of time base considering new system clocks settings */
+-  HAL_InitTick(uwTickPrio);
++  if (HAL_InitTick(uwTickPrio) != HAL_OK) { return HAL_ERROR; }
+ 
+   return HAL_OK;
+ }

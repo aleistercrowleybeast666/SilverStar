@@ -1,0 +1,15 @@
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:54:13:SX1280HalTransfer_Validate	24	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:72:6:SX1280HalWaitOnBusy	8	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:82:6:SX1280HalReset	8	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:77:6:SX1280HalInit	0	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:91:6:SX1280HalClearInstructionRam	32	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:124:6:SX1280HalWakeup	16	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:142:6:SX1280HalWriteCommand	32	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:164:6:SX1280HalReadCommand	32	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:190:6:SX1280HalWriteRegisters	32	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:212:6:SX1280HalWriteRegister	16	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:217:6:SX1280HalReadRegisters	32	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:245:9:SX1280HalReadRegister	16	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:253:6:SX1280HalWriteBuffer	32	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:274:6:SX1280HalReadBuffer	32	static
+Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c:301:9:SX1280HalGetDioStatus	16	static

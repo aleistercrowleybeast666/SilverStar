@@ -1,0 +1,3 @@
+HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.c:43:19:HAL_InitTick	56	static
+HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.c:135:6:HAL_SuspendTick	0	static
+HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.c:147:6:HAL_ResumeTick	0	static

@@ -1,0 +1,11 @@
+--- HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
++++ HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+@@ -173,7 +173,7 @@
+   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+ 
+   /* Use systick as time base source and configure 1ms tick (default clock after Reset is HSI) */
+-  HAL_InitTick(TICK_INT_PRIORITY);
++  if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK) { return HAL_ERROR; }
+ 
+   /* Init the low level hardware */
+   HAL_MspInit();
