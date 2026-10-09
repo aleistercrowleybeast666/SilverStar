@@ -385,6 +385,43 @@ class BuildRunner:
             line_callback is not None,
         )
 
+    def Target_Run(
+        self, model: ProjectModel, project_root: Path,
+        token: CancellationToken | None = None, *,
+        line_callback: LineCallback | None = None,
+        progress_callback: ProgressCallback | None = None,
+    ) -> BuildResult:
+        # Target GUI entry already owns the generated Flight/Ground root. Keep
+        # Run()'s authoritative Flight descriptor/target checks unchanged.
+        from silverstar_fccg.build.target_progress import TargetProgressPlan, TargetProgressTracker
+
+        root = self.policy.Path_Resolve(project_root, allow_root=True)
+        if not (root / "Makefile").is_file():
+            raise FccgError("error.makefile_missing", {"path": str(root)}, "Target Makefile is missing")
+        command = self.Command_Get(model, BuildAction.BUILD)
+        environment = self._Environment_Get(model, BuildAction.BUILD)
+        environment.update(LC_ALL="C", LANG="C")
+        dry_code, dry_lines = self._Process_Run((command[0], "-n", *command[1:]), root, environment, token)
+        plan = TargetProgressPlan.FromLines_Get(dry_lines)
+        tracker = TargetProgressTracker(plan, progress_callback, line_callback)
+        tracker.Progress_Report("PLAN")
+        if dry_code != 0:
+            for line in dry_lines:
+                if line_callback:
+                    line_callback(line.rstrip("\r\n"))
+            return BuildResult(BuildAction.BUILD, command, dry_code, "".join(dry_lines), plan.build_plan,
+                               live_streamed=line_callback is not None)
+        if plan.no_work:
+            tracker.Progress_Report("NO_WORK")
+        # GNU make job removal, after its final winning child, confirms the
+        # entire recipe. A mkdir/echo/compile launch or intermediate reap does not.
+        actual = command if plan.markers else (command[0], "--debug=j", *command[1:])
+        code, lines = self._Process_Run(actual, root, environment, token, tracker.Line_Report)
+        if code == 0:
+            tracker.Progress_Report("COMPLETE")
+        return BuildResult(BuildAction.BUILD, actual, code, "".join(lines), plan.build_plan,
+                           len(tracker.completed), line_callback is not None)
+
     def _Project_Validate(
         self, project_root: Path, action: BuildAction
     ) -> Path:

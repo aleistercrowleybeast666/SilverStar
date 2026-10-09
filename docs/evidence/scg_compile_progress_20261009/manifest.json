@@ -1,0 +1,26 @@
+{
+  "baseCommit": "191fd3903025d5a41c3d3eb6b12eadc83c279ce3",
+  "capturedUtc": "2026-10-09T03:00:10.0822950Z",
+  "changedSourceHashes": {
+    "apps/SCG/src/silverstar_fccg/build/target_progress.py": "164d2a9d0d1d1beb491ef19215c6eceda72a77aa1ee233277b98966e81a95c16",
+    "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": "722b02247eb834c6aa91321d260471968f0ebcc484aabb714843910754928916",
+    "apps/SCG/src/silverstar_fccg/build/runner.py": "ffa927d96aa9167c43fe0325caf0ed6460a3e314688f846c6a9b428f887fa812",
+    "apps/SCG/src/silverstar_fccg/i18n/en_US.json": "2ff31565672e175b0562c266a7f2c3fd7d9e11e76381505afe6ea56cdb8e1206",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "44322cef1ffcc8bfade1b7c8536a244adcda68ec01c265a51e465b049354a9da",
+    "apps/SCG/tests/test_target_compile_progress.py": "40b1a63a5bb495d3e9e1f6d0b2785477c1716bd53146aa2cd11bb5fb08a1b4ee"
+  },
+  "final": {
+    "exit": 0,
+    "log": "final2.log",
+    "seconds": 61.23,
+    "passed": 35
+  },
+  "correctedBaseline": {
+    "failed": 1,
+    "log": "pre191-corrected.log",
+    "seconds": 15.87,
+    "exit": 1
+  },
+  "scope": "Target GUI/build progress; synthetic make scheduler only; no MCU build or hardware",
+  "knownWarning": "pytest cache_dir config with disabled cache provider"
+}

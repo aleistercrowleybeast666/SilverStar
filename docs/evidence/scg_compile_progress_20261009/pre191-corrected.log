@@ -1,0 +1,23 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_gui_advances_after_each_verified_object_and_caps_until_audit[success] __
+tests\test_target_compile_progress.py:94: in test_gui_advances_after_each_verified_object_and_caps_until_audit
+    _Wait(qapp,lambda:window.progress_bar.value()==200)
+D:\python_software\SilverStar\apps\FCCG\tests\test_task_progress_busy.py:15: in _Wait
+    ???
+E   AssertionError: bounded worker wait expired
+E   assert False
+E    +  where False = <function test_gui_advances_after_each_verified_object_and_caps_until_audit.<locals>.<lambda> at 0x00000282145D9430>()
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_target_compile_progress.py::test_gui_advances_after_each_verified_object_and_caps_until_audit[success]
+1 failed, 1 warning in 15.87s

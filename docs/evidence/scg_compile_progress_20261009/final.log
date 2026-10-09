@@ -1,0 +1,17 @@
+.......F...........................                                      [100%]
+================================== FAILURES ===================================
+__________ test_native_parallel_incremental_and_no_work_recipe_trace __________
+tests\test_target_compile_progress.py:136: in test_native_parallel_incremental_and_no_work_recipe_trace
+    assert not failed.succeeded and failed.completed_steps==0
+E   assert (not True)
+E    +  where True = BuildResult(action=<BuildAction.BUILD: 'build'>, command=('D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE', '--debug=j', 'T... for 'all'.\n", plan=BuildPlan(total_steps=0, compile_steps=0, stage_steps=()), completed_steps=0, live_streamed=False).succeeded
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_target_compile_progress.py::test_native_parallel_incremental_and_no_work_recipe_trace
+1 failed, 34 passed, 1 warning in 64.28s (0:01:04)

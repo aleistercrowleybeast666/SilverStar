@@ -990,6 +990,9 @@
   "action.import_cubemx_project": "导入 CubeMX 工程",
   "ground.resources_scope": "此表仅检查地面站无线电资源；PC 接口和活动指示灯契约另行检查。",
   "power10.automatic_checks": "项目自动文本检测",
+  "build.progress.stage.audit": "产物审计",
+  "build.progress.unmeasured": "当前构建步骤无法可靠计量；已处理 {count} 条输出，等待进程结果。",
+  "build.progress.no_work": "构建已是最新，无待编译对象；随后检查产物。",
   "power10.contract_review_failed": "关键契约审查 FAIL，已知失败阻断人工验收；详情见系统日志。",
   "power10.contract_review_pending": "关键契约 NOT_PROVEN，人工验收待完成；自动结果不代表 FIELD READY 或 NASA 认证。"
 }

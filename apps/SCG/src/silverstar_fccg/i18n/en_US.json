@@ -990,6 +990,9 @@
   "action.import_cubemx_project": "Import CubeMX project",
   "ground.resources_scope": "This table covers Ground radio resources. PC interface and activity LED contracts are checked separately.",
   "power10.automatic_checks": "Automatic project text checks",
+  "build.progress.stage.audit": "Artifact audit",
+  "build.progress.unmeasured": "Build steps cannot be reliably counted; processed {count} output lines. Waiting for the process result.",
+  "build.progress.no_work": "Build is up to date; no compile objects are pending. Artifact audit follows.",
   "power10.contract_review_failed": "Critical contract review FAIL; known failures block manual acceptance. See the system log for details.",
   "power10.contract_review_pending": "Critical contracts NOT_PROVEN; manual acceptance pending. Automatic results do not establish FIELD READY or NASA certification."
 }

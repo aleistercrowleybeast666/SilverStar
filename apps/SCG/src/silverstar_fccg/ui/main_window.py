@@ -3468,22 +3468,22 @@ class MainWindow(QMainWindow):
                     shutil.rmtree(build_root)
                 return BuildResult(action, ("clean", str(build_root)), 0, "Build directory cleaned")
             runner = BuildRunner(output_policy)
-            context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.PLAN,
-                total=2, subject=target, code="status.build_running")
-            context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.BEGIN,
-                current=1, total=2, subject=f"{target}_compile", code="status.build_running")
-            command = runner.Command_Get(selected_model, BuildAction.BUILD)
-            environment = runner._Environment_Get(selected_model, action)
-            return_code, lines = runner._Process_Run(
-                command, target_root, environment,
+            def progress_report(progress: BuildProgress) -> None:
+                total = progress.total_steps + 1  # the actual artifact audit
+                context.Progress_Report(progress.completed_steps / total, "status.build_running")
+                if progress.stage == "PLAN":
+                    context.Line_Report(f"FCCG_UI_PLAN|{total}|{progress.stage_total}")
+                else:
+                    context.Line_Report(f"FCCG_UI_PROGRESS|{progress.stage}|{progress.stage_completed}|"
+                                        f"{progress.stage_total}|{progress.subject}")
+            built = runner.Target_Run(selected_model, target_root,
                 context.token if hasattr(context, "token") else context,
-                context.Line_Report,
-            )
-            context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.DONE,
-                current=1, total=2, subject=f"{target}_compile", code="status.build_running")
+                line_callback=context.Line_Report, progress_callback=progress_report)
+            command = built.command
+            environment = runner._Environment_Get(selected_model, action)
+            return_code, lines = built.return_code, [built.output]
             if return_code == 0:
-                context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.BEGIN,
-                    current=2, total=2, subject=f"{target}_artifact_audit", code="status.build_running")
+                context.Line_Report(f"FCCG_UI_PROGRESS|AUDIT|0|1|{target}_artifact_audit")
                 try:
                     if target == "ground":
                         elf = target_root / "build/ground.elf"
@@ -3522,14 +3522,14 @@ class MainWindow(QMainWindow):
                     context.Line_Report(f"Target static audit failed: {error}")
                     lines.append(f"Target static audit failed: {error}\n")
                     return_code = 1
-                context.ProgressEvent_Report("TARGET_BUILD", TaskProgressState.DONE,
-                    current=2, total=2, subject=f"{target}_artifact_audit", code="status.build_running")
+                context.Progress_Report(0.99, "status.build_running")
+                context.Line_Report(f"FCCG_UI_PROGRESS|AUDIT|1|1|{target}_artifact_audit")
             return BuildResult(action, command, return_code, "".join(lines),
-                               live_streamed=True)
+                               built.plan, built.completed_steps, live_streamed=True)
 
         self.Task_Run(
             run, self._TargetBuild_Complete, self._Build_Error,
-            indeterminate=True, line_callback=self._BuildLine_Append,
+            indeterminate=False, line_callback=self._BuildLine_Append,
         )
 
     def _TargetBuild_Complete(self, result: BuildResult) -> None:
@@ -3970,6 +3970,16 @@ class MainWindow(QMainWindow):
         if line.startswith("FCCG_UI_PROGRESS|"):
             _prefix, stage, current, total, subject = line.split("|", 4)
             if stage == "COMPLETE":
+                return
+            if stage == "UNMEASURED":
+                text = self._translator.Text_Get("build.progress.unmeasured", count=current)
+                self.status_label.setText(text)
+                self.build_page.BuildLog_Append(text)
+                return
+            if stage == "NO_WORK":
+                text = self._translator.Text_Get("build.progress.no_work")
+                self.status_label.setText(text)
+                self.build_page.BuildLog_Append(text)
                 return
             key = {
                 "ANALYZE": "build.progress.static_analysis",
