@@ -22,6 +22,9 @@ uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity);
 PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
                                           uint16_t length);
 void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length);
+/* USB-only lifecycle hooks. Consume reset in the main loop, never in ISR. */
+void PcByteStream_OnUsbReset(void);
+uint8_t PcByteStream_ResetPending_Get(void);
 uint32_t PcByteStream_OverflowCount_Get(void);
 
 #endif /* __PC_BYTE_STREAM_H */

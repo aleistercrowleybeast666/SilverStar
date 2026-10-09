@@ -64,6 +64,7 @@ def PlatformCompatibilityErrors_Get(
     cubemx_version: str,
     firmware_package: str,
     source_policy: str = "",
+    allow_ground_imported: bool = False,
 ) -> tuple[str, ...]:
     platform = manifest.platform
     if platform is None:
@@ -92,7 +93,10 @@ def PlatformCompatibilityErrors_Get(
             f"detected {firmware_package}, required "
             + ", ".join(contract.firmware_packages)
         )
-    if source_policy and source_policy != contract.source_policy:
+    ground_imported = (allow_ground_imported
+        and source_policy == "imported_tree_authoritative"
+        and manifest.component_id in {"silverstar.mcu.stm32f103c8t6", "silverstar.mcu.stm32f407vet6"})
+    if source_policy and source_policy != contract.source_policy and not ground_imported:
         errors.append(
             f"HAL/CMSIS source policy mismatch for {manifest.component_id}: "
             f"project uses {source_policy}, Platform requires {contract.source_policy}"

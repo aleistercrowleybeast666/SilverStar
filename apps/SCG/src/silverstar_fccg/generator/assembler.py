@@ -569,6 +569,8 @@ class ProjectAssembler:
                 f"Custom hardware snapshot is unavailable: {snapshot_id}"
             )
         files: dict[str, bytes] = {}
+        ground_base = model.hardware.inventory.get("ground_cubemx_base", {})
+        expected_hashes = ground_base.get("artifact_hashes", {}) if isinstance(ground_base, dict) else {}
         for source in sorted(snapshot.rglob("*")):
             if source.is_symlink():
                 raise ProjectAssemblerError("Hardware snapshot contains a symlink")
@@ -578,6 +580,13 @@ class ProjectAssembler:
             target = f"{self.HARDWARE_ROOT}/{relative}"
             self.internal_policy.RelativePath_Validate(target)
             files[target] = source.read_bytes()
+        if model.core == "silverstar.core.ground.0_1_0" and ground_base:
+            if not expected_hashes:
+                raise ProjectAssemblerError("Ground CubeMX snapshot has no artifact hashes; reimport the complete project")
+            for relative, expected in expected_hashes.items():
+                data = files.get(f"{self.HARDWARE_ROOT}/{relative}")
+                if data is None or hashlib.sha256(data).hexdigest() != expected:
+                    raise ProjectAssemblerError(f"Ground CubeMX snapshot changed: {relative}; reimport the project")
         mcu = self.catalog.Component_Get(model.mcu)
         if mcu.metadata.get("compact_entry") == "cubemx_static_tasks":
             from silverstar_fccg.generator.compact_entry import CompactFlightMain_Integrate

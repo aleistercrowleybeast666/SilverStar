@@ -20,6 +20,7 @@ typedef struct
 
 GroundBridgeResult GroundBridge_Init(void);
 GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+void GroundBridge_PcReset(void);
 GroundBridgeResult GroundBridge_DiagnosticsGet(
     GroundBridgeDiagnostics *diagnostics);
 

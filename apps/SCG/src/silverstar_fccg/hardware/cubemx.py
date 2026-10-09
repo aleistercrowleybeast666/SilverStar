@@ -5,7 +5,7 @@ import json
 import re
 import shutil
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from silverstar_fccg.core.workspace import WorkspacePolicy, WorkspacePolicyError
@@ -66,7 +66,10 @@ class CubeMxImporter:
         provider_id: str = "silverstar.hardware_provider.stm32_cubemx",
         risk_acknowledged: bool = False,
         progress_callback: Callable[[int, int, str, bool], None] | None = None,
+        target: str = "flight",
     ) -> CubeMxImportResult:
+        if target not in {"flight", "ground"}:
+            raise CubeMxImportError("CubeMX import target must be flight or ground")
         phases = (
             "read_ioc",
             "parse_peripherals",
@@ -84,6 +87,8 @@ class CubeMxImporter:
 
         progress(1, False)
         root, ioc_path = self._Input_Resolve(input_path)
+        if target == "ground" and len(tuple(root.glob("*.ioc"))) != 1:
+            raise CubeMxImportError("Ground CubeMX project must contain exactly one root .ioc file")
         ioc_text = self._Text_Read(ioc_path)
         progress(1, True)
 
@@ -101,6 +106,11 @@ class CubeMxImporter:
 
         progress(4, False)
         resources = inventory.HardwareResources_Get()
+        if target == "ground":
+            resources = tuple(replace(resource, metadata={
+                **resource.metadata, "pins": {"dm": "PA11", "dp": "PA12"},
+                "interrupt": "USB_LP_CAN1_RX0_IRQn" if actual_mcu == "STM32F103C8T6" else "OTG_FS_IRQn",
+            }) if resource.kind == "usb_cdc" else resource for resource in resources)
         capabilities = tuple(
             sorted({f"peripheral.{resource.kind}" for resource in resources})
         )
@@ -114,9 +124,22 @@ class CubeMxImporter:
             )
         self._RtosConflict_Validate(root, ioc_text)
         generated_layout = (root / "Core" / "Src" / "main.c").is_file()
+        if target == "ground" and not generated_layout:
+            raise CubeMxImportError("Ground requires a generated CubeMX project containing its .ioc and Core/Src/main.c; Generate Code before importing")
         if generated_layout or (root / "Core").exists() or (root / "Drivers").exists():
             self._GeneratedLayout_Validate(root)
-        source_files = self._SourceFiles_Get(root)
+        source_files = self._SourceFiles_Get(root, ground=target == "ground")
+        ground_inputs = None
+        if target == "ground":
+            from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get, GroundUsbConfiguration_Validate
+
+            try:
+                ground_inputs = GroundCubeInputs_Get(root, actual_mcu)
+                GroundUsbConfiguration_Validate(root, ioc_text, actual_mcu)
+            except ValueError as error:
+                raise CubeMxImportError(str(error)) from error
+            except (OSError, UnicodeError) as error:
+                raise CubeMxImportError(f"Cannot read required Ground CubeMX input: {error}; Generate Code with copied libraries and reimport") from error
         digest = self._SnapshotDigest_Get(root, source_files)
         progress(5, True)
 
@@ -161,6 +184,19 @@ class CubeMxImporter:
             )
             if (root / Path(*relative.split("/"))).is_dir()
         )
+        inventory_data = inventory.Dictionary_Get()
+        if ground_inputs is not None:
+            build_sources = ground_inputs.sources
+            include_dirs = ground_inputs.includes
+            inventory_data["ground_cubemx_base"] = {
+                "format_version": 1,
+                "mcu_flags": list(ground_inputs.flags),
+                "build_manifest": "Makefile",
+                "artifact_hashes": {
+                    path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                    for path in source_files if path.relative_to(root).as_posix() != "README.md"
+                },
+            }
         hardware = HardwareConfiguration(
             mode="custom",
             source_kind="manual_import",
@@ -171,10 +207,14 @@ class CubeMxImporter:
             cubemx_version=inventory.cubemx_version,
             firmware_package=inventory.firmware_package,
             capabilities=capabilities,
-            inventory=inventory.Dictionary_Get(),
+            inventory=inventory_data,
             resources=resources,
             build_sources=build_sources,
             include_dirs=include_dirs,
+            asm_sources=ground_inputs.assembly if ground_inputs else (),
+            defines=ground_inputs.defines if ground_inputs else (),
+            linker_script=ground_inputs.linker if ground_inputs else "",
+            hal_cmsis_source_policy="imported_tree_authoritative" if ground_inputs else "",
             source_digest=digest,
             source_label=root.name,
             risk_acknowledged=risk_acknowledged,
@@ -301,7 +341,7 @@ class CubeMxImporter:
         if not any(root.rglob("*.ld")):
             raise CubeMxImportError("CubeMX project has no linker script")
 
-    def _SourceFiles_Get(self, root: Path) -> tuple[Path, ...]:
+    def _SourceFiles_Get(self, root: Path, *, ground: bool = False) -> tuple[Path, ...]:
         files: list[Path] = []
         total_size = 0
         for path in root.rglob("*"):
@@ -312,7 +352,7 @@ class CubeMxImporter:
                 raise CubeMxImportError(f"CubeMX project symlink rejected: {relative.as_posix()}")
             if not path.is_file():
                 continue
-            if path.suffix.casefold() not in self._ALLOWED_SUFFIXES:
+            if path.suffix.casefold() not in self._ALLOWED_SUFFIXES and not (ground and relative.as_posix() == "Makefile"):
                 continue
             try:
                 self.policy.RelativePath_Validate(relative.as_posix())

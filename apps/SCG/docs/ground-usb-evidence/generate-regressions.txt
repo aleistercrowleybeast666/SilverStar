@@ -1,0 +1,15 @@
+config load "C:\Users\chdxm\Documents\Codex\2026-10-08\task\usb-validation\cube-f103-uart/cube-f103-uart.ioc"
+project name cube-f103-uart
+project path "C:\Users\chdxm\Documents\Codex\2026-10-08\task\usb-validation\cube-f103-uart"
+project setCustomFWPath "D:/Tools/Embedded/STM32/Repository/STM32Cube_FW_F1_V1.8.7"
+project toolchain Makefile
+SetCopyLibrary "copy only"
+project generate
+config load "C:\Users\chdxm\Documents\Codex\2026-10-08\task\usb-validation\cube-f407-usb/cube-f407-usb.ioc"
+project name cube-f407-usb
+project path "C:\Users\chdxm\Documents\Codex\2026-10-08\task\usb-validation\cube-f407-usb"
+project setCustomFWPath "D:/Tools/Embedded/STM32/Repository/STM32Cube_FW_F4_V1.28.3"
+project toolchain Makefile
+SetCopyLibrary "copy only"
+project generate
+exit

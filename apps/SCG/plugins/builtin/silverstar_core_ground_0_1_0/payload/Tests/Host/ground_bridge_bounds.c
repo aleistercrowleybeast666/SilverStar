@@ -86,5 +86,13 @@ int main(void)
         assert(GroundBridge_DiagnosticsGet(&diagnostics) == GROUND_BRIDGE_OK);
         assert(diagnostics.pc_write_error_count != 0U);
     }
+    GroundBridge_PcReset();
+    {
+        GroundBridgeDiagnostics diagnostics;
+        assert(GroundBridge_DiagnosticsGet(&diagnostics) == GROUND_BRIDGE_OK);
+        assert(diagnostics.pc_queued_frames == 0U);
+        /* Reset aborts queued traffic without hiding accumulated diagnostics. */
+        assert(diagnostics.pc_write_error_count != 0U);
+    }
     return 0;
 }

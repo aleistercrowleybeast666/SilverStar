@@ -27,6 +27,14 @@ static uint8_t s_pc_frame_head;
 static uint8_t s_pc_frame_tail;
 static uint8_t s_pc_frame_count;
 
+void GroundBridge_PcReset(void)
+{
+    GspMinParser_Init(&s_gsp_parser);
+    s_pc_frame_head = 0U;
+    s_pc_frame_tail = 0U;
+    s_pc_frame_count = 0U;
+}
+
 static GroundBridgeResult GroundBridge_FrameWrite(const uint8_t *frame, uint16_t length)
 {
     if ((frame == NULL) || (length == 0U) || (length > GSP_MIN_MAX_FRAME_LEN)

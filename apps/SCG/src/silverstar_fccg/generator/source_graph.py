@@ -103,6 +103,13 @@ def _ModuleProviderActive_Is(
 
 def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGraph:
     catalog = catalog.ProjectView_Get(model)
+    ground_base = model.hardware.inventory.get("ground_cubemx_base", {})
+    imported_ground = (
+        model.core == "silverstar.core.ground.0_1_0"
+        and model.hardware.mode == "custom"
+        and model.hardware.hal_cmsis_source_policy == "imported_tree_authoritative"
+        and isinstance(ground_base, dict) and ground_base.get("format_version") == 1
+    )
     from silverstar_fccg.project.compact import CompactErrors_Get
     from silverstar_fccg.project.compact_logging import CompactLogProfileErrors_Get
     from silverstar_fccg.project.feature_tiers import FeatureTier_ErrorsGet
@@ -171,6 +178,8 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
                     ):
                         selected_protocol_profiles.append((category, profile))
         for source in build.sources:
+            if imported_ground and source.startswith("Drivers/"):
+                continue
             if source in profile_sources:
                 continue
             if _HardwareProviderSource_Is(source):
@@ -193,9 +202,11 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
                     sources.extend(variant_sources)
                 else:
                     exclude_sources.extend(variant_sources)
-        asm_sources.extend(build.asm_sources)
+        if not imported_ground:
+            asm_sources.extend(build.asm_sources)
         include_dirs.extend(
             path for path in build.include_dirs if path not in profile_includes
+            and not (imported_ground and path.startswith(("Drivers/", "Targets/")))
         )
         defines.extend(
             value for value in build.defines if value not in profile_defines
@@ -222,6 +233,8 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
             module_providers = manifest.platform.module_providers
             matched_modules: set[str] = set()
             for provider in module_providers.values():
+                if imported_ground:
+                    continue
                 declared_module_provider_sources.extend(
                     (*provider.provider_sources, *provider.middleware_sources)
                 )
@@ -260,7 +273,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
                 for module in inventory_modules
                 if module not in matched_modules
             )
-            if module_providers and unsupported_modules:
+            if module_providers and unsupported_modules and not imported_ground:
                 raise SourceGraphError(
                     "CubeMX modules have no declarative Platform provider: "
                     + ", ".join(unsupported_modules)
@@ -275,7 +288,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
                     exclude_sources.extend(backend.sources)
                     continue
                 sources.extend(backend.sources)
-                if module_providers:
+                if module_providers or imported_ground:
                     pass
                 elif (
                     manifest.platform.compatibility.source_policy
@@ -289,7 +302,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
                     )
                 include_dirs.extend(backend.include_dirs)
                 defines.extend(backend.defines)
-        if build.linker_script:
+        if build.linker_script and not imported_ground:
             linker_scripts.append(build.linker_script)
         if build.toolchain_prefix:
             toolchain_prefixes.append(build.toolchain_prefix)
@@ -344,7 +357,16 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
             "HardwareGenerated/STM32CubeMX/Core/Src/sysmem.c",
             "HardwareGenerated/STM32CubeMX/Core/Src/freertos.c",
         ))
-        if model.hardware.hal_cmsis_source_policy == "plugin_payload_authoritative":
+        if imported_ground:
+            sources.extend(model.hardware.build_sources)
+            asm_sources.extend(model.hardware.asm_sources)
+            include_dirs.extend(model.hardware.include_dirs)
+            defines.extend(model.hardware.defines)
+            linker_scripts.append(model.hardware.linker_script)
+            declared_flags = model.hardware.inventory["ground_cubemx_base"].get("mcu_flags")
+            if tuple(declared_flags or ()) != _Unique_Ordered(mcu_flags):
+                raise SourceGraphError("Imported Ground compiler flags differ from the exact MCU contract")
+        elif model.hardware.hal_cmsis_source_policy == "plugin_payload_authoritative":
             imported_paths = (
                 *model.hardware.build_sources,
                 *model.hardware.asm_sources,

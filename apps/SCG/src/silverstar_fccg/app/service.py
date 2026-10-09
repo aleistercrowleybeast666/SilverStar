@@ -832,6 +832,7 @@ class FccgService:
         *,
         risk_acknowledged: bool,
         progress_callback: Callable[[int, int, str, bool], None] | None = None,
+        target: str = "flight",
     ) -> CubeMxImportResult:
         providers = [
             component
@@ -848,6 +849,7 @@ class FccgService:
             provider_id=providers[0].component_id,
             risk_acknowledged=risk_acknowledged,
             progress_callback=progress_callback,
+            target=target,
         )
         provider = providers[0].hardware_provider
         assert provider is not None
@@ -869,6 +871,8 @@ class FccgService:
             platform_manifest,
             cubemx_version=result.inventory.cubemx_version,
             firmware_package=result.inventory.firmware_package,
+            source_policy=result.hardware.hal_cmsis_source_policy,
+            allow_ground_imported=target == "ground",
         )
         if compatibility_errors:
             raise CubeMxImportError("; ".join(compatibility_errors))

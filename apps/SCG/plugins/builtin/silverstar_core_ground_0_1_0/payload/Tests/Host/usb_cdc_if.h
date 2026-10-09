@@ -1,6 +1,7 @@
 #ifndef __USBD_CDC_IF_H
 #define __USBD_CDC_IF_H
 #include <stdint.h>
+#include "usb_device.h"
 #define USBD_OK 0U
 #define USBD_BUSY 1U
 #define USBD_FAIL 2U

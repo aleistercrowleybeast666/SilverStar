@@ -99,9 +99,11 @@ def _UserSection_Insert(source: str, section: str, insertion: str, *, empty: boo
     return source[:match.start()] + start + "\n" + body + "\n" + end + source[match.end():]
 
 
-def _Main_Integrate(content: bytes) -> bytes:
+def _Main_Integrate(content: bytes, *, usb: bool = False) -> bytes:
     source = content.decode("utf-8-sig")
     source = _UserSection_Insert(source, "Includes", '#include "ground_bridge.h"', empty=True)
+    if usb:
+        source = _UserSection_Insert(source, "Includes", '#include "pc_byte_stream.h"', empty=False)
     source = _UserSection_Insert(
         source, "2", "  if (GroundBridge_Init() != GROUND_BRIDGE_OK) { Error_Handler(); }",
         empty=True,
@@ -112,9 +114,11 @@ def _Main_Integrate(content: bytes) -> bytes:
     )
     if section is None or section.group(1).strip() != "}":
         raise ValueError("Ground CubeMX main.c USER CODE 3 has unsupported application code")
+    usb_process = ("\n    if (PcByteStream_ResetPending_Get() != 0U) { GroundBridge_PcReset(); }"
+                   if usb else "")
     source = source.replace(
         "/* USER CODE BEGIN 3 */",
-        "/* USER CODE BEGIN 3 */\n    (void)GroundBridge_Process(HAL_GetTick());",
+        "/* USER CODE BEGIN 3 */" + usb_process + "\n    (void)GroundBridge_Process(HAL_GetTick());",
         1,
     )
     return source.encode("utf-8")
@@ -172,6 +176,23 @@ def _UsbCallback_Integrate(content: bytes) -> bytes:
     if marker not in source or "CDC_Receive_FS" not in source:
         raise ValueError("CubeMX USB CDC callback lacks a supported receive hook")
     source = source.replace(marker, marker + "\n  PcByteStream_OnUsbReceive(Buf, (uint16_t)*Len);", 1)
+    for section in ("3", "4"):
+        # Init/DeInit exist in both old and new classic CDC templates. Refuse
+        # an unfamiliar template instead of silently losing lifecycle handling.
+        if f"/* USER CODE BEGIN {section} */" not in source:
+            raise ValueError("CubeMX USB CDC callback lacks a supported Init/DeInit hook")
+        source = _UserSection_Insert(source, section, "  PcByteStream_OnUsbReset();", empty=False)
+    return source.encode("utf-8")
+
+
+def _UsbConf_Integrate(content: bytes) -> bytes:
+    source = content.decode("utf-8-sig")
+    source = _UserSection_Insert(source, "Includes", '#include "pc_byte_stream.h"', empty=False)
+    for event in ("Reset", "DevDisconnected"):
+        pattern = r"(?m)^([ \t]*USBD_LL_" + event + r"\([^\n]+\);)[ \t]*\r?$"
+        source, count = re.subn(pattern, r"\1\n  PcByteStream_OnUsbReset();", source)
+        if count != 1:
+            raise ValueError(f"CubeMX USB configuration lacks one classic {event} lifecycle call")
     return source.encode("utf-8")
 
 
@@ -229,86 +250,8 @@ uint32_t PcByteStream_OverflowCount_Get(void)
     return 0U;
 }}
 """
-    return """#include "pc_byte_stream.h"
-#include "gsp_min_protocol.h"
-#include "silverstar_assert.h"
-#include "usbd_cdc_if.h"
-#include <stddef.h>
-
-#define PC_USB_RX_CAPACITY 512U
-
-static uint8_t s_rx_buffer[PC_USB_RX_CAPACITY];
-static volatile uint16_t s_rx_head;
-static volatile uint16_t s_rx_tail;
-static volatile uint32_t s_rx_overflow_count;
-
-PcByteStreamInitResult PcByteStream_Init(void)
-{
-    return PC_BYTE_STREAM_INIT_OK;
-}
-
-void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
-{
-    uint16_t index;
-    uint32_t skipped;
-    if (data == NULL) { return; }
-    SILVERSTAR_ASSERT_OBJECT(data, uint8_t,
-        SILVERSTAR_ASSERT_MODULE_GENERATED);
-    SILVERSTAR_ASSERT((s_rx_head < PC_USB_RX_CAPACITY) &&
-        (s_rx_tail < PC_USB_RX_CAPACITY),
-        SILVERSTAR_ASSERT_MODULE_GENERATED,
-        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
-    for (index = 0U; (index < length) && (index < PC_USB_RX_CAPACITY);
-         index++)
-    {
-        uint16_t next = (uint16_t)((s_rx_head + 1U) % PC_USB_RX_CAPACITY);
-        if (next == s_rx_tail)
-        {
-            break;
-        }
-        s_rx_buffer[s_rx_head] = data[index];
-        s_rx_head = next;
-    }
-    skipped = (uint32_t)(length - index);
-    if (skipped > (UINT32_MAX - s_rx_overflow_count))
-    { s_rx_overflow_count = UINT32_MAX; }
-    else
-    { s_rx_overflow_count += skipped; }
-}
-
-uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
-{
-    uint16_t count;
-    if (buffer == NULL) { return 0U; }
-    for (count = 0U; (count < capacity) &&
-         (count < PC_USB_RX_CAPACITY); count++)
-    {
-        if (s_rx_tail == s_rx_head) { break; }
-        buffer[count] = s_rx_buffer[s_rx_tail];
-        s_rx_tail = (uint16_t)((s_rx_tail + 1U) % PC_USB_RX_CAPACITY);
-    }
-    return count;
-}
-
-PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
-                                          uint16_t length)
-{
-    uint8_t result;
-    if ((data == NULL) || (length == 0U) ||
-        (length > GSP_MIN_MAX_FRAME_LEN))
-    { return PC_BYTE_STREAM_WRITE_ERROR; }
-    result = CDC_Transmit_FS((uint8_t *)(uintptr_t)data, length);
-    /* USBD_BUSY is transient: the bounded Ground PC queue retries this frame. */
-    if (result == USBD_BUSY) { return PC_BYTE_STREAM_WRITE_BUSY; }
-    return (result == USBD_OK) ? PC_BYTE_STREAM_WRITE_OK :
-        PC_BYTE_STREAM_WRITE_ERROR;
-}
-
-uint32_t PcByteStream_OverflowCount_Get(void)
-{
-    return s_rx_overflow_count;
-}
-"""
+    from silverstar_fccg.generator.ground_pc_usb_cdc import PcUsbCdc_Render
+    return PcUsbCdc_Render()
 
 
 def _Makefile_Render(
@@ -429,6 +372,10 @@ def GroundFiles_Render(
     for owner in (platform_api, family, mcu):
         for source in owner.PayloadFiles_Get():
             relative = source.relative_to(owner.payload_root).as_posix()
+            if (ground.hardware.hal_cmsis_source_policy == "imported_tree_authoritative"
+                    and (relative.startswith(("Drivers/", "Middlewares/"))
+                         or relative in {mcu.build.linker_script, *mcu.build.asm_sources})):
+                continue
             if relative.startswith(("Middlewares/Third_Party/FatFs/", "FATFS/")):
                 continue
             if relative.startswith(("Platform/", "Drivers/", "BuildSystem/", "Middlewares/")) or relative in {
@@ -460,12 +407,16 @@ def GroundFiles_Render(
         files[main_path] = _VerifiedBoardMain_Prepare(
             files[main_path], catalog.Component_Get(ground.board)
         )
-    files[main_path] = _Main_Integrate(files[main_path])
+    files[main_path] = _Main_Integrate(files[main_path], usb=ground.pc_interface == "usb_cdc")
     if ground.pc_interface == "usb_cdc":
         callback_paths = [path for path in files if path.endswith("/usbd_cdc_if.c")]
         if len(callback_paths) != 1:
             raise ValueError("Ground CubeMX hardware has no unique usbd_cdc_if.c")
         files[callback_paths[0]] = _UsbCallback_Integrate(files[callback_paths[0]])
+        conf_paths = [path for path in files if path.endswith("/usbd_conf.c")]
+        if len(conf_paths) != 1:
+            raise ValueError("Ground CubeMX hardware has no unique usbd_conf.c")
+        files[conf_paths[0]] = _UsbConf_Integrate(files[conf_paths[0]])
 
     files["Generated/Inc/project_resources.h"] = _ResourceHeader_Render(
         ground_model, catalog
@@ -498,6 +449,9 @@ def GroundFiles_Render(
     ]))
     defines = tuple(dict.fromkeys([
         "SILVERSTAR_AIR_LINK_ENABLED=1", *base_graph.defines,
+        # Ground transfers bounded AIR frames; the established HAL option still
+        # accommodates a full 255-byte radio payload plus its command header.
+        "AIR_LINK_HAL_BUFFER_SIZE=260",
     ]))
     missing_sources = [source for source in sources if source not in files]
     if missing_sources:

@@ -228,6 +228,18 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
                 "GROUND_MCU_UNKNOWN", "Selected Ground MCU is not in the catalog",
             ))
         else:
+            if ground.hardware.mode == "custom" and ground.hardware.hal_cmsis_source_policy == "imported_tree_authoritative":
+                from silverstar_fccg.hardware.platform import PlatformCompatibilityErrors_Get
+
+                base = ground.hardware.inventory.get("ground_cubemx_base", {})
+                if not isinstance(base, dict) or base.get("format_version") != 1:
+                    issues.append(AirLinkIssue("GROUND_CUBEMX_BASE_REQUIRED", "Reimport the complete CubeMX Ground project"))
+                issues.extend(AirLinkIssue("GROUND_PLATFORM_COMPATIBILITY", message)
+                    for message in PlatformCompatibilityErrors_Get(exact_mcu,
+                        cubemx_version=ground.hardware.cubemx_version,
+                        firmware_package=ground.hardware.firmware_package,
+                        source_policy=ground.hardware.hal_cmsis_source_policy,
+                        allow_ground_imported=True))
             issues.extend(
                 AirLinkIssue("GROUND_" + issue.code, issue.message)
                 for issue in ClockPlan_Validate(
@@ -283,6 +295,10 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
     if ground.pc_interface == "usb_cdc":
         frontend_bindings.extend(("pc_interface", item.metadata, item.resource_id)
             for item in available.values() if item.kind == "usb_cdc")
+        for item in available.values():
+            pins = item.metadata.get("pins", {})
+            if item.kind == "usb_cdc" and isinstance(pins, dict):
+                occupied_pins.update((str(pin), "pc_interface") for pin in pins.values() if pin)
     for configuration in configurations:
         try:
             radio = catalog.Component_Get(configuration.plugin)

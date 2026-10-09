@@ -1,0 +1,440 @@
+{
+  "base_commit": "6fe76d87d05de6b7528e74d9c423df6d9217e47f",
+  "changed_source_sha256": {
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Core/Inc/ground_bridge.h": "36a6fbc25e6fb6d021832b3587ba4953d7ecd18b42d9ae8103ad13c5c28e4e2c",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Core/Inc/pc_byte_stream.h": "b3a659714a37daf1e47d36c8d51eb5d65c9d8aba14c905259a4680bdd7dca690",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Core/Src/ground_bridge.c": "b7a4f1ff35969a192d3dca2a294b6d150bdbae3d90868fb07c1680e828a2e946",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/ground_bridge_bounds.c": "2753bba46a7841c68addc12efef66b923a32134e341592f808566c0007e457c5",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_cdc.c": "cdecc4307cba31892353237d93c1033d368f2003af3c9b0a8135010e720cd8c3",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_cdc_if.h": "45efbbfffd5f5c4b770c00ece28a452b30cc76d39c035d4a8c2df7eae1d863df",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_device.h": "175ee88a30fe2c5e38ea6d9e2bedf74955eda89d263901b868390a490ff6c378",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_main.h": "f5e4897d1d56a845c278d94f3941eec907f72a81c5fe8cc03d8066352bd3c0a8",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_ground.py": "7efda2ba67a34ff883fde7901add9a19b1394339b21f66fd51bea7dbe949c8ef",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/plugin.json": "eeb85931f574af3ff557711eb88c229757a533fbff97c5cf1988f8faf96f2c12",
+    "apps/SCG/src/silverstar_fccg/app/service.py": "badd9f5b0eb5d905e557b5aee1bd7572b5ae92e0bd9d8d2e0740682d7e9a2608",
+    "apps/SCG/src/silverstar_fccg/generator/assembler.py": "723a5925bc5f2964aa5254dd1204482fb63f924dc543a0c9944e237663dbc30d",
+    "apps/SCG/src/silverstar_fccg/generator/ground_pc_usb_cdc.py": "588fac8e8caea52476ee758c164a235893c6616075bdd290b731965d977fb54a",
+    "apps/SCG/src/silverstar_fccg/generator/multi_target.py": "46a7bcc65bd543d2602a811e1b3af130dede1be589db8259d3aeff2fbaf8ed34",
+    "apps/SCG/src/silverstar_fccg/generator/source_graph.py": "e142029d7ff4c480cfdb369bf83cf3fcc49e6412775095285d7479f8bc517ff9",
+    "apps/SCG/src/silverstar_fccg/hardware/cubemx.py": "3205a65e8630fe1275c3fcdd1fdeab204ddb7c9f83e1fc86925420a797e64ccb",
+    "apps/SCG/src/silverstar_fccg/hardware/cubemx_ground.py": "abeda90cf8e452a560312f9e92ee7873afdc060549b30303b57ad7c668aadf9e",
+    "apps/SCG/src/silverstar_fccg/hardware/platform.py": "de144c5a56937f582034f94fc23e5a426f87f6d29d0c44b03f684d480ddd07fb",
+    "apps/SCG/src/silverstar_fccg/project/air_link.py": "19f9de2dc8315f7c76d154881b19008978093f752346b4f5a38b58bcb9322ffa",
+    "apps/SCG/tests/test_ground_cubemx_base.py": "60b5c50a65378b763961fbe64c16f860b5435f4d5022dd4c90531664ce5d179c",
+    "apps/SCG/tests/test_ground_usb_cdc_ring.py": "88b69c0431e76b7a076210b4466218a8ea0965d4e5502befff9ec3c9605ed1c1",
+    "apps/SCG/tests/test_round2_targets.py": "ea0722d0e13b584f4e84cd2288c48cd7ad773756541568d46da680a2a6d307e9"
+  },
+  "tools": {
+    "CubeMX": "6.15.0",
+    "CubeF1": "1.8.7",
+    "CubeF4": "1.28.3",
+    "ARM_GCC": "14.3.1 20250623",
+    "HOST_GCC": "16.1.0",
+    "mingw32_make": "4.4.1",
+    "Python": "3.14"
+  },
+  "pytest": {
+    "passed": 68,
+    "deselected": 1,
+    "duration_seconds": 132.52,
+    "known_failure": "pre-existing duplicate physical sd_sdio_fatfs / sd_sdio_fatfs_f1 component identity"
+  },
+  "targets": [
+    {
+      "case": "f103-usb",
+      "sources": 50,
+      "asm_sources": [
+        "HardwareGenerated/STM32CubeMX/startup_stm32f103xb.s"
+      ],
+      "linker_script": "HardwareGenerated/STM32CubeMX/STM32F103XX_FLASH.ld",
+      "artifact_sha256": {
+        "ground.elf": "e7dd36cb4f1685955c01c4464280df7ad79392ee206dac6c8fc5e38ea3d50cbd",
+        "ground.bin": "346506ee1843161665ab60815f67b3fde5c916ca93e69372439f288c402abdb0",
+        "ground_source_graph.json": "67a50ea2304a8ac8a31e30d7cfeab5ece3da4e3365d2afb89bbc7389bf21c41d"
+      },
+      "text": 36136,
+      "data": 380,
+      "bss_including_linker_reserved_stack": 11992,
+      "reserved_stack": 2048,
+      "reserved_heap": 0,
+      "ram_unallocated": 8108,
+      "first_party_critical_frames": {
+        "main": {
+          "bytes": 8,
+          "kind": "static",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/main.c:69:5:main"
+        },
+        "GroundBridge_Process": {
+          "bytes": 192,
+          "kind": "static",
+          "source": "Ground/Core/Src/ground_bridge.c:279:20:GroundBridge_Process"
+        },
+        "PcByteStream_Write": {
+          "bytes": 16,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:94:25:PcByteStream_Write"
+        },
+        "PcByteStream_Read": {
+          "bytes": 32,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:72:10:PcByteStream_Read"
+        },
+        "PcByteStream_OnUsbReceive": {
+          "bytes": 32,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:48:6:PcByteStream_OnUsbReceive"
+        },
+        "USB_LP_CAN1_RX0_IRQHandler": {
+          "bytes": 0,
+          "kind": "static",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/stm32f1xx_it.c:249:6:USB_LP_CAN1_RX0_IRQHandler"
+        }
+      },
+      "known_direct_call_path_samples": {
+        "main": {
+          "known_frame_sum": 600,
+          "path": [
+            "main",
+            "GroundBridge_Init",
+            "GroundRadio_Init",
+            "Lora_Init",
+            "Lora_ApplyDefaultConfig",
+            "SX1280SetModulationParams",
+            "SX1280SetPacketType",
+            "SX1280HalWriteCommand",
+            "SpiIn",
+            "PlatformSpi_WriteObserved",
+            "HAL_SPI_Transmit",
+            "SPI_EndRxTxTransaction",
+            "SPI_WaitFlagStateUntilTimeout",
+            "HAL_GetTick"
+          ]
+        },
+        "GroundBridge_Process": {
+          "known_frame_sum": 464,
+          "path": [
+            "GroundBridge_Process",
+            "GroundBridge_StatusSend",
+            "GspMin_BuildGsStatusFrame",
+            "GspMin_BuildFrame",
+            "ProtocolCrc16_CcittFalse",
+            "SilverStarAssert_ObjectCheck",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "PcByteStream_Write": {
+          "known_frame_sum": 24,
+          "path": [
+            "PcByteStream_Write",
+            "CDC_Transmit_FS",
+            "USBD_CDC_SetTxBuffer"
+          ]
+        },
+        "PcByteStream_Read": {
+          "known_frame_sum": 48,
+          "path": [
+            "PcByteStream_Read",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "PcByteStream_OnUsbReceive": {
+          "known_frame_sum": 48,
+          "path": [
+            "PcByteStream_OnUsbReceive",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "USB_LP_CAN1_RX0_IRQHandler": {
+          "known_frame_sum": 0,
+          "path": [
+            "USB_LP_CAN1_RX0_IRQHandler"
+          ]
+        }
+      },
+      "indirect_call_functions": [
+        "HAL_DMA_Abort_IT",
+        "USBD_CDC_DataOut",
+        "USBD_CDC_DeInit",
+        "USBD_CDC_EP0_RxReady",
+        "USBD_CDC_Init",
+        "USBD_CDC_Setup",
+        "USBD_ClrClassConfig",
+        "USBD_LL_DataInStage",
+        "USBD_LL_DataOutStage",
+        "USBD_LL_Reset",
+        "USBD_LL_SOF",
+        "USBD_SetClassConfig",
+        "USBD_StdDevReq",
+        "USBD_StdEPReq",
+        "USBD_StdItfReq",
+        "__libc_init_array"
+      ],
+      "stack_status": "NOT PROVEN: frame sums are partial observations, not upper bounds; vendor callbacks, library functions without .su, tail calls and nested IRQs require complete review and hardware high-water measurement"
+    },
+    {
+      "case": "f103-uart",
+      "sources": 39,
+      "asm_sources": [
+        "HardwareGenerated/STM32CubeMX/startup_stm32f103xb.s"
+      ],
+      "linker_script": "HardwareGenerated/STM32CubeMX/STM32F103XX_FLASH.ld",
+      "artifact_sha256": {
+        "ground.elf": "84a446e16f8e25bbf30d5ed286378bd86ca39acf0ca7432658dd9c8b4e64812c",
+        "ground.bin": "63f72c9ead2f5143f4b563aefc329954d03f1ce8639843db747589f0e31de9fa",
+        "ground_source_graph.json": "52b6c5c320824867a228e75e07544374f9742b14042130a117c262fc9648240d"
+      },
+      "text": 27264,
+      "data": 12,
+      "bss_including_linker_reserved_stack": 7576,
+      "reserved_stack": 2048,
+      "reserved_heap": 0,
+      "ram_unallocated": 12892,
+      "first_party_critical_frames": {
+        "main": {
+          "bytes": 8,
+          "kind": "static",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/main.c:67:5:main"
+        },
+        "GroundBridge_Process": {
+          "bytes": 192,
+          "kind": "static",
+          "source": "Ground/Core/Src/ground_bridge.c:279:20:GroundBridge_Process"
+        },
+        "PcByteStream_Write": {
+          "bytes": 24,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:118:25:PcByteStream_Write"
+        },
+        "PcByteStream_Read": {
+          "bytes": 24,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:98:10:PcByteStream_Read"
+        },
+        "PcByteStream_OnUsbReceive": {
+          "bytes": 0,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:146:6:PcByteStream_OnUsbReceive"
+        }
+      },
+      "known_direct_call_path_samples": {
+        "main": {
+          "known_frame_sum": 600,
+          "path": [
+            "main",
+            "GroundBridge_Init",
+            "GroundRadio_Init",
+            "Lora_Init",
+            "Lora_ApplyDefaultConfig",
+            "SX1280SetModulationParams",
+            "SX1280SetPacketType",
+            "SX1280HalWriteCommand",
+            "SpiIn",
+            "PlatformSpi_WriteObserved",
+            "HAL_SPI_Transmit",
+            "SPI_EndRxTxTransaction",
+            "SPI_WaitFlagStateUntilTimeout",
+            "HAL_GetTick"
+          ]
+        },
+        "GroundBridge_Process": {
+          "known_frame_sum": 464,
+          "path": [
+            "GroundBridge_Process",
+            "GroundBridge_StatusSend",
+            "GspMin_BuildGsStatusFrame",
+            "GspMin_BuildFrame",
+            "ProtocolCrc16_CcittFalse",
+            "SilverStarAssert_ObjectCheck",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "PcByteStream_Write": {
+          "known_frame_sum": 72,
+          "path": [
+            "PcByteStream_Write",
+            "SilverStarAssert_ObjectCheck",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "PcByteStream_Read": {
+          "known_frame_sum": 108,
+          "path": [
+            "PcByteStream_Read",
+            "PcByteStream_DmaReceiveStart",
+            "HAL_UARTEx_ReceiveToIdle_DMA",
+            "UART_Start_Receive_DMA",
+            "HAL_DMA_Start_IT"
+          ]
+        }
+      },
+      "indirect_call_functions": [
+        "HAL_DMA_Abort_IT",
+        "__libc_init_array"
+      ],
+      "stack_status": "NOT PROVEN: frame sums are partial observations, not upper bounds; vendor callbacks, library functions without .su, tail calls and nested IRQs require complete review and hardware high-water measurement"
+    },
+    {
+      "case": "f407-usb",
+      "sources": 60,
+      "asm_sources": [
+        "HardwareGenerated/STM32CubeMX/startup_stm32f407xx.s"
+      ],
+      "linker_script": "HardwareGenerated/STM32CubeMX/STM32F407XX_FLASH.ld",
+      "artifact_sha256": {
+        "ground.elf": "ba3006b1cac3bfa0ad45983dfc3f1803f71b10bba6692c9142a748dc9928cd16",
+        "ground.bin": "28dca728eef5349def8919af9ae603a035bdbea1000a5afd0f361015817f338e",
+        "ground_source_graph.json": "0a169b69be6f5a26e6d394120846558febe2f585e8cce8b7d096bafecc18b90c"
+      },
+      "text": 36488,
+      "data": 248,
+      "bss_including_linker_reserved_stack": 14784,
+      "reserved_stack": 2048,
+      "reserved_heap": 0,
+      "ram_unallocated": 116040,
+      "first_party_critical_frames": {
+        "main": {
+          "bytes": 8,
+          "kind": "static",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/main.c:70:5:main"
+        },
+        "GroundBridge_Process": {
+          "bytes": 192,
+          "kind": "static",
+          "source": "Ground/Core/Src/ground_bridge.c:279:20:GroundBridge_Process"
+        },
+        "PcByteStream_Write": {
+          "bytes": 16,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:94:25:PcByteStream_Write"
+        },
+        "PcByteStream_Read": {
+          "bytes": 32,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:72:10:PcByteStream_Read"
+        },
+        "PcByteStream_OnUsbReceive": {
+          "bytes": 32,
+          "kind": "static",
+          "source": "Generated/Src/pc_byte_stream.c:48:6:PcByteStream_OnUsbReceive"
+        },
+        "OTG_FS_IRQHandler": {
+          "bytes": 0,
+          "kind": "static",
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/stm32f4xx_it.c:223:6:OTG_FS_IRQHandler"
+        }
+      },
+      "known_direct_call_path_samples": {
+        "main": {
+          "known_frame_sum": 616,
+          "path": [
+            "main",
+            "GroundBridge_Init",
+            "GroundRadio_Init",
+            "Lora_Init",
+            "Lora_ApplyDefaultConfig",
+            "SX1280SetModulationParams",
+            "SX1280SetPacketType",
+            "SX1280HalWriteCommand",
+            "SpiIn",
+            "PlatformSpi_WriteObserved",
+            "HAL_SPI_Transmit",
+            "SPI_EndRxTxTransaction",
+            "SPI_WaitFlagStateUntilTimeout",
+            "HAL_GetTick"
+          ]
+        },
+        "GroundBridge_Process": {
+          "known_frame_sum": 464,
+          "path": [
+            "GroundBridge_Process",
+            "GroundBridge_StatusSend",
+            "GspMin_BuildGsStatusFrame",
+            "GspMin_BuildFrame",
+            "ProtocolCrc16_CcittFalse",
+            "SilverStarAssert_ObjectCheck",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "PcByteStream_Write": {
+          "known_frame_sum": 24,
+          "path": [
+            "PcByteStream_Write",
+            "CDC_Transmit_FS",
+            "USBD_CDC_SetTxBuffer"
+          ]
+        },
+        "PcByteStream_Read": {
+          "known_frame_sum": 48,
+          "path": [
+            "PcByteStream_Read",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "PcByteStream_OnUsbReceive": {
+          "known_frame_sum": 48,
+          "path": [
+            "PcByteStream_OnUsbReceive",
+            "SilverStarAssert_Check",
+            "SilverStarAssert_Fail"
+          ]
+        },
+        "OTG_FS_IRQHandler": {
+          "known_frame_sum": 0,
+          "path": [
+            "OTG_FS_IRQHandler"
+          ]
+        }
+      },
+      "indirect_call_functions": [
+        "USBD_CDC_DataIn",
+        "USBD_CDC_DataOut",
+        "USBD_CDC_DeInit",
+        "USBD_CDC_EP0_RxReady",
+        "USBD_CDC_Init",
+        "USBD_CDC_Setup",
+        "USBD_ClrClassConfig",
+        "USBD_LL_DataInStage",
+        "USBD_LL_DataOutStage",
+        "USBD_LL_DevDisconnected",
+        "USBD_LL_IsoINIncomplete",
+        "USBD_LL_IsoOUTIncomplete",
+        "USBD_LL_Reset",
+        "USBD_LL_SOF",
+        "USBD_RegisterClass",
+        "USBD_StdDevReq",
+        "USBD_StdItfReq",
+        "__libc_init_array"
+      ],
+      "stack_status": "NOT PROVEN: frame sums are partial observations, not upper bounds; vendor callbacks, library functions without .su, tail calls and nested IRQs require complete review and hardware high-water measurement"
+    }
+  ],
+  "generation_snapshots": [
+    {
+      "case": "f103-usb",
+      "target": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\generated-f103-usb\\Ground_Station",
+      "snapshot": "558114cb7690e8b26fab247ecee5cdd654f2fe92959eed00c6e9051e1262b917",
+      "source_count": 50
+    },
+    {
+      "case": "f103-uart",
+      "target": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\generated-f103-uart\\Ground_Station",
+      "snapshot": "99bdca7c0cd202561e4810e7e178c4f9e070b929862a54a6fa99cf314006c655",
+      "source_count": 39
+    },
+    {
+      "case": "f407-usb",
+      "target": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\generated-f407-usb\\Ground_Station",
+      "snapshot": "d8b26fa7aef02e45b53a9f684442dce3f904cf573a0948f0ef07189ac027faf0",
+      "source_count": 60
+    }
+  ],
+  "hardware_status": "NOT RUN",
+  "overall_power10_contract_review": "NOT PROVEN"
+}

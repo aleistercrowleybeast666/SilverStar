@@ -1,0 +1,140 @@
+"""Classic ST CDC adapter; TxState supports both old and new CDC interfaces."""
+from __future__ import annotations
+
+
+def PcUsbCdc_Render() -> str:
+    return '''#include "pc_byte_stream.h"
+#include "gsp_min_protocol.h"
+#include "silverstar_assert.h"
+#include "main.h"
+#include "usbd_conf.h"
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
+#include <stddef.h>
+
+#define PC_USB_RX_CAPACITY 512U
+
+extern USBD_HandleTypeDef hUsbDeviceFS;
+
+static uint8_t s_rx_buffer[PC_USB_RX_CAPACITY];
+static uint8_t s_tx_buffer[GSP_MIN_MAX_FRAME_LEN];
+static volatile uint16_t s_rx_head;
+static volatile uint16_t s_rx_tail;
+static volatile uint32_t s_rx_overflow_count;
+static volatile uint8_t s_reset_pending;
+
+PcByteStreamInitResult PcByteStream_Init(void)
+{
+    PcByteStream_OnUsbReset();
+    return PC_BYTE_STREAM_INIT_OK;
+}
+
+void PcByteStream_OnUsbReset(void)
+{
+    uint32_t saved_mask = __get_PRIMASK();
+    __disable_irq();
+    s_rx_head = 0U;
+    s_rx_tail = 0U;
+    s_reset_pending = 1U;
+    __set_PRIMASK(saved_mask);
+}
+
+uint8_t PcByteStream_ResetPending_Get(void)
+{
+    uint32_t saved_mask = __get_PRIMASK();
+    uint8_t pending;
+    __disable_irq();
+    pending = s_reset_pending;
+    s_reset_pending = 0U;
+    __set_PRIMASK(saved_mask);
+    return pending;
+}
+
+void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
+{
+    uint16_t index;
+    uint32_t skipped;
+    if (data == NULL) { return; }
+    SILVERSTAR_ASSERT((s_rx_head < PC_USB_RX_CAPACITY) &&
+        (s_rx_tail < PC_USB_RX_CAPACITY),
+        SILVERSTAR_ASSERT_MODULE_GENERATED,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    for (index = 0U; (index < length) && (index < PC_USB_RX_CAPACITY);
+         index++)
+    {
+        uint16_t next = (uint16_t)((s_rx_head + 1U) % PC_USB_RX_CAPACITY);
+        if (next == s_rx_tail) { break; }
+        s_rx_buffer[s_rx_head] = data[index];
+        __DMB();
+        s_rx_head = next;
+    }
+    skipped = (uint32_t)(length - index);
+    if (skipped > (UINT32_MAX - s_rx_overflow_count))
+    { s_rx_overflow_count = UINT32_MAX; }
+    else { s_rx_overflow_count += skipped; }
+}
+
+uint16_t PcByteStream_Read(uint8_t *buffer, uint16_t capacity)
+{
+    uint32_t saved_mask;
+    uint16_t count;
+    if ((buffer == NULL) || (capacity == 0U)) { return 0U; }
+    saved_mask = __get_PRIMASK();
+    __disable_irq();
+    SILVERSTAR_ASSERT((s_rx_head < PC_USB_RX_CAPACITY) &&
+        (s_rx_tail < PC_USB_RX_CAPACITY),
+        SILVERSTAR_ASSERT_MODULE_GENERATED,
+        SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    for (count = 0U; (count < capacity) &&
+         (count < PC_USB_RX_CAPACITY); count++)
+    {
+        if (s_rx_tail == s_rx_head) { break; }
+        buffer[count] = s_rx_buffer[s_rx_tail];
+        s_rx_tail = (uint16_t)((s_rx_tail + 1U) % PC_USB_RX_CAPACITY);
+    }
+    __set_PRIMASK(saved_mask);
+    return count;
+}
+
+PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
+                                          uint16_t length)
+{
+    uint32_t saved_mask;
+    uint8_t result;
+    uint16_t index;
+    USBD_CDC_HandleTypeDef *cdc;
+    if ((data == NULL) || (length == 0U) ||
+        (length > GSP_MIN_MAX_FRAME_LEN))
+    { return PC_BYTE_STREAM_WRITE_ERROR; }
+    saved_mask = __get_PRIMASK();
+    __disable_irq();
+    if ((hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) ||
+        (hUsbDeviceFS.pClassData == NULL))
+    {
+        __set_PRIMASK(saved_mask);
+        return PC_BYTE_STREAM_WRITE_BUSY;
+    }
+    cdc = (USBD_CDC_HandleTypeDef *)hUsbDeviceFS.pClassData;
+    if (cdc->TxState != 0U)
+    {
+        __set_PRIMASK(saved_mask);
+        return PC_BYTE_STREAM_WRITE_BUSY;
+    }
+    for (index = 0U; (index < length) &&
+         (index < GSP_MIN_MAX_FRAME_LEN); index++)
+    { s_tx_buffer[index] = data[index]; }
+    /* Own the bytes until the stack retires TxState, including a trailing ZLP.
+       OK means accepted, not delivered. Reset/deinit aborts the old transfer.
+       USB callbacks cannot run between the state check and publication. */
+    result = CDC_Transmit_FS(s_tx_buffer, length);
+    __set_PRIMASK(saved_mask);
+    if (result == USBD_BUSY) { return PC_BYTE_STREAM_WRITE_BUSY; }
+    return (result == USBD_OK) ? PC_BYTE_STREAM_WRITE_OK :
+        PC_BYTE_STREAM_WRITE_ERROR;
+}
+
+uint32_t PcByteStream_OverflowCount_Get(void)
+{
+    return s_rx_overflow_count;
+}
+'''

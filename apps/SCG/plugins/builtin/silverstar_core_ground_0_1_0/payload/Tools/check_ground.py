@@ -156,7 +156,10 @@ def Host_Check(root: Path, compiler: str) -> None:
         cases.append(('uart_dma', [str(adapter), str(root / 'Common/Src/silverstar_assert.c')], harness))
     elif 'CDC_Transmit_FS' in text:
         shutil.copyfile(tests / 'usb_cdc_if.h', build / 'usbd_cdc_if.h')
-        cases.append(('usb_cdc', [str(adapter)], tests / 'usb_cdc.c'))
+        shutil.copyfile(tests / 'usb_device.h', build / 'usb_device.h')
+        shutil.copyfile(tests / 'usb_main.h', build / 'main.h')
+        (build / 'usbd_conf.h').write_text('/* Host configuration stub. */\n', encoding='utf-8')
+        cases.append(('usb_cdc', [str(adapter), str(root / 'Common/Src/silverstar_assert.c')], tests / 'usb_cdc.c'))
     else:
         raise ValueError('No host harness for selected PC transport; acceptance blocked')
     for name, sources, harness in cases:

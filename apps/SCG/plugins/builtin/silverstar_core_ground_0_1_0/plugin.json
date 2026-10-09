@@ -4,7 +4,7 @@
   "name": "SilverStar Ground Bridge Core",
   "type": "core",
   "class": "ground_bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Opaque AIR frame bridge between GSP byte stream and packet radio.",
   "requires": {
     "components": [],

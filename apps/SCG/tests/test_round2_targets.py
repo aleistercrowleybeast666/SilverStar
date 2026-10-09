@@ -226,6 +226,8 @@ def test_usb_cdc_adapter_uses_the_same_gsp_byte_stream(
     assert "PcByteStream_OverflowCount_Get" in adapter
     callback = (
         b'#include "usbd_cdc_if.h"\n'
+        b"static int8_t CDC_Init_FS(void) {\n/* USER CODE BEGIN 3 */\n/* USER CODE END 3 */\n}\n"
+        b"static int8_t CDC_DeInit_FS(void) {\n/* USER CODE BEGIN 4 */\n/* USER CODE END 4 */\n}\n"
         b"static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len)\n"
         b"{\n  /* USER CODE BEGIN 6 */\n"
         b"  USBD_CDC_ReceivePacket(&hUsbDeviceFS);\n"
