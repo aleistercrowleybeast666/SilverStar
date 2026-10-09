@@ -1,0 +1,102 @@
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/hardware/native_classic_cdc.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_native_classic_cdc.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tools/validation/native_classic_cdc_compile.py', LF will be replaced by CRLF the next time Git touches it
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS strong linked IRQ handlers and actual vector entries
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build/analysis
+PASS strong linked IRQ handlers and actual vector entries
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 190, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 158, in NativeCompile_Run
+    raise ValueError("Native warning diagnostics require independent review; strict no-warning acceptance FAILED")
+ValueError: Native warning diagnostics require independent review; strict no-warning acceptance FAILED

@@ -16,6 +16,7 @@ from pathlib import Path
 from silverstar_fccg.hardware.cubemx import CubeMxImportError, CubeMxImporter, CubeMxImportResult
 from silverstar_fccg.hardware.ground_dependencies import GroundDependencyDirectives_Validate
 from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
+from silverstar_fccg.hardware.native_machine_contract import NativeAssemblyDirectives_Validate
 from silverstar_fccg.project.model import HardwareConfiguration, HardwareResource
 
 NATIVE_CLASSIC_CDC_KEY = "native_complete_classic_cdc"
@@ -45,6 +46,9 @@ class NativeDeviceFacts:
     evidence_source: str
     evidence_sha256: str
     fpu: str = ""
+    irq_numbers: tuple[tuple[str, int], ...] = ()
+    irq_header_sha256: str = ""
+    irq_evidence_source: str = ""
 
     def Facts_Validate(self) -> None:
         if not re.fullmatch(r"STM32[A-Z0-9]+", self.part):
@@ -53,6 +57,12 @@ class NativeDeviceFacts:
             raise CubeMxImportError("Unsupported single-core/cache-free CPU contract")
         if self.fpu not in {"", "fpv4-sp-d16"} or (self.fpu and self.core != "cortex-m4"):
             raise CubeMxImportError("Unsupported independent FPU facts")
+        if (not isinstance(self.irq_numbers, tuple) or not self.irq_numbers or
+                len({n for n, _ in self.irq_numbers}) != len(self.irq_numbers) or
+                any(not re.fullmatch(r"[A-Za-z0-9_]+_IRQn", n) or type(v) is not int or
+                    not -15 <= v <= 1023 for n, v in self.irq_numbers) or
+                not self.irq_evidence_source or not re.fullmatch(r"[0-9a-f]{64}", self.irq_header_sha256)):
+            raise CubeMxImportError("Reviewed independent IRQn/header facts are required")
         if not re.fullmatch(r"STM32[A-Za-z0-9]+", self.device_macro):
             raise CubeMxImportError("Invalid independent device macro")
         if not re.fullmatch(r"startup_stm32[a-z0-9]+\.s", self.startup):
@@ -305,6 +315,7 @@ def _NativeClassicCdc_Inspect(root: Path, *, device_facts: NativeDeviceFacts,
     if "HAL_IncTick" not in spi_code or "HAL_Init" not in spi_code:
         raise CubeMxImportError("Native HAL tick initialization/progression owner missing")
     startup = _Code_Get(files[build["asm_sources"][0]].decode("utf-8-sig"))
+    NativeAssemblyDirectives_Validate(startup, core=device_facts.core, fpu=device_facts.fpu)
     if (len(re.findall(r"(?m)^\s*Reset_Handler:\s*$", startup)) != 1 or
             not re.search(r"(?m)^\s*\.type\s+Reset_Handler\s*,\s*%function\s*$", startup) or
             re.search(r"\.thumb_set\s+Reset_Handler\s*,", startup) or
@@ -313,6 +324,12 @@ def _NativeClassicCdc_Inspect(root: Path, *, device_facts: NativeDeviceFacts,
     vector = startup.split("g_pfnVectors:", 1)
     if len(vector) != 2:
         raise CubeMxImportError("Unknown native GNU vector table")
+    declarations = re.findall(r"(?m)^\s*\.word\s+(\w+)\s*$", vector[1])
+    independent = dict(device_facts.irq_numbers)
+    headers = [p for p in files if p.startswith("Drivers/CMSIS/Device/ST/") and
+               hashlib.sha256(files[p]).hexdigest() == device_facts.irq_header_sha256]
+    if len(headers) != 1:
+        raise CubeMxImportError("Native CMSIS header differs from independent IRQn evidence")
     exceptions = {"NonMaskableInt", "HardFault", "MemoryManagement", "BusFault", "UsageFault",
                   "SVCall", "DebugMonitor", "PendSV", "SysTick"}
     irq = [k[5:].removesuffix("_IRQn") + "_IRQHandler" for k, v in fields.items()
@@ -323,12 +340,18 @@ def _NativeClassicCdc_Inspect(root: Path, *, device_facts: NativeDeviceFacts,
             raise CubeMxImportError("Native SysTick is not enabled")
         irq.insert(0, "SysTick_Handler")
     for name in irq:
+        irq_name = "SysTick_IRQn" if name == "SysTick_Handler" else name.removesuffix("_IRQHandler") + "_IRQn"
+        slot = independent.get(irq_name)
+        if slot is None or slot+16 >= len(declarations) or declarations[slot+16] != name:
+            raise CubeMxImportError("Native startup contradicts independent IRQn binding: " + name)
         if (len(re.findall(r"\bvoid\s+" + re.escape(name) + r"\s*\(\s*void\s*\)\s*\{", spi_code)) != 1 or
                 len(re.findall(r"(?m)^\s*\.word\s+" + re.escape(name) + r"\s*$", vector[1])) != 1):
             raise CubeMxImportError("Native IRQ has no unique compiled/vector owner: " + name)
-    proof = {"format_version": 1, "input_kind": NATIVE_CLASSIC_CDC_KEY, "ioc_file": iocs[0],
+    proof = {"format_version": 2, "input_kind": NATIVE_CLASSIC_CDC_KEY, "ioc_file": iocs[0],
              "device_facts": asdict(device_facts), "build": build, "cdc": cdc,
              "bindings": {"spi": spi_resource, "gpio": gpio_resources}, "required_irq_handlers": irq,
+             "independent_irq_slots": {name: independent["SysTick_IRQn" if name=="SysTick_Handler"
+                 else name.removesuffix("_IRQHandler")+"_IRQn"] for name in irq},
              "spi_abi": {"tx_buffer_const": qualifiers[0], "header_owner": spi_headers[0],
                          "blocking_timeout_semantics": "NOT_PROVEN"},
              "static_contract": "VALIDATED_TEXT_SCOPE", "compiler_abi_closure": "NOT_PROVEN",

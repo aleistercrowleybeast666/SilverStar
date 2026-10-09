@@ -7,6 +7,7 @@ from pathlib import Path
 from dataclasses import replace
 import hashlib
 import os
+import re
 import shutil
 import pytest
 from silverstar_fccg.app.service import FccgService
@@ -31,8 +32,14 @@ def native(request, tmp_path):
         values=("STM32F407VET6","cortex-m4","STM32F407xx","startup_stm32f407xx.s",
                 (NativeMemoryRegion("FLASH",0x08000000,524288),NativeMemoryRegion("RAM",0x20000000,131072),NativeMemoryRegion("CCMRAM",0x10000000,65536)))
     evidence=scg/"plugins/builtin"/component/"plugin.json"
+    package,family,header=("STM32Cube_FW_F1_V1.8.7","STM32F1xx","stm32f103xb.h") if request.param=="f103-usb" else ("STM32Cube_FW_F4_V1.28.3","STM32F4xx","stm32f407xx.h")
+    irq_evidence=Path(os.environ.get("SILVERSTAR_VENDOR_IRQ_REPOSITORY", "D:/Tools/Embedded/STM32/Repository"))/package/"Drivers/CMSIS/Device/ST"/family/"Include"/header
+    if not irq_evidence.is_file():pytest.fail("independent installed vendor IRQ header missing: "+str(irq_evidence))
+    irq_numbers=tuple((n,int(v)) for n,v in re.findall(r"(?m)^\s*(\w+_IRQn)\s*=\s*(-?\d+)\s*,",irq_evidence.read_text(encoding="utf-8-sig")))
     facts=NativeDeviceFacts(*values,str(evidence),hashlib.sha256(evidence.read_bytes()).hexdigest(),
-                            fpu="fpv4-sp-d16" if request.param=="f407-usb" else "")
+                            fpu="fpv4-sp-d16" if request.param=="f407-usb" else "",
+                            irq_numbers=irq_numbers,irq_header_sha256=hashlib.sha256(irq_evidence.read_bytes()).hexdigest(),
+                            irq_evidence_source=str(irq_evidence))
     root=tmp_path/"native"; shutil.copytree(source,root)
     return root,dict(device_facts=facts,spi_resource="SPI1",gpio_resources=(nss,"RADIO_RST","RADIO_BUSY","RADIO_DIO1"))
 

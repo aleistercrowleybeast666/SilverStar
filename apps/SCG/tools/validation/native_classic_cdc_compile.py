@@ -18,6 +18,7 @@ import sys
 SCG=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(SCG/"src"))
 from silverstar_fccg.hardware.native_classic_cdc import NativeDeviceFacts, NativeMemoryRegion, NativeClassicCdc_Inspect, NATIVE_PREFIX
+from silverstar_fccg.hardware.native_machine_contract import NativeAssemblyDirectives_Validate, NativeArmAttributes_Validate, NativeIndependentVectors_Validate
 
 
 def NativeCompile_Run(args):
@@ -27,7 +28,8 @@ def NativeCompile_Run(args):
     if args.device_facts.resolve().is_relative_to(root):
         raise ValueError("trusted independent device descriptor must be outside the imported project")
     facts_json=json.loads(args.device_facts.read_text(encoding="utf-8"))
-    facts=NativeDeviceFacts(**{**facts_json,"regions":tuple(NativeMemoryRegion(**r) for r in facts_json["regions"])})
+    facts=NativeDeviceFacts(**{**facts_json,"regions":tuple(NativeMemoryRegion(**r) for r in facts_json["regions"]),
+        "irq_numbers":tuple(tuple(item) for item in facts_json.get("irq_numbers",[]))})
     proof,inventory,files=NativeClassicCdc_Inspect(root,device_facts=facts,spi_resource=args.spi,gpio_resources=tuple(args.gpio))
     output.mkdir(parents=True)
     original_hashes={p:hashlib.sha256(b).hexdigest() for p,b in files.items()}
@@ -94,22 +96,30 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
                 if source.startswith("Generated/"):common += ["-Wextra","-Wpedantic","-Werror"]
                 run([*common,"-MD","-MP","-MF",rel.removesuffix(".o")+".d","-MT",rel,"-S",source,"-o",asm])
                 dependencies.AssemblerSource_Prepare(output,graph,source,build_dir)
+                NativeAssemblyDirectives_Validate((output/asm).read_text(encoding="utf-8"),core=facts.core,fpu=facts.fpu)
                 run([compiler,*graph["mcu_flags"],"-x","assembler","-Wa,--MD,"+rel.removesuffix(".o")+".gas.d","-c",asm,"-o",rel])
+                NativeArmAttributes_Validate(run([args.toolchain_prefix+"readelf","-A",rel]),
+                    core=facts.core,fpu=facts.fpu,hard_float="-mfloat-abi=hard" in graph["mcu_flags"])
                 dependencies.DependencyClosure_Validate(output,graph,compiler,build_dir=build_dir,source=source)
                 objects.append(rel)
             for source in graph["asm_sources"]:
                 obj=output/build_dir/Path(source).with_suffix(".o");obj.parent.mkdir(parents=True,exist_ok=True)
                 rel=obj.relative_to(output).as_posix()
                 run([compiler,*flags,"-save-temps=obj","-MD","-MP","-MF",rel.removesuffix(".o")+".d","-MT",rel,"-Wa,--MD,"+rel.removesuffix(".o")+".gas.d","-x","assembler-with-cpp","-c",source,"-o",rel])
+                NativeArmAttributes_Validate(run([args.toolchain_prefix+"readelf","-A",rel]),
+                    core=facts.core,fpu=facts.fpu,hard_float="-mfloat-abi=hard" in graph["mcu_flags"],assembly=True)
                 dependencies.DependencyClosure_Validate(output,graph,compiler,build_dir=build_dir,source=source)
                 objects.append(rel)
             elf=build_dir+"/native.elf"
             run([compiler,*objects,*graph["mcu_flags"],"-Wl,--gc-sections,-Map="+build_dir+"/native.map","-T"+graph["linker_script"],"-specs=nano.specs","-lc","-lm","-lnosys","-o",elf])
+            NativeArmAttributes_Validate(run([args.toolchain_prefix+"readelf","-A",elf]),
+                core=facts.core,fpu=facts.fpu,hard_float="-mfloat-abi=hard" in graph["mcu_flags"])
             symbols=run([args.toolchain_prefix+"nm","-n",elf])
             vector=build_dir+"/vectors.bin"
             run([args.toolchain_prefix+"objcopy","--dump-section",".isr_vector="+vector,elf])
             vector_bytes=(output/vector).read_bytes()
             dependencies.InterruptVectors_Validate(output,graph,symbols,vector_bytes)
+            NativeIndependentVectors_Validate(vector_bytes,symbols,proof["independent_irq_slots"])
             if len(vector_bytes)<8:
                 raise ValueError("native vector has no initial MSP/reset entries")
             initial_sp,reset=struct.unpack_from("<II",vector_bytes)
@@ -157,6 +167,8 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
           "validation_script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
           "validation_script_source":Path(__file__).read_text(encoding="utf-8"),
           "import_module_source":(SCG/"src/silverstar_fccg/hardware/native_classic_cdc.py").read_text(encoding="utf-8"),
+          "machine_contract_source":(SCG/"src/silverstar_fccg/hardware/native_machine_contract.py").read_text(encoding="utf-8"),
+          "machine_contract_sha256":hashlib.sha256((SCG/"src/silverstar_fccg/hardware/native_machine_contract.py").read_bytes()).hexdigest(),
           "toolchain_version":locals().get("version"),
           "warning_diagnostics":warning_diagnostics,
           "no_warning_gate":"FAIL" if warning_diagnostics else "NO_RECORDED_WARNING",

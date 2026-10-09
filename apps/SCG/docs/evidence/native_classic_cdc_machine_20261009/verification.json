@@ -1,0 +1,71 @@
+{
+  "source_baseline": "b0df77f06497ef908af91950695aaf15d65afac1",
+  "scope": "CPU/IRQ contract increment only; native_clock remains separate uncommitted runtime work",
+  "pre_fix": "4 failed",
+  "post_fix": "4 passed",
+  "final_scoped_tests": "62 passed, 147.99 seconds; existing cache_dir warning; no skips",
+  "runs": {
+    "ccdi-machine-pre10a": {
+      "exit": "1",
+      "log": "ccdi-machine-pre10a.log"
+    },
+    "ccdi-machine-post10a": {
+      "exit": "0",
+      "log": "ccdi-machine-post10a.log"
+    },
+    "ccdi-machine-all10b": {
+      "exit": "0",
+      "log": "ccdi-machine-all10b.log"
+    },
+    "ccdi-machine-f103-10a": {
+      "exit": "1",
+      "log": "ccdi-machine-f103-10a.log"
+    },
+    "ccdi-machine-f407-10a": {
+      "exit": "1",
+      "log": "ccdi-machine-f407-10a.log"
+    }
+  },
+  "native": {
+    "f103": {
+      "original_output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-machine-f103-10a",
+      "artifact_count": 365,
+      "commands": 225,
+      "warnings": [
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c:1183:42: warning: dereference of NULL 'pdata16bits' [CWE-476] [-Wanalyzer-null-dereference]",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c:1657:24: warning: dereference of NULL 'pdata16bits' [CWE-476] [-Wanalyzer-null-dereference]"
+      ],
+      "status": "FAILED",
+      "toolchain": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623"
+    },
+    "f407": {
+      "original_output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-machine-f407-10a",
+      "artifact_count": 455,
+      "commands": 279,
+      "warnings": [
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c:1180:42: warning: dereference of NULL 'pdata16bits' [CWE-476] [-Wanalyzer-null-dereference]",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c:1662:24: warning: dereference of NULL 'pdata16bits' [CWE-476] [-Wanalyzer-null-dereference]"
+      ],
+      "status": "FAILED",
+      "toolchain": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623"
+    }
+  },
+  "limits": "Ground runtime integration, EP0, UART warning closure, clock/radio timing, critical-contract review, stack, WCET and hardware remain NOT PROVEN. All native compiler commands succeeded, but no-warning gates FAIL. Prior gate histories unchanged.",
+  "evidence_sha256": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "ccdi-machine-all10b.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "ccdi-machine-all10b.log": "58ab729588f50d5e1fbd5c6e00cf221ac23ea07e09fa2cdb753987ec4c1bdd39",
+    "ccdi-machine-f103-10a.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "ccdi-machine-f103-10a.log": "fe1ea6b589bf5167eec6c9763495285b955a75cd3dac5031f793c157c68c401e",
+    "ccdi-machine-f407-10a.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "ccdi-machine-f407-10a.log": "b9722ccf8a107feee67d60d13b94043fd2318e6a5a0a3118b2f46d177971dd28",
+    "ccdi-machine-post10a.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "ccdi-machine-post10a.log": "5eb52807d72162c620f2ef5988a1f30863760bec592d40433f11a413bd403ada",
+    "ccdi-machine-pre10a.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "ccdi-machine-pre10a.log": "a0a0a403fe59f153bca49bf71c6421874e8430cf294e423af1bb6212c59f739e",
+    "f103-commands.log": "5cca390e678e2509aae3090b264510a574bbf443c3b2ccf0bb82696868c737b4",
+    "f103-receipt.json": "a95bb82849569b283f07e57f0ad6ebd8a877818748f8d79e06559d14bc6c50d6",
+    "f407-commands.log": "7fac557df3175678b8a5878475b48958739f7bb05c556ed9cc3de25ef34a7e47",
+    "f407-receipt.json": "01a52600c04514edcd954c7f68a029ff8e445c4cbf1648e2ac75b9eab208d2f1"
+  }
+}

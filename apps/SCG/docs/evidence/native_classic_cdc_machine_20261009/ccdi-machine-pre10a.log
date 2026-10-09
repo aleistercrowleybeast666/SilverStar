@@ -1,0 +1,75 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+________________ test_startup_cpu_override_rejected[f103-usb] _________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc-machine-pre10a/test_startup_cpu_override_reje_4c778a0f/native'), {'...3f7c0', fpu=''), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+
+    def test_startup_cpu_override_rejected(native):
+        root,args=native
+        startup=root/args['device_facts'].startup
+        cpu=args['device_facts'].core
+        startup.write_text(startup.read_text(encoding='utf-8-sig').replace(
+            '.cpu '+cpu, '.cpu cortex-m4' if cpu!='cortex-m4' else '.cpu cortex-m7'),encoding='utf-8')
+>       with pytest.raises(CubeMxImportError,match='CPU directive'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_machine_contract.py:14: Failed
+________________ test_startup_cpu_override_rejected[f407-usb] _________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc-machine-pre10a/test_startup_cpu_override_reje_4d1ef3ea/native'), {'... fpu='fpv4-sp-d16'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+
+    def test_startup_cpu_override_rejected(native):
+        root,args=native
+        startup=root/args['device_facts'].startup
+        cpu=args['device_facts'].core
+        startup.write_text(startup.read_text(encoding='utf-8-sig').replace(
+            '.cpu '+cpu, '.cpu cortex-m4' if cpu!='cortex-m4' else '.cpu cortex-m7'),encoding='utf-8')
+>       with pytest.raises(CubeMxImportError,match='CPU directive'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_machine_contract.py:14: Failed
+_______________ test_irq_vector_mutual_swap_rejected[f103-usb] ________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc-machine-pre10a/test_irq_vector_mutual_swap_re_5ec0f62e/native'), {'...3f7c0', fpu=''), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+
+    def test_irq_vector_mutual_swap_rejected(native):
+        root,args=native
+        startup=root/args['device_facts'].startup
+        a,b=('USB_LP_CAN1_RX0_IRQHandler','USB_HP_CAN1_TX_IRQHandler') if args['device_facts'].core=='cortex-m3' else ('OTG_FS_IRQHandler','USART1_IRQHandler')
+        code=startup.read_text(encoding='utf-8-sig')
+        startup.write_text(code.replace(a,'__SWAP__').replace(b,a).replace('__SWAP__',b),encoding='utf-8')
+>       with pytest.raises(CubeMxImportError,match='independent IRQn'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_machine_contract.py:24: Failed
+_______________ test_irq_vector_mutual_swap_rejected[f407-usb] ________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/nc-machine-pre10a/test_irq_vector_mutual_swap_re_5350b955/native'), {'... fpu='fpv4-sp-d16'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+
+    def test_irq_vector_mutual_swap_rejected(native):
+        root,args=native
+        startup=root/args['device_facts'].startup
+        a,b=('USB_LP_CAN1_RX0_IRQHandler','USB_HP_CAN1_TX_IRQHandler') if args['device_facts'].core=='cortex-m3' else ('OTG_FS_IRQHandler','USART1_IRQHandler')
+        code=startup.read_text(encoding='utf-8-sig')
+        startup.write_text(code.replace(a,'__SWAP__').replace(b,a).replace('__SWAP__',b),encoding='utf-8')
+>       with pytest.raises(CubeMxImportError,match='independent IRQn'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CubeMxImportError
+
+.work\ccdi\apps\SCG\tests\test_native_machine_contract.py:24: Failed
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_machine_contract.py::test_startup_cpu_override_rejected[f103-usb]
+FAILED .work\ccdi\apps\SCG\tests\test_native_machine_contract.py::test_startup_cpu_override_rejected[f407-usb]
+FAILED .work\ccdi\apps\SCG\tests\test_native_machine_contract.py::test_irq_vector_mutual_swap_rejected[f103-usb]
+FAILED .work\ccdi\apps\SCG\tests\test_native_machine_contract.py::test_irq_vector_mutual_swap_rejected[f407-usb]
+4 failed, 1 warning in 15.91s
