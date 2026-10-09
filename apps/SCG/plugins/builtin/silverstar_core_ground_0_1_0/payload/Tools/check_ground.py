@@ -174,7 +174,7 @@ def Host_Check(root: Path, compiler: str) -> None:
         flags = ['-DGROUND_TEST_USB'] if name == 'usb_backpressure' else []
         Command_Run(common + flags + sources + [str(harness), '-o', str(executable)], root)
         if name in ('backpressure', 'usb_backpressure'):
-            for scenario in ('idle', 'burst', 'radio', 'mixed', 'slow', 'sessions', 'queued-reset', 'budget', 'error'):
+            for scenario in ('idle', 'burst', 'radio', 'mixed', 'slow', 'sessions', 'queued-reset', 'budget', 'error', 'error-reset'):
                 Command_Run([str(executable), scenario], root)
         else:
             Command_Run([str(executable)], root)

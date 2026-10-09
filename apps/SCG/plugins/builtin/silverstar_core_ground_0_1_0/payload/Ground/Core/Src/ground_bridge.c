@@ -73,17 +73,21 @@ static GroundBridgeResult GroundBridge_PcFlush(void)
         uint16_t expected = s_pc_frame_lengths[s_pc_frame_head];
         PcByteStreamWriteResult write_result = PcByteStream_WriteSession(
             s_pc_frames[s_pc_frame_head], expected, s_pc_session);
+        /* A failed submission can invalidate its session. Preserve the real
+           error while cancelling stale queued frames; reset is not success. */
+        if ((write_result != PC_BYTE_STREAM_WRITE_OK) &&
+            (write_result != PC_BYTE_STREAM_WRITE_BUSY))
+        {
+            if (PcByteStream_Session_Check(s_pc_session) == 0U) { GroundBridge_PcReset(); }
+            if (s_pc_write_error_count < UINT32_MAX) { s_pc_write_error_count++; }
+            return GROUND_BRIDGE_PC_ERROR;
+        }
         if (PcByteStream_Session_Check(s_pc_session) == 0U)
         { GroundBridge_PcReset(); return GROUND_BRIDGE_OK; }
         if (write_result == PC_BYTE_STREAM_WRITE_BUSY)
         {
             if (s_pc_write_busy_count < UINT32_MAX) { s_pc_write_busy_count++; }
             return GROUND_BRIDGE_OK;
-        }
-        if (write_result != PC_BYTE_STREAM_WRITE_OK)
-        {
-            if (s_pc_write_error_count < UINT32_MAX) { s_pc_write_error_count++; }
-            return GROUND_BRIDGE_PC_ERROR;
         }
         s_pc_frame_head = (uint8_t)((s_pc_frame_head + 1U) % GROUND_PC_QUEUE_DEPTH);
         s_pc_frame_count--;

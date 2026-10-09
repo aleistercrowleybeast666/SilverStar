@@ -1,0 +1,231 @@
+{
+  "recorded_utc": "2026-10-09T09:33:49.435814+00:00",
+  "base_commit": "1ce4bb147b831ee5317684b3112e7b2243e63886",
+  "scope": "Follow-up common Ground write-error preservation when transport also invalidates session; C071 adaptation and approved PoT registration are a separate commit/validation batch",
+  "validated_snapshot": "base_commit plus these exact source snapshots (including new files) and validated-diff.patch",
+  "source_sha256": {
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Core/Inc/ground_bridge.h": "cd581df6b068999e85b632b648988689c5d4dd8ae6f9140bb1f8319e0d731388",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Core/Src/ground_bridge.c": "425258007cfb5f6d843df86de2a3dd7cd153914a172aa2d53c431f63433b415b",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/ground_backpressure.c": "603b1a2a5fdaa878d53370c693a7430a543361ccbe645f383ff66fac0dc0f479",
+    "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_ground.py": "11d4b59daff0261063ed8bedca826c1a6347d97282fc833765501a6117f9e741",
+    "apps/SCG/tests/test_ground_backpressure.py": "0590bff9b908a435f51a25024eb10f01c0bc50d57b1281ecd700a6dab5e18769"
+  },
+  "local_evidence_root": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\backpressure-error-reset-evidence",
+  "fresh_outputs": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2",
+  "commands": [
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "artifact-check",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2\\generated-f103-usb\\Ground_Station",
+      "log": "f103-usb-full-gates.log",
+      "started_utc": "2026-10-09T09:26:44.845119+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T09:29:32.025922+00:00",
+      "log_sha256": "188ed158f3a2a9f2d730b2b713621ed34b9c2226659930d533f8def7bf62d362"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_f103_ground_reference.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_backpressure.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_bridge_bounds.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_cubemx_base.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_gas_dependencies.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_generated_gates.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_generated_runtime.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_pc_uart_dma.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_radio_hal.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_radio_runtime.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_schema_contract.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_usb_cdc_ring.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_ground_usb_review_boundaries.py",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree\\apps\\SCG\\tests\\test_round2_targets.py",
+        "-q",
+        "-k",
+        "not test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources",
+        "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ssbackpressure-backend2",
+        "-o",
+        "cache_dir=C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2\\pytest-cache"
+      ],
+      "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\ground-usb-worktree",
+      "log": "backend.log",
+      "started_utc": "2026-10-09T09:26:45.221263+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T09:31:07.916331+00:00",
+      "log_sha256": "0d3f112ddbd2250ce41954a768be053ccc4a6dbbb4d65b858fd9b0d1f7bb4ea3"
+    },
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "artifact-check",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2\\generated-f103-uart\\Ground_Station",
+      "log": "f103-uart-full-gates.log",
+      "started_utc": "2026-10-09T09:29:32.042602+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T09:31:22.728769+00:00",
+      "log_sha256": "8df1747ba194c9308c4d957dbf94d8a6e71664f41d4b57314031f9fee69cb04b"
+    },
+    {
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "-B",
+        "-j2",
+        "all",
+        "architecture-check",
+        "host-tests",
+        "artifact-check",
+        "power10-check",
+        "static-analysis",
+        "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2\\generated-f407-usb\\Ground_Station",
+      "log": "f407-usb-full-gates.log",
+      "started_utc": "2026-10-09T09:31:22.749002+00:00",
+      "exit": 0,
+      "finished_utc": "2026-10-09T09:33:34.293972+00:00",
+      "log_sha256": "d636044a3882a56361e52f5034baf73de5fd08b6f2c8b8b314d02ac0694e27a1"
+    }
+  ],
+  "tools": {
+    "python": "Python 3.14.0",
+    "arm_gcc": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+    "host_gcc": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0",
+    "make": "GNU Make 4.4.1",
+    "powershell": "5.1.26100.9444"
+  },
+  "followup_pre_fix": {
+    "log": "prior-c071-failure/uart-full-gates.log",
+    "source_manifest": "C:/Users/chdxm/AppData/Local/Temp/ssc071-backpressure-run1/uart/candidate-manifest.json",
+    "observed": "actual UART HAL_ERROR invalidates session and old bridge wrongly returns OK; regression asserts PC_ERROR and fails"
+  },
+  "backend": {
+    "passed": 164,
+    "deselected": 1,
+    "deselected_test": "test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources",
+    "excluded_gui_files": [
+      "test_ground_board_recovery.py",
+      "test_ground_radio_editor.py",
+      "test_ground_activity_configuration.py"
+    ]
+  },
+  "scenarios": [
+    "idle 60000 synthetic seconds",
+    "five commands in 40 bytes",
+    "four radio frames with periodic status",
+    "slow transport 10000 turns and 12 retained commands",
+    "1000 commands/ACKs with 800 radio frames",
+    "100 partial-frame reset/reconnect cycles",
+    "queued session cancellation",
+    "64-byte per-turn input budget",
+    "real write error propagation including simultaneous session reset"
+  ],
+  "limits": [
+    "Host HAL/radio mocks; elapsed synthetic time is not MCU timing",
+    "bounded transport buffers can still overflow when peer ignores backpressure; existing overflow policy retained",
+    "session reset explicitly cancels pending session frames; no guarantee of ACK across reset",
+    "whole-program critical contracts, stack, WCET and hardware USB/UART/radio NOT PROVEN",
+    "F1/F4 generated main continues its existing ignored-Process-result policy; C071 main fail-stop is separate",
+    "No hardware, daily checkout, GUI, Flight, FINAL, EDA, push or remote publication actions"
+  ],
+  "initial_test_attempt": {
+    "result": "1 passed, 16 setup errors caused by strict conversion warning in new Host fixture; fixed by explicit cast",
+    "retained_compile_logs": "C:/Users/chdxm/AppData/Local/Temp/ssbackpressure-tests1",
+    "later_targeted": "17 passed before final slow/queued-reset additions; final 164-case backend includes all 20 pressure cases"
+  },
+  "daily_head": "253edffb0b88ce0e10d59887d09333e6fa798f90",
+  "artifact_summary": [
+    {
+      "case": "f103-usb",
+      "target": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2\\generated-f103-usb\\Ground_Station",
+      "source_count": 50,
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "591357cda36ae1330a8a8c22dcc884cdba7d105b18cce314fb718f5d4cec876c",
+          "ground.bin": "dea9a4ae2e67dbfbeb85867e7c2c0e2224eff62dd669e1409ade077c3f750369",
+          "ground.map": "1d62d16fe8fb7ba6141ee52f13663fed597ae49554566d5abf585a0f9e577a49",
+          "ground.size": "a6e441ed56fc0180b88add5ec6da6ff0f0f98875059004a93e45d5537549fd89"
+        },
+        "build/analysis": {
+          "ground.elf": "591357cda36ae1330a8a8c22dcc884cdba7d105b18cce314fb718f5d4cec876c",
+          "ground.bin": "dea9a4ae2e67dbfbeb85867e7c2c0e2224eff62dd669e1409ade077c3f750369",
+          "ground.map": "9bf3154d18628c08bc8d9c0f13490fcca35afa15a0633403d465e6ab839e3735",
+          "ground.size": "6358d53ff2b9c30f9f2bc7cfe6ebb3950c33a254b2a9d0b307dddca3a24f0019"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "warnings": [],
+      "power10_sha256": "32a6419d4ef1e5e015a7fcdf0f042d6035ac7a7710448efe98acf1286045eb55"
+    },
+    {
+      "case": "f103-uart",
+      "target": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2\\generated-f103-uart\\Ground_Station",
+      "source_count": 39,
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "5814644798e27c8abdbca201742c35e87e0a458a57ec6c6961f1954e708bbb4d",
+          "ground.bin": "3596abacf27bb87a433a1c78599866e7e021cb3d5730b04e161f698f13da5537",
+          "ground.map": "06e7dc7034693fc13a89b454409b0c73cb7619ca4a79936958098cd75fb777ef",
+          "ground.size": "e1147fddb63c61b3381db89cd9a6974a908959ba508869ff11e8543fa48632ba"
+        },
+        "build/analysis": {
+          "ground.elf": "5814644798e27c8abdbca201742c35e87e0a458a57ec6c6961f1954e708bbb4d",
+          "ground.bin": "3596abacf27bb87a433a1c78599866e7e021cb3d5730b04e161f698f13da5537",
+          "ground.map": "8e030bc2629e75c34dc9d9b09b9a00490e120fdc160ab487787ebaa164c52da1",
+          "ground.size": "bb1d55c7501444c2ee32bc3165fe14ca1fd83f59ae766c198c4085714ef6ab7c"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "warnings": [],
+      "power10_sha256": "32a6419d4ef1e5e015a7fcdf0f042d6035ac7a7710448efe98acf1286045eb55"
+    },
+    {
+      "case": "f407-usb",
+      "target": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ssbackpressure-run2\\generated-f407-usb\\Ground_Station",
+      "source_count": 60,
+      "linked_sha256": {
+        "build": {
+          "ground.elf": "9874d804b754818d533a3159ba35fee7b1e4b6df2d66f1d567895db0c124b0cb",
+          "ground.bin": "45c6c55cd1a9b03d0e66ae11e5ea34d326536d4705331a195d3137abf46e7167",
+          "ground.map": "380de469820f9fac10f2b30bb8a08f163d755af6c6eae2048bce7e9f452af316",
+          "ground.size": "3d3ade32c4d85b8dfa66c8857a7b619d86ba26960da06a32eb32316c514ca129"
+        },
+        "build/analysis": {
+          "ground.elf": "9874d804b754818d533a3159ba35fee7b1e4b6df2d66f1d567895db0c124b0cb",
+          "ground.bin": "45c6c55cd1a9b03d0e66ae11e5ea34d326536d4705331a195d3137abf46e7167",
+          "ground.map": "48a43726137d4c64118d23c75a9439e0531c09c3d8abced6a3bffbc2c5c03915",
+          "ground.size": "9d3cfd6a00d8fd6560c50ee8bb8a657a2643b448f98820c491be58768f6bb267"
+        }
+      },
+      "release_analysis_bin_equal": true,
+      "warnings": [],
+      "power10_sha256": "32a6419d4ef1e5e015a7fcdf0f042d6035ac7a7710448efe98acf1286045eb55"
+    }
+  ],
+  "evidence_summary_sha256": "fdec1d205c843c5d32de42a0e9d5768f092088eb119d520440870532db826238",
+  "evidence_receipt_sha256": "a2d68c964e7da1f5c672d89fd1be18e424cb78e682fb99a67938111d978a0a2f"
+}

@@ -8,7 +8,7 @@ from silverstar_fccg.generator.ground_pc_usb_cdc import PcUsbCdc_Render
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "plugins/builtin/silverstar_core_ground_0_1_0/payload"
 COMMON = ROOT / "plugins/builtin/silverstar_core_0_1_0/payload/Common"
-SCENARIOS = ("idle", "burst", "radio", "mixed", "slow", "sessions", "queued-reset", "budget", "error")
+SCENARIOS = ("idle", "burst", "radio", "mixed", "slow", "sessions", "queued-reset", "budget", "error", "error-reset")
 
 
 @pytest.fixture(scope="module", params=("uart_contract", "usb"))

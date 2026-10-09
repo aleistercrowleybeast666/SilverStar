@@ -29,7 +29,7 @@ static USBD_CDC_HandleTypeDef usb_class;
 uint8_t CDC_Transmit_FS(uint8_t *data, uint16_t length)
 {
     assert(usb_test_mask == 1U); write_calls++;
-    if (fail_write) { return USBD_FAIL; }
+    if (fail_write) { if (fail_write == 2U) { PcByteStream_OnUsbReset(); } return USBD_FAIL; }
     TxAccept(data, length); usb_class.TxState = 1U; return USBD_OK;
 }
 static void Feed(const uint8_t *data, uint16_t length) { PcByteStream_OnUsbReceive(data, length); }
@@ -70,7 +70,7 @@ PcByteStreamWriteResult PcByteStream_WriteSession(const uint8_t *data, uint16_t 
 {
     write_calls++;
     if (!connected || pending || value != session) { return PC_BYTE_STREAM_WRITE_BUSY; }
-    if (fail_write) { return PC_BYTE_STREAM_WRITE_ERROR; }
+    if (fail_write) { if (fail_write == 2U) { session++; } return PC_BYTE_STREAM_WRITE_ERROR; }
     assert(length <= sizeof(tx_owned)); memcpy(tx_owned, data, length);
     TxAccept(tx_owned, length); return PC_BYTE_STREAM_WRITE_OK;
 }
@@ -210,7 +210,8 @@ int main(int argc, char **argv)
     }
     else
     {
-        assert(strcmp(argv[1], "error") == 0); fail_write = 1U;
+        assert(strcmp(argv[1], "error") == 0 || strcmp(argv[1], "error-reset") == 0);
+        fail_write = (uint8_t)((strcmp(argv[1], "error-reset") == 0) ? 2U : 1U);
         assert(Step(1000U) == GROUND_BRIDGE_PC_ERROR);
         assert(GroundBridge_DiagnosticsGet(&diag) == GROUND_BRIDGE_OK && diag.pc_write_error_count != 0U);
     }
